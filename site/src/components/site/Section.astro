@@ -1,0 +1,49 @@
+---
+interface Props {
+  id?: string;
+  index?: string;
+  eyebrow?: string;
+  title?: string;
+  lead?: string;
+  tone?: 'page' | 'surface';
+  bordered?: boolean;
+}
+
+const { id, index, eyebrow, title, lead, tone = 'page', bordered = true } = Astro.props;
+---
+
+<section id={id} class:list={[tone === 'surface' && 'bg-surface', bordered && 'border-t border-line']}>
+  <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+    {
+      (index || eyebrow) && (
+        <div
+          class:list={[
+            'sticky top-0 z-10 -mx-5 mb-12 flex items-center gap-5 px-5 py-4 sm:-mx-8 sm:px-8',
+            tone === 'surface' ? 'bg-surface' : 'bg-page',
+          ]}
+        >
+          {index && <span class="font-mono text-sm leading-none text-primary figure-num">{index}</span>}
+          <span class="h-px grow bg-line" aria-hidden="true" />
+          {eyebrow && <span class="eyebrow leading-none">{eyebrow}</span>}
+        </div>
+      )
+    }
+
+    {
+      (title || lead) && (
+        <div class="grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-center lg:gap-16">
+          {title && (
+            <h2 class="font-heading text-3xl leading-[1.15] font-semibold tracking-[-0.02em] text-heading sm:text-[2.6rem]">
+              {title}
+            </h2>
+          )}
+          {lead && <p class="max-w-[62ch] text-muted">{lead}</p>}
+        </div>
+      )
+    }
+
+    <div class:list={[(title || lead) && 'mt-12']}>
+      <slot />
+    </div>
+  </div>
+</section>

@@ -35,18 +35,25 @@ function scoreTable(reports) {
   }));
 }
 
+function canonicalRoute(route) {
+  return route.length > 1 && route.endsWith('/') ? route.slice(0, -1) : route;
+}
+
 export function renderReport({ phase, gate, mobile, desktop }) {
   const failures = [];
+  const noindex = new Set(gate.measured.filter((row) => row.noindex).map((row) => canonicalRoute(row.route)));
   for (const [form, rows] of [
     ['mobile', mobile],
     ['desktop', desktop],
   ]) {
     for (const route of gate.routes) {
-      if (!rows.some((row) => row.route === route)) failures.push(`${form}: no Lighthouse run for ${route}`);
+      if (!rows.some((row) => canonicalRoute(row.route) === canonicalRoute(route)))
+        failures.push(`${form}: no Lighthouse run for ${route}`);
     }
     for (const row of rows) {
       if (row.runs !== 3) failures.push(`${form} ${row.route}: ${row.runs} runs, gate requires 3`);
       for (const [category, score] of Object.entries(row.scores)) {
+        if (category === 'seo' && noindex.has(canonicalRoute(row.route))) continue;
         if (score !== 100) failures.push(`${form} ${row.route} ${category}: ${score}`);
       }
     }
@@ -70,8 +77,9 @@ export function renderReport({ phase, gate, mobile, desktop }) {
     ['desktop', desktop],
   ]) {
     for (const row of rows) {
+      const seo = noindex.has(canonicalRoute(row.route)) ? 'n/a (noindex)' : row.scores.seo;
       lines.push(
-        `| ${form} | \`${row.route}\` | ${row.scores.performance} | ${row.scores.accessibility} | ${row.scores['best-practices']} | ${row.scores.seo} |`
+        `| ${form} | \`${row.route}\` | ${row.scores.performance} | ${row.scores.accessibility} | ${row.scores['best-practices']} | ${seo} |`
       );
     }
   }

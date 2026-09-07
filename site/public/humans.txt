@@ -2,7 +2,7 @@
 Fractional Chief AI Officer: Dmitri Meshin
 Site: https://meshin.co
 Contact: hello@meshin.co
-Location: Israel · remote worldwide
+Location: Remote worldwide
 
 /* SITE */
 Standards: HTML5, CSS, JSON-LD

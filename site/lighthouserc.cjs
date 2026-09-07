@@ -1,4 +1,36 @@
+const { existsSync, readFileSync } = require('node:fs');
+
 const desktop = process.env.LHCI_FORM_FACTOR === 'desktop';
+
+const CORE = {
+  'categories:performance': ['error', { minScore: 1 }],
+  'categories:accessibility': ['error', { minScore: 1 }],
+  'categories:best-practices': ['error', { minScore: 1 }],
+  'largest-contentful-paint': ['error', { maxNumericValue: 1800 }],
+  'cumulative-layout-shift': ['error', { maxNumericValue: 0.02 }],
+  'total-blocking-time': ['error', { maxNumericValue: 50 }],
+};
+
+const SEO = { 'categories:seo': ['error', { minScore: 1 }] };
+
+const gatePath = 'dist/gate-routes.json';
+const noindexRoutes = existsSync(gatePath)
+  ? JSON.parse(readFileSync(gatePath, 'utf8'))
+      .measured.filter((row) => row.noindex)
+      .map((row) => row.route)
+  : [];
+
+const escaped = noindexRoutes.map((route) => route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+const noindexPattern = escaped.length > 0 ? `(${escaped.join('|')})(/|\\.html|/index\\.html)?$` : null;
+
+const assert = noindexPattern
+  ? {
+      assertMatrix: [
+        { matchingUrlPattern: noindexPattern, assertions: CORE },
+        { matchingUrlPattern: `^(?!.*${noindexPattern}).*$`, assertions: { ...CORE, ...SEO } },
+      ],
+    }
+  : { assertions: { ...CORE, ...SEO } };
 
 module.exports = {
   ci: {
@@ -24,17 +56,7 @@ module.exports = {
         emulatedUserAgent: !desktop,
       },
     },
-    assert: {
-      assertions: {
-        'categories:performance': ['error', { minScore: 1 }],
-        'categories:accessibility': ['error', { minScore: 1 }],
-        'categories:best-practices': ['error', { minScore: 1 }],
-        'categories:seo': ['error', { minScore: 1 }],
-        'largest-contentful-paint': ['error', { maxNumericValue: 1800 }],
-        'cumulative-layout-shift': ['error', { maxNumericValue: 0.02 }],
-        'total-blocking-time': ['error', { maxNumericValue: 50 }],
-      },
-    },
+    assert,
     upload: { target: 'filesystem', outputDir: './.lighthouseci' },
   },
 };

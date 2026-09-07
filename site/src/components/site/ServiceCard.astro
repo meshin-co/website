@@ -1,0 +1,45 @@
+---
+interface Props {
+  index: string;
+  deliverables: string[];
+  name: string;
+  price: string;
+  duration: string;
+  outcome: string;
+  href?: string;
+}
+
+const { index, name, price, duration, outcome, deliverables, href } = Astro.props;
+---
+
+<article
+  class="card group flex h-full flex-col p-7 hover:card-hover sm:p-8"
+>
+  <div>
+    <div class="flex items-baseline gap-3">
+      <span class="font-mono text-xs text-primary figure-num">{index}</span>
+      <span class="eyebrow">{duration}</span>
+    </div>
+
+    <h3 class="mt-5 font-heading text-2xl leading-tight font-semibold tracking-[-0.01em] text-heading sm:min-h-[3.75rem]">
+      {href ? <a class="link-signature group-hover:link-signature-hover" href={href}>{name}</a> : name}
+    </h3>
+
+    <p class="mt-6 border-t border-line pt-5 font-mono text-2xl text-heading figure-num">{price}</p>
+  </div>
+
+  <div class="mt-6 flex grow flex-col">
+    <p class="grow text-muted">{outcome}</p>
+
+    <ul class="mt-7 grid gap-2">
+      {
+        deliverables.map((item) => (
+          <li class="flex gap-3 text-sm">
+            <span class="mt-[0.45rem] h-1.5 w-1.5 shrink-0 bg-primary" aria-hidden="true" />
+            <span class="max-w-[46ch] text-heading">{item}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</article>

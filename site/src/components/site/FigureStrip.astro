@@ -1,0 +1,20 @@
+---
+interface Props {
+  figures: { value: string; label: string }[];
+}
+
+const { figures } = Astro.props;
+---
+
+<dl class="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4 lg:gap-x-10">
+  {
+    figures.map((figure) => (
+      <div class="lg:border-l lg:border-line lg:pl-6 lg:first:border-l-0 lg:first:pl-0">
+        <dt class="font-heading text-[2.25rem] leading-none font-semibold tracking-[-0.02em] text-heading figure-num">
+          {figure.value}
+        </dt>
+        <dd class="mt-3 max-w-[30ch] text-sm leading-snug text-muted">{figure.label}</dd>
+      </div>
+    ))
+  }
+</dl>

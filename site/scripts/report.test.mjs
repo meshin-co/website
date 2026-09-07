@@ -69,3 +69,58 @@ test('a form factor missing a derived route is a failure, not an empty table', (
 
   assert.deepEqual(failures, ['mobile: no Lighthouse run for /', 'mobile: no Lighthouse run for /404']);
 });
+
+test('SEO is not graded on a noindex route, but everything else still is', () => {
+  const noindexGate = {
+    routes: ['/styleguide'],
+    measured: [{ route: '/styleguide', js: 1, css: 1, page: 1, noindex: true }],
+    overBudget: [],
+  };
+
+  const clean = renderReport({
+    phase: '2',
+    gate: noindexGate,
+    mobile: [row('/styleguide', { ...perfect, seo: 66 })],
+    desktop: [row('/styleguide', { ...perfect, seo: 66 })],
+  });
+
+  assert.deepEqual(clean.failures, []);
+  assert.match(clean.markdown, /n\/a \(noindex\)/);
+
+  const broken = renderReport({
+    phase: '2',
+    gate: noindexGate,
+    mobile: [row('/styleguide', { ...perfect, seo: 66, accessibility: 98 })],
+    desktop: [row('/styleguide', { ...perfect, seo: 66 })],
+  });
+
+  assert.deepEqual(broken.failures, ['mobile /styleguide accessibility: 98']);
+});
+
+test('SEO is still graded on an indexable route', () => {
+  const { failures } = renderReport({
+    phase: '2',
+    gate,
+    mobile: [row('/', { ...perfect, seo: 66 })],
+    desktop: [row('/', perfect)],
+  });
+
+  assert.deepEqual(failures, ['mobile / seo: 66']);
+});
+
+test('a trailing slash on a Lighthouse route still matches the gate route it came from', () => {
+  const { markdown } = renderReport({
+    phase: '2',
+    gate: { routes: ['/', '/styleguide'], measured: [{ route: '/styleguide', js: 1, css: 1, page: 1, noindex: true }] },
+    mobile: [
+      { route: '/', runs: 3, scores: { performance: 100, accessibility: 100, 'best-practices': 100, seo: 100 } },
+      { route: '/styleguide/', runs: 3, scores: { performance: 100, accessibility: 100, 'best-practices': 100, seo: 66 } },
+    ],
+    desktop: [
+      { route: '/', runs: 3, scores: { performance: 100, accessibility: 100, 'best-practices': 100, seo: 100 } },
+      { route: '/styleguide/', runs: 3, scores: { performance: 100, accessibility: 100, 'best-practices': 100, seo: 66 } },
+    ],
+  });
+
+  assert.match(markdown, /Result: PASS/);
+});

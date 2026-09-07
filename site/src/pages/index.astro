@@ -1,38 +1,87 @@
 ---
+import CardGrid from '~/components/site/CardGrid.astro';
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import FigureStrip from '~/components/site/FigureStrip.astro';
+import ShiftPanel from '~/components/site/ShiftPanel.astro';
+import Hero from '~/components/site/Hero.astro';
+import ResourceCard from '~/components/site/ResourceCard.astro';
+import Section from '~/components/site/Section.astro';
+import ServiceCard from '~/components/site/ServiceCard.astro';
+import SignalList from '~/components/site/SignalList.astro';
+import StepList from '~/components/site/StepList.astro';
+import { artifacts, brief, cta, drivers, figures, hero, nudge, services, shift, signals } from '~/data/home';
 import Layout from '~/layouts/PageLayout.astro';
 
 const metadata = {
   title: 'Fractional Chief AI Officer — meshin.co',
   ignoreTitleTemplate: true,
+  description:
+    'Fractional AI leadership for 30–300 person companies: governance that passes enterprise procurement, and agentic systems shipped to production with evals and observability.',
 };
-
-const sections = ['Do you need a Fractional CAIO?', 'Services', 'How I work', 'Proof', 'Case study', 'Latest writing'];
 ---
 
 <Layout metadata={metadata}>
-  <section class="mx-auto max-w-5xl px-4 py-16 sm:py-24">
-    <h1 class="font-heading text-[clamp(2.2rem,5vw,3.5rem)] leading-tight font-semibold text-heading">
-      AI leadership you can name on the org chart.
-    </h1>
-    <p class="mt-6 max-w-[70ch] text-muted">
-      Fractional Chief AI Officer for 30–300 person companies. I build the governance that gets you through enterprise
-      procurement and ship agentic systems that actually reach production — with evals, observability and a number in
-      the contract.
-    </p>
-    <div class="mt-8 flex flex-wrap items-center gap-6">
-      <a class="btn-primary" href="https://cal.com/meshin" target="_blank" rel="noopener">Book a 30-min fit call</a>
-    </div>
-    <p class="mt-8 font-mono text-sm text-muted">
-      15+ years shipping software · Open-source AI Governance Starter Kit · ISO/IEC 42001 Lead Implementer (in progress)
-    </p>
-  </section>
+  <Hero
+    title={hero.title}
+    titleAccent={hero.titleAccent}
+    sub={hero.sub}
+    proof={hero.proof}
+    ctaLabel={hero.ctaLabel}
+    ctaHref={hero.ctaHref}
+    brief={brief}
+  />
 
-  {
-    sections.map((title) => (
-      <section class="mx-auto max-w-5xl border-t border-line px-4 py-12">
-        <h2 class="font-heading text-2xl font-semibold text-heading">{title}</h2>
-        <p class="mt-3 text-muted">TODO(copy) — built in Phase 2 from PRD §9.1 and Appendix A.</p>
-      </section>
-    ))
-  }
+  <Section index="01" eyebrow="Track record" tone="surface">
+    <FigureStrip figures={figures} />
+  </Section>
+
+  <Section index="02" eyebrow="Fit" title="Do you need a Fractional CAIO?">
+    <SignalList items={signals.items} verdict={signals.verdict} />
+  </Section>
+
+  <Section index="03" eyebrow="Outcome" title={shift.title} tone="surface">
+    <ShiftPanel before={shift.before} after={shift.after} />
+  </Section>
+
+  <Section
+    index="04"
+    eyebrow="Offers"
+    title="Services"
+    lead="Three ways in. Each one ends with an artifact you can hand to a customer, a board or an auditor."
+  >
+    <CardGrid>
+      {services.map((service, order) => <ServiceCard {...service} index={String(order + 1).padStart(2, '0')} />)}
+    </CardGrid>
+
+    <div class="mt-10 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-4 border-t border-line pt-8">
+      <p class="max-w-[64ch] text-muted">{nudge.text}</p>
+      <a class="link-signature font-mono text-sm" href={nudge.href} target="_blank" rel="noopener">{nudge.label}</a>
+    </div>
+  </Section>
+
+  <Section
+    index="05"
+    eyebrow="Method"
+    title="How I work"
+    tone="page"
+    lead="Six things decide whether an AI initiative reaches production. I measure all six, in this order, and the last one is the one most engagements skip."
+  >
+    <StepList steps={drivers} />
+  </Section>
+
+  <Section
+    index="06"
+    eyebrow="Artifacts"
+    title="Proof"
+    tone="surface"
+    lead="The templates and harnesses I use in engagements are published, so you can read the method before you buy it."
+  >
+    <CardGrid>
+      {artifacts.map((artifact) => <ResourceCard {...artifact} />)}
+    </CardGrid>
+  </Section>
+
+  <Section>
+    <CtaBlock title={cta.title} body={cta.body} label={cta.label} href={cta.href} note={cta.note} />
+  </Section>
 </Layout>

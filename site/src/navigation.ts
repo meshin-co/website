@@ -16,7 +16,7 @@ export const footerData = {
     { ariaLabel: 'GitHub', icon: 'tabler:brand-github', href: 'https://github.com/meshin-dev' },
     { ariaLabel: 'Email', icon: 'tabler:mail', href: 'mailto:hello@meshin.co' },
   ],
-  footNote: 'Built with Astro · 0 cookies',
+  footNote: `© ${new Date().getFullYear()} meshin.co`,
 };
 
 export const homePermalink = getPermalink('/');

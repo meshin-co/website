@@ -4,6 +4,12 @@ import { join, relative, sep } from 'node:path';
 
 const ASSET_REF = /(?:href|src)\s*=\s*["']([^"']+)["']/gi;
 const LOCAL_ASSET = /^\/[^/].*\.(css|js|mjs)$/;
+const META_ROBOTS = /<meta[^>]+name=["']robots["'][^>]*>/i;
+
+export function isNoindex(html) {
+  const tag = html.match(META_ROBOTS)?.[0] ?? '';
+  return /content=["'][^"']*\bnoindex\b/i.test(tag);
+}
 
 export async function discoverRoutes(distDir) {
   const entries = await readdir(distDir, { withFileTypes: true, recursive: true });
@@ -62,7 +68,7 @@ export async function measureRoute(distDir, route) {
     if (asset.endsWith('.css')) css += bytes;
     else js += bytes;
   }
-  return { route, js, css, page: gzipBytes(Buffer.from(html)) + js + css };
+  return { route, js, css, page: gzipBytes(Buffer.from(html)) + js + css, noindex: isNoindex(html) };
 }
 
 async function main(distDir, budgetPath) {

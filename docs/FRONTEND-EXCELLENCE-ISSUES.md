@@ -90,3 +90,14 @@ correcting or extending the skill. Append; do not rewrite history.
 - **Suggested fix:** put `{platform}` in the example `snapshotPathTemplate`, and add the docker
   command for recording baselines to the same section. Otherwise the warning is prose that the
   code sample contradicts.
+## 007 · Visual verification against a long-running dev server can read stale scoped CSS
+- **When:** 2026-09-07, Phase 2, adding a new component with its own scoped `<style>` block.
+- **What happened:** the browser sweep showed the new widget completely unstyled (computed
+  `font-size: 18px` instead of `9px`, zero-width nodes) even though the built `dist` HTML and CSS
+  both contained the right rules. The dev server had been running through dozens of edits and was
+  serving a stale module graph for the newly created file.
+- **Cause:** the skill tells you to verify every change in a real browser, but never says which
+  server to point it at, so a stale dev server reads as a design defect.
+- **Suggested fix:** add a line to the audit workflow: when a sweep reports a widget as unstyled,
+  first confirm the rule exists in the built output, then restart the dev server before treating
+  it as a defect. Prefer serving `dist` for audit sweeps.

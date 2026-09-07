@@ -75,7 +75,7 @@ const persistKey = `header-${Array.from(
     <div class="absolute inset-0"></div>
     <div
       class:list={[
-        'relative text-default py-3 px-3 lg:px-6 mx-auto w-full',
+        'relative text-default py-3 px-5 sm:px-8 mx-auto w-full flex items-center justify-between',
         {
           'lg:flex lg:justify-between': position !== 'center',
         },
@@ -83,17 +83,21 @@ const persistKey = `header-${Array.from(
           'lg:grid lg:grid-cols-3 lg:items-center': position === 'center',
         },
         {
-          'max-w-7xl': !isFullWidth,
+          'max-w-6xl': !isFullWidth,
         },
       ]}
     >
-      <div class:list={[{ 'mr-auto rtl:mr-0 rtl:ml-auto': position === 'right' }, 'flex justify-between']}>
+      <div class:list={[{ 'mr-auto rtl:mr-0 rtl:ml-auto': position === 'right' }, 'flex items-center justify-between']}>
         <a class="flex items-center" href={getHomePermalink()}>
           <Logo />
         </a>
-        <div class="flex items-center lg:hidden">
-          <ToggleMenu />
-        </div>
+        {
+          links.length > 0 && (
+            <div class="flex items-center lg:hidden">
+              <ToggleMenu />
+            </div>
+          )
+        }
       </div>
       <nav
         class="items-center w-full lg:w-auto hidden lg:flex lg:mx-5 text-default overflow-y-auto overflow-x-hidden lg:overflow-visible lg:justify-self-center"
@@ -152,7 +156,8 @@ const persistKey = `header-${Array.from(
       <div
         class:list={[
           { 'ml-auto rtl:ml-0 rtl:mr-auto': position === 'left' },
-          'hidden lg:self-center lg:flex items-center lg:mb-0 fixed w-full lg:w-auto lg:static justify-end left-0 rtl:left-auto rtl:right-0 bottom-0 p-3 lg:p-0 lg:justify-self-end',
+          'flex items-center justify-end lg:self-center lg:justify-self-end',
+          links.length > 0 && 'hidden lg:flex',
         ]}
       >
         <div class="items-center flex justify-between w-full lg:w-auto">
@@ -215,29 +220,36 @@ const persistKey = `header-${Array.from(
       this.updateActiveLinks();
       document.addEventListener('astro:page-load', this.onPageLoad);
 
-      const closeMenu = () => {
-        toggle?.classList.remove('expanded');
-        toggle?.setAttribute('aria-expanded', 'false');
-        document.body.classList.remove('overflow-hidden');
-        header?.classList.remove('h-screen', 'expanded', 'bg-page');
-        nav?.classList.add('hidden');
-        lastChild?.classList.add('hidden');
-      };
+      if (toggle) {
+        const closeMenu = () => {
+          toggle.classList.remove('expanded');
+          toggle.setAttribute('aria-expanded', 'false');
+          document.body.classList.remove('overflow-hidden');
+          header?.classList.remove('h-screen', 'expanded', 'bg-page');
+          nav?.classList.add('hidden');
+          lastChild?.classList.add('hidden');
+        };
 
-      // Mobile menu toggle.
-      toggle?.addEventListener('click', () => {
-        const expanded = toggle.classList.toggle('expanded');
-        toggle.setAttribute('aria-expanded', String(expanded));
-        document.body.classList.toggle('overflow-hidden');
-        header?.classList.toggle('h-screen');
-        header?.classList.toggle('expanded');
-        header?.classList.toggle('bg-page');
-        nav?.classList.toggle('hidden');
-        lastChild?.classList.toggle('hidden');
-      });
+        // Mobile menu toggle.
+        toggle.addEventListener('click', () => {
+          const expanded = toggle.classList.toggle('expanded');
+          toggle.setAttribute('aria-expanded', String(expanded));
+          document.body.classList.toggle('overflow-hidden');
+          header?.classList.toggle('h-screen');
+          header?.classList.toggle('expanded');
+          header?.classList.toggle('bg-page');
+          nav?.classList.toggle('hidden');
+          lastChild?.classList.toggle('hidden');
+        });
 
-      // Close the mobile menu when a nav link is clicked.
-      nav?.addEventListener('click', closeMenu);
+        // Close the mobile menu when a nav link is clicked.
+        nav?.addEventListener('click', closeMenu);
+
+        // Close it when leaving the mobile/tablet breakpoint (desktop nav starts at `lg`).
+        this.mql = window.matchMedia('(max-width: 1023px)');
+        this.onMqlChange = () => closeMenu();
+        this.mql.addEventListener('change', this.onMqlChange);
+      }
 
       // Desktop dropdowns open on hover/`:focus-within`. When a dropdown link is
       // clicked it keeps focus, and because the header uses `transition:persist`
@@ -248,11 +260,6 @@ const persistKey = `header-${Array.from(
         const link = (e.target as HTMLElement)?.closest<HTMLElement>('.dropdown-menu a');
         if (link) link.blur();
       });
-
-      // Close it when leaving the mobile/tablet breakpoint (desktop nav starts at `lg`).
-      this.mql = window.matchMedia('(max-width: 1023px)');
-      this.onMqlChange = () => closeMenu();
-      this.mql.addEventListener('change', this.onMqlChange);
 
       // Sticky header: toggle the `scroll` class past a small threshold.
       if (header?.hasAttribute('data-aw-sticky-header')) {

@@ -1,0 +1,34 @@
+---
+interface Props {
+  name: string;
+  summary: string;
+  format: string;
+  status: string;
+  href?: string;
+}
+
+const { name, summary, format, status, href } = Astro.props;
+---
+
+<article class="card group flex h-full flex-col p-7 hover:card-hover">
+  <p class="eyebrow">{format}</p>
+
+  <h3 class="mt-4 font-heading text-xl leading-snug font-semibold text-heading">
+    {
+      href ? (
+        <a class="link-signature group-hover:link-signature-hover" href={href} target="_blank" rel="noopener">
+          {name}
+        </a>
+      ) : (
+        name
+      )
+    }
+  </h3>
+
+  <p class="mt-4 grow text-muted">{summary}</p>
+
+  <p class="mt-6 flex items-center gap-2 border-t border-line pt-4 font-mono text-xs text-muted">
+    <span class="inline-block size-1.5 rounded-full bg-primary" aria-hidden="true"></span>
+    {status}
+  </p>
+</article>

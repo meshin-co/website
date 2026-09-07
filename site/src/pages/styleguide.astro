@@ -1,0 +1,182 @@
+---
+import CardGrid from '~/components/site/CardGrid.astro';
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import FigureStrip from '~/components/site/FigureStrip.astro';
+import ShiftPanel from '~/components/site/ShiftPanel.astro';
+import Hero from '~/components/site/Hero.astro';
+import ResourceCard from '~/components/site/ResourceCard.astro';
+import Section from '~/components/site/Section.astro';
+import ServiceCard from '~/components/site/ServiceCard.astro';
+import SignalList from '~/components/site/SignalList.astro';
+import StepList from '~/components/site/StepList.astro';
+import { artifacts, brief, drivers, figures, services, shift, signals } from '~/data/home';
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Styleguide',
+  description: 'Every component in every state, both themes. Internal reference page.',
+  robots: { index: false, follow: false },
+};
+
+const swatches = ['page', 'text', 'muted', 'primary', 'line'];
+---
+
+<Layout metadata={metadata}>
+  <Section bordered={false} title="Styleguide" lead="Internal reference. Not indexed, not in the sitemap.">
+    <p class="font-mono text-sm text-muted">Toggle the theme in the header to check both palettes.</p>
+  </Section>
+
+  <Section title="Colour">
+    <ul class="grid gap-4 sm:grid-cols-5">
+      {
+        swatches.map((swatch) => (
+          <li class="grid gap-2">
+            <span class:list={['swatch', `swatch-${swatch}`]} />
+            <span class="font-mono text-xs text-muted">{swatch}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section title="Type scale">
+    <div class="grid gap-4">
+      <p class="font-heading text-[clamp(2.2rem,5vw,3.5rem)] leading-tight font-semibold text-heading">
+        Display · Fraunces 600
+      </p>
+      <h2 class="font-heading text-3xl font-semibold text-heading">Heading 2 · Fraunces 600</h2>
+      <h3 class="font-heading text-xl font-semibold text-heading">Heading 3 · Fraunces 600</h3>
+      <p class="max-w-[70ch]">
+        Body · IBM Plex Sans 400 at 18px / 1.6 with a 70ch measure. Governance that passes procurement and agents that
+        reach production, described in sentences a buyer can read once.
+      </p>
+      <p class="font-mono text-sm text-muted">Mono · system stack · $5,000 · 90 days · 2026-09-07</p>
+    </div>
+  </Section>
+
+  <Section title="Buttons and links">
+    <div class="flex flex-wrap items-center gap-6">
+      <button class="btn-primary" type="button">Primary</button>
+      <button class="btn" type="button">Secondary</button>
+      <button class="btn-primary" type="button" disabled>Disabled</button>
+      <a class="text-link underline underline-offset-4" href="/styleguide">Text link</a>
+    </div>
+  </Section>
+
+  <Section title="Hero">
+    <Hero
+      title="Hero headline sits at the LCP with no image above the fold."
+      sub="Two lines that say who this is for and what changes in ninety days."
+      titleAccent="component gallery"
+      proof={['proof one', 'proof two', 'proof three']}
+      ctaLabel="Primary action"
+      ctaHref="https://cal.com/meshin"
+      brief={brief}
+      secondary={{ label: 'secondary link →', href: '/styleguide' }}
+    />
+  </Section>
+
+  <Section title="Figure strip">
+    <FigureStrip figures={figures} />
+  </Section>
+
+  <Section title="Shift panel">
+    <ShiftPanel before={shift.before} after={shift.after} />
+  </Section>
+
+  <Section title="Signal list">
+    <SignalList items={signals.items.slice(0, 3)} verdict={signals.verdict} />
+  </Section>
+
+  <Section title="Service cards">
+    <CardGrid>
+      {services.map((service, order) => <ServiceCard {...service} index={String(order + 1).padStart(2, '0')} href="/styleguide" />)}
+    </CardGrid>
+  </Section>
+
+  <Section title="Step list">
+    <StepList steps={drivers.slice(0, 3)} />
+  </Section>
+
+  <Section title="Resource cards">
+    <CardGrid columns={2}>
+      {artifacts.slice(0, 2).map((artifact) => <ResourceCard {...artifact} />)}
+    </CardGrid>
+  </Section>
+
+  <Section title="Call to action">
+    <CtaBlock
+      title="One primary action per screen."
+      body="Secondary actions stay visually subordinate."
+      label="Book a call"
+      href="https://cal.com/meshin"
+      note="A mono note carries the fallback contact route."
+    />
+  </Section>
+
+  <Section title="Prose and tables">
+    <div class="grid gap-6">
+      <ul class="grid list-disc gap-2 pl-6">
+        <li>Unordered item with a <a class="text-link underline" href="/styleguide">link inside prose</a>.</li>
+        <li>Second item.</li>
+      </ul>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse text-left">
+          <caption class="pb-3 text-left font-mono text-sm text-muted">Offer comparison</caption>
+          <thead>
+            <tr class="border-b border-line">
+              <th class="py-2 pr-4 font-semibold" scope="col">Offer</th>
+              <th class="py-2 pr-4 font-semibold" scope="col">Price</th>
+              <th class="py-2 font-semibold" scope="col">Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              services.map((service) => (
+                <tr class="border-b border-line last:border-b-0">
+                  <td class="py-2 pr-4">{service.name}</td>
+                  <td class="py-2 pr-4 font-mono text-sm">{service.price}</td>
+                  <td class="py-2 font-mono text-sm">{service.duration}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <details class="border border-line p-5">
+        <summary class="cursor-pointer font-heading text-lg font-semibold text-heading">
+          Native details element, used for every FAQ
+        </summary>
+        <p class="mt-3 max-w-[65ch] text-muted">No JavaScript, keyboard-operable, open by default when linked.</p>
+      </details>
+    </div>
+  </Section>
+</Layout>
+
+<style>
+  .swatch {
+    display: block;
+    height: 4rem;
+    border: 1px solid var(--aw-color-line);
+  }
+
+  .swatch-page {
+    background: var(--aw-color-bg-page);
+  }
+
+  .swatch-text {
+    background: var(--aw-color-text-default);
+  }
+
+  .swatch-muted {
+    background: var(--aw-color-text-muted);
+  }
+
+  .swatch-primary {
+    background: var(--aw-color-primary);
+  }
+
+  .swatch-line {
+    background: var(--aw-color-line);
+  }
+</style>

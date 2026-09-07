@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
 
-import { discoverRoutes, diffRoutes, assetsOfPage, overBudget, measureRoute } from './gate.mjs';
+import { discoverRoutes, diffRoutes, assetsOfPage, overBudget, measureRoute, isNoindex } from './gate.mjs';
 
 async function fixtureDist(pages) {
   const dir = await mkdtemp(join(tmpdir(), 'gate-'));
@@ -76,4 +76,15 @@ test('a route over any budget is reported with the measured bytes', () => {
 
 test('a route inside every budget reports nothing', () => {
   assert.deepEqual(overBudget({ route: '/', js: 1, css: 1, page: 1 }, { js: 10240, css: 20480, page: 256000 }), []);
+});
+
+test('a page carrying meta robots noindex is detected', () => {
+  const html = '<html><head><meta name="robots" content="noindex, follow"></head></html>';
+
+  assert.equal(isNoindex(html), true);
+});
+
+test('an indexable page is not reported as noindex', () => {
+  assert.equal(isNoindex('<html><head><meta name="robots" content="index, follow"></head></html>'), false);
+  assert.equal(isNoindex('<html><head></head></html>'), false);
 });

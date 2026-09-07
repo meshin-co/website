@@ -1,18 +1,24 @@
 import { copyFile, mkdir, readdir, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 
-const formFactor = process.argv[2];
-const phase = process.env.GATE_PHASE ?? '1';
-
-if (!['mobile', 'desktop'].includes(formFactor)) {
-  throw new Error(`collect-reports: expected mobile or desktop, got ${formFactor}`);
+export function resolvePhase(phase) {
+  if (!phase) throw new Error('collect-reports: GATE_PHASE must name the phase these audits belong to');
+  return phase;
 }
 
-const target = join('..', 'audits', `phase-${phase}`, `lh-${formFactor}`);
-await rm(target, { recursive: true, force: true });
-await mkdir(target, { recursive: true });
+async function main(formFactor) {
+  if (!['mobile', 'desktop'].includes(formFactor)) {
+    throw new Error(`collect-reports: expected mobile or desktop, got ${formFactor}`);
+  }
 
-const names = (await readdir('.lighthouseci')).filter((name) => name.startsWith('lhr-') && name.endsWith('.json'));
-for (const name of names) await copyFile(join('.lighthouseci', name), join(target, name));
+  const target = join('..', 'audits', `phase-${resolvePhase(process.env.GATE_PHASE)}`, `lh-${formFactor}`);
+  await rm(target, { recursive: true, force: true });
+  await mkdir(target, { recursive: true });
 
-console.log(`${formFactor}: ${names.length} report(s) -> ${target}`);
+  const names = (await readdir('.lighthouseci')).filter((name) => name.startsWith('lhr-') && name.endsWith('.json'));
+  for (const name of names) await copyFile(join('.lighthouseci', name), join(target, name));
+
+  console.log(`${formFactor}: ${names.length} report(s) -> ${target}`);
+}
+
+if (import.meta.filename === process.argv[1]) await main(process.argv[2]);

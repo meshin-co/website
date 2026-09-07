@@ -1,0 +1,41 @@
+---
+interface Column {
+  label: string;
+  items: string[];
+}
+
+interface Props {
+  before: Column;
+  after: Column;
+}
+
+const { before, after } = Astro.props;
+---
+
+<div class="grid gap-px bg-line md:grid-cols-2">
+  <section class="bg-page p-7 sm:p-9">
+    <h3 class="eyebrow">{before.label}</h3>
+    <ul class="mt-6 grid gap-4">
+      {
+        before.items.map((item) => (
+          <li class="border-l-2 border-line pl-4 text-muted">
+            <span class="block max-w-[42ch]">{item}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="bg-page p-7 sm:p-9">
+    <h3 class="eyebrow text-primary">{after.label}</h3>
+    <ul class="mt-6 grid gap-4">
+      {
+        after.items.map((item) => (
+          <li class="rule-accent pl-4 text-heading">
+            <span class="block max-w-[42ch]">{item}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</div>
