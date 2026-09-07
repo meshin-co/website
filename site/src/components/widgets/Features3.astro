@@ -63,7 +63,7 @@ const columnsClass = getColumnsClass(columns);
     items.length > 0 && (
       <div class:list={['grid mx-auto gap-8 md:gap-y-12 mt-12', columnsClass]}>
         {items.map(({ title: itemTitle, description, icon, callToAction }) => (
-          <div class="intersect-once motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+          <div class="">
             <div class="flex flex-row max-w-full sm:max-w-md">
               {(icon || defaultIcon) && (
                 <div class="flex justify-center">

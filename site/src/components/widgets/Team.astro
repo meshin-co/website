@@ -30,7 +30,7 @@ const columnsClass = getColumnsClass(columns, 'sm:grid-cols-2');
   <ul class:list={['grid gap-8 md:gap-10 list-none', columnsClass]}>
     {
       members.map(({ name, role, image, bio, socials }) => (
-        <li class="text-center intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+        <li class="text-center">
           {image &&
             (typeof image === 'string' ? (
               <Fragment set:html={image} />

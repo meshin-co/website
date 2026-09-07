@@ -1,0 +1,10 @@
+/* TEAM */
+Fractional Chief AI Officer: Dmitri Meshin
+Site: https://meshin.co
+Contact: hello@meshin.co
+Location: Israel · remote worldwide
+
+/* SITE */
+Standards: HTML5, CSS, JSON-LD
+Components: Astro, Tailwind CSS, Pagefind
+Analytics: Plausible, no cookies

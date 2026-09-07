@@ -44,7 +44,7 @@ const spanClass = (span?: number, rowSpan?: number) =>
             <Card
               href={href}
               class:list={[
-                'group flex flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-gray-200 dark:bg-slate-900 dark:ring-slate-700 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade',
+                'group flex flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-gray-200 dark:bg-slate-900 dark:ring-slate-700',
                 href ? 'transition hover:shadow-lg hover:ring-primary/40' : '',
                 spanClass(span, rowSpan),
               ]}

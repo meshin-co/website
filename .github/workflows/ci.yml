@@ -9,7 +9,7 @@ defaults:
     working-directory: site
 
 jobs:
-  build:
+  gate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,6 +18,31 @@ jobs:
           node-version-file: site/.nvmrc
           cache: npm
           cache-dependency-path: site/package-lock.json
+
       - run: npm ci
       - run: npm run check
-      - run: npm run build
+      - run: npm test
+
+      - name: build, generate headers, measure budgets
+        run: npm run build
+
+      - run: npm run gate:html
+      - run: npm run gate:links
+
+      - name: visual snapshots and axe
+        run: |
+          npx playwright install --with-deps chromium
+          npm run gate:visual
+
+      - name: lighthouse mobile and desktop
+        run: npm run gate:lh
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gate-artifacts
+          path: |
+            site/.lighthouseci/lhr-*.json
+            site/test-results/
+            site/dist/gate-routes.json
+          retention-days: 14

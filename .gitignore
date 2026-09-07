@@ -7,3 +7,5 @@ dist/
 .lighthouseci/
 test-results/
 playwright-report/
+site/test-results/
+site/.lighthouseci/

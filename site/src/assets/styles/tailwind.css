@@ -7,7 +7,6 @@
 
 @variant dark (&:where(.dark, .dark *));
 
-@custom-variant intersect (&:not([no-intersect]));
 
 @theme {
   --color-primary: var(--aw-color-primary);
@@ -17,12 +16,15 @@
   --color-default: var(--aw-color-text-default);
   --color-muted: var(--aw-color-text-muted);
   --color-link: var(--aw-color-link, var(--aw-color-primary));
+  --color-line: var(--aw-color-line);
+  --color-on-primary: var(--aw-color-on-primary);
 
   --font-sans:
     var(--aw-font-sans, ui-sans-serif), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
     'Segoe UI Symbol', 'Noto Color Emoji';
   --font-serif: var(--aw-font-serif, ui-serif), ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
-  --font-heading: var(--aw-font-heading, ui-sans-serif), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--aw-font-heading, ui-serif), ui-serif, Georgia, serif;
+  --font-mono: var(--aw-font-mono, ui-monospace), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --animate-fade: fadeInUp 0.5s both;
 
@@ -35,6 +37,86 @@
       opacity: 1;
       transform: translateY(0);
     }
+  }
+}
+
+:root {
+  --aw-font-sans: var(--font-plex-sans);
+  --aw-font-serif: var(--font-fraunces);
+  --aw-font-heading: var(--font-fraunces);
+  --aw-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --aw-color-primary: oklch(45% 0.09 200);
+  --aw-color-secondary: oklch(38% 0.08 200);
+  --aw-color-accent: oklch(42% 0.11 200);
+
+  --aw-color-text-heading: oklch(18% 0.01 260);
+  --aw-color-text-default: oklch(20% 0.01 260);
+  --aw-color-text-muted: oklch(45% 0.01 260);
+  --aw-color-bg-page: oklch(98.5% 0.005 90);
+  --aw-color-line: oklch(88% 0.005 90);
+  --aw-color-on-primary: oklch(99% 0.002 90);
+
+  --aw-color-bg-page-dark: oklch(17% 0.01 260);
+}
+
+.dark {
+  --aw-color-primary: oklch(80% 0.1 200);
+  --aw-color-secondary: oklch(72% 0.1 200);
+  --aw-color-accent: oklch(84% 0.09 200);
+
+  --aw-color-text-heading: oklch(95% 0.005 90);
+  --aw-color-text-default: oklch(93% 0.005 90);
+  --aw-color-text-muted: oklch(76% 0.01 260);
+  --aw-color-bg-page: oklch(17% 0.01 260);
+  --aw-color-line: oklch(30% 0.01 260);
+  --aw-color-on-primary: oklch(16% 0.01 260);
+}
+
+::selection {
+  background-color: oklch(88% 0.05 200);
+}
+
+.dark ::selection {
+  background-color: oklch(35% 0.06 200);
+  color: oklch(97% 0.005 90);
+}
+
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--aw-color-accent);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
@@ -55,11 +137,11 @@
 }
 
 @utility btn {
-  @apply inline-flex items-center justify-center rounded-full border-gray-400 border bg-transparent font-medium text-center text-base text-page leading-snug transition py-3.5 px-6 md:px-8 ease-in duration-200 focus:ring-blue-500 focus:ring-offset-blue-200 focus:ring-2 focus:ring-offset-2 hover:bg-gray-100 hover:border-gray-600 dark:text-slate-300 dark:border-slate-500 dark:hover:bg-slate-800 dark:hover:border-slate-800 cursor-pointer;
+  @apply inline-flex items-center justify-center rounded-full border-line border bg-transparent font-medium text-center text-base text-page leading-snug transition py-3.5 px-6 md:px-8 ease-in duration-200 hover:border-primary cursor-pointer;
 }
 
 @utility btn-primary {
-  @apply btn font-semibold bg-primary text-white border-primary hover:bg-secondary hover:border-secondary hover:text-white dark:text-white dark:bg-primary dark:border-primary dark:hover:border-secondary dark:hover:bg-secondary;
+  @apply btn font-semibold bg-primary text-on-primary border-primary hover:bg-secondary hover:border-secondary hover:text-on-primary;
 }
 
 @utility btn-secondary {
@@ -67,7 +149,7 @@
 }
 
 @utility btn-tertiary {
-  @apply btn border-none shadow-none text-muted hover:text-gray-900 dark:text-gray-400 dark:hover:text-white;
+  @apply btn border-none shadow-none text-muted hover:text-heading;
 }
 
 /* Sticky header: solid page background on phones, translucent page background with blur on desktop. */

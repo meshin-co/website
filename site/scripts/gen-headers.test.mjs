@@ -1,0 +1,55 @@
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { test } from 'node:test';
+
+import { collectInlineScriptHashes, renderHeaders } from './gen-headers.mjs';
+
+const sha256 = (source) => `sha256-${createHash('sha256').update(source, 'utf8').digest('base64')}`;
+
+test('hashes every inline script in the document', () => {
+  const html = `<html><head><script>applyTheme("dark")</script><script src="/_astro/x.js"></script></head></html>`;
+
+  assert.deepEqual(collectInlineScriptHashes(html), [sha256('applyTheme("dark")')]);
+});
+
+test('deduplicates identical inline scripts', () => {
+  const body = 'applyTheme("dark")';
+
+  assert.equal(collectInlineScriptHashes(`<script>${body}</script><script>${body}</script>`).length, 1);
+});
+
+test('ignores json-ld and other non-executable script types', () => {
+  assert.deepEqual(collectInlineScriptHashes('<script type="application/ld+json">{"a":1}</script>'), []);
+});
+
+test('script-src carries every hash and never unsafe-inline', () => {
+  const policy = renderHeaders(['sha256-aaa', 'sha256-bbb']);
+
+  assert.match(policy, /script-src 'self' https:\/\/plausible\.io 'sha256-aaa' 'sha256-bbb';/);
+  assert.doesNotMatch(policy, /unsafe-inline|unsafe-eval/);
+});
+
+test('style-src stays self-only', () => {
+  assert.match(renderHeaders([]), /style-src 'self';/);
+});
+
+test('immutable caching for hashed assets and revalidation for html', () => {
+  const policy = renderHeaders([]);
+
+  assert.match(policy, /\/_astro\/\*\n {2}Cache-Control: public, max-age=31536000, immutable/);
+  assert.match(policy, /\/\*\.html\n {2}Cache-Control: public, max-age=0, must-revalidate/);
+});
+
+test('every response carries the transport and framing guards', () => {
+  const policy = renderHeaders([]);
+
+  for (const header of [
+    'Strict-Transport-Security: max-age=63072000; includeSubDomains; preload',
+    'X-Content-Type-Options: nosniff',
+    'Referrer-Policy: strict-origin-when-cross-origin',
+    'Cross-Origin-Opener-Policy: same-origin',
+    'X-Frame-Options: DENY',
+  ]) {
+    assert.ok(policy.includes(header), `missing ${header}`);
+  }
+});

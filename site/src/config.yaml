@@ -1,30 +1,28 @@
 site:
-  name: AstroWind
-  site: 'https://astrowind.vercel.app'
+  name: meshin.co
+  site: 'https://meshin.co'
   base: '/'
   trailingSlash: false
 
-  googleSiteVerificationId: orcPxI47GSa-cRvY11tUe6iGg2IO_RPvnA1q95iEM3M
+  googleSiteVerificationId: JzDVNYl7fyNlWq2UAtXGzgKmxjemBpi44BYH1_ahKgY
 
 # Default SEO metadata
 metadata:
   title:
-    default: AstroWind
-    template: '%s — AstroWind'
-  description: "\U0001F680 Suitable for Startups, Small Business, Sass Websites, Professional Portfolios, Marketing Websites, Landing Pages & Blogs."
+    default: 'Fractional Chief AI Officer — meshin.co'
+    template: '%s — meshin.co'
+  description: 'Fractional AI leadership for 30–300 person companies: AI governance that passes procurement and agentic automation shipped to production.'
   robots:
     index: true
     follow: true
   openGraph:
-    site_name: AstroWind
+    site_name: meshin.co
     images:
-      - url: '~/assets/images/default.png'
+      - url: '~/assets/images/og-default.png'
         width: 1200
-        height: 628
+        height: 630
     type: website
   twitter:
-    handle: '@arthelokyo'
-    site: '@arthelokyo'
     cardType: summary_large_image
 
 i18n:
@@ -33,40 +31,41 @@ i18n:
 
 apps:
   blog:
-    isEnabled: true
-    postsPerPage: 8
+    # Phase 1 ships the shell only. Turned on in Phase 3 with the real content model.
+    isEnabled: false
+    postsPerPage: 12
 
     post:
       isEnabled: true
-      permalink: '/%slug%' # Variables: %slug%, %year%, %month%, %day%, %hour%, %minute%, %second%, %category%
+      permalink: '/blog/%slug%'
       robots:
         index: true
 
     list:
       isEnabled: true
-      pathname: 'blog' # Blog main path, you can change this to "articles" (/articles)
+      pathname: 'blog'
       robots:
         index: true
 
     category:
       isEnabled: true
-      pathname: 'category' # Category main path /category/some-category, you can change this to "group" (/group/some-category)
+      pathname: 'blog/category'
       robots:
         index: true
 
     tag:
       isEnabled: true
-      pathname: 'tag' # Tag main path /tag/some-tag, you can change this to "topics" (/topics/some-category)
+      pathname: 'blog/tag'
       robots:
         index: false
 
     isRelatedPostsEnabled: true
-    relatedPostsCount: 4
+    relatedPostsCount: 3
 
 analytics:
   vendors:
     googleAnalytics:
-      id: null # or "G-XXXXXXXXXX"
+      id: null
 
 ui:
-  theme: 'system' # Values: "system" | "light" | "dark" | "light:only" | "dark:only"
+  theme: 'system'

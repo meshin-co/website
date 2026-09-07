@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/gen-headers.mjs dist && node scripts/gate.mjs dist budgets.json",
     "preview": "astro preview",
     "astro": "astro",
     "check": "npm run check:astro && npm run check:eslint && npm run check:prettier",
@@ -18,7 +18,12 @@
     "check:prettier": "prettier --check .",
     "fix": "npm run fix:eslint && npm run fix:prettier",
     "fix:eslint": "eslint --fix .",
-    "fix:prettier": "prettier -w ."
+    "fix:prettier": "prettier -w .",
+    "test": "node --test scripts/",
+    "gate:visual": "playwright test",
+    "gate:html": "html-validate \"dist/**/*.html\"",
+    "gate:links": "linkinator dist --recurse --silent --skip \"plausible.io|linkedin.com|cal.com|^https://meshin.co\"",
+    "gate:lh": "lhci autorun --config=lighthouserc.cjs && lhci autorun --config=lighthouserc.desktop.cjs"
   },
   "dependencies": {
     "@astro-community/astro-embed-twitter": "^0.5.11",
@@ -30,17 +35,17 @@
     "astro-icon": "^1.1.5",
     "astro-seo": "^1.2.0",
     "limax": "4.2.3",
-    "lodash.merge": "^4.6.2",
-    "unpic": "^4.2.2"
+    "lodash.merge": "^4.6.2"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@astrojs/markdown-remark": "^7.3.0",
     "@astrojs/mdx": "^8.0.0",
-    "@astrojs/partytown": "^2.1.7",
+    "@axe-core/playwright": "^4.13.0",
     "@eslint/js": "^10.0.1",
-    "@iconify-json/flat-color-icons": "^1.2.3",
     "@iconify-json/tabler": "^1.2.38",
+    "@lhci/cli": "^0.15.1",
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/typography": "^0.5.20",
     "@tailwindcss/vite": "^4.3.3",
     "@types/js-yaml": "^4.0.9",
@@ -53,7 +58,9 @@
     "eslint": "^10.8.1",
     "eslint-plugin-astro": "^3.1.0",
     "globals": "^17.9.0",
+    "html-validate": "^11.14.0",
     "js-yaml": "^4.1.1",
+    "linkinator": "^8.1.0",
     "mdast-util-to-string": "^4.0.0",
     "prettier": "^3.9.6",
     "prettier-plugin-astro": "^0.14.1",

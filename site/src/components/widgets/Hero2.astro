@@ -36,7 +36,7 @@ const imageWhole = imageAspect === 'auto';
       <div class="basis-1/2 text-center lg:text-left pb-10 md:pb-16 mx-auto">
         {
           badge && (
-            <span class="inline-block mb-4 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary dark:bg-primary/25 dark:text-blue-200 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+            <span class="inline-block mb-4 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary dark:bg-primary/25 dark:text-blue-200">
               {badge}
             </span>
           )
@@ -44,7 +44,7 @@ const imageWhole = imageAspect === 'auto';
         {
           tagline && (
             <p
-              class="text-base text-secondary dark:text-blue-200 font-bold tracking-wide uppercase intersect-once motion-safe:md:intersect:animate-fade motion-safe:md:opacity-0 intersect-quarter"
+              class="text-base text-secondary dark:text-blue-200 font-bold tracking-wide uppercase"
               set:html={tagline}
             />
           )
@@ -52,7 +52,7 @@ const imageWhole = imageAspect === 'auto';
         {
           title && (
             <h1
-              class="text-5xl md:text-6xl font-bold leading-tighter tracking-tighter mb-4 font-heading text-heading intersect-once motion-safe:md:intersect:animate-fade motion-safe:md:opacity-0 intersect-quarter"
+              class="text-5xl md:text-6xl font-bold leading-tighter tracking-tighter mb-4 font-heading text-heading"
               set:html={title}
             />
           )
@@ -61,7 +61,7 @@ const imageWhole = imageAspect === 'auto';
           {
             subtitle && (
               <p
-                class="text-xl text-muted mb-6 dark:text-slate-300 intersect-once motion-safe:md:intersect:animate-fade motion-safe:md:opacity-0 intersect-quarter"
+                class="text-xl text-muted mb-6 dark:text-slate-300"
                 set:html={subtitle}
               />
             )
@@ -69,7 +69,7 @@ const imageWhole = imageAspect === 'auto';
 
           {
             actions && (
-              <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-4 lg:justify-start lg:m-0 lg:max-w-7xl intersect-once motion-safe:md:intersect:animate-fade motion-safe:md:opacity-0 intersect-quarter">
+              <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-4 lg:justify-start lg:m-0 lg:max-w-7xl">
                 {Array.isArray(actions) ? (
                   actions.map((action) => (
                     <div class="flex w-full sm:w-auto">
@@ -88,7 +88,7 @@ const imageWhole = imageAspect === 'auto';
       <div class="basis-1/2">
         {
           image && (
-            <div class="relative m-auto max-w-5xl intersect-once intersect-no-queue motion-safe:md:intersect:animate-fade motion-safe:md:opacity-0 intersect-quarter">
+            <div class="relative m-auto max-w-5xl">
               {typeof image === 'string' ? (
                 <Fragment set:html={image} />
               ) : (
