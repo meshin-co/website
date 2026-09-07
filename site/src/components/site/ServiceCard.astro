@@ -12,17 +12,25 @@ interface Props {
 const { index, name, price, duration, outcome, deliverables, href } = Astro.props;
 ---
 
-<article
-  class="card group flex h-full flex-col p-7 hover:card-hover sm:p-8"
->
+<article class="card group flex h-full flex-col p-7 hover:card-hover sm:p-8">
   <div>
     <div class="flex items-baseline gap-3">
       <span class="font-mono text-xs text-primary figure-num">{index}</span>
       <span class="eyebrow">{duration}</span>
     </div>
 
-    <h3 class="mt-5 font-heading text-2xl leading-tight font-semibold tracking-[-0.01em] text-heading sm:min-h-[3.75rem]">
-      {href ? <a class="link-signature group-hover:link-signature-hover" href={href}>{name}</a> : name}
+    <h3
+      class="mt-5 font-heading text-2xl leading-tight font-semibold tracking-[-0.01em] text-heading sm:min-h-[3.75rem]"
+    >
+      {
+        href ? (
+          <a class="link-signature group-hover:link-signature-hover" href={href}>
+            {name}
+          </a>
+        ) : (
+          name
+        )
+      }
     </h3>
 
     <p class="mt-6 border-t border-line pt-5 font-mono text-2xl text-heading figure-num">{price}</p>

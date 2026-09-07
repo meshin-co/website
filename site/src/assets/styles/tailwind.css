@@ -171,7 +171,11 @@
 }
 
 @utility accent-underline {
-  background-image: linear-gradient(to top, color-mix(in oklch, var(--aw-color-primary) 32%, transparent) 0.14em, transparent 0.14em);
+  background-image: linear-gradient(
+    to top,
+    color-mix(in oklch, var(--aw-color-primary) 32%, transparent) 0.14em,
+    transparent 0.14em
+  );
   background-repeat: no-repeat;
   background-size: 100% 100%;
   padding-bottom: 0.04em;
@@ -214,7 +218,9 @@
 }
 
 @utility hairline-grid {
-  background-image: linear-gradient(to right, color-mix(in oklch, currentColor 7%, transparent) 1px, transparent 1px);
+  background-image:
+    linear-gradient(to right, color-mix(in oklch, currentColor 7%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklch, currentColor 7%, transparent) 1px, transparent 1px);
   background-size: 5.5rem 5.5rem;
 }
 

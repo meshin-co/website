@@ -10,8 +10,8 @@ Format: `YYYY-MM-DD · route or component · what changed visually · why`.
 `mcr.microsoft.com/playwright:v1.63.0-jammy` container) · Phase 1 CG.
 
 ## 2026-09-08 · `/` hero, section heads, CTA, footer
-- Hero: removed the hairline grid, added a four-stage pipeline motif (pilot → evals → gateway →
-  production) at the section foot, drawn in HTML at fixed type size so it stays legible on mobile.
+- Hero: the hairline grid is back and now draws both axes (vertical and horizontal rules). A
+  pipeline motif was tried here and rejected by the owner: it read as unrelated decoration.
 - Section heads: title and lead now share one vertical centre line instead of the lead sitting on
   the baseline.
 - CTA: the button and the email fallback are one group, centred together from `lg` and left-aligned
@@ -19,3 +19,5 @@ Format: `YYYY-MM-DD · route or component · what changed visually · why`.
 - Footer: colophon replaced with a copyright line that computes the current year.
 - Three-card rows go from one column straight to three, so no card is stranded at tablet width.
 - Copy: years of experience computed from January 2008; de-duplicated service bullets; plainer voice.
+- Headline: restored the space Astro was dropping between the plain and accented halves of the
+  hero `h1`, so it no longer reads "nameon the org chart".

@@ -1,6 +1,4 @@
 ---
-import PipelineBackdrop from '~/components/site/PipelineBackdrop.astro';
-
 interface Props {
   title: string;
   titleAccent: string;
@@ -17,9 +15,9 @@ const external = ctaHref.startsWith('http');
 ---
 
 <section class="relative overflow-hidden border-b border-line">
-  <PipelineBackdrop />
+  <div class="hairline-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
 
-  <div class="relative mx-auto max-w-6xl px-5 pt-14 pb-28 sm:px-8 sm:pt-20 sm:pb-36">
+  <div class="relative mx-auto max-w-6xl px-5 pt-14 pb-20 sm:px-8 sm:pt-20 sm:pb-28">
     <p class="eyebrow">Fractional Chief AI Officer</p>
 
     <div class="mt-12 grid gap-14 lg:grid-cols-[minmax(0,7fr)_minmax(0,4fr)] lg:gap-16">
@@ -27,14 +25,21 @@ const external = ctaHref.startsWith('http');
         <h1
           class="font-heading text-[clamp(2.5rem,6.2vw,4.5rem)] leading-[1.02] font-semibold tracking-[-0.03em] text-heading"
         >
-          {title} <span class="accent-underline">{titleAccent}</span>
+          {title}&#32;<span class="accent-underline">{titleAccent}</span>
         </h1>
 
         <p class="mt-8 max-w-[58ch] text-lg leading-relaxed text-muted">{sub}</p>
 
         <div class="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
-          <a class="btn-primary" href={ctaHref} {...external ? { target: '_blank', rel: 'noopener' } : {}}>{ctaLabel}</a>
-          {secondary && <a class="link-signature text-base" href={secondary.href}>{secondary.label}</a>}
+          <a class="btn-primary" href={ctaHref} {...external ? { target: '_blank', rel: 'noopener' } : {}}>{ctaLabel}</a
+          >
+          {
+            secondary && (
+              <a class="link-signature text-base" href={secondary.href}>
+                {secondary.label}
+              </a>
+            )
+          }
         </div>
       </div>
 

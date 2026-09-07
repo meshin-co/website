@@ -114,11 +114,19 @@ test('a trailing slash on a Lighthouse route still matches the gate route it cam
     gate: { routes: ['/', '/styleguide'], measured: [{ route: '/styleguide', js: 1, css: 1, page: 1, noindex: true }] },
     mobile: [
       { route: '/', runs: 3, scores: { performance: 100, accessibility: 100, 'best-practices': 100, seo: 100 } },
-      { route: '/styleguide/', runs: 3, scores: { performance: 100, accessibility: 100, 'best-practices': 100, seo: 66 } },
+      {
+        route: '/styleguide/',
+        runs: 3,
+        scores: { performance: 100, accessibility: 100, 'best-practices': 100, seo: 66 },
+      },
     ],
     desktop: [
       { route: '/', runs: 3, scores: { performance: 100, accessibility: 100, 'best-practices': 100, seo: 100 } },
-      { route: '/styleguide/', runs: 3, scores: { performance: 100, accessibility: 100, 'best-practices': 100, seo: 66 } },
+      {
+        route: '/styleguide/',
+        runs: 3,
+        scores: { performance: 100, accessibility: 100, 'best-practices': 100, seo: 66 },
+      },
     ],
   });
 

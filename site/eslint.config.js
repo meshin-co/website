@@ -34,6 +34,12 @@ export default [
     },
   },
   {
+    files: ['**/*.cjs'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    },
+  },
+  {
     // Define the configuration for `<script>` tag.
     // Script in `<script>` is assigned a virtual file name with the `.js` extension.
     files: ['**/*.{ts,tsx}', '**/*.astro/*.js'],

@@ -65,9 +65,9 @@ const swatches = ['page', 'text', 'muted', 'primary', 'line'];
 
   <Section title="Hero">
     <Hero
-      title="Hero headline sits at the LCP with no image above the fold."
+      title="Hero headline sits at the LCP"
       sub="Two lines that say who this is for and what changes in ninety days."
-      titleAccent="component gallery"
+      titleAccent="with no image above the fold."
       proof={['proof one', 'proof two', 'proof three']}
       ctaLabel="Primary action"
       ctaHref="https://cal.com/meshin"
@@ -90,7 +90,11 @@ const swatches = ['page', 'text', 'muted', 'primary', 'line'];
 
   <Section title="Service cards">
     <CardGrid>
-      {services.map((service, order) => <ServiceCard {...service} index={String(order + 1).padStart(2, '0')} href="/styleguide" />)}
+      {
+        services.map((service, order) => (
+          <ServiceCard {...service} index={String(order + 1).padStart(2, '0')} href="/styleguide" />
+        ))
+      }
     </CardGrid>
   </Section>
 

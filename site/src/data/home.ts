@@ -52,7 +52,7 @@ export const services = [
     price: 'from $12,000/mo',
     duration: '1–2 days a week',
     outcome:
-      "One or two days a week as the AI officer your customers can ask for by name. Most weeks that means procurement answers, design reviews and a board update, in that order of urgency.",
+      'One or two days a week as the AI officer your customers can ask for by name. Most weeks that means procurement answers, design reviews and a board update, in that order of urgency.',
     deliverables: [
       'Named officer for security questionnaires, contracts and audits',
       'Quarterly roadmap with a budget next to each item',
@@ -77,8 +77,7 @@ export const drivers = [
   },
   {
     name: 'Engineering capability',
-    detail:
-      'Whether your team can run evals, read traces and roll back a system that answers differently every time.',
+    detail: 'Whether your team can run evals, read traces and roll back a system that answers differently every time.',
   },
   {
     name: 'Adoption',
@@ -86,7 +85,8 @@ export const drivers = [
   },
   {
     name: 'Handover',
-    detail: 'Every engagement ends with an internal owner and written decisions. If you still need me in two years, I did it wrong.',
+    detail:
+      'Every engagement ends with an internal owner and written decisions. If you still need me in two years, I did it wrong.',
   },
 ];
 
@@ -107,7 +107,8 @@ export const artifacts = [
   },
   {
     name: 'Agent Evals CI Starter',
-    summary: 'A small harness that runs evals on an agentic system inside CI and records cost and latency for every run.',
+    summary:
+      'A small harness that runs evals on an agentic system inside CI and records cost and latency for every run.',
     format: 'Repo · CI workflow',
     status: 'Published with the first engagement',
   },
