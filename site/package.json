@@ -19,7 +19,7 @@
     "fix": "npm run fix:eslint && npm run fix:prettier",
     "fix:eslint": "eslint --fix .",
     "fix:prettier": "prettier -w .",
-    "test": "node --test scripts/",
+    "test": "node --test \"scripts/*.test.mjs\"",
     "gate:visual": "playwright test",
     "gate:html": "html-validate \"dist/**/*.html\"",
     "gate:links": "linkinator dist --recurse --silent --skip \"plausible.io|linkedin.com|cal.com|^https://meshin.co\"",
