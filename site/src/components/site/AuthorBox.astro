@@ -1,0 +1,23 @@
+---
+interface Props {
+  name: string;
+  role: string;
+  bio: string;
+  href: string;
+  linkLabel?: string;
+}
+
+const { name, role, bio, href, linkLabel = 'More about me' } = Astro.props;
+---
+
+<aside class="border-t border-line pt-6" aria-label="About the author">
+  <p class="eyebrow">Written by</p>
+  <div class="mt-4 grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-baseline">
+    <div>
+      <p class="font-heading text-lg font-semibold text-heading">{name}</p>
+      <p class="mt-1 font-mono text-sm text-muted">{role}</p>
+      <p class="mt-4 max-w-[68ch] text-muted">{bio}</p>
+    </div>
+    <a class="text-link font-mono text-sm" href={href}>{linkLabel}</a>
+  </div>
+</aside>

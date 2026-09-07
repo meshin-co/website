@@ -1,4 +1,12 @@
 ---
+import AnswerBlock from '~/components/site/AnswerBlock.astro';
+import AuthorBox from '~/components/site/AuthorBox.astro';
+import CaseMetrics from '~/components/site/CaseMetrics.astro';
+import FaqList from '~/components/site/FaqList.astro';
+import KeyTakeaways from '~/components/site/KeyTakeaways.astro';
+import PostCard from '~/components/site/PostCard.astro';
+import SourceList from '~/components/site/SourceList.astro';
+import TableOfContents from '~/components/site/TableOfContents.astro';
 import CardGrid from '~/components/site/CardGrid.astro';
 import CtaBlock from '~/components/site/CtaBlock.astro';
 import FigureStrip from '~/components/site/FigureStrip.astro';
@@ -147,13 +155,100 @@ const swatches = ['page', 'text', 'muted', 'primary', 'line'];
           </tbody>
         </table>
       </div>
-      <details class="border border-line p-5">
-        <summary class="cursor-pointer font-heading text-lg font-semibold text-heading">
-          Native details element, used for every FAQ
-        </summary>
-        <p class="mt-3 max-w-[65ch] text-muted">No JavaScript, keyboard-operable, open by default when linked.</p>
-      </details>
+      <FaqList
+        items={[
+          {
+            question: 'Native details element, used for every FAQ',
+            answer: 'No JavaScript, keyboard-operable, open by default when linked.',
+          },
+          { question: 'A second entry, to show the divider', answer: 'Answers wrap at the same measure as body copy.' },
+        ]}
+      />
     </div>
+  </Section>
+
+  <Section title="Answer block">
+    <AnswerBlock
+      question="What does a Fractional Chief AI Officer actually do?"
+      answer="Owns AI risk by name, gets one process into production, and hands it to an internal owner."
+    />
+  </Section>
+
+  <Section title="Takeaways band">
+    <KeyTakeaways
+      points={[
+        'One process in production beats five pilots.',
+        'Procurement asks who owns AI risk, not which model you use.',
+        'Evals in CI are what stop a prompt change shipping unnoticed.',
+      ]}
+    />
+  </Section>
+
+  <Section title="Post cards">
+    <CardGrid columns={2}>
+      <PostCard
+        title="Why your AI pilot never reached production"
+        href="/styleguide"
+        excerpt="The gap is rarely the model. It is data ownership, evals and a named owner."
+        date="2026-09-01"
+        readingTime="7 min read"
+        category="Governance"
+      />
+      <PostCard
+        title="What procurement asks about AI, and how to answer once"
+        href="/styleguide"
+        excerpt="A register, a policy and a classification table answer most of the questionnaire."
+        date="2026-08-18"
+        readingTime="5 min read"
+      />
+    </CardGrid>
+  </Section>
+
+  <Section title="Table of contents">
+    <TableOfContents
+      headings={[
+        { depth: 2, slug: 'where-pilots-stall', text: 'Where pilots stall' },
+        { depth: 3, slug: 'data-ownership', text: 'Data ownership' },
+        { depth: 2, slug: 'what-to-measure', text: 'What to measure' },
+      ]}
+    />
+  </Section>
+
+  <Section title="Case metrics">
+    <CaseMetrics
+      metrics={[
+        { label: 'Questionnaire turnaround', before: '3 weeks', after: '1 day' },
+        { label: 'Processes in production', before: '0', after: '1' },
+      ]}
+      note="Sample figures. Real case pages ship only with numbers a client has approved."
+    />
+  </Section>
+
+  <Section title="Author box">
+    <AuthorBox
+      name="Dmitri Meshin"
+      role="Fractional Chief AI Officer"
+      bio="Platform engineer who spends most weeks getting AI systems past security review and into production."
+      href="/styleguide"
+    />
+  </Section>
+
+  <Section title="Source list">
+    <SourceList
+      sources={[
+        {
+          title: 'ISO/IEC 42001:2023 Artificial intelligence management system',
+          publisher: 'ISO',
+          href: 'https://www.iso.org/standard/81230.html',
+          retrieved: '2026-09-08',
+        },
+        {
+          title: 'AI Risk Management Framework',
+          publisher: 'NIST',
+          href: 'https://www.nist.gov/itl/ai-risk-management-framework',
+        },
+      ]}
+    />
   </Section>
 </Layout>
 

@@ -1,0 +1,32 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+  label?: string;
+}
+
+const { headings, label = 'On this page' } = Astro.props;
+const entries = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+---
+
+{
+  entries.length > 0 && (
+    <nav aria-label={label} class="border-t border-line pt-5">
+      <p class="eyebrow">{label}</p>
+      <ol class="mt-4 grid gap-2">
+        {entries.map((heading) => (
+          <li class:list={[heading.depth === 3 && 'pl-5']}>
+            <a class="text-link text-sm" href={`#${heading.slug}`}>
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}

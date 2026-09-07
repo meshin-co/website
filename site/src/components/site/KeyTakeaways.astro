@@ -1,0 +1,22 @@
+---
+interface Props {
+  points: string[];
+  label?: string;
+}
+
+const { points, label = 'Key takeaways' } = Astro.props;
+---
+
+<aside class="bg-surface border-t border-b border-line px-6 py-7" aria-label={label}>
+  <p class="eyebrow">{label}</p>
+  <ul class="mt-5 grid gap-3">
+    {
+      points.map((point) => (
+        <li class="grid grid-cols-[auto_1fr] gap-3">
+          <span class="bg-primary mt-2 inline-block size-1.5" aria-hidden="true" />
+          <span class="max-w-[68ch] text-muted">{point}</span>
+        </li>
+      ))
+    }
+  </ul>
+</aside>

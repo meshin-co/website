@@ -1,0 +1,28 @@
+---
+interface Props {
+  items: { question: string; answer: string; id?: string }[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="grid gap-px bg-line">
+  {
+    items.map((item) => (
+      <div class="bg-page">
+        <details class="group px-6 py-5" id={item.id}>
+          <summary class="flex cursor-pointer items-baseline gap-4 marker:content-none [&::-webkit-details-marker]:hidden">
+            <span class="w-3 font-mono text-sm text-muted group-open:hidden" aria-hidden="true">
+              +
+            </span>
+            <span class="hidden w-3 font-mono text-sm text-primary group-open:inline" aria-hidden="true">
+              −
+            </span>
+            <h3 class="font-heading text-lg font-semibold text-heading">{item.question}</h3>
+          </summary>
+          <p class="mt-4 max-w-[68ch] pl-7 text-muted">{item.answer}</p>
+        </details>
+      </div>
+    ))
+  }
+</div>

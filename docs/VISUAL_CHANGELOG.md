@@ -21,3 +21,6 @@ Format: `YYYY-MM-DD · route or component · what changed visually · why`.
 - Copy: years of experience computed from January 2008; de-duplicated service bullets; plainer voice.
 - Headline: restored the space Astro was dropping between the plain and accented halves of the
   hero `h1`, so it no longer reads "nameon the org chart".
+- Component inventory completed: PostCard, AnswerBlock, KeyTakeaways, TableOfContents, FaqList,
+  AuthorBox, SourceList, CaseMetrics. All eight are in `/styleguide`, checked at 1440 and 390 in
+  both themes, plus the FAQ open state and keyboard focus rings.

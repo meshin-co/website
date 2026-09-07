@@ -1,0 +1,27 @@
+---
+interface Props {
+  sources: { title: string; publisher: string; href: string; retrieved?: string }[];
+  label?: string;
+}
+
+const { sources, label = 'Sources' } = Astro.props;
+---
+
+<section class="border-t border-line pt-6" aria-label={label}>
+  <h2 class="eyebrow">{label}</h2>
+  <ol class="mt-4 grid gap-4">
+    {
+      sources.map((source) => (
+        <li class="grid gap-1">
+          <a class="text-link" href={source.href} rel="noopener nofollow" target="_blank">
+            {source.title}
+          </a>
+          <p class="font-mono text-xs text-muted">
+            {source.publisher}
+            {source.retrieved && <span>{` · retrieved ${source.retrieved}`}</span>}
+          </p>
+        </li>
+      ))
+    }
+  </ol>
+</section>
