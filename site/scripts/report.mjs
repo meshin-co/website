@@ -1,5 +1,4 @@
 import { readFile, writeFile, readdir } from 'node:fs/promises';
-import { createGunzip } from 'node:zlib';
 import { join } from 'node:path';
 
 const CATEGORIES = ['performance', 'accessibility', 'best-practices', 'seo'];
@@ -42,6 +41,9 @@ export function renderReport({ phase, gate, mobile, desktop }) {
     ['mobile', mobile],
     ['desktop', desktop],
   ]) {
+    for (const route of gate.routes) {
+      if (!rows.some((row) => row.route === route)) failures.push(`${form}: no Lighthouse run for ${route}`);
+    }
     for (const row of rows) {
       if (row.runs !== 3) failures.push(`${form} ${row.route}: ${row.runs} runs, gate requires 3`);
       for (const [category, score] of Object.entries(row.scores)) {

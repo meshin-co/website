@@ -12,8 +12,6 @@ import Metadata from '~/components/common/Metadata.astro';
 import SiteVerification from '~/components/common/SiteVerification.astro';
 import Analytics from '~/components/common/Analytics.astro';
 
-
-
 import type { MetaData as MetaDataType } from '~/types';
 
 export interface Props {
@@ -48,6 +46,5 @@ const { language, textDirection } = I18N;
       href="#main">Skip to content</a
     >
     <slot />
-
   </body>
 </html>

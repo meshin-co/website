@@ -54,7 +54,9 @@ export function renderHeaders(scriptHashes) {
 
 async function htmlFilesIn(directory) {
   const entries = await readdir(directory, { withFileTypes: true, recursive: true });
-  return entries.filter((entry) => entry.isFile() && entry.name.endsWith('.html')).map((entry) => join(entry.parentPath, entry.name));
+  return entries
+    .filter((entry) => entry.isFile() && entry.name.endsWith('.html'))
+    .map((entry) => join(entry.parentPath, entry.name));
 }
 
 async function main(distDir) {

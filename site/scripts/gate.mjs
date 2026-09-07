@@ -39,14 +39,15 @@ export function overBudget(measured, budgets) {
 const gzipBytes = (buffer) => gzipSync(buffer, { level: 9 }).length;
 
 async function routeFile(distDir, route) {
-  const candidates =
-    route === '/' ? ['index.html'] : [`${route.slice(1)}/index.html`, `${route.slice(1)}.html`];
+  const candidates = route === '/' ? ['index.html'] : [`${route.slice(1)}/index.html`, `${route.slice(1)}.html`];
   for (const candidate of candidates) {
     const path = join(distDir, candidate);
-    if (await readFile(path).then(
-      () => true,
-      () => false
-    ))
+    if (
+      await readFile(path).then(
+        () => true,
+        () => false
+      )
+    )
       return path;
   }
   throw new Error(`gate: no built html for route ${route}`);

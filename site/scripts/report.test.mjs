@@ -58,3 +58,14 @@ test('the report carries no waiver or deferral vocabulary', () => {
 
   assert.doesNotMatch(markdown, /waiver|waived|known issue|next phase|accepted/i);
 });
+
+test('a form factor missing a derived route is a failure, not an empty table', () => {
+  const { failures } = renderReport({
+    phase: '1',
+    gate: { routes: ['/', '/404'], measured: [{ route: '/', js: 1, css: 1, page: 1 }], overBudget: [] },
+    mobile: [],
+    desktop: [row('/', perfect), row('/404', perfect)],
+  });
+
+  assert.deepEqual(failures, ['mobile: no Lighthouse run for /', 'mobile: no Lighthouse run for /404']);
+});

@@ -1,4 +1,8 @@
 dist
 node_modules
 .github
-.changeset
+.changesetdist
+.lighthouseci
+test-results
+node_modules
+tests/__screenshots__

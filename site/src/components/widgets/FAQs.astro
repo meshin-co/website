@@ -59,11 +59,7 @@ const faqSchema = schema
     items.length > 0 && collapsible && (
       <div class:list={['mx-auto max-w-3xl divide-y divide-gray-200 dark:divide-slate-700', classes?.list ?? '']}>
         {items.map(({ title: itemTitle, description, icon, callToAction }, index) => (
-          <details
-            class="group"
-            name={groupName}
-            open={index === defaultOpen}
-          >
+          <details class="group" name={groupName} open={index === defaultOpen}>
             <summary class="flex cursor-pointer list-none items-center justify-between gap-4 py-5 outline-offset-4 [&::-webkit-details-marker]:hidden">
               {itemTitle && <h3 class="text-lg font-semibold text-heading md:text-xl">{itemTitle}</h3>}
               <Icon

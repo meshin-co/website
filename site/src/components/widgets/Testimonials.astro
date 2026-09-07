@@ -40,12 +40,7 @@ const masonryClass =
     {
       testimonials &&
         testimonials.map(({ title, testimonial, name, job, image, rating, logo }) => (
-          <div
-            class:list={[
-              'flex h-auto',
-              { 'mb-6 break-inside-avoid': layout === 'masonry' },
-            ]}
-          >
+          <div class:list={['flex h-auto', { 'mb-6 break-inside-avoid': layout === 'masonry' }]}>
             <div class="flex w-full flex-col p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600">
               {(rating || logo) && (
                 <div class="flex items-center justify-between gap-4 pb-4">

@@ -23,7 +23,7 @@
     "gate:visual": "playwright test",
     "gate:html": "html-validate \"dist/**/*.html\"",
     "gate:links": "linkinator dist --recurse --silent --skip \"plausible.io|linkedin.com|cal.com|^https://meshin.co\"",
-    "gate:lh": "lhci autorun --config=lighthouserc.cjs && lhci autorun --config=lighthouserc.desktop.cjs"
+    "gate:lh": "rm -rf .lighthouseci && lhci autorun --config=lighthouserc.cjs && node scripts/collect-reports.mjs mobile && rm -rf .lighthouseci && LHCI_FORM_FACTOR=desktop lhci autorun --config=lighthouserc.cjs && node scripts/collect-reports.mjs desktop"
   },
   "dependencies": {
     "@astro-community/astro-embed-twitter": "^0.5.11",

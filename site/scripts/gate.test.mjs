@@ -17,7 +17,11 @@ async function fixtureDist(pages) {
 }
 
 test('routes come from the built html, not a hand-written list', async () => {
-  const dist = await fixtureDist({ '/': '<html></html>', '/pricing': '<html></html>', '/blog/a-post': '<html></html>' });
+  const dist = await fixtureDist({
+    '/': '<html></html>',
+    '/pricing': '<html></html>',
+    '/blog/a-post': '<html></html>',
+  });
 
   assert.deepEqual(await discoverRoutes(dist), ['/', '/blog/a-post', '/pricing']);
 });
@@ -61,7 +65,10 @@ test('external assets are not charged to the page budget', () => {
 });
 
 test('a route over any budget is reported with the measured bytes', () => {
-  const findings = overBudget({ route: '/', js: 11000, css: 1000, page: 1000 }, { js: 10240, css: 20480, page: 256000 });
+  const findings = overBudget(
+    { route: '/', js: 11000, css: 1000, page: 1000 },
+    { js: 10240, css: 20480, page: 256000 }
+  );
 
   assert.equal(findings.length, 1);
   assert.match(findings[0], /^\/ js 11000 > 10240$/);
