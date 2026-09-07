@@ -6,7 +6,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: 0,
   reporter: process.env.CI ? 'github' : 'list',
-  snapshotPathTemplate: '{testDir}/__screenshots__/{arg}{ext}',
+  snapshotPathTemplate: '{testDir}/__screenshots__/{platform}/{arg}{ext}',
   webServer: {
     command: 'npx --yes http-server dist -p 4322 --silent',
     url: 'http://127.0.0.1:4322',

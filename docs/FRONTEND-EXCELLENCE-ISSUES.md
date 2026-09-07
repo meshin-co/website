@@ -70,3 +70,23 @@ correcting or extending the skill. Append; do not rewrite history.
 - **Suggested fix:** add a row to `defects.md`'s lookup — *symptom:* many contrast failures with a
   ~1:1 ratio, one viewport only; *cause:* element measured while `opacity: 0` behind a scroll or
   intersect animation; *fix:* remove the animation or make the resting state visible.
+
+
+## 006 · The visual-regression recipe names the OS problem but its CI wiring ignores it
+
+- **When:** 2026-09-07, Phase 1, first CI run of the visual gate.
+- **What happened:** all 8 screenshot comparisons failed on GitHub Actions while passing locally.
+  Baselines were recorded on macOS; the runner is Linux, so font rasterisation differs on nearly
+  every glyph. `maxDiffPixelRatio: 0.002` cannot absorb that, and should not.
+- **What the skill says:** `testing.md` does warn that "font rendering differs across OS, so CI
+  and local runs disagree unless you pin the OS (Playwright's docker image)" — but its
+  `toHaveScreenshot` example uses a single flat snapshot path, and its GitHub Action snippet runs
+  the build and lhci with no container and no platform-scoped baselines. Following the recipe as
+  written produces exactly this failure.
+- **What was done here:** `snapshotPathTemplate: '{testDir}/__screenshots__/{platform}/{arg}{ext}'`
+  so each OS keeps its own baseline set, then recorded the Linux set with
+  `docker run --rm -v "$PWD":/work -w /work mcr.microsoft.com/playwright:v1.63.0-jammy npx playwright test --update-snapshots`.
+  Both sets are committed; local runs compare against `darwin`, CI against `linux`.
+- **Suggested fix:** put `{platform}` in the example `snapshotPathTemplate`, and add the docker
+  command for recording baselines to the same section. Otherwise the warning is prose that the
+  code sample contradicts.
