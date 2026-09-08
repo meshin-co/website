@@ -1,0 +1,73 @@
+---
+import { getCollection } from 'astro:content';
+
+import CardGrid from '~/components/site/CardGrid.astro';
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import ResourceCard from '~/components/site/ResourceCard.astro';
+import Section from '~/components/site/Section.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { breadcrumbNode, collectionNode, orgNode, personNode, resourceNode, websiteNode } from '~/utils/jsonld.mjs';
+
+const site = import.meta.env.SITE.replace(/\/$/, '');
+const resources = (await getCollection('resource', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.updatedDate.getTime() - a.data.updatedDate.getTime()
+);
+
+const metadata = {
+  title: 'Resources',
+  description:
+    'Open templates and checklists for AI governance: register, acceptable-use policy, data classification, vendor questionnaire.',
+};
+
+const nodes = [
+  orgNode(site),
+  personNode(site),
+  websiteNode(site),
+  collectionNode(site, { path: '/resources', name: 'Resources', description: metadata.description }),
+  breadcrumbNode(site, [
+    { name: 'Home', path: '/' },
+    { name: 'Resources', path: '/resources' },
+  ]),
+  ...resources.map((resource) => resourceNode(site, { id: resource.id, ...resource.data })),
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+
+  <Section
+    bordered={false}
+    headingLevel={1}
+    index="01"
+    eyebrow="Artifacts"
+    title="Take the paperwork with you."
+    lead="These are the documents I use in engagements. They are free, they carry a licence, and they need no tool or subscription."
+  />
+
+  <Section title="Available now">
+    <CardGrid columns={resources.length > 1 ? 2 : 1}>
+      {
+        resources.map((resource) => (
+          <ResourceCard
+            name={resource.data.name}
+            summary={resource.data.description}
+            format={`${resource.data.type} · v${resource.data.version} · ${resource.data.license}`}
+            status={resource.data.status}
+            href={`/resources/${resource.id}`}
+          />
+        ))
+      }
+    </CardGrid>
+  </Section>
+
+  <Section title="Want help applying them">
+    <CtaBlock
+      title="The templates are the easy part."
+      body="Filling them in against systems you already run is where it gets specific. That is what the two-week Assessment is for."
+      label="Book a 30-min fit call"
+      href="https://cal.com/meshin"
+      note="Or email hello@meshin.co"
+    />
+  </Section>
+</Layout>

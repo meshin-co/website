@@ -1,0 +1,90 @@
+---
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import Section from '~/components/site/Section.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { breadcrumbNode, orgNode, personNode } from '~/utils/jsonld.mjs';
+
+const site = import.meta.env.SITE.replace(/\/$/, '');
+const UPDATED = new Date('2026-09-08');
+
+const metadata = {
+  title: 'Now',
+  description: 'What I am working on this month, what I am reading, and how much capacity is actually free.',
+};
+
+const nodes = [
+  orgNode(site),
+  personNode(site),
+  breadcrumbNode(site, [
+    { name: 'Home', path: '/' },
+    { name: 'Now', path: '/now' },
+  ]),
+];
+
+const blocks = [
+  {
+    label: 'Working on',
+    items: [
+      'Agentic support triage for only.help, now in production and being watched rather than built.',
+      'Two assessments in the pipeline, both companies under two hundred people with stalled pilots.',
+      'Writing up the eval-set sampling mistake from the only.help sprint, because I have seen others make it.',
+    ],
+  },
+  {
+    label: 'Capacity',
+    items: [
+      'One assessment slot free this month.',
+      'One sprint slot free from the middle of next month.',
+      'Retainer: one client, room for one more.',
+    ],
+  },
+  {
+    label: 'Reading',
+    items: [
+      'The NIST AI Risk Management Framework profiles, again, looking for what a small company can drop.',
+      'Post-incident write-ups from teams running agents at volume, which are more useful than the papers.',
+    ],
+  },
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+
+  <Section
+    bordered={false}
+    headingLevel={1}
+    index="01"
+    eyebrow={`Updated ${UPDATED.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}`}
+    title="What I am doing now."
+    lead="Updated monthly. If the capacity line says nothing is free, it means nothing is free."
+  />
+
+  <Section title="This month">
+    <dl class="grid gap-px bg-line sm:grid-cols-3">
+      {
+        blocks.map((block) => (
+          <div class="bg-page p-6">
+            <dt class="eyebrow">{block.label}</dt>
+            <dd class="mt-4 grid gap-3">
+              {block.items.map((item) => (
+                <span class="block max-w-[44ch] text-muted">{item}</span>
+              ))}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Section>
+
+  <Section title="Next step">
+    <CtaBlock
+      title="One assessment slot is free this month."
+      body="If your pilot has stalled and you want to know why in two weeks rather than two quarters, take the call."
+      label="Book a 30-min fit call"
+      href="https://cal.com/meshin"
+      note="Or email hello@meshin.co"
+    />
+  </Section>
+</Layout>

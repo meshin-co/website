@@ -1,0 +1,96 @@
+---
+import type { GetStaticPaths } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import { getCollection, render } from 'astro:content';
+
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
+import KeyTakeaways from '~/components/site/KeyTakeaways.astro';
+import Section from '~/components/site/Section.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { articleMetadata } from '~/utils/machine-links.mjs';
+import { breadcrumbNode, orgNode, personNode, resourceNode } from '~/utils/jsonld.mjs';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const resources = await getCollection('resource');
+  return resources.map((resource) => ({ params: { id: resource.id }, props: { resource } }));
+};
+
+interface Props {
+  resource: CollectionEntry<'resource'>;
+}
+
+const { resource } = Astro.props;
+const { data } = resource;
+const { Content } = await render(resource);
+const site = import.meta.env.SITE.replace(/\/$/, '');
+
+const metadata = articleMetadata(site, {
+  title: data.title,
+  description: data.description,
+  collection: 'resource',
+  id: resource.id,
+  publishDate: data.publishDate,
+  updatedDate: data.updatedDate,
+});
+
+const nodes = [
+  orgNode(site),
+  personNode(site),
+  resourceNode(site, { id: resource.id, ...data }),
+  breadcrumbNode(site, [
+    { name: 'Home', path: '/' },
+    { name: 'Resources', path: '/resources' },
+    { name: data.name, path: `/resources/${resource.id}` },
+  ]),
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+  <MarkdownAlternate path={`/resources/${resource.id}`} slot="head" />
+
+  <Section
+    bordered={false}
+    headingLevel={1}
+    eyebrow={`${data.type} · v${data.version} · ${data.license}`}
+    title={data.name}
+    lead={data.description}
+  >
+    <p class="font-mono text-sm text-muted">{data.status}</p>
+  </Section>
+
+  <Section index="01" eyebrow="Contents" title="What is inside" tone="surface">
+    <KeyTakeaways label="Inside the kit" points={data.whatInside} />
+  </Section>
+
+  <Section index="02" eyebrow="Usage" title="How to use it">
+    <p class="max-w-[68ch] text-lg leading-relaxed text-muted">{data.howToUse}</p>
+    {
+      data.repoUrl && (
+        <p class="mt-8">
+          <a class="btn-primary" href={data.repoUrl} target="_blank" rel="noopener">
+            Open the repository
+          </a>
+        </p>
+      )
+    }
+  </Section>
+
+  <Section index="03" eyebrow="Detail" title="In my words">
+    <div class="prose-brief prose-brief-headings max-w-[68ch]">
+      <Content />
+    </div>
+  </Section>
+
+  <Section title="Next step">
+    <CtaBlock
+      title="Filling these in is the hard part."
+      body="If you want them filled in against the systems you already run, that is the two-week Assessment."
+      label="Book a 30-min fit call"
+      href="https://cal.com/meshin"
+      note="Or email hello@meshin.co"
+    />
+  </Section>
+</Layout>

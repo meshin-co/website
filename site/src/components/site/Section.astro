@@ -7,9 +7,11 @@ interface Props {
   lead?: string;
   tone?: 'page' | 'surface';
   bordered?: boolean;
+  headingLevel?: 1 | 2;
 }
 
-const { id, index, eyebrow, title, lead, tone = 'page', bordered = true } = Astro.props;
+const { id, index, eyebrow, title, lead, tone = 'page', bordered = true, headingLevel = 2 } = Astro.props;
+const Heading = headingLevel === 1 ? 'h1' : 'h2';
 ---
 
 <section id={id} class:list={[tone === 'surface' && 'bg-surface', bordered && 'border-t border-line']}>
@@ -33,9 +35,9 @@ const { id, index, eyebrow, title, lead, tone = 'page', bordered = true } = Astr
       (title || lead) && (
         <div class="grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-center lg:gap-16">
           {title && (
-            <h2 class="font-heading text-3xl leading-[1.15] font-semibold tracking-[-0.02em] text-heading sm:text-[2.6rem]">
+            <Heading class="font-heading text-3xl leading-[1.15] font-semibold tracking-[-0.02em] text-heading sm:text-[2.6rem]">
               {title}
-            </h2>
+            </Heading>
           )}
           {lead && <p class="max-w-[62ch] text-muted">{lead}</p>}
         </div>

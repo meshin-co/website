@@ -19,11 +19,13 @@
     "fix": "npm run fix:eslint && npm run fix:prettier",
     "fix:eslint": "eslint --fix .",
     "fix:prettier": "prettier -w .",
-    "test": "node --test \"scripts/*.test.mjs\"",
+    "test": "node --test \"scripts/*.test.mjs\" \"src/utils/*.test.mjs\" \"src/data/*.test.mjs\"",
     "gate:visual": "playwright test",
     "gate:html": "html-validate \"dist/**/*.html\"",
-    "gate:links": "linkinator dist --recurse --silent --skip \"plausible.io|linkedin.com|cal.com|^https://meshin.co\"",
-    "gate:lh": "rm -rf .lighthouseci && lhci autorun --config=lighthouserc.cjs && node scripts/collect-reports.mjs mobile && rm -rf .lighthouseci && LHCI_FORM_FACTOR=desktop lhci autorun --config=lighthouserc.cjs && node scripts/collect-reports.mjs desktop"
+    "gate:links": "linkinator dist --recurse --silent --skip \"plausible.io|linkedin.com|cal.com|github.com/meshin-co|^https://meshin.co\"",
+    "gate:lh": "rm -rf .lighthouseci && lhci autorun --config=lighthouserc.cjs && node scripts/collect-reports.mjs mobile && rm -rf .lighthouseci && LHCI_FORM_FACTOR=desktop lhci autorun --config=lighthouserc.cjs && node scripts/collect-reports.mjs desktop",
+    "gate:machine": "node scripts/machine.mjs dist",
+    "gate:jsonld": "node scripts/jsonld-gate.mjs dist"
   },
   "dependencies": {
     "@astro-community/astro-embed-twitter": "^0.5.11",
@@ -31,11 +33,18 @@
     "@astro-community/astro-embed-youtube": "^0.5.10",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
+    "@resvg/resvg-js": "^2.6.2",
     "astro": "^7.3.1",
+    "astro-expressive-code": "^0.44.2",
     "astro-icon": "^1.1.5",
     "astro-seo": "^1.2.0",
+    "github-slugger": "^2.0.0",
+    "hast-util-to-string": "^3.0.1",
+    "hastscript": "^9.0.1",
     "limax": "4.2.3",
-    "lodash.merge": "^4.6.2"
+    "lodash.merge": "^4.6.2",
+    "rehype-mermaid": "^3.0.0",
+    "satori": "^0.33.4"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",

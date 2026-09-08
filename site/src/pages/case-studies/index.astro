@@ -1,0 +1,77 @@
+---
+import { getCollection } from 'astro:content';
+
+import CardGrid from '~/components/site/CardGrid.astro';
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import PostCard from '~/components/site/PostCard.astro';
+import Section from '~/components/site/Section.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { breadcrumbNode, collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+
+const site = import.meta.env.SITE.replace(/\/$/, '');
+const cases = (await getCollection('case', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime()
+);
+
+const metadata = {
+  title: 'Case studies',
+  description:
+    'What shipped, what it replaced, and the numbers before and after. Anonymised only where a client asked for it.',
+};
+
+const nodes = [
+  orgNode(site),
+  personNode(site),
+  websiteNode(site),
+  collectionNode(site, { path: '/case-studies', name: 'Case studies', description: metadata.description }),
+  breadcrumbNode(site, [
+    { name: 'Home', path: '/' },
+    { name: 'Case studies', path: '/case-studies' },
+  ]),
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+
+  <Section
+    bordered={false}
+    headingLevel={1}
+    index="01"
+    eyebrow="Evidence"
+    title="What actually shipped."
+    lead="One entry per engagement that reached production, with the numbers I can show. Client work appears here only with permission, so this list is shorter than the work."
+  />
+
+  <Section title="Engagements">
+    {
+      cases.length === 0 ? (
+        <p class="max-w-[62ch] text-muted">Nothing published yet.</p>
+      ) : (
+        <CardGrid columns={2}>
+          {cases.map((entry) => (
+            <PostCard
+              title={entry.data.title}
+              href={`/case-studies/${entry.id}`}
+              excerpt={entry.data.description}
+              date={entry.data.publishDate.toISOString()}
+              readingTime={entry.data.duration}
+              category={entry.data.client.industry}
+            />
+          ))}
+        </CardGrid>
+      )
+    }
+  </Section>
+
+  <Section title="Next step">
+    <CtaBlock
+      title="Want the same in your stack?"
+      body="The 90-Day Production Sprint is the offer these came out of. It starts with the two-week Assessment."
+      label="Book a 30-min fit call"
+      href="https://cal.com/meshin"
+      note="Or email hello@meshin.co"
+    />
+  </Section>
+</Layout>

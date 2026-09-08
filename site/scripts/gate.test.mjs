@@ -88,3 +88,18 @@ test('an indexable page is not reported as noindex', () => {
   assert.equal(isNoindex('<html><head><meta name="robots" content="index, follow"></head></html>'), false);
   assert.equal(isNoindex('<html><head></head></html>'), false);
 });
+
+test('a route with its own declared budget is judged against that budget', () => {
+  const budgets = { js: 10240, css: 20480, page: 256000, routes: { '/search': { js: 61440 } } };
+
+  assert.deepEqual(overBudget({ route: '/search', js: 40000, css: 1000, page: 60000 }, budgets), []);
+  assert.deepEqual(overBudget({ route: '/', js: 40000, css: 1000, page: 60000 }, budgets), ['/ js 40000 > 10240']);
+});
+
+test('an override raises only the keys it names', () => {
+  const budgets = { js: 10240, css: 20480, page: 256000, routes: { '/search': { js: 61440 } } };
+
+  assert.deepEqual(overBudget({ route: '/search', js: 40000, css: 30000, page: 60000 }, budgets), [
+    '/search css 30000 > 20480',
+  ]);
+});

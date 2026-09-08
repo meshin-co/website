@@ -86,3 +86,24 @@ Config in force: `.perfect-coder/config.yml` — `mode: shadow`, `typescript-jav
 - **Workaround used:** `bash` heredoc again.
 - **Suggested fix:** skip files with no executable constructs (only literal exports), or let
   `.perfect-coder/config.yml` name data/content directories that carry no behaviour.
+
+## 006 · Strict mode blocks framework wiring files that cannot have unit tests
+- **When:** 2026-09-07, Phase 3, creating `src/pages/llms.txt.ts`, `llms-full.txt.ts`,
+  `feed.json.ts` and `src/pages/**/*.astro` route files.
+- **What happened:** `write` refused every one of them with "no test file found for the new
+  source file". These files import Astro virtual modules (`astro:content`, `astrowind:config`)
+  that only resolve inside an Astro build, so a `node --test` sibling cannot import them at all.
+  The testable logic lives in plain `.mjs` modules beside them, which do have tests.
+- **Suggested fix:** exempt files that a configured framework owns (Astro `src/pages/**`,
+  endpoint files, `*.astro`) or allow a repo to declare a "wiring" path glob whose tests live in
+  an adjacent pure module. The current rule pushes every author to the bash heredoc path, which
+  makes a compliant author indistinguishable from an evasive one.
+
+## 007 · The same false positive fires on `*.test.mjs` files themselves
+- **When:** 2026-09-07, Phase 3, two subagents independently hit it (`og-template.test.mjs`,
+  `machine-text.test.mjs`).
+- **What happened:** writing the failing test first, exactly as the skill's TDD gate demands,
+  is blocked because the test file has no sibling test of its own. Both agents reported it
+  unprompted and worked around it with a heredoc.
+- **Suggested fix:** treat a path matching the configured test pattern as never needing a
+  sibling. This is entry 001 seen from a second angle: the gate punishes the canonical red step.

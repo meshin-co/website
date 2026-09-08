@@ -1,0 +1,73 @@
+---
+import { getCollection } from 'astro:content';
+
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import FaqList from '~/components/site/FaqList.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import Section from '~/components/site/Section.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { breadcrumbNode, faqNode, orgNode, personNode } from '~/utils/jsonld.mjs';
+
+const site = import.meta.env.SITE.replace(/\/$/, '');
+const entries = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.order);
+
+const GROUPS = [
+  { key: 'general', title: 'Working together' },
+  { key: 'governance', title: 'Governance and risk' },
+  { key: 'operating-model', title: 'How engagements run' },
+  { key: 'agentic-architecture', title: 'Building the systems' },
+  { key: 'executive', title: 'For boards' },
+];
+
+const grouped = GROUPS.map((group) => ({
+  ...group,
+  items: entries.filter((entry) => entry.data.category === group.key),
+})).filter((group) => group.items.length > 0);
+
+const metadata = {
+  title: 'Questions and answers',
+  description:
+    'What a Fractional Chief AI Officer does, what each offer produces, and how AI risk gets recorded and signed off.',
+};
+
+const nodes = [
+  orgNode(site),
+  personNode(site),
+  faqNode(entries.map((entry) => ({ q: entry.data.question, a: entry.data.answer }))),
+  breadcrumbNode(site, [
+    { name: 'Home', path: '/' },
+    { name: 'FAQ', path: '/faq' },
+  ]),
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+
+  <Section
+    bordered={false}
+    headingLevel={1}
+    index="01"
+    eyebrow="FAQ"
+    title="Answers before the call."
+    lead="If your question is not here, email it. I answer in writing, and the good ones end up on this page."
+  />
+
+  {
+    grouped.map((group, index) => (
+      <Section index={String(index + 2).padStart(2, '0')} eyebrow="Questions" title={group.title}>
+        <FaqList items={group.items.map((entry) => ({ question: entry.data.question, answer: entry.data.answer }))} />
+      </Section>
+    ))
+  }
+
+  <Section title="Still unsure">
+    <CtaBlock
+      title="Ask it on a 30-minute call."
+      body="No slides. If your situation does not need me, I will say so."
+      label="Book a 30-min fit call"
+      href="https://cal.com/meshin"
+      note="Or email hello@meshin.co"
+    />
+  </Section>
+</Layout>

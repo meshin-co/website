@@ -1,0 +1,57 @@
+---
+import JsonLd from '~/components/common/JsonLd.astro';
+import Section from '~/components/site/Section.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { breadcrumbNode, orgNode, personNode } from '~/utils/jsonld.mjs';
+
+const site = import.meta.env.SITE.replace(/\/$/, '');
+
+const metadata = {
+  title: 'Imprint',
+  description: 'Who is responsible for this site, how to reach them, and what it is hosted on.',
+};
+
+const nodes = [
+  orgNode(site),
+  personNode(site),
+  breadcrumbNode(site, [
+    { name: 'Home', path: '/' },
+    { name: 'Imprint', path: '/imprint' },
+  ]),
+];
+
+const rows = [
+  { label: 'Responsible', value: 'Dmitri Meshin, Fractional Chief AI Officer, trading as meshin.co' },
+  { label: 'Contact', value: 'hello@meshin.co' },
+  { label: 'Working from', value: 'Remote worldwide' },
+  { label: 'Hosting', value: 'Cloudflare Pages, static files only' },
+  { label: 'Analytics', value: 'Plausible, cookieless and aggregate' },
+  { label: 'Responsible for content', value: 'Dmitri Meshin' },
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+
+  <Section
+    bordered={false}
+    headingLevel={1}
+    index="01"
+    eyebrow="Imprint"
+    title="Who runs this."
+    lead="One person, and the details to prove it."
+  />
+
+  <Section title="Details">
+    <dl class="grid gap-px bg-line sm:grid-cols-2">
+      {
+        rows.map((row) => (
+          <div class="bg-page p-6">
+            <dt class="eyebrow">{row.label}</dt>
+            <dd class="mt-3 max-w-[48ch] text-muted">{row.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Section>
+</Layout>

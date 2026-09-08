@@ -1,0 +1,97 @@
+---
+import type { GetStaticPaths } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import { getCollection, render } from 'astro:content';
+
+import AnswerBlock from '~/components/site/AnswerBlock.astro';
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
+import Section from '~/components/site/Section.astro';
+import SourceList from '~/components/site/SourceList.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { articleMetadata } from '~/utils/machine-links.mjs';
+import { breadcrumbNode, orgNode, personNode, termNode, termSetNode } from '~/utils/jsonld.mjs';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const terms = await getCollection('glossary');
+  return terms.map((term) => ({ params: { id: term.id }, props: { term } }));
+};
+
+interface Props {
+  term: CollectionEntry<'glossary'>;
+}
+
+const { term } = Astro.props;
+const { data } = term;
+const { Content } = await render(term);
+const site = import.meta.env.SITE.replace(/\/$/, '');
+const terms = await getCollection('glossary', ({ data: entry }) => !entry.draft);
+const related = terms.filter((entry) => data.relatedTerms.some((reference) => reference.id === entry.id));
+
+const metadata = articleMetadata(site, {
+  title: data.title,
+  description: data.description,
+  collection: 'glossary',
+  id: term.id,
+  publishDate: data.publishDate,
+  updatedDate: data.updatedDate,
+});
+
+const nodes = [
+  orgNode(site),
+  personNode(site),
+  termSetNode(site, [{ id: term.id }]),
+  termNode(site, { id: term.id, ...data }),
+  breadcrumbNode(site, [
+    { name: 'Home', path: '/' },
+    { name: 'Glossary', path: '/glossary' },
+    { name: data.term, path: `/glossary/${term.id}` },
+  ]),
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+  <MarkdownAlternate path={`/glossary/${term.id}`} slot="head" />
+
+  <Section bordered={false} headingLevel={1} eyebrow="Glossary" title={data.term} lead={data.description} />
+
+  <Section index="01" eyebrow="Definition" title="What it means" tone="surface">
+    <AnswerBlock question={`What is ${data.term}?`} answer={data.shortDefinition} />
+    <p class="mt-10 max-w-[68ch] text-muted">{data.definition}</p>
+  </Section>
+
+  <Section index="02" eyebrow="Detail" title="In practice">
+    <div class="prose-brief prose-brief-headings max-w-[68ch]">
+      <Content />
+    </div>
+  </Section>
+
+  <Section index="03" eyebrow="Provenance" title="Sources and neighbours">
+    <SourceList sources={data.sources} />
+    {
+      related.length > 0 && (
+        <ul class="mt-10 flex flex-wrap gap-x-8 gap-y-3">
+          {related.map((entry) => (
+            <li>
+              <a class="text-link font-mono text-sm" href={`/glossary/${entry.id}`}>
+                {entry.data.term}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </Section>
+
+  <Section title="Next step">
+    <CtaBlock
+      title="Need this in your own paperwork?"
+      body="The Governance Starter Kit has the register, the policy and the classification table this term belongs in."
+      label="Open the Starter Kit"
+      href="/resources/ai-governance-starter-kit"
+      note="Or email hello@meshin.co"
+    />
+  </Section>
+</Layout>

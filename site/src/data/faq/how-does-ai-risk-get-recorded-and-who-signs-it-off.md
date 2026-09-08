@@ -1,0 +1,7 @@
+---
+question: 'How does AI risk get recorded, and who signs it off?'
+answer: 'In an AI register: one line per initiative, its data flows, its risk level, and its owner. Under the Retainer, I review every entry and sign it as the named officer; final accountability for anything that reaches customers or the board still sits with your organisation, the same as for any other risk register you keep.'
+category: governance
+relatedPage: /ai-policy
+order: 15
+---

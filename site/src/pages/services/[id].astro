@@ -1,0 +1,104 @@
+---
+import type { GetStaticPaths } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import { getCollection, render } from 'astro:content';
+
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import FaqList from '~/components/site/FaqList.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
+import Section from '~/components/site/Section.astro';
+import ShiftPanel from '~/components/site/ShiftPanel.astro';
+import StepList from '~/components/site/StepList.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { articleMetadata } from '~/utils/machine-links.mjs';
+import { breadcrumbNode, faqNode, orgNode, personNode, serviceNode } from '~/utils/jsonld.mjs';
+import { formatPrice } from '~/utils/offers.mjs';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const services = await getCollection('service');
+  return services.map((service) => ({ params: { id: service.id }, props: { service } }));
+};
+
+interface Props {
+  service: CollectionEntry<'service'>;
+}
+
+const { service } = Astro.props;
+const { data } = service;
+const { Content } = await render(service);
+const site = import.meta.env.SITE.replace(/\/$/, '');
+
+const metadata = articleMetadata(site, {
+  title: data.title,
+  description: data.description,
+  collection: 'service',
+  id: service.id,
+});
+
+const nodes = [
+  orgNode(site),
+  personNode(site),
+  serviceNode(site, { id: service.id, ...data }),
+  faqNode(data.faq),
+  breadcrumbNode(site, [
+    { name: 'Home', path: '/' },
+    { name: 'Services', path: '/services' },
+    { name: data.name, path: `/services/${service.id}` },
+  ]),
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+  <MarkdownAlternate path={`/services/${service.id}`} slot="head" />
+
+  <Section bordered={false} headingLevel={1} eyebrow={data.duration} title={data.name} lead={data.tagline}>
+    <p class="font-mono text-2xl text-heading">{formatPrice(data.price)}</p>
+    <p class="mt-8 max-w-[68ch] text-lg leading-relaxed text-muted">{data.shortAnswer}</p>
+  </Section>
+
+  <Section index="01" eyebrow="Fit" title="Who this is for" tone="surface">
+    <ShiftPanel
+      before={{ label: 'This is for you if', items: data.forWhom }}
+      after={{ label: 'This is not for you if', items: data.notForWhom }}
+    />
+  </Section>
+
+  <Section index="02" eyebrow="Deliverables" title="What you get">
+    <ul class="grid gap-3 sm:grid-cols-2 sm:gap-x-14">
+      {
+        data.deliverables.map((deliverable) => (
+          <li class="grid grid-cols-[auto_1fr] gap-3">
+            <span class="mt-2 inline-block size-1.5 bg-primary" aria-hidden="true" />
+            <span class="max-w-[62ch] text-muted">{deliverable}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section index="03" eyebrow="Process" title="How it runs">
+    <StepList steps={data.process.map((step) => ({ name: step.title, detail: step.detail }))} ordered />
+  </Section>
+
+  <Section index="04" eyebrow="Detail" title="In my words" tone="surface">
+    <div class="prose-brief prose-brief-headings max-w-[68ch]">
+      <Content />
+    </div>
+  </Section>
+
+  <Section index="05" eyebrow="Questions" title="What people ask">
+    <FaqList items={data.faq.map((entry) => ({ question: entry.q, answer: entry.a }))} />
+  </Section>
+
+  <Section title="Next step">
+    <CtaBlock
+      title="Start with a 30-minute fit call."
+      body="No slides. We go through where you actually stand, and I tell you whether this offer is the right one."
+      label={data.cta.label}
+      href={data.cta.href}
+      note="Or email hello@meshin.co"
+    />
+  </Section>
+</Layout>

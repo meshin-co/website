@@ -1,0 +1,72 @@
+---
+import JsonLd from '~/components/common/JsonLd.astro';
+import Section from '~/components/site/Section.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { breadcrumbNode, orgNode, personNode } from '~/utils/jsonld.mjs';
+
+const site = import.meta.env.SITE.replace(/\/$/, '');
+const UPDATED = '2026-09-08';
+
+const metadata = {
+  title: 'Privacy',
+  description: 'What this site collects, which is almost nothing, and what happens to an email you send me.',
+};
+
+const nodes = [
+  orgNode(site),
+  personNode(site),
+  breadcrumbNode(site, [
+    { name: 'Home', path: '/' },
+    { name: 'Privacy', path: '/privacy' },
+  ]),
+];
+
+const sections = [
+  {
+    title: 'What this site collects',
+    body: 'No cookies are set and no accounts exist. Page views are counted by Plausible, which is cookieless and stores no personal data: a page path, a referrer, a country, and a device type. Nothing there identifies you, and there is no cross-site profile to opt out of.',
+  },
+  {
+    title: 'What the host sees',
+    body: 'Cloudflare serves these files and keeps request logs, including IP addresses, for its own abuse prevention and for a limited period. That is a technical necessity of serving a page over the internet, not a choice about analytics.',
+  },
+  {
+    title: 'Email and calls',
+    body: 'If you email hello@meshin.co or book a call, I keep that thread and the booking so I can do the work and account for it. That is a legitimate interest in responding to your own enquiry. I do not add you to a mailing list, because there is no mailing list.',
+  },
+  {
+    title: 'Client material',
+    body: 'Engagement material is held under the client contract, in an encrypted store, and shared only with the vendors that contract names. It is deleted or returned at the end of the retention period agreed in that contract.',
+  },
+  {
+    title: 'Your rights',
+    body: 'You can ask what I hold about you, ask for it to be corrected, or ask for it to be deleted, and I will answer within thirty days. Email hello@meshin.co. If you are unhappy with the answer you can complain to your local data protection authority.',
+  },
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+
+  <Section
+    bordered={false}
+    headingLevel={1}
+    index="01"
+    eyebrow={`Updated ${UPDATED}`}
+    title="Privacy."
+    lead="A static site with no accounts and no cookies. This page exists so you do not have to take that on trust."
+  />
+
+  <Section title="Detail">
+    <div class="grid gap-12">
+      {
+        sections.map((section) => (
+          <div>
+            <h2 class="font-heading text-xl font-semibold text-heading">{section.title}</h2>
+            <p class="mt-4 max-w-[68ch] leading-relaxed text-muted">{section.body}</p>
+          </div>
+        ))
+      }
+    </div>
+  </Section>
+</Layout>

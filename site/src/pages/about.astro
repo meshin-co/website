@@ -1,0 +1,91 @@
+---
+import { getEntry } from 'astro:content';
+
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import FigureStrip from '~/components/site/FigureStrip.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import Section from '~/components/site/Section.astro';
+import SignalList from '~/components/site/SignalList.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { breadcrumbNode, orgNode, personNode, profilePageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { figures } from '~/data/home';
+
+const site = import.meta.env.SITE.replace(/\/$/, '');
+const author = await getEntry('author', 'dmitri');
+
+const metadata = {
+  title: 'About Dmitri Meshin',
+  description:
+    'Platform engineer working as a Fractional Chief AI Officer for companies of 30 to 300 people. Remote worldwide.',
+};
+
+const nodes = [
+  orgNode(site),
+  personNode(site),
+  websiteNode(site),
+  profilePageNode(site),
+  breadcrumbNode(site, [
+    { name: 'Home', path: '/' },
+    { name: 'About', path: '/about' },
+  ]),
+];
+
+const principles = {
+  items: [
+    'One process in production is worth more than five pilots in a demo environment.',
+    'If nobody is named as the owner of AI risk, the answer to a security questionnaire is a guess.',
+    'A governance document nobody updates is worse than none, because it looks like a control.',
+    'Engagements should end. Handover is a deliverable, not a courtesy.',
+  ],
+  verdict: 'If that reads like your view too, we will get on.',
+};
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+
+  <Section bordered={false} headingLevel={1} index="01" eyebrow="About" title="Dmitri Meshin" lead={author?.data.role}>
+    <p class="mt-2 max-w-[68ch] text-lg leading-relaxed text-muted">{author?.data.bio}</p>
+  </Section>
+
+  <Section index="02" eyebrow="Record" title="What I have done" tone="surface">
+    <FigureStrip figures={figures} />
+  </Section>
+
+  <Section index="03" eyebrow="View" title="How I think about this work">
+    <SignalList items={principles.items} verdict={principles.verdict} />
+  </Section>
+
+  <Section index="04" eyebrow="Standing" title="Credentials and where to find me">
+    <dl class="grid gap-px bg-line sm:grid-cols-2">
+      <div class="bg-page p-6">
+        <dt class="eyebrow">Credentials</dt>
+        <dd class="mt-3 grid gap-2 text-muted">
+          {author?.data.credentials.map((credential) => <span>{credential}</span>)}
+        </dd>
+      </div>
+      <div class="bg-page p-6">
+        <dt class="eyebrow">Elsewhere</dt>
+        <dd class="mt-3 grid gap-2">
+          {
+            author?.data.sameAs.map((url) => (
+              <a class="text-link font-mono text-sm" href={url} target="_blank" rel="noopener">
+                {url.replace(/^https:\/\//, '')}
+              </a>
+            ))
+          }
+        </dd>
+      </div>
+    </dl>
+  </Section>
+
+  <Section title="Next step">
+    <CtaBlock
+      title="Start with a 30-minute fit call."
+      body="Tell me where the pilots stalled. If I am not the right person, I will say who is."
+      label="Book a 30-min fit call"
+      href="https://cal.com/meshin"
+      note="Or email hello@meshin.co"
+    />
+  </Section>
+</Layout>

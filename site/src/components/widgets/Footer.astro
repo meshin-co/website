@@ -27,7 +27,7 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '' } = Ast
 
 <footer class="not-prose border-t border-line">
   <div class="mx-auto max-w-6xl px-5 py-12 sm:px-8">
-    <div class="grid gap-10 md:grid-cols-[minmax(0,1fr)_auto] md:items-start md:gap-16">
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,14rem)_minmax(0,1fr)] lg:items-start lg:gap-16">
       <div>
         <a class="inline-block" href={getHomePermalink()}><Logo /></a>
 
@@ -46,7 +46,7 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '' } = Ast
 
       {
         links.length > 0 && (
-          <div class="grid gap-10 sm:grid-cols-2 md:gap-16">
+          <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10">
             {links.map(({ title, links: column }) => (
               <div>
                 <p class="eyebrow">{title}</p>

@@ -1,0 +1,74 @@
+---
+import { getCollection } from 'astro:content';
+
+import CardGrid from '~/components/site/CardGrid.astro';
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import Section from '~/components/site/Section.astro';
+import ServiceCard from '~/components/site/ServiceCard.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { breadcrumbNode, collectionNode, orgNode, personNode, serviceNode, websiteNode } from '~/utils/jsonld.mjs';
+import { formatPrice } from '~/utils/offers.mjs';
+
+const site = import.meta.env.SITE.replace(/\/$/, '');
+const services = (await getCollection('service')).sort((a, b) => a.data.order - b.data.order);
+
+const metadata = {
+  title: 'Services',
+  description:
+    'Three ways to work with a Fractional Chief AI Officer: a two-week assessment, a 90-day production sprint, a retainer.',
+};
+
+const nodes = [
+  orgNode(site),
+  personNode(site),
+  websiteNode(site),
+  collectionNode(site, { path: '/services', name: 'Services', description: metadata.description }),
+  breadcrumbNode(site, [
+    { name: 'Home', path: '/' },
+    { name: 'Services', path: '/services' },
+  ]),
+  ...services.map((service) => serviceNode(site, { id: service.id, ...service.data })),
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+
+  <Section
+    bordered={false}
+    headingLevel={1}
+    index="01"
+    eyebrow="Offers"
+    title="Three ways in."
+    lead="Every engagement ends with an internal owner and written decisions. Prices are on the page because you should be able to plan without a call."
+  />
+
+  <Section title="What you can buy">
+    <CardGrid>
+      {
+        services.map((service, position) => (
+          <ServiceCard
+            index={String(position + 1).padStart(2, '0')}
+            name={service.data.name}
+            price={formatPrice(service.data.price)}
+            duration={service.data.duration}
+            outcome={service.data.tagline}
+            deliverables={service.data.deliverables}
+            href={`/services/${service.id}`}
+          />
+        ))
+      }
+    </CardGrid>
+  </Section>
+
+  <Section title="Not sure which one">
+    <CtaBlock
+      title="Almost everyone starts with the two-week Assessment."
+      body="It is the cheapest way to find out whether the rest is worth your money. If it is not, I say so in the memo."
+      label="Book a 30-min fit call"
+      href="https://cal.com/meshin"
+      note="Or email hello@meshin.co"
+    />
+  </Section>
+</Layout>

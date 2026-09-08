@@ -1,11 +1,11 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
-import { routes } from './routes';
+import { routes, templates } from './routes';
 
 const themes = ['light', 'dark'] as const;
 
-for (const route of routes) {
+for (const route of templates) {
   for (const theme of themes) {
     test(`${route} renders as recorded in ${theme}`, async ({ page }, testInfo) => {
       await page.emulateMedia({ colorScheme: theme });
@@ -15,7 +15,11 @@ for (const route of routes) {
       const name = `${route === '/' ? 'home' : route.slice(1).replace(/\//g, '-')}-${theme}-${testInfo.project.name}.png`;
       await expect(page).toHaveScreenshot(name, { fullPage: true, maxDiffPixelRatio: 0.002 });
     });
+  }
+}
 
+for (const route of routes) {
+  for (const theme of themes) {
     test(`${route} has no accessibility violations in ${theme}`, async ({ page }) => {
       await page.emulateMedia({ colorScheme: theme });
       await page.goto(route);

@@ -10,7 +10,9 @@ import ServiceCard from '~/components/site/ServiceCard.astro';
 import SignalList from '~/components/site/SignalList.astro';
 import StepList from '~/components/site/StepList.astro';
 import { artifacts, brief, cta, drivers, figures, hero, nudge, services, shift, signals } from '~/data/home';
+import JsonLd from '~/components/common/JsonLd.astro';
 import Layout from '~/layouts/PageLayout.astro';
+import { orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
 
 const metadata = {
   title: 'Fractional Chief AI Officer — meshin.co',
@@ -18,9 +20,13 @@ const metadata = {
   description:
     'Fractional AI leadership for 30–300 person companies: governance that passes enterprise procurement, and agentic systems shipped to production with evals and observability.',
 };
+
+const site = import.meta.env.SITE.replace(/\/$/, '');
+const nodes = [orgNode(site), personNode(site), websiteNode(site)];
 ---
 
 <Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
   <Hero
     title={hero.title}
     titleAccent={hero.titleAccent}

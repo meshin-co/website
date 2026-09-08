@@ -284,6 +284,47 @@
   margin-top: 0;
 }
 
+@utility prose-brief {
+  @apply prose prose-lg dark:prose-invert;
+  --tw-prose-body: var(--aw-color-text-muted);
+  --tw-prose-headings: var(--aw-color-text-heading);
+  --tw-prose-links: var(--aw-color-primary);
+  --tw-prose-bold: var(--aw-color-text-heading);
+  --tw-prose-quotes: var(--aw-color-text-heading);
+  --tw-prose-quote-borders: var(--aw-color-line);
+  --tw-prose-hr: var(--aw-color-line);
+  --tw-prose-th-borders: var(--aw-color-line);
+  --tw-prose-td-borders: var(--aw-color-line);
+  --tw-prose-invert-body: var(--aw-color-text-muted);
+  --tw-prose-invert-headings: var(--aw-color-text-heading);
+  --tw-prose-invert-links: var(--aw-color-primary);
+  --tw-prose-invert-hr: var(--aw-color-line);
+  font-family: var(--aw-font-sans);
+}
+
+@utility heading-anchor {
+  @apply ml-2 align-baseline text-primary no-underline opacity-0 transition-opacity duration-150;
+
+  &::before {
+    content: '#';
+  }
+
+  &:focus-visible {
+    @apply opacity-100;
+  }
+}
+
+@utility prose-brief-headings {
+  & :is(h2, h3, h4) {
+    font-family: var(--aw-font-heading);
+    letter-spacing: -0.02em;
+  }
+
+  & :is(h2, h3, h4):hover .heading-anchor {
+    @apply opacity-100;
+  }
+}
+
 /* Blog prose: inline code without the typography plugin's backticks, and
    code blocks that follow the light/dark theme (Shiki dual themes). */
 .prose :where(code):not(:where(pre *)) {

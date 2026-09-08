@@ -1,0 +1,90 @@
+---
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import Section from '~/components/site/Section.astro';
+import ShiftPanel from '~/components/site/ShiftPanel.astro';
+import StepList from '~/components/site/StepList.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { breadcrumbNode, orgNode, personNode } from '~/utils/jsonld.mjs';
+import { drivers, shift } from '~/data/home';
+
+const site = import.meta.env.SITE.replace(/\/$/, '');
+
+const metadata = {
+  title: 'How I work',
+  description:
+    'The six things that decide whether an AI initiative reaches production, and the order I work through them.',
+};
+
+const nodes = [
+  orgNode(site),
+  personNode(site),
+  breadcrumbNode(site, [
+    { name: 'Home', path: '/' },
+    { name: 'Approach', path: '/approach' },
+  ]),
+];
+
+const sequence = [
+  {
+    name: 'Read what exists',
+    detail:
+      'Repositories, data flows, vendor contracts and the spreadsheets people actually use. Descriptions come later.',
+  },
+  {
+    name: 'Name the owner',
+    detail: 'One person accountable for AI risk, on the org chart, with the authority to say no.',
+  },
+  {
+    name: 'Classify the data',
+    detail: 'What may reach a vendor, what may not, and who decides when the answer is unclear.',
+  },
+  {
+    name: 'Pick one process',
+    detail: 'Volume plus a measurable outcome. If success needs a survey to detect, it is the wrong process.',
+  },
+  {
+    name: 'Ship it with evals',
+    detail: 'Evals in CI, tracing, cost per outcome and a rollback path before it touches a customer.',
+  },
+  {
+    name: 'Hand it over',
+    detail: 'An internal owner, written decisions and a runbook. The engagement is built to end.',
+  },
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+
+  <Section
+    bordered={false}
+    headingLevel={1}
+    index="01"
+    eyebrow="Method"
+    title="How I work."
+    lead="Six things decide whether an AI initiative reaches production. I measure all six, in this order, and the last one is the one most engagements skip."
+  />
+
+  <Section index="02" eyebrow="Measures" title="What I measure" tone="surface">
+    <StepList steps={drivers} ordered />
+  </Section>
+
+  <Section index="03" eyebrow="Sequence" title="The order I work in">
+    <StepList steps={sequence} ordered />
+  </Section>
+
+  <Section index="04" eyebrow="Outcome" title="What changes" tone="surface">
+    <ShiftPanel before={shift.before} after={shift.after} />
+  </Section>
+
+  <Section title="Next step">
+    <CtaBlock
+      title="Start with a 30-minute fit call."
+      body="We go through where you actually stand against these six, and what the first ninety days would cover."
+      label="Book a 30-min fit call"
+      href="https://cal.com/meshin"
+      note="Or email hello@meshin.co"
+    />
+  </Section>
+</Layout>

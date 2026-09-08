@@ -69,9 +69,17 @@ only by the rule that names it, never by judgement.
 5. `html-validate` 0 errors · `linkinator` 0 broken (skip list: `plausible.io`, `linkedin.com`,
    `github.com/meshin-co`) · byte budgets in range.
 6. Byte budgets are measured, not declared: real gzip of every JS/CSS asset each route can reach,
-   plus a Playwright pass that toggles the theme and focuses the search box so Plausible, the
-   toggle and the lazily-loaded Pagefind chunk are all charged to a route. Budgets: JS ≤10 KB gz,
-   CSS ≤20 KB gz, page ≤250 KB without images, fonts ≤120 KB.
+   plus a Playwright pass that toggles the theme and runs a real search so Plausible, the toggle
+   and the lazily-fetched search index are all charged to a route. Budgets: JS ≤10 KB gz,
+   CSS ≤20 KB gz, page ≤250 KB without images, fonts ≤120 KB. No route carries an exception.
+   **Deviation from the PRD, decided in Phase 3:** search is not Pagefind. Pagefind's runtime
+   boots a Web Worker that reported `Failed to load Pagefind metadata` without ever requesting
+   the metadata file, in three separate wirings (its own `astro-pagefind` component, a bundled
+   module, and a plain static module), while the same calls from a page console worked. Instead,
+   `/search-index.json` is generated from the same collections at build time (25 KB raw, 7 KB gz,
+   fetched only on the first query) and ranked by `public/search/index-model.mjs`, which is unit
+   tested. `/search` now costs 1.1 KB gz of JS like every other route, and the search behaviour
+   itself is covered by `tests/search.spec.ts`.
 7. JSON-LD: every page's `@graph` parses, and every `@id` referenced anywhere resolves to exactly
    one node that declares it. Rich Results test on one page per type.
 8. Machine-interface parity: `/llms.txt`, `/llms-full.txt`, `/feed.json`, sitemap and `.md`

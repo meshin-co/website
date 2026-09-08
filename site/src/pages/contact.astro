@@ -1,0 +1,100 @@
+---
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import Section from '~/components/site/Section.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { breadcrumbNode, orgNode, personNode } from '~/utils/jsonld.mjs';
+
+const site = import.meta.env.SITE.replace(/\/$/, '');
+
+const metadata = {
+  title: 'Contact',
+  description: 'Book a 30-minute fit call or email hello@meshin.co. Remote worldwide, on site when it earns the trip.',
+};
+
+const nodes = [
+  orgNode(site),
+  personNode(site),
+  breadcrumbNode(site, [
+    { name: 'Home', path: '/' },
+    { name: 'Contact', path: '/contact' },
+  ]),
+];
+
+const channels = [
+  {
+    label: 'Fit call',
+    body: 'Thirty minutes, no slides. Bring the pilot that stalled.',
+    action: { label: 'cal.com/meshin', href: 'https://cal.com/meshin' },
+  },
+  {
+    label: 'Email',
+    body: 'Written questions get written answers, usually the same day.',
+    action: { label: 'hello@meshin.co', href: 'mailto:hello@meshin.co' },
+  },
+  {
+    label: 'Security reports',
+    body: 'Disclosure policy and contact are in the well-known file.',
+    action: { label: '/.well-known/security.txt', href: '/.well-known/security.txt' },
+  },
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+
+  <Section
+    bordered={false}
+    headingLevel={1}
+    index="01"
+    eyebrow="Contact"
+    title="Three ways to reach me."
+    lead="No form, no autoresponder, no drip sequence. Remote worldwide, and on site when the trip earns itself."
+  />
+
+  <Section title="Channels">
+    <dl class="grid gap-px bg-line sm:grid-cols-3">
+      {
+        channels.map((channel) => (
+          <div class="bg-page p-6">
+            <dt class="eyebrow">{channel.label}</dt>
+            <dd class="mt-3 max-w-[42ch] text-muted">
+              {channel.body}
+              <a class="text-link mt-4 block font-mono text-sm" href={channel.action.href}>
+                {channel.action.label}
+              </a>
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Section>
+
+  <Section index="02" eyebrow="Before the call" title="What helps" tone="surface">
+    <ul class="grid gap-3 sm:grid-cols-2 sm:gap-x-14">
+      {
+        [
+          'The one process you would most like to see running in production.',
+          'Whether anyone is currently named as the owner of AI risk.',
+          'Which vendors already hold your data, and under what contract.',
+          'What has already been tried, and where it stopped.',
+        ].map((item) => (
+          <li class="grid grid-cols-[auto_1fr] gap-3">
+            <span class="mt-2 inline-block size-1.5 bg-primary" aria-hidden="true" />
+            <span class="max-w-[62ch] text-muted">{item}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section title="Book it">
+    <CtaBlock
+      title="Thirty minutes is enough to know."
+      body="If the answer is that you do not need me yet, that is a useful answer and it is free."
+      label="Book a 30-min fit call"
+      href="https://cal.com/meshin"
+      note="Or email hello@meshin.co"
+    />
+  </Section>
+</Layout>

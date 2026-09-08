@@ -1,0 +1,26 @@
+---
+interface Props {
+  label?: string;
+}
+
+const { label = 'Search this site' } = Astro.props;
+---
+
+<form class="grid gap-4" data-search role="search" action="/search" method="get">
+  <label class="eyebrow" for="search-query">{label}</label>
+  <input
+    class="border border-line bg-page px-4 py-3.5 font-mono text-base text-heading placeholder:text-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+    id="search-query"
+    name="q"
+    type="search"
+    autocomplete="off"
+    placeholder="evals, governance, retainer"
+  />
+  <button class="btn-primary justify-self-start" type="submit">Search</button>
+</form>
+
+<p class="mt-10 font-mono text-sm text-muted" data-search-summary aria-live="polite">Type a word and press Search.</p>
+
+<ol class="mt-6 grid gap-px bg-line empty:mt-0 empty:bg-transparent" data-search-results></ol>
+
+<script is:inline type="module" src="/search/box.mjs"></script>

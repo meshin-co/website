@@ -30,7 +30,12 @@ const swatches = ['page', 'text', 'muted', 'primary', 'line'];
 ---
 
 <Layout metadata={metadata}>
-  <Section bordered={false} title="Styleguide" lead="Internal reference. Not indexed, not in the sitemap.">
+  <Section
+    bordered={false}
+    headingLevel={1}
+    title="Styleguide"
+    lead="Internal reference. Not indexed, not in the sitemap."
+  >
     <p class="font-mono text-sm text-muted">Toggle the theme in the header to check both palettes.</p>
   </Section>
 
@@ -239,13 +244,13 @@ const swatches = ['page', 'text', 'muted', 'primary', 'line'];
         {
           title: 'ISO/IEC 42001:2023 Artificial intelligence management system',
           publisher: 'ISO',
-          href: 'https://www.iso.org/standard/81230.html',
+          url: 'https://www.iso.org/standard/81230.html',
           retrieved: '2026-09-08',
         },
         {
           title: 'AI Risk Management Framework',
           publisher: 'NIST',
-          href: 'https://www.nist.gov/itl/ai-risk-management-framework',
+          url: 'https://www.nist.gov/itl/ai-risk-management-framework',
         },
       ]}
     />

@@ -9,6 +9,7 @@ import type { MetaData, MetaDataOpenGraph } from '~/types';
 import { getCanonical } from '~/utils/permalinks';
 
 import { adaptOpenGraphImages } from '~/utils/images';
+import { escapeHtmlText } from '~/utils/html-text.mjs';
 
 export interface Props extends MetaData {
   dontUseTitleTemplate?: boolean;
@@ -89,8 +90,8 @@ const mergedTwitter = merge(
 );
 
 const seoProps: SEOProps = {
-  title: title || METADATA?.title?.default || '',
-  titleTemplate: ignoreTitleTemplate ? '%s' : METADATA?.title?.template || '%s',
+  title: escapeHtmlText(title || METADATA?.title?.default || ''),
+  titleTemplate: escapeHtmlText(ignoreTitleTemplate ? '%s' : METADATA?.title?.template || '%s'),
   canonical: canonical,
   noindex:
     typeof robots?.index !== 'undefined'

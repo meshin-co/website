@@ -1,0 +1,101 @@
+---
+import type { GetStaticPaths } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+
+import CardGrid from '~/components/site/CardGrid.astro';
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import PostCard from '~/components/site/PostCard.astro';
+import Section from '~/components/site/Section.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { breadcrumbNode, collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { readingTime } from '~/utils/reading-time.mjs';
+import { categoryPillars } from '~/data/categories.mjs';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = await getCollection('post', ({ data }) => !data.draft);
+  return Object.entries(categoryPillars).map(([category, pillar]) => ({
+    params: { category },
+    props: { pillar, posts: posts.filter((post) => post.data.category === category) },
+  }));
+};
+
+interface Props {
+  pillar: { title: string; description: string; body: string[] };
+  posts: CollectionEntry<'post'>[];
+}
+
+const { pillar, posts } = Astro.props;
+const { category } = Astro.params;
+const site = import.meta.env.SITE.replace(/\/$/, '');
+const sorted = posts.sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
+
+const metadata = { title: pillar.title, description: pillar.description };
+
+const nodes = [
+  orgNode(site),
+  personNode(site),
+  websiteNode(site),
+  collectionNode(site, {
+    path: `/blog/category/${category}`,
+    name: pillar.title,
+    description: pillar.description,
+  }),
+  breadcrumbNode(site, [
+    { name: 'Home', path: '/' },
+    { name: 'Writing', path: '/blog' },
+    { name: pillar.title, path: `/blog/category/${category}` },
+  ]),
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+
+  <Section
+    bordered={false}
+    headingLevel={1}
+    index="01"
+    eyebrow="Category"
+    title={pillar.title}
+    lead={pillar.description}
+  />
+
+  <Section index="02" eyebrow="Position" title="Where I stand on this" tone="surface">
+    <div class="grid max-w-[68ch] gap-6 text-lg leading-relaxed text-muted">
+      {pillar.body.map((paragraph) => <p>{paragraph}</p>)}
+    </div>
+  </Section>
+
+  <Section title="Articles in this category">
+    {
+      sorted.length === 0 ? (
+        <p class="max-w-[62ch] text-muted">Nothing published in this category yet.</p>
+      ) : (
+        <CardGrid columns={2}>
+          {sorted.map((post) => (
+            <PostCard
+              title={post.data.title}
+              href={`/blog/${post.id}`}
+              excerpt={post.data.description}
+              date={post.data.publishDate.toISOString()}
+              readingTime={readingTime(post.body ?? '')}
+              category={post.data.category}
+            />
+          ))}
+        </CardGrid>
+      )
+    }
+  </Section>
+
+  <Section title="Next step">
+    <CtaBlock
+      title="Start with a 30-minute fit call."
+      body="If this category is the one that describes your problem, we can go through where you actually stand."
+      label="Book a 30-min fit call"
+      href="https://cal.com/meshin"
+      note="Or email hello@meshin.co"
+    />
+  </Section>
+</Layout>

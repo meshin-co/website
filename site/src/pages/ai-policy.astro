@@ -1,0 +1,120 @@
+---
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import Section from '~/components/site/Section.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { breadcrumbNode, orgNode, personNode } from '~/utils/jsonld.mjs';
+
+const site = import.meta.env.SITE.replace(/\/$/, '');
+const UPDATED = '2026-09-08';
+
+const metadata = {
+  title: 'AI acceptable use policy',
+  description:
+    'My own acceptable-use policy for AI systems: what data may reach a vendor, what may not, and who decides.',
+};
+
+const nodes = [
+  orgNode(site),
+  personNode(site),
+  breadcrumbNode(site, [
+    { name: 'Home', path: '/' },
+    { name: 'AI policy', path: '/ai-policy' },
+  ]),
+];
+
+const tiers = [
+  {
+    tier: 'Public',
+    examples: 'Published writing, open-source code, marketing copy.',
+    rule: 'Any vendor. No approval needed.',
+  },
+  {
+    tier: 'Internal',
+    examples: 'Drafts, notes, my own repositories, invoices.',
+    rule: 'Vendors with a signed data processing agreement and no training on inputs.',
+  },
+  {
+    tier: 'Client confidential',
+    examples: 'Client code, architecture documents, incident detail, personal data.',
+    rule: 'Only vendors named in that client contract. Never pasted into a consumer chat interface.',
+  },
+  {
+    tier: 'Restricted',
+    examples: 'Credentials, production secrets, anything under legal privilege.',
+    rule: 'No AI system, no exception.',
+  },
+];
+
+const rules = [
+  'I own AI risk for this practice. There is nobody else to delegate it to, which makes the register short and the accountability obvious.',
+  'Every AI system I use for client work is listed in the register, with the data tier it may see and whether its output is reviewed before a client sees it.',
+  'Model output is never sent to a client unreviewed. If a document was drafted with an AI system, I have read every line of it and I stand behind it.',
+  'Client data is never used to improve a model. Where a vendor offers training on inputs by default, that setting is off before the tool is used.',
+  'If a vendor changes its terms, its register entry is re-checked before the next engagement day, not at renewal.',
+  'Incidents are written down, including the ones with no consequence, because the pattern matters more than the single event.',
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+
+  <Section
+    bordered={false}
+    headingLevel={1}
+    index="01"
+    eyebrow={`Version 1.0 · ${UPDATED}`}
+    title="My own AI policy."
+    lead="I sell governance, so this is mine, in public. It is also a worked example of the one-page policy I ask clients to write."
+  />
+
+  <Section index="02" eyebrow="Rules" title="What I hold myself to" tone="surface">
+    <ol class="grid gap-4">
+      {
+        rules.map((rule, index) => (
+          <li class="grid grid-cols-[2.5rem_1fr] gap-3">
+            <span class="font-mono text-sm text-muted">{String(index + 1).padStart(2, '0')}</span>
+            <span class="max-w-[66ch] text-muted">{rule}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+
+  <Section index="03" eyebrow="Classification" title="Which data may go where">
+    <section class="overflow-x-auto" aria-label="Data classification table" tabindex="0">
+      <table class="w-full border-collapse text-left">
+        <thead>
+          <tr class="border-b border-line">
+            <th class="py-3 pr-4 font-mono text-xs tracking-[0.16em] text-muted uppercase" scope="col">Tier</th>
+            <th class="py-3 pr-4 font-mono text-xs tracking-[0.16em] text-muted uppercase" scope="col">Examples</th>
+            <th class="py-3 font-mono text-xs tracking-[0.16em] text-muted uppercase" scope="col">Rule</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            tiers.map((row) => (
+              <tr class="border-b border-line last:border-b-0">
+                <th class="py-5 pr-4 font-mono font-normal text-heading" scope="row">
+                  {row.tier}
+                </th>
+                <td class="max-w-[32ch] py-5 pr-4 text-muted">{row.examples}</td>
+                <td class="max-w-[38ch] py-5 text-muted">{row.rule}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </section>
+  </Section>
+
+  <Section title="Want one of these">
+    <CtaBlock
+      title="This page is four documents in one."
+      body="The register, the policy, the classification table and the named owner. The Starter Kit has the templates, and the Assessment fills them in against your systems."
+      label="Open the Starter Kit"
+      href="/resources/ai-governance-starter-kit"
+      note="Or email hello@meshin.co"
+    />
+  </Section>
+</Layout>

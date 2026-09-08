@@ -1,0 +1,119 @@
+---
+import type { GetStaticPaths } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import { getCollection, getEntry, render } from 'astro:content';
+
+import AnswerBlock from '~/components/site/AnswerBlock.astro';
+import AuthorBox from '~/components/site/AuthorBox.astro';
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import FaqList from '~/components/site/FaqList.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
+import KeyTakeaways from '~/components/site/KeyTakeaways.astro';
+import Section from '~/components/site/Section.astro';
+import SourceList from '~/components/site/SourceList.astro';
+import TableOfContents from '~/components/site/TableOfContents.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { articleMetadata } from '~/utils/machine-links.mjs';
+import { breadcrumbNode, faqNode, orgNode, personNode, postNode } from '~/utils/jsonld.mjs';
+import { readingTime } from '~/utils/reading-time.mjs';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = await getCollection('post');
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+};
+
+interface Props {
+  post: CollectionEntry<'post'>;
+}
+
+const { post } = Astro.props;
+const { data } = post;
+const { Content, headings } = await render(post);
+const author = await getEntry(data.author);
+const site = import.meta.env.SITE.replace(/\/$/, '');
+const published = data.publishDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+const metadata = articleMetadata(site, {
+  title: data.title,
+  description: data.description,
+  collection: 'post',
+  id: post.id,
+  publishDate: data.publishDate,
+  updatedDate: data.updatedDate,
+});
+
+const nodes = [
+  orgNode(site),
+  personNode(site),
+  postNode(site, { id: post.id, ...data }),
+  ...(data.faq.length > 0 ? [faqNode(data.faq)] : []),
+  breadcrumbNode(site, [
+    { name: 'Home', path: '/' },
+    { name: 'Writing', path: '/blog' },
+    { name: data.title, path: `/blog/${post.id}` },
+  ]),
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+  <MarkdownAlternate path={`/blog/${post.id}`} slot="head" />
+
+  <Section
+    bordered={false}
+    headingLevel={1}
+    eyebrow={`${data.category} · ${published} · ${readingTime(post.body ?? '')}`}
+    title={data.title}
+    lead={data.description}
+  />
+
+  <Section index="01" eyebrow="Answer" title="The short answer" tone="surface">
+    <AnswerBlock question={data.title} answer={data.shortAnswer} />
+    <p class="mt-10 max-w-[68ch] text-muted">{data.fullAnswer}</p>
+  </Section>
+
+  <Section index="02" eyebrow="Takeaways" title="What to remember">
+    <KeyTakeaways points={data.keyTakeaways} />
+  </Section>
+
+  <Section index="03" eyebrow="Detail" title="The long version">
+    <div class="grid gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)] lg:gap-16">
+      <div class="prose-brief prose-brief-headings max-w-[68ch]">
+        <Content />
+      </div>
+      <div class="lg:sticky lg:top-24 lg:self-start">
+        <TableOfContents headings={headings} />
+      </div>
+    </div>
+  </Section>
+
+  {
+    data.faq.length > 0 && (
+      <Section index="04" eyebrow="Questions" title="What people ask" tone="surface">
+        <FaqList items={data.faq.map((entry) => ({ question: entry.q, answer: entry.a }))} />
+      </Section>
+    )
+  }
+
+  <Section index="05" eyebrow="Provenance" title="Where this comes from">
+    <SourceList sources={data.sources} />
+    {
+      author && (
+        <div class="mt-12">
+          <AuthorBox name={author.data.name} role={author.data.role} bio={author.data.bio} href="/about" />
+        </div>
+      )
+    }
+  </Section>
+
+  <Section title="Next step">
+    <CtaBlock
+      title="Start with a 30-minute fit call."
+      body="If this reads like your situation, we can go through where you actually stand and whether an Assessment is worth your money."
+      label="Book a 30-min fit call"
+      href="https://cal.com/meshin"
+      note="Or email hello@meshin.co"
+    />
+  </Section>
+</Layout>

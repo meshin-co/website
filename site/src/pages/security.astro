@@ -1,0 +1,101 @@
+---
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import Section from '~/components/site/Section.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { breadcrumbNode, orgNode, personNode } from '~/utils/jsonld.mjs';
+
+const site = import.meta.env.SITE.replace(/\/$/, '');
+
+const metadata = {
+  title: 'Security',
+  description: 'How this site is built and served, how client data is handled, and where to report a vulnerability.',
+};
+
+const nodes = [
+  orgNode(site),
+  personNode(site),
+  breadcrumbNode(site, [
+    { name: 'Home', path: '/' },
+    { name: 'Security', path: '/security' },
+  ]),
+];
+
+const posture = [
+  {
+    label: 'This site',
+    items: [
+      'Static files only. No server code, no database, no user accounts, no forms.',
+      'Content Security Policy with no inline scripts. Every inline block is hashed at build time.',
+      'No cookies, no consent banner, no cross-site tracking. Analytics are aggregate and cookieless.',
+    ],
+  },
+  {
+    label: 'Client data',
+    items: [
+      'Engagement material lives in an encrypted store on my own machines and in the client’s own systems.',
+      'Client data reaches only the vendors named in that client’s contract.',
+      'Nothing client-owned is used to train or improve a model.',
+    ],
+  },
+  {
+    label: 'Access',
+    items: [
+      'Hardware-backed keys for every account that matters, with no SMS fallback.',
+      'Client system access is requested per engagement, scoped to what the work needs, and revoked at handover.',
+      'Handover includes a list of every credential I held, so revocation is a checklist rather than a memory.',
+    ],
+  },
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+
+  <Section
+    bordered={false}
+    headingLevel={1}
+    index="01"
+    eyebrow="Security"
+    title="How this is built and handled."
+    lead="Short because the surface is small. A static site with no accounts cannot leak a database it does not have."
+  />
+
+  <Section title="Posture">
+    <dl class="grid gap-px bg-line sm:grid-cols-3">
+      {
+        posture.map((block) => (
+          <div class="bg-page p-6">
+            <dt class="eyebrow">{block.label}</dt>
+            <dd class="mt-4 grid gap-3">
+              {block.items.map((item) => (
+                <span class="block max-w-[44ch] text-muted">{item}</span>
+              ))}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Section>
+
+  <Section index="02" eyebrow="Disclosure" title="Reporting something" tone="surface">
+    <p class="max-w-[68ch] text-lg leading-relaxed text-muted">
+      Email <a class="text-link underline" href="mailto:hello@meshin.co">hello@meshin.co</a> with what you found and how to
+      reproduce it. I reply within two working days and I will tell you when it is fixed. No bounty, no legal threats, and
+      credit on request.
+    </p>
+    <p class="mt-6">
+      <a class="text-link font-mono text-sm" href="/.well-known/security.txt">/.well-known/security.txt</a>
+    </p>
+  </Section>
+
+  <Section title="Next step">
+    <CtaBlock
+      title="Need this written for your own company?"
+      body="Answering a customer security questionnaire honestly is most of what the two-week Assessment produces."
+      label="Book a 30-min fit call"
+      href="https://cal.com/meshin"
+      note="Or email hello@meshin.co"
+    />
+  </Section>
+</Layout>

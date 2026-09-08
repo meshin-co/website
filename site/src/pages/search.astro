@@ -1,0 +1,33 @@
+---
+import SearchBox from '~/components/site/SearchBox.astro';
+import Section from '~/components/site/Section.astro';
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Search',
+  description: 'Search the writing, glossary, services and case studies on this site.',
+  robots: { index: false, follow: true },
+};
+---
+
+<Layout metadata={metadata}>
+  <Section
+    bordered={false}
+    headingLevel={1}
+    index="01"
+    eyebrow="Search"
+    title="Find it here."
+    lead="The index is built with the site and runs in your browser. Nothing you type is sent anywhere."
+  />
+
+  <Section title="Query">
+    <SearchBox />
+    <noscript>
+      <p class="mt-6 max-w-[62ch] text-muted">
+        Search needs JavaScript. Without it, the <a class="text-link underline" href="/blog">writing index</a>, the
+        <a class="text-link underline" href="/glossary">glossary</a> and the
+        <a class="text-link underline" href="/resources">resource list</a> name everything on the site.
+      </p>
+    </noscript>
+  </Section>
+</Layout>

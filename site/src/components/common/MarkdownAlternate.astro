@@ -1,0 +1,11 @@
+---
+import { markdownPath } from '~/utils/machine-links.mjs';
+
+interface Props {
+  path: string;
+}
+
+const { path } = Astro.props;
+---
+
+<link rel="alternate" type="text/markdown" href={markdownPath(path)} />

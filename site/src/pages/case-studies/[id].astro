@@ -1,0 +1,110 @@
+---
+import type { GetStaticPaths } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import { getCollection, getEntry, render } from 'astro:content';
+
+import CaseMetrics from '~/components/site/CaseMetrics.astro';
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
+import Section from '~/components/site/Section.astro';
+import ShiftPanel from '~/components/site/ShiftPanel.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { articleMetadata } from '~/utils/machine-links.mjs';
+import { breadcrumbNode, orgNode, personNode, postNode } from '~/utils/jsonld.mjs';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const cases = await getCollection('case');
+  return cases.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+};
+
+interface Props {
+  entry: CollectionEntry<'case'>;
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+const offer = await getEntry(data.offer);
+const site = import.meta.env.SITE.replace(/\/$/, '');
+
+const metadata = articleMetadata(site, {
+  title: data.title,
+  description: data.description,
+  collection: 'case',
+  id: entry.id,
+  publishDate: data.publishDate,
+  updatedDate: data.updatedDate,
+});
+
+const nodes = [
+  orgNode(site),
+  personNode(site),
+  postNode(site, {
+    id: entry.id,
+    ...data,
+    category: 'operating-model',
+    section: 'case-studies',
+    sources: [],
+    tags: data.stack,
+  }),
+  breadcrumbNode(site, [
+    { name: 'Home', path: '/' },
+    { name: 'Case studies', path: '/case-studies' },
+    { name: data.title, path: `/case-studies/${entry.id}` },
+  ]),
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+  <MarkdownAlternate path={`/case-studies/${entry.id}`} slot="head" />
+
+  <Section
+    bordered={false}
+    headingLevel={1}
+    eyebrow={`${data.client.industry} · ${data.client.size} · ${data.duration}`}
+    title={data.title}
+    lead={data.description}
+  />
+
+  <Section index="01" eyebrow="Numbers" title="Before and after" tone="surface">
+    <CaseMetrics
+      metrics={data.outcome.metrics}
+      note={data.anonymized ? 'Client name withheld at their request.' : 'Published with permission.'}
+    />
+  </Section>
+
+  <Section index="02" eyebrow="Shape" title="Problem and approach">
+    <ShiftPanel
+      before={{ label: 'The problem', items: [data.problem] }}
+      after={{ label: 'The approach', items: [data.approach] }}
+    />
+  </Section>
+
+  <Section index="03" eyebrow="Stack" title="What it runs on">
+    <ul class="flex flex-wrap gap-x-8 gap-y-3">
+      {data.stack.map((item) => <li class="font-mono text-sm text-muted">{item}</li>)}
+    </ul>
+  </Section>
+
+  <Section index="04" eyebrow="Detail" title="In my words" tone="surface">
+    <div class="prose-brief prose-brief-headings max-w-[68ch]">
+      <Content />
+    </div>
+  </Section>
+
+  <Section title="Next step">
+    {
+      offer && (
+        <CtaBlock
+          title={`This came out of the ${offer.data.name}.`}
+          body={offer.data.tagline}
+          label="See the offer"
+          href={`/services/${offer.id}`}
+          note="Or email hello@meshin.co"
+        />
+      )
+    }
+  </Section>
+</Layout>

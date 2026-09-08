@@ -14,11 +14,9 @@ const CORE = {
 const SEO = { 'categories:seo': ['error', { minScore: 1 }] };
 
 const gatePath = 'dist/gate-routes.json';
-const noindexRoutes = existsSync(gatePath)
-  ? JSON.parse(readFileSync(gatePath, 'utf8'))
-      .measured.filter((row) => row.noindex)
-      .map((row) => row.route)
-  : [];
+const measured = existsSync(gatePath) ? JSON.parse(readFileSync(gatePath, 'utf8')).measured : [];
+const noindexRoutes = measured.filter((row) => row.noindex).map((row) => row.route);
+const url = measured.map((row) => (row.route === '/404' ? '/404.html' : `${row.route}/`.replace('//', '/')));
 
 const escaped = noindexRoutes.map((route) => route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
 const noindexPattern = escaped.length > 0 ? `(${escaped.join('|')})(/|\\.html|/index\\.html)?$` : null;
@@ -36,6 +34,7 @@ module.exports = {
   ci: {
     collect: {
       staticDistDir: './dist',
+      url,
       numberOfRuns: 3,
       settings: {
         blockedUrlPatterns: ['*plausible.io*'],

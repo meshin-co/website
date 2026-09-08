@@ -37,7 +37,9 @@ export function assetsOfPage(html) {
 }
 
 export function overBudget(measured, budgets) {
-  return Object.entries(budgets)
+  const { routes = {}, ...defaults } = budgets;
+  const limits = { ...defaults, ...(routes[measured.route] ?? {}) };
+  return Object.entries(limits)
     .filter(([key, limit]) => measured[key] > limit)
     .map(([key, limit]) => `${measured.route} ${key} ${measured[key]} > ${limit}`);
 }

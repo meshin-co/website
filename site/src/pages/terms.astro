@@ -1,0 +1,72 @@
+---
+import JsonLd from '~/components/common/JsonLd.astro';
+import Section from '~/components/site/Section.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { breadcrumbNode, orgNode, personNode } from '~/utils/jsonld.mjs';
+
+const site = import.meta.env.SITE.replace(/\/$/, '');
+const UPDATED = '2026-09-08';
+
+const metadata = {
+  title: 'Terms',
+  description: 'What this site is, what the published prices mean, and which terms actually govern an engagement.',
+};
+
+const nodes = [
+  orgNode(site),
+  personNode(site),
+  breadcrumbNode(site, [
+    { name: 'Home', path: '/' },
+    { name: 'Terms', path: '/terms' },
+  ]),
+];
+
+const sections = [
+  {
+    title: 'What this site is',
+    body: 'A description of a consulting practice. Nothing here is an offer capable of acceptance, and nothing here is legal, financial or compliance advice. If you act on something you read here without checking it against your own situation, that is your decision.',
+  },
+  {
+    title: 'Prices',
+    body: 'The published prices are current and honest at the date on this page. The price that binds either of us is the one in the signed statement of work for your engagement, which also fixes scope, duration and payment terms.',
+  },
+  {
+    title: 'Engagements',
+    body: 'Each engagement runs under its own written agreement covering confidentiality, intellectual property, liability and termination. That agreement overrides this page wherever the two differ. You own the deliverables and the code produced for you.',
+  },
+  {
+    title: 'Content and licences',
+    body: 'The writing on this site is mine and you may quote it with a link. Templates in the Resources section carry their own licence, stated on each entry, and that licence governs their use.',
+  },
+  {
+    title: 'Availability',
+    body: 'Pages may change or disappear. Published articles keep their address where I can manage it, and redirect where I cannot.',
+  },
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+
+  <Section
+    bordered={false}
+    headingLevel={1}
+    index="01"
+    eyebrow={`Updated ${UPDATED}`}
+    title="Terms."
+    lead="Short, because the engagement contract is the document that matters and this page is not it."
+  />
+
+  <Section title="Detail">
+    <div class="grid gap-12">
+      {
+        sections.map((section) => (
+          <div>
+            <h2 class="font-heading text-xl font-semibold text-heading">{section.title}</h2>
+            <p class="mt-4 max-w-[68ch] leading-relaxed text-muted">{section.body}</p>
+          </div>
+        ))
+      }
+    </div>
+  </Section>
+</Layout>
