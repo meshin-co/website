@@ -1,4 +1,6 @@
 ---
+import { graph } from '../../utils/jsonld.mjs';
+
 interface Props {
   nodes: Record<string, unknown>[];
 }
@@ -6,8 +8,4 @@ interface Props {
 const { nodes } = Astro.props;
 ---
 
-<script
-  type="application/ld+json"
-  set:html={JSON.stringify({ '@context': 'https://schema.org', '@graph': nodes })}
-  is:inline
-/>
+<script type="application/ld+json" set:html={JSON.stringify(graph(nodes))} is:inline />

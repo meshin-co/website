@@ -17,7 +17,7 @@ import {
 const SITE = 'https://meshin.co';
 
 test('every node in a graph carries a unique @id and the graph is a single JSON-LD document', () => {
-  const document = graph(SITE, [orgNode(SITE), personNode(SITE), websiteNode(SITE)]);
+  const document = graph([orgNode(SITE), personNode(SITE), websiteNode(SITE)]);
   assert.equal(document['@context'], 'https://schema.org');
   const ids = document['@graph'].map((node) => node['@id']);
   assert.deepEqual(ids, [`${SITE}/#org`, `${SITE}/#person`, `${SITE}/#website`]);
@@ -25,7 +25,7 @@ test('every node in a graph carries a unique @id and the graph is a single JSON-
 });
 
 test('references between nodes point at ids that exist in the same graph', () => {
-  const document = graph(SITE, [orgNode(SITE), personNode(SITE)]);
+  const document = graph([orgNode(SITE), personNode(SITE)]);
   const ids = new Set(document['@graph'].map((node) => node['@id']));
   assert.ok(ids.has(document['@graph'][0].founder['@id']));
   assert.ok(ids.has(document['@graph'][1].worksFor['@id']));
@@ -93,7 +93,7 @@ test('a glossary term belongs to the site term set', () => {
 });
 
 test('a whole page graph has no reference pointing outside itself', () => {
-  const document = graph(SITE, [
+  const document = graph([
     orgNode(SITE),
     personNode(SITE),
     websiteNode(SITE),

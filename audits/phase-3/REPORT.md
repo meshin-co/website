@@ -125,7 +125,7 @@ Result: PASS
 | `/now` | 1108 | 20229 | 27330 |
 | `/pricing` | 1108 | 20229 | 28025 |
 | `/privacy` | 1108 | 20229 | 27395 |
-| `/resources` | 1108 | 20229 | 27464 |
+| `/resources` | 1108 | 20229 | 27462 |
 | `/resources/ai-governance-starter-kit` | 1108 | 20229 | 27918 |
 | `/search` | 1985 | 20229 | 27543 |
 | `/security` | 1108 | 20229 | 27676 |

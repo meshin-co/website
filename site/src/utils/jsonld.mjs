@@ -22,7 +22,7 @@ const isoDay = (value) => new Date(value).toISOString().slice(0, 10);
 
 const absolute = (site, path) => (path === '/' ? `${site}/` : `${site}${path}`);
 
-export function graph(site, nodes) {
+export function graph(nodes) {
   return { '@context': 'https://schema.org', '@graph': nodes };
 }
 
