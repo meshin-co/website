@@ -9,3 +9,4 @@ test-results/
 playwright-report/
 site/test-results/
 site/.lighthouseci/
+audits/phase-ci/
