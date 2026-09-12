@@ -47,16 +47,21 @@ const nodes = [
   <Section
     bordered={false}
     headingLevel={1}
-    index="01"
     eyebrow="FAQ"
-    title="Answers before the call."
-    lead="If your question is not here, email it. I answer in writing, and the good ones end up on this page."
+    title="Fractional Chief AI Officer questions, answered"
+    lead="These are the Fractional Chief AI Officer questions people ask me most, before they book a call. If your question is not here, email it. I answer in writing, and the good ones end up on this page."
   />
 
   {
     grouped.map((group, index) => (
-      <Section index={String(index + 2).padStart(2, '0')} eyebrow="Questions" title={group.title}>
-        <FaqList items={group.items.map((entry) => ({ question: entry.data.question, answer: entry.data.answer }))} />
+      <Section eyebrow="Questions" title={group.title}>
+        <FaqList
+          items={group.items.map((entry) => ({
+            question: entry.data.question,
+            answer: entry.data.answer,
+            sources: entry.data.sources,
+          }))}
+        />
       </Section>
     ))
   }

@@ -9,7 +9,7 @@ const { points, label = 'Key takeaways' } = Astro.props;
 
 <aside class="bg-surface border-t border-b border-line px-6 py-7" aria-label={label}>
   <p class="eyebrow">{label}</p>
-  <ul class="mt-5 grid gap-3">
+  <ul class="mt-5 grid gap-3" data-takeaways>
     {
       points.map((point) => (
         <li class="grid grid-cols-[auto_1fr] gap-3">

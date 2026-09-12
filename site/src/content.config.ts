@@ -76,21 +76,22 @@ const serviceCollection = defineCollection({
       name: z.string(),
       tagline: z.string(),
       shortAnswer: shortAnswer(),
-      price: z.object({
-        amount: z.number().positive(),
-        currency: z.literal('USD'),
-        unit: z.enum(['fixed', 'from', 'per-month']),
-      }),
+      feeShape: z.string(),
       duration: z.string(),
       forWhom: z.array(z.string()).min(1),
       notForWhom: z.array(z.string()).min(1),
       deliverables: z.array(z.string()).min(1),
       process: z.array(z.object({ step: z.number().int().positive(), title: z.string(), detail: z.string() })).min(1),
+      schedule: z
+        .array(z.object({ stage: z.string(), work: z.string(), output: z.string() }))
+        .min(3)
+        .max(5),
       faq: z
         .array(z.object({ q: z.string(), a: z.string() }))
         .min(3)
         .max(8),
       cta: z.object({ label: z.string(), href: z.string() }),
+      sources: z.array(source).min(1),
       order: z.number().int().positive(),
     })
     .refine(datesInOrder, datesInOrderMessage),
@@ -110,6 +111,7 @@ const resourceCollection = defineCollection({
       repoUrl: z.url().optional(),
       whatInside: z.array(z.string()).min(1),
       howToUse: z.string(),
+      sources: z.array(source).min(1),
       relatedPosts: z.array(reference('post')).default([]),
     })
     .refine(datesInOrder, datesInOrderMessage),
@@ -126,11 +128,11 @@ const caseCollection = defineCollection({
       outcome: z.object({
         metrics: z
           .array(z.object({ label: z.string(), before: z.string(), after: z.string() }))
-          .min(1)
-          .max(3),
+          .max(3)
+          .default([]),
       }),
       stack: z.array(z.string()).min(1),
-      duration: z.string(),
+      duration: z.string().optional(),
       offer: reference('service'),
       quote: z.string().optional(),
       anonymized: z.boolean(),
@@ -161,6 +163,7 @@ const faqCollection = defineCollection({
     answer: z.string().refine((value) => countWords(value) <= 80, { message: 'must be 80 words or fewer' }),
     category: z.enum([...CATEGORIES, 'general']),
     relatedPage: z.string().optional(),
+    sources: z.array(source).optional(),
     order: z.number().int().positive(),
   }),
 });

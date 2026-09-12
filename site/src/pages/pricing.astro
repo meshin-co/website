@@ -6,7 +6,6 @@ import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { breadcrumbNode, orgNode, personNode, serviceNode } from '~/utils/jsonld.mjs';
-import { formatPrice } from '~/utils/offers.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
 const services = (await getCollection('service')).sort((a, b) => a.data.order - b.data.order);
@@ -14,7 +13,7 @@ const services = (await getCollection('service')).sort((a, b) => a.data.order - 
 const metadata = {
   title: 'Pricing',
   description:
-    'Assessment $5,000 fixed. Production Sprint from $25,000. Fractional CAIO retainer from $12,000 a month.',
+    'Three fixed structures and no hourly billing: a two-week Assessment, a 90-Day Sprint, and a monthly Retainer. Every fee reaches you in writing before work starts.',
 };
 
 const nodes = [
@@ -34,19 +33,18 @@ const nodes = [
   <Section
     bordered={false}
     headingLevel={1}
-    index="01"
     eyebrow="Pricing"
-    title="What it costs."
-    lead="Prices are here so you can plan without a call. The Assessment fee is credited against a Sprint that starts within three months."
+    title="What a Fractional Chief AI Officer costs"
+    lead="The fractional chief AI officer cost depends on which engagement fits, and the fit call settles it in thirty minutes. Every offer is a fixed structure rather than an hourly rate. The number reaches you in writing before any work starts."
   />
 
   <Section title="The three offers">
-    <section class="overflow-x-auto" aria-label="Offer comparison table" tabindex="0">
+    <section class="overflow-x-auto" aria-label="Offer comparison table" tabindex={0}>
       <table class="w-full border-collapse text-left">
         <thead>
           <tr class="border-b border-line">
             <th class="py-3 pr-4 font-mono text-xs tracking-[0.16em] text-muted uppercase" scope="col">Offer</th>
-            <th class="py-3 pr-4 font-mono text-xs tracking-[0.16em] text-muted uppercase" scope="col">Price</th>
+            <th class="py-3 pr-4 font-mono text-xs tracking-[0.16em] text-muted uppercase" scope="col">Fee shape</th>
             <th class="py-3 pr-4 font-mono text-xs tracking-[0.16em] text-muted uppercase" scope="col">Duration</th>
             <th class="py-3 font-mono text-xs tracking-[0.16em] text-muted uppercase" scope="col">What it produces</th>
           </tr>
@@ -60,7 +58,7 @@ const nodes = [
                     {service.data.name}
                   </a>
                 </th>
-                <td class="py-5 pr-4 font-mono text-heading">{formatPrice(service.data.price)}</td>
+                <td class="py-5 pr-4 font-mono text-sm text-heading">{service.data.feeShape}</td>
                 <td class="py-5 pr-4 font-mono text-sm text-muted">{service.data.duration}</td>
                 <td class="max-w-[38ch] py-5 text-muted">{service.data.tagline}</td>
               </tr>
@@ -71,7 +69,7 @@ const nodes = [
     </section>
   </Section>
 
-  <Section index="02" eyebrow="Terms" title="How billing works" tone="surface">
+  <Section eyebrow="Terms" title="How billing works" tone="surface">
     <ul class="grid gap-3 sm:grid-cols-2 sm:gap-x-14">
       {
         [

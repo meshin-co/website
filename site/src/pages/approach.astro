@@ -6,7 +6,6 @@ import ShiftPanel from '~/components/site/ShiftPanel.astro';
 import StepList from '~/components/site/StepList.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { breadcrumbNode, orgNode, personNode } from '~/utils/jsonld.mjs';
-import { drivers, shift } from '~/data/home';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
 
@@ -25,6 +24,34 @@ const nodes = [
   ]),
 ];
 
+const measures = [
+  {
+    name: 'Data readiness',
+    detail: "I find out what data you actually hold, and that decides what a vendor's model may ever touch.",
+  },
+  {
+    name: 'Process fit',
+    detail: 'I pick the one process with enough volume and a clear outcome to prove automation actually paid off.',
+  },
+  {
+    name: 'Governance',
+    detail: 'I check whether your governance paperwork is real, or just something that looks like a control.',
+  },
+  {
+    name: 'Engineering capability',
+    detail: 'I test whether your engineers can already roll back a bad model without waiting on me.',
+  },
+  {
+    name: 'Adoption',
+    detail: 'I check who is still using the system a month after launch, from logs, not from the announcement email.',
+  },
+  {
+    name: 'Handover',
+    detail:
+      'I close every engagement by naming an internal owner and writing down the decisions. Needing me two years later means I failed at this one.',
+  },
+];
+
 const sequence = [
   {
     name: 'Read what exists',
@@ -37,7 +64,7 @@ const sequence = [
   },
   {
     name: 'Classify the data',
-    detail: 'What may reach a vendor, what may not, and who decides when the answer is unclear.',
+    detail: 'I decide what may reach a vendor and who has the final call when that is unclear.',
   },
   {
     name: 'Pick one process',
@@ -49,9 +76,30 @@ const sequence = [
   },
   {
     name: 'Hand it over',
-    detail: 'An internal owner, written decisions and a runbook. The engagement is built to end.',
+    detail: 'The runbook and the decisions go to a named internal owner, and the engagement ends there.',
   },
 ];
+
+const shiftContent = {
+  before: {
+    label: 'Today',
+    items: [
+      'A pilot looks finished in the demo and stops there.',
+      'Nobody with the authority to say no owns the AI risk.',
+      'A security questionnaire stalls the deal for weeks.',
+      'Budget keeps moving and the process underneath it stays the same.',
+    ],
+  },
+  after: {
+    label: 'After the engagement',
+    items: [
+      'One process is live in production, evals running in CI.',
+      'One named person owns AI risk and reports on it to the board.',
+      'Security questionnaires get answered from the register, same day.',
+      'What each outcome costs sits on a dashboard, next to the contract value.',
+    ],
+  },
+};
 ---
 
 <Layout metadata={metadata}>
@@ -60,28 +108,27 @@ const sequence = [
   <Section
     bordered={false}
     headingLevel={1}
-    index="01"
     eyebrow="Method"
-    title="How I work."
-    lead="Six things decide whether an AI initiative reaches production. I measure all six, in this order, and the last one is the one most engagements skip."
+    title="How a Fractional AI Officer works with your team"
+    lead="This is how a Fractional AI Officer works: six signals, always in the same order, before I touch any code. The sixth, handover, is structurally the hardest one, because nothing forces it once a system is already live."
   />
 
-  <Section index="02" eyebrow="Measures" title="What I measure" tone="surface">
-    <StepList steps={drivers} ordered />
+  <Section eyebrow="Measures" title="What I measure" tone="surface">
+    <StepList steps={measures} ordered />
   </Section>
 
-  <Section index="03" eyebrow="Sequence" title="The order I work in">
+  <Section eyebrow="Sequence" title="The order I work in">
     <StepList steps={sequence} ordered />
   </Section>
 
-  <Section index="04" eyebrow="Outcome" title="What changes" tone="surface">
-    <ShiftPanel before={shift.before} after={shift.after} />
+  <Section eyebrow="Outcome" title="What changes" tone="surface">
+    <ShiftPanel before={shiftContent.before} after={shiftContent.after} />
   </Section>
 
   <Section title="Next step">
     <CtaBlock
       title="Start with a 30-minute fit call."
-      body="We go through where you actually stand against these six, and what the first ninety days would cover."
+      body="I go through where you actually stand against these six, and what the first ninety days would cover."
       label="Book a 30-min fit call"
       href="https://cal.com/meshin"
       note="Or email hello@meshin.co"

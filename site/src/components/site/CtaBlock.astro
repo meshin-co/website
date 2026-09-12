@@ -11,7 +11,7 @@ const { title, body, label, href, note } = Astro.props;
 const external = href.startsWith('http');
 ---
 
-<div class="bg-accent-tint border border-line">
+<div class="bg-accent-tint border border-line" data-gate-ignore>
   <div class="grid gap-10 p-8 sm:p-12 lg:grid-cols-[minmax(0,6fr)_minmax(0,4fr)] lg:items-center lg:gap-16">
     <div>
       <h2

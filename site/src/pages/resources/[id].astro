@@ -8,6 +8,7 @@ import JsonLd from '~/components/common/JsonLd.astro';
 import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
 import KeyTakeaways from '~/components/site/KeyTakeaways.astro';
 import Section from '~/components/site/Section.astro';
+import SourceList from '~/components/site/SourceList.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { articleMetadata } from '~/utils/machine-links.mjs';
 import { breadcrumbNode, orgNode, personNode, resourceNode } from '~/utils/jsonld.mjs';
@@ -61,11 +62,11 @@ const nodes = [
     <p class="font-mono text-sm text-muted">{data.status}</p>
   </Section>
 
-  <Section index="01" eyebrow="Contents" title="What is inside" tone="surface">
+  <Section eyebrow="Contents" title="What is inside" tone="surface">
     <KeyTakeaways label="Inside the kit" points={data.whatInside} />
   </Section>
 
-  <Section index="02" eyebrow="Usage" title="How to use it">
+  <Section eyebrow="Usage" title="How to use it">
     <p class="max-w-[68ch] text-lg leading-relaxed text-muted">{data.howToUse}</p>
     {
       data.repoUrl && (
@@ -78,10 +79,14 @@ const nodes = [
     }
   </Section>
 
-  <Section index="03" eyebrow="Detail" title="In my words">
+  <Section eyebrow="Detail" title="In my words">
     <div class="prose-brief prose-brief-headings max-w-[68ch]">
       <Content />
     </div>
+  </Section>
+
+  <Section eyebrow="Provenance" title="Sources">
+    <SourceList sources={data.sources} />
   </Section>
 
   <Section title="Next step">

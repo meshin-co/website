@@ -62,13 +62,12 @@ const rules = [
   <Section
     bordered={false}
     headingLevel={1}
-    index="01"
-    eyebrow={`Version 1.0 · ${UPDATED}`}
-    title="My own AI policy."
-    lead="I sell governance, so this is mine, in public. It is also a worked example of the one-page policy I ask clients to write."
+    eyebrow={`Updated ${UPDATED}`}
+    title="My AI acceptable use policy"
+    lead="I sell AI governance for a living. This AI acceptable use policy is mine, published in public rather than filed away. It is also a worked example of the one-page policy I ask clients to write."
   />
 
-  <Section index="02" eyebrow="Rules" title="What I hold myself to" tone="surface">
+  <Section eyebrow="Rules" title="What I hold myself to" tone="surface">
     <ol class="grid gap-4">
       {
         rules.map((rule, index) => (
@@ -81,8 +80,8 @@ const rules = [
     </ol>
   </Section>
 
-  <Section index="03" eyebrow="Classification" title="Which data may go where">
-    <section class="overflow-x-auto" aria-label="Data classification table" tabindex="0">
+  <Section eyebrow="Classification" title="Which data may go where">
+    <section class="overflow-x-auto" aria-label="Data classification table" tabindex={0}>
       <table class="w-full border-collapse text-left">
         <thead>
           <tr class="border-b border-line">

@@ -25,26 +25,15 @@ const nodes = [
 const blocks = [
   {
     label: 'Working on',
-    items: [
-      'Agentic support triage for only.help, now in production and being watched rather than built.',
-      'Two assessments in the pipeline, both companies under two hundred people with stalled pilots.',
-      'Writing up the eval-set sampling mistake from the only.help sprint, because I have seen others make it.',
-    ],
+    items: ['Filled in when the site launches.'],
   },
   {
     label: 'Capacity',
-    items: [
-      'One assessment slot free this month.',
-      'One sprint slot free from the middle of next month.',
-      'Retainer: one client, room for one more.',
-    ],
+    items: ['Filled in when the site launches. Until then, ask on the call.'],
   },
   {
     label: 'Reading',
-    items: [
-      'The NIST AI Risk Management Framework profiles, again, looking for what a small company can drop.',
-      'Post-incident write-ups from teams running agents at volume, which are more useful than the papers.',
-    ],
+    items: ['Filled in when the site launches.'],
   },
 ];
 ---
@@ -55,10 +44,9 @@ const blocks = [
   <Section
     bordered={false}
     headingLevel={1}
-    index="01"
     eyebrow={`Updated ${UPDATED.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}`}
-    title="What I am doing now."
-    lead="Updated monthly. If the capacity line says nothing is free, it means nothing is free."
+    title="What I am working on now"
+    lead="I update this list of what I am working on now once a month, by hand, not generated. When the capacity line says nothing is free, it means nothing is free. It stays empty until there is something true to put in it."
   />
 
   <Section title="This month">
@@ -80,8 +68,8 @@ const blocks = [
 
   <Section title="Next step">
     <CtaBlock
-      title="One assessment slot is free this month."
-      body="If your pilot has stalled and you want to know why in two weeks rather than two quarters, take the call."
+      title="Ask what is actually free this month."
+      body="Capacity changes weekly, so it is a question for the call rather than a line on a page."
       label="Book a 30-min fit call"
       href="https://cal.com/meshin"
       note="Or email hello@meshin.co"

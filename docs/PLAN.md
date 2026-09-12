@@ -21,8 +21,8 @@ The PRD's decision log (§2, D1–D24) stands except where a row below replaces 
 | L5 | No ctxr references | No `ctxr-dev`, no npm `@ctxr` anywhere on the site or in schema `sameAs` | D22 partial, §11.6 |
 | L6 | Contact | No form, no Pages Function, no Resend, no honeypot. `/contact` = email `hello@meshin.co` + Cal.com button | D11 |
 | L7 | Newsletter | Dropped entirely: no `/newsletter`, no footer signup, no "notify me" fields, no Buttondown | §1, §7.1, §9.5 |
-| L8 | Prices | Assessment `5000` USD fixed · Sprint from `25000` USD · Retainer from `12000` USD/month | §1 |
-| L9 | Hero photo | Locally generated neutral placeholder, no face, no remote host (CSP is `img-src 'self' data:`) | §1 |
+| L8 | Prices | Not published anywhere on the site. Three fee shapes only: Assessment fixed fee · Sprint fixed scope quoted once · Retainer monthly. Numbers are given on the fit call and written into the SOW. Replaces the earlier L8 (public $5,000/$25,000/$12,000), closed 2026-09-12 after owner review | §1, earlier L8 |
+| L9a | Hero | Home hero is the "editorial ledger": unchanged H1 and sub, two CTAs, then a three-cell monospace offer ledger (2 weeks / 90 days / 1–2 days a week) with no dollar figures, no spec card. Numbered section labels ("01", "02"…) and figure-number chips removed from every page and component. No "meshin.co" written inside page copy | new, 2026-09-12 |
 | L10 | Resource artifacts | Pages link to `https://github.com/meshin-co/<slug>`; repos are created by the owner later; `linkinator` skips that host prefix until they exist | D22 |
 | L11 | Case studies | `/case-studies` ships as a hub plus the anonymized-case template, zero metrics, no invented client | D22 |
 | L12 | Credential line | "ISO/IEC 42001 Lead Implementer (in progress)", no date; `hasCredential` stays out of Person schema until awarded | §4.5 |

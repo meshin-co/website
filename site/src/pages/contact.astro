@@ -9,7 +9,8 @@ const site = import.meta.env.SITE.replace(/\/$/, '');
 
 const metadata = {
   title: 'Contact',
-  description: 'Book a 30-minute fit call or email hello@meshin.co. Remote worldwide, on site when it earns the trip.',
+  description:
+    'Book a 30-minute fit call or email hello@meshin.co. Remote worldwide, on site when the trip is worth it.',
 };
 
 const nodes = [
@@ -46,10 +47,9 @@ const channels = [
   <Section
     bordered={false}
     headingLevel={1}
-    index="01"
     eyebrow="Contact"
-    title="Three ways to reach me."
-    lead="No form, no autoresponder, no drip sequence. Remote worldwide, and on site when the trip earns itself."
+    title="Book an AI leadership call"
+    lead="Book an AI leadership call: no form, no autoresponder, no drip sequence after it. I work remote worldwide, and on site when the trip is worth it."
   />
 
   <Section title="Channels">
@@ -70,7 +70,7 @@ const channels = [
     </dl>
   </Section>
 
-  <Section index="02" eyebrow="Before the call" title="What helps" tone="surface">
+  <Section eyebrow="Before the call" title="What helps" tone="surface">
     <ul class="grid gap-3 sm:grid-cols-2 sm:gap-x-14">
       {
         [

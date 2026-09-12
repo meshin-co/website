@@ -5,11 +5,8 @@ tagline: Two weeks to a memo your board can act on.
 description: A two-week AI readiness and risk assessment for companies of 30 to 300 people, ending in a memo your board can act on.
 publishDate: 2026-09-08
 updatedDate: 2026-09-08
-shortAnswer: Two weeks of interviews and reading your systems, ending in a memo your board can act on. You learn where you stand against the frameworks your customers ask about, what a customer audit would find today, and which three processes are worth automating first. The fee is credited if you continue.
-price:
-  amount: 5000
-  currency: USD
-  unit: fixed
+shortAnswer: This AI readiness assessment takes two weeks of interviews and reading your systems, and ends in a memo your board can act on. You learn where you stand against the frameworks your customers ask about, what a customer audit would find today and which three processes are worth automating first. The fee is credited if you continue.
+feeShape: Fixed fee
 duration: 2 weeks
 order: 1
 forWhom:
@@ -34,17 +31,40 @@ process:
     detail: I read the repositories, the data flows and the vendor list, rather than asking you to describe them.
   - step: 3
     title: Memo
-    detail: 'One document: where you stand, what a customer audit would find, and the three processes worth doing first.'
+    detail: One document, pulling together everything above.
+schedule:
+  - stage: Interviews
+    work: Conversations across engineering, product and legal
+    output: Direct answers from the people doing the work.
+  - stage: Systems read
+    work: Repositories, data flows and the vendor list
+    output: The inventory of AI tools and data already in the building.
+  - stage: Memo
+    work: Interviews and systems read, written up
+    output: The readiness score, the gap list and the three processes worth doing first.
 faq:
   - q: 'Who needs to be available?'
     a: One engineer who knows the data, one person who owns the process, and whoever signs vendor contracts. Two hours each, spread over the two weeks.
   - q: 'What do I get at the end?'
-    a: A memo, a readiness score with the evidence behind it, a gap list against the three frameworks, and a ranked shortlist of processes.
+    a: The memo covers your position, the audit gap and the ranked shortlist, all in one document.
   - q: 'Is the fee credited if we continue?'
     a: Yes. If you go on to a 90-Day Production Sprint within three months, the full Assessment fee comes off the Sprint price.
 cta:
   label: Book a 30-min fit call
   href: https://cal.com/meshin
+sources:
+  - title: AI Risk Management Framework
+    url: https://www.nist.gov/itl/ai-risk-management-framework
+    publisher: NIST
+    retrieved: '2026-09-08'
+  - title: 'ISO/IEC 42001:2023 — Information technology — Artificial intelligence — Management system'
+    url: https://www.iso.org/standard/42001
+    publisher: ISO/IEC
+    retrieved: '2026-09-08'
+  - title: 'Regulation (EU) 2024/1689 laying down harmonised rules on artificial intelligence (Artificial Intelligence Act)'
+    url: https://eur-lex.europa.eu/eli/reg/2024/1689/oj
+    publisher: EUR-Lex
+    retrieved: '2026-09-08'
 ---
 
 ## What this is

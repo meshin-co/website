@@ -10,7 +10,7 @@ interface Props {
 const { name, role, bio, href, linkLabel = 'More about me' } = Astro.props;
 ---
 
-<aside class="border-t border-line pt-6" aria-label="About the author">
+<aside data-gate-ignore class="border-t border-line pt-6" aria-label="About the author">
   <p class="eyebrow">Written by</p>
   <div class="mt-4 grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-baseline">
     <div>

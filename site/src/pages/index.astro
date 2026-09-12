@@ -9,7 +9,7 @@ import Section from '~/components/site/Section.astro';
 import ServiceCard from '~/components/site/ServiceCard.astro';
 import SignalList from '~/components/site/SignalList.astro';
 import StepList from '~/components/site/StepList.astro';
-import { artifacts, brief, cta, drivers, figures, hero, nudge, services, shift, signals } from '~/data/home';
+import { artifacts, cta, drivers, figures, hero, heroOffers, nudge, services, shift, signals } from '~/data/home';
 import JsonLd from '~/components/common/JsonLd.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
@@ -34,29 +34,29 @@ const nodes = [orgNode(site), personNode(site), websiteNode(site)];
     proof={hero.proof}
     ctaLabel={hero.ctaLabel}
     ctaHref={hero.ctaHref}
-    brief={brief}
+    offers={heroOffers}
+    secondary={{ label: 'Read the method', href: '/approach' }}
   />
 
-  <Section index="01" eyebrow="Track record" tone="surface">
+  <Section eyebrow="Track record" tone="surface">
     <FigureStrip figures={figures} />
   </Section>
 
-  <Section index="02" eyebrow="Fit" title="Do you need a Fractional CAIO?">
+  <Section eyebrow="Fit" title="Do you need a Fractional CAIO?">
     <SignalList items={signals.items} verdict={signals.verdict} />
   </Section>
 
-  <Section index="03" eyebrow="Outcome" title={shift.title} tone="surface">
+  <Section eyebrow="Outcome" title={shift.title} tone="surface">
     <ShiftPanel before={shift.before} after={shift.after} />
   </Section>
 
   <Section
-    index="04"
     eyebrow="Offers"
     title="Services"
     lead="Three ways in. Each one ends with an artifact you can hand to a customer, a board or an auditor."
   >
     <CardGrid>
-      {services.map((service, order) => <ServiceCard {...service} index={String(order + 1).padStart(2, '0')} />)}
+      {services.map((service, order) => <ServiceCard {...service} />)}
     </CardGrid>
 
     <div class="mt-10 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-4 border-t border-line pt-8">
@@ -66,21 +66,19 @@ const nodes = [orgNode(site), personNode(site), websiteNode(site)];
   </Section>
 
   <Section
-    index="05"
     eyebrow="Method"
     title="How I work"
     tone="page"
-    lead="Six things decide whether an AI initiative reaches production. I measure all six, in this order, and the last one is the one most engagements skip."
+    lead="Six things decide whether an AI initiative reaches production. I measure all six, in this order, and the sixth is the one a stalled pilot has usually skipped."
   >
     <StepList steps={drivers} />
   </Section>
 
   <Section
-    index="06"
     eyebrow="Artifacts"
     title="Proof"
     tone="surface"
-    lead="The templates and harnesses I use in engagements are published, so you can read the method before you buy it."
+    lead="Every template I use in engagements is written out in full on its own page, so you can read the method before you buy it."
   >
     <CardGrid>
       {artifacts.map((artifact) => <ResourceCard {...artifact} />)}

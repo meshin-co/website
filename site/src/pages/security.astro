@@ -25,25 +25,33 @@ const posture = [
   {
     label: 'This site',
     items: [
-      'Static files only. No server code, no database, no user accounts, no forms.',
+      'Static files only. No server code, no database, no user accounts, no data-collection forms: the search box on this site never submits anywhere, and the Content-Security-Policy blocks form submission outright.',
       'Content Security Policy with no inline scripts. Every inline block is hashed at build time.',
       'No cookies, no consent banner, no cross-site tracking. Analytics are aggregate and cookieless.',
     ],
   },
   {
-    label: 'Client data',
+    label: 'My machine and accounts',
     items: [
-      'Engagement material lives in an encrypted store on my own machines and in the client’s own systems.',
-      'Client data reaches only the vendors named in that client’s contract.',
+      'Full-disk encryption on the machine I work from, with an automatic screen lock.',
+      'Two-factor authentication on every work account, and passwords in a password manager rather than in a file or a browser.',
       'Nothing client-owned is used to train or improve a model.',
     ],
   },
   {
-    label: 'Access',
+    label: 'Your systems and your data',
     items: [
-      'Hardware-backed keys for every account that matters, with no SMS fallback.',
-      'Client system access is requested per engagement, scoped to what the work needs, and revoked at handover.',
-      'Handover includes a list of every credential I held, so revocation is a checklist rather than a memory.',
+      'I ask for a named account in your own systems, scoped to the work, so you hold the off-switch and revoke it at handover.',
+      'The work happens inside your systems. I keep no copy of your documents, exports, tickets or logs.',
+      'My own working notes are deleted at handover, and the handover lists every credential I held so revoking them is a checklist rather than a memory.',
+    ],
+  },
+  {
+    label: 'If something goes wrong',
+    items: [
+      'If I find that your material has been exposed, I tell you within 24 hours of finding out.',
+      'You get what I know at that point, not a polished version of it a week later.',
+      'Anything further, including who else must be notified, is set in your contract rather than on this page.',
     ],
   },
 ];
@@ -55,14 +63,13 @@ const posture = [
   <Section
     bordered={false}
     headingLevel={1}
-    index="01"
     eyebrow="Security"
-    title="How this is built and handled."
-    lead="Short because the surface is small. A static site with no accounts cannot leak a database it does not have."
+    title="Security practices for client work"
+    lead="My security practices, in four parts: this site, my own machine, your systems and your data, and what happens if something goes wrong."
   />
 
   <Section title="Posture">
-    <dl class="grid gap-px bg-line sm:grid-cols-3">
+    <dl class="grid gap-px bg-line sm:grid-cols-2">
       {
         posture.map((block) => (
           <div class="bg-page p-6">
@@ -78,7 +85,7 @@ const posture = [
     </dl>
   </Section>
 
-  <Section index="02" eyebrow="Disclosure" title="Reporting something" tone="surface">
+  <Section eyebrow="Disclosure" title="Reporting something" tone="surface">
     <p class="max-w-[68ch] text-lg leading-relaxed text-muted">
       Email <a class="text-link underline" href="mailto:hello@meshin.co">hello@meshin.co</a> with what you found and how to
       reproduce it. I reply within two working days and I will tell you when it is fixed. No bounty, no legal threats, and

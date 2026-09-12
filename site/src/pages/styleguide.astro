@@ -17,7 +17,7 @@ import Section from '~/components/site/Section.astro';
 import ServiceCard from '~/components/site/ServiceCard.astro';
 import SignalList from '~/components/site/SignalList.astro';
 import StepList from '~/components/site/StepList.astro';
-import { artifacts, brief, drivers, figures, services, shift, signals } from '~/data/home';
+import { artifacts, heroOffers, drivers, figures, hero, services, shift, signals } from '~/data/home';
 import Layout from '~/layouts/PageLayout.astro';
 
 const metadata = {
@@ -84,7 +84,13 @@ const swatches = ['page', 'text', 'muted', 'primary', 'line'];
       proof={['proof one', 'proof two', 'proof three']}
       ctaLabel="Primary action"
       ctaHref="https://cal.com/meshin"
-      brief={brief}
+      offers={heroOffers}
+      title={hero.title}
+      titleAccent={hero.titleAccent}
+      sub={hero.sub}
+      proof={hero.proof}
+      ctaLabel={hero.ctaLabel}
+      ctaHref={hero.ctaHref}
       secondary={{ label: 'secondary link →', href: '/styleguide' }}
     />
   </Section>
@@ -103,11 +109,7 @@ const swatches = ['page', 'text', 'muted', 'primary', 'line'];
 
   <Section title="Service cards">
     <CardGrid>
-      {
-        services.map((service, order) => (
-          <ServiceCard {...service} index={String(order + 1).padStart(2, '0')} href="/styleguide" />
-        ))
-      }
+      {services.map((service, order) => <ServiceCard {...service} href="/styleguide" />)}
     </CardGrid>
   </Section>
 
@@ -233,7 +235,7 @@ const swatches = ['page', 'text', 'muted', 'primary', 'line'];
     <AuthorBox
       name="Dmitri Meshin"
       role="Fractional Chief AI Officer"
-      bio="Platform engineer who spends most weeks getting AI systems past security review and into production."
+      bio="Platform engineer who gets AI systems past security review and into production."
       href="/styleguide"
     />
   </Section>

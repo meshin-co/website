@@ -9,11 +9,11 @@ import JsonLd from '~/components/common/JsonLd.astro';
 import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
 import Section from '~/components/site/Section.astro';
 import ShiftPanel from '~/components/site/ShiftPanel.astro';
+import SourceList from '~/components/site/SourceList.astro';
 import StepList from '~/components/site/StepList.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { articleMetadata } from '~/utils/machine-links.mjs';
 import { breadcrumbNode, faqNode, orgNode, personNode, serviceNode } from '~/utils/jsonld.mjs';
-import { formatPrice } from '~/utils/offers.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const services = await getCollection('service');
@@ -54,18 +54,18 @@ const nodes = [
   <MarkdownAlternate path={`/services/${service.id}`} slot="head" />
 
   <Section bordered={false} headingLevel={1} eyebrow={data.duration} title={data.name} lead={data.tagline}>
-    <p class="font-mono text-2xl text-heading">{formatPrice(data.price)}</p>
+    <p class="font-mono text-lg text-heading">{data.feeShape}</p>
     <p class="mt-8 max-w-[68ch] text-lg leading-relaxed text-muted">{data.shortAnswer}</p>
   </Section>
 
-  <Section index="01" eyebrow="Fit" title="Who this is for" tone="surface">
+  <Section eyebrow="Fit" title="Who this is for" tone="surface">
     <ShiftPanel
       before={{ label: 'This is for you if', items: data.forWhom }}
       after={{ label: 'This is not for you if', items: data.notForWhom }}
     />
   </Section>
 
-  <Section index="02" eyebrow="Deliverables" title="What you get">
+  <Section eyebrow="Deliverables" title="What you get">
     <ul class="grid gap-3 sm:grid-cols-2 sm:gap-x-14">
       {
         data.deliverables.map((deliverable) => (
@@ -78,24 +78,53 @@ const nodes = [
     </ul>
   </Section>
 
-  <Section index="03" eyebrow="Process" title="How it runs">
+  <Section eyebrow="Process" title="How it runs">
     <StepList steps={data.process.map((step) => ({ name: step.title, detail: step.detail }))} ordered />
+
+    <section class="mt-12 overflow-x-auto" aria-label="Schedule" tabindex={0}>
+      <table class="w-full border-collapse text-left">
+        <thead>
+          <tr class="border-b border-line">
+            <th class="py-3 pr-4 font-mono text-xs tracking-[0.16em] text-muted uppercase" scope="col">Stage</th>
+            <th class="py-3 pr-4 font-mono text-xs tracking-[0.16em] text-muted uppercase" scope="col">What happens</th>
+            <th class="py-3 font-mono text-xs tracking-[0.16em] text-muted uppercase" scope="col">What you get</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            data.schedule.map((row) => (
+              <tr class="border-b border-line last:border-b-0">
+                <th class="py-4 pr-4 align-top font-normal text-heading" scope="row">
+                  {row.stage}
+                </th>
+                <td class="max-w-[34ch] py-4 pr-4 align-top text-muted">{row.work}</td>
+                <td class="max-w-[34ch] py-4 align-top text-muted">{row.output}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </section>
   </Section>
 
-  <Section index="04" eyebrow="Detail" title="In my words" tone="surface">
+  <Section eyebrow="Detail" title="In my words" tone="surface">
     <div class="prose-brief prose-brief-headings max-w-[68ch]">
       <Content />
     </div>
   </Section>
 
-  <Section index="05" eyebrow="Questions" title="What people ask">
+  <Section eyebrow="Questions" title="What people ask">
     <FaqList items={data.faq.map((entry) => ({ question: entry.q, answer: entry.a }))} />
+  </Section>
+
+  <Section eyebrow="Provenance" title="Sources">
+    <SourceList sources={data.sources} />
   </Section>
 
   <Section title="Next step">
     <CtaBlock
       title="Start with a 30-minute fit call."
-      body="No slides. We go through where you actually stand, and I tell you whether this offer is the right one."
+      body="No slides. I walk through where you actually stand, and tell you whether this offer is the right one."
       label={data.cta.label}
       href={data.cta.href}
       note="Or email hello@meshin.co"

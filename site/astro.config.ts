@@ -14,8 +14,8 @@ import expressiveCode from 'astro-expressive-code';
 
 import astrowind from './vendor/integration';
 
-import { readingTimeRemarkPlugin, responsiveTablesRehypePlugin } from './src/utils/frontmatter';
-import { rehypeExternalLinks, rehypeHeadingAnchors } from './src/utils/pipeline.mjs';
+import { readingTimeRemarkPlugin } from './src/utils/frontmatter';
+import { rehypeExternalLinks, rehypeHeadingAnchors, rehypeScrollableTables } from './src/utils/pipeline.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -100,7 +100,7 @@ export default defineConfig({
   markdown: {
     processor: unified({
       remarkPlugins: [readingTimeRemarkPlugin],
-      rehypePlugins: [responsiveTablesRehypePlugin, rehypeHeadingAnchors, rehypeExternalLinks],
+      rehypePlugins: [rehypeScrollableTables, rehypeHeadingAnchors, rehypeExternalLinks],
     }),
     shikiConfig: {
       themes: { light: 'github-light', dark: 'github-dark' },

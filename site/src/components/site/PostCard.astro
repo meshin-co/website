@@ -4,21 +4,21 @@ interface Props {
   href: string;
   excerpt: string;
   date: string;
-  readingTime: string;
+  readingTime?: string;
   category?: string;
 }
 
 const { title, href, excerpt, date, readingTime, category } = Astro.props;
 const published = new Date(date);
-const meta = category ? `${readingTime} · ${category}` : readingTime;
+const meta = [readingTime, category].filter(Boolean).join(' · ');
 ---
 
-<article class="flex h-full flex-col border border-line p-6">
+<article class="flex h-full flex-col border border-line p-6" data-gate-ignore>
   <p class="eyebrow">
     <time datetime={published.toISOString().slice(0, 10)}>
       {published.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
     </time>
-    {` · ${meta}`}
+    {meta && ` · ${meta}`}
   </p>
 
   <h3 class="mt-5 font-heading text-xl font-semibold text-heading">

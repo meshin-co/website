@@ -79,7 +79,7 @@ export const STATIC_PAGES = [
     path: '/pricing',
     title: 'Pricing',
     description:
-      'Assessment $5,000 fixed. Production Sprint from $25,000. Fractional CAIO retainer from $12,000 a month.',
+      'A two-week Assessment, a 90-Day Production Sprint, and a monthly Fractional CAIO Retainer. Fixed structures, no hourly billing.',
   },
   {
     path: '/faq',

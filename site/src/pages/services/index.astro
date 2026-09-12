@@ -8,7 +8,6 @@ import Section from '~/components/site/Section.astro';
 import ServiceCard from '~/components/site/ServiceCard.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { breadcrumbNode, collectionNode, orgNode, personNode, serviceNode, websiteNode } from '~/utils/jsonld.mjs';
-import { formatPrice } from '~/utils/offers.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
 const services = (await getCollection('service')).sort((a, b) => a.data.order - b.data.order);
@@ -38,10 +37,9 @@ const nodes = [
   <Section
     bordered={false}
     headingLevel={1}
-    index="01"
     eyebrow="Offers"
-    title="Three ways in."
-    lead="Every engagement ends with an internal owner and written decisions. Prices are on the page because you should be able to plan without a call."
+    title="Fractional AI leadership services"
+    lead="I sell fractional AI leadership services three ways: a two-week assessment, a 90-day production sprint and a monthly retainer. Each one has a fixed shape, and the number reaches you in writing before any work starts. Pick the one that matches whether you need a diagnosis, a shipped process or an ongoing owner."
   />
 
   <Section title="What you can buy">
@@ -49,9 +47,8 @@ const nodes = [
       {
         services.map((service, position) => (
           <ServiceCard
-            index={String(position + 1).padStart(2, '0')}
             name={service.data.name}
-            price={formatPrice(service.data.price)}
+            feeShape={service.data.feeShape}
             duration={service.data.duration}
             outcome={service.data.tagline}
             deliverables={service.data.deliverables}
@@ -64,7 +61,7 @@ const nodes = [
 
   <Section title="Not sure which one">
     <CtaBlock
-      title="Almost everyone starts with the two-week Assessment."
+      title="Start with the two-week Assessment."
       body="It is the cheapest way to find out whether the rest is worth your money. If it is not, I say so in the memo."
       label="Book a 30-min fit call"
       href="https://cal.com/meshin"

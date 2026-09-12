@@ -4,8 +4,13 @@ term: Agentic workflow
 description: An agentic workflow is a task run by one or more LLM agents that plan steps, call tools and decide what happens next.
 publishDate: 2026-09-08
 updatedDate: 2026-09-08
-shortDefinition: An agentic workflow is a task carried out by one or more LLM-based agents that plan steps, call tools or APIs, and decide what to do next, with little or no human input at each step.
-definition: An agentic workflow is a task carried out by one or more large language model based agents that plan a sequence of steps, call tools or external APIs, observe the result, and decide what to do next, largely on their own once started. This is different from a single prompt and response. A chatbot that answers a question is not agentic. A system that reads a support ticket, looks up the customer's order in an internal API, drafts a refund, and issues it, is. Engineering teams reach for this pattern because it automates work that used to need a person to move between systems and make small judgment calls along the way. Security reviewers and boards ask about it separately from asking about the model, because the risk profile changes once a system can act rather than only speak. A wrong sentence in a chat reply is embarrassing. A wrong action taken by an agent with access to a live system, an order, a payment, a support ticket, has already happened by the time anyone notices.
+shortDefinition: An agentic workflow is a task one or more AI agents complete on their own once started. The system plans steps, calls tools or APIs, checks the result, and decides what happens next without a person approving each move.
+definition: |
+  The distinction that matters is between a single prompt and response and a task an agent sees through to the end. A chatbot that answers one question is not agentic. A system that reads a support ticket, looks up the order, drafts a refund and issues it, is agentic: nobody scripted that exact sequence in advance.
+
+  Engineering teams build this pattern because it automates the cross-system judgement calls that used to need a person. Security reviewers and boards ask about it separately from the model itself, because the risk changes once a system can act, not only speak.
+
+  A wrong sentence in a chat reply is embarrassing. A wrong action against a live order or a payment has already happened by the time anyone notices, because nothing stood between the decision and the outcome.
 relatedTerms:
   - human-in-the-loop
   - llm-gateway
@@ -19,8 +24,8 @@ sources:
 
 ## Why it comes up
 
-It comes up the moment a pitch or a product description uses the word "agent" rather than "assistant". A security reviewer's next question is almost always what the agent is allowed to do without asking first, because that is where the actual exposure sits, not in the model choice. A board hears "agentic" and, correctly, hears "this thing takes actions on its own", which is a different risk conversation than a chatbot that only produces text a person then reads and decides on.
+It comes up the moment a pitch or a product description says "agent" instead of "assistant". A security reviewer's next question is almost always what the agent can do without asking first, since that is where the real exposure sits, not the model choice. A board hears "agentic" and correctly hears "this thing takes actions on its own." That is a different risk conversation than a chatbot that only produces text.
 
 ## What to do about it
 
-List every action an agent can take, not just what it can say, and treat each one as a separate risk to sign off rather than a detail of implementation. Put a real limit on what it can do without a person confirming first, especially anything that spends money, changes a customer record, or sends something external. Log every tool call it makes so a bad outcome is traceable to a specific decision. Evals belong here too: test the whole chain of actions, not only the model's replies in isolation.
+List every action an agent can take, not just what it can say, and sign off on each as a separate risk. Set a real limit on what it can do without a person confirming first, especially anything that spends money, touches a customer record, or sends something external. Log every tool call, so a bad outcome traces to a specific decision. Evals belong here: test the whole action chain, not just the model's replies.

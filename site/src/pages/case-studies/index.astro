@@ -16,8 +16,7 @@ const cases = (await getCollection('case', ({ data }) => !data.draft)).sort(
 
 const metadata = {
   title: 'Case studies',
-  description:
-    'What shipped, what it replaced, and the numbers before and after. Anonymised only where a client asked for it.',
+  description: 'One entry, not a client case: only.help, my own product, built with the method I use for clients.',
 };
 
 const nodes = [
@@ -38,10 +37,9 @@ const nodes = [
   <Section
     bordered={false}
     headingLevel={1}
-    index="01"
     eyebrow="Evidence"
-    title="What actually shipped."
-    lead="One entry per engagement that reached production, with the numbers I can show. Client work appears here only with permission, so this list is shorter than the work."
+    title="Fractional chief AI officer case study"
+    lead="Here is one fractional chief AI officer case study: only.help, my own product. I ran the method I sell on myself first. A client case study appears here only once a client agrees in writing, which is why this page stays short."
   />
 
   <Section title="Engagements">

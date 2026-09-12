@@ -1,23 +1,19 @@
 ---
 interface Props {
-  index: string;
   deliverables: string[];
   name: string;
-  price: string;
+  feeShape: string;
   duration: string;
   outcome: string;
   href?: string;
 }
 
-const { index, name, price, duration, outcome, deliverables, href } = Astro.props;
+const { name, feeShape, duration, outcome, deliverables, href } = Astro.props;
 ---
 
-<article class="card group flex h-full flex-col p-7 hover:card-hover sm:p-8">
+<article class="card group flex h-full flex-col p-7 hover:card-hover sm:p-8" data-gate-ignore>
   <div>
-    <div class="flex items-baseline gap-3">
-      <span class="font-mono text-xs text-primary figure-num">{index}</span>
-      <span class="eyebrow">{duration}</span>
-    </div>
+    <span class="eyebrow">{duration}</span>
 
     <h3
       class="mt-5 font-heading text-2xl leading-tight font-semibold tracking-[-0.01em] text-heading sm:min-h-[3.75rem]"
@@ -33,7 +29,7 @@ const { index, name, price, duration, outcome, deliverables, href } = Astro.prop
       }
     </h3>
 
-    <p class="mt-6 border-t border-line pt-5 font-mono text-2xl text-heading figure-num">{price}</p>
+    <p class="mt-6 border-t border-line pt-5 font-mono text-lg text-heading figure-num">{feeShape}</p>
   </div>
 
   <div class="mt-6 flex grow flex-col">

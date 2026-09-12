@@ -53,16 +53,9 @@ const nodes = [
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
 
-  <Section
-    bordered={false}
-    headingLevel={1}
-    index="01"
-    eyebrow="Category"
-    title={pillar.title}
-    lead={pillar.description}
-  />
+  <Section bordered={false} headingLevel={1} eyebrow="Category" title={pillar.title} lead={pillar.description} />
 
-  <Section index="02" eyebrow="Position" title="Where I stand on this" tone="surface">
+  <Section eyebrow="Position" title="Where I stand on this" tone="surface">
     <div class="grid max-w-[68ch] gap-6 text-lg leading-relaxed text-muted">
       {pillar.body.map((paragraph) => <p>{paragraph}</p>)}
     </div>

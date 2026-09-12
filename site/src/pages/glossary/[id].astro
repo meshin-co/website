@@ -28,6 +28,7 @@ const { Content } = await render(term);
 const site = import.meta.env.SITE.replace(/\/$/, '');
 const terms = await getCollection('glossary', ({ data: entry }) => !entry.draft);
 const related = terms.filter((entry) => data.relatedTerms.some((reference) => reference.id === entry.id));
+const definitionParagraphs = data.definition.split(/\n{2,}/);
 
 const metadata = articleMetadata(site, {
   title: data.title,
@@ -55,20 +56,20 @@ const nodes = [
   <JsonLd nodes={nodes} slot="head" />
   <MarkdownAlternate path={`/glossary/${term.id}`} slot="head" />
 
-  <Section bordered={false} headingLevel={1} eyebrow="Glossary" title={data.term} lead={data.description} />
+  <Section bordered={false} headingLevel={1} eyebrow="Glossary" title={data.term} />
 
-  <Section index="01" eyebrow="Definition" title="What it means" tone="surface">
+  <Section eyebrow="Definition" title="What it means" tone="surface">
     <AnswerBlock question={`What is ${data.term}?`} answer={data.shortDefinition} />
-    <p class="mt-10 max-w-[68ch] text-muted">{data.definition}</p>
+    {definitionParagraphs.map((paragraph) => <p class="mt-10 max-w-[68ch] text-muted">{paragraph}</p>)}
   </Section>
 
-  <Section index="02" eyebrow="Detail" title="In practice">
+  <Section eyebrow="Detail" title="In practice">
     <div class="prose-brief prose-brief-headings max-w-[68ch]">
       <Content />
     </div>
   </Section>
 
-  <Section index="03" eyebrow="Provenance" title="Sources and neighbours">
+  <Section eyebrow="Provenance" title="Sources and neighbours">
     <SourceList sources={data.sources} />
     {
       related.length > 0 && (

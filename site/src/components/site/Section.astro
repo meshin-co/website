@@ -1,7 +1,6 @@
 ---
 interface Props {
   id?: string;
-  index?: string;
   eyebrow?: string;
   title?: string;
   lead?: string;
@@ -10,23 +9,17 @@ interface Props {
   headingLevel?: 1 | 2;
 }
 
-const { id, index, eyebrow, title, lead, tone = 'page', bordered = true, headingLevel = 2 } = Astro.props;
+const { id, eyebrow, title, lead, tone = 'page', bordered = true, headingLevel = 2 } = Astro.props;
 const Heading = headingLevel === 1 ? 'h1' : 'h2';
 ---
 
 <section id={id} class:list={[tone === 'surface' && 'bg-surface', bordered && 'border-t border-line']}>
   <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
     {
-      (index || eyebrow) && (
-        <div
-          class:list={[
-            'sticky top-0 z-10 -mx-5 mb-12 flex items-center gap-5 px-5 py-4 sm:-mx-8 sm:px-8',
-            tone === 'surface' ? 'bg-surface' : 'bg-page',
-          ]}
-        >
-          {index && <span class="font-mono text-sm leading-none text-primary figure-num">{index}</span>}
+      eyebrow && (
+        <div class:list={['mb-12 flex items-center gap-5', tone === 'surface' ? 'bg-surface' : 'bg-page']}>
+          <span class="eyebrow leading-none">{eyebrow}</span>
           <span class="h-px grow bg-line" aria-hidden="true" />
-          {eyebrow && <span class="eyebrow leading-none">{eyebrow}</span>}
         </div>
       )
     }

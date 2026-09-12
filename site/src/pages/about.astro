@@ -37,26 +37,28 @@ const principles = {
     'A governance document nobody updates is worse than none, because it looks like a control.',
     'Engagements should end. Handover is a deliverable, not a courtesy.',
   ],
-  verdict: 'If that reads like your view too, we will get on.',
 };
 ---
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
 
-  <Section bordered={false} headingLevel={1} index="01" eyebrow="About" title="Dmitri Meshin" lead={author?.data.role}>
-    <p class="mt-2 max-w-[68ch] text-lg leading-relaxed text-muted">{author?.data.bio}</p>
+  <Section bordered={false} headingLevel={1} eyebrow="About" title="Dmitri Meshin" lead={author?.data.role}>
+    <p class="mt-2 max-w-[68ch] text-lg leading-relaxed text-muted">
+      I'm Dmitri Meshin, a platform engineer by trade. My work is getting one AI system through a corporate security
+      review and into production, then hand the keys to the team that has to keep it running.
+    </p>
   </Section>
 
-  <Section index="02" eyebrow="Record" title="What I have done" tone="surface">
+  <Section eyebrow="Record" title="What I have done" tone="surface">
     <FigureStrip figures={figures} />
   </Section>
 
-  <Section index="03" eyebrow="View" title="How I think about this work">
-    <SignalList items={principles.items} verdict={principles.verdict} />
+  <Section eyebrow="View" title="How I think about this work">
+    <SignalList items={principles.items} />
   </Section>
 
-  <Section index="04" eyebrow="Standing" title="Credentials and where to find me">
+  <Section eyebrow="Standing" title="Credentials and where to find me">
     <dl class="grid gap-px bg-line sm:grid-cols-2">
       <div class="bg-page p-6">
         <dt class="eyebrow">Credentials</dt>

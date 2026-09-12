@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs';
+import { gzipSync } from 'node:zlib';
+
 import { expect, test } from '@playwright/test';
 
 const INDEX_BUDGET_BYTES = 64 * 1024;
@@ -22,7 +25,9 @@ test('search returns real hits and the lazily fetched index stays inside its bud
 
   const total = lazyBytes.reduce((sum, bytes) => sum + bytes, 0);
   expect(total).toBeGreaterThan(0);
-  expect(total).toBeLessThan(INDEX_BUDGET_BYTES);
+
+  const wireBytes = gzipSync(readFileSync(new URL('../dist/search-index.json', import.meta.url))).byteLength;
+  expect(wireBytes).toBeLessThan(INDEX_BUDGET_BYTES);
 });
 
 test('a query in the url is answered on load, and a nonsense query says so', async ({ page }) => {

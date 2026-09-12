@@ -90,3 +90,15 @@ export function rehypeExternalLinks(options = {}) {
     });
   };
 }
+
+export function rehypeScrollableTables() {
+  return (tree) => {
+    if (!tree.children) return;
+
+    tree.children = tree.children.map((node) =>
+      node.type === 'element' && node.tagName === 'table'
+        ? { type: 'element', tagName: 'div', properties: { className: 'table-scroll', tabIndex: 0 }, children: [node] }
+        : node
+    );
+  };
+}

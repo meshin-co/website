@@ -12,12 +12,6 @@ const KNOWS_ABOUT = [
   'LLM evaluation',
 ];
 
-const PRICE_UNITS = {
-  fixed: undefined,
-  from: 'https://schema.org/MinimumAdvertisedPrice',
-  'per-month': 'MONTH',
-};
-
 const isoDay = (value) => new Date(value).toISOString().slice(0, 10);
 
 const absolute = (site, path) => (path === '/' ? `${site}/` : `${site}${path}`);
@@ -72,7 +66,6 @@ export function websiteNode(site) {
 }
 
 export function serviceNode(site, service) {
-  const unit = PRICE_UNITS[service.price.unit];
   return {
     '@type': 'Service',
     '@id': `${site}/services/${service.id}#service`,
@@ -84,13 +77,7 @@ export function serviceNode(site, service) {
     offers: {
       '@type': 'Offer',
       url: `${site}/services/${service.id}`,
-      priceSpecification: {
-        '@type': service.price.unit === 'per-month' ? 'UnitPriceSpecification' : 'PriceSpecification',
-        price: service.price.amount,
-        priceCurrency: service.price.currency,
-        ...(service.price.unit === 'per-month' ? { unitCode: unit, billingDuration: 1 } : {}),
-        ...(service.price.unit === 'from' ? { valueAddedTaxIncluded: false, minPrice: service.price.amount } : {}),
-      },
+      availability: 'https://schema.org/InStock',
     },
   };
 }

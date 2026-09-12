@@ -101,3 +101,13 @@ correcting or extending the skill. Append; do not rewrite history.
 - **Suggested fix:** add a line to the audit workflow: when a sweep reports a widget as unstyled,
   first confirm the rule exists in the built output, then restart the dev server before treating
   it as a defect. Prefer serving `dist` for audit sweeps.
+
+## 2026-09-12 — Throwaway preview routes leak into the gate-derived route list
+
+**What happened.** To show hero variants, I added `src/pages/hero-preview.astro`, built, and screenshotted. A later `content-gate.mjs dist` run reported "66 pages gated" — the throwaway route had entered the audited set, because the audited route list derives from `dist/**/*.html` and every built page lands there.
+
+**Why it is costly.** The plan (L13, route derivation rule) treats `dist` as the source of truth. A scratch page silently widens every downstream gate: content gate, Lighthouse (68 URLs → 69, ~40s × 3 runs × 2 form factors of wasted compute), byte budgets, sitemap.
+
+**Workaround used.** Deleted the file before the real build. The route vanished from dist and the gate went back to 65 pages.
+
+**Suggested fix.** Add a `--routes-from` flag or an env exclude list to the gate chain (`content-gate.mjs`, `gate.mjs`, `lighthouserc.cjs`), so scratch routes can carry an explicit marker (e.g. frontmatter `robots: noindex` already exists for /styleguide and /search — those are intentional). Cheapest real guard: a unit test that fails the build when any dist route is neither in `content-facts.json` target queries nor marked noindex.

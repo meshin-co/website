@@ -63,32 +63,36 @@ const nodes = [
   <Section
     bordered={false}
     headingLevel={1}
-    eyebrow={`${data.client.industry} · ${data.client.size} · ${data.duration}`}
+    eyebrow={[data.client.industry, data.client.size, data.duration].filter(Boolean).join(' · ')}
     title={data.title}
     lead={data.description}
   />
 
-  <Section index="01" eyebrow="Numbers" title="Before and after" tone="surface">
-    <CaseMetrics
-      metrics={data.outcome.metrics}
-      note={data.anonymized ? 'Client name withheld at their request.' : 'Published with permission.'}
-    />
-  </Section>
+  {
+    data.outcome.metrics.length > 0 && (
+      <Section eyebrow="Numbers" title="Before and after" tone="surface">
+        <CaseMetrics
+          metrics={data.outcome.metrics}
+          note={data.anonymized ? 'Client name withheld at their request.' : 'Published with permission.'}
+        />
+      </Section>
+    )
+  }
 
-  <Section index="02" eyebrow="Shape" title="Problem and approach">
+  <Section eyebrow="Shape" title="Problem and approach">
     <ShiftPanel
       before={{ label: 'The problem', items: [data.problem] }}
       after={{ label: 'The approach', items: [data.approach] }}
     />
   </Section>
 
-  <Section index="03" eyebrow="Stack" title="What it runs on">
+  <Section eyebrow="Stack" title="What it runs on">
     <ul class="flex flex-wrap gap-x-8 gap-y-3">
       {data.stack.map((item) => <li class="font-mono text-sm text-muted">{item}</li>)}
     </ul>
   </Section>
 
-  <Section index="04" eyebrow="Detail" title="In my words" tone="surface">
+  <Section eyebrow="Detail" title="In my words" tone="surface">
     <div class="prose-brief prose-brief-headings max-w-[68ch]">
       <Content />
     </div>

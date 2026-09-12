@@ -68,16 +68,22 @@ const nodes = [
     lead={data.description}
   />
 
-  <Section index="01" eyebrow="Answer" title="The short answer" tone="surface">
+  <Section eyebrow="Answer" title="The short answer" tone="surface">
     <AnswerBlock question={data.title} answer={data.shortAnswer} />
-    <p class="mt-10 max-w-[68ch] text-muted">{data.fullAnswer}</p>
+    <p class="mt-10 max-w-[68ch] text-muted" data-gate-lead>{data.fullAnswer}</p>
+    <p class="mt-6 font-mono text-xs text-muted">
+      Updated{' '}
+      <time datetime={data.updatedDate.toISOString().slice(0, 10)}>
+        {data.updatedDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+      </time>
+    </p>
   </Section>
 
-  <Section index="02" eyebrow="Takeaways" title="What to remember">
+  <Section eyebrow="Takeaways" title="What to remember">
     <KeyTakeaways points={data.keyTakeaways} />
   </Section>
 
-  <Section index="03" eyebrow="Detail" title="The long version">
+  <Section eyebrow="Detail" title="The long version">
     <div class="grid gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)] lg:gap-16">
       <div class="prose-brief prose-brief-headings max-w-[68ch]">
         <Content />
@@ -90,13 +96,13 @@ const nodes = [
 
   {
     data.faq.length > 0 && (
-      <Section index="04" eyebrow="Questions" title="What people ask" tone="surface">
+      <Section eyebrow="Questions" title="What people ask" tone="surface">
         <FaqList items={data.faq.map((entry) => ({ question: entry.q, answer: entry.a }))} />
       </Section>
     )
   }
 
-  <Section index="05" eyebrow="Provenance" title="Where this comes from">
+  <Section eyebrow="Provenance" title="Where this comes from">
     <SourceList sources={data.sources} />
     {
       author && (

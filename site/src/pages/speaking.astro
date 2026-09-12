@@ -12,7 +12,7 @@ const appearances = (await getCollection('speaking')).sort((a, b) => b.data.date
 
 const metadata = {
   title: 'Speaking',
-  description: 'Talks and podcast appearances on agentic systems, AI governance and who owns AI risk.',
+  description: 'Agentic systems, AI governance and who owns AI risk, when I am asked to speak.',
 };
 
 const nodes = [
@@ -35,10 +35,9 @@ const nodes = [
   <Section
     bordered={false}
     headingLevel={1}
-    index="01"
     eyebrow="Speaking"
-    title="Where I have said this out loud."
-    lead="Roughly one appearance a quarter. I talk about what broke in production, not about what is coming next year."
+    title="Speaking on AI governance"
+    lead="Speaking on AI governance, when the invitation fits. I would rather talk about what broke in production than what is coming next year."
   />
 
   <Section title="Appearances">

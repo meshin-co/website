@@ -31,16 +31,15 @@ test('references between nodes point at ids that exist in the same graph', () =>
   assert.ok(ids.has(document['@graph'][1].worksFor['@id']));
 });
 
-test('a service node prices the offer instead of putting a number in the name', () => {
+test('a service node links the offer without publishing a price', () => {
   const node = serviceNode(SITE, {
     id: 'ai-readiness-and-risk-assessment',
     name: 'AI Readiness & Risk Assessment',
     description: 'Two weeks.',
-    price: { amount: 5000, currency: 'USD', unit: 'fixed' },
   });
   assert.equal(node['@id'], `${SITE}/services/ai-readiness-and-risk-assessment#service`);
-  assert.equal(node.offers.priceSpecification.price, 5000);
-  assert.equal(node.offers.priceSpecification.priceCurrency, 'USD');
+  assert.equal(node.offers.url, `${SITE}/services/ai-readiness-and-risk-assessment`);
+  assert.equal(node.offers.priceSpecification, undefined);
   assert.equal(node.provider['@id'], `${SITE}/#org`);
 });
 
@@ -101,7 +100,6 @@ test('a whole page graph has no reference pointing outside itself', () => {
       id: 'x',
       name: 'X',
       description: 'Y',
-      price: { amount: 1, currency: 'USD', unit: 'from' },
     }),
     breadcrumbNode(SITE, [{ name: 'Home', path: '/' }]),
   ]);

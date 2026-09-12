@@ -1,7 +1,13 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { isExternalHref, mergeRelTokens, rehypeHeadingAnchors, rehypeExternalLinks } from './pipeline.mjs';
+import {
+  isExternalHref,
+  mergeRelTokens,
+  rehypeHeadingAnchors,
+  rehypeExternalLinks,
+  rehypeScrollableTables,
+} from './pipeline.mjs';
 
 test('a relative path is never external', () => {
   assert.equal(isExternalHref('/blog/foo'), false);
@@ -137,4 +143,38 @@ test('running the external link pass twice does not duplicate rel tokens', () =>
   plugin(tree);
 
   assert.deepEqual(tree.children[0].properties.rel, ['noopener']);
+});
+
+test('a table is wrapped for scrolling by class, never by an inline style', () => {
+  const tree = { children: [{ type: 'element', tagName: 'table', children: [] }] };
+
+  rehypeScrollableTables()(tree);
+
+  const [wrapper] = tree.children;
+  assert.equal(wrapper.tagName, 'div');
+  assert.equal(wrapper.properties.className, 'table-scroll');
+  assert.equal(wrapper.properties.style, undefined);
+  assert.equal(wrapper.properties.tabIndex, 0);
+  assert.equal(wrapper.children[0].tagName, 'table');
+});
+
+test('wrapping runs once per table and leaves other nodes in place', () => {
+  const tree = {
+    children: [
+      { type: 'element', tagName: 'p', children: [] },
+      { type: 'element', tagName: 'table', children: [] },
+      { type: 'element', tagName: 'table', children: [] },
+    ],
+  };
+
+  rehypeScrollableTables()(tree);
+
+  assert.deepEqual(
+    tree.children.map((node) => node.tagName),
+    ['p', 'div', 'div']
+  );
+  assert.deepEqual(
+    tree.children.slice(1).map((node) => node.children[0].tagName),
+    ['table', 'table']
+  );
 });
