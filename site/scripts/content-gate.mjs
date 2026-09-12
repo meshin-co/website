@@ -17,6 +17,7 @@ const PROFILE_BY_PREFIX = [
   ['/resources/', 'offer'],
   ['/case-studies/', 'offer'],
   ['/glossary/', 'term'],
+  ['/faq/', 'faq-answer'],
 ];
 
 export function profileFor(route) {

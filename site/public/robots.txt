@@ -1,26 +1,51 @@
 User-agent: *
 Allow: /
-Disallow: /blog/tag/
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: GPTBot
 Allow: /
+Disallow: /search
+Disallow: /styleguide
 
 User-agent: ClaudeBot
 Allow: /
-
-User-agent: anthropic-ai
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
+Disallow: /search
+Disallow: /styleguide
 
 User-agent: Google-Extended
 Allow: /
+Disallow: /search
+Disallow: /styleguide
 
 User-agent: CCBot
 Allow: /
+Disallow: /search
+Disallow: /styleguide
 
-User-agent: Bingbot
+User-agent: PerplexityBot
 Allow: /
+Disallow: /search
+Disallow: /styleguide
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /search
+Disallow: /styleguide
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /search
+Disallow: /styleguide
+
+User-agent: Claude-User
+Allow: /
+Disallow: /search
+Disallow: /styleguide
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /search
+Disallow: /styleguide
+
+Sitemap: https://meshin.co/sitemap-index.xml

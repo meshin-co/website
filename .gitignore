@@ -9,5 +9,6 @@ test-results/
 playwright-report/
 site/test-results/
 site/.lighthouseci/
+.og-cache/
+site/.indexnow-routes.json
 audits/phase-ci/
-.omp-perfect-coder/*.jsonl

@@ -1,33 +1,42 @@
-import { readFileSync } from 'node:fs';
-import { gzipSync } from 'node:zlib';
+import { fileURLToPath } from 'node:url';
 
 import { expect, test } from '@playwright/test';
 
-const INDEX_BUDGET_BYTES = 64 * 1024;
+import { PER_SHARD_BUDGET_BYTES, SUM_BUDGET_BYTES, discoverShards, shardBudgets } from '../scripts/search-budget.mjs';
 
-test('search returns real hits and the lazily fetched index stays inside its budget', async ({ page }) => {
-  const lazyBytes: number[] = [];
-  page.on('response', async (response) => {
-    if (!response.url().includes('/search-index.json')) return;
-    lazyBytes.push((await response.body().catch(() => Buffer.alloc(0))).byteLength);
+const distDir = fileURLToPath(new URL('../dist/', import.meta.url));
+const indexPath = /\/search-index(-[a-z]+)?\.json$/;
+
+test('search returns real hits and every fetched shard stays inside the per-shard and sum budgets', async ({
+  page,
+}) => {
+  const fetched = new Set<string>();
+  page.on('response', (response) => {
+    const { pathname } = new URL(response.url());
+    if (indexPath.test(pathname)) fetched.add(pathname);
   });
 
   await page.goto('/search');
-  expect(lazyBytes).toHaveLength(0);
+  expect([...fetched]).toHaveLength(0);
 
   await page.fill('#search-query', 'governance');
   await page.click('form[data-search] button[type="submit"]');
 
-  await expect(page.locator('[data-search-summary]')).toContainText(/pages match/);
+  await expect(page.locator('[data-search-summary]')).toContainText(/match/);
   const hits = page.locator('[data-search-results] li');
   expect(await hits.count()).toBeGreaterThan(0);
   await expect(hits.first().locator('a')).toHaveAttribute('href', /^\//);
 
-  const total = lazyBytes.reduce((sum, bytes) => sum + bytes, 0);
-  expect(total).toBeGreaterThan(0);
+  const budgets = shardBudgets(distDir);
+  expect(budgets.shards.length).toBeGreaterThan(0);
+  for (const shard of budgets.shards) {
+    expect(shard.bytes, `${shard.file} exceeds the per-shard budget`).toBeLessThan(PER_SHARD_BUDGET_BYTES);
+  }
+  expect(budgets.sum, 'the sum of all shards exceeds the sum-of-shards budget').toBeLessThan(SUM_BUDGET_BYTES);
+  expect(budgets.withinBudget).toBe(true);
 
-  const wireBytes = gzipSync(readFileSync(new URL('../dist/search-index.json', import.meta.url))).byteLength;
-  expect(wireBytes).toBeLessThan(INDEX_BUDGET_BYTES);
+  const expected = new Set(discoverShards(distDir).map((file) => `/${file.split('/').pop()}`));
+  expect(fetched).toEqual(expected);
 });
 
 test('a query in the url is answered on load, and a nonsense query says so', async ({ page }) => {

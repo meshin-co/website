@@ -8,10 +8,11 @@ import { METADATA } from 'astrowind:config';
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
 
-import { buildOgTree } from '~/utils/og-template.mjs';
+import { findOgCacheDir, ogCacheKey, readOgImage, writeOgImage } from '~/utils/og-cache.mjs';
 import { pickFontFile, readFontNames } from '~/utils/font-file.mjs';
+import { buildOgTree } from '~/utils/og-template.mjs';
 
-type OgProps = { title: string; eyebrow?: string; footer?: string };
+type OgProps = { title: string; eyebrow?: string; footer?: string; cacheKey: string };
 
 const COLLECTIONS = ['post', 'service', 'resource', 'glossary', 'case'] as const;
 const FONT_DIRS = ['src/assets/fonts', 'node_modules/.astro/fonts', '.astro/fonts'];
@@ -39,10 +40,15 @@ function findFont(files: ReturnType<typeof loadFontFiles>, family: string, style
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  const defaultTitle = METADATA.title?.default ?? 'meshin.co';
   const paths: { params: { slug: string }; props: OgProps }[] = [
     {
       params: { slug: 'default' },
-      props: { title: METADATA.title?.default ?? 'meshin.co', footer: METADATA.description },
+      props: {
+        title: defaultTitle,
+        footer: METADATA.description,
+        cacheKey: ogCacheKey({ collection: 'default', id: 'default', title: defaultTitle }),
+      },
     },
   ];
   for (const collection of COLLECTIONS) {
@@ -50,14 +56,31 @@ export const getStaticPaths: GetStaticPaths = async () => {
     for (const entry of entries) {
       paths.push({
         params: { slug: `${collection}/${entry.id}` },
-        props: { title: entry.data.title, eyebrow: collection, footer: entry.data.description },
+        props: {
+          title: entry.data.title,
+          eyebrow: collection,
+          footer: entry.data.description,
+          cacheKey: ogCacheKey({
+            collection,
+            id: entry.id,
+            title: entry.data.title,
+            updatedDate: entry.data.updatedDate,
+          }),
+        },
       });
     }
   }
   return paths;
 };
 
-export const GET: APIRoute<OgProps> = async ({ props }) => {
+const PNG_HEADERS = { 'Content-Type': 'image/png' } as const;
+
+export const GET: APIRoute<OgProps> = async ({ params, props }) => {
+  const slug = String(params.slug);
+  const cacheDir = findOgCacheDir();
+  const cached = readOgImage(cacheDir, slug, props.cacheKey);
+  if (cached) return new Response(new Uint8Array(cached), { headers: PNG_HEADERS });
+
   const files = loadFontFiles();
   const fonts = [
     { name: 'Fraunces', data: findFont(files, 'Fraunces', 'SemiBold'), weight: 600 as const, style: 'normal' as const },
@@ -71,5 +94,6 @@ export const GET: APIRoute<OgProps> = async ({ props }) => {
   const tree = buildOgTree({ title: props.title, eyebrow: props.eyebrow ?? '', footer: props.footer ?? '' });
   const svg = await satori(tree, { width: 1200, height: 630, fonts });
   const png = new Resvg(svg).render().asPng();
-  return new Response(new Uint8Array(png), { headers: { 'Content-Type': 'image/png' } });
+  writeOgImage(cacheDir, slug, props.cacheKey, png);
+  return new Response(new Uint8Array(png), { headers: PNG_HEADERS });
 };

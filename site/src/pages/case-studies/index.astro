@@ -8,6 +8,7 @@ import PostCard from '~/components/site/PostCard.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { breadcrumbNode, collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
 const cases = (await getCollection('case', ({ data }) => !data.draft)).sort(
@@ -20,10 +21,15 @@ const metadata = {
 };
 
 const nodes = [
-  orgNode(site),
+  orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
   websiteNode(site),
-  collectionNode(site, { path: '/case-studies', name: 'Case studies', description: metadata.description }),
+  collectionNode(site, {
+    path: '/case-studies',
+    name: 'Case studies',
+    description: metadata.description,
+    items: cases.map((entry) => ({ url: `/case-studies/${entry.id}` })),
+  }),
   breadcrumbNode(site, [
     { name: 'Home', path: '/' },
     { name: 'Case studies', path: '/case-studies' },

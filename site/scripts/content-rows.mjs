@@ -14,6 +14,7 @@ export const PROFILES = {
   offer: { needsTableOrFigure: true, inbound: 2, outbound: 1, questionHeadings: 0 },
   page: { inbound: 1, outbound: 0, questionHeadings: 0 },
   term: { inbound: 1, outbound: 1, questionHeadings: 0 },
+  'faq-answer': { inbound: 0, outbound: 0, questionHeadings: 0 },
 };
 
 const STANDARD_NUMBER = /\b(?:ISO|IEC|NIST|SP|OWASP|EU|Article|Annex|Regulation)\b[^.]{0,24}$/i;
@@ -57,8 +58,11 @@ export function judgePage(page, profile, facts, bannedPhrases) {
     const inHeading = page.headings.h1[0]?.toLowerCase() ?? '';
     if (!terms.every((term) => inHeading.includes(term)))
       add('h1-query', page.headings.h1[0] ?? '', `missing "${query}"`);
-    else if (!terms.every((term) => page.opening.toLowerCase().includes(term)))
-      add('query-opening', page.opening.slice(0, 80), `missing "${query}" in the first 100 words`);
+    else {
+      const opening = page.profile === 'faq-answer' ? `${inHeading} ${page.opening}` : page.opening;
+      if (!terms.every((term) => opening.toLowerCase().includes(term)))
+        add('query-opening', page.opening.slice(0, 80), `missing "${query}" in the first 100 words`);
+    }
   }
 
   for (const violation of paragraphViolations(page.paragraphs))

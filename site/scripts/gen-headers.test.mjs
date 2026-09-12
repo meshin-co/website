@@ -53,3 +53,28 @@ test('every response carries the transport and framing guards', () => {
     assert.ok(policy.includes(header), `missing ${header}`);
   }
 });
+
+test('machine surfaces carry X-Robots-Tag: noindex', () => {
+  const policy = renderHeaders([]);
+
+  for (const rule of [
+    '/rss.xml',
+    '/*/rss.xml',
+    '/feed.json',
+    '/llms.txt',
+    '/llms-full.txt',
+    '/search-index*',
+    '/*.md',
+  ]) {
+    assert.ok(policy.includes(`${rule}\n  X-Robots-Tag: noindex`), `${rule} misses X-Robots-Tag`);
+  }
+});
+
+test('html pages never receive X-Robots-Tag', () => {
+  const starBlock = renderHeaders([])
+    .split('\n\n')
+    .find((block) => block.startsWith('/*\n'));
+
+  assert.ok(starBlock, 'no global block');
+  assert.ok(!starBlock.includes('X-Robots-Tag'));
+});

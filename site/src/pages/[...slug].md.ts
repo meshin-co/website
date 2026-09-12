@@ -1,6 +1,7 @@
 import type { APIRoute, GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 
+import { teaser } from '~/utils/faq-meta.mjs';
 import { absoluteUrl, renderSidecar } from '~/utils/machine-text.mjs';
 
 export const prerender = true;
@@ -11,6 +12,7 @@ const BASES = {
   resource: 'resources',
   glossary: 'glossary',
   case: 'case-studies',
+  faq: 'faq',
 } as const;
 
 type LiveEntry = { data: { draft?: boolean; noindex?: boolean } };
@@ -25,10 +27,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
       paths.push({
         params: { slug: `${base}/${entry.id}` },
         props: {
-          title: entry.data.title,
-          description: entry.data.description,
+          title: 'question' in entry.data ? entry.data.question : entry.data.title,
+          description: 'answer' in entry.data ? teaser(entry.data.answer) : entry.data.description,
           updated: entry.data.updatedDate ?? entry.data.publishDate,
-          body: entry.body ?? '',
+          body: 'answer' in entry.data ? entry.data.answer : (entry.body ?? ''),
           path: `/${base}/${entry.id}`,
         },
       });

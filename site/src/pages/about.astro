@@ -8,6 +8,7 @@ import Section from '~/components/site/Section.astro';
 import SignalList from '~/components/site/SignalList.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { breadcrumbNode, orgNode, personNode, profilePageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 import { figures } from '~/data/home';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
@@ -20,7 +21,7 @@ const metadata = {
 };
 
 const nodes = [
-  orgNode(site),
+  orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
   websiteNode(site),
   profilePageNode(site),

@@ -119,3 +119,14 @@ Config in force: `.omp-perfect-coder/config.yml` — `mode: shadow`, `typescript
 **Disposition.** The plugin re-appends absolute paths on every resolved violation, so hand-rewriting is Sisyphean. Runtime ledgers (`*.jsonl`) are now gitignored; `config.yml` and `test-exemptions.yml` stay tracked. Antibody matching is hash-based, so the lost cross-clone memory is advisory only.
 
 **Suggested fix.** In `enforcement-core.ts`, relativize against the repo base before calling `recordAntibody` (the same `resolveRepoBase` already used elsewhere in `enforce-limits.ts`), or store the repo-relative path and resolve on read.
+
+## 2026-09-12 — Plugin moved state home-side (supersedes the gitignore workaround)
+
+**What happened.** The plugin now stores config, baseline, exemptions and all ledgers in
+`~/.perfect-coder/repos/<normalized-remote>-<hash8>/` and AUTO-MIGRATES any repo-side
+`.omp-perfect-coder/` away (copy+unlink, dir removed). This deleted the repo dir mid-session,
+which looked like an accident but was the migration working.
+
+**Disposition.** Supersedes the earlier `*.jsonl` gitignore workaround: nothing plugin-owned
+belongs in the repo anymore, and the absolute-path leak class is gone upstream. The repo drops
+the dir from tracking and the ignore line; `PERFECT_CODER_HOME` env can relocate the store.

@@ -13,3 +13,5 @@ export function isWithinWordRange(text, min, max) {
 export function isNotBeforePublish(publishDate, updatedDate) {
   return updatedDate.getTime() >= publishDate.getTime();
 }
+
+export const OG_TITLE_MAX_CHARS = 100;

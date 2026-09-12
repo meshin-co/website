@@ -41,6 +41,27 @@ export function renderHeaders(scriptHashes) {
   Cross-Origin-Opener-Policy: same-origin
   X-Frame-Options: DENY
 
+/rss.xml
+  X-Robots-Tag: noindex
+
+/*/rss.xml
+  X-Robots-Tag: noindex
+
+/feed.json
+  X-Robots-Tag: noindex
+
+/llms.txt
+  X-Robots-Tag: noindex
+
+/llms-full.txt
+  X-Robots-Tag: noindex
+
+/search-index*
+  X-Robots-Tag: noindex
+
+/*.md
+  X-Robots-Tag: noindex
+
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
 

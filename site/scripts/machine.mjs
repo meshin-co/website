@@ -1,17 +1,14 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-import { discoverRoutes } from './gate.mjs';
+import { discoverRoutes, isNoindex } from './gate.mjs';
+import { FEED_BASES } from '../src/utils/feeds.mjs';
+import { NOINDEX_STATIC_PAGES } from '../src/utils/machine-text.mjs';
 
-const NON_PUBLIC = new Set(['faq', 'author', 'speaking']);
+const NON_PUBLIC = new Set(['author', 'speaking']);
+const FEED_FLOOR = 5;
 
-export const COLLECTION_BASES = {
-  post: 'blog',
-  service: 'services',
-  resource: 'resources',
-  glossary: 'glossary',
-  case: 'case-studies',
-};
+export const COLLECTION_BASES = FEED_BASES;
 
 export function publicCollections(configSource) {
   const block = configSource.match(/export const collections = \{([^}]*)\}/s);
@@ -24,6 +21,17 @@ export function publicCollections(configSource) {
 
 export function missingFromGenerator(text, collections) {
   return collections.filter((collection) => !text.includes(`/${COLLECTION_BASES[collection]}/`));
+}
+export function llmsIndexGaps(text, collections) {
+  return collections.filter((collection) => !text.includes(`/llms/${collection}.txt`));
+}
+
+export function llmsRouteGaps(text, routes) {
+  return routes.filter((route) => !text.includes(`${route})`));
+}
+
+export function noindexStaticListings(text) {
+  return [...NOINDEX_STATIC_PAGES].filter((path) => text.includes(`(${path})`));
 }
 
 export function sidecarGaps(routes, builtFiles) {
@@ -39,15 +47,95 @@ export function sidecarGaps(routes, builtFiles) {
     .filter((sidecar) => !built.has(sidecar));
 }
 
+function toPath(url) {
+  return url.replace(/^https?:\/\/[^/]+/, '');
+}
+
+function itemPaths(feedXml) {
+  return [...feedXml.matchAll(/<guid[^>]*>([^<]+)<\/guid>/g)].map(([, url]) => toPath(url));
+}
+
+export function feedCoverageFailures(collections, { perCollectionFeeds, mergedFeed, jsonFeedItems, liveRoutesByKind }) {
+  const failures = [];
+  const mergedPaths = itemPaths(mergedFeed);
+
+  for (const collection of collections) {
+    const base = COLLECTION_BASES[collection];
+    const feedPaths = itemPaths(perCollectionFeeds[collection] ?? '');
+    for (const route of liveRoutesByKind[collection] ?? []) {
+      if (!feedPaths.includes(route)) failures.push(`/${base}/rss.xml omits ${route}`);
+    }
+
+    const floor = Math.min(FEED_FLOOR, (liveRoutesByKind[collection] ?? []).length);
+    const present = mergedPaths.filter((path) => path.startsWith(`/${base}/`)).length;
+    if (present < floor) {
+      failures.push(`merged rss.xml carries ${present} ${collection} entries, floor is ${floor}`);
+    }
+  }
+
+  const jsonPaths = jsonFeedItems.map(toPath);
+  const mirrored =
+    jsonPaths.length === mergedPaths.length && jsonPaths.every((path, index) => path === mergedPaths[index]);
+  if (!mirrored) failures.push('feed.json does not mirror rss.xml item-for-item');
+
+  return failures;
+}
+
+async function routeHtml(distDir, route) {
+  const withoutSlash = route.slice(1);
+  for (const candidate of [join(distDir, withoutSlash, 'index.html'), join(distDir, `${withoutSlash}.html`)]) {
+    const html = await readFile(candidate, 'utf8').catch(() => null);
+    if (html !== null) return html;
+  }
+  return '';
+}
+
+async function liveRoutesByKind(distDir, collections, routes) {
+  const byKind = {};
+  for (const collection of collections) {
+    const base = COLLECTION_BASES[collection];
+    const candidates = routes.filter((route) => route.split('/').length === 3 && route.startsWith(`/${base}/`));
+    const live = [];
+    for (const route of candidates) {
+      if (!isNoindex(await routeHtml(distDir, route))) live.push(route);
+    }
+    byKind[collection] = live;
+  }
+  return byKind;
+}
+
 async function main(distDir) {
   const collections = publicCollections(await readFile('src/content.config.ts', 'utf8'));
   const routes = await discoverRoutes(distDir);
   const failures = [];
 
-  for (const generator of ['llms.txt', 'llms-full.txt', 'feed.json']) {
+  const liveByKind = await liveRoutesByKind(distDir, collections, routes);
+  for (const generator of ['llms.txt', 'feed.json']) {
     const text = await readFile(join(distDir, generator), 'utf8');
     for (const missing of missingFromGenerator(text, collections)) {
       failures.push(`${generator} covers no ${missing} entry`);
+    }
+  }
+
+  const llmsTxt = await readFile(join(distDir, 'llms.txt'), 'utf8');
+  for (const path of noindexStaticListings(llmsTxt)) failures.push(`llms.txt lists noindex page ${path}`);
+  for (const collection of collections) {
+    for (const gap of llmsRouteGaps(llmsTxt, liveByKind[collection])) failures.push(`llms.txt omits ${gap}`);
+  }
+
+  const llmsIndex = await readFile(join(distDir, 'llms-full.txt'), 'utf8');
+  for (const gap of llmsIndexGaps(llmsIndex, collections)) {
+    failures.push(`llms-full.txt lists no /llms/${gap}.txt`);
+  }
+
+  for (const collection of collections) {
+    const file = await readFile(join(distDir, 'llms', `${collection}.txt`), 'utf8').catch(() => null);
+    if (file === null) {
+      failures.push(`no /llms/${collection}.txt full-text file`);
+      continue;
+    }
+    for (const gap of llmsRouteGaps(file, liveByKind[collection])) {
+      failures.push(`/llms/${collection}.txt omits ${gap}`);
     }
   }
 
@@ -67,6 +155,25 @@ async function main(distDir) {
   );
 
   for (const gap of sidecarGaps(routes, sidecars.filter(Boolean))) failures.push(`no markdown sidecar for ${gap}`);
+
+  const perCollectionFeeds = {};
+  for (const collection of collections) {
+    perCollectionFeeds[collection] = await readFile(
+      join(distDir, COLLECTION_BASES[collection], 'rss.xml'),
+      'utf8'
+    ).catch(() => '');
+  }
+  const mergedFeed = await readFile(join(distDir, 'rss.xml'), 'utf8').catch(() => '');
+  const jsonFeedItems = JSON.parse(await readFile(join(distDir, 'feed.json'), 'utf8'))?.items?.map((item) => item.url);
+
+  failures.push(
+    ...feedCoverageFailures(collections, {
+      perCollectionFeeds,
+      mergedFeed,
+      jsonFeedItems,
+      liveRoutesByKind: await liveRoutesByKind(distDir, collections, routes),
+    })
+  );
 
   console.log(`machine: ${collections.length} public collections, ${routes.length} routes`);
   if (failures.length > 0) {

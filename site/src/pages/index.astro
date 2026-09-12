@@ -13,6 +13,7 @@ import { artifacts, cta, drivers, figures, hero, heroOffers, nudge, services, sh
 import JsonLd from '~/components/common/JsonLd.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const metadata = {
   title: 'Fractional Chief AI Officer — meshin.co',
@@ -22,7 +23,7 @@ const metadata = {
 };
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
-const nodes = [orgNode(site), personNode(site), websiteNode(site)];
+const nodes = [orgNode(site, { logoPath: ogDefaultPath }), personNode(site), websiteNode(site)];
 ---
 
 <Layout metadata={metadata}>

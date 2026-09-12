@@ -3,7 +3,8 @@ import CtaBlock from '~/components/site/CtaBlock.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { breadcrumbNode, orgNode, personNode } from '~/utils/jsonld.mjs';
+import { breadcrumbNode, orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
 const UPDATED = '2026-09-08';
@@ -15,8 +16,10 @@ const metadata = {
 };
 
 const nodes = [
-  orgNode(site),
+  orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
+  websiteNode(site),
+  webPageNode(site, '/ai-policy', null, metadata.title),
   breadcrumbNode(site, [
     { name: 'Home', path: '/' },
     { name: 'AI policy', path: '/ai-policy' },

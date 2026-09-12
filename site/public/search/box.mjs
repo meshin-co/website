@@ -1,4 +1,5 @@
 import { excerptFor, rankEntries } from '/search/index-model.mjs';
+import { KINDS, shardHref, summaryLine } from '/search/shards.mjs';
 
 const MAXIMUM_RESULTS = 20;
 const PROMPT = 'Type a word and press Search.';
@@ -8,17 +9,18 @@ const input = document.querySelector('#search-query');
 const summary = document.querySelector('[data-search-summary]');
 const list = document.querySelector('[data-search-results]');
 
-let index;
+let loading;
 
-async function load() {
-  index ??= await fetch('/search-index.json').then((response) => response.json());
-  return index;
-}
-
-function summarise(query, count) {
-  if (count === 0) return `No pages match “${query}”.`;
-  if (count === 1) return `1 page matches “${query}”.`;
-  return `${count} pages match “${query}”.`;
+function load() {
+  loading ??= Promise.all(
+    Object.keys(KINDS).map((kind) =>
+      fetch(shardHref(kind)).then((response) => {
+        if (!response.ok) throw new Error(`${shardHref(kind)} ${response.status}`);
+        return response.json();
+      })
+    )
+  ).then((shards) => shards.flat());
+  return loading;
 }
 
 function render(entries, query) {
@@ -59,10 +61,10 @@ async function run(query) {
   try {
     const ranked = rankEntries(await load(), trimmed);
     render(ranked.slice(0, MAXIMUM_RESULTS), trimmed);
-    summary.textContent = summarise(trimmed, ranked.length);
+    summary.textContent = summaryLine(ranked, trimmed);
   } catch {
     list.replaceChildren();
-    summary.textContent = 'Search is unavailable right now. The writing, glossary and resource pages list everything.';
+    summary.textContent = 'Search is unavailable right now. The FAQ, writing and glossary pages list everything.';
   }
 }
 

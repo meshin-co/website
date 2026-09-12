@@ -1,0 +1,84 @@
+---
+import type { GetStaticPaths } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
+import Section from '~/components/site/Section.astro';
+import SourceList from '~/components/site/SourceList.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { faqMetadata } from '~/utils/faq-meta.mjs';
+import { breadcrumbNode, faqPageNode, orgNode, personNode } from '~/utils/jsonld.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const questions = await getCollection('faq', ({ data }) => !data.draft);
+  return questions.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+};
+
+interface Props {
+  entry: CollectionEntry<'faq'>;
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const site = import.meta.env.SITE.replace(/\/$/, '');
+
+const metadata = faqMetadata(data);
+
+const nodes = [
+  orgNode(site, { logoPath: ogDefaultPath }),
+  personNode(site),
+  faqPageNode(site, { id: entry.id, question: data.question, answer: data.answer }),
+  breadcrumbNode(site, [
+    { name: 'Home', path: '/' },
+    { name: 'FAQ', path: '/faq' },
+    { name: data.question, path: `/faq/${entry.id}` },
+  ]),
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+  <MarkdownAlternate path={`/faq/${entry.id}`} slot="head" />
+
+  <Section bordered={false} headingLevel={1} eyebrow="FAQ" title={data.question} />
+
+  <Section eyebrow="Answer" title="The answer" tone="surface">
+    <p class="max-w-[68ch] text-lg leading-relaxed text-muted" data-gate-lead>{data.answer}</p>
+    <p class="mt-6 font-mono text-xs text-muted">
+      Updated{' '}
+      <time datetime={data.updatedDate.toISOString().slice(0, 10)}>
+        {data.updatedDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+      </time>
+    </p>
+    {
+      data.relatedPage && (
+        <p class="mt-6 font-mono text-xs text-muted">
+          <a class="text-link" href={data.relatedPage}>
+            Related page
+          </a>
+        </p>
+      )
+    }
+    {
+      data.sources && data.sources.length > 0 && (
+        <div class="mt-10">
+          <SourceList sources={data.sources} />
+        </div>
+      )
+    }
+  </Section>
+
+  <Section title="Still unsure">
+    <CtaBlock
+      title="Your situation is probably stranger than this answer."
+      body="Bring the actual constraint to a 30-minute fit call. If the honest answer is that you do not need me, you will hear it there."
+      label="Book a 30-min fit call"
+      href="https://cal.com/meshin"
+      note="Or email hello@meshin.co"
+    />
+  </Section>
+</Layout>

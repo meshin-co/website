@@ -1,3 +1,5 @@
+import { ogImagePath } from './machine-links.mjs';
+
 const PERSON_NAME = 'Dmitri Meshin';
 const PERSON_ROLE = 'Fractional Chief AI Officer';
 const ORG_NAME = 'meshin.co';
@@ -20,12 +22,15 @@ export function graph(nodes) {
   return { '@context': 'https://schema.org', '@graph': nodes };
 }
 
-export function orgNode(site) {
+export function orgNode(site, { logoPath = '/og/default.png' } = {}) {
+  const logo = `${site}${logoPath}`;
   return {
     '@type': 'Organization',
     '@id': `${site}/#org`,
     name: ORG_NAME,
     url: `${site}/`,
+    logo,
+    image: logo,
     founder: { '@id': `${site}/#person` },
     sameAs: ORG_SAME_AS,
     contactPoint: {
@@ -82,15 +87,20 @@ export function serviceNode(site, service) {
   };
 }
 
-export function postNode(site, post) {
+export function postNode(site, post, { basePath = '/blog', ogCollection = 'post' } = {}) {
+  const url = `${site}${basePath}/${post.id}`;
   return {
     '@type': 'BlogPosting',
-    '@id': `${site}/blog/${post.id}#post`,
-    url: `${site}/blog/${post.id}`,
+    '@id': `${url}#post`,
+    url,
     headline: post.title,
     description: post.description,
     datePublished: isoDay(post.publishDate),
     dateModified: isoDay(post.updatedDate),
+    inLanguage: 'en',
+    image: `${site}${ogImagePath(ogCollection, post.id)}`,
+    ...(Number.isFinite(post.wordCount) ? { wordCount: post.wordCount } : {}),
+    mainEntityOfPage: { '@id': `${url}#webpage` },
     author: { '@id': `${site}/#person` },
     publisher: { '@id': `${site}/#org` },
     ...(post.category ? { articleSection: post.category } : {}),
@@ -110,7 +120,8 @@ export function resourceNode(site, resource) {
     url: `${site}/resources/${resource.id}`,
     name: resource.name,
     description: resource.description,
-    dateModified: isoDay(resource.updatedDate),
+    ...(resource.publishDate ? { datePublished: isoDay(resource.publishDate) } : {}),
+    ...(resource.updatedDate ? { dateModified: isoDay(resource.updatedDate) } : {}),
     license: resource.license,
     version: resource.version,
     author: { '@id': `${site}/#person` },
@@ -129,6 +140,25 @@ export function faqNode(items) {
   };
 }
 
+export function faqPageNode(site, faq) {
+  const path = faq.url ?? `/faq/${faq.id}`;
+  return {
+    '@type': 'FAQPage',
+    '@id': `${site}${path}#faqpage`,
+    url: absolute(site, path),
+    mainEntity: {
+      '@type': 'Question',
+      '@id': `${site}${path}#question`,
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        '@id': `${site}${path}#answer`,
+        text: faq.answer,
+      },
+    },
+  };
+}
+
 export function breadcrumbNode(site, crumbs) {
   return {
     '@type': 'BreadcrumbList',
@@ -141,13 +171,15 @@ export function breadcrumbNode(site, crumbs) {
   };
 }
 
-export function termSetNode(site, terms) {
+export function termSetNode(site, terms = []) {
   return {
     '@type': 'DefinedTermSet',
     '@id': `${site}/glossary#termset`,
     name: 'AI governance glossary',
     url: `${site}/glossary`,
-    hasDefinedTerm: terms.map((term) => ({ '@id': `${site}/glossary/${term.id}#term` })),
+    ...(terms.length > 0
+      ? { hasDefinedTerm: terms.map((term) => ({ '@id': `${site}/glossary/${term.id}#term` })) }
+      : {}),
   };
 }
 
@@ -170,6 +202,37 @@ export function collectionNode(site, page) {
     name: page.name,
     description: page.description,
     isPartOf: { '@id': `${site}/#website` },
+    ...(page.items?.length
+      ? {
+          itemListElement: page.items.map((item, index) => ({
+            '@type': 'ListItem',
+            position: index + 1,
+            url: absolute(site, item.url),
+          })),
+        }
+      : {}),
+  };
+}
+
+export function contactPageNode(site) {
+  return {
+    '@type': 'ContactPage',
+    '@id': `${site}/contact#page`,
+    url: `${site}/contact`,
+    name: 'Contact',
+    mainEntity: { '@id': `${site}/#org` },
+    isPartOf: { '@id': `${site}/#website` },
+  };
+}
+
+export function webPageNode(site, path, dateModified, name) {
+  return {
+    '@type': 'WebPage',
+    '@id': `${site}${path}#webpage`,
+    url: absolute(site, path),
+    ...(name ? { name } : {}),
+    isPartOf: { '@id': `${site}/#website` },
+    ...(dateModified ? { dateModified: isoDay(dateModified) } : {}),
   };
 }
 
@@ -178,6 +241,7 @@ export function profilePageNode(site) {
     '@type': 'ProfilePage',
     '@id': `${site}/about#page`,
     url: `${site}/about`,
+    name: 'About',
     mainEntity: { '@id': `${site}/#person` },
     isPartOf: { '@id': `${site}/#website` },
   };

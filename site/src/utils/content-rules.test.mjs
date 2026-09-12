@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { test } from 'node:test';
 
-import { countWords, isWithinWordRange, isNotBeforePublish } from './content-rules.mjs';
+import { countWords, isWithinWordRange, isNotBeforePublish, OG_TITLE_MAX_CHARS } from './content-rules.mjs';
 
 test('word counting ignores punctuation, dashes and repeated whitespace', () => {
   assert.equal(countWords('  One  two—three, four.  '), 4);
@@ -20,4 +23,16 @@ test('an update on the publish day is allowed, a day earlier is not', () => {
   assert.equal(isNotBeforePublish(publish, new Date('2026-09-01T00:00:00Z')), true);
   assert.equal(isNotBeforePublish(publish, new Date('2026-09-02T00:00:00Z')), true);
   assert.equal(isNotBeforePublish(publish, new Date('2026-08-31T23:59:59Z')), false);
+});
+
+test('the planted FAQ specimen violates the OG title cap, and the bound is exact', () => {
+  const fixture = readFileSync(
+    join(dirname(fileURLToPath(import.meta.url)), '../../tests/guard-mutations/fixtures/faq-question-too-long.md'),
+    'utf8'
+  );
+  const question = fixture.match(/^question: '(.*)'$/m)?.[1];
+  assert.ok(question, 'fixture carries a single-quoted question line');
+  assert.ok(question.length > OG_TITLE_MAX_CHARS, `specimen question must exceed the cap (got ${question.length})`);
+
+  assert.equal('x'.repeat(OG_TITLE_MAX_CHARS - 1).length < OG_TITLE_MAX_CHARS, true);
 });

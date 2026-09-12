@@ -11,7 +11,10 @@ import Section from '~/components/site/Section.astro';
 import ShiftPanel from '~/components/site/ShiftPanel.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { articleMetadata } from '~/utils/machine-links.mjs';
-import { breadcrumbNode, orgNode, personNode, postNode } from '~/utils/jsonld.mjs';
+import { breadcrumbNode, orgNode, personNode, postNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { countWords } from '~/utils/content-rules.mjs';
+import { lastmod } from '~/utils/lastmod.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const cases = await getCollection('case');
@@ -31,6 +34,8 @@ const site = import.meta.env.SITE.replace(/\/$/, '');
 const metadata = articleMetadata(site, {
   title: data.title,
   description: data.description,
+  ogImage: data.ogImage,
+  canonical: data.canonical,
   collection: 'case',
   id: entry.id,
   publishDate: data.publishDate,
@@ -38,16 +43,27 @@ const metadata = articleMetadata(site, {
 });
 
 const nodes = [
-  orgNode(site),
+  orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
-  postNode(site, {
-    id: entry.id,
-    ...data,
-    category: 'operating-model',
-    section: 'case-studies',
-    sources: [],
-    tags: data.stack,
-  }),
+  websiteNode(site),
+  postNode(
+    site,
+    {
+      id: entry.id,
+      ...data,
+      category: 'operating-model',
+      section: 'case-studies',
+      sources: [],
+      tags: data.stack,
+      wordCount: countWords((entry.body ?? '').replace(/[#>*_`[\]()!-]/g, ' ')),
+    },
+    { basePath: '/case-studies', ogCollection: 'case' }
+  ),
+  webPageNode(
+    site,
+    `/case-studies/${entry.id}`,
+    lastmod({ publishDate: data.publishDate, updatedDate: data.updatedDate })
+  ),
   breadcrumbNode(site, [
     { name: 'Home', path: '/' },
     { name: 'Case studies', path: '/case-studies' },

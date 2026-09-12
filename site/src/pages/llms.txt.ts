@@ -1,7 +1,14 @@
 import { getCollection } from 'astro:content';
 
 import { SITE, METADATA } from 'astrowind:config';
-import { absoluteUrl, renderLlmsTxt, STATIC_PAGES } from '~/utils/machine-text.mjs';
+import { absoluteUrl, publicIndexableStaticPages, renderLlmsTxt } from '~/utils/machine-text.mjs';
+import {
+  COLLECTION_NAMES,
+  LLMS_COLLECTIONS,
+  latestUpdated,
+  llmsFeedPointers,
+  toLlmsEntry,
+} from '~/utils/llms-collections.mjs';
 
 export const prerender = true;
 
@@ -9,46 +16,46 @@ type LiveEntry = { data: { draft?: boolean; noindex?: boolean } };
 
 const isLive = ({ data }: LiveEntry) => !data.draft && !data.noindex;
 
-type Entry = {
-  id: string;
-  body?: string;
-  data: {
-    title: string;
-    description: string;
-    shortAnswer?: string;
-    publishDate?: Date;
-    updatedDate?: Date;
-    tags?: string[];
-  };
-};
-
-const toItem = (site: string, base: string) => (entry: Entry) => ({
-  title: entry.data.title,
-  url: absoluteUrl(site, `${base}/${entry.id}`),
-  description: entry.data.description,
-});
-
 export const GET = async () => {
   const site = import.meta.env.SITE.replace(/\/$/, '');
-  const [services, posts, resources, glossary, cases] = await Promise.all([
-    getCollection('service', isLive),
-    getCollection('post', isLive),
-    getCollection('resource', isLive),
-    getCollection('glossary', isLive),
-    getCollection('case', isLive),
-  ]);
 
-  const sections = [
-    { title: 'Offers', items: services.map(toItem(site, '/services')) },
-    { title: 'Writing', items: posts.map(toItem(site, '/blog')) },
-    { title: 'Resources', items: resources.map(toItem(site, '/resources')) },
-    { title: 'Glossary', items: glossary.map(toItem(site, '/glossary')) },
-    { title: 'Case studies', items: cases.map(toItem(site, '/case-studies')) },
-    {
-      title: 'About',
-      items: STATIC_PAGES.map(({ path, title, description }) => ({ title, description, url: absoluteUrl(site, path) })),
-    },
-  ];
+  const sections: { title: string; items: { url: string }[] }[] = [];
+  const freshnessByCollection: (string | null)[] = [];
+
+  for (const { name, base, title } of LLMS_COLLECTIONS) {
+    const entries = await getCollection(name as Parameters<typeof getCollection>[0], isLive);
+    const mapped = entries.map(toLlmsEntry());
+    freshnessByCollection.push(latestUpdated(mapped));
+    sections.push({
+      title,
+      items: mapped.map((entry) => ({
+        title: entry.title,
+        description: entry.description,
+        updated: entry.updated,
+        url: absoluteUrl(site, `${base}/${entry.id}`),
+      })),
+    });
+  }
+
+  const mergedFreshness = latestUpdated(freshnessByCollection.map((updated) => ({ updated })));
+  sections.push({
+    title: 'Feeds',
+    items: llmsFeedPointers().map((feed, index) => ({
+      title: feed.title,
+      description: feed.description,
+      updated: index === 0 ? mergedFreshness : freshnessByCollection[index - 1],
+      url: absoluteUrl(site, feed.url),
+    })),
+  });
+
+  sections.push({
+    title: 'Pages',
+    items: publicIndexableStaticPages().map(({ path, title, description }) => ({
+      title,
+      description,
+      url: absoluteUrl(site, path),
+    })),
+  });
 
   const body = renderLlmsTxt({ site: SITE.name, tagline: METADATA.description, sections });
 

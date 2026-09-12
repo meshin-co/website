@@ -56,10 +56,16 @@ export const adaptOpenGraphImages = async (
 
   const adaptedImages = await Promise.all(
     openGraph.images.map(async (image) => {
-      if (!image?.url) return { url: '' };
+      if (!image?.url)
+        throw new Error(
+          `OG image entry has an empty url on ${astroSite?.href || 'unknown page'} — refusing to emit og:* tags without an image`
+        );
 
       const resolved = await findImage(image.url);
-      if (!resolved) return { url: '' };
+      if (!resolved)
+        throw new Error(
+          `OG image "${image.url}" does not resolve: no matching asset under src/assets/images — failing the build instead of dropping og:* tags`
+        );
 
       // Generate an optimized JPG via Astro's image service (Sharp by default).
       const optimized = await getImage({

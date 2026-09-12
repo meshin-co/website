@@ -10,14 +10,16 @@ export function markdownPath(pagePath) {
 }
 
 export function articleMetadata(site, entry) {
-  const { title, description, collection, id, publishDate, updatedDate, section, tags } = entry;
-  const images = [{ url: `${site}${ogImagePath(collection, id)}`, width: OG_WIDTH, height: OG_HEIGHT }];
+  const { title, description, collection, id, publishDate, updatedDate, section, tags, ogImage, canonical } = entry;
+  const images = [
+    ogImage ? { url: ogImage } : { url: `${site}${ogImagePath(collection, id)}`, width: OG_WIDTH, height: OG_HEIGHT },
+  ];
+  const base = { title, description, ...(canonical ? { canonical } : {}) };
 
-  if (!publishDate) return { title, description, openGraph: { type: 'website', images } };
+  if (!publishDate) return { ...base, openGraph: { type: 'website', images } };
 
   return {
-    title,
-    description,
+    ...base,
     openGraph: {
       type: 'article',
       images,

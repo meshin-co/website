@@ -12,6 +12,7 @@ import Layout from '~/layouts/PageLayout.astro';
 import { breadcrumbNode, collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
 import { readingTime } from '~/utils/reading-time.mjs';
 import { categoryPillars } from '~/data/categories.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getCollection('post', ({ data }) => !data.draft);
@@ -34,13 +35,14 @@ const sorted = posts.sort((a, b) => b.data.publishDate.getTime() - a.data.publis
 const metadata = { title: pillar.title, description: pillar.description };
 
 const nodes = [
-  orgNode(site),
+  orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
   websiteNode(site),
   collectionNode(site, {
     path: `/blog/category/${category}`,
     name: pillar.title,
     description: pillar.description,
+    items: sorted.map((post) => ({ url: `/blog/${post.id}` })),
   }),
   breadcrumbNode(site, [
     { name: 'Home', path: '/' },

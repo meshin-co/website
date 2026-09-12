@@ -12,6 +12,7 @@ import SourceList from '~/components/site/SourceList.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { articleMetadata } from '~/utils/machine-links.mjs';
 import { breadcrumbNode, orgNode, personNode, termNode, termSetNode } from '~/utils/jsonld.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const terms = await getCollection('glossary');
@@ -33,17 +34,25 @@ const definitionParagraphs = data.definition.split(/\n{2,}/);
 const metadata = articleMetadata(site, {
   title: data.title,
   description: data.description,
+  ogImage: data.ogImage,
+  canonical: data.canonical,
   collection: 'glossary',
   id: term.id,
   publishDate: data.publishDate,
   updatedDate: data.updatedDate,
 });
 
+const otherTerms = terms.filter((entry) => entry.id !== term.id);
+
 const nodes = [
-  orgNode(site),
+  orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
-  termSetNode(site, [{ id: term.id }]),
+  termSetNode(
+    site,
+    terms.map((entry) => ({ id: entry.id }))
+  ),
   termNode(site, { id: term.id, ...data }),
+  ...otherTerms.map((entry) => termNode(site, { id: entry.id, ...entry.data })),
   breadcrumbNode(site, [
     { name: 'Home', path: '/' },
     { name: 'Glossary', path: '/glossary' },

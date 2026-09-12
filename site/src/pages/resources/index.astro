@@ -7,7 +7,8 @@ import JsonLd from '~/components/common/JsonLd.astro';
 import ResourceCard from '~/components/site/ResourceCard.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { breadcrumbNode, collectionNode, orgNode, personNode, resourceNode, websiteNode } from '~/utils/jsonld.mjs';
+import { breadcrumbNode, collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
 const resources = (await getCollection('resource', ({ data }) => !data.draft)).sort(
@@ -21,15 +22,19 @@ const metadata = {
 };
 
 const nodes = [
-  orgNode(site),
+  orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
   websiteNode(site),
-  collectionNode(site, { path: '/resources', name: 'Resources', description: metadata.description }),
+  collectionNode(site, {
+    path: '/resources',
+    name: 'Resources',
+    description: metadata.description,
+    items: resources.map((resource) => ({ url: `/resources/${resource.id}` })),
+  }),
   breadcrumbNode(site, [
     { name: 'Home', path: '/' },
     { name: 'Resources', path: '/resources' },
   ]),
-  ...resources.map((resource) => resourceNode(site, { id: resource.id, ...resource.data })),
 ];
 ---
 

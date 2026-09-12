@@ -16,8 +16,11 @@ import astrowind from './vendor/integration';
 
 import { readingTimeRemarkPlugin } from './src/utils/frontmatter';
 import { rehypeExternalLinks, rehypeHeadingAnchors, rehypeScrollableTables } from './src/utils/pipeline.mjs';
+import { collectionLastmods } from './src/utils/sitemap-lastmod.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const LASTMODS = (await collectionLastmods(path.resolve(__dirname, 'src/data'))) as Record<string, string>;
 
 export default defineConfig({
   output: 'static',
@@ -56,6 +59,11 @@ export default defineConfig({
   integrations: [
     sitemap({
       filter: (page) => !/\/blog\/tag\/|\/styleguide|\/search/.test(page),
+      serialize: (item) => {
+        const route = new URL(item.url).pathname.replace(/\/$/, '');
+        const modified = LASTMODS[route];
+        return modified ? ({ ...item, lastmod: new Date(modified) } as unknown as typeof item) : item;
+      },
     }),
     expressiveCode({
       themes: ['github-light', 'github-dark'],

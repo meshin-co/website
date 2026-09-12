@@ -145,3 +145,23 @@ These were mine to fix, not yours to answer:
 | Security posture: full-disk encryption with auto lock; 2FA everywhere; passwords in a manager; client-issued named accounts revoked at handover; no copies of client data; breach told within 24 hours | confirmed, live |
 | only.help is your own product, publishable without client permission | confirmed, live |
 | Case-studies hub keeps one honest entry, labelled as your own product | decided |
+| Long FAQ questions (optional, style only — the build guard sits at 100): tighten toward ≤70 chars for tighter OG cards if you want; 10 of 25 run longer, longest 96 | optional |
+
+The ten, with current lengths: what-does-a-fractional-chief-ai-officer-actually-do (96),
+what-if-the-ai-we-are-building-goes-into-a-product-we-sell (90),
+what-do-nist-ai-rmf-iso-iec-42001-and-the-eu-ai-act-require (89),
+can-you-work-with-our-existing-ai-vendor-or-platform (86),
+what-does-the-two-week-assessment-produce-and-is-the-fee-credited-if-we-continue (83),
+can-you-get-us-iso-iec-42001-certified-or-just-a-working-system (82),
+how-quickly-can-you-start-and-how-does-availability-work-for-a-remote-officer (80),
+who-owns-the-frameworks-templates-and-playbooks-built-during-the-engagement (78),
+whats-the-difference-between-the-assessment-the-sprint-and-the-retainer (75),
+is-my-company-too-small-or-too-early-for-a-fractional-chief-ai-officer (74).
+
+Owner action from Phase 4.5a (plan row L23), dashboard setup only — no code: create an
+"AI referrals" segment in Plausible so answer-engine traffic has a feedback loop. The segment
+matches these referrer sources:
+
+```json
+{ "visit:source": ["chatgpt.com", "perplexity.ai", "copilot.microsoft.com", "gemini.google.com"] }
+```

@@ -12,6 +12,7 @@ import SourceList from '~/components/site/SourceList.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { articleMetadata } from '~/utils/machine-links.mjs';
 import { breadcrumbNode, orgNode, personNode, resourceNode } from '~/utils/jsonld.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const resources = await getCollection('resource');
@@ -30,6 +31,8 @@ const site = import.meta.env.SITE.replace(/\/$/, '');
 const metadata = articleMetadata(site, {
   title: data.title,
   description: data.description,
+  ogImage: data.ogImage,
+  canonical: data.canonical,
   collection: 'resource',
   id: resource.id,
   publishDate: data.publishDate,
@@ -37,7 +40,7 @@ const metadata = articleMetadata(site, {
 });
 
 const nodes = [
-  orgNode(site),
+  orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
   resourceNode(site, { id: resource.id, ...data }),
   breadcrumbNode(site, [

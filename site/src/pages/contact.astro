@@ -3,7 +3,8 @@ import CtaBlock from '~/components/site/CtaBlock.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { breadcrumbNode, orgNode, personNode } from '~/utils/jsonld.mjs';
+import { breadcrumbNode, contactPageNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
 
@@ -14,8 +15,10 @@ const metadata = {
 };
 
 const nodes = [
-  orgNode(site),
+  orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
+  websiteNode(site),
+  contactPageNode(site),
   breadcrumbNode(site, [
     { name: 'Home', path: '/' },
     { name: 'Contact', path: '/contact' },

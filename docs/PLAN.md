@@ -28,7 +28,7 @@ The PRD's decision log (§2, D1–D24) stands except where a row below replaces 
 | L12 | Credential line | "ISO/IEC 42001 Lead Implementer (in progress)", no date; `hasCredential` stays out of Person schema until awarded | §4.5 |
 | L13 | Lighthouse bar | Hard 100/100/100/100 mobile **and** desktop. A run at 97–99 is re-run up to 3 times; still under 100 = phase fails. No waiver file, no footnoted pass | §11.8, §14.9 |
 | L14 | Tests | Logic units (zod refinements, JSON-LD builders, machine-interface endpoints, OG text) **plus** Playwright visual snapshots per page template | new |
-| L15 | Enforcement | `perfect-coder` strict for `.ts`, shadow for `.astro`/`.md` (`/.omp-perfect-coder/config.yml`) | new |
+| L15 | Enforcement | `perfect-coder` strict for `.ts`, shadow for `.astro`/`.md`; state lives home-side at `~/.perfect-coder/repos/<remote-key>/` (plugin auto-migrates and deletes any repo-side dir, so nothing plugin-owned is ever committed) | new, updated 2026-09-12 |
 | L16 | Hosting | Deploy to `meshin.pages.dev` from Phase 1; Cloudflare API token requested from owner at the end of Phase 1; apex `meshin.co` attached at Phase 5 | D15 |
 | L17 | Apex state | The old Cloudflare redirect from `meshin.co` to Google Calendar was removed by the owner; apex now serves nothing until Phase 5 | new |
 | L18 | Copy handoff | Work stops after Phase 3 with a written copy checklist for the owner; Phase 4 copy starts only after that comes back | §14 |

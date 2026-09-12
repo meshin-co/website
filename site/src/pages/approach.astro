@@ -5,7 +5,8 @@ import Section from '~/components/site/Section.astro';
 import ShiftPanel from '~/components/site/ShiftPanel.astro';
 import StepList from '~/components/site/StepList.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { breadcrumbNode, orgNode, personNode } from '~/utils/jsonld.mjs';
+import { breadcrumbNode, orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
 
@@ -16,8 +17,10 @@ const metadata = {
 };
 
 const nodes = [
-  orgNode(site),
+  orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
+  websiteNode(site),
+  webPageNode(site, '/approach', null, metadata.title),
   breadcrumbNode(site, [
     { name: 'Home', path: '/' },
     { name: 'Approach', path: '/approach' },

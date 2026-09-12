@@ -26,6 +26,20 @@ jobs:
       - name: build, generate headers, measure budgets
         run: npm run build
 
+      - name: restore the route set last announced to indexnow
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache@v4
+        with:
+          path: site/.indexnow-routes.json
+          key: indexnow-routes-${{ github.run_id }}
+          restore-keys: indexnow-routes-
+
+      - name: ping indexnow when the dist route set changed
+        if: github.ref == 'refs/heads/main'
+        run: node scripts/indexnow-ping.mjs dist --previous .indexnow-routes.json
+        env:
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+
       - run: npm run gate:html
       - run: npm run gate:links
       - run: npm run gate:machine

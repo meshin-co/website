@@ -2,7 +2,7 @@ import { defineCollection, reference } from 'astro:content';
 import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
-import { countWords, isNotBeforePublish, isWithinWordRange } from '~/utils/content-rules.mjs';
+import { countWords, isNotBeforePublish, isWithinWordRange, OG_TITLE_MAX_CHARS } from '~/utils/content-rules.mjs';
 
 const CATEGORIES = ['governance', 'agentic-architecture', 'operating-model', 'executive'] as const;
 
@@ -158,14 +158,20 @@ const glossaryCollection = defineCollection({
 
 const faqCollection = defineCollection({
   loader: glob({ pattern: ['*.md', '*.mdx'], base: 'src/data/faq' }),
-  schema: z.object({
-    question: z.string(),
-    answer: z.string().refine((value) => countWords(value) <= 80, { message: 'must be 80 words or fewer' }),
-    category: z.enum([...CATEGORIES, 'general']),
-    relatedPage: z.string().optional(),
-    sources: z.array(source).optional(),
-    order: z.number().int().positive(),
-  }),
+  schema: z
+    .object({
+      question: z.string().max(OG_TITLE_MAX_CHARS, { message: `must be ${OG_TITLE_MAX_CHARS} characters or fewer` }),
+      answer: z.string().refine((value) => countWords(value) <= 80, { message: 'must be 80 words or fewer' }),
+      category: z.enum([...CATEGORIES, 'general']),
+      relatedPage: z.string().optional(),
+      sources: z.array(source).optional(),
+      order: z.number().int().positive(),
+      publishDate: z.date(),
+      updatedDate: z.date(),
+      draft: z.boolean().default(false),
+      noindex: z.boolean().default(false),
+    })
+    .refine(datesInOrder, datesInOrderMessage),
 });
 
 const authorCollection = defineCollection({
@@ -179,17 +185,6 @@ const authorCollection = defineCollection({
   }),
 });
 
-const speakingCollection = defineCollection({
-  loader: glob({ pattern: ['*.md', '*.mdx'], base: 'src/data/speaking' }),
-  schema: z.object({
-    title: z.string(),
-    event: z.string(),
-    date: z.date(),
-    url: z.url().optional(),
-    type: z.enum(['talk', 'podcast', 'article', 'mention']),
-  }),
-});
-
 export const collections = {
   post: postCollection,
   service: serviceCollection,
@@ -198,7 +193,6 @@ export const collections = {
   glossary: glossaryCollection,
   faq: faqCollection,
   author: authorCollection,
-  speaking: speakingCollection,
 };
 
 export const postCategories = CATEGORIES;

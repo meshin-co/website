@@ -14,6 +14,7 @@ import StepList from '~/components/site/StepList.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { articleMetadata } from '~/utils/machine-links.mjs';
 import { breadcrumbNode, faqNode, orgNode, personNode, serviceNode } from '~/utils/jsonld.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const services = await getCollection('service');
@@ -32,12 +33,14 @@ const site = import.meta.env.SITE.replace(/\/$/, '');
 const metadata = articleMetadata(site, {
   title: data.title,
   description: data.description,
+  ogImage: data.ogImage,
+  canonical: data.canonical,
   collection: 'service',
   id: service.id,
 });
 
 const nodes = [
-  orgNode(site),
+  orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
   serviceNode(site, { id: service.id, ...data }),
   faqNode(data.faq),

@@ -44,3 +44,36 @@ test('a page with no dates gets a website card, not an article one', () => {
   assert.equal(metadata.openGraph.type, 'website');
   assert.equal(metadata.openGraph.article, undefined);
 });
+
+test('a per-entry ogImage replaces the generated endpoint image', () => {
+  const metadata = articleMetadata('https://meshin.co', {
+    title: 'A post',
+    description: 'A description.',
+    collection: 'post',
+    id: 'a-post',
+    ogImage: '~/assets/images/custom-card.png',
+  });
+
+  assert.equal(metadata.openGraph.images.length, 1);
+  assert.equal(metadata.openGraph.images[0].url, '~/assets/images/custom-card.png');
+  assert.equal(metadata.openGraph.images[0].width, undefined);
+});
+
+test('a canonical override is carried through, and omitted when absent', () => {
+  const withCanonical = articleMetadata('https://meshin.co', {
+    title: 'A post',
+    description: 'A description.',
+    collection: 'post',
+    id: 'a-post',
+    canonical: 'https://example.com/syndicated',
+  });
+  assert.equal(withCanonical.canonical, 'https://example.com/syndicated');
+
+  const withoutCanonical = articleMetadata('https://meshin.co', {
+    title: 'A post',
+    description: 'A description.',
+    collection: 'post',
+    id: 'a-post',
+  });
+  assert.equal(withoutCanonical.canonical, undefined);
+});

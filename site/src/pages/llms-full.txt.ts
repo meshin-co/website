@@ -1,7 +1,8 @@
 import { getCollection } from 'astro:content';
 
 import { SITE } from 'astrowind:config';
-import { absoluteUrl, renderLlmsFull } from '~/utils/machine-text.mjs';
+import { absoluteUrl, renderLlmsIndex } from '~/utils/machine-text.mjs';
+import { COLLECTION_NAMES, LLMS_COLLECTIONS, latestUpdated, toLlmsEntry } from '~/utils/llms-collections.mjs';
 
 export const prerender = true;
 
@@ -9,45 +10,22 @@ type LiveEntry = { data: { draft?: boolean; noindex?: boolean } };
 
 const isLive = ({ data }: LiveEntry) => !data.draft && !data.noindex;
 
-type Entry = {
-  id: string;
-  body?: string;
-  data: {
-    title: string;
-    description: string;
-    shortAnswer?: string;
-    publishDate?: Date;
-    updatedDate?: Date;
-    tags?: string[];
-  };
-};
-
-const toEntry = (site: string, base: string) => (entry: Entry) => ({
-  title: entry.data.title,
-  url: absoluteUrl(site, `${base}/${entry.id}`),
-  summary: entry.data.shortAnswer ?? entry.data.description,
-  body: entry.body ?? '',
-});
-
 export const GET = async () => {
   const site = import.meta.env.SITE.replace(/\/$/, '');
-  const [services, posts, resources, glossary, cases] = await Promise.all([
-    getCollection('service', isLive),
-    getCollection('post', isLive),
-    getCollection('resource', isLive),
-    getCollection('glossary', isLive),
-    getCollection('case', isLive),
-  ]);
 
-  const entries = [
-    ...services.map(toEntry(site, '/services')),
-    ...posts.map(toEntry(site, '/blog')),
-    ...resources.map(toEntry(site, '/resources')),
-    ...glossary.map(toEntry(site, '/glossary')),
-    ...cases.map(toEntry(site, '/case-studies')),
-  ];
+  const files = [];
+  for (const { name, base, title, file } of LLMS_COLLECTIONS) {
+    const entries = await getCollection(name as Parameters<typeof getCollection>[0], isLive);
+    const mapped = entries.map(toLlmsEntry());
+    files.push({
+      title: `${title} — full text`,
+      url: absoluteUrl(site, file),
+      count: mapped.length,
+      updated: latestUpdated(mapped),
+    });
+  }
 
-  const body = renderLlmsFull({ site: SITE.name, entries });
-
-  return new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
+  return new Response(renderLlmsIndex({ site: SITE.name, files }), {
+    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+  });
 };

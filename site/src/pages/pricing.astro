@@ -6,6 +6,7 @@ import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { breadcrumbNode, orgNode, personNode, serviceNode } from '~/utils/jsonld.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
 const services = (await getCollection('service')).sort((a, b) => a.data.order - b.data.order);
@@ -17,7 +18,7 @@ const metadata = {
 };
 
 const nodes = [
-  orgNode(site),
+  orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
   ...services.map((service) => serviceNode(site, { id: service.id, ...service.data })),
   breadcrumbNode(site, [

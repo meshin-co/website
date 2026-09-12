@@ -6,8 +6,9 @@ import JsonLd from '~/components/common/JsonLd.astro';
 import PostCard from '~/components/site/PostCard.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { breadcrumbNode, collectionNode, orgNode, personNode, postNode, websiteNode } from '~/utils/jsonld.mjs';
+import { breadcrumbNode, collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
 import { readingTime } from '~/utils/reading-time.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
 const posts = (await getCollection('post', ({ data }) => !data.draft)).sort(
@@ -20,15 +21,19 @@ const metadata = {
 };
 
 const nodes = [
-  orgNode(site),
+  orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
   websiteNode(site),
-  collectionNode(site, { path: '/blog', name: 'Writing', description: metadata.description }),
+  collectionNode(site, {
+    path: '/blog',
+    name: 'Writing',
+    description: metadata.description,
+    items: posts.map((post) => ({ url: `/blog/${post.id}` })),
+  }),
   breadcrumbNode(site, [
     { name: 'Home', path: '/' },
     { name: 'Writing', path: '/blog' },
   ]),
-  ...posts.map((post) => postNode(site, { id: post.id, ...post.data })),
 ];
 ---
 
