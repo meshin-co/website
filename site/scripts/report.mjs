@@ -46,7 +46,7 @@ export function renderReport({ phase, gate, mobile, desktop }) {
     ['mobile', mobile],
     ['desktop', desktop],
   ]) {
-    for (const route of gate.routes) {
+    for (const route of gate.lighthouseRoutes ?? gate.routes) {
       if (!rows.some((row) => canonicalRoute(row.route) === canonicalRoute(route)))
         failures.push(`${form}: no Lighthouse run for ${route}`);
     }
@@ -88,7 +88,17 @@ export function renderReport({ phase, gate, mobile, desktop }) {
     lines.push(`| \`${row.route}\` | ${row.js} | ${row.css} | ${row.page} |`);
   }
   lines.push('', `Budgets: JS ≤10240 · CSS ≤20480 · page ≤256000 bytes gzip.`, '');
-  lines.push('## Derived route list', '', gate.routes.map((route) => `\`${route}\``).join(', '), '');
+  lines.push(
+    '## Lighthouse route selection',
+    '',
+    'One leaf per repeated template family (heaviest by built bytes) plus every unique page:',
+    (gate.lighthouseRoutes ?? gate.routes).map((route) => `\`${route}\``).join(', '),
+    '',
+    '## Derived route list (all gates)',
+    '',
+    gate.routes.map((route) => `\`${route}\``).join(', '),
+    ''
+  );
   if (failures.length > 0) lines.push('## Failures', '', ...failures.map((failure) => `- ${failure}`), '');
   return { markdown: `${lines.join('\n')}`, failures };
 }

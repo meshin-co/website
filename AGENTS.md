@@ -25,7 +25,10 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
   focus. No `ClientRouter`, no islands beyond Pagefind, no third-party embeds, no cookies.
 - No contact form, no Pages Function, no Resend. `/contact` is an email address plus a Cal.com
   button. No newsletter anywhere.
-- The audited route list is derived from `dist/**/*.html`, never hand-authored.
+- The route lists are derived from `dist/**/*.html`, never hand-authored. Cheap gates (content, links, budgets,
+  machine interfaces, JSON-LD) run on every route. Lighthouse audits every unique page plus ONE leaf per repeated
+  template family — the heaviest by built bytes — because leaves of one template differ only in content, not in
+  what Lighthouse measures.
 - From Phase 3 on, every template is gated against its heaviest real content entry, never
   placeholder text.
 - Every guard (zod refinement, CSP directive list, byte budget) has a planted violating specimen

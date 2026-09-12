@@ -63,8 +63,12 @@ only by the rule that names it, never by judgement.
 2. `scripts/gate/routes.mjs` — enumerate every `dist/**/*.html`, write
    `audits/phase-N/routes.json`, diff against the previous phase's file. The audited route list is
    **derived, never hand-authored**. An unexplained shrink fails the gate.
-3. Lighthouse CI over the derived list, mobile and desktop, `numberOfRuns: 3`, median. The gate
-   asserts the results array really has 3 runs before trusting any score. Bar per L13.
+3. Lighthouse CI over a **representative list derived from `dist/`**: every unique page plus ONE
+   leaf per repeated template family, chosen as the heaviest by built bytes (`lighthouseSet` in
+   `scripts/gate.mjs`, exported into `dist/gate-routes.json`). Leaves of one template differ only
+   in content, not in what Lighthouse measures, so auditing 100 posts proves what auditing one
+   heaviest post proves. Mobile and desktop, `numberOfRuns: 3`, median. The gate asserts the
+   results array really has 3 runs before trusting any score. Bar per L13.
 4. `axe-core` on every derived route, light and dark → 0 violations.
 5. `html-validate` 0 errors · `linkinator` 0 broken (skip list: `plausible.io`, `linkedin.com`,
    `github.com/meshin-co`) · byte budgets in range.

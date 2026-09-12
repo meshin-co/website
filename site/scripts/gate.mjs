@@ -22,6 +22,24 @@ export async function discoverRoutes(distDir) {
   return [...new Set(routes)].sort();
 }
 
+export function lighthouseSet(measured) {
+  const byParent = new Map();
+  for (const row of measured) {
+    const parent = row.route === '/' ? '' : row.route.slice(0, row.route.lastIndexOf('/'));
+    byParent.set(parent, [...(byParent.get(parent) ?? []), row]);
+  }
+
+  const selected = new Set();
+  for (const [parent, children] of byParent) {
+    const isFamily = parent !== '' && children.length > 1;
+    const chosen = isFamily
+      ? [children.reduce((heaviest, row) => (row.page > heaviest.page ? row : heaviest))]
+      : children;
+    for (const row of chosen) selected.add(row.route);
+  }
+  return [...selected];
+}
+
 export function diffRoutes(before, after) {
   const added = after.filter((route) => !before.includes(route));
   const removed = before.filter((route) => !after.includes(route));
@@ -80,7 +98,10 @@ async function main(distDir, budgetPath) {
   for (const route of routes) measured.push(await measureRoute(distDir, route));
 
   const findings = measured.flatMap((row) => overBudget(row, budgets));
-  await writeFile(join(distDir, 'gate-routes.json'), `${JSON.stringify({ routes, measured }, null, 2)}\n`);
+  await writeFile(
+    join(distDir, 'gate-routes.json'),
+    `${JSON.stringify({ routes, measured, lighthouseRoutes: lighthouseSet(measured) }, null, 2)}\n`
+  );
 
   for (const row of measured) console.log(`${row.route} js=${row.js} css=${row.css} page=${row.page}`);
   if (findings.length > 0) {

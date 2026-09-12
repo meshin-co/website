@@ -14,9 +14,11 @@ const CORE = {
 const SEO = { 'categories:seo': ['error', { minScore: 1 }] };
 
 const gatePath = 'dist/gate-routes.json';
-const measured = existsSync(gatePath) ? JSON.parse(readFileSync(gatePath, 'utf8')).measured : [];
+const gate = existsSync(gatePath) ? JSON.parse(readFileSync(gatePath, 'utf8')) : { measured: [], lighthouseRoutes: [] };
+const measured = gate.measured;
+const audited = gate.lighthouseRoutes.filter((route) => measured.some((row) => row.route === route));
 const noindexRoutes = measured.filter((row) => row.noindex).map((row) => row.route);
-const url = measured.map((row) => (row.route === '/404' ? '/404.html' : `${row.route}/`.replace('//', '/')));
+const url = audited.map((route) => (route === '/404' ? '/404.html' : `${route}/`.replace('//', '/')));
 
 const escaped = noindexRoutes.map((route) => route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
 const noindexPattern = escaped.length > 0 ? `(${escaped.join('|')})(/|\\.html|/index\\.html)?$` : null;

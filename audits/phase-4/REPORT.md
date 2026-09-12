@@ -163,8 +163,8 @@ Result: PASS
 | `/blog/evals-in-ci-for-llm-agents` | 1108 | 20228 | 34201 |
 | `/blog/how-to-build-an-ai-system-register-in-a-week` | 1108 | 20228 | 32418 |
 | `/blog/why-your-ai-pilot-never-reached-production` | 1108 | 20228 | 32820 |
-| `/case-studies` | 1108 | 20228 | 27304 |
-| `/case-studies/only-help-agentic-support` | 1108 | 20228 | 28494 |
+| `/case-studies` | 1108 | 20228 | 27299 |
+| `/case-studies/only-help-agentic-support` | 1108 | 20228 | 28493 |
 | `/contact` | 1108 | 20228 | 27349 |
 | `/faq` | 1108 | 20228 | 33777 |
 | `/glossary` | 1108 | 20228 | 32052 |
@@ -215,11 +215,16 @@ Result: PASS
 | `/services/ai-readiness-and-risk-assessment` | 1108 | 20228 | 29550 |
 | `/services/fractional-caio-retainer` | 1108 | 20228 | 29626 |
 | `/speaking` | 1108 | 20228 | 26926 |
-| `/styleguide` | 1108 | 20408 | 31865 |
+| `/styleguide` | 1108 | 20408 | 31878 |
 | `/terms` | 1108 | 20228 | 27241 |
 
 Budgets: JS ≤10240 · CSS ≤20480 · page ≤256000 bytes gzip.
 
-## Derived route list
+## Lighthouse route selection
+
+One leaf per repeated template family (heaviest by built bytes) plus every unique page:
+`/`, `/404`, `/about`, `/ai-policy`, `/approach`, `/blog`, `/case-studies`, `/contact`, `/faq`, `/glossary`, `/imprint`, `/now`, `/pricing`, `/privacy`, `/resources`, `/search`, `/security`, `/services`, `/speaking`, `/styleguide`, `/terms`, `/blog/evals-in-ci-for-llm-agents`, `/blog/category/agentic-architecture`, `/case-studies/only-help-agentic-support`, `/glossary/high-risk-ai-system`, `/resources/llm-gateway-governance-config`, `/services/fractional-caio-retainer`
+
+## Derived route list (all gates)
 
 `/`, `/404`, `/about`, `/ai-policy`, `/approach`, `/blog`, `/blog/ai-acceptable-use-policy-for-a-50-person-company`, `/blog/category/agentic-architecture`, `/blog/category/executive`, `/blog/category/governance`, `/blog/category/operating-model`, `/blog/evals-in-ci-for-llm-agents`, `/blog/how-to-build-an-ai-system-register-in-a-week`, `/blog/why-your-ai-pilot-never-reached-production`, `/case-studies`, `/case-studies/only-help-agentic-support`, `/contact`, `/faq`, `/glossary`, `/glossary/agentic-workflow`, `/glossary/ai-governance`, `/glossary/ai-impact-assessment`, `/glossary/ai-management-system`, `/glossary/ai-register`, `/glossary/conformity-assessment`, `/glossary/data-classification`, `/glossary/dpia`, `/glossary/eu-ai-act`, `/glossary/evals`, `/glossary/guardrails`, `/glossary/hallucination-rate`, `/glossary/high-risk-ai-system`, `/glossary/human-in-the-loop`, `/glossary/human-oversight`, `/glossary/iso-iec-42001`, `/glossary/llm-gateway`, `/glossary/model-card`, `/glossary/model-provenance`, `/glossary/nist-ai-rmf`, `/glossary/observability`, `/glossary/post-market-monitoring`, `/glossary/prompt-injection`, `/glossary/provider-vs-deployer`, `/glossary/red-teaming`, `/glossary/retrieval-augmented-generation`, `/glossary/serious-incident-reporting`, `/glossary/shadow-ai`, `/glossary/sub-processor`, `/glossary/technical-documentation`, `/imprint`, `/now`, `/pricing`, `/privacy`, `/resources`, `/resources/agent-evals-ci-starter`, `/resources/ai-governance-starter-kit`, `/resources/ai-readiness-scorecard`, `/resources/build-vs-buy-ai-kit`, `/resources/llm-gateway-governance-config`, `/search`, `/security`, `/services`, `/services/90-day-production-sprint`, `/services/ai-readiness-and-risk-assessment`, `/services/fractional-caio-retainer`, `/speaking`, `/styleguide`, `/terms`
