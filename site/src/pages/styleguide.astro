@@ -109,7 +109,7 @@ const swatches = ['page', 'text', 'muted', 'primary', 'line'];
 
   <Section title="Service cards">
     <CardGrid>
-      {services.map((service, order) => <ServiceCard {...service} href="/styleguide" />)}
+      {services.map((service) => <ServiceCard {...service} href="/styleguide" />)}
     </CardGrid>
   </Section>
 
@@ -154,7 +154,7 @@ const swatches = ['page', 'text', 'muted', 'primary', 'line'];
               services.map((service) => (
                 <tr class="border-b border-line last:border-b-0">
                   <td class="py-2 pr-4">{service.name}</td>
-                  <td class="py-2 pr-4 font-mono text-sm">{service.price}</td>
+                  <td class="py-2 pr-4 font-mono text-sm">{service.feeShape}</td>
                   <td class="py-2 font-mono text-sm">{service.duration}</td>
                 </tr>
               ))
