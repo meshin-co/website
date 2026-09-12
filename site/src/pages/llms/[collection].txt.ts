@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 
 import { SITE } from 'astrowind:config';
 import { absoluteUrl, renderLlmsCollection } from '~/utils/machine-text.mjs';
-import { COLLECTION_NAMES, LLMS_COLLECTIONS, toLlmsEntry } from '~/utils/llms-collections.mjs';
+import { LLMS_COLLECTIONS, toLlmsEntry } from '~/utils/llms-collections.mjs';
 
 export const prerender = true;
 

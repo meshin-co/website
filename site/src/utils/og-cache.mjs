@@ -38,10 +38,12 @@ export function readOgImage(cacheDir, slug, key) {
 export function writeOgImage(cacheDir, slug, key, png) {
   mkdirSync(cacheDir, { recursive: true });
   writeFileSync(join(cacheDir, `${key}.png`), png);
-  let manifest = {};
+  let manifest;
   try {
     manifest = JSON.parse(readFileSync(join(cacheDir, 'manifest.json'), 'utf8'));
-  } catch {}
+  } catch {
+    manifest = {};
+  }
   manifest[slug] = key;
   writeFileSync(join(cacheDir, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
 }

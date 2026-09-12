@@ -2,13 +2,7 @@ import { getCollection } from 'astro:content';
 
 import { SITE, METADATA } from 'astrowind:config';
 import { absoluteUrl, publicIndexableStaticPages, renderLlmsTxt } from '~/utils/machine-text.mjs';
-import {
-  COLLECTION_NAMES,
-  LLMS_COLLECTIONS,
-  latestUpdated,
-  llmsFeedPointers,
-  toLlmsEntry,
-} from '~/utils/llms-collections.mjs';
+import { LLMS_COLLECTIONS, latestUpdated, llmsFeedPointers, toLlmsEntry } from '~/utils/llms-collections.mjs';
 
 export const prerender = true;
 

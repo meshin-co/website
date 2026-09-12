@@ -2,7 +2,7 @@ import { getCollection } from 'astro:content';
 
 import { SITE } from 'astrowind:config';
 import { absoluteUrl, renderLlmsIndex } from '~/utils/machine-text.mjs';
-import { COLLECTION_NAMES, LLMS_COLLECTIONS, latestUpdated, toLlmsEntry } from '~/utils/llms-collections.mjs';
+import { LLMS_COLLECTIONS, latestUpdated, toLlmsEntry } from '~/utils/llms-collections.mjs';
 
 export const prerender = true;
 
@@ -14,7 +14,7 @@ export const GET = async () => {
   const site = import.meta.env.SITE.replace(/\/$/, '');
 
   const files = [];
-  for (const { name, base, title, file } of LLMS_COLLECTIONS) {
+  for (const { name, title, file } of LLMS_COLLECTIONS) {
     const entries = await getCollection(name as Parameters<typeof getCollection>[0], isLive);
     const mapped = entries.map(toLlmsEntry());
     files.push({
