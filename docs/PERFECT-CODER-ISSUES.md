@@ -107,3 +107,13 @@ Config in force: `.omp-perfect-coder/config.yml` — `mode: shadow`, `typescript
   unprompted and worked around it with a heredoc.
 - **Suggested fix:** treat a path matching the configured test pattern as never needing a
   sibling. This is entry 001 seen from a second angle: the gate punishes the canonical red step.
+
+## 2026-09-12 — antibodies.jsonl records absolute paths
+
+**What happened.** The owner found `/Users/developer/work/projects/meshin.co/site/package-lock.json` inside a committed plugin ledger file. `package-lock.json` itself was clean — the absolute path lives in `.omp-perfect-coder/antibodies.jsonl`. `enforcement-core.ts` passes `absPath` to `recordAntibody`, so every antibody record leaks the local username and checkout location into the repo.
+
+**Why it is costly.** The repo is not portable: another machine or CI user carries records that name a filesystem that does not exist there. It also leaks the local username into a public-ish artifact.
+
+**Workaround used.** Matching keys on `checkId + contentHash`, not path, so rewriting `path` to repo-relative is safe. Rewrote the existing record to `site/package-lock.json`.
+
+**Suggested fix.** In `enforcement-core.ts`, relativize against the repo base before calling `recordAntibody` (the same `resolveRepoBase` already used elsewhere in `enforce-limits.ts`), or store the repo-relative path and resolve on read.
