@@ -123,7 +123,7 @@ Goal: a scaffolded, committed repo whose template builds untouched, with a recor
 - `npm create astro@latest -- --template arthelokyo/astrowind site`; Node from `.nvmrc` (22).
 - `npm i && npm run build` in `/site` — prove the template builds as shipped.
 - Baseline Lighthouse of the untouched template → `audits/phase-0/baseline/`.
-- `/.perfect-coder/config.yml`: `mode: shadow`, `languages: { typescript: strict }`.
+- `/.omp-perfect-coder/config.yml`: `mode: shadow`, `languages: { typescript-javascript: strict }`. Renamed 2026-09-12: the plugin moved from `.perfect-coder` to `.omp-perfect-coder`, and the old path was silently ignored for all of Phase 4.
 - `AGENTS.md` (PRD Appendix I, adjusted for L1–L19), `CLAUDE.md` → pointer to `AGENTS.md`.
 - `docs/DECISIONS.md` = PRD §2 plus the L-table above. `audits/`, `docs/VISUAL_CHANGELOG.md`.
 - CI in build-only mode; gates switch on in Phase 1.

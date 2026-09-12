@@ -3,7 +3,7 @@
 Incidents where the `perfect-coder` plugin blocked, mis-fired, or forced a workaround during the
 meshin.co build. Raw material for improving the plugin. Append; do not rewrite history.
 
-Config in force: `.perfect-coder/config.yml` — `mode: shadow`, `typescript-javascript: strict`.
+Config in force: `.omp-perfect-coder/config.yml` — `mode: shadow`, `typescript-javascript: strict`. The plugin renamed its path from `.perfect-coder` on 2026-09-12; until the repo followed, this config was silently ignored and every write ran in shadow.
 
 ---
 
