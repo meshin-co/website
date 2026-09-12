@@ -56,7 +56,7 @@ const nodes = [orgNode(site), personNode(site), websiteNode(site)];
     lead="Three ways in. Each one ends with an artifact you can hand to a customer, a board or an auditor."
   >
     <CardGrid>
-      {services.map((service, order) => <ServiceCard {...service} />)}
+      {services.map((service) => <ServiceCard {...service} />)}
     </CardGrid>
 
     <div class="mt-10 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-4 border-t border-line pt-8">
