@@ -1,0 +1,49 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = 'h-8' } = Astro.props;
+
+const body =
+  'M68,43 h184 a28,28 0 0 1 28,28 v88 a28,28 0 0 1 -28,28 h-184 a28,28 0 0 1 -28,-28 v-88 a28,28 0 0 1 28,-28 z M82,82 h158 a6,6 0 0 1 6,6 v67 a6,6 0 0 1 -6,6 h-158 a6,6 0 0 1 -6,-6 v-67 a6,6 0 0 1 6,-6 z';
+---
+
+<svg
+  class={className}
+  viewBox="0 0 320 230"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  role="img"
+  aria-label="CAIO"
+>
+  <g fill="currentColor">
+    <rect x="152" y="0" width="16" height="45" rx="8"></rect>
+    <rect x="84" y="10" width="16" height="35" rx="8"></rect>
+    <rect x="220" y="10" width="16" height="35" rx="8"></rect>
+    <rect x="152" y="185" width="16" height="45" rx="8"></rect>
+    <rect x="84" y="185" width="16" height="35" rx="8"></rect>
+    <rect x="220" y="185" width="16" height="35" rx="8"></rect>
+    <rect x="0" y="107" width="40" height="16" rx="8"></rect>
+    <rect x="16" y="74" width="24" height="18" rx="8"></rect>
+    <rect x="16" y="138" width="24" height="17" rx="8"></rect>
+    <rect x="280" y="107" width="40" height="16" rx="8"></rect>
+    <rect x="280" y="74" width="24" height="18" rx="8"></rect>
+    <rect x="280" y="138" width="24" height="17" rx="8"></rect>
+    <path fill-rule="evenodd" d={body}></path>
+  </g>
+  <text
+    x="161"
+    y="121.5"
+    text-anchor="middle"
+    dominant-baseline="central"
+    fill="currentColor"
+    font-family="'IBM Plex Mono', ui-monospace, 'SF Mono', monospace"
+    font-size="58"
+    font-weight="700"
+    letter-spacing="4"
+    aria-hidden="true"
+  >
+    CAIO
+  </text>
+</svg>

@@ -41,3 +41,14 @@ Format: `YYYY-MM-DD · route or component · what changed visually · why`.
 - Scrollable tables on `/pricing` and `/ai-policy` are keyboard focusable named regions.
 - Snapshot scope changed: visual snapshots now cover one representative route per template
   (`scripts/templates.mjs`), while axe still runs on all 41 routes in both themes.
+
+## 2026-09-12 — Brand: chip logo lockup `Fractional [CAIO]`
+
+Header and footer brand replaced the green-square wordmark with the recreated
+microchip mark (all four sides pinned, unequal pin lengths, 33/31 wall asymmetry
+from the source PNG) widened horizontally to carry `CAIO` in IBM Plex Mono inside
+the cavity, optically centered. `Fractional` in Fraunces precedes the figure.
+Adaptive: mark and text inherit `currentColor`; `[CAIO]` keeps heading color.
+Favicons regenerated from the same geometry (svg with dark-mode media query,
+180px apple-touch on paper, 16/32/48 ico). Both platform baselines regenerated
+in the same commit.

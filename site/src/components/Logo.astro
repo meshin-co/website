@@ -1,8 +1,8 @@
 ---
-import { SITE } from 'astrowind:config';
+import LogoMark from '~/components/common/LogoMark.astro';
 ---
 
-<span class="flex items-baseline gap-2 self-center font-heading text-xl font-semibold whitespace-nowrap text-heading">
-  <span class="inline-block size-2 bg-primary" aria-hidden="true"></span>
-  {SITE?.name}
+<span class="flex items-center gap-2.5 self-center whitespace-nowrap">
+  <span class="font-heading text-xl font-semibold text-heading">Fractional</span>
+  <LogoMark class="h-7 text-heading" />
 </span>
