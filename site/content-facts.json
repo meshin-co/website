@@ -65,22 +65,5 @@
     "/resources/llm-gateway-governance-config": "llm gateway governance config",
     "/resources/build-vs-buy-ai-kit": "build vs buy ai kit"
   },
-  "numbers": [
-    "30",
-    "300",
-    "90",
-    "42001",
-    "27001",
-    "2",
-    "3",
-    "1",
-    "0.1",
-    "14",
-    "71",
-    "1,000",
-    "155",
-    "12",
-    "6",
-    "24"
-  ]
+  "numbers": ["30", "300", "90", "42001", "27001", "2", "3", "1", "0.1", "14", "71", "1,000", "155", "12", "6", "24"]
 }
