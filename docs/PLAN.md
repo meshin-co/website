@@ -33,6 +33,21 @@ The PRD's decision log (§2, D1–D24) stands except where a row below replaces 
 | L17 | Apex state | The old Cloudflare redirect from `meshin.co` to Google Calendar was removed by the owner; apex now serves nothing until Phase 5 | new |
 | L18 | Copy handoff | Work stops after Phase 3 with a written copy checklist for the owner; Phase 4 copy starts only after that comes back | §14 |
 | L19 | Resource slugs | `ai-governance-starter-kit`, `ai-readiness-scorecard`, `agent-evals-ci-starter`, `llm-gateway-governance-config`, `build-vs-buy-ai-kit` | §14 Phase 4 |
+| L20 | FAQ pages | Every FAQ question is its own route `/faq/{slug}` with dates, OG, sidecar, Question/Answer JSON-LD; `/faq` stays the hub | audit 2026-09-12 |
+| L21 | Speaking | Route and collection deleted until a real talk exists | audit |
+| L22 | Open Graph | Satori `og-default.png`; missing image fails the build; `og:image:alt` everywhere; per-entry `ogImage`/`canonical` consumed | audit |
+| L23 | robots.txt | Per-bot groups inherit `*` disallows; `Sitemap:` line; AI crawlers allowed deliberately and recorded | audit |
+| L24 | Feeds | Merged full-text `/rss.xml` (six collections, 50 newest) + one feed per collection + JSON Feed mirror + autodiscovery | audit, owner chose all-6 |
+| L25 | llms surfaces | FAQ in `/llms.txt` + `/llms-full.txt`; feed pointers; STATIC_PAGES derived from dist | audit |
+| L26 | Search | Everything indexed (FAQ Q&A, definitions, static bodies) with per-entry caps; shard by kind over budget; parallel merge client; results grouped by kind | audit |
+| L27 | JSON-LD | Org logo, BlogPosting image/wordCount/language, ItemLists on all hubs, ContactPage, ProfilePage, consistent DefinedTermSet, gate on every family | audit |
+| L28 | Sitemap | `lastmod` everywhere; new routes included; paginated hubs canonical on page one | audit |
+| L29 | Breadcrumbs | Visible UI on every non-home page, shared with JSON-LD, gate-enforced | audit |
+| L30 | Pagination | Blog + categories at 12/page, page one canonical, `rel prev/next`, page 2+ noindex-follow; other hubs stay flat | audit |
+| L31 | Tags | `/blog/tag/{tag}` + `/blog/tags` index, all indexed, shipped now (owner call over deferral) | owner 2026-09-12 |
+| L32 | Dead ends | Every route linked from ≥1 other page; posts link up/sideways; categories linked from hub, footer, post eyebrows | audit |
+| L33 | Semantic core | `docs/SEMANTIC-CORE.md`, one table per route family with the why; drift-gated against `content-facts.json` and built pages | owner |
+| L34 | Skills | `site/.agents/skills/` fully replaced: 6 deleted, 6 rewritten, 4 kept, ~8 new from proven procedures; friction-log insights classified into them | owner |
 
 Verified facts behind these: Astro `7.3.1`, Tailwind `4.3.3`, template `@arthelokyo/astrowind@1.0.0-beta.66`
 (Astro 7 + Tailwind v4, `engines.node >=22.22.3`), `pagefind 1.5.2`, `satori 0.33.4`,
@@ -212,6 +227,84 @@ Goal: the site is worth indexing.
 
 CG-4: all new routes plus every earlier route re-run (regression, not just new work). Extra:
 `cspell`, paragraph and measure check, ≥2 inbound internal links per article.
+
+
+### Phase 4.5a · Machine layer: every surface complete
+
+Goal: every machine reader — crawler, answer engine, feed subscriber — gets the whole site, whole.
+Decided with the owner on 2026-09-12 (audit evidence: `local://audit-*.md`, six read-only audits).
+
+1. **FAQ becomes a first-class collection** (L20). Schema gains the publishable base
+   (publishDate, updatedDate, draft, noindex). Route per question `/faq/{slug}` with per-question
+   OG image (satori), `.md` sidecar, `Question`/`Answer` JSON-LD on the page and `FAQPage` on the
+   hub. The hub keeps all 25 with anchors to the per-question pages.
+2. **Speaking is deleted** (L21): collection, route, nav links, llms entries, Event JSON-LD,
+   sitemap. Returns the day a real talk exists, with `Event` nodes.
+3. **Open Graph everywhere** (L22): satori-generated `og-default.png` in the site's design lane,
+   wired into `config.yaml`; `Metadata.astro` stops silently dropping og:* when an image is
+   missing — it fails the build instead. `og:image:alt` on every route. Per-entry `ogImage` and
+   `canonical` schema fields finally consumed by the templates.
+4. **robots.txt repaired** (L23): per-bot groups inherit the `*` disallows (no re-allowing),
+   `Sitemap:` line added, modern AI crawlers enumerated deliberately (GPTBot, ClaudeBot,
+   PerplexityBot, Google-Extended, CCBot — allow), and the intent recorded in the semantic core.
+5. **Feeds** (L24): `@astrojs/rss` finally used. One merged full-text `/rss.xml` (all six
+   collections, 50 newest, `updatedDate` respected) plus six per-collection feeds
+   (`/blog/rss.xml`, `/glossary/rss.xml`, `/resources/rss.xml`, `/case-studies/rss.xml`,
+   `/faq/rss.xml`, `/services/rss.xml`); `/feed.json` mirrors the merged feed; autodiscovery
+   `<link rel="alternate">` in head; `machine.mjs` gate extended to verify every feed lists every
+   live entry of its collection.
+6. **llms.txt surfaces** (L25): FAQ included in `/llms.txt` and `/llms-full.txt`; feed pointers
+   added; STATIC_PAGES hand-list replaced by derivation from dist so it cannot drift.
+7. **Search covers everything** (L26): index FAQ Q&A, glossary definitions, service FAQs and
+   deliverables, post takeaways, case problem/approach, static-page bodies; per-entry text cap;
+   shard by kind (`/search-index-{kind}.json`) when any shard would cross its budget; client
+   fetches shards in parallel on first search, merges, ranks across kinds, groups results by kind
+   with counts. Playwright budget test moves to per-shard.
+8. **JSON-LD completed** (L27): `Organization.logo` + `image`; BlogPosting gains `image`,
+   `wordCount`, `inLanguage`, `mainEntityOfPage`; hubs emit member lists (`ItemList` +
+   `mainEntity`) for blog, categories, glossary, resources, case-studies, services; `ContactPage`
+   on /contact, `ProfilePage` on /about; glossary `DefinedTermSet` consistent across hub and term
+   pages; `faqNode` gets an `@id`; personNode derived from the author collection (single source);
+   resource nodes carry dates; `webPageNode` with `dateModified` on undated pages. The gate's
+   ROUTE_TYPES extended from 10 families to every family, so nothing regresses silently.
+9. **Sitemap** (L28): `lastmod` from `updatedDate ?? publishDate`; new routes (FAQ pages, tag
+   pages, paginated pages from 4.5b) included; canonical page-one only for paginated hubs.
+
+CG-4.5a: full gate re-run plus: every feed validates (RSS spec + JSON Feed), every live entry
+appears in its feed and the merged feed, robots.txt group semantics tested, OG tags present on
+all 68+ routes (grep-level gate), JSON-LD gate over all families, search finds one term from
+every kind.
+
+### Phase 4.5b · Human layer: navigation, standards, semantic core
+
+Goal: a reader — human or crawler following links — can reach everything from everything.
+
+1. **Breadcrumbs UI everywhere** (L29): the existing `Breadcrumbs.astro` wired on every page
+   below home, sharing data with the JSON-LD trail; gate-extended to hubs.
+2. **Pagination** (L30): `/blog` and category pages paginate at 12/page; page one canonical at
+   the bare route; `rel prev/next`; numbered links crawlable; page 2+ noindex-follow.
+3. **Tag pages** (L31, owner chose ship-now): `/blog/tag/{tag}` for every used tag plus
+   `/blog/tags` index; all indexed and sitemapped; posts and PostCards render tags as links;
+   tags stay in BlogPosting keywords; thin one-post tags accepted as honest and growing.
+4. **Dead ends closed** (L32): posts link up (blog, category, breadcrumbs) and sideways
+   (prev/next within category, related-by-category, related resources); category pages linked
+   from /blog hub, footer, and every post eyebrow; PostCard category becomes a link.
+5. **Semantic core** (L33): `docs/SEMANTIC-CORE.md` — one table per route family: target query,
+   title pattern, meta description pattern, H1, body intent, internal links, and the *why*
+   (business reason, PRD §). `content-facts.json` stays the machine map; a new gate check
+   forbids drift between the doc, the facts file, and built pages (query present in opening,
+   title pattern honoured).
+6. **Standards replaced** (L34): `site/.agents/skills/` — delete the 6 dead template skills,
+   rewrite the 6 wrong ones against current reality, keep 4; author the new set from procedures
+   proven in phases 0–4: content-gate run, six-judge panel, add-a-collection-entry,
+   machine-interface updates, representative-Lighthouse set, visual-baseline regeneration in the
+   CI container, gate runbook, launch checklist. Classify the friction-log insights into these
+   skills. AGENTS.md staleness fixed (rss.xml claim, Pagefind claim, jsonld.ts path); DECISIONS.md
+   D9/D12 marked superseded; `config.yaml` dead blocks removed.
+
+CG-4.5b: full gate re-run plus: linkinator crawl finds zero orphan routes (every route linked
+from ≥1 other page), breadcrumb UI present on all non-home routes, pagination canonicals
+verified, semantic-core drift gate green, skills lint (every skill names real files only).
 
 ### Phase 5 · Launch
 
