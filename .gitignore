@@ -10,3 +10,4 @@ playwright-report/
 site/test-results/
 site/.lighthouseci/
 audits/phase-ci/
+.omp-perfect-coder/*.jsonl

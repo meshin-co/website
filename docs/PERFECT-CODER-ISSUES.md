@@ -116,4 +116,6 @@ Config in force: `.omp-perfect-coder/config.yml` — `mode: shadow`, `typescript
 
 **Workaround used.** Matching keys on `checkId + contentHash`, not path, so rewriting `path` to repo-relative is safe. Rewrote the existing record to `site/package-lock.json`.
 
+**Disposition.** The plugin re-appends absolute paths on every resolved violation, so hand-rewriting is Sisyphean. Runtime ledgers (`*.jsonl`) are now gitignored; `config.yml` and `test-exemptions.yml` stay tracked. Antibody matching is hash-based, so the lost cross-clone memory is advisory only.
+
 **Suggested fix.** In `enforcement-core.ts`, relativize against the repo base before calling `recordAntibody` (the same `resolveRepoBase` already used elsewhere in `enforce-limits.ts`), or store the repo-relative path and resolve on read.
