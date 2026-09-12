@@ -43,12 +43,12 @@ The PRD's decision log (§2, D1–D24) stands except where a row below replaces 
 | L27 | JSON-LD | Org logo, BlogPosting image/wordCount/language, `itemListElement` lists on all hubs, ContactPage, ProfilePage, consistent DefinedTermSet, Person→meshin-dev / Org→meshin-co sameAs split; gate covers every family and FAILS CLOSED on unknown patterns; Rich Results per emitted family | audit + ADHD |
 | L28 | Sitemap | One shared `lastmod()` helper across sitemap/feeds/sidecars/llms (omitted when undated, never build-time); cross-surface agreement gated; new routes included; paginated hubs list page one only | audit + ADHD |
 | L29 | Breadcrumbs | Visible UI on every non-home page, shared with JSON-LD, gate-enforced | audit |
-| L30 | Pagination | Blog + categories at 12/page, page one canonical, crawlable numbered links, page 2+ noindex-follow, no rel prev/next; proven at gate via a planted 13th draft post; other hubs stay flat | audit + ADHD |
+| L30 | Pagination | Blog + categories at 12/page, page one canonical, crawlable numbered links, page 2+ noindex-follow, no rel prev/next; proven at gate by a LIVE 13th post planted inside the mutation-smoke repo copy (drafts never render); other hubs stay flat | audit + ADHD |
 | L31 | Tags | `/blog/tag/{tag}` + `/blog/tags` index, ALL indexed and sitemapped (owner re-affirmed under ADHD challenge); controlled tag vocabulary in `site/src/data/tags.mjs`, schema-enforced | owner ×2 |
 | L32 | Dead ends | Every route linked from ≥1 other page; posts link up/sideways; categories linked from hub, footer, post eyebrows | audit |
 | L33 | Semantic core | `docs/SEMANTIC-CORE.md`: tables generated from `content-facts.json`, hand-authored why + the 30 buyer prompts (PRD §17.3) mapped to routes; no drift gate (generated views cannot drift) | owner + ADHD |
 | L34 | Skills | `site/.agents/skills/` fully replaced: all 12 template-derived deleted, 4 keepers re-verified against L1–L34, ~8 new from proven procedures (add-a-collection names the four hand-lists); friction-log insights classified into them | owner + ADHD |
-
+| L35 | Mutation smoke | `scripts/gate/mutation-smoke.mjs` + guard-mutations fixtures built in 4.5b; every guard family proven able to fail before CG-4.5b; pagination page-2 proof lives here | ADHD + Drift |
 Verified facts behind these: Astro `7.3.1`, Tailwind `4.3.3`, template `@arthelokyo/astrowind@1.0.0-beta.66`
 (Astro 7 + Tailwind v4, `engines.node >=22.22.3`), `pagefind 1.5.2`, `satori 0.33.4`,
 `@resvg/resvg-js 2.6.2`, `@lhci/cli 0.15.1`. `cal.com/meshin` returns 200. `meshin.co` MX is
@@ -233,7 +233,7 @@ CG-4: all new routes plus every earlier route re-run (regression, not just new w
 
 Goal: every machine reader — crawler, answer engine, feed subscriber — gets the whole site, whole.
 Decided with the owner 2026-09-12; hardened after a six-frame ADHD review the same day (evidence:
-`'/Users/developer/.omp/agent/sessions/-work-projects-meshin.co/2026-09-06T18-24-21-304Z_01a077f6-d938-7753-970b-6ac280c68aba/local/adhd-*.md'`). Owner re-affirmed under review: all tags indexed (L31), sharding built now
+`audits/phase-4.5/adhd/`). Owner re-affirmed under review: all tags indexed (L31), sharding built now
 (L26), six per-collection feeds (L24).
 
 1. **FAQ becomes a first-class collection** (L20). Schema gains the publishable base
@@ -310,8 +310,9 @@ Goal: a reader — human or crawler following links — can reach everything fro
    below home, sharing data with the JSON-LD trail; gate-extended to hubs.
 2. **Pagination** (L30): `/blog` and category pages paginate at 12/page; page one canonical at
    the bare route; page 2+ noindex-follow with crawlable numbered links. At 4 posts no page 2
-   renders, so the gate proves pagination with a planted 13th draft post (specimen removed after
-   the proof): page 2 renders, canonical and noindex asserted, then removed.
+   renders, so pagination is proven inside the mutation-smoke repo copy (packet 7): a LIVE 13th
+   post added in the copy forces page 2, the build is asserted to render it with the correct
+   canonical and noindex-follow, and the copy is discarded. A draft specimen would never render.
 3. **Tag pages** (L31, owner re-affirmed twice): `/blog/tag/{tag}` for every used tag plus
    `/blog/tags` index; all indexed and sitemapped; posts and PostCards render tags as links;
    tags stay in BlogPosting keywords. Tag vocabulary is a controlled list in
@@ -328,6 +329,14 @@ Goal: a reader — human or crawler following links — can reach everything fro
    designed against the questions LLMs actually get asked. A generated view cannot drift; no new
    drift gate. The title-pattern grammar is defined once (placeholder rules, lengths) in the
    generation script.
+7. **Mutation smoke built for real** (L35): `scripts/gate/mutation-smoke.mjs` and
+   `site/tests/guard-mutations/fixtures/` from CG §3 finally exist. The smoke copies the repo to
+   a temp dir, plants one violating specimen per guard family (zod refinements, budgets,
+   JSON-LD gate, machine coverage, content gate, and the new L20–L28 guards), runs the gate
+   there, and asserts a non-zero exit naming the offending field — restoring green afterwards.
+   The pagination page-2 proof runs in the same copy. Every guard this phase adds is proven able
+   to fail before CG-4.5b trusts it.
+
 6. **Standards replaced** (L34): `site/.agents/skills/` — delete all 12 template-derived skills
    (not merely stale but rule-violating: `configure-contact-form.md` contradicts L6,
    `setup-decap-cms.md` describes a CMS this repo never had; rewriting docs for removed features
@@ -341,7 +350,7 @@ Goal: a reader — human or crawler following links — can reach everything fro
    `config.yaml` dead blocks removed.
 
 CG-4.5b: full gate re-run plus: linkinator crawl finds zero orphan routes; breadcrumb UI present
-on all non-home routes; pagination proven via the planted specimen; semantic-core generation
+on all non-home routes; pagination proven via the live specimen in the smoke copy; semantic-core generation
 green; skills lint (every skill names real files only); whole-site visual baselines regenerated
 once at the end, per-template-family changelog entries.
 ### Phase 5 · Launch
