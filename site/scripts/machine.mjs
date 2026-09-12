@@ -27,7 +27,14 @@ export function llmsIndexGaps(text, collections) {
 }
 
 export function llmsRouteGaps(text, routes) {
-  return routes.filter((route) => !text.includes(`${route})`));
+  const listed = new Set();
+  for (const line of text.split('\n')) {
+    const trimmed = line.trim().replace(/^- /, '');
+    const link = /^\[[^\]]*\]\((https?:\/\/[^)]+)\)/.exec(trimmed);
+    const url = link ? link[1] : /^https?:\/\/\S+$/.test(trimmed) ? trimmed : null;
+    if (url) listed.add(new URL(url).pathname);
+  }
+  return routes.filter((route) => !listed.has(route));
 }
 
 export function noindexStaticListings(text) {

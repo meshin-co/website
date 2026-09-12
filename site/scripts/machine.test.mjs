@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import {
+  llmsRouteGaps,
   publicCollections,
   missingFromGenerator,
   sidecarGaps,
@@ -23,6 +24,20 @@ export const collections = {
   speaking: speakingCollection,
 };
 `;
+
+test('a body link cannot mask an entry whose own url line is missing', () => {
+  const file = [
+    '# Glossary',
+    '',
+    'See also [the other term](https://meshin.co/glossary/other) for details.',
+    '[https://meshin.co/glossary/present](https://meshin.co/glossary/present)',
+  ].join('\n');
+
+  assert.deepEqual(llmsRouteGaps(file, ['/glossary/other', '/glossary/present', '/glossary/missing']), [
+    '/glossary/other',
+    '/glossary/missing',
+  ]);
+});
 
 test('the public collection list comes from the content config, faq included, speaking and author out', () => {
   assert.deepEqual(publicCollections(CONFIG), ['post', 'service', 'resource', 'glossary', 'case', 'faq']);
