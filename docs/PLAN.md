@@ -294,8 +294,10 @@ Goal: a reader — human or crawler following links — can reach everything fro
    (business reason, PRD §). `content-facts.json` stays the machine map; a new gate check
    forbids drift between the doc, the facts file, and built pages (query present in opening,
    title pattern honoured).
-6. **Standards replaced** (L34): `site/.agents/skills/` — delete the 6 dead template skills,
-   rewrite the 6 wrong ones against current reality, keep 4; author the new set from procedures
+6. **Standards replaced** (L34): `site/.agents/skills/` — delete the 6 dead template skills
+   (they are not merely stale but rule-violating: `configure-contact-form.md` contradicts L6,
+   `setup-decap-cms.md` describes a CMS this repo never had), rewrite the 6 wrong ones against
+   current reality, keep 4 — with the kept four re-verified against L1–L34 before they survive; author the new set from procedures
    proven in phases 0–4: content-gate run, six-judge panel, add-a-collection-entry,
    machine-interface updates, representative-Lighthouse set, visual-baseline regeneration in the
    CI container, gate runbook, launch checklist. Classify the friction-log insights into these
