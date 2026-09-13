@@ -5,6 +5,7 @@ import { getCollection, render } from 'astro:content';
 
 import CtaBlock from '~/components/site/CtaBlock.astro';
 import FaqList from '~/components/site/FaqList.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
 import Section from '~/components/site/Section.astro';
@@ -13,7 +14,7 @@ import SourceList from '~/components/site/SourceList.astro';
 import StepList from '~/components/site/StepList.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { articleMetadata } from '~/utils/machine-links.mjs';
-import { breadcrumbNode, faqNode, orgNode, personNode, serviceNode } from '~/utils/jsonld.mjs';
+import { faqNode, orgNode, personNode, serviceNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -39,21 +40,24 @@ const metadata = articleMetadata(site, {
   id: service.id,
 });
 
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Services', path: '/services' },
+  { name: data.name, path: `/services/${service.id}` },
+];
+
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
   serviceNode(site, { id: service.id, ...data }),
   faqNode(data.faq),
-  breadcrumbNode(site, [
-    { name: 'Home', path: '/' },
-    { name: 'Services', path: '/services' },
-    { name: data.name, path: `/services/${service.id}` },
-  ]),
 ];
 ---
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
+
+  <Breadcrumbs crumbs={crumbs} />
   <MarkdownAlternate path={`/services/${service.id}`} slot="head" />
 
   <Section bordered={false} headingLevel={1} eyebrow={data.duration} title={data.name} lead={data.tagline}>

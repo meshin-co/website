@@ -1,9 +1,10 @@
 ---
 import CtaBlock from '~/components/site/CtaBlock.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { breadcrumbNode, orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
@@ -13,15 +14,16 @@ const metadata = {
   description: 'How this site is built and served, how client data is handled, and where to report a vulnerability.',
 };
 
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Security', path: '/security' },
+];
+
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
   websiteNode(site),
   webPageNode(site, '/security', null, metadata.title),
-  breadcrumbNode(site, [
-    { name: 'Home', path: '/' },
-    { name: 'Security', path: '/security' },
-  ]),
 ];
 
 const posture = [
@@ -62,6 +64,8 @@ const posture = [
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
+
+  <Breadcrumbs crumbs={crumbs} />
 
   <Section
     bordered={false}

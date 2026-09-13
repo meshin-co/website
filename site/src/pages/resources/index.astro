@@ -3,11 +3,12 @@ import { getCollection } from 'astro:content';
 
 import CardGrid from '~/components/site/CardGrid.astro';
 import CtaBlock from '~/components/site/CtaBlock.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import ResourceCard from '~/components/site/ResourceCard.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { breadcrumbNode, collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
@@ -21,6 +22,11 @@ const metadata = {
     'Open templates and checklists for AI governance: register, acceptable-use policy, data classification, vendor questionnaire.',
 };
 
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Resources', path: '/resources' },
+];
+
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
@@ -31,15 +37,13 @@ const nodes = [
     description: metadata.description,
     items: resources.map((resource) => ({ url: `/resources/${resource.id}` })),
   }),
-  breadcrumbNode(site, [
-    { name: 'Home', path: '/' },
-    { name: 'Resources', path: '/resources' },
-  ]),
 ];
 ---
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
+
+  <Breadcrumbs crumbs={crumbs} />
 
   <Section
     bordered={false}

@@ -5,13 +5,14 @@ import { getCollection, render } from 'astro:content';
 
 import AnswerBlock from '~/components/site/AnswerBlock.astro';
 import CtaBlock from '~/components/site/CtaBlock.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
 import Section from '~/components/site/Section.astro';
 import SourceList from '~/components/site/SourceList.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { articleMetadata } from '~/utils/machine-links.mjs';
-import { breadcrumbNode, orgNode, personNode, termNode, termSetNode } from '~/utils/jsonld.mjs';
+import { orgNode, personNode, termNode, termSetNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -44,6 +45,12 @@ const metadata = articleMetadata(site, {
 
 const otherTerms = terms.filter((entry) => entry.id !== term.id);
 
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Glossary', path: '/glossary' },
+  { name: data.term, path: `/glossary/${term.id}` },
+];
+
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
@@ -53,16 +60,13 @@ const nodes = [
   ),
   termNode(site, { id: term.id, ...data }),
   ...otherTerms.map((entry) => termNode(site, { id: entry.id, ...entry.data })),
-  breadcrumbNode(site, [
-    { name: 'Home', path: '/' },
-    { name: 'Glossary', path: '/glossary' },
-    { name: data.term, path: `/glossary/${term.id}` },
-  ]),
 ];
 ---
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
+
+  <Breadcrumbs crumbs={crumbs} />
   <MarkdownAlternate path={`/glossary/${term.id}`} slot="head" />
 
   <Section bordered={false} headingLevel={1} eyebrow="Glossary" title={data.term} />

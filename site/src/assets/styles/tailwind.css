@@ -46,7 +46,6 @@
   --aw-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --aw-color-primary: oklch(45% 0.09 200);
-  --font-mono: var(--font-plex-mono), ui-monospace, 'SF Mono', monospace;
   --aw-color-secondary: oklch(38% 0.08 200);
   --aw-color-accent: oklch(42% 0.11 200);
 

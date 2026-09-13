@@ -1,9 +1,10 @@
 ---
 import CtaBlock from '~/components/site/CtaBlock.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { breadcrumbNode, contactPageNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { contactPageNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
@@ -14,15 +15,16 @@ const metadata = {
     'Book a 30-minute fit call or email hello@meshin.co. Remote worldwide, on site when the trip is worth it.',
 };
 
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Contact', path: '/contact' },
+];
+
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
   websiteNode(site),
   contactPageNode(site),
-  breadcrumbNode(site, [
-    { name: 'Home', path: '/' },
-    { name: 'Contact', path: '/contact' },
-  ]),
 ];
 
 const channels = [
@@ -46,6 +48,8 @@ const channels = [
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
+
+  <Breadcrumbs crumbs={crumbs} />
 
   <Section
     bordered={false}

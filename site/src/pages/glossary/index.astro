@@ -1,11 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
 
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import {
-  breadcrumbNode,
   collectionNode,
   orgNode,
   personNode,
@@ -25,6 +25,11 @@ const metadata = {
   description: 'Plain definitions of the AI governance terms that come up in security reviews and board meetings.',
 };
 
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Glossary', path: '/glossary' },
+];
+
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
@@ -40,10 +45,6 @@ const nodes = [
     terms.map((term) => ({ id: term.id }))
   ),
   ...terms.map((term) => termNode(site, { id: term.id, ...term.data })),
-  breadcrumbNode(site, [
-    { name: 'Home', path: '/' },
-    { name: 'Glossary', path: '/glossary' },
-  ]),
 ];
 
 const HUB_DEFINITIONS: Record<string, string> = {
@@ -71,6 +72,8 @@ const cards = terms.map((term) => {
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
+
+  <Breadcrumbs crumbs={crumbs} />
 
   <Section
     bordered={false}

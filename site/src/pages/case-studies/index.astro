@@ -3,11 +3,12 @@ import { getCollection } from 'astro:content';
 
 import CardGrid from '~/components/site/CardGrid.astro';
 import CtaBlock from '~/components/site/CtaBlock.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import PostCard from '~/components/site/PostCard.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { breadcrumbNode, collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
@@ -20,6 +21,11 @@ const metadata = {
   description: 'One entry, not a client case: only.help, my own product, built with the method I use for clients.',
 };
 
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Case studies', path: '/case-studies' },
+];
+
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
@@ -30,15 +36,13 @@ const nodes = [
     description: metadata.description,
     items: cases.map((entry) => ({ url: `/case-studies/${entry.id}` })),
   }),
-  breadcrumbNode(site, [
-    { name: 'Home', path: '/' },
-    { name: 'Case studies', path: '/case-studies' },
-  ]),
 ];
 ---
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
+
+  <Breadcrumbs crumbs={crumbs} />
 
   <Section
     bordered={false}

@@ -1,9 +1,10 @@
 ---
 import CtaBlock from '~/components/site/CtaBlock.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { breadcrumbNode, orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
@@ -15,15 +16,16 @@ const metadata = {
     'My own acceptable-use policy for AI systems: what data may reach a vendor, what may not, and who decides.',
 };
 
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'AI policy', path: '/ai-policy' },
+];
+
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
   websiteNode(site),
   webPageNode(site, '/ai-policy', null, metadata.title),
-  breadcrumbNode(site, [
-    { name: 'Home', path: '/' },
-    { name: 'AI policy', path: '/ai-policy' },
-  ]),
 ];
 
 const tiers = [
@@ -61,6 +63,8 @@ const rules = [
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
+
+  <Breadcrumbs crumbs={crumbs} />
 
   <Section
     bordered={false}

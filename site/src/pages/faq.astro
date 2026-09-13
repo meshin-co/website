@@ -2,11 +2,12 @@
 import { getCollection } from 'astro:content';
 
 import CtaBlock from '~/components/site/CtaBlock.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { teaser } from '~/utils/faq-meta.mjs';
-import { breadcrumbNode, collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
@@ -31,6 +32,11 @@ const metadata = {
     'What a Fractional Chief AI Officer does, what each offer produces, and how AI risk gets recorded and signed off.',
 };
 
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'FAQ', path: '/faq' },
+];
+
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
@@ -41,15 +47,13 @@ const nodes = [
     description: metadata.description,
     items: entries.map((entry) => ({ url: `/faq/${entry.id}` })),
   }),
-  breadcrumbNode(site, [
-    { name: 'Home', path: '/' },
-    { name: 'FAQ', path: '/faq' },
-  ]),
 ];
 ---
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
+
+  <Breadcrumbs crumbs={crumbs} />
 
   <Section
     bordered={false}

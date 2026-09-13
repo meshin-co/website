@@ -1,8 +1,9 @@
 ---
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { breadcrumbNode, orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
@@ -13,15 +14,16 @@ const metadata = {
   description: 'What this site collects, which is almost nothing, and what happens to an email you send me.',
 };
 
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Privacy', path: '/privacy' },
+];
+
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
   websiteNode(site),
   webPageNode(site, '/privacy', null, metadata.title),
-  breadcrumbNode(site, [
-    { name: 'Home', path: '/' },
-    { name: 'Privacy', path: '/privacy' },
-  ]),
 ];
 
 const sections = [
@@ -50,6 +52,8 @@ const sections = [
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
+
+  <Breadcrumbs crumbs={crumbs} />
 
   <Section
     bordered={false}

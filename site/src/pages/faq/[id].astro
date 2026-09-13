@@ -4,13 +4,14 @@ import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
 
 import CtaBlock from '~/components/site/CtaBlock.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
 import Section from '~/components/site/Section.astro';
 import SourceList from '~/components/site/SourceList.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { faqMetadata } from '~/utils/faq-meta.mjs';
-import { breadcrumbNode, faqPageNode, orgNode, personNode } from '~/utils/jsonld.mjs';
+import { faqPageNode, orgNode, personNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -28,20 +29,23 @@ const site = import.meta.env.SITE.replace(/\/$/, '');
 
 const metadata = faqMetadata(data);
 
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'FAQ', path: '/faq' },
+  { name: data.question, path: `/faq/${entry.id}` },
+];
+
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
   faqPageNode(site, { id: entry.id, question: data.question, answer: data.answer }),
-  breadcrumbNode(site, [
-    { name: 'Home', path: '/' },
-    { name: 'FAQ', path: '/faq' },
-    { name: data.question, path: `/faq/${entry.id}` },
-  ]),
 ];
 ---
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
+
+  <Breadcrumbs crumbs={crumbs} />
   <MarkdownAlternate path={`/faq/${entry.id}`} slot="head" />
 
   <Section bordered={false} headingLevel={1} eyebrow="FAQ" title={data.question} />

@@ -3,11 +3,12 @@ import { getEntry } from 'astro:content';
 
 import CtaBlock from '~/components/site/CtaBlock.astro';
 import FigureStrip from '~/components/site/FigureStrip.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import SignalList from '~/components/site/SignalList.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { breadcrumbNode, orgNode, personNode, profilePageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { orgNode, personNode, profilePageNode, websiteNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 import { figures } from '~/data/home';
 
@@ -20,15 +21,16 @@ const metadata = {
     'Platform engineer working as a Fractional Chief AI Officer for companies of 30 to 300 people. Remote worldwide.',
 };
 
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'About', path: '/about' },
+];
+
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
   websiteNode(site),
   profilePageNode(site),
-  breadcrumbNode(site, [
-    { name: 'Home', path: '/' },
-    { name: 'About', path: '/about' },
-  ]),
 ];
 
 const principles = {
@@ -43,6 +45,8 @@ const principles = {
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
+
+  <Breadcrumbs crumbs={crumbs} />
 
   <Section bordered={false} headingLevel={1} eyebrow="About" title="Dmitri Meshin" lead={author?.data.role}>
     <p class="mt-2 max-w-[68ch] text-lg leading-relaxed text-muted">

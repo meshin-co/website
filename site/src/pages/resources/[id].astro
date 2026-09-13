@@ -4,6 +4,7 @@ import type { CollectionEntry } from 'astro:content';
 import { getCollection, render } from 'astro:content';
 
 import CtaBlock from '~/components/site/CtaBlock.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
 import KeyTakeaways from '~/components/site/KeyTakeaways.astro';
@@ -11,7 +12,7 @@ import Section from '~/components/site/Section.astro';
 import SourceList from '~/components/site/SourceList.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { articleMetadata } from '~/utils/machine-links.mjs';
-import { breadcrumbNode, orgNode, personNode, resourceNode } from '~/utils/jsonld.mjs';
+import { orgNode, personNode, resourceNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -39,20 +40,23 @@ const metadata = articleMetadata(site, {
   updatedDate: data.updatedDate,
 });
 
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Resources', path: '/resources' },
+  { name: data.name, path: `/resources/${resource.id}` },
+];
+
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
   resourceNode(site, { id: resource.id, ...data }),
-  breadcrumbNode(site, [
-    { name: 'Home', path: '/' },
-    { name: 'Resources', path: '/resources' },
-    { name: data.name, path: `/resources/${resource.id}` },
-  ]),
 ];
 ---
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
+
+  <Breadcrumbs crumbs={crumbs} />
   <MarkdownAlternate path={`/resources/${resource.id}`} slot="head" />
 
   <Section

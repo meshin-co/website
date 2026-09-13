@@ -1,11 +1,12 @@
 ---
 import CtaBlock from '~/components/site/CtaBlock.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import ShiftPanel from '~/components/site/ShiftPanel.astro';
 import StepList from '~/components/site/StepList.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { breadcrumbNode, orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
@@ -16,15 +17,16 @@ const metadata = {
     'The six things that decide whether an AI initiative reaches production, and the order I work through them.',
 };
 
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Approach', path: '/approach' },
+];
+
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
   websiteNode(site),
   webPageNode(site, '/approach', null, metadata.title),
-  breadcrumbNode(site, [
-    { name: 'Home', path: '/' },
-    { name: 'Approach', path: '/approach' },
-  ]),
 ];
 
 const measures = [
@@ -107,6 +109,8 @@ const shiftContent = {
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
+
+  <Breadcrumbs crumbs={crumbs} />
 
   <Section
     bordered={false}
