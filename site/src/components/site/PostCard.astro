@@ -13,9 +13,8 @@ interface Props {
 
 const { title, href, excerpt, date, readingTime, category, tags = [] } = Astro.props;
 const published = new Date(date);
-const categoryTitle = category
-  ? (categoryPillars[category as keyof typeof categoryPillars]?.title ?? category)
-  : undefined;
+const pillar = category ? (categoryPillars[category as keyof typeof categoryPillars] ?? null) : null;
+const categoryTitle = category ? (pillar?.title ?? category) : undefined;
 ---
 
 <article class="flex h-full flex-col border border-line p-6" data-gate-ignore>
@@ -28,12 +27,15 @@ const categoryTitle = category
       categoryTitle && (
         <>
           {' · '}
-          <a
-            class="text-link underline decoration-2 underline-offset-4 hover:decoration-primary"
-            href={`/blog/category/${category}`}
-          >
-            {categoryTitle}
-          </a>
+          {pillar && (
+            <a
+              class="text-link underline decoration-2 underline-offset-4 hover:decoration-primary"
+              href={`/blog/category/${category}`}
+            >
+              {categoryTitle}
+            </a>
+          )}
+          {!pillar && categoryTitle}
         </>
       )
     }
