@@ -65,3 +65,28 @@ jobs:
             site/test-results/
             site/dist/gate-routes.json
           retention-days: 14
+
+  regen-baselines:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npx playwright test --update-snapshots
+      - name: Commit regenerated linux baselines
+        run: |
+          git config user.name 'baseline-bot'
+          git config user.email 'baseline-bot@meshin.co'
+          git add tests/__screenshots__/linux
+          git commit -m 'test: regenerate linux baselines on the CI runner' || echo 'no changes'
+          git push
