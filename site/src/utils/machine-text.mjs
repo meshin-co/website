@@ -129,6 +129,11 @@ const STATIC_PAGE_CATALOG = [
       'Fractional AI leadership for 30–300 person companies: governance that passes enterprise procurement, and agentic systems shipped to production with evals and observability.',
   },
   {
+    path: '/blog/tags',
+    title: 'Writing topics',
+    description: 'Every topic tag used across the writing, each with its own page.',
+  },
+  {
     path: '/about',
     title: 'About Dmitri Meshin',
     description:

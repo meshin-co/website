@@ -1,0 +1,34 @@
+---
+interface Props {
+  links: Array<{ pageNumber: number; href: string }>;
+  currentPage?: number;
+}
+
+const { links, currentPage } = Astro.props;
+---
+
+{
+  links.length > 1 && (
+    <nav aria-label="Pagination" class="mx-auto w-full max-w-6xl px-5 pb-16 sm:px-8">
+      <ol class="flex list-none flex-wrap gap-3 font-mono text-sm">
+        {links.map(({ pageNumber, href }) => (
+          <li>
+            {pageNumber === currentPage ? (
+              <span aria-current="page" class="border border-line px-3 py-1 text-heading">
+                {pageNumber}
+              </span>
+            ) : (
+              <a
+                aria-label={`Page ${pageNumber}`}
+                class="border border-line px-3 py-1 text-muted hover:border-primary hover:text-primary"
+                href={href}
+              >
+                {pageNumber}
+              </a>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}

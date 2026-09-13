@@ -1,0 +1,76 @@
+---
+import { getCollection } from 'astro:content';
+
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import Section from '~/components/site/Section.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { TAGS } from '~/data/tags.mjs';
+import { collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+
+const site = import.meta.env.SITE.replace(/\/$/, '');
+const posts = await getCollection('post', ({ data }) => !data.draft);
+
+const counts = new Map(TAGS.map((tag) => [tag.slug, 0]));
+for (const post of posts) {
+  for (const tag of post.data.tags) counts.set(tag, (counts.get(tag) ?? 0) + 1);
+}
+
+const metadata = {
+  title: 'Tags',
+  description: 'The tags used across the writing, with how many articles carry each one.',
+};
+
+const nodes = [
+  orgNode(site, { logoPath: ogDefaultPath }),
+  personNode(site),
+  websiteNode(site),
+  collectionNode(site, {
+    path: '/blog/tags',
+    name: 'Tags',
+    description: metadata.description,
+    items: TAGS.map((tag) => ({ url: `/blog/tag/${tag.slug}` })),
+  }),
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+
+  <Breadcrumbs
+    crumbs={[
+      { name: 'Home', path: '/' },
+      { name: 'Writing', path: '/blog' },
+      { name: 'Tags', path: '/blog/tags' },
+    ]}
+  />
+
+  <Section
+    bordered={false}
+    headingLevel={1}
+    eyebrow="Writing"
+    title="Tags"
+    lead="The tags used across the writing, with how many articles carry each one."
+  />
+
+  <Section title="All tags">
+    <ul class="grid list-none gap-x-8 gap-y-0 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        TAGS.map((tag) => {
+          const count = counts.get(tag.slug) ?? 0;
+          return (
+            <li class="flex items-baseline justify-between gap-4 border-b border-line py-4">
+              <a class="text-link font-heading text-lg font-semibold hover:underline" href={`/blog/tag/${tag.slug}`}>
+                {tag.name}
+              </a>
+              <span class="font-mono text-xs text-muted">
+                {count} {count === 1 ? 'article' : 'articles'}
+              </span>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </Section>
+</Layout>

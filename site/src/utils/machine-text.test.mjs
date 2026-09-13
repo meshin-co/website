@@ -226,6 +226,7 @@ test('publicIndexableStaticPages covers every public static page of the site', (
   const paths = publicIndexableStaticPages().map((page) => page.path);
   const expected = [
     '/',
+    '/blog/tags',
     '/about',
     '/approach',
     '/pricing',

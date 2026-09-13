@@ -1,7 +1,6 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-import { collectPages } from './content-gate.mjs';
 import { judgePage, PROFILES } from './content-rows.mjs';
 import { discoverRoutes } from './gate.mjs';
 
@@ -71,16 +70,7 @@ export const FAMILY_GRAMMAR = {
   },
 };
 
-const FAMILY_ORDER = [
-  'static',
-  'service',
-  'resource',
-  'case-study',
-  'article',
-  'blog-category',
-  'term',
-  'faq-answer',
-];
+const FAMILY_ORDER = ['static', 'service', 'resource', 'case-study', 'article', 'blog-category', 'term', 'faq-answer'];
 
 const STEM_RULES = {
   term: /^What\b.*\?$/,
@@ -98,7 +88,7 @@ export function titleFindings(rows) {
   const findings = [];
 
   for (const { route, title } of rows) {
-    const add = (rule, detail) => findings.push({ route, rule, detail });
+    const add = (rule, detail) => findings.push({ route, rule, detail, excerpt: '' });
     if (!title) {
       add('title-missing', 'no <title> element');
       continue;
@@ -121,17 +111,17 @@ export function orphanFindings(routes, queries) {
   const findings = [];
 
   for (const route of queries) {
-    if (!built.has(route)) findings.push({ route, rule: 'query-without-route', detail: 'no built route' });
+    if (!built.has(route)) findings.push({ route, rule: 'query-without-route', detail: 'no built route', excerpt: '' });
   }
   for (const route of routes) {
-    if (!known.has(route)) findings.push({ route, rule: 'route-without-query', detail: 'no content-facts row' });
+    if (!known.has(route))
+      findings.push({ route, rule: 'route-without-query', detail: 'no content-facts row', excerpt: '' });
   }
 
   return findings;
 }
 
-export async function collectSemantic(distDir, facts) {
-  const pages = await collectPages(distDir);
+export async function collectSemantic(distDir, facts, pages) {
   const rows = [];
 
   for (const page of pages) {
@@ -161,12 +151,23 @@ export async function collectSemantic(distDir, facts) {
   return rows;
 }
 
-export async function checkFindings(distDir) {
-  const facts = JSON.parse(await readFile('content-facts.json', 'utf8'));
-  const rows = await collectSemantic(distDir, facts);
-  const routes = await discoverRoutes(distDir);
+async function collectGated(distDir) {
+  const { collectPages } = await import('./content-gate.mjs');
+  return collectPages(distDir);
+}
 
-  return [...orphanFindings(routes, Object.keys(facts.targetQuery)).filter((finding) => finding.rule === 'query-without-route'), ...orphanFindings(rows.map((row) => row.route), Object.keys(facts.targetQuery)).filter((finding) => finding.rule === 'route-without-query'), ...titleFindings(rows)];
+export async function checkFindings(distDir, pages) {
+  const facts = JSON.parse(await readFile('content-facts.json', 'utf8'));
+  const queries = Object.keys(facts.targetQuery);
+  const rows = await collectSemantic(distDir, facts, pages ?? (await collectGated(distDir)));
+  const built = await discoverRoutes(distDir);
+  const gated = rows.map((row) => row.route);
+
+  const findings = orphanFindings(built, queries).filter((finding) => finding.rule === 'query-without-route');
+  findings.push(...orphanFindings(gated, queries).filter((finding) => finding.rule === 'route-without-query'));
+  findings.push(...titleFindings(rows));
+
+  return findings;
 }
 
 const cell = (text) => `\`${text}\``;
@@ -215,7 +216,7 @@ async function main() {
     return;
   }
 
-  const rows = await collectSemantic('dist', facts);
+  const rows = await collectSemantic('dist', facts, await collectGated('dist'));
   const doc = await readFile(DOC, 'utf8');
   await writeFile(DOC, spliceGenerated(doc, renderFamilies(rows)));
   const families = new Set(rows.map((row) => row.family));

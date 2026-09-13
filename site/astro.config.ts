@@ -58,7 +58,7 @@ export default defineConfig({
 
   integrations: [
     sitemap({
-      filter: (page) => !/\/blog\/tag\/|\/styleguide|\/search/.test(page),
+      filter: (page) => !/\/styleguide|\/search|\/blog\/page\/|\/blog\/category\/[^/]+\/page\//.test(page),
       serialize: (item) => {
         const route = new URL(item.url).pathname.replace(/\/$/, '');
         const modified = LASTMODS[route];

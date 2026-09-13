@@ -2,6 +2,7 @@ import { defineCollection, reference } from 'astro:content';
 import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
+import { postTagSchema } from '~/data/tags.mjs';
 import { countWords, isNotBeforePublish, isWithinWordRange, OG_TITLE_MAX_CHARS } from '~/utils/content-rules.mjs';
 
 const CATEGORIES = ['governance', 'agentic-architecture', 'operating-model', 'executive'] as const;
@@ -57,7 +58,7 @@ const postCollection = defineCollection({
         .max(5)
         .default([]),
       category: z.enum(CATEGORIES),
-      tags: z.array(z.string()).default([]),
+      tags: postTagSchema.default([]),
       sources: z.array(source).min(1),
       author: reference('author'),
       relatedResources: z.array(reference('resource')).default([]),

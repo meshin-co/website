@@ -28,12 +28,18 @@ test('titles that follow every family pattern produce no findings', () => {
   const rows = [
     { route: '/', title: 'Fractional Chief AI Officer — meshin.co' },
     { route: '/pricing', title: 'Pricing — meshin.co' },
-    { route: '/blog/evals-in-ci-for-llm-agents', title: 'Evals in CI for LLM agents, without a golden answer — meshin.co' },
+    {
+      route: '/blog/evals-in-ci-for-llm-agents',
+      title: 'Evals in CI for LLM agents, without a golden answer — meshin.co',
+    },
     { route: '/services/90-day-production-sprint', title: '90-Day Production Sprint — meshin.co' },
     { route: '/glossary/ai-register', title: 'What is an AI register? — meshin.co' },
     { route: '/glossary/evals', title: 'What are evals? — meshin.co' },
     { route: '/faq/how-do-you-charge-for-the-work', title: 'How do you charge for the work? — meshin.co' },
-    { route: '/faq/what-does-the-two-week-assessment-produce', title: 'What does the two-week Assessment produce, and is the fee… — meshin.co' },
+    {
+      route: '/faq/what-does-the-two-week-assessment-produce',
+      title: 'What does the two-week Assessment produce, and is the fee… — meshin.co',
+    },
   ];
 
   assert.deepEqual(titleFindings(rows), []);
@@ -66,7 +72,7 @@ test('a faq title that is neither question nor truncation fails the stem rule', 
 });
 
 test('facts rows without a built route and built routes without a facts row are both orphans', () => {
-  const findings = orphanFindings(['/', '/pricing', '/blog/a', '/blog/orphan'], ['/', '/blog/a', '/gone']);
+  const findings = orphanFindings(['/', '/pricing', '/blog/a', '/blog/orphan'], ['/', '/pricing', '/blog/a', '/gone']);
 
   assert.deepEqual(
     findings.map((finding) => finding.rule),
@@ -108,7 +114,7 @@ test('renderFamilies emits one table per family with its grammar and every colum
 
   assert.match(markdown, /### term \(1\)/);
   assert.match(markdown, /### static \(1\)/);
-  assert.match(markdown, new RegExp(FAMILY_GRAMMAR.term.pattern.replace(/[{}]/g, '\\$&')));
+  assert.ok(markdown.includes(`\`${FAMILY_GRAMMAR.term.pattern}\``));
   assert.match(markdown, /\| `\/glossary\/ai-register` \| ai register \|/);
   assert.match(markdown, /\| `\/pricing` \| fractional chief ai officer cost \|/);
   assert.match(markdown, /body intent: \w/);

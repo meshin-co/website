@@ -25,7 +25,9 @@
     "gate:links": "linkinator dist --recurse --silent --skip \"plausible.io|linkedin.com|cal.com|github.com/meshin-co|^https://meshin.co\"",
     "gate:lh": "rm -rf .lighthouseci && lhci autorun --config=lighthouserc.cjs && node scripts/collect-reports.mjs mobile && rm -rf .lighthouseci && LHCI_FORM_FACTOR=desktop lhci autorun --config=lighthouserc.cjs && node scripts/collect-reports.mjs desktop",
     "gate:machine": "node scripts/machine.mjs dist",
-    "gate:jsonld": "node scripts/jsonld-gate.mjs dist"
+    "gate:jsonld": "node scripts/jsonld-gate.mjs dist",
+    "gate:skills": "node scripts/check-skills.mjs",
+    "test:smoke": "node scripts/mutation-smoke.mjs"
   },
   "dependencies": {
     "@astro-community/astro-embed-twitter": "^0.5.11",

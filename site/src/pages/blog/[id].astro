@@ -5,37 +5,60 @@ import { getCollection, getEntry, render } from 'astro:content';
 
 import AnswerBlock from '~/components/site/AnswerBlock.astro';
 import AuthorBox from '~/components/site/AuthorBox.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import CardGrid from '~/components/site/CardGrid.astro';
 import CtaBlock from '~/components/site/CtaBlock.astro';
 import FaqList from '~/components/site/FaqList.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
 import KeyTakeaways from '~/components/site/KeyTakeaways.astro';
+import PostCard from '~/components/site/PostCard.astro';
 import Section from '~/components/site/Section.astro';
 import SourceList from '~/components/site/SourceList.astro';
 import TableOfContents from '~/components/site/TableOfContents.astro';
 import Layout from '~/layouts/PageLayout.astro';
+import { categoryPillars } from '~/data/categories.mjs';
+import { tagBySlug } from '~/data/tags.mjs';
 import { articleMetadata } from '~/utils/machine-links.mjs';
-import { breadcrumbNode, faqNode, orgNode, personNode, postNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { faqNode, orgNode, personNode, postNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { neighbourPosts, relatedPosts } from '~/utils/post-neighbors.mjs';
 import { readingTime } from '~/utils/reading-time.mjs';
 import { countWords } from '~/utils/content-rules.mjs';
 import { lastmod } from '~/utils/lastmod.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const posts = await getCollection('post');
-  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+  const posts = await getCollection('post', ({ data }) => !data.draft);
+  const byCategory = new Map<string, CollectionEntry<'post'>[]>();
+  for (const post of posts) {
+    const list = byCategory.get(post.data.category) ?? [];
+    list.push(post);
+    byCategory.set(post.data.category, list);
+  }
+  return posts.map((post) => {
+    const categoryPosts = byCategory.get(post.data.category) ?? [];
+    const { previous, next } = neighbourPosts(categoryPosts, post.id);
+    return {
+      params: { id: post.id },
+      props: { post, previous, next, related: relatedPosts(categoryPosts, post.id) },
+    };
+  });
 };
 
 interface Props {
   post: CollectionEntry<'post'>;
+  previous: CollectionEntry<'post'> | null;
+  next: CollectionEntry<'post'> | null;
+  related: CollectionEntry<'post'>[];
 }
 
-const { post } = Astro.props;
+const { post, previous, next, related } = Astro.props;
 const { data } = post;
 const { Content, headings } = await render(post);
 const author = await getEntry(data.author);
 const site = import.meta.env.SITE.replace(/\/$/, '');
 const published = data.publishDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+const categoryTitle = categoryPillars[data.category]?.title ?? data.category;
 
 const metadata = articleMetadata(site, {
   title: data.title,
@@ -46,6 +69,8 @@ const metadata = articleMetadata(site, {
   id: post.id,
   publishDate: data.publishDate,
   updatedDate: data.updatedDate,
+  section: categoryTitle,
+  tags: data.tags.map((slug) => tagBySlug[slug]?.name ?? slug),
 });
 
 const nodes = [
@@ -59,11 +84,6 @@ const nodes = [
   }),
   ...(data.faq.length > 0 ? [faqNode(data.faq)] : []),
   webPageNode(site, `/blog/${post.id}`, lastmod({ publishDate: data.publishDate, updatedDate: data.updatedDate })),
-  breadcrumbNode(site, [
-    { name: 'Home', path: '/' },
-    { name: 'Writing', path: '/blog' },
-    { name: data.title, path: `/blog/${post.id}` },
-  ]),
 ];
 ---
 
@@ -71,10 +91,19 @@ const nodes = [
   <JsonLd nodes={nodes} slot="head" />
   <MarkdownAlternate path={`/blog/${post.id}`} slot="head" />
 
+  <Breadcrumbs
+    crumbs={[
+      { name: 'Home', path: '/' },
+      { name: 'Writing', path: '/blog' },
+      { name: categoryTitle, path: `/blog/category/${data.category}` },
+      { name: data.title, path: `/blog/${post.id}` },
+    ]}
+  />
+
   <Section
     bordered={false}
     headingLevel={1}
-    eyebrow={`${data.category} · ${published} · ${readingTime(post.body ?? '')}`}
+    eyebrow={`${categoryTitle} · ${published} · ${readingTime(post.body ?? '')}`}
     title={data.title}
     lead={data.description}
   />
@@ -103,6 +132,20 @@ const nodes = [
         <TableOfContents headings={headings} />
       </div>
     </div>
+    {
+      data.tags.length > 0 && (
+        <nav aria-label="Tags" class="mt-12 flex flex-wrap gap-3 font-mono text-xs">
+          {data.tags.map((slug) => (
+            <a
+              class="border border-line px-3 py-1 text-muted hover:border-primary hover:text-primary"
+              href={`/blog/tag/${slug}`}
+            >
+              {tagBySlug[slug]?.name ?? slug}
+            </a>
+          ))}
+        </nav>
+      )
+    }
   </Section>
 
   {
@@ -123,6 +166,47 @@ const nodes = [
       )
     }
   </Section>
+
+  {
+    (previous || next || related.length > 0) && (
+      <Section eyebrow="Continue" title="Keep reading">
+        {(previous || next) && (
+          <nav aria-label="More in this category" class="mb-10 flex flex-wrap gap-x-10 gap-y-4 font-mono text-xs">
+            {previous && (
+              <a
+                class="text-link underline decoration-2 underline-offset-4 hover:decoration-primary"
+                href={`/blog/${previous.id}`}
+              >
+                ← Previous: {previous.data.title}
+              </a>
+            )}
+            {next && (
+              <a
+                class="text-link underline decoration-2 underline-offset-4 hover:decoration-primary"
+                href={`/blog/${next.id}`}
+              >
+                Next: {next.data.title} →
+              </a>
+            )}
+          </nav>
+        )}
+        {related.length > 0 && (
+          <CardGrid columns={2}>
+            {related.map((entry) => (
+              <PostCard
+                title={entry.data.title}
+                href={`/blog/${entry.id}`}
+                excerpt={entry.data.description}
+                date={entry.data.publishDate.toISOString()}
+                readingTime={readingTime(entry.body ?? '')}
+                category={entry.data.category}
+              />
+            ))}
+          </CardGrid>
+        )}
+      </Section>
+    )
+  }
 
   <Section title="Next step">
     <CtaBlock

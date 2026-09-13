@@ -45,10 +45,11 @@ export function sidecarGaps(routes, builtFiles) {
   const built = new Set(builtFiles.map((file) => `/${file.replace(/^\//, '')}`));
   const bases = new Set(Object.values(COLLECTION_BASES));
 
+  const reserved = new Set(['tags', 'tag', 'page', 'category']);
   return routes
     .filter((route) => {
       const parts = route.split('/').filter(Boolean);
-      return parts.length === 2 && bases.has(parts[0]);
+      return parts.length === 2 && bases.has(parts[0]) && !reserved.has(parts[1] ?? '');
     })
     .map((route) => `${route}.md`)
     .filter((sidecar) => !built.has(sidecar));
@@ -101,7 +102,11 @@ async function liveRoutesByKind(distDir, collections, routes) {
   const byKind = {};
   for (const collection of collections) {
     const base = COLLECTION_BASES[collection];
-    const candidates = routes.filter((route) => route.split('/').length === 3 && route.startsWith(`/${base}/`));
+    const reserved = new Set(['tags', 'tag', 'page', 'category']);
+    const candidates = routes.filter((route) => {
+      const parts = route.split('/').filter(Boolean);
+      return parts.length === 2 && parts[0] === base && !reserved.has(parts[1] ?? '');
+    });
     const live = [];
     for (const route of candidates) {
       if (!isNoindex(await routeHtml(distDir, route))) live.push(route);

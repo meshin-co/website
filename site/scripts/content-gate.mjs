@@ -10,7 +10,10 @@ const DUPLICATE_MINIMUM_WORDS = 12;
 
 const UNGATED = new Set(['/404', '/search', '/styleguide']);
 
+const UNGATED_PATTERNS = [/^\/blog\/page\/\d+$/, /^\/blog\/category\/[^/]+\/page\/\d+$/];
 const PROFILE_BY_PREFIX = [
+  ['/blog/tags', 'page'],
+  ['/blog/tag/', 'page'],
   ['/blog/category/', 'page'],
   ['/blog/', 'article'],
   ['/services/', 'offer'],
@@ -34,7 +37,7 @@ export async function collectPages(distDir) {
   const pages = [];
 
   for (const route of routes) {
-    if (UNGATED.has(route)) continue;
+    if (UNGATED.has(route) || UNGATED_PATTERNS.some((pattern) => pattern.test(route))) continue;
     const html = await readFile(join(distDir, routeFile(route)), 'utf8');
     pages.push({ ...extractPage(route, html), profile: profileFor(route) });
   }
@@ -68,6 +71,8 @@ async function main(distDir) {
 
   const pages = await collectPages(distDir);
   const findings = gateFindings(pages, facts, bannedPhrases);
+  for (const finding of await (await import('./semantic-core.mjs')).checkFindings(distDir, pages))
+    findings.push(finding);
 
   const byRule = new Map();
   for (const finding of findings) byRule.set(finding.rule, (byRule.get(finding.rule) ?? 0) + 1);

@@ -21,8 +21,10 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
 - Blocking budgets, measured from the shipped build and never from a config file: JS ≤10 KB gz,
   CSS ≤20 KB gz, page ≤250 KB without images, fonts ≤120 KB across 2 families and 4 weights,
   CLS ≤0.02, LCP ≤1.8 s mobile.
-- Client JavaScript is limited to Plausible, the theme toggle, and Pagefind loaded on search
-  focus. No `ClientRouter`, no islands beyond Pagefind, no third-party embeds, no cookies.
+- Client JavaScript is limited to Plausible, the theme toggle, and the lazy search-index
+  fetch on first query (custom build-time index, `public/search/index-model.mjs`; no
+  third-party search runtime). No `ClientRouter`, no islands, no third-party embeds, no
+  cookies.
 - No contact form, no Pages Function, no Resend. `/contact` is an email address plus a Cal.com
   button. No newsletter anywhere.
 - The route lists are derived from `dist/**/*.html`, never hand-authored. Cheap gates (content, links, budgets,
@@ -41,11 +43,12 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
   "expert", "passionate".
 - Design lane: "engineering brief" — Fraunces plus IBM Plex Sans, paper and ink with one deep
   teal accent in OKLCH. No gradients, no stock imagery, no purple.
-- Structured data: one JSON-LD `@graph` per page from `src/utils/jsonld.ts`. Every node has an
-  `@id`, every referenced `@id` resolves, and CI validates it.
-- Machine interfaces (`/llms.txt`, `/llms-full.txt`, `/{page}.md`, `/feed.json`, `/rss.xml`,
-  `/og/*.png`, sitemap) are build outputs. Verify them in `dist/`, not in source.
-- Ask Context7 about Astro 7, Tailwind v4, Pagefind and satori APIs before relying on memory.
+- Structured data: one JSON-LD `@graph` per page from `site/src/utils/jsonld.mjs`. Every node has
+  an `@id`, every referenced `@id` resolves, and CI validates it.
+- Machine interfaces (`/llms.txt`, `/llms-full.txt`, `/llms/{collection}.txt`, `/{page}.md`,
+  `/feed.json`, `/rss.xml` plus six per-collection feeds, `/og/*.png`, search shards, sitemap)
+  are build outputs. Verify them in `dist/`, not in source.
+- Ask Context7 about Astro 7, Tailwind v4 and satori APIs before relying on memory.
 
 ## Commands
 

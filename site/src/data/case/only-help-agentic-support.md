@@ -1,6 +1,6 @@
 ---
 title: only.help — agentic support triage, on my own product
-description: How a support triage agent went from a demo notebook to a production path with evals in CI and a named owner.
+description: An agentic support triage workflow that went from a demo notebook to a production path with evals in CI and a named owner.
 publishDate: 2026-09-08
 updatedDate: 2026-09-08
 client:

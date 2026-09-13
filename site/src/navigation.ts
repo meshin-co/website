@@ -33,6 +33,15 @@ export const footerData = {
       ],
     },
     {
+      title: 'Topics',
+      links: [
+        { text: 'AI governance', href: getPermalink('/blog/category/governance') },
+        { text: 'Agentic architecture', href: getPermalink('/blog/category/agentic-architecture') },
+        { text: 'AI operating model', href: getPermalink('/blog/category/operating-model') },
+        { text: 'AI for boards', href: getPermalink('/blog/category/executive') },
+      ],
+    },
+    {
       title: 'Practice',
       links: [
         { text: 'About', href: getPermalink('/about') },

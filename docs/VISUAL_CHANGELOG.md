@@ -52,3 +52,13 @@ Adaptive: mark and text inherit `currentColor`; `[CAIO]` keeps heading color.
 Favicons regenerated from the same geometry (svg with dark-mode media query,
 180px apple-touch on paper, 16/32/48 ico). Both platform baselines regenerated
 in the same commit.
+
+## 2026-09-13 — Phase 4.5b: breadcrumbs, blog navigation, tag pages
+
+Breadcrumbs UI on every non-home route (component owns the single
+BreadcrumbList). Blog hub + categories paginate at 12/page with crawlable
+numbered links, page 2+ noindex-follow, page-one canonical. /blog/tags index
+plus 12 tag pages, all indexed, controlled vocabulary schema-enforced. Posts
+link up and sideways (prev/next, related, category, tags); footer gains
+Topics. Inline links restyled with persistent underline (axe
+link-in-text-block). Both platform baselines regenerated.

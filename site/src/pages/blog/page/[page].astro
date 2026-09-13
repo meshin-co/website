@@ -1,0 +1,94 @@
+---
+import type { GetStaticPaths } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import CardGrid from '~/components/site/CardGrid.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import PaginationLinks from '~/components/site/PaginationLinks.astro';
+import PostCard from '~/components/site/PostCard.astro';
+import Section from '~/components/site/Section.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { paginate, paginationLinks } from '~/utils/paginate.mjs';
+import { readingTime } from '~/utils/reading-time.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = (await getCollection('post', ({ data }) => !data.draft)).sort(
+    (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime()
+  );
+  return paginate(posts).map(({ pageNumber, entries }) => ({
+    params: { page: String(pageNumber) },
+    props: { pageNumber, entries, all: posts },
+  }));
+};
+
+interface Props {
+  pageNumber: number;
+  entries: CollectionEntry<'post'>[];
+  all: CollectionEntry<'post'>[];
+}
+
+const { pageNumber, entries, all } = Astro.props;
+const site = import.meta.env.SITE.replace(/\/$/, '');
+const basePath = `/blog/page/${pageNumber}`;
+
+const metadata = {
+  title: `Writing, page ${pageNumber}`,
+  description: 'Notes on getting AI systems past security review and into production, written for founders and boards.',
+  robots: { index: false, follow: true },
+};
+
+const nodes = [
+  orgNode(site, { logoPath: ogDefaultPath }),
+  personNode(site),
+  websiteNode(site),
+  collectionNode(site, {
+    path: basePath,
+    name: 'Writing',
+    description: metadata.description,
+    items: entries.map((post) => ({ url: `/blog/${post.id}` })),
+  }),
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+
+  <Breadcrumbs
+    crumbs={[
+      { name: 'Home', path: '/' },
+      { name: 'Writing', path: '/blog' },
+      { name: `Page ${pageNumber}`, path: basePath },
+    ]}
+  />
+
+  <Section
+    bordered={false}
+    headingLevel={1}
+    eyebrow="Writing"
+    title={`Writing, page ${pageNumber}`}
+    lead="Older articles, continuing from the first page."
+  />
+
+  <Section title="Articles">
+    <CardGrid columns={2}>
+      {
+        entries.map((post) => (
+          <PostCard
+            title={post.data.title}
+            href={`/blog/${post.id}`}
+            excerpt={post.data.description}
+            date={post.data.publishDate.toISOString()}
+            readingTime={readingTime(post.body ?? '')}
+            category={post.data.category}
+          />
+        ))
+      }
+    </CardGrid>
+  </Section>
+
+  <PaginationLinks links={paginationLinks('/blog', all)} currentPage={pageNumber} />
+</Layout>

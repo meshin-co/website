@@ -43,6 +43,7 @@ jobs:
       - run: npm run gate:html
       - run: npm run gate:links
       - run: npm run gate:machine
+      - run: npm run gate:skills
       - run: npm run gate:jsonld
 
       - name: visual snapshots and axe

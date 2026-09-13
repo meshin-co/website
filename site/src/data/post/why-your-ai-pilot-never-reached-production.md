@@ -22,7 +22,7 @@ tags:
   - ai-pilots
   - production-readiness
   - ai-governance
-  - llm-evals
+  - evals-in-ci
 sources:
   - title: 'Artificial Intelligence Risk Management Framework (AI RMF 1.0) | NIST'
     url: 'https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-ai-rmf-10'

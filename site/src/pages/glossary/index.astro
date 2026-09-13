@@ -5,14 +5,7 @@ import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import {
-  collectionNode,
-  orgNode,
-  personNode,
-  termNode,
-  termSetNode,
-  websiteNode,
-} from '~/utils/jsonld.mjs';
+import { collectionNode, orgNode, personNode, termNode, termSetNode, websiteNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');

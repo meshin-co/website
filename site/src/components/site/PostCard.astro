@@ -1,4 +1,6 @@
 ---
+import { categoryPillars } from '~/data/categories.mjs';
+
 interface Props {
   title: string;
   href: string;
@@ -6,11 +8,14 @@ interface Props {
   date: string;
   readingTime?: string;
   category?: string;
+  tags?: string[];
 }
 
-const { title, href, excerpt, date, readingTime, category } = Astro.props;
+const { title, href, excerpt, date, readingTime, category, tags = [] } = Astro.props;
 const published = new Date(date);
-const meta = [readingTime, category].filter(Boolean).join(' · ');
+const categoryTitle = category
+  ? (categoryPillars[category as keyof typeof categoryPillars]?.title ?? category)
+  : undefined;
 ---
 
 <article class="flex h-full flex-col border border-line p-6" data-gate-ignore>
@@ -18,7 +23,20 @@ const meta = [readingTime, category].filter(Boolean).join(' · ');
     <time datetime={published.toISOString().slice(0, 10)}>
       {published.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
     </time>
-    {meta && ` · ${meta}`}
+    {readingTime && ` · ${readingTime}`}
+    {
+      categoryTitle && (
+        <>
+          {' · '}
+          <a
+            class="text-link underline decoration-2 underline-offset-4 hover:decoration-primary"
+            href={`/blog/category/${category}`}
+          >
+            {categoryTitle}
+          </a>
+        </>
+      )
+    }
   </p>
 
   <h3 class="mt-5 font-heading text-xl font-semibold text-heading">
@@ -26,4 +44,22 @@ const meta = [readingTime, category].filter(Boolean).join(' · ');
   </h3>
 
   <p class="mt-4 grow text-muted">{excerpt}</p>
+
+  {
+    tags.length > 0 && (
+      <p class="mt-4 font-mono text-xs text-muted">
+        {tags.map((tag, index) => (
+          <>
+            {index > 0 && ' · '}
+            <a
+              class="text-link underline decoration-2 underline-offset-4 hover:decoration-primary"
+              href={`/blog/tag/${tag}`}
+            >
+              {tag}
+            </a>
+          </>
+        ))}
+      </p>
+    )
+  }
 </article>

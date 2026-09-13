@@ -18,6 +18,7 @@
     "/resources": "ai governance templates",
     "/resources/ai-governance-starter-kit": "ai governance starter kit",
     "/case-studies": "fractional chief ai officer case study",
+    "/case-studies/only-help-agentic-support": "agentic support triage",
     "/faq": "fractional chief ai officer questions",
     "/faq/are-models-trained-on-our-customer-data": "are models trained on our customer data?",
     "/faq/can-you-get-us-iso-iec-42001-certified-or-just-a-working-system": "can you get us certified to iso/iec 42001, or do you just build a working system?",
@@ -87,7 +88,20 @@
     "/resources/ai-readiness-scorecard": "ai readiness scorecard",
     "/resources/agent-evals-ci-starter": "agent evals ci starter",
     "/resources/llm-gateway-governance-config": "llm gateway governance config",
-    "/resources/build-vs-buy-ai-kit": "build vs buy ai kit"
+    "/resources/build-vs-buy-ai-kit": "build vs buy ai kit",
+    "/blog/tags": "tags",
+    "/blog/tag/acceptable-use-policy": "acceptable use policy",
+    "/blog/tag/agentic-architecture": "agentic architecture",
+    "/blog/tag/ai-governance": "ai governance",
+    "/blog/tag/ai-pilots": "ai pilots",
+    "/blog/tag/ai-register": "ai register",
+    "/blog/tag/evals-in-ci": "evals in ci",
+    "/blog/tag/eu-ai-act": "eu ai act",
+    "/blog/tag/llm-as-judge": "llm as judge",
+    "/blog/tag/policy-enforcement": "policy enforcement",
+    "/blog/tag/production-readiness": "production readiness",
+    "/blog/tag/security-review": "security review",
+    "/blog/tag/shadow-ai": "shadow ai"
   },
   "numbers": ["30", "300", "90", "42001", "27001", "2", "3", "1", "0.1", "14", "71", "1,000", "155", "12", "6", "24"]
 }

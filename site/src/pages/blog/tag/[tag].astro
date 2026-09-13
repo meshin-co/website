@@ -1,0 +1,94 @@
+---
+import type { GetStaticPaths } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import CardGrid from '~/components/site/CardGrid.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import PostCard from '~/components/site/PostCard.astro';
+import Section from '~/components/site/Section.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { TAGS } from '~/data/tags.mjs';
+import { collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { readingTime } from '~/utils/reading-time.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = (await getCollection('post', ({ data }) => !data.draft)).sort(
+    (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime()
+  );
+  return TAGS.map((tag) => ({
+    params: { tag: tag.slug },
+    props: { tag, posts: posts.filter((post) => post.data.tags.includes(tag.slug)) },
+  }));
+};
+
+interface Props {
+  tag: { slug: string; name: string };
+  posts: CollectionEntry<'post'>[];
+}
+
+const { tag, posts } = Astro.props;
+const site = import.meta.env.SITE.replace(/\/$/, '');
+const basePath = `/blog/tag/${tag.slug}`;
+
+const metadata = {
+  title: tag.name,
+  description: `Every article tagged ${tag.name}, newest first.`,
+};
+
+const nodes = [
+  orgNode(site, { logoPath: ogDefaultPath }),
+  personNode(site),
+  websiteNode(site),
+  collectionNode(site, {
+    path: basePath,
+    name: tag.name,
+    description: metadata.description,
+    items: posts.map((post) => ({ url: `/blog/${post.id}` })),
+  }),
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+
+  <Breadcrumbs
+    crumbs={[
+      { name: 'Home', path: '/' },
+      { name: 'Writing', path: '/blog' },
+      { name: tag.name, path: basePath },
+    ]}
+  />
+
+  <Section
+    bordered={false}
+    headingLevel={1}
+    eyebrow="Tag"
+    title={tag.name}
+    lead={`Every article tagged ${tag.name}, newest first.`}
+  />
+
+  <Section title="Articles">
+    {
+      posts.length === 0 ? (
+        <p class="max-w-[62ch] text-muted">Nothing carries this tag yet.</p>
+      ) : (
+        <CardGrid columns={2}>
+          {posts.map((post) => (
+            <PostCard
+              title={post.data.title}
+              href={`/blog/${post.id}`}
+              excerpt={post.data.description}
+              date={post.data.publishDate.toISOString()}
+              readingTime={readingTime(post.body ?? '')}
+              category={post.data.category}
+              tags={post.data.tags}
+            />
+          ))}
+        </CardGrid>
+      )
+    }
+  </Section>
+</Layout>

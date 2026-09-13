@@ -3,15 +3,18 @@ import type { GetStaticPaths } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
 
-import CardGrid from '~/components/site/CardGrid.astro';
 import CtaBlock from '~/components/site/CtaBlock.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import CardGrid from '~/components/site/CardGrid.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
+import PaginationLinks from '~/components/site/PaginationLinks.astro';
 import PostCard from '~/components/site/PostCard.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { breadcrumbNode, collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
-import { readingTime } from '~/utils/reading-time.mjs';
 import { categoryPillars } from '~/data/categories.mjs';
+import { collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { firstPage, paginationLinks } from '~/utils/paginate.mjs';
+import { readingTime } from '~/utils/reading-time.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -31,6 +34,8 @@ const { pillar, posts } = Astro.props;
 const { category } = Astro.params;
 const site = import.meta.env.SITE.replace(/\/$/, '');
 const sorted = posts.sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
+const visible = firstPage(sorted);
+const basePath = `/blog/category/${category}`;
 
 const metadata = { title: pillar.title, description: pillar.description };
 
@@ -39,21 +44,24 @@ const nodes = [
   personNode(site),
   websiteNode(site),
   collectionNode(site, {
-    path: `/blog/category/${category}`,
+    path: basePath,
     name: pillar.title,
     description: pillar.description,
-    items: sorted.map((post) => ({ url: `/blog/${post.id}` })),
+    items: visible.map((post) => ({ url: `/blog/${post.id}` })),
   }),
-  breadcrumbNode(site, [
-    { name: 'Home', path: '/' },
-    { name: 'Writing', path: '/blog' },
-    { name: pillar.title, path: `/blog/category/${category}` },
-  ]),
 ];
 ---
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
+
+  <Breadcrumbs
+    crumbs={[
+      { name: 'Home', path: '/' },
+      { name: 'Writing', path: '/blog' },
+      { name: pillar.title, path: basePath },
+    ]}
+  />
 
   <Section bordered={false} headingLevel={1} eyebrow="Category" title={pillar.title} lead={pillar.description} />
 
@@ -65,11 +73,11 @@ const nodes = [
 
   <Section title="Articles in this category">
     {
-      sorted.length === 0 ? (
+      visible.length === 0 ? (
         <p class="max-w-[62ch] text-muted">Nothing published in this category yet.</p>
       ) : (
         <CardGrid columns={2}>
-          {sorted.map((post) => (
+          {visible.map((post) => (
             <PostCard
               title={post.data.title}
               href={`/blog/${post.id}`}
@@ -77,12 +85,15 @@ const nodes = [
               date={post.data.publishDate.toISOString()}
               readingTime={readingTime(post.body ?? '')}
               category={post.data.category}
+              tags={post.data.tags}
             />
           ))}
         </CardGrid>
       )
     }
   </Section>
+
+  <PaginationLinks links={paginationLinks(basePath, sorted)} currentPage={1} />
 
   <Section title="Next step">
     <CtaBlock

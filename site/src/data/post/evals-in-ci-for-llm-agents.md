@@ -22,8 +22,7 @@ faq:
     a: 'Not necessarily, but many teams find a stronger judge catches subtler failures than a same-tier one, since judging is its own hard task. Weigh that against cost: the judge runs on every case in the set, every time the pipeline runs, and a large judge model on a large eval set is usually where the cost ceiling gets tested first.'
 category: agentic-architecture
 tags:
-  - llm-evals
-  - ci-cd
+  - evals-in-ci
   - llm-as-judge
   - agentic-architecture
 sources:

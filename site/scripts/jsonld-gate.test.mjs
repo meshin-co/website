@@ -59,12 +59,13 @@ test('a route of a known family is required to carry that family node', () => {
   assert.deepEqual(requiredTypesFor('/blog/category/governance'), ['CollectionPage', 'BreadcrumbList']);
   assert.deepEqual(requiredTypesFor('/blog/why-pilots-stall'), ['BlogPosting', 'BreadcrumbList']);
   assert.deepEqual(requiredTypesFor('/faq/what-is-ai-governance'), ['FAQPage', 'BreadcrumbList']);
+  assert.deepEqual(requiredTypesFor('/blog/tag/ai-governance'), ['CollectionPage', 'BreadcrumbList']);
   assert.deepEqual(requiredTypesFor('/privacy'), ['BreadcrumbList']);
   assert.deepEqual(requiredTypesFor('/'), ['Organization', 'Person', 'WebSite']);
 });
 
 test('a route matching no family yields no requirements instead of an empty pass', () => {
-  assert.equal(requiredTypesFor('/blog/tag/governance'), undefined);
+  assert.equal(requiredTypesFor('/blog/tags/extra'), undefined);
   assert.equal(requiredTypesFor('/speaking'), undefined);
   assert.equal(requiredTypesFor('/freshly-invented-route'), undefined);
 });
