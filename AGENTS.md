@@ -66,4 +66,11 @@ cd site
 npm run build      # production build, the only build Lighthouse may measure
 npm run check      # astro check, eslint, prettier
 npm run preview    # serve dist for local gate runs
+npm run gate:lh    # both form factors, all audited routes, ~30 min
+npm run test:smoke # every guard family proven able to fail, ~40 s
 ```
+
+CI runs the same gates as a parallel graph: one build, then check+units,
+guard-mutations, cheap gates, Playwright (3 shards) and Lighthouse
+(2 form factors x 4 route shards) in parallel, merged by `gate-report`.
+A single shard locally: `LHCI_FORM_FACTOR=mobile LH_SHARD_INDEX=1 LH_SHARD_TOTAL=4 npm run gate:lh:one`.
