@@ -44,6 +44,16 @@ no row — that last check is what makes "nothing skipped" mechanical instead of
 
 Reused strings collapse to one row with every usage site listed, so a fix lands everywhere at once.
 
+**Landed 2026-09-14, before any editing.** `npm run gate:editorial` builds the ledger from four
+extractors and fails on all three checks; `site/.agents/skills/editorial-ledger.md` is the
+procedure. Measured starting position: **1548 rows** across 105 routes and 242 files, all
+`unreviewed`; **75** shipped paragraphs tracing to no source row; **264** source strings no page
+renders. The untraceable count fell 674 to 75 during calibration — every reduction was a defect in
+my extractors, not in the site — and the first confirmed real finding is
+`src/data/author/dmitri.md`, whose body prose ships nowhere while only its frontmatter `bio`
+renders. The gate is deliberately red until the pass is done, so it joins CI with CG-4.7, not
+before.
+
 ## 2. Core extension, mapping, gap analysis
 
 Extend `docs/SEMANTIC-CORE.md` with the layers the brief asks for and the existing document lacks:
