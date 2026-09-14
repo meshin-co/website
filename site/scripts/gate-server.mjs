@@ -1,6 +1,6 @@
 import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs';
 import { createServer } from 'node:http';
-import { extname, join, normalize, resolve } from 'node:path';
+import { extname, join, normalize, relative, resolve } from 'node:path';
 import { createGzip } from 'node:zlib';
 
 const TYPES = {
@@ -22,7 +22,7 @@ const TYPES = {
 
 const COMPRESSIBLE = new Set(['.html', '.css', '.js', '.mjs', '.json', '.txt', '.xml', '.svg']);
 
-export function resolveFile(requestPath) {
+export function resolveCandidates(requestPath) {
   const [pathOnly] = requestPath.split('?');
   let decoded;
   try {
@@ -32,8 +32,8 @@ export function resolveFile(requestPath) {
   }
   if (decoded.split('/').includes('..')) return null;
   const trimmed = normalize(decoded).replace(/^\/+/, '');
-  if (trimmed === '' || trimmed.endsWith('/')) return `${trimmed}index.html`;
-  return extname(trimmed) === '' ? `${trimmed}/index.html` : trimmed;
+  if (trimmed === '' || trimmed.endsWith('/')) return [`${trimmed}index.html`];
+  return extname(trimmed) === '' ? [`${trimmed}/index.html`, `${trimmed}.html`] : [trimmed];
 }
 
 export function acceptsGzip(acceptEncoding) {
@@ -74,14 +74,21 @@ function startGateServer({ root, port = 0, headersPath }) {
   const rules = headersPath && existsSync(headersPath) ? headerRulesFor(readFileSync(headersPath, 'utf8')) : [];
 
   const server = createServer((request, response) => {
-    const file = resolveFile(request.url ?? '/');
-    const target = file === null ? null : join(rootDir, file);
-    if (target === null || !target.startsWith(rootDir) || !existsSync(target) || !statSync(target).isFile()) {
+    const candidates = resolveCandidates(request.url ?? '/') ?? [];
+    const found = candidates
+      .map((candidate) => join(rootDir, candidate))
+      .find((target) => target.startsWith(rootDir) && existsSync(target) && statSync(target).isFile());
+
+    const errorPage = join(rootDir, '404.html');
+    const target = found ?? (existsSync(errorPage) ? errorPage : null);
+    if (target === null) {
       response.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
       response.end('not found');
       return;
     }
 
+    const file = relative(rootDir, target);
+    const status = found ? 200 : 404;
     const headers = { 'Content-Type': contentTypeFor(file) };
     for (const [name, value] of matchingHeaders(rules, `/${file}`.replace(/index\.html$/, ''))) headers[name] = value;
 
@@ -89,7 +96,7 @@ function startGateServer({ root, port = 0, headersPath }) {
     if (gzip) {
       headers['Content-Encoding'] = 'gzip';
       headers.Vary = 'Accept-Encoding';
-      response.writeHead(200, headers);
+      response.writeHead(status, headers);
       createReadStream(target)
         .pipe(createGzip({ level: 9 }))
         .pipe(response);
@@ -97,7 +104,7 @@ function startGateServer({ root, port = 0, headersPath }) {
     }
 
     headers['Content-Length'] = String(statSync(target).size);
-    response.writeHead(200, headers);
+    response.writeHead(status, headers);
     createReadStream(target).pipe(response);
   });
 

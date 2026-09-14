@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { acceptsGzip, contentTypeFor, headerRulesFor, resolveFile } from './gate-server.mjs';
+import { acceptsGzip, contentTypeFor, headerRulesFor, resolveCandidates } from './gate-server.mjs';
+
+const resolveFile = (path) => resolveCandidates(path)?.[0] ?? null;
 
 test('an html route resolves to its index file', () => {
   assert.equal(resolveFile('/blog/'), 'blog/index.html');
@@ -54,4 +56,18 @@ test('a header block matches by prefix like Cloudflare does', () => {
   const applied = (path) => rules.filter((rule) => new RegExp(`^${rule.pattern.replace('*', '.*')}$`).test(path));
   assert.equal(applied('/_astro/app.css').length, 2);
   assert.equal(applied('/blog/').length, 1);
+});
+
+test('an extensionless route offers its own html file as well as a directory index', () => {
+  assert.deepEqual(resolveCandidates('/404'), ['404/index.html', '404.html']);
+  assert.deepEqual(resolveCandidates('/blog'), ['blog/index.html', 'blog.html']);
+});
+
+test('a path that already names a file offers only that file', () => {
+  assert.deepEqual(resolveCandidates('/404.html'), ['404.html']);
+  assert.deepEqual(resolveCandidates('/llms.txt'), ['llms.txt']);
+});
+
+test('traversal is refused before any candidate is built', () => {
+  assert.equal(resolveCandidates('/../secrets.env'), null);
 });
