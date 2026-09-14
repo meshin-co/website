@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { test } from 'node:test';
 
-import { collectInlineScriptHashes, renderHeaders } from './gen-headers.mjs';
+import { collectInlineScriptHashes, collectInlineStyleHashes, renderHeaders } from './gen-headers.mjs';
 
 const sha256 = (source) => `sha256-${createHash('sha256').update(source, 'utf8').digest('base64')}`;
 
@@ -77,4 +77,30 @@ test('html pages never receive X-Robots-Tag', () => {
 
   assert.ok(starBlock, 'no global block');
   assert.ok(!starBlock.includes('X-Robots-Tag'));
+});
+
+test('an inline style block is hashed so the shipped CSP does not block it', () => {
+  const hashes = collectInlineStyleHashes('<style>@font-face{font-family:x}</style>');
+  assert.equal(hashes.length, 1);
+  assert.match(hashes[0], /^sha256-/);
+});
+
+test('an external stylesheet link is never hashed', () => {
+  assert.deepEqual(collectInlineStyleHashes('<link rel="stylesheet" href="/app.css">'), []);
+});
+
+test('identical inline styles across pages collapse to one hash', () => {
+  const html = '<style>a{color:red}</style><style>a{color:red}</style>';
+  assert.equal(collectInlineStyleHashes(html).length, 1);
+});
+
+test('style-src carries every collected style hash and nothing else', () => {
+  const header = renderHeaders(['sha256-script'], ['sha256-style']);
+  assert.match(header, /style-src 'self' 'sha256-style'/);
+  assert.match(header, /script-src 'self' https:\/\/plausible\.io 'sha256-script'/);
+  assert.ok(!/style-src[^;]*unsafe-inline/.test(header));
+});
+
+test('with no inline styles the policy stays exactly self', () => {
+  assert.match(renderHeaders([], []), /style-src 'self';/);
 });

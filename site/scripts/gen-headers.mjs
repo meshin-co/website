@@ -3,6 +3,7 @@ import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 const INLINE_SCRIPT = /<script(?![^>]*\bsrc=)([^>]*)>([\s\S]*?)<\/script>/gi;
+const INLINE_STYLE = /<style([^>]*)>([\s\S]*?)<\/style>/gi;
 const EXECUTABLE_TYPES = new Set(['', 'text/javascript', 'module', 'application/javascript']);
 
 const typeOf = (attributes) => (attributes.match(/\btype\s*=\s*["']?([^"'\s>]+)/i)?.[1] ?? '').toLowerCase();
@@ -16,15 +17,24 @@ export function collectInlineScriptHashes(html) {
   return [...hashes];
 }
 
-export function renderHeaders(scriptHashes) {
+export function collectInlineStyleHashes(html) {
+  const hashes = new Set();
+  for (const [, , body] of html.matchAll(INLINE_STYLE)) {
+    hashes.add(`sha256-${createHash('sha256').update(body, 'utf8').digest('base64')}`);
+  }
+  return [...hashes];
+}
+
+export function renderHeaders(scriptHashes, styleHashes = []) {
   const scriptSrc = ["'self'", 'https://plausible.io', ...scriptHashes.map((hash) => `'${hash}'`)].join(' ');
+  const styleSrc = ["'self'", ...styleHashes.map((hash) => `'${hash}'`)].join(' ');
   const policy = [
     `default-src 'self'`,
     `script-src ${scriptSrc}`,
     `connect-src 'self' https://plausible.io`,
     `img-src 'self' data:`,
     `font-src 'self'`,
-    `style-src 'self'`,
+    `style-src ${styleSrc}`,
     `object-src 'none'`,
     `base-uri 'self'`,
     `form-action 'none'`,
@@ -82,13 +92,19 @@ async function htmlFilesIn(directory) {
 
 async function main(distDir) {
   const files = await htmlFilesIn(distDir);
-  const hashes = new Set();
+  const scripts = new Set();
+  const styles = new Set();
   for (const file of files) {
-    for (const hash of collectInlineScriptHashes(await readFile(file, 'utf8'))) hashes.add(hash);
+    const html = await readFile(file, 'utf8');
+    for (const hash of collectInlineScriptHashes(html)) scripts.add(hash);
+    for (const hash of collectInlineStyleHashes(html)) styles.add(hash);
   }
-  const sorted = [...hashes].sort();
-  await writeFile(join(distDir, '_headers'), renderHeaders(sorted));
-  console.log(`_headers written for ${files.length} pages, ${sorted.length} inline script hash(es)`);
+  const sortedScripts = [...scripts].sort();
+  const sortedStyles = [...styles].sort();
+  await writeFile(join(distDir, '_headers'), renderHeaders(sortedScripts, sortedStyles));
+  console.log(
+    `_headers written for ${files.length} pages, ${sortedScripts.length} inline script hash(es), ${sortedStyles.length} inline style hash(es)`
+  );
 }
 
 if (import.meta.filename === process.argv[1]) {
