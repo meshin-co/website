@@ -207,3 +207,19 @@ test('the real tree clears every L49 reproducibility check', async () => {
 
   assert.deepEqual(findings, []);
 });
+
+test('a file at exactly the cap passes, because a trailing newline is not a line', () => {
+  const atCap = `${Array.from({ length: 80 }, (_, i) => `line ${i}`).join('\n')}\n`;
+  assert.deepEqual(
+    skillFindings({ file: 'x.md', content: atCap, roots: [] }).filter((f) => f.rule === 'max-lines'),
+    []
+  );
+});
+
+test('one line over the cap still fails', () => {
+  const overCap = `${Array.from({ length: 81 }, (_, i) => `line ${i}`).join('\n')}\n`;
+  assert.deepEqual(
+    skillFindings({ file: 'x.md', content: overCap, roots: [] }).map((f) => f.rule),
+    ['max-lines']
+  );
+});

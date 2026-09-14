@@ -71,7 +71,7 @@ export function resolveCandidate(token, roots) {
 export function skillFindings({ file, content, roots }) {
   const findings = [];
 
-  const lineCount = content.split('\n').length;
+  const lineCount = content.replace(/\n$/, '').split('\n').length;
   if (lineCount > MAX_LINES) {
     findings.push({ file, rule: 'max-lines', detail: `${lineCount} lines (cap ${MAX_LINES})` });
   }
