@@ -10,7 +10,9 @@ Run from `site/`. Each step green before the next.
 1. `npm run build` — chains `astro build`, `scripts/gen-headers.mjs dist` (writes the CSP and
    cache headers into the output) and `scripts/gate.mjs dist budgets.json` (byte budgets, route
    derivation).
-2. `npm run check` — astro check, eslint, prettier.
+2. `npm run check` — astro check, eslint, prettier. Run it before every push, including a commit
+   that touches nothing but Markdown: prettier checks `.md`, so a hand-written skill or plan file
+   is a CI failure waiting to happen. `npm test` passing tells you nothing about formatting.
 3. `npm test` — unit tests for `scripts/`, `src/utils/` and `src/data/`.
 4. `npm run gate:html`, then `npm run gate:links` — html-validate, then linkinator with the
    plausible.io, linkedin.com, cal.com, github.com/meshin-co and meshin.co skips.
