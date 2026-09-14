@@ -9,7 +9,7 @@ const SITE = resolve(HERE, '..');
 const REPO = resolve(SITE, '..');
 const FIXTURES = join(SITE, 'tests', 'guard-mutations', 'fixtures');
 const LIVE_POST_TARGET = 13;
-const GATES = ['budget', 'jsonld', 'content-gate'];
+const GATES = ['budget', 'jsonld', 'jsonld-properties', 'content-gate'];
 const CHECKS = ['semantic-title'];
 
 export const FAMILIES = [
@@ -51,9 +51,23 @@ export const FAMILIES = [
   },
   { id: 'budget-page-cap', kind: 'gate', gate: 'budget', tokens: ['OVER BUDGET / page'] },
   { id: 'jsonld-fail-closed', kind: 'gate', gate: 'jsonld', tokens: ['matches no known jsonld route family'] },
+  {
+    id: 'jsonld-property-completeness',
+    kind: 'gate',
+    gate: 'jsonld-properties',
+    tokens: ['is missing required property logo'],
+  },
+  {
+    id: 'faq-description-floor',
+    kind: 'build',
+    fixture: 'faq-description-too-short.md',
+    plant: 'src/data/faq',
+    tokens: ['description: must be 120 characters or more'],
+  },
   { id: 'semantic-title-pattern', kind: 'pure', check: 'semantic-title' },
   { id: 'machine-feed-coverage', kind: 'unit-covered' },
   { id: 'pagination-page-2', kind: 'pagination', fixture: 'live-post.md', slow: true },
+  { id: 'category-pagination-page-2', kind: 'pagination', fixture: 'live-post.md', scope: 'category', slow: true },
 ];
 
 const KINDS = ['build', 'build-then-gate', 'gate', 'pure', 'pagination', 'unit-covered'];
@@ -163,6 +177,45 @@ async function runGateFamily(copySite, entry, work) {
     await writeFile(budgets, `${JSON.stringify({ js: 10240, css: 20480, page: 1 }, null, 2)}\n`);
     return expectedFailure(await run('node', ['scripts/gate.mjs', dist, budgets], copySite), entry.tokens);
   }
+  if (entry.gate === 'jsonld-properties') {
+    const dist = join(work, 'jsonld-properties-dist');
+    await mkdir(dist, { recursive: true });
+    const graph = {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'Organization',
+          '@id': 'https://example.com/#org',
+          name: 'Test',
+          url: 'https://example.com/',
+          sameAs: [],
+          contactPoint: {},
+        },
+        {
+          '@type': 'Person',
+          '@id': 'https://example.com/#person',
+          name: 'Test',
+          jobTitle: 'x',
+          url: 'https://example.com/about',
+          sameAs: [],
+          knowsAbout: [],
+        },
+        {
+          '@type': 'WebSite',
+          '@id': 'https://example.com/#website',
+          url: 'https://example.com/',
+          name: 'Test',
+          publisher: {},
+          potentialAction: {},
+        },
+      ],
+    };
+    await writeFile(
+      join(dist, 'index.html'),
+      `<!doctype html><html><head><script type="application/ld+json">${JSON.stringify(graph)}</script></head><body>x</body></html>`
+    );
+    return expectedFailure(await run('node', ['scripts/jsonld-gate.mjs', dist], copySite), entry.tokens);
+  }
   const dist = join(work, 'jsonld-dist');
   await mkdir(join(dist, 'unknown-route'), { recursive: true });
   await writeFile(join(dist, 'unknown-route/index.html'), '<!doctype html><html><head></head><body>x</body></html>');
@@ -211,7 +264,74 @@ async function livePostCount(copySite) {
   return live;
 }
 
-async function runPaginationFamily(copySite, entry) {
+async function fixtureCategory(entry) {
+  const raw = await readFile(join(FIXTURES, entry.fixture), 'utf8');
+  const frontmatter = raw.split(/^---$/m)[1] ?? '';
+  const match = /^category:\s*(\S+)\s*$/m.exec(frontmatter);
+  if (!match) throw new Error(`mutation smoke: fixture ${entry.fixture} has no category for category-pagination`);
+  return match[1];
+}
+
+async function livePostCountByCategory(copySite, category) {
+  const dir = join(copySite, 'src/data/post');
+  let live = 0;
+  for (const name of await readdir(dir)) {
+    if (!/\.(md|mdx)$/.test(name)) continue;
+    const frontmatter = (await readFile(join(dir, name), 'utf8')).split(/^---$/m)[1] ?? '';
+    if (/^draft:\s*true\s*$/m.test(frontmatter)) continue;
+    if (new RegExp(`^category:\\s*${category}\\s*$`, 'm').test(frontmatter)) live += 1;
+  }
+  return live;
+}
+
+async function categoryPaginationArtifacts(copySite, category) {
+  const page2Path = `dist/blog/category/${category}/page/2/index.html`;
+  const page2Html = await readFile(join(copySite, page2Path), 'utf8').catch(() => null);
+  if (page2Html === null) throw new Error(`${page2Path} was not built`);
+  const robots = robotsMeta(page2Html);
+  if (!/noindex/.test(robots) || !/follow/.test(robots))
+    throw new Error(`category page 2 robots is not noindex, follow: ${robots}`);
+  if (!canonicalHref(page2Html).endsWith(`/blog/category/${category}/page/2`))
+    throw new Error(`category page 2 canonical is not self: ${canonicalHref(page2Html)}`);
+  const page1Html = await readFile(join(copySite, `dist/blog/category/${category}/index.html`), 'utf8');
+  if (/noindex/.test(robotsMeta(page1Html))) throw new Error('category page 1 carries noindex');
+  if (!canonicalHref(page1Html).endsWith(`/blog/category/${category}`))
+    throw new Error(`category page 1 canonical is not the bare route: ${canonicalHref(page1Html)}`);
+  return { robots, canonical: canonicalHref(page2Html) };
+}
+
+async function runCategoryPaginationFamily(copySite, entry) {
+  const category = await fixtureCategory(entry);
+  const live = await livePostCountByCategory(copySite, category);
+  const clones = Math.max(0, LIVE_POST_TARGET - live);
+  const planted = [];
+  for (let index = 1; index <= clones; index += 1) {
+    const target = join(copySite, 'src/data/post', `mutation-category-post-${String(index).padStart(2, '0')}.md`);
+    await copyFile(join(FIXTURES, entry.fixture), target);
+    planted.push(target);
+  }
+  try {
+    const built = await build(copySite);
+    if (built.code !== 0)
+      return { ok: false, reason: `build with ${clones} category clones failed: ${built.output.slice(-400)}` };
+    const proof = await categoryPaginationArtifacts(copySite, category);
+    if (
+      clones > 0 &&
+      !(await readFile(join(copySite, `dist/blog/category/${category}/page/2/index.html`), 'utf8')).includes(
+        'mutation-category-post'
+      )
+    )
+      return { ok: false, reason: 'category page 2 lists no planted live post' };
+    return {
+      ok: true,
+      reason: `${category}: ${live} live + ${clones} clones; robots ${proof.robots}, canonical ${proof.canonical}`,
+    };
+  } finally {
+    await Promise.all(planted.map((path) => rm(path, { force: true })));
+  }
+}
+
+async function runBlogPaginationFamily(copySite, entry) {
   const live = await livePostCount(copySite);
   const clones = Math.max(0, LIVE_POST_TARGET - live);
   const planted = [];
@@ -237,6 +357,12 @@ async function runPaginationFamily(copySite, entry) {
   } finally {
     await Promise.all(planted.map((path) => rm(path, { force: true })));
   }
+}
+
+async function runPaginationFamily(copySite, entry) {
+  return entry.scope === 'category'
+    ? runCategoryPaginationFamily(copySite, entry)
+    : runBlogPaginationFamily(copySite, entry);
 }
 
 async function prepareCopy(work) {

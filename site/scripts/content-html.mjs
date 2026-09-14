@@ -63,6 +63,11 @@ const CHROME = /<(header|footer|nav)\b[^>]*>/gi;
 const IGNORED = /<(\w+)\b[^>]*\bdata-gate-ignore\b[^>]*>/gi;
 const LEAD = /<p\b[^>]*\bdata-gate-lead\b[^>]*>([\s\S]*?)<\/p>/i;
 
+function newestDate(html) {
+  const days = matchAll(html, /<time\b[^>]*\bdatetime="([^"]+)"/gi).map((value) => value.slice(0, 10));
+  return days.length > 0 ? days.sort().at(-1) : null;
+}
+
 export function extractPage(route, html) {
   const chromeFree = cutBalanced(html, CHROME);
   const main = MAIN.exec(chromeFree)?.[1] ?? chromeFree;
@@ -93,6 +98,6 @@ export function extractPage(route, html) {
     tables: matchAll(body, /<table\b/gi, 0).length,
     figures: matchAll(body, /<(figure|svg)\b/gi, 0).length,
     takeaways: takeawayBlock ? matchAll(takeawayBlock[2], /<li\b/gi, 0).length : 0,
-    updated: /<time\b[^>]*\bdatetime="([^"]+)"/i.exec(body)?.[1]?.slice(0, 10) ?? null,
+    updated: newestDate(main),
   };
 }

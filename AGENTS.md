@@ -7,10 +7,13 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
 1. `docs/PLAN.md` — the phased build plan and the locked decisions (L1–L35). Start here.
 2. `docs/PRD.md` — the full requirements spec. `docs/PLAN.md` §1 overrides it where they differ.
 3. `docs/DECISIONS.md` — the closed decision log.
-4. `site/.agents/skills/` — the repeatable procedures for this repo: the design lane, running
-   the gate, adding a collection entry, restoring a collection, regenerating visual baselines,
-   the judge panel, the content gate, the machine interfaces and the launch checklist. Read the
-   matching one before doing that job by hand; `design-lane.md` comes before any markup or CSS.
+4. `site/.agents/skills/` — one procedure per file, each named for the job it does: the design
+   lane, snippet grammar, structured data, the search index, machine interfaces, running the
+   gate, the content gate, the judge panel, adding a collection entry, restoring a collection,
+   visual baselines, extending the mutation smoke, explaining a route removal, coordinating
+   parallel agents, clearing dead weight, verifying in the built output, and the launch
+   checklist. Read the matching one before doing that job by hand; `design-lane.md` comes before
+   any markup or CSS. `gate:skills` fails if a skill names a path or command that does not exist.
 5. `docs/SEMANTIC-CORE.md` — which title, meta description and target query each route family
    carries and why, plus the 30 buyer prompts mapped to the routes that must win them. Read it
    before writing or editing any page copy, title or meta description.
@@ -57,6 +60,14 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
 - Machine interfaces (`/llms.txt`, `/llms-full.txt`, `/llms/{collection}.txt`, `/{page}.md`,
   `/feed.json`, `/rss.xml` plus six per-collection feeds, `/og/*.png`, search shards, sitemap)
   are build outputs. Verify them in `dist/`, not in source.
+- Verify a claim about the site in the built output — `dist/`, a response from the gate server, or
+  a command's real stdout. Never in source, never in a doc. When a doc and the build disagree, the
+  doc is wrong. Procedure: `site/.agents/skills/verify-in-the-built-output.md`.
+- Found dead weight (unreferenced components, exports, baselines, scripts, contradicted config) is
+  removed in the session that found it, never deferred (L40). Procedure:
+  `site/.agents/skills/clear-dead-weight-now.md`.
+- Work is finished when the procedure that produced it lives in the methodology layer: a skill, a
+  hard rule here, a locked row in the plan, or a machine check (L49).
 - Ask Context7 about Astro 7, Tailwind v4 and satori APIs before relying on memory.
 
 ## Commands

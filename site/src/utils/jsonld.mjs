@@ -13,17 +13,77 @@ const KNOWS_ABOUT = [
   'agentic systems',
   'LLM evaluation',
 ];
+const DEFAULT_IMAGE_WIDTH = 1200;
+const DEFAULT_IMAGE_HEIGHT = 630;
+const LANGUAGE = 'en';
 
-const isoDay = (value) => new Date(value).toISOString().slice(0, 10);
+const isoInstant = (value) => new Date(value).toISOString();
 
 const absolute = (site, path) => (path === '/' ? `${site}/` : `${site}${path}`);
+
+const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const citationOf = (sources) =>
+  (sources ?? []).map((source) => ({ '@type': 'CreativeWork', name: source.title, url: source.url }));
+
+/** @typedef {{ url: string, width?: number, height?: number }} JsonLdImage */
+
+/** @param {JsonLdImage} image */
+export function imageObject({ url, width, height }) {
+  return { '@type': 'ImageObject', url, ...(width ? { width } : {}), ...(height ? { height } : {}) };
+}
+
+export function glossaryRef(site, id) {
+  return { '@id': `${site}/glossary/${id}#term` };
+}
+
+export function glossaryStub(site, term) {
+  return {
+    '@type': 'DefinedTerm',
+    '@id': `${site}/glossary/${term.id}#term`,
+    name: term.term,
+    url: `${site}/glossary/${term.id}`,
+  };
+}
+
+/**
+ * @param {string} text
+ * @param {{ id: string, term: string }[]} terms
+ * @param {string} [excludeId]
+ * @returns {string[]}
+ */
+export function findGlossaryMentions(text, terms, excludeId) {
+  if (!text || !terms?.length) return [];
+  return terms
+    .filter((term) => term.id !== excludeId)
+    .filter((term) => new RegExp(`(?<![\\w])${escapeRegExp(term.term)}(?![\\w])`, 'iu').test(text))
+    .map((term) => term.id);
+}
+
+/**
+ * @param {string} site
+ * @param {{ about?: string[], mentions?: string[] }} links
+ * @returns {Record<string, unknown>}
+ */
+function entityGraphLinks(site, { about = [], mentions = [] }) {
+  const unique = (ids) => [...new Set(ids)];
+  const aboutIds = unique(about);
+  const mentionIds = unique(mentions).filter((id) => !aboutIds.includes(id));
+  const out = {};
+  if (aboutIds.length) out.about = aboutIds.map((id) => glossaryRef(site, id));
+  if (mentionIds.length) out.mentions = mentionIds.map((id) => glossaryRef(site, id));
+  return out;
+}
 
 export function graph(nodes) {
   return { '@context': 'https://schema.org', '@graph': nodes };
 }
 
-export function orgNode(site, { logoPath = '/og/default.png' } = {}) {
-  const logo = `${site}${logoPath}`;
+export function orgNode(
+  site,
+  { logoPath = '/og/default.png', width = DEFAULT_IMAGE_WIDTH, height = DEFAULT_IMAGE_HEIGHT } = {}
+) {
+  const logo = imageObject({ url: `${site}${logoPath}`, width, height });
   return {
     '@type': 'Organization',
     '@id': `${site}/#org`,
@@ -70,7 +130,29 @@ export function websiteNode(site) {
   };
 }
 
-export function serviceNode(site, service) {
+export function serviceEntityLinks(service, terms = []) {
+  const aboutText = [service.name, service.tagline, service.shortAnswer, service.description]
+    .filter(Boolean)
+    .join('\n');
+  const mentionText = [
+    aboutText,
+    ...(service.forWhom ?? []),
+    ...(service.notForWhom ?? []),
+    ...(service.deliverables ?? []),
+    ...(service.process ?? []).flatMap((step) => [step.title, step.detail]),
+    ...(service.schedule ?? []).flatMap((row) => [row.stage, row.work, row.output]),
+    ...(service.faq ?? []).flatMap((item) => [item.q, item.a]),
+    service.body,
+  ]
+    .filter(Boolean)
+    .join('\n');
+  const about = findGlossaryMentions(aboutText, terms, service.id);
+  const mentions = findGlossaryMentions(mentionText, terms, service.id).filter((id) => !about.includes(id));
+  return { about, mentions };
+}
+
+/** @param {string} site @param {any} entry @param {{ about?: string[], mentions?: string[] }} [links] */
+export function serviceNode(site, service, { about = [], mentions = [] } = {}) {
   return {
     '@type': 'Service',
     '@id': `${site}/services/${service.id}#service`,
@@ -79,15 +161,28 @@ export function serviceNode(site, service) {
     serviceType: PERSON_ROLE,
     provider: { '@id': `${site}/#org` },
     areaServed: 'Worldwide',
+    inLanguage: LANGUAGE,
     offers: {
       '@type': 'Offer',
       url: `${site}/services/${service.id}`,
       availability: 'https://schema.org/InStock',
     },
+    citation: citationOf(service.sources),
+    ...entityGraphLinks(site, { about, mentions }),
   };
 }
 
-export function postNode(site, post, { basePath = '/blog', ogCollection = 'post' } = {}) {
+export function postEntityLinks(post, terms = []) {
+  const aboutText = [post.title, post.description, post.shortAnswer, post.fullAnswer].filter(Boolean).join('\n');
+  const about = (post.tags ?? []).filter((tag) => terms.some((term) => term.id === tag));
+  const mentions = findGlossaryMentions([aboutText, post.body].filter(Boolean).join('\n'), terms, post.id).filter(
+    (id) => !about.includes(id)
+  );
+  return { about, mentions };
+}
+
+/** @param {string} site @param {any} post @param {{ basePath?: string, ogCollection?: string, about?: string[], mentions?: string[] }} [links] */
+export function postNode(site, post, { basePath = '/blog', ogCollection = 'post', about = [], mentions = [] } = {}) {
   const url = `${site}${basePath}/${post.id}`;
   return {
     '@type': 'BlogPosting',
@@ -95,9 +190,9 @@ export function postNode(site, post, { basePath = '/blog', ogCollection = 'post'
     url,
     headline: post.title,
     description: post.description,
-    datePublished: isoDay(post.publishDate),
-    dateModified: isoDay(post.updatedDate),
-    inLanguage: 'en',
+    datePublished: isoInstant(post.publishDate),
+    dateModified: isoInstant(post.updatedDate),
+    inLanguage: LANGUAGE,
     image: `${site}${ogImagePath(ogCollection, post.id)}`,
     ...(Number.isFinite(post.wordCount) ? { wordCount: post.wordCount } : {}),
     mainEntityOfPage: { '@id': `${url}#webpage` },
@@ -105,27 +200,42 @@ export function postNode(site, post, { basePath = '/blog', ogCollection = 'post'
     publisher: { '@id': `${site}/#org` },
     ...(post.category ? { articleSection: post.category } : {}),
     ...(post.tags?.length ? { keywords: post.tags.join(', ') } : {}),
-    citation: (post.sources ?? []).map((source) => ({
-      '@type': 'CreativeWork',
-      name: source.title,
-      url: source.url,
-    })),
+    citation: citationOf(post.sources),
+    ...entityGraphLinks(site, { about, mentions }),
   };
 }
 
-export function resourceNode(site, resource) {
+export function resourceEntityLinks(resource, terms = []) {
+  const aboutText = [resource.name, resource.description].filter(Boolean).join('\n');
+  const mentionText = [aboutText, ...(resource.whatInside ?? []), resource.howToUse, resource.body]
+    .filter(Boolean)
+    .join('\n');
+  const about = findGlossaryMentions(aboutText, terms, resource.id);
+  const mentions = findGlossaryMentions(mentionText, terms, resource.id).filter((id) => !about.includes(id));
+  return { about, mentions };
+}
+
+/** @param {{ about?: string[], mentions?: string[], image?: JsonLdImage }} [options] */
+/** @param {string} site @param {any} entry @param {{ about?: string[], mentions?: string[], image?: unknown }} [links] */
+export function resourceNode(site, resource, options = {}) {
+  const { about = [], mentions = [], image } = options;
   return {
     '@type': resource.repoUrl ? 'SoftwareSourceCode' : 'CreativeWork',
     '@id': `${site}/resources/${resource.id}#resource`,
     url: `${site}/resources/${resource.id}`,
     name: resource.name,
     description: resource.description,
-    ...(resource.publishDate ? { datePublished: isoDay(resource.publishDate) } : {}),
-    ...(resource.updatedDate ? { dateModified: isoDay(resource.updatedDate) } : {}),
+    ...(resource.publishDate ? { datePublished: isoInstant(resource.publishDate) } : {}),
+    ...(resource.updatedDate ? { dateModified: isoInstant(resource.updatedDate) } : {}),
     license: resource.license,
     version: resource.version,
     author: { '@id': `${site}/#person` },
+    inLanguage: LANGUAGE,
+    isPartOf: { '@id': `${site}/#website` },
     ...(resource.repoUrl ? { codeRepository: resource.repoUrl } : {}),
+    ...(image ? { primaryImageOfPage: image } : {}),
+    citation: citationOf(resource.sources),
+    ...entityGraphLinks(site, { about, mentions }),
   };
 }
 
@@ -140,12 +250,24 @@ export function faqNode(items) {
   };
 }
 
-export function faqPageNode(site, faq) {
+export function faqPageNode(
+  site,
+  faq,
+  options = /** @type {{ image?: JsonLdImage, speakableSelectors?: string[] }} */ ({})
+) {
+  const { image, speakableSelectors = [] } = options;
   const path = faq.url ?? `/faq/${faq.id}`;
   return {
     '@type': 'FAQPage',
     '@id': `${site}${path}#faqpage`,
     url: absolute(site, path),
+    isPartOf: { '@id': `${site}/#website` },
+    inLanguage: LANGUAGE,
+    ...(faq.sources?.length ? { citation: citationOf(faq.sources) } : {}),
+    ...(image ? { primaryImageOfPage: image } : {}),
+    ...(speakableSelectors.length
+      ? { speakable: { '@type': 'SpeakableSpecification', cssSelector: speakableSelectors } }
+      : {}),
     mainEntity: {
       '@type': 'Question',
       '@id': `${site}${path}#question`,
@@ -183,7 +305,9 @@ export function termSetNode(site, terms = []) {
   };
 }
 
+/** @param {string} site @param {any} entry @param {{ about?: string[], mentions?: string[] }} [links] */
 export function termNode(site, term) {
+  const mentionIds = (term.relatedTerms ?? []).map((ref) => ref.id).filter((id) => id !== term.id);
   return {
     '@type': 'DefinedTerm',
     '@id': `${site}/glossary/${term.id}#term`,
@@ -191,6 +315,9 @@ export function termNode(site, term) {
     description: term.shortDefinition,
     url: `${site}/glossary/${term.id}`,
     inDefinedTermSet: { '@id': `${site}/glossary#termset` },
+    inLanguage: LANGUAGE,
+    citation: citationOf(term.sources),
+    ...entityGraphLinks(site, { mentions: mentionIds }),
   };
 }
 
@@ -225,14 +352,34 @@ export function contactPageNode(site) {
   };
 }
 
-export function webPageNode(site, path, dateModified, name) {
+/**
+ * @param {{
+ *   image?: { url: string, width?: number, height?: number },
+ *   mainEntity?: string,
+ *   speakableSelectors?: string[]
+ * }} [options]
+ */
+export function webPageNode(
+  site,
+  path,
+  dateModified,
+  name,
+  options = /** @type {{ image?: JsonLdImage, mainEntity?: string, speakableSelectors?: string[] }} */ ({})
+) {
+  const { image, mainEntity, speakableSelectors = [] } = options;
   return {
     '@type': 'WebPage',
     '@id': `${site}${path}#webpage`,
     url: absolute(site, path),
     ...(name ? { name } : {}),
     isPartOf: { '@id': `${site}/#website` },
-    ...(dateModified ? { dateModified: isoDay(dateModified) } : {}),
+    inLanguage: LANGUAGE,
+    ...(dateModified ? { dateModified: isoInstant(dateModified) } : {}),
+    ...(image ? { primaryImageOfPage: image } : {}),
+    ...(mainEntity ? { mainEntity: { '@id': mainEntity } } : {}),
+    ...(speakableSelectors.length
+      ? { speakable: { '@type': 'SpeakableSpecification', cssSelector: speakableSelectors } }
+      : {}),
   };
 }
 

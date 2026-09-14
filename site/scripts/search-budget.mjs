@@ -32,3 +32,18 @@ export function shardBudgets(distDir) {
     withinBudget: shards.length > 0 && sum < SUM_BUDGET_BYTES && shards.every((shard) => shard.withinBudget),
   };
 }
+
+function main(distDir) {
+  const budgets = shardBudgets(distDir);
+  for (const shard of budgets.shards) {
+    console.log(
+      `${shard.file} ${shard.bytes} bytes gz${shard.withinBudget ? '' : ` (over ${PER_SHARD_BUDGET_BYTES})`}`
+    );
+  }
+  console.log(`sum ${budgets.sum} bytes gz${budgets.withinBudget ? '' : ` (over ${SUM_BUDGET_BYTES})`}`);
+  if (!budgets.withinBudget) process.exitCode = 1;
+}
+
+if (import.meta.filename === process.argv[1]) {
+  main(process.argv[2] ?? 'dist');
+}

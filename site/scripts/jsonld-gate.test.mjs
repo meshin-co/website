@@ -4,7 +4,16 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
 
-import { extractGraphs, danglingIds, duplicateIds, missingTypes, requiredTypesFor, main } from './jsonld-gate.mjs';
+import {
+  extractGraphs,
+  danglingIds,
+  duplicateIds,
+  missingTypes,
+  missingProperties,
+  requiredTypesFor,
+  REQUIRED_PROPERTIES,
+  main,
+} from './jsonld-gate.mjs';
 
 const page = (json) => `<html><head><script type="application/ld+json">${json}</script></head></html>`;
 const graphlessPage = '<html><head><title>x</title></head></html>';
@@ -53,6 +62,49 @@ test('two nodes declaring the same id are reported', () => {
 
   assert.deepEqual(danglingIds(graphs), []);
   assert.deepEqual(duplicateIds(graphs), ['https://x/#person']);
+});
+
+test("a node missing one of its type's required properties is reported by id and property name", () => {
+  const graphs = extractGraphs(page('{"@graph":[{"@type":"Organization","@id":"https://x/#org","name":"X"}]}'));
+  const failures = missingProperties(graphs, ['Organization']);
+  assert.ok(failures.some((failure) => failure.includes('https://x/#org') && failure.includes('logo')));
+  assert.ok(!failures.some((failure) => failure.includes('name')));
+});
+
+test('a node satisfying every required property of its type reports nothing', () => {
+  const graphs = extractGraphs(
+    page(
+      JSON.stringify({
+        '@graph': [
+          {
+            '@type': 'DefinedTermSet',
+            '@id': 'x',
+            ...Object.fromEntries(REQUIRED_PROPERTIES.DefinedTermSet.map((prop) => [prop, 'x'])),
+          },
+        ],
+      })
+    )
+  );
+  assert.deepEqual(missingProperties(graphs, ['DefinedTermSet']), []);
+});
+
+test('a required type absent from REQUIRED_PROPERTIES fails the property gate closed', () => {
+  const graphs = extractGraphs(page('{"@graph":[{"@type":"NeverDefined","@id":"x"}]}'));
+  assert.deepEqual(missingProperties(graphs, ['NeverDefined']), [
+    'NeverDefined matches no known jsonld property family',
+  ]);
+});
+
+test('a union type checks the properties of whichever variant is actually present', () => {
+  const graphs = extractGraphs(page('{"@graph":[{"@type":"SoftwareSourceCode","@id":"x","name":"N"}]}'));
+  const failures = missingProperties(graphs, ['CreativeWork|SoftwareSourceCode']);
+  assert.ok(failures.some((failure) => failure.includes('codeRepository')));
+  assert.ok(!failures.some((failure) => failure.startsWith('CreativeWork ')));
+});
+
+test('a required type absent from the graph reports no property failures, since missingTypes already reports the absence', () => {
+  const graphs = extractGraphs(page('{"@graph":[]}'));
+  assert.deepEqual(missingProperties(graphs, ['Organization']), []);
 });
 
 test('a route of a known family is required to carry that family node', () => {
@@ -106,6 +158,35 @@ test('a route matching no known pattern fails the gate closed', async () => {
   }
 });
 
+test('a route with the right type present but a missing required property fails the gate closed', async () => {
+  const dir = await withFixture({
+    '/blog/tag/governance': page(
+      '{"@graph":[{"@type":"CollectionPage","@id":"https://x/blog/tag/governance#page","isPartOf":{"@id":"https://x/#website"}},{"@type":"WebSite","@id":"https://x/#website"},{"@type":"BreadcrumbList","@id":"https://x/blog/tag/governance#breadcrumbs","itemListElement":[]}]}'
+    ),
+  });
+  try {
+    process.exitCode = undefined;
+    let logged = '';
+    const error = console.error;
+    console.error = (line) => {
+      logged += line;
+    };
+    const log = console.log;
+    console.log = () => {};
+    try {
+      await main(dir);
+    } finally {
+      console.error = error;
+      console.log = log;
+    }
+    assert.equal(process.exitCode, 1);
+    assert.match(logged, /CollectionPage node .* is missing required property name/);
+  } finally {
+    process.exitCode = undefined;
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
 test('a page outside the exempt set carrying no graph fails the gate', async () => {
   const dir = await withFixture({ '/now': graphlessPage });
   try {
@@ -130,12 +211,33 @@ test('an exempt utility route without a graph passes the gate', async () => {
   }
 });
 
-test('a page satisfying its family requirements passes the gate', async () => {
-  const dir = await withFixture({
-    '/about': page(
-      '{"@graph":[{"@type":"ProfilePage","@id":"https://x/about#page","mainEntity":{"@id":"https://x/#person"}},{"@type":"Person","@id":"https://x/#person"},{"@type":"BreadcrumbList","@id":"https://x/about#breadcrumbs"}]}'
-    ),
-  });
+test('a page satisfying its family requirements, including property completeness, passes the gate', async () => {
+  const graph = {
+    '@graph': [
+      {
+        '@type': 'ProfilePage',
+        '@id': 'https://x/about#page',
+        url: 'https://x/about',
+        name: 'About',
+        mainEntity: { '@id': 'https://x/#person' },
+        isPartOf: { '@id': 'https://x/#website' },
+      },
+      {
+        '@type': 'Person',
+        '@id': 'https://x/#person',
+        name: 'Dmitri Meshin',
+        jobTitle: 'Fractional Chief AI Officer',
+        url: 'https://x/about',
+        worksFor: { '@id': 'https://x/#org' },
+        sameAs: ['https://example.com/in/x'],
+        knowsAbout: ['AI governance'],
+      },
+      { '@type': 'WebSite', '@id': 'https://x/#website' },
+      { '@type': 'Organization', '@id': 'https://x/#org' },
+      { '@type': 'BreadcrumbList', '@id': 'https://x/about#breadcrumbs', itemListElement: [] },
+    ],
+  };
+  const dir = await withFixture({ '/about': page(JSON.stringify(graph)) });
   try {
     process.exitCode = undefined;
     await quiet(() => main(dir));

@@ -12,8 +12,20 @@ import Section from '~/components/site/Section.astro';
 import SourceList from '~/components/site/SourceList.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { articleMetadata } from '~/utils/machine-links.mjs';
-import { orgNode, personNode, termNode, termSetNode } from '~/utils/jsonld.mjs';
+import {
+  findGlossaryMentions,
+  imageObject,
+  orgNode,
+  personNode,
+  termNode,
+  termSetNode,
+  webPageNode,
+  websiteNode,
+} from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+import RelatedContent from '~/components/site/RelatedContent.astro';
+import { distinctByKeyword, firstMention, textMentionsKeyword, resolveByIds } from '~/utils/related-content.mjs';
+import { lastmod } from '~/utils/lastmod.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const terms = await getCollection('glossary');
@@ -45,6 +57,38 @@ const metadata = articleMetadata(site, {
 
 const otherTerms = terms.filter((entry) => entry.id !== term.id);
 
+const services = await getCollection('service');
+const definitionText = [data.shortDefinition, data.definition].join('\n');
+
+const serviceCandidates = distinctByKeyword(
+  services.map((service) => ({ id: service.id, name: service.data.name, href: `/services/${service.id}` }))
+);
+const concernedServices = serviceCandidates.filter((service) => textMentionsKeyword(definitionText, service.keyword));
+
+const otherTermCandidates = otherTerms.map((entry) => ({ id: entry.id, term: entry.data.term }));
+const mentionedOtherTermIds = findGlossaryMentions(definitionText, otherTermCandidates, term.id).filter(
+  (id) => !data.relatedTerms.some((reference) => reference.id === id)
+);
+const mentionedOtherTerms = resolveByIds(mentionedOtherTermIds, otherTerms);
+
+const entityCandidates = [
+  ...[...related, ...mentionedOtherTerms].map((entry) => ({ name: entry.data.term, href: `/glossary/${entry.id}` })),
+  ...concernedServices.map((service) => ({ name: service.keyword, href: `/services/${service.id}` })),
+];
+const linkedFirstParagraph =
+  definitionParagraphs.length > 0 ? firstMention(definitionParagraphs[0], entityCandidates) : null;
+
+const relatedGroups = [
+  {
+    heading: 'Related terms',
+    items: [...related, ...mentionedOtherTerms].map((entry) => ({
+      label: entry.data.term,
+      href: `/glossary/${entry.id}`,
+    })),
+  },
+  { heading: 'Concerns', items: concernedServices.map((service) => ({ label: service.name, href: service.href })) },
+];
+
 const crumbs = [
   { name: 'Home', path: '/' },
   { name: 'Glossary', path: '/glossary' },
@@ -54,12 +98,24 @@ const crumbs = [
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
+  websiteNode(site),
   termSetNode(
     site,
     terms.map((entry) => ({ id: entry.id }))
   ),
   termNode(site, { id: term.id, ...data }),
   ...otherTerms.map((entry) => termNode(site, { id: entry.id, ...entry.data })),
+  webPageNode(
+    site,
+    `/glossary/${term.id}`,
+    lastmod({ publishDate: data.publishDate, updatedDate: data.updatedDate }),
+    data.term,
+    {
+      image: imageObject(metadata.openGraph.images[0]),
+      mainEntity: `${site}/glossary/${term.id}#term`,
+      speakableSelectors: ['h1', '[data-answer]'],
+    }
+  ),
 ];
 ---
 
@@ -68,36 +124,54 @@ const nodes = [
 
   <Breadcrumbs crumbs={crumbs} />
   <MarkdownAlternate path={`/glossary/${term.id}`} slot="head" />
+  <link rel="alternate" type="application/rss+xml" title="meshin.co — Glossary" href="/glossary/rss.xml" slot="head" />
 
-  <Section bordered={false} headingLevel={1} eyebrow="Glossary" title={data.term} />
+  <article>
+    <Section bordered={false} headingLevel={1} eyebrow="Glossary" title={data.term} />
 
-  <Section eyebrow="Definition" title="What it means" tone="surface">
-    <AnswerBlock question={`What is ${data.term}?`} answer={data.shortDefinition} />
-    {definitionParagraphs.map((paragraph) => <p class="mt-10 max-w-[68ch] text-muted">{paragraph}</p>)}
-  </Section>
-
-  <Section eyebrow="Detail" title="In practice">
-    <div class="prose-brief prose-brief-headings max-w-[68ch]">
-      <Content />
-    </div>
-  </Section>
-
-  <Section eyebrow="Provenance" title="Sources and neighbours">
-    <SourceList sources={data.sources} />
-    {
-      related.length > 0 && (
-        <ul class="mt-10 flex flex-wrap gap-x-8 gap-y-3">
-          {related.map((entry) => (
-            <li>
-              <a class="text-link font-mono text-sm" href={`/glossary/${entry.id}`}>
-                {entry.data.term}
+    <Section eyebrow="Definition" title="What it means" tone="surface">
+      <AnswerBlock question={`What is ${data.term}?`} answer={data.shortDefinition} />
+      {
+        definitionParagraphs.map((paragraph, index) =>
+          index === 0 && linkedFirstParagraph ? (
+            <p class="mt-10 max-w-[68ch] text-muted">
+              {linkedFirstParagraph.before}
+              <a
+                class="text-link underline decoration-2 underline-offset-4 hover:decoration-primary"
+                href={linkedFirstParagraph.href}
+              >
+                {linkedFirstParagraph.matched}
               </a>
-            </li>
-          ))}
-        </ul>
-      )
-    }
-  </Section>
+              {linkedFirstParagraph.after}
+            </p>
+          ) : (
+            <p class="mt-10 max-w-[68ch] text-muted">{paragraph}</p>
+          )
+        )
+      }
+      <p class="mt-6 font-mono text-xs text-muted" data-gate-ignore>
+        Published{' '}
+        <time datetime={data.publishDate.toISOString().slice(0, 10)}>
+          {data.publishDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+        </time>
+        {' · Updated '}
+        <time datetime={data.updatedDate.toISOString().slice(0, 10)}>
+          {data.updatedDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+        </time>
+      </p>
+    </Section>
+
+    <Section eyebrow="Detail" title="In practice">
+      <div class="prose-brief prose-brief-headings max-w-[68ch]">
+        <Content />
+      </div>
+    </Section>
+
+    <Section eyebrow="Provenance" title="Sources and neighbours">
+      <SourceList sources={data.sources} />
+      <RelatedContent groups={relatedGroups} />
+    </Section>
+  </article>
 
   <Section title="Next step">
     <CtaBlock

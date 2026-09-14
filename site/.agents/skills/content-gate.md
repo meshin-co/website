@@ -9,7 +9,9 @@ ship, and neither half can excuse the other.
 Run `node scripts/content-gate.mjs dist` from `site/`. It reads every derived route except
 /404, /search and /styleguide, judges each page under a profile (article, offer, term,
 faq-answer, pillar, page — chosen by route prefix), and exits non-zero on any finding.
-Inputs:
+Two numeric rules gate most articles: every paragraph ≤75 words with no single-sentence
+paragraph over 45 words, and median sentence length ≤22 words per page with the longest
+sentence ≤45 words (full row spec: `docs/CONTENT-GATE.md` rows 5–6). Inputs:
 
 - `site/content-facts.json` — the facts file: one `targetQuery` row per route, plus the
   `numbers` allowlist. Every number on every page must be computed in code, sourced to a
@@ -34,6 +36,29 @@ When a route ships, add `"route": "target query"` to the `targetQuery` object in
 Per-family rows live in `docs/CONTENT-GATE.md` (articles carry the fullest set; offers drop
 the article-only rows; terms and FAQ answers run a reduced set). The judge composition per
 family is in the same scope table.
+
+## Semantic core (L48)
+
+`node scripts/content-gate.mjs dist` also runs `scripts/semantic-core.mjs`'s `checkFindings()`
+as its last step — one call, no separate npm script. That call:
+
+- Regenerates `docs/SEMANTIC-CORE.md`'s generated table in memory and diffs it against the
+  committed file, failing with the exact drifted routes if they differ. A stale doc cannot pass
+  `gate:content`, and `gate:content` is a CI step (L36) — so it cannot pass CI either.
+- Confirms every `content-facts.json` `targetQuery` row maps to a built route and every gated
+  route has a row (orphans in both directions), and that every built `<title>` follows its
+  family's title grammar.
+- Confirms every buyer-prompt "Must win" route (docs/SEMANTIC-CORE.md's 30 buyer prompts,
+  PRD §17.3) is actually built, every quoted "Passage" is still a literal substring of its
+  cited route's rendered text, and every GAP absence-claim (for example, "Israel" appears on
+  no built page) still holds.
+
+To regenerate the doc after adding, removing or reclassifying a route: run
+`node scripts/semantic-core.mjs` from `site/` (writes `docs/SEMANTIC-CORE.md`), then
+`node scripts/semantic-core.mjs --check dist` to confirm it is now clean before committing.
+A new route family needs a `FAMILY_BY_PREFIX` entry and a matching `FAMILY_GRAMMAR` row in
+`scripts/semantic-core.mjs` before regenerating, or it silently falls into the wrong family's
+title grammar.
 
 ## Half B — judged
 

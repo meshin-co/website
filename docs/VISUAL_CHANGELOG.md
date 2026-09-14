@@ -78,3 +78,14 @@ render with `font-display: swap`, which is safe now that the CSP no longer block
 metric overrides. Deleting 38 unreachable template components cut the stylesheet from about
 21 KB gz to 12.5 KB. Article pages are around 80 px shorter as a result; both platform baselines
 regenerated.
+
+## 2026-09-14 — Phase 4.6: dates, landmarks and related content on every leaf
+
+Every leaf body is wrapped in `<article>`, and each one now shows a "Published … · Updated …"
+line built from real `<time datetime>` values — glossary terms, case studies, resources and
+services previously showed no date at all. FAQ, glossary, resource and service leaves gained a
+related-content block (related questions, the service an answer concerns, glossary terms the
+prose actually mentions), and the first honest mention of a term or service in a leaf's own copy
+is now a link. Tag pages carry the `/blog/tags` level in their breadcrumb trail. Both date and
+related blocks are marked `data-gate-ignore` because they are chrome, not prose; the content gate
+still reads the rendered date from them.

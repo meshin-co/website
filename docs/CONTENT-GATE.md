@@ -46,7 +46,7 @@ Checked by script. Each row names the failure message the script prints.
 4. `fullAnswer` (article lead) 130–170 words.
 5. Every paragraph ≤ 75 words. No paragraph is a single sentence longer than 45 words.
 6. Median sentence length ≤ 22 words across the page; longest sentence ≤ 45 words.
-7. Zero banned phrases (`references/banned-phrases.md`): AI fingerprints, filler, hedges,
+7. Zero banned phrases (`site/banned-phrases.json`): AI fingerprints, filler, hedges,
    marketing verbs.
 8. No sentence longer than 12 words appears on two different routes. Boilerplate CTAs and nav are
    exempt by selector, not by phrase.

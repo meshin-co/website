@@ -102,18 +102,116 @@ export async function lintSkillsDir(skillsDir, roots) {
   return findings;
 }
 
+const ONE_OFF_SCRIPTS = [
+  {
+    name: 'content-rows.mjs',
+    reason:
+      'row-scoring library imported only by content-gate.mjs and semantic-core.mjs, both documented in content-gate.md',
+  },
+  {
+    name: 'prose-rules.mjs',
+    reason:
+      'duplicate-sentence and prose-quality checks imported only by content-gate.mjs, documented in content-gate.md',
+  },
+  {
+    name: 'content-html.mjs',
+    reason: 'HTML-extraction library imported only by content-gate.mjs, documented in content-gate.md',
+  },
+];
+
+const SCRIPT_FILE = /\.(mjs|cjs)$/;
+const TEST_FILE = /\.test\.(mjs|cjs)$/;
+const NAMED_SCRIPT_CALL = /scripts\/([\w.-]+\.(?:mjs|cjs))/g;
+
+export function scriptInvokers(scripts) {
+  const invokers = new Map();
+  for (const [key, command] of Object.entries(scripts)) {
+    for (const [, basename] of command.matchAll(NAMED_SCRIPT_CALL)) {
+      if (!invokers.has(basename)) invokers.set(basename, new Set());
+      invokers.get(basename).add(key);
+    }
+  }
+  return invokers;
+}
+
+export function scriptCoverageFindings({ scriptFiles, skillsText, scripts }) {
+  const invokers = scriptInvokers(scripts);
+  const oneOff = new Set(ONE_OFF_SCRIPTS.map((entry) => entry.name));
+  const findings = [];
+  for (const file of scriptFiles) {
+    if (!SCRIPT_FILE.test(file) || TEST_FILE.test(file)) continue;
+    if (oneOff.has(file) || skillsText.includes(file)) continue;
+    const invokingKeys = [...(invokers.get(file) ?? [])];
+    if (invokingKeys.some((key) => skillsText.includes(key))) continue;
+    findings.push({
+      file: 'site/scripts',
+      rule: 'undocumented-script',
+      detail: `${file} is named by no skill, no documented npm script invokes it, and it carries no one-off declaration`,
+    });
+  }
+  return findings;
+}
+
+export function gateTestScriptFindings({ scripts, skillsText }) {
+  const findings = [];
+  for (const key of Object.keys(scripts)) {
+    if (!/^(gate|test):/.test(key)) continue;
+    if (!skillsText.includes(key)) {
+      findings.push({ file: 'package.json', rule: 'undocumented-npm-script', detail: `"${key}" is named by no skill` });
+    }
+  }
+  return findings;
+}
+
+export function extractCommandsBlock(agentsMdText) {
+  const headingIndex = agentsMdText.indexOf('## Commands');
+  if (headingIndex === -1) return null;
+  const match = agentsMdText.slice(headingIndex).match(/```([\s\S]*?)```/);
+  return match ? match[1] : null;
+}
+
+export function commandsScriptNames(commandsBlockText) {
+  if (!commandsBlockText) return [];
+  const names = [];
+  for (const line of commandsBlockText.split('\n')) {
+    const match = line.match(/npm run (\S+)/);
+    if (match) names.push(match[1]);
+  }
+  return names;
+}
+
+export function agentsCommandsFindings({ agentsMdText, scripts }) {
+  const names = commandsScriptNames(extractCommandsBlock(agentsMdText));
+  return names
+    .filter((name) => !(name in scripts))
+    .map((name) => ({
+      file: 'AGENTS.md',
+      rule: 'missing-npm-script',
+      detail: `"npm run ${name}" has no matching script in package.json`,
+    }));
+}
+
 async function main(skillsDirArg) {
   const siteRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
   const repoRoot = resolve(siteRoot, '..');
   const skillsDir = isAbsolute(skillsDirArg ?? '') ? skillsDirArg : join(siteRoot, '.agents', 'skills');
 
   const findings = await lintSkillsDir(skillsDir, [repoRoot, siteRoot]);
-  for (const finding of findings) console.error(`${finding.file} ${finding.rule} [${finding.detail}]`);
 
-  const fileCount = (await readdir(skillsDir, { recursive: true })).filter((name) =>
-    String(name).endsWith('.md')
-  ).length;
-  console.log(findings.length === 0 ? `skills: ${fileCount} files clean` : `skills: ${findings.length} findings`);
+  const skillFiles = (await readdir(skillsDir, { recursive: true })).filter((name) => String(name).endsWith('.md'));
+  const skillsText = (await Promise.all(skillFiles.map((name) => readFile(join(skillsDir, name), 'utf8')))).join('\n');
+  const { scripts } = JSON.parse(await readFile(join(siteRoot, 'package.json'), 'utf8'));
+  const scriptFiles = await readdir(join(siteRoot, 'scripts'));
+  const agentsMdText = await readFile(join(repoRoot, 'AGENTS.md'), 'utf8');
+
+  findings.push(...gateTestScriptFindings({ scripts, skillsText }));
+  findings.push(...scriptCoverageFindings({ scriptFiles, skillsText, scripts }));
+  findings.push(...agentsCommandsFindings({ agentsMdText, scripts }));
+
+  for (const finding of findings) console.error(`${finding.file} ${finding.rule} [${finding.detail}]`);
+  console.log(
+    findings.length === 0 ? `skills: ${skillFiles.length} files clean` : `skills: ${findings.length} findings`
+  );
   if (findings.length > 0) process.exitCode = 1;
 }
 

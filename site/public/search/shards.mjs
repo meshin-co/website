@@ -1,6 +1,14 @@
 import { buildIndexEntry } from './index-model.mjs';
 
-export const ENTRY_TEXT_CAP = 4096;
+export const ENTRY_TEXT_CAPS = {
+  post: 16384,
+  glossary: 4096,
+  resource: 4096,
+  service: 3072,
+  case: 4096,
+  faq: 1024,
+  page: 4096,
+};
 
 export const KINDS = {
   post: { label: 'Writing', singular: 'article', plural: 'articles' },
@@ -14,7 +22,7 @@ export const KINDS = {
 
 export const shardHref = (kind) => `/search-index-${kind}.json`;
 
-const words = (parts) => parts.filter((part) => typeof part === 'string' && part.trim() !== '').join(' ');
+export const words = (parts) => parts.filter((part) => typeof part === 'string' && part.trim() !== '').join(' ');
 
 const faqPairs = (items = []) => words(items.map(({ q, a }) => `${q} ${a}`));
 
@@ -22,7 +30,8 @@ const outcomeMetrics = ({ metrics = [] } = {}) =>
   words(metrics.map(({ label, before, after }) => `${label} ${before} to ${after}`));
 
 const textFor = {
-  post: ({ keyTakeaways = [], fullAnswer = '', body = '' }) => words([...keyTakeaways, fullAnswer, body]),
+  post: ({ keyTakeaways = [], fullAnswer = '', faq = [], body = '' }) =>
+    words([...keyTakeaways, fullAnswer, faqPairs(faq), body]),
   glossary: ({ shortDefinition = '', definition = '', body = '' }) => words([shortDefinition, definition, body]),
   resource: ({ body = '' }) => words([body]),
   service: ({ shortAnswer = '', deliverables = [], faq = [], body = '' }) =>
@@ -41,7 +50,8 @@ export function buildShardEntry(kind, record) {
     kind: KINDS[kind].label,
     body: textFor[kind](record),
   });
-  return entry.text.length > ENTRY_TEXT_CAP ? { ...entry, text: entry.text.slice(0, ENTRY_TEXT_CAP) } : entry;
+  const cap = ENTRY_TEXT_CAPS[kind];
+  return entry.text.length > cap ? { ...entry, text: entry.text.slice(0, cap) } : entry;
 }
 
 const KIND_ORDER = Object.keys(KINDS);

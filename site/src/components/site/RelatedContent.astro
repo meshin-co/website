@@ -1,0 +1,42 @@
+---
+export interface RelatedItem {
+  label: string;
+  href: string;
+}
+
+export interface RelatedGroup {
+  heading: string;
+  items: RelatedItem[];
+}
+
+interface Props {
+  groups: RelatedGroup[];
+}
+
+const { groups } = Astro.props;
+const visible = groups.filter((group) => group.items.length > 0);
+---
+
+{
+  visible.length > 0 && (
+    <div class="mt-10 grid gap-8 sm:grid-cols-2" data-gate-ignore>
+      {visible.map((group) => (
+        <div>
+          <p class="font-mono text-xs tracking-[0.16em] text-muted uppercase">{group.heading}</p>
+          <ul class="mt-4 flex flex-wrap gap-x-6 gap-y-3">
+            {group.items.map((item) => (
+              <li>
+                <a
+                  class="text-link font-mono text-sm underline decoration-2 underline-offset-4 hover:decoration-primary"
+                  href={item.href}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  )
+}

@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build && node scripts/gen-headers.mjs dist && node scripts/gate.mjs dist budgets.json",
+    "build": "astro build && node scripts/gen-headers.mjs dist && node scripts/generate-static-sidecars.mjs dist && node scripts/search-page-text.mjs dist && node scripts/gate.mjs dist budgets.json",
     "preview": "astro preview",
     "astro": "astro",
     "check": "npm run check:astro && npm run check:eslint && npm run check:prettier",
@@ -33,7 +33,8 @@
     "gate:routes": "node scripts/routes-gate.mjs dist",
     "assets:og-default": "node scripts/generate-og-default.mjs",
     "assets:favicons": "node scripts/generate-favicons.mjs",
-    "gate:lh:one": "rm -rf .lighthouseci && lhci autorun --config=lighthouserc.cjs && node scripts/collect-reports.mjs \"$LHCI_FORM_FACTOR\""
+    "gate:lh:one": "rm -rf .lighthouseci && lhci autorun --config=lighthouserc.cjs && node scripts/collect-reports.mjs \"$LHCI_FORM_FACTOR\"",
+    "assets:robots": "node scripts/gen-robots.mjs"
   },
   "dependencies": {
     "@astro-community/astro-embed-twitter": "^0.5.11",

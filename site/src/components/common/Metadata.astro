@@ -70,9 +70,19 @@ function buildOpenGraph(og: MetaDataOpenGraph): SEOProps['openGraph'] | undefine
   };
 }
 
+const builtOpenGraph = buildOpenGraph(adaptedOg);
+
 const mergedTwitter = merge(
   {
     card: (adaptedOg?.images?.length ? 'summary_large_image' : 'summary') as 'summary_large_image' | 'summary',
+    ...(builtOpenGraph
+      ? {
+          title: builtOpenGraph.basic.title,
+          description: builtOpenGraph.optional?.description,
+          image: builtOpenGraph.image?.url,
+          imageAlt: builtOpenGraph.image?.alt,
+        }
+      : {}),
   },
   METADATA?.twitter
     ? {
@@ -107,7 +117,7 @@ const seoProps: SEOProps = {
         ? !METADATA.robots.follow
         : true,
   description: description || METADATA?.description,
-  openGraph: buildOpenGraph(adaptedOg),
+  openGraph: builtOpenGraph,
   twitter: mergedTwitter,
   surpressWarnings: true,
 };

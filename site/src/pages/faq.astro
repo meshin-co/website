@@ -4,6 +4,7 @@ import { getCollection } from 'astro:content';
 import CtaBlock from '~/components/site/CtaBlock.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
+import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { teaser } from '~/utils/faq-meta.mjs';
@@ -52,6 +53,14 @@ const nodes = [
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
+  <MarkdownAlternate path="/faq" slot="head" />
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title="meshin.co — Questions and answers"
+    href="/faq/rss.xml"
+    slot="head"
+  />
 
   <Breadcrumbs crumbs={crumbs} />
 

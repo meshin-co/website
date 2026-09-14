@@ -51,3 +51,9 @@ maintainer, rival, scale (branch evidence in `audits/phase-4.5/adhd/`). Branches
 findings are scored by cross-frame agreement, where an idea found by two or more independent
 frames is the convergence signal; each finding is dispositioned accept, defer or reject, with
 owner-reopen items listed separately and the plan amended in the same pass.
+
+A plan is called hardened after two such sessions, not two passes inside one session: one when the
+plan is authored, a second over the written plan before execution starts. The second session reads
+the amended plan cold and may reverse a decision from the first — on meshin.co it reversed two and
+re-affirmed the rest verbatim. Evidence for the second session is the six branch reports in
+`audits/phase-4.5/adhd/`.

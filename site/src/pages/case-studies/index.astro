@@ -5,6 +5,7 @@ import CardGrid from '~/components/site/CardGrid.astro';
 import CtaBlock from '~/components/site/CtaBlock.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
+import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
 import PostCard from '~/components/site/PostCard.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
@@ -41,6 +42,14 @@ const nodes = [
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
+  <MarkdownAlternate path="/case-studies" slot="head" />
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title="meshin.co — Case studies"
+    href="/case-studies/rss.xml"
+    slot="head"
+  />
 
   <Breadcrumbs crumbs={crumbs} />
 

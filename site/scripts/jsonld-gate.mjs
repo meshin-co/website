@@ -33,6 +33,60 @@ const ROUTE_TYPES = [
 
 const GRAPH_EXEMPT = new Set(['/404', '/search', '/styleguide']);
 
+export const REQUIRED_PROPERTIES = {
+  Organization: ['name', 'url', 'logo', 'image', 'sameAs', 'contactPoint', 'founder'],
+  Person: ['name', 'jobTitle', 'url', 'worksFor', 'sameAs', 'knowsAbout'],
+  WebSite: ['url', 'name', 'publisher', 'potentialAction'],
+  Service: ['name', 'description', 'serviceType', 'provider', 'areaServed', 'offers', 'inLanguage', 'citation'],
+  BlogPosting: [
+    'url',
+    'headline',
+    'description',
+    'datePublished',
+    'dateModified',
+    'inLanguage',
+    'image',
+    'mainEntityOfPage',
+    'author',
+    'publisher',
+    'citation',
+  ],
+  CreativeWork: [
+    'url',
+    'name',
+    'description',
+    'datePublished',
+    'dateModified',
+    'license',
+    'version',
+    'author',
+    'inLanguage',
+    'isPartOf',
+    'citation',
+  ],
+  SoftwareSourceCode: [
+    'url',
+    'name',
+    'description',
+    'datePublished',
+    'dateModified',
+    'license',
+    'version',
+    'author',
+    'inLanguage',
+    'isPartOf',
+    'citation',
+    'codeRepository',
+  ],
+  DefinedTermSet: ['name', 'url'],
+  DefinedTerm: ['name', 'description', 'url', 'inDefinedTermSet', 'inLanguage', 'citation'],
+  CollectionPage: ['url', 'name', 'isPartOf'],
+  FAQPage: ['mainEntity'],
+  ProfilePage: ['url', 'name', 'mainEntity', 'isPartOf'],
+  ContactPage: ['url', 'name', 'mainEntity', 'isPartOf'],
+  BreadcrumbList: ['itemListElement'],
+};
+
 export function extractGraphs(html) {
   const graphs = [];
   for (const [, body] of html.matchAll(LD_BLOCK)) {
@@ -83,6 +137,36 @@ export function missingTypes(graphs, required) {
   return required.filter((type) => !type.split('|').some((option) => present.has(option)));
 }
 
+export function missingProperties(graphs, required) {
+  const byType = new Map();
+  for (const node of nodesOf(graphs)) {
+    for (const type of [node['@type']].flat()) {
+      if (!byType.has(type)) byType.set(type, []);
+      byType.get(type).push(node);
+    }
+  }
+
+  const failures = [];
+  for (const type of required) {
+    const options = type.split('|');
+    const presentOption = options.find((option) => byType.has(option));
+    if (!presentOption) continue;
+    const requiredProps = REQUIRED_PROPERTIES[presentOption];
+    if (!requiredProps) {
+      failures.push(`${presentOption} matches no known jsonld property family`);
+      continue;
+    }
+    for (const node of byType.get(presentOption)) {
+      for (const prop of requiredProps) {
+        if (node[prop] === undefined || node[prop] === null) {
+          failures.push(`${presentOption} node ${node['@id'] ?? '(no id)'} is missing required property ${prop}`);
+        }
+      }
+    }
+  }
+  return failures;
+}
+
 export const requiredTypesFor = (route) => ROUTE_TYPES.find(({ pattern }) => pattern.test(route))?.types;
 
 export async function main(distDir) {
@@ -111,6 +195,7 @@ export async function main(distDir) {
     for (const id of danglingIds(graphs)) failures.push(`${route} references undeclared ${id}`);
     for (const id of duplicateIds(graphs)) failures.push(`${route} declares ${id} twice`);
     for (const type of missingTypes(graphs, required)) failures.push(`${route} has no ${type} node`);
+    for (const failure of missingProperties(graphs, required)) failures.push(`${route} ${failure}`);
   }
 
   console.log(`jsonld: ${checked} of ${routes.length} routes carry a graph`);

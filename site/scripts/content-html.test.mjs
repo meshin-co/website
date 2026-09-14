@@ -106,3 +106,22 @@ test('a hex entity decodes, so an escaped ampersand is not read as a number', ()
 
   assert.equal(page.paragraphs[0], 'AI Readiness & Risk Assessment.');
 });
+
+test('a rendered date inside an ignored chrome block still counts as the updated date', () => {
+  const html = [
+    '<main>',
+    '<p>Real prose that the gate judges.</p>',
+    '<p data-gate-ignore>Published <time datetime="2026-09-01">1 September 2026</time>',
+    ' &middot; Updated <time datetime="2026-09-14">14 September 2026</time></p>',
+    '</main>',
+  ].join('');
+  const page = extractPage('/x', html);
+  assert.equal(page.updated, '2026-09-14');
+  assert.ok(!page.text.includes('Published'));
+});
+
+test('the newest rendered date wins, not the first one in the markup', () => {
+  const html =
+    '<main><p data-gate-ignore>Published <time datetime="2026-01-02">x</time> &middot; Updated <time datetime="2026-08-09">y</time></p></main>';
+  assert.equal(extractPage('/x', html).updated, '2026-08-09');
+});

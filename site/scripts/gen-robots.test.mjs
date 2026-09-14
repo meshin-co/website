@@ -8,8 +8,30 @@ import { test } from 'node:test';
 import { disallowedPaths, renderRobots } from './gen-robots.mjs';
 
 const SITE_ROOT = fileURLToPath(new URL('..', import.meta.url));
-const TRAINING_AGENTS = ['GPTBot', 'ClaudeBot', 'Google-Extended', 'CCBot', 'PerplexityBot'];
-const RETRIEVAL_AGENTS = ['OAI-SearchBot', 'Claude-SearchBot', 'Claude-User', 'Perplexity-User'];
+const TRAINING_AGENTS = [
+  'GPTBot',
+  'ClaudeBot',
+  'Google-Extended',
+  'CCBot',
+  'PerplexityBot',
+  'Applebot-Extended',
+  'meta-externalagent',
+  'Bytespider',
+  'Diffbot',
+  'cohere-ai',
+];
+const RETRIEVAL_AGENTS = [
+  'OAI-SearchBot',
+  'Claude-SearchBot',
+  'Claude-User',
+  'Perplexity-User',
+  'ChatGPT-User',
+  'Amazonbot',
+  'ImagesiftBot',
+  'Timpibot',
+  'YouBot',
+];
+const SEARCH_AGENTS = ['Googlebot', 'Bingbot', 'Applebot'];
 
 function parseRobots(text) {
   const groups = [];
@@ -39,11 +61,11 @@ test('the star group disallows exactly search and styleguide', () => {
   assert.deepEqual(disallows, ['/search', '/styleguide']);
 });
 
-test('a named group replaces the star group for that agent, so every AI agent repeats the star disallows', () => {
+test('a named group replaces the star group for that agent, so every AI and search agent repeats the star disallows', () => {
   const parsed = parseRobots(renderRobots(['/search', '/styleguide']));
   const expectedDisallows = groupFor(parsed, 'some-unknown-bot').disallows;
 
-  for (const agent of [...TRAINING_AGENTS, ...RETRIEVAL_AGENTS]) {
+  for (const agent of [...TRAINING_AGENTS, ...RETRIEVAL_AGENTS, ...SEARCH_AGENTS]) {
     const group = groupFor(parsed, agent);
     assert.ok(group, `${agent} has no group`);
     assert.deepEqual(group.allows, ['/'], `${agent} must be allowed site-wide`);
@@ -53,10 +75,43 @@ test('a named group replaces the star group for that agent, so every AI agent re
 
 test('an unlisted agent resolves to the star group', () => {
   const parsed = parseRobots(renderRobots(['/search', '/styleguide']));
-  const star = groupFor(parsed, 'Googlebot');
+  const star = parsed.groups.find((group) => group.agents.includes('*'));
 
-  assert.equal(groupFor(parsed, 'Bingbot'), star);
-  assert.equal(groupFor(parsed, 'Amazonbot'), star);
+  assert.equal(groupFor(parsed, 'SomeUnlistedBot'), star);
+  assert.equal(groupFor(parsed, 'RandomCrawler'), star);
+});
+
+test('the crawler register names exactly this pinned set of agents, in this order, so silence is never a decision', () => {
+  const parsed = parseRobots(renderRobots(['/search', '/styleguide']));
+
+  assert.deepEqual(
+    parsed.groups.map((group) => group.agents[0]),
+    [
+      '*',
+      'gptbot',
+      'claudebot',
+      'google-extended',
+      'ccbot',
+      'perplexitybot',
+      'applebot-extended',
+      'meta-externalagent',
+      'bytespider',
+      'diffbot',
+      'cohere-ai',
+      'oai-searchbot',
+      'claude-searchbot',
+      'claude-user',
+      'perplexity-user',
+      'chatgpt-user',
+      'amazonbot',
+      'imagesiftbot',
+      'timpibot',
+      'youbot',
+      'googlebot',
+      'bingbot',
+      'applebot',
+    ]
+  );
 });
 
 test('blog tag routes stay crawlable for every agent (L31)', () => {

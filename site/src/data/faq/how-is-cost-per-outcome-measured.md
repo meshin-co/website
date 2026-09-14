@@ -1,6 +1,6 @@
 ---
 question: 'How is cost per outcome measured?'
-answer: 'On a dashboard built during the Sprint. Total spend on the workflow, model calls included, divided by how many times it produced the outcome you defined before the Sprint started. It sits next to tracing, so if the number moves, you can see whether it moved because of volume, a model change, or a genuine quality problem.'
+answer: 'On a dashboard built during the Sprint. Total spend on the workflow, model calls included, divided by how many times it produced the outcome. You define that outcome before the Sprint starts. The number sits next to tracing. So when it moves, you can see why: volume, a model change, or a real quality problem.'
 publishDate: 2026-09-12
 updatedDate: 2026-09-12
 category: executive

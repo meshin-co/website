@@ -1,7 +1,7 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import type { CollectionEntry } from 'astro:content';
-import { getCollection, render } from 'astro:content';
+import { getCollection, getEntries, render } from 'astro:content';
 
 import CtaBlock from '~/components/site/CtaBlock.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
@@ -12,8 +12,18 @@ import Section from '~/components/site/Section.astro';
 import SourceList from '~/components/site/SourceList.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { articleMetadata } from '~/utils/machine-links.mjs';
-import { orgNode, personNode, resourceNode } from '~/utils/jsonld.mjs';
+import {
+  glossaryStub,
+  imageObject,
+  orgNode,
+  personNode,
+  resourceEntityLinks,
+  resourceNode,
+  websiteNode,
+} from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+import RelatedContent from '~/components/site/RelatedContent.astro';
+import { firstMention, resolveByIds } from '~/utils/related-content.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const resources = await getCollection('resource');
@@ -27,6 +37,10 @@ interface Props {
 const { resource } = Astro.props;
 const { data } = resource;
 const { Content } = await render(resource);
+const terms = (await getCollection('glossary', ({ data: term }) => !term.draft)).map((entry) => ({
+  id: entry.id,
+  term: entry.data.term,
+}));
 const site = import.meta.env.SITE.replace(/\/$/, '');
 
 const metadata = articleMetadata(site, {
@@ -46,10 +60,32 @@ const crumbs = [
   { name: data.name, path: `/resources/${resource.id}` },
 ];
 
+const resourceForLinks = { id: resource.id, ...data, body: resource.body };
+const { about, mentions } = resourceEntityLinks(resourceForLinks, terms);
+const citedTermIds = [...new Set([...about, ...mentions])];
+
+const relatedTerms = resolveByIds(citedTermIds, terms);
+const relatedPostEntries = data.relatedPosts.length > 0 ? await getEntries(data.relatedPosts) : [];
+const entityCandidates = relatedTerms.map((term) => ({ name: term.term, href: `/glossary/${term.id}` }));
+const linkedHowToUse = firstMention(data.howToUse, entityCandidates);
+
+const relatedGroups = [
+  {
+    heading: 'Related terms',
+    items: relatedTerms.map((term) => ({ label: term.term, href: `/glossary/${term.id}` })),
+  },
+  {
+    heading: 'Related posts',
+    items: relatedPostEntries.map((post) => ({ label: post.data.title, href: `/blog/${post.id}` })),
+  },
+];
+
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
-  resourceNode(site, { id: resource.id, ...data }),
+  websiteNode(site),
+  ...resolveByIds(citedTermIds, terms).map((term) => glossaryStub(site, term)),
+  resourceNode(site, resourceForLinks, { about, mentions, image: imageObject(metadata.openGraph.images[0]) }),
 ];
 ---
 
@@ -58,43 +94,80 @@ const nodes = [
 
   <Breadcrumbs crumbs={crumbs} />
   <MarkdownAlternate path={`/resources/${resource.id}`} slot="head" />
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title="meshin.co — Resources"
+    href="/resources/rss.xml"
+    slot="head"
+  />
 
-  <Section
-    bordered={false}
-    headingLevel={1}
-    eyebrow={`${data.type} · v${data.version} · ${data.license}`}
-    title={data.name}
-    lead={data.description}
-  >
-    <p class="font-mono text-sm text-muted">{data.status}</p>
-  </Section>
+  <article>
+    <Section
+      bordered={false}
+      headingLevel={1}
+      eyebrow={`${data.type} · v${data.version} · ${data.license}`}
+      title={data.name}
+      lead={data.description}
+    >
+      <p class="font-mono text-sm text-muted">{data.status}</p>
+      <p class="mt-6 font-mono text-xs text-muted" data-gate-ignore>
+        Published{' '}
+        <time datetime={data.publishDate.toISOString().slice(0, 10)}>
+          {data.publishDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+        </time>
+        {' · Updated '}
+        <time datetime={data.updatedDate.toISOString().slice(0, 10)}>
+          {data.updatedDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+        </time>
+      </p>
+    </Section>
 
-  <Section eyebrow="Contents" title="What is inside" tone="surface">
-    <KeyTakeaways label="Inside the kit" points={data.whatInside} />
-  </Section>
+    <Section eyebrow="Contents" title="What is inside" tone="surface">
+      <KeyTakeaways label="Inside the kit" points={data.whatInside} />
+    </Section>
 
-  <Section eyebrow="Usage" title="How to use it">
-    <p class="max-w-[68ch] text-lg leading-relaxed text-muted">{data.howToUse}</p>
-    {
-      data.repoUrl && (
-        <p class="mt-8">
-          <a class="btn-primary" href={data.repoUrl} target="_blank" rel="noopener">
-            Open the repository
-          </a>
-        </p>
-      )
-    }
-  </Section>
+    <Section eyebrow="Usage" title="How to use it">
+      <p class="max-w-[68ch] text-lg leading-relaxed text-muted">
+        {
+          linkedHowToUse ? (
+            <>
+              {linkedHowToUse.before}
+              <a
+                class="text-link underline decoration-2 underline-offset-4 hover:decoration-primary"
+                href={linkedHowToUse.href}
+              >
+                {linkedHowToUse.matched}
+              </a>
+              {linkedHowToUse.after}
+            </>
+          ) : (
+            data.howToUse
+          )
+        }
+      </p>
+      {
+        data.repoUrl && (
+          <p class="mt-8">
+            <a class="btn-primary" href={data.repoUrl} target="_blank" rel="noopener">
+              Open the repository
+            </a>
+          </p>
+        )
+      }
+    </Section>
 
-  <Section eyebrow="Detail" title="In my words">
-    <div class="prose-brief prose-brief-headings max-w-[68ch]">
-      <Content />
-    </div>
-  </Section>
+    <Section eyebrow="Detail" title="In my words">
+      <div class="prose-brief prose-brief-headings max-w-[68ch]">
+        <Content />
+      </div>
+    </Section>
 
-  <Section eyebrow="Provenance" title="Sources">
-    <SourceList sources={data.sources} />
-  </Section>
+    <Section eyebrow="Provenance" title="Sources and neighbours">
+      <SourceList sources={data.sources} />
+      <RelatedContent groups={relatedGroups} />
+    </Section>
+  </article>
 
   <Section title="Next step">
     <CtaBlock

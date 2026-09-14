@@ -12,7 +12,16 @@ import Section from '~/components/site/Section.astro';
 import ShiftPanel from '~/components/site/ShiftPanel.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { articleMetadata } from '~/utils/machine-links.mjs';
-import { orgNode, personNode, postNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import {
+  glossaryStub,
+  imageObject,
+  orgNode,
+  personNode,
+  postEntityLinks,
+  postNode,
+  webPageNode,
+  websiteNode,
+} from '~/utils/jsonld.mjs';
 import { countWords } from '~/utils/content-rules.mjs';
 import { lastmod } from '~/utils/lastmod.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
@@ -30,6 +39,10 @@ const { entry } = Astro.props;
 const { data } = entry;
 const { Content } = await render(entry);
 const offer = await getEntry(data.offer);
+const terms = (await getCollection('glossary', ({ data: term }) => !term.draft)).map((glossaryEntry) => ({
+  id: glossaryEntry.id,
+  term: glossaryEntry.data.term,
+}));
 const site = import.meta.env.SITE.replace(/\/$/, '');
 
 const metadata = articleMetadata(site, {
@@ -49,27 +62,36 @@ const crumbs = [
   { name: data.title, path: `/case-studies/${entry.id}` },
 ];
 
+const postForLinks = {
+  id: entry.id,
+  ...data,
+  category: 'operating-model',
+  section: 'case-studies',
+  sources: [],
+  tags: data.stack,
+  wordCount: countWords((entry.body ?? '').replace(/[#>*_`[\]()!-]/g, ' ')),
+  body: entry.body,
+};
+const { about, mentions } = postEntityLinks(postForLinks, terms);
+const citedTermIds = [...new Set([...about, ...mentions])];
+
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
   websiteNode(site),
-  postNode(
-    site,
-    {
-      id: entry.id,
-      ...data,
-      category: 'operating-model',
-      section: 'case-studies',
-      sources: [],
-      tags: data.stack,
-      wordCount: countWords((entry.body ?? '').replace(/[#>*_`[\]()!-]/g, ' ')),
-    },
-    { basePath: '/case-studies', ogCollection: 'case' }
+  ...citedTermIds.map((id) =>
+    glossaryStub(
+      site,
+      terms.find((term) => term.id === id)
+    )
   ),
+  postNode(site, postForLinks, { basePath: '/case-studies', ogCollection: 'case', about, mentions }),
   webPageNode(
     site,
     `/case-studies/${entry.id}`,
-    lastmod({ publishDate: data.publishDate, updatedDate: data.updatedDate })
+    lastmod({ publishDate: data.publishDate, updatedDate: data.updatedDate }),
+    data.title,
+    { image: imageObject(metadata.openGraph.images[0]) }
   ),
 ];
 ---
@@ -79,44 +101,64 @@ const nodes = [
 
   <Breadcrumbs crumbs={crumbs} />
   <MarkdownAlternate path={`/case-studies/${entry.id}`} slot="head" />
-
-  <Section
-    bordered={false}
-    headingLevel={1}
-    eyebrow={[data.client.industry, data.client.size, data.duration].filter(Boolean).join(' · ')}
-    title={data.title}
-    lead={data.description}
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title="meshin.co — Case studies"
+    href="/case-studies/rss.xml"
+    slot="head"
   />
 
-  {
-    data.outcome.metrics.length > 0 && (
-      <Section eyebrow="Numbers" title="Before and after" tone="surface">
-        <CaseMetrics
-          metrics={data.outcome.metrics}
-          note={data.anonymized ? 'Client name withheld at their request.' : 'Published with permission.'}
-        />
-      </Section>
-    )
-  }
+  <article>
+    <Section
+      bordered={false}
+      headingLevel={1}
+      eyebrow={[data.client.industry, data.client.size, data.duration].filter(Boolean).join(' · ')}
+      title={data.title}
+      lead={data.description}
+    >
+      <p class="font-mono text-xs text-muted" data-gate-ignore>
+        Published{' '}
+        <time datetime={data.publishDate.toISOString().slice(0, 10)}>
+          {data.publishDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+        </time>
+        {' · Updated '}
+        <time datetime={data.updatedDate.toISOString().slice(0, 10)}>
+          {data.updatedDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+        </time>
+      </p>
+    </Section>
 
-  <Section eyebrow="Shape" title="Problem and approach">
-    <ShiftPanel
-      before={{ label: 'The problem', items: [data.problem] }}
-      after={{ label: 'The approach', items: [data.approach] }}
-    />
-  </Section>
+    {
+      data.outcome.metrics.length > 0 && (
+        <Section eyebrow="Numbers" title="Before and after" tone="surface">
+          <CaseMetrics
+            metrics={data.outcome.metrics}
+            note={data.anonymized ? 'Client name withheld at their request.' : 'Published with permission.'}
+          />
+        </Section>
+      )
+    }
 
-  <Section eyebrow="Stack" title="What it runs on">
-    <ul class="flex flex-wrap gap-x-8 gap-y-3">
-      {data.stack.map((item) => <li class="font-mono text-sm text-muted">{item}</li>)}
-    </ul>
-  </Section>
+    <Section eyebrow="Shape" title="Problem and approach">
+      <ShiftPanel
+        before={{ label: 'The problem', items: [data.problem] }}
+        after={{ label: 'The approach', items: [data.approach] }}
+      />
+    </Section>
 
-  <Section eyebrow="Detail" title="In my words" tone="surface">
-    <div class="prose-brief prose-brief-headings max-w-[68ch]">
-      <Content />
-    </div>
-  </Section>
+    <Section eyebrow="Stack" title="What it runs on">
+      <ul class="flex flex-wrap gap-x-8 gap-y-3">
+        {data.stack.map((item) => <li class="font-mono text-sm text-muted">{item}</li>)}
+      </ul>
+    </Section>
+
+    <Section eyebrow="Detail" title="In my words" tone="surface">
+      <div class="prose-brief prose-brief-headings max-w-[68ch]">
+        <Content />
+      </div>
+    </Section>
+  </article>
 
   <Section title="Next step">
     {

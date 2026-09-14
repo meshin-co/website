@@ -4,6 +4,13 @@ import { glob } from 'astro/loaders';
 
 import { postTagSchema } from '~/data/tags.mjs';
 import { countWords, isNotBeforePublish, isWithinWordRange, ogTitleSchema } from '~/utils/content-rules.mjs';
+import {
+  DESCRIPTION_MAX_CHARS,
+  DESCRIPTION_MIN_CHARS,
+  TITLE_ROOM_CHARS,
+  faqDescription,
+  isDescriptionInRange,
+} from '~/utils/faq-meta.mjs';
 
 const CATEGORIES = ['governance', 'agentic-architecture', 'operating-model', 'executive'] as const;
 
@@ -162,7 +169,16 @@ const faqCollection = defineCollection({
   schema: z
     .object({
       question: ogTitleSchema,
+      shortTitle: z
+        .string()
+        .max(TITLE_ROOM_CHARS, { message: `must be ${TITLE_ROOM_CHARS} characters or fewer` })
+        .optional(),
       answer: z.string().refine((value) => countWords(value) <= 80, { message: 'must be 80 words or fewer' }),
+      description: z
+        .string()
+        .min(DESCRIPTION_MIN_CHARS, { message: `must be ${DESCRIPTION_MIN_CHARS} characters or more` })
+        .max(DESCRIPTION_MAX_CHARS, { message: `must be ${DESCRIPTION_MAX_CHARS} characters or fewer` })
+        .optional(),
       category: z.enum([...CATEGORIES, 'general']),
       relatedPage: z.string().optional(),
       sources: z.array(source).optional(),
@@ -172,7 +188,14 @@ const faqCollection = defineCollection({
       draft: z.boolean().default(false),
       noindex: z.boolean().default(false),
     })
-    .refine(datesInOrder, datesInOrderMessage),
+    .refine(datesInOrder, datesInOrderMessage)
+    .refine(
+      (entry) => entry.description !== undefined || isDescriptionInRange(faqDescription(entry.question, entry.answer)),
+      {
+        message: `computed description must be ${DESCRIPTION_MIN_CHARS}–${DESCRIPTION_MAX_CHARS} characters`,
+        path: ['description'],
+      }
+    ),
 });
 
 const authorCollection = defineCollection({

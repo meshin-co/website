@@ -5,7 +5,7 @@ import {
   absoluteUrl,
   stripMarkdown,
   renderLlmsTxt,
-  renderLlmsIndex,
+  renderLlmsFull,
   renderLlmsCollection,
   publicIndexableStaticPages,
   buildFeedItems,
@@ -14,6 +14,9 @@ import {
   renderSidecar,
   collectionHubs,
   liveTopicMap,
+  sidecarFileForRoute,
+  sidecarRoutes,
+  HUB_PAGES,
 } from './machine-text.mjs';
 import { lastmod } from './lastmod.mjs';
 
@@ -185,36 +188,70 @@ test('renderLlmsCollection never emits a draft or noindex entry', () => {
   assert.ok(!output.includes('# Hidden'));
 });
 
-test('renderLlmsIndex lists every file with its entry count and latest date', () => {
-  const files = [
-    { title: 'Offers — full text', url: `${ORIGIN}/llms/service.txt`, count: 3, updated: '2026-09-01T00:00:00.000Z' },
-    { title: 'Writing — full text', url: `${ORIGIN}/llms/post.txt`, count: 12, updated: '2026-09-05T08:00:00.000Z' },
+test('renderLlmsFull carries the actual full body text of every collection, not just links to it', () => {
+  const sections = [
     {
-      title: 'Questions and answers — full text',
-      url: `${ORIGIN}/llms/faq.txt`,
-      count: 25,
-      updated: '2026-08-30T00:00:00.000Z',
+      title: 'Offers',
+      entries: [
+        {
+          title: 'Assessment',
+          url: `${ORIGIN}/services/assessment`,
+          summary: 'Two weeks.',
+          body: 'The full write-up of the assessment offer.',
+          updated: '2026-09-01T00:00:00.000Z',
+        },
+      ],
+    },
+    {
+      title: 'Questions and answers',
+      entries: [
+        {
+          title: 'How do you charge?',
+          url: `${ORIGIN}/faq/how-do-you-charge`,
+          summary: 'Fixed structures.',
+          body: 'Three fixed structures, no hourly billing.',
+          updated: '2026-09-12T00:00:00.000Z',
+        },
+      ],
     },
   ];
-  const output = renderLlmsIndex({ site: 'meshin.co', files });
-  assert.ok(output.startsWith('# meshin.co\n\n- [Offers — full text]'));
-  assert.ok(
-    output.includes(
-      '- [Writing — full text](https://meshin.co/llms/post.txt): 12 entries, updated 2026-09-05T08:00:00.000Z'
-    )
-  );
-  assert.equal(output.split('\n').filter((line) => line.startsWith('- [')).length, 3);
+  const output = renderLlmsFull({ site: 'meshin.co', sections });
+
+  assert.ok(output.startsWith('# meshin.co\n\n## Offers'));
+  assert.ok(output.includes('The full write-up of the assessment offer.'));
+  assert.ok(output.includes('## Questions and answers'));
+  assert.ok(output.includes('Three fixed structures, no hourly billing.'));
 });
 
-test('renderLlmsIndex uses the singular for one entry and omits an absent date', () => {
-  const files = [{ title: 'Glossary — full text', url: `${ORIGIN}/llms/glossary.txt`, count: 1 }];
-  const output = renderLlmsIndex({ site: 'meshin.co', files });
-  assert.ok(output.includes('- [Glossary — full text](https://meshin.co/llms/glossary.txt): 1 entry'));
-  assert.ok(!output.includes('updated'));
+test('renderLlmsFull never emits a draft or noindex entry', () => {
+  const sections = [
+    {
+      title: 'Writing',
+      entries: [
+        { title: 'Live', url: `${ORIGIN}/blog/live`, summary: 's', body: 'Live body.', updated: null },
+        { title: 'Draft', url: `${ORIGIN}/blog/draft`, summary: 's', body: 'Draft body.', updated: null, draft: true },
+        {
+          title: 'Hidden',
+          url: `${ORIGIN}/blog/hidden`,
+          summary: 's',
+          body: 'Hidden body.',
+          updated: null,
+          noindex: true,
+        },
+      ],
+    },
+  ];
+  const output = renderLlmsFull({ site: 'meshin.co', sections });
+
+  assert.ok(output.includes('Live body.'));
+  assert.ok(!output.includes('Draft body.'));
+  assert.ok(!output.includes('Hidden body.'));
 });
 
-test('renderLlmsIndex with no files is just the site header', () => {
-  assert.equal(renderLlmsIndex({ site: 'meshin.co', files: [] }), '# meshin.co\n');
+test('renderLlmsFull omits a section heading body when its collection has no live entries, and ends with one newline', () => {
+  const output = renderLlmsFull({ site: 'meshin.co', sections: [{ title: 'Case studies', entries: [] }] });
+
+  assert.equal(output, '# meshin.co\n\n## Case studies\n');
 });
 
 test('publicIndexableStaticPages never lists the noindex static pages', () => {
@@ -404,6 +441,44 @@ test('mergeWithKindFloor keeps evergreen kinds in the merged window when a newer
   );
 });
 
+test('mergeWithKindFloor guarantees every kind reaches its floor even when one large kind shares the single newest date across the whole merge window', () => {
+  const kind = (name, count, date) =>
+    Array.from({ length: count }, (_, i) => ({
+      id: `${name}-${i}`,
+      url: `${ORIGIN}/${name}/${i}`,
+      title: `${name} ${i}`,
+      summary: 's',
+      body: 'b',
+      publishDate: date,
+      updatedDate: date,
+      kind: name,
+    }));
+  const entries = [
+    ...kind('faq', 25, '2026-09-12'),
+    ...kind('post', 4, '2026-09-08'),
+    ...kind('service', 3, '2026-09-08'),
+    ...kind('resource', 5, '2026-09-08'),
+    ...kind('case', 1, '2026-09-08'),
+    ...kind('glossary', 30, '2026-09-08'),
+  ];
+
+  const merged = mergeWithKindFloor(entries);
+  const counts = new Map();
+  for (const entry of merged) counts.set(entry.kind, (counts.get(entry.kind) ?? 0) + 1);
+
+  for (const [name, count] of [
+    ['faq', 25],
+    ['post', 4],
+    ['service', 3],
+    ['resource', 5],
+    ['case', 1],
+    ['glossary', 30],
+  ]) {
+    const floor = Math.min(5, count);
+    assert.ok((counts.get(name) ?? 0) >= floor, `${name} carries ${counts.get(name) ?? 0}, floor is ${floor}`);
+  }
+});
+
 test('mergeWithKindFloor keeps every entry of a kind smaller than the floor and never caps a small site', () => {
   const entries = [
     {
@@ -506,6 +581,46 @@ test('collectionHubs keeps every collection when no static page already covers i
   ];
   const hubs = collectionHubs({ collections, staticPaths: new Set(['/faq']) });
   assert.deepEqual(hubs, collections);
+});
+
+test('sidecarFileForRoute maps a leaf route onto a dist-relative markdown file path', () => {
+  assert.equal(sidecarFileForRoute('/glossary/evals'), 'glossary/evals.md');
+});
+
+test('sidecarFileForRoute maps the root route onto index.md, never a bare .md file', () => {
+  assert.equal(sidecarFileForRoute('/'), 'index.md');
+});
+
+test('sidecarRoutes carries every public static page plus every collection hub not already a static page', () => {
+  const paths = sidecarRoutes().map((page) => page.path);
+  for (const staticPath of publicIndexableStaticPages().map((page) => page.path)) {
+    assert.ok(paths.includes(staticPath), `${staticPath} missing from sidecarRoutes`);
+  }
+  for (const hub of ['/blog', '/glossary', '/resources', '/services', '/case-studies']) {
+    assert.ok(paths.includes(hub), `${hub} missing from sidecarRoutes`);
+  }
+});
+
+test('sidecarRoutes never lists a hub twice when its base is already a static page path', () => {
+  const paths = sidecarRoutes().map((page) => page.path);
+  assert.equal(paths.filter((path) => path === '/faq').length, 1);
+});
+
+test('sidecarRoutes drops a caller-supplied hub whose base a static page already covers', () => {
+  const staticPages = [{ path: '/about', title: 'About', description: 'd' }];
+  const hubs = [
+    { base: '/about', title: 'wrong', description: 'wrong' },
+    { base: '/blog', title: 'Writing', description: 'd2' },
+  ];
+  const paths = sidecarRoutes({ staticPages, hubs }).map((page) => page.path);
+  assert.deepEqual(paths, ['/about', '/blog']);
+});
+
+test('every HUB_PAGES entry carries a non-empty title and description', () => {
+  for (const hub of HUB_PAGES) {
+    assert.ok(hub.title.length > 0, `${hub.base} has no title`);
+    assert.ok(hub.description.length > 0, `${hub.base} has no description`);
+  }
 });
 
 test('liveTopicMap groups posts by a single-value key and keeps the newest updated stamp', () => {

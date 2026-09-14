@@ -56,3 +56,16 @@ Reach for an existing utility before writing classes: `eyebrow`, `figure-num`, `
 2. `node scripts/gate.mjs dist budgets.json` — CSS is capped at 20 KB gzip. Tailwind scans every
    file under `src/`, so an unused component costs real bytes; delete it rather than parking it.
 3. Look at `/styleguide` in a browser at 375 px and 1440 px before claiming a component is done.
+
+## Leaf body landmarks and dates (L42–L45)
+
+Every entry-level leaf (blog post, FAQ leaf, glossary term, resource, service, case study) wraps
+its body — everything between the breadcrumb and the final "Next step" CTA band — in a single
+`<article>`. A sibling's related-content block for the same template lands inside that
+`<article>` too; never split the body across two landmarks for one entry.
+
+Every dated family renders a visible `Published … · Updated …` line with real `<time datetime>`
+elements next to the primary answer or lead paragraph, even when both dates are identical. This
+is in addition to, not instead of, the `article:published_time`/`article:modified_time` head
+meta already emitted from the same `publishDate`/`updatedDate` — a family that only has one
+cannot claim the other.

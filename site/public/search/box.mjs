@@ -19,7 +19,12 @@ function load() {
         return response.json();
       })
     )
-  ).then((shards) => shards.flat());
+  )
+    .then((shards) => shards.flat())
+    .catch((error) => {
+      loading = undefined;
+      throw error;
+    });
   return loading;
 }
 

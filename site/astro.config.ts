@@ -16,11 +16,16 @@ import astrowind from './vendor/integration';
 
 import { readingTimeRemarkPlugin } from './src/utils/frontmatter';
 import { rehypeExternalLinks, rehypeHeadingAnchors, rehypeScrollableTables } from './src/utils/pipeline.mjs';
-import { collectionLastmods } from './src/utils/sitemap-lastmod.mjs';
+import { siteLastmods } from './src/utils/sitemap-lastmod.mjs';
+import { publicIndexableStaticPages } from './src/utils/machine-text.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const LASTMODS = (await collectionLastmods(path.resolve(__dirname, 'src/data'))) as Record<string, string>;
+const LASTMODS = (await siteLastmods({
+  dataDir: path.resolve(__dirname, 'src/data'),
+  staticPages: publicIndexableStaticPages(),
+  cwd: __dirname,
+})) as Record<string, string>;
 
 export default defineConfig({
   output: 'static',
@@ -61,8 +66,10 @@ export default defineConfig({
   integrations: [
     sitemap({
       filter: (page) => !/\/styleguide|\/search|\/blog\/page\/|\/blog\/category\/[^/]+\/page\//.test(page),
+      namespaces: { news: false, image: false, video: false },
       serialize: (item) => {
-        const route = new URL(item.url).pathname.replace(/\/$/, '');
+        const pathname = new URL(item.url).pathname;
+        const route = pathname === '/' ? pathname : pathname.replace(/\/$/, '');
         const modified = LASTMODS[route];
         return modified ? ({ ...item, lastmod: new Date(modified) } as unknown as typeof item) : item;
       },

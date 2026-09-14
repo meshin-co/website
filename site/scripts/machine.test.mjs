@@ -6,9 +6,14 @@ import {
   llmsRouteGaps,
   publicCollections,
   missingFromGenerator,
+  sidecarCandidateRoutes,
   sidecarGaps,
+  sidecarContentGaps,
+  hubFeedLinkGaps,
   feedCoverageFailures,
   indexableCoverageGaps,
+  sizeGuardFailure,
+  lastmodCoverageGaps,
   COLLECTION_BASES,
 } from './machine.mjs';
 
@@ -65,9 +70,79 @@ test('a generator covering every public collection including faq reports nothing
 });
 
 test('a page whose markdown sidecar was not built is reported', () => {
-  const gaps = sidecarGaps(['/blog/a-post', '/glossary/evals', '/about'], ['blog/a-post.md']);
+  const gaps = sidecarGaps(['/blog/a-post', '/glossary/evals', '/about'], { '/blog/a-post': '# A post\n\nbody' });
 
-  assert.deepEqual(gaps, ['/glossary/evals.md']);
+  assert.deepEqual(gaps, ['/glossary/evals.md', '/about.md']);
+});
+
+test('sidecarGaps also requires a sidecar for a collection hub page, not only its leaves', () => {
+  const gaps = sidecarGaps(['/blog', '/blog/a-post'], { '/blog/a-post': '# A post\n\nbody' });
+
+  assert.deepEqual(gaps, ['/blog.md']);
+});
+
+test('sidecarCandidateRoutes never asks for a sidecar on a noindex-only helper route like /blog/tags reserved slugs', () => {
+  const candidates = sidecarCandidateRoutes(['/blog/tag/governance', '/blog/category/governance', '/blog/a-post']);
+  assert.deepEqual(candidates, ['/blog/a-post']);
+});
+
+const SIDECAR = (overrides = {}) =>
+  [
+    `# ${overrides.title ?? 'About Dmitri Meshin'}`,
+    '',
+    '> A description.',
+    '',
+    `Source: ${overrides.source ?? 'https://meshin.co/about'}`,
+    `Updated: ${overrides.updated ?? '2026-09-05'}`,
+    '',
+    '---',
+    '',
+    overrides.body ?? 'Real body prose about the page.',
+  ].join('\n');
+
+test('sidecarContentGaps reports nothing for a sidecar carrying a title, matching canonical, a dated line and real prose', () => {
+  const gaps = sidecarContentGaps(['/about'], { '/about': SIDECAR() }, { site: 'https://meshin.co' });
+  assert.deepEqual(gaps, []);
+});
+
+test('sidecarContentGaps reports a sidecar whose body is empty even though the file exists', () => {
+  const gaps = sidecarContentGaps(['/about'], { '/about': SIDECAR({ body: '' }) }, { site: 'https://meshin.co' });
+  assert.deepEqual(gaps, ['sidecar for /about body is empty']);
+});
+
+test('sidecarContentGaps reports a sidecar whose canonical does not match its own route', () => {
+  const gaps = sidecarContentGaps(
+    ['/about'],
+    { '/about': SIDECAR({ source: 'https://meshin.co/wrong-page' }) },
+    { site: 'https://meshin.co' }
+  );
+  assert.deepEqual(gaps, [
+    'sidecar for /about canonical is https://meshin.co/wrong-page, expected https://meshin.co/about',
+  ]);
+});
+
+test('sidecarContentGaps reports a sidecar with no parseable Updated date', () => {
+  const gaps = sidecarContentGaps(
+    ['/about'],
+    { '/about': SIDECAR({ updated: 'not-a-date' }) },
+    { site: 'https://meshin.co' }
+  );
+  assert.deepEqual(gaps, ['sidecar for /about carries no updated date']);
+});
+
+test('hubFeedLinkGaps reports nothing when a hub head carries its own collection feed link', () => {
+  const html = '<head><link rel="alternate" type="application/rss+xml" title="x" href="/blog/rss.xml"></head>';
+  assert.deepEqual(hubFeedLinkGaps(['/blog'], { '/blog': html }), []);
+});
+
+test('hubFeedLinkGaps reports a hub whose head only advertises the merged feed, not its own collection feed', () => {
+  const html = '<head><link rel="alternate" type="application/rss+xml" title="x" href="/rss.xml"></head>';
+  assert.deepEqual(hubFeedLinkGaps(['/blog'], { '/blog': html }), ['/blog']);
+});
+
+test('hubFeedLinkGaps ignores a plain href match that never carries rel="alternate"', () => {
+  const html = '<a href="/blog/rss.xml">feed</a>';
+  assert.deepEqual(hubFeedLinkGaps(['/blog'], { '/blog': html }), ['/blog']);
 });
 
 test('an indexable dist route missing from llms.txt is reported as a coverage gap', () => {
@@ -96,6 +171,34 @@ test('a route already listed in llms.txt is never reported twice, even when it w
     noindexRoutes: [],
   });
   assert.deepEqual(gaps, []);
+});
+
+test('sizeGuardFailure reports nothing while a file stays under its byte guard', () => {
+  assert.deepEqual(sizeGuardFailure('llms-full.txt', 1000, 2_000_000), []);
+});
+
+test('sizeGuardFailure reports the exact byte count and guard once a file grows past it, so growth cannot go unnoticed', () => {
+  assert.deepEqual(sizeGuardFailure('llms-full.txt', 2_000_001, 2_000_000), [
+    'llms-full.txt is 2000001 bytes, over the 2000000 byte guard',
+  ]);
+});
+
+const sitemapFixture = (urls) =>
+  `<urlset>${urls.map(({ loc, dated }) => `<url><loc>${loc}</loc>${dated ? '<lastmod>2026-09-08T00:00:00.000Z</lastmod>' : ''}</url>`).join('')}</urlset>`;
+
+test('lastmodCoverageGaps reports a route present in the sitemap without a lastmod element', () => {
+  const sitemap = sitemapFixture([
+    { loc: 'https://meshin.co/blog', dated: true },
+    { loc: 'https://meshin.co/faq', dated: false },
+  ]);
+
+  assert.deepEqual(lastmodCoverageGaps(sitemap, ['/blog', '/faq']), ['/faq']);
+});
+
+test('lastmodCoverageGaps reports a route missing from the sitemap entirely, not just an undated one', () => {
+  const sitemap = sitemapFixture([{ loc: 'https://meshin.co/blog', dated: true }]);
+
+  assert.deepEqual(lastmodCoverageGaps(sitemap, ['/blog', '/about']), ['/about']);
 });
 
 const feedItem = (url) => `<item><guid isPermaLink="true">${url}</guid></item>`;

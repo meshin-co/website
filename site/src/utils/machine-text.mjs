@@ -41,22 +41,18 @@ function renderEntry({ title, url, summary, body, updated }) {
   return [head, stripMarkdown(body ?? '')].filter(Boolean).join('\n\n');
 }
 
-export function renderLlmsCollection({ site, title, entries }) {
+function renderCollectionSection({ title, entries }) {
   const body = entries.filter(isLive).map(renderEntry).join('\n\n---\n\n');
-  const blocks = body ? [`# ${site}`, `## ${title}`, body] : [`# ${site}`, `## ${title}`];
-  return `${blocks.join('\n\n')}\n`;
+  return body ? `## ${title}\n\n${body}` : `## ${title}`;
 }
 
-function renderIndexLink({ title, url, count, updated }) {
-  const entries = `${count} ${count === 1 ? 'entry' : 'entries'}`;
-  const date = updated ? `, updated ${toIso(updated)}` : '';
-  return `- [${title}](${url}): ${entries}${date}`;
+export function renderLlmsCollection({ site, title, entries }) {
+  return `# ${site}\n\n${renderCollectionSection({ title, entries })}\n`;
 }
 
-export function renderLlmsIndex({ site, files }) {
-  const listing = files.map(renderIndexLink).join('\n');
-  const blocks = listing ? [`# ${site}`, listing] : [`# ${site}`];
-  return `${blocks.join('\n\n')}\n`;
+export function renderLlmsFull({ site, sections }) {
+  const blocks = sections.map(renderCollectionSection);
+  return `# ${site}\n\n${blocks.join('\n\n')}\n`;
 }
 
 function toFeedItem(entry) {
@@ -121,92 +117,108 @@ export function toRssItems(items) {
   }));
 }
 
-const STATIC_PAGE_CATALOG = [
+export const STATIC_PAGE_CATALOG = [
   {
     path: '/',
     title: 'Home',
+    file: 'src/pages/index.astro',
     description:
       'Fractional AI leadership for 30–300 person companies: governance that passes enterprise procurement, and agentic systems shipped to production with evals and observability.',
   },
   {
     path: '/blog/tags',
     title: 'Writing topics',
+    file: 'src/pages/blog/tags.astro',
     description: 'Every topic tag used across the writing, each with its own page.',
   },
   {
     path: '/about',
     title: 'About Dmitri Meshin',
+    file: 'src/pages/about.astro',
     description:
       'Platform engineer working as a Fractional Chief AI Officer for companies of 30 to 300 people. Remote worldwide.',
   },
   {
     path: '/approach',
     title: 'How I work',
+    file: 'src/pages/approach.astro',
     description:
       'The six things that decide whether an AI initiative reaches production, and the order I work through them.',
   },
   {
     path: '/pricing',
     title: 'Pricing',
+    file: 'src/pages/pricing.astro',
     description:
       'A two-week Assessment, a 90-Day Production Sprint, and a monthly Fractional CAIO Retainer. Fixed structures, no hourly billing.',
   },
   {
     path: '/faq',
     title: 'Questions and answers',
+    file: 'src/pages/faq.astro',
     description:
       'What a Fractional Chief AI Officer does, what each offer produces, and how AI risk gets recorded and signed off.',
   },
   {
     path: '/contact',
     title: 'Contact',
+    file: 'src/pages/contact.astro',
     description:
       'Book a 30-minute fit call or email hello@meshin.co. Remote worldwide, on site when it earns the trip.',
   },
   {
     path: '/ai-policy',
     title: 'AI policy',
+    file: 'src/pages/ai-policy.astro',
     description:
       'My own acceptable-use policy for AI systems: what data may reach a vendor, what may not, and who decides.',
   },
   {
     path: '/security',
     title: 'Security',
+    file: 'src/pages/security.astro',
     description: 'How this site is built and served, how client data is handled, and where to report a vulnerability.',
   },
   {
     path: '/now',
     title: 'Now',
+    file: 'src/pages/now.astro',
     description: 'What I am working on this month, what I am reading, and how much capacity is actually free.',
   },
   {
     path: '/imprint',
     title: 'Imprint',
+    file: 'src/pages/imprint.astro',
     description: 'Who is responsible for this site, how to reach them, and what it is hosted on.',
   },
   {
     path: '/privacy',
     title: 'Privacy',
+    file: 'src/pages/privacy.astro',
     description: 'What this site collects, which is almost nothing, and what happens to an email you send me.',
   },
   {
     path: '/terms',
     title: 'Terms',
+    file: 'src/pages/terms.astro',
     description: 'What this site is, what the published prices mean, and which terms actually govern an engagement.',
   },
   {
     path: '/search',
     title: 'Search',
+    file: 'src/pages/search.astro',
     description: 'Search the writing, glossary, services and case studies on this site.',
   },
   {
     path: '/styleguide',
     title: 'Styleguide',
+    file: 'src/pages/styleguide.astro',
     description: 'Every component in every state, both themes. Internal reference page.',
   },
   {
     path: '/404',
     title: 'Not found',
+    file: 'src/pages/404.astro',
     description: 'This page does not exist on meshin.co. Start from the home page.',
   },
 ];
@@ -235,6 +247,57 @@ export function renderSidecar({ title, url, description, updated, body }) {
 export function collectionHubs({ collections, staticPaths }) {
   const covered = staticPaths instanceof Set ? staticPaths : new Set(staticPaths);
   return collections.filter((collection) => !covered.has(collection.base));
+}
+
+export const HUB_PAGES = [
+  {
+    base: '/blog',
+    title: 'Writing',
+    description:
+      'Notes on getting AI systems past security review and into production, written for founders and boards.',
+  },
+  {
+    base: '/faq',
+    title: 'Questions and answers',
+    description:
+      'What a Fractional Chief AI Officer does, what each offer produces, and how AI risk gets recorded and signed off.',
+  },
+  {
+    base: '/glossary',
+    title: 'AI governance glossary',
+    description: 'Plain definitions of the AI governance terms that come up in security reviews and board meetings.',
+  },
+  {
+    base: '/resources',
+    title: 'Resources',
+    description:
+      'Open templates and checklists for AI governance: register, acceptable-use policy, data classification, vendor questionnaire.',
+  },
+  {
+    base: '/services',
+    title: 'Services',
+    description:
+      'Three ways to work with a Fractional Chief AI Officer: a two-week assessment, a 90-day production sprint, a retainer.',
+  },
+  {
+    base: '/case-studies',
+    title: 'Case studies',
+    description: 'One entry, not a client case: only.help, my own product, built with the method I use for clients.',
+  },
+];
+
+export function sidecarFileForRoute(route) {
+  return route === '/' ? 'index.md' : `${route.slice(1)}.md`;
+}
+
+export function sidecarRoutes({ staticPages = publicIndexableStaticPages(), hubs = HUB_PAGES } = {}) {
+  const staticPaths = staticPages.map((page) => page.path);
+  const hubPages = collectionHubs({ collections: hubs, staticPaths }).map((hub) => ({
+    path: hub.base,
+    title: hub.title,
+    description: hub.description,
+  }));
+  return [...staticPages, ...hubPages];
 }
 
 function newerUpdated(a, b) {

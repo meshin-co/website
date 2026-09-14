@@ -14,8 +14,21 @@ import SourceList from '~/components/site/SourceList.astro';
 import StepList from '~/components/site/StepList.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { articleMetadata } from '~/utils/machine-links.mjs';
-import { faqNode, orgNode, personNode, serviceNode } from '~/utils/jsonld.mjs';
+import {
+  faqNode,
+  glossaryStub,
+  imageObject,
+  orgNode,
+  personNode,
+  serviceEntityLinks,
+  serviceNode,
+  webPageNode,
+  websiteNode,
+} from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+import { lastmod } from '~/utils/lastmod.mjs';
+import RelatedContent from '~/components/site/RelatedContent.astro';
+import { distinctByKeyword, firstMention, textMentionsKeyword, resolveByIds } from '~/utils/related-content.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const services = await getCollection('service');
@@ -29,6 +42,10 @@ interface Props {
 const { service } = Astro.props;
 const { data } = service;
 const { Content } = await render(service);
+const terms = (await getCollection('glossary', ({ data: term }) => !term.draft)).map((entry) => ({
+  id: entry.id,
+  term: entry.data.term,
+}));
 const site = import.meta.env.SITE.replace(/\/$/, '');
 
 const metadata = articleMetadata(site, {
@@ -38,6 +55,8 @@ const metadata = articleMetadata(site, {
   canonical: data.canonical,
   collection: 'service',
   id: service.id,
+  publishDate: data.publishDate,
+  updatedDate: data.updatedDate,
 });
 
 const crumbs = [
@@ -46,10 +65,51 @@ const crumbs = [
   { name: data.name, path: `/services/${service.id}` },
 ];
 
+const serviceForLinks = { id: service.id, ...data, body: service.body };
+const { about, mentions } = serviceEntityLinks(serviceForLinks, terms);
+const citedTermIds = [...new Set([...about, ...mentions])];
+
+const relatedTerms = resolveByIds(citedTermIds, terms);
+const allServices = await getCollection('service');
+const distinctServices = distinctByKeyword(allServices.map((entry) => ({ id: entry.id, name: entry.data.name })));
+const thisServiceKeyword = distinctServices.find((entry) => entry.id === service.id)?.keyword ?? null;
+const allQuestions = await getCollection('faq', ({ data: faq }) => !faq.draft);
+const relatedQuestions = thisServiceKeyword
+  ? allQuestions.filter((entry) =>
+      textMentionsKeyword(`${entry.data.question}\n${entry.data.answer}`, thisServiceKeyword)
+    )
+  : [];
+
+const entityCandidates = relatedTerms.map((term) => ({ name: term.term, href: `/glossary/${term.id}` }));
+const linkedShortAnswer = firstMention(data.shortAnswer, entityCandidates);
+
+const relatedGroups = [
+  {
+    heading: 'Related terms',
+    items: relatedTerms.map((term) => ({ label: term.term, href: `/glossary/${term.id}` })),
+  },
+  {
+    heading: 'Related questions',
+    items: relatedQuestions.map((entry) => ({ label: entry.data.question, href: `/faq/${entry.id}` })),
+  },
+];
+
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
-  serviceNode(site, { id: service.id, ...data }),
+  websiteNode(site),
+  ...resolveByIds(citedTermIds, terms).map((term) => glossaryStub(site, term)),
+  serviceNode(site, serviceForLinks, { about, mentions }),
+  webPageNode(
+    site,
+    `/services/${service.id}`,
+    lastmod({ publishDate: data.publishDate, updatedDate: data.updatedDate }),
+    data.name,
+    {
+      image: imageObject(metadata.openGraph.images[0]),
+      mainEntity: `${site}/services/${service.id}#service`,
+    }
+  ),
   faqNode(data.faq),
 ];
 ---
@@ -59,74 +119,107 @@ const nodes = [
 
   <Breadcrumbs crumbs={crumbs} />
   <MarkdownAlternate path={`/services/${service.id}`} slot="head" />
+  <link rel="alternate" type="application/rss+xml" title="meshin.co — Offers" href="/services/rss.xml" slot="head" />
 
-  <Section bordered={false} headingLevel={1} eyebrow={data.duration} title={data.name} lead={data.tagline}>
-    <p class="font-mono text-lg text-heading">{data.feeShape}</p>
-    <p class="mt-8 max-w-[68ch] text-lg leading-relaxed text-muted">{data.shortAnswer}</p>
-  </Section>
+  <article>
+    <Section bordered={false} headingLevel={1} eyebrow={data.duration} title={data.name} lead={data.tagline}>
+      <p class="font-mono text-lg text-heading">{data.feeShape}</p>
+      <p class="mt-8 max-w-[68ch] text-lg leading-relaxed text-muted">
+        {
+          linkedShortAnswer ? (
+            <>
+              {linkedShortAnswer.before}
+              <a
+                class="text-link underline decoration-2 underline-offset-4 hover:decoration-primary"
+                href={linkedShortAnswer.href}
+              >
+                {linkedShortAnswer.matched}
+              </a>
+              {linkedShortAnswer.after}
+            </>
+          ) : (
+            data.shortAnswer
+          )
+        }
+      </p>
+      <p class="mt-6 font-mono text-xs text-muted" data-gate-ignore>
+        Published{' '}
+        <time datetime={data.publishDate.toISOString().slice(0, 10)}>
+          {data.publishDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+        </time>
+        {' · Updated '}
+        <time datetime={data.updatedDate.toISOString().slice(0, 10)}>
+          {data.updatedDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+        </time>
+      </p>
+    </Section>
 
-  <Section eyebrow="Fit" title="Who this is for" tone="surface">
-    <ShiftPanel
-      before={{ label: 'This is for you if', items: data.forWhom }}
-      after={{ label: 'This is not for you if', items: data.notForWhom }}
-    />
-  </Section>
+    <Section eyebrow="Fit" title="Who this is for" tone="surface">
+      <ShiftPanel
+        before={{ label: 'This is for you if', items: data.forWhom }}
+        after={{ label: 'This is not for you if', items: data.notForWhom }}
+      />
+    </Section>
 
-  <Section eyebrow="Deliverables" title="What you get">
-    <ul class="grid gap-3 sm:grid-cols-2 sm:gap-x-14">
-      {
-        data.deliverables.map((deliverable) => (
-          <li class="grid grid-cols-[auto_1fr] gap-3">
-            <span class="mt-2 inline-block size-1.5 bg-primary" aria-hidden="true" />
-            <span class="max-w-[62ch] text-muted">{deliverable}</span>
-          </li>
-        ))
-      }
-    </ul>
-  </Section>
+    <Section eyebrow="Deliverables" title="What you get">
+      <ul class="grid gap-3 sm:grid-cols-2 sm:gap-x-14">
+        {
+          data.deliverables.map((deliverable) => (
+            <li class="grid grid-cols-[auto_1fr] gap-3">
+              <span class="mt-2 inline-block size-1.5 bg-primary" aria-hidden="true" />
+              <span class="max-w-[62ch] text-muted">{deliverable}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </Section>
 
-  <Section eyebrow="Process" title="How it runs">
-    <StepList steps={data.process.map((step) => ({ name: step.title, detail: step.detail }))} ordered />
+    <Section eyebrow="Process" title="How it runs">
+      <StepList steps={data.process.map((step) => ({ name: step.title, detail: step.detail }))} ordered />
 
-    <section class="mt-12 overflow-x-auto" aria-label="Schedule" tabindex={0}>
-      <table class="w-full border-collapse text-left">
-        <thead>
-          <tr class="border-b border-line">
-            <th class="py-3 pr-4 font-mono text-xs tracking-[0.16em] text-muted uppercase" scope="col">Stage</th>
-            <th class="py-3 pr-4 font-mono text-xs tracking-[0.16em] text-muted uppercase" scope="col">What happens</th>
-            <th class="py-3 font-mono text-xs tracking-[0.16em] text-muted uppercase" scope="col">What you get</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            data.schedule.map((row) => (
-              <tr class="border-b border-line last:border-b-0">
-                <th class="py-4 pr-4 align-top font-normal text-heading" scope="row">
-                  {row.stage}
-                </th>
-                <td class="max-w-[34ch] py-4 pr-4 align-top text-muted">{row.work}</td>
-                <td class="max-w-[34ch] py-4 align-top text-muted">{row.output}</td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
-    </section>
-  </Section>
+      <section class="mt-12 overflow-x-auto" aria-label="Schedule" tabindex={0}>
+        <table class="w-full border-collapse text-left">
+          <thead>
+            <tr class="border-b border-line">
+              <th class="py-3 pr-4 font-mono text-xs tracking-[0.16em] text-muted uppercase" scope="col">Stage</th>
+              <th class="py-3 pr-4 font-mono text-xs tracking-[0.16em] text-muted uppercase" scope="col"
+                >What happens</th
+              >
+              <th class="py-3 font-mono text-xs tracking-[0.16em] text-muted uppercase" scope="col">What you get</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              data.schedule.map((row) => (
+                <tr class="border-b border-line last:border-b-0">
+                  <th class="py-4 pr-4 align-top font-normal text-heading" scope="row">
+                    {row.stage}
+                  </th>
+                  <td class="max-w-[34ch] py-4 pr-4 align-top text-muted">{row.work}</td>
+                  <td class="max-w-[34ch] py-4 align-top text-muted">{row.output}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </section>
+    </Section>
 
-  <Section eyebrow="Detail" title="In my words" tone="surface">
-    <div class="prose-brief prose-brief-headings max-w-[68ch]">
-      <Content />
-    </div>
-  </Section>
+    <Section eyebrow="Detail" title="In my words" tone="surface">
+      <div class="prose-brief prose-brief-headings max-w-[68ch]">
+        <Content />
+      </div>
+    </Section>
 
-  <Section eyebrow="Questions" title="What people ask">
-    <FaqList items={data.faq.map((entry) => ({ question: entry.q, answer: entry.a }))} />
-  </Section>
+    <Section eyebrow="Questions" title="What people ask">
+      <FaqList items={data.faq.map((entry) => ({ question: entry.q, answer: entry.a }))} />
+    </Section>
 
-  <Section eyebrow="Provenance" title="Sources">
-    <SourceList sources={data.sources} />
-  </Section>
+    <Section eyebrow="Provenance" title="Sources and neighbours">
+      <SourceList sources={data.sources} />
+      <RelatedContent groups={relatedGroups} />
+    </Section>
+  </article>
 
   <Section title="Next step">
     <CtaBlock

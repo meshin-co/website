@@ -48,7 +48,7 @@ The PRD's decision log (§2, D1–D24) stands except where a row below replaces 
 | L31 | Tags | `/blog/tag/{tag}` + `/blog/tags` index, ALL indexed and sitemapped (owner re-affirmed under ADHD challenge); controlled tag vocabulary in `site/src/data/tags.mjs`, schema-enforced | owner ×2 |
 | L32 | Dead ends | Every route linked from ≥1 other page; posts link up/sideways; categories linked from hub, footer, post eyebrows | audit |
 | L33 | Semantic core | `docs/SEMANTIC-CORE.md`: tables generated from `content-facts.json`, hand-authored why + the 30 buyer prompts (PRD §17.3) mapped to routes; no drift gate (generated views cannot drift) | owner + ADHD |
-| L34 | Skills | `site/.agents/skills/` fully replaced. Re-verification against L1–L41 rejected all **16** template-derived skills, the 4 marked keepers included, because each one's procedure is either rule-violating or superseded by a named replacement: `add-blog-post` and `add-page` by `add-collection-entry.md`, `add-structured-data` by `machine-interfaces.md`, `set-open-graph-image` by `visual-baselines.md`, `deploy-cloudflare` by `launch-checklist.md`, `styling` and `use-shadcn-tokens` by `design-lane.md`, which documents this repo's own OKLCH token layer rather than the template's shadcn one. Nine authored from proven procedures: design-lane, run-the-gate, content-gate, judge-panel, add-collection-entry, add-or-restore-a-collection (names the four hand-lists: `machine.mjs`, `templates.mjs`, jsonld-gate `ROUTE_TYPES`, `content-facts.json`), machine-interfaces, visual-baselines, launch-checklist. The representative-Lighthouse-set procedure lives in run-the-gate.md, not its own file. `gate:skills` lints that every path named is real | owner + ADHD, corrected 2026-09-14 |
+| L34 | Skills | `site/.agents/skills/` fully replaced. Re-verification against L1–L41 rejected all **16** template-derived skills, the 4 marked keepers included, because each one's procedure is either rule-violating or superseded by a named replacement: `add-blog-post` and `add-page` by `add-collection-entry.md`, `add-structured-data` by `structured-data.md`, `set-open-graph-image` by `visual-baselines.md`, `deploy-cloudflare` by `launch-checklist.md`, `styling` and `use-shadcn-tokens` by `design-lane.md`, which documents this repo's own OKLCH token layer rather than the template's shadcn one. Seventeen authored and split by job, each under the 80-line cap the linter enforces: design-lane, snippet-grammar, structured-data, search-index, machine-interfaces, run-the-gate, content-gate, judge-panel, add-collection-entry, add-or-restore-a-collection (names the four hand-lists: `machine.mjs`, `templates.mjs`, jsonld-gate `ROUTE_TYPES`, `content-facts.json`), machine-interfaces, visual-baselines, launch-checklist. The representative-Lighthouse-set procedure lives in run-the-gate.md, not its own file. `gate:skills` lints that every path named is real | owner + ADHD, corrected 2026-09-14 |
 | L35 | Mutation smoke | `site/scripts/mutation-smoke.mjs` + guard-mutations fixtures built in 4.5b; every guard family proven able to fail before CG-4.5b; pagination page-2 proof lives here | ADHD + Drift |
 | L36 | Gate wiring | Every gate that the plan calls enforced runs in `.github/workflows/ci.yml`: `gate:content`, `gate:orphans`, `gate:routes`, `test:smoke` were script-only until 2026-09-13 and are now CI steps. A gate not in `ci.yml` is not a gate | validation 2026-09-13 |
 | L37 | Tag routes | Only tags carried by at least one live post get a route and a `/blog/tags` row; an unused vocabulary tag builds nothing, because an indexed empty page is thin content | validation 2026-09-13 |
@@ -56,6 +56,14 @@ The PRD's decision log (§2, D1–D24) stands except where a row below replaces 
 | L39 | Font policy | Three faces ship and only three: Fraunces 600, IBM Plex Sans 400 and 500, `display: swap`. No weight is requested that is not loaded — synthesized bold is a defect, so prose headings ask for 600. Every inline `<style>` Astro's font API emits is hashed into `style-src` | validation 2026-09-14 |
 | L40 | Dead weight | Found dead weight is removed in the session that found it, never deferred to a note: 38 unreachable template components (which were inflating the stylesheet by 8.5 KB gz), 9 dead exports, 8 stale baselines and a dead JSON-LD builder went in this pass | owner 2026-09-14 |
 | L41 | Gate wall time | Lighthouse runs as a CI matrix: 2 form factors x 4 route shards = 8 runners over one shared `dist` artifact, sliced round-robin by `site/scripts/lh-shards.cjs`. Shards cannot hide a gap because `scripts/report.mjs` merges every shard and fails on any audited route missing a run or carrying fewer than 3 runs. Check, units, guard-mutations, cheap gates and Playwright (3 shards) are their own parallel jobs | owner 2026-09-14 |
+| L42 | Social cards | Every page emits the full Twitter/X card set (`twitter:title`, `twitter:description`, `twitter:image`) from the same values Open Graph already computes, not `twitter:card` alone | review 2026-09-14 |
+| L43 | Snippet grammar | No title or meta description is ever truncated mid-clause with an ellipsis. A description is a whole sentence of 120–160 characters; an over-long question gets a hand-authored short title, never a cut one. Zod enforces the floor, a planted fixture proves it | review 2026-09-14 |
+| L44 | Entity graph | Posts, services, resources and terms declare `about`/`mentions` against the glossary `DefinedTerm` `@id`s, and every collection that carries `sources` emits them as schema.org `citation`. The JSON-LD gate checks required PROPERTIES per family, not only node types | review 2026-09-14 |
+| L45 | Feed completeness | The merged `/rss.xml` carries every kind at its per-kind floor with no silent truncation, and every surface a page has — its collection feed, the JSON Feed, its `.md` sidecar — is advertised in that page's head | review 2026-09-14 |
+| L46 | Crawler register | `robots.txt` names every AI and search user agent we have a position on, each with an explicit allow, so silence is never mistaken for a decision. A fixture test pins the list | review 2026-09-14 |
+| L47 | Search parity | Search covers every indexable route family, including hubs, categories and tags, derived from the same static-page catalogue the machine surfaces use. One failed shard fetch retries instead of disabling search for the page's life | review 2026-09-14 |
+| L48 | Semantic core freshness | `semantic-core.mjs --check` regenerates the table in memory and fails when the committed `docs/SEMANTIC-CORE.md` differs, so a stale core cannot pass CI. Every family row carries query intent, the citable unit, its internal-link targets, a freshness cadence and the pages it must beat | review 2026-09-14 |
+| L49 | Reproducibility | A change is finished when the procedure that produced it lives in the methodology layer: a skill, an AGENTS.md hard rule, a locked row, or a machine check. `check-skills.mjs` asserts every `gate:*` and `test:*` script is named by a skill, every script under `site/scripts/` is named by a skill or declared one-off, and every command in AGENTS.md exists in `package.json` | owner 2026-09-14 |
 Verified facts behind these: Astro `7.3.1`, Tailwind `4.3.3`, template `@arthelokyo/astrowind@1.0.0-beta.66`
 (Astro 7 + Tailwind v4, `engines.node >=22.22.3`), `pagefind 1.5.2`, `satori 0.33.4`,
 `@resvg/resvg-js 2.6.2`, `@lhci/cli 0.15.1`. `cal.com/meshin` returns 200. `meshin.co` MX is
@@ -360,6 +368,42 @@ CG-4.5b: full gate re-run plus: linkinator crawl finds zero orphan routes; bread
 on all non-home routes; pagination proven via the live specimen in the smoke copy; semantic-core generation
 green; skills lint (every skill names real files only); whole-site visual baselines regenerated
 once at the end, per-template-family changelog entries.
+### Phase 4.6 · Answer-engine hardening
+
+Goal: every route earns its snippet and its citation. Seven read-only audits (head and markup,
+structured data, feeds and machine surfaces, the crawl graph, search, the semantic core, the
+standards layer) found real gaps after CG-4.5b passed; this phase closes them and makes each fix
+reproducible. Evidence: `audits/phase-4.6/`.
+
+1. **Snippets and markup** (L42, L43): the full Twitter card set; FAQ descriptions rewritten to
+   whole sentences inside 120–160 characters with a zod floor and a planted fixture; no
+   mid-clause ellipsis in any title or description; `<article>` around every leaf body; visible
+   published and updated `<time datetime>` on every dated family.
+2. **Schema depth** (L44): `about`/`mentions` entity links to glossary terms, `citation` from the
+   `sources` every collection already carries, `speakable`, `primaryImageOfPage`, `ImageObject`
+   logo, `contactPoint`, `knowsAbout`, `HowTo` where content is genuinely step-by-step, and a
+   JSON-LD gate that asserts required properties per family instead of node types alone.
+3. **Feeds and crawler surfaces** (L45, L46): merged-feed per-kind floors honoured; per-collection
+   feed, JSON Feed and `.md` sidecar advertised in every head; `lastmod` on hubs, static and
+   taxonomy routes; unused sitemap namespaces dropped; the crawler register completed with a
+   fixture test.
+4. **Search parity** (L47): the shard catalogue derived from `STATIC_PAGE_CATALOG`, hub, category
+   and tag kinds added, post text including its FAQ block, per-kind caps, and a fetch retry so one
+   dropped request cannot disable search.
+5. **Crawl graph**: tag trails include the `/blog/tags` level; related blocks and entity links on
+   FAQ, glossary, resource and service leaves; the pagination guard extended to the category
+   variant.
+6. **Semantic core** (L48): regenerated over all 105 routes with buckets for the taxonomy
+   families, the strategy fields added per family, the buyer-prompt claims mechanically
+   re-verified, and a staleness check in `gate:content`.
+7. **Standards** (L49): every uncaptured lesson written into a skill, the dead
+   `references/banned-phrases.md` reference fixed, and the reproducibility checks wired into
+   `check-skills.mjs`.
+
+CG-4.6 is the standard gate plus: the new property-level JSON-LD assertions, the crawler fixture,
+the search parity test, the semantic-core staleness check and the skills coverage check all green,
+with `audits/phase-4.6/REPORT.md` generated.
+
 ### Phase 5 · Launch
 
 Goal: public, indexed, measured.

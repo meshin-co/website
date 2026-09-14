@@ -2,11 +2,17 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import {
+  ABSENCE_CLAIMS,
   FAMILY_GRAMMAR,
   GENERATED_BEGIN,
   GENERATED_END,
+  absenceFindings,
+  docDriftFindings,
   familyFor,
+  mustWinFindings,
   orphanFindings,
+  parseBuyerPrompts,
+  passageFindings,
   renderFamilies,
   spliceGenerated,
   titleFindings,
@@ -16,6 +22,8 @@ test('route shape decides which semantic family a route belongs to', () => {
   assert.equal(familyFor('/blog/category/governance'), 'blog-category');
   assert.equal(familyFor('/blog/why-your-ai-pilot-never-reached-production'), 'article');
   assert.equal(familyFor('/blog'), 'static');
+  assert.equal(familyFor('/blog/tags'), 'tag-index');
+  assert.equal(familyFor('/blog/tag/shadow-ai'), 'tag');
   assert.equal(familyFor('/services/90-day-production-sprint'), 'service');
   assert.equal(familyFor('/resources/ai-governance-starter-kit'), 'resource');
   assert.equal(familyFor('/case-studies/only-help-agentic-support'), 'case-study');
@@ -151,4 +159,164 @@ test('regenerating an already generated doc is idempotent', () => {
 
 test('splicing a doc without markers fails loudly instead of silently appending', () => {
   assert.throws(() => spliceGenerated('# Semantic core\n\nno markers here', 'block'), /markers missing/);
+});
+
+const GENERATED_DOC = [
+  '# Semantic core',
+  '',
+  GENERATED_BEGIN,
+  '### static (1)',
+  '',
+  '| Route | Query | Title | Description | H1 | Links | Opening |',
+  '|---|---|---|---|---|---|---|',
+  '| `/` | fractional chief ai officer | Fractional Chief AI Officer — meshin.co | one line. | Home | 5 | ✓ |',
+  GENERATED_END,
+].join('\n');
+
+const FRESH_BLOCK = [
+  '### static (1)',
+  '',
+  '| Route | Query | Title | Description | H1 | Links | Opening |',
+  '|---|---|---|---|---|---|---|',
+  '| `/` | fractional chief ai officer | Fractional Chief AI Officer — meshin.co | one line. | Home | 5 | ✓ |',
+].join('\n');
+
+test('a doc whose generated block matches the fresh render has no drift findings', () => {
+  assert.deepEqual(docDriftFindings(GENERATED_DOC, FRESH_BLOCK), []);
+});
+
+test('a hand-edited generated cell is reported as drift, naming the route', () => {
+  const stale = GENERATED_DOC.replace('one line.', 'STALE HAND-EDITED LINE.');
+
+  const findings = docDriftFindings(stale, FRESH_BLOCK);
+
+  assert.deepEqual(
+    findings.map((finding) => finding.rule),
+    ['doc-drift']
+  );
+  assert.equal(findings[0].route, '/');
+});
+
+test('a route missing from the committed doc but present in the fresh render is reported as drift', () => {
+  const freshWithExtra = `${FRESH_BLOCK}\n| \`/pricing\` | cost | Pricing — meshin.co | desc. | Pricing | 5 | ✓ |`;
+
+  const findings = docDriftFindings(GENERATED_DOC, freshWithExtra);
+
+  assert.deepEqual(
+    findings.map((finding) => finding.route),
+    ['/pricing']
+  );
+});
+
+test('doc drift throws loudly instead of silently passing when markers are missing', () => {
+  assert.throws(() => docDriftFindings('# Semantic core\n\nno markers here', FRESH_BLOCK), /markers missing/);
+});
+
+const BUYER_PROMPTS_DOC = [
+  '### The 30 buyer prompts (PRD §17.3)',
+  [
+    '**1. entity prompt**',
+    'Must win: `/` (support: `/services/fractional-caio-retainer`).',
+    'Passage: "I am the answer." (`/`)',
+    'Why: because.',
+  ].join('\n'),
+  [
+    '**2. shared-route prompt**',
+    'Must win: `/glossary/eu-ai-act` + `/glossary/provider-vs-deployer`, support `/faq/nist`.',
+    'Passage: "A definition sentence." (term definition)',
+    'Why: because.',
+  ].join('\n'),
+  [
+    '**16. locale prompt one**',
+    '**17. locale prompt two**',
+    'Must win: `/about` (intended), support `/`, `/contact`.',
+    'Passage: "I am Dmitri." (`/about`)',
+    'Why: because.',
+    '**GAP (hard for 16):** "Israel" appears on no built page.',
+  ].join('\n'),
+  ['### GAP register — feeds Phase 6 content plans', '', '| # | Prompt | Gap |'].join('\n'),
+].join('\n\n');
+
+test('parseBuyerPrompts extracts must-win routes, dropping support routes', () => {
+  const prompts = parseBuyerPrompts(BUYER_PROMPTS_DOC);
+
+  const first = prompts.find((prompt) => prompt.number === 1);
+  assert.deepEqual(first.mustWinRoutes, ['/']);
+  assert.deepEqual(first.passages, [{ text: 'I am the answer.', route: '/' }]);
+});
+
+test('parseBuyerPrompts keeps every route joined by "+" as a must-win route', () => {
+  const prompts = parseBuyerPrompts(BUYER_PROMPTS_DOC);
+
+  const second = prompts.find((prompt) => prompt.number === 2);
+  assert.deepEqual(second.mustWinRoutes, ['/glossary/eu-ai-act', '/glossary/provider-vs-deployer']);
+});
+
+test("parseBuyerPrompts binds a bare-quote passage to the prompt's must-win route", () => {
+  const prompts = parseBuyerPrompts(BUYER_PROMPTS_DOC);
+
+  const second = prompts.find((prompt) => prompt.number === 2);
+  assert.deepEqual(second.passages, [{ text: 'A definition sentence.', route: '/glossary/eu-ai-act' }]);
+});
+
+test('parseBuyerPrompts applies one shared block to every heading number in it', () => {
+  const prompts = parseBuyerPrompts(BUYER_PROMPTS_DOC);
+
+  const sixteen = prompts.find((prompt) => prompt.number === 16);
+  const seventeen = prompts.find((prompt) => prompt.number === 17);
+  assert.deepEqual(sixteen.mustWinRoutes, ['/about']);
+  assert.deepEqual(seventeen.mustWinRoutes, ['/about']);
+});
+
+test('mustWinFindings reports a must-win route that was never built', () => {
+  const prompts = [{ number: 9, mustWinRoutes: ['/blog/missing'], passages: [] }];
+
+  const findings = mustWinFindings(prompts, ['/', '/pricing']);
+
+  assert.deepEqual(
+    findings.map((finding) => [finding.route, finding.rule]),
+    [['/blog/missing', 'buyer-prompt-must-win-missing']]
+  );
+});
+
+test('mustWinFindings is silent when every must-win route is built', () => {
+  const prompts = [{ number: 9, mustWinRoutes: ['/pricing'], passages: [] }];
+
+  assert.deepEqual(mustWinFindings(prompts, ['/', '/pricing']), []);
+});
+
+test('passageFindings reports a quoted passage no longer present on its route', () => {
+  const prompts = [{ number: 1, mustWinRoutes: ['/'], passages: [{ text: 'the exact sentence', route: '/' }] }];
+  const pages = [{ route: '/', text: 'a page that says something else entirely' }];
+
+  const findings = passageFindings(prompts, pages);
+
+  assert.deepEqual(
+    findings.map((finding) => [finding.route, finding.rule]),
+    [['/', 'buyer-prompt-passage-missing']]
+  );
+});
+
+test('passageFindings is silent when the passage is still a literal substring of the page', () => {
+  const prompts = [{ number: 1, mustWinRoutes: ['/'], passages: [{ text: 'the exact sentence', route: '/' }] }];
+  const pages = [{ route: '/', text: 'a page that has the exact sentence right here' }];
+
+  assert.deepEqual(passageFindings(prompts, pages), []);
+});
+
+test('absenceFindings flags a GAP claim once the claimed absent term is found on a page', () => {
+  const pages = [{ route: '/about', text: 'Based in Israel, remote worldwide.' }];
+
+  const findings = absenceFindings(pages, ABSENCE_CLAIMS);
+
+  assert.deepEqual(
+    findings.map((finding) => [finding.route, finding.rule]),
+    [['/about', 'gap-claim-stale']]
+  );
+});
+
+test('absenceFindings is silent while the claimed absent term stays absent', () => {
+  const pages = [{ route: '/about', text: 'Remote worldwide.' }];
+
+  assert.deepEqual(absenceFindings(pages, ABSENCE_CLAIMS), []);
 });

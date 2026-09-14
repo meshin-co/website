@@ -20,7 +20,7 @@ Run from `site/`. Each step green before the next.
    `scripts/orphan-gate.mjs` is closed and carries a reason per entry.
 7. `npm run gate:machine`, then `npm run gate:jsonld` — machine-interface coverage (including
    every indexable route appearing in `llms.txt`) and JSON-LD graph integrity
-   (machine-interfaces.md).
+   (structured-data.md).
 8. `npm run gate:skills` — skills lint: every path real, no forbidden claims, length caps.
 9. `GATE_PHASE=phase-N npm run gate:routes` — writes `audits/phase-N/routes.json` and fails on
    an unexplained shrink against the previous phase, or on a stale entry in

@@ -1,10 +1,22 @@
-import { mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, readdir, writeFile, rm } from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { test } from 'node:test';
 
-import { lintSkillsDir, pathCandidates, resolveCandidate, skillFindings } from './check-skills.mjs';
+import {
+  agentsCommandsFindings,
+  commandsScriptNames,
+  extractCommandsBlock,
+  gateTestScriptFindings,
+  lintSkillsDir,
+  pathCandidates,
+  resolveCandidate,
+  scriptCoverageFindings,
+  scriptInvokers,
+  skillFindings,
+} from './check-skills.mjs';
 
 const fixtureRoot = await mkdtemp(join(tmpdir(), 'check-skills-'));
 await mkdir(join(fixtureRoot, 'repo', 'site', 'src', 'utils'), { recursive: true });
@@ -94,4 +106,99 @@ test('lintSkillsDir returns findings for a violating fixture and none for a clea
   );
 
   await rm(fixtureRoot, { recursive: true, force: true });
+});
+
+test('scriptInvokers maps a script basename to every npm-script key that runs it', () => {
+  const invokers = scriptInvokers({
+    'gate:lh': 'lhci autorun && node scripts/collect-reports.mjs mobile',
+    'gate:lh:one': 'lhci autorun && node scripts/collect-reports.mjs "$FACTOR"',
+    'gate:content': 'node scripts/content-gate.mjs dist',
+  });
+  assert.deepEqual(invokers.get('collect-reports.mjs'), new Set(['gate:lh', 'gate:lh:one']));
+  assert.deepEqual(invokers.get('content-gate.mjs'), new Set(['gate:content']));
+});
+
+test('scriptCoverageFindings flags a script named nowhere and clears one reachable three ways', () => {
+  const scripts = {
+    'gate:content': 'node scripts/content-gate.mjs dist',
+    'gate:routes': 'node scripts/routes-gate.mjs dist',
+  };
+  const findings = scriptCoverageFindings({
+    scriptFiles: ['content-gate.mjs', 'routes-gate.mjs', 'content-rows.mjs', 'mystery-script.mjs', 'gate.test.mjs'],
+    skillsText: 'run `npm run gate:content`; see scripts/routes-gate.mjs and docs/PLAN.md',
+    scripts,
+  });
+  const flagged = findings.map((f) => f.detail);
+  assert.ok(flagged.some((detail) => detail.includes('mystery-script.mjs')));
+  assert.equal(
+    flagged.some((detail) => detail.includes('content-gate.mjs')),
+    false
+  );
+  assert.equal(
+    flagged.some((detail) => detail.includes('routes-gate.mjs')),
+    false
+  );
+  assert.equal(
+    flagged.some((detail) => detail.includes('content-rows.mjs')),
+    false
+  );
+  assert.equal(
+    flagged.some((detail) => detail.includes('gate.test.mjs')),
+    false
+  );
+});
+
+test('gateTestScriptFindings flags an undocumented gate:*/test:* script and clears a documented one', () => {
+  const scripts = { 'gate:content': 'x', 'test:smoke': 'x', build: 'x' };
+  const findings = gateTestScriptFindings({ scripts, skillsText: 'run `npm run gate:content`' });
+  assert.deepEqual(
+    findings.map((f) => f.detail),
+    ['"test:smoke" is named by no skill']
+  );
+});
+
+test('extractCommandsBlock and commandsScriptNames read the fenced block after "## Commands"', () => {
+  const md = [
+    '# doc',
+    '',
+    '## Commands',
+    '',
+    '```',
+    'cd site',
+    'npm run build',
+    'npm run gate:lh # slow',
+    '```',
+    '',
+  ].join('\n');
+  assert.deepEqual(commandsScriptNames(extractCommandsBlock(md)), ['build', 'gate:lh']);
+  assert.equal(extractCommandsBlock('# no commands section'), null);
+});
+
+test('agentsCommandsFindings flags a command with no matching package.json script', () => {
+  const md = ['## Commands', '```', 'npm run build', 'npm run gate:ghost', '```'].join('\n');
+  const findings = agentsCommandsFindings({ agentsMdText: md, scripts: { build: 'astro build' } });
+  assert.deepEqual(
+    findings.map((f) => f.detail),
+    ['"npm run gate:ghost" has no matching script in package.json']
+  );
+});
+
+test('the real tree clears every L49 reproducibility check', async () => {
+  const siteRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+  const repoRoot = resolve(siteRoot, '..');
+  const skillsDir = join(siteRoot, '.agents', 'skills');
+
+  const skillFiles = (await readdir(skillsDir, { recursive: true })).filter((name) => String(name).endsWith('.md'));
+  const skillsText = (await Promise.all(skillFiles.map((name) => readFile(join(skillsDir, name), 'utf8')))).join('\n');
+  const { scripts } = JSON.parse(await readFile(join(siteRoot, 'package.json'), 'utf8'));
+  const scriptFiles = await readdir(join(siteRoot, 'scripts'));
+  const agentsMdText = await readFile(join(repoRoot, 'AGENTS.md'), 'utf8');
+
+  const findings = [
+    ...gateTestScriptFindings({ scripts, skillsText }),
+    ...scriptCoverageFindings({ scriptFiles, skillsText, scripts }),
+    ...agentsCommandsFindings({ agentsMdText, scripts }),
+  ];
+
+  assert.deepEqual(findings, []);
 });

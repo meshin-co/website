@@ -4,6 +4,7 @@ import { getCollection } from 'astro:content';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import CardGrid from '~/components/site/CardGrid.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
+import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
 import PaginationLinks from '~/components/site/PaginationLinks.astro';
 import PostCard from '~/components/site/PostCard.astro';
 import Section from '~/components/site/Section.astro';
@@ -40,6 +41,8 @@ const nodes = [
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
+  <MarkdownAlternate path="/blog" slot="head" />
+  <link rel="alternate" type="application/rss+xml" title="meshin.co — Writing" href="/blog/rss.xml" slot="head" />
 
   <Breadcrumbs
     crumbs={[

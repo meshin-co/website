@@ -3,10 +3,19 @@ import { join } from 'node:path';
 
 import { discoverRoutes, isNoindex } from './gate.mjs';
 import { FEED_BASES } from '../src/utils/feeds.mjs';
-import { NOINDEX_STATIC_PAGES } from '../src/utils/machine-text.mjs';
+import {
+  absoluteUrl,
+  NOINDEX_STATIC_PAGES,
+  publicIndexableStaticPages,
+  sidecarFileForRoute,
+  sidecarRoutes,
+} from '../src/utils/machine-text.mjs';
+import { siteLastmods } from '../src/utils/sitemap-lastmod.mjs';
 
 const NON_PUBLIC = new Set(['author', 'speaking']);
 const FEED_FLOOR = 5;
+const LLMS_FULL_MAX_BYTES = 2_000_000;
+const SITE_ORIGIN = 'https://meshin.co';
 
 export const COLLECTION_BASES = FEED_BASES;
 
@@ -22,8 +31,8 @@ export function publicCollections(configSource) {
 export function missingFromGenerator(text, collections) {
   return collections.filter((collection) => !text.includes(`/${COLLECTION_BASES[collection]}/`));
 }
-function llmsIndexGaps(text, collections) {
-  return collections.filter((collection) => !text.includes(`/llms/${collection}.txt`));
+export function sizeGuardFailure(label, bytes, maxBytes) {
+  return bytes > maxBytes ? [`${label} is ${bytes} bytes, over the ${maxBytes} byte guard`] : [];
 }
 
 function parseListedRoutes(text) {
@@ -52,22 +61,85 @@ function noindexStaticListings(text) {
   return [...NOINDEX_STATIC_PAGES].filter((path) => text.includes(`(${path})`));
 }
 
-export function sidecarGaps(routes, builtFiles) {
-  const built = new Set(builtFiles.map((file) => `/${file.replace(/^\//, '')}`));
-  const bases = new Set(Object.values(COLLECTION_BASES));
+const RESERVED_LEAF_SLUGS = new Set(['tags', 'tag', 'page', 'category']);
 
-  const reserved = new Set(['tags', 'tag', 'page', 'category']);
-  return routes
-    .filter((route) => {
-      const parts = route.split('/').filter(Boolean);
-      return parts.length === 2 && bases.has(parts[0]) && !reserved.has(parts[1] ?? '');
-    })
-    .map((route) => `${route}.md`)
-    .filter((sidecar) => !built.has(sidecar));
+export function sidecarCandidateRoutes(routes) {
+  const bases = new Set(Object.values(COLLECTION_BASES));
+  const collectionLeaves = routes.filter((route) => {
+    const parts = route.split('/').filter(Boolean);
+    return parts.length === 2 && bases.has(parts[0]) && !RESERVED_LEAF_SLUGS.has(parts[1] ?? '');
+  });
+  const staticAndHubs = sidecarRoutes()
+    .map((page) => page.path)
+    .filter((path) => routes.includes(path));
+  return [...collectionLeaves, ...staticAndHubs];
+}
+
+export function sidecarGaps(routes, sidecarTextByRoute) {
+  return sidecarCandidateRoutes(routes)
+    .filter((route) => !sidecarTextByRoute[route])
+    .map((route) => `/${sidecarFileForRoute(route)}`);
+}
+
+function parseSidecar(text) {
+  return {
+    title: /^# (.+)$/m.exec(text)?.[1]?.trim() ?? '',
+    source: /^Source: (\S+)$/m.exec(text)?.[1] ?? '',
+    updated: /^Updated: (\d{4}-\d{2}-\d{2})$/m.exec(text)?.[1] ?? '',
+    body: text
+      .split(/\n---\n\n/)
+      .slice(1)
+      .join('\n---\n\n')
+      .trim(),
+  };
+}
+
+export function sidecarContentGaps(routes, sidecarTextByRoute, { site }) {
+  const failures = [];
+  for (const route of sidecarCandidateRoutes(routes)) {
+    const text = sidecarTextByRoute[route];
+    if (!text) continue;
+
+    const { title, source, updated, body } = parseSidecar(text);
+    const expectedSource = absoluteUrl(site, route);
+    if (!title) failures.push(`sidecar for ${route} carries no title`);
+    if (source !== expectedSource) {
+      failures.push(`sidecar for ${route} canonical is ${source || '(missing)'}, expected ${expectedSource}`);
+    }
+    if (!updated) failures.push(`sidecar for ${route} carries no updated date`);
+    if (!body) failures.push(`sidecar for ${route} body is empty`);
+  }
+  return failures;
+}
+
+const LINK_TAG = /<link\b[^>]*>/gi;
+
+function hasCollectionFeedLink(html, base) {
+  const href = `href="${base}/rss.xml"`;
+  return [...html.matchAll(LINK_TAG)].some((tag) => /rel=["']alternate["']/.test(tag[0]) && tag[0].includes(href));
+}
+
+export function hubFeedLinkGaps(hubRoutes, htmlByRoute) {
+  return hubRoutes.filter((route) => !hasCollectionFeedLink(htmlByRoute[route] ?? '', route));
 }
 
 function toPath(url) {
-  return url.replace(/^https?:\/\/[^/]+/, '');
+  const path = url.replace(/^https?:\/\/[^/]+/, '');
+  return path === '' ? '/' : path;
+}
+
+function sitemapLastmods(xml) {
+  const lastmods = new Map();
+  for (const [, block] of xml.matchAll(/<url>([\s\S]*?)<\/url>/g)) {
+    const loc = /<loc>([^<]+)<\/loc>/.exec(block)?.[1];
+    if (loc) lastmods.set(toPath(loc), /<lastmod>/.test(block));
+  }
+  return lastmods;
+}
+
+export function lastmodCoverageGaps(sitemapXml, routes) {
+  const lastmods = sitemapLastmods(sitemapXml);
+  return routes.filter((route) => !lastmods.get(route));
 }
 
 function itemPaths(feedXml) {
@@ -159,9 +231,10 @@ async function main(distDir) {
     failures.push(`llms.txt is missing indexable route ${gap}`);
   }
 
-  const llmsIndex = await readFile(join(distDir, 'llms-full.txt'), 'utf8');
-  for (const gap of llmsIndexGaps(llmsIndex, collections)) {
-    failures.push(`llms-full.txt lists no /llms/${gap}.txt`);
+  const llmsFull = await readFile(join(distDir, 'llms-full.txt'), 'utf8');
+  failures.push(...sizeGuardFailure('llms-full.txt', Buffer.byteLength(llmsFull, 'utf8'), LLMS_FULL_MAX_BYTES));
+  for (const collection of collections) {
+    for (const gap of llmsRouteGaps(llmsFull, liveByKind[collection])) failures.push(`llms-full.txt omits ${gap}`);
   }
 
   for (const collection of collections) {
@@ -180,17 +253,29 @@ async function main(distDir) {
     failures.push(`sitemap covers no ${missing} entry`);
   }
 
-  const sidecars = await Promise.all(
-    routes.map(async (route) => {
-      const candidate = `${route.slice(1)}.md`;
-      return readFile(join(distDir, candidate)).then(
-        () => candidate,
-        () => null
-      );
-    })
-  );
+  const expectedLastmods = await siteLastmods({
+    dataDir: 'src/data',
+    staticPages: publicIndexableStaticPages(),
+    cwd: process.cwd(),
+  });
+  for (const gap of lastmodCoverageGaps(sitemap, Object.keys(expectedLastmods))) {
+    failures.push(`sitemap has no lastmod for ${gap}`);
+  }
 
-  for (const gap of sidecarGaps(routes, sidecars.filter(Boolean))) failures.push(`no markdown sidecar for ${gap}`);
+  const sidecarTextByRoute = {};
+  for (const route of sidecarCandidateRoutes(routes)) {
+    sidecarTextByRoute[route] = await readFile(join(distDir, sidecarFileForRoute(route)), 'utf8').catch(() => null);
+  }
+
+  for (const gap of sidecarGaps(routes, sidecarTextByRoute)) failures.push(`no markdown sidecar for ${gap}`);
+  for (const gap of sidecarContentGaps(routes, sidecarTextByRoute, { site: SITE_ORIGIN })) failures.push(gap);
+
+  const hubRoutes = [...new Set(Object.values(COLLECTION_BASES))].map((base) => `/${base}`);
+  const hubHtml = {};
+  for (const route of hubRoutes) hubHtml[route] = await routeHtml(distDir, route);
+  for (const gap of hubFeedLinkGaps(hubRoutes, hubHtml)) {
+    failures.push(`${gap} does not advertise its own collection feed <link>`);
+  }
 
   const perCollectionFeeds = {};
   for (const collection of collections) {

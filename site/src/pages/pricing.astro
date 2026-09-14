@@ -6,11 +6,15 @@ import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { orgNode, personNode, serviceNode } from '~/utils/jsonld.mjs';
+import { glossaryStub, orgNode, personNode, serviceEntityLinks, serviceNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
 const services = (await getCollection('service')).sort((a, b) => a.data.order - b.data.order);
+const terms = (await getCollection('glossary', ({ data: term }) => !term.draft)).map((entry) => ({
+  id: entry.id,
+  term: entry.data.term,
+}));
 
 const metadata = {
   title: 'Pricing',
@@ -23,10 +27,22 @@ const crumbs = [
   { name: 'Pricing', path: '/pricing' },
 ];
 
+const serviceLinks = services.map((service) => ({
+  service: { id: service.id, ...service.data },
+  links: serviceEntityLinks({ id: service.id, ...service.data }, terms),
+}));
+const citedTermIds = [...new Set(serviceLinks.flatMap(({ links }) => [...links.about, ...links.mentions]))];
+
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
-  ...services.map((service) => serviceNode(site, { id: service.id, ...service.data })),
+  ...citedTermIds.map((id) =>
+    glossaryStub(
+      site,
+      terms.find((term) => term.id === id)
+    )
+  ),
+  ...serviceLinks.map(({ service, links }) => serviceNode(site, service, links)),
 ];
 ---
 

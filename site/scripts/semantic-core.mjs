@@ -1,6 +1,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
+import { extractPage } from './content-html.mjs';
 import { judgePage, PROFILES } from './content-rows.mjs';
 import { discoverRoutes } from './gate.mjs';
 
@@ -12,6 +13,8 @@ export const GENERATED_END = '<!-- semantic-core:end generated -->';
 
 const FAMILY_BY_PREFIX = [
   ['/blog/category/', 'blog-category'],
+  ['/blog/tags', 'tag-index'],
+  ['/blog/tag/', 'tag'],
   ['/blog/', 'article'],
   ['/services/', 'service'],
   ['/resources/', 'resource'],
@@ -58,6 +61,16 @@ export const FAMILY_GRAMMAR = {
     meta: 'what the category covers, scoped to the 30–300 person buyer',
     intent: 'curated list with one-line stakes per entry',
   },
+  'tag-index': {
+    pattern: 'Tags — meshin.co',
+    meta: 'what tags exist and how many articles carry each one',
+    intent: 'browse the tag list, then route into one tag',
+  },
+  tag: {
+    pattern: '{tag name} — meshin.co',
+    meta: 'every article tagged {tag}, newest first',
+    intent: 'thin archive list; route straight to the tagged articles',
+  },
   term: {
     pattern: 'What is {term}? — meshin.co',
     meta: 'the definition sentence',
@@ -70,7 +83,18 @@ export const FAMILY_GRAMMAR = {
   },
 };
 
-const FAMILY_ORDER = ['static', 'service', 'resource', 'case-study', 'article', 'blog-category', 'term', 'faq-answer'];
+const FAMILY_ORDER = [
+  'static',
+  'service',
+  'resource',
+  'case-study',
+  'article',
+  'blog-category',
+  'tag-index',
+  'tag',
+  'term',
+  'faq-answer',
+];
 
 const STEM_RULES = {
   term: /^What\b.*\?$/,
@@ -156,6 +180,141 @@ async function collectGated(distDir) {
   return collectPages(distDir);
 }
 
+async function readRouteHtml(distDir, route) {
+  const candidates = route === '/' ? ['index.html'] : [`${route.slice(1)}/index.html`, `${route.slice(1)}.html`];
+  for (const candidate of candidates) {
+    try {
+      return await readFile(join(distDir, candidate), 'utf8');
+    } catch {
+      // try the next candidate
+    }
+  }
+  throw new Error(`semantic-core: no built html for route ${route}`);
+}
+
+async function collectAllPages(distDir) {
+  const routes = await discoverRoutes(distDir);
+  const pages = [];
+  for (const route of routes) pages.push(extractPage(route, await readRouteHtml(distDir, route)));
+  return pages;
+}
+
+const routeCell = (line) => /^\|\s*`([^`]+)`/.exec(line)?.[1];
+
+export function docDriftFindings(committedDoc, freshBlock) {
+  const begin = committedDoc.indexOf(GENERATED_BEGIN);
+  const end = committedDoc.indexOf(GENERATED_END);
+  if (begin === -1 || end === -1) throw new Error('semantic-core: markers missing from docs/SEMANTIC-CORE.md');
+
+  const committedBlock = committedDoc.slice(begin + GENERATED_BEGIN.length, end).trim();
+  if (committedBlock === freshBlock.trim()) return [];
+
+  const committedLines = new Map();
+  for (const line of committedBlock.split('\n')) {
+    const route = routeCell(line);
+    if (route) committedLines.set(route, line);
+  }
+  const freshLines = new Map();
+  for (const line of freshBlock.split('\n')) {
+    const route = routeCell(line);
+    if (route) freshLines.set(route, line);
+  }
+
+  const drifted = new Set();
+  for (const [route, line] of freshLines) if (committedLines.get(route) !== line) drifted.add(route);
+  for (const route of committedLines.keys()) if (!freshLines.has(route)) drifted.add(route);
+
+  return [...drifted].sort().map((route) => ({
+    route,
+    rule: 'doc-drift',
+    detail: 'generated table differs from docs/SEMANTIC-CORE.md',
+    excerpt: '',
+  }));
+}
+
+const PROMPTS_HEADING = '### The 30 buyer prompts';
+const GAP_REGISTER_HEADING = '### GAP register';
+
+export function parseBuyerPrompts(doc) {
+  const start = doc.indexOf(PROMPTS_HEADING);
+  if (start === -1) return [];
+  const end = doc.indexOf(GAP_REGISTER_HEADING, start);
+  const section = doc.slice(start, end === -1 ? undefined : end);
+
+  const prompts = [];
+  for (const block of section.split(/\n\n(?=\*\*\d+\.)/)) {
+    const numbers = [...block.matchAll(/^\*\*(\d+)\./gm)].map((match) => Number(match[1]));
+    if (numbers.length === 0) continue;
+
+    const mustWinLine = /^Must win[^:\n]*:(.*)$/m.exec(block);
+    const mustWinRoutes = mustWinLine
+      ? [...mustWinLine[1].split(/\bsupport\b/i)[0].matchAll(/`([^`]+)`/g)].map((match) => match[1])
+      : [];
+
+    const passages = [...block.matchAll(/Passage:\s*"([^"]+)"\s*\(`([^`]+)`\)/g)].map((match) => ({
+      text: match[1],
+      route: match[2],
+    }));
+    if (passages.length === 0) {
+      const bareQuote = /Passage:\s*"([^"]+)"/.exec(block);
+      if (bareQuote && mustWinRoutes[0]) passages.push({ text: bareQuote[1], route: mustWinRoutes[0] });
+    }
+
+    for (const number of numbers) prompts.push({ number, mustWinRoutes, passages });
+  }
+
+  return prompts;
+}
+
+export function mustWinFindings(prompts, builtRoutes) {
+  const built = new Set(builtRoutes);
+  const findings = [];
+  for (const prompt of prompts)
+    for (const route of prompt.mustWinRoutes)
+      if (!built.has(route))
+        findings.push({
+          route,
+          rule: 'buyer-prompt-must-win-missing',
+          detail: `prompt ${prompt.number} must-win route not built`,
+          excerpt: '',
+        });
+  return findings;
+}
+
+export function passageFindings(prompts, pages) {
+  const textByRoute = new Map(pages.map((page) => [page.route, page.text]));
+  const findings = [];
+  for (const prompt of prompts)
+    for (const passage of prompt.passages) {
+      const text = textByRoute.get(passage.route);
+      if (text === undefined || text.includes(passage.text)) continue;
+      findings.push({
+        route: passage.route,
+        rule: 'buyer-prompt-passage-missing',
+        detail: `prompt ${prompt.number} passage no longer found on the page`,
+        excerpt: passage.text.slice(0, 90),
+      });
+    }
+  return findings;
+}
+
+export const ABSENCE_CLAIMS = [{ prompt: 16, term: 'Israel', claim: '"Israel" appears on no built page' }];
+
+export function absenceFindings(pages, claims = ABSENCE_CLAIMS) {
+  const findings = [];
+  for (const claim of claims) {
+    const hit = pages.find((page) => page.text.includes(claim.term));
+    if (hit)
+      findings.push({
+        route: hit.route,
+        rule: 'gap-claim-stale',
+        detail: `prompt ${claim.prompt} GAP claim (${claim.claim}) no longer holds`,
+        excerpt: claim.term,
+      });
+  }
+  return findings;
+}
+
 export async function checkFindings(distDir, pages) {
   const facts = JSON.parse(await readFile('content-facts.json', 'utf8'));
   const queries = Object.keys(facts.targetQuery);
@@ -166,6 +325,15 @@ export async function checkFindings(distDir, pages) {
   const findings = orphanFindings(built, queries).filter((finding) => finding.rule === 'query-without-route');
   findings.push(...orphanFindings(gated, queries).filter((finding) => finding.rule === 'route-without-query'));
   findings.push(...titleFindings(rows));
+
+  const doc = await readFile(DOC, 'utf8');
+  findings.push(...docDriftFindings(doc, renderFamilies(rows)));
+
+  const prompts = parseBuyerPrompts(doc);
+  const allPages = await collectAllPages(distDir);
+  findings.push(...mustWinFindings(prompts, built));
+  findings.push(...passageFindings(prompts, allPages));
+  findings.push(...absenceFindings(allPages));
 
   return findings;
 }

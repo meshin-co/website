@@ -1,5 +1,6 @@
 ---
 question: 'What do NIST AI RMF, ISO/IEC 42001 and the EU AI Act each require of a company our size?'
+shortTitle: 'What do NIST, ISO/IEC 42001 and the EU AI Act require?'
 answer: "None of the three sets a headcount threshold. NIST's AI RMF is voluntary guidance built around four functions: govern, map, measure and manage. ISO/IEC 42001 is a certifiable standard for running an AI management system. The EU AI Act is binding law: what you owe depends on being a provider (building AI into what you sell) or a deployer (only using it inside the business), plus the system's risk tier, not your size."
 publishDate: 2026-09-12
 updatedDate: 2026-09-12

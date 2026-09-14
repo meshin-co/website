@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { buildIndexEntry, scoreEntry, rankEntries } from '../public/search/index-model.mjs';
-import { ENTRY_TEXT_CAP, KINDS, buildShardEntry, shardHref, summaryLine } from '../public/search/shards.mjs';
+import { ENTRY_TEXT_CAPS, KINDS, buildShardEntry, shardHref, summaryLine } from '../public/search/shards.mjs';
 
 const ENTRY = {
   href: '/glossary/evals',
@@ -104,18 +104,20 @@ test('a faq entry indexes the question as title and the answer as description an
   assert.ok(entry.text.includes('Three fixed structures'));
 });
 
-test('a post entry indexes takeaways, full answer and body', () => {
+test('a post entry indexes takeaways, full answer, its own faq block and body', () => {
   const entry = buildShardEntry('post', {
     href: '/blog/a',
     title: 'Why pilots stall',
     description: 'Pilots stall.',
     keyTakeaways: ['One process beats five pilots.'],
     fullAnswer: 'A pilot stalls when nobody owns the outcome.',
+    faq: [{ q: 'What is the single most common cause?', a: 'No named owner for the outcome.' }],
     body: 'The rest of the argument, in order.',
   });
 
   assert.ok(entry.text.startsWith('One process beats five pilots.'));
   assert.ok(entry.text.includes('A pilot stalls when nobody owns the outcome.'));
+  assert.ok(entry.text.includes('What is the single most common cause? No named owner for the outcome.'));
   assert.ok(entry.text.includes('The rest of the argument, in order.'));
 });
 
@@ -167,15 +169,14 @@ test('a case entry indexes the problem, the approach and the outcome metrics', (
   assert.ok(entry.text.includes('First response 3 days to 4 hours'));
 });
 
-test('entry text is capped when a body would blow the per-entry cap', () => {
-  const entry = buildShardEntry('post', {
-    href: '/blog/huge',
-    title: 'Huge',
-    description: 'Big.',
-    body: 'word '.repeat(10_000),
-  });
+test('entry text is capped at its own kind budget, not a shared global one', () => {
+  const huge = 'word '.repeat(10_000);
+  const post = buildShardEntry('post', { href: '/blog/huge', title: 'Huge', description: 'Big.', body: huge });
+  const faq = buildShardEntry('faq', { href: '/faq/huge', question: 'Huge?', answer: huge });
 
-  assert.equal(entry.text.length, ENTRY_TEXT_CAP);
+  assert.equal(post.text.length, ENTRY_TEXT_CAPS.post);
+  assert.equal(faq.text.length, ENTRY_TEXT_CAPS.faq);
+  assert.ok(ENTRY_TEXT_CAPS.post > ENTRY_TEXT_CAPS.faq, 'post budget must exceed the faq budget it is tested against');
 });
 
 test('the summary line groups results by kind with counts, biggest group first', () => {

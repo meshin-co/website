@@ -5,6 +5,7 @@ import CardGrid from '~/components/site/CardGrid.astro';
 import CtaBlock from '~/components/site/CtaBlock.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
+import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
 import ResourceCard from '~/components/site/ResourceCard.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
@@ -42,6 +43,14 @@ const nodes = [
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
+  <MarkdownAlternate path="/resources" slot="head" />
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title="meshin.co — Resources"
+    href="/resources/rss.xml"
+    slot="head"
+  />
 
   <Breadcrumbs crumbs={crumbs} />
 

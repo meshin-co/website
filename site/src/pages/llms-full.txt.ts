@@ -1,8 +1,8 @@
 import { getCollection } from 'astro:content';
 
 import { SITE } from 'astrowind:config';
-import { absoluteUrl, renderLlmsIndex } from '~/utils/machine-text.mjs';
-import { LLMS_COLLECTIONS, latestUpdated, toLlmsEntry } from '~/utils/llms-collections.mjs';
+import { absoluteUrl, renderLlmsFull } from '~/utils/machine-text.mjs';
+import { LLMS_COLLECTIONS, toLlmsEntry } from '~/utils/llms-collections.mjs';
 
 export const prerender = true;
 
@@ -13,19 +13,20 @@ const isLive = ({ data }: LiveEntry) => !data.draft && !data.noindex;
 export const GET = async () => {
   const site = import.meta.env.SITE.replace(/\/$/, '');
 
-  const files = [];
-  for (const { name, title, file } of LLMS_COLLECTIONS) {
+  const sections = [];
+  for (const { name, base, title } of LLMS_COLLECTIONS) {
     const entries = await getCollection(name as Parameters<typeof getCollection>[0], isLive);
-    const mapped = entries.map(toLlmsEntry());
-    files.push({
-      title: `${title} — full text`,
-      url: absoluteUrl(site, file),
-      count: mapped.length,
-      updated: latestUpdated(mapped),
-    });
+    const mapped = entries.map(toLlmsEntry()).map((entry) => ({
+      title: entry.title,
+      url: absoluteUrl(site, `${base}/${entry.id}`),
+      summary: entry.description,
+      body: entry.body,
+      updated: entry.updated,
+    }));
+    sections.push({ title, entries: mapped });
   }
 
-  return new Response(renderLlmsIndex({ site: SITE.name, files }), {
+  return new Response(renderLlmsFull({ site: SITE.name, sections }), {
     headers: { 'Content-Type': 'text/plain; charset=utf-8' },
   });
 };

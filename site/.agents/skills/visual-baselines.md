@@ -9,12 +9,23 @@ its own set, and BOTH sets are regenerated together, in the same commit.
 
     cd site && npx playwright test --update-snapshots
 
-## linux (CI-matching container)
+## linux (preferred: the CI runner itself)
 
-Run from `site/` so the volume maps the installed packages:
+`gh workflow run ci --ref main` triggers the `regen-baselines` job in
+`.github/workflows/ci.yml`. It builds on the same runner image that verifies the snapshots,
+regenerates `tests/__screenshots__/linux/` and commits as `baseline-bot`. Use this first: a
+container matching the image is still not the runner, and a one-line sub-pixel wrap difference
+between them cost a full red CI round on 2026-09-13.
 
-    docker run --rm -v "$PWD":/work -w /work mcr.microsoft.com/playwright:v1.63.0-jammy \
-      npx playwright test --update-snapshots
+Pull the bot commit before continuing: `git pull --rebase origin main`.
+
+## linux (fallback: CI-matching container)
+
+Use when the runner is unavailable, or to reproduce a failure locally. Run from `site/` so the
+volume maps the installed packages:
+
+    docker run --rm --platform linux/amd64 -v "$PWD":/work -w /work \
+      mcr.microsoft.com/playwright:v1.63.0-noble npx playwright test --update-snapshots
 
 ## Same-commit rule
 

@@ -1,9 +1,13 @@
 import type { APIRoute } from 'astro';
 import { getCollection, getEntry } from 'astro:content';
 
+import { categoryPillars } from '~/data/categories.mjs';
 import { artifacts, drivers, hero, services, shift, signals } from '~/data/home';
+import { TAGS } from '~/data/tags.mjs';
 import { FEED_BASES, isLive } from '~/utils/feeds.mjs';
-import { buildShardEntry, KINDS } from '../../public/search/shards.mjs';
+import { LLMS_COLLECTIONS } from '~/utils/llms-collections.mjs';
+import { collectionHubs, publicIndexableStaticPages } from '~/utils/machine-text.mjs';
+import { buildShardEntry, KINDS, words } from '../../public/search/shards.mjs';
 
 export const prerender = true;
 
@@ -19,7 +23,7 @@ interface ShardEntry {
   text: string;
 }
 
-const homeBody = [
+const HOME_BODY = words([
   hero.sub,
   hero.proof.join(' '),
   ...signals.items,
@@ -29,53 +33,7 @@ const homeBody = [
   ...shift.before.items,
   ...shift.after.items,
   ...artifacts.map(({ name, summary }) => `${name} ${summary}`),
-].join(' ');
-
-const PAGES = [
-  {
-    href: '/',
-    title: 'Fractional Chief AI Officer',
-    description: 'AI leadership you can name on the org chart.',
-    body: homeBody,
-  },
-  {
-    href: '/approach',
-    title: 'How I work',
-    description: 'The six things that decide whether an AI initiative reaches production.',
-    body: '',
-  },
-  {
-    href: '/pricing',
-    title: 'Pricing',
-    description: 'Assessment, sprint and retainer prices, with the billing terms.',
-    body: '',
-  },
-  {
-    href: '/about',
-    title: 'About Dmitri Meshin',
-    description: 'Platform engineer working as a Fractional Chief AI Officer.',
-    body: '',
-  },
-  {
-    href: '/faq',
-    title: 'Questions and answers',
-    description: 'What each offer produces and how AI risk gets signed off.',
-    body: '',
-  },
-  {
-    href: '/ai-policy',
-    title: 'AI acceptable use policy',
-    description: 'My own policy: which data may reach which vendor, and who decides.',
-    body: '',
-  },
-  {
-    href: '/security',
-    title: 'Security',
-    description: 'How this site is built and how client data is handled.',
-    body: '',
-  },
-  { href: '/now', title: 'Now', description: 'What I am working on this month and what capacity is free.', body: '' },
-];
+]);
 
 const shardBuilders: Record<string, () => Promise<ShardEntry[]>> = {
   post: async () =>
@@ -87,6 +45,7 @@ const shardBuilders: Record<string, () => Promise<ShardEntry[]>> = {
         body: entry.body ?? '',
         keyTakeaways: entry.data.keyTakeaways,
         fullAnswer: entry.data.fullAnswer,
+        faq: entry.data.faq,
       })
     ),
   glossary: async () =>
@@ -142,9 +101,71 @@ const shardBuilders: Record<string, () => Promise<ShardEntry[]>> = {
       })
     ),
   page: async () => {
-    const author = await getEntry('author', 'dmitri');
-    const aboutBody = author ? [author.data.role, author.data.bio, author.data.credentials.join(' ')].join(' ') : '';
-    return PAGES.map((page) => buildShardEntry('page', page.href === '/about' ? { ...page, body: aboutBody } : page));
+    const [author, posts, faqEntries] = await Promise.all([
+      getEntry('author', 'dmitri'),
+      getCollection('post', isLive),
+      getCollection('faq', isLive),
+    ]);
+
+    const aboutBody = author ? words([author.data.role, author.data.bio, author.data.credentials.join(' ')]) : '';
+
+    const faqBody = words(faqEntries.map((entry) => entry.data.question));
+
+    const tagCounts = new Map<string, number>();
+    for (const post of posts) {
+      for (const tag of post.data.tags) tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+    }
+    const liveTags = TAGS.filter((tag) => (tagCounts.get(tag.slug) ?? 0) > 0);
+    const blogTagsBody = words(liveTags.map((tag) => tag.name));
+
+    const liveCategorySlugs = new Set<string>(posts.map((post) => post.data.category));
+
+    const staticPageBodyFromSource: Record<string, string> = {
+      '/': HOME_BODY,
+      '/about': aboutBody,
+      '/faq': faqBody,
+      '/blog/tags': blogTagsBody,
+    };
+
+    const staticPages = publicIndexableStaticPages();
+
+    const staticPageEntries = staticPages.map((page) =>
+      buildShardEntry('page', {
+        href: page.path,
+        title: page.title,
+        description: page.description,
+        body: staticPageBodyFromSource[page.path] ?? '',
+      })
+    );
+
+    const hubEntries = collectionHubs({
+      collections: LLMS_COLLECTIONS,
+      staticPaths: staticPages.map((page) => page.path),
+    }).map(({ base }: { base: string }) =>
+      buildShardEntry('page', { href: base, title: '', description: '', body: '' })
+    );
+
+    const categoryEntries = Object.entries(categoryPillars)
+      .filter(([slug]) => liveCategorySlugs.has(slug))
+      .map(([slug, pillar]) =>
+        buildShardEntry('page', {
+          href: `/blog/category/${slug}`,
+          title: pillar.title,
+          description: pillar.description,
+          body: pillar.body.join(' '),
+        })
+      );
+
+    const tagEntries = liveTags.map((tag) =>
+      buildShardEntry('page', {
+        href: `/blog/tag/${tag.slug}`,
+        title: tag.name,
+        description: `Every article tagged ${tag.name}, newest first.`,
+        body: `Every article tagged ${tag.name}, newest first.`,
+      })
+    );
+
+    return [...staticPageEntries, ...hubEntries, ...categoryEntries, ...tagEntries];
   },
 };
 

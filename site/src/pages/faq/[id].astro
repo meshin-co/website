@@ -11,8 +11,10 @@ import Section from '~/components/site/Section.astro';
 import SourceList from '~/components/site/SourceList.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { faqMetadata } from '~/utils/faq-meta.mjs';
-import { faqPageNode, orgNode, personNode } from '~/utils/jsonld.mjs';
+import { faqPageNode, findGlossaryMentions, imageObject, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+import RelatedContent from '~/components/site/RelatedContent.astro';
+import { distinctByKeyword, firstMention, textMentionsKeyword, resolveByIds } from '~/utils/related-content.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const questions = await getCollection('faq', ({ data }) => !data.draft);
@@ -29,6 +31,46 @@ const site = import.meta.env.SITE.replace(/\/$/, '');
 
 const metadata = faqMetadata(data);
 
+const services = await getCollection('service');
+const terms = await getCollection('glossary', ({ data: term }) => !term.draft);
+const allQuestions = await getCollection('faq', ({ data: other }) => !other.draft);
+const faqText = `${data.question}\n${data.answer}`;
+
+const relatedQuestions = allQuestions
+  .filter((other) => other.id !== entry.id && other.data.category === data.category)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
+
+const serviceCandidates = distinctByKeyword(
+  services.map((service) => ({ id: service.id, name: service.data.name, href: `/services/${service.id}` }))
+);
+const concernedServices = serviceCandidates.filter((service) => textMentionsKeyword(faqText, service.keyword));
+
+const mentionedTermIds = findGlossaryMentions(
+  faqText,
+  terms.map((term) => ({ id: term.id, term: term.data.term }))
+);
+const mentionedTerms = resolveByIds(mentionedTermIds, terms);
+
+const entityCandidates = [
+  ...mentionedTerms.map((term) => ({ name: term.data.term, href: `/glossary/${term.id}` })),
+  ...concernedServices.map((service) => ({ name: service.keyword, href: `/services/${service.id}` })),
+];
+const linkedAnswer = firstMention(data.answer, entityCandidates);
+
+const relatedGroups = [
+  {
+    heading: 'Related questions',
+    items: relatedQuestions.map((other) => ({ label: other.data.question, href: `/faq/${other.id}` })),
+  },
+  { heading: 'Concerns', items: concernedServices.map((service) => ({ label: service.name, href: service.href })) },
+  {
+    heading: 'Related terms',
+    items: mentionedTerms.map((term) => ({ label: term.data.term, href: `/glossary/${term.id}` })),
+  },
+];
+const hasRelated = relatedGroups.some((group) => group.items.length > 0);
+
 const crumbs = [
   { name: 'Home', path: '/' },
   { name: 'FAQ', path: '/faq' },
@@ -38,7 +80,15 @@ const crumbs = [
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
-  faqPageNode(site, { id: entry.id, question: data.question, answer: data.answer }),
+  websiteNode(site),
+  faqPageNode(
+    site,
+    { id: entry.id, question: data.question, answer: data.answer, sources: data.sources },
+    {
+      image: imageObject({ url: `${site}${ogDefaultPath}`, width: 1200, height: 630 }),
+      speakableSelectors: ['h1', '[data-gate-lead]'],
+    }
+  ),
 ];
 ---
 
@@ -47,34 +97,72 @@ const nodes = [
 
   <Breadcrumbs crumbs={crumbs} />
   <MarkdownAlternate path={`/faq/${entry.id}`} slot="head" />
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title="meshin.co — Questions and answers"
+    href="/faq/rss.xml"
+    slot="head"
+  />
 
-  <Section bordered={false} headingLevel={1} eyebrow="FAQ" title={data.question} />
+  <article>
+    <Section bordered={false} headingLevel={1} eyebrow="FAQ" title={data.question} />
 
-  <Section eyebrow="Answer" title="The answer" tone="surface">
-    <p class="max-w-[68ch] text-lg leading-relaxed text-muted" data-gate-lead>{data.answer}</p>
-    <p class="mt-6 font-mono text-xs text-muted">
-      Updated{' '}
-      <time datetime={data.updatedDate.toISOString().slice(0, 10)}>
-        {data.updatedDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
-      </time>
-    </p>
+    <Section eyebrow="Answer" title="The answer" tone="surface">
+      <p class="max-w-[68ch] text-lg leading-relaxed text-muted" data-gate-lead>
+        {
+          linkedAnswer ? (
+            <>
+              {linkedAnswer.before}
+              <a
+                class="text-link underline decoration-2 underline-offset-4 hover:decoration-primary"
+                href={linkedAnswer.href}
+              >
+                {linkedAnswer.matched}
+              </a>
+              {linkedAnswer.after}
+            </>
+          ) : (
+            data.answer
+          )
+        }
+      </p>
+      <p class="mt-6 font-mono text-xs text-muted" data-gate-ignore>
+        Published{' '}
+        <time datetime={data.publishDate.toISOString().slice(0, 10)}>
+          {data.publishDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+        </time>
+        {' · Updated '}
+        <time datetime={data.updatedDate.toISOString().slice(0, 10)}>
+          {data.updatedDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+        </time>
+      </p>
+      {
+        data.relatedPage && (
+          <p class="mt-6 font-mono text-xs text-muted">
+            <a class="text-link" href={data.relatedPage}>
+              Related page
+            </a>
+          </p>
+        )
+      }
+      {
+        data.sources && data.sources.length > 0 && (
+          <div class="mt-10">
+            <SourceList sources={data.sources} />
+          </div>
+        )
+      }
+    </Section>
+
     {
-      data.relatedPage && (
-        <p class="mt-6 font-mono text-xs text-muted">
-          <a class="text-link" href={data.relatedPage}>
-            Related page
-          </a>
-        </p>
+      hasRelated && (
+        <Section eyebrow="Continue" title="Related">
+          <RelatedContent groups={relatedGroups} />
+        </Section>
       )
     }
-    {
-      data.sources && data.sources.length > 0 && (
-        <div class="mt-10">
-          <SourceList sources={data.sources} />
-        </div>
-      )
-    }
-  </Section>
+  </article>
 
   <Section title="Still unsure">
     <CtaBlock

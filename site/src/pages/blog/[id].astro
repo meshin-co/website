@@ -20,7 +20,17 @@ import Layout from '~/layouts/PageLayout.astro';
 import { categoryPillars } from '~/data/categories.mjs';
 import { tagBySlug } from '~/data/tags.mjs';
 import { articleMetadata } from '~/utils/machine-links.mjs';
-import { faqNode, orgNode, personNode, postNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import {
+  faqNode,
+  glossaryStub,
+  imageObject,
+  orgNode,
+  personNode,
+  postEntityLinks,
+  postNode,
+  webPageNode,
+  websiteNode,
+} from '~/utils/jsonld.mjs';
 import { neighbourPosts, relatedPosts } from '~/utils/post-neighbors.mjs';
 import { readingTime } from '~/utils/reading-time.mjs';
 import { countWords } from '~/utils/content-rules.mjs';
@@ -56,6 +66,10 @@ const { post, previous, next, related } = Astro.props;
 const { data } = post;
 const { Content, headings } = await render(post);
 const author = await getEntry(data.author);
+const terms = (await getCollection('glossary', ({ data: term }) => !term.draft)).map((entry) => ({
+  id: entry.id,
+  term: entry.data.term,
+}));
 const site = import.meta.env.SITE.replace(/\/$/, '');
 const published = data.publishDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 const categoryTitle = categoryPillars[data.category]?.title ?? data.category;
@@ -73,23 +87,44 @@ const metadata = articleMetadata(site, {
   tags: data.tags.map((slug) => tagBySlug[slug]?.name ?? slug),
 });
 
+const postForLinks = {
+  id: post.id,
+  ...data,
+  wordCount: countWords((post.body ?? '').replace(/[#>*_`[\]()!-]/g, ' ')),
+  body: post.body,
+};
+const { about, mentions } = postEntityLinks(postForLinks, terms);
+const citedTermIds = [...new Set([...about, ...mentions])];
+
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
   websiteNode(site),
-  postNode(site, {
-    id: post.id,
-    ...data,
-    wordCount: countWords((post.body ?? '').replace(/[#>*_`[\]()!-]/g, ' ')),
-  }),
+  ...citedTermIds.map((id) =>
+    glossaryStub(
+      site,
+      terms.find((term) => term.id === id)
+    )
+  ),
+  postNode(site, postForLinks, { about, mentions }),
   ...(data.faq.length > 0 ? [faqNode(data.faq)] : []),
-  webPageNode(site, `/blog/${post.id}`, lastmod({ publishDate: data.publishDate, updatedDate: data.updatedDate })),
+  webPageNode(
+    site,
+    `/blog/${post.id}`,
+    lastmod({ publishDate: data.publishDate, updatedDate: data.updatedDate }),
+    data.title,
+    {
+      image: imageObject(metadata.openGraph.images[0]),
+      speakableSelectors: ['h1', '[data-answer]', '[data-gate-lead]'],
+    }
+  ),
 ];
 ---
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
   <MarkdownAlternate path={`/blog/${post.id}`} slot="head" />
+  <link rel="alternate" type="application/rss+xml" title="meshin.co — Writing" href="/blog/rss.xml" slot="head" />
 
   <Breadcrumbs
     crumbs={[
@@ -100,113 +135,119 @@ const nodes = [
     ]}
   />
 
-  <Section
-    bordered={false}
-    headingLevel={1}
-    eyebrow={`${categoryTitle} · ${published} · ${readingTime(post.body ?? '')}`}
-    title={data.title}
-    lead={data.description}
-  />
+  <article>
+    <Section
+      bordered={false}
+      headingLevel={1}
+      eyebrow={`${categoryTitle} · ${published} · ${readingTime(post.body ?? '')}`}
+      title={data.title}
+      lead={data.description}
+    />
 
-  <Section eyebrow="Answer" title="The short answer" tone="surface">
-    <AnswerBlock question={data.title} answer={data.shortAnswer} />
-    <p class="mt-10 max-w-[68ch] text-muted" data-gate-lead>{data.fullAnswer}</p>
-    <p class="mt-6 font-mono text-xs text-muted">
-      Updated{' '}
-      <time datetime={data.updatedDate.toISOString().slice(0, 10)}>
-        {data.updatedDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
-      </time>
-    </p>
-  </Section>
+    <Section eyebrow="Answer" title="The short answer" tone="surface">
+      <AnswerBlock question={data.title} answer={data.shortAnswer} />
+      <p class="mt-10 max-w-[68ch] text-muted" data-gate-lead>{data.fullAnswer}</p>
+      <p class="mt-6 font-mono text-xs text-muted" data-gate-ignore>
+        Published{' '}
+        <time datetime={data.publishDate.toISOString().slice(0, 10)}>
+          {data.publishDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+        </time>
+        {' · Updated '}
+        <time datetime={data.updatedDate.toISOString().slice(0, 10)}>
+          {data.updatedDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+        </time>
+      </p>
+    </Section>
 
-  <Section eyebrow="Takeaways" title="What to remember">
-    <KeyTakeaways points={data.keyTakeaways} />
-  </Section>
+    <Section eyebrow="Takeaways" title="What to remember">
+      <KeyTakeaways points={data.keyTakeaways} />
+    </Section>
 
-  <Section eyebrow="Detail" title="The long version">
-    <div class="grid gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)] lg:gap-16">
-      <div class="prose-brief prose-brief-headings max-w-[68ch]">
-        <Content />
-      </div>
-      <div class="lg:sticky lg:top-24 lg:self-start">
-        <TableOfContents headings={headings} />
-      </div>
-    </div>
-    {
-      data.tags.length > 0 && (
-        <nav aria-label="Tags" class="mt-12 flex flex-wrap gap-3 font-mono text-xs">
-          {data.tags.map((slug) => (
-            <a
-              class="border border-line px-3 py-1 text-muted hover:border-primary hover:text-primary"
-              href={`/blog/tag/${slug}`}
-            >
-              {tagBySlug[slug]?.name ?? slug}
-            </a>
-          ))}
-        </nav>
-      )
-    }
-  </Section>
-
-  {
-    data.faq.length > 0 && (
-      <Section eyebrow="Questions" title="What people ask" tone="surface">
-        <FaqList items={data.faq.map((entry) => ({ question: entry.q, answer: entry.a }))} />
-      </Section>
-    )
-  }
-
-  <Section eyebrow="Provenance" title="Where this comes from">
-    <SourceList sources={data.sources} />
-    {
-      author && (
-        <div class="mt-12">
-          <AuthorBox name={author.data.name} role={author.data.role} bio={author.data.bio} href="/about" />
+    <Section eyebrow="Detail" title="The long version">
+      <div class="grid gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)] lg:gap-16">
+        <div class="prose-brief prose-brief-headings max-w-[68ch]">
+          <Content />
         </div>
+        <div class="lg:sticky lg:top-24 lg:self-start">
+          <TableOfContents headings={headings} />
+        </div>
+      </div>
+      {
+        data.tags.length > 0 && (
+          <nav aria-label="Tags" class="mt-12 flex flex-wrap gap-3 font-mono text-xs">
+            {data.tags.map((slug) => (
+              <a
+                class="border border-line px-3 py-1 text-muted hover:border-primary hover:text-primary"
+                href={`/blog/tag/${slug}`}
+              >
+                {tagBySlug[slug]?.name ?? slug}
+              </a>
+            ))}
+          </nav>
+        )
+      }
+    </Section>
+
+    {
+      data.faq.length > 0 && (
+        <Section eyebrow="Questions" title="What people ask" tone="surface">
+          <FaqList items={data.faq.map((entry) => ({ question: entry.q, answer: entry.a }))} />
+        </Section>
       )
     }
-  </Section>
 
-  {
-    (previous || next || related.length > 0) && (
-      <Section eyebrow="Continue" title="Keep reading">
-        {(previous || next) && (
-          <nav aria-label="More in this category" class="mb-10 flex flex-wrap gap-x-10 gap-y-4 font-mono text-xs">
-            {previous && (
-              <a
-                class="text-link underline decoration-2 underline-offset-4 hover:decoration-primary"
-                href={`/blog/${previous.id}`}
-              >
-                ← Previous: {previous.data.title}
-              </a>
-            )}
-            {next && (
-              <a
-                class="text-link underline decoration-2 underline-offset-4 hover:decoration-primary"
-                href={`/blog/${next.id}`}
-              >
-                Next: {next.data.title} →
-              </a>
-            )}
-          </nav>
-        )}
-        {related.length > 0 && (
-          <CardGrid columns={2}>
-            {related.map((entry) => (
-              <PostCard
-                title={entry.data.title}
-                href={`/blog/${entry.id}`}
-                excerpt={entry.data.description}
-                date={entry.data.publishDate.toISOString()}
-                readingTime={readingTime(entry.body ?? '')}
-                category={entry.data.category}
-              />
-            ))}
-          </CardGrid>
-        )}
-      </Section>
-    )
-  }
+    <Section eyebrow="Provenance" title="Where this comes from">
+      <SourceList sources={data.sources} />
+      {
+        author && (
+          <div class="mt-12">
+            <AuthorBox name={author.data.name} role={author.data.role} bio={author.data.bio} href="/about" />
+          </div>
+        )
+      }
+    </Section>
+
+    {
+      (previous || next || related.length > 0) && (
+        <Section eyebrow="Continue" title="Keep reading">
+          {(previous || next) && (
+            <nav aria-label="More in this category" class="mb-10 flex flex-wrap gap-x-10 gap-y-4 font-mono text-xs">
+              {previous && (
+                <a
+                  class="text-link underline decoration-2 underline-offset-4 hover:decoration-primary"
+                  href={`/blog/${previous.id}`}
+                >
+                  ← Previous: {previous.data.title}
+                </a>
+              )}
+              {next && (
+                <a
+                  class="text-link underline decoration-2 underline-offset-4 hover:decoration-primary"
+                  href={`/blog/${next.id}`}
+                >
+                  Next: {next.data.title} →
+                </a>
+              )}
+            </nav>
+          )}
+          {related.length > 0 && (
+            <CardGrid columns={2}>
+              {related.map((entry) => (
+                <PostCard
+                  title={entry.data.title}
+                  href={`/blog/${entry.id}`}
+                  excerpt={entry.data.description}
+                  date={entry.data.publishDate.toISOString()}
+                  readingTime={readingTime(entry.body ?? '')}
+                  category={entry.data.category}
+                />
+              ))}
+            </CardGrid>
+          )}
+        </Section>
+      )
+    }
+  </article>
 
   <Section title="Next step">
     <CtaBlock
