@@ -27,6 +27,15 @@ volume maps the installed packages:
     docker run --rm --platform linux/amd64 -v "$PWD":/work -w /work \
       mcr.microsoft.com/playwright:v1.63.0-noble npx playwright test --update-snapshots
 
+**Never regenerate baselines this way on Apple Silicon.** `--platform linux/amd64` on an arm64
+host runs under QEMU, and its timing is not the runner's. Measured on 2026-09-14: repeated full
+runs of the same commit against the same baselines failed 24, then 27, then 9, then 14 tests, a
+different set each time, while the real runner passed all three visual shards on the same code.
+Every failure was a whole-page **dimension** mismatch — two stable heights per page, 18 to 57 px
+apart, symmetric between runs — never same-size pixel noise. Emulated failures are not evidence
+about the site, and baselines recorded under emulation may not match the runner. Use the
+container only to reproduce a failure the runner already reported, and regenerate on the runner.
+
 ## Same-commit rule
 
 Every baseline change adds an entry to `docs/VISUAL_CHANGELOG.md` in the same commit, format
