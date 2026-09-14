@@ -5,12 +5,13 @@ const CATEGORIES = ['performance', 'accessibility', 'best-practices', 'seo'];
 
 const median = (values) => [...values].sort((a, b) => a - b)[Math.floor(values.length / 2)];
 
-async function readReports(dir) {
-  const files = (await readdir(dir)).filter((name) => name.startsWith('lhr-'));
+export async function readReports(dir) {
+  const entries = await readdir(dir, { withFileTypes: true, recursive: true });
   const reports = [];
-  for (const name of files) {
-    const raw = await readFile(join(dir, name));
-    const text = name.endsWith('.gz')
+  for (const entry of entries) {
+    if (!entry.isFile() || !entry.name.startsWith('lhr-')) continue;
+    const raw = await readFile(join(entry.parentPath, entry.name));
+    const text = entry.name.endsWith('.gz')
       ? await new Response(new Blob([raw]).stream().pipeThrough(new DecompressionStream('gzip'))).text()
       : raw.toString('utf8');
     reports.push(JSON.parse(text));

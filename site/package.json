@@ -32,7 +32,8 @@
     "gate:orphans": "node scripts/orphan-gate.mjs dist",
     "gate:routes": "node scripts/routes-gate.mjs dist",
     "assets:og-default": "node scripts/generate-og-default.mjs",
-    "assets:favicons": "node scripts/generate-favicons.mjs"
+    "assets:favicons": "node scripts/generate-favicons.mjs",
+    "gate:lh:one": "rm -rf .lighthouseci && lhci autorun --config=lighthouserc.cjs && node scripts/collect-reports.mjs \"$LHCI_FORM_FACTOR\""
   },
   "dependencies": {
     "@astro-community/astro-embed-twitter": "^0.5.11",

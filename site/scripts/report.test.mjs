@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
+import { mkdir, mkdtemp, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { test } from 'node:test';
 
-import { renderReport } from './report.mjs';
+import { readReports, renderReport } from './report.mjs';
 
 const row = (route, scores, runs = 3) => ({ route, runs, scores });
 const perfect = { performance: 100, accessibility: 100, 'best-practices': 100, seo: 100 };
@@ -131,4 +134,31 @@ test('a trailing slash on a Lighthouse route still matches the gate route it cam
   });
 
   assert.match(markdown, /Result: PASS/);
+});
+
+const lighthouseRun = (path) => ({
+  finalUrl: `http://127.0.0.1:4330${path}`,
+  categories: {
+    performance: { score: 1 },
+    accessibility: { score: 1 },
+    'best-practices': { score: 1 },
+    seo: { score: 1 },
+  },
+});
+
+test('reports collected into per-shard subdirectories are all read', async () => {
+  const dir = join(await mkdtemp(join(tmpdir(), 'report-shards-')), 'lh-mobile');
+  await mkdir(join(dir, 'shard-1'), { recursive: true });
+  await mkdir(join(dir, 'shard-2'), { recursive: true });
+  await writeFile(join(dir, 'shard-1', 'lhr-1.json'), JSON.stringify(lighthouseRun('/')));
+  await writeFile(join(dir, 'shard-2', 'lhr-2.json'), JSON.stringify(lighthouseRun('/about/')));
+
+  const reports = await readReports(dir);
+  assert.deepEqual(reports.map((report) => new URL(report.finalUrl).pathname).sort(), ['/', '/about/']);
+});
+
+test('a flat directory of reports still reads', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'report-flat-'));
+  await writeFile(join(dir, 'lhr-1.json'), JSON.stringify(lighthouseRun('/')));
+  assert.equal((await readReports(dir)).length, 1);
 });

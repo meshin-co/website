@@ -1,5 +1,7 @@
 const { existsSync, readFileSync } = require('node:fs');
 
+const { shardOf, shardRoutes } = require('./scripts/lh-shards.cjs');
+
 const desktop = process.env.LHCI_FORM_FACTOR === 'desktop';
 
 const CORE = {
@@ -16,9 +18,12 @@ const SEO = { 'categories:seo': ['error', { minScore: 1 }] };
 const gatePath = 'dist/gate-routes.json';
 const gate = existsSync(gatePath) ? JSON.parse(readFileSync(gatePath, 'utf8')) : { measured: [], lighthouseRoutes: [] };
 const measured = gate.measured;
-const audited = gate.lighthouseRoutes.filter((route) => measured.some((row) => row.route === route));
+const allAudited = gate.lighthouseRoutes.filter((route) => measured.some((row) => row.route === route));
+const shard = shardOf(process.env);
+const audited = shardRoutes(allAudited, shard);
 const noindexRoutes = measured.filter((row) => row.noindex).map((row) => row.route);
-const origin = `http://127.0.0.1:${process.env.GATE_SERVER_PORT ?? 4330}`;
+const port = Number(process.env.GATE_SERVER_PORT ?? 4330) + shard.index - 1;
+const origin = `http://127.0.0.1:${port}`;
 const url = audited.map((route) =>
   `${origin}${route === '/404' ? '/404.html' : `${route}/`.replace('//', '/')}`.replace(/\/$/, '/')
 );
@@ -38,7 +43,7 @@ const assert = noindexPattern
 module.exports = {
   ci: {
     collect: {
-      startServerCommand: `node scripts/gate-server.mjs dist`,
+      startServerCommand: `GATE_SERVER_PORT=${port} node scripts/gate-server.mjs dist`,
       startServerReadyPattern: 'gate server listening',
       url,
       numberOfRuns: 3,

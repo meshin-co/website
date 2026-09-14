@@ -1,9 +1,17 @@
 import { copyFile, mkdir, readdir, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 
+import { shardOf } from './lh-shards.cjs';
+
 export function resolvePhase(phase) {
   if (!phase) throw new Error('collect-reports: GATE_PHASE must name the phase these audits belong to');
   return phase.replace(/^phase-/, '');
+}
+
+export function targetDir(formFactor, env) {
+  const shard = shardOf(env);
+  const phaseDir = join('..', 'audits', `phase-${resolvePhase(env.GATE_PHASE)}`, `lh-${formFactor}`);
+  return shard.total === 1 ? phaseDir : join(phaseDir, `shard-${shard.index}`);
 }
 
 async function main(formFactor) {
@@ -11,7 +19,7 @@ async function main(formFactor) {
     throw new Error(`collect-reports: expected mobile or desktop, got ${formFactor}`);
   }
 
-  const target = join('..', 'audits', `phase-${resolvePhase(process.env.GATE_PHASE)}`, `lh-${formFactor}`);
+  const target = targetDir(formFactor, process.env);
   await rm(target, { recursive: true, force: true });
   await mkdir(target, { recursive: true });
 
