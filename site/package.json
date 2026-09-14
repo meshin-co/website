@@ -34,7 +34,8 @@
     "assets:og-default": "node scripts/generate-og-default.mjs",
     "assets:favicons": "node scripts/generate-favicons.mjs",
     "gate:lh:one": "rm -rf .lighthouseci && lhci autorun --config=lighthouserc.cjs && node scripts/collect-reports.mjs \"$LHCI_FORM_FACTOR\"",
-    "assets:robots": "node scripts/gen-robots.mjs"
+    "assets:robots": "node scripts/gen-robots.mjs",
+    "gate:plan": "node scripts/plan-gate.mjs"
   },
   "dependencies": {
     "@astro-community/astro-embed-twitter": "^0.5.11",

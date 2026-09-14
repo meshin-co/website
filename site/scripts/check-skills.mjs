@@ -31,9 +31,13 @@ const looksLikePath = (token) => {
   return KNOWN_ROOT_SEGMENTS.has(token.split('/')[0]);
 };
 
+const TRAILING_PUNCTUATION = /[.,;:!?)]+$/;
+
 export function pathCandidates(text) {
   const spans = [...text.matchAll(/`([^`\n]+)`/g)].map(([, span]) => span.trim());
-  const bare = [...text.matchAll(/(?<![\w`@./])([\w@.-]+(?:\/[\w@.-]+)+)/g)].map(([token]) => token);
+  const bare = [...text.matchAll(/(?<![\w`@./])([\w@.-]+(?:\/[\w@.-]+)+)/g)].map(([token]) =>
+    token.replace(TRAILING_PUNCTUATION, '')
+  );
   return [...new Set([...spans, ...bare])].filter(looksLikePath);
 }
 

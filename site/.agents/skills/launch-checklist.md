@@ -1,6 +1,6 @@
 # Launch Checklist (Phase 5)
 
-The plan of record is `docs/PLAN.md` Phase 5. CG-5 runs against the production URL, not a
+The plan of record is `docs/plan/INDEX.md` Phase 5. CG-5 runs against the production URL, not a
 preview. Nothing here happens before 4.5b is green.
 
 ## Before the flip

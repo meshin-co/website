@@ -1,6 +1,6 @@
 # Run the Calibration Gate
 
-Run at the end of every phase and before any merge to main. The procedure is `docs/PLAN.md` §3,
+Run at the end of every phase and before any merge to main. The procedure is `docs/plan/reference/calibration-gate.md`,
 steps 1–11; this file is the command-level runbook. One exit code decides the merge.
 
 ## Order

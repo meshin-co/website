@@ -1,7 +1,7 @@
 # Stay Inside the Design Lane
 
 Read before writing any markup or CSS. The lane is "engineering brief": paper and ink, one deep
-teal accent, hairlines instead of boxes, numbers instead of adjectives. `docs/PLAN.md` rows L9a,
+teal accent, hairlines instead of boxes, numbers instead of adjectives. `docs/plan/INDEX.md` rows L9a,
 L9b and L39 are the binding part; this file is how to obey them without inventing a second
 convention.
 

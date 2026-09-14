@@ -20,24 +20,29 @@ import {
 
 const fixtureRoot = await mkdtemp(join(tmpdir(), 'check-skills-'));
 await mkdir(join(fixtureRoot, 'repo', 'site', 'src', 'utils'), { recursive: true });
-await mkdir(join(fixtureRoot, 'repo', 'docs'), { recursive: true });
+await mkdir(join(fixtureRoot, 'repo', 'docs', 'plan'), { recursive: true });
 await mkdir(join(fixtureRoot, 'repo', 'site', 'audits'), { recursive: true });
-await writeFile(join(fixtureRoot, 'repo', 'docs', 'PLAN.md'), '# plan');
+await writeFile(join(fixtureRoot, 'repo', 'docs', 'plan', 'INDEX.md'), '# plan index');
 await writeFile(join(fixtureRoot, 'repo', 'site', 'src', 'utils', 'jsonld.mjs'), 'export {}');
 await mkdir(join(fixtureRoot, 'repo', 'site', 'scripts'), { recursive: true });
 await writeFile(join(fixtureRoot, 'repo', 'site', 'scripts', 'gate.mjs'), 'export {}');
 
 const roots = [join(fixtureRoot, 'repo'), join(fixtureRoot, 'repo', 'site')];
 
+test('a path at the end of a sentence is not read with its full stop attached', () => {
+  assert.deepEqual(pathCandidates('then read docs/plan/INDEX.md.'), ['docs/plan/INDEX.md']);
+  assert.deepEqual(pathCandidates('see scripts/gate.mjs, then stop'), ['scripts/gate.mjs']);
+});
+
 test('pathCandidates picks backticked and bare paths, drops commands and URIs', () => {
   const text =
-    'run `npm run gate:machine`, see docs/PLAN.md §3, skip https://meshin.co and mcr.microsoft.com/playwright:v1 images';
+    'run `npm run gate:machine`, see docs/plan/reference/calibration-gate.md, skip https://meshin.co and mcr.microsoft.com/playwright:v1 images';
   const candidates = pathCandidates(text);
-  assert.deepEqual(candidates, ['docs/PLAN.md']);
+  assert.deepEqual(candidates, ['docs/plan/reference/calibration-gate.md']);
 });
 
 test('resolveCandidate tries repo root then site root and expands the ~/ alias', () => {
-  assert.equal(resolveCandidate('docs/PLAN.md', roots), join(roots[0], 'docs', 'PLAN.md'));
+  assert.equal(resolveCandidate('docs/plan/INDEX.md', roots), join(roots[0], 'docs', 'plan', 'INDEX.md'));
   assert.equal(resolveCandidate('scripts/gate.mjs', roots), join(roots[1], 'scripts', 'gate.mjs'));
   assert.equal(resolveCandidate('~/utils/jsonld.mjs', roots), join(roots[1], 'src', 'utils', 'jsonld.mjs'));
   assert.equal(resolveCandidate('src/utils/nope.mjs', roots), null);
@@ -91,7 +96,7 @@ test('lintSkillsDir returns findings for a violating fixture and none for a clea
   );
   await writeFile(
     join(skillsDir, 'clean.md'),
-    ['# Clean', '', 'Run `npm run gate:machine`, then read docs/PLAN.md §3.'].join('\n')
+    ['# Clean', '', 'Run `npm run gate:machine`, then read docs/plan/INDEX.md.'].join('\n')
   );
 
   const findings = await lintSkillsDir(skillsDir, roots);
@@ -125,7 +130,7 @@ test('scriptCoverageFindings flags a script named nowhere and clears one reachab
   };
   const findings = scriptCoverageFindings({
     scriptFiles: ['content-gate.mjs', 'routes-gate.mjs', 'content-rows.mjs', 'mystery-script.mjs', 'gate.test.mjs'],
-    skillsText: 'run `npm run gate:content`; see scripts/routes-gate.mjs and docs/PLAN.md',
+    skillsText: 'run `npm run gate:content`; see scripts/routes-gate.mjs and docs/plan/INDEX.md',
     scripts,
   });
   const flagged = findings.map((f) => f.detail);

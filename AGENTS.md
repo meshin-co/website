@@ -4,8 +4,17 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
 
 ## Read order
 
-1. `docs/PLAN.md` — the phased build plan and the locked decisions (L1–L35). Start here.
-2. `docs/PRD.md` — the full requirements spec. `docs/PLAN.md` §1 overrides it where they differ.
+1. `docs/plan/INDEX.md` — the plan index, and the only plan file you read up front. It names each
+   phase, its status (carried in the filename: `.done.md`, `.active.md`, `.next.md`,
+   `.planned.md`, `.dropped.md`) and where the reference material lives. Read the index, then the
+   one `.active` or `.next` phase file, and nothing more until you need it. The locked decisions
+   L1–L49 live in `docs/plan/reference/decisions.md`; the gate procedure in
+   `docs/plan/reference/calibration-gate.md`. Finishing a phase means renaming its file to
+   `.done.md` and updating its index row in the same commit; `npm run gate:plan` fails when a
+   status word is unknown, when two phases claim `active` or `next`, or when the index and the
+   phases directory disagree.
+2. `docs/PRD.md` — the full requirements spec. `docs/plan/reference/decisions.md` overrides it
+   where they differ.
 3. `docs/DECISIONS.md` — the closed decision log.
 4. `site/.agents/skills/` — one procedure per file, each named for the job it does: the design
    lane, snippet grammar, structured data, the search index, machine interfaces, running the
@@ -13,7 +22,8 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
    visual baselines, extending the mutation smoke, explaining a route removal, coordinating
    parallel agents, clearing dead weight, verifying in the built output, and the launch
    checklist. Read the matching one before doing that job by hand; `design-lane.md` comes before
-   any markup or CSS. `gate:skills` fails if a skill names a path or command that does not exist.
+   any markup or CSS. `navigate-the-plan.md` explains the plan tree. `gate:skills` fails if a
+   skill names a path or command that does not exist.
 5. `docs/SEMANTIC-CORE.md` — which title, meta description and target query each route family
    carries and why, plus the 30 buyer prompts mapped to the routes that must win them. Read it
    before writing or editing any page copy, title or meta description.
@@ -24,7 +34,7 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
 
 ## Hard rules
 
-- Every phase ends with the Calibration Gate in `docs/PLAN.md` §3. No merge without a green gate
+- Every phase ends with the Calibration Gate in `docs/plan/reference/calibration-gate.md`. No merge without a green gate
   and a generated `audits/phase-N/REPORT.md`. There is no waiver path and no "fix next phase".
 - Lighthouse must read 100/100/100/100 on mobile and desktop for every audited route. A run at
   97–99 is re-run up to three times, then it is a failure.
