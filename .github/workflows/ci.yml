@@ -10,8 +10,43 @@ defaults:
     working-directory: site
 
 jobs:
-  build:
+  changes:
     if: github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.classify.outputs.code }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: classify the diff, so prose cannot spend a Lighthouse matrix
+        id: classify
+        working-directory: .
+        run: |
+          before="${{ github.event.before }}"
+          if [ -z "$before" ] || [ "$before" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$before" 2>/dev/null; then
+            before="$(git rev-parse HEAD~1 2>/dev/null || git rev-parse HEAD)"
+          fi
+          changed="$(git diff --name-only "$before" "${{ github.sha }}" || true)"
+          echo "changed files:"
+          echo "$changed"
+          code=false
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+            case "$file" in
+              docs/*|audits/*|site/.agents/*) ;;
+              */*) code=true ;;
+              *.md) ;;
+              *) code=true ;;
+            esac
+          done <<< "$changed"
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          echo "build surface changed: $code"
+
+  build:
+    if: github.event_name != 'workflow_dispatch' && needs.changes.outputs.code == 'true'
+    needs: changes
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -46,9 +81,12 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm test
+      - run: npm run gate:skills
+      - run: npm run gate:plan
 
   guard-mutations:
-    if: github.event_name != 'workflow_dispatch'
+    if: github.event_name != 'workflow_dispatch' && needs.changes.outputs.code == 'true'
+    needs: changes
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -62,8 +100,8 @@ jobs:
         run: npm run test:smoke
 
   cheap-gates:
-    if: github.event_name != 'workflow_dispatch'
-    needs: build
+    if: github.event_name != 'workflow_dispatch' && needs.changes.outputs.code == 'true'
+    needs: [changes, build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -83,8 +121,6 @@ jobs:
       - run: npm run gate:content
       - run: npm run gate:orphans
       - run: npm run gate:machine
-      - run: npm run gate:skills
-      - run: npm run gate:plan
       - run: npm run gate:jsonld
 
       - name: route set never shrinks unexplained
@@ -107,8 +143,8 @@ jobs:
           INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
 
   visual-and-axe:
-    if: github.event_name != 'workflow_dispatch'
-    needs: build
+    if: github.event_name != 'workflow_dispatch' && needs.changes.outputs.code == 'true'
+    needs: [changes, build]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -136,8 +172,8 @@ jobs:
           retention-days: 14
 
   lighthouse:
-    if: github.event_name != 'workflow_dispatch'
-    needs: build
+    if: github.event_name != 'workflow_dispatch' && needs.changes.outputs.code == 'true'
+    needs: [changes, build]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -172,8 +208,8 @@ jobs:
           retention-days: 14
 
   gate-report:
-    if: github.event_name != 'workflow_dispatch'
-    needs: [build, types-and-units, guard-mutations, cheap-gates, visual-and-axe, lighthouse]
+    if: github.event_name != 'workflow_dispatch' && needs.changes.outputs.code == 'true'
+    needs: [changes, build, types-and-units, guard-mutations, cheap-gates, visual-and-axe, lighthouse]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
