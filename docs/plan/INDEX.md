@@ -30,7 +30,7 @@ and update the row above.
 
 | File | What it holds |
 |---|---|
-| [reference/decisions.md](reference/decisions.md) | The 48 locked rows L1-L49 that override or extend the PRD. Read before proposing anything that contradicts one. |
+| [reference/locked-decisions.md](reference/locked-decisions.md) | The 48 locked rows L1-L49 that override or extend the PRD. Read before proposing anything that contradicts one. |
 | [reference/calibration-gate.md](reference/calibration-gate.md) | The eleven-step gate every phase ends with, and the two rules that make a fake-green hard. |
 | [reference/must-not-do.md](reference/must-not-do.md) | What each phase is forbidden from doing. |
 | [reference/test-strategy.md](reference/test-strategy.md) | What is unit-tested, what is snapshotted, what is gated. |
@@ -39,7 +39,7 @@ and update the row above.
 ## How to navigate this without reading everything
 
 - Starting work: read this index, then the one `.active` or `.next` phase file.
-- Proposing a change that contradicts something: `reference/decisions.md`, and quote the row.
+- Proposing a change that contradicts something: `reference/locked-decisions.md`, and quote the row.
 - Finishing a phase: `reference/calibration-gate.md`, then rename the phase file to `.done.md`.
 - Looking for how something is actually done: `site/.agents/skills/`, one file per job. The plan
   says what and why; the skills say how.

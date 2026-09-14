@@ -8,14 +8,17 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
    phase, its status (carried in the filename: `.done.md`, `.active.md`, `.next.md`,
    `.planned.md`, `.dropped.md`) and where the reference material lives. Read the index, then the
    one `.active` or `.next` phase file, and nothing more until you need it. The locked decisions
-   L1–L49 live in `docs/plan/reference/decisions.md`; the gate procedure in
+   L1–L49 live in `docs/plan/reference/locked-decisions.md`; the gate procedure in
    `docs/plan/reference/calibration-gate.md`. Finishing a phase means renaming its file to
    `.done.md` and updating its index row in the same commit; `npm run gate:plan` fails when a
    status word is unknown, when two phases claim `active` or `next`, or when the index and the
    phases directory disagree.
-2. `docs/PRD.md` — the full requirements spec. `docs/plan/reference/decisions.md` overrides it
+2. `docs/PRD.md` — the full requirements spec. `docs/plan/reference/locked-decisions.md` overrides it
    where they differ.
-3. `docs/DECISIONS.md` — the closed decision log.
+3. `docs/DECISIONS.md` — the closed decision log, rows `D1`–`D24`, written before the build
+   started. Different file from the plan's locked rows: `D` rows are the original decisions, `L`
+   rows are what the build actually locked. Where they disagree the `L` row wins and the `D` row
+   is marked superseded.
 4. `site/.agents/skills/` — one procedure per file, each named for the job it does: the design
    lane, snippet grammar, structured data, the search index, machine interfaces, running the
    gate, the content gate, the judge panel, adding a collection entry, restoring a collection,

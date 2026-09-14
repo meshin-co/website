@@ -48,7 +48,7 @@ the row to `INDEX.md`. Run `npm run gate:plan`.
 
 | Was                                   | Is                                           |
 | ------------------------------------- | -------------------------------------------- |
-| `PLAN.md` §1 locked decisions         | `docs/plan/reference/decisions.md`           |
+| `PLAN.md` §1 locked decisions         | `docs/plan/reference/locked-decisions.md`           |
 | `PLAN.md` §2 what a phase must not do | `docs/plan/reference/must-not-do.md`         |
 | `PLAN.md` §3 the Calibration Gate     | `docs/plan/reference/calibration-gate.md`    |
 | `PLAN.md` §4 the phases               | one file per phase under `docs/plan/phases/` |

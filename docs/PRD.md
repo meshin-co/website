@@ -1,7 +1,7 @@
 # PRD v2 · meshin.co
 
 Extracted verbatim from `docs/PRD v2 · meshin.co — исполняемая спецификация сайта.mhtml`.
-Requirements source of truth. Where `docs/plan/reference/decisions.md` (rows L1–L19) contradicts this
+Requirements source of truth. Where `docs/plan/reference/locked-decisions.md` (rows L1–L19) contradicts this
 document, the plan wins.
 
 ---
