@@ -46,3 +46,19 @@ test('parseArgs understands only --fast', () => {
   assert.deepEqual(parseArgs(['--fast']), { fast: true });
   assert.throws(() => parseArgs(['--slow']), /unknown flag/);
 });
+
+test('a message wrapped across lines by a narrow terminal still names the field', () => {
+  const run = { code: 1, output: 'question: must be 98\n  characters or fewer' };
+  assert.equal(expectedFailure(run, ['question: must be 98 characters or fewer']).ok, true);
+});
+
+test('colour codes never hide the field name', () => {
+  const run = { code: 1, output: '\u001b[31mtitle: must be 98 characters or fewer\u001b[0m' };
+  assert.equal(expectedFailure(run, ['title: must be 98 characters or fewer']).ok, true);
+});
+
+test('a missed token reports the tail of what the build actually said', () => {
+  const result = expectedFailure({ code: 1, output: 'something else entirely' }, ['title: must be 98']);
+  assert.equal(result.ok, false);
+  assert.match(result.reason, /something else entirely/);
+});

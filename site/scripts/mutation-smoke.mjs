@@ -92,10 +92,19 @@ export function manifestFamilies(manifest) {
   });
 }
 
+export function flattenOutput(output) {
+  return String(output)
+    .replace(/\u001b\[[0-9;]*m/g, '')
+    .replace(/\s+/g, ' ');
+}
+
 export function expectedFailure(run, tokens) {
   if (!Number.isInteger(run.code) || run.code === 0) return { ok: false, reason: 'guard exited zero' };
+  const flattened = flattenOutput(run.output);
   for (const token of tokens) {
-    if (!run.output.includes(token)) return { ok: false, reason: `output did not name "${token}"` };
+    if (!flattened.includes(token)) {
+      return { ok: false, reason: `output did not name "${token}": ...${flattened.slice(-300)}` };
+    }
   }
   return { ok: true, reason: `non-zero exit naming ${tokens.map((token) => `"${token}"`).join(' ')}` };
 }

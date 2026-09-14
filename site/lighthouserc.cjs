@@ -18,7 +18,10 @@ const gate = existsSync(gatePath) ? JSON.parse(readFileSync(gatePath, 'utf8')) :
 const measured = gate.measured;
 const audited = gate.lighthouseRoutes.filter((route) => measured.some((row) => row.route === route));
 const noindexRoutes = measured.filter((row) => row.noindex).map((row) => row.route);
-const url = audited.map((route) => (route === '/404' ? '/404.html' : `${route}/`.replace('//', '/')));
+const origin = `http://127.0.0.1:${process.env.GATE_SERVER_PORT ?? 4330}`;
+const url = audited.map((route) =>
+  `${origin}${route === '/404' ? '/404.html' : `${route}/`.replace('//', '/')}`.replace(/\/$/, '/')
+);
 
 const escaped = noindexRoutes.map((route) => route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
 const noindexPattern = escaped.length > 0 ? `(${escaped.join('|')})(/|\\.html|/index\\.html)?$` : null;
@@ -35,7 +38,8 @@ const assert = noindexPattern
 module.exports = {
   ci: {
     collect: {
-      staticDistDir: './dist',
+      startServerCommand: `node scripts/gate-server.mjs dist`,
+      startServerReadyPattern: 'gate server listening',
       url,
       numberOfRuns: 3,
       settings: {
