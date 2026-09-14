@@ -14,16 +14,38 @@ Run from `site/`. Each step green before the next.
 3. `npm test` — unit tests for `scripts/`, `src/utils/` and `src/data/`.
 4. `npm run gate:html`, then `npm run gate:links` — html-validate, then linkinator with the
    plausible.io, linkedin.com, cal.com, github.com/meshin-co and meshin.co skips.
-5. `npm run gate:machine`, then `npm run gate:jsonld` — machine-interface coverage and JSON-LD
-   graph integrity (machine-interfaces.md).
-6. `node scripts/content-gate.mjs dist` — content Half A (content-gate.md).
-7. `node scripts/check-skills.mjs` — skills lint: every path real, no forbidden claims,
-   length caps.
-8. `npm run gate:lh` — Lighthouse mobile then desktop, 3 runs each, median; the collector
-   asserts the runs really happened before trusting any score.
-9. `npm run gate:visual` — Playwright snapshots and axe, both themes (visual-baselines.md).
-10. `node scripts/report.mjs` — generates the phase REPORT.md under `audits/phase-N/` from the
-    raw JSON of steps 2–9. No waiver field, no "fix next phase".
+5. `npm run gate:content` — content Half A plus the semantic-core drift check
+   (content-gate.md).
+6. `npm run gate:orphans` — every route needs an inbound link; the exempt list in
+   `scripts/orphan-gate.mjs` is closed and carries a reason per entry.
+7. `npm run gate:machine`, then `npm run gate:jsonld` — machine-interface coverage (including
+   every indexable route appearing in `llms.txt`) and JSON-LD graph integrity
+   (machine-interfaces.md).
+8. `npm run gate:skills` — skills lint: every path real, no forbidden claims, length caps.
+9. `GATE_PHASE=phase-N npm run gate:routes` — writes `audits/phase-N/routes.json` and fails on
+   an unexplained shrink against the previous phase, or on a stale entry in
+   `routes-removed.json`.
+10. `npm run test:smoke` — every guard family plants a violating specimen in a repo copy and
+    must fail naming the offending field (CG §3). About 40 s.
+11. `npm run gate:lh` — Lighthouse mobile then desktop, 3 runs each, median, served through
+    `scripts/gate-server.mjs` so the measurement carries production gzip and the real
+    `_headers`. About 30 min locally; see the CI section for the parallel form.
+12. `npm run gate:visual` — Playwright snapshots and axe, both themes (visual-baselines.md).
+13. `node scripts/report.mjs <phase> ../audits/phase-<phase>` — generates REPORT.md from the raw
+    JSON of the steps above. No waiver field, no "fix next phase".
+
+## In CI the same gates run in parallel
+
+`build` runs once and uploads `dist`; `types-and-units`, `guard-mutations`, `cheap-gates`,
+`visual-and-axe` (3 Playwright shards) and `lighthouse` (2 form factors x 4 route shards, 8
+runners) all fan out from that artifact, and `gate-report` merges every shard into one
+REPORT.md. Whole gate: about 8 minutes.
+
+One shard by hand:
+`LHCI_FORM_FACTOR=mobile LH_SHARD_INDEX=1 LH_SHARD_TOTAL=4 npm run gate:lh:one`. Shards deal
+routes round-robin (`scripts/lh-shards.cjs`), each binds port `4330 + index - 1`, and each
+writes `lh-<factor>/shard-<index>/`. A lost or empty shard cannot shrink the gate: the report
+fails any audited route with no run or fewer than 3 runs.
 
 ## Representative Lighthouse set
 
