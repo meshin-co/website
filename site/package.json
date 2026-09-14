@@ -30,7 +30,9 @@
     "test:smoke": "node scripts/mutation-smoke.mjs",
     "gate:content": "node scripts/content-gate.mjs dist",
     "gate:orphans": "node scripts/orphan-gate.mjs dist",
-    "gate:routes": "node scripts/routes-gate.mjs dist"
+    "gate:routes": "node scripts/routes-gate.mjs dist",
+    "assets:og-default": "node scripts/generate-og-default.mjs",
+    "assets:favicons": "node scripts/generate-favicons.mjs"
   },
   "dependencies": {
     "@astro-community/astro-embed-twitter": "^0.5.11",

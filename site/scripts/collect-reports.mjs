@@ -3,7 +3,7 @@ import { join } from 'node:path';
 
 export function resolvePhase(phase) {
   if (!phase) throw new Error('collect-reports: GATE_PHASE must name the phase these audits belong to');
-  return phase;
+  return phase.replace(/^phase-/, '');
 }
 
 async function main(formFactor) {

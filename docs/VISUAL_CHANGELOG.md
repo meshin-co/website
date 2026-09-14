@@ -69,3 +69,12 @@ Numbered chips removed from the step and signal lists (L9a had been applied to s
 only). Footer gains a crawlable Search link. The tags index and tag routes now cover only tags a
 live post actually carries, so two empty indexed pages are gone. Blog card tag and category links
 carry the persistent underline. Every baseline regenerated on both platforms.
+
+## 2026-09-14 — Fonts: three faces, no synthesized bold
+
+Fraunces 700 is gone (no shipped page requested it through a class), so prose h2/h3/h4 now ask
+for 600 like every other heading instead of letting the browser fake bold from 600. Both families
+render with `font-display: swap`, which is safe now that the CSP no longer blocks the fallback
+metric overrides. Deleting 38 unreachable template components cut the stylesheet from about
+21 KB gz to 12.5 KB. Article pages are around 80 px shorter as a result; both platform baselines
+regenerated.

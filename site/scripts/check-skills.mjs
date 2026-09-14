@@ -3,7 +3,7 @@ import { existsSync, statSync } from 'node:fs';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-export const MAX_LINES = 80;
+const MAX_LINES = 80;
 
 const FORBIDDEN = [
   { test: (text) => /\bpagefind\b/i.test(text), detail: 'Pagefind claim (search is the custom index; PLAN §3 step 6)' },

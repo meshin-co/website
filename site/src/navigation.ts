@@ -67,5 +67,3 @@ export const footerData = {
   ],
   footNote: `© ${new Date().getFullYear()} meshin.co`,
 };
-
-export const homePermalink = getPermalink('/');

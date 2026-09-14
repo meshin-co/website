@@ -22,11 +22,11 @@ export function publicCollections(configSource) {
 export function missingFromGenerator(text, collections) {
   return collections.filter((collection) => !text.includes(`/${COLLECTION_BASES[collection]}/`));
 }
-export function llmsIndexGaps(text, collections) {
+function llmsIndexGaps(text, collections) {
   return collections.filter((collection) => !text.includes(`/llms/${collection}.txt`));
 }
 
-export function parseListedRoutes(text) {
+function parseListedRoutes(text) {
   const listed = new Set();
   for (const line of text.split('\n')) {
     const trimmed = line.trim().replace(/^- /, '');
@@ -48,7 +48,7 @@ export function indexableCoverageGaps({ routes, listed, noindexRoutes }) {
   return routes.filter((route) => !noindexSet.has(route) && !listedSet.has(route));
 }
 
-export function noindexStaticListings(text) {
+function noindexStaticListings(text) {
   return [...NOINDEX_STATIC_PAGES].filter((path) => text.includes(`(${path})`));
 }
 

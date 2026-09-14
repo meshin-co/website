@@ -195,5 +195,3 @@ export const collections = {
   faq: faqCollection,
   author: authorCollection,
 };
-
-export const postCategories = CATEGORIES;

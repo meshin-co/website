@@ -94,7 +94,7 @@ export function manifestFamilies(manifest) {
 
 const ANSI_SEQUENCE = new RegExp(`${String.fromCharCode(27)}\\[[0-9;]*m`, 'g');
 
-export function flattenOutput(output) {
+function flattenOutput(output) {
   return String(output).replace(ANSI_SEQUENCE, '').replace(/\s+/g, ' ');
 }
 

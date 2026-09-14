@@ -2,7 +2,7 @@ import GithubSlugger from 'github-slugger';
 import { h } from 'hastscript';
 import { toString as hastToString } from 'hast-util-to-string';
 
-export const SITE_HOSTNAME = 'meshin.co';
+const SITE_HOSTNAME = 'meshin.co';
 
 const HEADING_TAG_PATTERN = /^h[1-6]$/;
 

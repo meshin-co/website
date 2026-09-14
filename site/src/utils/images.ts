@@ -25,7 +25,7 @@ const loadLocalImages = () => {
  *   - `"http(s)://…"` or `"/path"` → returned as-is (external or public/)
  *   - `"~/assets/images/…"`        → resolved to its ImageMetadata via the glob
  */
-export const findImage = async (
+const findImage = async (
   imagePath?: string | ImageMetadata | null
 ): Promise<string | ImageMetadata | undefined | null> => {
   if (typeof imagePath !== 'string') return imagePath;

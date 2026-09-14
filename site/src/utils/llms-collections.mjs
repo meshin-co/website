@@ -1,8 +1,6 @@
 import { lastmod } from './lastmod.mjs';
 import { teaser } from './faq-meta.mjs';
 
-export const COLLECTION_NAMES = ['service', 'post', 'resource', 'glossary', 'case', 'faq'];
-
 export const LLMS_COLLECTIONS = [
   { name: 'service', base: '/services', title: 'Offers', file: '/llms/service.txt' },
   { name: 'post', base: '/blog', title: 'Writing', file: '/llms/post.txt' },

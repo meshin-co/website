@@ -317,6 +317,7 @@
 @utility prose-brief-headings {
   & :is(h2, h3, h4) {
     font-family: var(--aw-font-heading);
+    font-weight: 600;
     letter-spacing: -0.02em;
   }
 

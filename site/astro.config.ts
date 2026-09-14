@@ -39,8 +39,9 @@ export default defineConfig({
     {
       provider: fontProviders.fontsource(),
       name: 'Fraunces',
+      display: 'swap',
       cssVariable: '--font-fraunces',
-      weights: ['600', '700'],
+      weights: ['600'],
       styles: ['normal'],
       subsets: ['latin'],
       fallbacks: ['Georgia', 'serif'],
@@ -48,6 +49,7 @@ export default defineConfig({
     {
       provider: fontProviders.fontsource(),
       name: 'IBM Plex Sans',
+      display: 'swap',
       cssVariable: '--font-plex-sans',
       weights: ['400', '500'],
       styles: ['normal'],

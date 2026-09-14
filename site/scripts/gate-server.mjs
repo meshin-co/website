@@ -69,7 +69,7 @@ function matchingHeaders(rules, requestPath) {
   return applied;
 }
 
-export function startGateServer({ root, port = 0, headersPath }) {
+function startGateServer({ root, port = 0, headersPath }) {
   const rootDir = resolve(root);
   const rules = headersPath && existsSync(headersPath) ? headerRulesFor(readFileSync(headersPath, 'utf8')) : [];
 

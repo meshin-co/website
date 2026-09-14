@@ -31,3 +31,10 @@ an entry fails review. The platform-scoped snapshot path template lives in
 - axe contrast failures at a ~1:1 ratio on one viewport mean the element was measured while
   invisible behind a scroll or intersection animation. Remove the animation so the resting
   state is visible; do not nudge the palette.
+
+## Brand assets (OG image, favicons)
+
+`npm run assets:og-default` regenerates `src/assets/images/og-default.png` from
+`src/config.yaml`'s `metadata.description`; `npm run assets:favicons` regenerates
+`src/assets/favicons/apple-touch-icon.png` and `favicon.ico`. Run both after any brand color,
+wordmark, or description change and commit the resulting PNGs.

@@ -121,7 +121,7 @@ export function orphanFindings(routes, queries) {
   return findings;
 }
 
-export async function collectSemantic(distDir, facts, pages) {
+async function collectSemantic(distDir, facts, pages) {
   const rows = [];
 
   for (const page of pages) {
