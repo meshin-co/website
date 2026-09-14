@@ -10,9 +10,8 @@ Run from `site/`. Each step green before the next.
 1. `npm run build` — chains `astro build`, `scripts/gen-headers.mjs dist` (writes the CSP and
    cache headers into the output) and `scripts/gate.mjs dist budgets.json` (byte budgets, route
    derivation).
-2. `npm run check` — astro check, eslint, prettier. Run it before every push, including a commit
-   that touches nothing but Markdown: prettier checks `.md`, so a hand-written skill or plan file
-   is a CI failure waiting to happen. `npm test` passing tells you nothing about formatting.
+2. `npm run check` — astro check, eslint, prettier. Run it before every push, including a
+   Markdown-only commit: prettier checks `.md`, and `npm test` says nothing about formatting.
 3. `npm test` — unit tests for `scripts/`, `src/utils/` and `src/data/`.
 4. `npm run gate:html`, then `npm run gate:links` — html-validate, then linkinator with the
    plausible.io, linkedin.com, cal.com, github.com/meshin-co and meshin.co skips.
@@ -63,13 +62,13 @@ family logic via `scripts/templates.mjs`.
   in `lighthouserc.cjs`.
 - Mobile and desktop runs must not share an output directory; `gate:lh` clears the Lighthouse
   output dir between them and collects each factor separately — keep that structure.
-- Assert the North Star numbers, not 0.9x thresholds. A run at 97–99 re-runs up to three
-  times, then the phase fails (L13).
+- Assert the North Star numbers, not 0.9x thresholds. A run at 97–99 re-runs three times, then
+  the phase fails (L13).
 - Plausible is blocked inside lab runs and verified by a separate live check.
 - A scratch page left in the build silently widens every downstream gate; delete throwaway
   routes before the audited build.
 
-## Manual pass (PLAN §3 step 10)
+## Manual pass (calibration gate step 10)
 
 320/375/768/1024/1280/1920 widths, `prefers-reduced-motion`, keyboard only, screen reader on
 the primary task (find an offer → CTA; read an article). The read-aloud pass is the check
