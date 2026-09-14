@@ -7,10 +7,10 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
 1. `docs/PLAN.md` — the phased build plan and the locked decisions (L1–L35). Start here.
 2. `docs/PRD.md` — the full requirements spec. `docs/PLAN.md` §1 overrides it where they differ.
 3. `docs/DECISIONS.md` — the closed decision log.
-4. `site/.agents/skills/` — the repeatable procedures for this repo: running the gate, adding a
-   collection entry, restoring a collection, regenerating visual baselines, the judge panel, the
-   content gate, the machine interfaces and the launch checklist. Read the matching one before
-   doing that job by hand.
+4. `site/.agents/skills/` — the repeatable procedures for this repo: the design lane, running
+   the gate, adding a collection entry, restoring a collection, regenerating visual baselines,
+   the judge panel, the content gate, the machine interfaces and the launch checklist. Read the
+   matching one before doing that job by hand; `design-lane.md` comes before any markup or CSS.
 5. `docs/SEMANTIC-CORE.md` — which title, meta description and target query each route family
    carries and why, plus the 30 buyer prompts mapped to the routes that must win them. Read it
    before writing or editing any page copy, title or meta description.
