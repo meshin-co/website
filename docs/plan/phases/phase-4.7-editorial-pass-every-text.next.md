@@ -46,10 +46,9 @@ Reused strings collapse to one row with every usage site listed, so a fix lands 
 
 **Landed 2026-09-14, before any editing.** `npm run gate:editorial` builds the ledger from four
 extractors and fails on all three checks; `site/.agents/skills/editorial-ledger.md` is the
-procedure. Measured starting position: **1548 rows** across 105 routes and 242 files, all
-`unreviewed`; **75** shipped paragraphs tracing to no source row; **264** source strings no page
-renders. The untraceable count fell 674 to 75 during calibration — every reduction was a defect in
-my extractors, not in the site — and the first confirmed real finding is
+procedure. Measured starting position: **1414 rows** across 105 routes, all `unreviewed`; **75** shipped
+paragraphs tracing to no source row; **65** source strings no page renders. Calibration cut untraceable 674 to 75 and dead copy 264 to 65; every reduction was a defect in
+my extractors, not in the site. The first confirmed real finding is
 `src/data/author/dmitri.md`, whose body prose ships nowhere while only its frontmatter `bio`
 renders. The gate is deliberately red until the pass is done, so it joins CI with CG-4.7, not
 before.

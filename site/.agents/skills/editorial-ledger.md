@@ -36,9 +36,19 @@ in the site: undecoded HTML entities, markdown syntax inside the comparison, com
 apostrophe, top-level-only frontmatter reading (a post's `faq:` list was invisible), and
 whitespace left before punctuation by inline-link stripping.
 
-Two classes are excluded on purpose, each with a test proving real prose still fails: render-
-composed metadata (`08 Sept 2026 · 6 min read · AI governance`, tag slug runs) and bare hostnames
-rendered from source URLs.
+Both buckets need the same rigour. Dead copy started at 264 and fell to 65 once these were
+excluded, each with a precision test: SVG geometry, source comments, code fragments and type
+annotations, Tailwind utility class lists, structural keys, and `<script>`/`<style>` bodies. Text
+is also counted as shipped when it appears in a prose-carrying attribute (`content`, `title`,
+`alt`, `aria-label`, `placeholder`) or in a machine surface under `dist` (`.txt`, `.md`, `.json`,
+`.xml`), not only in page text — a feed title and the `machine-text.mjs` description both read as
+dead until those were included.
+
+Copy is decided by value shape: more than one word, contains three lowercase letters in a row, no
+date or URL prefix, under 20 percent digits, no code operators, not a utility class list. On the
+untraceable side, two classes are excluded on purpose, each with a test proving real prose still
+fails: render-composed metadata (`08 Sept 2026 · 6 min read · AI governance`, tag slug runs) and
+bare hostnames rendered from source URLs.
 
 A number this gate prints is only worth reporting if you have sampled it. Both original checks
 looked healthy while being wrong: the first `unrowed` check compared the build against a ledger

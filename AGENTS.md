@@ -94,7 +94,10 @@ npm run gate:lh    # both form factors, all audited routes, ~30 min
 npm run test:smoke # every guard family proven able to fail, ~40 s
 ```
 
-CI runs the same gates as a parallel graph: one build, then check+units,
-guard-mutations, cheap gates, Playwright (3 shards) and Lighthouse
-(2 form factors x 4 route shards) in parallel, merged by `gate-report`.
+CI classifies the diff first. A commit touching only `docs/`, `audits/`, `site/.agents/` or
+root-level Markdown runs `check`+units+`gate:skills`+`gate:plan` and nothing else, because prose
+cannot change what Lighthouse measures. Anything else — source, config, content Markdown under
+`site/src/data/`, the workflow itself — runs the full parallel graph: one build, then
+check+units, guard-mutations, cheap gates, Playwright (3 shards) and Lighthouse (2 form factors
+x 4 route shards) in parallel, merged by `gate-report`.
 A single shard locally: `LHCI_FORM_FACTOR=mobile LH_SHARD_INDEX=1 LH_SHARD_TOTAL=4 npm run gate:lh:one`.

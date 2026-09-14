@@ -82,13 +82,17 @@ function buildLedger(dist) {
     return { route, html: readFileSync(existsSync(nested) ? nested : flat, 'utf8') };
   });
 
+  const machineSurfaces = walk(dist, (name) => /\.(txt|md|json|xml)$/.test(name))
+    .filter((file) => !file.endsWith('gate-routes.json'))
+    .map((file) => ({ route: `/${relative(dist, file)}`, html: readFileSync(file, 'utf8') }));
+
   const rawSource = [...collectionRows(entries), ...componentRows(components), ...constantRows(constants)];
   const sourceRows = mergeRows(rawSource);
   const rows = mergeRows([...rawSource, ...renderedRows(pages)]);
   return {
     rows,
     untraceable: untraceableText(pages, sourceRows),
-    dead: deadCopy(sourceRows, pages),
+    dead: deadCopy(sourceRows, [...pages, ...machineSurfaces]),
     pages: pages.length,
   };
 }

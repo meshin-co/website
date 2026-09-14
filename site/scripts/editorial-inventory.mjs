@@ -16,11 +16,27 @@ const NON_PROSE_FIELDS = new Set([
 
 const DATE_OR_URL = /^(\d{4}-\d{2}-\d{2}|https?:\/\/|\/)/;
 
+const CODE_FRAGMENT =
+  /(&&|\|\||!==|===|=>|\?\?|\?\.|\$\{|\breturn\b|\bnew [A-Z]|Array<|\w+\(|\/\^|^\s*[;.]|\w:\s*\w+\s*$)/;
+
+const digitHeavy = (value) => value.replace(/[^0-9]/g, '').length / value.length > 0.2;
+
+const UTILITY_TOKEN = /^[a-z]+[-:][a-z0-9[\]/.-]+$|^[a-z]+:[a-z-]+$/;
+
+const isUtilityClassList = (value) => {
+  const tokens = value.trim().split(/\s+/);
+  return tokens.filter((token) => UTILITY_TOKEN.test(token)).length / tokens.length >= 0.5;
+};
+
 const isProseValue = (value) =>
   typeof value === 'string' &&
   !DATE_OR_URL.test(value.trim()) &&
   value.trim().split(/\s+/).length > 1 &&
-  /[A-Za-z]/.test(value);
+  /[A-Za-z]/.test(value) &&
+  !CODE_FRAGMENT.test(value) &&
+  !digitHeavy(value) &&
+  !isUtilityClassList(value) &&
+  /[a-z]{3}/.test(value);
 
 const STRUCTURAL_ATTRIBUTES = new Set([
   'class',
@@ -52,10 +68,9 @@ const STRUCTURAL_ATTRIBUTES = new Set([
   'fetchpriority',
 ]);
 
-const looksLikeProse = (value) =>
-  typeof value === 'string' && /[A-Za-z]/.test(value) && value.trim().split(/\s+/).length > 0;
-
 const clean = (value) => value.replace(/\s+/g, ' ').trim();
+
+const withoutComments = (source) => source.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|[^:])\/\/[^\n]*/g, '$1');
 
 const row = (file, location, text) => ({ file, location, text: clean(text), status: 'unreviewed' });
 
@@ -78,7 +93,8 @@ export function collectionRows(entries) {
 }
 
 export function componentRows(files) {
-  return files.flatMap(({ file, source }) => {
+  return files.flatMap(({ file, source: raw }) => {
+    const source = withoutComments(raw).replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, ' ');
     const attributes = [...source.matchAll(/([a-zA-Z:-]+)="([^"{}]*)"/g)]
       .filter(
         ([, attribute, value]) =>
@@ -90,22 +106,29 @@ export function componentRows(files) {
       .map(([, attribute, value]) => row(file, `attribute.${attribute}`, value));
     const texts = [...source.matchAll(/>([^<>{}]+)</g)]
       .map((match) => clean(match[1]))
-      .filter((value) => value !== '' && /[A-Za-z]/.test(value) && !/^[a-z-]+:/.test(value))
+      .filter(
+        (value) => value !== '' && /[A-Za-z]/.test(value) && !/^[a-z-]+:/.test(value) && !CODE_FRAGMENT.test(value)
+      )
       .map((value) => row(file, 'text', value));
     return [...attributes, ...texts];
   });
 }
 
-const QUOTED = [/(\w+):\s*'((?:[^'\\]|\\.)*)'/g, /(\w+):\s*"((?:[^"\\]|\\.)*)"/g, /(\w+):\s*`((?:[^`\\]|\\.)*)`/g];
+const QUOTED = [
+  /(\w+)\s*[:=]\s*'((?:[^'\\]|\\.)*)'/g,
+  /(\w+)\s*[:=]\s*"((?:[^"\\]|\\.)*)"/g,
+  /(\w+)\s*[:=]\s*`((?:[^`\\]|\\.)*)`/g,
+];
 
 export function constantRows(files) {
-  return files.flatMap(({ file, source }) =>
-    QUOTED.flatMap((pattern) =>
+  return files.flatMap(({ file, source: raw }) => {
+    const source = withoutComments(raw);
+    return QUOTED.flatMap((pattern) =>
       [...source.matchAll(pattern)]
-        .filter(([, , value]) => looksLikeProse(value) && /\s/.test(value.trim()))
+        .filter(([, key, value]) => !STRUCTURAL_ATTRIBUTES.has(key) && isProseValue(value))
         .map(([, key, value]) => row(file, `constant.${key}`, value))
-    )
-  );
+    );
+  });
 }
 
 export function renderedRows(pages) {
@@ -169,7 +192,13 @@ const normalise = (value) =>
     .replace(/\s+([,.;:!?)])/g, '$1')
     .replace(/([([])\s+/g, '$1');
 
-const builtText = (pages) => pages.map(({ route, html }) => ({ route, text: normalise(stripMarkup(html)) }));
+const SHIPPED_ATTRIBUTES = /\b(?:content|title|alt|aria-label|placeholder)="([^"]*)"/gi;
+
+const builtText = (pages) =>
+  pages.map(({ route, html }) => ({
+    route,
+    text: normalise([stripMarkup(html), ...[...html.matchAll(SHIPPED_ATTRIBUTES)].map((match) => match[1])].join(' ')),
+  }));
 
 const stripMarkup = (html) => html.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]+>/g, ' ');
 

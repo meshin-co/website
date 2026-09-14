@@ -277,3 +277,109 @@ test('a space left before punctuation by an inline link does not make a sentence
 test('a bare hostname rendered from a source url is not authored copy', () => {
   assert.deepEqual(untraceableText([{ route: '/x', html: '<main><p>iso.org</p></main>' }], []), []);
 });
+
+test('svg geometry is not copy, however many letters it contains', () => {
+  const rows = componentRows([
+    { file: 'LogoMark.astro', source: '<path d="M704.67 424.1A305 305 0 0 1 703.13 443.73L532.18 424.71" />' },
+  ]);
+  assert.deepEqual(rows, []);
+});
+
+test('a code fragment caught between quotes is not copy', () => {
+  const rows = constantRows([
+    { file: 'pipeline.mjs', source: 'const http = "&& url.protocol !==";\n  const label = "Read the register";' },
+  ]);
+  assert.deepEqual(
+    rows.map((row) => row.text),
+    ['Read the register']
+  );
+});
+
+test('text shipped in a meta attribute counts as shipped, so a description is not dead copy', () => {
+  const dead = deadCopy(
+    [{ text: 'AI governance is the decisions, roles and controls.', usedIn: ['g.md'] }],
+    [
+      {
+        route: '/x',
+        html: '<head><meta name="description" content="AI governance is the decisions, roles and controls."></head><body></body>',
+      },
+    ]
+  );
+  assert.deepEqual(dead, []);
+});
+
+test('text shipped only in a machine surface counts as shipped', () => {
+  const dead = deadCopy(
+    [{ text: 'Platform engineer working as a Fractional Chief AI Officer.', usedIn: ['machine-text.mjs'] }],
+    [{ route: '/llms.txt', html: 'Platform engineer working as a Fractional Chief AI Officer.' }]
+  );
+  assert.deepEqual(dead, []);
+});
+
+test('a source comment is never copy, in a component or in code', () => {
+  assert.deepEqual(
+    componentRows([
+      {
+        file: 'x.astro',
+        source:
+          '---\n// Single source of truth for applying the theme.\n/* a block comment with words */\n---\n<p>Real copy here</p>',
+      },
+    ]).map((row) => row.text),
+    ['Real copy here']
+  );
+  assert.deepEqual(
+    constantRows([{ file: 'x.mjs', source: "// label = 'Commented out copy'\nconst label = 'Live copy here';" }]).map(
+      (row) => row.text
+    ),
+    ['Live copy here']
+  );
+});
+
+test('prose shipped inside a link title or aria-label counts as shipped', () => {
+  const dead = deadCopy(
+    [{ text: 'meshin.co — JSON Feed', usedIn: ['CommonMeta.astro'] }],
+    [{ route: '/x', html: '<head><link rel="alternate" title="meshin.co — JSON Feed" href="/feed.json"></head>' }]
+  );
+  assert.deepEqual(dead, []);
+});
+
+test('type annotations and expressions from a component script are not copy', () => {
+  const notCopy = [
+    '; secondaryLinks: Array',
+    'source.publisher ?? new URL(source.url).hostname.replace(/^www./, )',
+    'items?.map((item) => item.title)',
+  ];
+  for (const source of notCopy) {
+    assert.deepEqual(constantRows([{ file: 'x.astro', source: `key: "${source}"` }]), [], source);
+  }
+});
+
+test('real copy containing a parenthesis or a question mark survives', () => {
+  const rows = constantRows([
+    { file: 'x.astro', source: 'lead: "Is my company too small? Probably not (thirty people is enough)."' },
+  ]);
+  assert.equal(rows.length, 1);
+});
+
+test('a class list is not copy, whichever extractor sees it', () => {
+  assert.deepEqual(constantRows([{ file: 'x.astro', source: 'class: "w-6 h-6 lg:w-5 lg:inline-block"' }]), []);
+  assert.deepEqual(constantRows([{ file: 'x.astro', source: 'wrapper: "mt-3 flex items-center gap-4"' }]), []);
+});
+
+test('a structural key never yields copy even when its value reads like words', () => {
+  assert.deepEqual(constantRows([{ file: 'x.astro', source: 'id: "hero card wide"' }]), []);
+});
+
+test('script and style bodies are never copy', () => {
+  const rows = componentRows([
+    {
+      file: 'Header.astro',
+      source:
+        '<script>const header = document.querySelector("#header"); const toggle = 1;</script>\n<style>.a { color: red }</style>\n<p>Real copy</p>',
+    },
+  ]);
+  assert.deepEqual(
+    rows.map((row) => row.text),
+    ['Real copy']
+  );
+});

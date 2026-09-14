@@ -8,6 +8,7 @@
       "usedIn": [
         "src/data/author/dmitri.md",
         "src/pages/about.astro",
+        "src/utils/jsonld.mjs",
         "src/pages/imprint.astro",
         "/about",
         "/blog/ai-acceptable-use-policy-for-a-50-person-company",
@@ -24,6 +25,7 @@
       "usedIn": [
         "src/data/author/dmitri.md",
         "src/components/site/Hero.astro",
+        "src/utils/jsonld.mjs",
         "/",
         "/about",
         "/blog/ai-acceptable-use-policy-for-a-50-person-company",
@@ -228,6 +230,7 @@
       "status": "unreviewed",
       "usedIn": [
         "src/data/faq/how-do-you-charge-for-the-work.md",
+        "src/utils/faq-meta.test.mjs",
         "src/utils/feeds.test.mjs",
         "/faq/how-do-you-charge-for-the-work"
       ]
@@ -783,7 +786,6 @@
       "usedIn": [
         "src/data/glossary/ai-governance.md",
         "src/data/categories.mjs",
-        "src/data/tags.mjs",
         "src/utils/jsonld.test.mjs",
         "/blog/category/governance",
         "/blog/tag/ai-governance",
@@ -937,7 +939,6 @@
       "status": "unreviewed",
       "usedIn": [
         "src/data/glossary/ai-register.md",
-        "src/data/tags.mjs",
         "src/utils/jsonld.test.mjs",
         "/blog/tag/ai-register",
         "/glossary/ai-register"
@@ -1121,18 +1122,6 @@
       "status": "unreviewed",
       "usedIn": [
         "src/data/glossary/eu-ai-act.md"
-      ]
-    },
-    {
-      "location": "frontmatter.term",
-      "text": "EU AI Act",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/data/glossary/eu-ai-act.md",
-        "src/data/tags.mjs",
-        "src/utils/jsonld.test.mjs",
-        "/blog/tag/eu-ai-act",
-        "/glossary/eu-ai-act"
       ]
     },
     {
@@ -1332,14 +1321,6 @@
       ]
     },
     {
-      "location": "frontmatter.definition",
-      "text": "A system reaches the category one of two ways. Article 6(1) covers the first: a safety component of, or itself, a product already regulated under EU product-safety law, such as medical devices or machinery. That underlying law already requires third-party conformity assessment. Annex III covers the second: eight listed use-case areas, among them biometric identification, employment decisions, credit scoring and law enforcement. Article 6(2) makes a system high-risk for landing in one of those areas alone, with no product-safety law involved at all. A system inside Annex III can still escape the label under Article 6(3), for four narrow reasons. One is a limited procedural task: reformatting an application into a standard template, say. Another is improving a human decision already made, such as tidying a report's wording without changing its recommendation. A third is detecting a deviation without replacing human judgement, such as flagging an unusual transaction for a fraud analyst to review. The fourth is a preparatory task ahead of someone else's assessment, such as gathering a loan applicant's documents before a human underwriter looks at them. None of the four survives contact with profiling: a system that profiles individual people is high-risk regardless.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/data/glossary/high-risk-ai-system.md"
-      ]
-    },
-    {
       "location": "body",
       "text": "## Why it comes up It is the first question every other AI Act obligation depends on. A customer's legal team or an investor's due diligence checklist asks it before anything else about the system. A board hears it phrased more simply, as \"are we in the category that gets the heavy paperwork, and who decided.\" Getting the classification wrong either way has a real cost, either missed obligations or needless process on a system that never required it. ## What to do about it Run the classification test on each system separately, not on the company as a whole. One product can be high-risk while another, built the same month, is not. Write the decision down, including the reasoning for a not-high-risk conclusion, since an authority can ask to see it later. This classification is exactly what the [AI readiness and risk assessment](/services/ai-readiness-and-risk-assessment) produces for every system in the inventory, not just the ones already suspected.",
       "status": "unreviewed",
@@ -1435,24 +1416,6 @@
       "status": "unreviewed",
       "usedIn": [
         "src/data/glossary/human-oversight.md"
-      ]
-    },
-    {
-      "location": "frontmatter.title",
-      "text": "What is ISO/IEC 42001?",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/data/glossary/iso-iec-42001.md"
-      ]
-    },
-    {
-      "location": "frontmatter.term",
-      "text": "ISO/IEC 42001",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/data/glossary/iso-iec-42001.md",
-        "src/utils/related-content.test.mjs",
-        "/glossary/iso-iec-42001"
       ]
     },
     {
@@ -1644,16 +1607,6 @@
       "status": "unreviewed",
       "usedIn": [
         "src/data/glossary/nist-ai-rmf.md"
-      ]
-    },
-    {
-      "location": "frontmatter.term",
-      "text": "NIST AI RMF",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/data/glossary/nist-ai-rmf.md",
-        "src/utils/jsonld.test.mjs",
-        "/glossary/nist-ai-rmf"
       ]
     },
     {
@@ -2042,7 +1995,6 @@
       "status": "unreviewed",
       "usedIn": [
         "src/data/glossary/shadow-ai.md",
-        "src/data/tags.mjs",
         "src/utils/jsonld.test.mjs",
         "/blog/tag/shadow-ai",
         "/glossary/shadow-ai"
@@ -2198,15 +2150,6 @@
     {
       "location": "frontmatter.shortAnswer",
       "text": "An AI acceptable use policy for a company of 30 to 300 people classifies which data may reach which AI vendor, names who approves a new tool, and requires review before AI output reaches a customer. It must not try to ban AI outright or list every tool by name. It also names who decides after a breach.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/data/post/ai-acceptable-use-policy-for-a-50-person-company.md",
-        "/blog/ai-acceptable-use-policy-for-a-50-person-company"
-      ]
-    },
-    {
-      "location": "frontmatter.fullAnswer",
-      "text": "An AI acceptable use policy only earns its place once it decides who approves a new AI tool and which data tier may reach which category of vendor. It also decides whether a person checks AI output before it reaches a customer or a contract, and when a customer must be told they are dealing with an AI system. Most templates answer the first two questions and stay quiet on the rest. That is exactly why staff read them once and then ignore them. A policy this size needs one named owner, not a committee, and a review interval short enough to catch the tool people started using without asking. ISO/IEC 42001 treats a policy like this as one part of a management system, not a standalone document. The EU AI Act already requires disclosure once an AI system talks to a customer directly. Skip the enforcement clause and none of the rest holds.",
       "status": "unreviewed",
       "usedIn": [
         "src/data/post/ai-acceptable-use-policy-for-a-50-person-company.md",
@@ -2638,15 +2581,6 @@
       ]
     },
     {
-      "location": "frontmatter.faq.3.a",
-      "text": "One named person, not a shared folder. They do not need to personally approve every new AI tool, but they need standing to ask why an unlisted system turned up, and a fixed date on the calendar to confirm every row is still accurate.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/data/post/how-to-build-an-ai-system-register-in-a-week.md",
-        "/blog/how-to-build-an-ai-system-register-in-a-week"
-      ]
-    },
-    {
       "location": "body",
       "text": "A security review of an AI system usually starts with one question: what is actually running. If the honest answer takes a week of digging through chat logs and old tickets, the review stalls before it reaches architecture or data flows. An AI system register is the fix: one document listing every AI system a company runs, who owns it, and how risky it is. ## What is an AI system register? An AI system register is the full inventory of every AI system a company runs, regardless of how it got there. That includes a customer-facing feature, an internal copilot, or a marketing tool with a model switched on inside it that nobody called an AI project when they signed up. A working entry names what the system does, what data can reach it, which vendor or model sits behind it, who owns it, and a rough risk tier. Some call this same list an [AI register](/glossary/ai-register) rather than an AI system register. Most of the systems on it never started as a formal AI project, which is why the list has to go looking for them rather than wait to be told. ## Why does a security reviewer ask for it before anything else? A security or procurement reviewer asks one version of the same question first: what touches our data. Without a register, answering that means paging engineering, marketing, finance and support one by one, and hoping nobody forgot a tool. The [NIST AI RMF](/glossary/nist-ai-rmf) treats this as a named control, not a nice extra. Its Govern function includes a specific requirement: a mechanism to inventory AI systems, resourced according to how much risk the organisation is willing to carry. Everything a reviewer asks next, a data flow diagram, a vendor contract clause, an incident plan, gets scoped against rows already on this list. Skip the register, and the reviewer either stalls the process or signs off on a system nobody can fully describe. ## What should the register record? A register only earns its keep if a reviewer can answer their own questions from it, without a follow-up meeting. What follows is close to the version I hand a client: enough fields to answer a first review, and no field that exists only to look thorough. | What to record | Why a reviewer wants it | Who fills it in | | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------- | | Name the system and what it does. | A reviewer cannot scope a check against a system they cannot picture. | The system's product or engineering owner. | | Note whether it was built in-house or bought, and which vendor or model sits behind it. | A vendor's own controls become part of the risk the moment its API touches your data. | Whoever set up the account or the integration. | | List the data the system can see. | This sets the risk tier and decides which contract terms and legal duties actually apply. | The team that owns the data source, with legal signing off. | | Record who relies on the system's output. | Blast radius matters as much as data sensitivity when a reviewer decides how much scrutiny to apply. | The system owner, from usage or team headcount. | | Mark its deployment status: pilot, production or retired. | A pilot running on sample data is a different conversation from a live system holding real customer records. | The system owner, kept current as status changes. | | Name one internal owner. | A reviewer wants a person who can answer for the system, not a distribution list nobody reads. | Whoever runs the team that operates the system. | | Assign a risk tier. | This decides how much documentation, testing and sign-off the reviewer expects before anything ships. | Whoever runs the security or risk review, not the system's own owner. | | Log the date it was last checked. | A register that has not moved in a year gets treated the same as no register at all. | Whoever owns the register process, on a fixed schedule. | ## How do you build one in a week without buying a tool? None of this needs procurement. A spreadsheet, a shared document and five short conversations get a usable first version out the door. - **Monday.** Create the spreadsheet with those three columns, and seed it with every system already in use: the model inside the product, the support tool, the analytics dashboard that quietly added an AI summary. - **Tuesday and Wednesday.** Interview engineering, marketing, finance and support directly, not by survey. Ask each team what they actually use day to day, since a spreadsheet plug-in with a model behind it belongs on the list too. - **Thursday.** Fill in the vendor, data and risk-tier columns from what you heard, and flag anything nobody could describe clearly for a follow-up conversation rather than a guess. - **Friday.** Assign an owner to every row, pick a reviewer for the risk tiers, and put a recheck date on the calendar before anyone calls the list finished. ## What a register does not do Building the register is the easy part of this, and several harder parts of AI governance sit outside it. It does not replace a lawyer's read of a vendor contract. The register tells legal which vendor to check and what data reaches them. It says nothing about whether that vendor's specific contract terms are safe to sign, and those terms change often enough that last year's answer will not do. The registration duty in the [EU AI Act](/glossary/eu-ai-act) is a separate, public step for certain high-risk systems. It means registering under Article 49, in the database the Commission set up under Article 71, before the system goes live. An internal register is how you find out fast which systems might owe that separate duty; it is not a substitute for filing it. It does not stay accurate on its own, either. A register nobody owns drifts out of date within a quarter, and a stale register reads to a reviewer as no register at all. If you would rather someone else run the discovery and the first risk pass, an [AI Readiness & Risk Assessment](/services/ai-readiness-and-risk-assessment) does the same work in two weeks and hands you a finished register. The [starter kit](/resources/ai-governance-starter-kit) has a blank version of this table, ready to copy into your own document.",
       "status": "unreviewed",
@@ -2795,7 +2729,6 @@
       "status": "unreviewed",
       "usedIn": [
         "src/data/resource/agent-evals-ci-starter.md",
-        "src/data/home.ts",
         "/resources/agent-evals-ci-starter"
       ]
     },
@@ -2882,9 +2815,6 @@
       "status": "unreviewed",
       "usedIn": [
         "src/data/resource/ai-governance-starter-kit.md",
-        "src/data/home.ts",
-        "src/utils/jsonld.test.mjs",
-        "src/utils/related-content.test.mjs",
         "/resources/ai-governance-starter-kit"
       ]
     },
@@ -2953,7 +2883,6 @@
       "status": "unreviewed",
       "usedIn": [
         "src/data/resource/ai-readiness-scorecard.md",
-        "src/data/home.ts",
         "/resources/ai-readiness-scorecard"
       ]
     },
@@ -3021,7 +2950,6 @@
       "status": "unreviewed",
       "usedIn": [
         "src/data/resource/build-vs-buy-ai-kit.md",
-        "src/utils/related-content.test.mjs",
         "/resources/build-vs-buy-ai-kit"
       ]
     },
@@ -3158,7 +3086,6 @@
       "status": "unreviewed",
       "usedIn": [
         "src/data/service/90-day-production-sprint.md",
-        "src/data/home.ts",
         "/services/90-day-production-sprint"
       ]
     },
@@ -3198,15 +3125,6 @@
         "src/data/service/90-day-production-sprint.md",
         "/services",
         "/services/90-day-production-sprint"
-      ]
-    },
-    {
-      "location": "frontmatter.duration",
-      "text": "90 days",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/data/service/90-day-production-sprint.md",
-        "src/data/home.ts"
       ]
     },
     {
@@ -3502,9 +3420,7 @@
       "text": "AI Readiness & Risk Assessment",
       "status": "unreviewed",
       "usedIn": [
-        "src/data/service/ai-readiness-and-risk-assessment.md",
-        "src/data/home.ts",
-        "src/utils/jsonld.test.mjs"
+        "src/data/service/ai-readiness-and-risk-assessment.md"
       ]
     },
     {
@@ -3784,8 +3700,6 @@
       "status": "unreviewed",
       "usedIn": [
         "src/data/service/fractional-caio-retainer.md",
-        "src/data/home.ts",
-        "src/utils/related-content.test.mjs",
         "/services/fractional-caio-retainer"
       ]
     },
@@ -4110,739 +4024,11 @@
       ]
     },
     {
-      "location": "text",
-      "text": "// Single source of truth for *applying* the color theme. // // This runs inline in the",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/ApplyColorMode.astro"
-      ]
-    },
-    {
-      "location": "text",
-      "text": "so the `.dark` class is set before first // paint (anti-FOUC — it must not be deferred/bundled). It also registers an // `astro:after-swap` listener so the theme is re-applied on client-side // navigations with",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/ApplyColorMode.astro"
-      ]
-    },
-    {
-      "location": "text",
-      "text": ". Toggling the theme is owned by the //",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/ApplyColorMode.astro"
-      ]
-    },
-    {
-      "location": "text",
-      "text": "applyTheme(resolveTheme()));",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/ApplyColorMode.astro"
-      ]
-    },
-    {
       "location": "attribute.title",
       "text": "meshin.co — JSON Feed",
       "status": "unreviewed",
       "usedIn": [
         "src/components/common/CommonMeta.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M704.99 408.14A305 305 0 0 1 704.48 427.82L532.77 417.77A133 133 0 0 0 533 409.19Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M704.67 424.1A305 305 0 0 1 703.13 443.73L532.18 424.71A133 133 0 0 0 532.86 416.15Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M703.52 440.03A305 305 0 0 1 700.95 459.55L531.23 431.61A133 133 0 0 0 532.35 423.09Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M701.53 455.87A305 305 0 0 1 697.94 475.23L529.92 438.45A133 133 0 0 0 531.49 430Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M698.72 471.59A305 305 0 0 1 694.12 490.74L528.26 445.21A133 133 0 0 0 530.26 436.86Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M695.08 487.14A305 305 0 0 1 689.49 506.02L526.24 451.87A133 133 0 0 0 528.68 443.64Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M690.64 502.48A305 305 0 0 1 684.07 521.04L523.87 458.42A133 133 0 0 0 526.74 450.33Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M685.4 517.56A305 305 0 0 1 677.87 535.75L521.17 464.84A133 133 0 0 0 524.46 456.9Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M679.38 532.35A305 305 0 0 1 670.91 550.12L518.13 471.1A133 133 0 0 0 521.83 463.35Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M672.6 546.8A305 305 0 0 1 663.2 564.11L514.77 477.2A133 133 0 0 0 518.87 469.66Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M665.06 560.88A305 305 0 0 1 654.78 577.67L511.1 483.12A133 133 0 0 0 515.59 475.8Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M656.8 574.55A305 305 0 0 1 645.65 590.78L507.12 488.83A133 133 0 0 0 511.98 481.75Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M647.84 587.76A305 305 0 0 1 635.85 603.39L502.85 494.33A133 133 0 0 0 508.07 487.52Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M638.2 600.49A305 305 0 0 1 625.41 615.47L498.29 499.6A133 133 0 0 0 503.87 493.07Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M627.9 612.7A305 305 0 0 1 614.35 626.98L493.47 504.62A133 133 0 0 0 499.38 498.39Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M616.98 624.35A305 305 0 0 1 602.7 637.9L488.39 509.38A133 133 0 0 0 494.62 503.47Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M605.47 635.41A305 305 0 0 1 590.49 648.2L483.07 513.87A133 133 0 0 0 489.6 508.29Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M593.39 645.85A305 305 0 0 1 577.76 657.84L477.52 518.07A133 133 0 0 0 484.33 512.85Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M580.78 655.65A305 305 0 0 1 564.55 666.8L471.75 521.98A133 133 0 0 0 478.83 517.12Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M567.67 664.78A305 305 0 0 1 550.88 675.06L465.8 525.59A133 133 0 0 0 473.12 521.1Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M554.11 673.2A305 305 0 0 1 536.8 682.6L459.66 528.87A133 133 0 0 0 467.2 524.77Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M540.12 680.91A305 305 0 0 1 522.35 689.38L453.35 531.83A133 133 0 0 0 461.1 528.13Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M525.75 687.87A305 305 0 0 1 507.56 695.4L446.9 534.46A133 133 0 0 0 454.84 531.17Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M511.04 694.07A305 305 0 0 1 492.48 700.64L440.33 536.74A133 133 0 0 0 448.42 533.87Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M496.02 699.49A305 305 0 0 1 477.14 705.08L433.64 538.68A133 133 0 0 0 441.87 536.24Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M480.74 704.12A305 305 0 0 1 461.59 708.72L426.86 540.26A133 133 0 0 0 435.21 538.26Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M465.23 707.94A305 305 0 0 1 445.87 711.53L420 541.49A133 133 0 0 0 428.45 539.92Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M449.55 710.95A305 305 0 0 1 430.03 713.52L413.09 542.35A133 133 0 0 0 421.61 541.23Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M433.73 713.13A305 305 0 0 1 414.1 714.67L406.15 542.86A133 133 0 0 0 414.71 542.18Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M417.82 714.48A305 305 0 0 1 398.14 714.99L399.19 543A133 133 0 0 0 407.77 542.77Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M401.86 714.99A305 305 0 0 1 382.18 714.48L392.23 542.77A133 133 0 0 0 400.81 543Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M385.9 714.67A305 305 0 0 1 366.27 713.13L385.29 542.18A133 133 0 0 0 393.85 542.86Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M369.97 713.52A305 305 0 0 1 350.45 710.95L378.39 541.23A133 133 0 0 0 386.91 542.35Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M354.13 711.53A305 305 0 0 1 334.77 707.94L371.55 539.92A133 133 0 0 0 380 541.49Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M338.41 708.72A305 305 0 0 1 319.26 704.12L364.79 538.26A133 133 0 0 0 373.14 540.26Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M322.86 705.08A305 305 0 0 1 303.98 699.49L358.13 536.24A133 133 0 0 0 366.36 538.68Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M307.52 700.64A305 305 0 0 1 288.96 694.07L351.58 533.87A133 133 0 0 0 359.67 536.74Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M292.44 695.4A305 305 0 0 1 274.25 687.87L345.16 531.17A133 133 0 0 0 353.1 534.46Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M277.65 689.38A305 305 0 0 1 259.88 680.91L338.9 528.13A133 133 0 0 0 346.65 531.83Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M263.2 682.6A305 305 0 0 1 245.89 673.2L332.8 524.77A133 133 0 0 0 340.34 528.87Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M249.12 675.06A305 305 0 0 1 232.33 664.78L326.88 521.1A133 133 0 0 0 334.2 525.59Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M235.45 666.8A305 305 0 0 1 219.22 655.65L321.17 517.12A133 133 0 0 0 328.25 521.98Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M222.24 657.84A305 305 0 0 1 206.61 645.85L315.67 512.85A133 133 0 0 0 322.48 518.07Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M209.51 648.2A305 305 0 0 1 194.53 635.41L310.4 508.29A133 133 0 0 0 316.93 513.87Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M197.3 637.9A305 305 0 0 1 183.02 624.35L305.38 503.47A133 133 0 0 0 311.61 509.38Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M185.65 626.98A305 305 0 0 1 172.1 612.7L300.62 498.39A133 133 0 0 0 306.53 504.62Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M174.59 615.47A305 305 0 0 1 161.8 600.49L296.13 493.07A133 133 0 0 0 301.71 499.6Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M164.15 603.39A305 305 0 0 1 152.16 587.76L291.93 487.52A133 133 0 0 0 297.15 494.33Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M154.35 590.78A305 305 0 0 1 143.2 574.55L288.02 481.75A133 133 0 0 0 292.88 488.83Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M145.22 577.67A305 305 0 0 1 134.94 560.88L284.41 475.8A133 133 0 0 0 288.9 483.12Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M136.8 564.11A305 305 0 0 1 127.4 546.8L281.13 469.66A133 133 0 0 0 285.23 477.2Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M129.09 550.12A305 305 0 0 1 120.62 532.35L278.17 463.35A133 133 0 0 0 281.87 471.1Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M122.13 535.75A305 305 0 0 1 114.6 517.56L275.54 456.9A133 133 0 0 0 278.83 464.84Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M115.93 521.04A305 305 0 0 1 109.36 502.48L273.26 450.33A133 133 0 0 0 276.13 458.42Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M110.51 506.02A305 305 0 0 1 104.92 487.14L271.32 443.64A133 133 0 0 0 273.76 451.87Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M105.88 490.74A305 305 0 0 1 101.28 471.59L269.74 436.86A133 133 0 0 0 271.74 445.21Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M102.06 475.23A305 305 0 0 1 98.47 455.87L268.51 430A133 133 0 0 0 270.08 438.45Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M99.05 459.55A305 305 0 0 1 96.48 440.03L267.65 423.09A133 133 0 0 0 268.77 431.61Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M96.87 443.73A305 305 0 0 1 95.33 424.1L267.14 416.15A133 133 0 0 0 267.82 424.71Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M95.52 427.82A305 305 0 0 1 95.01 408.14L267 409.19A133 133 0 0 0 267.23 417.77Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M95.01 411.86A305 305 0 0 1 95.52 392.18L267.23 402.23A133 133 0 0 0 267 410.81Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M95.33 395.9A305 305 0 0 1 96.87 376.27L267.82 395.29A133 133 0 0 0 267.14 403.85Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M96.48 379.97A305 305 0 0 1 99.05 360.45L268.77 388.39A133 133 0 0 0 267.65 396.91Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M98.47 364.13A305 305 0 0 1 102.06 344.77L270.08 381.55A133 133 0 0 0 268.51 390Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M101.28 348.41A305 305 0 0 1 105.88 329.26L271.74 374.79A133 133 0 0 0 269.74 383.14Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M104.92 332.86A305 305 0 0 1 110.51 313.98L273.76 368.13A133 133 0 0 0 271.32 376.36Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M109.36 317.52A305 305 0 0 1 115.93 298.96L276.13 361.58A133 133 0 0 0 273.26 369.67Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M114.6 302.44A305 305 0 0 1 122.13 284.25L278.83 355.16A133 133 0 0 0 275.54 363.1Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M120.62 287.65A305 305 0 0 1 129.09 269.88L281.87 348.9A133 133 0 0 0 278.17 356.65Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M127.4 273.2A305 305 0 0 1 136.8 255.89L285.23 342.8A133 133 0 0 0 281.13 350.34Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M134.94 259.12A305 305 0 0 1 145.22 242.33L288.9 336.88A133 133 0 0 0 284.41 344.2Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M143.2 245.45A305 305 0 0 1 154.35 229.22L292.88 331.17A133 133 0 0 0 288.02 338.25Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M152.16 232.24A305 305 0 0 1 164.15 216.61L297.15 325.67A133 133 0 0 0 291.93 332.48Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M161.8 219.51A305 305 0 0 1 174.59 204.53L301.71 320.4A133 133 0 0 0 296.13 326.93Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M172.1 207.3A305 305 0 0 1 185.65 193.02L306.53 315.38A133 133 0 0 0 300.62 321.61Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M183.02 195.65A305 305 0 0 1 197.3 182.1L311.61 310.62A133 133 0 0 0 305.38 316.53Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M194.53 184.59A305 305 0 0 1 209.51 171.8L316.93 306.13A133 133 0 0 0 310.4 311.71Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M206.61 174.15A305 305 0 0 1 222.24 162.16L322.48 301.93A133 133 0 0 0 315.67 307.15Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M219.22 164.35A305 305 0 0 1 235.45 153.2L328.25 298.02A133 133 0 0 0 321.17 302.88Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M232.33 155.22A305 305 0 0 1 249.12 144.94L334.2 294.41A133 133 0 0 0 326.88 298.9Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M245.89 146.8A305 305 0 0 1 263.2 137.4L340.34 291.13A133 133 0 0 0 332.8 295.23Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M259.88 139.09A305 305 0 0 1 277.65 130.62L346.65 288.17A133 133 0 0 0 338.9 291.87Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M274.25 132.13A305 305 0 0 1 292.44 124.6L353.1 285.54A133 133 0 0 0 345.16 288.83Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M288.96 125.93A305 305 0 0 1 307.52 119.36L359.67 283.26A133 133 0 0 0 351.58 286.13Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M303.98 120.51A305 305 0 0 1 322.86 114.92L366.36 281.32A133 133 0 0 0 358.13 283.76Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "M705 410A305 305 0 1 1 321.06 115.39L365.58 281.53A133 133 0 1 0 533 410Z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
-      ]
-    },
-    {
-      "location": "attribute.d",
-      "text": "m 534.00644,171.43606 c 14.07298,59.92957 51.07299,96.92957 111,111.00001 -59.92701,14.07042 -96.92702,51.07042 -111,110.99999 -14.07298,-59.92957 -51.07298,-96.92957 -111,-110.99999 59.92702,-14.07044 96.92702,-51.07044 111,-111.00001 z",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/common/LogoMark.astro"
       ]
     },
     {
@@ -4925,30 +4111,6 @@
       ]
     },
     {
-      "location": "text",
-      "text": "source.publisher ?? new URL(source.url).hostname.replace(/^www\\./, ''); ---",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/site/SourceList.astro"
-      ]
-    },
-    {
-      "location": "text",
-      "text": "; secondaryLinks: Array",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/widgets/Footer.astro"
-      ]
-    },
-    {
-      "location": "text",
-      "text": "; socialLinks: Array",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/widgets/Footer.astro"
-      ]
-    },
-    {
       "location": "attribute.aria-label",
       "text": "Main navigation",
       "status": "unreviewed",
@@ -4957,56 +4119,8 @@
       ]
     },
     {
-      "location": "attribute.iconClass",
-      "text": "w-6 h-6 lg:w-5 lg:h-5 lg:inline-block",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/widgets/Header.astro"
-      ]
-    },
-    {
       "location": "attribute.aria-label",
       "text": "RSS Feed",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/widgets/Header.astro"
-      ]
-    },
-    {
-      "location": "text",
-      "text": "; actions?: Array",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/widgets/Header.astro"
-      ]
-    },
-    {
-      "location": "text",
-      "text": "('#header'); const toggle = this.querySelector",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/widgets/Header.astro"
-      ]
-    },
-    {
-      "location": "text",
-      "text": "('[data-aw-toggle-menu]'); const nav = this.querySelector",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/widgets/Header.astro"
-      ]
-    },
-    {
-      "location": "text",
-      "text": "('#header nav'); const lastChild = this.querySelector",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/widgets/Header.astro"
-      ]
-    },
-    {
-      "location": "text",
-      "text": "'/' + p.replace(/^\\/+|\\/+$/g, ''); const current = norm(window.location.pathname); this.querySelectorAll",
       "status": "unreviewed",
       "usedIn": [
         "src/components/widgets/Header.astro"
@@ -5034,14 +4148,6 @@
       "status": "unreviewed",
       "usedIn": [
         "src/layouts/Layout.astro"
-      ]
-    },
-    {
-      "location": "text",
-      "text": "fallback",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/layouts/PageLayout.astro"
       ]
     },
     {
@@ -5509,53 +4615,12 @@
       ]
     },
     {
-      "location": "text",
-      "text": "!data.draft); const byCategory = new Map",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/blog/[id].astro"
-      ]
-    },
-    {
-      "location": "text",
-      "text": "; previous: CollectionEntry",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/blog/[id].astro"
-      ]
-    },
-    {
-      "location": "text",
-      "text": "| null; next: CollectionEntry",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/blog/[id].astro"
-      ]
-    },
-    {
-      "location": "text",
-      "text": "| null; related: CollectionEntry",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/blog/[id].astro"
-      ]
-    },
-    {
       "location": "attribute.title",
       "text": "Articles in this category",
       "status": "unreviewed",
       "usedIn": [
         "src/pages/blog/category/[category]/page/[page].astro",
         "src/pages/blog/category/[category].astro"
-      ]
-    },
-    {
-      "location": "text",
-      "text": "[]; all: CollectionEntry",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/blog/category/[category]/page/[page].astro",
-        "src/pages/blog/page/[page].astro"
       ]
     },
     {
@@ -6030,20 +5095,11 @@
       ]
     },
     {
-      "location": "text",
-      "text": "index === 0 && linkedFirstParagraph ? (",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/glossary/[id].astro"
-      ]
-    },
-    {
       "location": "attribute.title",
       "text": "AI governance glossary",
       "status": "unreviewed",
       "usedIn": [
         "src/pages/glossary/index.astro",
-        "src/utils/jsonld.mjs",
         "src/utils/machine-text.mjs",
         "/glossary"
       ]
@@ -6211,14 +5267,6 @@
       "usedIn": [
         "src/pages/pricing.astro",
         "/pricing"
-      ]
-    },
-    {
-      "location": "text",
-      "text": "serviceNode(site, service, links)), ]; ---",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/pricing.astro"
       ]
     },
     {
@@ -7109,7 +6157,6 @@
       "status": "unreviewed",
       "usedIn": [
         "src/data/categories.mjs",
-        "src/data/tags.mjs",
         "/blog/category/agentic-architecture",
         "/blog/tag/agentic-architecture"
       ]
@@ -7216,15 +6263,6 @@
       ]
     },
     {
-      "location": "constant.name",
-      "text": "Data readiness",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/data/home.ts",
-        "src/pages/approach.astro"
-      ]
-    },
-    {
       "location": "constant.detail",
       "text": "What you hold, who owns it, and what may reach a model.",
       "status": "unreviewed",
@@ -7232,15 +6270,6 @@
         "src/data/home.ts",
         "/",
         "/styleguide"
-      ]
-    },
-    {
-      "location": "constant.name",
-      "text": "Process fit",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/data/home.ts",
-        "src/pages/approach.astro"
       ]
     },
     {
@@ -7261,15 +6290,6 @@
         "src/data/home.ts",
         "/",
         "/styleguide"
-      ]
-    },
-    {
-      "location": "constant.name",
-      "text": "Engineering capability",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/data/home.ts",
-        "src/pages/approach.astro"
       ]
     },
     {
@@ -7514,74 +6534,35 @@
       ]
     },
     {
-      "location": "constant.name",
-      "text": "Acceptable use policy",
+      "location": "constant.TITLE_SUFFIX",
+      "text": "— meshin.co",
       "status": "unreviewed",
       "usedIn": [
-        "src/data/tags.mjs",
-        "/blog/tag/acceptable-use-policy"
+        "src/utils/faq-meta.mjs"
       ]
     },
     {
-      "location": "constant.name",
-      "text": "AI pilots",
+      "location": "constant.answer",
+      "text": "A memo your board can act on: a readiness score across strategy, data, delivery, people and governance, plus the five fixes. The rest follows.",
       "status": "unreviewed",
       "usedIn": [
-        "src/data/tags.mjs",
-        "/blog/tag/ai-pilots"
+        "src/utils/faq-meta.test.mjs"
       ]
     },
     {
-      "location": "constant.name",
-      "text": "Evals in CI",
+      "location": "constant.answer",
+      "text": "Companies of thirty to three hundred people, usually with at least one engineer, who have run AI pilots that quietly stalled somewhere between demo and production. The rest follows.",
       "status": "unreviewed",
       "usedIn": [
-        "src/data/tags.mjs",
-        "/blog/tag/evals-in-ci"
+        "src/utils/faq-meta.test.mjs"
       ]
     },
     {
-      "location": "constant.name",
-      "text": "LLM as judge",
+      "location": "constant.answer",
+      "text": "Three fixed structures, no hourly billing. The rest follows.",
       "status": "unreviewed",
       "usedIn": [
-        "src/data/tags.mjs",
-        "/blog/tag/llm-as-judge"
-      ]
-    },
-    {
-      "location": "constant.name",
-      "text": "Policy enforcement",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/data/tags.mjs",
-        "/blog/tag/policy-enforcement"
-      ]
-    },
-    {
-      "location": "constant.name",
-      "text": "Production readiness",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/data/tags.mjs",
-        "/blog/tag/production-readiness"
-      ]
-    },
-    {
-      "location": "constant.name",
-      "text": "Security review",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/data/tags.mjs",
-        "/blog/tag/security-review"
-      ]
-    },
-    {
-      "location": "constant.message",
-      "text": "must be ${OG_TITLE_MAX_CHARS} characters or fewer",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/content-rules.mjs"
+        "src/utils/faq-meta.test.mjs"
       ]
     },
     {
@@ -7610,27 +6591,11 @@
       ]
     },
     {
-      "location": "constant.body",
-      "text": "Body of ${id}.",
+      "location": "constant.answer",
+      "text": "Three fixed structures, no hourly billing. The Assessment is a fixed fee for the two weeks. The Sprint is quoted once from the scope in the statement of work.",
       "status": "unreviewed",
       "usedIn": [
-        "src/utils/feed-items.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.title",
-      "text": "Title ${id}",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/feed-items.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.description",
-      "text": "Description ${id}.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/feed-items.test.mjs"
+        "src/utils/feeds.test.mjs"
       ]
     },
     {
@@ -7687,15 +6652,8 @@
       "text": "IBM Plex Sans",
       "status": "unreviewed",
       "usedIn": [
-        "src/utils/font-file.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.image",
-      "text": "${site}${ogImagePath(ogCollection, post.id)}",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/jsonld.mjs"
+        "src/utils/font-file.test.mjs",
+        "src/utils/og-template.mjs"
       ]
     },
     {
@@ -7811,7 +6769,6 @@
         "src/utils/llms-collections.mjs",
         "src/utils/machine-text.mjs",
         "src/utils/machine-text.test.mjs",
-        "src/pages/case-studies/[id].astro",
         "src/pages/case-studies/index.astro"
       ]
     },
@@ -7837,22 +6794,6 @@
     {
       "location": "constant.description",
       "text": "Merged full-text feed of every live entry, newest first.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/llms-collections.mjs"
-      ]
-    },
-    {
-      "location": "constant.title",
-      "text": "${title} feed",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/llms-collections.mjs"
-      ]
-    },
-    {
-      "location": "constant.description",
-      "text": "Full-text feed of every live entry in ${title.toLowerCase()}.",
       "status": "unreviewed",
       "usedIn": [
         "src/utils/llms-collections.mjs"
@@ -7896,14 +6837,6 @@
       "status": "unreviewed",
       "usedIn": [
         "src/utils/llms-collections.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.url",
-      "text": "${site}${ogImagePath(collection, id)}",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-links.mjs"
       ]
     },
     {
@@ -8007,8 +6940,7 @@
       "text": "AI policy",
       "status": "unreviewed",
       "usedIn": [
-        "src/utils/machine-text.mjs",
-        "src/pages/ai-policy.astro"
+        "src/utils/machine-text.mjs"
       ]
     },
     {
@@ -8144,6 +7076,14 @@
       "usedIn": [
         "src/utils/machine-text.mjs",
         "src/pages/case-studies/index.astro"
+      ]
+    },
+    {
+      "location": "constant.input",
+      "text": "Before.\\n\\n```bash\\nnpm install\\n```\\n\\nAfter.",
+      "status": "unreviewed",
+      "usedIn": [
+        "src/utils/machine-text.test.mjs"
       ]
     },
     {
@@ -8317,54 +7257,6 @@
     },
     {
       "location": "constant.title",
-      "text": "Post ${i}",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.publishDate",
-      "text": "2026-09-${String(10 + i).padStart(2, '0')}",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.title",
-      "text": "Term ${i}",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.publishDate",
-      "text": "2026-0${1 + i}-01",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.title",
-      "text": "${name} ${i}",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.border",
-      "text": "1px solid ${BORDER_COLOR}",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/og-template.mjs"
-      ]
-    },
-    {
-      "location": "constant.title",
       "text": "A Fixed-Fee AI Readiness Assessment",
       "status": "unreviewed",
       "usedIn": [
@@ -8374,6 +7266,14 @@
     {
       "location": "constant.footer",
       "text": "A short page description under 155 characters.",
+      "status": "unreviewed",
+      "usedIn": [
+        "src/utils/og-template.test.mjs"
+      ]
+    },
+    {
+      "location": "constant.longTitle",
+      "text": "Governance that survives procurement, the board and every vendor review that follows it,",
       "status": "unreviewed",
       "usedIn": [
         "src/utils/og-template.test.mjs"
@@ -8404,32 +7304,8 @@
       ]
     },
     {
-      "location": "constant.javascript",
-      "text": ") ) { return slug; } switch (type) { case",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/permalinks.ts"
-      ]
-    },
-    {
-      "location": "constant.http",
-      "text": "&& url.protocol !==",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/pipeline.mjs"
-      ]
-    },
-    {
-      "location": "constant.https",
-      "text": ") return false; return url.hostname !== siteHostname; } export function mergeRelTokens(existingRel, ...tokensToAdd) { const tokens = []; const seen = new Set(); const add = (token) => { if (!token || seen.has(token)) return; seen.add(token); tokens.push(token); }; const existing = Array.isArray(existingRel) ? existingRel : typeof existingRel ===",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/pipeline.mjs"
-      ]
-    },
-    {
-      "location": "constant.name",
-      "text": "Something AI",
+      "location": "constant.text",
+      "text": "The Sprint ends when the Assessment already produced its findings.",
       "status": "unreviewed",
       "usedIn": [
         "src/utils/related-content.test.mjs"
@@ -8569,28 +7445,12 @@
       ]
     },
     {
-      "location": "constant.name",
-      "text": "Read what exists",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/approach.astro"
-      ]
-    },
-    {
       "location": "constant.detail",
       "text": "Repositories, data flows, vendor contracts and the spreadsheets people actually use. Descriptions come later.",
       "status": "unreviewed",
       "usedIn": [
         "src/pages/approach.astro",
         "/approach"
-      ]
-    },
-    {
-      "location": "constant.name",
-      "text": "Name the owner",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/approach.astro"
       ]
     },
     {
@@ -8603,28 +7463,12 @@
       ]
     },
     {
-      "location": "constant.name",
-      "text": "Classify the data",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/approach.astro"
-      ]
-    },
-    {
       "location": "constant.detail",
       "text": "I decide what may reach a vendor and who has the final call when that is unclear.",
       "status": "unreviewed",
       "usedIn": [
         "src/pages/approach.astro",
         "/approach"
-      ]
-    },
-    {
-      "location": "constant.name",
-      "text": "Pick one process",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/approach.astro"
       ]
     },
     {
@@ -8637,28 +7481,12 @@
       ]
     },
     {
-      "location": "constant.name",
-      "text": "Ship it with evals",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/approach.astro"
-      ]
-    },
-    {
       "location": "constant.detail",
       "text": "Evals in CI, tracing, cost per outcome and a rollback path before it touches a customer.",
       "status": "unreviewed",
       "usedIn": [
         "src/pages/approach.astro",
         "/approach"
-      ]
-    },
-    {
-      "location": "constant.name",
-      "text": "Hand it over",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/approach.astro"
       ]
     },
     {
@@ -8684,39 +7512,6 @@
       "status": "unreviewed",
       "usedIn": [
         "src/pages/approach.astro"
-      ]
-    },
-    {
-      "location": "constant.title",
-      "text": "${pillar.title}, page ${pageNumber}",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/blog/category/[category]/page/[page].astro"
-      ]
-    },
-    {
-      "location": "constant.name",
-      "text": "Page ${pageNumber}",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/blog/category/[category]/page/[page].astro",
-        "src/pages/blog/page/[page].astro"
-      ]
-    },
-    {
-      "location": "constant.title",
-      "text": "Writing, page ${pageNumber}",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/blog/page/[page].astro"
-      ]
-    },
-    {
-      "location": "constant.description",
-      "text": "Every article tagged ${tag.name}, newest first.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/blog/tag/[tag].astro"
       ]
     },
     {
@@ -9326,35 +8121,61 @@
       ]
     },
     {
-      "location": "constant.alt",
-      "text": "${title || METADATA?.title?.default || ''}${og.type === 'article' ? ' — meshin.co' : ''}",
+      "location": "constant.label",
+      "text": "Toggle Menu",
       "status": "unreviewed",
       "usedIn": [
-        "src/components/common/Metadata.astro"
+        "src/components/common/ToggleMenu.astro"
       ]
     },
     {
-      "location": "constant.tertiary",
-      "text": "btn btn-tertiary",
+      "location": "constant.label",
+      "text": "Toggle between Dark and Light mode",
       "status": "unreviewed",
       "usedIn": [
-        "src/components/ui/Button.astro"
+        "src/components/common/ToggleTheme.astro"
       ]
     },
     {
-      "location": "constant.link",
-      "text": "cursor-pointer hover:text-primary",
+      "location": "constant.linkLabel",
+      "text": "More about me",
       "status": "unreviewed",
       "usedIn": [
-        "src/components/ui/Button.astro"
+        "src/components/site/AuthorBox.astro"
       ]
     },
     {
-      "location": "constant.rel",
-      "text": "noopener noreferrer",
+      "location": "constant.label",
+      "text": "Key takeaways",
       "status": "unreviewed",
       "usedIn": [
-        "src/components/ui/Button.astro"
+        "src/components/site/KeyTakeaways.astro",
+        "/blog/ai-acceptable-use-policy-for-a-50-person-company",
+        "/blog/evals-in-ci-for-llm-agents",
+        "/blog/how-to-build-an-ai-system-register-in-a-week",
+        "/blog/why-your-ai-pilot-never-reached-production",
+        "/styleguide"
+      ]
+    },
+    {
+      "location": "constant.label",
+      "text": "Search this site",
+      "status": "unreviewed",
+      "usedIn": [
+        "src/components/site/SearchBox.astro"
+      ]
+    },
+    {
+      "location": "constant.label",
+      "text": "On this page",
+      "status": "unreviewed",
+      "usedIn": [
+        "src/components/site/TableOfContents.astro",
+        "/blog/ai-acceptable-use-policy-for-a-50-person-company",
+        "/blog/evals-in-ci-for-llm-agents",
+        "/blog/how-to-build-an-ai-system-register-in-a-week",
+        "/blog/why-your-ai-pilot-never-reached-production",
+        "/styleguide"
       ]
     },
     {
@@ -9554,6 +8375,14 @@
     },
     {
       "location": "body.p",
+      "text": "An AI acceptable use policy only earns its place once it decides who approves a new AI tool and which data tier may reach which category of vendor. It also decides whether a person checks AI output before it reaches a customer or a contract, and when a customer must be told they are dealing with an AI system. Most templates answer the first two questions and stay quiet on the rest. That is exactly why staff read them once and then ignore them. A policy this size needs one named owner, not a committee, and a review interval short enough to catch the tool people started using without asking. ISO/IEC 42001 treats a policy like this as one part of a management system, not a standalone document. The EU AI Act already requires disclosure once an AI system talks to a customer directly. Skip the enforcement clause and none of the rest holds.",
+      "status": "unreviewed",
+      "usedIn": [
+        "/blog/ai-acceptable-use-policy-for-a-50-person-company"
+      ]
+    },
+    {
+      "location": "body.p",
       "text": "Published 8 September 2026 · Updated 8 September 2026",
       "status": "unreviewed",
       "usedIn": [
@@ -9600,18 +8429,6 @@
         "/services/90-day-production-sprint",
         "/services/ai-readiness-and-risk-assessment",
         "/services/fractional-caio-retainer"
-      ]
-    },
-    {
-      "location": "body.p",
-      "text": "Key takeaways",
-      "status": "unreviewed",
-      "usedIn": [
-        "/blog/ai-acceptable-use-policy-for-a-50-person-company",
-        "/blog/evals-in-ci-for-llm-agents",
-        "/blog/how-to-build-an-ai-system-register-in-a-week",
-        "/blog/why-your-ai-pilot-never-reached-production",
-        "/styleguide"
       ]
     },
     {
@@ -9756,18 +8573,6 @@
       "status": "unreviewed",
       "usedIn": [
         "/blog/ai-acceptable-use-policy-for-a-50-person-company"
-      ]
-    },
-    {
-      "location": "body.p",
-      "text": "On this page",
-      "status": "unreviewed",
-      "usedIn": [
-        "/blog/ai-acceptable-use-policy-for-a-50-person-company",
-        "/blog/evals-in-ci-for-llm-agents",
-        "/blog/how-to-build-an-ai-system-register-in-a-week",
-        "/blog/why-your-ai-pilot-never-reached-production",
-        "/styleguide"
       ]
     },
     {
@@ -10375,8 +9180,24 @@
       ]
     },
     {
+      "location": "body.p",
+      "text": "One named person, not a shared folder. They do not need to personally approve every new AI tool, but they need standing to ask why an unlisted system turned up, and a fixed date on the calendar to confirm every row is still accurate.",
+      "status": "unreviewed",
+      "usedIn": [
+        "/blog/how-to-build-an-ai-system-register-in-a-week"
+      ]
+    },
+    {
       "location": "head.title",
       "text": "Acceptable use policy — meshin.co",
+      "status": "unreviewed",
+      "usedIn": [
+        "/blog/tag/acceptable-use-policy"
+      ]
+    },
+    {
+      "location": "body.h1",
+      "text": "Acceptable use policy",
       "status": "unreviewed",
       "usedIn": [
         "/blog/tag/acceptable-use-policy"
@@ -10415,6 +9236,14 @@
       ]
     },
     {
+      "location": "body.h1",
+      "text": "AI pilots",
+      "status": "unreviewed",
+      "usedIn": [
+        "/blog/tag/ai-pilots"
+      ]
+    },
+    {
       "location": "body.p",
       "text": "Every article tagged AI pilots, newest first.",
       "status": "unreviewed",
@@ -10447,6 +9276,15 @@
       ]
     },
     {
+      "location": "body.h1",
+      "text": "EU AI Act",
+      "status": "unreviewed",
+      "usedIn": [
+        "/blog/tag/eu-ai-act",
+        "/glossary/eu-ai-act"
+      ]
+    },
+    {
       "location": "body.p",
       "text": "Every article tagged EU AI Act, newest first.",
       "status": "unreviewed",
@@ -10457,6 +9295,14 @@
     {
       "location": "head.title",
       "text": "Evals in CI — meshin.co",
+      "status": "unreviewed",
+      "usedIn": [
+        "/blog/tag/evals-in-ci"
+      ]
+    },
+    {
+      "location": "body.h1",
+      "text": "Evals in CI",
       "status": "unreviewed",
       "usedIn": [
         "/blog/tag/evals-in-ci"
@@ -10479,6 +9325,14 @@
       ]
     },
     {
+      "location": "body.h1",
+      "text": "LLM as judge",
+      "status": "unreviewed",
+      "usedIn": [
+        "/blog/tag/llm-as-judge"
+      ]
+    },
+    {
       "location": "body.p",
       "text": "Every article tagged LLM as judge, newest first.",
       "status": "unreviewed",
@@ -10489,6 +9343,14 @@
     {
       "location": "head.title",
       "text": "Policy enforcement — meshin.co",
+      "status": "unreviewed",
+      "usedIn": [
+        "/blog/tag/policy-enforcement"
+      ]
+    },
+    {
+      "location": "body.h1",
+      "text": "Policy enforcement",
       "status": "unreviewed",
       "usedIn": [
         "/blog/tag/policy-enforcement"
@@ -10511,6 +9373,14 @@
       ]
     },
     {
+      "location": "body.h1",
+      "text": "Production readiness",
+      "status": "unreviewed",
+      "usedIn": [
+        "/blog/tag/production-readiness"
+      ]
+    },
+    {
       "location": "body.p",
       "text": "Every article tagged Production readiness, newest first.",
       "status": "unreviewed",
@@ -10521,6 +9391,14 @@
     {
       "location": "head.title",
       "text": "Security review — meshin.co",
+      "status": "unreviewed",
+      "usedIn": [
+        "/blog/tag/security-review"
+      ]
+    },
+    {
+      "location": "body.h1",
+      "text": "Security review",
       "status": "unreviewed",
       "usedIn": [
         "/blog/tag/security-review"
@@ -12170,6 +11048,14 @@
       ]
     },
     {
+      "location": "body.h1",
+      "text": "ISO/IEC 42001",
+      "status": "unreviewed",
+      "usedIn": [
+        "/glossary/iso-iec-42001"
+      ]
+    },
+    {
       "location": "body.p",
       "text": "ISO/IEC&#39;s joint technical committee for artificial intelligence published it in December 2023. It specifies requirements for an AI management system: the recurring policies, roles and processes that govern how an organisation develops, provides or uses AI. It uses the same Plan-Do-Check-Act structure as other ISO management-system standards, such as ISO/IEC 27001 for information security.",
       "status": "unreviewed",
@@ -12348,6 +11234,14 @@
     {
       "location": "head.title",
       "text": "What is the NIST AI RMF? — meshin.co",
+      "status": "unreviewed",
+      "usedIn": [
+        "/glossary/nist-ai-rmf"
+      ]
+    },
+    {
+      "location": "body.h1",
+      "text": "NIST AI RMF",
       "status": "unreviewed",
       "usedIn": [
         "/glossary/nist-ai-rmf"
