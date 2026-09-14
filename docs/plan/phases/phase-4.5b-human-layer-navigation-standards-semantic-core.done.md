@@ -20,12 +20,12 @@ Goal: a reader — human or crawler following links — can reach everything fro
    category becomes a link.
 5. **Semantic core** (L33): `docs/SEMANTIC-CORE.md` — per-family tables GENERATED from
    `content-facts.json` at gate time (query, title pattern, meta pattern, H1, body intent,
-   internal links); hand-authored columns only the *why* (business reason, PRD §) and the mapping
+   internal links); hand-authored columns only the _why_ (business reason, PRD §) and the mapping
    of the 30 buyer prompts (PRD §17.3) to the routes that must win them, so the machine layer is
    designed against the questions LLMs actually get asked. A generated view cannot drift; no new
    drift gate. The title-pattern grammar is defined once (placeholder rules, lengths) in the
    generation script.
-7. **Mutation smoke built for real** (L35): `site/scripts/mutation-smoke.mjs` and
+6. **Mutation smoke built for real** (L35): `site/scripts/mutation-smoke.mjs` and
    `site/tests/guard-mutations/fixtures/` from CG §3 finally exist. The smoke copies the repo to
    a temp dir, plants one violating specimen per guard family (zod refinements, budgets,
    JSON-LD gate, machine coverage, content gate, and the new L20–L28 guards), runs the gate
@@ -33,7 +33,7 @@ Goal: a reader — human or crawler following links — can reach everything fro
    The pagination page-2 proof runs in the same copy. Every guard this phase adds is proven able
    to fail before CG-4.5b trusts it.
 
-6. **Standards replaced** (L34): `site/.agents/skills/` — delete all 12 template-derived skills
+7. **Standards replaced** (L34): `site/.agents/skills/` — delete all 12 template-derived skills
    (not merely stale but rule-violating: `configure-contact-form.md` contradicts L6,
    `setup-decap-cms.md` describes a CMS this repo never had; rewriting docs for removed features
    is waste); the 4 keepers re-verified against L1–L34 before they survive; author the new set
