@@ -89,3 +89,17 @@ prose actually mentions), and the first honest mention of a term or service in a
 is now a link. Tag pages carry the `/blog/tags` level in their breadcrumb trail. Both date and
 related blocks are marked `data-gate-ignore` because they are chrome, not prose; the content gate
 still reads the rendered date from them.
+
+## 2026-09-14 — New brand mark: conic ring and sparkle
+
+The chip mark is replaced by the owner-supplied ring: a 264° annular sweep whose ink fades from
+solid at the horizontal cut to fully transparent at the open end, with a four-point sparkle whose
+top and right tips sit exactly on the ring's outer circle. The wordmark is gone from the header
+and footer — the mark is square and carries a screen-reader-only "Fractional CAIO".
+
+Built from `site/scripts/logo-geometry.json` by `npm run assets:logo`: one annular path filled
+with `currentColor` and masked by 85 wedges at 3°, so the mark inverts with the theme from
+`text-heading` alone and no second file exists for dark mode. Wedges live inside the mask because
+semi-transparent wedges painted on the page double their alpha where they overlap and show
+hairline seams. Favicons, the apple touch icon and the square transparent social PNGs all
+regenerate from the same geometry.
