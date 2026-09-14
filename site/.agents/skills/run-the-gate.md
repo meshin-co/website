@@ -60,8 +60,8 @@ family logic via `scripts/templates.mjs`.
 
 - lhci has no `settings.preset`; form factors come from `formFactor` plus `screenEmulation`
   in `lighthouserc.cjs`.
-- Mobile and desktop runs must not share an output directory; `gate:lh` clears the Lighthouse
-  output dir between them and collects each factor separately — keep that structure.
+- Two Lighthouse runs must never share an output directory. `gate:lh` clears it between form
+  factors; a shard writes `lh-<factor>/shard-<index>/` and binds its own port.
 - Assert the North Star numbers, not 0.9x thresholds. A run at 97–99 re-runs three times, then
   the phase fails (L13).
 - Plausible is blocked inside lab runs and verified by a separate live check.
