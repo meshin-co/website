@@ -1,7 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components';
 import Logo from '~/components/Logo.astro';
-import { getHomePermalink } from '~/utils/permalinks';
+import { getHomePermalink, getPermalink } from '~/utils/permalinks';
 
 interface Link {
   text?: string;
@@ -31,17 +31,18 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '' } = Ast
       <div>
         <a class="inline-block" href={getHomePermalink()}><Logo /></a>
 
-        {
-          secondaryLinks.length > 0 && (
-            <ul class="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm">
-              {secondaryLinks.map(({ text, href }) => (
-                <li>
-                  <a class="link-signature hover:link-signature-hover" href={href} set:html={text} />
-                </li>
-              ))}
-            </ul>
-          )
-        }
+        <ul class="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+          <li>
+            <a class="link-signature hover:link-signature-hover" href={getPermalink('/search')}> Search </a>
+          </li>
+          {
+            secondaryLinks.map(({ text, href }) => (
+              <li>
+                <a class="link-signature hover:link-signature-hover" href={href} set:html={text} />
+              </li>
+            ))
+          }
+        </ul>
       </div>
 
       {

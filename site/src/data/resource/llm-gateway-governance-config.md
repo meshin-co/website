@@ -2,6 +2,7 @@
 title: LLM Gateway Governance Config
 name: LLM Gateway Governance Config
 type: template
+repoUrl: https://github.com/meshin-co/llm-gateway-governance-config
 description: 'A governance config for an LLM gateway. It decides what gets logged, redacted, and who may call which model.'
 publishDate: 2026-09-08
 updatedDate: 2026-09-08

@@ -18,7 +18,6 @@ import {
   contactPageNode,
   profilePageNode,
   webPageNode,
-  speakingListNode,
 } from './jsonld.mjs';
 
 const SITE = 'https://meshin.co';
@@ -125,14 +124,6 @@ test('a whole page graph has no reference pointing outside itself', () => {
     breadcrumbNode(SITE, [{ name: 'Home', path: '/' }]),
   ]);
   assert.deepEqual(danglingOf(document), []);
-});
-
-test('a speaking list is an ItemList of events that point at the person', () => {
-  const node = speakingListNode(SITE, [{ title: 'Talk', event: 'Meetup', date: new Date('2026-06-11'), type: 'talk' }]);
-  assert.equal(node['@type'], 'ItemList');
-  assert.equal(node.itemListElement[0].position, 1);
-  assert.equal(node.itemListElement[0].item['@type'], 'Event');
-  assert.equal(node.itemListElement[0].item.performer['@id'], `${SITE}/#person`);
 });
 
 test('the org node carries a logo and image at the default og endpoint', () => {

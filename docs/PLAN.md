@@ -49,7 +49,9 @@ The PRD's decision log (§2, D1–D24) stands except where a row below replaces 
 | L32 | Dead ends | Every route linked from ≥1 other page; posts link up/sideways; categories linked from hub, footer, post eyebrows | audit |
 | L33 | Semantic core | `docs/SEMANTIC-CORE.md`: tables generated from `content-facts.json`, hand-authored why + the 30 buyer prompts (PRD §17.3) mapped to routes; no drift gate (generated views cannot drift) | owner + ADHD |
 | L34 | Skills | `site/.agents/skills/` fully replaced: all 12 template-derived deleted, 4 keepers re-verified against L1–L34, ~8 new from proven procedures (add-a-collection names the four hand-lists); friction-log insights classified into them | owner + ADHD |
-| L35 | Mutation smoke | `scripts/gate/mutation-smoke.mjs` + guard-mutations fixtures built in 4.5b; every guard family proven able to fail before CG-4.5b; pagination page-2 proof lives here | ADHD + Drift |
+| L35 | Mutation smoke | `site/scripts/mutation-smoke.mjs` + guard-mutations fixtures built in 4.5b; every guard family proven able to fail before CG-4.5b; pagination page-2 proof lives here | ADHD + Drift |
+| L36 | Gate wiring | Every gate that the plan calls enforced runs in `.github/workflows/ci.yml`: `gate:content`, `gate:orphans`, `gate:routes`, `test:smoke` were script-only until 2026-09-13 and are now CI steps. A gate not in `ci.yml` is not a gate | validation 2026-09-13 |
+| L37 | Tag routes | Only tags carried by at least one live post get a route and a `/blog/tags` row; an unused vocabulary tag builds nothing, because an indexed empty page is thin content | validation 2026-09-13 |
 Verified facts behind these: Astro `7.3.1`, Tailwind `4.3.3`, template `@arthelokyo/astrowind@1.0.0-beta.66`
 (Astro 7 + Tailwind v4, `engines.node >=22.22.3`), `pagefind 1.5.2`, `satori 0.33.4`,
 `@resvg/resvg-js 2.6.2`, `@lhci/cli 0.15.1`. `cal.com/meshin` returns 200. `meshin.co` MX is
@@ -76,7 +78,7 @@ Steps 1–11 all run. A step that cannot run yet (edge checks before the first d
 only by the rule that names it, never by judgement.
 
 1. `npm run build && npm run check` — zero errors, zero warnings.
-2. `scripts/gate/routes.mjs` — enumerate every `dist/**/*.html`, write
+2. `site/scripts/routes-gate.mjs` — enumerate every `dist/**/*.html`, write
    `audits/phase-N/routes.json`, diff against the previous phase's file. The audited route list is
    **derived, never hand-authored**. An unexplained shrink fails the gate.
 3. Lighthouse CI over a **representative list derived from `dist/`**: every unique page plus ONE
@@ -119,7 +121,7 @@ Two rules that make a fake-green gate hard:
   is not gate-eligible.
 - **Guards must be provable.** Every zod refinement, plus the CSP directive list and each byte
   budget, has a planted violating specimen under `site/tests/guard-mutations/fixtures/` (outside
-  `src/content/`). Once per gate, `scripts/gate/mutation-smoke.mjs` copies the repo to a temp dir,
+  `src/content/`). Once per gate, `site/scripts/mutation-smoke.mjs` copies the repo to a temp dir,
   drops one bad fixture per collection, runs `astro build` there, and asserts a non-zero exit that
   names the offending field. A guard never proven red is not trusted.
 
@@ -160,7 +162,7 @@ Goal: an empty site at 100×4 with strict CSP, real budgets, and CI that blocks 
 - `Layout.astro` head per §11.5, skip link, `<main id="main">`, footer. Plausible only.
 - `public/_headers` (PRD Appendix G, `form-action 'none'` since L6 removes forms), `robots.txt`,
   `security.txt`, `humans.txt`, favicons, temporary `og-default.png`.
-- Gate scripts: `scripts/gate/routes.mjs`, budget measurement, `lighthouserc.cjs` per L13,
+- Gate scripts: `site/scripts/routes-gate.mjs`, budget measurement, `lighthouserc.cjs` per L13,
   `.github/workflows/ci.yml` with the full gate.
 - Cloudflare Pages project `meshin-co` → `meshin.pages.dev`, `noindex` until Phase 5. **Ask the
   owner for `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` at the end of this phase**; until
@@ -330,7 +332,7 @@ Goal: a reader — human or crawler following links — can reach everything fro
    designed against the questions LLMs actually get asked. A generated view cannot drift; no new
    drift gate. The title-pattern grammar is defined once (placeholder rules, lengths) in the
    generation script.
-7. **Mutation smoke built for real** (L35): `scripts/gate/mutation-smoke.mjs` and
+7. **Mutation smoke built for real** (L35): `site/scripts/mutation-smoke.mjs` and
    `site/tests/guard-mutations/fixtures/` from CG §3 finally exist. The smoke copies the repo to
    a temp dir, plants one violating specimen per guard family (zod refinements, budgets,
    JSON-LD gate, machine coverage, content gate, and the new L20–L28 guards), runs the gate

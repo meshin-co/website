@@ -2,6 +2,7 @@
 title: Agent Evals CI Starter
 name: Agent Evals CI Starter
 type: kit
+repoUrl: https://github.com/meshin-co/agent-evals-ci-starter
 description: 'A starter CI pipeline for agent evals. It runs on every pull request and blocks a bad merge before it ships.'
 publishDate: 2026-09-08
 updatedDate: 2026-09-08

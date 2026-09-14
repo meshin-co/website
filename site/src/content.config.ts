@@ -3,7 +3,7 @@ import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 import { postTagSchema } from '~/data/tags.mjs';
-import { countWords, isNotBeforePublish, isWithinWordRange, OG_TITLE_MAX_CHARS } from '~/utils/content-rules.mjs';
+import { countWords, isNotBeforePublish, isWithinWordRange, ogTitleSchema } from '~/utils/content-rules.mjs';
 
 const CATEGORIES = ['governance', 'agentic-architecture', 'operating-model', 'executive'] as const;
 
@@ -30,7 +30,7 @@ const fullAnswer = () => {
 };
 
 const publishable = {
-  title: z.string(),
+  title: ogTitleSchema,
   description: z.string().max(155),
   publishDate: z.date(),
   updatedDate: z.date(),
@@ -161,7 +161,7 @@ const faqCollection = defineCollection({
   loader: glob({ pattern: ['*.md', '*.mdx'], base: 'src/data/faq' }),
   schema: z
     .object({
-      question: z.string().max(OG_TITLE_MAX_CHARS, { message: `must be ${OG_TITLE_MAX_CHARS} characters or fewer` }),
+      question: ogTitleSchema,
       answer: z.string().refine((value) => countWords(value) <= 80, { message: 'must be 80 words or fewer' }),
       category: z.enum([...CATEGORIES, 'general']),
       relatedPage: z.string().optional(),

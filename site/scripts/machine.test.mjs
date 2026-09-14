@@ -8,6 +8,7 @@ import {
   missingFromGenerator,
   sidecarGaps,
   feedCoverageFailures,
+  indexableCoverageGaps,
   COLLECTION_BASES,
 } from './machine.mjs';
 
@@ -67,6 +68,34 @@ test('a page whose markdown sidecar was not built is reported', () => {
   const gaps = sidecarGaps(['/blog/a-post', '/glossary/evals', '/about'], ['blog/a-post.md']);
 
   assert.deepEqual(gaps, ['/glossary/evals.md']);
+});
+
+test('an indexable dist route missing from llms.txt is reported as a coverage gap', () => {
+  const routes = ['/blog', '/blog/a-post', '/search'];
+  const gaps = indexableCoverageGaps({
+    routes,
+    listed: ['/blog/a-post'],
+    noindexRoutes: ['/search'],
+  });
+  assert.deepEqual(gaps, ['/blog']);
+});
+
+test('a noindex route missing from llms.txt is never reported, it is meant to stay off it', () => {
+  const gaps = indexableCoverageGaps({
+    routes: ['/styleguide'],
+    listed: [],
+    noindexRoutes: new Set(['/styleguide']),
+  });
+  assert.deepEqual(gaps, []);
+});
+
+test('a route already listed in llms.txt is never reported twice, even when it would also be indexable', () => {
+  const gaps = indexableCoverageGaps({
+    routes: ['/glossary/evals'],
+    listed: new Set(['/glossary/evals']),
+    noindexRoutes: [],
+  });
+  assert.deepEqual(gaps, []);
 });
 
 const feedItem = (url) => `<item><guid isPermaLink="true">${url}</guid></item>`;

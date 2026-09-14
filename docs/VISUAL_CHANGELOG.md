@@ -62,3 +62,10 @@ plus 12 tag pages, all indexed, controlled vocabulary schema-enforced. Posts
 link up and sideways (prev/next, related, category, tags); footer gains
 Topics. Inline links restyled with persistent underline (axe
 link-in-text-block). Both platform baselines regenerated.
+
+## 2026-09-13 — Plan validation fixes
+
+Numbered chips removed from the step and signal lists (L9a had been applied to section headers
+only). Footer gains a crawlable Search link. The tags index and tag routes now cover only tags a
+live post actually carries, so two empty indexed pages are gone. Blog card tag and category links
+carry the persistent underline. Every baseline regenerated on both platforms.

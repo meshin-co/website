@@ -2,6 +2,7 @@
 title: Build vs Buy AI Kit
 name: Build vs Buy AI Kit
 type: kit
+repoUrl: https://github.com/meshin-co/build-vs-buy-ai-kit
 description: 'The build vs buy AI kit: a one-page worksheet of the criteria I work through before recommending either path.'
 publishDate: 2026-09-08
 updatedDate: 2026-09-08

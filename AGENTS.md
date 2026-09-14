@@ -4,12 +4,19 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
 
 ## Read order
 
-1. `docs/PLAN.md` — the phased build plan and the locked decisions (L1–L19). Start here.
+1. `docs/PLAN.md` — the phased build plan and the locked decisions (L1–L35). Start here.
 2. `docs/PRD.md` — the full requirements spec. `docs/PLAN.md` §1 overrides it where they differ.
 3. `docs/DECISIONS.md` — the closed decision log.
-4. `skill://frontend-excellence` — all UI work. Load at most 3 references at a time via its
+4. `site/.agents/skills/` — the repeatable procedures for this repo: running the gate, adding a
+   collection entry, restoring a collection, regenerating visual baselines, the judge panel, the
+   content gate, the machine interfaces and the launch checklist. Read the matching one before
+   doing that job by hand.
+5. `docs/SEMANTIC-CORE.md` — which title, meta description and target query each route family
+   carries and why, plus the 30 buyer prompts mapped to the routes that must win them. Read it
+   before writing or editing any page copy, title or meta description.
+6. `skill://frontend-excellence` — all UI work. Load at most 3 references at a time via its
    routing tables.
-5. `skill://perfect-coder` — all source code. Minimal viable change, test-first, per-language
+7. `skill://perfect-coder` — all source code. Minimal viable change, test-first, per-language
    size caps.
 
 ## Hard rules
@@ -41,8 +48,10 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
   facts become `TODO(owner)` and go on the copy checklist.
 - Copy tone: direct and engineering. Numbers and dates instead of adjectives. No "leading",
   "expert", "passionate".
-- Design lane: "engineering brief" — Fraunces plus IBM Plex Sans, paper and ink with one deep
-  teal accent in OKLCH. No gradients, no stock imagery, no purple.
+- Design lane: "engineering brief" — Fraunces, IBM Plex Sans and IBM Plex Mono (3 families,
+  98 KB gz, a documented deviation from the 2-family rule), paper and ink with one deep teal
+  accent in OKLCH. No gradients, no stock imagery, no purple. No numbered section labels and no
+  figure-number chips anywhere.
 - Structured data: one JSON-LD `@graph` per page from `site/src/utils/jsonld.mjs`. Every node has
   an `@id`, every referenced `@id` resolves, and CI validates it.
 - Machine interfaces (`/llms.txt`, `/llms-full.txt`, `/llms/{collection}.txt`, `/{page}.md`,

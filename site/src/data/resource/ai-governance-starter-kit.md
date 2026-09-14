@@ -2,6 +2,7 @@
 title: AI Governance Starter Kit
 name: AI Governance Starter Kit
 type: kit
+repoUrl: https://github.com/meshin-co/ai-governance-starter-kit
 description: 'AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire.'
 publishDate: 2026-09-08
 updatedDate: 2026-09-08

@@ -18,7 +18,14 @@ export const FAMILIES = [
     kind: 'build',
     fixture: 'faq-question-too-long.md',
     plant: 'src/data/faq',
-    tokens: ['question: must be 100 characters or fewer'],
+    tokens: ['question: must be 98 characters or fewer'],
+  },
+  {
+    id: 'og-title-length',
+    kind: 'build',
+    fixture: 'post-title-too-long.md',
+    plant: 'src/data/post',
+    tokens: ['title: must be 98 characters or fewer'],
   },
   {
     id: 'faq-missing-updated-date',

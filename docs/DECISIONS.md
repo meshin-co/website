@@ -25,7 +25,7 @@ any D row they name. Where a D row below is marked *superseded*, read the L row 
 | D16 | Images | Local only, through `astro:assets`. Unpic and remote domains removed | Budget and control |
 | D17 | Partytown | Removed | No third-party scripts besides Plausible |
 | D18 | astro-compress | Kept as the template configures it (csso off, lightningcss on) | Already tuned for Tailwind v4 |
-| D19 | Blog URLs | `/blog/{slug}`; categories at `/blog/category/{slug}`; tags at `/blog/tag/{slug}` and noindex | Index the hubs, not the tags |
+| D19 | Blog URLs | *Superseded by L31.* `/blog/{slug}`; categories at `/blog/category/{slug}`; tags at `/blog/tag/{slug}`, all indexed and sitemapped | Owner re-affirmed indexing tags twice under ADHD challenge |
 | D20 | Russian version | Phase 6 at the earliest; English only until then | Focus |
 | D21 | AstroWind v2 | Do not wait. Start on v1; migration is a separate project | v2 is a promise, not a release |
 | D22 | Case studies | *Superseded by L10 and L11*: hub plus anonymized template, no metrics; artifact repos under `meshin-co` later | Honesty |

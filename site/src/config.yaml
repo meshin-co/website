@@ -31,8 +31,7 @@ i18n:
 
 apps:
   blog:
-    # Phase 1 ships the shell only. Turned on in Phase 3 with the real content model.
-    isEnabled: false
+    isEnabled: true
     postsPerPage: 12
 
     post:
@@ -57,7 +56,7 @@ apps:
       isEnabled: true
       pathname: 'blog/tag'
       robots:
-        index: false
+        index: true
 
     isRelatedPostsEnabled: true
     relatedPostsCount: 3

@@ -10,14 +10,8 @@ const Tag = ordered ? 'ol' : 'ul';
 
 <Tag class="grid gap-x-14 gap-y-0 sm:grid-cols-2">
   {
-    steps.map((step, order) => (
-      <li class="flex items-start gap-4 border-t border-line py-8">
-        <span
-          class="w-8 shrink-0 font-heading text-2xl leading-[1.75rem] font-semibold text-numeral figure-num"
-          aria-hidden="true"
-        >
-          {String(order + 1).padStart(2, '0')}
-        </span>
+    steps.map((step) => (
+      <li class="border-t border-line py-8">
         <div>
           <h3 class="font-heading text-xl leading-snug font-semibold text-heading">{step.name}</h3>
           <p class="mt-3 max-w-[42ch] text-muted">{step.detail}</p>

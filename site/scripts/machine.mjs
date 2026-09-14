@@ -26,7 +26,7 @@ export function llmsIndexGaps(text, collections) {
   return collections.filter((collection) => !text.includes(`/llms/${collection}.txt`));
 }
 
-export function llmsRouteGaps(text, routes) {
+export function parseListedRoutes(text) {
   const listed = new Set();
   for (const line of text.split('\n')) {
     const trimmed = line.trim().replace(/^- /, '');
@@ -34,7 +34,18 @@ export function llmsRouteGaps(text, routes) {
     const url = link ? link[1] : /^https?:\/\/\S+$/.test(trimmed) ? trimmed : null;
     if (url) listed.add(new URL(url).pathname);
   }
+  return listed;
+}
+
+export function llmsRouteGaps(text, routes) {
+  const listed = parseListedRoutes(text);
   return routes.filter((route) => !listed.has(route));
+}
+
+export function indexableCoverageGaps({ routes, listed, noindexRoutes }) {
+  const listedSet = listed instanceof Set ? listed : new Set(listed);
+  const noindexSet = noindexRoutes instanceof Set ? noindexRoutes : new Set(noindexRoutes);
+  return routes.filter((route) => !noindexSet.has(route) && !listedSet.has(route));
 }
 
 export function noindexStaticListings(text) {
@@ -98,6 +109,14 @@ async function routeHtml(distDir, route) {
   return '';
 }
 
+async function noindexRoutesOf(distDir, routes) {
+  const noindex = new Set();
+  for (const route of routes) {
+    if (isNoindex(await routeHtml(distDir, route))) noindex.add(route);
+  }
+  return noindex;
+}
+
 async function liveRoutesByKind(distDir, collections, routes) {
   const byKind = {};
   for (const collection of collections) {
@@ -133,6 +152,11 @@ async function main(distDir) {
   for (const path of noindexStaticListings(llmsTxt)) failures.push(`llms.txt lists noindex page ${path}`);
   for (const collection of collections) {
     for (const gap of llmsRouteGaps(llmsTxt, liveByKind[collection])) failures.push(`llms.txt omits ${gap}`);
+  }
+
+  const noindexRoutes = await noindexRoutesOf(distDir, routes);
+  for (const gap of indexableCoverageGaps({ routes, listed: parseListedRoutes(llmsTxt), noindexRoutes })) {
+    failures.push(`llms.txt is missing indexable route ${gap}`);
   }
 
   const llmsIndex = await readFile(join(distDir, 'llms-full.txt'), 'utf8');

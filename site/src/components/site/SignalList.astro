@@ -9,14 +9,8 @@ const { items, verdict } = Astro.props;
 
 <ol class="grid gap-0 sm:auto-rows-fr sm:grid-cols-2 sm:gap-x-14">
   {
-    items.map((item, order) => (
-      <li class="flex items-start gap-4 border-b border-line py-6 last:border-b-0">
-        <span
-          class="w-8 shrink-0 font-heading text-2xl leading-[1.72rem] font-semibold text-numeral figure-num"
-          aria-hidden="true"
-        >
-          {String(order + 1).padStart(2, '0')}
-        </span>
+    items.map((item) => (
+      <li class="border-b border-line py-6 last:border-b-0">
         <span class="max-w-[44ch] text-[1.0625rem] leading-relaxed">{item}</span>
       </li>
     ))

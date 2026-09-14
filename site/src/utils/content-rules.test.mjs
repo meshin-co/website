@@ -4,7 +4,13 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { test } from 'node:test';
 
-import { countWords, isWithinWordRange, isNotBeforePublish, OG_TITLE_MAX_CHARS } from './content-rules.mjs';
+import {
+  countWords,
+  isWithinWordRange,
+  isNotBeforePublish,
+  OG_TITLE_MAX_CHARS,
+  ogTitleSchema,
+} from './content-rules.mjs';
 
 test('word counting ignores punctuation, dashes and repeated whitespace', () => {
   assert.equal(countWords('  One  two—three, four.  '), 4);
@@ -35,4 +41,13 @@ test('the planted FAQ specimen violates the OG title cap, and the bound is exact
   assert.ok(question.length > OG_TITLE_MAX_CHARS, `specimen question must exceed the cap (got ${question.length})`);
 
   assert.equal('x'.repeat(OG_TITLE_MAX_CHARS - 1).length < OG_TITLE_MAX_CHARS, true);
+});
+
+test('ogTitleSchema accepts a title at the cap and rejects one character past it', () => {
+  const atCap = ogTitleSchema.safeParse('x'.repeat(OG_TITLE_MAX_CHARS));
+  assert.equal(atCap.success, true);
+
+  const overCap = ogTitleSchema.safeParse('x'.repeat(OG_TITLE_MAX_CHARS + 1));
+  assert.equal(overCap.success, false);
+  assert.equal(overCap.error.issues[0].message, `must be ${OG_TITLE_MAX_CHARS} characters or fewer`);
 });

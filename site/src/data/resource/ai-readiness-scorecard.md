@@ -2,6 +2,7 @@
 title: AI Readiness Scorecard
 name: AI Readiness Scorecard
 type: scorecard
+repoUrl: https://github.com/meshin-co/ai-readiness-scorecard
 description: 'A five-axis AI readiness scorecard you score yourself: strategy, data, delivery, people, governance.'
 publishDate: 2026-09-08
 updatedDate: 2026-09-08

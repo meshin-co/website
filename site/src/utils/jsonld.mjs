@@ -246,24 +246,3 @@ export function profilePageNode(site) {
     isPartOf: { '@id': `${site}/#website` },
   };
 }
-
-export function speakingListNode(site, appearances) {
-  return {
-    '@type': 'ItemList',
-    '@id': `${site}/speaking#list`,
-    name: 'Talks and appearances',
-    itemListElement: appearances.map((appearance, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      item: {
-        '@type': 'Event',
-        name: appearance.title,
-        startDate: appearance.date.toISOString().slice(0, 10),
-        eventAttendanceMode: 'https://schema.org/OnlineEventAttendanceMode',
-        location: { '@type': 'VirtualLocation', name: appearance.event },
-        performer: { '@id': `${site}/#person` },
-        ...(appearance.url ? { url: appearance.url } : {}),
-      },
-    })),
-  };
-}

@@ -27,7 +27,10 @@
     "gate:machine": "node scripts/machine.mjs dist",
     "gate:jsonld": "node scripts/jsonld-gate.mjs dist",
     "gate:skills": "node scripts/check-skills.mjs",
-    "test:smoke": "node scripts/mutation-smoke.mjs"
+    "test:smoke": "node scripts/mutation-smoke.mjs",
+    "gate:content": "node scripts/content-gate.mjs dist",
+    "gate:orphans": "node scripts/orphan-gate.mjs dist",
+    "gate:routes": "node scripts/routes-gate.mjs dist"
   },
   "dependencies": {
     "@astro-community/astro-embed-twitter": "^0.5.11",

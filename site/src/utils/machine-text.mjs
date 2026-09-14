@@ -231,3 +231,27 @@ export function renderSidecar({ title, url, description, updated, body }) {
   ];
   return `${head.join('\n')}\n${body}`;
 }
+
+export function collectionHubs({ collections, staticPaths }) {
+  const covered = staticPaths instanceof Set ? staticPaths : new Set(staticPaths);
+  return collections.filter((collection) => !covered.has(collection.base));
+}
+
+function newerUpdated(a, b) {
+  if (!a) return b ?? null;
+  if (!b) return a;
+  return a > b ? a : b;
+}
+
+export function liveTopicMap(posts, key) {
+  const map = new Map();
+  for (const post of posts) {
+    const value = post[key];
+    const slugs = Array.isArray(value) ? value : [value];
+    for (const slug of slugs) {
+      if (!slug) continue;
+      map.set(slug, newerUpdated(map.get(slug) ?? null, post.updated ?? null));
+    }
+  }
+  return map;
+}

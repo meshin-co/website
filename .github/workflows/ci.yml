@@ -44,9 +44,19 @@ jobs:
 
       - run: npm run gate:html
       - run: npm run gate:links
+      - run: npm run gate:content
+      - run: npm run gate:orphans
       - run: npm run gate:machine
       - run: npm run gate:skills
       - run: npm run gate:jsonld
+
+      - name: route set never shrinks unexplained
+        run: npm run gate:routes
+        env:
+          GATE_PHASE: ci
+
+      - name: every guard proven able to fail
+        run: npm run test:smoke
 
       - name: visual snapshots and axe
         run: |

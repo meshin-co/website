@@ -12,6 +12,8 @@ import {
   mergeWithKindFloor,
   toRssItems,
   renderSidecar,
+  collectionHubs,
+  liveTopicMap,
 } from './machine-text.mjs';
 import { lastmod } from './lastmod.mjs';
 
@@ -486,4 +488,53 @@ test('a markdown sidecar carries a title, canonical url and the body verbatim', 
   assert.match(sidecar, /^Source: https:\/\/meshin\.co\/blog\/a-post$/m);
   assert.match(sidecar, /^Updated: 2026-09-05$/m);
   assert.ok(sidecar.endsWith('## Heading\n\nA paragraph with **bold** text.\n'));
+});
+
+test('collectionHubs drops a collection whose base is already a static page path', () => {
+  const collections = [
+    { name: 'post', base: '/blog' },
+    { name: 'faq', base: '/faq' },
+  ];
+  const hubs = collectionHubs({ collections, staticPaths: ['/faq', '/about'] });
+  assert.deepEqual(hubs, [{ name: 'post', base: '/blog' }]);
+});
+
+test('collectionHubs keeps every collection when no static page already covers its base', () => {
+  const collections = [
+    { name: 'post', base: '/blog' },
+    { name: 'glossary', base: '/glossary' },
+  ];
+  const hubs = collectionHubs({ collections, staticPaths: new Set(['/faq']) });
+  assert.deepEqual(hubs, collections);
+});
+
+test('liveTopicMap groups posts by a single-value key and keeps the newest updated stamp', () => {
+  const posts = [
+    { category: 'governance', updated: '2026-01-01T00:00:00.000Z' },
+    { category: 'governance', updated: '2026-06-01T00:00:00.000Z' },
+    { category: 'executive', updated: '2026-03-01T00:00:00.000Z' },
+  ];
+  const map = liveTopicMap(posts, 'category');
+  assert.deepEqual(
+    [...map.entries()].sort(),
+    [
+      ['executive', '2026-03-01T00:00:00.000Z'],
+      ['governance', '2026-06-01T00:00:00.000Z'],
+    ].sort()
+  );
+});
+
+test('liveTopicMap groups posts by an array-value key, sharing one slug across posts', () => {
+  const posts = [
+    { tags: ['ai-governance', 'shadow-ai'], updated: '2026-02-01T00:00:00.000Z' },
+    { tags: ['ai-governance'], updated: '2026-05-01T00:00:00.000Z' },
+  ];
+  const map = liveTopicMap(posts, 'tags');
+  assert.equal(map.get('ai-governance'), '2026-05-01T00:00:00.000Z');
+  assert.equal(map.get('shadow-ai'), '2026-02-01T00:00:00.000Z');
+});
+
+test('liveTopicMap never invents a slug for a post carrying no tags', () => {
+  const map = liveTopicMap([{ tags: [], updated: '2026-01-01T00:00:00.000Z' }], 'tags');
+  assert.equal(map.size, 0);
 });
