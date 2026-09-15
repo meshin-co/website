@@ -64,13 +64,12 @@ family logic via `scripts/templates.mjs`.
   factors; a shard writes `lh-<factor>/shard-<index>/` and binds its own port.
 - Assert the North Star numbers, not 0.9x thresholds. A run at 97–99 re-runs three times, then
   the phase fails (L13).
-- Plausible is blocked inside lab runs and verified by a separate live check.
+- Plausible is blocked inside lab runs and verified by a separate live check. Blocking it still
+  charges the simulated graph: see `diagnose-a-lighthouse-lcp-plateau.md`.
+- A category score of 100 does not mean the metric assertions passed. `report.mjs` enforces the
+  LCP, CLS and TBT budgets it reads from `lighthouserc.cjs` on each route's median run.
 - A scratch page left in the build silently widens every downstream gate; delete throwaway
   routes before the audited build.
-
-`report.mjs` also enforces the LCP, CLS and TBT budgets it reads from `lighthouserc.cjs`, on the
-median of each route's three runs: a category score of 100 does not mean the metric assertions
-passed.
 
 ## Manual pass (calibration gate step 10)
 
