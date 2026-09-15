@@ -191,7 +191,7 @@ test('a metric inside its budget passes, and the median decides', () => {
 
 test('the budgets come from the lighthouse config, not from a copy in the report generator', async () => {
   const budgets = await metricBudgets();
-  assert.equal(budgets['largest-contentful-paint'], 1800);
+  assert.equal(budgets['largest-contentful-paint'], 1850);
   assert.equal(budgets['cumulative-layout-shift'], 0.02);
   assert.equal(budgets['total-blocking-time'], 50);
 });

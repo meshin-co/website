@@ -136,3 +136,20 @@ test('an override raises only the keys it names', () => {
     '/search css 30000 > 20480',
   ]);
 });
+
+test('the development-only styleguide is not audited, because nothing there competes for a query', () => {
+  const measured = [
+    { route: '/', page: 100, noindex: false },
+    { route: '/styleguide', page: 300, noindex: true },
+    { route: '/about', page: 120, noindex: false },
+  ];
+  assert.deepEqual(lighthouseSet(measured).sort(), ['/', '/about']);
+});
+
+test('every other noindex route stays audited, so the exclusion cannot widen', () => {
+  const measured = [
+    { route: '/404', page: 90, noindex: true },
+    { route: '/search', page: 95, noindex: true },
+  ];
+  assert.deepEqual(lighthouseSet(measured).sort(), ['/404', '/search']);
+});

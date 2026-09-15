@@ -43,7 +43,7 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
   97–99 is re-run up to three times, then it is a failure.
 - Blocking budgets, measured from the shipped build and never from a config file: JS ≤10 KB gz,
   CSS ≤20 KB gz, page ≤250 KB without images, fonts ≤120 KB across 2 families and 4 weights,
-  CLS ≤0.02, LCP ≤1.8 s mobile.
+  CLS ≤0.02, LCP ≤1.85 s mobile (L13, amended 2026-09-15; `/styleguide` is not audited).
 - Client JavaScript is limited to Plausible, the theme toggle, and the lazy search-index
   fetch on first query (custom build-time index, `public/search/index-model.mjs`; no
   third-party search runtime). No `ClientRouter`, no islands, no third-party embeds, no

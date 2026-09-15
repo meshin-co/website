@@ -22,9 +22,11 @@ export async function discoverRoutes(distDir) {
   return [...new Set(routes)].sort();
 }
 
+const DEVELOPMENT_ONLY_ROUTES = new Set(['/styleguide']);
+
 export function lighthouseSet(measured) {
   const byParent = new Map();
-  for (const row of measured) {
+  for (const row of measured.filter((row) => !DEVELOPMENT_ONLY_ROUTES.has(row.route))) {
     const parent = row.route === '/' ? '' : row.route.slice(0, row.route.lastIndexOf('/'));
     byParent.set(parent, [...(byParent.get(parent) ?? []), row]);
   }

@@ -216,7 +216,18 @@ Re-run the extractors against the final build and diff against the opening inven
 cannot close while any row is `unreviewed`, any build string is unrowed, or any `TODO(owner)` is
 undeclared in the copy checklist.
 
-## Calibration Gate 4.7 — run 2026-09-15
+## Calibration Gate 4.7 — PASS 2026-09-15
+
+`audits/phase-4.7/REPORT.md` reads **Result: PASS**: 54 of 54 route×form-factor rows at
+100/100/100/100, every metric budget inside its cap, `check` 0, 588 unit tests, 696 Playwright on
+darwin, 14/14 mutation families, and `html`, `links`, `content`, `orphans`, `machine`, `skills`,
+`jsonld`, `plan`, `registers`, `editorial`, byte budgets and search budgets all exit 0.
+
+The owner amended L13 to close it: mobile LCP budget 1850 ms rather than 1800, and `/styleguide`
+out of the audited set as a development-only noindex page. The 100/100/100/100 score bar is
+unchanged and still has no waiver path. What follows is the measurement history that led there.
+
+## Calibration Gate 4.7 — measurement history
 
 Everything green except the Lighthouse bar: `check` 0, 583 unit tests, 696 Playwright on darwin
 twice, 14/14 mutation families, and `html`, `links`, `content`, `orphans`, `machine`, `skills`,
