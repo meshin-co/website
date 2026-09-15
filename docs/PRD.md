@@ -1002,7 +1002,7 @@ Context7 MCP (подключён) |
 
 - Ежемесячно — buyer prompts, /now; ежеквартально — Polish Loop + S3-аудит + зависимости + проверка AstroWind v2 (миграция — отдельный PRD).
 
-- RU-раздел (/ru/): Astro i18n routing, hreflang, переводы services/approach/faq/about и 5 лучших статей; отдельный llms.txt секцией; только после ≥10 EN-статей и первого лида.
+- ~~RU-раздел (/ru/)~~ — **superseded by L54 on 2026-09-15: English only, no second language.**
 КГ на каждый PR — автоматический (CI) + ручной Polish Loop на изменённых маршрутах.
 
 14.9 Калибровочный гейт (КГ) — единая процедура

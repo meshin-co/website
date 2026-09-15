@@ -97,7 +97,7 @@ export function orgNode(
       '@type': 'ContactPoint',
       contactType: 'sales',
       email: 'hello@meshin.co',
-      availableLanguage: ['en', 'ru', 'he'],
+      availableLanguage: 'en',
     },
   };
 }
