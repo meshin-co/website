@@ -1,0 +1,182 @@
+[
+  {
+    "target": "src/data/glossary/agentic-workflow.md",
+    "status": "rewritten",
+    "reason": "description was 117 chars (below 120 floor) and said \"LLM agents\" while shortDefinition/body say \"AI agents\" - fixed length to 145 chars and standardized on \"AI agents\" throughout. updatedDate bumped.",
+    "digest": "063c70b6736e"
+  },
+  {
+    "target": "src/data/glossary/ai-governance.md",
+    "status": "verified",
+    "reason": "already answer-first, tight paragraphs each carrying a fact, description in range, no banned phrases, no long sentences.",
+    "digest": "bd8fc4aa95b7"
+  },
+  {
+    "target": "src/data/glossary/ai-impact-assessment.md",
+    "status": "verified",
+    "reason": "already meets the standard; findings.json's untraceable \"Concerns\" hit for this route is the RelatedContent template heading, not missing copy.",
+    "digest": "792654b14993"
+  },
+  {
+    "target": "src/data/glossary/ai-management-system.md",
+    "status": "verified",
+    "reason": "already meets the standard, sentences and paragraphs within limits.",
+    "digest": "0b8a7f4612e2"
+  },
+  {
+    "target": "src/data/glossary/ai-register.md",
+    "status": "rewritten",
+    "reason": "description was 111 chars, below the 120 floor - rewrote to 125 chars, same claim, no new facts. updatedDate bumped.",
+    "digest": "784dcfe3759f"
+  },
+  {
+    "target": "src/data/glossary/conformity-assessment.md",
+    "status": "verified",
+    "reason": "already meets the standard; the \"Concerns\" untraceable hit is the template's RelatedContent group heading, not missing copy.",
+    "digest": "f9827bf936a4"
+  },
+  {
+    "target": "src/data/glossary/data-classification.md",
+    "status": "rewritten",
+    "reason": "definition's first paragraph had a 40-word sentence built on a colon-plus-question clause - split into two sentences at the question mark, no fact lost. updatedDate bumped.",
+    "digest": "7056d9226e16"
+  },
+  {
+    "target": "src/data/glossary/dpia.md",
+    "status": "rewritten",
+    "reason": "\"Why it comes up\" opened with a 42-word sentence - split at the comma-and clause into two sentences. updatedDate bumped.",
+    "digest": "ec4a5725a8cd"
+  },
+  {
+    "target": "src/data/glossary/eu-ai-act.md",
+    "status": "rewritten",
+    "reason": "shortDefinition (35 words) and one definition sentence (35 words) were both one word over the 34-word hard cap - trimmed shortDefinition (\"from banned practices to high-risk systems\" folded into \"heaviest for high-risk systems\") and split the definition sentence at the comma. updatedDate bumped.",
+    "digest": "86b57328179d"
+  },
+  {
+    "target": "src/data/glossary/evals.md",
+    "status": "verified",
+    "reason": "already meets the standard, shortDefinition answers first with no restatement.",
+    "digest": "dbd6b91d3044"
+  },
+  {
+    "target": "src/data/glossary/guardrails.md",
+    "status": "rewritten",
+    "reason": "two consecutive question-mark sentences in \"Why it comes up\" (new gate rule, cap 1) - merged into one question. Also fixed a malformed \"one of three things: A, or B. The third, C\" list into a proper three-item list, which then ran 42 words - split at the resulting boundary. updatedDate bumped.",
+    "digest": "7ff28e6b0ffa"
+  },
+  {
+    "target": "src/data/glossary/hallucination-rate.md",
+    "status": "verified",
+    "reason": "already meets the standard; a 37-word flag on one sentence was a false positive from a quoted-string period (\"we do not know.\" That reads...) - the sentence is 21 words, correctly punctuated already.",
+    "digest": "cb3f170760d0"
+  },
+  {
+    "target": "src/data/glossary/high-risk-ai-system.md",
+    "status": "verified",
+    "reason": "already meets the standard; a 44-word flag was the same quoted-string false positive (actual sentence is 21 words). The 4 untraceable definition-paragraph findings in findings.json trace directly to this file's own multi-paragraph `definition` field - real copy, ledger-granularity artifact, not missing source.",
+    "digest": "83ca74860504"
+  },
+  {
+    "target": "src/data/glossary/human-in-the-loop.md",
+    "status": "verified",
+    "reason": "already meets the standard.",
+    "digest": "c800a72573f5"
+  },
+  {
+    "target": "src/data/glossary/human-oversight.md",
+    "status": "verified",
+    "reason": "already meets the standard.",
+    "digest": "2441a34c7862"
+  },
+  {
+    "target": "src/data/glossary/iso-iec-42001.md",
+    "status": "verified",
+    "reason": "already meets the standard; the \"Concerns\" untraceable hit is the template's RelatedContent group heading, not missing copy.",
+    "digest": "3c9d24bb836f"
+  },
+  {
+    "target": "src/data/glossary/llm-gateway.md",
+    "status": "rewritten",
+    "reason": "description was 114 chars, below the 120 floor - rewrote to 145 chars, same claim. updatedDate bumped.",
+    "digest": "2a11a5680ced"
+  },
+  {
+    "target": "src/data/glossary/model-card.md",
+    "status": "verified",
+    "reason": "already meets the standard.",
+    "digest": "29b8ac8ca231"
+  },
+  {
+    "target": "src/data/glossary/model-provenance.md",
+    "status": "verified",
+    "reason": "already meets the standard.",
+    "digest": "717796c49b23"
+  },
+  {
+    "target": "src/data/glossary/nist-ai-rmf.md",
+    "status": "rewritten",
+    "reason": "shortDefinition (35 words) and one definition sentence (40 words) were over the 34-word cap - trimmed the redundant \"published by NIST\" (NIST already named as subject) and split the long sentence at the colon. updatedDate bumped.",
+    "digest": "2ed94b9b8d96"
+  },
+  {
+    "target": "src/data/glossary/observability.md",
+    "status": "verified",
+    "reason": "already meets the standard.",
+    "digest": "268f4f2ff090"
+  },
+  {
+    "target": "src/data/glossary/post-market-monitoring.md",
+    "status": "verified",
+    "reason": "already meets the standard; one \"not only\" without a paired \"but also\" is not the banned formulaic construction.",
+    "digest": "3d323573115f"
+  },
+  {
+    "target": "src/data/glossary/prompt-injection.md",
+    "status": "verified",
+    "reason": "already meets the standard.",
+    "digest": "c7e900603c85"
+  },
+  {
+    "target": "src/data/glossary/provider-vs-deployer.md",
+    "status": "rewritten",
+    "reason": "two sentences ran over the 34-word cap (35 and 35 words), one each in \"Why it comes up\" and \"What to do about it\" - split both at their existing clause boundaries, no fact lost. updatedDate bumped.",
+    "digest": "517e17e91e93"
+  },
+  {
+    "target": "src/data/glossary/red-teaming.md",
+    "status": "verified",
+    "reason": "already meets the standard.",
+    "digest": "6e6998af77f4"
+  },
+  {
+    "target": "src/data/glossary/retrieval-augmented-generation.md",
+    "status": "verified",
+    "reason": "already meets the standard; one \"not only\" without a paired \"but also\" is not the banned formulaic construction.",
+    "digest": "a17fe7ab7491"
+  },
+  {
+    "target": "src/data/glossary/serious-incident-reporting.md",
+    "status": "rewritten",
+    "reason": "\"Why it comes up\" ran a 39-word sentence with an embedded rhetorical question - split into three sentences, kept the single remaining question intact (still only one question mark on the page, gate-compliant). updatedDate bumped.",
+    "digest": "aa155510a946"
+  },
+  {
+    "target": "src/data/glossary/shadow-ai.md",
+    "status": "verified",
+    "reason": "already meets the standard; confirms canonical casing - \"Shadow AI\" at sentence start, lowercase \"shadow AI\" mid-sentence.",
+    "digest": "dc01b4bf5b8a"
+  },
+  {
+    "target": "src/data/glossary/sub-processor.md",
+    "status": "verified",
+    "reason": "already meets the standard.",
+    "digest": "6b484e92627b"
+  },
+  {
+    "target": "src/data/glossary/technical-documentation.md",
+    "status": "rewritten",
+    "reason": "two sentences ran over the 34-word cap (35 words each), one each in \"Why it comes up\" and \"What to do about it\" - split both at existing clause boundaries. updatedDate bumped.",
+    "digest": "d0ae50ff6640"
+  }
+]

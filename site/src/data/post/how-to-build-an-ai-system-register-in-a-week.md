@@ -2,7 +2,7 @@
 title: How to build an AI system register in a week
 description: 'A step-by-step way to build an AI system register in a week without buying a tool, so a security reviewer gets the document they ask for first.'
 publishDate: 2026-09-08
-updatedDate: 2026-09-08
+updatedDate: 2026-09-15
 shortAnswer: 'An AI system register lists every AI tool a company builds, buys or lets a team adopt: what it does, what data it touches, who owns it, and how risky it is. A security reviewer asks for this list before anything else. A team builds a usable version in a week with a spreadsheet and five interviews, no software required.'
 fullAnswer: 'A security reviewer asks for an AI system register before model choice, prompt design or accuracy come up. It is the inventory of every AI system in use, however it got there. Each entry records what it does, what data reaches it, which vendor sits behind it, who owns it, and how risky it is. Every later question a reviewer asks only makes sense once that list exists. Most companies of thirty to three hundred people do not have one, not because the work is hard, but because nobody was ever assigned to write it down. Building the first version does not need a tool or a budget line. It needs a spreadsheet, a short interview with each team that touches a model, and one person who agrees to keep the list current once the interviews stop.'
 keyTakeaways:
@@ -12,13 +12,13 @@ keyTakeaways:
   - 'A register nobody updates gets treated the same as no register in a review, so it needs one named owner and a fixed date to recheck every row.'
 faq:
   - q: 'Do you need a register if your company only uses ChatGPT and a few SaaS tools with AI features?'
-    a: 'Yes. A register is not only for models a company builds. It should list any AI feature that can see company or customer data, including a tool a team subscribed to on its own, because that is exactly the kind of system a reviewer or an incident finds first.'
+    a: 'Yes. A register covers more than models a company builds. It should list any AI feature that can see company or customer data. That includes a tool a team subscribed to on its own, since that is exactly the kind of system a reviewer or an incident finds first.'
   - q: 'How is an AI system register different from a data flow diagram or a risk assessment?'
-    a: 'The register comes first. A data flow diagram maps how data moves through one system in detail, and a risk assessment scores how risky a system is, but both need the list of systems, owners and data that the register provides before that work can start. Skip the register and the same discovery gets repeated every time someone asks.'
+    a: 'The register comes first. A data flow diagram maps how data moves through one system in detail, and a risk assessment scores how risky a system is. Both need the list of systems, owners and data that the register provides before that work can start. Skip the register and the same discovery gets repeated every time someone asks.'
   - q: 'Does an internal register satisfy the registration duty under the EU AI Act?'
     a: 'No. An internal register is a record a company keeps for itself. The public registration duty under Article 49 of the EU AI Act applies separately, only to certain high-risk systems, and is filed in the database the Commission set up under Article 71. Building the internal register first is still the fastest way to find out which systems might owe that separate duty.'
   - q: 'Who should own the register after the first week?'
-    a: 'One named person, not a shared folder. They do not need to personally approve every new AI tool, but they need standing to ask why an unlisted system turned up, and a fixed date on the calendar to confirm every row is still accurate.'
+    a: 'One named person, not a shared folder. They do not need to personally approve every new AI tool. But they need standing to ask why an unlisted system turned up, and a fixed date on the calendar to confirm every row is still accurate.'
 category: governance
 tags:
   - ai-register

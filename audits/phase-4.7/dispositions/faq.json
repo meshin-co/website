@@ -1,0 +1,152 @@
+[
+  {
+    "target": "site/src/data/faq/are-models-trained-on-our-customer-data.md",
+    "status": "verified",
+    "reason": "Already answer-first ('Not by default.'), within word/description limits, no banned phrases, teaser does not truncate.",
+    "digest": "31dcb1bec039"
+  },
+  {
+    "target": "site/src/data/faq/can-you-get-us-iso-iec-42001-certified-or-just-a-working-system.md",
+    "status": "rewritten",
+    "reason": "First sentence shortened from 19 to 9 words ('I build a working system, not the certification itself.') to stop the /faq index teaser cutting mid-clause; the locked SEMANTIC-CORE.md buyer-prompt passage (2nd sentence, 'My work is built to get your management system, risk register...') kept byte-identical.",
+    "digest": "a62ef84c1921"
+  },
+  {
+    "target": "site/src/data/faq/can-you-work-with-our-existing-ai-vendor-or-platform.md",
+    "status": "rewritten",
+    "reason": "First sentence split from 18 to 7 words to stop teaser truncation; rest of answer unchanged, matches Retainer service scope.",
+    "digest": "e83cba75785d"
+  },
+  {
+    "target": "site/src/data/faq/how-do-you-charge-for-the-work.md",
+    "status": "verified",
+    "reason": "Already answer-first, matches all three service fee shapes exactly, within limits.",
+    "digest": "aec728fe33e4"
+  },
+  {
+    "target": "site/src/data/faq/how-does-ai-risk-get-recorded-and-who-signs-it-off.md",
+    "status": "rewritten",
+    "reason": "First sentence split from 17 to 4 words ('In an AI register.') to stop teaser truncation; already used canonical 'AI register' term.",
+    "digest": "6711b8747a83"
+  },
+  {
+    "target": "site/src/data/faq/how-does-the-retainer-end.md",
+    "status": "rewritten",
+    "reason": "First sentence shortened from 24 to 11 words to stop teaser truncation; the locked SEMANTIC-CORE.md passage ('The handover plan exists from the first month, not the last.') kept byte-identical; description re-verified in range after restructure (150 chars).",
+    "digest": "f1d394abd882"
+  },
+  {
+    "target": "site/src/data/faq/how-is-a-prompt-or-model-change-stopped-from-shipping-unnoticed.md",
+    "status": "rewritten",
+    "reason": "First sentence shortened from 28 to 4 words ('Evals in continuous integration.') to stop teaser truncation.",
+    "digest": "1a5efca8cd45"
+  },
+  {
+    "target": "site/src/data/faq/how-is-cost-per-outcome-measured.md",
+    "status": "verified",
+    "reason": "Already answer-first, direct, within limits, matches Sprint service's cost-per-outcome dashboard deliverable.",
+    "digest": "f4e5eadc946f"
+  },
+  {
+    "target": "site/src/data/faq/how-quickly-can-you-start-and-how-does-availability-work-for-a-remote-officer.md",
+    "status": "rewritten",
+    "reason": "First sentence shortened from 25 to 5 words ('One client at a time.') to stop teaser truncation.",
+    "digest": "89706ec4c481"
+  },
+  {
+    "target": "site/src/data/faq/is-my-company-too-small-or-too-early-for-a-fractional-chief-ai-officer.md",
+    "status": "verified",
+    "reason": "Already answer-first, direct, within limits.",
+    "digest": "b1e3d966ec2c"
+  },
+  {
+    "target": "site/src/data/faq/what-counts-as-in-production-for-the-90-day-sprint.md",
+    "status": "rewritten",
+    "reason": "First sentence shortened from 19 to 10 words to stop teaser truncation; matches Sprint service's 'in production' definition.",
+    "digest": "93694b151a67"
+  },
+  {
+    "target": "site/src/data/faq/what-do-nist-ai-rmf-iso-iec-42001-and-the-eu-ai-act-require.md",
+    "status": "verified",
+    "reason": "Already answer-first, terminology (NIST AI RMF, ISO/IEC 42001, EU AI Act, provider/deployer) already matches the glossary's standardized spellings, within limits.",
+    "digest": "28b2f5c1d2be"
+  },
+  {
+    "target": "site/src/data/faq/what-do-we-do-about-tools-staff-are-already-using-without-approval.md",
+    "status": "rewritten",
+    "reason": "First sentence shortened from 23 to 11 words and 'the register' clarified to 'the AI register' (canonical glossary term); matches Retainer service's process step 1 wording; description re-verified in range (140 chars).",
+    "digest": "51fa9a758505"
+  },
+  {
+    "target": "site/src/data/faq/what-does-a-fractional-chief-ai-officer-actually-do.md",
+    "status": "verified",
+    "reason": "CONFLICT, not fixed: first sentence is 28 words and uses 'AI risk register' instead of the glossary's canonical 'AI register', both of which normally warrant a rewrite. It is byte-identical to the locked passage docs/SEMANTIC-CORE.md quotes for buyer prompt 27 ('I carry the AI risk register, review every initiative...'). Editing it would desync a drift-gated document I do not own. Left untouched; reported in the final summary for Main to resolve (update the locked passage and the faq-meta.mjs teaser truncation together, or accept the drift).",
+    "digest": "0691b98eed5a"
+  },
+  {
+    "target": "site/src/data/faq/what-does-the-two-week-assessment-produce-and-is-the-fee-credited-if-we-continue.md",
+    "status": "rewritten",
+    "reason": "First sentence shortened from 43 to 7 words ('A memo your board can act on.') to stop teaser truncation; matches AI Readiness & Risk Assessment service fee-credit terms exactly.",
+    "digest": "caa67913055b"
+  },
+  {
+    "target": "site/src/data/faq/what-happens-if-the-evals-say-a-workflow-isnt-good-enough.md",
+    "status": "verified",
+    "reason": "Already answer-first ('Then it does not ship.'), matches Sprint service FAQ, within limits.",
+    "digest": "391e2aea63c6"
+  },
+  {
+    "target": "site/src/data/faq/what-happens-on-a-fit-call-and-does-it-cost-anything.md",
+    "status": "verified",
+    "reason": "Already answer-first, direct, within limits.",
+    "digest": "8ee2c244d78b"
+  },
+  {
+    "target": "site/src/data/faq/what-if-the-ai-we-are-building-goes-into-a-product-we-sell.md",
+    "status": "rewritten",
+    "reason": "'the risk register' corrected to 'the AI register' (canonical glossary term); teaser was already fine, no other change.",
+    "digest": "f57b8dd15dc0"
+  },
+  {
+    "target": "site/src/data/faq/what-if-we-already-have-a-data-science-team-or-an-internal-ai-lead.md",
+    "status": "rewritten",
+    "reason": "First sentence shortened from 19 to 9 words to stop teaser truncation; 'AI risk register' corrected to 'AI register' (canonical glossary term).",
+    "digest": "102705bd77aa"
+  },
+  {
+    "target": "site/src/data/faq/what-size-of-company-do-you-actually-work-with.md",
+    "status": "rewritten",
+    "reason": "First sentence shortened from 13 to 11 words to stop teaser truncation; 'thirty to three hundred' changed to '30 to 300' to match the numeral convention used everywhere else on the site (about page, service descriptions); description re-verified in range (146 chars).",
+    "digest": "de705a5f048f"
+  },
+  {
+    "target": "site/src/data/faq/whats-the-difference-between-the-assessment-the-sprint-and-the-retainer.md",
+    "status": "rewritten",
+    "reason": "First sentence shortened from 23 to 5 words ('Three fixed offers, three stages.') to stop teaser truncation.",
+    "digest": "211565484514"
+  },
+  {
+    "target": "site/src/data/faq/who-answers-customer-security-questionnaires.md",
+    "status": "verified",
+    "reason": "Already answer-first ('I do, as the named officer on record.'), byte-identical to the locked SEMANTIC-CORE.md passage for buyer prompt 5, already short enough that the teaser does not truncate.",
+    "digest": "ddf8380c20ce"
+  },
+  {
+    "target": "site/src/data/faq/who-owns-the-code-and-the-data.md",
+    "status": "verified",
+    "reason": "Already answer-first ('You do, both.'), matches Sprint service's code-ownership FAQ, within limits.",
+    "digest": "a63187d5f56d"
+  },
+  {
+    "target": "site/src/data/faq/who-owns-the-frameworks-templates-and-playbooks-built-during-the-engagement.md",
+    "status": "rewritten",
+    "reason": "First sentence shortened from 24 to 8 words to stop teaser truncation; 'the register' clarified to 'the AI register' for terminology consistency.",
+    "digest": "20021735b064"
+  },
+  {
+    "target": "site/src/data/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai.md",
+    "status": "verified",
+    "reason": "CONFLICT, not fixed: first sentence is 35 words, which normally warrants a rewrite to stop the /faq index teaser cutting it off mid-clause ('A named officer on your customers' security reviews and your board's.'). It is byte-identical to the locked passage docs/SEMANTIC-CORE.md quotes for buyer prompt 2. Editing it would desync a drift-gated document I do not own. Left untouched; reported in the final summary for Main to resolve.",
+    "digest": "c6e7098ea4b7"
+  }
+]

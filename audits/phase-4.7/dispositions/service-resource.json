@@ -1,0 +1,50 @@
+[
+  {
+    "target": "site/src/data/service/90-day-production-sprint.md",
+    "status": "rewritten",
+    "reason": "description extended 108->125 chars to meet the 120-155 floor; NIST function reference fixed from 'areas' to 'functions' and given its first-mention (AI RMF) short form, matching glossary/nist-ai-rmf.md wording",
+    "digest": "c3e25af7240e"
+  },
+  {
+    "target": "site/src/data/service/ai-readiness-and-risk-assessment.md",
+    "status": "rewritten",
+    "reason": "description extended 118->137 chars to meet the 120-155 floor; added a 'What you keep' section stating explicit ownership of the memo, readiness score, gap list and ranked shortlist - the sprint and retainer pages already had an ownership section, this one did not",
+    "digest": "91d3c5f3f0c3"
+  },
+  {
+    "target": "site/src/data/service/fractional-caio-retainer.md",
+    "status": "rewritten",
+    "reason": "description already at 120 chars, unchanged; NIST function reference fixed from 'areas' to 'functions' and given its first-mention (AI RMF) short form; trimmed 'instead of a whole sector' to 'not a whole sector' to hold the sentence at the 34-word hard stop after the added words; also removed the unconfirmed 'twelve to twenty-four months' / '12 to 24 months' / 'two years' retainer-length claim from the deliverables bullet and the FAQ answer, per COPY-CHECKLIST 3.7 (unanswered) and to match home.ts's already-softened wording (coordinated with StaticPageEditor over hub) - checklist row updated to REMOVED",
+    "digest": "f8dc229d7992"
+  },
+  {
+    "target": "site/src/data/resource/agent-evals-ci-starter.md",
+    "status": "rewritten",
+    "reason": "description extended 108->140 chars to meet the 120-155 floor, naming the plain YAML case format already documented in whatInside; NIST function reference fixed from 'areas' to 'functions' with first-mention (AI RMF) short form",
+    "digest": "12a7b2445ee9"
+  },
+  {
+    "target": "site/src/data/resource/ai-governance-starter-kit.md",
+    "status": "rewritten",
+    "reason": "description already at 135 chars, unchanged; added the (AI RMF) short form on the page's only NIST Risk Management Framework mention for corpus-wide terminology consistency",
+    "digest": "6690c1c70ddb"
+  },
+  {
+    "target": "site/src/data/resource/ai-readiness-scorecard.md",
+    "status": "rewritten",
+    "reason": "description extended 100->120 chars to meet the 120-155 floor, adding 'in an afternoon' which the body already states; NIST reference given its first-mention (AI RMF) short form",
+    "digest": "701acdbad560"
+  },
+  {
+    "target": "site/src/data/resource/build-vs-buy-ai-kit.md",
+    "status": "rewritten",
+    "reason": "description extended 109->136 chars to meet the 120-155 floor; NIST function reference fixed from 'areas' to 'functions' with first-mention (AI RMF) short form",
+    "digest": "81a15b961b10"
+  },
+  {
+    "target": "site/src/data/resource/llm-gateway-governance-config.md",
+    "status": "rewritten",
+    "reason": "description extended 108->140 chars to meet the 120-155 floor, adding the escalation-on-policy-break behaviour already documented in whatInside; no NIST AI RMF mention on this page (it cites NIST SP 800-53 instead), no terminology fix needed",
+    "digest": "7654301d597e"
+  }
+]

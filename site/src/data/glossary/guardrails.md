@@ -6,7 +6,7 @@ publishDate: 2026-09-08
 updatedDate: 2026-09-15
 shortDefinition: Guardrails are the checks placed around what an AI model can be asked, what it can say, and what it can do. They are enforced in the surrounding code, not left to the model's training. That way an unusual input cannot simply talk the system out of a rule.
 definition: |
-  In practice a guardrail is one of three things: a topic restriction on what the model will engage with, an output filter on what a user sees, or an action gate that controls what the system may do without a check first.
+  In practice a guardrail is one of three things: a topic restriction on what the model will engage with, or an output filter on what a user sees. The third is an action gate, which controls what the system may do without a check first.
 
   OWASP, an independent security-standards group, publishes its own mitigation list for prompt injection, which reads like a checklist for these three. Privilege control and human approval for high-risk actions are guardrails, not model behaviour.
 

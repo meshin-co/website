@@ -57,7 +57,7 @@ export const services = [
       'Named officer for security questionnaires, contracts and audits',
       'Quarterly roadmap with a budget next to each item',
       'Review of every AI initiative, including the shadow tools nobody approved',
-      'Handover plan, so an internal owner runs this in 12–24 months',
+      'Handover plan, so an internal owner can run this without me',
     ],
   },
 ];
@@ -114,7 +114,7 @@ export const artifacts = [
 ];
 
 export const cta = {
-  title: 'Start with a 30‑minute fit call.',
+  title: 'Start with a 30-minute fit call.',
   body: 'No slides. I go through where you actually stand, and I tell you whether an Assessment is worth your money. If it is not, I say so.',
   label: 'Book a 30-min fit call',
   href: 'https://cal.com/meshin',

@@ -1,0 +1,632 @@
+[
+  {
+    "target": "/",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "538f7315d05d"
+  },
+  {
+    "target": "/404",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "7393fcba2730"
+  },
+  {
+    "target": "/about",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "b329acfeaa4c"
+  },
+  {
+    "target": "/ai-policy",
+    "status": "verified",
+    "reason": "head.title 'AI acceptable-use policy — meshin.co' and its H1 both use the hyphenated 'acceptable-use policy' form, consistent with the corpus-wide convention for the compound modifier (categories.mjs, FAQ/resource/service data all hyphenate it in running prose). docs/SEMANTIC-CORE.md's cached generated table still shows the unhyphenated 'AI acceptable use policy' for this route's title/H1 — that cache predates today's edit (ai-policy.astro's own UPDATED constant is 2026-09-15) and will resolve on the next semantic-core regeneration; current source is internally consistent (title, H1, description and lead all hyphenated) so no route-level change was needed.",
+    "digest": "09d796ea6aa6"
+  },
+  {
+    "target": "/approach",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "4ceffa5c3c8d"
+  },
+  {
+    "target": "/blog",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "6f31d22ec616"
+  },
+  {
+    "target": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "75c78d5a223a"
+  },
+  {
+    "target": "/blog/category/agentic-architecture",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "b7c7424fe26a"
+  },
+  {
+    "target": "/blog/category/executive",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "a39121b94c93"
+  },
+  {
+    "target": "/blog/category/governance",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "9916036531ca"
+  },
+  {
+    "target": "/blog/category/operating-model",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "8cf7c4924284"
+  },
+  {
+    "target": "/blog/evals-in-ci-for-llm-agents",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "7f02f85d9122"
+  },
+  {
+    "target": "/blog/how-to-build-an-ai-system-register-in-a-week",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "16dee4c371ec"
+  },
+  {
+    "target": "/blog/tag/acceptable-use-policy",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "7d80f922db60"
+  },
+  {
+    "target": "/blog/tag/agentic-architecture",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "9050f93c901c"
+  },
+  {
+    "target": "/blog/tag/ai-governance",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "4d2dd80e42bd"
+  },
+  {
+    "target": "/blog/tag/ai-pilots",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "da55332ec5f1"
+  },
+  {
+    "target": "/blog/tag/ai-register",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "5537be5972ca"
+  },
+  {
+    "target": "/blog/tag/eu-ai-act",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "78ac44186c22"
+  },
+  {
+    "target": "/blog/tag/evals-in-ci",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "eeba90387a4b"
+  },
+  {
+    "target": "/blog/tag/llm-as-judge",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "3417a0fde0e7"
+  },
+  {
+    "target": "/blog/tag/policy-enforcement",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "aa372a8bc09e"
+  },
+  {
+    "target": "/blog/tag/production-readiness",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "55dca73c81f6"
+  },
+  {
+    "target": "/blog/tag/security-review",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "14734d95f406"
+  },
+  {
+    "target": "/blog/tag/shadow-ai",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "80fa38c0fe5c"
+  },
+  {
+    "target": "/blog/tags",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "dcd0eb74d328"
+  },
+  {
+    "target": "/blog/why-your-ai-pilot-never-reached-production",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "550fa2cc690e"
+  },
+  {
+    "target": "/case-studies",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "137a83cb580d"
+  },
+  {
+    "target": "/case-studies/only-help-agentic-support",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "d5b069e101f7"
+  },
+  {
+    "target": "/contact",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "eced35c2efac"
+  },
+  {
+    "target": "/faq",
+    "status": "rewritten",
+    "reason": "The index page's per-question teaser (site/src/utils/faq-meta.mjs teaser()) truncated a long first sentence by a raw word count with no regard for clause boundaries, producing fragments that end on a bare article/possessive, e.g. \"A named officer on your customers' security reviews and your board's.\" for /faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai. Fixed teaser() to prefer a clauseTrim-style cut at a comma/and/or/but boundary (reusing and extending clauseTrim with an optional word-count ceiling) before falling back to the old word-count method, so it now stops at 'A named officer on your customers' security reviews.' Verified against all 25 current FAQ entries: every teaser now ends on a complete clause. Full faq-meta.test.mjs suite (17 tests) still passes.",
+    "digest": "6255cc1a3289"
+  },
+  {
+    "target": "/faq/are-models-trained-on-our-customer-data",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "2a31ec406638"
+  },
+  {
+    "target": "/faq/can-you-get-us-iso-iec-42001-certified-or-just-a-working-system",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "76465cc0bbfe"
+  },
+  {
+    "target": "/faq/can-you-work-with-our-existing-ai-vendor-or-platform",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "051bc60f3fe2"
+  },
+  {
+    "target": "/faq/how-do-you-charge-for-the-work",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "0748dd9cde74"
+  },
+  {
+    "target": "/faq/how-does-ai-risk-get-recorded-and-who-signs-it-off",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "d9586f7ee982"
+  },
+  {
+    "target": "/faq/how-does-the-retainer-end",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "9495962daa39"
+  },
+  {
+    "target": "/faq/how-is-a-prompt-or-model-change-stopped-from-shipping-unnoticed",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "09a9113528e0"
+  },
+  {
+    "target": "/faq/how-is-cost-per-outcome-measured",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "cd2e215a514c"
+  },
+  {
+    "target": "/faq/how-quickly-can-you-start-and-how-does-availability-work-for-a-remote-officer",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "dcc25199fdd9"
+  },
+  {
+    "target": "/faq/is-my-company-too-small-or-too-early-for-a-fractional-chief-ai-officer",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "8d90b4b7c32a"
+  },
+  {
+    "target": "/faq/what-counts-as-in-production-for-the-90-day-sprint",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "cc2eb06d3725"
+  },
+  {
+    "target": "/faq/what-do-nist-ai-rmf-iso-iec-42001-and-the-eu-ai-act-require",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "9fad4bd1dab4"
+  },
+  {
+    "target": "/faq/what-do-we-do-about-tools-staff-are-already-using-without-approval",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "55529b308838"
+  },
+  {
+    "target": "/faq/what-does-a-fractional-chief-ai-officer-actually-do",
+    "status": "verified",
+    "reason": "This entry's answer field was edited by an earlier sealed pass (updatedDate 2026-09-15, now reads 'I carry the AI register as a named officer...') after the last dist build, so site/dist/faq/index.html still shows the pre-edit teaser 'I carry the AI risk register, review every initiative, sign the.' That stale row needs no template fix: with the current source text, faq-meta.mjs's teaser() (word/char budget not exceeded) already returns the full first sentence verbatim, and it will render correctly the next time the site is built.",
+    "digest": "3bbe612a4cdc"
+  },
+  {
+    "target": "/faq/what-does-the-two-week-assessment-produce-and-is-the-fee-credited-if-we-continue",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "2dd219fc06fe"
+  },
+  {
+    "target": "/faq/what-happens-if-the-evals-say-a-workflow-isnt-good-enough",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "b8942654df11"
+  },
+  {
+    "target": "/faq/what-happens-on-a-fit-call-and-does-it-cost-anything",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "89e103194ccf"
+  },
+  {
+    "target": "/faq/what-if-the-ai-we-are-building-goes-into-a-product-we-sell",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "2928bf4a664a"
+  },
+  {
+    "target": "/faq/what-if-we-already-have-a-data-science-team-or-an-internal-ai-lead",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "c387f851a6a0"
+  },
+  {
+    "target": "/faq/what-size-of-company-do-you-actually-work-with",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "a50758ad98a6"
+  },
+  {
+    "target": "/faq/whats-the-difference-between-the-assessment-the-sprint-and-the-retainer",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "ae2579a62a73"
+  },
+  {
+    "target": "/faq/who-answers-customer-security-questionnaires",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "e71722888791"
+  },
+  {
+    "target": "/faq/who-owns-the-code-and-the-data",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "a8b9fe540811"
+  },
+  {
+    "target": "/faq/who-owns-the-frameworks-templates-and-playbooks-built-during-the-engagement",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "c57b65ba65b4"
+  },
+  {
+    "target": "/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai",
+    "status": "verified",
+    "reason": "This route's own head.title/head.description (via faqMetadata/faqDescription) were already correct. The broken composed string traced to this entry's answer was the /faq index page's teaser() excerpt, not this detail route; fixed under the /faq disposition (site/src/utils/faq-meta.mjs).",
+    "digest": "6bcecb86f88f"
+  },
+  {
+    "target": "/glossary",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "6c3a0418ad0d"
+  },
+  {
+    "target": "/glossary/agentic-workflow",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "c474e9415dde"
+  },
+  {
+    "target": "/glossary/ai-governance",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "b88d6e95876d"
+  },
+  {
+    "target": "/glossary/ai-impact-assessment",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "7cad2c13eea1"
+  },
+  {
+    "target": "/glossary/ai-management-system",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "e1a541566620"
+  },
+  {
+    "target": "/glossary/ai-register",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "a45fe333728d"
+  },
+  {
+    "target": "/glossary/conformity-assessment",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "13cdf72e8df4"
+  },
+  {
+    "target": "/glossary/data-classification",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "9cc7c997d2ce"
+  },
+  {
+    "target": "/glossary/dpia",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "36246985c7c9"
+  },
+  {
+    "target": "/glossary/eu-ai-act",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "83bd35a0fd34"
+  },
+  {
+    "target": "/glossary/evals",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "17bc5c5e18a6"
+  },
+  {
+    "target": "/glossary/guardrails",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "e02a1ab4e676"
+  },
+  {
+    "target": "/glossary/hallucination-rate",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "eaf22e502f7c"
+  },
+  {
+    "target": "/glossary/high-risk-ai-system",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "a75f9dafa428"
+  },
+  {
+    "target": "/glossary/human-in-the-loop",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "1e957ec42b40"
+  },
+  {
+    "target": "/glossary/human-oversight",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "a649c41b0e3a"
+  },
+  {
+    "target": "/glossary/iso-iec-42001",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "0b3a158dc829"
+  },
+  {
+    "target": "/glossary/llm-gateway",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "fd6d11ebaf9b"
+  },
+  {
+    "target": "/glossary/model-card",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "8de6e99ce98c"
+  },
+  {
+    "target": "/glossary/model-provenance",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "ef5e3135de0e"
+  },
+  {
+    "target": "/glossary/nist-ai-rmf",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "b48d55504d3e"
+  },
+  {
+    "target": "/glossary/observability",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "990c25ba9854"
+  },
+  {
+    "target": "/glossary/post-market-monitoring",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "ec982e1af296"
+  },
+  {
+    "target": "/glossary/prompt-injection",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "6d35db7ca338"
+  },
+  {
+    "target": "/glossary/provider-vs-deployer",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "e8486e1c26d5"
+  },
+  {
+    "target": "/glossary/red-teaming",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "207888f5e903"
+  },
+  {
+    "target": "/glossary/retrieval-augmented-generation",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "87b5f6f10d36"
+  },
+  {
+    "target": "/glossary/serious-incident-reporting",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "a83d4931f5fa"
+  },
+  {
+    "target": "/glossary/shadow-ai",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "c7f78fbd9e9d"
+  },
+  {
+    "target": "/glossary/sub-processor",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "0589d45a28e4"
+  },
+  {
+    "target": "/glossary/technical-documentation",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "6a5c174f3b0f"
+  },
+  {
+    "target": "/imprint",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "3f296f97c787"
+  },
+  {
+    "target": "/now",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "dab3f59b7249"
+  },
+  {
+    "target": "/pricing",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "f9acd87f9f70"
+  },
+  {
+    "target": "/privacy",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "ffe18e45e300"
+  },
+  {
+    "target": "/resources",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "2ec9024f82c3"
+  },
+  {
+    "target": "/resources/agent-evals-ci-starter",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "c0f95cd3cabe"
+  },
+  {
+    "target": "/resources/ai-governance-starter-kit",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "6bfc55f84105"
+  },
+  {
+    "target": "/resources/ai-readiness-scorecard",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "8a83a6ad72ea"
+  },
+  {
+    "target": "/resources/build-vs-buy-ai-kit",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "6ea45a24122d"
+  },
+  {
+    "target": "/resources/llm-gateway-governance-config",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "f63490e463a9"
+  },
+  {
+    "target": "/search",
+    "status": "rewritten",
+    "reason": "Noscript fallback paragraph in site/src/pages/search.astro was missing a space before each inline <a> link (Astro drops line-break-only whitespace before a tag), rendering 'theglossary', 'theresource list', 'thequestions and answers', 'thecase studies' with no space. Fixed by moving the space onto the same line as each <a> using the project's existing {' '} convention (matches the 'Published{' '}' pattern used elsewhere).",
+    "digest": "e5a77125aaec"
+  },
+  {
+    "target": "/security",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "9702f0a4572f"
+  },
+  {
+    "target": "/services",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "0b6b042e1ae3"
+  },
+  {
+    "target": "/services/90-day-production-sprint",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "68b5c6b76e07"
+  },
+  {
+    "target": "/services/ai-readiness-and-risk-assessment",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "270edeb41ecf"
+  },
+  {
+    "target": "/services/fractional-caio-retainer",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "eef44a3461fe"
+  },
+  {
+    "target": "/styleguide",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "e8c37469eea6"
+  },
+  {
+    "target": "/terms",
+    "status": "verified",
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
+    "digest": "9e4c8fbd0c65"
+  }
+]

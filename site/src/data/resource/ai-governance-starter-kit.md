@@ -5,7 +5,7 @@ type: kit
 repoUrl: https://github.com/meshin-co/ai-governance-starter-kit
 description: 'AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire.'
 publishDate: 2026-09-08
-updatedDate: 2026-09-08
+updatedDate: 2026-09-15
 version: '0.1'
 license: MIT
 status: Written out in full on this page. A repository copy is not published yet.
@@ -43,4 +43,4 @@ It is not a compliance certificate, and it is not legal advice. It is the paperw
 | Data classification table | Which vendors are allowed to see which tier of data.       | The AI risk owner, together with whoever owns the data. |
 | Vendor questionnaire      | One answer set procurement can reuse for every new vendor. | Procurement, before a vendor contract is signed.        |
 
-It maps loosely to what ISO/IEC 42001 and the NIST AI Risk Management Framework both expect a company to have on file, without requiring either.
+It maps loosely to what ISO/IEC 42001 and the NIST AI Risk Management Framework (AI RMF) both expect a company to have on file, without requiring either.

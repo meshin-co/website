@@ -3,7 +3,7 @@ title: What is the difference between a provider and a deployer?
 term: Provider vs deployer
 description: Provider and deployer are EU AI Act roles - a provider builds or brands a system, a deployer uses it, and the two owe different duties.
 publishDate: 2026-09-08
-updatedDate: 2026-09-08
+updatedDate: 2026-09-15
 shortDefinition: Provider vs deployer is the EU AI Act split between the company that builds an AI system and the company that runs it. Most of the Act's paperwork depends on which of the two roles a company holds.
 definition: |-
   Article 3 defines a provider by two acts done together. The first is developing the system, or having someone else develop it. The second is placing it on the market or putting it into service, under the provider's own name or trademark. Payment is irrelevant. Giving the system away under your own brand still makes you the provider.
@@ -22,8 +22,8 @@ sources:
 
 ## Why it comes up
 
-It surfaces in a contract negotiation once both sides realise the label matters more than expected, because a provider owes technical documentation and a conformity assessment while a deployer mainly owes human oversight and monitoring. A board hears about it when a vendor's contract quietly assigns the company duties it assumed the vendor carried. Getting the role wrong can leave a company holding an obligation nobody budgeted for.
+It surfaces in a contract negotiation once both sides realise the label matters more than expected. A provider owes technical documentation and a conformity assessment, while a deployer mainly owes human oversight and monitoring. A board hears about it when a vendor's contract quietly assigns the company duties it assumed the vendor carried. Getting the role wrong can leave a company holding an obligation nobody budgeted for.
 
 ## What to do about it
 
-Run the provider-or-deployer test per system, not per company, since rebranding one vendor's model can make a company a provider for that product while it stays a deployer for everything else it merely uses. Write the answer into the AI register alongside the risk tier, since a security questionnaire will eventually ask for both. The [Fractional CAIO Retainer](/services/fractional-caio-retainer) is where I answer this kind of question inside a live negotiation.
+Run the provider-or-deployer test per system, not per company. Rebranding one vendor's model can make a company a provider for that product while it stays a deployer for everything else it merely uses. Write the answer into the AI register alongside the risk tier, since a security questionnaire will eventually ask for both. The [Fractional CAIO Retainer](/services/fractional-caio-retainer) is where I answer this kind of question inside a live negotiation.

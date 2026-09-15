@@ -2,9 +2,9 @@
 title: AI Readiness & Risk Assessment
 name: AI Readiness & Risk Assessment
 tagline: Two weeks to a memo your board can act on.
-description: A two-week AI readiness and risk assessment for companies of 30 to 300 people, ending in a memo your board can act on.
+description: A two-week AI readiness and risk assessment for companies of 30 to 300 people, ending in a memo your board can act on, gap list included.
 publishDate: 2026-09-08
-updatedDate: 2026-09-08
+updatedDate: 2026-09-15
 shortAnswer: This AI readiness assessment takes two weeks of interviews and reading your systems, and ends in a memo your board can act on. You learn where you stand against the frameworks your customers ask about, what a customer audit would find today and which three processes are worth automating first. The fee is credited if you continue.
 feeShape: Fixed fee
 duration: 2 weeks
@@ -70,6 +70,10 @@ sources:
 ## What this is
 
 Two weeks. I interview the people doing the work, read your systems and your vendor list, and write one memo you can hand to a board or a customer.
+
+## What you keep
+
+One document, whether or not you continue: the readiness score, the gap list, and the three processes ranked by what automating them is worth this quarter.
 
 ## Why it is two weeks and not two days
 

@@ -1,339 +1,6 @@
 {
-  "untraceable": [
-    {
-      "route": "/blog/category/agentic-architecture",
-      "text": "An agent demo is easy and an agent in production is not, and the gap between them is almost never about the model. It is about the same engineering discipline any other system needs, applied to a component whose output is not deterministic."
-    },
-    {
-      "route": "/blog/category/agentic-architecture",
-      "text": "Start with evaluation, before the prompt. If you cannot say what a good answer looks like on a set of real cases, you cannot tell whether a change made the system better or simply different. Build the eval set from work that has already been done by people, so there is a known-good answer to compare against, and sample it across a long enough window that seasonality does not flatter you."
-    },
-    {
-      "route": "/blog/category/agentic-architecture",
-      "text": "Put that eval run in continuous integration. This is the single change that most often turns a prototype into something a team will let near a customer, because it moves the question from an argument about vibes to a number that blocks a merge. A regression should fail the build, in the same job, with the same authority as a broken unit test."
-    },
-    {
-      "route": "/blog/category/agentic-architecture",
-      "text": "Instrument every call. When an answer is wrong you want to see which retrieval returned which document and what the model was given, not reconstruct it from memory. Tracing turns a support escalation into a quick check instead of a day of guessing."
-    },
-    {
-      "route": "/blog/category/agentic-architecture",
-      "text": "Set a cost ceiling per outcome and check it in the same job as the evals. A loop that retries three times on a bad tool response is fine in a demo and ruinous at volume. If you cannot state the cost of one completed task, you do not yet know whether the system makes sense."
-    },
-    {
-      "route": "/blog/category/agentic-architecture",
-      "text": "Then design the boundary. Tool interfaces are where agents actually break, which is why an explicit protocol between the model and your systems is worth adopting, rather than one improvised inside a prompt. Keep the tools narrow, validate their inputs, and make every destructive action reversible."
-    },
-    {
-      "route": "/blog/category/agentic-architecture",
-      "text": "Finally, keep a rollback path. A prompt is a deployment. Version it, ship it behind the same controls as code, and be able to put yesterday back quickly."
-    },
-    {
-      "route": "/blog/category/executive",
-      "text": "A board does not need a member who can explain how a model works. It needs to know who inside the company is answerable when one gets something wrong in front of a customer, and whether that answer would survive being read back in a dispute. Ask that question at every review, not just the first one."
-    },
-    {
-      "route": "/blog/category/executive",
-      "text": "Ask for three things, by name rather than by department. Who owns AI risk, specifically, not which team owns it. A register of every AI system in use, kept current rather than produced once for an audit. And the last time a customer or a regulator asked a question about this, with the answer that was actually given. Anything less than a name is not an answer."
-    },
-    {
-      "route": "/blog/category/executive",
-      "text": "Do not ask for a demo. A demo proves a model can perform once, in front of people who want it to succeed, which is the least useful thing a board can learn. Do not ask for a token count, a model name, or a list of pilots. Those measure activity, not risk, and a company can produce an impressive slide about all three without anyone being accountable for one of them."
-    },
-    {
-      "route": "/blog/category/executive",
-      "text": "The exposure that actually matters shows up after something goes wrong, not before. A regulator or an insurer will not ask whether the model was good. They will ask whether someone reviewed the system before it reached a customer, whether that review is written down, and whether the questionnaire answer was still true afterwards. A board that has not asked those questions is the one that gets asked them first."
-    },
-    {
-      "route": "/blog/category/executive",
-      "text": "A company of 30 to 300 people needs one named owner, one page of decisions, and the discipline to update both when something changes. A board does this well by asking the same few questions until the answers stop moving."
-    },
-    {
-      "route": "/blog/category/governance",
-      "text": "Governance has a bad name in small companies because most of what is sold under that name is written for a bank. A three hundred person company does not need a committee, a maturity model or a consultant to run a workshop. It needs four things that fit on a shared drive and get updated when something changes."
-    },
-    {
-      "route": "/blog/category/governance",
-      "text": "The first is a register: every AI system in use, who owns it, what data reaches it, and whether a person checks its output before a customer sees it. Companies usually find more AI in the building than they expected, because someone signed up for a tool with a credit card and nobody wrote it down."
-    },
-    {
-      "route": "/blog/category/governance",
-      "text": "The second is an acceptable-use policy short enough that people read it. One page. What you may paste into a chat window, what you may not, and who to ask when the answer is unclear. A policy that requires a training course to understand is a policy that gets ignored by the people whose behaviour it was written to change."
-    },
-    {
-      "route": "/blog/category/governance",
-      "text": "The third is a data classification table. Three or four tiers, each with a rule about which vendors may see that tier. This is the document that answers most of a customer security questionnaire, and it is the one companies most often skip because it requires a decision rather than a description."
-    },
-    {
-      "route": "/blog/category/governance",
-      "text": "That is the whole set. It takes about two weeks to produce honestly, and the honest version is worth more than a thorough version that describes a company you are not. When a customer asks who owns AI risk, or a board asks what happens if a model leaks a document, you want to answer from a document that was true last week, not from one that was impressive last year."
-    },
-    {
-      "route": "/blog/category/operating-model",
-      "text": "Most stalled AI programmes are not blocked on technology. They are blocked because nobody can say who decides whether a system is allowed to touch customer data, and nobody owns the outcome once the pilot team moves on."
-    },
-    {
-      "route": "/blog/category/operating-model",
-      "text": "An operating model answers three questions. Who chooses which processes get automated. Who reviews a system before it reaches a customer. Who runs it afterwards. If the answer to any of those is a team name rather than a person, the work will drift until someone senior gets nervous and stops it."
-    },
-    {
-      "route": "/blog/category/operating-model",
-      "text": "Choice comes first, and it is mostly a filter. A candidate process needs volume, a measurable outcome, and a tolerable failure mode. Volume, because a system used twice a week never accumulates enough signal to improve. A measurable outcome, because a metric you have to survey for cannot gate a release. A tolerable failure mode, because the first version will be wrong sometimes and you need to know what that costs."
-    },
-    {
-      "route": "/blog/category/operating-model",
-      "text": "Review comes second. It should be boring and written down: what evidence a launch needs, who signs, and what evidence would stop it. In practice this is a short checklist attached to the register entry, not a governance ceremony. The point is that the answer exists before someone needs it at eleven at night."
-    },
-    {
-      "route": "/blog/category/operating-model",
-      "text": "Ownership comes third and is the one that gets skipped. A pilot that reaches production without a named internal owner becomes shadow infrastructure: nobody updates it, nobody watches its cost, and its failure surprises everyone. Handover is a deliverable, not a formality, and it only counts once someone is actually watching the dashboard."
-    },
-    {
-      "route": "/blog/category/operating-model",
-      "text": "This is also why fractional works for companies of this size. You need the decisions made properly once, written down, and handed to someone inside the company. You do not need a permanent executive to maintain four documents and a review checklist. An engagement that does not end has usually replaced an operating model rather than built one."
-    },
-    {
-      "route": "/blog/how-to-build-an-ai-system-register-in-a-week",
-      "text": "One named person, not a shared folder. They do not need to personally approve every new AI tool, but they need standing to ask why an unlisted system turned up, and a fixed date on the calendar to confirm every row is still accurate."
-    },
-    {
-      "route": "/blog/tag/acceptable-use-policy",
-      "text": "Every article tagged Acceptable use policy, newest first."
-    },
-    {
-      "route": "/blog/tag/agentic-architecture",
-      "text": "Every article tagged Agentic architecture, newest first."
-    },
-    {
-      "route": "/blog/tag/ai-governance",
-      "text": "Every article tagged AI governance, newest first."
-    },
-    {
-      "route": "/blog/tag/ai-pilots",
-      "text": "Every article tagged AI pilots, newest first."
-    },
-    {
-      "route": "/blog/tag/ai-register",
-      "text": "Every article tagged AI register, newest first."
-    },
-    {
-      "route": "/blog/tag/eu-ai-act",
-      "text": "Every article tagged EU AI Act, newest first."
-    },
-    {
-      "route": "/blog/tag/evals-in-ci",
-      "text": "Every article tagged Evals in CI, newest first."
-    },
-    {
-      "route": "/blog/tag/llm-as-judge",
-      "text": "Every article tagged LLM as judge, newest first."
-    },
-    {
-      "route": "/blog/tag/policy-enforcement",
-      "text": "Every article tagged Policy enforcement, newest first."
-    },
-    {
-      "route": "/blog/tag/production-readiness",
-      "text": "Every article tagged Production readiness, newest first."
-    },
-    {
-      "route": "/blog/tag/security-review",
-      "text": "Every article tagged Security review, newest first."
-    },
-    {
-      "route": "/blog/tag/shadow-ai",
-      "text": "Every article tagged Shadow AI, newest first."
-    },
-    {
-      "route": "/faq",
-      "text": "I carry the AI risk register, review every initiative, sign the."
-    },
-    {
-      "route": "/faq",
-      "text": "Companies of thirty to three hundred people, usually with at least."
-    },
-    {
-      "route": "/faq",
-      "text": "The Assessment is two weeks at a fixed fee, and ends."
-    },
-    {
-      "route": "/faq",
-      "text": "One client gets one or two days a week at a."
-    },
-    {
-      "route": "/faq",
-      "text": "Your data science team stays exactly where it is: I do."
-    },
-    {
-      "route": "/faq",
-      "text": "In an AI register: one line per initiative, its data flows."
-    },
-    {
-      "route": "/faq",
-      "text": "Put them in the register rather than pretend they aren&#39;t there."
-    },
-    {
-      "route": "/faq",
-      "text": "Everything written for your business — the register, the policies, the."
-    },
-    {
-      "route": "/faq",
-      "text": "A memo your board can act on: a readiness score across."
-    },
-    {
-      "route": "/faq",
-      "text": "Real users or real transactions, monitored, with a rollback path and."
-    },
-    {
-      "route": "/faq",
-      "text": "With a named internal owner in place and the decisions that."
-    },
-    {
-      "route": "/faq",
-      "text": "Evals in continuous integration: a test set that runs on every."
-    },
-    {
-      "route": "/faq",
-      "text": "I work with what you already run: OpenAI, Anthropic, Azure, or."
-    },
-    {
-      "route": "/faq",
-      "text": "A named officer on your customers&#39; security reviews and your board&#39;s."
-    },
-    {
-      "route": "/faq/can-you-work-with-our-existing-ai-vendor-or-platform",
-      "text": "Concerns"
-    },
-    {
-      "route": "/faq/how-do-you-charge-for-the-work",
-      "text": "Concerns"
-    },
-    {
-      "route": "/faq/how-does-ai-risk-get-recorded-and-who-signs-it-off",
-      "text": "Concerns"
-    },
-    {
-      "route": "/faq/how-does-the-retainer-end",
-      "text": "Concerns"
-    },
-    {
-      "route": "/faq/how-is-cost-per-outcome-measured",
-      "text": "Concerns"
-    },
-    {
-      "route": "/faq/what-counts-as-in-production-for-the-90-day-sprint",
-      "text": "Concerns"
-    },
-    {
-      "route": "/faq/what-do-we-do-about-tools-staff-are-already-using-without-approval",
-      "text": "Concerns"
-    },
-    {
-      "route": "/faq/what-does-the-two-week-assessment-produce-and-is-the-fee-credited-if-we-continue",
-      "text": "Concerns"
-    },
-    {
-      "route": "/faq/what-happens-if-the-evals-say-a-workflow-isnt-good-enough",
-      "text": "Concerns"
-    },
-    {
-      "route": "/faq/what-happens-on-a-fit-call-and-does-it-cost-anything",
-      "text": "Concerns"
-    },
-    {
-      "route": "/faq/whats-the-difference-between-the-assessment-the-sprint-and-the-retainer",
-      "text": "Concerns"
-    },
-    {
-      "route": "/faq/who-answers-customer-security-questionnaires",
-      "text": "Concerns"
-    },
-    {
-      "route": "/faq/who-owns-the-frameworks-templates-and-playbooks-built-during-the-engagement",
-      "text": "Concerns"
-    },
-    {
-      "route": "/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai",
-      "text": "Concerns"
-    },
-    {
-      "route": "/glossary/ai-impact-assessment",
-      "text": "Concerns"
-    },
-    {
-      "route": "/glossary/ai-register",
-      "text": "Concerns"
-    },
-    {
-      "route": "/glossary/conformity-assessment",
-      "text": "Concerns"
-    },
-    {
-      "route": "/glossary/dpia",
-      "text": "Concerns"
-    },
-    {
-      "route": "/glossary/eu-ai-act",
-      "text": "Concerns"
-    },
-    {
-      "route": "/glossary/high-risk-ai-system",
-      "text": "A system reaches the category one of two ways. Article 6(1) covers the first: a safety component of, or itself, a product already regulated under EU product-safety law, such as medical devices or machinery. That underlying law already requires third-party conformity assessment ."
-    },
-    {
-      "route": "/glossary/high-risk-ai-system",
-      "text": "Annex III covers the second: eight listed use-case areas, among them biometric identification, employment decisions, credit scoring and law enforcement. Article 6(2) makes a system high-risk for landing in one of those areas alone, with no product-safety law involved at all."
-    },
-    {
-      "route": "/glossary/high-risk-ai-system",
-      "text": "A system inside Annex III can still escape the label under Article 6(3), for four narrow reasons. One is a limited procedural task: reformatting an application into a standard template, say. Another is improving a human decision already made, such as tidying a report&#39;s wording without changing its recommendation."
-    },
-    {
-      "route": "/glossary/high-risk-ai-system",
-      "text": "A third is detecting a deviation without replacing human judgement, such as flagging an unusual transaction for a fraud analyst to review. The fourth is a preparatory task ahead of someone else&#39;s assessment, such as gathering a loan applicant&#39;s documents before a human underwriter looks at them. None of the four survives contact with profiling: a system that profiles individual people is high-risk regardless."
-    },
-    {
-      "route": "/glossary/high-risk-ai-system",
-      "text": "Concerns"
-    },
-    {
-      "route": "/glossary/iso-iec-42001",
-      "text": "Concerns"
-    }
-  ],
+  "untraceable": [],
   "dead": [
-    {
-      "location": "body",
-      "text": "I work with companies of thirty to three hundred people who have run a few AI pilots and cannot get one into production. The blocker is rarely the model. It is who owns the risk, which data may reach a vendor, and whether anyone would notice if a prompt change made the output worse.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/data/author/dmitri.md"
-      ]
-    },
-    {
-      "location": "attribute.aria-label",
-      "text": "RSS Feed",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/widgets/Header.astro"
-      ]
-    },
-    {
-      "location": "attribute.media",
-      "text": "(prefers-color-scheme: light)",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/layouts/Layout.astro"
-      ]
-    },
-    {
-      "location": "attribute.media",
-      "text": "(prefers-color-scheme: dark)",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/layouts/Layout.astro"
-      ]
-    },
     {
       "location": "text",
       "text": "Nothing published yet.",
@@ -369,454 +36,35 @@
       ]
     },
     {
-      "location": "attribute.title",
-      "text": "Hero headline sits at the LCP",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/styleguide.astro"
-      ]
-    },
-    {
-      "location": "attribute.sub",
-      "text": "Two lines that say who this is for and what changes in ninety days.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/styleguide.astro"
-      ]
-    },
-    {
-      "location": "attribute.titleAccent",
-      "text": "with no image above the fold.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/styleguide.astro"
-      ]
-    },
-    {
-      "location": "constant.answer",
-      "text": "Companies of thirty to three hundred people, usually with at least one engineer, who have run AI pilots that quietly stalled somewhere between demo and production. The rest follows.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/faq-meta.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.answer",
-      "text": "Three fixed structures, no hourly billing. The rest follows.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/faq-meta.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.description",
-      "text": "A hand-authored description that overrides the mechanical default entirely, kept between the required floor and ceiling.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/faq-meta.test.mjs"
-      ]
-    },
-    {
       "location": "constant.message",
-      "text": "updatedDate must not be before publishDate",
+      "text": "characters or fewer",
       "status": "unreviewed",
       "usedIn": [
-        "src/utils/faq-meta.test.mjs"
+        "src/utils/content-rules.mjs"
       ]
     },
     {
-      "location": "constant.body",
-      "text": "Body from the markdown file.",
+      "location": "constant.textContent",
+      "text": "Search is unavailable right now. The FAQ, writing and glossary pages list everything.",
       "status": "unreviewed",
       "usedIn": [
-        "src/utils/feeds.test.mjs"
+        "public/search/box.mjs"
       ]
     },
     {
-      "location": "constant.description",
-      "text": "Fallback description.",
+      "location": "constant.textContent",
+      "text": "Searching for “",
       "status": "unreviewed",
       "usedIn": [
-        "src/utils/feeds.test.mjs",
-        "src/utils/llms-collections.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.shortAnswer",
-      "text": "A task one or more AI agents complete on their own.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/feeds.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.body",
-      "text": "Case body.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/feeds.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.description",
-      "text": "Support automation.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/feeds.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.family",
-      "text": "Fraunces SemiBold",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/font-file.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.tagline",
-      "text": "A two-week read of your AI governance posture.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/jsonld.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.description",
-      "text": "Governance review.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/jsonld.test.mjs"
+        "public/search/box.mjs"
       ]
     },
     {
       "location": "constant.title",
-      "text": "Why pilots stall",
+      "text": "Writing, page",
       "status": "unreviewed",
       "usedIn": [
-        "src/utils/jsonld.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.body",
-      "text": "The NIST AI RMF treats this as a governance decision. Evals catch regressions.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/jsonld.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.shortDefinition",
-      "text": "A list.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/jsonld.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.answer",
-      "text": "The system of controls.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/jsonld.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.description",
-      "text": "Covers AI governance basics.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/jsonld.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.shortDefinition",
-      "text": "Repeatable tests.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/jsonld.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.shortDefinition",
-      "text": "Unapproved tools.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/jsonld.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.shortDefinition",
-      "text": "One chokepoint.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/jsonld.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.tagline",
-      "text": "About AI governance.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/jsonld.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.body",
-      "text": "The scorecard body.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/llms-collections.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.shortAnswer",
-      "text": "Score yourself across five dimensions.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/llms-collections.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.question",
-      "text": "What does a Fractional CAIO do?",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/llms-collections.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.answer",
-      "text": "Owns the AI outcome end to end. The rest of the answer elaborates on governance, shipping and evals in more detail.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/llms-collections.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.title",
-      "text": "A post",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-links.test.mjs",
-        "src/utils/machine-text.test.mjs",
-        "src/utils/og-cache.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.input",
-      "text": "Before.\\n\\n```bash\\nnpm install\\n```\\n\\nAfter.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.tagline",
-      "text": "Plain-spoken AI governance.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.description",
-      "text": "Two weeks to a memo.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.title",
-      "text": "First post",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.description",
-      "text": "No date.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.summary",
-      "text": "Summary one.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.body",
-      "text": "Body one.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.summary",
-      "text": "Summary two.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.body",
-      "text": "Body two.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.body",
-      "text": "## Section\\n\\nSee the [source](https://example.com) below.\\n\\n```js\\nconst x = 1;\\n```",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.body",
-      "text": "The full write-up of the assessment offer.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.title",
-      "text": "How do you charge?",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.summary",
-      "text": "Fixed structures.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.body",
-      "text": "Live body.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.body",
-      "text": "Draft body.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.body",
-      "text": "Hidden body.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.body",
-      "text": "See the [link](https://example.com).",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.summary",
-      "text": "Short answer.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.body",
-      "text": "Full text.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.body",
-      "text": "## Heading\\n\\nA paragraph with **bold** text.\\n",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/machine-text.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.title",
-      "text": "A Fixed-Fee AI Readiness Assessment",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/og-template.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.footer",
-      "text": "A short page description under 155 characters.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/og-template.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.longTitle",
-      "text": "Governance that survives procurement, the board and every vendor review that follows it,",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/og-template.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.footer",
-      "text": "A short page description.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/og-template.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.title",
-      "text": "A Title With No Eyebrow",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/og-template.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.title",
-      "text": "A Title",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/og-template.test.mjs"
-      ]
-    },
-    {
-      "location": "constant.text",
-      "text": "The Sprint ends when the Assessment already produced its findings.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/utils/related-content.test.mjs"
+        "src/pages/blog/page/[page].astro"
       ]
     },
     {
@@ -829,5 +77,174 @@
     }
   ],
   "stale": [],
-  "unmatched": []
+  "unmatched": [
+    {
+      "target": "site/src/components/Favicons.astro",
+      "status": "verified",
+      "reason": "no user-facing text, only link attributes",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/common/LogoMark.astro",
+      "status": "verified",
+      "reason": "decorative SVG mark, aria-hidden and focusable=false, no accessible text of its own",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/common/Metadata.astro",
+      "status": "verified",
+      "reason": "og:image:alt is built programmatically from each page's own title, confirms zero hand-authored alt attributes exist; no literal prose to edit",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/common/Breadcrumbs.astro",
+      "status": "verified",
+      "reason": "aria-label='Breadcrumb' is the standard landmark name, already correct",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/common/JsonLd.astro",
+      "status": "verified",
+      "reason": "no user-facing text, pure JSON-LD emitter",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/common/MarkdownAlternate.astro",
+      "status": "verified",
+      "reason": "no user-facing text, link generator only",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/common/Analytics.astro",
+      "status": "verified",
+      "reason": "no user-facing text",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/common/ApplyColorMode.astro",
+      "status": "verified",
+      "reason": "no user-facing text, inline script only",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/common/SiteVerification.astro",
+      "status": "verified",
+      "reason": "no user-facing text",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/RelatedContent.astro",
+      "status": "verified",
+      "reason": "pure pass-through of caller-supplied heading/label text, nothing hardcoded to edit",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/SignalList.astro",
+      "status": "verified",
+      "reason": "pass-through only, no hardcoded copy",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/StepList.astro",
+      "status": "verified",
+      "reason": "pass-through only, no hardcoded copy",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/PostCard.astro",
+      "status": "verified",
+      "reason": "pass-through only, no hardcoded copy",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/PaginationLinks.astro",
+      "status": "verified",
+      "reason": "aria-label='Pagination' and per-link aria-label='Page N' already say what the control does, standard pattern",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/ServiceCard.astro",
+      "status": "verified",
+      "reason": "pass-through only, no hardcoded copy",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/Section.astro",
+      "status": "verified",
+      "reason": "pass-through only, no hardcoded copy",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/SourceList.astro",
+      "status": "verified",
+      "reason": "aria-label/heading default 'Sources' names the landmark correctly, standard pattern",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/ResourceCard.astro",
+      "status": "verified",
+      "reason": "pass-through only, no hardcoded copy",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/CtaBlock.astro",
+      "status": "verified",
+      "reason": "pass-through only, no hardcoded copy",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/CardGrid.astro",
+      "status": "verified",
+      "reason": "no text, layout wrapper only",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/AnswerBlock.astro",
+      "status": "verified",
+      "reason": "pass-through only, no hardcoded copy",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/FigureStrip.astro",
+      "status": "verified",
+      "reason": "pass-through only, no hardcoded copy",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/ShiftPanel.astro",
+      "status": "verified",
+      "reason": "pass-through only, no hardcoded copy",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/ui/Button.astro",
+      "status": "verified",
+      "reason": "pass-through only, no hardcoded copy",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/layouts/PageLayout.astro",
+      "status": "verified",
+      "reason": "no hardcoded copy, wiring only",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/navigation.ts",
+      "status": "rewritten",
+      "reason": "header/footer nav labels were already direct destination names, left unchanged; the three footer social-link aria-labels ('LinkedIn'/'GitHub'/'Email') were icon-only accessible names naming only the platform, rewritten to 'View my LinkedIn profile' / 'View my GitHub profile' / 'Email me' so each says what the control does",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/config.yaml",
+      "status": "verified",
+      "reason": "default title/description match the '/' route's own metadata and machine-text.mjs catalog entry exactly, already consistent",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "src/utils/og-template.mjs",
+      "status": "verified",
+      "reason": "'IBM Plex Sans' is a CSS font-family value used only in inline styles for OG-image rendering, never rendered as visible page text - likely an extractor false positive worth excluding the same way Tailwind class lists and structural keys already are (editorial-ledger.md); left unchanged since it is correct as a design token",
+      "digest": "e3b0c44298fc"
+    }
+  ]
 }

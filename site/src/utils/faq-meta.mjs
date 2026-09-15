@@ -16,6 +16,9 @@ export function teaser(answer) {
 
   if (words.length < DUPLICATE_SENTENCE_FLOOR_WORDS && sentence.length <= TEASER_MAX_CHARS) return sentence;
 
+  const clause = clauseTrim(sentence, TEASER_MAX_CHARS, DUPLICATE_SENTENCE_FLOOR_WORDS);
+  if (clause) return clause;
+
   const kept = [];
   for (const word of words) {
     if (kept.length === DUPLICATE_SENTENCE_FLOOR_WORDS - 1) break;
@@ -31,9 +34,9 @@ export const TITLE_ROOM_CHARS = TITLE_MAX_CHARS - TITLE_SUFFIX.length;
 
 const COORDINATING_BOUNDARY = /\s*,\s*|\s+(?=(?:and|or|but)\s)/;
 
-export function clauseTrim(text, maxChars) {
+export function clauseTrim(text, maxChars, maxWords = Infinity) {
   const trimmed = text.trim();
-  if (trimmed.length <= maxChars) return trimmed;
+  if (trimmed.length <= maxChars && trimmed.split(/\s+/).filter(Boolean).length < maxWords) return trimmed;
   const terminal = /[.!?]$/.test(trimmed) ? trimmed.slice(-1) : '.';
   const body = /[.!?]$/.test(trimmed) ? trimmed.slice(0, -1) : trimmed;
   const parts = body.split(COORDINATING_BOUNDARY).filter(Boolean);
@@ -42,7 +45,8 @@ export function clauseTrim(text, maxChars) {
   for (const part of parts) {
     const candidate = acc ? `${acc}, ${part}` : part;
     const withTerminal = `${candidate}${terminal}`;
-    if (withTerminal.length > maxChars) break;
+    const words = candidate.split(/\s+/).filter(Boolean).length;
+    if (withTerminal.length > maxChars || words >= maxWords) break;
     acc = candidate;
     best = withTerminal;
   }

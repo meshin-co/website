@@ -1,0 +1,98 @@
+[
+  {
+    "target": "site/src/pages/index.astro",
+    "status": "verified",
+    "reason": "Answer-first sections, no banned phrases, sentence lengths compliant. Hero title/sub are locked unchanged by L9a; left untouched (see report conflict note).",
+    "digest": "a0c63151df8d"
+  },
+  {
+    "target": "site/src/data/home.ts",
+    "status": "rewritten",
+    "reason": "Normalized a stray U+2011 non-breaking hyphen to ASCII in cta.title (\"30-minute\"); removed the unconfirmed \"12–24 months\" retainer-handover track-record claim (COPY-CHECKLIST 3.7) from the Retainer deliverables list, replaced with a fact-preserving line with no timeframe. Hero title/sub left unchanged per L9a (conflict noted in report).",
+    "digest": "d8baa3155f60"
+  },
+  {
+    "target": "site/src/pages/about.astro",
+    "status": "verified",
+    "reason": "Direct, concrete, sources every claim to the author entry; no invented facts beyond what's already confirmed. Meets voice and sentence-length standard.",
+    "digest": "bf20156dd816"
+  },
+  {
+    "target": "site/src/pages/approach.astro",
+    "status": "verified",
+    "reason": "Six measures/sequence items are concrete and answer-first. \"Fractional AI Officer\" (no \"Chief\") in H1/lead matches the semantic core's locked generated row and target query; not a terminology drift defect.",
+    "digest": "16b8746fc0de"
+  },
+  {
+    "target": "site/src/pages/pricing.astro",
+    "status": "verified",
+    "reason": "Explains fee shape and what decides cost with no dollar figures anywhere, correctly complying with locked decision L8.",
+    "digest": "7c41e9999b01"
+  },
+  {
+    "target": "site/src/pages/contact.astro",
+    "status": "verified",
+    "reason": "Channel copy is concrete and answer-first; CTA wording consistent with the rest of the site.",
+    "digest": "ed53564b0fad"
+  },
+  {
+    "target": "site/src/pages/now.astro",
+    "status": "verified",
+    "reason": "Correctly ships as an honest holding state per L18/COPY-CHECKLIST §4; lead paragraph already explains why it's empty rather than guessing. No owner facts invented.",
+    "digest": "e399482c43f8"
+  },
+  {
+    "target": "site/src/pages/ai-policy.astro",
+    "status": "rewritten",
+    "reason": "Hyphenated \"AI acceptable-use policy\" in title/H1/lead to match the corpus-canonical spelling (confirmed with GlossaryEditor: hyphenated form is the only spelling used across the glossary/FAQ/service corpus). Bumped updatedDate-equivalent UPDATED const to 2026-09-15.",
+    "digest": "707148eb4110"
+  },
+  {
+    "target": "site/src/pages/security.astro",
+    "status": "verified",
+    "reason": "Four-part posture list matches confirmed facts in COPY-CHECKLIST §7/§9 (full-disk encryption, 2FA, no client-data copies, 24-hour breach notice). No claim strengthened or weakened.",
+    "digest": "35d190e52acd"
+  },
+  {
+    "target": "site/src/pages/privacy.astro",
+    "status": "verified",
+    "reason": "Retention periods (12 months enquiries, 6 years invoiced) match the confirmed, live COPY-CHECKLIST §9 row exactly. Left untouched — retention periods are a protected legal claim.",
+    "digest": "047525fad14c"
+  },
+  {
+    "target": "site/src/pages/terms.astro",
+    "status": "rewritten",
+    "reason": "Fixed a stale factual claim: the \"Prices\" section and meta description referred to \"published prices\" that were removed sitewide by locked decision L8 (closed 2026-09-12); this page predates that change (UPDATED was 2026-09-08) and was never updated. Renamed the section \"Fees\" and rewrote it to state no price is published, only fee shapes, matching /pricing's language. Did not touch jurisdiction, liability, IP, or governing-law clauses. Bumped UPDATED to 2026-09-15.",
+    "digest": "d84fbeb6e62b"
+  },
+  {
+    "target": "site/src/pages/imprint.astro",
+    "status": "verified",
+    "reason": "Matches the currently-confirmed identity/contact/hosting facts on record; entity form, registration number, jurisdiction, address and VAT remain correctly unstated pending COPY-CHECKLIST §8 (already open, no new row needed).",
+    "digest": "5f8bffac2b7b"
+  },
+  {
+    "target": "site/src/pages/404.astro",
+    "status": "verified",
+    "reason": "Concise, accurate, single clear CTA (\"Home\"). No machine fingerprints.",
+    "digest": "c5dbe190acd2"
+  },
+  {
+    "target": "site/src/pages/search.astro",
+    "status": "verified",
+    "reason": "Accurate client-side-search framing and noscript fallback links. No empty/error copy lives in this file (it's rendered by the SearchBox component, out of this assignment's Target list).",
+    "digest": "cb443281fcff"
+  },
+  {
+    "target": "site/src/pages/styleguide.astro",
+    "status": "verified",
+    "reason": "Internal noindex dev-reference page; description is accurate and not buyer-facing copy, no changes needed.",
+    "digest": "14d47a4b25ed"
+  },
+  {
+    "target": "site/src/pages/faq.astro",
+    "status": "verified",
+    "reason": "Hub lead is answer-first and accurate; per-group teasers pull from FAQ collection entries (FaqEditor's scope), hub's own copy meets the standard.",
+    "digest": "32973f195c97"
+  }
+]

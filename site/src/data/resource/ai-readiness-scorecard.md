@@ -3,9 +3,9 @@ title: AI Readiness Scorecard
 name: AI Readiness Scorecard
 type: scorecard
 repoUrl: https://github.com/meshin-co/ai-readiness-scorecard
-description: 'A five-axis AI readiness scorecard you score yourself: strategy, data, delivery, people, governance.'
+description: 'A five-axis AI readiness scorecard you score yourself in an afternoon: strategy, data, delivery, people, and governance.'
 publishDate: 2026-09-08
-updatedDate: 2026-09-08
+updatedDate: 2026-09-15
 version: '0.1'
 license: MIT
 status: Written out in full on this page. A repository copy is not published yet.
@@ -44,7 +44,7 @@ Five axes, scored from zero to three, that give you a rough position before you 
 
 Score each axis from zero to three using the table above, then add the five scores for a total out of fifteen. A low total early on is common. It usually means nobody has written anything down yet, not that the engineering is behind.
 
-The five axes are not a substitute for the [NIST AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework) or [ISO/IEC 42001](https://www.iso.org/standard/42001). They are a rougher pass at the same territory, built to take an afternoon rather than an audit.
+The five axes are not a substitute for the [NIST AI Risk Management Framework (AI RMF)](https://www.nist.gov/itl/ai-risk-management-framework) or [ISO/IEC 42001](https://www.iso.org/standard/42001). They are a rougher pass at the same territory, built to take an afternoon rather than an audit.
 
 ## What it is not
 

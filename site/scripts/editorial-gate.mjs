@@ -3,7 +3,7 @@ import { join, relative, resolve } from 'node:path';
 
 import { parse } from 'yaml';
 
-import { applyDispositions, digestFor } from './dispositions.mjs';
+import { applyConditionalCopy, applyDispositions, digestFor, inheritDerivedStatus } from './dispositions.mjs';
 import {
   collectionRows,
   componentRows,
@@ -18,6 +18,7 @@ const SITE = resolve(process.argv[2] ?? '.');
 const LEDGER = resolve(SITE, '../audits/phase-4.7/inventory.json');
 const DISPOSITIONS = resolve(SITE, '../audits/phase-4.7/dispositions');
 const FINDINGS = resolve(SITE, '../audits/phase-4.7/findings.json');
+const CONDITIONAL = resolve(SITE, '../audits/phase-4.7/conditional-copy.json');
 
 const walk = (dir, test) =>
   existsSync(dir)
@@ -81,8 +82,9 @@ function buildLedger(dist) {
     ...walk(join(SITE, 'src/pages'), (name) => name.endsWith('.astro')),
   ].map((file) => ({ file: relative(SITE, file), source: readFileSync(file, 'utf8') }));
   const constants = [
-    ...walk(join(SITE, 'src/data'), (name) => /\.(ts|mjs)$/.test(name)),
-    ...walk(join(SITE, 'src/utils'), (name) => /\.(ts|mjs)$/.test(name)),
+    ...walk(join(SITE, 'src/data'), (name) => /\.(ts|mjs)$/.test(name) && !/\.test\.mjs$/.test(name)),
+    ...walk(join(SITE, 'src/utils'), (name) => /\.(ts|mjs)$/.test(name) && !/\.test\.mjs$/.test(name)),
+    ...walk(join(SITE, 'public/search'), (name) => name.endsWith('.mjs')),
     ...walk(join(SITE, 'src/pages'), (name) => name.endsWith('.astro')),
     ...walk(join(SITE, 'src/components'), (name) => name.endsWith('.astro')),
   ].map((file) => ({ file: relative(SITE, file), source: readFileSync(file, 'utf8') }));
@@ -112,8 +114,32 @@ function buildLedger(dist) {
 function main(dist) {
   const built = buildLedger(dist);
   const dispositions = readDispositions(DISPOSITIONS);
-  const { rows, stale, unmatched } = applyDispositions(built.rows, dispositions);
-  const findings = ledgerFindings({ rows, untraceable: built.untraceable, dead: built.dead, stale, unmatched });
+  const declarations = existsSync(CONDITIONAL) ? JSON.parse(readFileSync(CONDITIONAL, 'utf8')) : [];
+  const conditional = applyConditionalCopy(built.dead, declarations);
+  const applied = applyDispositions(built.rows, dispositions);
+  const { stale, unmatched } = applied;
+  const rows = inheritDerivedStatus(applied.rows);
+  const missingTarget = unmatched.filter(
+    (entry) => !existsSync(resolve(SITE, entry.target.replace(/^site\//, ''))) && !entry.target.startsWith('/')
+  );
+  const noRows = unmatched.length - missingTarget.length;
+  const findings = ledgerFindings({
+    rows,
+    untraceable: built.untraceable,
+    dead: conditional.remaining,
+    stale: [
+      ...stale,
+      ...conditional.stale.map((entry) => ({
+        target: entry.text.slice(0, 40),
+        why: 'declared conditional but the build ships it',
+      })),
+      ...conditional.invalid.map((entry) => ({
+        target: entry.text.slice(0, 40),
+        why: 'conditional declaration carries no reason',
+      })),
+    ],
+    unmatched: missingTarget,
+  });
 
   mkdirSync(resolve(LEDGER, '..'), { recursive: true });
   const counts = {
@@ -135,8 +161,12 @@ function main(dist) {
   const byStatus = rows.reduce((totals, entry) => ({ ...totals, [entry.status]: (totals[entry.status] ?? 0) + 1 }), {});
   console.log(`editorial ledger: ${rows.length} rows across ${built.pages} routes`, byStatus);
   console.log(`shipped text tracing to no source row: ${built.untraceable.length}`);
-  console.log(`source copy no page ships: ${built.dead.length}`);
-  console.log(`dispositions: ${dispositions.length} declared, ${stale.length} stale, ${unmatched.length} unmatched`);
+  console.log(
+    `source copy no page ships: ${built.dead.length} (${declarations.length} declared state-conditional, ${conditional.remaining.length} unexplained)`
+  );
+  console.log(
+    `dispositions: ${dispositions.length} declared, ${stale.length} stale, ${missingTarget.length} naming a missing file, ${noRows} on files with no copy rows`
+  );
   if (findings.length > 0) {
     console.log(`findings: ${findings.length}`);
     const sample = (label, entries, format) => {
@@ -149,7 +179,11 @@ function main(dist) {
       built.untraceable,
       (entry) => `${entry.route} | ${entry.text.slice(0, 70)}`
     );
-    sample('source copy no page ships', built.dead, (entry) => `${entry.usedIn[0]} | ${entry.text.slice(0, 60)}`);
+    sample(
+      'source copy no page ships',
+      conditional.remaining,
+      (entry) => `${entry.usedIn[0]} | ${entry.text.slice(0, 60)}`
+    );
     sample('stale dispositions', stale, (entry) => `${entry.target} | ${entry.why}`);
     process.exitCode = 1;
   }

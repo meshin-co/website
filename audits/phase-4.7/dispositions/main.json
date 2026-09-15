@@ -1,0 +1,26 @@
+[
+  {
+    "target": "src/utils/jsonld.mjs",
+    "status": "verified",
+    "reason": "knowsAbout entity names, checked against the concept register in docs/SEMANTIC-CORE.md: ISO/IEC 42001, NIST AI Risk Management Framework, EU AI Act and AI governance match their canonical spellings, and agentic systems plus LLM evaluation are the two topic labels with no glossary page of their own",
+    "digest": "1711fc9057f5"
+  },
+  {
+    "target": "src/utils/content-rules.mjs",
+    "status": "verified",
+    "reason": "zod validation message fragments composed into a build error, plain and accurate; never rendered to a page, and the complete message is declared in conditional-copy.json",
+    "digest": "cb19b1cbbeaf"
+  },
+  {
+    "target": "src/pages/styleguide.astro",
+    "status": "rewritten",
+    "reason": "removed three dead duplicate Hero attributes that a second set of the same attributes overrode, so the literal demo strings never rendered",
+    "digest": "14d47a4b25ed"
+  },
+  {
+    "target": "src/data/faq/what-does-a-fractional-chief-ai-officer-actually-do.md",
+    "status": "rewritten",
+    "reason": "first sentence cut to 9 words so the /faq teaser stops mid-clause truncation, and AI risk register corrected to the canonical AI register; the quoted passage in docs/SEMANTIC-CORE.md was updated in the same commit",
+    "digest": "0691b98eed5a"
+  }
+]

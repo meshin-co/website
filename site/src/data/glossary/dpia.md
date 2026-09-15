@@ -3,7 +3,7 @@ title: What is a DPIA?
 term: DPIA
 description: A DPIA, or data protection impact assessment, is a written GDPR check of privacy risk before high-risk personal-data processing begins.
 publishDate: 2026-09-08
-updatedDate: 2026-09-08
+updatedDate: 2026-09-15
 shortDefinition: A DPIA, short for data protection impact assessment, is a written GDPR review completed before a company begins personal-data processing likely to carry high privacy risk. It assesses what data is collected, why, and how that risk is being reduced, distinct from a fairness review of the decision itself.
 definition: |-
   GDPR Article 35 makes this review mandatory, not a judgement call, in three situations. One is large-scale profiling with legal or similarly significant effects. Another is large-scale processing of special-category data, such as health or biometric records. The third is systematic large-scale monitoring of a public space. Most consequential AI systems land in the first of these by default.
@@ -26,7 +26,7 @@ sources:
 
 ## Why it comes up
 
-Almost any AI system worth building processes personal data, which makes a DPIA the default question rather than an edge case, and legal or procurement asks for it specifically once a system moves from a prototype to something touching real customer records. It gets confused with the newer AI Act impact assessment often enough that clarifying the difference is usually the more useful answer than either document alone.
+Almost any AI system worth building processes personal data, which makes a DPIA the default question rather than an edge case. Legal or procurement asks for it specifically once a system moves from a prototype to something touching real customer records. It gets confused with the newer AI Act impact assessment often enough that clarifying the difference is usually the more useful answer than either document alone.
 
 ## What to do about it
 

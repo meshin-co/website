@@ -1,0 +1,272 @@
+[
+  {
+    "target": "site/src/components/Logo.astro",
+    "status": "verified",
+    "reason": "sr-only brand text 'Fractional CAIO' matches L9b brand decision, no change needed",
+    "digest": "d6c27154567d"
+  },
+  {
+    "target": "site/src/components/Favicons.astro",
+    "status": "verified",
+    "reason": "no user-facing text, only link attributes",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/common/LogoMark.astro",
+    "status": "verified",
+    "reason": "decorative SVG mark, aria-hidden and focusable=false, no accessible text of its own",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/common/CommonMeta.astro",
+    "status": "verified",
+    "reason": "feed link titles ('meshin.co', 'meshin.co — JSON Feed') already match brand naming pattern used everywhere else",
+    "digest": "1e7d376a1016"
+  },
+  {
+    "target": "site/src/components/common/Metadata.astro",
+    "status": "verified",
+    "reason": "og:image:alt is built programmatically from each page's own title, confirms zero hand-authored alt attributes exist; no literal prose to edit",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/common/Breadcrumbs.astro",
+    "status": "verified",
+    "reason": "aria-label='Breadcrumb' is the standard landmark name, already correct",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/common/JsonLd.astro",
+    "status": "verified",
+    "reason": "no user-facing text, pure JSON-LD emitter",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/common/MarkdownAlternate.astro",
+    "status": "verified",
+    "reason": "no user-facing text, link generator only",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/common/Analytics.astro",
+    "status": "verified",
+    "reason": "no user-facing text",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/common/ApplyColorMode.astro",
+    "status": "verified",
+    "reason": "no user-facing text, inline script only",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/common/SiteVerification.astro",
+    "status": "verified",
+    "reason": "no user-facing text",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/common/ToggleMenu.astro",
+    "status": "rewritten",
+    "reason": "default aria-label 'Toggle Menu' -> 'Toggle navigation menu' so the accessible name says what is being toggled, not just the bare action",
+    "digest": "bf3abc07b46e"
+  },
+  {
+    "target": "site/src/components/common/ToggleTheme.astro",
+    "status": "rewritten",
+    "reason": "default accessible name 'Toggle between Dark and Light mode' -> 'Switch between dark and light mode': plainer verb, consistent sentence-case instead of mid-sentence capitals",
+    "digest": "2ea4cea99a1b"
+  },
+  {
+    "target": "site/src/components/site/RelatedContent.astro",
+    "status": "verified",
+    "reason": "pure pass-through of caller-supplied heading/label text, nothing hardcoded to edit",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/site/SignalList.astro",
+    "status": "verified",
+    "reason": "pass-through only, no hardcoded copy",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/site/StepList.astro",
+    "status": "verified",
+    "reason": "pass-through only, no hardcoded copy",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/site/PostCard.astro",
+    "status": "verified",
+    "reason": "pass-through only, no hardcoded copy",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/site/PaginationLinks.astro",
+    "status": "verified",
+    "reason": "aria-label='Pagination' and per-link aria-label='Page N' already say what the control does, standard pattern",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/site/ServiceCard.astro",
+    "status": "verified",
+    "reason": "pass-through only, no hardcoded copy",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/site/Section.astro",
+    "status": "verified",
+    "reason": "pass-through only, no hardcoded copy",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/site/Hero.astro",
+    "status": "verified",
+    "reason": "static eyebrow 'Fractional Chief AI Officer' matches the entity name used across the semantic core; locked H1/sub per L9a, not touched",
+    "digest": "04c42d709c21"
+  },
+  {
+    "target": "site/src/components/site/SourceList.astro",
+    "status": "verified",
+    "reason": "aria-label/heading default 'Sources' names the landmark correctly, standard pattern",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/site/AuthorBox.astro",
+    "status": "verified",
+    "reason": "aria-label 'About the author', visible text 'Written by' and link default 'More about me' are already direct and non-vague",
+    "digest": "992bdcbb79ee"
+  },
+  {
+    "target": "site/src/components/site/KeyTakeaways.astro",
+    "status": "verified",
+    "reason": "default label 'Key takeaways' is a plain, correct landmark/heading name",
+    "digest": "5b1fcf0ceb96"
+  },
+  {
+    "target": "site/src/components/site/ResourceCard.astro",
+    "status": "verified",
+    "reason": "pass-through only, no hardcoded copy",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/site/CtaBlock.astro",
+    "status": "verified",
+    "reason": "pass-through only, no hardcoded copy",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/site/FaqList.astro",
+    "status": "verified",
+    "reason": "hardcoded 'Sources' eyebrow label is already direct",
+    "digest": "59ecb9284a4d"
+  },
+  {
+    "target": "site/src/components/site/CardGrid.astro",
+    "status": "verified",
+    "reason": "no text, layout wrapper only",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/site/SearchBox.astro",
+    "status": "verified",
+    "reason": "visible label 'Search this site', placeholder 'evals, governance, retainer' (real example topics), submit button 'Search' and the idle prompt 'Type a word and press Search.' are already clear and non-vague; the failure message itself lives in site/public/search/box.mjs, outside this Target list -- flagged to Main, not edited",
+    "digest": "270607d7e4be"
+  },
+  {
+    "target": "site/src/components/site/AnswerBlock.astro",
+    "status": "verified",
+    "reason": "pass-through only, no hardcoded copy",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/site/CaseMetrics.astro",
+    "status": "verified",
+    "reason": "table headers 'Measure'/'Before'/'After' are short, direct, and correct",
+    "digest": "7d8c2b0e5060"
+  },
+  {
+    "target": "site/src/components/site/TableOfContents.astro",
+    "status": "verified",
+    "reason": "default label 'On this page' correctly names the landmark",
+    "digest": "4a1e6011bb7e"
+  },
+  {
+    "target": "site/src/components/site/FigureStrip.astro",
+    "status": "verified",
+    "reason": "pass-through only, no hardcoded copy",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/site/ShiftPanel.astro",
+    "status": "verified",
+    "reason": "pass-through only, no hardcoded copy",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/components/widgets/Footer.astro",
+    "status": "verified",
+    "reason": "component renders caller-supplied ariaLabel/text as-is; the actual social-link label text lives in navigation.ts and was rewritten there",
+    "digest": "0513f386ac19"
+  },
+  {
+    "target": "site/src/components/widgets/Header.astro",
+    "status": "verified",
+    "reason": "aria-label='Main navigation' already correct; the aria-label='RSS Feed' link is genuinely dead code (showRssFeed defaults false and is never passed true from any call site, confirmed absent from dist) -- flagged to Main for deletion under the dead-weight rule (L40), not edited here since that is a structural change beyond copy",
+    "digest": "c75a1e3cf867"
+  },
+  {
+    "target": "site/src/components/ui/Button.astro",
+    "status": "verified",
+    "reason": "pass-through only, no hardcoded copy",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/layouts/Layout.astro",
+    "status": "verified",
+    "reason": "'Skip to content' skip link is already clear; the two theme-color meta 'media' attribute values were flagged dead by the extractor but confirmed present in dist -- extractor false positive, no action needed",
+    "digest": "eed567642683"
+  },
+  {
+    "target": "site/src/layouts/PageLayout.astro",
+    "status": "verified",
+    "reason": "no hardcoded copy, wiring only",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/navigation.ts",
+    "status": "rewritten",
+    "reason": "header/footer nav labels were already direct destination names, left unchanged; the three footer social-link aria-labels ('LinkedIn'/'GitHub'/'Email') were icon-only accessible names naming only the platform, rewritten to 'View my LinkedIn profile' / 'View my GitHub profile' / 'Email me' so each says what the control does",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/config.yaml",
+    "status": "verified",
+    "reason": "default title/description match the '/' route's own metadata and machine-text.mjs catalog entry exactly, already consistent",
+    "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "site/src/utils/machine-text.mjs",
+    "status": "rewritten",
+    "reason": "STATIC_PAGE_CATALOG/HUB_PAGES are hand-duplicated titles/descriptions that ship in llms.txt and .md sidecars; six entries had drifted from their live page's own metadata ('/blog/tags' title+description, '/contact' and '/pricing' and '/terms' descriptions, '/ai-policy' and '/404' titles) -- resynced to the current live source. The '/terms' fix also corrects a factual error: the old sidecar description said 'what the published prices mean', contradicting L8 (no prices are published); the live page correctly says 'why no price appears on it'",
+    "digest": "19edca6adeb8"
+  },
+  {
+    "target": "site/src/utils/faq-meta.mjs",
+    "status": "verified",
+    "reason": "pure formatting/trimming utilities (teaser, clauseTrim, pageTitle, faqDescription), no hardcoded prose beyond the ' — meshin.co' title suffix which matches the site brand suffix used everywhere",
+    "digest": "93ea70635d74"
+  },
+  {
+    "target": "site/src/data/categories.mjs",
+    "status": "rewritten",
+    "reason": "terminology (register, acceptable-use policy, data classification, ISO/IEC 42001, NIST AI Risk Management Framework) confirmed against the glossary by GlossaryEditor with no drift; nine sentences across the four category bodies exceeded the 34-word hard stop (up to 40 words) and were split into shorter sentences without changing any fact, number, or claim; longest sentence is now 27 words",
+    "digest": "4aefcde369ee"
+  },
+  {
+    "target": "site/src/data/tags.mjs",
+    "status": "verified",
+    "reason": "12 short tag names, no prose to edit, no banned phrasing",
+    "digest": "2033dc870f3b"
+  }
+]

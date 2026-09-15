@@ -1,9 +1,9 @@
 ---
 title: What is an agentic workflow?
 term: Agentic workflow
-description: An agentic workflow is a task run by one or more LLM agents that plan steps, call tools and decide what happens next.
+description: An agentic workflow is a task run by one or more AI agents that plan steps, call tools and decide what happens next without a person's approval.
 publishDate: 2026-09-08
-updatedDate: 2026-09-08
+updatedDate: 2026-09-15
 shortDefinition: An agentic workflow is a task one or more AI agents complete on their own once started. The system plans steps, calls tools or APIs, checks the result, and decides what happens next without a person approving each move.
 definition: |
   The distinction that matters is between a single prompt and response and a task an agent sees through to the end. A chatbot that answers one question is not agentic. A system that reads a support ticket, looks up the order, drafts a refund and issues it, is agentic: nobody scripted that exact sequence in advance.

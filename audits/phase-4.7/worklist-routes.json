@@ -1,0 +1,1372 @@
+{
+  "/": [
+    {
+      "location": "body.h1",
+      "text": "A Fractional Chief AI Officer&#32;you can name on the org chart."
+    },
+    {
+      "location": "body.p",
+      "text": "I&#39;m the fractional chief AI officer your org chart can point at when a customer asks who owns AI risk. I set up the governance an enterprise security review asks for, then get one process live for real users, with evals, tracing, a rollback path and a cost per outcome."
+    },
+    {
+      "location": "body.p",
+      "text": "Three or more of these five signs? You&#39;re exactly who this is for."
+    }
+  ],
+  "/404": [
+    {
+      "location": "head.title",
+      "text": "Page not found \u2014 meshin.co"
+    }
+  ],
+  "/about": [
+    {
+      "location": "head.title",
+      "text": "About Dmitri Meshin \u2014 meshin.co"
+    }
+  ],
+  "/ai-policy": [
+    {
+      "location": "head.title",
+      "text": "AI acceptable-use policy \u2014 meshin.co"
+    }
+  ],
+  "/approach": [
+    {
+      "location": "head.title",
+      "text": "How I work \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "I find out what data you actually hold, and that decides what a vendor&#39;s model may ever touch."
+    }
+  ],
+  "/blog": [
+    {
+      "location": "head.title",
+      "text": "Writing \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "08 Sept 2026 \u00b7 6 min read \u00b7 AI governance"
+    },
+    {
+      "location": "body.p",
+      "text": "acceptable-use-policy \u00b7 ai-governance \u00b7 shadow-ai \u00b7 policy-enforcement"
+    },
+    {
+      "location": "body.p",
+      "text": "08 Sept 2026 \u00b7 8 min read \u00b7 Agentic architecture"
+    },
+    {
+      "location": "body.p",
+      "text": "evals-in-ci \u00b7 llm-as-judge \u00b7 agentic-architecture"
+    },
+    {
+      "location": "body.p",
+      "text": "08 Sept 2026 \u00b7 5 min read \u00b7 AI governance"
+    },
+    {
+      "location": "body.p",
+      "text": "ai-register \u00b7 security-review \u00b7 ai-governance \u00b7 eu-ai-act"
+    },
+    {
+      "location": "body.p",
+      "text": "08 Sept 2026 \u00b7 6 min read \u00b7 AI operating model"
+    },
+    {
+      "location": "body.p",
+      "text": "ai-pilots \u00b7 production-readiness \u00b7 ai-governance \u00b7 evals-in-ci"
+    },
+    {
+      "location": "body.p",
+      "text": "Or browse every article by tag."
+    }
+  ],
+  "/blog/ai-acceptable-use-policy-for-a-50-person-company": [
+    {
+      "location": "head.title",
+      "text": "What actually belongs in an AI acceptable use policy \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "An AI acceptable use policy only earns its place once it decides who approves a new AI tool and which data tier may reach which category of vendor. It also decides whether a person checks AI output before it reaches a customer or a contract, and when a customer must be told they are dealing with an "
+    },
+    {
+      "location": "body.p",
+      "text": "Published 8 September 2026 \u00b7 Updated 15 September 2026"
+    },
+    {
+      "location": "body.p",
+      "text": "By the time a policy is drafted, some staff are already using AI without asking anyone first. That means drafting client emails in a personal chatbot account, running a browser extension nobody vetted, or building a habit around a coding assistant they picked themselves. That is shadow AI, and treat"
+    },
+    {
+      "location": "body.p",
+      "text": "The same person who is already accountable for AI risk generally should hold this document. A shared inbox cannot hold it, because someone has to be answerable when a customer or an auditor asks a direct question. ISO/IEC 42001 treats a policy like this as one part of a management system, reviewed o"
+    },
+    {
+      "location": "body.p",
+      "text": "The version I run for my own practice is public at my AI policy, one page, as a worked example of the same shape at a much smaller scale. The Starter Kit sets out the same structure as a table you can copy, sized for a company with more than one person to coordinate."
+    },
+    {
+      "location": "body.p",
+      "text": "A written policy does not tell you whether anyone inside the company actually owns AI risk today. If nobody does, that gap usually surfaces during an AI readiness and risk assessment before it ever reaches the policy stage, because there is no obvious person to hand the draft to."
+    },
+    {
+      "location": "body.p",
+      "text": "genai.owasp.org"
+    }
+  ],
+  "/blog/category/agentic-architecture": [
+    {
+      "location": "head.title",
+      "text": "Agentic architecture \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "An agent demo is easy and an agent in production is not, and the gap between them is almost never about the model. It is about the same engineering discipline any other system needs, applied to a component whose output is not deterministic."
+    },
+    {
+      "location": "body.p",
+      "text": "Start with evaluation, before the prompt. You need to say what a good answer looks like on a set of real cases. Otherwise you cannot tell whether a change made the system better or simply different. Build the eval set from work people have already done, so there is a known-good answer to compare aga"
+    },
+    {
+      "location": "body.p",
+      "text": "Put that eval run in continuous integration. This is the single change that most often turns a prototype into something a team will let near a customer. It moves the question from an argument about vibes to a number that blocks a merge. A regression should fail the build, in the same job, with the s"
+    },
+    {
+      "location": "body.p",
+      "text": "Instrument every call. When an answer is wrong you want to see which retrieval returned which document and what the model was given, not reconstruct it from memory. Tracing turns a support escalation into a quick check instead of a day of guessing."
+    },
+    {
+      "location": "body.p",
+      "text": "Set a cost ceiling per outcome and check it in the same job as the evals. A loop that retries three times on a bad tool response is fine in a demo and ruinous at volume. If you cannot state the cost of one completed task, you do not yet know whether the system makes sense."
+    },
+    {
+      "location": "body.p",
+      "text": "Then design the boundary. Tool interfaces are where agents actually break. That is why an explicit protocol between the model and your systems is worth adopting, rather than one improvised inside a prompt. Keep the tools narrow, validate their inputs, and make every destructive action reversible."
+    },
+    {
+      "location": "body.p",
+      "text": "Finally, keep a rollback path. A prompt is a deployment. Version it, ship it behind the same controls as code, and be able to put yesterday back quickly."
+    }
+  ],
+  "/blog/category/executive": [
+    {
+      "location": "head.title",
+      "text": "AI for boards \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "A board does not need a member who can explain how a model works. It needs to know who inside the company is answerable when one gets something wrong in front of a customer. It also needs to know whether that answer would survive being read back in a dispute. Ask that question at every review, not j"
+    },
+    {
+      "location": "body.p",
+      "text": "Ask for three things, by name rather than by department. Who owns AI risk, specifically, not which team owns it. A register of every AI system in use, kept current rather than produced once for an audit. And the last time a customer or a regulator asked a question about this, with the answer that wa"
+    },
+    {
+      "location": "body.p",
+      "text": "Do not ask for a demo. A demo proves a model can perform once, in front of people who want it to succeed, which is the least useful thing a board can learn. Do not ask for a token count, a model name, or a list of pilots. Those measure activity, not risk, and a company can produce an impressive slid"
+    },
+    {
+      "location": "body.p",
+      "text": "The exposure that actually matters shows up after something goes wrong, not before. A regulator or an insurer will not ask whether the model was good. They will ask whether someone reviewed the system before it reached a customer. They will also ask whether that review is written down, and whether t"
+    },
+    {
+      "location": "body.p",
+      "text": "A company of 30 to 300 people needs one named owner, one page of decisions, and the discipline to update both when something changes. A board does this well by asking the same few questions until the answers stop moving."
+    }
+  ],
+  "/blog/category/governance": [
+    {
+      "location": "head.title",
+      "text": "AI governance \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Governance has a bad name in small companies because most of what is sold under that name is written for a bank. A three hundred person company does not need a committee, a maturity model or a consultant to run a workshop. It needs four things that fit on a shared drive and get updated when somethin"
+    },
+    {
+      "location": "body.p",
+      "text": "The first is a register: every AI system in use, who owns it, what data reaches it. It also records whether a person checks its output before a customer sees it. Companies usually find more AI in the building than they expected, because someone signed up for a tool with a credit card and nobody wrot"
+    },
+    {
+      "location": "body.p",
+      "text": "The second is an acceptable-use policy short enough that people read it. One page. What you may paste into a chat window, what you may not, and who to ask when the answer is unclear. A policy that requires a training course to understand is a policy that gets ignored by the people whose behaviour it"
+    },
+    {
+      "location": "body.p",
+      "text": "The third is a data classification table. Three or four tiers, each with a rule about which vendors may see that tier. This is the document that answers most of a customer security questionnaire. It is also the one companies most often skip, because it requires a decision rather than a description."
+    },
+    {
+      "location": "body.p",
+      "text": "The fourth is a named owner: one person whose job description says they own AI risk and who has the authority to stop a launch. Frameworks like ISO/IEC 42001 and the NIST AI Risk Management Framework both assume this person exists. Without them, every answer in a questionnaire is a guess, and every "
+    },
+    {
+      "location": "body.p",
+      "text": "That is the whole set. It takes about two weeks to produce honestly, and the honest version is worth more than a thorough version that describes a company you are not. A customer may ask who owns AI risk. A board may ask what happens if a model leaks a document. Either way, you want to answer from a"
+    }
+  ],
+  "/blog/category/operating-model": [
+    {
+      "location": "head.title",
+      "text": "AI operating model \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Most stalled AI programmes are not blocked on technology. They are blocked because nobody can say who decides whether a system is allowed to touch customer data. Nobody owns the outcome once the pilot team moves on, either."
+    },
+    {
+      "location": "body.p",
+      "text": "An operating model answers three questions. Who chooses which processes get automated. Who reviews a system before it reaches a customer. Who runs it afterwards. If the answer to any of those is a team name rather than a person, the work will drift until someone senior gets nervous and stops it."
+    },
+    {
+      "location": "body.p",
+      "text": "Choice comes first, and it is mostly a filter. A candidate process needs volume, a measurable outcome, and a tolerable failure mode. Volume, because a system used twice a week never accumulates enough signal to improve. A measurable outcome, because a metric you have to survey for cannot gate a rele"
+    },
+    {
+      "location": "body.p",
+      "text": "Review comes second. It should be boring and written down: what evidence a launch needs, who signs, and what evidence would stop it. In practice this is a short checklist attached to the register entry, not a governance ceremony. The point is that the answer exists before someone needs it at eleven "
+    },
+    {
+      "location": "body.p",
+      "text": "Ownership comes third and is the one that gets skipped. A pilot that reaches production without a named internal owner becomes shadow infrastructure: nobody updates it, nobody watches its cost, and its failure surprises everyone. Handover is a deliverable, not a formality, and it only counts once so"
+    },
+    {
+      "location": "body.p",
+      "text": "This is also why fractional works for companies of this size. You need the decisions made properly once, written down, and handed to someone inside the company. You do not need a permanent executive to maintain four documents and a review checklist. An engagement that does not end has usually replac"
+    }
+  ],
+  "/blog/evals-in-ci-for-llm-agents": [
+    {
+      "location": "head.title",
+      "text": "Evals in CI for LLM agents, without a golden answer \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "An eval suite that only runs on a laptop protects nobody. The same regression a developer catches by eye on a good day slips through on a bad one, and a model provider\u2019s silent update slips through every time. Putting an eval suite in CI turns a habit into a gate. The pull request cannot merge until"
+    },
+    {
+      "location": "body.p",
+      "text": "Sample across a period long enough that one good or bad week does not decide the result. On only.help, my own product, the support-triage rollout built its first eval set from tickets already answered. It then found that the first week looked better than the system really was, purely from seasonal t"
+    },
+    {
+      "location": "body.p",
+      "text": "Measure cost per completed run, across the whole eval set, the way you measure the pass rate. A change that makes the agent slower or more expensive without a real gain is a regression, even if every other score stays green. A 90-Day Production Sprint puts this gate in place before a workflow takes "
+    },
+    {
+      "location": "body.p",
+      "text": "airc.nist.gov"
+    },
+    {
+      "location": "body.p",
+      "text": "promptfoo.dev"
+    },
+    {
+      "location": "body.p",
+      "text": "braintrust.dev"
+    }
+  ],
+  "/blog/how-to-build-an-ai-system-register-in-a-week": [
+    {
+      "location": "head.title",
+      "text": "How to build an AI system register in a week \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "A working entry names what the system does, what data can reach it, which vendor or model sits behind it, who owns it, and a rough risk tier. Some call this same list an AI register rather than an AI system register. Most of the systems on it never started as a formal AI project, which is why the li"
+    },
+    {
+      "location": "body.p",
+      "text": "The NIST AI RMF treats this as a named control, not a nice extra. Its Govern function includes a specific requirement: a mechanism to inventory AI systems, resourced according to how much risk the organisation is willing to carry."
+    },
+    {
+      "location": "body.p",
+      "text": "The registration duty in the EU AI Act is a separate, public step for certain high-risk systems. It means registering under Article 49, in the database the Commission set up under Article 71, before the system goes live. An internal register is how you find out fast which systems might owe that sepa"
+    },
+    {
+      "location": "body.p",
+      "text": "If you would rather someone else run the discovery and the first risk pass, an AI Readiness &#x26; Risk Assessment does the same work in two weeks and hands you a finished register. The starter kit has a blank version of this table, ready to copy into your own document."
+    },
+    {
+      "location": "body.p",
+      "text": "One named person, not a shared folder. They do not need to personally approve every new AI tool. But they need standing to ask why an unlisted system turned up, and a fixed date on the calendar to confirm every row is still accurate."
+    }
+  ],
+  "/blog/tag/acceptable-use-policy": [
+    {
+      "location": "head.title",
+      "text": "Acceptable use policy \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Every article tagged Acceptable use policy, newest first."
+    }
+  ],
+  "/blog/tag/agentic-architecture": [
+    {
+      "location": "body.p",
+      "text": "Every article tagged Agentic architecture, newest first."
+    }
+  ],
+  "/blog/tag/ai-governance": [
+    {
+      "location": "body.p",
+      "text": "Every article tagged AI governance, newest first."
+    }
+  ],
+  "/blog/tag/ai-pilots": [
+    {
+      "location": "head.title",
+      "text": "AI pilots \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Every article tagged AI pilots, newest first."
+    }
+  ],
+  "/blog/tag/ai-register": [
+    {
+      "location": "head.title",
+      "text": "AI register \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Every article tagged AI register, newest first."
+    }
+  ],
+  "/blog/tag/eu-ai-act": [
+    {
+      "location": "head.title",
+      "text": "EU AI Act \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Every article tagged EU AI Act, newest first."
+    }
+  ],
+  "/blog/tag/evals-in-ci": [
+    {
+      "location": "head.title",
+      "text": "Evals in CI \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Every article tagged Evals in CI, newest first."
+    }
+  ],
+  "/blog/tag/llm-as-judge": [
+    {
+      "location": "head.title",
+      "text": "LLM as judge \u2014 meshin.co"
+    },
+    {
+      "location": "body.h1",
+      "text": "LLM as judge"
+    },
+    {
+      "location": "body.p",
+      "text": "Every article tagged LLM as judge, newest first."
+    }
+  ],
+  "/blog/tag/policy-enforcement": [
+    {
+      "location": "head.title",
+      "text": "Policy enforcement \u2014 meshin.co"
+    },
+    {
+      "location": "body.h1",
+      "text": "Policy enforcement"
+    },
+    {
+      "location": "body.p",
+      "text": "Every article tagged Policy enforcement, newest first."
+    }
+  ],
+  "/blog/tag/production-readiness": [
+    {
+      "location": "head.title",
+      "text": "Production readiness \u2014 meshin.co"
+    },
+    {
+      "location": "body.h1",
+      "text": "Production readiness"
+    },
+    {
+      "location": "body.p",
+      "text": "Every article tagged Production readiness, newest first."
+    }
+  ],
+  "/blog/tag/security-review": [
+    {
+      "location": "head.title",
+      "text": "Security review \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Every article tagged Security review, newest first."
+    }
+  ],
+  "/blog/tag/shadow-ai": [
+    {
+      "location": "head.title",
+      "text": "Shadow AI \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Every article tagged Shadow AI, newest first."
+    }
+  ],
+  "/blog/tags": [
+    {
+      "location": "head.title",
+      "text": "Tags \u2014 meshin.co"
+    }
+  ],
+  "/blog/why-your-ai-pilot-never-reached-production": [
+    {
+      "location": "head.title",
+      "text": "Why your AI pilot never reached production \u2014 meshin.co"
+    }
+  ],
+  "/case-studies": [
+    {
+      "location": "head.title",
+      "text": "Case studies \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "08 Sept 2026 \u00b7 Consumer software"
+    }
+  ],
+  "/case-studies/only-help-agentic-support": [
+    {
+      "location": "head.title",
+      "text": "only.help \u2014 agentic support triage, on my own product \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Published 8 September 2026 \u00b7 Updated 8 September 2026"
+    }
+  ],
+  "/contact": [
+    {
+      "location": "head.title",
+      "text": "Contact \u2014 meshin.co"
+    }
+  ],
+  "/faq": [
+    {
+      "location": "head.title",
+      "text": "Questions and answers \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "I carry the AI risk register, review every initiative, sign the."
+    },
+    {
+      "location": "body.p",
+      "text": "Size isn&#39;t the real test."
+    },
+    {
+      "location": "body.p",
+      "text": "A named officer on your customers&#39; security reviews and your board&#39;s."
+    }
+  ],
+  "/faq/are-models-trained-on-our-customer-data": [
+    {
+      "location": "head.title",
+      "text": "Are models trained on our customer data? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Published 12 September 2026 \u00b7 Updated 12 September 2026"
+    }
+  ],
+  "/faq/can-you-get-us-iso-iec-42001-certified-or-just-a-working-system": [
+    {
+      "location": "head.title",
+      "text": "Can you get us ISO/IEC 42001 certified? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Published 12 September 2026 \u00b7 Updated 15 September 2026"
+    }
+  ],
+  "/faq/can-you-work-with-our-existing-ai-vendor-or-platform": [
+    {
+      "location": "head.title",
+      "text": "Can you work with our existing AI vendor? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Concerns"
+    }
+  ],
+  "/faq/how-do-you-charge-for-the-work": [
+    {
+      "location": "head.title",
+      "text": "How do you charge for the work? \u2014 meshin.co"
+    }
+  ],
+  "/faq/how-does-ai-risk-get-recorded-and-who-signs-it-off": [
+    {
+      "location": "head.title",
+      "text": "How does AI risk get recorded, and who signs it off? \u2014 meshin.co"
+    }
+  ],
+  "/faq/how-does-the-retainer-end": [
+    {
+      "location": "head.title",
+      "text": "How does the Retainer end? \u2014 meshin.co"
+    }
+  ],
+  "/faq/how-is-a-prompt-or-model-change-stopped-from-shipping-unnoticed": [
+    {
+      "location": "head.title",
+      "text": "How is a prompt or model change caught? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Evals in continuous integration. A test set runs on every change and fails the build when quality drops, the same gate your engineers already trust for code. A prompt edit, a model swap, a vendor&#39;s silent update: all pass the same evals as the original release before reaching production. Tracing"
+    }
+  ],
+  "/faq/how-is-cost-per-outcome-measured": [
+    {
+      "location": "head.title",
+      "text": "How is cost per outcome measured? \u2014 meshin.co"
+    }
+  ],
+  "/faq/how-quickly-can-you-start-and-how-does-availability-work-for-a-remote-officer": [
+    {
+      "location": "head.title",
+      "text": "How quickly can you start as a remote officer? \u2014 meshin.co"
+    }
+  ],
+  "/faq/is-my-company-too-small-or-too-early-for-a-fractional-chief-ai-officer": [
+    {
+      "location": "head.title",
+      "text": "Is my company too small for a Fractional CAIO? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Size isn&#39;t the real test. If you&#39;re running pilots that never reach production, or a customer or investor has already asked who owns your AI risk, you&#39;re ready. If you have no engineers, no pilots, and nobody outside the company has asked that question yet, you&#39;re early: fix that fir"
+    }
+  ],
+  "/faq/what-counts-as-in-production-for-the-90-day-sprint": [
+    {
+      "location": "head.title",
+      "text": "What counts as 'in production' for the 90-day Sprint? \u2014 meshin.co"
+    },
+    {
+      "location": "body.h1",
+      "text": "What counts as &#39;in production&#39; for the 90-day Sprint?"
+    }
+  ],
+  "/faq/what-do-nist-ai-rmf-iso-iec-42001-and-the-eu-ai-act-require": [
+    {
+      "location": "head.title",
+      "text": "What do NIST, ISO/IEC 42001 and the EU AI Act require? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "None of the three sets a headcount threshold. NIST&#39;s AI RMF is voluntary guidance built around four functions: govern, map, measure and manage. ISO/IEC 42001 is a certifiable standard for running an AI management system. The EU AI Act is binding law: what you owe depends on being a provider (bui"
+    }
+  ],
+  "/faq/what-do-we-do-about-tools-staff-are-already-using-without-approval": [
+    {
+      "location": "head.title",
+      "text": "What about tools staff use without approval? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Put them in the AI register, not on a ban list. That beats banning them, which just pushes the same behaviour further underground. The Retainer&#39;s first step is exactly this: inventory the AI tools and data flows already in the building, then write a data classification and an acceptable-use poli"
+    }
+  ],
+  "/faq/what-does-a-fractional-chief-ai-officer-actually-do": [
+    {
+      "location": "head.title",
+      "text": "What does a Fractional Chief AI Officer do? \u2014 meshin.co"
+    }
+  ],
+  "/faq/what-does-the-two-week-assessment-produce-and-is-the-fee-credited-if-we-continue": [
+    {
+      "location": "head.title",
+      "text": "What does the two-week Assessment produce? \u2014 meshin.co"
+    }
+  ],
+  "/faq/what-happens-if-the-evals-say-a-workflow-isnt-good-enough": [
+    {
+      "location": "head.title",
+      "text": "What if the evals say a workflow is not enough? \u2014 meshin.co"
+    },
+    {
+      "location": "body.h1",
+      "text": "What happens if the evals say a workflow isn&#39;t good enough?"
+    }
+  ],
+  "/faq/what-happens-on-a-fit-call-and-does-it-cost-anything": [
+    {
+      "location": "head.title",
+      "text": "What happens on a fit call, and does it cost anything? \u2014 meshin.co"
+    }
+  ],
+  "/faq/what-if-the-ai-we-are-building-goes-into-a-product-we-sell": [
+    {
+      "location": "head.title",
+      "text": "What if our AI goes into a product we sell? \u2014 meshin.co"
+    },
+    {
+      "location": "body.h1",
+      "text": "What if the AI we&#39;re building goes into a product we sell, not just an internal workflow?"
+    }
+  ],
+  "/faq/what-if-we-already-have-a-data-science-team-or-an-internal-ai-lead": [
+    {
+      "location": "head.title",
+      "text": "What if we already have a data science team? \u2014 meshin.co"
+    }
+  ],
+  "/faq/what-size-of-company-do-you-actually-work-with": [
+    {
+      "location": "head.title",
+      "text": "What size of company do you actually work with? \u2014 meshin.co"
+    }
+  ],
+  "/faq/whats-the-difference-between-the-assessment-the-sprint-and-the-retainer": [
+    {
+      "location": "head.title",
+      "text": "Assessment, Sprint or Retainer: what differs? \u2014 meshin.co"
+    },
+    {
+      "location": "body.h1",
+      "text": "What&#39;s the difference between the Assessment, the Sprint and the Retainer?"
+    }
+  ],
+  "/faq/who-answers-customer-security-questionnaires": [
+    {
+      "location": "head.title",
+      "text": "Who answers customer security questionnaires? \u2014 meshin.co"
+    }
+  ],
+  "/faq/who-owns-the-code-and-the-data": [
+    {
+      "location": "head.title",
+      "text": "Who owns the code and the data? \u2014 meshin.co"
+    }
+  ],
+  "/faq/who-owns-the-frameworks-templates-and-playbooks-built-during-the-engagement": [
+    {
+      "location": "head.title",
+      "text": "Who owns the frameworks and playbooks I build? \u2014 meshin.co"
+    }
+  ],
+  "/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai": [
+    {
+      "location": "head.title",
+      "text": "Why hire a fractional officer over a full-time head? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "A named officer on your customers&#39; security reviews and your board&#39;s roadmap \u2014 that is the accountability you get, without a full-time salary, a hiring process, or a seat that sits empty between AI decisions. If you need someone hands-on across five systems at once, that is a full-time hire,"
+    }
+  ],
+  "/glossary": [
+    {
+      "location": "head.title",
+      "text": "AI governance glossary \u2014 meshin.co"
+    }
+  ],
+  "/glossary/agentic-workflow": [
+    {
+      "location": "head.title",
+      "text": "What is an agentic workflow? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "arxiv.org"
+    }
+  ],
+  "/glossary/ai-governance": [
+    {
+      "location": "head.title",
+      "text": "What is AI governance? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "A customer&#39;s procurement team asks for it during a security review. A board asks after a pilot nears production, once someone raises who is liable for a bad call. Regulators ask for pieces of it too, through frameworks like the NIST AI RMF and standards like ISO/IEC 42001."
+    }
+  ],
+  "/glossary/ai-impact-assessment": [
+    {
+      "location": "head.title",
+      "text": "What is an AI impact assessment? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Name the specific groups the system could disadvantage before launch. Use the actual decision it makes and who it makes it about. Write down the mitigation for each risk identified, and who checked that the mitigation actually works rather than just exists on paper. I flag which systems need this sp"
+    }
+  ],
+  "/glossary/ai-management-system": [
+    {
+      "location": "head.title",
+      "text": "What is an AI management system? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "The EU AI Act does not require this broader system. Article 17 requires a narrower relative of it instead. Every provider of a high-risk AI system must run a documented quality management system, covering the risk-management process, post-market monitoring and serious-incident procedures among other"
+    },
+    {
+      "location": "body.p",
+      "text": "Set a fixed date to review the register rather than waiting for a customer to ask. I score exactly this structure against ISO/IEC 42001 in the two-week AI readiness and risk assessment, so the gap list is evidence rather than a guess."
+    }
+  ],
+  "/glossary/ai-register": [
+    {
+      "location": "head.title",
+      "text": "What is an AI register? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "An AI register is a company&#39;s own inventory of every AI system it builds, buys or uses, listing what it does, what data it touches, who owns it and how risky it is."
+    },
+    {
+      "location": "body.p",
+      "text": "The honest answer to &quot;what AI do you run&quot; is too often &quot;we are not sure.&quot; Building a register does not need new software. It forces one decision per system: a named owner. That turns a question a reviewer might spend a day chasing into a document you hand over in a meeting."
+    }
+  ],
+  "/glossary/conformity-assessment": [
+    {
+      "location": "head.title",
+      "text": "What is a conformity assessment? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "A conformity assessment is the process a provider completes before placing a high-risk AI system on the market, either checking it internally or having an accredited outside body check it. It shows the system actually meets the EU AI Act&#39;s requirements, rather than merely claiming to."
+    },
+    {
+      "location": "body.p",
+      "text": "For almost every high-risk system, the outcome is simple: the provider checks its own work against the rules and signs a declaration, with no outside reviewer involved. Only biometric-identification systems sometimes need an independent outside checker, a &quot;notified body,&quot; to sign off inste"
+    },
+    {
+      "location": "body.p",
+      "text": "Article 43 sets this split by Annex III area, the EU AI Act&#39;s list of high-risk use cases. Every area except biometric identification uses Annex VI, the self-check route with no notified body involved. Biometric identification uses Annex VII&#39;s notified-body route wherever harmonised standard"
+    },
+    {
+      "location": "body.p",
+      "text": "Work out early, before the system is built, which assessment route applies, since a notified-body review takes far longer to arrange than an internal one and cannot be rushed at launch. Keep the assessment evidence alongside the technical documentation it depends on, not in a file only one person ca"
+    }
+  ],
+  "/glossary/data-classification": [
+    {
+      "location": "head.title",
+      "text": "What is data classification? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "NIST&#39;s own method for federal systems ties each category to a real question, not a subjective label: what actually happens to confidentiality, integrity or availability if this breaks? That means naming who could see this data, alter it, or take it offline. A scheme built the same way works for "
+    },
+    {
+      "location": "body.p",
+      "text": "Keep the scheme small. Three or four tiers is enough for most companies, and a scheme nobody can remember gets ignored the same as none. Map every AI tool in the register to which tiers may reach it. Make the most important rule explicit: customer data and secrets never go into an unclassified tool."
+    }
+  ],
+  "/glossary/dpia": [
+    {
+      "location": "head.title",
+      "text": "What is a DPIA? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Write the DPIA before the system is built, not after, since a risk found during design is cheap to change and the same risk found after launch usually is not. Start from what is actually being collected and why, not from a template\u2019s headings, and consult the data protection officer while there is t"
+    }
+  ],
+  "/glossary/eu-ai-act": [
+    {
+      "location": "head.title",
+      "text": "What is the EU AI Act? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Obligations scale with the tier. High-risk systems carry duties such as a conformity assessment, technical documentation, human oversight, and registration in an EU database. The Act applies to any company whose AI system is used in the EU, not only companies based there. That is why a US-based star"
+    },
+    {
+      "location": "body.p",
+      "text": "In practice, it changes what &quot;we did not think about that&quot; costs. For a high-risk use case, a company now needs a documented risk assessment and a named point of human oversight, with evidence of both ready before a regulator or a customer&#39;s legal team asks."
+    }
+  ],
+  "/glossary/evals": [
+    {
+      "location": "head.title",
+      "text": "What are evals? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Evals are repeatable tests that score an AI system&#39;s outputs against a fixed set of examples and criteria, run before release and again whenever the prompt, data or model changes."
+    },
+    {
+      "location": "body.p",
+      "text": "Engineering teams build them because &quot;it worked when I tried it a few times&quot; does not survive a prompt change six months later, once nobody remembers which cases mattered. Security reviewers and boards ask about them because an eval suite is the concrete answer to &quot;how do you know it "
+    }
+  ],
+  "/glossary/guardrails": [
+    {
+      "location": "head.title",
+      "text": "What are guardrails in an AI system? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Guardrails are the checks placed around what an AI model can be asked, what it can say, and what it can do. They are enforced in the surrounding code, not left to the model&#39;s training. That way an unusual input cannot simply talk the system out of a rule."
+    },
+    {
+      "location": "body.p",
+      "text": "This is closer to what NIST&#39;s AI Risk Management Framework calls its Manage function: turning a risk decision into something the system enforces, not something merely written down. Guardrails are how that function shows up in code, not in a policy document nobody checks against production."
+    },
+    {
+      "location": "body.p",
+      "text": "Write guardrails as rules the code enforces, not text pasted into a prompt. Test each one against an input designed to defeat it, not a well-behaved example. Put a real check in front of any action that spends money, changes a record, or sends something external. That way a failure blocks the action"
+    }
+  ],
+  "/glossary/hallucination-rate": [
+    {
+      "location": "head.title",
+      "text": "What is a hallucination rate? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "A hallucination rate is the share of a model&#39;s answers that state something false or invented in the same confident tone as a correct one, measured against questions with known correct answers."
+    },
+    {
+      "location": "body.p",
+      "text": "NIST&#39;s generative-AI risk guidance calls this failure confabulation, distinct from an ordinary software bug because confidence is never a reliable guide to accuracy here. That makes it different from a crash or an error message, which at least announces itself. A model rarely answers &quot;I don"
+    },
+    {
+      "location": "body.p",
+      "text": "Measure the rate on the eval suite\u2019s real cases, not a generic public benchmark. Behaviour on general trivia says little about a specific product\u2019s actual questions. Track the number after every prompt or model change, the way an eval pass rate is tracked. Do not measure it once and assume it holds."
+    }
+  ],
+  "/glossary/high-risk-ai-system": [
+    {
+      "location": "head.title",
+      "text": "What makes an AI system high-risk? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "A system reaches the category one of two ways. Article 6(1) covers the first: a safety component of, or itself, a product already regulated under EU product-safety law, such as medical devices or machinery. That underlying law already requires third-party conformity assessment."
+    },
+    {
+      "location": "body.p",
+      "text": "Annex III covers the second: eight listed use-case areas, among them biometric identification, employment decisions, credit scoring and law enforcement. Article 6(2) makes a system high-risk for landing in one of those areas alone, with no product-safety law involved at all."
+    },
+    {
+      "location": "body.p",
+      "text": "A system inside Annex III can still escape the label under Article 6(3), for four narrow reasons. One is a limited procedural task: reformatting an application into a standard template, say. Another is improving a human decision already made, such as tidying a report&#39;s wording without changing i"
+    },
+    {
+      "location": "body.p",
+      "text": "A third is detecting a deviation without replacing human judgement, such as flagging an unusual transaction for a fraud analyst to review. The fourth is a preparatory task ahead of someone else&#39;s assessment, such as gathering a loan applicant&#39;s documents before a human underwriter looks at t"
+    },
+    {
+      "location": "body.p",
+      "text": "Run the classification test on each system separately, not on the company as a whole. One product can be high-risk while another, built the same month, is not. Write the decision down, including the reasoning for a not-high-risk conclusion, since an authority can ask to see it later. This classifica"
+    }
+  ],
+  "/glossary/human-in-the-loop": [
+    {
+      "location": "head.title",
+      "text": "What is human-in-the-loop? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Human-in-the-loop means a person reviews or can stop an AI system&#39;s output before it takes effect, rather than the system acting on its own once it starts."
+    },
+    {
+      "location": "body.p",
+      "text": "Where a system falls on that spectrum is a design decision, not a fixed property of the technology. It is one of the first things a customer&#39;s security team or a regulator asks about, for anything that can affect a person&#39;s money, employment or legal standing."
+    },
+    {
+      "location": "body.p",
+      "text": "Article 14 of the EU AI Act requires &quot;effective&quot; human oversight for high-risk systems: oversight that can genuinely catch and correct a bad output, not a person who clicks approve without reading it. In practice, this decides where a company can safely remove a person from a workflow, and"
+    }
+  ],
+  "/glossary/human-oversight": [
+    {
+      "location": "head.title",
+      "text": "What does human oversight require under the EU AI Act? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Article 14 spells out five specific capacities the overseeing person needs. They must understand the system&#39;s real limits well enough to spot a malfunction, and stay alert to automation bias rather than trusting the output by default. They also need to correctly read what the output actually mea"
+    },
+    {
+      "location": "body.p",
+      "text": "Name the specific person or role authorised to halt each high-risk system, not a team, and check they have time per case to evaluate output rather than approve on reflex. Train that person specifically on automation bias. A rushed or over-trusting reviewer defeats the requirement even when the proce"
+    }
+  ],
+  "/glossary/iso-iec-42001": [
+    {
+      "location": "head.title",
+      "text": "What is ISO/IEC 42001? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "ISO/IEC&#39;s joint technical committee for artificial intelligence published it in December 2023. It specifies requirements for an AI management system: the recurring policies, roles and processes that govern how an organisation develops, provides or uses AI. It uses the same Plan-Do-Check-Act stru"
+    },
+    {
+      "location": "body.p",
+      "text": "Unlike the NIST AI RMF, a free framework, ISO/IEC 42001 is a standard a company can be audited and certified against by an accredited third party. Enterprise customers and procurement teams ask for it, or ask where you sit against it, because certification gives them a documented, externally checked"
+    }
+  ],
+  "/glossary/llm-gateway": [
+    {
+      "location": "head.title",
+      "text": "What is an LLM gateway? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Every call to any model passes through one place, instead of going straight from application code to a vendor&#39;s API. Through that point, a company can control who is allowed to call a model. It can log every prompt and response for an audit trail, and redact sensitive data before it leaves the b"
+    },
+    {
+      "location": "body.p",
+      "text": "Engineering teams adopt one to stop rebuilding the same authentication and logging code in every project that touches a model. It also gives a direct, specific answer to a vendor questionnaire&#39;s question about how model access is controlled. That beats a description of several applications each "
+    }
+  ],
+  "/glossary/model-card": [
+    {
+      "location": "head.title",
+      "text": "What is a model card? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "A model card is a short, standard-shaped document a model&#39;s maker publishes. It describes what the model was built for, and how it performs across groups and conditions. It also names where the model should not be used, closer to a spec sheet than a sales page."
+    },
+    {
+      "location": "body.p",
+      "text": "NIST&#39;s risk management framework expects the same thing in substance. A model should be explained, validated and documented, not simply shipped. A vendor who has actually done that evaluation work typically wants to show the results, since they usually help on some axis. One who cannot produce a"
+    },
+    {
+      "location": "body.p",
+      "text": "Ask every model vendor for their card before signing. Read the limitations section before the headline numbers: the numbers are chosen by the vendor, and the limitations rarely are. If a company fine-tunes or wraps a base model itself, write a short card of its own. Describe what changed and what wa"
+    }
+  ],
+  "/glossary/model-provenance": [
+    {
+      "location": "head.title",
+      "text": "What is model provenance? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "For a smaller company building on someone else&#39;s model, provenance is a due-diligence question, not a publishing duty. Work through it before signing, not after. That distinction decides who actually reads the summary, and when: before a contract is signed, not after a customer&#39;s legal team "
+    },
+    {
+      "location": "body.p",
+      "text": "Ask every model vendor what the model was trained on, or where its training-data summary sits if the vendor owes one. Ask what licence covers the weights and output. Record the answer in the AI register next to that system, not in an email thread nobody can find during a review. Reading the actual v"
+    }
+  ],
+  "/glossary/nist-ai-rmf": [
+    {
+      "location": "head.title",
+      "text": "What is the NIST AI RMF? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "The NIST AI Risk Management Framework (AI RMF) is a voluntary US framework, published in January 2023, for identifying and managing an AI system&#39;s risks across its design, development and use."
+    },
+    {
+      "location": "body.p",
+      "text": "The framework sets out four functions an organisation applies to an AI system. GOVERN covers policy and accountability, while MAP covers understanding context and risk. Testing and metrics fall under MEASURE. Acting on what it found is MANAGE&#39;s job."
+    },
+    {
+      "location": "body.p",
+      "text": "It is not a law, and it is not sector specific. A bank, a hospital and a ten-person startup can all use the same structure. US procurement teams, and increasingly non-US ones, ask about it because it gives a common vocabulary for a question that used to have no fixed answer. That question is how you"
+    }
+  ],
+  "/glossary/observability": [
+    {
+      "location": "head.title",
+      "text": "What is observability for an AI system? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Observability is the ability to see, after the fact, exactly what a live AI system was asked. For any one case someone points to, it also shows what the system retrieved or called, and what it answered. An aggregate chart alone cannot explain one specific customer&#39;s bad experience."
+    },
+    {
+      "location": "body.p",
+      "text": "This differs from a simple uptime dashboard. It can show a system is running while saying nothing about whether one specific answer, given to one specific person, was actually right. NIST&#39;s risk management framework calls this its Measure function: a system only counts as measured if it keeps be"
+    },
+    {
+      "location": "body.p",
+      "text": "Log the full input, every step the system took including tool calls, and the output for every real request, not a sample. Keep those logs long enough to support an investigation. Make sure any one case can be pulled up by its own reference, rather than only appearing inside an average. This logging,"
+    }
+  ],
+  "/glossary/post-market-monitoring": [
+    {
+      "location": "head.title",
+      "text": "What is post-market monitoring under the EU AI Act? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "The monitoring plan is not a separate document. Article 72 makes it part of the system&#39;s technical documentation, built and updated alongside it, not bolted on after a complaint. A pattern the monitoring turns up is also the raw material for the next duty in the chain: deciding whether what happ"
+    },
+    {
+      "location": "body.p",
+      "text": "A monitoring system that never hears from the people using it day to day is monitoring very little. The Fractional CAIO Retainer I run keeps this review on a fixed schedule, not only when a customer complains."
+    }
+  ],
+  "/glossary/prompt-injection": [
+    {
+      "location": "head.title",
+      "text": "What is prompt injection? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Direct injection comes from whoever is typing into the box, phrased to override the model&#39;s own hidden starting instructions, its system prompt. Indirect injection is the more dangerous form. It arrives inside content the model retrieves on its own: a webpage it is summarising, a resume it is sc"
+    },
+    {
+      "location": "body.p",
+      "text": "Never let a model\u2019s output directly trigger a sensitive action without a check enforced in code. Keep the model\u2019s own permissions to the smallest set it needs. Treat anything the model reads from outside the conversation as untrusted input, the way a web application treats a user-supplied string. Ev"
+    }
+  ],
+  "/glossary/provider-vs-deployer": [
+    {
+      "location": "head.title",
+      "text": "What is the difference between a provider and a deployer? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Provider vs deployer is the EU AI Act split between the company that builds an AI system and the company that runs it. Most of the Act&#39;s paperwork depends on which of the two roles a company holds."
+    },
+    {
+      "location": "body.p",
+      "text": "Article 3 defines a provider by two acts done together. The first is developing the system, or having someone else develop it. The second is placing it on the market or putting it into service, under the provider&#39;s own name or trademark. Payment is irrelevant. Giving the system away under your o"
+    },
+    {
+      "location": "body.p",
+      "text": "A deployer is defined by use, not branding: using the system under the deployer&#39;s own authority. The only carve-out is personal, non-professional activity. A company using a tool internally is a deployer even if it never touches a customer."
+    },
+    {
+      "location": "body.p",
+      "text": "That test has a sharp edge. A company that fine-tunes a vendor&#39;s model and ships the result under its own product name has made itself the provider of that product. It does not matter that it built none of the underlying model. Owning the brand is what matters, not how much of the system the com"
+    },
+    {
+      "location": "body.p",
+      "text": "Run the provider-or-deployer test per system, not per company. Rebranding one vendor\u2019s model can make a company a provider for that product while it stays a deployer for everything else it merely uses. Write the answer into the AI register alongside the risk tier, since a security questionnaire will"
+    }
+  ],
+  "/glossary/red-teaming": [
+    {
+      "location": "head.title",
+      "text": "What is red teaming for an AI system? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "NIST&#39;s generative AI profile recommends red teaming as a check against specific categories of harm, including information leakage and harmful content generation. Those failures depend on someone actively trying to cause them; they rarely show up in ordinary use. The finding that matters is the o"
+    },
+    {
+      "location": "body.p",
+      "text": "Budget real time, not an afternoon, for someone to actively try prompt injection, data extraction and off-limits requests. Do it against the actual live system, not a sanitised demo. Write down exactly what broke, and fix the underlying guardrail, not just the one example that happened to get tried."
+    }
+  ],
+  "/glossary/retrieval-augmented-generation": [
+    {
+      "location": "head.title",
+      "text": "What is retrieval augmented generation? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "OWASP, the group that publishes widely used security-risk lists, tracks this as its own risk category. In a shared vector database, one customer&#39;s data can leak into another customer&#39;s results. Embeddings themselves can sometimes be inverted, too, to recover the source text they were built f"
+    },
+    {
+      "location": "body.p",
+      "text": "Control access at the document-store level, not only at the chat interface. RAG will surface anything in the index to anyone who can ask the right question, regardless of who is meant to see it. Treat the document store itself as a data-classification boundary. Check what happens when a document con"
+    }
+  ],
+  "/glossary/serious-incident-reporting": [
+    {
+      "location": "head.title",
+      "text": "What counts as a serious incident under the EU AI Act? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "The duty falls on the provider, the company that built the system, and sometimes on the deployer, the company running it. It applies once a malfunction leads to death, serious harm, or a serious breach of someone&#39;s fundamental rights."
+    },
+    {
+      "location": "body.p",
+      "text": "Once the report is filed, the provider has to investigate: assess the risk, take corrective action, and cooperate with the authority. It cannot alter the system in a way that would affect the investigation&#39;s findings without telling the authority first. The duty also covers serious harm to prope"
+    },
+    {
+      "location": "body.p",
+      "text": "Decide in advance, in writing, who has the authority to judge that an incident is serious enough to report, rather than leaving that call to whoever notices the problem first. Preserve the system\u2019s state at the time of the incident for investigation, instead of immediately patching it away. The Frac"
+    }
+  ],
+  "/glossary/shadow-ai": [
+    {
+      "location": "head.title",
+      "text": "What is shadow AI? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Shadow AI is any AI tool an employee uses for company work without IT or security&#39;s knowledge. Examples range from a personal chatbot account to a browser extension or a locally run model."
+    },
+    {
+      "location": "body.p",
+      "text": "The hardest form to spot is a model downloaded and run locally on a laptop. It never crosses the network as a request to a known AI vendor. The same problem shows up wherever an employee reaches for a tool without asking. A developer might call a model&#39;s API directly from a side project. A brows"
+    }
+  ],
+  "/glossary/sub-processor": [
+    {
+      "location": "head.title",
+      "text": "What is a sub-processor? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "A sub-processor is a vendor an AI provider hands a company&#39;s data to behind the scenes. The model provider behind a SaaS tool is a common example. GDPR Article 28 requires the provider to get the customer&#39;s permission, and to bind the sub-processor to the same data protections by contract."
+    },
+    {
+      "location": "body.p",
+      "text": "The chain does not stop at one level either. The processor often runs its own infrastructure through a further sub-processor, such as a cloud host or a fine-tuning partner. That passes the same flow-down obligation another level down. Asking for the sub-processor list is really asking how many hops "
+    },
+    {
+      "location": "body.p",
+      "text": "Ask every AI vendor for its sub-processor list, and how it notifies customers of a change. Then check honestly: does the notice give a real chance to object, or just a record that it happened? Fold the answer into the AI register entry for that vendor, next to the data classification of what reaches"
+    }
+  ],
+  "/glossary/technical-documentation": [
+    {
+      "location": "head.title",
+      "text": "What is technical documentation under the EU AI Act? \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "The EU AI Act sets the content directly in Annex IV, rather than leaving it to the provider&#39;s judgement. A national authority or notified body has to be able to assess it without relying on the provider&#39;s own explanation. Article 11 lets a small or micro enterprise use a simplified version o"
+    },
+    {
+      "location": "body.p",
+      "text": "Start the document on the first day of build, recording design decisions as they are made. Reconstructing the reasoning behind a choice months later is far harder than writing it down at the time. Version it alongside the system itself, so the documentation for a given release actually matches what "
+    }
+  ],
+  "/imprint": [
+    {
+      "location": "head.title",
+      "text": "Imprint \u2014 meshin.co"
+    }
+  ],
+  "/now": [
+    {
+      "location": "head.title",
+      "text": "Now \u2014 meshin.co"
+    }
+  ],
+  "/pricing": [
+    {
+      "location": "head.title",
+      "text": "Pricing \u2014 meshin.co"
+    }
+  ],
+  "/privacy": [
+    {
+      "location": "head.title",
+      "text": "Privacy \u2014 meshin.co"
+    }
+  ],
+  "/resources": [
+    {
+      "location": "head.title",
+      "text": "Resources \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "kit \u00b7 v0.1 \u00b7 MIT"
+    },
+    {
+      "location": "body.p",
+      "text": "scorecard \u00b7 v0.1 \u00b7 MIT"
+    },
+    {
+      "location": "body.p",
+      "text": "template \u00b7 v0.1 \u00b7 MIT"
+    }
+  ],
+  "/resources/agent-evals-ci-starter": [
+    {
+      "location": "head.title",
+      "text": "Agent Evals CI Starter \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "A CI workflow and an eval case format for one agentic workflow. The same discipline sits inside the 90-Day Production Sprint. A prompt or model change should not merge without passing a test set first."
+    },
+    {
+      "location": "body.p",
+      "text": "The tags borrow their shape from OWASP\u2019s Top 10 for Large Language Model Applications. Prompt injection and excessive agency (the agent doing something nobody asked it to) show up in a support agent as often as in a public chatbot. A tagged case catches the regression either way."
+    },
+    {
+      "location": "body.p",
+      "text": "It is not a considered eval set on its own. A handful of cases pulled from real conversations tests more than a long list invented at a desk. The starter takes no position on which cases you pick, and that part still maps to the MEASURE function (one of the framework\u2019s four functions) in NIST\u2019s AI R"
+    },
+    {
+      "location": "body.p",
+      "text": "OWASP \u00b7 retrieved 2026-09-08"
+    },
+    {
+      "location": "body.p",
+      "text": "NIST \u00b7 retrieved 2026-09-08"
+    }
+  ],
+  "/resources/ai-governance-starter-kit": [
+    {
+      "location": "head.title",
+      "text": "AI Governance Starter Kit \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "ISO/IEC \u00b7 retrieved 2026-09-08"
+    }
+  ],
+  "/resources/ai-readiness-scorecard": [
+    {
+      "location": "head.title",
+      "text": "AI Readiness Scorecard \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Copy the table into a spreadsheet or your own wiki. Score each axis yourself, or better, ask three people to score it separately and compare notes. A gap between an engineer&#39;s score and a board member&#39;s score is often more telling than the total."
+    },
+    {
+      "location": "body.p",
+      "text": "Five axes, scored from zero to three, that give you a rough position before you pay anyone to check it properly. The axes match the ones in the AI Readiness &#x26; Risk Assessment. This is the self-administered version, without the evidence behind it."
+    },
+    {
+      "location": "body.p",
+      "text": "The five axes are not a substitute for the NIST AI Risk Management Framework (AI RMF) or ISO/IEC 42001. They are a rougher pass at the same territory, built to take an afternoon rather than an audit."
+    }
+  ],
+  "/resources/build-vs-buy-ai-kit": [
+    {
+      "location": "head.title",
+      "text": "Build vs Buy AI Kit \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Weight the six criteria for your situation, score build and buy against each one, and let the total argue with your gut feeling. A bought tool still needs an owner and a place in your AI register."
+    },
+    {
+      "location": "body.p",
+      "text": "NIST\u2019s AI Risk Management Framework (AI RMF) treats a vendor\u2019s model the same as one you trained, under its MAP function (one of the framework\u2019s four functions). The risk to your customer does not care who wrote the code."
+    },
+    {
+      "location": "body.p",
+      "text": "It is not a procurement process, and it will not pick the vendor for you. It decides one thing: whether the job belongs inside your codebase or inside someone else\u2019s product. This is the call the Fractional CAIO Retainer reviews every quarter, alongside the shadow AI a team already bought without as"
+    }
+  ],
+  "/resources/llm-gateway-governance-config": [
+    {
+      "location": "head.title",
+      "text": "LLM Gateway Governance Config \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "A policy file for whichever LLM gateway you run, hosted or self-built. It is the config, not the gateway itself. The decisions live in a file your team reviews, not in a script only one engineer remembers."
+    },
+    {
+      "location": "body.p",
+      "text": "The logging schema borrows its shape from the EU AI Act\u2019s Article 12, which requires automatic event logs for high-risk systems. Not every call through a gateway is high-risk. The habit costs little to build in now. It is expensive to retrofit once a regulator or a customer asks first."
+    },
+    {
+      "location": "body.p",
+      "text": "The allowed_models and log_retention keys map to two NIST SP 800-53 control families: Access Control and Audit and Accountability. A procurement questionnaire is often built from this catalogue, even when nobody names it."
+    },
+    {
+      "location": "body.p",
+      "text": "It is not a gateway, and it will not stop a determined engineer from calling a model directly. It makes an unrouted call a shadow AI finding. That is the layer the 90-Day Production Sprint puts in front of a workflow before it counts as production."
+    },
+    {
+      "location": "body.p",
+      "text": "EUR-Lex \u00b7 retrieved 2026-09-08"
+    }
+  ],
+  "/search": [
+    {
+      "location": "head.title",
+      "text": "Search \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Search needs JavaScript. Without it, the writing index, theglossary, theresource list, thequestions and answers and thecase studies name everything on the site."
+    }
+  ],
+  "/security": [
+    {
+      "location": "head.title",
+      "text": "Security \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Email hello@meshin.co with what you found and how to reproduce it. I reply within two working days and I will tell you when it is fixed. No bounty, no legal threats, and credit on request."
+    }
+  ],
+  "/services": [
+    {
+      "location": "head.title",
+      "text": "Services \u2014 meshin.co"
+    }
+  ],
+  "/services/90-day-production-sprint": [
+    {
+      "location": "head.title",
+      "text": "90-Day Production Sprint \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "Evals in CI apply the MEASURE function (one of the framework\u2019s four functions) inside the NIST AI Risk Management Framework (AI RMF) to one production workflow instead of a whole AI programme. A dashboard with cost per outcome is evidence a customer\u2019s security team can check, not a claim they have t"
+    }
+  ],
+  "/services/ai-readiness-and-risk-assessment": [
+    {
+      "location": "head.title",
+      "text": "AI Readiness &amp; Risk Assessment \u2014 meshin.co"
+    },
+    {
+      "location": "body.h1",
+      "text": "AI Readiness &amp; Risk Assessment"
+    }
+  ],
+  "/services/fractional-caio-retainer": [
+    {
+      "location": "head.title",
+      "text": "Fractional CAIO Retainer \u2014 meshin.co"
+    },
+    {
+      "location": "body.p",
+      "text": "The register, the policy and the classification are the GOVERN function (one of the framework\u2019s four functions) of the NIST AI Risk Management Framework (AI RMF), applied to one company, not a whole sector. ISO/IEC 42001 asks for the same three documents inside a certified management system. This re"
+    }
+  ],
+  "/styleguide": [
+    {
+      "location": "head.title",
+      "text": "Styleguide \u2014 meshin.co"
+    },
+    {
+      "location": "body.h1",
+      "text": "Styleguide"
+    },
+    {
+      "location": "body.p",
+      "text": "01 Sept 2026 \u00b7 7 min read \u00b7 AI governance"
+    },
+    {
+      "location": "body.p",
+      "text": "18 Aug 2026 \u00b7 5 min read"
+    },
+    {
+      "location": "body.p",
+      "text": "ISO \u00b7 retrieved 2026-09-08"
+    }
+  ],
+  "/terms": [
+    {
+      "location": "head.title",
+      "text": "Terms \u2014 meshin.co"
+    }
+  ]
+}

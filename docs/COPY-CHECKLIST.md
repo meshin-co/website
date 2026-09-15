@@ -46,7 +46,7 @@ not support it, the row says so, and I have already removed or softened it — t
 | 3.4 | Fee-credit window for the Assessment | credited against a Sprint starting within three months | |
 | 3.5 | Cancellation notice on the retainer | thirty days | |
 | 3.6 | Travel billed at cost, agreed in advance | yes | |
-| 3.7 | Typical retainer length before handover | "twelve to twenty-four months" — reads as a track record you may not have yet | |
+| 3.7 | Typical retainer length before handover | **REMOVED 2026-09-15:** `home.ts` and `src/data/service/fractional-caio-retainer.md` (deliverable + FAQ answer) no longer state a specific duration ("twelve to twenty-four months" / "12 to 24 months" / "two years") — the unconfirmed track-record claim is gone, wording now just says the engagement is built to end with a named internal owner | |
 | 3.8 | Assessment interview load: how many conversations, how long each | "six to ten conversations", "two hours each" | |
 | 3.9 | Fit call: free, thirty minutes, booked at cal.com/meshin | yes | |
 | 3.10 | Written questions answered "usually the same day" — still true? | yes | |

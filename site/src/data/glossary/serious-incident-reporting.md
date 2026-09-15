@@ -3,7 +3,7 @@ title: What counts as a serious incident under the EU AI Act?
 term: Serious incident reporting
 description: Serious incident reporting is the EU AI Act duty to tell a regulator, fast, when a high-risk system causes real harm or a rights breach.
 publishDate: 2026-09-08
-updatedDate: 2026-09-08
+updatedDate: 2026-09-15
 shortDefinition: Serious incident reporting is the EU AI Act duty to notify the relevant national authority after a high-risk AI system causes serious harm. It falls on the provider, the company that built the system, and sometimes the deployer, the company running it. The clock is tight and legally fixed.
 definition: |-
   The duty falls on the provider, the company that built the system, and sometimes on the deployer, the company running it. It applies once a malfunction leads to death, serious harm, or a serious breach of someone's fundamental rights.
@@ -24,7 +24,7 @@ sources:
 
 ## Why it comes up
 
-It surprises companies who assume that deploying a high-risk system is a one-time compliance exercise, the same way a data-breach notification law surprises a company that has never had to report one before. A board's real question is usually simpler - if something goes badly wrong, does the company already know who calls the regulator, or would that decision be made live, under pressure, by whoever happens to be in the room.
+It surprises companies who assume that deploying a high-risk system is a one-time compliance exercise. That is the same surprise a data-breach notification law gives a company that has never had to report one before. A board's real question is usually simpler. If something goes badly wrong, does the company already know who calls the regulator - or would that decision be made live, under pressure, by whoever happens to be in the room?
 
 ## What to do about it
 

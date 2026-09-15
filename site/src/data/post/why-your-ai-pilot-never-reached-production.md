@@ -2,7 +2,7 @@
 title: Why your AI pilot never reached production
 description: 'Most AI pilots stall on ownership, data rules and a missing outcome metric, not the model. Here is what has to be true before one reaches production.'
 publishDate: 2026-09-08
-updatedDate: 2026-09-08
+updatedDate: 2026-09-15
 shortAnswer: 'Most AI pilots stall because no single person owns the risk, legal has never decided which data may reach a vendor and success has no number attached to it. A pilot reaches production once someone is accountable for it, the data path is classified, an outcome is measured and a regression triggers an automatic rollback.'
 fullAnswer: 'An AI pilot never reached production because of an organisational gap, not a technical one. A demo only has to impress the person running it. Production has to survive a change of prompt, a change of model and a change of the person who built it, without anyone noticing except a number on a dashboard. Six conditions decide whether that gap closes. One named owner still answers for the system a year after launch, and a data classification signed off by someone with authority says what a vendor may see. An outcome number moves when the system works, matched by an eval that runs in the build pipeline before every release. Tracing shows which step produced a bad answer, and a rollback fires on a threshold, not an argument. Most stalled pilots are missing the first two, and the rest cannot be built until those exist.'
 keyTakeaways:
@@ -76,7 +76,7 @@ Six conditions turn a pilot into something a platform team will actually run. No
 | Tracing and cost per outcome. | Every run logged well enough to reconstruct, with a cost a finance team can read.           | Nobody can say what a run costs, or which step produced a bad answer.                      |
 | Rollback.                     | A rehearsed way to revert to the last prompt, model or version within minutes.              | The team improvises during the first real incident instead of using a tested path.         |
 
-For a system that touches decisions about people, the EU AI Act sets a similar bar for higher-risk uses: a documented risk-management process, records that make a decision traceable and a human who can step in. Meeting the six conditions above gets most of the way there even for teams the Act does not yet cover.
+For a system that touches decisions about people, the EU AI Act sets a similar bar for higher-risk uses. It requires a documented risk-management process, records that make a decision traceable and a human who can step in. Meeting the six conditions above gets most of the way there even for teams the Act does not yet cover.
 
 ## How would I sequence it?
 
@@ -102,6 +102,6 @@ Your risk appetite is still your call, not this sequence's. Two companies with t
 
 It does not replace a legal review of your contracts with model vendors. Classifying data tells your lawyers what question to ask; it does not answer whether a specific vendor's terms are acceptable, and that answer changes as vendors change their terms.
 
-The underlying model is exactly as reliable as it was before this sequence started. Evals catch regressions against the cases you thought to test, not every way a general-purpose model can fail on a case nobody wrote down, which is why the rollback path matters as much as the evals do.
+The underlying model is exactly as reliable as it was before this sequence started. Evals catch regressions against the cases you thought to test. They do not catch every way a general-purpose model can fail on a case nobody wrote down, which is why the rollback path matters as much as the evals do.
 
 It does not scale to five processes at once. The sequence above is built for one workflow with one owner. Running it for a second or third process repeats the same ninety days; it does not shortcut them.

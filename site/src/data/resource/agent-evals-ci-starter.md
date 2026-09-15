@@ -3,9 +3,9 @@ title: Agent Evals CI Starter
 name: Agent Evals CI Starter
 type: kit
 repoUrl: https://github.com/meshin-co/agent-evals-ci-starter
-description: 'A starter CI pipeline for agent evals. It runs on every pull request and blocks a bad merge before it ships.'
+description: 'A starter CI pipeline for agent evals. It runs on every pull request and blocks a bad merge before it ships, using a plain YAML case format.'
 publishDate: 2026-09-08
-updatedDate: 2026-09-08
+updatedDate: 2026-09-15
 version: '0.1'
 license: MIT
 status: Written out in full on this page. A repository copy is not published yet.
@@ -47,4 +47,4 @@ The tags borrow their shape from [OWASP's Top 10 for Large Language Model Applic
 
 ## What it is not
 
-It is not a considered eval set on its own. A handful of cases pulled from real conversations tests more than a long list invented at a desk. The starter takes no position on which cases you pick, and that part still maps to the MEASURE function (one of the framework's four areas) in [NIST's AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework).
+It is not a considered eval set on its own. A handful of cases pulled from real conversations tests more than a long list invented at a desk. The starter takes no position on which cases you pick, and that part still maps to the MEASURE function (one of the framework's four functions) in [NIST's AI Risk Management Framework (AI RMF)](https://www.nist.gov/itl/ai-risk-management-framework).

@@ -127,9 +127,9 @@ export const STATIC_PAGE_CATALOG = [
   },
   {
     path: '/blog/tags',
-    title: 'Writing topics',
+    title: 'Tags',
     file: 'src/pages/blog/tags.astro',
-    description: 'Every topic tag used across the writing, each with its own page.',
+    description: 'The tags used across the writing, with how many articles carry each one.',
   },
   {
     path: '/about',
@@ -150,7 +150,7 @@ export const STATIC_PAGE_CATALOG = [
     title: 'Pricing',
     file: 'src/pages/pricing.astro',
     description:
-      'A two-week Assessment, a 90-Day Production Sprint, and a monthly Fractional CAIO Retainer. Fixed structures, no hourly billing.',
+      'Three fixed structures and no hourly billing: a two-week Assessment, a 90-Day Sprint, and a monthly Retainer. Every fee reaches you in writing before work starts.',
   },
   {
     path: '/faq',
@@ -164,11 +164,11 @@ export const STATIC_PAGE_CATALOG = [
     title: 'Contact',
     file: 'src/pages/contact.astro',
     description:
-      'Book a 30-minute fit call or email hello@meshin.co. Remote worldwide, on site when it earns the trip.',
+      'Book a 30-minute fit call or email hello@meshin.co. Remote worldwide, on site when the trip is worth it.',
   },
   {
     path: '/ai-policy',
-    title: 'AI policy',
+    title: 'AI acceptable-use policy',
     file: 'src/pages/ai-policy.astro',
     description:
       'My own acceptable-use policy for AI systems: what data may reach a vendor, what may not, and who decides.',
@@ -201,7 +201,7 @@ export const STATIC_PAGE_CATALOG = [
     path: '/terms',
     title: 'Terms',
     file: 'src/pages/terms.astro',
-    description: 'What this site is, what the published prices mean, and which terms actually govern an engagement.',
+    description: 'What this site is, why no price appears on it, and which terms actually govern an engagement.',
   },
   {
     path: '/search',
@@ -217,7 +217,7 @@ export const STATIC_PAGE_CATALOG = [
   },
   {
     path: '/404',
-    title: 'Not found',
+    title: 'Page not found',
     file: 'src/pages/404.astro',
     description: 'This page does not exist on meshin.co. Start from the home page.',
   },

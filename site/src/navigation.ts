@@ -61,9 +61,13 @@ export const footerData = {
   ],
   secondaryLinks: [{ text: 'Imprint', href: getPermalink('/imprint') }],
   socialLinks: [
-    { ariaLabel: 'LinkedIn', icon: 'tabler:brand-linkedin', href: 'https://www.linkedin.com/in/meshin/' },
-    { ariaLabel: 'GitHub', icon: 'tabler:brand-github', href: 'https://github.com/meshin-dev' },
-    { ariaLabel: 'Email', icon: 'tabler:mail', href: 'mailto:hello@meshin.co' },
+    {
+      ariaLabel: 'View my LinkedIn profile',
+      icon: 'tabler:brand-linkedin',
+      href: 'https://www.linkedin.com/in/meshin/',
+    },
+    { ariaLabel: 'View my GitHub profile', icon: 'tabler:brand-github', href: 'https://github.com/meshin-dev' },
+    { ariaLabel: 'Email me', icon: 'tabler:mail', href: 'mailto:hello@meshin.co' },
   ],
   footNote: `© ${new Date().getFullYear()} meshin.co`,
 };

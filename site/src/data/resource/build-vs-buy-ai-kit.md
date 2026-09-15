@@ -3,9 +3,9 @@ title: Build vs Buy AI Kit
 name: Build vs Buy AI Kit
 type: kit
 repoUrl: https://github.com/meshin-co/build-vs-buy-ai-kit
-description: 'The build vs buy AI kit: a one-page worksheet of the criteria I work through before recommending either path.'
+description: 'The build vs buy AI kit: a one-page worksheet of the six criteria I work through before recommending either path, and how to score them.'
 publishDate: 2026-09-08
-updatedDate: 2026-09-08
+updatedDate: 2026-09-15
 version: '0.1'
 license: MIT
 status: Written out in full on this page. A repository copy is not published yet.
@@ -41,7 +41,7 @@ A worksheet for one recurring decision: build the workflow yourself, or buy a ve
 
 Weight the six criteria for your situation, score build and buy against each one, and let the total argue with your gut feeling. A bought tool still needs an owner and a place in your [AI register](/glossary/ai-register).
 
-[NIST's AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework) treats a vendor's model the same as one you trained, under its MAP function (one of the framework's four areas). The risk to your customer does not care who wrote the code.
+[NIST's AI Risk Management Framework (AI RMF)](https://www.nist.gov/itl/ai-risk-management-framework) treats a vendor's model the same as one you trained, under its MAP function (one of the framework's four functions). The risk to your customer does not care who wrote the code.
 
 ## What it is not
 

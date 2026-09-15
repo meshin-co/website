@@ -2,9 +2,9 @@
 title: 90-Day Production Sprint
 name: 90-Day Production Sprint
 tagline: One process live in production, with evals in CI.
-description: A 90-day sprint that puts one agentic workflow into production with evals in CI, tracing, and a named owner.
+description: A 90-day sprint that puts one agentic workflow into production with evals in CI, tracing, a named owner, and a rollback path.
 publishDate: 2026-09-08
-updatedDate: 2026-09-08
+updatedDate: 2026-09-15
 shortAnswer: A 90-day production sprint is built to get one process running in production and keep it there. I build it with your engineers rather than beside them, so the team can change it after I leave. You get evals in continuous integration, tracing, a cost per outcome your finance team can read and a rollback path.
 feeShape: Fixed scope, quoted once from the statement of work
 duration: 90 days
@@ -75,4 +75,4 @@ The workflow, the eval suite, the traces, and an engineer on your team who has b
 
 ## Where this maps to a standard
 
-Evals in CI apply the MEASURE function (one of the framework's four areas) inside the [NIST AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework) to one production workflow instead of a whole AI programme. A dashboard with cost per outcome is evidence a customer's security team can check, not a claim they have to trust.
+Evals in CI apply the MEASURE function (one of the framework's four functions) inside the [NIST AI Risk Management Framework (AI RMF)](https://www.nist.gov/itl/ai-risk-management-framework) to one production workflow instead of a whole AI programme. A dashboard with cost per outcome is evidence a customer's security team can check, not a claim they have to trust.

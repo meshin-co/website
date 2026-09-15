@@ -1,9 +1,9 @@
 ---
 title: What is an AI register?
 term: AI register
-description: An AI register is a company's own inventory of every AI system it uses, who owns each one, and how risky it is.
+description: An AI register is a company's own inventory of every AI system it builds, buys or uses, naming its owner and how risky it is.
 publishDate: 2026-09-08
-updatedDate: 2026-09-08
+updatedDate: 2026-09-15
 shortDefinition: An AI register is a company's own inventory of every AI system it builds, buys or uses, listing what it does, what data it touches, who owns it and how risky it is.
 definition: |
   A working entry covers what a system does, what data it can see, which vendor or model sits behind it, who owns it, and a rough risk tier. That applies as much to a vendor tool an ops team subscribed to on a card as to a flagship product.

@@ -2,12 +2,12 @@
 title: What actually belongs in an AI acceptable use policy
 description: 'What a working AI acceptable use policy has to decide, what it must refuse to do, and how a company of 30 to 300 people gets staff to follow it.'
 publishDate: 2026-09-08
-updatedDate: 2026-09-08
-shortAnswer: 'An AI acceptable use policy for a company of 30 to 300 people classifies which data may reach which AI vendor, names who approves a new tool, and requires review before AI output reaches a customer. It must not try to ban AI outright or list every tool by name. It also names who decides after a breach.'
+updatedDate: 2026-09-15
+shortAnswer: 'An AI acceptable use policy for a company of 30 to 300 people classifies which data may reach which AI vendor and names who approves a new tool. It also requires review before AI output reaches a customer. It must not try to ban AI outright or list every tool by name. It also names who decides after a breach.'
 fullAnswer: 'An AI acceptable use policy only earns its place once it decides who approves a new AI tool and which data tier may reach which category of vendor. It also decides whether a person checks AI output before it reaches a customer or a contract, and when a customer must be told they are dealing with an AI system. Most templates answer the first two questions and stay quiet on the rest. That is exactly why staff read them once and then ignore them. A policy this size needs one named owner, not a committee, and a review interval short enough to catch the tool people started using without asking. ISO/IEC 42001 treats a policy like this as one part of a management system, not a standalone document. The EU AI Act already requires disclosure once an AI system talks to a customer directly. Skip the enforcement clause and none of the rest holds.'
 keyTakeaways:
   - 'A policy earns compliance when it names an owner, a data tier and a request path for a new tool, not when it lists every AI product by name.'
-  - 'The EU AI Act already requires disclosure once an AI system talks to a customer directly or generates content someone could mistake for work a human did, regardless of whether the system counts as high-risk.'
+  - 'The EU AI Act already requires disclosure once an AI system talks to a customer directly or generates content someone could mistake for work a human did. That holds regardless of whether the system counts as high-risk.'
   - 'Banning AI outright does not remove the risk. It moves the same activity out of sight, which is how shadow AI starts.'
   - 'A rule with nobody named to decide what happens after a breach is a suggestion, and staff work that out within days.'
   - 'ISO/IEC 42001 treats the policy as part of a recurring cycle: owned, reviewed on a schedule, and checked against what the AI register actually shows people using.'
@@ -64,15 +64,15 @@ It also requires labelling content the system generated, whether or not that sys
 
 ## What should the policy refuse to try to do?
 
-A policy that tries to be the technical control fails twice: once because a paragraph of text cannot stop a paste into a browser, and once because staff read that overreach as proof the whole document is for show. Access limits, contract terms and vendor settings do the technical work. The policy states the rule those controls exist to support.
+A policy that tries to be the technical control fails twice. It fails once because a paragraph of text cannot stop a paste into a browser, and again because staff read that overreach as proof the whole document is for show. Access limits, contract terms and vendor settings do the technical work. The policy states the rule those controls exist to support.
 
-Listing every approved tool by name reads as complete on the day it is published and is wrong within weeks, because a new model or a new vendor account always arrives faster than a document gets updated. A policy built around named tools also implies that anything missing from the list is quietly fine, which is the opposite of what a reviewer wants to see.
+Listing every approved tool by name reads as complete on the day it is published. It is wrong within weeks, because a new model or a new vendor account always arrives faster than a document gets updated. A policy built around named tools also implies that anything missing from the list is quietly fine, which is the opposite of what a reviewer wants to see.
 
 An outright ban is the easiest policy to write and the least effective one to run. It does not remove the reason someone went looking for an AI tool in the first place. It just moves that search out of sight, where it is much harder to see or govern.
 
 ## What do you do about the tools staff are already using?
 
-By the time a policy is drafted, some staff are already drafting client emails in a personal chatbot account, running a browser extension nobody vetted, or building a habit around a coding assistant they picked themselves, without asking anyone first. That is [shadow AI](/glossary/shadow-ai), and treating it as rare is the first mistake a policy can make.
+By the time a policy is drafted, some staff are already using AI without asking anyone first. That means drafting client emails in a personal chatbot account, running a browser extension nobody vetted, or building a habit around a coding assistant they picked themselves. That is [shadow AI](/glossary/shadow-ai), and treating it as rare is the first mistake a policy can make.
 
 Two moves fix more of it than a warning email does. First, make the approved path faster than the workaround: a fast yes for a low-risk tool beats a slow review nobody wants to wait for. Second, check instead of asking. Checking browser extensions, expense claims and what the company actually pays AI vendors shows what people are really running, which beats trusting a self-reported survey.
 
@@ -86,7 +86,7 @@ That decision runs through the disciplinary process HR already has for any other
 
 ## Who should own it, and how does it stay current?
 
-The same person who is already accountable for AI risk generally should hold this document, for the reason a shared inbox cannot hold it: someone has to be answerable when a customer or an auditor asks a direct question. [ISO/IEC 42001](/glossary/iso-iec-42001) treats a policy like this as one part of a management system, reviewed on a schedule and checked against a live inventory.
+The same person who is already accountable for AI risk generally should hold this document. A shared inbox cannot hold it, because someone has to be answerable when a customer or an auditor asks a direct question. [ISO/IEC 42001](/glossary/iso-iec-42001) treats a policy like this as one part of a management system, reviewed on a schedule and checked against a live inventory.
 
 A review interval only works if it is tied to something that actually changes: a new hire, a new vendor account, a client contract that names a data rule of its own. Quarterly is a reasonable default for a company this size. The exact interval matters less than the fact that one exists and someone is accountable for keeping it.
 

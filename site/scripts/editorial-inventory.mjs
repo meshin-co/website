@@ -16,8 +16,11 @@ const NON_PROSE_FIELDS = new Set([
 
 const DATE_OR_URL = /^(\d{4}-\d{2}-\d{2}|https?:\/\/|\/)/;
 
+const DESIGN_TOKEN =
+  /^(IBM Plex|Fraunces|SFMono|ui-(sans|serif|monospace)|system-ui)\b|(^|,\s)(sans-serif|serif|monospace)$/;
+
 const CODE_FRAGMENT =
-  /(&&|\|\||!==|===|=>|\?\?|\?\.|\$\{|\breturn\b|\bnew [A-Z]|Array<|\w+\(|\/\^|^\s*[;.]|\w:\s*\w+\s*$)/;
+  /(&&|\|\||!==|===|=>|\?\?|\?\.|\$\{|\breturn\b|\bnew [A-Z]\w*\(|Array<|\.\w+\(|\)\s*,?\s*\]|---\s*$|\/\^|^\s*[;.!]|\);|\w:\s*\w+\s*$)/;
 
 const digitHeavy = (value) => value.replace(/[^0-9]/g, '').length / value.length > 0.2;
 
@@ -36,6 +39,7 @@ const isProseValue = (value) =>
   !CODE_FRAGMENT.test(value) &&
   !digitHeavy(value) &&
   !isUtilityClassList(value) &&
+  !DESIGN_TOKEN.test(value.trim()) &&
   /[a-z]{3}/.test(value);
 
 const STRUCTURAL_ATTRIBUTES = new Set([
@@ -66,6 +70,10 @@ const STRUCTURAL_ATTRIBUTES = new Set([
   'crossorigin',
   'decoding',
   'fetchpriority',
+  'media',
+  'sizes',
+  'integrity',
+  'referrerpolicy',
 ]);
 
 const clean = (value) => value.replace(/\s+/g, ' ').trim();
@@ -114,20 +122,41 @@ export function componentRows(files) {
   });
 }
 
-const QUOTED = [
-  /(\w+)\s*[:=]\s*'((?:[^'\\]|\\.)*)'/g,
-  /(\w+)\s*[:=]\s*"((?:[^"\\]|\\.)*)"/g,
-  /(\w+)\s*[:=]\s*`((?:[^`\\]|\\.)*)`/g,
-];
+function templateLiteralRows(file, source) {
+  return [...source.matchAll(/(\w+)\s*[:=]\s*`((?:[^`\\]|\\.)*)`/g)].flatMap(([, key, body]) =>
+    body
+      .split(/\$\{[^}]*\}/)
+      .map((part) => clean(part))
+      .filter((part) => /^[A-Za-z]/.test(part) && isProseValue(part))
+      .map((part) => row(file, `constant.${key}`, part))
+  );
+}
+
+const QUOTED = [/(\w+)\s*[:=]\s*'((?:[^'\\]|\\.)*)'/g, /(\w+)\s*[:=]\s*"((?:[^"\\]|\\.)*)"/g];
+
+const ARRAY_LITERAL = /(\w+)\s*[:=]\s*\[([\s\S]*?)\]/g;
+const QUOTED_ITEM = /(['"`])((?:[^'"`\\]|\\.)*)\1/g;
+
+function arrayRows(file, source) {
+  return [...source.matchAll(ARRAY_LITERAL)]
+    .filter(([, key]) => !STRUCTURAL_ATTRIBUTES.has(key))
+    .flatMap(([, key, body]) =>
+      [...body.matchAll(QUOTED_ITEM)]
+        .map(([, , value]) => value)
+        .filter((value) => isProseValue(value))
+        .map((value) => row(file, `constant.${key}`, value))
+    );
+}
 
 export function constantRows(files) {
   return files.flatMap(({ file, source: raw }) => {
     const source = withoutComments(raw);
-    return QUOTED.flatMap((pattern) =>
+    const keyed = QUOTED.flatMap((pattern) =>
       [...source.matchAll(pattern)]
         .filter(([, key, value]) => !STRUCTURAL_ATTRIBUTES.has(key) && isProseValue(value))
         .map(([, key, value]) => row(file, `constant.${key}`, value))
     );
+    return [...keyed, ...arrayRows(file, source), ...templateLiteralRows(file, source)];
   });
 }
 
@@ -200,7 +229,11 @@ const builtText = (pages) =>
     text: normalise([stripMarkup(html), ...[...html.matchAll(SHIPPED_ATTRIBUTES)].map((match) => match[1])].join(' ')),
   }));
 
-const stripMarkup = (html) => html.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]+>/g, ' ');
+const stripMarkup = (html) =>
+  html
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<script\b(?![^>]*application\/ld\+json)[^>]*>[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ');
 
 export function deadCopy(rows, pages) {
   const shipped = builtText(pages);
@@ -232,12 +265,17 @@ export function untraceableText(pages, rows) {
       .filter(
         (text) =>
           text !== '' &&
+          text.split(/\s+/).length >= 4 &&
           !isComposedMetadata(text) &&
           !sources.some((source) => {
-            const shipped = normalise(text);
-            return (
-              source.includes(shipped.slice(0, 80)) || (source.split(/\s+/).length >= 4 && shipped.includes(source))
-            );
+            const shipped = normalise(text).replace(/[.,;:]$/, '');
+            if (source.includes(shipped.slice(0, 80))) return true;
+            if (source.split(/\s+/).length >= 3 && shipped.includes(source)) return true;
+            const shippedWords = shipped.split(/\s+/).filter((word) => word.length > 2);
+            if (shippedWords.length < 4) return false;
+            const sourceWords = new Set(source.split(/\s+/));
+            const shared = shippedWords.filter((word) => sourceWords.has(word)).length;
+            return shared / shippedWords.length >= 0.7;
           })
       )
       .map((text) => ({ route, text }));

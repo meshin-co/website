@@ -2,7 +2,7 @@
 title: Evals in CI for LLM agents, without a golden answer
 description: 'How to build an eval set from production traffic, score an LLM agent without a golden answer, and fail a merge in CI when it regresses.'
 publishDate: 2026-09-08
-updatedDate: 2026-09-08
+updatedDate: 2026-09-15
 shortAnswer: 'Evals in CI run a fixed test set on every change. A regression then fails the build, the way a broken unit test does. Most agent tasks have no single right answer. Score with a rubric-based judge, a groundedness check, or a comparison against the last good version. Track the pass rate over time.'
 fullAnswer: 'Evals in CI put a fixed test set on every prompt, model, or code change. The build fails when the pass rate drops. A regression gets caught before a reviewer approves the pull request, not after a customer notices. Build the set from real production traffic. Sample across a period long enough that one quiet week does not flatter the result. Most agent tasks have no single correct answer. Score them in layers instead. Start with deterministic checks: a tool call shape, a required field, a data format. Add a reference-free judge for whether an answer is grounded in what the agent retrieved. Fall back to a comparison against the last known-good version for everything else. Treat the judge as a component that needs calibration against a human-labelled sample, not as ground truth. A cost ceiling per completed run sits in the same job as the score. An expensive change then fails the build for the same reason a wrong one does.'
 keyTakeaways:
@@ -19,7 +19,7 @@ faq:
   - q: 'Should a flaky eval block a merge the same way a clear regression does?'
     a: 'No. A check that disagrees with itself run to run is broken, not informative, and forcing it to gate a build just adds noise to the release process. Quarantine it: leave it running and visible, stop it from blocking anything, and assign someone to fix its rubric or its sampling before it rejoins the checks that actually gate a merge.'
   - q: 'Does the judge need to be a stronger model than the one being tested?'
-    a: 'Not necessarily, but many teams find a stronger judge catches subtler failures than a same-tier one, since judging is its own hard task. Weigh that against cost: the judge runs on every case in the set, every time the pipeline runs, and a large judge model on a large eval set is usually where the cost ceiling gets tested first.'
+    a: 'Not necessarily, but many teams find a stronger judge catches subtler failures than a same-tier one, since judging is its own hard task. Weigh that against cost. The judge runs on every case in the set, every time the pipeline runs, and a large judge model on a large eval set is usually where the cost ceiling gets tested first.'
 category: agentic-architecture
 tags:
   - evals-in-ci
@@ -37,15 +37,15 @@ sources:
 author: dmitri
 ---
 
-An eval suite that only runs on a laptop protects nobody. The same regression a developer catches by eye on a good day slips through on a bad one. A model provider's silent update slips through every time. Putting [an eval suite](/glossary/evals) in CI turns a habit into a gate. The pull request cannot merge until the numbers clear, whoever is watching.
+An eval suite that only runs on a laptop protects nobody. The same regression a developer catches by eye on a good day slips through on a bad one, and a model provider's silent update slips through every time. Putting [an eval suite](/glossary/evals) in CI turns a habit into a gate. The pull request cannot merge until the numbers clear, whoever is watching.
 
 ## How do you build an eval set from production traffic?
 
 Pull the first cases from what the agent has actually handled, not from what a spec said it should handle. Real traces carry the phrasing, the edge cases, and the odd multi-step requests. A person writing test data from imagination never thinks to include them. A support agent's eval set should read like a week of its own transcripts, because that is exactly what it is.
 
-Sample across a period long enough that one good or bad week does not decide the result. On only.help, my own product, the support-triage rollout built its first eval set from tickets already answered. It then found that the [first week looked better than the system really was](/case-studies/only-help-agentic-support), purely from seasonal timing. A month of traffic spans weekdays, weekends, and spikes the business already expects. That mix is a sturdier base than one convenient week.
+Sample across a period long enough that one good or bad week does not decide the result. On only.help, my own product, the support-triage rollout built its first eval set from tickets already answered. It then found that the [first week looked better than the system really was](/case-studies/only-help-agentic-support), purely from seasonal timing. A month of traffic spans weekdays, weekends, and spikes the business already expects, which is a sturdier base than one convenient week.
 
-Mix the set on purpose. Include three kinds of case: routine ones that should always pass, a handful known to be hard, and a few with no single acceptable answer. Most agent tasks in production fall into that last kind. Store the set next to the code that it tests, in a format a reviewer can read in a pull request. Change it through the same review a code change gets.
+Mix the set on purpose. Include three kinds of case: routine ones that should always pass, a handful known to be hard, and a few with no single acceptable answer. Most agent tasks in production fall into that last kind. Store the set next to the code that it tests, in a format a reviewer can read in a pull request, and change it through the same review a code change gets.
 
 Revisit the set on a fixed schedule rather than whenever someone remembers. Retire a case once the product has genuinely outgrown it. Add one the day a new failure reaches production. That keeps the set tracking how the agent is actually used.
 
@@ -55,9 +55,9 @@ Most agent tasks do not reduce to one correct string, so do not force them into 
 
 Start with deterministic checks on anything mechanical. Check whether the agent called the right tool, with a valid argument set, in a shape that downstream code can actually parse. These checks are cheap, and they never disagree with themselves. In most agentic systems, they catch a large share of regressions before a judge ever runs.
 
-OWASP's list of risks in large language model applications names excessive agency as one of the standard failure modes worth testing for. Excessive agency means an agent taking an action its task never asked for. Write a case for every tool the agent can call. Each case should check that the tool stays quiet when not needed. It should also check that the tool fires correctly when needed.
+OWASP's list of risks in large language model applications names excessive agency as one of the standard failure modes worth testing for. Excessive agency means an agent taking an action its task never asked for. Write a case for every tool the agent can call. Each case should check that the tool stays quiet when not needed, and that it fires correctly when needed.
 
-For the answer's content, add a reference-free judge. Look at the question and whatever the agent actually retrieved. Then check whether every claim in the answer traces back to a document it had in hand. This catches a fluent, confident answer that is simply not supported by anything the system looked at. That is the failure mode a plain accuracy score misses entirely.
+For the answer's content, add a reference-free judge. Look at the question and whatever the agent actually retrieved. Then check whether every claim in the answer traces back to a document it had in hand. This catches a fluent, confident answer that is not supported by anything the system looked at, which is the failure mode a plain accuracy score misses entirely.
 
 Where no rubric fits cleanly, fall back to a comparison against the last known-good version. Show a judge both outputs, blind to which one is new, and ask it to pick a winner. A judge finds picking a winner easier than defending an absolute score out of some invented scale. A win rate against a fixed baseline is also a steadier number to watch than a score with no anchor.
 
@@ -92,12 +92,12 @@ Not every check should carry the same weight. A wrong tool call and a slow respo
 
 Put a cost ceiling in the same job as the quality score. Do not put it on a separate dashboard someone checks once a week. Agent systems fail commercially long before they fail technically. Consider a tool call that retries a few times on a bad response: harmless in a demo, ruinous once real traffic hits it.
 
-Measure cost per completed run, across the whole eval set, the way you measure the pass rate. A change that makes the agent slower or more expensive without a real gain is a regression. That holds even if every other score stays green. A [90-Day Production Sprint](/services/90-day-production-sprint) puts this gate in place before a workflow takes its first real user. That is a cheaper time to find the problem than after the first invoice.
+Measure cost per completed run, across the whole eval set, the way you measure the pass rate. A change that makes the agent slower or more expensive without a real gain is a regression, even if every other score stays green. A [90-Day Production Sprint](/services/90-day-production-sprint) puts this gate in place before a workflow takes its first real user. That is a cheaper time to find the problem than after the first invoice.
 
 ## What does the pipeline do when a check fails?
 
 A failing check blocks the merge by default. The pull request gets a summary next to the diff that caused it. That summary lists which cases failed, what the agent returned, and what the check expected. Nobody reconstructs the failure from a log.
 
-Not every failure deserves the same response. A wrong tool call or an unsupported claim should stop the release outright. A latency or cost warning close to its budget can page an owner instead. So can a drop in judge-human agreement, without stopping every other change in the queue. Keep that distinction explicit in the pipeline config, not in someone's memory of which checks are actually load-bearing.
+Not every failure deserves the same response. A wrong tool call or an unsupported claim should stop the release outright. A latency or cost warning close to its budget, or a drop in judge-human agreement, can page an owner instead, without stopping every other change in the queue. Keep that distinction explicit in the pipeline config, not in someone's memory of which checks are actually load-bearing.
 
 Only a named reviewer, not the author of the change, can override a hard block. That override has to write itself into the same log the eval results live in. An override that leaves no trace is indistinguishable from no gate at all. It gets used that way the next time someone is in a hurry.

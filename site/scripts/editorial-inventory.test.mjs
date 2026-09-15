@@ -383,3 +383,162 @@ test('script and style bodies are never copy', () => {
     ['Real copy']
   );
 });
+
+test('a structural media query is not copy', () => {
+  assert.deepEqual(
+    componentRows([
+      {
+        file: 'Layout.astro',
+        source: '<meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)" />',
+      },
+    ]).map((row) => row.location),
+    []
+  );
+});
+
+test('a font stack is a design token, not copy', () => {
+  assert.deepEqual(constantRows([{ file: 'og-template.mjs', source: "const SANS_FONT = 'IBM Plex Sans';" }]), []);
+  assert.deepEqual(
+    constantRows([{ file: 'x.mjs', source: "const stack = 'ui-sans-serif, system-ui, sans-serif';" }]),
+    []
+  );
+  assert.equal(constantRows([{ file: 'x.mjs', source: "const label = 'Read the register';" }]).length, 1);
+});
+
+test('prose inside an array literal is copy, keyed by the array it belongs to', () => {
+  const rows = constantRows([
+    {
+      file: 'categories.mjs',
+      source:
+        "  body: [\n    'An agent demo is easy and production is not.',\n    'Start with evaluation, before the prompt.',\n  ],",
+    },
+  ]);
+  assert.deepEqual(
+    rows.map((row) => [row.location, row.text]),
+    [
+      ['constant.body', 'An agent demo is easy and production is not.'],
+      ['constant.body', 'Start with evaluation, before the prompt.'],
+    ]
+  );
+});
+
+test('an array of slugs or tokens is not copy', () => {
+  assert.deepEqual(constantRows([{ file: 'x.mjs', source: "tags: ['ai-governance', 'shadow-ai']," }]), []);
+});
+
+test('prose about a new AI tool is copy; a constructor call is not', () => {
+  const rows = collectionRows([
+    {
+      file: 'p.md',
+      frontmatter: {
+        fullAnswer: 'A policy earns its place once it decides who approves a new AI tool and which data may reach it.',
+        junk: 'const url = new URL(source.url).hostname',
+      },
+      body: '',
+    },
+  ]);
+  assert.deepEqual(
+    rows.map((row) => row.location),
+    ['frontmatter.fullAnswer']
+  );
+});
+
+test('a one-word label is not an untraceable paragraph, but a real short sentence still is', () => {
+  assert.deepEqual(untraceableText([{ route: '/x', html: '<main><p>Concerns</p></main>' }], []), []);
+  assert.equal(untraceableText([{ route: '/x', html: '<main><p>Nobody owns this yet.</p></main>' }], []).length, 1);
+});
+
+test('a template sentence split by an interpolation traces to its longest source fragment', () => {
+  assert.deepEqual(
+    untraceableText(
+      [{ route: '/x', html: '<main><p>Every article tagged AI governance, newest first.</p></main>' }],
+      [{ text: 'Every article tagged', usedIn: ['tag.astro'] }]
+    ),
+    []
+  );
+  assert.equal(
+    untraceableText(
+      [{ route: '/x', html: '<main><p>Every article tagged AI governance, newest first.</p></main>' }],
+      [{ text: 'newest first', usedIn: ['tag.astro'] }]
+    ).length,
+    1
+  );
+});
+
+test('a leaked code fragment is not copy', () => {
+  assert.deepEqual(
+    constantRows([
+      { file: 'x.astro', source: 'const posts = data.filter((d) => !d.draft); const byCategory = new Map();' },
+    ]),
+    []
+  );
+});
+
+test('a template literal yields its literal parts, not the interpolation', () => {
+  const rows = constantRows([
+    { file: 'tag.astro', source: 'const lead = `Every article tagged ${title}, newest first.`;' },
+  ]);
+  assert.deepEqual(rows.map((row) => row.text).sort(), ['Every article tagged']);
+});
+
+test('prose citing a legal article with a clause number is copy', () => {
+  const rows = collectionRows([
+    { file: 'g.md', frontmatter: { definition: 'Article 6(1) covers the first route into the category.' }, body: '' },
+  ]);
+  assert.equal(rows.length, 1);
+  assert.deepEqual(constantRows([{ file: 'x.mjs', source: "const n = 'node.querySelector(sel).value';" }]), []);
+});
+
+test('a teaser that adds a full stop still traces to the sentence it was cut from', () => {
+  assert.deepEqual(
+    untraceableText(
+      [{ route: '/faq', html: '<main><p>A named officer on your security reviews.</p></main>' }],
+      [{ text: 'A named officer on your security reviews and your board', usedIn: ['a.md'] }]
+    ),
+    []
+  );
+});
+
+test('text shipped only inside json-ld counts as shipped', () => {
+  assert.deepEqual(
+    deadCopy(
+      [{ text: 'LLM evaluation', usedIn: ['jsonld.mjs'] }],
+      [
+        {
+          route: '/x',
+          html: '<script type="application/ld+json">{"knowsAbout":["LLM evaluation"]}</script><main></main>',
+        },
+      ]
+    ),
+    []
+  );
+});
+
+test('a sentence split around an inline link traces by word overlap', () => {
+  assert.deepEqual(
+    untraceableText(
+      [{ route: '/x', html: '<main><p>Email hello@meshin.co with what you found and how to reproduce it.</p></main>' }],
+      [
+        {
+          text: 'with what you found and how to reproduce it. I reply within two working days.',
+          usedIn: ['security.astro'],
+        },
+      ]
+    ),
+    []
+  );
+  assert.equal(
+    untraceableText(
+      [{ route: '/x', html: '<main><p>A sentence sharing almost nothing with the source row.</p></main>' }],
+      [{ text: 'with what you found and how to reproduce it', usedIn: ['security.astro'] }]
+    ).length,
+    1
+  );
+});
+
+test('a code tail leaking from a component script is not copy', () => {
+  assert.deepEqual(
+    constantRows([{ file: 'pricing.astro', source: "const g = 'serviceNode(site, service, links)), ]; ---';" }]),
+    []
+  );
+});

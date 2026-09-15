@@ -12,6 +12,8 @@ import {
 } from '../src/utils/machine-text.mjs';
 import { siteLastmods } from '../src/utils/sitemap-lastmod.mjs';
 
+import { catalogDriftFindings } from './catalog-drift.mjs';
+
 const NON_PUBLIC = new Set(['author', 'speaking']);
 const FEED_FLOOR = 5;
 const LLMS_FULL_MAX_BYTES = 2_000_000;
@@ -296,7 +298,26 @@ async function main(distDir) {
     })
   );
 
-  console.log(`machine: ${collections.length} public collections, ${routes.length} routes`);
+  const { STATIC_PAGE_CATALOG, HUB_PAGES } = await import('../src/utils/machine-text.mjs');
+  const catalog = [...STATIC_PAGE_CATALOG, ...HUB_PAGES.map((hub) => ({ ...hub, path: hub.base }))];
+  const builtDescriptions = {};
+  for (const entry of catalog) {
+    const nested = join(distDir, entry.path === '/' ? 'index.html' : join(entry.path.slice(1), 'index.html'));
+    const html = await readFile(nested, 'utf8').catch(() =>
+      readFile(join(distDir, `${entry.path.slice(1)}.html`), 'utf8').catch(() => null)
+    );
+    if (html === null) continue;
+    const tag =
+      [...html.matchAll(/<meta\b[^>]*>/gi)].map(([found]) => found).find((found) => /name="description"/.test(found)) ??
+      '';
+    builtDescriptions[entry.path] = { description: /content="([^"]*)"/.exec(tag)?.[1] ?? '' };
+  }
+  for (const finding of catalogDriftFindings(catalog, builtDescriptions))
+    failures.push(`${finding.route} ${finding.rule} [${finding.detail}]`);
+
+  console.log(
+    `machine: ${collections.length} public collections, ${routes.length} routes, ${catalog.length} catalog entries`
+  );
   if (failures.length > 0) {
     for (const failure of failures) console.error(`MACHINE ${failure}`);
     process.exitCode = 1;

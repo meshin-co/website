@@ -5,8 +5,8 @@ the committed content, never estimated. Re-run it after any content change.
 
 ## The ledger
 
-1414 rows, 1414 still unreviewed. 75 paragraphs ship
-with no source row; 65 source strings reach no page or machine surface. Source:
+1412 rows, 0 still unreviewed. 0 paragraphs ship
+with no source row; 9 source strings reach no page or machine surface. Source:
 `npm run gate:editorial`, ledger at `audits/phase-4.7/inventory.json`.
 
 ## Concepts used without a link to their definition

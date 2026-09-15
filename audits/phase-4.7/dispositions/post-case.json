@@ -1,0 +1,32 @@
+[
+  {
+    "target": "src/data/post/ai-acceptable-use-policy-for-a-50-person-company.md",
+    "status": "rewritten",
+    "reason": "shortAnswer sentence (36w) and one keyTakeaway (35w) split under the 34-word cap; four body sentences (37-40w) split, including the colon-joined 'fails twice: once because...and once because' and 'without asking anyone first' clause; updatedDate bumped.",
+    "digest": "269d3ceccef8"
+  },
+  {
+    "target": "src/data/post/evals-in-ci-for-llm-agents.md",
+    "status": "rewritten",
+    "reason": "FAQ answer's 37-word cost-tradeoff sentence split; seven body paragraphs at 5 sentences trimmed to 4 by merging a weakest adjacent pair each (opening paragraph, production-traffic sampling, mixing the eval set, excessive-agency tool cases, reference-free judge, cost-ceiling measurement, failure-response distinction); updatedDate bumped.",
+    "digest": "3b985b95bf47"
+  },
+  {
+    "target": "src/data/post/how-to-build-an-ai-system-register-in-a-week.md",
+    "status": "rewritten",
+    "reason": "Dropped the standalone 'not only' construction in FAQ #1 for a direct claim; split three FAQ answers (38w, 42w, 37w) under the sentence cap; updatedDate bumped. Kept 'AI system register' as the post's own term (title/H1/body) rather than switching to the glossary's 'AI register' -- the post already explicitly reconciles the two ('Some call this same list an AI register... rather than an AI system register', linked to /glossary/ai-register) and GlossaryEditor confirmed the title is a locked route name; changing the whole post's terminology was out of the minimal-diff scope for this pass. Investigated the /blog/how-to-build-an-ai-system-register-in-a-week untraceable-paragraph finding: it traces exactly to the FAQ answer for 'Who should own the register after the first week?', which is real reviewed content, not phantom text -- fixed as part of this file's FAQ pass.",
+    "digest": "6b071fd1effc"
+  },
+  {
+    "target": "src/data/post/why-your-ai-pilot-never-reached-production.md",
+    "status": "rewritten",
+    "reason": "Split two body sentences (36w, 37w): the colon-joined EU AI Act risk-management sentence, and the 'Evals catch... not every way... which is why' sentence; updatedDate bumped.",
+    "digest": "33c44317a9bd"
+  },
+  {
+    "target": "src/data/case/only-help-agentic-support.md",
+    "status": "verified",
+    "reason": "Already meets the standard: no formulaic opening/closing, no banned phrases, all sentences under the word cap, all paragraphs under 5 sentences, description is a 122-char sentence, outcome.metrics stays empty per L11 (no invented metric added).",
+    "digest": "f36341ab2663"
+  }
+]

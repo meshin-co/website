@@ -119,6 +119,28 @@ content gate's sentence-length, banned-phrase and duplicate-sentence rules hold 
 
 Unknown facts become `TODO(owner)` rows in `docs/COPY-CHECKLIST.md`, never a plausible guess.
 
+**Steps 4 to 6 landed 2026-09-15.** Eight agents on disjoint file sets did the editing, then the
+remaining rows were reviewed by owner. Ledger: **1412 rows, 377 rewritten, 1035 verified, zero
+unreviewed**; shipped text tracing to no source row **0**; source copy no page ships **9**, each
+declared in `audits/phase-4.7/conditional-copy.json` with the state that renders it and a stale
+check so the list cannot rot. 259 dispositions, all sealed against the text they reviewed.
+
+Real defects found by the pass, not by the gate: `/terms` still said "the published prices" three
+days after L8 removed every price; `/search`'s noscript fallback shipped "theglossary" and
+"thequestions" because Astro drops a line-break-only text node before a tag; the `/faq` index
+teaser cut answers mid-clause on a bare article or possessive; five service and resource pages
+called the NIST AI RMF functions "areas"; the home page carried an unconfirmed "12 to 24 months"
+retainer claim; `/styleguide`'s `<Hero>` had duplicate attributes so three demo strings never
+rendered; and `src/data/author/dmitri.md` carried body prose no page renders, now deleted under
+L40.
+
+Eleven defects were in my own extractors, each fixed with a precision control: `\bnew [A-Z]`
+matched the phrase "a new AI tool" and silently dropped a 154-word answer from the ledger; `\w+\(`
+rejected prose citing "Article 6(1)"; array literals, template literals and assignment-form
+constants were never scanned, which hid every category pillar body; test fixtures counted as dead
+copy; `media` attributes and font stacks counted as copy; JSON-LD text did not count as shipped;
+and a teaser that adds a full stop failed containment.
+
 ## 5. Machine-fingerprint and consistency sweep
 
 Extend `scripts/prose-rules.mjs` with checks for the patterns the brief names that nothing

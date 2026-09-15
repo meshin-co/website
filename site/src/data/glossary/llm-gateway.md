@@ -1,9 +1,9 @@
 ---
 title: What is an LLM gateway?
 term: LLM gateway
-description: An LLM gateway is a single service every call to a language model passes through, for auth, logging and filtering.
+description: An LLM gateway is a single service every call to a language model passes through, for authentication, logging, rate limits and content filtering.
 publishDate: 2026-09-08
-updatedDate: 2026-09-08
+updatedDate: 2026-09-15
 shortDefinition: An LLM (large language model) gateway is a single service every model call passes through, so a company can enforce authentication, logging, rate limits and content filtering in one place.
 definition: |
   Every call to any model passes through one place, instead of going straight from application code to a vendor's API. Through that point, a company can control who is allowed to call a model. It can log every prompt and response for an audit trail, and redact sensitive data before it leaves the building. It can also apply rate and cost limits, and fail over to a different provider if one goes down.
