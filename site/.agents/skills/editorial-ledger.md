@@ -54,10 +54,12 @@ A number this gate prints is only worth reporting if you have sampled it. Both o
 looked healthy while being wrong: the first `unrowed` check compared the build against a ledger
 that already contained the build's own rows, so it could only ever print 0.
 
-## Dispositioning a row
+## Re-reviewing after a later change
 
-Edit `audits/phase-4.7/inventory.json`. Re-running keeps the disposition of any text that has not
-changed, and resets a text that has, because the disposition was about the old words.
+Re-running keeps the disposition of any text that has not changed and resets a text that has,
+because the disposition was about the old words.
 
 Unknown owner facts are `owner-blocked` with the reason, and the same fact goes on
 `docs/COPY-CHECKLIST.md`. Never guess an owner fact to clear a row.
+
+Dispositioning a row is its own procedure: `disposition-a-text.md`.

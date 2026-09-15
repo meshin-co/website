@@ -3,6 +3,7 @@ import { join, relative, resolve } from 'node:path';
 
 import { parse } from 'yaml';
 
+import { applyDispositions, digestFor } from './dispositions.mjs';
 import {
   collectionRows,
   componentRows,
@@ -15,6 +16,8 @@ import {
 
 const SITE = resolve(process.argv[2] ?? '.');
 const LEDGER = resolve(SITE, '../audits/phase-4.7/inventory.json');
+const DISPOSITIONS = resolve(SITE, '../audits/phase-4.7/dispositions');
+const FINDINGS = resolve(SITE, '../audits/phase-4.7/findings.json');
 
 const walk = (dir, test) =>
   existsSync(dir)
@@ -45,17 +48,26 @@ export function mergeLedger(fresh, recorded) {
   });
 }
 
-export function ledgerFindings({ rows, untraceable = [], dead = [] }) {
-  const stale = rows.filter(
+export function ledgerFindings({ rows, untraceable = [], dead = [], stale = [], unmatched = [] }) {
+  const pending = rows.filter(
     (entry) =>
       !['rewritten', 'verified', 'owner-blocked'].includes(entry.status) ||
       (entry.status === 'owner-blocked' && !entry.reason)
   );
   return [
-    ...stale.map((entry) => `unreviewed: ${entry.usedIn[0]} — ${entry.text.slice(0, 60)}`),
+    ...pending.map((entry) => `unreviewed: ${entry.usedIn[0]} — ${entry.text.slice(0, 60)}`),
     ...untraceable.map((entry) => `ships but traces to no source row: ${entry.route} — ${entry.text.slice(0, 60)}`),
     ...dead.map((entry) => `source copy no page ships: ${entry.usedIn[0]} — ${entry.text.slice(0, 60)}`),
+    ...stale.map((entry) => `stale disposition: ${entry.target} — ${entry.why}`),
+    ...unmatched.map((entry) => `disposition names a target with no rows: ${entry.target}`),
   ];
+}
+
+export function readDispositions(dir) {
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir)
+    .filter((name) => name.endsWith('.json'))
+    .flatMap((name) => JSON.parse(readFileSync(join(dir, name), 'utf8')));
 }
 
 function buildLedger(dist) {
@@ -98,22 +110,33 @@ function buildLedger(dist) {
 }
 
 function main(dist) {
-  const recorded = existsSync(LEDGER) ? JSON.parse(readFileSync(LEDGER, 'utf8')).rows : [];
   const built = buildLedger(dist);
-  const rows = mergeLedger(built.rows, recorded);
-  const findings = ledgerFindings({ rows, untraceable: built.untraceable, dead: built.dead });
+  const dispositions = readDispositions(DISPOSITIONS);
+  const { rows, stale, unmatched } = applyDispositions(built.rows, dispositions);
+  const findings = ledgerFindings({ rows, untraceable: built.untraceable, dead: built.dead, stale, unmatched });
 
   mkdirSync(resolve(LEDGER, '..'), { recursive: true });
-  const counts = { untraceable: built.untraceable.length, dead: built.dead.length };
+  const counts = {
+    untraceable: built.untraceable.length,
+    dead: built.dead.length,
+    stale: stale.length,
+    unmatched: unmatched.length,
+  };
   writeFileSync(
     LEDGER,
     `${JSON.stringify({ generated: new Date().toISOString().slice(0, 10), counts, rows }, null, 2)}\n`
+  );
+
+  writeFileSync(
+    FINDINGS,
+    `${JSON.stringify({ untraceable: built.untraceable, dead: built.dead, stale, unmatched }, null, 2)}\n`
   );
 
   const byStatus = rows.reduce((totals, entry) => ({ ...totals, [entry.status]: (totals[entry.status] ?? 0) + 1 }), {});
   console.log(`editorial ledger: ${rows.length} rows across ${built.pages} routes`, byStatus);
   console.log(`shipped text tracing to no source row: ${built.untraceable.length}`);
   console.log(`source copy no page ships: ${built.dead.length}`);
+  console.log(`dispositions: ${dispositions.length} declared, ${stale.length} stale, ${unmatched.length} unmatched`);
   if (findings.length > 0) {
     console.log(`findings: ${findings.length}`);
     const sample = (label, entries, format) => {
@@ -127,8 +150,28 @@ function main(dist) {
       (entry) => `${entry.route} | ${entry.text.slice(0, 70)}`
     );
     sample('source copy no page ships', built.dead, (entry) => `${entry.usedIn[0]} | ${entry.text.slice(0, 60)}`);
+    sample('stale dispositions', stale, (entry) => `${entry.target} | ${entry.why}`);
     process.exitCode = 1;
   }
 }
 
-if (import.meta.filename === process.argv[1]) main(resolve(SITE, process.argv[3] ?? 'dist'));
+export function sealDispositions(dist) {
+  const built = buildLedger(dist);
+  let sealed = 0;
+  for (const name of existsSync(DISPOSITIONS) ? readdirSync(DISPOSITIONS).filter((f) => f.endsWith('.json')) : []) {
+    const file = join(DISPOSITIONS, name);
+    const entries = JSON.parse(readFileSync(file, 'utf8')).map((entry) => {
+      const digest = digestFor(built.rows, entry.target);
+      if (entry.digest !== digest) sealed += 1;
+      return { ...entry, digest };
+    });
+    writeFileSync(file, `${JSON.stringify(entries, null, 2)}\n`);
+  }
+  console.log(`sealed ${sealed} dispositions against the current text`);
+}
+
+if (import.meta.filename === process.argv[1]) {
+  const dist = resolve(SITE, process.argv[3] ?? 'dist');
+  if (process.argv.includes('--seal')) sealDispositions(dist);
+  else main(dist);
+}

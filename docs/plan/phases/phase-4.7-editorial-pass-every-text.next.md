@@ -94,6 +94,13 @@ family, so the cost is stated before the decision, not discovered after.
 
 Rewriting prose before this step means rewriting text that is about to move.
 
+**Decided 2026-09-15: no structural change in this phase.** The gap analysis evidences no
+duplicate or competing page, no cannibalised intent and no overloaded route. Moving, merging or
+splitting a route would invalidate every visual baseline plus the sitemap, feed, llms and search
+surfaces for a gain nothing in the data supports. The 9 buyer-prompt gaps that would need new
+routes stay owner-blocked and feed Phase 6. Copy, titles, meta descriptions and internal links are
+in scope; the route set is frozen at 105.
+
 ## 4. Editing, in dependency order
 
 1. The 30 glossary definitions first — they are the concept register every other page cites.
