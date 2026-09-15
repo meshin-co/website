@@ -79,6 +79,11 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
 - Found dead weight (unreferenced components, exports, baselines, scripts, contradicted config) is
   removed in the session that found it, never deferred (L40). Procedure:
   `site/.agents/skills/clear-dead-weight-now.md`.
+- No user-facing string ships unreviewed. Every one enters the editorial ledger and carries a
+  disposition of `rewritten`, `verified`, or `owner-blocked` with a reason (L52). Read
+  `site/.agents/skills/write-copy.md` before writing copy and
+  `site/.agents/skills/place-a-new-text.md` before adding any new text; one concept is defined on
+  exactly one page (L50, L51, L53).
 - Work is finished when the procedure that produced it lives in the methodology layer: a skill, a
   hard rule here, a locked row in the plan, or a machine check (L49).
 - Ask Context7 about Astro 7, Tailwind v4 and satori APIs before relying on memory.

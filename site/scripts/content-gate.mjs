@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { discoverRoutes } from './gate.mjs';
 import { extractPage } from './content-html.mjs';
 import { judgePage, PROFILES } from './content-rows.mjs';
-import { duplicateSentences } from './prose-rules.mjs';
+import { duplicateSentences, machinePatternHits, punctuationFindings, questionRunLength } from './prose-rules.mjs';
 
 const DUPLICATE_MINIMUM_WORDS = 12;
 
@@ -52,6 +52,22 @@ export function gateFindings(pages, facts, bannedPhrases) {
     route: page.route,
     text: [page.lead, ...page.paragraphs].filter(Boolean).join(' '),
   }));
+
+  const QUESTION_RUN_CAP = 1;
+  for (const page of prose) {
+    for (const hit of machinePatternHits(page.text))
+      findings.push({ route: page.route, rule: hit.rule, excerpt: hit.excerpt, detail: 'machine pattern' });
+    for (const hit of punctuationFindings(page.text))
+      findings.push({ route: page.route, rule: hit.rule, excerpt: hit.excerpt, detail: hit.detail });
+    const run = questionRunLength(page.text);
+    if (run > QUESTION_RUN_CAP)
+      findings.push({
+        route: page.route,
+        rule: 'rhetorical-question-run',
+        excerpt: `${run} consecutive questions`,
+        detail: `cap ${QUESTION_RUN_CAP}`,
+      });
+  }
 
   for (const duplicate of duplicateSentences(prose, DUPLICATE_MINIMUM_WORDS)) {
     findings.push({

@@ -3,10 +3,10 @@ title: What are guardrails in an AI system?
 term: Guardrails
 description: Guardrails are checks enforced in code around what a model can be asked and what it can say or do, not rules typed into a prompt.
 publishDate: 2026-09-08
-updatedDate: 2026-09-08
+updatedDate: 2026-09-15
 shortDefinition: Guardrails are the checks placed around what an AI model can be asked, what it can say, and what it can do. They are enforced in the surrounding code, not left to the model's training. That way an unusual input cannot simply talk the system out of a rule.
 definition: |
-  In practice a guardrail is one of three things: a topic restriction on what the model will engage with, or an output filter on what a user sees. The third, an action gate, controls what the system may do without a check first.
+  In practice a guardrail is one of three things: a topic restriction on what the model will engage with, an output filter on what a user sees, or an action gate that controls what the system may do without a check first.
 
   OWASP, an independent security-standards group, publishes its own mitigation list for prompt injection, which reads like a checklist for these three. Privilege control and human approval for high-risk actions are guardrails, not model behaviour.
 
@@ -24,7 +24,7 @@ sources:
 
 ## Why it comes up
 
-Asking what guardrails a system has is one of the shortest, most common questions in a security review. It is a hard one to answer honestly if the only guardrail is the model's own training and good manners. A board hears it as a proxy for a bigger question: what is the actual worst thing this system could be tricked into doing? And what stands between that action and a real customer?
+Asking what guardrails a system has is one of the shortest, most common questions in a security review. It is a hard one to answer honestly if the only guardrail is the model's own training and good manners. A board hears it as a proxy for a bigger question: what is the actual worst thing this system could be tricked into doing, and what stands between that action and a real customer?
 
 ## What to do about it
 

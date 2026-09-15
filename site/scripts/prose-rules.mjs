@@ -123,3 +123,49 @@ export function duplicateSentences(pages, minimumWords) {
     .filter(([, routes]) => routes.length > 1)
     .map(([sentence, routes]) => ({ sentence, routes }));
 }
+
+const MACHINE_PATTERNS = [
+  {
+    rule: 'formulaic-transition',
+    pattern: /(^|[.!?]\s+|\s)(moreover|furthermore|additionally|in conclusion|in summary|as such)\b/gi,
+  },
+  { rule: 'not-only-but-also', pattern: /\bnot only\b[^.!?]{0,80}\bbut also\b/gi },
+  { rule: 'guide-preamble', pattern: /\b(this (guide|article|post|page) will|in this (guide|article|post),? we)\b/gi },
+  {
+    rule: 'hollow-credential',
+    pattern:
+      /\b(industry-leading|leading (provider|expert|authority)|passionate about|deeply passionate|thought leader)\b/gi,
+  },
+];
+
+const DENSITY_RULES = [
+  { rule: 'semicolon-density', pattern: /;/g, minimum: 3, perThousand: 6 },
+  { rule: 'em-dash-density', pattern: /—/g, minimum: 3, perThousand: 6 },
+];
+
+export function machinePatternHits(text) {
+  return MACHINE_PATTERNS.flatMap(({ rule, pattern }) =>
+    [...text.matchAll(pattern)].map((match) => ({ rule, excerpt: match[0].trim() }))
+  );
+}
+
+export function punctuationFindings(text) {
+  const words = text.split(/\s+/).filter(Boolean).length || 1;
+  return DENSITY_RULES.flatMap(({ rule, pattern, minimum, perThousand }) => {
+    const count = (text.match(pattern) ?? []).length;
+    const density = (count / words) * 1000;
+    return count >= minimum && density > perThousand
+      ? [{ rule, excerpt: `${count} in ${words} words`, detail: `${density.toFixed(1)} per 1000, cap ${perThousand}` }]
+      : [];
+  });
+}
+
+export function questionRunLength(text) {
+  let run = 0;
+  let longest = 0;
+  for (const sentence of splitSentences(text)) {
+    run = sentence.trim().endsWith('?') ? run + 1 : 0;
+    longest = Math.max(longest, run);
+  }
+  return longest;
+}
