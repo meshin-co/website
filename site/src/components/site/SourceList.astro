@@ -16,7 +16,7 @@ const publisherOf = (source: Props['sources'][number]) =>
     {
       sources.map((source) => (
         <li class="grid gap-1">
-          <a class="text-link" href={source.url} rel="noopener nofollow" target="_blank">
+          <a class="text-link inline-block py-1" href={source.url} rel="noopener nofollow" target="_blank">
             {source.title}
           </a>
           <p class="font-mono text-xs text-muted" data-gate-ignore>

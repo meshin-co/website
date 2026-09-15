@@ -5,8 +5,8 @@ import { createRequire } from 'node:module';
 const CATEGORIES = ['performance', 'accessibility', 'best-practices', 'seo'];
 
 export async function metricBudgets() {
-  const require = createRequire(import.meta.url);
-  const assert = require('../lighthouserc.cjs').ci.assert;
+  const load = createRequire(import.meta.url);
+  const assert = load('../lighthouserc.cjs').ci.assert;
   const groups = assert.assertMatrix ?? [{ assertions: assert.assertions ?? {} }];
   const budgets = {};
   for (const group of groups) {

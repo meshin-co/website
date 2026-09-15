@@ -201,7 +201,7 @@
 }
 
 @utility link-signature {
-  @apply text-link no-underline;
+  @apply inline-block py-1 text-link no-underline;
   border-bottom: 1px solid color-mix(in oklch, var(--aw-color-primary) 45%, transparent);
   transition: border-bottom-color 160ms ease-out;
 }
@@ -309,7 +309,7 @@
 }
 
 @utility heading-anchor {
-  @apply ml-2 align-baseline text-primary no-underline opacity-0 transition-opacity duration-150;
+  @apply ml-2 inline-block min-w-6 align-baseline text-primary no-underline opacity-0 transition-opacity duration-150;
 
   &::before {
     content: '#';

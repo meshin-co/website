@@ -119,3 +119,15 @@ header and footer referencing it through `<use>`. Pixel output is identical; the
 
 Analytics moved off the critical path: the Plausible tag is appended on the window `load` event
 from a hashed inline script instead of shipping as a deferred head script. No visual change.
+
+## 2026-09-15 - Phase 5 polish sweep: tap targets and a mobile overflow
+
+Every interactive target now clears 24 px in both axes at all six audit widths. Eight components
+gained vertical padding: breadcrumbs, heading anchors, the author link, glossary index links, FAQ
+and post card titles, source lists, hero offer links, related-content links, the signature link
+and the contact channel links. Line boxes grow by 2-8 px where those links sit, so most pages
+shift slightly.
+
+Two blog posts no longer scroll horizontally at 320 px. The mobile single-column grid track sized
+itself to the min-content of a wide table, because only the `lg:` columns used `minmax(0,…)`;
+`min-w-0` on the prose column fixes it.

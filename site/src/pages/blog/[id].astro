@@ -165,7 +165,7 @@ const nodes = [
 
     <Section eyebrow="Detail" title="The long version">
       <div class="grid gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)] lg:gap-16">
-        <div class="prose-brief prose-brief-headings max-w-[68ch]">
+        <div class="prose-brief prose-brief-headings min-w-0 max-w-[68ch]">
           <Content />
         </div>
         <div class="lg:sticky lg:top-24 lg:self-start">
@@ -214,7 +214,7 @@ const nodes = [
             <nav aria-label="More in this category" class="mb-10 flex flex-wrap gap-x-10 gap-y-4 font-mono text-xs">
               {previous && (
                 <a
-                  class="text-link underline decoration-2 underline-offset-4 hover:decoration-primary"
+                  class="text-link inline-block py-1 underline decoration-2 underline-offset-4 hover:decoration-primary"
                   href={`/blog/${previous.id}`}
                 >
                   ← Previous: {previous.data.title}
@@ -222,7 +222,7 @@ const nodes = [
               )}
               {next && (
                 <a
-                  class="text-link underline decoration-2 underline-offset-4 hover:decoration-primary"
+                  class="text-link inline-block py-1 underline decoration-2 underline-offset-4 hover:decoration-primary"
                   href={`/blog/${next.id}`}
                 >
                   Next: {next.data.title} →

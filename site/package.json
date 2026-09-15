@@ -42,7 +42,8 @@
     "gate:registers": "node scripts/generate-registers.mjs --check dist",
     "assets:gaps": "node scripts/generate-gaps.mjs dist",
     "assets:seal": "node scripts/editorial-gate.mjs . dist --seal",
-    "audit:geo": "node scripts/generate-geo-baseline.mjs dist"
+    "audit:geo": "node scripts/generate-geo-baseline.mjs dist",
+    "audit:polish": "node scripts/run-polish-sweep.mjs"
   },
   "dependencies": {
     "@astro-community/astro-embed-twitter": "^0.5.11",

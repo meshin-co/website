@@ -18,6 +18,6 @@ const { name, role, bio, href, linkLabel = 'More about me' } = Astro.props;
       <p class="mt-1 font-mono text-sm text-muted">{role}</p>
       <p class="mt-4 max-w-[68ch] text-muted">{bio}</p>
     </div>
-    <a class="text-link font-mono text-sm" href={href}>{linkLabel}</a>
+    <a class="text-link inline-block py-1 font-mono text-sm" href={href}>{linkLabel}</a>
   </div>
 </aside>

@@ -27,7 +27,7 @@ const visible = groups.filter((group) => group.items.length > 0);
             {group.items.map((item) => (
               <li>
                 <a
-                  class="text-link font-mono text-sm underline decoration-2 underline-offset-4 hover:decoration-primary"
+                  class="text-link inline-block py-1 font-mono text-sm underline decoration-2 underline-offset-4 hover:decoration-primary"
                   href={item.href}
                 >
                   {item.label}
