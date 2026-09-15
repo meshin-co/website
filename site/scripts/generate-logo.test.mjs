@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { maskGreyAt, wedgeSpans, renderMark } from './generate-logo.mjs';
+import { maskGreyAt, renderMark, renderSymbol, renderUse, wedgeSpans } from './generate-logo.mjs';
 
 test('the ramp is read from the measured table, brightest at the open end', () => {
   assert.ok(maskGreyAt(0) > 200, 'the cut end is nearly opaque ink');
@@ -46,4 +46,19 @@ test('the rendered mark scopes every id so two instances cannot collide', () => 
 test('ink colour reaches both the ring and the star', () => {
   const svg = renderMark({ ink: '#123456', prefix: 'y-' });
   assert.equal([...svg.matchAll(/fill="#123456"/g)].length, 2);
+});
+
+test('the symbol carries the geometry once and the mark only references it', () => {
+  const symbol = renderSymbol();
+  assert.match(symbol, /<symbol id="logo-mark"/);
+  assert.equal((symbol.match(/<linearGradient/g) ?? []).length, wedgeSpans().length);
+
+  const mark = renderUse();
+  assert.match(mark, /<use href="#logo-mark"/);
+  assert.equal((mark.match(/<path/g) ?? []).length, 0);
+  assert.equal((mark.match(/<linearGradient/g) ?? []).length, 0);
+});
+
+test('the referenced mark still inherits ink from its use site, so one file serves both themes', () => {
+  assert.match(renderSymbol(), /currentColor/);
 });

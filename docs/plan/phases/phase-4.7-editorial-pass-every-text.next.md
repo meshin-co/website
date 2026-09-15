@@ -216,6 +216,32 @@ Re-run the extractors against the final build and diff against the opening inven
 cannot close while any row is `unreviewed`, any build string is unrowed, or any `TODO(owner)` is
 undeclared in the copy checklist.
 
+## Calibration Gate 4.7 — run 2026-09-15
+
+Everything green except the Lighthouse bar: `check` 0, 583 unit tests, 696 Playwright on darwin
+twice, 14/14 mutation families, and `html`, `links`, `content`, `orphans`, `machine`, `skills`,
+`jsonld`, `plan`, `registers`, `editorial`, byte budgets and search budgets all exit 0. Home page
+14.8 KB gzip.
+
+`audits/phase-4.7/REPORT.md` records **55 of 56 route×form-factor rows at 100/100/100/100**. Two
+open items, both the same root cause and both needing an owner decision, because clearing either
+one means amending a locked row:
+
+1. **LCP 1803–1806 ms against our own 1800 ms budget** on five of 28 audited routes. The cause is
+   63 KB of webfonts arriving on the simulated 1.47 Mbps mobile link; LCP tracks the swap repaint
+   of the text. Two real optimisations landed first and are measured: the brand mark as a shared
+   `<symbol>` (HTML 101 KB → 69 KB) and Plausible off the critical path (LCP 1806 → 1656 in
+   isolation). Measured dead ends: inlining all CSS moved FCP 1055 → 904 and left LCP unchanged;
+   `unicodeRange` did not re-subset the files; dropping the font preloads moved LCP to 1654 but
+   FCP to 1500 and performance to 0.99; preloading only the body family gave LCP 1806 and FCP
+   1206; Astro hoists preloads so head order cannot be changed from the layout.
+   Options: amend **L39** to `font-display: optional` for the body face (LCP ≈1350, first visit
+   paints in the metric-matched fallback), amend **L39** to two faces by dropping IBM Plex Sans 500
+   (≈1670, nav and labels render at 400), or amend the budget row with the evidence that Chrome
+   scores 100 at 1804 and Google's own "good" threshold is 2500.
+2. **`/styleguide` mobile performance 99**, same LCP cause. It is a noindex internal demo page,
+   excluded from the sitemap. The owner decides whether it belongs in the audited set at all.
+
 ## Calibration Gate 4.7
 
 The standard gate (`docs/plan/reference/calibration-gate.md`) plus:

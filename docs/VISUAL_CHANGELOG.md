@@ -10,6 +10,7 @@ Format: `YYYY-MM-DD · route or component · what changed visually · why`.
 `mcr.microsoft.com/playwright:v1.63.0-jammy` container) · Phase 1 CG.
 
 ## 2026-09-08 · `/` hero, section heads, CTA, footer
+
 - Hero: the hairline grid is back and now draws both axes (vertical and horizontal rules). A
   pipeline motif was tried here and rejected by the owner: it read as unrelated decoration.
 - Section heads: title and lead now share one vertical centre line instead of the lead sitting on
@@ -26,6 +27,7 @@ Format: `YYYY-MM-DD · route or component · what changed visually · why`.
   both themes, plus the FAQ open state and keyboard focus rings.
 
 ## 2026-09-08 · Phase 3 · every content template
+
 - New route templates, all captured at 1440x900 and 375x812 in both themes: `/services`,
   `/services/:entry`, `/resources`, `/resources/:entry`, `/blog`, `/blog/:entry`,
   `/blog/category/:entry`, `/glossary`, `/glossary/:entry`, `/case-studies`,
@@ -103,3 +105,17 @@ with `currentColor` and masked by 85 wedges at 3°, so the mark inverts with the
 semi-transparent wedges painted on the page double their alpha where they overlap and show
 hairline seams. Favicons, the apple touch icon and the square transparent social PNGs all
 regenerate from the same geometry.
+
+## 2026-09-15 - Phase 4.7: copy pass, shared brand symbol
+
+Every route: copy rewritten or verified across 1412 ledger rows, so most pages changed text.
+Notable visible changes: `/terms` no longer claims published prices, `/search`'s noscript fallback
+renders spaces between its links, `/faq` teasers end on a complete clause, and `/styleguide`'s Hero
+demo now shows the real hero props rather than three dead duplicate attributes.
+
+The brand mark is emitted once per page as an SVG `<symbol>` mounted by `PageLayout.astro`, with
+header and footer referencing it through `<use>`. Pixel output is identical; the HTML fell from
+101 KB to 69 KB because 180 paths and 170 gradients became 93 and 85.
+
+Analytics moved off the critical path: the Plausible tag is appended on the window `load` event
+from a hashed inline script instead of shipping as a deferred head script. No visual change.

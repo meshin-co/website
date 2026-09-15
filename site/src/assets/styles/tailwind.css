@@ -134,6 +134,12 @@
   background-color: var(--aw-color-bg-page-dark);
 }
 
+@utility logo-symbol {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
 @utility text-page {
   color: var(--aw-color-text-default);
 }

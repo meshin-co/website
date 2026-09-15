@@ -36,7 +36,7 @@
     "gate:lh:one": "rm -rf .lighthouseci && lhci autorun --config=lighthouserc.cjs && node scripts/collect-reports.mjs \"$LHCI_FORM_FACTOR\"",
     "assets:robots": "node scripts/gen-robots.mjs",
     "gate:plan": "node scripts/plan-gate.mjs",
-    "assets:logo": "node scripts/generate-logo.mjs && node scripts/generate-favicons.mjs",
+    "assets:logo": "node scripts/generate-logo.mjs && node scripts/generate-favicons.mjs && prettier --write src/components/common/LogoMark.astro src/components/common/LogoSymbol.astro --log-level warn",
     "gate:editorial": "node scripts/editorial-gate.mjs . dist",
     "assets:registers": "node scripts/generate-registers.mjs",
     "gate:registers": "node scripts/generate-registers.mjs --check dist",

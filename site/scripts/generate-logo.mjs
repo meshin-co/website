@@ -83,25 +83,37 @@ ${renderMark({ ink, prefix: 's-' })}
 </svg>
 `;
 
-const component = () => {
-  const marked = renderMark({ ink: 'currentColor', prefix: '${scope}', indent: '  ', jsx: true });
-  return `---
+export const renderSymbol = () =>
+  `<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" class="logo-symbol" aria-hidden="true" focusable="false">
+<symbol id="logo-mark" viewBox="${viewBox}">
+${renderMark({ ink: 'currentColor', prefix: 'logo-' })}
+</symbol>
+</svg>
+`;
+
+export const renderUse = () => `<use href="#logo-mark" />`;
+
+const symbolComponent = () => `---
+---
+
+${renderSymbol()}`;
+
+const component = () => `---
 interface Props {
   class?: string;
 }
 
 const { class: className = 'h-8 w-8' } = Astro.props;
-const scope = \`logo-\${Math.random().toString(36).slice(2, 8)}-\`;
 ---
 
 <svg class={className} viewBox="${viewBox}" role="img" aria-hidden="true" focusable="false">
-${marked}
+  ${renderUse()}
 </svg>
 `;
-};
 
 function main() {
   writeFileSync('src/components/common/LogoMark.astro', component());
+  writeFileSync('src/components/common/LogoSymbol.astro', symbolComponent());
   writeFileSync('public/logo.svg', standalone('#16181c'));
   writeFileSync('public/brand/logo-on-dark.svg', standalone('#f4f2ee'));
   console.log(`logo written: ${wedgeSpans().length} graduations at ${wedgeStep} degrees`);
