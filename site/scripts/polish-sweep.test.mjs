@@ -103,3 +103,10 @@ test('a visually hidden element is never a finding, and a real control still is'
     1
   );
 });
+
+test('the report states the floor it actually enforces and a machine-readable count', () => {
+  const md = renderSweep({ routes: 105, widths: WIDTHS, findings: [] });
+  assert.match(md, /under 24 px/);
+  assert.doesNotMatch(md, /under 44 px/);
+  assert.match(md, /^findings: 0$/m);
+});
