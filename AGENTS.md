@@ -82,6 +82,9 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
   are reproducible from any build by re-running the gate and had grown to 272 MB. Playwright
   baselines stay tracked — they are fixtures the visual gate reads — but their history was
   collapsed once, on 2026-09-15, when five regenerations had accumulated 579 MB.
+  Every commit hash changed on that date; a hash quoted before it will not resolve. Translate it
+  through `docs/plan/reference/history-rewrite-2026-09-15.md`, which maps all 84 surviving
+  commits and names the 7 that were pruned as empty.
 - Found dead weight (unreferenced components, exports, baselines, scripts, contradicted config) is
   removed in the session that found it, never deferred (L40). Procedure:
   `site/.agents/skills/clear-dead-weight-now.md`.
