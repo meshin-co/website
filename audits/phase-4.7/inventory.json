@@ -1,5 +1,9 @@
 {
-  "generated": "2026-09-14",
+  "generated": "2026-09-15",
+  "counts": {
+    "untraceable": 75,
+    "dead": 65
+  },
   "rows": [
     {
       "location": "frontmatter.name",

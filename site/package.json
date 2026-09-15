@@ -37,7 +37,10 @@
     "assets:robots": "node scripts/gen-robots.mjs",
     "gate:plan": "node scripts/plan-gate.mjs",
     "assets:logo": "node scripts/generate-logo.mjs && node scripts/generate-favicons.mjs",
-    "gate:editorial": "node scripts/editorial-gate.mjs . dist"
+    "gate:editorial": "node scripts/editorial-gate.mjs . dist",
+    "assets:registers": "node scripts/generate-registers.mjs",
+    "gate:registers": "node scripts/generate-registers.mjs --check dist",
+    "assets:gaps": "node scripts/generate-gaps.mjs dist"
   },
   "dependencies": {
     "@astro-community/astro-embed-twitter": "^0.5.11",

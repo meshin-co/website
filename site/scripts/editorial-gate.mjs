@@ -104,10 +104,14 @@ function main(dist) {
   const findings = ledgerFindings({ rows, untraceable: built.untraceable, dead: built.dead });
 
   mkdirSync(resolve(LEDGER, '..'), { recursive: true });
-  writeFileSync(LEDGER, `${JSON.stringify({ generated: new Date().toISOString().slice(0, 10), rows }, null, 2)}\n`);
+  const counts = { untraceable: built.untraceable.length, dead: built.dead.length };
+  writeFileSync(
+    LEDGER,
+    `${JSON.stringify({ generated: new Date().toISOString().slice(0, 10), counts, rows }, null, 2)}\n`
+  );
 
-  const counts = rows.reduce((totals, entry) => ({ ...totals, [entry.status]: (totals[entry.status] ?? 0) + 1 }), {});
-  console.log(`editorial ledger: ${rows.length} rows across ${built.pages} routes`, counts);
+  const byStatus = rows.reduce((totals, entry) => ({ ...totals, [entry.status]: (totals[entry.status] ?? 0) + 1 }), {});
+  console.log(`editorial ledger: ${rows.length} rows across ${built.pages} routes`, byStatus);
   console.log(`shipped text tracing to no source row: ${built.untraceable.length}`);
   console.log(`source copy no page ships: ${built.dead.length}`);
   if (findings.length > 0) {
