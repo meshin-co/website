@@ -3,6 +3,12 @@ export function indexableOnly(rows, noindexRoutes) {
   return rows.filter((row) => !excluded.has(row.route));
 }
 
+const TEMPLATE_LEAD = /^\/blog\/(tag|category)\//;
+
+export function authoredRoutesOnly(rows) {
+  return rows.filter((row) => !TEMPLATE_LEAD.test(row.route));
+}
+
 export function groupByConcept(findings) {
   const byConcept = new Map();
   for (const finding of findings) {
@@ -45,7 +51,7 @@ export function renderGaps({ ledger, concepts, orphans, promptGaps }) {
     '',
     'Each row is a concept defined on one page and used on others that do not link to it. Not every',
     'mention should become a link — the phase decision is first mention per page. Noindex utility',
-    'routes are excluded.',
+    'routes and taxonomy hub leads are excluded.',
     '',
     table(
       ['Concept', 'Defined by', 'Routes using it unlinked'],

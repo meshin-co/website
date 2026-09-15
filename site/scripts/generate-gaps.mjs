@@ -3,8 +3,8 @@ import { join } from 'node:path';
 
 import { parse } from 'yaml';
 
-import { groupByConcept, indexableOnly, orphanEntities, renderGaps } from './editorial-gaps.mjs';
-import { conceptRegister, entityRegister, undefinedConceptFindings } from './registers.mjs';
+import { authoredRoutesOnly, groupByConcept, indexableOnly, orphanEntities, renderGaps } from './editorial-gaps.mjs';
+import { conceptRegister, entityRegister, prosePassages, undefinedConceptFindings } from './registers.mjs';
 
 const LEDGER = '../audits/phase-4.7/inventory.json';
 const CORE = '../docs/SEMANTIC-CORE.md';
@@ -34,6 +34,7 @@ function main() {
       route,
       noindex: [...html.matchAll(/<meta\b[^>]*>/gi)].some(([tag]) => /robots/i.test(tag) && /noindex/i.test(tag)),
       text: main.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' '),
+      prose: prosePassages(main),
       hrefs: [...main.matchAll(/href="([^"]+)"/g)].map((match) => match[1].replace(/\/$/, '') || '/'),
     };
   });
@@ -55,7 +56,9 @@ function main() {
       untraceable: ledger.counts.untraceable,
       dead: ledger.counts.dead,
     },
-    concepts: groupByConcept(indexableOnly(undefinedConceptFindings(concepts, pages), noindexRoutes)),
+    concepts: groupByConcept(
+      authoredRoutesOnly(indexableOnly(undefinedConceptFindings(concepts, pages), noindexRoutes))
+    ),
     orphans: orphanEntities(entityRegister(terms, pages)),
     promptGaps,
   });

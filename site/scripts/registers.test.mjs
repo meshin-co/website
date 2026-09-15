@@ -8,6 +8,7 @@ import {
   undefinedConceptFindings,
   renderRegisters,
   registerDriftFindings,
+  prosePassages,
 } from './registers.mjs';
 
 const terms = [
@@ -58,9 +59,9 @@ test('a page using a concept without linking to its definition is a finding, and
   const findings = undefinedConceptFindings(
     [{ concept: 'AI governance', definedBy: '/glossary/ai-governance', definition: 'x' }],
     [
-      { route: '/blog/unlinked', text: 'AI governance matters here.', hrefs: [] },
-      { route: '/blog/linked', text: 'AI governance matters here.', hrefs: ['/glossary/ai-governance'] },
-      { route: '/glossary/ai-governance', text: 'AI governance is defined here.', hrefs: [] },
+      { route: '/blog/unlinked', prose: 'AI governance matters here.', hrefs: [] },
+      { route: '/blog/linked', prose: 'AI governance matters here.', hrefs: ['/glossary/ai-governance'] },
+      { route: '/glossary/ai-governance', prose: 'AI governance is defined here.', hrefs: [] },
     ]
   );
   assert.deepEqual(
@@ -116,4 +117,43 @@ test('the rendered block is deterministic and carries every register', () => {
 test('a committed doc that no longer matches the freshly generated registers is drift', () => {
   assert.equal(registerDriftFindings('<!-- REGISTERS:BEGIN -->\nold\n<!-- REGISTERS:END -->', 'new').length, 1);
   assert.deepEqual(registerDriftFindings('<!-- REGISTERS:BEGIN -->\nnew\n<!-- REGISTERS:END -->', 'new'), []);
+});
+
+test('only body prose counts as using a concept: not json-ld, breadcrumbs, headings or anchor text', () => {
+  const concepts = [{ concept: 'AI governance', definedBy: '/glossary/ai-governance', definition: 'x' }];
+  const cases = [
+    ['json-ld', '<script type="application/ld+json">{"name":"AI governance"}</script>'],
+    ['breadcrumb', '<nav aria-label="Breadcrumb"><a href="/blog">Writing</a> AI governance</nav>'],
+    ['heading', '<h1>AI governance</h1>'],
+    ['anchor text', '<p>Read <a href="/blog/tag/ai-governance">AI governance</a> writing.</p>'],
+  ];
+  for (const [label, html] of cases) {
+    assert.deepEqual(
+      undefinedConceptFindings(concepts, [{ route: '/x', prose: prosePassages(html), hrefs: [] }]),
+      [],
+      label
+    );
+  }
+  assert.equal(
+    undefinedConceptFindings(concepts, [
+      { route: '/x', prose: prosePassages('<p>AI governance decides who signs off.</p>'), hrefs: [] },
+    ]).length,
+    1
+  );
+});
+
+test('a hyphenated slug is not a mention of the term inside it', () => {
+  const findings = undefinedConceptFindings(
+    [{ concept: 'Evals', definedBy: '/glossary/evals', definition: 'x' }],
+    [{ route: '/x', prose: prosePassages('<li>evals-in-ci · ai-governance</li>'), hrefs: [] }]
+  );
+  assert.deepEqual(findings, []);
+});
+
+test('prose passages keep list items, because definitions get used in lists', () => {
+  const findings = undefinedConceptFindings(
+    [{ concept: 'Shadow AI', definedBy: '/glossary/shadow-ai', definition: 'x' }],
+    [{ route: '/x', prose: prosePassages('<li>Shadow AI is already in your org.</li>'), hrefs: [] }]
+  );
+  assert.equal(findings.length, 1);
 });

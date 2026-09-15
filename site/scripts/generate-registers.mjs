@@ -11,6 +11,7 @@ import {
   renderRegisters,
   spliceRegisters,
   undefinedConceptFindings,
+  prosePassages,
 } from './registers.mjs';
 
 const DOC = '../docs/SEMANTIC-CORE.md';
@@ -42,6 +43,7 @@ function builtPages(dist) {
     return {
       route,
       text: main.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' '),
+      prose: prosePassages(main),
       hrefs: [...main.matchAll(/href="([^"]+)"/g)].map((match) => match[1].replace(/\/$/, '') || '/'),
     };
   });

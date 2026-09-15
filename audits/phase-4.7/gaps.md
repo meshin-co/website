@@ -13,22 +13,21 @@ with no source row; 65 source strings reach no page or machine surface. Source:
 
 Each row is a concept defined on one page and used on others that do not link to it. Not every
 mention should become a link — the phase decision is first mention per page. Noindex utility
-routes are excluded.
+routes and taxonomy hub leads are excluded.
 
-| Concept                 | Defined by                          | Routes using it unlinked |
-| ----------------------- | ----------------------------------- | ------------------------ |
-| Evals                   | `/glossary/evals`                   | 21                       |
-| AI governance           | `/glossary/ai-governance`           | 20                       |
-| EU AI Act               | `/glossary/eu-ai-act`               | 14                       |
-| ISO/IEC 42001           | `/glossary/iso-iec-42001`           | 12                       |
-| NIST AI RMF             | `/glossary/nist-ai-rmf`             | 11                       |
-| AI register             | `/glossary/ai-register`             | 8                        |
-| Data classification     | `/glossary/data-classification`     | 5                        |
-| Agentic workflow        | `/glossary/agentic-workflow`        | 2                        |
-| Shadow AI               | `/glossary/shadow-ai`               | 2                        |
-| Conformity assessment   | `/glossary/conformity-assessment`   | 1                        |
-| LLM gateway             | `/glossary/llm-gateway`             | 1                        |
-| Technical documentation | `/glossary/technical-documentation` | 1                        |
+| Concept | Defined by | Routes using it unlinked |
+|---|---|---|
+| Evals | `/glossary/evals` | 9 |
+| AI register | `/glossary/ai-register` | 6 |
+| AI governance | `/glossary/ai-governance` | 5 |
+| EU AI Act | `/glossary/eu-ai-act` | 4 |
+| Data classification | `/glossary/data-classification` | 3 |
+| NIST AI RMF | `/glossary/nist-ai-rmf` | 3 |
+| Agentic workflow | `/glossary/agentic-workflow` | 2 |
+| ISO/IEC 42001 | `/glossary/iso-iec-42001` | 2 |
+| Conformity assessment | `/glossary/conformity-assessment` | 1 |
+| LLM gateway | `/glossary/llm-gateway` | 1 |
+| Technical documentation | `/glossary/technical-documentation` | 1 |
 
 ## Entities nothing points at
 

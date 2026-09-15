@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { groupByConcept, orphanEntities, indexableOnly, renderGaps } from './editorial-gaps.mjs';
+import { groupByConcept, orphanEntities, indexableOnly, authoredRoutesOnly, renderGaps } from './editorial-gaps.mjs';
 
 test('noindex utility routes are excluded, because nothing there competes for a query', () => {
   assert.deepEqual(
@@ -43,4 +43,16 @@ test('the report states every count it claims and names the source of each', () 
   assert.match(report, /Evals/);
   assert.match(report, /Shadow AI/);
   assert.match(report, /fractional caio cost/);
+});
+
+test('taxonomy hub leads are excluded, because the term is injected by the template not written by hand', () => {
+  assert.deepEqual(
+    authoredRoutesOnly([
+      { route: '/blog/tag/ai-register' },
+      { route: '/blog/category/governance' },
+      { route: '/services' },
+      { route: '/blog/a-real-post' },
+    ]),
+    [{ route: '/services' }, { route: '/blog/a-real-post' }]
+  );
 });

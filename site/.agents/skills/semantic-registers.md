@@ -41,6 +41,14 @@ reformatting the generated tables breaks both drift gates at once — `gate:regi
 used without a link to their definition, entities with no inbound mentions, and the buyer prompts
 whose GAP register row says no route owns them.
 
+A mention only counts inside body prose: `prosePassages()` keeps `<p>` and `<li>` text and drops
+`<script>` (JSON-LD names every concept), `<nav>` (breadcrumbs), every heading (a tag page's H1 is
+the tag name), and anchor text (already a link, just to somewhere else). Word boundaries exclude
+hyphens, so the tag slug `evals-in-ci` is not a use of `Evals`. Taxonomy hub leads are dropped
+too, because the template injects the term. Sampling five raw findings on 2026-09-14 showed all
+five of those classes were false positives: the count fell 105 to 44, and the survivors are body
+prose with no link to the definition.
+
 The unlinked-concept list is an opportunity list, not a defect list. Linking every mention would
 over-link; the phase decision is first mention per page. Noindex utility routes (`/404`,
 `/search`, `/styleguide`, and the search shard page) are excluded, because nothing there competes

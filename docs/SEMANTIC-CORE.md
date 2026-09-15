@@ -413,7 +413,7 @@ One owning route per entity. The mention count is inbound references from other 
 | Data classification | `/glossary/data-classification` | 14 |
 | DPIA | `/glossary/dpia` | 4 |
 | EU AI Act | `/glossary/eu-ai-act` | 35 |
-| Evals | `/glossary/evals` | 34 |
+| Evals | `/glossary/evals` | 30 |
 | Guardrails | `/glossary/guardrails` | 5 |
 | Hallucination rate | `/glossary/hallucination-rate` | 4 |
 | High-risk AI system | `/glossary/high-risk-ai-system` | 9 |

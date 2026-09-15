@@ -1,7 +1,25 @@
 export const REGISTERS_BEGIN = '<!-- REGISTERS:BEGIN -->';
 export const REGISTERS_END = '<!-- REGISTERS:END -->';
 
-const mentions = (text, term) => new RegExp(`\\b${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(text);
+const escape = (term) => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const mentions = (text, term) => new RegExp(`(^|[^\\w-])${escape(term)}(?![\\w-])`, 'i').test(text ?? '');
+
+export function prosePassages(html) {
+  const withoutCode = html
+    .replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, ' ')
+    .replace(/<nav\b[^>]*>[\s\S]*?<\/nav>/gi, ' ')
+    .replace(/<h[1-6]\b[^>]*>[\s\S]*?<\/h[1-6]>/gi, ' ');
+  return [...withoutCode.matchAll(/<(p|li)\b[^>]*>([\s\S]*?)<\/\1>/gi)]
+    .map((match) => match[2].replace(/<a\b[^>]*>[\s\S]*?<\/a>/gi, ' '))
+    .map((passage) =>
+      passage
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+    )
+    .join(' ');
+}
 
 export function entityRegister(terms, pages) {
   return terms.map((entry) => ({
@@ -38,7 +56,7 @@ export function undefinedConceptFindings(concepts, pages) {
       .filter(
         (page) =>
           page.route !== concept.definedBy &&
-          mentions(page.text, concept.concept) &&
+          mentions(page.prose, concept.concept) &&
           !page.hrefs.includes(concept.definedBy)
       )
       .map((page) => ({ route: page.route, concept: concept.concept, definedBy: concept.definedBy }))
