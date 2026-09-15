@@ -38,9 +38,9 @@ Run from `site/`. Each step green before the next.
 ## In CI the same gates run in parallel
 
 `build` runs once and uploads `dist`; `types-and-units`, `guard-mutations`, `cheap-gates`,
-`visual-and-axe` (3 Playwright shards) and `lighthouse` (2 form factors x 4 route shards, 8
-runners) all fan out from that artifact, and `gate-report` merges every shard into one
-REPORT.md. Whole gate: about 8 minutes.
+`visual-and-axe` (3 Playwright shards) and `lighthouse` (2 form factors x 4 route shards) fan out
+from that artifact, and `gate-report` merges them. Whole gate: about 8 minutes. A docs-only commit
+runs `types-and-units` alone (`changes` job classifies the diff).
 
 One shard by hand:
 `LHCI_FORM_FACTOR=mobile LH_SHARD_INDEX=1 LH_SHARD_TOTAL=4 npm run gate:lh:one`. Shards deal
@@ -70,14 +70,11 @@ family logic via `scripts/templates.mjs`.
   LCP, CLS and TBT budgets it reads from `lighthouserc.cjs` on each route's median run.
 - A scratch page left in the build silently widens every downstream gate; delete throwaway
   routes before the audited build.
+- perfect-coder strict mode refuses test, config and data-only files with no sibling test: create
+  those with a shell heredoc (`docs/PERFECT-CODER-ISSUES.md`).
 
 ## Manual pass (calibration gate step 10)
 
-320/375/768/1024/1280/1920 widths, `prefers-reduced-motion`, keyboard only, screen reader on
-the primary task (find an offer → CTA; read an article). The read-aloud pass is the check
-that word-count guards cannot fake.
-
-## perfect-coder friction (docs/PERFECT-CODER-ISSUES.md)
-
-Strict mode refuses test, config and data-only files it cannot see a sibling test for — create
-those with a shell heredoc and continue; plugin state is home-side and never committed.
+320/375/768/1024/1280/1920 widths, `prefers-reduced-motion`, keyboard only, screen reader on the
+primary task (find an offer → CTA; read an article). The read-aloud pass is the check word-count
+guards cannot fake.
