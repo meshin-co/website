@@ -76,6 +76,12 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
 - Verify a claim about the site in the built output — `dist/`, a response from the gate server, or
   a command's real stdout. Never in source, never in a doc. When a doc and the build disagree, the
   doc is wrong. Procedure: `site/.agents/skills/verify-in-the-built-output.md`.
+- Evidence in git is the generated report, never the raw run. `audits/phase-N/REPORT.md`, the
+  sweeps, the checklists, the ledgers and the dispositions are committed; `lh-mobile/`,
+  `lh-desktop/`, `baseline/` and every `*.json.gz` under `audits/` are gitignored, because they
+  are reproducible from any build by re-running the gate and had grown to 272 MB. Playwright
+  baselines stay tracked — they are fixtures the visual gate reads — but their history was
+  collapsed once, on 2026-09-15, when five regenerations had accumulated 579 MB.
 - Found dead weight (unreferenced components, exports, baselines, scripts, contradicted config) is
   removed in the session that found it, never deferred (L40). Procedure:
   `site/.agents/skills/clear-dead-weight-now.md`.

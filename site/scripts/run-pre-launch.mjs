@@ -263,7 +263,7 @@ const rows = [
     item: 'every artefact in this phase exists on disk',
     status: report && sweep ? 'pass' : 'fail',
     detail:
-      'audits/phase-5/ carries REPORT.md, polish-sweep.md, this file and the gzipped Lighthouse JSON; commands live in .agents/skills/run-the-gate.md',
+      'audits/phase-5/ carries REPORT.md, polish-sweep.md and this file; raw Lighthouse runs are gitignored and reproduced by re-running the gate, per .agents/skills/run-the-gate.md',
   },
 ];
 

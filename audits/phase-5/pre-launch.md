@@ -22,10 +22,10 @@ Measured: **17 pass, 7 n/a, 3 owner-blocked, 0 fail**.
 | 10. State coverage | empty, error and 404 states carry real copy | pass | 9 state-conditional strings, each declared with the state that renders it in audits/phase-4.7/conditional-copy.json |
 | 13. Cross-browser | WebKit and Gecko render every route with no console error and no sideways scroll | pass | npx playwright test tests/cross-browser.spec.ts --project=webkit --project=firefox |
 | 2. Core Web Vitals | LCP, CLS and TBT inside their budgets | pass | the report reads maxNumericValue per route out of lighthouserc.cjs, not the category scores |
-| 20. Documentation | the last commit touching markup also updated the visual changelog | pass | git show --name-only 57a9755 lists docs/VISUAL_CHANGELOG.md |
+| 20. Documentation | the last commit touching markup also updated the visual changelog | pass | git show --name-only d412cc6 lists docs/VISUAL_CHANGELOG.md |
 | 21. Git and review | the plan tree, its index and its phase statuses agree | pass | gate:plan; check, unit tests and the production build run in the same sweep |
 | 22. Multi-page polish | every user-facing string is dispositioned, no unexplained drift | pass | gate:editorial over the whole ledger, and gate:registers for the concept and entity registers |
-| 24. Evidence manifest | every artefact in this phase exists on disk | pass | audits/phase-5/ carries REPORT.md, polish-sweep.md, this file and the gzipped Lighthouse JSON; commands live in .agents/skills/run-the-gate.md |
+| 24. Evidence manifest | every artefact in this phase exists on disk | pass | audits/phase-5/ carries REPORT.md, polish-sweep.md and this file; raw Lighthouse runs are gitignored and reproduced by re-running the gate, per .agents/skills/run-the-gate.md |
 | 3. Asset budgets | JS, CSS and page bytes from the shipped build | pass | node scripts/gate.mjs dist budgets.json, real gzip bytes including lazy chunks |
 | 3. Asset budgets | font families and faces | pass | 0 families, 0 faces: ; three families is the documented L39 deviation |
 | 4. Accessibility, automated | axe clean in both themes on every route, and the skip link is the first focus stop | pass | npx playwright test tests/visual.spec.ts, which runs AxeBuilder per route per theme |
