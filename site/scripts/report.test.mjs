@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
 
-import { readReports, renderReport } from './report.mjs';
+import { metricBudgets, metricFailures, readReports, renderReport } from './report.mjs';
 
 const row = (route, scores, runs = 3) => ({ route, runs, scores });
 const perfect = { performance: 100, accessibility: 100, 'best-practices': 100, seo: 100 };
@@ -161,4 +161,37 @@ test('a flat directory of reports still reads', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'report-flat-'));
   await writeFile(join(dir, 'lhr-1.json'), JSON.stringify(lighthouseRun('/')));
   assert.equal((await readReports(dir)).length, 1);
+});
+
+test('a metric over its budget is a failure even when every category scores 100', () => {
+  const failures = metricFailures(
+    [
+      {
+        formFactor: 'mobile',
+        route: '/',
+        metrics: { 'largest-contentful-paint': [1804, 1805, 1806] },
+      },
+    ],
+    { 'largest-contentful-paint': 1800 }
+  );
+  assert.equal(failures.length, 1);
+  assert.match(failures[0], /largest-contentful-paint/);
+  assert.match(failures[0], /1805/);
+});
+
+test('a metric inside its budget passes, and the median decides', () => {
+  assert.deepEqual(
+    metricFailures(
+      [{ formFactor: 'mobile', route: '/', metrics: { 'largest-contentful-paint': [1650, 1656, 1900] } }],
+      { 'largest-contentful-paint': 1800 }
+    ),
+    []
+  );
+});
+
+test('the budgets come from the lighthouse config, not from a copy in the report generator', async () => {
+  const budgets = await metricBudgets();
+  assert.equal(budgets['largest-contentful-paint'], 1800);
+  assert.equal(budgets['cumulative-layout-shift'], 0.02);
+  assert.equal(budgets['total-blocking-time'], 50);
 });

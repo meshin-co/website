@@ -68,6 +68,10 @@ family logic via `scripts/templates.mjs`.
 - A scratch page left in the build silently widens every downstream gate; delete throwaway
   routes before the audited build.
 
+`report.mjs` also enforces the LCP, CLS and TBT budgets it reads from `lighthouserc.cjs`, on the
+median of each route's three runs: a category score of 100 does not mean the metric assertions
+passed.
+
 ## Manual pass (calibration gate step 10)
 
 320/375/768/1024/1280/1920 widths, `prefers-reduced-motion`, keyboard only, screen reader on

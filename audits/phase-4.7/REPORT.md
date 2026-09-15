@@ -189,3 +189,10 @@ One leaf per repeated template family (heaviest by built bytes) plus every uniqu
 ## Failures
 
 - mobile /styleguide/ performance: 99
+- metric: mobile / largest-contentful-paint: 1804.473 over budget 1800
+- metric: mobile /blog/category/governance/ largest-contentful-paint: 1803.729 over budget 1800
+- metric: mobile /faq/what-do-nist-ai-rmf-iso-iec-42001-and-the-eu-ai-act-require/ largest-contentful-paint: 1803.805 over budget 1800
+- metric: mobile /pricing/ largest-contentful-paint: 1803.859 over budget 1800
+- metric: mobile /resources/llm-gateway-governance-config/ largest-contentful-paint: 1804.159 over budget 1800
+- metric: mobile /services/fractional-caio-retainer/ largest-contentful-paint: 1803.958 over budget 1800
+- metric: mobile /styleguide/ largest-contentful-paint: 1803.893 over budget 1800

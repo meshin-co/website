@@ -1,7 +1,35 @@
 import { readFile, writeFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
+import { createRequire } from 'node:module';
 
 const CATEGORIES = ['performance', 'accessibility', 'best-practices', 'seo'];
+
+export async function metricBudgets() {
+  const require = createRequire(import.meta.url);
+  const assert = require('../lighthouserc.cjs').ci.assert;
+  const groups = assert.assertMatrix ?? [{ assertions: assert.assertions ?? {} }];
+  const budgets = {};
+  for (const group of groups) {
+    for (const [audit, rule] of Object.entries(group.assertions ?? {})) {
+      if (!Array.isArray(rule) || typeof rule[1]?.maxNumericValue !== 'number') continue;
+      budgets[audit] = Math.min(budgets[audit] ?? Infinity, rule[1].maxNumericValue);
+    }
+  }
+  return budgets;
+}
+
+export function metricFailures(rows, budgets) {
+  return rows.flatMap((row) =>
+    Object.entries(budgets).flatMap(([audit, budget]) => {
+      const values = row.metrics?.[audit];
+      if (!values?.length) return [];
+      const value = median(values);
+      return value > budget
+        ? [`${row.formFactor} ${row.route} ${audit}: ${Math.round(value * 1000) / 1000} over budget ${budget}`]
+        : [];
+    })
+  );
+}
 
 const median = (values) => [...values].sort((a, b) => a - b)[Math.floor(values.length / 2)];
 
@@ -27,11 +55,17 @@ function scoreTable(reports) {
     for (const category of CATEGORIES) {
       entry[category] = [...(entry[category] ?? []), Math.round(report.categories[category].score * 100)];
     }
+    entry.metrics ??= {};
+    for (const [audit, data] of Object.entries(report.audits)) {
+      if (typeof data?.numericValue !== 'number') continue;
+      entry.metrics[audit] = [...(entry.metrics[audit] ?? []), data.numericValue];
+    }
     byRoute.set(path, entry);
   }
   return [...byRoute.entries()].sort().map(([route, scores]) => ({
     route,
     runs: scores.performance.length,
+    metrics: scores.metrics,
     scores: Object.fromEntries(CATEGORIES.map((category) => [category, median(scores[category])])),
   }));
 }
@@ -40,7 +74,7 @@ function canonicalRoute(route) {
   return route.length > 1 && route.endsWith('/') ? route.slice(0, -1) : route;
 }
 
-export function renderReport({ phase, gate, mobile, desktop }) {
+export function renderReport({ phase, gate, mobile, desktop, budgets = {} }) {
   const failures = [];
   const noindex = new Set(gate.measured.filter((row) => row.noindex).map((row) => canonicalRoute(row.route)));
   for (const [form, rows] of [
@@ -60,6 +94,13 @@ export function renderReport({ phase, gate, mobile, desktop }) {
     }
   }
   for (const finding of gate.overBudget ?? []) failures.push(`budget: ${finding}`);
+
+  const metricRows = [
+    ...mobile.map((row) => ({ formFactor: 'mobile', ...row })),
+    ...desktop.map((row) => ({ formFactor: 'desktop', ...row })),
+  ];
+  const overMetric = metricFailures(metricRows, budgets);
+  for (const finding of overMetric) failures.push(`metric: ${finding}`);
 
   const lines = [
     `# Phase ${phase} — Calibration Gate report`,
@@ -111,6 +152,7 @@ async function main(phase, auditDir) {
     gate,
     mobile: scoreTable(await readReports(join(auditDir, 'lh-mobile'))),
     desktop: scoreTable(await readReports(join(auditDir, 'lh-desktop'))),
+    budgets: await metricBudgets(),
   });
   await writeFile(join(auditDir, 'REPORT.md'), markdown);
   console.log(markdown);
