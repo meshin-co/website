@@ -46,8 +46,12 @@ A mention only counts inside body prose: `prosePassages()` keeps `<p>` and `<li>
 the tag name), and anchor text (already a link, just to somewhere else). Word boundaries exclude
 hyphens, so the tag slug `evals-in-ci` is not a use of `Evals`. Taxonomy hub leads are dropped
 too, because the template injects the term. Sampling five raw findings on 2026-09-14 showed all
-five of those classes were false positives: the count fell 105 to 44, and the survivors are body
-prose with no link to the definition.
+five of those classes were false positives: the count fell 105 to 53, and the noindex and
+taxonomy filters leave 37 survivors, all body prose with no link to the definition.
+
+Read the count from `audits/phase-4.7/gaps.md` after regenerating. Do not derive it by subtracting
+filter counts from an intermediate probe — the filters compose in a fixed order, and doing that
+arithmetic by hand produced a published 44 when the artifact said 37.
 
 The unlinked-concept list is an opportunity list, not a defect list. Linking every mention would
 over-link; the phase decision is first mention per page. Noindex utility routes (`/404`,
