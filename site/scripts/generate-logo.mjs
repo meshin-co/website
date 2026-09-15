@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 
-const geometry = JSON.parse(readFileSync(new URL('./logo-geometry.json', import.meta.url), 'utf8'));
+export const geometry = JSON.parse(readFileSync(new URL('./logo-geometry.json', import.meta.url), 'utf8'));
 const { centre, outerRadius, innerRadius, arcEnd, tailEnd, wedgeStep, viewBox, star, ramp } = geometry;
 
 const paperGreyAt = (deg) => {
@@ -93,6 +93,11 @@ ${renderMark({ ink: 'currentColor', prefix: 'logo-' })}
 
 export const renderUse = () => `<use href="#logo-mark" />`;
 
+export const referenceViewBox = () => {
+  const [, , width, height] = viewBox.split(' ');
+  return `0 0 ${width} ${height}`;
+};
+
 const symbolComponent = () => `---
 ---
 
@@ -106,7 +111,7 @@ interface Props {
 const { class: className = 'h-8 w-8' } = Astro.props;
 ---
 
-<svg class={className} viewBox="${viewBox}" role="img" aria-hidden="true" focusable="false">
+<svg class={className} viewBox="${referenceViewBox()}" role="img" aria-hidden="true" focusable="false">
   ${renderUse()}
 </svg>
 `;

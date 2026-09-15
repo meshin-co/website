@@ -21,6 +21,15 @@ against the PRD §5 targets of 5/30 by month 6 and 15/30 by month 12.
 The generator is `scripts/generate-geo-baseline.mjs`; the parsing, scoring and rendering live in
 `scripts/geo-baseline.mjs`, which is where the tests point.
 
+## What this is not
+
+The score is structural readiness: whether a route exists, ships the promised passage, and carries
+a marked citable unit, a JSON-LD graph and an `llms.txt` line. The protocol in
+`docs/SEMANTIC-CORE.md` also asks for each prompt to be run through ChatGPT, Claude, Perplexity,
+Gemini and Google AI Mode and recorded as mentioned, cited or absent. Nothing here queries an
+engine. Never present the readiness number as a citation rate, and never diff engine behaviour
+against it.
+
 ## Reading a gap
 
 `marked citable unit` missing does not mean the page has no answer. It means nothing in the markup

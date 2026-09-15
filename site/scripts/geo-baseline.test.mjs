@@ -89,3 +89,10 @@ Why: local queries need local evidence
   assert.equal(prompts[1].mustWin, '/about');
   assert.equal(prompts[0].passage, "I'm Dmitri Meshin, a platform engineer by trade.");
 });
+
+test('the report names itself structural readiness, never a citation rate, because no engine was queried', () => {
+  const md = renderBaseline([{ number: 1, prompt: 'p', mustWin: '/', missing: [] }]);
+  assert.match(md, /structural readiness/i);
+  assert.match(md, /no AI engine was queried/i);
+  assert.doesNotMatch(md, /citation rate|cited by/i);
+});

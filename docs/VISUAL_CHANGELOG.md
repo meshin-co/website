@@ -131,3 +131,12 @@ shift slightly.
 Two blog posts no longer scroll horizontally at 320 px. The mobile single-column grid track sized
 itself to the min-content of a wide table, because only the `lg:` columns used `minmax(0,…)`;
 `min-w-0` on the prose column fixes it.
+
+## 2026-09-15 - The brand mark is whole again
+
+The header and footer mark was clipped on the left and sat off centre. Cause was mine, from the
+same-day symbol extraction: the referencing `<svg>` repeated the `<symbol>`'s own offset
+`viewBox="95 105 610 610"`, so the `<use>` rect spanned user coordinates 0 to 610 while the
+visible window started at 95,105 - the content was translated up and left by that offset and cut.
+The reference viewport is now `0 0 610 610` and the symbol keeps the offset. Verified in both
+themes on the real page: full ring, centred, ink on paper in light and paper on ink in dark.

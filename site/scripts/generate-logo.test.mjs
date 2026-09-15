@@ -1,7 +1,15 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { maskGreyAt, renderMark, renderSymbol, renderUse, wedgeSpans } from './generate-logo.mjs';
+import {
+  geometry,
+  maskGreyAt,
+  referenceViewBox,
+  renderMark,
+  renderSymbol,
+  renderUse,
+  wedgeSpans,
+} from './generate-logo.mjs';
 
 test('the ramp is read from the measured table, brightest at the open end', () => {
   assert.ok(maskGreyAt(0) > 200, 'the cut end is nearly opaque ink');
@@ -61,4 +69,10 @@ test('the symbol carries the geometry once and the mark only references it', () 
 
 test('the referenced mark still inherits ink from its use site, so one file serves both themes', () => {
   assert.match(renderSymbol(), /currentColor/);
+});
+
+test('the referencing viewport starts at the origin, because the symbol already carries the offset viewBox', () => {
+  const [x, y, width, height] = geometry.viewBox.split(' ').map(Number);
+  assert.ok(x !== 0 || y !== 0, 'this test only means something while the mark geometry is offset');
+  assert.equal(referenceViewBox(), `0 0 ${width} ${height}`);
 });
