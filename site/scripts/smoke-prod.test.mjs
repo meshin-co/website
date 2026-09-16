@@ -1,0 +1,64 @@
+import assert from 'node:assert/strict';
+import { test } from 'node:test';
+
+import { checkHeaders, checkNoindex, renderSmoke, verdictFor } from './smoke-prod.mjs';
+
+test('a response missing a required security header is a failure, naming the header', () => {
+  const finding = checkHeaders({ 'content-security-policy': "default-src 'self'" });
+  assert.equal(finding.status, 'fail');
+  assert.match(finding.detail, /strict-transport-security/);
+});
+
+test('a CSP that allows inline script is a failure even when every header is present', () => {
+  const headers = {
+    'content-security-policy': "script-src 'self' 'unsafe-inline'",
+    'strict-transport-security': 'max-age=63072000',
+    'x-content-type-options': 'nosniff',
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'permissions-policy': 'camera=()',
+    'cross-origin-opener-policy': 'same-origin',
+  };
+  const finding = checkHeaders(headers);
+  assert.equal(finding.status, 'fail');
+  assert.match(finding.detail, /unsafe-inline/);
+});
+
+test('a complete restrictive header set passes', () => {
+  const headers = {
+    'content-security-policy': "default-src 'self'; script-src 'self'",
+    'strict-transport-security': 'max-age=63072000; includeSubDomains; preload',
+    'x-content-type-options': 'nosniff',
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'permissions-policy': 'camera=(), microphone=()',
+    'cross-origin-opener-policy': 'same-origin',
+  };
+  assert.equal(checkHeaders(headers).status, 'pass');
+});
+
+test('a live page still carrying noindex is a failure, because the launch flip is what removes it', () => {
+  assert.equal(checkNoindex('<meta name="robots" content="noindex, nofollow" />').status, 'fail');
+  assert.equal(checkNoindex('<meta name="robots" content="index, follow" />').status, 'pass');
+});
+
+test('a route that answers 200 passes and any other status fails with the code', () => {
+  assert.equal(verdictFor({ route: '/', status: 200 }).status, 'pass');
+  const bad = verdictFor({ route: '/pricing', status: 404 });
+  assert.equal(bad.status, 'fail');
+  assert.match(bad.detail, /404/);
+});
+
+test('a redirect is a failure on a canonical route, because the flip should land it directly', () => {
+  const finding = verdictFor({ route: '/', status: 301 });
+  assert.equal(finding.status, 'fail');
+  assert.match(finding.detail, /301/);
+});
+
+test('the report prints the origin it measured and every failing row', () => {
+  const md = renderSmoke('https://meshin.co', [
+    { check: 'route /', status: 'pass', detail: '200' },
+    { check: 'headers', status: 'fail', detail: 'missing strict-transport-security' },
+  ]);
+  assert.match(md, /https:\/\/meshin\.co/);
+  assert.match(md, /^failures: 1$/m);
+  assert.match(md, /strict-transport-security/);
+});

@@ -27,7 +27,7 @@ reproducible. Evidence: `audits/phase-4.6/`.
    families, the strategy fields added per family, the buyer-prompt claims mechanically
    re-verified, and a staleness check in `gate:content`.
 7. **Standards** (L49): every uncaptured lesson written into a skill, the dead
-   `references/banned-phrases.md` reference fixed, and the reproducibility checks wired into
+   `site/banned-phrases.json` reference fixed, and the reproducibility checks wired into
    `check-skills.mjs`.
 
 CG-4.6 is the standard gate plus: the new property-level JSON-LD assertions, the crawler fixture,

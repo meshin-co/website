@@ -1,9 +1,12 @@
 # Decision log
 
-Closed. Do not reopen without a written replacement row.
+**Status: closed 2026-09-06, partly superseded.** Do not reopen a row without a written
+replacement.
 
-Rows D1–D24 are the PRD §2 log, in English. Rows L1–L19 live in `docs/plan/reference/locked-decisions.md` and override
-any D row they name. Where a D row below is marked *superseded*, read the L row instead.
+Rows D1–D24 are the PRD §2 log, in English, and record what was decided before the build began.
+Rows L1–L54 in `docs/plan/reference/locked-decisions.md` are what the build actually locked, and
+they override any D row they name. Where a D row below is marked *superseded*, the L row is the
+answer. On a conflict the order is always: locked row, then this log, then `docs/PRD.md`.
 
 | # | Topic | Decision | Why |
 |---|---|---|---|

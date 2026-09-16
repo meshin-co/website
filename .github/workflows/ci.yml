@@ -83,6 +83,7 @@ jobs:
       - run: npm test
       - run: npm run gate:skills
       - run: npm run gate:plan
+      - run: npm run gate:docs
 
   guard-mutations:
     if: github.event_name != 'workflow_dispatch' && needs.changes.outputs.code == 'true'

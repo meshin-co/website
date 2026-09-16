@@ -9,7 +9,7 @@ const SITE = resolve(HERE, '..');
 const REPO = resolve(SITE, '..');
 const FIXTURES = join(SITE, 'tests', 'guard-mutations', 'fixtures');
 const LIVE_POST_TARGET = 13;
-const GATES = ['budget', 'jsonld', 'jsonld-properties', 'content-gate'];
+const GATES = ['budget', 'jsonld', 'jsonld-properties', 'content-gate', 'docs'];
 const CHECKS = ['semantic-title'];
 
 export const FAMILIES = [
@@ -50,6 +50,7 @@ export const FAMILIES = [
     tokens: ['banned-phrase [leverage]'],
   },
   { id: 'budget-page-cap', kind: 'gate', gate: 'budget', tokens: ['OVER BUDGET / page'] },
+  { id: 'docs-dead-path', kind: 'gate', gate: 'docs', tokens: ['dead-path'] },
   { id: 'jsonld-fail-closed', kind: 'gate', gate: 'jsonld', tokens: ['matches no known jsonld route family'] },
   {
     id: 'jsonld-property-completeness',
@@ -166,6 +167,18 @@ async function runPlantedFamily(copySite, entry, gated) {
 }
 
 async function runGateFamily(copySite, entry, work) {
+  if (entry.gate === 'docs') {
+    const repo = join(work, 'docs-repo');
+    await mkdir(join(repo, 'docs/plan/reference'), { recursive: true });
+    await mkdir(join(repo, 'site/.agents/skills'), { recursive: true });
+    await writeFile(
+      join(repo, 'AGENTS.md'),
+      'The build reads `docs/this-file-does-not-exist.md` before anything else.\n'
+    );
+    await writeFile(join(repo, 'docs/plan/reference/locked-decisions.md'), '| L1 | Row | Decision |\n');
+    await writeFile(join(repo, 'site/package.json'), `${JSON.stringify({ scripts: {} }, null, 2)}\n`);
+    return expectedFailure(await run('node', ['scripts/run-docs-gate.mjs', repo], copySite), entry.tokens);
+  }
   if (entry.gate === 'budget') {
     const dist = join(work, 'budget-dist');
     await mkdir(dist, { recursive: true });
