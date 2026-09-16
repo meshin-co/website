@@ -25,6 +25,7 @@ a build.
 | `generate-registers.mjs` | `gate:registers`, `assets:registers` | A hand-edited register block, or a dangling concept                         |
 | `plan-gate.mjs`          | `gate:plan`                          | Two phases claiming `active`, or an index that disagrees with the directory |
 | `run-docs-gate.mjs`      | `gate:docs`                          | A document citing a dead path, a dead command, or a stale locked-row range  |
+| `run-external-links.mjs` | `gate:external`                      | An outbound link missing `nofollow`, `noopener` or `noreferrer`             |
 | `check-skills.mjs`       | `gate:skills`                        | A skill naming a path or command that does not exist                        |
 | `search-budget.mjs`      | `gate:search`                        | A search shard over its byte budget                                         |
 | `mutation-smoke.mjs`     | `test:smoke`                         | A guard family that can no longer be made to fail                           |
@@ -64,6 +65,7 @@ be tested without a build.
 | Script                    | Imported by                                   | What it holds                                                  |
 | ------------------------- | --------------------------------------------- | -------------------------------------------------------------- |
 | `docs-gate.mjs`           | `run-docs-gate.mjs`                           | Which citations are checkable, and which are excluded by name  |
+| `external-links.mjs`      | `run-external-links.mjs`                      | The required rel set, and what counts as outbound              |
 | `smoke-prod.mjs`          | `run-smoke-prod.mjs`                          | The required header set and the per-route verdict              |
 | `polish-sweep.mjs`        | `run-polish-sweep.mjs`                        | Finding classification and the six audit widths                |
 | `pre-launch.mjs`          | `run-pre-launch.mjs`                          | The checklist rules and the four statuses                      |

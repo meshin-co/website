@@ -29,7 +29,11 @@ const external = ctaHref.startsWith('http');
     <p class="mt-8 max-w-[62ch] text-lg leading-relaxed text-muted">{sub}</p>
 
     <div class="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
-      <a class="btn-primary" href={ctaHref} {...external ? { target: '_blank', rel: 'noopener' } : {}}>{ctaLabel}</a>
+      <a
+        class="btn-primary"
+        href={ctaHref}
+        {...external ? { target: '_blank', rel: 'nofollow noopener noreferrer' } : {}}>{ctaLabel}</a
+      >
       {
         secondary && (
           <a class="link-signature text-base" href={secondary.href}>

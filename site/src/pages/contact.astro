@@ -1,4 +1,5 @@
 ---
+import { externalRelAttrs } from '~/utils/pipeline.mjs';
 import CtaBlock from '~/components/site/CtaBlock.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
@@ -62,7 +63,11 @@ const channels = [
             <dt class="eyebrow">{channel.label}</dt>
             <dd class="mt-3 max-w-[42ch] text-muted">
               {channel.body}
-              <a class="text-link mt-4 inline-block py-1 font-mono text-sm" href={channel.action.href}>
+              <a
+                class="text-link mt-4 inline-block py-1 font-mono text-sm"
+                href={channel.action.href}
+                {...externalRelAttrs(channel.action.href)}
+              >
                 {channel.action.label}
               </a>
             </dd>

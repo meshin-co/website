@@ -30,7 +30,7 @@ const variants = {
   ) : (
     <a
       class={twMerge(variants[variant] || '', className)}
-      {...(target ? { target: target, rel: 'noopener noreferrer' } : {})}
+      {...(target ? { target: target, rel: 'nofollow noopener noreferrer' } : {})}
       {...rest}
     >
       <Fragment set:html={text} />

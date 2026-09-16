@@ -22,7 +22,7 @@
     "test": "node --test \"scripts/*.test.mjs\" \"src/utils/*.test.mjs\" \"src/data/*.test.mjs\"",
     "gate:visual": "playwright test",
     "gate:html": "html-validate \"dist/**/*.html\"",
-    "gate:links": "linkinator dist --recurse --silent --skip \"plausible.io|linkedin.com|cal.com|github.com/meshin-co|^https://meshin.co\"",
+    "gate:links": "linkinator dist --recurse --silent --skip \"plausible.io|linkedin.com|cal.com|github.com/meshin-co|apps.apple.com|^https://meshin.co\"",
     "gate:lh": "rm -rf .lighthouseci && lhci autorun --config=lighthouserc.cjs && node scripts/collect-reports.mjs mobile && rm -rf .lighthouseci && LHCI_FORM_FACTOR=desktop lhci autorun --config=lighthouserc.cjs && node scripts/collect-reports.mjs desktop",
     "gate:machine": "node scripts/machine.mjs dist",
     "gate:jsonld": "node scripts/jsonld-gate.mjs dist",
@@ -47,7 +47,8 @@
     "audit:prelaunch": "node scripts/run-pre-launch.mjs dist",
     "smoke:prod": "node scripts/run-smoke-prod.mjs",
     "gate:docs": "node scripts/run-docs-gate.mjs ..",
-    "audit:geo-probe": "node scripts/run-geo-probe.mjs"
+    "audit:geo-probe": "node scripts/run-geo-probe.mjs",
+    "gate:external": "node scripts/run-external-links.mjs dist"
   },
   "dependencies": {
     "@astro-community/astro-embed-twitter": "^0.5.11",

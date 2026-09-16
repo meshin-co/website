@@ -36,6 +36,10 @@ const log = [
   {
     date: 'August 2026',
     text: 'Shipped Smarter Day 3.7.0, the iOS app I build and publish myself. Free on the App Store, filed under Productivity.',
+    links: [
+      { label: 'smarter.day', href: 'https://smarter.day/' },
+      { label: 'App Store', href: 'https://apps.apple.com/app/apple-store/id6736619323' },
+    ],
   },
   {
     date: 'November 2025',
@@ -63,7 +67,23 @@ const log = [
         log.map((entry) => (
           <div class="border-line grid gap-2 border-b py-6 sm:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] sm:gap-8">
             <dt class="eyebrow">{entry.date}</dt>
-            <dd class="min-w-0 max-w-[68ch] text-muted">{entry.text}</dd>
+            <dd class="min-w-0 max-w-[68ch] text-muted">
+              {entry.text}
+              {entry.links && (
+                <span class="mt-3 flex flex-wrap gap-x-6 gap-y-2">
+                  {entry.links.map((link) => (
+                    <a
+                      class="text-link inline-block py-1 font-mono text-sm"
+                      href={link.href}
+                      target="_blank"
+                      rel="nofollow noopener noreferrer"
+                    >
+                      {link.label}
+                    </a>
+                  ))}
+                </span>
+              )}
+            </dd>
           </div>
         ))
       }

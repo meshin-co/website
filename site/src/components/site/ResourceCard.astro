@@ -1,4 +1,5 @@
 ---
+import { externalRelAttrs } from '~/utils/pipeline.mjs';
 interface Props {
   name: string;
   summary: string;
@@ -16,7 +17,12 @@ const { name, summary, format, status, href } = Astro.props;
   <h3 class="mt-4 font-heading text-xl leading-snug font-semibold text-heading">
     {
       href ? (
-        <a class="link-signature group-hover:link-signature-hover" href={href} target="_blank" rel="noopener">
+        <a
+          class="link-signature group-hover:link-signature-hover"
+          href={href}
+          {...externalRelAttrs(href)}
+          {...(externalRelAttrs(href).rel ? { target: '_blank' } : {})}
+        >
           {name}
         </a>
       ) : (

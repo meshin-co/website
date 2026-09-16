@@ -1,4 +1,5 @@
 ---
+import { externalRelAttrs } from '~/utils/pipeline.mjs';
 import type { GetStaticPaths } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 import { getCollection, render } from 'astro:content';
@@ -139,6 +140,7 @@ const nodes = [
               <a
                 class="text-link underline decoration-2 underline-offset-4 hover:decoration-primary"
                 href={linkedFirstParagraph.href}
+                {...externalRelAttrs(linkedFirstParagraph.href)}
               >
                 {linkedFirstParagraph.matched}
               </a>

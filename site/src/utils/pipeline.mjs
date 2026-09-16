@@ -11,6 +11,8 @@ function walkElements(node, visit) {
   for (const child of node.children ?? []) walkElements(child, visit);
 }
 
+export const EXTERNAL_REL = ['nofollow', 'noopener', 'noreferrer'];
+
 export function isExternalHref(href, siteHostname = SITE_HOSTNAME) {
   if (typeof href !== 'string' || href === '') return false;
 
@@ -75,6 +77,10 @@ export function rehypeHeadingAnchors() {
   };
 }
 
+export function externalRelAttrs(href, siteHostname = SITE_HOSTNAME) {
+  return isExternalHref(href, siteHostname) ? { rel: EXTERNAL_REL.join(' ') } : {};
+}
+
 export function rehypeExternalLinks(options = {}) {
   const siteHostname = options.siteHostname ?? SITE_HOSTNAME;
 
@@ -85,7 +91,7 @@ export function rehypeExternalLinks(options = {}) {
       const href = node.properties?.href;
       if (!isExternalHref(href, siteHostname)) return;
 
-      node.properties.rel = mergeRelTokens(node.properties.rel, 'noopener');
+      node.properties.rel = mergeRelTokens(node.properties.rel, ...EXTERNAL_REL);
       delete node.properties.target;
     });
   };

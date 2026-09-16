@@ -5772,7 +5772,7 @@
         "src/pages/now.astro",
         "/now"
       ],
-      "reason": "Rewritten 2026-09-16: the holding state is gone. The page is now an append-only log and the lead says so, so no line has to be maintained. Owner facts came from the owner and from Apple's lookup API; the day job is deliberately not named, at the owner's request."
+      "reason": "Rewritten 2026-09-16: /now is a dated log, and the August entry now carries two outbound links (smarter.day and the App Store listing), both with rel=nofollow noopener noreferrer per L55. Facts from Apple's lookup API; the day job stays unnamed at the owner's request."
     },
     {
       "location": "attribute.lead",
@@ -5782,7 +5782,7 @@
         "src/pages/now.astro",
         "/now"
       ],
-      "reason": "Rewritten 2026-09-16: the holding state is gone. The page is now an append-only log and the lead says so, so no line has to be maintained. Owner facts came from the owner and from Apple's lookup API; the day job is deliberately not named, at the owner's request."
+      "reason": "Rewritten 2026-09-16: /now is a dated log, and the August entry now carries two outbound links (smarter.day and the App Store listing), both with rel=nofollow noopener noreferrer per L55. Facts from Apple's lookup API; the day job stays unnamed at the owner's request."
     },
     {
       "location": "attribute.title",
@@ -5791,7 +5791,7 @@
       "usedIn": [
         "src/pages/now.astro"
       ],
-      "reason": "Rewritten 2026-09-16: the holding state is gone. The page is now an append-only log and the lead says so, so no line has to be maintained. Owner facts came from the owner and from Apple's lookup API; the day job is deliberately not named, at the owner's request."
+      "reason": "Rewritten 2026-09-16: /now is a dated log, and the August entry now carries two outbound links (smarter.day and the App Store listing), both with rel=nofollow noopener noreferrer per L55. Facts from Apple's lookup API; the day job stays unnamed at the owner's request."
     },
     {
       "location": "attribute.title",
@@ -5800,7 +5800,7 @@
       "usedIn": [
         "src/pages/now.astro"
       ],
-      "reason": "Rewritten 2026-09-16: the holding state is gone. The page is now an append-only log and the lead says so, so no line has to be maintained. Owner facts came from the owner and from Apple's lookup API; the day job is deliberately not named, at the owner's request."
+      "reason": "Rewritten 2026-09-16: /now is a dated log, and the August entry now carries two outbound links (smarter.day and the App Store listing), both with rel=nofollow noopener noreferrer per L55. Facts from Apple's lookup API; the day job stays unnamed at the owner's request."
     },
     {
       "location": "attribute.body",
@@ -5810,7 +5810,7 @@
         "src/pages/now.astro",
         "/now"
       ],
-      "reason": "Rewritten 2026-09-16: the holding state is gone. The page is now an append-only log and the lead says so, so no line has to be maintained. Owner facts came from the owner and from Apple's lookup API; the day job is deliberately not named, at the owner's request."
+      "reason": "Rewritten 2026-09-16: /now is a dated log, and the August entry now carries two outbound links (smarter.day and the App Store listing), both with rel=nofollow noopener noreferrer per L55. Facts from Apple's lookup API; the day job stays unnamed at the owner's request."
     },
     {
       "location": "attribute.title",
@@ -7924,7 +7924,7 @@
         "src/utils/machine-text.mjs",
         "src/pages/now.astro"
       ],
-      "reason": "Rewritten 2026-09-16: the holding state is gone. The page is now an append-only log and the lead says so, so no line has to be maintained. Owner facts came from the owner and from Apple's lookup API; the day job is deliberately not named, at the owner's request."
+      "reason": "Rewritten 2026-09-16: /now is a dated log, and the August entry now carries two outbound links (smarter.day and the App Store listing), both with rel=nofollow noopener noreferrer per L55. Facts from Apple's lookup API; the day job stays unnamed at the owner's request."
     },
     {
       "location": "constant.description",
@@ -8834,7 +8834,7 @@
       "usedIn": [
         "src/pages/now.astro"
       ],
-      "reason": "Rewritten 2026-09-16: the holding state is gone. The page is now an append-only log and the lead says so, so no line has to be maintained. Owner facts came from the owner and from Apple's lookup API; the day job is deliberately not named, at the owner's request."
+      "reason": "Rewritten 2026-09-16: /now is a dated log, and the August entry now carries two outbound links (smarter.day and the App Store listing), both with rel=nofollow noopener noreferrer per L55. Facts from Apple's lookup API; the day job stays unnamed at the owner's request."
     },
     {
       "location": "constant.text",
@@ -8843,7 +8843,16 @@
       "usedIn": [
         "src/pages/now.astro"
       ],
-      "reason": "Rewritten 2026-09-16: the holding state is gone. The page is now an append-only log and the lead says so, so no line has to be maintained. Owner facts came from the owner and from Apple's lookup API; the day job is deliberately not named, at the owner's request."
+      "reason": "Rewritten 2026-09-16: /now is a dated log, and the August entry now carries two outbound links (smarter.day and the App Store listing), both with rel=nofollow noopener noreferrer per L55. Facts from Apple's lookup API; the day job stays unnamed at the owner's request."
+    },
+    {
+      "location": "constant.label",
+      "text": "App Store",
+      "status": "rewritten",
+      "usedIn": [
+        "src/pages/now.astro"
+      ],
+      "reason": "Rewritten 2026-09-16: /now is a dated log, and the August entry now carries two outbound links (smarter.day and the App Store listing), both with rel=nofollow noopener noreferrer per L55. Facts from Apple's lookup API; the day job stays unnamed at the owner's request."
     },
     {
       "location": "constant.text",
@@ -8852,7 +8861,7 @@
       "usedIn": [
         "src/pages/now.astro"
       ],
-      "reason": "Rewritten 2026-09-16: the holding state is gone. The page is now an append-only log and the lead says so, so no line has to be maintained. Owner facts came from the owner and from Apple's lookup API; the day job is deliberately not named, at the owner's request."
+      "reason": "Rewritten 2026-09-16: /now is a dated log, and the August entry now carries two outbound links (smarter.day and the App Store listing), both with rel=nofollow noopener noreferrer per L55. Facts from Apple's lookup API; the day job stays unnamed at the owner's request."
     },
     {
       "location": "constant.title",
@@ -13165,7 +13174,7 @@
       "usedIn": [
         "/now"
       ],
-      "reason": "Rewritten 2026-09-16 from a holding state into a dated log, newest first: ISO/IEC 42001 study with no certificate claimed, and the two Smarter Day releases. Every fact verified against a primary source (the App Store lookup API for the release dates, version and price); the capacity block was deleted because a page nobody can keep in sync is worse than no page."
+      "reason": "Rewritten 2026-09-16: /now is a dated log, and the August entry now carries two outbound links (smarter.day and the App Store listing), both with rel=nofollow noopener noreferrer per L55. Facts from Apple's lookup API; the day job stays unnamed at the owner's request."
     },
     {
       "location": "head.title",
