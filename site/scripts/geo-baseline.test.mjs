@@ -28,6 +28,7 @@ test('prompts are read from the core with their must-win route and passage', () 
     mustWin: '/',
     support: ['/services/x'],
     passage: 'I am the officer your org chart can point at.',
+    passageRoute: '/',
   });
 });
 
@@ -95,4 +96,49 @@ test('the report names itself structural readiness, never a citation rate, becau
   assert.match(md, /structural readiness/i);
   assert.match(md, /no AI engine was queried/i);
   assert.doesNotMatch(md, /citation rate|cited by/i);
+});
+
+test('the passage is checked on the route the core attributes it to, not on the must-win route', () => {
+  const prompts = parsePrompts(`### The 30 buyer prompts
+
+**4. AI governance consultant ISO 42001 small company**
+Must win: \`/services/x\`, support \`/faq/y\`.
+Passage: "auditor would recognise as ready" (\`/faq/y\`)
+Why: because.
+`);
+  assert.equal(prompts[0].passageRoute, '/faq/y');
+
+  const pages = {
+    '/services/x': { text: 'no such words here', hasShortAnswer: true, hasJsonLd: true, inLlms: true },
+    '/faq/y': { text: 'an auditor would recognise as ready', hasShortAnswer: true, hasJsonLd: true, inLlms: true },
+  };
+  assert.deepEqual(scorePrompt(prompts[0], pages).missing, []);
+});
+
+test('a passage with no attributed route is still checked on the must-win route', () => {
+  const prompts = parsePrompts(`### The 30 buyer prompts
+
+**5. p**
+Must win: \`/a\`.
+Passage: "exact words"
+Why: because.
+`);
+  assert.equal(prompts[0].passageRoute, '');
+  const pages = { '/a': { text: 'exact words', hasShortAnswer: true, hasJsonLd: true, inLlms: true } };
+  assert.deepEqual(scorePrompt(prompts[0], pages).missing, []);
+});
+
+test('a passage missing from its attributed route is a finding that names that route', () => {
+  const prompts = parsePrompts(`### The 30 buyer prompts
+
+**6. p**
+Must win: \`/a\`.
+Passage: "promised words" (\`/b\`)
+Why: because.
+`);
+  const pages = {
+    '/a': { text: 'x', hasShortAnswer: true, hasJsonLd: true, inLlms: true },
+    '/b': { text: 'nothing like it', hasShortAnswer: true, hasJsonLd: true, inLlms: true },
+  };
+  assert.deepEqual(scorePrompt(prompts[0], pages).missing, ['passage on /b']);
 });

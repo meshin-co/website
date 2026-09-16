@@ -62,6 +62,7 @@ const MAIN = /<main\b[^>]*>([\s\S]*?)<\/main>/i;
 const CHROME = /<(header|footer|nav)\b[^>]*>/gi;
 const IGNORED = /<(\w+)\b[^>]*\bdata-gate-ignore\b[^>]*>/gi;
 const LEAD = /<p\b[^>]*\bdata-gate-lead\b[^>]*>([\s\S]*?)<\/p>/i;
+const LEADS = /<p\b[^>]*\bdata-gate-lead\b[^>]*>([\s\S]*?)<\/p>/gi;
 
 function newestDate(html) {
   const days = matchAll(html, /<time\b[^>]*\bdatetime="([^"]+)"/gi).map((value) => value.slice(0, 10));
@@ -74,9 +75,10 @@ export function extractPage(route, html) {
   const body = cutBalanced(main, IGNORED);
 
   const lead = LEAD.exec(body) ? stripTags(LEAD.exec(body)[1]) : null;
+  const markedAnswers = new Set(matchAll(body, LEADS).map(stripTags));
   const paragraphs = matchAll(body, /<p\b[^>]*>([\s\S]*?)<\/p>/gi)
     .map(stripTags)
-    .filter((paragraph) => paragraph && paragraph !== lead);
+    .filter((paragraph) => paragraph && !markedAnswers.has(paragraph));
   const h1 = matchAll(body, /<h1\b[^>]*>([\s\S]*?)<\/h1>/gi).map(stripTags);
   const sub = matchAll(body, /<h([2-4])\b[^>]*>([\s\S]*?)<\/h\1>/gi, 2).map(stripTags);
   const hrefs = matchAll(body, /<a\b[^>]*\bhref="([^"]+)"/gi);
@@ -91,7 +93,7 @@ export function extractPage(route, html) {
     route,
     text: stripTags(body),
     lead,
-    opening: [lead, ...paragraphs].filter(Boolean).join(' ').split(/\s+/).slice(0, OPENING_WORDS).join(' '),
+    opening: [...markedAnswers, ...paragraphs].filter(Boolean).join(' ').split(/\s+/).slice(0, OPENING_WORDS).join(' '),
     paragraphs,
     headings: { h1, sub },
     links: { internal, external },

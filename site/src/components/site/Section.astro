@@ -32,7 +32,11 @@ const Heading = headingLevel === 1 ? 'h1' : 'h2';
               {title}
             </Heading>
           )}
-          {lead && <p class="max-w-[62ch] text-muted">{lead}</p>}
+          {lead && (
+            <p class="max-w-[62ch] text-muted" {...(headingLevel === 1 ? { 'data-gate-lead': true } : {})}>
+              {lead}
+            </p>
+          )}
         </div>
       )
     }
