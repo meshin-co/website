@@ -248,8 +248,8 @@
   {
     "target": "site/src/utils/machine-text.mjs",
     "status": "rewritten",
-    "reason": "STATIC_PAGE_CATALOG/HUB_PAGES are hand-duplicated titles/descriptions that ship in llms.txt and .md sidecars; six entries had drifted from their live page's own metadata ('/blog/tags' title+description, '/contact' and '/pricing' and '/terms' descriptions, '/ai-policy' and '/404' titles) -- resynced to the current live source. The '/terms' fix also corrects a factual error: the old sidecar description said 'what the published prices mean', contradicting L8 (no prices are published); the live page correctly says 'why no price appears on it'",
-    "digest": "19edca6adeb8"
+    "reason": "Rewritten 2026-09-16: the static page catalog's /now description was updated to match the page's new meta description after /now became a dated log. gate:machine caught the drift, which is what the catalog guard exists for.",
+    "digest": "7f63bf06d91c"
   },
   {
     "target": "site/src/utils/faq-meta.mjs",

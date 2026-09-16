@@ -46,7 +46,8 @@
     "audit:polish": "node scripts/run-polish-sweep.mjs",
     "audit:prelaunch": "node scripts/run-pre-launch.mjs dist",
     "smoke:prod": "node scripts/run-smoke-prod.mjs",
-    "gate:docs": "node scripts/run-docs-gate.mjs .."
+    "gate:docs": "node scripts/run-docs-gate.mjs ..",
+    "audit:geo-probe": "node scripts/run-geo-probe.mjs"
   },
   "dependencies": {
     "@astro-community/astro-embed-twitter": "^0.5.11",

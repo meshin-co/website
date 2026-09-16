@@ -5767,50 +5767,50 @@
     {
       "location": "attribute.title",
       "text": "What I am working on now",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "src/pages/now.astro",
         "/now"
       ],
-      "reason": "Correctly ships as an honest holding state per L18/COPY-CHECKLIST §4; lead paragraph already explains why it's empty rather than guessing. No owner facts invented."
+      "reason": "Rewritten 2026-09-16: the holding state is gone. The page is now an append-only log and the lead says so, so no line has to be maintained. Owner facts came from the owner and from Apple's lookup API; the day job is deliberately not named, at the owner's request."
     },
     {
       "location": "attribute.lead",
-      "text": "I update this list of what I am working on now once a month, by hand, not generated. When the capacity line says nothing is free, it means nothing is free. It stays empty until there is something true to put in it.",
-      "status": "verified",
+      "text": "What I am working on now, kept as a log with the newest line first. A line is added when something actually happens and is not edited afterwards, so nothing here has to be kept in sync. What is not on the list is not being worked on.",
+      "status": "rewritten",
       "usedIn": [
         "src/pages/now.astro",
         "/now"
       ],
-      "reason": "Correctly ships as an honest holding state per L18/COPY-CHECKLIST §4; lead paragraph already explains why it's empty rather than guessing. No owner facts invented."
+      "reason": "Rewritten 2026-09-16: the holding state is gone. The page is now an append-only log and the lead says so, so no line has to be maintained. Owner facts came from the owner and from Apple's lookup API; the day job is deliberately not named, at the owner's request."
     },
     {
       "location": "attribute.title",
-      "text": "This month",
-      "status": "verified",
+      "text": "The log",
+      "status": "rewritten",
       "usedIn": [
         "src/pages/now.astro"
       ],
-      "reason": "Correctly ships as an honest holding state per L18/COPY-CHECKLIST §4; lead paragraph already explains why it's empty rather than guessing. No owner facts invented."
+      "reason": "Rewritten 2026-09-16: the holding state is gone. The page is now an append-only log and the lead says so, so no line has to be maintained. Owner facts came from the owner and from Apple's lookup API; the day job is deliberately not named, at the owner's request."
     },
     {
       "location": "attribute.title",
-      "text": "Ask what is actually free this month.",
-      "status": "verified",
+      "text": "Ask what is free right now.",
+      "status": "rewritten",
       "usedIn": [
         "src/pages/now.astro"
       ],
-      "reason": "Correctly ships as an honest holding state per L18/COPY-CHECKLIST §4; lead paragraph already explains why it's empty rather than guessing. No owner facts invented."
+      "reason": "Rewritten 2026-09-16: the holding state is gone. The page is now an append-only log and the lead says so, so no line has to be maintained. Owner facts came from the owner and from Apple's lookup API; the day job is deliberately not named, at the owner's request."
     },
     {
       "location": "attribute.body",
-      "text": "Capacity changes weekly, so it is a question for the call rather than a line on a page.",
-      "status": "verified",
+      "text": "Availability is a question for the call, not a line on a page that would be wrong a week later.",
+      "status": "rewritten",
       "usedIn": [
         "src/pages/now.astro",
         "/now"
       ],
-      "reason": "Correctly ships as an honest holding state per L18/COPY-CHECKLIST §4; lead paragraph already explains why it's empty rather than guessing. No owner facts invented."
+      "reason": "Rewritten 2026-09-16: the holding state is gone. The page is now an append-only log and the lead says so, so no line has to be maintained. Owner facts came from the owner and from Apple's lookup API; the day job is deliberately not named, at the owner's request."
     },
     {
       "location": "attribute.title",
@@ -7918,13 +7918,13 @@
     },
     {
       "location": "constant.description",
-      "text": "What I am working on this month, what I am reading, and how much capacity is actually free.",
-      "status": "verified",
+      "text": "A dated log of what I am building and studying, newest first. A line is added when something happens and never edited after.",
+      "status": "rewritten",
       "usedIn": [
         "src/utils/machine-text.mjs",
         "src/pages/now.astro"
       ],
-      "reason": "Correctly ships as an honest holding state per L18/COPY-CHECKLIST §4; lead paragraph already explains why it's empty rather than guessing. No owner facts invented."
+      "reason": "Rewritten 2026-09-16: the holding state is gone. The page is now an append-only log and the lead says so, so no line has to be maintained. Owner facts came from the owner and from Apple's lookup API; the day job is deliberately not named, at the owner's request."
     },
     {
       "location": "constant.description",
@@ -8828,31 +8828,31 @@
       "reason": "Answer-first sections, no banned phrases, sentence lengths compliant. Hero title/sub are locked unchanged by L9a; left untouched (see report conflict note)."
     },
     {
-      "location": "constant.label",
-      "text": "Working on",
-      "status": "verified",
+      "location": "constant.text",
+      "text": "Working through ISO/IEC 42001, the AI management system standard. Studying it, not certified against it: no exam booked and no certificate to claim.",
+      "status": "rewritten",
       "usedIn": [
         "src/pages/now.astro"
       ],
-      "reason": "Correctly ships as an honest holding state per L18/COPY-CHECKLIST §4; lead paragraph already explains why it's empty rather than guessing. No owner facts invented."
+      "reason": "Rewritten 2026-09-16: the holding state is gone. The page is now an append-only log and the lead says so, so no line has to be maintained. Owner facts came from the owner and from Apple's lookup API; the day job is deliberately not named, at the owner's request."
     },
     {
-      "location": "constant.blocks",
-      "text": "Filled in when the site launches.",
-      "status": "verified",
+      "location": "constant.text",
+      "text": "Shipped Smarter Day 3.7.0, the iOS app I build and publish myself. Free on the App Store, filed under Productivity.",
+      "status": "rewritten",
       "usedIn": [
         "src/pages/now.astro"
       ],
-      "reason": "Correctly ships as an honest holding state per L18/COPY-CHECKLIST §4; lead paragraph already explains why it's empty rather than guessing. No owner facts invented."
+      "reason": "Rewritten 2026-09-16: the holding state is gone. The page is now an append-only log and the lead says so, so no line has to be maintained. Owner facts came from the owner and from Apple's lookup API; the day job is deliberately not named, at the owner's request."
     },
     {
-      "location": "constant.items",
-      "text": "Filled in when the site launches. Until then, ask on the call.",
-      "status": "verified",
+      "location": "constant.text",
+      "text": "First release of Smarter Day: a structured day, tasks, habits and an Eisenhower priority matrix in one app.",
+      "status": "rewritten",
       "usedIn": [
         "src/pages/now.astro"
       ],
-      "reason": "Correctly ships as an honest holding state per L18/COPY-CHECKLIST §4; lead paragraph already explains why it's empty rather than guessing. No owner facts invented."
+      "reason": "Rewritten 2026-09-16: the holding state is gone. The page is now an append-only log and the lead says so, so no line has to be maintained. Owner facts came from the owner and from Apple's lookup API; the day job is deliberately not named, at the owner's request."
     },
     {
       "location": "constant.title",
@@ -13161,11 +13161,11 @@
     {
       "location": "head.title",
       "text": "Now — meshin.co",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "/now"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Rewritten 2026-09-16 from a holding state into a dated log, newest first: ISO/IEC 42001 study with no certificate claimed, and the two Smarter Day releases. Every fact verified against a primary source (the App Store lookup API for the release dates, version and price); the capacity block was deleted because a page nobody can keep in sync is worse than no page."
     },
     {
       "location": "head.title",

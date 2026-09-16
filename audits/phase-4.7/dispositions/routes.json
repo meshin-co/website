@@ -529,9 +529,9 @@
   },
   {
     "target": "/now",
-    "status": "verified",
-    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "dab3f59b7249"
+    "status": "rewritten",
+    "reason": "Rewritten 2026-09-16 from a holding state into a dated log, newest first: ISO/IEC 42001 study with no certificate claimed, and the two Smarter Day releases. Every fact verified against a primary source (the App Store lookup API for the release dates, version and price); the capacity block was deleted because a page nobody can keep in sync is worse than no page.",
+    "digest": "5d123aced415"
   },
   {
     "target": "/pricing",
