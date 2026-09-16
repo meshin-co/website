@@ -8,11 +8,12 @@ import { orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mj
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
-const UPDATED = new Date('2026-09-08');
+const UPDATED = new Date('2026-09-16');
 
 const metadata = {
   title: 'Now',
-  description: 'What I am working on this month, what I am reading, and how much capacity is actually free.',
+  description:
+    'A dated log of what I am building and studying, newest first. A line is added when something happens and never edited after.',
 };
 
 const crumbs = [
@@ -27,18 +28,18 @@ const nodes = [
   webPageNode(site, '/now', null, metadata.title),
 ];
 
-const blocks = [
+const log = [
   {
-    label: 'Working on',
-    items: ['Filled in when the site launches.'],
+    date: 'September 2026',
+    text: 'Working through ISO/IEC 42001, the AI management system standard. Studying it, not certified against it: no exam booked and no certificate to claim.',
   },
   {
-    label: 'Capacity',
-    items: ['Filled in when the site launches. Until then, ask on the call.'],
+    date: 'August 2026',
+    text: 'Shipped Smarter Day 3.7.0, the iOS app I build and publish myself. Free on the App Store, filed under Productivity.',
   },
   {
-    label: 'Reading',
-    items: ['Filled in when the site launches.'],
+    date: 'November 2025',
+    text: 'First release of Smarter Day: a structured day, tasks, habits and an Eisenhower priority matrix in one app.',
   },
 ];
 ---
@@ -53,20 +54,16 @@ const blocks = [
     headingLevel={1}
     eyebrow={`Updated ${UPDATED.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}`}
     title="What I am working on now"
-    lead="I update this list of what I am working on now once a month, by hand, not generated. When the capacity line says nothing is free, it means nothing is free. It stays empty until there is something true to put in it."
+    lead="What I am working on now, kept as a log with the newest line first. A line is added when something actually happens and is not edited afterwards, so nothing here has to be kept in sync. What is not on the list is not being worked on."
   />
 
-  <Section title="This month">
-    <dl class="grid gap-px bg-line sm:grid-cols-3">
+  <Section title="The log">
+    <dl class="border-line grid border-t">
       {
-        blocks.map((block) => (
-          <div class="bg-page p-6">
-            <dt class="eyebrow">{block.label}</dt>
-            <dd class="mt-4 grid gap-3">
-              {block.items.map((item) => (
-                <span class="block max-w-[44ch] text-muted">{item}</span>
-              ))}
-            </dd>
+        log.map((entry) => (
+          <div class="border-line grid gap-2 border-b py-6 sm:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] sm:gap-8">
+            <dt class="eyebrow">{entry.date}</dt>
+            <dd class="min-w-0 max-w-[68ch] text-muted">{entry.text}</dd>
           </div>
         ))
       }
@@ -75,8 +72,8 @@ const blocks = [
 
   <Section title="Next step">
     <CtaBlock
-      title="Ask what is actually free this month."
-      body="Capacity changes weekly, so it is a question for the call rather than a line on a page."
+      title="Ask what is free right now."
+      body="Availability is a question for the call, not a line on a page that would be wrong a week later."
       label="Book a 30-min fit call"
       href="https://cal.com/meshin"
       note="Or email hello@meshin.co"

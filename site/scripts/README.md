@@ -46,36 +46,38 @@ a build.
 
 ## Audits and reports
 
-| Script                      | Invoked by               | What it produces                                            |
-| --------------------------- | ------------------------ | ----------------------------------------------------------- |
-| `report.mjs`                | `gate:lh`, CI            | `audits/phase-N/REPORT.md`, including the metric budgets    |
-| `collect-reports.mjs`       | `gate:lh`, `gate:lh:one` | The per-shard Lighthouse runs, merged                       |
-| `run-polish-sweep.mjs`      | `audit:polish`           | `audits/phase-5/polish-sweep.md`, 105 routes at six widths  |
-| `run-pre-launch.mjs`        | `audit:prelaunch`        | `audits/phase-5/pre-launch.md`, all 24 checklist sections   |
-| `run-smoke-prod.mjs`        | `smoke:prod`             | `audits/phase-5/smoke-prod.md`, 18 live requests            |
-| `generate-geo-baseline.mjs` | `audit:geo`              | `audits/geo-baseline.md`, buyer-prompt structural readiness |
+| Script                      | Invoked by               | What it produces                                                  |
+| --------------------------- | ------------------------ | ----------------------------------------------------------------- |
+| `report.mjs`                | `gate:lh`, CI            | `audits/phase-N/REPORT.md`, including the metric budgets          |
+| `collect-reports.mjs`       | `gate:lh`, `gate:lh:one` | The per-shard Lighthouse runs, merged                             |
+| `run-polish-sweep.mjs`      | `audit:polish`           | `audits/phase-5/polish-sweep.md`, 105 routes at six widths        |
+| `run-pre-launch.mjs`        | `audit:prelaunch`        | `audits/phase-5/pre-launch.md`, all 24 checklist sections         |
+| `run-smoke-prod.mjs`        | `smoke:prod`             | `audits/phase-5/smoke-prod.md`, 18 live requests                  |
+| `generate-geo-baseline.mjs` | `audit:geo`              | `audits/geo-baseline.md`, buyer-prompt structural readiness       |
+| `run-geo-probe.mjs`         | `audit:geo-probe`        | `audits/geo-probe.md`, what four live answer engines actually say |
 
 ## Modules
 
 Imported, never run directly. Each holds the rules its gate or report enforces, so the rules can
 be tested without a build.
 
-| Script                    | Imported by                                   | What it holds                                                 |
-| ------------------------- | --------------------------------------------- | ------------------------------------------------------------- |
-| `docs-gate.mjs`           | `run-docs-gate.mjs`                           | Which citations are checkable, and which are excluded by name |
-| `smoke-prod.mjs`          | `run-smoke-prod.mjs`                          | The required header set and the per-route verdict             |
-| `polish-sweep.mjs`        | `run-polish-sweep.mjs`                        | Finding classification and the six audit widths               |
-| `pre-launch.mjs`          | `run-pre-launch.mjs`                          | The checklist rules and the four statuses                     |
-| `geo-baseline.mjs`        | `generate-geo-baseline.mjs`                   | Prompt parsing and readiness scoring                          |
-| `content-rows.mjs`        | the content and editorial gates               | Row extraction from built HTML                                |
-| `prose-rules.mjs`         | the content gate, the registers               | Machine-pattern and density rules                             |
-| `registers.mjs`           | `generate-registers.mjs`, `generate-gaps.mjs` | Entity, concept and relationship registers                    |
-| `editorial-inventory.mjs` | `editorial-gate.mjs`                          | What counts as a user-facing string                           |
-| `editorial-gaps.mjs`      | `generate-gaps.mjs`                           | Unlinked concepts and orphan entities                         |
-| `dispositions.mjs`        | `editorial-gate.mjs`                          | Disposition validity and derived status                       |
-| `catalog-drift.mjs`       | `machine.mjs`                                 | Static page catalog versus the built pages                    |
-| `templates.mjs`           | `editorial-inventory.mjs`                     | Template families and their leaves                            |
-| `lh-shards.cjs`           | `lighthouserc.cjs`                            | Route sharding across the Lighthouse matrix                   |
+| Script                    | Imported by                                   | What it holds                                                  |
+| ------------------------- | --------------------------------------------- | -------------------------------------------------------------- |
+| `docs-gate.mjs`           | `run-docs-gate.mjs`                           | Which citations are checkable, and which are excluded by name  |
+| `smoke-prod.mjs`          | `run-smoke-prod.mjs`                          | The required header set and the per-route verdict              |
+| `polish-sweep.mjs`        | `run-polish-sweep.mjs`                        | Finding classification and the six audit widths                |
+| `pre-launch.mjs`          | `run-pre-launch.mjs`                          | The checklist rules and the four statuses                      |
+| `geo-baseline.mjs`        | `generate-geo-baseline.mjs`                   | Prompt parsing and readiness scoring                           |
+| `geo-probe.mjs`           | `run-geo-probe.mjs`                           | Verdict classification, redirect resolution, the engine roster |
+| `content-rows.mjs`        | the content and editorial gates               | Row extraction from built HTML                                 |
+| `prose-rules.mjs`         | the content gate, the registers               | Machine-pattern and density rules                              |
+| `registers.mjs`           | `generate-registers.mjs`, `generate-gaps.mjs` | Entity, concept and relationship registers                     |
+| `editorial-inventory.mjs` | `editorial-gate.mjs`                          | What counts as a user-facing string                            |
+| `editorial-gaps.mjs`      | `generate-gaps.mjs`                           | Unlinked concepts and orphan entities                          |
+| `dispositions.mjs`        | `editorial-gate.mjs`                          | Disposition validity and derived status                        |
+| `catalog-drift.mjs`       | `machine.mjs`                                 | Static page catalog versus the built pages                     |
+| `templates.mjs`           | `editorial-inventory.mjs`                     | Template families and their leaves                             |
+| `lh-shards.cjs`           | `lighthouserc.cjs`                            | Route sharding across the Lighthouse matrix                    |
 
 ## Servers
 

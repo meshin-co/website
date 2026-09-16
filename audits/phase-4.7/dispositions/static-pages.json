@@ -37,9 +37,9 @@
   },
   {
     "target": "site/src/pages/now.astro",
-    "status": "verified",
-    "reason": "Correctly ships as an honest holding state per L18/COPY-CHECKLIST §4; lead paragraph already explains why it's empty rather than guessing. No owner facts invented.",
-    "digest": "e399482c43f8"
+    "status": "rewritten",
+    "reason": "Rewritten 2026-09-16: the holding state is gone. The page is now an append-only log and the lead says so, so no line has to be maintained. Owner facts came from the owner and from Apple's lookup API; the day job is deliberately not named, at the owner's request.",
+    "digest": "213ff1357c60"
   },
   {
     "target": "site/src/pages/ai-policy.astro",

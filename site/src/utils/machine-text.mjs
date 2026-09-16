@@ -183,7 +183,8 @@ export const STATIC_PAGE_CATALOG = [
     path: '/now',
     title: 'Now',
     file: 'src/pages/now.astro',
-    description: 'What I am working on this month, what I am reading, and how much capacity is actually free.',
+    description:
+      'A dated log of what I am building and studying, newest first. A line is added when something happens and never edited after.',
   },
   {
     path: '/imprint',

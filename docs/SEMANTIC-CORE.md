@@ -34,7 +34,7 @@ title `{page name} — meshin.co` · meta: value-proposition clause naming the o
 | `/faq` | fractional chief ai officer questions | Questions and answers — meshin.co | What a Fractional Chief AI Officer does, what each offer produces, and how AI risk gets recorded and signed off. | Fractional Chief AI Officer questions, answered | 47 | ✓ |
 | `/glossary` | ai governance glossary | AI governance glossary — meshin.co | Plain definitions of the AI governance terms that come up in security reviews and board meetings. | AI governance glossary | 52 | ✓ |
 | `/imprint` | imprint | Imprint — meshin.co | Who is responsible for this site, how to reach them, and what it is hosted on. | Imprint | 22 | ✓ |
-| `/now` | what i am working on now | Now — meshin.co | What I am working on this month, what I am reading, and how much capacity is actually free. | What I am working on now | 22 | ✓ |
+| `/now` | what i am working on now | Now — meshin.co | A dated log of what I am building and studying, newest first. A line is added when something happens and never edited after. | What I am working on now | 22 | ✓ |
 | `/pricing` | fractional chief ai officer cost | Pricing — meshin.co | Three fixed structures and no hourly billing: a two-week Assessment, a 90-Day Sprint, and a monthly Retainer. Every fee reaches you in writing before work starts. | What a Fractional Chief AI Officer costs | 25 | ✓ |
 | `/privacy` | privacy policy | Privacy — meshin.co | What this site collects, which is almost nothing, and what happens to an email you send me. | Privacy policy | 22 | ✓ |
 | `/resources` | ai governance templates | Resources — meshin.co | Open templates and checklists for AI governance: register, acceptable-use policy, data classification, vendor questionnaire. | AI governance templates | 22 | ✓ |
@@ -407,7 +407,7 @@ One owning route per entity. The mention count is inbound references from other 
 | Agentic workflow | `/glossary/agentic-workflow` | 11 |
 | AI governance | `/glossary/ai-governance` | 30 |
 | AI impact assessment | `/glossary/ai-impact-assessment` | 2 |
-| AI management system | `/glossary/ai-management-system` | 3 |
+| AI management system | `/glossary/ai-management-system` | 4 |
 | AI register | `/glossary/ai-register` | 27 |
 | Conformity assessment | `/glossary/conformity-assessment` | 5 |
 | Data classification | `/glossary/data-classification` | 14 |
@@ -419,7 +419,7 @@ One owning route per entity. The mention count is inbound references from other 
 | High-risk AI system | `/glossary/high-risk-ai-system` | 9 |
 | Human oversight | `/glossary/human-oversight` | 6 |
 | Human-in-the-loop | `/glossary/human-in-the-loop` | 5 |
-| ISO/IEC 42001 | `/glossary/iso-iec-42001` | 25 |
+| ISO/IEC 42001 | `/glossary/iso-iec-42001` | 26 |
 | LLM gateway | `/glossary/llm-gateway` | 6 |
 | Model card | `/glossary/model-card` | 3 |
 | Model provenance | `/glossary/model-provenance` | 3 |

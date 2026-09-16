@@ -140,3 +140,10 @@ same-day symbol extraction: the referencing `<svg>` repeated the `<symbol>`'s ow
 visible window started at 95,105 - the content was translated up and left by that offset and cut.
 The reference viewport is now `0 0 610 610` and the symbol keeps the offset. Verified in both
 themes on the real page: full ring, centred, ink on paper in light and paper on ink in dark.
+
+## 2026-09-16 - /now becomes a dated log
+
+`/now` stops being a holding page with three empty blocks and a capacity line. It is an
+append-only log: a date column and a sentence, newest first, nothing to keep in sync. The
+three-column `dl` is replaced by a bordered two-column list, so the page is shorter and its
+baselines changed at both viewports.

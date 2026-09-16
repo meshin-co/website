@@ -1,0 +1,1106 @@
+{
+  "rows": [
+    {
+      "number": 1,
+      "prompt": "who is a fractional chief AI officer for a 100-person SaaS company",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 1,
+      "prompt": "who is a fractional chief AI officer for a 100-person SaaS company",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 1,
+      "prompt": "who is a fractional chief AI officer for a 100-person SaaS company",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 1,
+      "prompt": "who is a fractional chief AI officer for a 100-person SaaS company",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "umbrex.com, 0260.ai, hartzai.com, linkedin.com"
+    },
+    {
+      "number": 2,
+      "prompt": "fractional CAIO vs full-time CAIO cost",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "fsagency.co, theaihat.com, aiassemblylines.com, primeai.solutions"
+    },
+    {
+      "number": 2,
+      "prompt": "fractional CAIO vs full-time CAIO cost",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "epcgroup.net, justinmckelvey.com, thehovi.com, fsagency.co"
+    },
+    {
+      "number": 2,
+      "prompt": "fractional CAIO vs full-time CAIO cost",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "appliedaileadership.org, heidrick.com, gofractional.com, bls.gov"
+    },
+    {
+      "number": 2,
+      "prompt": "fractional CAIO vs full-time CAIO cost",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "iternal.ai, avihayzanetti.ai, theaihat.com, arqmetrica.com"
+    },
+    {
+      "number": 3,
+      "prompt": "AI readiness assessment template for SMB",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 3,
+      "prompt": "AI readiness assessment template for SMB",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 3,
+      "prompt": "AI readiness assessment template for SMB",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 3,
+      "prompt": "AI readiness assessment template for SMB",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "techsevenpartners.com, surveymonkey.com, acumatica.com, layer3labs.io"
+    },
+    {
+      "number": 4,
+      "prompt": "AI governance consultant ISO 42001 small company",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "advisera.com, kpmg.com, cloudsecurityalliance.org, hyperproof.io"
+    },
+    {
+      "number": 4,
+      "prompt": "AI governance consultant ISO 42001 small company",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 4,
+      "prompt": "AI governance consultant ISO 42001 small company",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 4,
+      "prompt": "AI governance consultant ISO 42001 small company",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "bdemerson.com, aimsready.com, dionach.com, grcsolutions.io"
+    },
+    {
+      "number": 5,
+      "prompt": "named person responsible for AI risk in vendor procurement",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "eisneramper.com, onetrust.com, pwc.com, isms.online"
+    },
+    {
+      "number": 5,
+      "prompt": "named person responsible for AI risk in vendor procurement",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "optro.ai, isms.online, aigovernancecore.com, mcallistercompliancegroup.com"
+    },
+    {
+      "number": 5,
+      "prompt": "named person responsible for AI risk in vendor procurement",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 5,
+      "prompt": "named person responsible for AI risk in vendor procurement",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "ibm.com, isms.online, boardcloud.us, pwc.com"
+    },
+    {
+      "number": 6,
+      "prompt": "how to build an AI system register",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "medium.com, elevateconsult.com, mlflow.org, 2021.ai"
+    },
+    {
+      "number": 6,
+      "prompt": "how to build an AI system register",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 6,
+      "prompt": "how to build an AI system register",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 6,
+      "prompt": "how to build an AI system register",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "linkedin.com, aitrustcert.com, pranoti.thesciencetalk.com, agility-at-scale.com"
+    },
+    {
+      "number": 7,
+      "prompt": "AI acceptable use policy template",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "isaca.org, frsecure.com, tenable.com, purplesec.us"
+    },
+    {
+      "number": 7,
+      "prompt": "AI acceptable use policy template",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 7,
+      "prompt": "AI acceptable use policy template",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 7,
+      "prompt": "AI acceptable use policy template",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "shadowaipolicy.com, aigovguide.org, aona.ai, frsecure.com"
+    },
+    {
+      "number": 8,
+      "prompt": "EU AI Act obligations for deployers small business",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "knowledge.dlapiper.com, artificialintelligenceact.eu, iapp.org, sentra.io"
+    },
+    {
+      "number": 8,
+      "prompt": "EU AI Act obligations for deployers small business",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "wpseoai.com, taylorwessing.com, regumatrix.eu, digital4business.eu"
+    },
+    {
+      "number": 8,
+      "prompt": "EU AI Act obligations for deployers small business",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "eur-lex.europa.eu, ai-act-service-desk.ec.europa.eu, digital-strategy.ec.europa.eu"
+    },
+    {
+      "number": 8,
+      "prompt": "EU AI Act obligations for deployers small business",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "regulation-ai.eu, aiactbase.eu, artificialintelligenceact.eu, regumatrix.eu"
+    },
+    {
+      "number": 9,
+      "prompt": "why do AI pilots fail to reach production",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "witness.ai, firstlinesoftware.com, digitaldividedata.com, zbrain.ai"
+    },
+    {
+      "number": 9,
+      "prompt": "why do AI pilots fail to reach production",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 9,
+      "prompt": "why do AI pilots fail to reach production",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 9,
+      "prompt": "why do AI pilots fail to reach production",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "unifyapps.com, forbes.com, mindstudio.ai, fountaincity.tech"
+    },
+    {
+      "number": 10,
+      "prompt": "LLM gateway for governance and audit",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "langchain.com, braintrust.dev, github.com, solo.io"
+    },
+    {
+      "number": 10,
+      "prompt": "LLM gateway for governance and audit",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 10,
+      "prompt": "LLM gateway for governance and audit",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 10,
+      "prompt": "LLM gateway for governance and audit",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "truefoundry.com, cequence.ai, getmaxim.ai, openrouter.ai"
+    },
+    {
+      "number": 11,
+      "prompt": "how to put evals for AI agents into CI",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "galileo.ai, kinde.com, arize.com, mabl.com"
+    },
+    {
+      "number": 11,
+      "prompt": "how to put evals for AI agents into CI",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 11,
+      "prompt": "how to put evals for AI agents into CI",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 11,
+      "prompt": "how to put evals for AI agents into CI",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "agentcenter.cloud, tessary.ai, agenticwire.news, agent-ci.com"
+    },
+    {
+      "number": 12,
+      "prompt": "AI vendor assessment questionnaire template",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 12,
+      "prompt": "AI vendor assessment questionnaire template",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 12,
+      "prompt": "AI vendor assessment questionnaire template",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 12,
+      "prompt": "AI vendor assessment questionnaire template",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "airuntimesecurity.io, aigovernance.com, learntprm.com, aona.ai"
+    },
+    {
+      "number": 13,
+      "prompt": "build vs buy AI 3-year TCO",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "atlan.com, cmarix.com, hp.com, fastgpt.io"
+    },
+    {
+      "number": 13,
+      "prompt": "build vs buy AI 3-year TCO",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 13,
+      "prompt": "build vs buy AI 3-year TCO",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 13,
+      "prompt": "build vs buy AI 3-year TCO",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "linkedin.com, slavin.ai, expertaiprompts.blog, neomanex.com"
+    },
+    {
+      "number": 14,
+      "prompt": "AI operating model for mid-size company",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "technijian.com, govirtualoffice.com, nmsconsulting.com, prometheusagency.co"
+    },
+    {
+      "number": 14,
+      "prompt": "AI operating model for mid-size company",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 14,
+      "prompt": "AI operating model for mid-size company",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 14,
+      "prompt": "AI operating model for mid-size company",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "escalategroup.com, gtframe.io, pertamapartners.com, agrahri.com"
+    },
+    {
+      "number": 15,
+      "prompt": "how to hand over AI leadership to internal team",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 15,
+      "prompt": "how to hand over AI leadership to internal team",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 15,
+      "prompt": "how to hand over AI leadership to internal team",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 15,
+      "prompt": "how to hand over AI leadership to internal team",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "agathon.ai, sherwen.com, launch-ai.io, 51d.co"
+    },
+    {
+      "number": 16,
+      "prompt": "fractional AI officer Israel",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "gofractional.com, fayedigital.com, chiefaiofficer.com, iffelinternational.com"
+    },
+    {
+      "number": 16,
+      "prompt": "fractional AI officer Israel",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "cywayz.co.il, elevateagents.ai, fractionalcaio.org, intellivise.ai"
+    },
+    {
+      "number": 16,
+      "prompt": "fractional AI officer Israel",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 16,
+      "prompt": "fractional AI officer Israel",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "avihayzanetti.ai, linkedin.com, trifoldtechnologies.com, ctodirectory.com"
+    },
+    {
+      "number": 17,
+      "prompt": "fractional AI leader Europe remote",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "gofractional.com, kore1.com, fractionaljobs.io, pearltalent.com"
+    },
+    {
+      "number": 17,
+      "prompt": "fractional AI leader Europe remote",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 17,
+      "prompt": "fractional AI leader Europe remote",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 17,
+      "prompt": "fractional AI leader Europe remote",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "unplexed.com, fractional-csuite.com, gofractional.com, join.com"
+    },
+    {
+      "number": 18,
+      "prompt": "agentic automation consultant for B2B",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "simon-kucher.com, commercetools.com, cdomagazine.tech, abmagency.com"
+    },
+    {
+      "number": 18,
+      "prompt": "agentic automation consultant for B2B",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 18,
+      "prompt": "agentic automation consultant for B2B",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 18,
+      "prompt": "agentic automation consultant for B2B",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "stackconsulting.pro, techaheadcorp.com, etumos.com, smartaiworkspace.tech"
+    },
+    {
+      "number": 19,
+      "prompt": "MCP security best practices",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "truefoundry.com, labs.cloudsecurityalliance.org, socprime.com, cycognito.com"
+    },
+    {
+      "number": 19,
+      "prompt": "MCP security best practices",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 19,
+      "prompt": "MCP security best practices",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 19,
+      "prompt": "MCP security best practices",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "obot.ai, cheatsheetseries.owasp.org, modelcontextprotocol.io, labs.cloudsecurityalliance.org"
+    },
+    {
+      "number": 20,
+      "prompt": "multi-agent reference architecture production",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "microsoft.github.io, github.com, docs.cloud.google.com, aws.amazon.com"
+    },
+    {
+      "number": 20,
+      "prompt": "multi-agent reference architecture production",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 20,
+      "prompt": "multi-agent reference architecture production",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 20,
+      "prompt": "multi-agent reference architecture production",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "microsoft.github.io, arxiv.org, markaicode.com, linkedin.com"
+    },
+    {
+      "number": 21,
+      "prompt": "adoption telemetry for AI tools",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "netguru.com, getpanto.ai, ventionteams.com, walkme.com"
+    },
+    {
+      "number": 21,
+      "prompt": "adoption telemetry for AI tools",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 21,
+      "prompt": "adoption telemetry for AI tools",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 21,
+      "prompt": "adoption telemetry for AI tools",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "arxiv.org, apploretechnologies.com, hivel.ai, honeycomb.io"
+    },
+    {
+      "number": 22,
+      "prompt": "AI incident response plan template",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 22,
+      "prompt": "AI incident response plan template",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 22,
+      "prompt": "AI incident response plan template",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 22,
+      "prompt": "AI incident response plan template",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "areebi.com, purplesec.us, pertamapartners.com, theworldofai.org"
+    },
+    {
+      "number": 23,
+      "prompt": "data classification for LLM usage",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 23,
+      "prompt": "data classification for LLM usage",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 23,
+      "prompt": "data classification for LLM usage",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 23,
+      "prompt": "data classification for LLM usage",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "engineering.grab.com, rainz.ai, ethyca.com, varonis.com"
+    },
+    {
+      "number": 24,
+      "prompt": "ISO 42001 gap assessment",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "schellman.com, isms.online, ispartnersllc.com, uk.grcsolutions.io"
+    },
+    {
+      "number": 24,
+      "prompt": "ISO 42001 gap assessment",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 24,
+      "prompt": "ISO 42001 gap assessment",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 24,
+      "prompt": "ISO 42001 gap assessment",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "aiactindex.eu, isms.online, der-ki-auditor.de, viritux.com"
+    },
+    {
+      "number": 25,
+      "prompt": "NIST AI RMF for small companies",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "securiti.ai, netsolutions.com, paloaltonetworks.com, orca.security"
+    },
+    {
+      "number": 25,
+      "prompt": "NIST AI RMF for small companies",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 25,
+      "prompt": "NIST AI RMF for small companies",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 25,
+      "prompt": "NIST AI RMF for small companies",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "nist.gov, diligent.com, airc.nist.gov, nvlpubs.nist.gov"
+    },
+    {
+      "number": 26,
+      "prompt": "fractional CAIO pricing",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "kore1.com, uvik.net, hireafractionalexec.com, paul-okhrem.com"
+    },
+    {
+      "number": 26,
+      "prompt": "fractional CAIO pricing",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "iternal.ai, precisionlogic.ai, avihayzanetti.ai, automationtransformationconsulting.com"
+    },
+    {
+      "number": 26,
+      "prompt": "fractional CAIO pricing",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 26,
+      "prompt": "fractional CAIO pricing",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "fractionalcaio.org, iternal.ai, paul-okhrem.com, agrahri.com"
+    },
+    {
+      "number": 27,
+      "prompt": "what does a chief AI officer do in a 50 person company",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 27,
+      "prompt": "what does a chief AI officer do in a 50 person company",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 27,
+      "prompt": "what does a chief AI officer do in a 50 person company",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 27,
+      "prompt": "what does a chief AI officer do in a 50 person company",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "searchsvc.com, bluemetrics.ai, justinmckelvey.com, him-business-school.com"
+    },
+    {
+      "number": 28,
+      "prompt": "AI governance starter kit open source",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "helpnetsecurity.com, github.com, opensource.microsoft.com, dev.to"
+    },
+    {
+      "number": 28,
+      "prompt": "AI governance starter kit open source",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "aigovernancestack.com, verifywise.ai, github.com, flowtivity.ai"
+    },
+    {
+      "number": 28,
+      "prompt": "AI governance starter kit open source",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "github.com, nist.gov, opensource.microsoft.com"
+    },
+    {
+      "number": 28,
+      "prompt": "AI governance starter kit open source",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "github.com, opensource.microsoft.com, ithub.global.ssl.fastly.net, sovaihub.com"
+    },
+    {
+      "number": 29,
+      "prompt": "AI readiness scorecard five drivers",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "intuz.com, data-sleek.com, adoption.microsoft.com, matthewkruczek.ai"
+    },
+    {
+      "number": 29,
+      "prompt": "AI readiness scorecard five drivers",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "teamvoy.com, adoption.microsoft.com, forbes.com, scribd.com"
+    },
+    {
+      "number": 29,
+      "prompt": "AI readiness scorecard five drivers",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 29,
+      "prompt": "AI readiness scorecard five drivers",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "pwc.com, data-sleek.com, n-ix.com, leadtheshift.org"
+    },
+    {
+      "number": 30,
+      "prompt": "board memo AI strategy one page",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 30,
+      "prompt": "board memo AI strategy one page",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 30,
+      "prompt": "board memo AI strategy one page",
+      "provider": "openai",
+      "model": "gpt-5",
+      "status": "absent",
+      "retrieved": false,
+      "detail": ""
+    },
+    {
+      "number": 30,
+      "prompt": "board memo AI strategy one page",
+      "provider": "sonar",
+      "model": "perplexity/sonar",
+      "status": "absent",
+      "retrieved": true,
+      "detail": "getdatatruth.com, askajay.ai, clarityarc.com, phosailabs.com"
+    }
+  ],
+  "active": [
+    {
+      "id": "openai",
+      "model": "gpt-5",
+      "keyName": "OPENAI_API_KEY"
+    },
+    {
+      "id": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "keyName": "ANTHROPIC_API_KEY"
+    },
+    {
+      "id": "gemini",
+      "model": "gemini-flash-latest",
+      "keyName": "GEMINI_API_KEY"
+    },
+    {
+      "id": "sonar",
+      "model": "perplexity/sonar",
+      "keyName": "OPENROUTER_API_KEY"
+    }
+  ]
+}
