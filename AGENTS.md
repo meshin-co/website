@@ -27,10 +27,16 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
    lane, snippet grammar, structured data, the search index, machine interfaces, running the
    gate, the content gate, the judge panel, adding a collection entry, restoring a collection,
    visual baselines, extending the mutation smoke, explaining a route removal, coordinating
-   parallel agents, clearing dead weight, verifying in the built output, and the launch
-   checklist. Read the matching one before doing that job by hand; `design-lane.md` comes before
-   any markup or CSS. `navigate-the-plan.md` explains the plan tree. `gate:skills` fails if a
-   skill names a path or command that does not exist.
+   parallel agents, clearing dead weight, verifying in the built output, keeping the docs honest,
+   smoking the live site, running the growth loop, and the launch checklist. Read the matching one
+   before doing that job by hand; `design-lane.md` comes before any markup or CSS.
+   `navigate-the-plan.md` explains the plan tree. `gate:skills` fails if a skill names a path or
+   command that does not exist.
+
+   `site/scripts/README.md` is the map of every script, grouped into gates, generators, audits,
+   modules and servers, with the npm command that invokes each. Read it instead of listing the
+   directory; `scripts-index.test.mjs` fails when a script is added without a row.
+
 5. `docs/SEMANTIC-CORE.md` — which title, meta description and target query each route family
    carries and why, plus the 30 buyer prompts mapped to the routes that must win them. Read it
    before writing or editing any page copy, title or meta description.
