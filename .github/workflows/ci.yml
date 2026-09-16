@@ -123,6 +123,7 @@ jobs:
       - run: npm run gate:orphans
       - run: npm run gate:machine
       - run: npm run gate:jsonld
+      - run: npm run gate:external
 
       - name: route set never shrinks unexplained
         run: npm run gate:routes

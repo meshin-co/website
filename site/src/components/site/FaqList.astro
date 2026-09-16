@@ -27,7 +27,12 @@ const { items } = Astro.props;
               {item.sources.map((source, index) => (
                 <>
                   {index > 0 && ' · '}
-                  <a class="text-link inline-block py-1" href={source.url} target="_blank" rel="noopener">
+                  <a
+                    class="text-link inline-block py-1"
+                    href={source.url}
+                    target="_blank"
+                    rel="nofollow noopener noreferrer"
+                  >
                     {source.title}
                   </a>
                 </>

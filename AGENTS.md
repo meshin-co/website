@@ -8,7 +8,7 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
    phase, its status (carried in the filename: `.done.md`, `.active.md`, `.next.md`,
    `.planned.md`, `.dropped.md`) and where the reference material lives. Read the index, then the
    one `.active` or `.next` phase file, and nothing more until you need it. The locked decisions
-   L1–L54 live in `docs/plan/reference/locked-decisions.md`; the gate procedure in
+   L1–L55 live in `docs/plan/reference/locked-decisions.md`; the gate procedure in
    `docs/plan/reference/calibration-gate.md`. Finishing a phase means renaming its file to
    `.done.md` and updating its index row in the same commit; `npm run gate:plan` fails when a
    status word is unknown, when two phases claim `active` or `next`, or when the index and the
@@ -103,6 +103,12 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
   `site/.agents/skills/write-copy.md` before writing copy and
   `site/.agents/skills/place-a-new-text.md` before adding any new text; one concept is defined on
   exactly one page (L50, L51, L53).
+- Every link leaving the site carries `rel="nofollow noopener noreferrer"` (L55). No ranking
+  signal leaves, the opened page cannot reach `window.opener`, and the destination is not told
+  who sent the visitor. The value has one source, `EXTERNAL_REL` in `site/src/utils/pipeline.mjs`:
+  markdown gets it from the `rehypeExternalLinks` pass, components spread
+  `externalRelAttrs(href)`. Never type the tokens into a new component. `npm run gate:external`
+  fails on any outbound anchor missing one. Procedure: `site/.agents/skills/link-out.md`.
 - Work is finished when the procedure that produced it lives in the methodology layer: a skill, a
   hard rule here, a locked row in the plan, or a machine check (L49).
 - Ask Context7 about Astro 7, Tailwind v4 and satori APIs before relying on memory.

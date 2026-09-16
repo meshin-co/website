@@ -31,7 +31,7 @@ and update the row above.
 
 | File                                                                               | What it holds                                                                                                |
 | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| [reference/locked-decisions.md](reference/locked-decisions.md)                     | The locked rows L1-L54 that override or extend the PRD. Read before proposing anything that contradicts one. |
+| [reference/locked-decisions.md](reference/locked-decisions.md)                     | The locked rows L1-L55 that override or extend the PRD. Read before proposing anything that contradicts one. |
 | [reference/calibration-gate.md](reference/calibration-gate.md)                     | The eleven-step gate every phase ends with, and the two rules that make a fake-green hard.                   |
 | [reference/must-not-do.md](reference/must-not-do.md)                               | What each phase is forbidden from doing.                                                                     |
 | [reference/test-strategy.md](reference/test-strategy.md)                           | What is unit-tested, what is snapshotted, what is gated.                                                     |

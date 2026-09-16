@@ -9,7 +9,7 @@ const SITE = resolve(HERE, '..');
 const REPO = resolve(SITE, '..');
 const FIXTURES = join(SITE, 'tests', 'guard-mutations', 'fixtures');
 const LIVE_POST_TARGET = 13;
-const GATES = ['budget', 'jsonld', 'jsonld-properties', 'content-gate', 'docs'];
+const GATES = ['budget', 'jsonld', 'jsonld-properties', 'content-gate', 'docs', 'external'];
 const CHECKS = ['semantic-title'];
 
 export const FAMILIES = [
@@ -51,6 +51,7 @@ export const FAMILIES = [
   },
   { id: 'budget-page-cap', kind: 'gate', gate: 'budget', tokens: ['OVER BUDGET / page'] },
   { id: 'docs-dead-path', kind: 'gate', gate: 'docs', tokens: ['dead-path'] },
+  { id: 'external-link-rel', kind: 'gate', gate: 'external', tokens: ['is missing nofollow'] },
   { id: 'jsonld-fail-closed', kind: 'gate', gate: 'jsonld', tokens: ['matches no known jsonld route family'] },
   {
     id: 'jsonld-property-completeness',
@@ -167,6 +168,15 @@ async function runPlantedFamily(copySite, entry, gated) {
 }
 
 async function runGateFamily(copySite, entry, work) {
+  if (entry.gate === 'external') {
+    const dist = join(work, 'external-dist');
+    await mkdir(dist, { recursive: true });
+    await writeFile(
+      join(dist, 'index.html'),
+      '<!doctype html><html><body><a href="https://iso.org/standard/42001" rel="noopener">ISO</a></body></html>'
+    );
+    return expectedFailure(await run('node', ['scripts/run-external-links.mjs', dist], copySite), entry.tokens);
+  }
   if (entry.gate === 'docs') {
     const repo = join(work, 'docs-repo');
     await mkdir(join(repo, 'docs/plan/reference'), { recursive: true });

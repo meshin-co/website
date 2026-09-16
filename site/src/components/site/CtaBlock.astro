@@ -23,7 +23,9 @@ const external = href.startsWith('http');
     </div>
 
     <div class="flex flex-col items-start gap-5 lg:items-center lg:justify-self-end lg:text-center">
-      <a class="btn-primary" href={href} {...external ? { target: '_blank', rel: 'noopener' } : {}}>{label}</a>
+      <a class="btn-primary" href={href} {...external ? { target: '_blank', rel: 'nofollow noopener noreferrer' } : {}}
+        >{label}</a
+      >
       {note && <p class="font-mono text-xs text-muted">{note}</p>}
     </div>
   </div>

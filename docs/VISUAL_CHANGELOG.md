@@ -147,3 +147,12 @@ themes on the real page: full ring, centred, ink on paper in light and paper on 
 append-only log: a date column and a sentence, newest first, nothing to keep in sync. The
 three-column `dl` is replaced by a bordered two-column list, so the page is shorter and its
 baselines changed at both viewports.
+
+## 2026-09-16 - /now links out, and every outbound link is marked
+
+The August entry on `/now` gains two links, smarter.day and the App Store listing, rendered as
+mono-type chips under the entry text. Baselines for `/now` change at both viewports.
+
+Every outbound link on the site now carries `rel="nofollow noopener noreferrer"`. No visual
+change: 210 header and footer social links, the Cal.com buttons, the source lists and every
+markdown link gained attributes only.

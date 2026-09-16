@@ -5,6 +5,7 @@ import {
   isExternalHref,
   mergeRelTokens,
   rehypeHeadingAnchors,
+  externalRelAttrs,
   rehypeExternalLinks,
   rehypeScrollableTables,
 } from './pipeline.mjs';
@@ -118,7 +119,7 @@ test('internal links are left completely untouched', () => {
   assert.deepEqual(tree.children[1].properties, { href: 'https://meshin.co/blog/foo', target: '_blank' });
 });
 
-test('external links get rel=noopener merged in and lose any target', () => {
+test('external links get the full nofollow, noopener and noreferrer set merged in, and lose any target', () => {
   const bare = element('a', { href: 'https://nist.gov/ai-rmf' }, [textNode('NIST AI RMF')]);
   const withRelAndTarget = element('a', { href: 'https://iso.org/x', rel: ['nofollow'], target: '_blank' }, [
     textNode('ISO'),
@@ -127,10 +128,10 @@ test('external links get rel=noopener merged in and lose any target', () => {
 
   rehypeExternalLinks()(tree);
 
-  assert.deepEqual(tree.children[0].properties.rel, ['noopener']);
+  assert.deepEqual(tree.children[0].properties.rel, ['nofollow', 'noopener', 'noreferrer']);
   assert.equal('target' in tree.children[0].properties, false);
 
-  assert.deepEqual(tree.children[1].properties.rel, ['nofollow', 'noopener']);
+  assert.deepEqual(tree.children[1].properties.rel, ['nofollow', 'noopener', 'noreferrer']);
   assert.equal('target' in tree.children[1].properties, false);
 });
 
@@ -142,7 +143,7 @@ test('running the external link pass twice does not duplicate rel tokens', () =>
   plugin(tree);
   plugin(tree);
 
-  assert.deepEqual(tree.children[0].properties.rel, ['noopener']);
+  assert.deepEqual(tree.children[0].properties.rel, ['nofollow', 'noopener', 'noreferrer']);
 });
 
 test('a table is wrapped for scrolling by class, never by an inline style', () => {
@@ -177,4 +178,13 @@ test('wrapping runs once per table and leaves other nodes in place', () => {
     tree.children.slice(1).map((node) => node.children[0].tagName),
     ['table', 'table']
   );
+});
+
+test('an outbound href gets the full rel, an internal one gets no rel at all', () => {
+  assert.deepEqual(externalRelAttrs('https://www.nist.gov/itl/ai-risk-management-framework'), {
+    rel: 'nofollow noopener noreferrer',
+  });
+  assert.deepEqual(externalRelAttrs('/glossary/ai-register'), {});
+  assert.deepEqual(externalRelAttrs('https://meshin.co/services'), {});
+  assert.deepEqual(externalRelAttrs(undefined), {});
 });

@@ -62,7 +62,9 @@ const nodes = [orgNode(site, { logoPath: ogDefaultPath }), personNode(site), web
 
     <div class="mt-10 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-4 border-t border-line pt-8">
       <p class="max-w-[64ch] text-muted">{nudge.text}</p>
-      <a class="link-signature font-mono text-sm" href={nudge.href} target="_blank" rel="noopener">{nudge.label}</a>
+      <a class="link-signature font-mono text-sm" href={nudge.href} target="_blank" rel="nofollow noopener noreferrer"
+        >{nudge.label}</a
+      >
     </div>
   </Section>
 

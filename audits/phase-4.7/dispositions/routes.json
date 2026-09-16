@@ -530,7 +530,7 @@
   {
     "target": "/now",
     "status": "rewritten",
-    "reason": "Rewritten 2026-09-16 from a holding state into a dated log, newest first: ISO/IEC 42001 study with no certificate claimed, and the two Smarter Day releases. Every fact verified against a primary source (the App Store lookup API for the release dates, version and price); the capacity block was deleted because a page nobody can keep in sync is worse than no page.",
+    "reason": "Rewritten 2026-09-16: /now is a dated log, and the August entry now carries two outbound links (smarter.day and the App Store listing), both with rel=nofollow noopener noreferrer per L55. Facts from Apple's lookup API; the day job stays unnamed at the owner's request.",
     "digest": "5d123aced415"
   },
   {
