@@ -1,8 +1,13 @@
 # PRD v2 · meshin.co
 
-Extracted verbatim from `docs/PRD v2 · meshin.co — исполняемая спецификация сайта.mhtml`.
-Requirements source of truth. Where `docs/plan/reference/locked-decisions.md` (rows L1–L19) contradicts this
-document, the plan wins.
+**Status: frozen 2026-09-06, superseded in places.** Extracted verbatim from
+`docs/sources/prd-v2.mhtml`. It records what was asked for at handover, in Russian, and is never
+edited to match what was built. Where `docs/plan/reference/locked-decisions.md` (rows L1–L54)
+contradicts this document, the locked row wins — and the locked rows contradict it in several
+places, including the contact form, the newsletter, prices, and the `/ru` section (L54).
+
+For what the site actually is, read `AGENTS.md` and the active phase file. Read this document for
+the original intent behind a requirement, not for its current shape.
 
 ---
 

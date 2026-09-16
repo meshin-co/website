@@ -44,7 +44,9 @@
     "assets:seal": "node scripts/editorial-gate.mjs . dist --seal",
     "audit:geo": "node scripts/generate-geo-baseline.mjs dist",
     "audit:polish": "node scripts/run-polish-sweep.mjs",
-    "audit:prelaunch": "node scripts/run-pre-launch.mjs dist"
+    "audit:prelaunch": "node scripts/run-pre-launch.mjs dist",
+    "smoke:prod": "node scripts/run-smoke-prod.mjs",
+    "gate:docs": "node scripts/run-docs-gate.mjs .."
   },
   "dependencies": {
     "@astro-community/astro-embed-twitter": "^0.5.11",

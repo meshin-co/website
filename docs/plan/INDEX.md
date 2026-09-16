@@ -29,14 +29,16 @@ and update the row above.
 
 ## Reference
 
-| File                                                           | What it holds                                                                                                   |
-| -------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| [reference/locked-decisions.md](reference/locked-decisions.md) | The 48 locked rows L1-L49 that override or extend the PRD. Read before proposing anything that contradicts one. |
-| [reference/calibration-gate.md](reference/calibration-gate.md) | The eleven-step gate every phase ends with, and the two rules that make a fake-green hard.                      |
-| [reference/must-not-do.md](reference/must-not-do.md)           | What each phase is forbidden from doing.                                                                        |
-| [reference/test-strategy.md](reference/test-strategy.md)       | What is unit-tested, what is snapshotted, what is gated.                                                        |
-| [reference/risk-register.md](reference/risk-register.md)       | Known risks and their mitigations.                                                                              |
-| [briefs/refine-all-texts.md](../briefs/refine-all-texts.md)    | The owner brief Phase 4.7 executes, stored verbatim.                                                            |
+| File                                                                               | What it holds                                                                                                |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| [reference/locked-decisions.md](reference/locked-decisions.md)                     | The locked rows L1-L54 that override or extend the PRD. Read before proposing anything that contradicts one. |
+| [reference/calibration-gate.md](reference/calibration-gate.md)                     | The eleven-step gate every phase ends with, and the two rules that make a fake-green hard.                   |
+| [reference/must-not-do.md](reference/must-not-do.md)                               | What each phase is forbidden from doing.                                                                     |
+| [reference/test-strategy.md](reference/test-strategy.md)                           | What is unit-tested, what is snapshotted, what is gated.                                                     |
+| [reference/risk-register.md](reference/risk-register.md)                           | Known risks and their mitigations.                                                                           |
+| [reference/bigpowers-mapping.md](reference/bigpowers-mapping.md)                   | Which bigpowers skills were adopted, which map onto what already exists, and which are skipped and why.      |
+| [reference/history-rewrite-2026-09-15.md](reference/history-rewrite-2026-09-15.md) | Old commit hash to new, after the 761 MB to 113 MB rewrite.                                                  |
+| [briefs/refine-all-texts.md](../briefs/refine-all-texts.md)                        | The owner brief Phase 4.7 executes, stored verbatim.                                                         |
 
 ## How to navigate this without reading everything
 

@@ -8,10 +8,10 @@ with minimal real content.
 - Templates: PostLayout, ServicePage, ResourcePage, CasePage, GlossaryTermPage, CategoryHub,
   FaqPage, ProfilePage, plus `/pricing`, `/approach`, `/contact` (L6), `/ai-policy`, `/security`,
   `/now`, `/speaking`, legal pages.
-- `src/utils/jsonld.ts` — one `@graph` per page, node builders per PRD Appendix D, `@id`
+- `src/utils/jsonld.mjs` — one `@graph` per page, node builders per PRD Appendix D, `@id`
   integrity test.
 - Endpoints: `llms.txt.ts`, `llms-full.txt.ts`, `feed.json.ts`, `[...slug].md.ts`,
-  `og/[...slug].png.ts` (satori + resvg; assert rendered text nodes, not file existence), sitemap
+  `src/pages/og/[...slug].png.ts` (satori + resvg; assert rendered text nodes, not file existence), sitemap
   filter and `lastmod`. All generators read the collection list from the content config.
 - Rehype/remark chain: slug, autolink headings, external links, mermaid → SVG at build time,
   expressive-code. Pagefind postbuild, `/search`, `data-pagefind-body` on `<main>`.

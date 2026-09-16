@@ -25,6 +25,19 @@ CG-5 runs against the production URL, not a preview.
   citation baseline; PRD §17.3's mentioned/cited/absent run across five engines is external and
   manual, and the artifact says so on its first line.
 
+## Verifying the flip, the moment it happens
+
+The Calibration Gate's edge checks were prose until 2026-09-15. They are now a command:
+
+    npm run smoke:prod https://meshin.co
+
+18 real requests: all six security headers present with no unsafe CSP directive, no `noindex`
+robots meta on the home page, and ten canonical routes plus six machine surfaces answering 200 —
+a 301 fails, because after the flip a canonical route lands directly. It writes
+`audits/phase-5/smoke-prod.md`, which currently records a pass against the local gate server;
+CG-5 is not closed until it records one against `https://meshin.co`. Procedure:
+`site/.agents/skills/smoke-the-live-site.md`.
+
 ## Blocked on the owner
 
 Nothing below can be measured from this machine.

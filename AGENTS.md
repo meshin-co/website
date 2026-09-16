@@ -8,25 +8,35 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
    phase, its status (carried in the filename: `.done.md`, `.active.md`, `.next.md`,
    `.planned.md`, `.dropped.md`) and where the reference material lives. Read the index, then the
    one `.active` or `.next` phase file, and nothing more until you need it. The locked decisions
-   L1–L49 live in `docs/plan/reference/locked-decisions.md`; the gate procedure in
+   L1–L54 live in `docs/plan/reference/locked-decisions.md`; the gate procedure in
    `docs/plan/reference/calibration-gate.md`. Finishing a phase means renaming its file to
    `.done.md` and updating its index row in the same commit; `npm run gate:plan` fails when a
    status word is unknown, when two phases claim `active` or `next`, or when the index and the
    phases directory disagree.
-2. `docs/PRD.md` — the full requirements spec. `docs/plan/reference/locked-decisions.md` overrides it
-   where they differ.
-3. `docs/DECISIONS.md` — the closed decision log, rows `D1`–`D24`, written before the build
-   started. Different file from the plan's locked rows: `D` rows are the original decisions, `L`
-   rows are what the build actually locked. Where they disagree the `L` row wins and the `D` row
-   is marked superseded.
+
+   **On any conflict the order is: a locked row, then `docs/DECISIONS.md`, then `docs/PRD.md`,
+   then this file's hard rules — and above all of them, the built output.**
+
+2. `docs/PRD.md` — the requirements spec as handed over, frozen 2026-09-06 and superseded in
+   places. Read it for the original intent behind a requirement, never for the site's current
+   shape. The raw handover documents it came from are in `docs/sources/`.
+3. `docs/DECISIONS.md` — the decision log closed before the build, rows `D1`–`D24`. The `L` rows
+   are what the build actually locked; a `D` row marked superseded has an `L` row that answers
+   instead.
 4. `site/.agents/skills/` — one procedure per file, each named for the job it does: the design
    lane, snippet grammar, structured data, the search index, machine interfaces, running the
    gate, the content gate, the judge panel, adding a collection entry, restoring a collection,
    visual baselines, extending the mutation smoke, explaining a route removal, coordinating
-   parallel agents, clearing dead weight, verifying in the built output, and the launch
-   checklist. Read the matching one before doing that job by hand; `design-lane.md` comes before
-   any markup or CSS. `navigate-the-plan.md` explains the plan tree. `gate:skills` fails if a
-   skill names a path or command that does not exist.
+   parallel agents, clearing dead weight, verifying in the built output, keeping the docs honest,
+   smoking the live site, running the growth loop, and the launch checklist. Read the matching one
+   before doing that job by hand; `design-lane.md` comes before any markup or CSS.
+   `navigate-the-plan.md` explains the plan tree. `gate:skills` fails if a skill names a path or
+   command that does not exist.
+
+   `site/scripts/README.md` is the map of every script, grouped into gates, generators, audits,
+   modules and servers, with the npm command that invokes each. Read it instead of listing the
+   directory; `scripts-index.test.mjs` fails when a script is added without a row.
+
 5. `docs/SEMANTIC-CORE.md` — which title, meta description and target query each route family
    carries and why, plus the 30 buyer prompts mapped to the routes that must win them. Read it
    before writing or editing any page copy, title or meta description.
@@ -96,6 +106,26 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
 - Work is finished when the procedure that produced it lives in the methodology layer: a skill, a
   hard rule here, a locked row in the plan, or a machine check (L49).
 - Ask Context7 about Astro 7, Tailwind v4 and satori APIs before relying on memory.
+- The bigpowers catalogue is mapped once in `docs/plan/reference/bigpowers-mapping.md`: what was
+  adopted, what the project already does under another name, and what is skipped and why. Read
+  that row before adopting anything from it; two of its skills carry waiver-capable status models
+  that would weaken the gate.
+
+## Tests (F.I.R.S.T)
+
+Every test earns its place against five criteria. A test that fails one is rewritten or deleted,
+not kept for the count.
+
+- **Fast** — the 632 unit tests run in about four seconds together. A test that needs a build or a
+  browser belongs in Playwright, not `node:test`.
+- **Independent** — no shared mutable state, no ordering assumption. Each mutation family
+  synthesises its own fixture tree; no test mutates the real `src/`.
+- **Repeatable** — same result on any machine. Visual baselines are per platform for this reason,
+  and an emulated container is never evidence about a runner (`visual-baselines.md`).
+- **Self-validating** — the test asserts; it never prints for a human to read. A guard is only
+  trusted once a planted specimen has made it fail.
+- **Timely** — written before the code, red first. `npm run test:smoke` proves all 15 guard
+  families can still fail.
 
 ## Commands
 
@@ -105,7 +135,9 @@ npm run build      # production build, the only build Lighthouse may measure
 npm run check      # astro check, eslint, prettier
 npm run preview    # serve dist for local gate runs
 npm run gate:lh    # both form factors, all audited routes, ~30 min
-npm run test:smoke # every guard family proven able to fail, ~40 s
+npm run gate:docs  # every path, command and locked-row range a document claims
+npm run smoke:prod # 18 live requests against an origin, default https://meshin.co
+npm run test:smoke # every guard family proven able to fail, ~60 s
 ```
 
 CI classifies the diff first. A commit touching only `docs/`, `audits/`, `site/.agents/` or
