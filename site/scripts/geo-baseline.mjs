@@ -36,6 +36,7 @@ export function parsePrompts(doc) {
       mustWin: routes[0] ?? '',
       support: routes.slice(1),
       passage: /Passage:\s*"([^"]+)"/.exec(body)?.[1]?.trim() ?? '',
+      passageRoute: /Passage:\s*"[^"]+"\s*\(`([^`]+)`\)/.exec(body)?.[1]?.trim() ?? '',
     };
   });
 }
@@ -49,7 +50,12 @@ export function scorePrompt(prompt, pages) {
   }
 
   const missing = [];
-  if (prompt.passage && !normalise(page.text).includes(normalise(prompt.passage))) missing.push('passage');
+  if (prompt.passage) {
+    const route = prompt.passageRoute || prompt.mustWin;
+    const host = pages[route] ?? pages[route.replace(/\/$/, '')];
+    const carried = host && normalise(host.text).includes(normalise(prompt.passage));
+    if (!carried) missing.push(prompt.passageRoute ? `passage on ${prompt.passageRoute}` : 'passage');
+  }
   if (!page.hasShortAnswer) missing.push('marked citable unit');
   if (!page.hasJsonLd) missing.push('JSON-LD graph');
   if (!page.inLlms) missing.push('llms.txt line');

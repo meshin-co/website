@@ -12,44 +12,44 @@ does it carry a marked citable unit (`data-answer` or `data-gate-lead`), a JSON-
 `llms.txt` line. A missing marked unit does not mean the page has no answer: it means extraction
 has to guess which paragraph is the answer.
 
-Structural readiness: **12 of 30** prompts have everything the site can give.
+Structural readiness: **26 of 30** prompts have everything the site can give.
 
 ## Ready
 
-| #   | Prompt                                                     | Must win                                                               |
-| --- | ---------------------------------------------------------- | ---------------------------------------------------------------------- |
-| 2   | fractional CAIO vs full-time CAIO cost                     | `/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai` |
-| 5   | named person responsible for AI risk in vendor procurement | `/faq/who-answers-customer-security-questionnaires`                    |
-| 6   | how to build an AI system register                         | `/blog/how-to-build-an-ai-system-register-in-a-week`                   |
-| 7   | AI acceptable use policy template                          | `/blog/ai-acceptable-use-policy-for-a-50-person-company`               |
-| 8   | EU AI Act obligations for deployers small business         | `/glossary/eu-ai-act`                                                  |
-| 9   | why do AI pilots fail to reach production                  | `/blog/why-your-ai-pilot-never-reached-production`                     |
-| 11  | how to put evals for AI agents into CI                     | `/blog/evals-in-ci-for-llm-agents`                                     |
-| 15  | how to hand over AI leadership to internal team            | `/faq/how-does-the-retainer-end`                                       |
-| 23  | data classification for LLM usage                          | `/glossary/data-classification`                                        |
-| 24  | ISO 42001 gap assessment                                   | `/glossary/iso-iec-42001`                                              |
-| 25  | NIST AI RMF for small companies                            | `/glossary/nist-ai-rmf`                                                |
-| 27  | what does a chief AI officer do in a 50 person company     | `/faq/what-does-a-fractional-chief-ai-officer-actually-do`             |
+| # | Prompt | Must win |
+|---|---|---|
+| 1 | who is a fractional chief AI officer for a 100-person SaaS company | `/` |
+| 2 | fractional CAIO vs full-time CAIO cost | `/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai` |
+| 3 | AI readiness assessment template for SMB | `/resources/ai-readiness-scorecard` |
+| 4 | AI governance consultant ISO 42001 small company | `/services/ai-readiness-and-risk-assessment` |
+| 5 | named person responsible for AI risk in vendor procurement | `/faq/who-answers-customer-security-questionnaires` |
+| 6 | how to build an AI system register | `/blog/how-to-build-an-ai-system-register-in-a-week` |
+| 7 | AI acceptable use policy template | `/blog/ai-acceptable-use-policy-for-a-50-person-company` |
+| 8 | EU AI Act obligations for deployers small business | `/glossary/eu-ai-act` |
+| 9 | why do AI pilots fail to reach production | `/blog/why-your-ai-pilot-never-reached-production` |
+| 10 | LLM gateway for governance and audit | `/glossary/llm-gateway` |
+| 11 | how to put evals for AI agents into CI | `/blog/evals-in-ci-for-llm-agents` |
+| 12 | AI vendor assessment questionnaire template | `/resources/ai-governance-starter-kit` |
+| 13 | build vs buy AI 3-year TCO | `/resources/build-vs-buy-ai-kit` |
+| 14 | AI operating model for mid-size company | `/approach` |
+| 15 | how to hand over AI leadership to internal team | `/faq/how-does-the-retainer-end` |
+| 16 | fractional AI officer Israel | `/about` |
+| 17 | fractional AI leader Europe remote | `/about` |
+| 18 | agentic automation consultant for B2B | `/services/90-day-production-sprint` |
+| 23 | data classification for LLM usage | `/glossary/data-classification` |
+| 24 | ISO 42001 gap assessment | `/glossary/iso-iec-42001` |
+| 25 | NIST AI RMF for small companies | `/glossary/nist-ai-rmf` |
+| 26 | fractional CAIO pricing | `/pricing` |
+| 27 | what does a chief AI officer do in a 50 person company | `/faq/what-does-a-fractional-chief-ai-officer-actually-do` |
+| 28 | AI governance starter kit open source | `/resources/ai-governance-starter-kit` |
+| 29 | AI readiness scorecard five drivers | `/resources/ai-readiness-scorecard` |
+| 30 | board memo AI strategy one page | `/services/ai-readiness-and-risk-assessment` |
 
 ## Gaps
 
-| #   | Prompt                                                             | Must win                                     | Missing                          |
-| --- | ------------------------------------------------------------------ | -------------------------------------------- | -------------------------------- |
-| 1   | who is a fractional chief AI officer for a 100-person SaaS company | `/`                                          | marked citable unit              |
-| 3   | AI readiness assessment template for SMB                           | `/resources/ai-readiness-scorecard`          | marked citable unit              |
-| 4   | AI governance consultant ISO 42001 small company                   | `/services/ai-readiness-and-risk-assessment` | passage, marked citable unit     |
-| 10  | LLM gateway for governance and audit                               | `/glossary/llm-gateway`                      | passage                          |
-| 12  | AI vendor assessment questionnaire template                        | `/resources/ai-governance-starter-kit`       | marked citable unit              |
-| 13  | build vs buy AI 3-year TCO                                         | `/resources/build-vs-buy-ai-kit`             | marked citable unit              |
-| 14  | AI operating model for mid-size company                            | `/approach`                                  | marked citable unit              |
-| 16  | fractional AI officer Israel                                       | `/about`                                     | marked citable unit              |
-| 17  | fractional AI leader Europe remote                                 | `/about`                                     | marked citable unit              |
-| 18  | agentic automation consultant for B2B                              | `/services/90-day-production-sprint`         | marked citable unit              |
-| 19  | MCP security best practices                                        | ``                                           | the core names no must-win route |
-| 20  | multi-agent reference architecture production                      | ``                                           | the core names no must-win route |
-| 21  | adoption telemetry for AI tools                                    | ``                                           | the core names no must-win route |
-| 22  | AI incident response plan template                                 | ``                                           | the core names no must-win route |
-| 26  | fractional CAIO pricing                                            | `/pricing`                                   | marked citable unit              |
-| 28  | AI governance starter kit open source                              | `/resources/ai-governance-starter-kit`       | marked citable unit              |
-| 29  | AI readiness scorecard five drivers                                | `/resources/ai-readiness-scorecard`          | marked citable unit              |
-| 30  | board memo AI strategy one page                                    | `/services/ai-readiness-and-risk-assessment` | marked citable unit              |
+| # | Prompt | Must win | Missing |
+|---|---|---|---|
+| 19 | MCP security best practices | `` | the core names no must-win route |
+| 20 | multi-agent reference architecture production | `` | the core names no must-win route |
+| 21 | adoption telemetry for AI tools | `` | the core names no must-win route |
+| 22 | AI incident response plan template | `` | the core names no must-win route |
