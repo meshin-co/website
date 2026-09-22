@@ -1,8 +1,10 @@
+import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
 import {
   citedCommands,
+  discoverDocs,
   citedPaths,
   enforcesRowRange,
   isExternal,
@@ -12,19 +14,26 @@ import {
 
 const repo = resolve(process.argv[2] ?? '..');
 
-const walk = (dir) => {
-  const out = [];
+const walkMarkdown = (dir, prefix = '') => {
+  const found = [];
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    const path = join(dir, entry.name);
-    if (entry.isDirectory()) out.push(...walk(path));
-    else if (entry.name.endsWith('.md')) out.push(path);
+    if (entry.name === '.git' || entry.name === 'node_modules') continue;
+    const relative = prefix ? `${prefix}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) found.push(...walkMarkdown(join(dir, entry.name), relative));
+    else if (entry.name.endsWith('.md')) found.push(relative);
   }
-  return out;
+  return found;
 };
 
-const docs = [join(repo, 'AGENTS.md'), ...walk(join(repo, 'docs')), ...walk(join(repo, 'site/.agents/skills'))].filter(
-  (path) => existsSync(path)
+const tracked = discoverDocs(
+  () =>
+    execFileSync('git', ['-C', repo, 'ls-files', '*.md'], { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] })
+      .split('\n')
+      .filter(Boolean),
+  () => walkMarkdown(repo)
 );
+
+const docs = tracked.map((path) => join(repo, path)).filter((path) => existsSync(path));
 
 const scripts = JSON.parse(readFileSync(join(repo, 'site/package.json'), 'utf8')).scripts;
 const lockedRows = readFileSync(join(repo, 'docs/plan/reference/locked-decisions.md'), 'utf8');

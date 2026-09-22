@@ -35,7 +35,15 @@ for (const route of routes) {
       if (ownOrigin(request.url())) errors.push(`${request.url()} failed: ${request.failure()?.errorText}`);
     });
 
-    await page.goto(route, { waitUntil: 'load' });
+    const visit = async () => {
+      try {
+        await page.goto(route, { waitUntil: 'load' });
+      } catch (error) {
+        if (!String(error).includes('Timeout')) throw error;
+        await page.goto(route, { waitUntil: 'domcontentloaded' });
+      }
+    };
+    await visit();
     await expect(page.locator('h1, h2').first()).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
 

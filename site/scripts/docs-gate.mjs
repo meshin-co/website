@@ -39,3 +39,15 @@ export function enforcesRowRange(doc) {
   if (doc.endsWith('.done.md') || doc.endsWith('.dropped.md')) return false;
   return doc !== ROW_REFERENCE;
 }
+
+const IGNORED_ROOTS = ['audits/', 'node_modules/', 'dist/', '.astro/'];
+
+export function discoverDocs(viaGit, viaWalk) {
+  let paths;
+  try {
+    paths = viaGit();
+  } catch {
+    paths = viaWalk();
+  }
+  return paths.filter((path) => !IGNORED_ROOTS.some((root) => path.startsWith(root)));
+}

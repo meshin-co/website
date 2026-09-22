@@ -2,7 +2,7 @@
 
 **Status: frozen 2026-09-06, superseded in places.** Extracted verbatim from
 `docs/sources/prd-v2.mhtml`. It records what was asked for at handover, in Russian, and is never
-edited to match what was built. Where `docs/plan/reference/locked-decisions.md` (rows L1–L55)
+edited to match what was built. Where `docs/plan/reference/locked-decisions.md` (rows L1–L56)
 contradicts this document, the locked row wins — and the locked rows contradict it in several
 places, including the contact form, the newsletter, prices, and the `/ru` section (L54).
 
@@ -62,6 +62,7 @@ PRICE_RETAINER_FROM_USD_MONTH: 7500
 2. Журнал решений (закрыто; не обсуждать)
 
 # |
+
 Решение |
 Выбор |
 Обоснование |
@@ -241,7 +242,7 @@ B2B-компании 30–300 сотрудников, с выручкой, чь�
 - Procurement blocker — клиенты не подписывают, пока не увидят, кто управляет AI-рисками.
 
 - Operating-model gap — деньги на AI тратятся, процессы не меняются.
-≥3 → retainer; 1–2 → assessment; 0 → не клиент.
+  ≥3 → retainer; 1–2 → assessment; 0 → не клиент.
 
 4.5 Почему нам поверят (доказательства, которые сайт обязан показать)
 
@@ -562,19 +563,19 @@ functions/api/contact.ts |
 
 // Общие поля (mixin): title, description (≤155), publishDate, updatedDate (обязательно), draft, noindex?, canonical?, ogImage?
 post: shortAnswer (string, 40–60 слов — проверять zod .refine по количеству слов),
- fullAnswer (130–170 слов), keyTakeaways (string[3..5]),
- faq ({q,a}[0..5]), category (enum 4), tags (string[]),
- sources ({title,url}[1..]), author (ref 'author'), relatedResources (ref[]),
- series?, image?, imageAlt?
+fullAnswer (130–170 слов), keyTakeaways (string[3..5]),
+faq ({q,a}[0..5]), category (enum 4), tags (string[]),
+sources ({title,url}[1..]), author (ref 'author'), relatedResources (ref[]),
+series?, image?, imageAlt?
 case: client {name?, industry, size}, problem, approach, outcome {metrics {label,value}[1..3]},
- stack (string[]), duration, offer (ref 'service'), quote?, anonymized (bool)
+stack (string[]), duration, offer (ref 'service'), quote?, anonymized (bool)
 service: slug, name, tagline, shortAnswer, price {amount, currency:'USD', unit:'fixed'|'from'|'per-month'},
- duration, forWhom (string[]), notForWhom (string[]), deliverables (string[]),
- process ({step,title,detail}[]), faq ({q,a}[3..8]), cta {label, href}
+duration, forWhom (string[]), notForWhom (string[]), deliverables (string[]),
+process ({step,title,detail}[]), faq ({q,a}[3..8]), cta {label, href}
 resource: type (enum 'template'|'kit'|'scorecard'|'repo'|'checklist'), version, license,
- downloadUrl?, repoUrl?, whatInside (string[]), howToUse, relatedPosts (ref[])
+downloadUrl?, repoUrl?, whatInside (string[]), howToUse, relatedPosts (ref[])
 glossary: term, shortDefinition (≤50 слов), definition (100–200), relatedTerms (ref[]),
- sources ({title,url}[1..])
+sources ({title,url}[1..])
 faq: question, answer (≤80 слов), category (enum 4 | 'general'), relatedPage?
 author: name, role, photo, bio, sameAs (url[]), credentials (string[])
 speaking: title, event, date, url?, type (enum 'talk'|'podcast'|'article'|'mention')
@@ -602,7 +603,7 @@ Zod-правила: updatedDate ≥ publishDate; shortAnswer 40–60 слов; f
 - Latest writing — 3 поста (title, shortAnswer первые 2 строки).
 
 - CTA повтор.
-Никаких каруселей, логотипов «trusted by», счётчиков без источника.
+  Никаких каруселей, логотипов «trusted by», счётчиков без источника.
 
 9.2 Offer pages ×3
 
@@ -661,23 +662,23 @@ H1 «What is {term}?» → shortDefinition (жирно) → definition → «Why
 10.2 Токены (CustomStyles.astro + tailwind.css @theme)
 
 :root {
- --aw-color-bg-page: oklch(98.5% 0.005 90); /* paper */
- --aw-color-text-page: oklch(20% 0.01 260); /* ink */
- --aw-color-text-muted:oklch(45% 0.01 260);
- --aw-color-primary: oklch(45% 0.09 200); /* deep teal */
- --aw-color-accent: oklch(60% 0.12 200);
- --aw-color-line: oklch(88% 0.005 90);
- --aw-font-heading: var(--font-fraunces);
- --aw-font-sans: var(--font-plex-sans);
- --aw-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+--aw-color-bg-page: oklch(98.5% 0.005 90); /* paper _/
+--aw-color-text-page: oklch(20% 0.01 260); /_ ink _/
+--aw-color-text-muted:oklch(45% 0.01 260);
+--aw-color-primary: oklch(45% 0.09 200); /_ deep teal _/
+--aw-color-accent: oklch(60% 0.12 200);
+--aw-color-line: oklch(88% 0.005 90);
+--aw-font-heading: var(--font-fraunces);
+--aw-font-sans: var(--font-plex-sans);
+--aw-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 .dark {
- --aw-color-bg-page: oklch(17% 0.01 260);
- --aw-color-text-page: oklch(93% 0.005 90);
- --aw-color-text-muted:oklch(70% 0.01 260);
- --aw-color-primary: oklch(72% 0.10 200); /* lightened accent for text on dark */
- --aw-color-accent: oklch(80% 0.10 200);
- --aw-color-line: oklch(28% 0.01 260);
+--aw-color-bg-page: oklch(17% 0.01 260);
+--aw-color-text-page: oklch(93% 0.005 90);
+--aw-color-text-muted:oklch(70% 0.01 260);
+--aw-color-primary: oklch(72% 0.10 200); /_ lightened accent for text on dark */
+--aw-color-accent: oklch(80% 0.10 200);
+--aw-color-line: oklch(28% 0.01 260);
 }
 
 Контраст: body ≥ 4.5:1, large ≥ 3:1 — проверять в обеих темах отдельно.
@@ -708,7 +709,7 @@ Astro v7, Tailwind v4 (@tailwindcss/vite), MDX, @astrojs/sitemap, astro-icon (ta
 
 11.2 Удалить
 
-<ClientRouter /> из Layout.astro (D4); @astrojs/partytown и hasExternalScripts (D17); GA-интеграцию в Analytics.astro (заменить на Plausible); unpic и image.domains (D16); демо-контент (src/data/post/* примеры, демо-страницы landing/*, homes/*, pricing.astro демо — заменить своими); flat-color-icons; netlify.toml, vercel.json, Dockerfile, docker-compose.yml, nginx/ (хостинг — Cloudflare).
+<ClientRouter /> из Layout.astro (D4); @astrojs/partytown и hasExternalScripts (D17); GA-интеграцию в Analytics.astro (заменить на Plausible); unpic и image.domains (D16); демо-контент (src/data/post/* примеры, демо-страницы landing/_, homes/_, pricing.astro демо — заменить своими); flat-color-icons; netlify.toml, vercel.json, Dockerfile, docker-compose.yml, nginx/ (хостинг — Cloudflare).
 
 11.3 Добавить
 
@@ -770,10 +771,10 @@ AGENTS.md |
 
 site: { name: 'meshin.co', site: 'https://meshin.co', base: '/', trailingSlash: false, googleSiteVerificationId: 'TODO(owner)' }
 metadata:
- title: { default: 'Fractional Chief AI Officer — meshin.co', template: '%s — meshin.co' }
- description: 'Fractional AI leadership for 30–300 person companies: AI governance that passes procurement and agentic automation shipped to production.'
- robots: { index: true, follow: true }
- openGraph: { site_name: 'meshin.co', images: [{ url: '~/assets/images/og-default.png', width: 1200, height: 630 }], type: website }
+title: { default: 'Fractional Chief AI Officer — meshin.co', template: '%s — meshin.co' }
+description: 'Fractional AI leadership for 30–300 person companies: AI governance that passes procurement and agentic automation shipped to production.'
+robots: { index: true, follow: true }
+openGraph: { site_name: 'meshin.co', images: [{ url: '~/assets/images/og-default.png', width: 1200, height: 630 }], type: website }
 i18n: { language: en, textDirection: ltr }
 apps.blog: { isEnabled: true, postsPerPage: 12, post.permalink: '/blog/%slug%', list.pathname: 'blog', category: { pathname: 'blog/category', robots.index: true }, tag: { pathname: 'blog/tag', robots.index: false }, isRelatedPostsEnabled: true, relatedPostsCount: 3 }
 analytics.vendors.googleAnalytics.id: null # Plausible подключается в Analytics.astro
@@ -823,11 +824,11 @@ Page weight (без изображений) |
 
 Изображения above-the-fold |
 0 на mobile home; ≤1 на about |
- |
+|
 
 Любое превышение — блокер, а не «полировка». |
- |
- |
+|
+|
 
 12. Эксплуатация
 
@@ -844,6 +845,7 @@ Page weight (без изображений) |
 13. Скиллы и порядок их применения
 
 # |
+
 Скилл |
 Установка |
 Когда |
@@ -907,7 +909,7 @@ Context7 MCP (подключён) |
 - Создать audits/, docs/DECISIONS.md (скопировать §2), docs/PRD.md (этот документ).
 
 - Git init, .github/workflows/ci.yml (Приложение H) в режиме «только build + check» — гейты включаются в Фазе 1.
-Выход: шаблон собирается; скиллы установлены; baseline снят.
+  Выход: шаблон собирается; скиллы установлены; baseline снят.
 
 Фаза 1 · Каркас и инфраструктура (≈ 1.5 дня)
 
@@ -930,8 +932,8 @@ Context7 MCP (подключён) |
 - Cloudflare Pages проект, env, wrangler pages deploy dist из CI; подключить домен meshin.co (apex; www → 301 на apex).
 
 - Страницы-заглушки: /, /404 с финальной структурой, но временным текстом «TODO(copy)».
-Калибровочный гейт КГ-1 на маршрутах /, /404. Особое внимание: font-swap CLS (metrics-override), CSP без нарушений в консоли, JS ≤ 10 KB.
-Выход: пустой сайт в проде на 100/100/100/100 mobile+desktop; CSP строгий; Plausible пишет; CI блокирует регрессии.
+  Калибровочный гейт КГ-1 на маршрутах /, /404. Особое внимание: font-swap CLS (metrics-override), CSP без нарушений в консоли, JS ≤ 10 KB.
+  Выход: пустой сайт в проде на 100/100/100/100 mobile+desktop; CSP строгий; Plausible пишет; CI блокирует регрессии.
 
 Фаза 2 · Дизайн-система и компоненты (≈ 2 дня)
 
@@ -946,8 +948,8 @@ Context7 MCP (подключён) |
 - Состояния: hover/focus-visible/active/disabled; reduced-motion; dark mode проверен отдельно.
 
 - Собрать / с финальной структурой §9.1 и копирайтом Приложения A.
-КГ-2 на /, /styleguide, /404. Из S1 загрузить design.md, components.md, responsive.md; провести фазы 3 (widget inventory), 11 (geometry sweep), 12 (drift) Polish Loop. Контраст обеих тем через axe + ручной OKLCH-чек.
-Выход: дизайн-система стабильна; главная — финальная; 100/100/100/100.
+  КГ-2 на /, /styleguide, /404. Из S1 загрузить design.md, components.md, responsive.md; провести фазы 3 (widget inventory), 11 (geometry sweep), 12 (drift) Polish Loop. Контраст обеих тем через axe + ручной OKLCH-чек.
+  Выход: дизайн-система стабильна; главная — финальная; 100/100/100/100.
 
 Фаза 3 · Контент-модель, шаблоны, машинные интерфейсы (≈ 2.5 дня)
 
@@ -968,8 +970,8 @@ Context7 MCP (подключён) |
 - Наполнить минимальный контент, чтобы каждый шаблон рендерился: 1 пост-образец (реальный, из §15 нед. 2), 3 сервиса (Приложение A), 1 ресурс (Scorecard — описание + ссылка на репо/PDF TODO(owner)), 1 кейс (only.help, anonymized:false), 10 терминов, 20 FAQ, /about, /approach, /pricing, /faq, /ai-policy, /security, /privacy, /terms, /imprint, /now, /speaking, /newsletter, /contact.
 
 - Применить S3 (seo-schema, seo-technical) и S4 (geo-llmstxt, geo-crawlers): исправить всё найденное.
-КГ-3 на всех шаблонных маршрутах: /, /services, /services/ai-readiness-assessment, /pricing, /approach, /resources, /resources/{1}, /case-studies/{1}, /blog, /blog/{1}, /blog/category/governance, /glossary, /glossary/{1}, /faq, /about, /contact, /search, /404. Плюс: JSON-LD валиден на каждом; .md-сайдкары 200; llms.txt валиден; feed.json валиден; форма проходит keyboard + screen-reader; sitemap без noindex-страниц.
-Выход: сайт функционально полон; каждый тип страницы — 100/100/100/100.
+  КГ-3 на всех шаблонных маршрутах: /, /services, /services/ai-readiness-assessment, /pricing, /approach, /resources, /resources/{1}, /case-studies/{1}, /blog, /blog/{1}, /blog/category/governance, /glossary, /glossary/{1}, /faq, /about, /contact, /search, /404. Плюс: JSON-LD валиден на каждом; .md-сайдкары 200; llms.txt валиден; feed.json валиден; форма проходит keyboard + screen-reader; sitemap без noindex-страниц.
+  Выход: сайт функционально полон; каждый тип страницы — 100/100/100/100.
 
 Фаза 4 · Контент ядра и ресурсы (≈ 3 дня работы агента + правки owner)
 
@@ -984,8 +986,8 @@ Context7 MCP (подключён) |
 - /resources/sample-readiness-report — обезличенный образец (структура + пример заполнения).
 
 - Прогнать S3 seo-content/citability по каждой статье: shortAnswer самодостаточен, H2-вопросы, источники, entity-упоминания.
-КГ-4 на всех новых маршрутах + повтор 6 шаблонных. Дополнительно: проверка орфографии (cspell), читаемость (measure, длина абзацев), внутренние ссылки ≥2 входящих на каждую статью.
-Выход: контент ядра готов к индексации.
+  КГ-4 на всех новых маршрутах + повтор 6 шаблонных. Дополнительно: проверка орфографии (cspell), читаемость (measure, длина абзацев), внутренние ссылки ≥2 входящих на каждую статью.
+  Выход: контент ядра готов к индексации.
 
 Фаза 5 · Запуск и индексация (≈ 0.5 дня + ожидание)
 
@@ -996,8 +998,8 @@ Context7 MCP (подключён) |
 - Базовый замер §17.3 (30 buyer prompts) → audits/geo-baseline.md.
 
 - Включить Plausible goals; проверить события.
-КГ-5: production URL, не preview; CrUX пока пуст — Lighthouse throttled mobile/desktop на 10 маршрутах, три прогона, медиана.
-Выход: сайт публичен, проиндексирован, замеры сняты.
+  КГ-5: production URL, не preview; CrUX пока пуст — Lighthouse throttled mobile/desktop на 10 маршрутах, три прогона, медиана.
+  Выход: сайт публичен, проиндексирован, замеры сняты.
 
 Фаза 6 · Рост (циклично, каждые 2 недели)
 
@@ -1008,14 +1010,14 @@ Context7 MCP (подключён) |
 - Ежемесячно — buyer prompts, /now; ежеквартально — Polish Loop + S3-аудит + зависимости + проверка AstroWind v2 (миграция — отдельный PRD).
 
 - ~~RU-раздел (/ru/)~~ — **superseded by L54 on 2026-09-15: English only, no second language.**
-КГ на каждый PR — автоматический (CI) + ручной Polish Loop на изменённых маршрутах.
+  КГ на каждый PR — автоматический (CI) + ручной Polish Loop на изменённых маршрутах.
 
 14.9 Калибровочный гейт (КГ) — единая процедура
 
 1. npm run build && npm run check # ноль ошибок/предупреждений
 2. npm run preview (или dist на локальном static-сервере) # Lighthouse только на production build
 3. Lighthouse CI: mobile + desktop, 3 прогона, медиана, все маршруты фазы
- → все категории 100 (P допуск ≥97 с записью причины); все assertions lighthouserc пройдены
+   → все категории 100 (P допуск ≥97 с записью причины); все assertions lighthouserc пройдены
 4. axe-core на каждом маршруте, light + dark → 0 violations
 5. html-validate → 0 errors; linkinator → 0 broken; size-limit → в бюджете
 6. JSON-LD: валидация всех страниц; все @id резолвятся; Rich Results test на 1 странице каждого типа
@@ -1024,7 +1026,7 @@ Context7 MCP (подключён) |
 9. Ручной проход: 320/375/768/1024/1280/1920; prefers-reduced-motion; keyboard-only; VoiceOver/NVDA на primary task (найти оффер → CTA; прочитать статью)
 10. Self-Improvement чеклист S1 — все «да»
 11. REPORT.md фазы заполнен; waiver'ов нет (или записаны)
-→ Только после этого: PR → merge → deploy
+    → Только после этого: PR → merge → deploy
 
 Часть E · Контент, дистрибуция, эксплуатация
 
@@ -1155,7 +1157,7 @@ Home / Signals — H2: Do you need a Fractional CAIO?
 - A customer's procurement team asked who is accountable for your AI risks — and the deal stalled.
 
 - AI budget is being spent, but no process has actually changed.
-Three or more? That's the profile I work with.
+  Three or more? That's the profile I work with.
 
 Services / short answers
 
@@ -1179,7 +1181,7 @@ FAQ (20 стартовых) — Приложение C.
 Приложение C · FAQ (20)
 
 - What is a fractional Chief AI Officer? 2. How is this different from an AI consultant or agency? 3. Who is this for — and who is it not for? 4. What happens in the 2-week Assessment? 5. What do I get at the end of the Assessment? 6. What does the 90-Day Sprint deliver? 7. How do you measure success? 8. What is an AI system register and why do I need one? 9. Do we need ISO/IEC 42001? 10. Does the EU AI Act apply to a company like ours? 11. Which AI tools and models do you use? 12. Can everything stay inside our infrastructure? 13. How do you handle our data and IP? 14. How do you work with our existing engineering team? 15. What happens when the engagement ends? 16. How do you price, and what affects the price? 17. Do you work under NDA? 18. Which time zones and languages do you work in? 19. Can you help us answer our customers' AI security questionnaires? 20. Why should we trust you?
-Каждый ответ ≤80 слов, самодостаточен, со ссылкой на страницу-источник.
+  Каждый ответ ≤80 слов, самодостаточен, со ссылкой на страницу-источник.
 
 Приложение D · Заготовки схем JSON-LD
 
@@ -1198,22 +1200,27 @@ FAQ (20 стартовых) — Приложение C.
 > production with evals and observability. Israel, remote worldwide.
 
 ## Services
+
 - [AI Readiness & Risk Assessment](https://meshin.co/services/ai-readiness-assessment.md): 2 weeks, fixed price, five-driver scorecard and board memo
 - [90-Day Production Sprint](https://meshin.co/services/90-day-production-sprint.md): one process to production with evals and governance minimum
 - [Fractional CAIO Retainer](https://meshin.co/services/fractional-caio.md): named AI officer, 1–2 days/week
 
 ## How I work
+
 - [Approach](https://meshin.co/approach.md)
 - [Pricing](https://meshin.co/pricing.md)
 - [FAQ](https://meshin.co/faq.md)
 
 ## Open-source resources
+
 {{ for resource: - [title](url.md): one-line }}
 
 ## Recent articles
+
 {{ last 20 posts: - [title](url.md): shortAnswer first sentence }}
 
 ## Optional
+
 - [Glossary](https://meshin.co/glossary.md)
 - [About](https://meshin.co/about.md)
 - [Full content](https://meshin.co/llms-full.txt)
@@ -1221,23 +1228,24 @@ FAQ (20 стартовых) — Приложение C.
 Приложение G · public/_headers и robots.txt
 
 /*
- Content-Security-Policy: default-src 'self'; script-src 'self' https://plausible.io; connect-src 'self' https://plausible.io; img-src 'self' data:; font-src 'self'; style-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
- Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
- X-Content-Type-Options: nosniff
- Referrer-Policy: strict-origin-when-cross-origin
- Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
- Cross-Origin-Opener-Policy: same-origin
- X-Frame-Options: DENY
+Content-Security-Policy: default-src 'self'; script-src 'self' https://plausible.io; connect-src 'self' https://plausible.io; img-src 'self' data:; font-src 'self'; style-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+Cross-Origin-Opener-Policy: same-origin
+X-Frame-Options: DENY
 /_astro/*
- Cache-Control: public, max-age=31536000, immutable
+Cache-Control: public, max-age=31536000, immutable
 /og/*
- Cache-Control: public, max-age=604800
+Cache-Control: public, max-age=604800
 /*.html
- Cache-Control: public, max-age=0, must-revalidate
+Cache-Control: public, max-age=0, must-revalidate
 
 Если билд требует inline <style> — добавить 'unsafe-inline' в style-src только после подтверждения, что 'self' ломает рендер, и записать waiver.
 
 # robots.txt
+
 User-agent: *
 Allow: /
 Disallow: /blog/tag/
@@ -1267,68 +1275,70 @@ Sitemap: https://meshin.co/sitemap-index.xml
 name: ci
 on: [push, pull_request]
 jobs:
- build:
- runs-on: ubuntu-latest
- steps:
- - uses: actions/checkout@v4
- - uses: actions/setup-node@v4
- with: { node-version-file: .nvmrc, cache: npm }
- - run: npm ci
- - run: npm run check
- - run: npm run build
- - run: npx pagefind --site dist
- - run: npx html-validate "dist/**/*.html"
- - run: npx linkinator dist --recurse --skip "plausible.io|linkedin.com"
- - run: npx size-limit
- - run: node scripts/validate-llms.mjs dist
- - run: node scripts/validate-jsonld.mjs dist
- - run: npx playwright install --with-deps chromium && node scripts/axe.mjs dist
- - run: npx lhci autorun
- - uses: actions/upload-artifact@v4
- with: { name: audits, path: .lighthouseci }
- deploy:
- needs: build
- if: github.ref == 'refs/heads/main'
- runs-on: ubuntu-latest
- steps:
- - uses: actions/checkout@v4
- - uses: actions/setup-node@v4
- with: { node-version-file: .nvmrc, cache: npm }
- - run: npm ci && npm run build && npx pagefind --site dist
- - run: npx wrangler pages deploy dist --project-name meshin-co
- env: { CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}, CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }} }
- - run: node scripts/indexnow.mjs
- env: { INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }} }
+build:
+runs-on: ubuntu-latest
+steps:
+
+- uses: actions/checkout@v4
+- uses: actions/setup-node@v4
+  with: { node-version-file: .nvmrc, cache: npm }
+- run: npm ci
+- run: npm run check
+- run: npm run build
+- run: npx pagefind --site dist
+- run: npx html-validate "dist/**/*.html"
+- run: npx linkinator dist --recurse --skip "plausible.io|linkedin.com"
+- run: npx size-limit
+- run: node scripts/validate-llms.mjs dist
+- run: node scripts/validate-jsonld.mjs dist
+- run: npx playwright install --with-deps chromium && node scripts/axe.mjs dist
+- run: npx lhci autorun
+- uses: actions/upload-artifact@v4
+  with: { name: audits, path: .lighthouseci }
+  deploy:
+  needs: build
+  if: github.ref == 'refs/heads/main'
+  runs-on: ubuntu-latest
+  steps:
+- uses: actions/checkout@v4
+- uses: actions/setup-node@v4
+  with: { node-version-file: .nvmrc, cache: npm }
+- run: npm ci && npm run build && npx pagefind --site dist
+- run: npx wrangler pages deploy dist --project-name meshin-co
+  env: { CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}, CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }} }
+- run: node scripts/indexnow.mjs
+  env: { INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }} }
 
 // lighthouserc.cjs
 module.exports = {
- ci: {
- collect: {
- staticDistDir: './dist',
- url: ['/', '/services/ai-readiness-assessment', '/pricing', '/approach', '/blog', '/blog/<first-post>', '/resources', '/glossary', '/about', '/contact', '/404'],
- numberOfRuns: 3,
- settings: { preset: 'desktop' } // второй набор — mobile по умолчанию; два collect-конфига или матрица
- },
- assert: {
- assertions: {
- 'categories:performance': ['error', { minScore: 0.97 }],
- 'categories:accessibility': ['error', { minScore: 1 }],
- 'categories:best-practices': ['error', { minScore: 1 }],
- 'categories:seo': ['error', { minScore: 1 }],
- 'largest-contentful-paint': ['error', { maxNumericValue: 1800 }],
- 'cumulative-layout-shift': ['error', { maxNumericValue: 0.02 }],
- 'total-blocking-time': ['error', { maxNumericValue: 50 }],
- 'resource-summary:script:size': ['error', { maxNumericValue: 10240 }],
- 'resource-summary:stylesheet:size': ['error', { maxNumericValue: 20480 }],
- }
- },
- upload: { target: 'filesystem', outputDir: './.lighthouseci' }
- }
+ci: {
+collect: {
+staticDistDir: './dist',
+url: ['/', '/services/ai-readiness-assessment', '/pricing', '/approach', '/blog', '/blog/<first-post>', '/resources', '/glossary', '/about', '/contact', '/404'],
+numberOfRuns: 3,
+settings: { preset: 'desktop' } // второй набор — mobile по умолчанию; два collect-конфига или матрица
+},
+assert: {
+assertions: {
+'categories:performance': ['error', { minScore: 0.97 }],
+'categories:accessibility': ['error', { minScore: 1 }],
+'categories:best-practices': ['error', { minScore: 1 }],
+'categories:seo': ['error', { minScore: 1 }],
+'largest-contentful-paint': ['error', { maxNumericValue: 1800 }],
+'cumulative-layout-shift': ['error', { maxNumericValue: 0.02 }],
+'total-blocking-time': ['error', { maxNumericValue: 50 }],
+'resource-summary:script:size': ['error', { maxNumericValue: 10240 }],
+'resource-summary:stylesheet:size': ['error', { maxNumericValue: 20480 }],
+}
+},
+upload: { target: 'filesystem', outputDir: './.lighthouseci' }
+}
 };
 
 Приложение I · Дополнение к AGENTS.md
 
 ## Project: meshin.co (see docs/PRD.md — single source of truth)
+
 - Skills priority: skill-frontend-excellence > AstroWind skills > claude-seo/geo-seo > frontend-design. Load ≤3 references from frontend-excellence at a time via its routing tables.
 - Every phase ends with the Calibration Gate in docs/PRD.md §14.9. No merge without a green gate and audits/phase-N/REPORT.md.
 - Budgets (blocking): mobile Lighthouse 100/100/100/100 (perf ≥97 with recorded reason), JS ≤10 KB gz, CSS ≤20 KB gz, CLS ≤0.02, LCP ≤1.8s.

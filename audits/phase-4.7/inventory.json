@@ -1,10 +1,10 @@
 {
-  "generated": "2026-09-16",
+  "generated": "2026-09-22",
   "counts": {
     "untraceable": 0,
     "dead": 9,
     "stale": 0,
-    "unmatched": 28
+    "unmatched": 29
   },
   "rows": [
     {
@@ -7729,15 +7729,6 @@
         "src/utils/content-rules.mjs"
       ],
       "reason": "zod validation message fragments composed into a build error, plain and accurate; never rendered to a page, and the complete message is declared in conditional-copy.json"
-    },
-    {
-      "location": "constant.TITLE_SUFFIX",
-      "text": "— meshin.co",
-      "status": "verified",
-      "usedIn": [
-        "src/utils/faq-meta.mjs"
-      ],
-      "reason": "pure formatting/trimming utilities (teaser, clauseTrim, pageTitle, faqDescription), no hardcoded prose beyond the ' — meshin.co' title suffix which matches the site brand suffix used everywhere"
     },
     {
       "location": "constant.KNOWS_ABOUT",

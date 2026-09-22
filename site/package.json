@@ -48,7 +48,8 @@
     "smoke:prod": "node scripts/run-smoke-prod.mjs",
     "gate:docs": "node scripts/run-docs-gate.mjs ..",
     "audit:geo-probe": "node scripts/run-geo-probe.mjs",
-    "gate:external": "node scripts/run-external-links.mjs dist"
+    "gate:external": "node scripts/run-external-links.mjs dist",
+    "gate:search": "node scripts/search-budget.mjs dist"
   },
   "dependencies": {
     "@astro-community/astro-embed-twitter": "^0.5.11",
@@ -117,5 +118,8 @@
   },
   "allowScripts": {
     "esbuild": true
+  },
+  "localOnlyGates": {
+    "gate:lh": "the CI lighthouse matrix runs gate:lh:one per form factor and route shard; the full local run would be one 30-minute job"
   }
 }

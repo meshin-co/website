@@ -15,6 +15,7 @@ import {
   sizeGuardFailure,
   lastmodCoverageGaps,
   COLLECTION_BASES,
+  humansTxtFindings,
 } from './machine.mjs';
 
 const CONFIG = `
@@ -312,4 +313,21 @@ const FEED_ENDPOINTS = [
 test('the merged feed and one endpoint per public collection exist, so the gate has something to check', async () => {
   await Promise.all(FEED_ENDPOINTS.map((endpoint) => access(endpoint)));
   assert.equal(FEED_ENDPOINTS.length, Object.keys(COLLECTION_BASES).length + 1);
+});
+
+test('a component named in humans.txt that the project does not depend on is a finding', () => {
+  const findings = humansTxtFindings('Components: Astro, Tailwind CSS, Pagefind\n', {
+    astro: '7.3.1',
+    tailwindcss: '4.3.3',
+  });
+  assert.equal(findings.length, 1);
+  assert.match(findings[0].detail, /Pagefind/);
+});
+
+test('every component backed by a dependency is clean, matched case- and space-insensitively', () => {
+  assert.deepEqual(humansTxtFindings('Components: Astro, Tailwind CSS\n', { astro: '7', tailwindcss: '4' }), []);
+});
+
+test('a humans.txt with no components line is a finding, because the file claims to describe the stack', () => {
+  assert.equal(humansTxtFindings('/* TEAM */\nSite: https://meshin.co\n', { astro: '7' }).length, 1);
 });

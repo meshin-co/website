@@ -124,6 +124,9 @@ jobs:
       - run: npm run gate:machine
       - run: npm run gate:jsonld
       - run: npm run gate:external
+      - run: npm run gate:search
+      - run: npm run gate:editorial
+      - run: npm run gate:registers
 
       - name: route set never shrinks unexplained
         run: npm run gate:routes
@@ -164,8 +167,8 @@ jobs:
         with:
           name: dist
           path: site/dist
-      - run: npx playwright install --with-deps chromium
-      - run: npx playwright test --shard=${{ matrix.shard }}/3
+      - run: npx playwright install --with-deps chromium webkit firefox
+      - run: npm run gate:visual -- --shard=${{ matrix.shard }}/3
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
@@ -262,7 +265,7 @@ jobs:
           cache: npm
           cache-dependency-path: site/package-lock.json
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium webkit firefox
       - run: npm run build
       - run: npx playwright test --update-snapshots
       - name: Commit regenerated linux baselines
