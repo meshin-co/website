@@ -1,3 +1,5 @@
+import { parseMustWinLine } from './semantic-core.mjs';
+
 const PROMPT_HEADING = /^\*\*(\d+)\.\s+([^*]+)\*\*$/gm;
 
 const normalise = (value) =>
@@ -28,13 +30,12 @@ export function parsePrompts(doc) {
     const shared = ownBody.trim() === '' && nextHeading;
     const body = shared ? section.slice(nextHeading.after, headings[index + 2]?.at ?? section.length) : ownBody;
 
-    const mustWinLine = /Must win:\s*([^\n]+)/.exec(body)?.[1] ?? '';
-    const routes = [...mustWinLine.matchAll(/`([^`]+)`/g)].map((match) => match[1]);
+    const { mustWinRoutes, supportRoutes } = parseMustWinLine(body);
     return {
       number: heading.number,
       prompt: heading.prompt,
-      mustWin: routes[0] ?? '',
-      support: routes.slice(1),
+      mustWin: mustWinRoutes[0] ?? '',
+      support: [...mustWinRoutes.slice(1), ...supportRoutes],
       passage: /Passage:\s*"([^"]+)"/.exec(body)?.[1]?.trim() ?? '',
       passageRoute: /Passage:\s*"[^"]+"\s*\(`([^`]+)`\)/.exec(body)?.[1]?.trim() ?? '',
     };

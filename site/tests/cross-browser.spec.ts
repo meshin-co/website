@@ -7,7 +7,7 @@ const WIDTHS = [375, 1280];
 test.describe.configure({ mode: 'parallel' });
 
 for (const route of routes) {
-  test(`${route} renders in this engine with no console error and no sideways scroll`, async ({ page }) => {
+  test(`${route} renders in this engine with no console error and no sideways scroll`, async ({ page }, testInfo) => {
     await page.route('**/*', async (route_) => {
       if (route_.request().resourceType() !== 'document') return route_.fallback();
       const response = await route_.fetch();
@@ -39,7 +39,11 @@ for (const route of routes) {
       try {
         await page.goto(route, { waitUntil: 'load' });
       } catch (error) {
-        if (!String(error).includes('Timeout')) throw error;
+        if (!/timeout/i.test(String(error))) throw error;
+        testInfo.annotations.push({
+          type: 'slow-navigation',
+          description: `${route} did not reach load; retried on domcontentloaded`,
+        });
         await page.goto(route, { waitUntil: 'domcontentloaded' });
       }
     };

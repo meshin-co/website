@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
 import {
@@ -45,10 +46,44 @@ test('a service worker registration in the build is a finding, because no kill s
   assert.equal(checkServiceWorker(['<p>none</p>']).status, 'pass');
 });
 
-test('the font policy counts families and weights from the shipped faces', () => {
-  const finding = checkFontPolicy(['a-400.woff2', 'a-500.woff2', 'b-400.woff2', 'c-400.woff2', 'c-700.woff2']);
-  assert.equal(finding.families, 3);
-  assert.equal(finding.weights, 5);
+const realFace = (family, hash, weight) =>
+  `@font-face{font-family:"${family}-${hash}";src:url("/_astro/fonts/${hash}.woff2") format("woff2");font-weight:${weight};font-style:normal}`;
+const fallbackFace = (family, hash, weight, localName) =>
+  `@font-face{font-family:"${family}-${hash} fallback: ${localName}";src:local("${localName}");font-weight:${weight};font-style:normal}`;
+
+test('the font policy counts real @font-face src:url rules, strips the content hash, and ignores the local() fallback', () => {
+  const css =
+    realFace('Fraunces', 'c376d5df76677c15', 600) +
+    fallbackFace('Fraunces', 'c376d5df76677c15', 600, 'Times New Roman') +
+    realFace('IBM Plex Sans', '0e3285ad6af1f8cc', 400) +
+    realFace('IBM Plex Sans', '18e62b4625ad145f', 500) +
+    fallbackFace('IBM Plex Sans', '0e3285ad6af1f8cc', 400, 'Arial');
+
+  const finding = checkFontPolicy(css);
+  assert.equal(finding.families, 2);
+  assert.equal(finding.weights, 3);
+  assert.deepEqual(finding.list, ['fraunces-600', 'ibm plex sans-400', 'ibm plex sans-500']);
+});
+
+test('a fontsource-shaped filename with no real @font-face rule is not counted', () => {
+  assert.deepEqual(checkFontPolicy('a-400.woff2, b-500.woff2'), { families: 0, weights: 0, list: [] });
+});
+
+test('an extra shipped face changes the count, so the check reacts to what actually ships', () => {
+  const oneFace = realFace('Fraunces', 'aaaa000000000000', 600);
+  const twoFaces = oneFace + realFace('Mono', 'bbbb111111111111', 400);
+
+  assert.deepEqual(checkFontPolicy(oneFace), { families: 1, weights: 1, list: ['fraunces-600'] });
+  assert.deepEqual(checkFontPolicy(twoFaces), { families: 2, weights: 2, list: ['fraunces-600', 'mono-400'] });
+});
+
+test('checkFontPolicy against the real shipped build reports 2 families and 3 faces, not 0 and 0', () => {
+  const html = readFileSync(new URL('../dist/index.html', import.meta.url), 'utf8');
+  const finding = checkFontPolicy(html);
+
+  assert.equal(finding.families, 2);
+  assert.equal(finding.weights, 3);
+  assert.deepEqual(finding.list, ['fraunces-600', 'ibm plex sans-400', 'ibm plex sans-500']);
 });
 
 test('the checklist renders every item with a status, and never leaves one blank', () => {

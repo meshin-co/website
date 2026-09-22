@@ -66,7 +66,7 @@ test('two nodes declaring the same id are reported', () => {
 
 test("a node missing one of its type's required properties is reported by id and property name", () => {
   const graphs = extractGraphs(page('{"@graph":[{"@type":"Organization","@id":"https://x/#org","name":"X"}]}'));
-  const failures = missingProperties(graphs, ['Organization']);
+  const failures = missingProperties(graphs, ['Organization'], '/');
   assert.ok(failures.some((failure) => failure.includes('https://x/#org') && failure.includes('logo')));
   assert.ok(!failures.some((failure) => failure.includes('name')));
 });
@@ -85,26 +85,26 @@ test('a node satisfying every required property of its type reports nothing', ()
       })
     )
   );
-  assert.deepEqual(missingProperties(graphs, ['DefinedTermSet']), []);
+  assert.deepEqual(missingProperties(graphs, ['DefinedTermSet'], '/'), []);
 });
 
 test('a required type absent from REQUIRED_PROPERTIES fails the property gate closed', () => {
   const graphs = extractGraphs(page('{"@graph":[{"@type":"NeverDefined","@id":"x"}]}'));
-  assert.deepEqual(missingProperties(graphs, ['NeverDefined']), [
+  assert.deepEqual(missingProperties(graphs, ['NeverDefined'], '/'), [
     'NeverDefined matches no known jsonld property family',
   ]);
 });
 
 test('a union type checks the properties of whichever variant is actually present', () => {
   const graphs = extractGraphs(page('{"@graph":[{"@type":"SoftwareSourceCode","@id":"x","name":"N"}]}'));
-  const failures = missingProperties(graphs, ['CreativeWork|SoftwareSourceCode']);
+  const failures = missingProperties(graphs, ['CreativeWork|SoftwareSourceCode'], '/');
   assert.ok(failures.some((failure) => failure.includes('codeRepository')));
   assert.ok(!failures.some((failure) => failure.startsWith('CreativeWork ')));
 });
 
 test('a required type absent from the graph reports no property failures, since missingTypes already reports the absence', () => {
   const graphs = extractGraphs(page('{"@graph":[]}'));
-  assert.deepEqual(missingProperties(graphs, ['Organization']), []);
+  assert.deepEqual(missingProperties(graphs, ['Organization'], '/'), []);
 });
 
 test('a route of a known family is required to carry that family node', () => {
@@ -246,4 +246,20 @@ test('a page satisfying its family requirements, including property completeness
     process.exitCode = undefined;
     await rm(dir, { recursive: true, force: true });
   }
+});
+
+test('a node whose id points at another page keeps its reference shape, because only the defining page carries the floor', () => {
+  const graphs = extractGraphs(
+    page('{"@graph":[{"@type":"DefinedTerm","@id":"https://x/glossary/term#term","name":"T"}]}')
+  );
+  assert.deepEqual(missingProperties(graphs, [], '/services/retainer'), []);
+  assert.ok(missingProperties(graphs, [], '/glossary/term').length > 0);
+});
+
+test('a companion node no route declares still carries a floor, because WebPage had none', () => {
+  const graphs = extractGraphs(
+    page('{"@graph":[{"@type":"WebPage","@id":"https://x/terms#webpage","url":"u","name":"n"}]}')
+  );
+  const failures = missingProperties(graphs, [], '/terms');
+  assert.ok(failures.some((failure) => failure.includes('dateModified')));
 });

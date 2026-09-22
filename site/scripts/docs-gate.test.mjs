@@ -5,7 +5,9 @@ import {
   citedCommands,
   discoverDocs,
   citedPaths,
+  emptyDiscoveryFinding,
   enforcesRowRange,
+  isBuildOutput,
   isExternal,
   lockedRowClaims,
   resolveCandidates,
@@ -80,4 +82,33 @@ test('git discovery wins when it works, and still drops generated evidence', () 
     discoverDocs(viaGit, () => []),
     ['AGENTS.md', 'docs/b.md']
   );
+});
+
+test('a build-output root under site/ is ignored the same as its bare form, because the walk branch always sees the site/ prefix', () => {
+  const viaWalk = () => ['docs/a.md', 'site/dist/gate-summary.md', 'dist/legacy.md', 'site/.astro/cache.md'];
+  assert.deepEqual(
+    discoverDocs(() => {
+      throw new Error('no git');
+    }, viaWalk),
+    ['docs/a.md']
+  );
+});
+
+test('site/src/data content entries are excluded from the doc set, because articles are gated by gate:content and gate:editorial, not this gate', () => {
+  const viaGit = () => ['AGENTS.md', 'site/src/data/blog/post-1.md', 'docs/b.md'];
+  assert.deepEqual(
+    discoverDocs(viaGit, () => []),
+    ['AGENTS.md', 'docs/b.md']
+  );
+});
+
+test('an empty discovered set is a finding, not a silent pass, because a git repo with only untracked docs must not report 0 findings', () => {
+  assert.equal(emptyDiscoveryFinding(0)?.rule, 'no-docs-discovered');
+  assert.equal(emptyDiscoveryFinding(3), null);
+});
+
+test('a build-output path is recognized in both its bare and site/-prefixed form', () => {
+  assert.equal(isBuildOutput('dist/gate-routes.json'), true);
+  assert.equal(isBuildOutput('site/dist/gate-routes.json'), true);
+  assert.equal(isBuildOutput('docs/PRD.md'), false);
 });

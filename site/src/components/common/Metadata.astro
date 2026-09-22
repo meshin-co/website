@@ -102,7 +102,7 @@ const mergedTwitter = merge(
 
 const seoProps: SEOProps = {
   title: escapeHtmlText(title || METADATA?.title?.default || ''),
-  titleTemplate: escapeHtmlText(ignoreTitleTemplate ? '%s' : METADATA?.title?.template || '%s'),
+  titleTemplate: escapeHtmlText(ignoreTitleTemplate ? '%s' : `%s — ${SITE?.name || ''}`),
   canonical: canonical,
   noindex:
     typeof robots?.index !== 'undefined'

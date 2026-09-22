@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, writeFile, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
@@ -12,6 +12,7 @@ import {
   measureRoute,
   isNoindex,
   lighthouseSet,
+  main,
 } from './gate.mjs';
 
 async function fixtureDist(pages) {
@@ -152,4 +153,28 @@ test('every other noindex route stays audited, so the exclusion cannot widen', (
     { route: '/search', page: 95, noindex: true },
   ];
   assert.deepEqual(lighthouseSet(measured).sort(), ['/404', '/search']);
+});
+
+test('gate-routes.json carries the over-budget findings the gate already computed', async () => {
+  const dist = await fixtureDist({ '/': `<html><body>${'x'.repeat(50)}</body></html>` });
+  const budgetPath = join(dist, 'budgets.json');
+  await writeFile(budgetPath, JSON.stringify({ js: 10240, css: 20480, page: 10 }));
+
+  await main(dist, budgetPath);
+  process.exitCode = 0;
+  const written = JSON.parse(await readFile(join(dist, 'gate-routes.json'), 'utf8'));
+
+  assert.equal(written.overBudget.length, 1);
+  assert.match(written.overBudget[0], /^\/ page \d+ > 10$/);
+});
+
+test('gate-routes.json reports no over-budget findings when every route is inside its budget', async () => {
+  const dist = await fixtureDist({ '/': '<html><body>ok</body></html>' });
+  const budgetPath = join(dist, 'budgets.json');
+  await writeFile(budgetPath, JSON.stringify({ js: 10240, css: 20480, page: 256000 }));
+
+  await main(dist, budgetPath);
+  const written = JSON.parse(await readFile(join(dist, 'gate-routes.json'), 'utf8'));
+
+  assert.deepEqual(written.overBudget, []);
 });

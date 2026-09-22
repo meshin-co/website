@@ -34,6 +34,7 @@ const ROUTE_TYPES = [
 const GRAPH_EXEMPT = new Set(['/404', '/search', '/styleguide']);
 
 export const REQUIRED_PROPERTIES = {
+  WebPage: ['url', 'name', 'isPartOf', 'inLanguage', 'dateModified'],
   Organization: ['name', 'url', 'logo', 'image', 'sameAs', 'contactPoint', 'founder'],
   Person: ['name', 'jobTitle', 'url', 'worksFor', 'sameAs', 'knowsAbout'],
   WebSite: ['url', 'name', 'publisher', 'potentialAction'],
@@ -137,7 +138,18 @@ export function missingTypes(graphs, required) {
   return required.filter((type) => !type.split('|').some((option) => present.has(option)));
 }
 
-export function missingProperties(graphs, required) {
+export function ownsNode(route, node) {
+  const id = node['@id'];
+  if (typeof id !== 'string') return true;
+  if (!/^(https?:\/\/|\/)/.test(id)) return true;
+  const path = id
+    .replace(/^https?:\/\/[^/]+/, '')
+    .replace(/#.*$/, '')
+    .replace(/\/$/, '');
+  return (path === '' ? '/' : path) === route;
+}
+
+export function missingProperties(graphs, required, route) {
   const byType = new Map();
   for (const node of nodesOf(graphs)) {
     for (const type of [node['@type']].flat()) {
@@ -147,19 +159,16 @@ export function missingProperties(graphs, required) {
   }
 
   const failures = [];
-  for (const type of required) {
-    const options = type.split('|');
-    const presentOption = options.find((option) => byType.has(option));
-    if (!presentOption) continue;
-    const requiredProps = REQUIRED_PROPERTIES[presentOption];
+  for (const [type, nodes] of byType) {
+    const requiredProps = REQUIRED_PROPERTIES[type];
     if (!requiredProps) {
-      failures.push(`${presentOption} matches no known jsonld property family`);
+      failures.push(`${type} matches no known jsonld property family`);
       continue;
     }
-    for (const node of byType.get(presentOption)) {
+    for (const node of nodes.filter((candidate) => ownsNode(route, candidate))) {
       for (const prop of requiredProps) {
         if (node[prop] === undefined || node[prop] === null) {
-          failures.push(`${presentOption} node ${node['@id'] ?? '(no id)'} is missing required property ${prop}`);
+          failures.push(`${type} node ${node['@id'] ?? '(no id)'} is missing required property ${prop}`);
         }
       }
     }
@@ -195,7 +204,7 @@ export async function main(distDir) {
     for (const id of danglingIds(graphs)) failures.push(`${route} references undeclared ${id}`);
     for (const id of duplicateIds(graphs)) failures.push(`${route} declares ${id} twice`);
     for (const type of missingTypes(graphs, required)) failures.push(`${route} has no ${type} node`);
-    for (const failure of missingProperties(graphs, required)) failures.push(`${route} ${failure}`);
+    for (const failure of missingProperties(graphs, required, route)) failures.push(`${route} ${failure}`);
   }
 
   console.log(`jsonld: ${checked} of ${routes.length} routes carry a graph`);

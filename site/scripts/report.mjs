@@ -18,6 +18,14 @@ export async function metricBudgets() {
   return budgets;
 }
 
+export function byteBudgets() {
+  return createRequire(import.meta.url)('../budgets.json');
+}
+
+export function byteBudgetSentence({ js, css, page } = {}) {
+  return `Budgets: JS ≤${js} · CSS ≤${css} · page ≤${page} bytes gzip.`;
+}
+
 export function metricFailures(rows, budgets) {
   return rows.flatMap((row) =>
     Object.entries(budgets).flatMap(([audit, budget]) => {
@@ -74,7 +82,7 @@ function canonicalRoute(route) {
   return route.length > 1 && route.endsWith('/') ? route.slice(0, -1) : route;
 }
 
-export function renderReport({ phase, gate, mobile, desktop, budgets = {} }) {
+export function renderReport({ phase, gate, mobile, desktop, budgets = {}, byteBudgets: byteBudgetLimits = {} }) {
   const failures = [];
   const noindex = new Set(gate.measured.filter((row) => row.noindex).map((row) => canonicalRoute(row.route)));
   for (const [form, rows] of [
@@ -129,7 +137,7 @@ export function renderReport({ phase, gate, mobile, desktop, budgets = {} }) {
   for (const row of gate.measured) {
     lines.push(`| \`${row.route}\` | ${row.js} | ${row.css} | ${row.page} |`);
   }
-  lines.push('', `Budgets: JS ≤10240 · CSS ≤20480 · page ≤256000 bytes gzip.`, '');
+  lines.push('', byteBudgetSentence(byteBudgetLimits), '');
   lines.push(
     '## Lighthouse route selection',
     '',
@@ -153,6 +161,7 @@ async function main(phase, auditDir) {
     mobile: scoreTable(await readReports(join(auditDir, 'lh-mobile'))),
     desktop: scoreTable(await readReports(join(auditDir, 'lh-desktop'))),
     budgets: await metricBudgets(),
+    byteBudgets: byteBudgets(),
   });
   await writeFile(join(auditDir, 'REPORT.md'), markdown);
   console.log(markdown);

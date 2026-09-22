@@ -333,17 +333,6 @@ export interface Bento extends Omit<Headline, 'classes'>, Widget {
   columns?: 3 | 4;
 }
 
-export interface Newsletter extends Omit<Headline, 'classes'>, Widget {
-  placeholder?: string;
-  button?: string;
-  disclaimer?: string;
-  /** Where to POST the email. Without it the form does nothing (see configure-contact-form.md). */
-  action?: string;
-  method?: 'post' | 'get';
-  name?: string;
-  layout?: 'band' | 'card';
-}
-
 export interface Quote extends Widget {
   quote?: string;
   name?: string;

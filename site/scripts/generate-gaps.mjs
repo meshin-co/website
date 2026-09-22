@@ -15,6 +15,20 @@ const pageOf = (dist, route) => {
   return readFileSync(existsSync(nested) ? nested : join(dist, `${route.slice(1)}.html`), 'utf8');
 };
 
+const GAP_ROW = /^\| [\d, ]+\s*\| ([^|]+?)\s*\| ([^|]+?)\s*\|/gm;
+const RECOGNISED_GAP_PHRASING =
+  /no route|absent|missing|never appears|no anchor|no playbook|no prose owner|no artifact/i;
+
+export function promptGapRows(coreDoc) {
+  const rows = [...coreDoc.matchAll(GAP_ROW)];
+  const unrecognised = rows.filter(([, , gap]) => !RECOGNISED_GAP_PHRASING.test(gap));
+  if (unrecognised.length > 0) {
+    const named = unrecognised.map(([, prompt, gap]) => `"${prompt.trim()} — ${gap.trim()}"`).join(', ');
+    throw new Error(`generate-gaps: GAP register row(s) use phrasing the allowlist does not recognise: ${named}`);
+  }
+  return rows.map(([, prompt, gap]) => `${prompt.trim()} — ${gap.trim()}`);
+}
+
 function main() {
   const dist = process.argv[2] ?? 'dist';
   const terms = readdirSync('src/data/glossary')
@@ -43,11 +57,7 @@ function main() {
   const ledger = JSON.parse(readFileSync(LEDGER, 'utf8'));
   const rows = ledger.rows;
   const concepts = conceptRegister(terms);
-  const promptGaps = [...readFileSync(CORE, 'utf8').matchAll(/^\| [\d, ]+\s*\| ([^|]+?)\s*\| ([^|]+?)\s*\|/gm)]
-    .filter(([, , gap]) =>
-      /no route|absent|missing|never appears|no anchor|no playbook|no prose owner|no artifact/i.test(gap)
-    )
-    .map(([, prompt, gap]) => `${prompt.trim()} — ${gap.trim()}`);
+  const promptGaps = promptGapRows(readFileSync(CORE, 'utf8'));
 
   const report = renderGaps({
     ledger: {

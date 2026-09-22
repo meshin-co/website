@@ -21,7 +21,7 @@ CG-5 runs against the production URL, not a preview.
 - WebKit and Gecko render every route: `tests/cross-browser.spec.ts`, 210 tests.
 - Lighthouse on the local production build: `audits/phase-5/REPORT.md`, Result PASS, 50 of 54
   rows at 100/100/100/100, the four noindex rows n/a on SEO.
-- Buyer-prompt structural readiness: `audits/geo-baseline.md`, 12 of 30 ready. This is not the
+- Buyer-prompt structural readiness: `audits/geo-baseline.md`, 26 of 30 ready. This is not the
   citation baseline; PRD §17.3's mentioned/cited/absent run across five engines is external and
   manual, and the artifact says so on its first line.
 

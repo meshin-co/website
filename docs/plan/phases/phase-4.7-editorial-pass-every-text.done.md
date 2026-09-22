@@ -120,7 +120,7 @@ content gate's sentence-length, banned-phrase and duplicate-sentence rules hold 
 Unknown facts become `TODO(owner)` rows in `docs/COPY-CHECKLIST.md`, never a plausible guess.
 
 **Steps 4 to 6 landed 2026-09-15.** Eight agents on disjoint file sets did the editing, then the
-remaining rows were reviewed by owner. Ledger: **1412 rows, 377 rewritten, 1035 verified, zero
+remaining rows were reviewed by owner. Ledger: **1412 rows, 388 rewritten, 1024 verified, zero
 unreviewed**; shipped text tracing to no source row **0**; source copy no page ships **9**, each
 declared in `audits/phase-4.7/conditional-copy.json` with the state that renders it and a stale
 check so the list cannot rot. 259 dispositions, all sealed against the text they reviewed.
@@ -218,8 +218,9 @@ undeclared in the copy checklist.
 
 ## Calibration Gate 4.7 — PASS 2026-09-15
 
-`audits/phase-4.7/REPORT.md` reads **Result: PASS**: 54 of 54 route×form-factor rows at
-100/100/100/100, every metric budget inside its cap, `check` 0, 588 unit tests, 696 Playwright on
+`audits/phase-4.7/REPORT.md` reads **Result: PASS**: 50 of 54 route×form-factor rows at
+100/100/100/100, the four noindex rows (`/404`, `/search`, mobile and desktop) n/a on SEO,
+every metric budget inside its cap, `check` 0, 588 unit tests, 696 Playwright on
 darwin, 14/14 mutation families, and `html`, `links`, `content`, `orphans`, `machine`, `skills`,
 `jsonld`, `plan`, `registers`, `editorial`, byte budgets and search budgets all exit 0.
 

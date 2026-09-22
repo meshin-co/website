@@ -69,9 +69,6 @@ const postCollection = defineCollection({
       sources: z.array(source).min(1),
       author: reference('author'),
       relatedResources: z.array(reference('resource')).default([]),
-      series: z.string().optional(),
-      image: z.string().optional(),
-      imageAlt: z.string().optional(),
     })
     .refine(datesInOrder, datesInOrderMessage),
 });
@@ -115,7 +112,6 @@ const resourceCollection = defineCollection({
       version: z.string(),
       license: z.string(),
       status: z.string(),
-      downloadUrl: z.url().optional(),
       repoUrl: z.url().optional(),
       whatInside: z.array(z.string()).min(1),
       howToUse: z.string(),
@@ -142,7 +138,6 @@ const caseCollection = defineCollection({
       stack: z.array(z.string()).min(1),
       duration: z.string().optional(),
       offer: reference('service'),
-      quote: z.string().optional(),
       anonymized: z.boolean(),
     })
     .refine(datesInOrder, datesInOrderMessage),

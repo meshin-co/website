@@ -1,6 +1,8 @@
 # Keep the Docs Honest
 
-`npm run gate:docs` reads every Markdown file in `AGENTS.md`, `docs/` and `.agents/skills/` and
+`npm run gate:docs` reads every tracked Markdown file — not just `AGENTS.md`, `docs/` and
+`.agents/skills/`, its original three-root scope — excluding only `audits/` (generated evidence),
+`site/dist/` (build output) and `site/src/data/` (content entries, not documentation prose). It
 fails when a document claims something the repository does not hold. Three rules, each with a
 precision control and a test. The rules live in `scripts/docs-gate.mjs`, their tests in
 `scripts/docs-gate.test.mjs`, and `scripts/run-docs-gate.mjs` walks the tree:

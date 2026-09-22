@@ -169,10 +169,7 @@ const header = [
 ].join(' ');
 
 mkdirSync(OUT.slice(0, OUT.lastIndexOf('/')), { recursive: true });
-const report = renderProbe(rows).replace(
-  'engine returned a `meshin.co` URL among its sources. `mentioned` means the answer named the',
-  `engine returned a \`meshin.co\` URL among its sources. \`mentioned\` means the answer named the`
-);
+const report = renderProbe(rows);
 writeFileSync(OUT, `${report}\n## Method\n\n${header}\n`);
 writeFileSync(
   OUT.replace(/\.md$/, '.json'),

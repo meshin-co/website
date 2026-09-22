@@ -93,7 +93,7 @@ export async function measureRoute(distDir, route) {
   return { route, js, css, page: gzipBytes(Buffer.from(html)) + js + css, noindex: isNoindex(html) };
 }
 
-async function main(distDir, budgetPath) {
+export async function main(distDir, budgetPath) {
   const budgets = JSON.parse(await readFile(budgetPath, 'utf8'));
   const routes = await discoverRoutes(distDir);
   const measured = [];
@@ -102,7 +102,7 @@ async function main(distDir, budgetPath) {
   const findings = measured.flatMap((row) => overBudget(row, budgets));
   await writeFile(
     join(distDir, 'gate-routes.json'),
-    `${JSON.stringify({ routes, measured, lighthouseRoutes: lighthouseSet(measured) }, null, 2)}\n`
+    `${JSON.stringify({ routes, measured, lighthouseRoutes: lighthouseSet(measured), overBudget: findings }, null, 2)}\n`
   );
 
   for (const row of measured) console.log(`${row.route} js=${row.js} css=${row.css} page=${row.page}`);

@@ -20,9 +20,10 @@ in here duplicates a phase file; it points at them.
 | 6     | Growth (repeating, every two weeks)               | `planned` | [phase-6-growth-repeating-every-two-weeks.planned.md](phases/phase-6-growth-repeating-every-two-weeks.planned.md)                             |                                                                                                                                           |
 
 Status lives in the filename, not in a table someone forgets to update: `.done.md`, `.active.md`,
-`.next.md`, `.planned.md`, `.dropped.md`. Exactly one phase may be `.active` at a time, and at
-most one may be `.next`. `scripts/plan-gate.mjs` enforces both, plus that every file the index
-lists exists and every file on disk is listed here.
+`.next.md`, `.planned.md`, `.dropped.md`. At most one phase may be `.active` at a time (the
+current tree has zero — Phase 5 is `.next`, not `.active`), and at most one may be `.next`.
+`scripts/plan-gate.mjs` enforces both, plus that every file the index lists exists and every file
+on disk is listed here.
 
 Renaming a file is how a phase changes state. Do it in the same commit that finishes the work,
 and update the row above.
@@ -38,6 +39,7 @@ and update the row above.
 | [reference/risk-register.md](reference/risk-register.md)                           | Known risks and their mitigations.                                                                           |
 | [reference/bigpowers-mapping.md](reference/bigpowers-mapping.md)                   | Which bigpowers skills were adopted, which map onto what already exists, and which are skipped and why.      |
 | [reference/history-rewrite-2026-09-15.md](reference/history-rewrite-2026-09-15.md) | Old commit hash to new, after the 761 MB to 113 MB rewrite.                                                  |
+| [reference/known-gaps.md](reference/known-gaps.md)                                 | Real problems found but deliberately not closed in the pass that found them, with the reason why and an owner. |
 | [briefs/refine-all-texts.md](../briefs/refine-all-texts.md)                        | The owner brief Phase 4.7 executes, stored verbatim.                                                         |
 
 ## How to navigate this without reading everything

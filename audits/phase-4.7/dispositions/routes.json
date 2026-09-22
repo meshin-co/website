@@ -2,8 +2,8 @@
   {
     "target": "/",
     "status": "verified",
-    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "538f7315d05d"
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page. Re-read 2026-09-22 after the homepage stopped declaring its own title: the rendered <title> is byte-identical, the change removed a duplicate declaration of the brand suffix rather than any word a reader sees.",
+    "digest": "54a18b23c86b"
   },
   {
     "target": "/404",
@@ -38,8 +38,8 @@
   {
     "target": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
     "status": "verified",
-    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "75c78d5a223a"
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page. Re-read 2026-09-22 after relatedResources began rendering: the post gained one section, eyebrow \"Resources\" and heading \"Take this further\", listing resources the post already named in its frontmatter and previously discarded. No sentence of the article itself changed.",
+    "digest": "582ed0cded99"
   },
   {
     "target": "/blog/category/agentic-architecture",
@@ -74,8 +74,8 @@
   {
     "target": "/blog/how-to-build-an-ai-system-register-in-a-week",
     "status": "verified",
-    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "16dee4c371ec"
+    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page. Re-read 2026-09-22 after relatedResources began rendering: same single added section, eyebrow \"Resources\" and heading \"Take this further\", from frontmatter the post already carried. No sentence of the article itself changed.",
+    "digest": "848d33f999bc"
   },
   {
     "target": "/blog/tag/acceptable-use-policy",
@@ -159,7 +159,7 @@
     "target": "/blog/why-your-ai-pilot-never-reached-production",
     "status": "verified",
     "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "550fa2cc690e"
+    "digest": "fa9ef2abfd66"
   },
   {
     "target": "/case-studies",
@@ -621,7 +621,7 @@
     "target": "/styleguide",
     "status": "verified",
     "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "e8c37469eea6"
+    "digest": "f7f17802ddf9"
   },
   {
     "target": "/terms",

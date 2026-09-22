@@ -68,11 +68,12 @@ export const FAMILIES = [
   },
   { id: 'semantic-title-pattern', kind: 'pure', check: 'semantic-title' },
   { id: 'machine-feed-coverage', kind: 'unit-covered' },
+  { id: 'gate-wiring-removed-from-ci', kind: 'wiring' },
   { id: 'pagination-page-2', kind: 'pagination', fixture: 'live-post.md', slow: true },
   { id: 'category-pagination-page-2', kind: 'pagination', fixture: 'live-post.md', scope: 'category', slow: true },
 ];
 
-const KINDS = ['build', 'build-then-gate', 'gate', 'pure', 'pagination', 'unit-covered'];
+const KINDS = ['build', 'build-then-gate', 'gate', 'pure', 'pagination', 'unit-covered', 'wiring'];
 const REQUIREMENTS = {
   build: ['fixture', 'plant', 'tokens'],
   'build-then-gate': ['fixture', 'plant', 'tokens', 'gate'],
@@ -80,6 +81,7 @@ const REQUIREMENTS = {
   pure: ['check'],
   pagination: ['fixture'],
   'unit-covered': [],
+  wiring: [],
 };
 
 const invalid = (field, value) =>
@@ -407,17 +409,55 @@ async function prepareCopy(work) {
   return copySite;
 }
 
+async function runWiringFamily(copySite) {
+  const workflow = join(copySite, '../.github/workflows/ci.yml');
+  const pristine = await readFile(workflow, 'utf8');
+  const gate = 'npm run gate:editorial';
+  if (!pristine.includes(gate))
+    return { ok: false, reason: `${gate} is not in ci.yml, so the specimen cannot be planted` };
+
+  await writeFile(workflow, pristine.replace(gate, 'echo skipped'));
+  const planted = await run('node', ['scripts/plan-gate.mjs'], copySite);
+  await writeFile(workflow, pristine);
+  const restored = await run('node', ['scripts/plan-gate.mjs'], copySite);
+
+  if (planted.code === 0)
+    return { ok: false, reason: 'plan gate stayed green with gate:editorial removed from ci.yml' };
+  if (!planted.output.includes('gate-not-in-ci'))
+    return { ok: false, reason: `plan gate failed for the wrong reason: ${planted.output.slice(-200)}` };
+  if (restored.code !== 0)
+    return { ok: false, reason: `plan gate stayed red after restore: ${restored.output.slice(-200)}` };
+  return { ok: true, reason: 'gate-not-in-ci on the planted specimen, green after restore' };
+}
+
 const EXECUTORS = {
   build: (copySite, entry) => runPlantedFamily(copySite, entry, false),
   'build-then-gate': (copySite, entry) => runPlantedFamily(copySite, entry, true),
   gate: (copySite, entry, work) => runGateFamily(copySite, entry, work),
   pure: (copySite) => runPureFamily(copySite),
+  wiring: (copySite) => runWiringFamily(copySite),
   pagination: (copySite, entry) => runPaginationFamily(copySite, entry),
   'unit-covered': () => ({
     ok: true,
     reason: 'proven by unit tests (machine.test.mjs feedCoverageFailures); no repo-copy run',
   }),
 };
+
+export function label(result) {
+  if (result.skipped) return 'skip';
+  return result.ok ? 'ok  ' : 'FAIL';
+}
+
+export function tally(results, familyCount, seconds) {
+  const families = results.filter((result) => result.id !== 'baseline-green-copy');
+  const proven = families.filter((result) => result.ok && !result.skipped).length;
+  const skipped = families.filter((result) => result.skipped).length;
+  const parts = [`mutation smoke: ${proven}/${familyCount} families proven`];
+  if (skipped > 0) parts.push(`${skipped} skipped`);
+  const failedCount = families.filter((result) => !result.ok && !result.skipped).length;
+  if (failedCount > 0) parts.push(`${failedCount} FAILED`);
+  return `${parts.join(', ')} in ${seconds}s`;
+}
 
 async function main() {
   const { fast } = parseArgs(process.argv.slice(2));
@@ -437,7 +477,8 @@ async function main() {
       for (const entry of manifestFamilies(FAMILIES)) {
         const familyStart = Date.now();
         let outcome;
-        if (fast && entry.slow) outcome = { ok: true, reason: 'skipped: --fast (pagination proof needs a full build)' };
+        if (fast && entry.slow)
+          outcome = { skipped: true, reason: 'skipped: --fast (pagination proof needs a full build)' };
         else outcome = await EXECUTORS[entry.kind](copySite, entry, work);
         results.push({ id: entry.id, ...outcome, seconds: Math.round((Date.now() - familyStart) / 1000) });
       }
@@ -446,11 +487,9 @@ async function main() {
     results.push({ id: 'smoke-harness', ok: false, reason: error.message });
   }
 
-  for (const result of results) console.log(`${result.ok ? 'ok  ' : 'FAIL'} ${result.id}: ${result.reason}`);
-  const failed = results.filter((result) => !result.ok);
-  console.log(
-    `mutation smoke: ${results.length - failed.length}/${results.length} green in ${Math.round((Date.now() - started) / 1000)}s${fast ? ' [fast]' : ''}`
-  );
+  for (const result of results) console.log(`${label(result)} ${result.id}: ${result.reason}`);
+  console.log(tally(results, FAMILIES.length, Math.round((Date.now() - started) / 1000)));
+  const failed = results.filter((result) => !result.ok && !result.skipped);
   if (failed.length > 0 || process.env.MUTATION_SMOKE_KEEP) console.log(`workdir kept for inspection: ${work}`);
   else await rm(work, { recursive: true, force: true });
   process.exitCode = failed.length > 0 ? 1 : 0;

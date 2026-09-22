@@ -212,26 +212,51 @@ export function docDriftFindings(committedDoc, freshBlock) {
   if (committedBlock === freshBlock.trim()) return [];
 
   const committedLines = new Map();
+  const committedNonRoute = [];
   for (const line of committedBlock.split('\n')) {
     const route = routeCell(line);
     if (route) committedLines.set(route, line);
+    else committedNonRoute.push(line);
   }
   const freshLines = new Map();
+  const freshNonRoute = [];
   for (const line of freshBlock.split('\n')) {
     const route = routeCell(line);
     if (route) freshLines.set(route, line);
+    else freshNonRoute.push(line);
   }
 
   const drifted = new Set();
   for (const [route, line] of freshLines) if (committedLines.get(route) !== line) drifted.add(route);
   for (const route of committedLines.keys()) if (!freshLines.has(route)) drifted.add(route);
 
-  return [...drifted].sort().map((route) => ({
+  const findings = [...drifted].sort().map((route) => ({
     route,
     rule: 'doc-drift',
     detail: 'generated table differs from docs/SEMANTIC-CORE.md',
     excerpt: '',
   }));
+
+  if (committedNonRoute.join('\n') !== freshNonRoute.join('\n')) {
+    findings.push({
+      route: null,
+      rule: 'doc-drift-structure',
+      detail: 'generated headings or grammar lines differ from docs/SEMANTIC-CORE.md',
+      excerpt: '',
+    });
+  }
+
+  return findings;
+}
+
+export function parseMustWinLine(text) {
+  const match = /^Must win[^:\n]*:(.*)$/m.exec(text);
+  if (!match) return { mustWinRoutes: [], supportRoutes: [] };
+  const [before, after = ''] = match[1].split(/\bsupport\b/i);
+  return {
+    mustWinRoutes: [...before.matchAll(/`([^`]+)`/g)].map((route) => route[1]),
+    supportRoutes: [...after.matchAll(/`([^`]+)`/g)].map((route) => route[1]),
+  };
 }
 
 const PROMPTS_HEADING = '### The 30 buyer prompts';
@@ -248,10 +273,7 @@ export function parseBuyerPrompts(doc) {
     const numbers = [...block.matchAll(/^\*\*(\d+)\./gm)].map((match) => Number(match[1]));
     if (numbers.length === 0) continue;
 
-    const mustWinLine = /^Must win[^:\n]*:(.*)$/m.exec(block);
-    const mustWinRoutes = mustWinLine
-      ? [...mustWinLine[1].split(/\bsupport\b/i)[0].matchAll(/`([^`]+)`/g)].map((match) => match[1])
-      : [];
+    const { mustWinRoutes } = parseMustWinLine(block);
 
     const passages = [...block.matchAll(/Passage:\s*"([^"]+)"\s*\(`([^`]+)`\)/g)].map((match) => ({
       text: match[1],

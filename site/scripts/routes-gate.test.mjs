@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { test } from 'node:test';
 
-import { diffRoutes, phaseOrder } from './routes-gate.mjs';
+import { collectRoutes, diffRoutes, phaseOrder } from './routes-gate.mjs';
 
 test('a route that disappears without an explanation fails the gate', () => {
   const result = diffRoutes({ previous: ['/', '/blog'], current: ['/'], explained: [] });
@@ -40,4 +43,13 @@ test('phases sort by numeric position, not string order', () => {
     'phase-4.5',
     'phase-10',
   ]);
+});
+
+test('a page built as a bare .html file is a route, because /404 was invisible to the shrink gate', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'routes-gate-'));
+  mkdirSync(join(dir, 'about'), { recursive: true });
+  writeFileSync(join(dir, 'index.html'), '<html></html>');
+  writeFileSync(join(dir, 'about', 'index.html'), '<html></html>');
+  writeFileSync(join(dir, '404.html'), '<html></html>');
+  assert.deepEqual(collectRoutes(dir).sort(), ['/', '/404', '/about']);
 });

@@ -111,7 +111,7 @@ function buildLedger(dist) {
   };
 }
 
-function main(dist) {
+export function buildReport(dist) {
   const built = buildLedger(dist);
   const dispositions = readDispositions(DISPOSITIONS);
   const declarations = existsSync(CONDITIONAL) ? JSON.parse(readFileSync(CONDITIONAL, 'utf8')) : [];
@@ -122,7 +122,7 @@ function main(dist) {
   const missingTarget = unmatched.filter(
     (entry) => !existsSync(resolve(SITE, entry.target.replace(/^site\//, ''))) && !entry.target.startsWith('/')
   );
-  const noRows = unmatched.length - missingTarget.length;
+  const noRowsEntries = unmatched.filter((entry) => !missingTarget.includes(entry));
   const findings = ledgerFindings({
     rows,
     untraceable: built.untraceable,
@@ -141,22 +141,62 @@ function main(dist) {
     unmatched: missingTarget,
   });
 
-  mkdirSync(resolve(LEDGER, '..'), { recursive: true });
   const counts = {
     untraceable: built.untraceable.length,
     dead: built.dead.length,
     stale: stale.length,
     unmatched: unmatched.length,
+    missingTarget: missingTarget.length,
+    noRows: noRowsEntries.length,
   };
-  writeFileSync(
-    LEDGER,
-    `${JSON.stringify({ generated: new Date().toISOString().slice(0, 10), counts, rows }, null, 2)}\n`
-  );
 
-  writeFileSync(
-    FINDINGS,
-    `${JSON.stringify({ untraceable: built.untraceable, dead: built.dead, stale, unmatched }, null, 2)}\n`
-  );
+  return {
+    built,
+    dispositions,
+    declarations,
+    conditional,
+    stale,
+    unmatched,
+    rows,
+    missingTarget,
+    noRowsEntries,
+    counts,
+    findings,
+  };
+}
+
+function report(dist, { write }) {
+  const result = buildReport(dist);
+  const {
+    built,
+    dispositions,
+    declarations,
+    conditional,
+    stale,
+    unmatched,
+    rows,
+    missingTarget,
+    noRowsEntries,
+    counts,
+    findings,
+  } = result;
+
+  if (write) {
+    mkdirSync(resolve(LEDGER, '..'), { recursive: true });
+    writeFileSync(
+      LEDGER,
+      `${JSON.stringify({ generated: new Date().toISOString().slice(0, 10), counts, rows }, null, 2)}\n`
+    );
+
+    writeFileSync(
+      FINDINGS,
+      `${JSON.stringify(
+        { untraceable: built.untraceable, dead: built.dead, stale, unmatched, noRows: noRowsEntries },
+        null,
+        2
+      )}\n`
+    );
+  }
 
   const byStatus = rows.reduce((totals, entry) => ({ ...totals, [entry.status]: (totals[entry.status] ?? 0) + 1 }), {});
   console.log(`editorial ledger: ${rows.length} rows across ${built.pages} routes`, byStatus);
@@ -165,7 +205,7 @@ function main(dist) {
     `source copy no page ships: ${built.dead.length} (${declarations.length} declared state-conditional, ${conditional.remaining.length} unexplained)`
   );
   console.log(
-    `dispositions: ${dispositions.length} declared, ${stale.length} stale, ${missingTarget.length} naming a missing file, ${noRows} on files with no copy rows`
+    `dispositions: ${dispositions.length} declared, ${stale.length} stale, ${missingTarget.length} naming a missing file, ${noRowsEntries.length} on files with no copy rows (reported, not gated)`
   );
   if (findings.length > 0) {
     console.log(`findings: ${findings.length}`);
@@ -207,5 +247,5 @@ export function sealDispositions(dist) {
 if (import.meta.filename === process.argv[1]) {
   const dist = resolve(SITE, process.argv[3] ?? 'dist');
   if (process.argv.includes('--seal')) sealDispositions(dist);
-  else main(dist);
+  else report(dist, { write: !process.argv.includes('--check') });
 }

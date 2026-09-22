@@ -212,6 +212,58 @@ test('doc drift throws loudly instead of silently passing when markers are missi
   assert.throws(() => docDriftFindings('# Semantic core\n\nno markers here', FRESH_BLOCK), /markers missing/);
 });
 
+const FULL_GENERATED_DOC = [
+  '# Semantic core',
+  '',
+  GENERATED_BEGIN,
+  '### static (1)',
+  '',
+  'title `{page name} — meshin.co` · meta: value-proposition clause · body intent: answer the query',
+  '',
+  '| Route | Query | Title | Description | H1 | Links | Opening |',
+  '|---|---|---|---|---|---|---|',
+  '| `/` | fractional chief ai officer | Fractional Chief AI Officer — meshin.co | one line. | Home | 5 | ✓ |',
+  GENERATED_END,
+].join('\n');
+
+const FULL_FRESH_BLOCK = [
+  '### static (1)',
+  '',
+  'title `{page name} — meshin.co` · meta: value-proposition clause · body intent: answer the query',
+  '',
+  '| Route | Query | Title | Description | H1 | Links | Opening |',
+  '|---|---|---|---|---|---|---|',
+  '| `/` | fractional chief ai officer | Fractional Chief AI Officer — meshin.co | one line. | Home | 5 | ✓ |',
+].join('\n');
+
+test('a hand-edited family heading is reported as drift, even though every route cell still matches', () => {
+  const stale = FULL_GENERATED_DOC.replace('### static (1)', '### static (99)');
+
+  const findings = docDriftFindings(stale, FULL_FRESH_BLOCK);
+
+  assert.ok(findings.length > 0, 'a mutated heading must not pass silently');
+});
+
+test('a hand-edited grammar line is reported as drift, even though every route cell still matches', () => {
+  const stale = FULL_GENERATED_DOC.replace('answer the query', 'STALE HAND-EDITED GRAMMAR');
+
+  const findings = docDriftFindings(stale, FULL_FRESH_BLOCK);
+
+  assert.ok(findings.length > 0, 'a mutated grammar line must not pass silently');
+});
+
+test('renaming a route cell is still caught, at exactly two findings, once heading and grammar are untouched', () => {
+  const renamed = FULL_FRESH_BLOCK.replace('| `/` |', '| `/renamed` |');
+
+  const findings = docDriftFindings(FULL_GENERATED_DOC, renamed);
+
+  assert.equal(findings.length, 2);
+  assert.deepEqual(
+    findings.map((finding) => finding.rule),
+    ['doc-drift', 'doc-drift']
+  );
+});
+
 const BUYER_PROMPTS_DOC = [
   '### The 30 buyer prompts (PRD §17.3)',
   [

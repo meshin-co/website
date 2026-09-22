@@ -1,7 +1,7 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import type { CollectionEntry } from 'astro:content';
-import { getCollection, getEntry, render } from 'astro:content';
+import { getCollection, getEntries, getEntry, render } from 'astro:content';
 
 import AnswerBlock from '~/components/site/AnswerBlock.astro';
 import AuthorBox from '~/components/site/AuthorBox.astro';
@@ -13,6 +13,7 @@ import JsonLd from '~/components/common/JsonLd.astro';
 import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
 import KeyTakeaways from '~/components/site/KeyTakeaways.astro';
 import PostCard from '~/components/site/PostCard.astro';
+import ResourceCard from '~/components/site/ResourceCard.astro';
 import Section from '~/components/site/Section.astro';
 import SourceList from '~/components/site/SourceList.astro';
 import TableOfContents from '~/components/site/TableOfContents.astro';
@@ -35,6 +36,7 @@ import { neighbourPosts, relatedPosts } from '~/utils/post-neighbors.mjs';
 import { readingTime } from '~/utils/reading-time.mjs';
 import { countWords } from '~/utils/content-rules.mjs';
 import { lastmod } from '~/utils/lastmod.mjs';
+import { resourceCardProps } from '~/utils/resource-card.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -66,6 +68,7 @@ const { post, previous, next, related } = Astro.props;
 const { data } = post;
 const { Content, headings } = await render(post);
 const author = await getEntry(data.author);
+const relatedResources = data.relatedResources.length > 0 ? await getEntries(data.relatedResources) : [];
 const terms = (await getCollection('glossary', ({ data: term }) => !term.draft)).map((entry) => ({
   id: entry.id,
   term: entry.data.term,
@@ -206,6 +209,18 @@ const nodes = [
         )
       }
     </Section>
+
+    {
+      relatedResources.length > 0 && (
+        <Section eyebrow="Resources" title="Take this further" tone="surface">
+          <CardGrid columns={2}>
+            {relatedResources.map((resource) => (
+              <ResourceCard {...resourceCardProps(resource)} />
+            ))}
+          </CardGrid>
+        </Section>
+      )
+    }
 
     {
       (previous || next || related.length > 0) && (

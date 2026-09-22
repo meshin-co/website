@@ -4,7 +4,15 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
 
-import { metricBudgets, metricFailures, readReports, renderReport } from './report.mjs';
+import {
+  byteBudgetSentence,
+  byteBudgets,
+  metricBudgets,
+  metricFailures,
+  readReports,
+  renderReport,
+} from './report.mjs';
+import { overBudget } from './gate.mjs';
 
 const row = (route, scores, runs = 3) => ({ route, runs, scores });
 const perfect = { performance: 100, accessibility: 100, 'best-practices': 100, seo: 100 };
@@ -194,4 +202,55 @@ test('the budgets come from the lighthouse config, not from a copy in the report
   assert.equal(budgets['largest-contentful-paint'], 1850);
   assert.equal(budgets['cumulative-layout-shift'], 0.02);
   assert.equal(budgets['total-blocking-time'], 50);
+});
+
+test('byteBudgetSentence renders whatever limits it is given, not a fixed string', () => {
+  assert.equal(byteBudgetSentence({ js: 1, css: 2, page: 3 }), 'Budgets: JS ≤1 · CSS ≤2 · page ≤3 bytes gzip.');
+});
+
+test('the printed byte-budget sentence comes from budgets.json, not a hardcoded copy', async () => {
+  const limits = byteBudgets();
+  assert.deepEqual(limits, { js: 10240, css: 20480, page: 256000 });
+
+  const { markdown } = renderReport({
+    phase: '1',
+    gate,
+    mobile: [row('/', perfect)],
+    desktop: [row('/', perfect)],
+    byteBudgets: limits,
+  });
+  assert.match(markdown, /Budgets: JS ≤10240 · CSS ≤20480 · page ≤256000 bytes gzip\./);
+});
+
+test('a measured row that exceeds a real budgets.json limit fails the report end to end', async () => {
+  const limits = byteBudgets();
+  const measured = { route: '/heavy', js: limits.js + 1, css: 100, page: 200 };
+  const findings = overBudget(measured, limits);
+
+  const { failures } = renderReport({
+    phase: '1',
+    gate: { routes: ['/heavy'], measured: [measured], overBudget: findings },
+    mobile: [row('/heavy', perfect)],
+    desktop: [row('/heavy', perfect)],
+  });
+
+  assert.deepEqual(failures, [`budget: /heavy js ${limits.js + 1} > ${limits.js}`]);
+});
+
+test('a measured row inside every real budgets.json limit produces no budget failure', async () => {
+  const limits = byteBudgets();
+  const measured = { route: '/light', js: 1, css: 1, page: 1 };
+  const findings = overBudget(measured, limits);
+
+  const { failures } = renderReport({
+    phase: '1',
+    gate: { routes: ['/light'], measured: [measured], overBudget: findings },
+    mobile: [row('/light', perfect)],
+    desktop: [row('/light', perfect)],
+  });
+
+  assert.deepEqual(
+    failures.filter((failure) => failure.startsWith('budget:')),
+    []
+  );
 });

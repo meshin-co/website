@@ -7,6 +7,7 @@ import {
   gatesCitedButUndefined,
   gatesMissingFromCi,
   indexFindings,
+  knownGapsFindings,
   parseStatus,
   statusFindings,
 } from './plan-gate.mjs';
@@ -122,4 +123,81 @@ test('a declaration with an empty reason does not excuse the gate', () => {
 
 test('a declaration for a gate that does not exist is itself a finding', () => {
   assert.deepEqual(staleGateDeclarations({ 'gate:lh': 'x' }, { 'gate:ghost': 'gone' }), ['gate:ghost']);
+});
+
+test('a declared reason of true, 1 or a blank string does not excuse the gate, only a non-empty trimmed string does', () => {
+  assert.deepEqual(gatesMissingFromCi({ 'gate:lh': 'x' }, '', { 'gate:lh': true }), ['gate:lh']);
+  assert.deepEqual(gatesMissingFromCi({ 'gate:lh': 'x' }, '', { 'gate:lh': 1 }), ['gate:lh']);
+  assert.deepEqual(gatesMissingFromCi({ 'gate:lh': 'x' }, '', { 'gate:lh': ' ' }), ['gate:lh']);
+  assert.deepEqual(gatesMissingFromCi({ 'gate:lh': 'x' }, '', { 'gate:lh': 'because reasons' }), []);
+});
+
+test('a gate named only in a YAML comment line is not treated as wired', () => {
+  const workflow = '# run: npm run gate:one\njobs:\n  x:\n    steps:\n      - run: npm run gate:two\n';
+  assert.deepEqual(gatesMissingFromCi({ 'gate:one': 'x', 'gate:two': 'y' }, workflow), ['gate:one']);
+});
+
+test('test:smoke is checked even without the gate: prefix, because L36 names it explicitly', () => {
+  assert.deepEqual(gatesMissingFromCi({ 'test:smoke': 'node mutation-smoke.mjs' }, ''), ['test:smoke']);
+  assert.deepEqual(gatesMissingFromCi({ 'test:smoke': 'node mutation-smoke.mjs' }, '- run: npm run test:smoke'), []);
+});
+
+test('a script whose documented output lands under audits/ is checked even without the gate: prefix', () => {
+  const scripts = { 'audit:prelaunch': 'node run-pre-launch.mjs', 'assets:gaps': 'node generate-gaps.mjs' };
+  const readme =
+    '| `run-pre-launch.mjs` | `audit:prelaunch` | `audits/phase-5/pre-launch.md`, all 24 checklist sections |\n' +
+    '| `generate-gaps.mjs` | `assets:gaps` | `audits/phase-4.7/gaps.md` from the ledger and the registers |\n';
+  assert.deepEqual(gatesMissingFromCi(scripts, '', {}, readme).sort(), ['assets:gaps', 'audit:prelaunch']);
+  assert.deepEqual(gatesMissingFromCi(scripts, '- run: npm run audit:prelaunch', {}, readme), ['assets:gaps']);
+});
+
+test('a script documented outside audits/ is left alone even if it lacks the gate: prefix', () => {
+  const scripts = { 'assets:robots': 'node gen-robots.mjs' };
+  const readme = '| `gen-robots.mjs` | `assets:robots` | `public/robots.txt` |\n';
+  assert.deepEqual(gatesMissingFromCi(scripts, '', {}, readme), []);
+});
+
+test('every npx playwright install line must list a browser a project needs, not just the first one', () => {
+  const config = "use: devices['Desktop Safari']";
+  assert.deepEqual(
+    browsersMissingFromCi(config, [
+      'npx playwright install --with-deps chromium webkit firefox',
+      'npx playwright install --with-deps chromium firefox',
+    ]),
+    ['webkit']
+  );
+  assert.deepEqual(
+    browsersMissingFromCi(config, [
+      'npx playwright install --with-deps chromium webkit firefox',
+      'npx playwright install --with-deps chromium webkit firefox',
+    ]),
+    []
+  );
+});
+
+test('an explicit browserName literal is caught even when no Desktop device name is present', () => {
+  const config = "use: { browserName: 'webkit' }";
+  assert.deepEqual(browsersMissingFromCi(config, 'npx playwright install --with-deps chromium'), ['webkit']);
+});
+
+test('a mobile device name still names its engine by substring, so Mobile Safari is caught', () => {
+  const config = "use: devices['Mobile Safari']";
+  assert.deepEqual(browsersMissingFromCi(config, 'npx playwright install --with-deps chromium'), ['webkit']);
+});
+
+test('a known-gaps row needs both a non-empty reason and a unique id', () => {
+  const header = '| id | claim | why it is not closed | owner | opened |\n| --- | --- | --- | --- | --- |\n';
+  assert.deepEqual(knownGapsFindings(header + '| G1 | x happens | because y | TODO(owner) | 2026-09-22 |\n'), []);
+  assert.deepEqual(
+    knownGapsFindings(header + '| G1 | x happens |  | TODO(owner) | 2026-09-22 |\n').map((f) => f.rule),
+    ['known-gap-empty-reason']
+  );
+  const duplicateIds =
+    header +
+    '| G1 | x happens | because y | TODO(owner) | 2026-09-22 |\n' +
+    '| G1 | z happens | because w | TODO(owner) | 2026-09-22 |\n';
+  assert.deepEqual(
+    knownGapsFindings(duplicateIds).map((f) => f.rule),
+    ['known-gap-duplicate-id']
+  );
 });

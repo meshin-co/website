@@ -27,6 +27,12 @@ export function isExternal(path) {
   return EXTERNAL_ROOTS.some((root) => path.startsWith(root));
 }
 
+const BUILD_OUTPUT_ROOTS = ['dist/', 'site/dist/'];
+
+export function isBuildOutput(path) {
+  return BUILD_OUTPUT_ROOTS.some((root) => path.startsWith(root));
+}
+
 export function resolveCandidates(path, citingDoc) {
   const directory = citingDoc.includes('/') ? citingDoc.slice(0, citingDoc.lastIndexOf('/')) : '';
   const beside = directory ? `${directory}/${path}` : path;
@@ -40,7 +46,11 @@ export function enforcesRowRange(doc) {
   return doc !== ROW_REFERENCE;
 }
 
-const IGNORED_ROOTS = ['audits/', 'node_modules/', 'dist/', '.astro/'];
+const IGNORED_ROOTS = ['audits/', 'node_modules/', 'dist/', '.astro/', 'site/src/data/'];
+
+function isIgnoredRoot(path) {
+  return IGNORED_ROOTS.some((root) => path.startsWith(root) || path.startsWith(`site/${root}`));
+}
 
 export function discoverDocs(viaGit, viaWalk) {
   let paths;
@@ -49,5 +59,10 @@ export function discoverDocs(viaGit, viaWalk) {
   } catch {
     paths = viaWalk();
   }
-  return paths.filter((path) => !IGNORED_ROOTS.some((root) => path.startsWith(root)));
+  return paths.filter((path) => !isIgnoredRoot(path));
+}
+
+export function emptyDiscoveryFinding(count) {
+  if (count > 0) return null;
+  return { doc: '(discovery)', rule: 'no-docs-discovered', detail: 'discovered 0 markdown files to check' };
 }
