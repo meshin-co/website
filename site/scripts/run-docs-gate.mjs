@@ -6,7 +6,9 @@ import {
   citedCommands,
   discoverDocs,
   citedPaths,
+  emptyDiscoveryFinding,
   enforcesRowRange,
+  isBuildOutput,
   isExternal,
   lockedRowClaims,
   resolveCandidates,
@@ -34,6 +36,7 @@ const tracked = discoverDocs(
 );
 
 const docs = tracked.map((path) => join(repo, path)).filter((path) => existsSync(path));
+const buildPresent = existsSync(join(repo, 'site/dist'));
 
 const scripts = JSON.parse(readFileSync(join(repo, 'site/package.json'), 'utf8')).scripts;
 const lockedRows = readFileSync(join(repo, 'docs/plan/reference/locked-decisions.md'), 'utf8');
@@ -41,12 +44,16 @@ const highestRow = Math.max(...[...lockedRows.matchAll(/^\| L(\d+)/gm)].map(([, 
 
 const findings = [];
 
+const emptyFinding = emptyDiscoveryFinding(docs.length);
+if (emptyFinding) findings.push(emptyFinding);
+
 for (const doc of docs) {
   const text = readFileSync(doc, 'utf8');
   const relative = doc.slice(repo.length + 1);
 
   for (const cited of citedPaths(text)) {
     if (isExternal(cited)) continue;
+    if (isBuildOutput(cited) && !buildPresent) continue;
     const resolved = resolveCandidates(cited, relative).some((candidate) => {
       const absolute = join(repo, candidate);
       return existsSync(absolute) && statSync(absolute).isFile();

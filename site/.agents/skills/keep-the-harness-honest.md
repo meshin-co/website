@@ -31,10 +31,13 @@ reader can see what is not in CI and why, instead of discovering it during an in
 
 It used to read `AGENTS.md`, `docs/` and `.agents/skills/` — 66 files. `scripts/README.md` sat
 outside that set and cited `gate:search`, a command that did not exist, for as long as it took an
-outside reviewer to find it. The gate now reads every tracked Markdown file, 151 of them,
-excluding only `audits/`, which is generated evidence and historical by design. It falls back to a
-filesystem walk when git is unavailable, because the mutation smoke runs it in a synthesized tree
-that is not a repository.
+outside reviewer to find it. The gate now reads every tracked Markdown file, excluding `audits/`
+(generated evidence, historical by design), `site/dist/` (build output) and `site/src/data/`
+(content entries, not documentation prose). The count changes with every file anyone adds or
+removes, so this document does not pin one — `git ls-files '*.md'` against
+`scripts/docs-gate.mjs`'s `IGNORED_ROOTS` gets the current figure. It falls back to a filesystem
+walk when git is unavailable, because the mutation smoke runs it in a synthesized tree that is
+not a repository.
 
 ## What this cannot catch
 

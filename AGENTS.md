@@ -52,7 +52,7 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
 - Lighthouse must read 100/100/100/100 on mobile and desktop for every audited route. A run at
   97–99 is re-run up to three times, then it is a failure.
 - Blocking budgets, measured from the shipped build and never from a config file: JS ≤10 KB gz,
-  CSS ≤20 KB gz, page ≤250 KB without images, fonts ≤120 KB across 2 families and 4 weights,
+  CSS ≤20 KB gz, page ≤250 KB without images, fonts ≤120 KB across 2 families and 3 faces,
   CLS ≤0.02, LCP ≤1.85 s mobile (L13, amended 2026-09-15; `/styleguide` is not audited).
 - Client JavaScript is limited to Plausible, the theme toggle, and the lazy search-index
   fetch on first query (custom build-time index, `public/search/index-model.mjs`; no
@@ -74,10 +74,12 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
   facts become `TODO(owner)` and go on the copy checklist.
 - Copy tone: direct and engineering. Numbers and dates instead of adjectives. No "leading",
   "expert", "passionate".
-- Design lane: "engineering brief" — Fraunces, IBM Plex Sans and IBM Plex Mono (3 families,
-  98 KB gz, a documented deviation from the 2-family rule), paper and ink with one deep teal
-  accent in OKLCH. No gradients, no stock imagery, no purple. No numbered section labels and no
-  figure-number chips anywhere.
+- Design lane: "engineering brief" — Fraunces (600) and IBM Plex Sans (400, 500): 2 families,
+  3 faces, 63.4 KB gz measured from `dist/_astro/fonts/` (L39). The earlier plan to add IBM Plex
+  Mono as a third family (L9b, 98 KB gz) is superseded: `--aw-font-mono` is never assigned, so
+  monospace resolves to the system stack. Paper and ink with one deep teal accent in OKLCH. No
+  gradients, no stock imagery, no purple. No numbered section labels and no figure-number chips
+  anywhere.
 - Structured data: one JSON-LD `@graph` per page from `site/src/utils/jsonld.mjs`. Every node has
   an `@id`, every referenced `@id` resolves, and CI validates it.
 - Machine interfaces (`/llms.txt`, `/llms-full.txt`, `/llms/{collection}.txt`, `/{page}.md`,
@@ -128,8 +130,8 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
 Every test earns its place against five criteria. A test that fails one is rewritten or deleted,
 not kept for the count.
 
-- **Fast** — the 632 unit tests run in about four seconds together. A test that needs a build or a
-  browser belongs in Playwright, not `node:test`.
+- **Fast** — the unit tests (run `npm test` for the current count) run in about four seconds
+  together. A test that needs a build or a browser belongs in Playwright, not `node:test`.
 - **Independent** — no shared mutable state, no ordering assumption. Each mutation family
   synthesises its own fixture tree; no test mutates the real `src/`.
 - **Repeatable** — same result on any machine. Visual baselines are per platform for this reason,

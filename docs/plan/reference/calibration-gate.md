@@ -15,7 +15,7 @@ only by the rule that names it, never by judgement.
    results array really has 3 runs before trusting any score. Bar per L13.
 4. `axe-core` on every derived route, light and dark → 0 violations.
 5. `html-validate` 0 errors · `linkinator` 0 broken (skip list: `plausible.io`, `linkedin.com`,
-   `github.com/meshin-co`) · byte budgets in range.
+   `cal.com`, `github.com/meshin-co`, `apps.apple.com`, `^https://meshin.co`) · byte budgets in range.
 6. Byte budgets are measured, not declared: real gzip of every JS/CSS asset each route can reach,
    plus a Playwright pass that toggles the theme and runs a real search so Plausible, the toggle
    and the lazily-fetched search index are all charged to a route. Budgets: JS ≤10 KB gz,

@@ -36,7 +36,7 @@ Changing a phase's state is two edits in one commit: rename the file, update its
 - a phase file exists that `INDEX.md` never lists,
 - `INDEX.md` lists a phase file that does not exist.
 
-It runs in the `cheap-gates` CI job, so a half-renamed phase cannot merge.
+It runs in the `types-and-units` CI job, so a half-renamed phase cannot merge.
 
 ## Adding a phase
 

@@ -47,6 +47,76 @@ export function indexFindings({ listed, present }) {
   return findings;
 }
 
+export function knownGapsFindings(markdown) {
+  const rows = markdown
+    .split('\n')
+    .filter((line) => line.trim().startsWith('|'))
+    .map((line) =>
+      line
+        .split('|')
+        .slice(1, -1)
+        .map((cell) => cell.trim())
+    )
+    .filter((cells) => cells.length === 5 && cells[0] !== 'id' && !/^-+$/.test(cells[0]));
+  const findings = [];
+  const seen = new Set();
+  for (const [id, , reason] of rows) {
+    if (!id) {
+      findings.push({
+        rule: 'known-gap-missing-id',
+        detail: 'docs/plan/reference/known-gaps.md has a row with no id',
+      });
+      continue;
+    }
+    if (seen.has(id)) {
+      findings.push({
+        rule: 'known-gap-duplicate-id',
+        detail: `docs/plan/reference/known-gaps.md uses id ${id} more than once`,
+      });
+    }
+    seen.add(id);
+    if (!reason) {
+      findings.push({
+        rule: 'known-gap-empty-reason',
+        detail: `docs/plan/reference/known-gaps.md row ${id} has no reason why it is not closed`,
+      });
+    }
+  }
+  return findings;
+}
+
+function stripYamlComments(workflow) {
+  return workflow
+    .split('\n')
+    .filter((line) => !line.trim().startsWith('#'))
+    .join('\n');
+}
+
+function hasReason(value) {
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
+function auditOutputScriptNames(index) {
+  const names = new Set();
+  for (const line of index.split('\n')) {
+    const cells = line.split('|').slice(1, -1);
+    if (cells.length !== 3) continue;
+    const [script, invokedBy, produces] = cells.map((cell) => cell.trim());
+    if (!/^`[^`]+\.mjs`$/.test(script) || !produces.includes('audits/')) continue;
+    for (const match of invokedBy.matchAll(/`([a-z]+(?::[a-z-]+)+)`/g)) names.add(match[1]);
+  }
+  return names;
+}
+
+function namesRequiringCi(scripts, index) {
+  const names = new Set(gateNames(scripts));
+  if ('test:smoke' in scripts) names.add('test:smoke');
+  for (const name of auditOutputScriptNames(index)) {
+    if (name in scripts) names.add(name);
+  }
+  return [...names];
+}
+
 function main() {
   const present = readdirSync(join(PLAN_DIR, 'phases')).filter((name) => name.endsWith('.md'));
   const index = readFileSync(join(PLAN_DIR, 'INDEX.md'), 'utf8');
@@ -60,7 +130,8 @@ function main() {
   const workflow = readFileSync(new URL('../../.github/workflows/ci.yml', import.meta.url), 'utf8');
   const scriptIndex = readFileSync(new URL('./README.md', import.meta.url), 'utf8');
   const playwrightConfig = readFileSync(new URL('../playwright.config.ts', import.meta.url), 'utf8');
-  const installLine = /npx playwright install[^\n]*/.exec(workflow)?.[0] ?? '';
+  const installLines = [...workflow.matchAll(/npx playwright install[^\n]*/g)].map((match) => match[0]);
+  const knownGaps = readFileSync(new URL('../../docs/plan/reference/known-gaps.md', import.meta.url), 'utf8');
 
   const findings = [
     ...statusFindings(phases),
@@ -69,7 +140,7 @@ function main() {
       rule: 'stale-gate-declaration',
       detail: `package.json declares ${gate} local-only, but no such gate exists`,
     })),
-    ...gatesMissingFromCi(scripts, workflow, localOnly).map((gate) => ({
+    ...gatesMissingFromCi(scripts, workflow, localOnly, scriptIndex).map((gate) => ({
       rule: 'gate-not-in-ci',
       detail: `${gate} is defined in package.json but never runs in ci.yml; L36 says a gate not in ci.yml is not a gate`,
     })),
@@ -77,10 +148,11 @@ function main() {
       rule: 'gate-undefined',
       detail: `scripts/README.md names ${gate}, which package.json does not define`,
     })),
-    ...browsersMissingFromCi(playwrightConfig, installLine).map((browser) => ({
+    ...browsersMissingFromCi(playwrightConfig, installLines).map((browser) => ({
       rule: 'browser-not-installed',
-      detail: `playwright.config.ts runs a ${browser} project, and ci.yml installs only: ${installLine || 'nothing'}`,
+      detail: `playwright.config.ts runs a ${browser} project, and at least one npx playwright install line in ci.yml does not include it`,
     })),
+    ...knownGapsFindings(knownGaps),
   ];
 
   for (const finding of findings) console.error(`PLAN ${finding.rule} ${finding.detail}`);
@@ -94,15 +166,15 @@ function gateNames(scripts) {
   return Object.keys(scripts).filter((name) => name.startsWith('gate:'));
 }
 
-export function gatesMissingFromCi(scripts, workflow, localOnly = {}) {
-  return gateNames(scripts)
-    .filter((gate) => !new RegExp(`npm run ${gate}(?![\\w:-])`).test(workflow))
-    .filter((gate) => !localOnly[gate]);
+export function gatesMissingFromCi(scripts, workflow, localOnly = {}, index = '') {
+  const cleanWorkflow = stripYamlComments(workflow);
+  return namesRequiringCi(scripts, index)
+    .filter((gate) => !new RegExp(`npm run ${gate}(?![\\w:-])`).test(cleanWorkflow))
+    .filter((gate) => !hasReason(localOnly[gate]));
 }
 
 export function staleGateDeclarations(scripts, localOnly = {}) {
-  const defined = new Set(gateNames(scripts));
-  return Object.keys(localOnly).filter((gate) => !defined.has(gate));
+  return Object.keys(localOnly).filter((gate) => !(gate in scripts));
 }
 
 export function gatesCitedButUndefined(scripts, index) {
@@ -111,12 +183,15 @@ export function gatesCitedButUndefined(scripts, index) {
   return [...new Set(cited)].filter((gate) => !defined.has(gate));
 }
 
-export function browsersMissingFromCi(playwrightConfig, ciInstallLine) {
-  const browserOf = { 'Desktop Safari': 'webkit', 'Desktop Firefox': 'firefox', 'Desktop Chrome': 'chromium' };
-  const needed = new Set(
-    Object.entries(browserOf)
-      .filter(([device]) => playwrightConfig.includes(device))
-      .map(([, browser]) => browser)
+export function browsersMissingFromCi(playwrightConfig, ciInstallLines) {
+  const lines = Array.isArray(ciInstallLines) ? ciInstallLines : [ciInstallLines];
+  const browserOf = { Safari: 'webkit', Firefox: 'firefox', Chrome: 'chromium' };
+  const deviceBrowsers = Object.entries(browserOf)
+    .filter(([device]) => playwrightConfig.includes(device))
+    .map(([, browser]) => browser);
+  const explicitBrowsers = [...playwrightConfig.matchAll(/browserName:\s*['"](webkit|firefox|chromium)['"]/g)].map(
+    (match) => match[1]
   );
-  return [...needed].filter((browser) => !ciInstallLine.includes(browser));
+  const needed = new Set([...deviceBrowsers, ...explicitBrowsers]);
+  return [...needed].filter((browser) => lines.length === 0 || lines.some((line) => !line.includes(browser)));
 }

@@ -14,8 +14,8 @@
   {
     "target": "src/pages/styleguide.astro",
     "status": "rewritten",
-    "reason": "removed three dead duplicate Hero attributes that a second set of the same attributes overrode, so the literal demo strings never rendered",
-    "digest": "14d47a4b25ed"
+    "reason": "removed three dead duplicate Hero attributes that a second set of the same attributes overrode, so the literal demo strings never rendered Re-read 2026-09-22 after the mono specimen line dropped a price literal that locked row L8 forbids on every route; the sample now reads \"42 findings\" and carries no currency, and the rest of the page is unchanged.",
+    "digest": "58d1b278f5fa"
   },
   {
     "target": "src/data/faq/what-does-a-fractional-chief-ai-officer-actually-do.md",

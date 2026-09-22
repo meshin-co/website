@@ -9,8 +9,13 @@ Two halves, both mandatory:
   frontmatter and fails the build on a violation. No judgement, no waiver.
 - **Half B — judged.** Six adversarial judges run in parallel per page under the `adhd` skill,
   each in its own frame, each blind to the others. A page ships only when every judge returns
-  zero blockers. Verdicts are written to `audits/phase-4/content/<route>.md` and are part of the
-  phase evidence.
+  zero blockers. The loop below (step 6) requires the verdict table and findings to be written
+  to `audits/phase-N/content/<route>.md`. **That step was never followed for the pages that
+  shipped in Phase 4**: `audits/phase-4/content/` holds only `REPORT.md` — Half A's mechanical
+  results and the Lighthouse/byte-budget scores — with no persisted per-route judge output. The
+  judged loop ran (pages did not ship until every judge returned clean), but its findings are
+  not retrievable evidence for any already-shipped route. Every new content page must close this
+  gap in the same commit that ships it.
 
 A page that passes Half A and fails Half B does not ship. Neither half can excuse the other.
 
@@ -110,7 +115,7 @@ one sentence of reasoning per finding. A finding without a quoted excerpt is dis
 3. Run all six judges in parallel.
 4. Fix every `BLOCKER`. Fix `NIT`s or record a one-line reason for declining.
 5. Re-run the judges that returned findings. Repeat until every judge returns `CLEAN` on blockers.
-6. Write `audits/phase-4/content/<route>.md`: the judge table, every finding, what changed, and
+6. Write `audits/phase-N/content/<route>.md`: the judge table, every finding, what changed, and
    the round count.
 
 ### What a judge may never do

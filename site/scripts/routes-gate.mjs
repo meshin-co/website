@@ -30,16 +30,17 @@ export function diffRoutes({ previous, current, explained }) {
   };
 }
 
-function collectRoutes(distDir) {
+export function collectRoutes(distDir) {
   const routes = [];
   const walk = (dir) => {
     for (const entry of readdirSync(dir, { withFileTypes: true })) {
       const full = join(dir, entry.name);
       if (entry.isDirectory()) {
         walk(full);
-      } else if (entry.name === 'index.html') {
+      } else if (entry.name.endsWith('.html')) {
         const rel = relative(distDir, full)
           .replace(/index\.html$/, '')
+          .replace(/\.html$/, '')
           .replace(/\/$/, '');
         routes.push(`/${rel}`.replace(/^\/$/, '/'));
       }

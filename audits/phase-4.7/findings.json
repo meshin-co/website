@@ -244,7 +244,183 @@
       "target": "site/src/utils/faq-meta.mjs",
       "status": "verified",
       "reason": "pure formatting/trimming utilities (teaser, clauseTrim, pageTitle, faqDescription), no hardcoded prose beyond the ' — meshin.co' title suffix which matches the site brand suffix used everywhere",
-      "digest": "93ea70635d74"
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "src/utils/og-template.mjs",
+      "status": "verified",
+      "reason": "'IBM Plex Sans' is a CSS font-family value used only in inline styles for OG-image rendering, never rendered as visible page text - likely an extractor false positive worth excluding the same way Tailwind class lists and structural keys already are (editorial-ledger.md); left unchanged since it is correct as a design token",
+      "digest": "e3b0c44298fc"
+    }
+  ],
+  "noRows": [
+    {
+      "target": "site/src/components/Favicons.astro",
+      "status": "verified",
+      "reason": "no user-facing text, only link attributes",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/common/LogoMark.astro",
+      "status": "verified",
+      "reason": "decorative SVG mark, aria-hidden and focusable=false, no accessible text of its own",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/common/Metadata.astro",
+      "status": "verified",
+      "reason": "og:image:alt is built programmatically from each page's own title, confirms zero hand-authored alt attributes exist; no literal prose to edit",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/common/Breadcrumbs.astro",
+      "status": "verified",
+      "reason": "aria-label='Breadcrumb' is the standard landmark name, already correct",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/common/JsonLd.astro",
+      "status": "verified",
+      "reason": "no user-facing text, pure JSON-LD emitter",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/common/MarkdownAlternate.astro",
+      "status": "verified",
+      "reason": "no user-facing text, link generator only",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/common/Analytics.astro",
+      "status": "verified",
+      "reason": "no user-facing text",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/common/ApplyColorMode.astro",
+      "status": "verified",
+      "reason": "no user-facing text, inline script only",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/common/SiteVerification.astro",
+      "status": "verified",
+      "reason": "no user-facing text",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/RelatedContent.astro",
+      "status": "verified",
+      "reason": "pure pass-through of caller-supplied heading/label text, nothing hardcoded to edit",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/SignalList.astro",
+      "status": "verified",
+      "reason": "pass-through only, no hardcoded copy",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/StepList.astro",
+      "status": "verified",
+      "reason": "pass-through only, no hardcoded copy",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/PostCard.astro",
+      "status": "verified",
+      "reason": "pass-through only, no hardcoded copy",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/PaginationLinks.astro",
+      "status": "verified",
+      "reason": "aria-label='Pagination' and per-link aria-label='Page N' already say what the control does, standard pattern",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/ServiceCard.astro",
+      "status": "verified",
+      "reason": "pass-through only, no hardcoded copy",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/Section.astro",
+      "status": "verified",
+      "reason": "pass-through only, no hardcoded copy",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/SourceList.astro",
+      "status": "verified",
+      "reason": "aria-label/heading default 'Sources' names the landmark correctly, standard pattern",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/ResourceCard.astro",
+      "status": "verified",
+      "reason": "pass-through only, no hardcoded copy",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/CtaBlock.astro",
+      "status": "verified",
+      "reason": "pass-through only, no hardcoded copy",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/CardGrid.astro",
+      "status": "verified",
+      "reason": "no text, layout wrapper only",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/AnswerBlock.astro",
+      "status": "verified",
+      "reason": "pass-through only, no hardcoded copy",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/FigureStrip.astro",
+      "status": "verified",
+      "reason": "pass-through only, no hardcoded copy",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/site/ShiftPanel.astro",
+      "status": "verified",
+      "reason": "pass-through only, no hardcoded copy",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/components/ui/Button.astro",
+      "status": "verified",
+      "reason": "pass-through only, no hardcoded copy",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/layouts/PageLayout.astro",
+      "status": "verified",
+      "reason": "no hardcoded copy, wiring only",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/navigation.ts",
+      "status": "rewritten",
+      "reason": "header/footer nav labels were already direct destination names, left unchanged; the three footer social-link aria-labels ('LinkedIn'/'GitHub'/'Email') were icon-only accessible names naming only the platform, rewritten to 'View my LinkedIn profile' / 'View my GitHub profile' / 'Email me' so each says what the control does",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/config.yaml",
+      "status": "verified",
+      "reason": "default title/description match the '/' route's own metadata and machine-text.mjs catalog entry exactly, already consistent",
+      "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "site/src/utils/faq-meta.mjs",
+      "status": "verified",
+      "reason": "pure formatting/trimming utilities (teaser, clauseTrim, pageTitle, faqDescription), no hardcoded prose beyond the ' — meshin.co' title suffix which matches the site brand suffix used everywhere",
+      "digest": "e3b0c44298fc"
     },
     {
       "target": "src/utils/og-template.mjs",

@@ -7,6 +7,7 @@ import { orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mj
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
+const UPDATED = '2026-09-13';
 
 const metadata = {
   title: 'Imprint',
@@ -22,7 +23,7 @@ const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
   websiteNode(site),
-  webPageNode(site, '/imprint', null, metadata.title),
+  webPageNode(site, '/imprint', UPDATED, metadata.title),
 ];
 
 const rows = [

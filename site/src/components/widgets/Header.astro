@@ -48,20 +48,9 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
 // regardless of the `trailingSlash` setting (`getPermalink()` emits `/contact/`
 // when it is enabled, while `currentPath` above never has one, see #557).
 const isActive = (href?: string) => typeof href === 'string' && `/${trimSlash(href)}` === currentPath;
-
-// The header is kept across view transitions (transition:persist) so its state
-// survives client-side navigations. Astro matches persisted elements by name,
-// so the name must change whenever the header content does: otherwise a page
-// with its own menu (the demo homes, the landing pages) would keep showing the
-// header of the page the visitor came from. Hash the props that shape the markup.
-const persistKey = `header-${Array.from(
-  JSON.stringify({ links, actions, isSticky, isDark, isFullWidth, showToggleTheme, position })
-)
-  .reduce((hash, char) => (hash * 31 + char.charCodeAt(0)) >>> 0, 7)
-  .toString(36)}`;
 ---
 
-<aw-header transition:persist={persistKey}>
+<aw-header>
   <header
     class:list={[
       { sticky: isSticky, relative: !isSticky, dark: isDark },
@@ -191,10 +180,6 @@ const persistKey = `header-${Array.from(
     private onScroll?: () => void;
     private mql?: MediaQueryList;
     private onMqlChange?: () => void;
-    private onPageLoad = () => {
-      this.updateActiveLinks();
-      this.closeOpenDropdown();
-    };
 
     connectedCallback() {
       const header = this.querySelector<HTMLElement>('#header');
@@ -202,11 +187,7 @@ const persistKey = `header-${Array.from(
       const nav = this.querySelector<HTMLElement>('#header nav');
       const lastChild = this.querySelector<HTMLElement>('#header > div > div:last-child');
 
-      // The header persists across view transitions (transition:persist), so
-      // the server-rendered `aw-link-active` class would go stale. Re-compute it
-      // on every navigation (astro:page-load fires on load and after each swap).
       this.updateActiveLinks();
-      document.addEventListener('astro:page-load', this.onPageLoad);
 
       if (toggle) {
         const closeMenu = () => {
@@ -239,16 +220,6 @@ const persistKey = `header-${Array.from(
         this.mql.addEventListener('change', this.onMqlChange);
       }
 
-      // Desktop dropdowns open on hover/`:focus-within`. When a dropdown link is
-      // clicked it keeps focus, and because the header uses `transition:persist`
-      // the dropdown would stay open after the client-side navigation. Blur the
-      // link on click so it closes right away (the `astro:page-load` handler is
-      // the safety net if focus is restored during the swap).
-      nav?.addEventListener('click', (e) => {
-        const link = (e.target as HTMLElement)?.closest<HTMLElement>('.dropdown-menu a');
-        if (link) link.blur();
-      });
-
       // Sticky header: toggle the `scroll` class past a small threshold.
       if (header?.hasAttribute('data-aw-sticky-header')) {
         let ticking = false;
@@ -273,15 +244,6 @@ const persistKey = `header-${Array.from(
     disconnectedCallback() {
       if (this.onScroll) document.removeEventListener('scroll', this.onScroll);
       if (this.mql && this.onMqlChange) this.mql.removeEventListener('change', this.onMqlChange);
-      document.removeEventListener('astro:page-load', this.onPageLoad);
-    }
-
-    // With `transition:persist` the header (and its focus) survives client-side
-    // navigations, so a clicked dropdown link keeps `:focus-within` and its menu
-    // would stay open on the next page. Drop the focus so the CSS closes it.
-    private closeOpenDropdown() {
-      const active = document.activeElement as HTMLElement | null;
-      if (active && this.contains(active) && active.closest('.dropdown')) active.blur();
     }
 
     private updateActiveLinks() {

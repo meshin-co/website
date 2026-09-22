@@ -9,8 +9,7 @@ site:
 # Default SEO metadata
 metadata:
   title:
-    default: 'Fractional Chief AI Officer — meshin.co'
-    template: '%s — meshin.co'
+    default: 'Fractional Chief AI Officer'
   description: 'Fractional AI leadership for 30–300 person companies: AI governance that passes procurement and agentic automation shipped to production.'
   robots:
     index: true

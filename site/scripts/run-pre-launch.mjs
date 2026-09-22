@@ -50,8 +50,6 @@ const components = walk('src', /\.astro$/).map((file) => ({
 const css = walk(join(dist, '_astro'), /\.css$/)
   .map((file) => readFileSync(file, 'utf8'))
   .join('\n');
-const fontDir = join(dist, '_astro/fonts');
-const fonts = existsSync(fontDir) ? readdirSync(fontDir) : [];
 const routes = JSON.parse(readFileSync(join(dist, 'gate-routes.json'), 'utf8')).routes;
 
 const report = artifact('REPORT.md');
@@ -60,7 +58,7 @@ const lighthouse = report.includes('Result: PASS') ? 'pass' : 'fail';
 const perfectRows = (report.match(/\| 100 \| 100 \| 100 \| 100 \|/g) ?? []).length;
 const sweepCount = /^findings: (\d+)$/m.exec(sweep);
 const sweepClean = sweepCount && Number(sweepCount[1]) === 0 ? 'pass' : 'fail';
-const fontPolicy = checkFontPolicy(fonts);
+const fontPolicy = checkFontPolicy(documents.join('\n'));
 const motion = checkMotion(css);
 const colour = checkRawColour(components);
 const cookies = checkCookies(documents);
@@ -117,7 +115,7 @@ const rows = [
       fontPolicy.weights +
       ' faces: ' +
       fontPolicy.list.join(', ') +
-      '; three families is the documented L39 deviation',
+      '; three faces across two families is the documented L39 policy',
   },
   {
     section: '4. Accessibility, automated',

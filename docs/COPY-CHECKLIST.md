@@ -51,10 +51,13 @@ not support it, the row says so, and I have already removed or softened it — t
 | 3.9 | Fit call: free, thirty minutes, booked at cal.com/meshin | yes | |
 | 3.10 | Written questions answered "usually the same day" — still true? | yes | |
 
-## 4. Current state (/now) — **REMOVED PENDING YOU**
+## 4. Current state (/now)
 
-Everything on `/now` was a claim about this month that only you can make. I have emptied the page
-down to an honest holding line until you fill these.
+`/now` was an empty holding line early on. Since commit `0534b44` (2026-09-16) it ships as a
+dated log — "newest first", a line added only when something happens and never edited after —
+with three real entries already live (the ISO/IEC 42001 study, and the Smarter Day 3.7.0 and
+first-release dates). It is not blocked on the rows below; they stay open only if you want
+capacity or availability lines added to the log format.
 
 | # | Fact | Answer |
 |---|---|---|
@@ -165,3 +168,20 @@ matches these referrer sources:
 ```json
 { "visit:source": ["chatgpt.com", "perplexity.ai", "copilot.microsoft.com", "gemini.google.com"] }
 ```
+
+---
+
+## 10. JSON-LD `dateModified` — pages with no visible date
+
+Widening the JSON-LD property floor (audit item 26) caught 7 pages whose `WebPage` node carried
+no `dateModified`. Four were wired to the date they already display (`/ai-policy`, `/now`,
+`/privacy`, `/terms`). Three display no date anywhere on the page:
+
+| # | Fact | Currently on the site | Answer |
+|---|---|---|---|
+| 10.1 | `/security` `dateModified` | Set to `2026-09-13`, `git log -1 --format=%cs` for `site/src/pages/security.astro` — a history fact, not invented | TODO(owner) |
+| 10.2 | `/approach` `dateModified` | Set to `2026-09-13`, `git log -1 --format=%cs` for `site/src/pages/approach.astro` | TODO(owner) |
+| 10.3 | `/imprint` `dateModified` | Set to `2026-09-13`, `git log -1 --format=%cs` for `site/src/pages/imprint.astro` | TODO(owner) |
+
+Confirm `2026-09-13` is the date a reader should understand as "last reviewed" for these three
+pages, or supply the real review date for each.

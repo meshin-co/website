@@ -255,7 +255,7 @@
     "target": "site/src/utils/faq-meta.mjs",
     "status": "verified",
     "reason": "pure formatting/trimming utilities (teaser, clauseTrim, pageTitle, faqDescription), no hardcoded prose beyond the ' — meshin.co' title suffix which matches the site brand suffix used everywhere",
-    "digest": "93ea70635d74"
+    "digest": "e3b0c44298fc"
   },
   {
     "target": "site/src/data/categories.mjs",

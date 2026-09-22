@@ -410,7 +410,7 @@ One owning route per entity. The mention count is inbound references from other 
 | AI management system | `/glossary/ai-management-system` | 4 |
 | AI register | `/glossary/ai-register` | 27 |
 | Conformity assessment | `/glossary/conformity-assessment` | 5 |
-| Data classification | `/glossary/data-classification` | 14 |
+| Data classification | `/glossary/data-classification` | 15 |
 | DPIA | `/glossary/dpia` | 4 |
 | EU AI Act | `/glossary/eu-ai-act` | 35 |
 | Evals | `/glossary/evals` | 30 |

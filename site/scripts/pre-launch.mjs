@@ -6,7 +6,10 @@ const LAYOUT_TRANSITION =
 const LONG_DURATION = /(?:transition|animation)[^;}]*?(\d{3,})ms/gi;
 const COOKIE_WRITE = /document\.cookie\s*=|Set-Cookie:/i;
 const SERVICE_WORKER = /serviceWorker\s*\.\s*register/i;
-const FONT_FACE = /^(?<family>[a-z-]+?)-(?<weight>\d{3})(?:-[a-z]+)?\.woff2$/i;
+const FONT_FACE_BLOCK = /@font-face\{([^}]*)\}/g;
+const FONT_FAMILY = /font-family:"?([^";]+)"?/;
+const FONT_WEIGHT = /font-weight:(\d+)/;
+const HASHED_FAMILY_SUFFIX = /-[0-9a-f]{16}$/;
 
 const finding = (status, detail) => ({ status, detail });
 
@@ -55,14 +58,16 @@ export function checkServiceWorker(documents) {
     : finding('fail', `${offenders} documents register a service worker`);
 }
 
-export function checkFontPolicy(fontFiles) {
+export function checkFontPolicy(css) {
   const families = new Set();
   const weights = new Set();
-  for (const name of fontFiles) {
-    const match = FONT_FACE.exec(name);
-    if (!match) continue;
-    families.add(match.groups.family.toLowerCase());
-    weights.add(`${match.groups.family.toLowerCase()}-${match.groups.weight}`);
+  for (const [, block] of css.matchAll(FONT_FACE_BLOCK)) {
+    if (!block.includes('src:url(')) continue;
+    const family = FONT_FAMILY.exec(block)?.[1]?.replace(HASHED_FAMILY_SUFFIX, '').toLowerCase();
+    const weight = FONT_WEIGHT.exec(block)?.[1];
+    if (!family || !weight) continue;
+    families.add(family);
+    weights.add(`${family}-${weight}`);
   }
   return { families: families.size, weights: weights.size, list: [...weights].sort() };
 }

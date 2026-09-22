@@ -19,6 +19,20 @@ Why: the objection
 
 ### GAP register`;
 
+test('a "Must win (partial):" line is still read, because the parser is shared with semantic-core', () => {
+  const partialDoc = `### The 30 buyer prompts
+
+**20. multi-agent reference architecture production**
+Must win (partial): \`/approach\` (referenced stack, PRD Appendix B).
+Why: because.
+
+### GAP register`;
+
+  const prompts = parsePrompts(partialDoc);
+
+  assert.equal(prompts[0].mustWin, '/approach');
+});
+
 test('prompts are read from the core with their must-win route and passage', () => {
   const prompts = parsePrompts(doc);
   assert.equal(prompts.length, 2);

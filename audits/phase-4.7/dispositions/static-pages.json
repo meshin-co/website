@@ -3,7 +3,7 @@
     "target": "site/src/pages/index.astro",
     "status": "verified",
     "reason": "Answer-first sections, no banned phrases, sentence lengths compliant. Hero title/sub are locked unchanged by L9a; left untouched (see report conflict note).",
-    "digest": "a0c63151df8d"
+    "digest": "192746979976"
   },
   {
     "target": "site/src/data/home.ts",
@@ -87,7 +87,7 @@
     "target": "site/src/pages/styleguide.astro",
     "status": "verified",
     "reason": "Internal noindex dev-reference page; description is accurate and not buyer-facing copy, no changes needed.",
-    "digest": "14d47a4b25ed"
+    "digest": "58d1b278f5fa"
   },
   {
     "target": "site/src/pages/faq.astro",

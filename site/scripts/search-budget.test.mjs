@@ -82,3 +82,16 @@ test('a dist with no index at all fails loud instead of passing empty', () => {
     clean(dist);
   }
 });
+
+test('a missing shard is not a silent pass: one real shard out of the expected set fails the budget', () => {
+  const dist = distWith({ 'search-index-faq.json': '[]' });
+
+  try {
+    const budgets = shardBudgets(dist);
+    assert.equal(budgets.shards.length, 1);
+    assert.ok(budgets.expectedShardCount > 1);
+    assert.equal(budgets.withinBudget, false);
+  } finally {
+    clean(dist);
+  }
+});

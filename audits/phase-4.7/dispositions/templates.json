@@ -21,7 +21,7 @@
     "target": "src/pages/blog/[id].astro",
     "status": "verified",
     "reason": "section titles, CTA copy and the RSS link title all match voice/terminology standard; composed <title> relies on the global '%s — meshin.co' template and already matches the article family pattern in SEMANTIC-CORE",
-    "digest": "f012c480eb2c"
+    "digest": "72ba343d5836"
   },
   {
     "target": "src/pages/blog/category/[category].astro",
