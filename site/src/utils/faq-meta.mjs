@@ -1,3 +1,4 @@
+import { brandFromDisk, titleSuffix } from './brand.mjs';
 import { splitSentences } from '../../scripts/prose-rules.mjs';
 
 const TEASER_MAX_CHARS = 140;
@@ -28,7 +29,7 @@ export function teaser(answer) {
   return `${kept.join(' ').replace(/[,;:.!?]+$/, '')}.`;
 }
 
-const TITLE_SUFFIX = ' — meshin.co';
+const TITLE_SUFFIX = titleSuffix(brandFromDisk());
 const TITLE_MAX_CHARS = 70;
 export const TITLE_ROOM_CHARS = TITLE_MAX_CHARS - TITLE_SUFFIX.length;
 

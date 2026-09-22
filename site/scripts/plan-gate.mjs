@@ -53,7 +53,35 @@ function main() {
   const listed = [...index.matchAll(/\(phases\/([^)]+\.md)\)/g)].map((match) => match[1]);
 
   const phases = present.map((file) => ({ file, status: parseStatus(file) }));
-  const findings = [...statusFindings(phases), ...indexFindings({ listed, present: [...new Set(present)] })];
+
+  const manifest = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
+  const scripts = manifest.scripts;
+  const localOnly = manifest.localOnlyGates ?? {};
+  const workflow = readFileSync(new URL('../../.github/workflows/ci.yml', import.meta.url), 'utf8');
+  const scriptIndex = readFileSync(new URL('./README.md', import.meta.url), 'utf8');
+  const playwrightConfig = readFileSync(new URL('../playwright.config.ts', import.meta.url), 'utf8');
+  const installLine = /npx playwright install[^\n]*/.exec(workflow)?.[0] ?? '';
+
+  const findings = [
+    ...statusFindings(phases),
+    ...indexFindings({ listed, present: [...new Set(present)] }),
+    ...staleGateDeclarations(scripts, localOnly).map((gate) => ({
+      rule: 'stale-gate-declaration',
+      detail: `package.json declares ${gate} local-only, but no such gate exists`,
+    })),
+    ...gatesMissingFromCi(scripts, workflow, localOnly).map((gate) => ({
+      rule: 'gate-not-in-ci',
+      detail: `${gate} is defined in package.json but never runs in ci.yml; L36 says a gate not in ci.yml is not a gate`,
+    })),
+    ...gatesCitedButUndefined(scripts, scriptIndex).map((gate) => ({
+      rule: 'gate-undefined',
+      detail: `scripts/README.md names ${gate}, which package.json does not define`,
+    })),
+    ...browsersMissingFromCi(playwrightConfig, installLine).map((browser) => ({
+      rule: 'browser-not-installed',
+      detail: `playwright.config.ts runs a ${browser} project, and ci.yml installs only: ${installLine || 'nothing'}`,
+    })),
+  ];
 
   for (const finding of findings) console.error(`PLAN ${finding.rule} ${finding.detail}`);
   console.log(`plan: ${present.length} phase files, ${findings.length} findings`);
@@ -61,3 +89,34 @@ function main() {
 }
 
 if (import.meta.filename === process.argv[1]) main();
+
+function gateNames(scripts) {
+  return Object.keys(scripts).filter((name) => name.startsWith('gate:'));
+}
+
+export function gatesMissingFromCi(scripts, workflow, localOnly = {}) {
+  return gateNames(scripts)
+    .filter((gate) => !new RegExp(`npm run ${gate}(?![\\w:-])`).test(workflow))
+    .filter((gate) => !localOnly[gate]);
+}
+
+export function staleGateDeclarations(scripts, localOnly = {}) {
+  const defined = new Set(gateNames(scripts));
+  return Object.keys(localOnly).filter((gate) => !defined.has(gate));
+}
+
+export function gatesCitedButUndefined(scripts, index) {
+  const cited = [...index.matchAll(/`(gate:[a-z:-]+)`/g)].map(([, gate]) => gate);
+  const defined = new Set(gateNames(scripts));
+  return [...new Set(cited)].filter((gate) => !defined.has(gate));
+}
+
+export function browsersMissingFromCi(playwrightConfig, ciInstallLine) {
+  const browserOf = { 'Desktop Safari': 'webkit', 'Desktop Firefox': 'firefox', 'Desktop Chrome': 'chromium' };
+  const needed = new Set(
+    Object.entries(browserOf)
+      .filter(([device]) => playwrightConfig.includes(device))
+      .map(([, browser]) => browser)
+  );
+  return [...needed].filter((browser) => !ciInstallLine.includes(browser));
+}

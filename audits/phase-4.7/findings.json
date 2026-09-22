@@ -241,6 +241,12 @@
       "digest": "e3b0c44298fc"
     },
     {
+      "target": "site/src/utils/faq-meta.mjs",
+      "status": "verified",
+      "reason": "pure formatting/trimming utilities (teaser, clauseTrim, pageTitle, faqDescription), no hardcoded prose beyond the ' — meshin.co' title suffix which matches the site brand suffix used everywhere",
+      "digest": "93ea70635d74"
+    },
+    {
       "target": "src/utils/og-template.mjs",
       "status": "verified",
       "reason": "'IBM Plex Sans' is a CSS font-family value used only in inline styles for OG-image rendering, never rendered as visible page text - likely an extractor false positive worth excluding the same way Tailwind class lists and structural keys already are (editorial-ledger.md); left unchanged since it is correct as a design token",

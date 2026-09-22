@@ -214,6 +214,14 @@ async function main(distDir) {
   const routes = await discoverRoutes(distDir);
   const failures = [];
 
+  const manifest = JSON.parse(await readFile('package.json', 'utf8'));
+  for (const finding of humansTxtFindings(await readFile(join(distDir, 'humans.txt'), 'utf8'), {
+    ...(manifest.dependencies ?? {}),
+    ...(manifest.devDependencies ?? {}),
+  })) {
+    failures.push(`${finding.rule} ${finding.detail}`);
+  }
+
   const liveByKind = await liveRoutesByKind(distDir, collections, routes);
   for (const generator of ['llms.txt', 'feed.json']) {
     const text = await readFile(join(distDir, generator), 'utf8');
@@ -326,4 +334,27 @@ async function main(distDir) {
 
 if (import.meta.filename === process.argv[1]) {
   await main(process.argv[2] ?? 'dist');
+}
+
+export function humansTxtFindings(text, dependencies) {
+  const line = /^Components:\s*(.+)$/m.exec(text);
+  if (!line) {
+    return [
+      {
+        rule: 'humans-components-missing',
+        detail: 'humans.txt names no Components line, so its stack claim cannot be checked',
+      },
+    ];
+  }
+
+  const installed = new Set(Object.keys(dependencies).map((name) => name.toLowerCase().replace(/[^a-z]/g, '')));
+  return line[1]
+    .split(',')
+    .map((component) => component.trim())
+    .filter(Boolean)
+    .filter((component) => !installed.has(component.toLowerCase().replace(/[^a-z]/g, '')))
+    .map((component) => ({
+      rule: 'humans-component-absent',
+      detail: `humans.txt names ${component}, which is not a dependency of this project`,
+    }));
 }

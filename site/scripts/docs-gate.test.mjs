@@ -3,6 +3,7 @@ import { test } from 'node:test';
 
 import {
   citedCommands,
+  discoverDocs,
   citedPaths,
   enforcesRowRange,
   isExternal,
@@ -63,4 +64,20 @@ test('a finished phase file is a historical record, so its row-range claim is no
 
 test('the reference itself may cite a past range in a row, so only the docs pointing at it are checked', () => {
   assert.equal(enforcesRowRange('docs/plan/reference/locked-decisions.md'), false);
+});
+
+test('markdown discovery falls back to a walk when git is unavailable, because the gate must run outside a repo', () => {
+  const viaGit = () => {
+    throw new Error('fatal: not a git repository');
+  };
+  const viaWalk = () => ['docs/a.md', 'node_modules/x/b.md', 'audits/phase-1/REPORT.md', 'dist/c.md'];
+  assert.deepEqual(discoverDocs(viaGit, viaWalk), ['docs/a.md']);
+});
+
+test('git discovery wins when it works, and still drops generated evidence', () => {
+  const viaGit = () => ['AGENTS.md', 'audits/phase-1/REPORT.md', 'docs/b.md'];
+  assert.deepEqual(
+    discoverDocs(viaGit, () => []),
+    ['AGENTS.md', 'docs/b.md']
+  );
 });

@@ -32,7 +32,7 @@ measured content, not one shared number: `post: 16384` (long-form articles with 
 the post's own `faq` frontmatter, the same pattern `textFor.service` already used — a post's FAQ
 answer is a findable phrase, not silently dropped. Shard and sum budgets
 (`scripts/search-budget.mjs`, 64 KB gz per shard / 192 KB gz summed) are unchanged and still
-pass with headroom; re-measure with `node scripts/search-budget.mjs dist` after touching any
+pass with headroom; re-measure with `npm run gate:search` after touching any
 `textFor` entry or cap.
 
 `public/search/box.mjs`'s `load()` memoizes the shard fetch in a module-level `loading`

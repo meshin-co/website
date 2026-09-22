@@ -8,7 +8,7 @@ precision control and a test. The rules live in `scripts/docs-gate.mjs`, their t
 - **dead-path** — a backticked repo-relative path that resolves to no file. Resolution tries the
   citing document's own directory first, so an index may link its siblings.
 - **dead-command** — an `npm run X` that `site/package.json` does not define.
-- **stale-row-range** — a claim of the form `L1-L55` whose highest row disagrees with
+- **stale-row-range** — a claim of the form `L1-L56` whose highest row disagrees with
   `docs/plan/reference/locked-decisions.md`.
 
 ## Why the ranges are checked

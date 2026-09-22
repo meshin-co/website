@@ -248,7 +248,9 @@ async function runGateFamily(copySite, entry, work) {
 async function runPureFamily(copySite) {
   const { titleFindings } = await import(pathToFileURL(join(copySite, 'scripts/semantic-core.mjs')).href);
   const failing = titleFindings([{ route: '/blog', title: 'Writing' }]);
-  const passing = titleFindings([{ route: '/blog', title: 'Writing — meshin.co' }]);
+  const { brandFromDisk, titleSuffix } = await import(pathToFileURL(join(copySite, 'src/utils/brand.mjs')).href);
+  const suffix = titleSuffix(brandFromDisk(join(copySite, 'src/config.yaml')));
+  const passing = titleFindings([{ route: '/blog', title: `Writing${suffix}` }]);
   if (!failing.some((finding) => finding.rule === 'title-suffix'))
     return { ok: false, reason: 'titleFindings stayed green on a wrong-suffix title' };
   if (passing.length > 0) return { ok: false, reason: `titleFindings flagged a compliant title: ${passing[0].rule}` };

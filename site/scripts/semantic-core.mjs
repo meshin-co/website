@@ -5,8 +5,10 @@ import { extractPage } from './content-html.mjs';
 import { judgePage, PROFILES } from './content-rows.mjs';
 import { discoverRoutes } from './gate.mjs';
 
+import { brandFromDisk, titleSuffix } from '../src/utils/brand.mjs';
+
 const DOC = '../docs/SEMANTIC-CORE.md';
-const TITLE_SUFFIX = ' — meshin.co';
+const TITLE_SUFFIX = titleSuffix(brandFromDisk());
 
 export const GENERATED_BEGIN = '<!-- semantic-core:begin generated -->';
 export const GENERATED_END = '<!-- semantic-core:end generated -->';
@@ -32,27 +34,27 @@ export function familyFor(route) {
 
 export const FAMILY_GRAMMAR = {
   static: {
-    pattern: '{page name} — meshin.co',
+    pattern: `{page name}${TITLE_SUFFIX}`,
     meta: 'value-proposition clause naming the offer and the buyer',
     intent: 'answer the query, then route to the next step',
   },
   service: {
-    pattern: '{offer name} — meshin.co',
+    pattern: `{offer name}${TITLE_SUFFIX}`,
     meta: 'one outcome sentence: what ships, in what timeframe',
     intent: 'offer → deliverables → fit → CTA',
   },
   resource: {
-    pattern: '{artifact name} — meshin.co',
+    pattern: `{artifact name}${TITLE_SUFFIX}`,
     meta: 'one sentence naming the artifact and what you do with it',
     intent: 'what it is → what is inside → how to use it',
   },
   'case-study': {
-    pattern: '{client} — {engagement} — meshin.co',
+    pattern: `{client} — {engagement}${TITLE_SUFFIX}`,
     meta: 'how the system went from demo to production',
     intent: 'problem → approach → outcome',
   },
   article: {
-    pattern: '{short answer sentence} — meshin.co',
+    pattern: `{short answer sentence}${TITLE_SUFFIX}`,
     meta: 'the shortAnswer sentence, uncut',
     intent: 'problem → mechanism → fix → takeaways',
   },
