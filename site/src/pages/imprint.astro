@@ -4,6 +4,7 @@ import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { SITE } from 'astrowind:config';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
@@ -27,8 +28,8 @@ const nodes = [
 ];
 
 const rows = [
-  { label: 'Responsible', value: 'Dmitri Meshin, Fractional Chief AI Officer, trading as meshin.co' },
-  { label: 'Contact', value: 'hello@meshin.co' },
+  { label: 'Responsible', value: `Dmitri Meshin, Fractional Chief AI Officer, trading as ${SITE.name}` },
+  { label: 'Contact', value: `hello@${SITE.name}` },
   { label: 'Working from', value: 'Remote worldwide' },
   { label: 'Hosting', value: 'Cloudflare Pages, static files only' },
   { label: 'Analytics', value: 'Plausible, cookieless and aggregate' },

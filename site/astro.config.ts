@@ -16,16 +16,23 @@ import astrowind from './vendor/integration';
 
 import { readingTimeRemarkPlugin } from './src/utils/frontmatter';
 import { rehypeExternalLinks, rehypeHeadingAnchors, rehypeScrollableTables } from './src/utils/pipeline.mjs';
-import { siteLastmods } from './src/utils/sitemap-lastmod.mjs';
+import { siteLastmods, noindexEntryRoutes, noindexCategoryRoutes } from './src/utils/sitemap-lastmod.mjs';
 import { publicIndexableStaticPages } from './src/utils/machine-text.mjs';
+import { categoryPillars } from './src/data/categories.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const DATA_DIR = path.resolve(__dirname, 'src/data');
 
 const LASTMODS = (await siteLastmods({
-  dataDir: path.resolve(__dirname, 'src/data'),
+  dataDir: DATA_DIR,
   staticPages: publicIndexableStaticPages(),
   cwd: __dirname,
 })) as Record<string, string>;
+
+const NOINDEX_ROUTES = new Set([
+  ...(await noindexEntryRoutes(DATA_DIR)),
+  ...(await noindexCategoryRoutes(DATA_DIR, Object.keys(categoryPillars))),
+]);
 
 export default defineConfig({
   output: 'static',
@@ -65,7 +72,11 @@ export default defineConfig({
 
   integrations: [
     sitemap({
-      filter: (page) => !/\/styleguide|\/search|\/blog\/page\/|\/blog\/category\/[^/]+\/page\//.test(page),
+      filter: (page) => {
+        if (/\/styleguide|\/search|\/blog\/page\/|\/blog\/category\/[^/]+\/page\//.test(page)) return false;
+        const pathname = new URL(page).pathname.replace(/\/$/, '') || '/';
+        return !NOINDEX_ROUTES.has(pathname);
+      },
       namespaces: { news: false, image: false, video: false },
       serialize: (item) => {
         const pathname = new URL(item.url).pathname;

@@ -48,17 +48,25 @@ export function indexFindings({ listed, present }) {
 }
 
 export function knownGapsFindings(markdown) {
-  const rows = markdown
+  const cellsOf = (line) =>
+    line
+      .split('|')
+      .slice(1, -1)
+      .map((cell) => cell.trim());
+  const candidates = markdown
     .split('\n')
     .filter((line) => line.trim().startsWith('|'))
-    .map((line) =>
-      line
-        .split('|')
-        .slice(1, -1)
-        .map((cell) => cell.trim())
-    )
-    .filter((cells) => cells.length === 5 && cells[0] !== 'id' && !/^-+$/.test(cells[0]));
+    .map(cellsOf)
+    .filter((cells) => cells[0] !== 'id' && !/^-+$/.test(cells[0] ?? ''));
+
   const findings = [];
+  for (const cells of candidates.filter((cells) => cells.length !== 5 && /^G\d+$/.test(cells[0] ?? ''))) {
+    findings.push({
+      rule: 'known-gap-malformed-row',
+      detail: `docs/plan/reference/known-gaps.md row ${cells[0]} has ${cells.length} cells, not 5`,
+    });
+  }
+  const rows = candidates.filter((cells) => cells.length === 5);
   const seen = new Set();
   for (const [id, , reason] of rows) {
     if (!id) {

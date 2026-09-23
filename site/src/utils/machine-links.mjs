@@ -10,11 +10,17 @@ export function markdownPath(pagePath) {
 }
 
 export function articleMetadata(site, entry) {
-  const { title, description, collection, id, publishDate, updatedDate, section, tags, ogImage, canonical } = entry;
+  const { title, description, collection, id, publishDate, updatedDate, section, tags, ogImage, canonical, noindex } =
+    entry;
   const images = [
     ogImage ? { url: ogImage } : { url: `${site}${ogImagePath(collection, id)}`, width: OG_WIDTH, height: OG_HEIGHT },
   ];
-  const base = { title, description, ...(canonical ? { canonical } : {}) };
+  const base = {
+    title,
+    description,
+    ...(canonical ? { canonical } : {}),
+    ...(noindex ? { robots: { index: false, follow: true } } : {}),
+  };
 
   if (!publishDate) return { ...base, openGraph: { type: 'website', images } };
 

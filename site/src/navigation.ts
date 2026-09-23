@@ -1,3 +1,4 @@
+import { SITE } from 'astrowind:config';
 import { getPermalink } from './utils/permalinks';
 
 export const headerData = {
@@ -67,7 +68,7 @@ export const footerData = {
       href: 'https://www.linkedin.com/in/meshin/',
     },
     { ariaLabel: 'View my GitHub profile', icon: 'tabler:brand-github', href: 'https://github.com/meshin-dev' },
-    { ariaLabel: 'Email me', icon: 'tabler:mail', href: 'mailto:hello@meshin.co' },
+    { ariaLabel: 'Email me', icon: 'tabler:mail', href: `mailto:hello@${SITE.name}` },
   ],
-  footNote: `© ${new Date().getFullYear()} meshin.co`,
+  footNote: `© ${new Date().getFullYear()} ${SITE.name}`,
 };

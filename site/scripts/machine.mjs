@@ -11,13 +11,14 @@ import {
   sidecarRoutes,
 } from '../src/utils/machine-text.mjs';
 import { siteLastmods } from '../src/utils/sitemap-lastmod.mjs';
+import { brandFromDisk } from '../src/utils/brand.mjs';
 
 import { catalogDriftFindings } from './catalog-drift.mjs';
 
 const NON_PUBLIC = new Set(['author', 'speaking']);
 const FEED_FLOOR = 5;
 const LLMS_FULL_MAX_BYTES = 2_000_000;
-const SITE_ORIGIN = 'https://meshin.co';
+const SITE_ORIGIN = `https://${brandFromDisk().name}`;
 
 export const COLLECTION_BASES = FEED_BASES;
 
@@ -28,6 +29,10 @@ export function publicCollections(configSource) {
   return [...block[1].matchAll(/^\s*([A-Za-z][\w]*)\s*:/gm)]
     .map(([, name]) => name)
     .filter((name) => !NON_PUBLIC.has(name));
+}
+
+export function feedBaseGaps(collections) {
+  return collections.filter((collection) => !COLLECTION_BASES[collection]);
 }
 
 export function missingFromGenerator(text, collections) {
@@ -142,6 +147,11 @@ function sitemapLastmods(xml) {
 export function lastmodCoverageGaps(sitemapXml, routes) {
   const lastmods = sitemapLastmods(sitemapXml);
   return routes.filter((route) => !lastmods.get(route));
+}
+
+export function sitemapNoindexLeaks(sitemapXml, noindexRoutes) {
+  const listed = sitemapLastmods(sitemapXml);
+  return [...noindexRoutes].filter((route) => listed.has(route));
 }
 
 function itemPaths(feedXml) {
@@ -262,6 +272,9 @@ async function main(distDir) {
   for (const missing of missingFromGenerator(sitemap, collections)) {
     failures.push(`sitemap covers no ${missing} entry`);
   }
+  for (const gap of sitemapNoindexLeaks(sitemap, noindexRoutes)) {
+    failures.push(`sitemap lists noindex route ${gap}`);
+  }
 
   const expectedLastmods = await siteLastmods({
     dataDir: 'src/data',
@@ -287,12 +300,13 @@ async function main(distDir) {
     failures.push(`${gap} does not advertise its own collection feed <link>`);
   }
 
+  for (const gap of feedBaseGaps(collections)) {
+    failures.push(`${gap} has no FEED_BASES entry; skipping its feed coverage check`);
+  }
   const perCollectionFeeds = {};
   for (const collection of collections) {
-    perCollectionFeeds[collection] = await readFile(
-      join(distDir, COLLECTION_BASES[collection], 'rss.xml'),
-      'utf8'
-    ).catch(() => '');
+    const base = COLLECTION_BASES[collection];
+    perCollectionFeeds[collection] = base ? await readFile(join(distDir, base, 'rss.xml'), 'utf8').catch(() => '') : '';
   }
   const mergedFeed = await readFile(join(distDir, 'rss.xml'), 'utf8').catch(() => '');
   const jsonFeedItems = JSON.parse(await readFile(join(distDir, 'feed.json'), 'utf8'))?.items?.map((item) => item.url);

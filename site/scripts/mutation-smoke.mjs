@@ -69,11 +69,12 @@ export const FAMILIES = [
   { id: 'semantic-title-pattern', kind: 'pure', check: 'semantic-title' },
   { id: 'machine-feed-coverage', kind: 'unit-covered' },
   { id: 'gate-wiring-removed-from-ci', kind: 'wiring' },
+  { id: 'brand-literal-typed-into-a-module', kind: 'brand' },
   { id: 'pagination-page-2', kind: 'pagination', fixture: 'live-post.md', slow: true },
   { id: 'category-pagination-page-2', kind: 'pagination', fixture: 'live-post.md', scope: 'category', slow: true },
 ];
 
-const KINDS = ['build', 'build-then-gate', 'gate', 'pure', 'pagination', 'unit-covered', 'wiring'];
+const KINDS = ['build', 'build-then-gate', 'gate', 'pure', 'pagination', 'unit-covered', 'wiring', 'brand'];
 const REQUIREMENTS = {
   build: ['fixture', 'plant', 'tokens'],
   'build-then-gate': ['fixture', 'plant', 'tokens', 'gate'],
@@ -82,6 +83,7 @@ const REQUIREMENTS = {
   pagination: ['fixture'],
   'unit-covered': [],
   wiring: [],
+  brand: [],
 };
 
 const invalid = (field, value) =>
@@ -409,6 +411,25 @@ async function prepareCopy(work) {
   return copySite;
 }
 
+async function runBrandFamily(copySite) {
+  const module = join(copySite, 'src/utils/pipeline.mjs');
+  const pristine = await readFile(module, 'utf8');
+  const { brandFromDisk } = await import(pathToFileURL(join(copySite, 'src/utils/brand.mjs')).href);
+  const brand = brandFromDisk(join(copySite, 'src/config.yaml')).name;
+
+  await writeFile(module, `const typed = '${brand}';\n${pristine}`);
+  const planted = await run('node', ['scripts/brand-gate.mjs'], copySite);
+  await writeFile(module, pristine);
+  const restored = await run('node', ['scripts/brand-gate.mjs'], copySite);
+
+  if (planted.code === 0) return { ok: false, reason: 'brand gate stayed green on a typed brand literal' };
+  if (!planted.output.includes('src/utils/pipeline.mjs'))
+    return { ok: false, reason: `brand gate failed without naming the file: ${planted.output.slice(-200)}` };
+  if (restored.code !== 0)
+    return { ok: false, reason: `brand gate stayed red after restore: ${restored.output.slice(-200)}` };
+  return { ok: true, reason: 'typed literal named by file and line, green after restore' };
+}
+
 async function runWiringFamily(copySite) {
   const workflow = join(copySite, '../.github/workflows/ci.yml');
   const pristine = await readFile(workflow, 'utf8');
@@ -436,6 +457,7 @@ const EXECUTORS = {
   gate: (copySite, entry, work) => runGateFamily(copySite, entry, work),
   pure: (copySite) => runPureFamily(copySite),
   wiring: (copySite) => runWiringFamily(copySite),
+  brand: (copySite) => runBrandFamily(copySite),
   pagination: (copySite, entry) => runPaginationFamily(copySite, entry),
   'unit-covered': () => ({
     ok: true,

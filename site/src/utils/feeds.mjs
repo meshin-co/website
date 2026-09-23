@@ -12,6 +12,8 @@ export const FEED_BASES = {
 
 export const isLive = ({ data }) => !data.draft && !data.noindex;
 
+export const isPublished = ({ data }) => !data.draft;
+
 export function toFeedSource(entry, { kind, base, site }) {
   const isQuestion = 'answer' in entry.data;
   return {

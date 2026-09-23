@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { SITE } from 'astrowind:config';
 
 import CardGrid from '~/components/site/CardGrid.astro';
 import CtaBlock from '~/components/site/CtaBlock.astro';
@@ -11,9 +12,10 @@ import ServiceCard from '~/components/site/ServiceCard.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+import { isPublished } from '~/utils/feeds.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
-const services = (await getCollection('service')).sort((a, b) => a.data.order - b.data.order);
+const services = (await getCollection('service', isPublished)).sort((a, b) => a.data.order - b.data.order);
 
 const metadata = {
   title: 'Services',
@@ -42,7 +44,13 @@ const nodes = [
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
   <MarkdownAlternate path="/services" slot="head" />
-  <link rel="alternate" type="application/rss+xml" title="meshin.co — Offers" href="/services/rss.xml" slot="head" />
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title={`${SITE.name} — Offers`}
+    href="/services/rss.xml"
+    slot="head"
+  />
 
   <Breadcrumbs crumbs={crumbs} />
 
@@ -77,7 +85,6 @@ const nodes = [
       body="It is the cheapest way to find out whether the rest is worth your money. If it is not, I say so in the memo."
       label="Book a 30-min fit call"
       href="https://cal.com/meshin"
-      note="Or email hello@meshin.co"
     />
   </Section>
 </Layout>

@@ -2,8 +2,9 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 import { diffRoutes, discoverRoutes } from './gate.mjs';
+import { brandFromDisk } from '../src/utils/brand.mjs';
 
-const DEFAULT_HOST = 'meshin.co';
+const DEFAULT_HOST = brandFromDisk().name;
 const ENDPOINT = 'https://api.indexnow.org/indexnow';
 
 export function changedRoutes(before, after) {

@@ -101,10 +101,11 @@ export function isDescriptionInRange(description) {
 }
 
 export function faqMetadata(entry) {
-  const { question, answer, description, shortTitle, publishDate, updatedDate } = entry;
+  const { question, answer, description, shortTitle, publishDate, updatedDate, noindex } = entry;
   return {
     title: pageTitle(question, shortTitle),
     description: description ?? faqDescription(question, answer),
+    ...(noindex ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
       type: 'article',
       article: {

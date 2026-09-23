@@ -2,6 +2,7 @@
 import type { GetStaticPaths } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 import { getCollection, getEntry, render } from 'astro:content';
+import { SITE } from 'astrowind:config';
 
 import CaseMetrics from '~/components/site/CaseMetrics.astro';
 import CtaBlock from '~/components/site/CtaBlock.astro';
@@ -25,9 +26,10 @@ import {
 import { countWords } from '~/utils/content-rules.mjs';
 import { lastmod } from '~/utils/lastmod.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+import { isPublished } from '~/utils/feeds.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const cases = await getCollection('case');
+  const cases = await getCollection('case', isPublished);
   return cases.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
 };
 
@@ -54,6 +56,7 @@ const metadata = articleMetadata(site, {
   id: entry.id,
   publishDate: data.publishDate,
   updatedDate: data.updatedDate,
+  noindex: data.noindex,
 });
 
 const crumbs = [
@@ -104,7 +107,7 @@ const nodes = [
   <link
     rel="alternate"
     type="application/rss+xml"
-    title="meshin.co — Case studies"
+    title={`${SITE.name} — Case studies`}
     href="/case-studies/rss.xml"
     slot="head"
   />
@@ -168,7 +171,6 @@ const nodes = [
           body={offer.data.tagline}
           label="See the offer"
           href={`/services/${offer.id}`}
-          note="Or email hello@meshin.co"
         />
       )
     }

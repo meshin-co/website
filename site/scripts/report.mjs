@@ -1,5 +1,6 @@
 import { readFile, writeFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 
 const CATEGORIES = ['performance', 'accessibility', 'best-practices', 'seo'];
@@ -82,7 +83,29 @@ function canonicalRoute(route) {
   return route.length > 1 && route.endsWith('/') ? route.slice(0, -1) : route;
 }
 
-export function renderReport({ phase, gate, mobile, desktop, budgets = {}, byteBudgets: byteBudgetLimits = {} }) {
+export function generatorRevision() {
+  try {
+    return execFileSync('git', ['rev-parse', '--short', 'HEAD'], { encoding: 'utf8' }).trim();
+  } catch {
+    return 'unknown';
+  }
+}
+
+export function assertedFamilies(gate) {
+  const families = ['lighthouse scores', 'lighthouse metric budgets'];
+  if (Array.isArray(gate.overBudget)) families.push('byte budgets');
+  return families;
+}
+
+export function renderReport({
+  phase,
+  gate,
+  mobile,
+  desktop,
+  budgets = {},
+  byteBudgets: byteBudgetLimits = {},
+  generator = 'unknown',
+}) {
   const failures = [];
   const noindex = new Set(gate.measured.filter((row) => row.noindex).map((row) => canonicalRoute(row.route)));
   for (const [form, rows] of [
@@ -114,6 +137,10 @@ export function renderReport({ phase, gate, mobile, desktop, budgets = {}, byteB
     `# Phase ${phase} — Calibration Gate report`,
     '',
     'Generated from raw check output by `scripts/report.mjs`. Do not hand-edit.',
+    '',
+    `Generated-from: ${generator}`,
+    '',
+    `Asserted: ${assertedFamilies(gate).join(', ')}`,
     '',
     `Result: ${failures.length === 0 ? 'PASS' : 'FAIL'}`,
     '',
@@ -162,6 +189,7 @@ async function main(phase, auditDir) {
     desktop: scoreTable(await readReports(join(auditDir, 'lh-desktop'))),
     budgets: await metricBudgets(),
     byteBudgets: byteBudgets(),
+    generator: generatorRevision(),
   });
   await writeFile(join(auditDir, 'REPORT.md'), markdown);
   console.log(markdown);

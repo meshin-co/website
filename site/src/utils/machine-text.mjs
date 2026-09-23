@@ -1,4 +1,7 @@
 import { lastmod } from './lastmod.mjs';
+import { brandFromDisk, contactEmail } from './brand.mjs';
+
+const BRAND = brandFromDisk();
 
 export function absoluteUrl(site, path) {
   return path === '/' ? `${site}/` : `${site}${path}`;
@@ -163,8 +166,7 @@ export const STATIC_PAGE_CATALOG = [
     path: '/contact',
     title: 'Contact',
     file: 'src/pages/contact.astro',
-    description:
-      'Book a 30-minute fit call or email hello@meshin.co. Remote worldwide, on site when the trip is worth it.',
+    description: `Book a 30-minute fit call or email ${contactEmail(BRAND)}. Remote worldwide, on site when the trip is worth it.`,
   },
   {
     path: '/ai-policy',
@@ -220,7 +222,7 @@ export const STATIC_PAGE_CATALOG = [
     path: '/404',
     title: 'Page not found',
     file: 'src/pages/404.astro',
-    description: 'This page does not exist on meshin.co. Start from the home page.',
+    description: `This page does not exist on ${BRAND.name}. Start from the home page.`,
   },
 ];
 

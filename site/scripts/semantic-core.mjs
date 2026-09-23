@@ -59,27 +59,27 @@ export const FAMILY_GRAMMAR = {
     intent: 'problem → mechanism → fix → takeaways',
   },
   'blog-category': {
-    pattern: '{category name} — meshin.co',
+    pattern: `{category name}${TITLE_SUFFIX}`,
     meta: 'what the category covers, scoped to the 30–300 person buyer',
     intent: 'curated list with one-line stakes per entry',
   },
   'tag-index': {
-    pattern: 'Tags — meshin.co',
+    pattern: `Tags${TITLE_SUFFIX}`,
     meta: 'what tags exist and how many articles carry each one',
     intent: 'browse the tag list, then route into one tag',
   },
   tag: {
-    pattern: '{tag name} — meshin.co',
+    pattern: `{tag name}${TITLE_SUFFIX}`,
     meta: 'every article tagged {tag}, newest first',
     intent: 'thin archive list; route straight to the tagged articles',
   },
   term: {
-    pattern: 'What is {term}? — meshin.co',
+    pattern: `What is {term}?${TITLE_SUFFIX}`,
     meta: 'the definition sentence',
     intent: 'definition → why it matters → adjacent terms',
   },
   'faq-answer': {
-    pattern: '{question} — meshin.co',
+    pattern: `{question}${TITLE_SUFFIX}`,
     meta: 'first sentence of the answer',
     intent: 'direct answer → mechanism → next step',
   },

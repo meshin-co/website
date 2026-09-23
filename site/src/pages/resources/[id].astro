@@ -3,6 +3,7 @@ import { externalRelAttrs } from '~/utils/pipeline.mjs';
 import type { GetStaticPaths } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 import { getCollection, getEntries, render } from 'astro:content';
+import { SITE } from 'astrowind:config';
 
 import CtaBlock from '~/components/site/CtaBlock.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
@@ -25,9 +26,10 @@ import {
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 import RelatedContent from '~/components/site/RelatedContent.astro';
 import { firstMention, resolveByIds } from '~/utils/related-content.mjs';
+import { isPublished } from '~/utils/feeds.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const resources = await getCollection('resource');
+  const resources = await getCollection('resource', isPublished);
   return resources.map((resource) => ({ params: { id: resource.id }, props: { resource } }));
 };
 
@@ -53,6 +55,7 @@ const metadata = articleMetadata(site, {
   id: resource.id,
   publishDate: data.publishDate,
   updatedDate: data.updatedDate,
+  noindex: data.noindex,
 });
 
 const crumbs = [
@@ -98,7 +101,7 @@ const nodes = [
   <link
     rel="alternate"
     type="application/rss+xml"
-    title="meshin.co — Resources"
+    title={`${SITE.name} — Resources`}
     href="/resources/rss.xml"
     slot="head"
   />
@@ -177,7 +180,6 @@ const nodes = [
       body="If you want them filled in against the systems you already run, that is the two-week Assessment."
       label="Book a 30-min fit call"
       href="https://cal.com/meshin"
-      note="Or email hello@meshin.co"
     />
   </Section>
 </Layout>

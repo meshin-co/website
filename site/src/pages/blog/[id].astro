@@ -2,6 +2,7 @@
 import type { GetStaticPaths } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 import { getCollection, getEntries, getEntry, render } from 'astro:content';
+import { SITE } from 'astrowind:config';
 
 import AnswerBlock from '~/components/site/AnswerBlock.astro';
 import AuthorBox from '~/components/site/AuthorBox.astro';
@@ -38,9 +39,10 @@ import { countWords } from '~/utils/content-rules.mjs';
 import { lastmod } from '~/utils/lastmod.mjs';
 import { resourceCardProps } from '~/utils/resource-card.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+import { isPublished } from '~/utils/feeds.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const posts = await getCollection('post', ({ data }) => !data.draft);
+  const posts = await getCollection('post', isPublished);
   const byCategory = new Map<string, CollectionEntry<'post'>[]>();
   for (const post of posts) {
     const list = byCategory.get(post.data.category) ?? [];
@@ -86,6 +88,7 @@ const metadata = articleMetadata(site, {
   id: post.id,
   publishDate: data.publishDate,
   updatedDate: data.updatedDate,
+  noindex: data.noindex,
   section: categoryTitle,
   tags: data.tags.map((slug) => tagBySlug[slug]?.name ?? slug),
 });
@@ -127,7 +130,7 @@ const nodes = [
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
   <MarkdownAlternate path={`/blog/${post.id}`} slot="head" />
-  <link rel="alternate" type="application/rss+xml" title="meshin.co — Writing" href="/blog/rss.xml" slot="head" />
+  <link rel="alternate" type="application/rss+xml" title={`${SITE.name} — Writing`} href="/blog/rss.xml" slot="head" />
 
   <Breadcrumbs
     crumbs={[
@@ -270,7 +273,6 @@ const nodes = [
       body="If this reads like your situation, we can go through where you actually stand and whether an Assessment is worth your money."
       label="Book a 30-min fit call"
       href="https://cal.com/meshin"
-      note="Or email hello@meshin.co"
     />
   </Section>
 </Layout>

@@ -2,8 +2,9 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { checkHeaders, checkNoindex, renderSmoke, verdictFor } from './smoke-prod.mjs';
+import { brandFromDisk } from '../src/utils/brand.mjs';
 
-const origin = (process.argv[2] ?? 'https://meshin.co').replace(/\/$/, '');
+const origin = (process.argv[2] ?? `https://${brandFromDisk().name}`).replace(/\/$/, '');
 const out = process.argv[3] ?? '../audits/phase-5/smoke-prod.md';
 
 const CANONICAL = [

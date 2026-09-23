@@ -3,7 +3,9 @@ import { writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 
-const SITE_ORIGIN = 'https://meshin.co';
+import { brandFromDisk } from '../src/utils/brand.mjs';
+
+const SITE_ORIGIN = `https://${brandFromDisk().name}`;
 const TRAINING_AGENTS = [
   'GPTBot',
   'ClaudeBot',

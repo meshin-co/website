@@ -12,6 +12,7 @@ site/.lighthouseci/
 .og-cache/
 site/.indexnow-routes.json
 audits/phase-ci/
+audits/phase-local/
 audits/*/lh-mobile/
 audits/*/lh-desktop/
 audits/*/baseline/

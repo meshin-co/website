@@ -16,9 +16,10 @@ import { collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld
 import { firstPage, paginationLinks } from '~/utils/paginate.mjs';
 import { readingTime } from '~/utils/reading-time.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+import { isPublished } from '~/utils/feeds.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const posts = await getCollection('post', ({ data }) => !data.draft);
+  const posts = await getCollection('post', isPublished);
   return Object.entries(categoryPillars).map(([category, pillar]) => ({
     params: { category },
     props: { pillar, posts: posts.filter((post) => post.data.category === category) },
@@ -105,7 +106,6 @@ const nodes = [
       body="If this category is the one that describes your problem, we can go through where you actually stand."
       label="Book a 30-min fit call"
       href="https://cal.com/meshin"
-      note="Or email hello@meshin.co"
     />
   </Section>
 </Layout>

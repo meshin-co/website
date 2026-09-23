@@ -12,6 +12,7 @@ import {
   isExternal,
   lockedRowClaims,
   resolveCandidates,
+  summaryLine,
 } from './docs-gate.mjs';
 
 const repo = resolve(process.argv[2] ?? '..');
@@ -43,6 +44,7 @@ const lockedRows = readFileSync(join(repo, 'docs/plan/reference/locked-decisions
 const highestRow = Math.max(...[...lockedRows.matchAll(/^\| L(\d+)/gm)].map(([, number]) => Number(number)));
 
 const findings = [];
+const skippedBuildOutput = [];
 
 const emptyFinding = emptyDiscoveryFinding(docs.length);
 if (emptyFinding) findings.push(emptyFinding);
@@ -53,7 +55,10 @@ for (const doc of docs) {
 
   for (const cited of citedPaths(text)) {
     if (isExternal(cited)) continue;
-    if (isBuildOutput(cited) && !buildPresent) continue;
+    if (isBuildOutput(cited) && !buildPresent) {
+      skippedBuildOutput.push({ doc: relative, detail: cited });
+      continue;
+    }
     const resolved = resolveCandidates(cited, relative).some((candidate) => {
       const absolute = join(repo, candidate);
       return existsSync(absolute) && statSync(absolute).isFile();
@@ -77,6 +82,13 @@ for (const doc of docs) {
   }
 }
 
-console.log(`docs: ${docs.length} files checked, ${findings.length} findings`);
+console.log(
+  summaryLine({
+    fileCount: docs.length,
+    findingCount: findings.length,
+    skippedBuildOutputCount: skippedBuildOutput.length,
+  })
+);
 for (const finding of findings) console.log(`  ${finding.rule} ${finding.doc}: ${finding.detail}`);
+for (const skipped of skippedBuildOutput) console.log(`  build-output-unverified ${skipped.doc}: ${skipped.detail}`);
 process.exitCode = findings.length === 0 ? 0 : 1;

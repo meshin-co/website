@@ -34,7 +34,16 @@ test('toLlmsEntry maps a titled entry with shortAnswer preferred over descriptio
     description: 'Score yourself across five dimensions.',
     body: 'The scorecard body.',
     updated: '2026-09-05T08:00:00.000Z',
+    draft: false,
+    noindex: false,
   });
+});
+
+test('toLlmsEntry preserves a truthy draft or noindex flag instead of dropping it', () => {
+  const draftEntry = { id: 'x', body: 'b', data: { title: 'X', description: 'd', draft: true } };
+  const noindexEntry = { id: 'y', body: 'b', data: { title: 'Y', description: 'd', noindex: true } };
+  assert.equal(toLlmsEntry()(draftEntry).draft, true);
+  assert.equal(toLlmsEntry()(noindexEntry).noindex, true);
 });
 
 test('toLlmsEntry maps a faq entry to question, teaser and full answer', () => {

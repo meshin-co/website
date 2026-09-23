@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { SITE } from 'astrowind:config';
 
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
@@ -67,7 +68,13 @@ const cards = terms.map((term) => {
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
   <MarkdownAlternate path="/glossary" slot="head" />
-  <link rel="alternate" type="application/rss+xml" title="meshin.co — Glossary" href="/glossary/rss.xml" slot="head" />
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title={`${SITE.name} — Glossary`}
+    href="/glossary/rss.xml"
+    slot="head"
+  />
 
   <Breadcrumbs crumbs={crumbs} />
 

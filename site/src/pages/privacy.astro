@@ -4,6 +4,7 @@ import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { SITE } from 'astrowind:config';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
@@ -37,7 +38,7 @@ const sections = [
   },
   {
     title: 'Email and calls',
-    body: 'If you email hello@meshin.co or book a call, I keep that thread and the booking so I can answer and account for the work. Enquiries that never become paid work are deleted twelve months after the last message. Anything I have invoiced is kept for six years, for accounting. There is no mailing list to be added to.',
+    body: `If you email hello@${SITE.name} or book a call, I keep that thread and the booking so I can answer and account for the work. Enquiries that never become paid work are deleted twelve months after the last message. Anything I have invoiced is kept for six years, for accounting. There is no mailing list to be added to.`,
   },
   {
     title: 'Client material',
@@ -45,7 +46,7 @@ const sections = [
   },
   {
     title: 'Your rights',
-    body: 'You can ask what I hold about you, ask for it to be corrected, or ask for it to be deleted, and I will answer within thirty days. Email hello@meshin.co. If you are unhappy with the answer you can complain to your local data protection authority.',
+    body: `You can ask what I hold about you, ask for it to be corrected, or ask for it to be deleted, and I will answer within thirty days. Email hello@${SITE.name}. If you are unhappy with the answer you can complain to your local data protection authority.`,
   },
 ];
 ---

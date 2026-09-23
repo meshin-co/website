@@ -5,7 +5,7 @@ the committed content, never estimated. Re-run it after any content change.
 
 ## The ledger
 
-1412 rows, 0 still unreviewed. 0 paragraphs ship
+1414 rows, 0 still unreviewed. 0 paragraphs ship
 with no source row; 9 source strings reach no page or machine surface. Source:
 `npm run gate:editorial`, ledger at `audits/phase-4.7/inventory.json`.
 
@@ -18,10 +18,10 @@ routes and taxonomy hub leads are excluded.
 | Concept | Defined by | Routes using it unlinked |
 |---|---|---|
 | Evals | `/glossary/evals` | 9 |
+| AI governance | `/glossary/ai-governance` | 7 |
 | AI register | `/glossary/ai-register` | 6 |
-| AI governance | `/glossary/ai-governance` | 5 |
+| Data classification | `/glossary/data-classification` | 5 |
 | EU AI Act | `/glossary/eu-ai-act` | 4 |
-| Data classification | `/glossary/data-classification` | 3 |
 | NIST AI RMF | `/glossary/nist-ai-rmf` | 3 |
 | Agentic workflow | `/glossary/agentic-workflow` | 2 |
 | ISO/IEC 42001 | `/glossary/iso-iec-42001` | 2 |
@@ -44,6 +44,7 @@ stay owner-blocked in this phase.
 - Israel / Europe remote — "Israel" never appears site-wide; "remote worldwide" only as a three-page aside (copy fix, not new content)
 - MCP security best practices — No route at all
 - adoption telemetry — No route at all
+- fractional vs full-time cost — No cost-shape comparison article
 - build vs buy 3-year TCO — Worksheet exists, TCO model absent
 - AI operating model — No anchor article
 - handover to internal team — FAQ covers it; no playbook

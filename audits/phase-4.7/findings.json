@@ -91,6 +91,12 @@
       "digest": "e3b0c44298fc"
     },
     {
+      "target": "site/src/components/common/CommonMeta.astro",
+      "status": "verified",
+      "reason": "feed link titles ('meshin.co', 'meshin.co — JSON Feed') already match brand naming pattern used everywhere else",
+      "digest": "e3b0c44298fc"
+    },
+    {
       "target": "site/src/components/common/Metadata.astro",
       "status": "verified",
       "reason": "og:image:alt is built programmatically from each page's own title, confirms zero hand-authored alt attributes exist; no literal prose to edit",
@@ -182,12 +188,6 @@
     },
     {
       "target": "site/src/components/site/ResourceCard.astro",
-      "status": "verified",
-      "reason": "pass-through only, no hardcoded copy",
-      "digest": "e3b0c44298fc"
-    },
-    {
-      "target": "site/src/components/site/CtaBlock.astro",
       "status": "verified",
       "reason": "pass-through only, no hardcoded copy",
       "digest": "e3b0c44298fc"
@@ -267,6 +267,12 @@
       "digest": "e3b0c44298fc"
     },
     {
+      "target": "site/src/components/common/CommonMeta.astro",
+      "status": "verified",
+      "reason": "feed link titles ('meshin.co', 'meshin.co — JSON Feed') already match brand naming pattern used everywhere else",
+      "digest": "e3b0c44298fc"
+    },
+    {
       "target": "site/src/components/common/Metadata.astro",
       "status": "verified",
       "reason": "og:image:alt is built programmatically from each page's own title, confirms zero hand-authored alt attributes exist; no literal prose to edit",
@@ -358,12 +364,6 @@
     },
     {
       "target": "site/src/components/site/ResourceCard.astro",
-      "status": "verified",
-      "reason": "pass-through only, no hardcoded copy",
-      "digest": "e3b0c44298fc"
-    },
-    {
-      "target": "site/src/components/site/CtaBlock.astro",
       "status": "verified",
       "reason": "pass-through only, no hardcoded copy",
       "digest": "e3b0c44298fc"

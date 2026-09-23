@@ -2,6 +2,12 @@
 
 Generated from raw check output by `scripts/report.mjs`. Do not hand-edit.
 
+Generated-from: a revision before `6a0c9c2`, whose byte-budget assertion read a field
+`gate.mjs` never wrote. This report's `Result` covers Lighthouse scores and Lighthouse
+metric budgets only; its byte-budget rows were printed, never asserted. The raw Lighthouse
+runs behind it are gitignored, so it cannot be regenerated — it is kept as the record of
+what was measured at the time, with its limit stated.
+
 Result: PASS
 
 ## Lighthouse (median of 3 runs)

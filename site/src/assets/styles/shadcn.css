@@ -29,17 +29,17 @@
   --popover-foreground: var(--aw-color-text-default);
 
   --primary: var(--aw-color-primary);
-  --primary-foreground: #fff;
+  --primary-foreground: oklch(100% 0 0);
   --secondary: var(--aw-color-secondary);
-  --secondary-foreground: #fff;
+  --secondary-foreground: oklch(100% 0 0);
   --accent: var(--aw-color-accent);
-  --accent-foreground: #fff;
+  --accent-foreground: oklch(100% 0 0);
 
   --muted: color-mix(in oklab, var(--aw-color-text-default) 6%, var(--aw-color-bg-page));
   --muted-foreground: var(--aw-color-text-muted);
 
   --destructive: oklch(57.7% 0.245 27.325);
-  --destructive-foreground: #fff;
+  --destructive-foreground: oklch(100% 0 0);
 
   --border: color-mix(in oklab, var(--aw-color-text-default) 15%, var(--aw-color-bg-page));
   --input: color-mix(in oklab, var(--aw-color-text-default) 15%, var(--aw-color-bg-page));
@@ -56,7 +56,7 @@
   --sidebar: var(--aw-color-bg-page);
   --sidebar-foreground: var(--aw-color-text-default);
   --sidebar-primary: var(--aw-color-primary);
-  --sidebar-primary-foreground: #fff;
+  --sidebar-primary-foreground: oklch(100% 0 0);
   --sidebar-accent: color-mix(in oklab, var(--aw-color-text-default) 6%, var(--aw-color-bg-page));
   --sidebar-accent-foreground: var(--aw-color-text-default);
   --sidebar-border: color-mix(in oklab, var(--aw-color-text-default) 15%, var(--aw-color-bg-page));

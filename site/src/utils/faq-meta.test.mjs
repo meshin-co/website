@@ -9,6 +9,7 @@ import { z } from 'astro/zod';
 import { isNotBeforePublish } from './content-rules.mjs';
 import { splitSentences } from '../../scripts/prose-rules.mjs';
 import { clauseTrim, faqDescription, faqMetadata, firstSentence, pageTitle, teaser } from './faq-meta.mjs';
+import { brandFromDisk, titleSuffix } from './brand.mjs';
 
 const wordCount = (sentence) => sentence.split(/\s+/).filter(Boolean).length;
 
@@ -86,6 +87,26 @@ test('faq leaf metadata carries article dates and computes the description from 
   assert.equal(metadata.openGraph.images, undefined);
 });
 
+test('faqMetadata sets robots index false, follow true for a noindex question, and no robots field for a live one', () => {
+  const noindexed = faqMetadata({
+    question: 'A retired question?',
+    answer: 'An answer kept only for archival reasons.',
+    publishDate: new Date('2026-09-12T00:00:00Z'),
+    updatedDate: new Date('2026-09-12T00:00:00Z'),
+    noindex: true,
+  });
+  assert.deepEqual(noindexed.robots, { index: false, follow: true });
+
+  const live = faqMetadata({
+    question: 'How do you charge for the work?',
+    answer: 'Three fixed structures, no hourly billing. The rest follows.',
+    publishDate: new Date('2026-09-12T00:00:00Z'),
+    updatedDate: new Date('2026-09-12T00:00:00Z'),
+    noindex: false,
+  });
+  assert.equal(live.robots, undefined);
+});
+
 test('faqMetadata prefers an explicit description and shortTitle over the computed defaults', () => {
   const metadata = faqMetadata({
     question: 'What do NIST AI RMF, ISO/IEC 42001 and the EU AI Act each require of a company our size?',
@@ -146,7 +167,7 @@ test('an over-budget question with a shortTitle uses the shortTitle for the titl
   const title = pageTitle(question, shortTitle);
 
   assert.equal(title, shortTitle);
-  assert.ok((title + ' — meshin.co').length <= 70);
+  assert.ok((title + titleSuffix(brandFromDisk())).length <= 70);
 });
 
 test('an over-budget question without a shortTitle falls back to a clause boundary, never an ellipsis', () => {

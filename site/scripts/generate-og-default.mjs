@@ -3,6 +3,8 @@ import yaml from 'js-yaml';
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
 
+import { brandFromDisk } from '../src/utils/brand.mjs';
+
 const WIDTH = 1200;
 const HEIGHT = 630;
 const INSET = 32;
@@ -11,7 +13,7 @@ const BORDER_COLOR = '#e6e3dc';
 const INK = '#16181c';
 const MUTED = '#6b665e';
 const BRAND = '#0f5f5c';
-const TITLE = 'meshin.co — Fractional Chief AI Officer';
+const TITLE = `${brandFromDisk().name} — Fractional Chief AI Officer`;
 const OUTPUT = 'src/assets/images/og-default.png';
 const { metadata } = yaml.load(readFileSync('src/config.yaml', 'utf8'));
 

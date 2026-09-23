@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { FEED_BASES, toFeedSource } from './feeds.mjs';
+import { FEED_BASES, isPublished, toFeedSource } from './feeds.mjs';
 
 const ORIGIN = 'https://meshin.co';
 
@@ -9,6 +9,12 @@ test('FEED_BASES covers exactly the six public collections with their URL bases'
   assert.deepEqual(Object.keys(FEED_BASES), ['post', 'service', 'resource', 'glossary', 'case', 'faq']);
   assert.deepEqual(FEED_BASES.faq, 'faq');
   assert.deepEqual(FEED_BASES.case, 'case-studies');
+});
+
+test('isPublished excludes a draft entry but keeps a live noindex entry', () => {
+  assert.equal(isPublished({ data: { draft: true } }), false);
+  assert.equal(isPublished({ data: { draft: false, noindex: true } }), true);
+  assert.equal(isPublished({ data: {} }), true);
 });
 
 test('toFeedSource maps an faq entry onto question, teaser and full answer', () => {

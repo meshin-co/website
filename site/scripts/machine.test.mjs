@@ -6,6 +6,7 @@ import {
   llmsRouteGaps,
   publicCollections,
   missingFromGenerator,
+  feedBaseGaps,
   sidecarCandidateRoutes,
   sidecarGaps,
   sidecarContentGaps,
@@ -14,6 +15,7 @@ import {
   indexableCoverageGaps,
   sizeGuardFailure,
   lastmodCoverageGaps,
+  sitemapNoindexLeaks,
   COLLECTION_BASES,
   humansTxtFindings,
 } from './machine.mjs';
@@ -48,6 +50,12 @@ test('a body link cannot mask an entry whose own url line is missing', () => {
 
 test('the public collection list comes from the content config, faq included, speaking and author out', () => {
   assert.deepEqual(publicCollections(CONFIG), ['post', 'service', 'resource', 'glossary', 'case', 'faq']);
+});
+
+test('feedBaseGaps reports a collection missing from FEED_BASES instead of the caller crashing on join(distDir, undefined)', () => {
+  assert.deepEqual(feedBaseGaps(['post', 'service']), []);
+  assert.deepEqual(feedBaseGaps(['post', 'speaking']), ['speaking']);
+  assert.equal(COLLECTION_BASES.speaking, undefined);
 });
 
 test('a speaking collection reappearing in the config stays out of the machine surfaces', () => {
@@ -200,6 +208,18 @@ test('lastmodCoverageGaps reports a route missing from the sitemap entirely, not
   const sitemap = sitemapFixture([{ loc: 'https://meshin.co/blog', dated: true }]);
 
   assert.deepEqual(lastmodCoverageGaps(sitemap, ['/blog', '/about']), ['/about']);
+});
+
+test('sitemapNoindexLeaks reports a route that is both noindex and still listed in the sitemap, never a live route', () => {
+  const sitemap = sitemapFixture([
+    { loc: 'https://meshin.co/blog/category/executive', dated: true },
+    { loc: 'https://meshin.co/blog/live-post', dated: true },
+  ]);
+
+  assert.deepEqual(sitemapNoindexLeaks(sitemap, new Set(['/blog/category/executive', '/blog/category/governance'])), [
+    '/blog/category/executive',
+  ]);
+  assert.deepEqual(sitemapNoindexLeaks(sitemap, new Set(['/blog/category/governance'])), []);
 });
 
 const feedItem = (url) => `<item><guid isPermaLink="true">${url}</guid></item>`;

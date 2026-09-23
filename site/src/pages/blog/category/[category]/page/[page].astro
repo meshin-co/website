@@ -15,9 +15,10 @@ import { collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld
 import { paginate, paginationLinks } from '~/utils/paginate.mjs';
 import { readingTime } from '~/utils/reading-time.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+import { isPublished } from '~/utils/feeds.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const posts = await getCollection('post', ({ data }) => !data.draft);
+  const posts = await getCollection('post', isPublished);
   const paths = [];
   for (const [category, pillar] of Object.entries(categoryPillars)) {
     const inCategory = posts

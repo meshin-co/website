@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { SITE } from 'astrowind:config';
 
 import CardGrid from '~/components/site/CardGrid.astro';
 import CtaBlock from '~/components/site/CtaBlock.astro';
@@ -47,7 +48,7 @@ const nodes = [
   <link
     rel="alternate"
     type="application/rss+xml"
-    title="meshin.co — Resources"
+    title={`${SITE.name} — Resources`}
     href="/resources/rss.xml"
     slot="head"
   />
@@ -84,7 +85,6 @@ const nodes = [
       body="Filling them in against systems you already run is where it gets specific. That is what the two-week Assessment is for."
       label="Book a 30-min fit call"
       href="https://cal.com/meshin"
-      note="Or email hello@meshin.co"
     />
   </Section>
 </Layout>

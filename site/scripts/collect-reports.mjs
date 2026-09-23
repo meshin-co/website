@@ -29,4 +29,7 @@ async function main(formFactor) {
   console.log(`${formFactor}: ${names.length} report(s) -> ${target}`);
 }
 
-if (import.meta.filename === process.argv[1]) await main(process.argv[2]);
+if (import.meta.filename === process.argv[1]) {
+  process.env.GATE_PHASE ||= 'local';
+  await main(process.argv[2]);
+}

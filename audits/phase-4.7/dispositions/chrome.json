@@ -21,7 +21,7 @@
     "target": "site/src/components/common/CommonMeta.astro",
     "status": "verified",
     "reason": "feed link titles ('meshin.co', 'meshin.co — JSON Feed') already match brand naming pattern used everywhere else",
-    "digest": "1e7d376a1016"
+    "digest": "e3b0c44298fc"
   },
   {
     "target": "site/src/components/common/Metadata.astro",
@@ -152,8 +152,8 @@
   {
     "target": "site/src/components/site/CtaBlock.astro",
     "status": "verified",
-    "reason": "pass-through only, no hardcoded copy",
-    "digest": "e3b0c44298fc"
+    "reason": "pass-through only, no hardcoded copy Re-read 2026-09-23 after the CTA note stopped being typed at 20 call sites and started deriving from the one brand declaration; the rendered sentence is unchanged.",
+    "digest": "b0afccd9e7ac"
   },
   {
     "target": "site/src/components/site/FaqList.astro",
@@ -248,8 +248,8 @@
   {
     "target": "site/src/utils/machine-text.mjs",
     "status": "rewritten",
-    "reason": "Rewritten 2026-09-16: the static page catalog's /now description was updated to match the page's new meta description after /now became a dated log. gate:machine caught the drift, which is what the catalog guard exists for.",
-    "digest": "7f63bf06d91c"
+    "reason": "Rewritten 2026-09-16: the static page catalog's /now description was updated to match the page's new meta description after /now became a dated log. gate:machine caught the drift, which is what the catalog guard exists for. Re-read 2026-09-23 after the draft and noindex flags began reaching the live filter; no user-facing sentence changed.",
+    "digest": "f18f785dfa6e"
   },
   {
     "target": "site/src/utils/faq-meta.mjs",

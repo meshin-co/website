@@ -1,4 +1,6 @@
 ---
+import { SITE } from 'astrowind:config';
+
 interface Props {
   title: string;
   body: string;
@@ -7,7 +9,7 @@ interface Props {
   note?: string;
 }
 
-const { title, body, label, href, note } = Astro.props;
+const { title, body, label, href, note = `Or email hello@${SITE.name}` } = Astro.props;
 const external = href.startsWith('http');
 ---
 

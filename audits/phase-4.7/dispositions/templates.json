@@ -21,13 +21,13 @@
     "target": "src/pages/blog/[id].astro",
     "status": "verified",
     "reason": "section titles, CTA copy and the RSS link title all match voice/terminology standard; composed <title> relies on the global '%s — meshin.co' template and already matches the article family pattern in SEMANTIC-CORE",
-    "digest": "72ba343d5836"
+    "digest": "2b47a453c3f1"
   },
   {
     "target": "src/pages/blog/category/[category].astro",
     "status": "verified",
     "reason": "CTA and empty-state copy compliant; pillar.title/description already match the blog-category SEMANTIC-CORE row exactly",
-    "digest": "de65a29052dd"
+    "digest": "915357ec064d"
   },
   {
     "target": "src/pages/blog/category/[category]/page/[page].astro",
@@ -39,7 +39,7 @@
     "target": "src/pages/blog/index.astro",
     "status": "verified",
     "reason": "H1 'Writing on AI governance' and lead are answer-first and under length; composed title 'Writing' + template matches the static-family /blog row in SEMANTIC-CORE",
-    "digest": "d08d3404d5a2"
+    "digest": "8fdffb3110a6"
   },
   {
     "target": "src/pages/blog/page/[page].astro",
@@ -63,55 +63,55 @@
     "target": "src/pages/case-studies/[id].astro",
     "status": "verified",
     "reason": "section titles, ShiftPanel labels and CTA copy compliant, no banned phrases or invented facts",
-    "digest": "5bc56858b480"
+    "digest": "109bd2c192c1"
   },
   {
     "target": "src/pages/case-studies/index.astro",
     "status": "verified",
     "reason": "H1/lead answer-first and honest about the single-entry policy (L11); composed title matches the static-family /case-studies SEMANTIC-CORE row",
-    "digest": "f09fbbfa9e37"
+    "digest": "05e0f6e71c55"
   },
   {
     "target": "src/pages/faq/[id].astro",
     "status": "verified",
     "reason": "'The answer' section, related headings and CTA copy compliant; composed title (data.question + template) matches the faq-answer family pattern",
-    "digest": "8f06b384598e"
+    "digest": "40b514cc24f3"
   },
   {
     "target": "src/pages/glossary/[id].astro",
     "status": "verified",
     "reason": "section titles and CTA body compliant; composed title (data.term + template) is only the raw term name, and the 'What is {term}?' phrasing documented for the term family in SEMANTIC-CORE comes from content data, not this template, so there is nothing here to fix",
-    "digest": "202d6965a9de"
+    "digest": "51d8cc307e38"
   },
   {
     "target": "src/pages/glossary/index.astro",
     "status": "verified",
     "reason": "lead and the 'evals' hub definition already use locked terminology correctly; composed title matches the static-family /glossary row",
-    "digest": "ee11ff6f0346"
+    "digest": "9553dc5f9b2f"
   },
   {
     "target": "src/pages/resources/[id].astro",
     "status": "verified",
     "reason": "section titles, 'Inside the kit' label and CTA copy compliant, no invented facts about repo state",
-    "digest": "2d4496c5a5e1"
+    "digest": "312b702ca460"
   },
   {
     "target": "src/pages/resources/index.astro",
     "status": "verified",
     "reason": "lead and CTA copy answer-first, no banned phrases; composed title matches the static-family /resources row",
-    "digest": "05c4c41c2a72"
+    "digest": "7166aaebcb58"
   },
   {
     "target": "src/pages/services/[id].astro",
     "status": "verified",
     "reason": "section titles, schedule table headers and ShiftPanel labels compliant; RSS link title follows the site's consistent feed-title convention, not the page <title> pattern",
-    "digest": "eda47481f43c"
+    "digest": "e0d1f187cdfd"
   },
   {
     "target": "src/pages/services/index.astro",
     "status": "verified",
     "reason": "H1/lead/CTA compliant, no prices stated (L8); composed title matches the static-family /services row",
-    "digest": "a1900063e11d"
+    "digest": "9b039b2e2603"
   },
   {
     "target": "src/utils/llms-collections.mjs",
