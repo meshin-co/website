@@ -1,14 +1,14 @@
 ---
-
+import { SITE } from 'astrowind:config';
 ---
 
-<script is:inline>
+<script is:inline define:vars={{ analyticsDomain: SITE.name }}>
   addEventListener(
     'load',
     () => {
       const tag = document.createElement('script');
       tag.defer = true;
-      tag.dataset.domain = 'meshin.co';
+      tag.dataset.domain = analyticsDomain;
       tag.src = 'https://plausible.io/js/script.outbound-links.file-downloads.js';
       document.head.append(tag);
     },

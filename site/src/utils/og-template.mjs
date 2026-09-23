@@ -1,3 +1,5 @@
+import { brandFromDisk } from './brand.mjs';
+
 const WIDTH = 1200;
 const HEIGHT = 630;
 const INSET = 32;
@@ -6,7 +8,7 @@ const BORDER_COLOR = '#e6e3dc';
 const INK = '#16181c';
 const MUTED = '#6b665e';
 const BRAND = '#0f5f5c';
-const BRAND_TEXT = 'meshin.co';
+const BRAND_TEXT = brandFromDisk().name;
 const SERIF_FONT = 'Fraunces';
 const SANS_FONT = 'IBM Plex Sans';
 

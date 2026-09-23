@@ -87,6 +87,18 @@ test('skillFindings flags forbidden claims, missing paths and oversized files', 
   );
 });
 
+test('skillFindings leaves a site/dist/ citation alone, because the docs gate treats it as build output too', () => {
+  const findings = skillFindings({
+    file: 'harness.md',
+    content: 'The measured build writes site/dist/gate-routes.json for verification.',
+    roots,
+  });
+  assert.deepEqual(
+    findings.filter((f) => f.rule === 'missing-path'),
+    []
+  );
+});
+
 test('lintSkillsDir returns findings for a violating fixture and none for a clean one', async () => {
   const skillsDir = join(fixtureRoot, 'skills');
   await mkdir(skillsDir, { recursive: true });

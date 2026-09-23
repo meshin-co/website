@@ -47,9 +47,11 @@
     "audit:prelaunch": "node scripts/run-pre-launch.mjs dist",
     "smoke:prod": "node scripts/run-smoke-prod.mjs",
     "gate:docs": "node scripts/run-docs-gate.mjs ..",
+    "gate:evidence": "node scripts/run-evidence-gate.mjs ..",
     "audit:geo-probe": "node scripts/run-geo-probe.mjs",
     "gate:external": "node scripts/run-external-links.mjs dist",
-    "gate:search": "node scripts/search-budget.mjs dist"
+    "gate:search": "node scripts/search-budget.mjs dist",
+    "gate:brand": "node scripts/brand-gate.mjs"
   },
   "dependencies": {
     "@astro-community/astro-embed-twitter": "^0.5.11",

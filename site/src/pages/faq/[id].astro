@@ -3,6 +3,7 @@ import { externalRelAttrs } from '~/utils/pipeline.mjs';
 import type { GetStaticPaths } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
+import { SITE } from 'astrowind:config';
 
 import CtaBlock from '~/components/site/CtaBlock.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
@@ -16,9 +17,10 @@ import { faqPageNode, findGlossaryMentions, imageObject, orgNode, personNode, we
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 import RelatedContent from '~/components/site/RelatedContent.astro';
 import { distinctByKeyword, firstMention, textMentionsKeyword, resolveByIds } from '~/utils/related-content.mjs';
+import { isPublished } from '~/utils/feeds.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const questions = await getCollection('faq', ({ data }) => !data.draft);
+  const questions = await getCollection('faq', isPublished);
   return questions.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
 };
 
@@ -101,7 +103,7 @@ const nodes = [
   <link
     rel="alternate"
     type="application/rss+xml"
-    title="meshin.co — Questions and answers"
+    title={`${SITE.name} — Questions and answers`}
     href="/faq/rss.xml"
     slot="head"
   />
@@ -172,7 +174,6 @@ const nodes = [
       body="Bring the actual constraint to a 30-minute fit call. If the honest answer is that you do not need me, you will hear it there."
       label="Book a 30-min fit call"
       href="https://cal.com/meshin"
-      note="Or email hello@meshin.co"
     />
   </Section>
 </Layout>

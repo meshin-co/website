@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { SITE } from 'astrowind:config';
 
 import CtaBlock from '~/components/site/CtaBlock.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
@@ -57,7 +58,7 @@ const nodes = [
   <link
     rel="alternate"
     type="application/rss+xml"
-    title="meshin.co — Questions and answers"
+    title={`${SITE.name} — Questions and answers`}
     href="/faq/rss.xml"
     slot="head"
   />
@@ -97,7 +98,6 @@ const nodes = [
       body="No slides. If your situation does not need me, I will say so."
       label="Book a 30-min fit call"
       href="https://cal.com/meshin"
-      note="Or email hello@meshin.co"
     />
   </Section>
 </Layout>

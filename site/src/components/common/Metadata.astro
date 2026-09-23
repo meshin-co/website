@@ -64,7 +64,7 @@ function buildOpenGraph(og: MetaDataOpenGraph): SEOProps['openGraph'] | undefine
       url: imageUrl,
       width: firstImage?.width,
       height: firstImage?.height,
-      alt: `${title || METADATA?.title?.default || ''}${og.type === 'article' ? ' — meshin.co' : ''}`,
+      alt: `${title || METADATA?.title?.default || ''}${og.type === 'article' ? ` — ${SITE.name}` : ''}`,
     },
     ...(og.type === 'article' && og.article ? { article: og.article } : {}),
   };

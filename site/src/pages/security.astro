@@ -5,9 +5,11 @@ import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { SITE } from 'astrowind:config';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
+const CONTACT_EMAIL = `hello@${SITE.name}`;
 const UPDATED = '2026-09-13';
 
 const metadata = {
@@ -95,9 +97,9 @@ const posture = [
 
   <Section eyebrow="Disclosure" title="Reporting something" tone="surface">
     <p class="max-w-[68ch] text-lg leading-relaxed text-muted">
-      Email <a class="text-link underline" href="mailto:hello@meshin.co">hello@meshin.co</a> with what you found and how to
-      reproduce it. I reply within two working days and I will tell you when it is fixed. No bounty, no legal threats, and
-      credit on request.
+      Email <a class="text-link underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> with what you found and how
+      to reproduce it. I reply within two working days and I will tell you when it is fixed. No bounty, no legal threats,
+      and credit on request.
     </p>
     <p class="mt-6">
       <a class="text-link font-mono text-sm" href="/.well-known/security.txt">/.well-known/security.txt</a>
@@ -110,7 +112,6 @@ const posture = [
       body="Answering a customer security questionnaire honestly is most of what the two-week Assessment produces."
       label="Book a 30-min fit call"
       href="https://cal.com/meshin"
-      note="Or email hello@meshin.co"
     />
   </Section>
 </Layout>

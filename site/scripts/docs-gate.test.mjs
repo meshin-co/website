@@ -11,6 +11,7 @@ import {
   isExternal,
   lockedRowClaims,
   resolveCandidates,
+  summaryLine,
 } from './docs-gate.mjs';
 
 test('a backticked repo path is cited, and a filename suffix fragment is not', () => {
@@ -111,4 +112,22 @@ test('a build-output path is recognized in both its bare and site/-prefixed form
   assert.equal(isBuildOutput('dist/gate-routes.json'), true);
   assert.equal(isBuildOutput('site/dist/gate-routes.json'), true);
   assert.equal(isBuildOutput('docs/PRD.md'), false);
+});
+
+test('the summary line stays silent about skipped build-output citations when none were skipped', () => {
+  assert.equal(
+    summaryLine({ fileCount: 84, findingCount: 0, skippedBuildOutputCount: 0 }),
+    'docs: 84 files checked, 0 findings'
+  );
+});
+
+test('the summary line reports skipped build-output citations instead of silently dropping them', () => {
+  assert.equal(
+    summaryLine({ fileCount: 84, findingCount: 0, skippedBuildOutputCount: 1 }),
+    'docs: 84 files checked, 0 findings, 1 build-output citation unverified (no build present)'
+  );
+  assert.equal(
+    summaryLine({ fileCount: 84, findingCount: 2, skippedBuildOutputCount: 3 }),
+    'docs: 84 files checked, 2 findings, 3 build-output citations unverified (no build present)'
+  );
 });

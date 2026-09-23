@@ -1,5 +1,10 @@
-const OUR_HOSTS = ['meshin.co'];
-const OUR_NAMES = [/\bmeshin\.co\b/i, /\bDmitri\s+Meshin\b/i];
+import { brandFromDisk } from '../src/utils/brand.mjs';
+
+const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const BRAND = brandFromDisk();
+const OUR_HOSTS = [BRAND.name];
+const OUR_NAMES = [new RegExp(`\\b${escapeRegExp(BRAND.name)}\\b`, 'i'), /\bDmitri\s+Meshin\b/i];
 
 const PROVIDERS = [
   { id: 'openai', keyName: 'OPENAI_API_KEY', model: 'gpt-5', retrieval: 'web_search tool' },
@@ -78,7 +83,7 @@ export function renderProbe(rows) {
     '# GEO probe — measured answers from live engines',
     '',
     'Each row is one buyer prompt sent to one engine with retrieval enabled. `cited` means the',
-    'engine returned a `meshin.co` URL among its sources. `mentioned` means the answer named the',
+    `engine returned a \`${BRAND.name}\` URL among its sources. \`mentioned\` means the answer named the`,
     'site or the owner without citing it. `absent` means neither.',
     '',
     '| Engine | | | | |',

@@ -19,6 +19,7 @@ import {
   HUB_PAGES,
 } from './machine-text.mjs';
 import { lastmod } from './lastmod.mjs';
+import { toLlmsEntry } from './llms-collections.mjs';
 
 const ORIGIN = 'https://meshin.co';
 
@@ -182,6 +183,27 @@ test('renderLlmsCollection never emits a draft or noindex entry', () => {
     { title: 'Draft', url: `${ORIGIN}/blog/draft`, summary: 's', body: 'b', draft: true },
     { title: 'Hidden', url: `${ORIGIN}/blog/hidden`, summary: 's', body: 'b', noindex: true },
   ];
+  const output = renderLlmsCollection({ site: 'meshin.co', title: 'Writing', entries });
+  assert.ok(output.includes('# Live'));
+  assert.ok(!output.includes('# Draft'));
+  assert.ok(!output.includes('# Hidden'));
+});
+
+test('the real /llms/{collection}.txt pipeline drops a draft or noindex content entry, not just a pre-filtered fixture', () => {
+  const contentEntries = [
+    { id: 'live', body: 'Live body.', data: { title: 'Live', description: 'd' } },
+    { id: 'draft', body: 'Draft body.', data: { title: 'Draft', description: 'd', draft: true } },
+    { id: 'hidden', body: 'Hidden body.', data: { title: 'Hidden', description: 'd', noindex: true } },
+  ];
+  const entries = contentEntries.map(toLlmsEntry()).map((entry) => ({
+    title: entry.title,
+    url: `${ORIGIN}/blog/${entry.id}`,
+    summary: entry.description,
+    body: entry.body,
+    updated: entry.updated,
+    draft: entry.draft,
+    noindex: entry.noindex,
+  }));
   const output = renderLlmsCollection({ site: 'meshin.co', title: 'Writing', entries });
   assert.ok(output.includes('# Live'));
   assert.ok(!output.includes('# Draft'));

@@ -1,7 +1,10 @@
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 
+import { resolvePhase } from './collect-reports.mjs';
+
 const AUDITS_DIR = resolve(process.cwd(), '..', 'audits');
+const NUMBERED_PHASE = /^phase-\d+(?:\.\d+)?$/;
 
 export function phaseOrder(names) {
   return [...names].sort((a, b) => {
@@ -54,33 +57,32 @@ function readJson(path, fallback) {
   return existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : fallback;
 }
 
-function previousPhase(phase) {
-  if (!existsSync(AUDITS_DIR)) return null;
-  const phases = phaseOrder(
-    readdirSync(AUDITS_DIR, { withFileTypes: true })
-      .filter((entry) => entry.isDirectory() && entry.name.startsWith('phase-'))
+export function previousPhase(auditsDir, phase) {
+  if (!existsSync(auditsDir)) return null;
+  const numbered = phaseOrder(
+    readdirSync(auditsDir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory() && entry.name !== phase && NUMBERED_PHASE.test(entry.name))
       .map((entry) => entry.name)
-  );
-  const index = phases.indexOf(phase);
-  const earlier = (index === -1 ? phases : phases.slice(0, index)).filter((name) =>
-    existsSync(join(AUDITS_DIR, name, 'routes.json'))
-  );
-  return earlier.length > 0 ? earlier[earlier.length - 1] : null;
+  ).filter((name) => existsSync(join(auditsDir, name, 'routes.json')));
+  return numbered.length > 0 ? numbered[numbered.length - 1] : null;
 }
 
-async function main(distDir, phase) {
+async function main(distDir, rawPhase) {
   const current = collectRoutes(resolve(distDir));
+  const phase = `phase-${resolvePhase(rawPhase)}`;
   const phaseDir = join(AUDITS_DIR, phase);
   mkdirSync(phaseDir, { recursive: true });
 
-  const earlier = previousPhase(phase);
+  const earlier = previousPhase(AUDITS_DIR, phase);
   const previous = earlier ? readJson(join(AUDITS_DIR, earlier, 'routes.json'), null) : null;
   const explained = readJson(join(phaseDir, 'routes-removed.json'), []);
 
   const result = diffRoutes({ previous, current, explained });
   writeFileSync(join(phaseDir, 'routes.json'), `${JSON.stringify(current, null, 2)}\n`);
 
-  const label = earlier ? `${earlier} -> ${phase}` : `${phase} baseline`;
+  const label = earlier
+    ? `${earlier} -> ${phase}`
+    : `${phase} baseline (no earlier numbered phase under audits/ carries a routes.json)`;
   console.log(`ROUTES ${label}: ${current.length} routes, +${result.added.length} -${result.removed.length}`);
   for (const route of result.unexplained) {
     console.error(`ROUTES UNEXPLAINED REMOVAL ${route} — add it to audits/${phase}/routes-removed.json with a reason`);
@@ -92,5 +94,5 @@ async function main(distDir, phase) {
 }
 
 if (import.meta.filename === process.argv[1]) {
-  await main(process.argv[2] ?? 'dist', process.env.GATE_PHASE ?? 'phase-local');
+  await main(process.argv[2] ?? 'dist', process.env.GATE_PHASE || 'local');
 }

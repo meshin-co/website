@@ -201,3 +201,16 @@ test('a known-gaps row needs both a non-empty reason and a unique id', () => {
     ['known-gap-duplicate-id']
   );
 });
+
+test('a known-gap row with the wrong cell count is reported, because a silently skipped row is an unchecked gap', () => {
+  const markdown = [
+    '| id | claim | why it is not closed | owner | opened |',
+    '| --- | --- | --- | --- | --- |',
+    '| G1 | a claim | a reason | owner | 2026-09-23 |',
+    '| G2 | a claim | a reason | 2026-09-23 |',
+  ].join('\n');
+  assert.deepEqual(
+    knownGapsFindings(markdown).map(({ rule }) => rule),
+    ['known-gap-malformed-row']
+  );
+});

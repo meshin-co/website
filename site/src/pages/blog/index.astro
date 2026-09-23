@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { SITE } from 'astrowind:config';
 
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import CardGrid from '~/components/site/CardGrid.astro';
@@ -42,7 +43,7 @@ const nodes = [
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
   <MarkdownAlternate path="/blog" slot="head" />
-  <link rel="alternate" type="application/rss+xml" title="meshin.co — Writing" href="/blog/rss.xml" slot="head" />
+  <link rel="alternate" type="application/rss+xml" title={`${SITE.name} — Writing`} href="/blog/rss.xml" slot="head" />
 
   <Breadcrumbs
     crumbs={[

@@ -3,6 +3,7 @@ import { externalRelAttrs } from '~/utils/pipeline.mjs';
 import type { GetStaticPaths } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 import { getCollection, render } from 'astro:content';
+import { SITE } from 'astrowind:config';
 
 import CtaBlock from '~/components/site/CtaBlock.astro';
 import FaqList from '~/components/site/FaqList.astro';
@@ -30,9 +31,10 @@ import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 import { lastmod } from '~/utils/lastmod.mjs';
 import RelatedContent from '~/components/site/RelatedContent.astro';
 import { distinctByKeyword, firstMention, textMentionsKeyword, resolveByIds } from '~/utils/related-content.mjs';
+import { isPublished } from '~/utils/feeds.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const services = await getCollection('service');
+  const services = await getCollection('service', isPublished);
   return services.map((service) => ({ params: { id: service.id }, props: { service } }));
 };
 
@@ -58,6 +60,7 @@ const metadata = articleMetadata(site, {
   id: service.id,
   publishDate: data.publishDate,
   updatedDate: data.updatedDate,
+  noindex: data.noindex,
 });
 
 const crumbs = [
@@ -120,7 +123,13 @@ const nodes = [
 
   <Breadcrumbs crumbs={crumbs} />
   <MarkdownAlternate path={`/services/${service.id}`} slot="head" />
-  <link rel="alternate" type="application/rss+xml" title="meshin.co — Offers" href="/services/rss.xml" slot="head" />
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title={`${SITE.name} — Offers`}
+    href="/services/rss.xml"
+    slot="head"
+  />
 
   <article>
     <Section bordered={false} headingLevel={1} eyebrow={data.duration} title={data.name} lead={data.tagline}>
@@ -229,7 +238,6 @@ const nodes = [
       body="No slides. I walk through where you actually stand, and tell you whether this offer is the right one."
       label={data.cta.label}
       href={data.cta.href}
-      note="Or email hello@meshin.co"
     />
   </Section>
 </Layout>

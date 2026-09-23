@@ -63,27 +63,50 @@ test('the font policy counts real @font-face src:url rules, strips the content h
   assert.equal(finding.families, 2);
   assert.equal(finding.weights, 3);
   assert.deepEqual(finding.list, ['fraunces-600', 'ibm plex sans-400', 'ibm plex sans-500']);
+  assert.equal(finding.status, 'pass');
 });
 
-test('a fontsource-shaped filename with no real @font-face rule is not counted', () => {
-  assert.deepEqual(checkFontPolicy('a-400.woff2, b-500.woff2'), { families: 0, weights: 0, list: [] });
+test('a fontsource-shaped filename with no real @font-face rule is not counted, and is a failure, not a pass', () => {
+  const finding = checkFontPolicy('a-400.woff2, b-500.woff2');
+  assert.equal(finding.families, 0);
+  assert.equal(finding.weights, 0);
+  assert.deepEqual(finding.list, []);
+  assert.equal(finding.status, 'fail');
 });
 
-test('an extra shipped face changes the count, so the check reacts to what actually ships', () => {
+test('an empty document is a failure, never a silent 0/0 pass', () => {
+  const finding = checkFontPolicy('');
+  assert.equal(finding.families, 0);
+  assert.equal(finding.weights, 0);
+  assert.equal(finding.status, 'fail');
+  assert.match(finding.detail, /no @font-face/);
+});
+
+test('an extra shipped face changes the count, so the check reacts to what actually ships, and neither shape matches the locked L39 policy', () => {
   const oneFace = realFace('Fraunces', 'aaaa000000000000', 600);
   const twoFaces = oneFace + realFace('Mono', 'bbbb111111111111', 400);
 
-  assert.deepEqual(checkFontPolicy(oneFace), { families: 1, weights: 1, list: ['fraunces-600'] });
-  assert.deepEqual(checkFontPolicy(twoFaces), { families: 2, weights: 2, list: ['fraunces-600', 'mono-400'] });
+  const one = checkFontPolicy(oneFace);
+  assert.equal(one.families, 1);
+  assert.equal(one.weights, 1);
+  assert.deepEqual(one.list, ['fraunces-600']);
+  assert.equal(one.status, 'fail');
+
+  const two = checkFontPolicy(twoFaces);
+  assert.equal(two.families, 2);
+  assert.equal(two.weights, 2);
+  assert.deepEqual(two.list, ['fraunces-600', 'mono-400']);
+  assert.equal(two.status, 'fail');
 });
 
-test('checkFontPolicy against the real shipped build reports 2 families and 3 faces, not 0 and 0', () => {
+test('checkFontPolicy against the real shipped build reports 2 families and 3 faces, and passes the locked L39 policy exactly', () => {
   const html = readFileSync(new URL('../dist/index.html', import.meta.url), 'utf8');
   const finding = checkFontPolicy(html);
 
   assert.equal(finding.families, 2);
   assert.equal(finding.weights, 3);
   assert.deepEqual(finding.list, ['fraunces-600', 'ibm plex sans-400', 'ibm plex sans-500']);
+  assert.equal(finding.status, 'pass');
 });
 
 test('the checklist renders every item with a status, and never leaves one blank', () => {
@@ -134,4 +157,21 @@ test('a hyphenated property that merely ends in a layout word is not a layout tr
     'pass'
   );
   assert.equal(checkMotion('.a { transition: margin-top .16s; }').status, 'fail');
+});
+
+test('a raw Tailwind palette colour utility is a finding, because it bypasses the --aw-color-* token system', () => {
+  const dirty = checkRawColour([{ file: 'x.astro', source: 'class="hover:bg-gray-100 dark:text-white"' }]);
+  assert.equal(dirty.status, 'fail');
+  assert.match(dirty.detail, /x\.astro/);
+
+  const clean = checkRawColour([{ file: 'x.astro', source: 'class="hover:bg-surface text-heading"' }]);
+  assert.equal(clean.status, 'pass');
+});
+
+test('a raw oklch() literal outside a token definition is a finding, but a --aw-color-* token definition using oklch() is not', () => {
+  const dirty = checkRawColour([{ file: 'x.css', source: '::selection { background-color: oklch(88% 0.05 200); }' }]);
+  assert.equal(dirty.status, 'fail');
+
+  const clean = checkRawColour([{ file: 'x.css', source: ':root {\n  --aw-color-primary: oklch(45% 0.09 200);\n}' }]);
+  assert.equal(clean.status, 'pass');
 });

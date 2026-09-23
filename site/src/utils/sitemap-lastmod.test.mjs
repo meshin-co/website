@@ -12,6 +12,8 @@ import {
   taxonomyLastmods,
   staticPageLastmods,
   siteLastmods,
+  noindexEntryRoutes,
+  noindexCategoryRoutes,
 } from './sitemap-lastmod.mjs';
 
 const execFileAsync = promisify(execFile);
@@ -87,6 +89,52 @@ test('taxonomyLastmods maps every live category and tag to its newest post, drop
     '/blog/tag/shadow-ai': '2026-07-15T00:00:00.000Z',
     '/blog/tags': '2026-07-15T00:00:00.000Z',
   });
+});
+
+test('noindexEntryRoutes lists a live entry marked noindex, never a draft one even if it is also noindex', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'sitemap-lastmod-noindex-'));
+  await Promise.all([mkdir(join(dir, 'post')), mkdir(join(dir, 'faq'))]);
+  await writeFile(
+    join(dir, 'post', 'hidden.md'),
+    '---\ntitle: Hidden\npublishDate: 2026-01-01\nupdatedDate: 2026-01-01\nnoindex: true\ncategory: governance\ntags: []\n---\n\nBody.\n'
+  );
+  await writeFile(
+    join(dir, 'post', 'visible.md'),
+    '---\ntitle: Visible\npublishDate: 2026-01-01\nupdatedDate: 2026-01-01\ncategory: governance\ntags: []\n---\n\nBody.\n'
+  );
+  await writeFile(
+    join(dir, 'post', 'draft-and-noindex.md'),
+    '---\ntitle: DraftHidden\npublishDate: 2026-01-01\nupdatedDate: 2026-01-01\ndraft: true\nnoindex: true\ncategory: governance\ntags: []\n---\n\nBody.\n'
+  );
+  await writeFile(
+    join(dir, 'faq', 'hidden-question.md'),
+    '---\nquestion: Q?\nanswer: A.\npublishDate: 2026-01-01\nupdatedDate: 2026-01-01\nnoindex: true\n---\n'
+  );
+  try {
+    const routes = await noindexEntryRoutes(dir);
+    assert.deepEqual(routes.sort(), ['/blog/hidden', '/faq/hidden-question']);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test('noindexCategoryRoutes lists a category with zero live posts, treating a draft-only category as empty', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'sitemap-lastmod-category-'));
+  await mkdir(join(dir, 'post'));
+  await writeFile(
+    join(dir, 'post', 'a.md'),
+    '---\ntitle: A\npublishDate: 2026-01-01\nupdatedDate: 2026-01-01\ncategory: governance\ntags: []\n---\n\nBody.\n'
+  );
+  await writeFile(
+    join(dir, 'post', 'draft.md'),
+    '---\ntitle: Draft\npublishDate: 2026-01-01\nupdatedDate: 2026-01-01\ndraft: true\ncategory: executive\ntags: []\n---\n\nBody.\n'
+  );
+  try {
+    const routes = await noindexCategoryRoutes(dir, ['governance', 'executive', 'operating-model']);
+    assert.deepEqual(routes.sort(), ['/blog/category/executive', '/blog/category/operating-model']);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
 });
 
 async function gitFixture() {

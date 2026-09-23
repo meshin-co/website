@@ -42,7 +42,7 @@ const artifact = (name) => {
 
 const documents = walk(dist, /\.html$/).map((page) => readFileSync(page, 'utf8'));
 const GENERATED = new Set(['src/components/common/LogoSymbol.astro', 'src/components/common/LogoMark.astro']);
-const components = walk('src', /\.astro$/).map((file) => ({
+const components = walk('src', /\.(astro|css)$/).map((file) => ({
   file,
   source: readFileSync(file, 'utf8'),
   generated: GENERATED.has(file),
@@ -108,14 +108,8 @@ const rows = [
   {
     section: '3. Asset budgets',
     item: 'font families and faces',
-    status: fontPolicy.families <= 3 && fontPolicy.weights <= 4 ? 'pass' : 'fail',
-    detail:
-      fontPolicy.families +
-      ' families, ' +
-      fontPolicy.weights +
-      ' faces: ' +
-      fontPolicy.list.join(', ') +
-      '; three faces across two families is the documented L39 policy',
+    status: fontPolicy.status,
+    detail: fontPolicy.detail,
   },
   {
     section: '4. Accessibility, automated',

@@ -11,6 +11,10 @@ export function titleSuffix(brand) {
   return ` — ${brand.name}`;
 }
 
+export function contactEmail(brand) {
+  return `hello@${brand.name}`;
+}
+
 export function brandFromDisk(configPath = resolve(process.cwd(), 'src/config.yaml')) {
   return readBrand(readFileSync(configPath, 'utf8'));
 }

@@ -19,6 +19,8 @@ export function toLlmsEntry() {
       description: isFaq ? teaser(entry.data.answer) : (entry.data.shortAnswer ?? entry.data.description),
       body: isFaq ? entry.data.answer : (entry.body ?? ''),
       updated: lastmod(entry.data),
+      draft: Boolean(entry.data.draft),
+      noindex: Boolean(entry.data.noindex),
     };
   };
 }

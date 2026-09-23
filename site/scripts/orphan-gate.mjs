@@ -1,7 +1,9 @@
 import { readFile, readdir } from 'node:fs/promises';
 import { join, relative, sep } from 'node:path';
 
-const SITE_ORIGIN = 'https://meshin.co';
+import { brandFromDisk } from '../src/utils/brand.mjs';
+
+const SITE_ORIGIN = `https://${brandFromDisk().name}`;
 
 export const EXEMPT_ROUTES = [
   {

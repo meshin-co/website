@@ -39,6 +39,23 @@ removes, so this document does not pin one — `git ls-files '*.md'` against
 walk when git is unavailable, because the mutation smoke runs it in a synthesized tree that is
 not a repository.
 
+## Four properties, not one
+
+A gate has four independent properties, and this project has shipped three of four while
+publishing a false result:
+
+1. **It exists.** `gate:search` was cited in two documents and defined nowhere.
+2. **It is wired.** `gate:editorial` and `gate:registers` were defined and ran in no CI job.
+3. **It can fail.** `checkFontPolicy` parsed a filename shape the build stopped emitting and
+   returned `0 families, 0 faces` for months, passing every time.
+4. **Its artefact is fresh.** Eight phase reports under `audits/` printed `Result: PASS` computed
+   from an assertion array nothing wrote.
+
+`gate:plan` covers 1 and 2. `npm run test:smoke` covers 3. `npm run gate:evidence` covers 4, via `scripts/evidence-gate.mjs` and `scripts/run-evidence-gate.mjs`: every
+generated artefact under `audits/` must name the revision it came from, and `scripts/report.mjs`
+stamps `Generated-from:` and `Asserted:` into each report so it cannot claim a family it never ran.
+Check all four before believing a green result.
+
 ## What this cannot catch
 
 Whether a gate's assertion is _meaningful_. `gate:plan` proves a gate runs; only a planted

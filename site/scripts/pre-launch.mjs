@@ -1,4 +1,8 @@
 const RAW_COLOUR = /#[0-9a-f]{3,8}\b|\brgba?\(|\bhsla?\(/i;
+const TAILWIND_COLOUR_UTILITY =
+  /\b(?:bg|text|border|ring|fill|stroke|from|via|to|shadow|outline|divide|caret|accent|decoration)-(?:red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|slate|gray|zinc|neutral|stone)-\d{2,3}\b|\b(?:bg|text|border|ring|fill|stroke|from|via|to|shadow|outline|divide|caret|accent|decoration)-(?:white|black)\b/;
+const RAW_OKLCH = /oklch\(/;
+const TOKEN_DEFINITION_LINE = /^\s*--[\w-]+\s*:.*oklch\(/;
 const COMMENT_LINE = /^\s*(\/\/|\/\*|\*)/;
 const BROWSER_CHROME_COLOUR = /(name="theme-color"|rel="mask-icon")/;
 const LAYOUT_TRANSITION =
@@ -10,15 +14,18 @@ const FONT_FACE_BLOCK = /@font-face\{([^}]*)\}/g;
 const FONT_FAMILY = /font-family:"?([^";]+)"?/;
 const FONT_WEIGHT = /font-weight:(\d+)/;
 const HASHED_FAMILY_SUFFIX = /-[0-9a-f]{16}$/;
+const FONT_POLICY = { families: 2, weights: 3 };
 
 const finding = (status, detail) => ({ status, detail });
 
-const colourBearingLines = ({ source }) =>
-  source
-    .split('\n')
-    .filter((line) => RAW_COLOUR.test(line))
-    .filter((line) => !COMMENT_LINE.test(line))
-    .filter((line) => !BROWSER_CHROME_COLOUR.test(line));
+const isColourViolation = (line) =>
+  (RAW_COLOUR.test(line) ||
+    TAILWIND_COLOUR_UTILITY.test(line) ||
+    (RAW_OKLCH.test(line) && !TOKEN_DEFINITION_LINE.test(line))) &&
+  !COMMENT_LINE.test(line) &&
+  !BROWSER_CHROME_COLOUR.test(line);
+
+const colourBearingLines = ({ source }) => source.split('\n').filter(isColourViolation);
 
 export function checkRawColour(files) {
   const offenders = files
@@ -69,7 +76,24 @@ export function checkFontPolicy(css) {
     families.add(family);
     weights.add(`${family}-${weight}`);
   }
-  return { families: families.size, weights: weights.size, list: [...weights].sort() };
+  const list = [...weights].sort();
+  if (families.size === 0) {
+    return {
+      families: 0,
+      weights: 0,
+      list,
+      status: 'fail',
+      detail: 'no @font-face rule with a src:url() was found, so the font policy cannot be verified',
+    };
+  }
+  const matchesPolicy = families.size === FONT_POLICY.families && weights.size === FONT_POLICY.weights;
+  return {
+    families: families.size,
+    weights: weights.size,
+    list,
+    status: matchesPolicy ? 'pass' : 'fail',
+    detail: `${families.size} families, ${weights.size} faces: ${list.join(', ')}; L39 requires exactly ${FONT_POLICY.families} families and ${FONT_POLICY.weights} faces`,
+  };
 }
 
 const STATUS_ORDER = { fail: 0, 'owner-blocked': 1, 'n/a': 2, pass: 3 };

@@ -67,6 +67,22 @@ export async function taxonomyLastmods(dataDir) {
   return lastmods;
 }
 
+export async function noindexEntryRoutes(dataDir) {
+  const routes = [];
+  for (const [kind, base] of Object.entries(FEED_BASES)) {
+    for (const { slug, data } of await frontmatterEntries(join(dataDir, kind))) {
+      if (!data?.draft && data?.noindex) routes.push(`/${base}/${slug}`);
+    }
+  }
+  return routes;
+}
+
+export async function noindexCategoryRoutes(dataDir, categorySlugs) {
+  const posts = (await frontmatterEntries(join(dataDir, 'post'))).filter(({ data }) => !data?.draft);
+  const withPosts = new Set(posts.map(({ data }) => data.category));
+  return categorySlugs.filter((slug) => !withPosts.has(slug)).map((slug) => `/blog/category/${slug}`);
+}
+
 export async function staticPageLastmods(pages, { cwd } = {}) {
   const lastmods = {};
   for (const { path, file } of pages) {

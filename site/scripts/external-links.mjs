@@ -1,6 +1,8 @@
+import { brandFromDisk } from '../src/utils/brand.mjs';
+
 export const EXTERNAL_REL = ['nofollow', 'noopener', 'noreferrer'];
 
-const OUR_HOSTS = ['meshin.co'];
+const OUR_HOSTS = [brandFromDisk().name];
 const ANCHOR = /<a\b[^>]*>/gi;
 const HREF = /\bhref="([^"]*)"/i;
 const REL = /\brel="([^"]*)"/i;

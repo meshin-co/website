@@ -34,6 +34,7 @@ Run from `site/`. Each step green before the next.
 12. `npm run gate:visual` — Playwright snapshots and axe, both themes (visual-baselines.md).
 13. `node scripts/report.mjs <phase> ../audits/phase-<phase>` — generates REPORT.md from the raw
     JSON of the steps above. No waiver field, no "fix next phase".
+14. `npm run gate:brand` — no code outside `src/data/` types the brand name; it derives via `src/utils/brand.mjs` or `SITE.name` from `astrowind:config`.
 
 ## In CI the same gates run in parallel
 
@@ -68,8 +69,7 @@ family logic via `scripts/templates.mjs`.
   charges the simulated graph: see `diagnose-a-lighthouse-lcp-plateau.md`.
 - A category score of 100 does not mean the metric assertions passed. `report.mjs` enforces the
   LCP, CLS and TBT budgets it reads from `lighthouserc.cjs` on each route's median run.
-- A scratch page left in the build silently widens every downstream gate; delete throwaway
-  routes before the audited build.
+- A scratch page left in the build silently widens every downstream gate; delete throwaway routes before the audited build.
 - perfect-coder strict mode refuses test, config and data-only files with no sibling test: create
   those with a shell heredoc (`docs/PERFECT-CODER-ISSUES.md`).
 

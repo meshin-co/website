@@ -21,8 +21,14 @@ test('a GAP register row using recognised phrasing is kept', () => {
 test('a declared GAP register row whose phrasing the allowlist does not recognise is an error, not a silent drop', () => {
   const doc = tableWith([
     '| 19 | MCP security best practices | No route at all | new glossary term |',
-    '| 2 | fractional vs full-time cost | No cost-shape comparison article | PRD row |',
+    '| 2 | fractional vs full-time cost | Nobody has written a word about this | PRD row |',
   ]);
 
-  assert.throws(() => promptGapRows(doc), /fractional vs full-time cost.*No cost-shape comparison article/s);
+  assert.throws(() => promptGapRows(doc), /fractional vs full-time cost.*Nobody has written a word about this/s);
+});
+
+test('a "no ... article" gap, the phrasing the real GAP register uses, is recognised and kept, not thrown', () => {
+  const doc = tableWith(['| 2 | fractional vs full-time cost | No cost-shape comparison article | PRD row |']);
+
+  assert.deepEqual(promptGapRows(doc), ['fractional vs full-time cost — No cost-shape comparison article']);
 });

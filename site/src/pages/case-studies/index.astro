@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { SITE } from 'astrowind:config';
 
 import CardGrid from '~/components/site/CardGrid.astro';
 import CtaBlock from '~/components/site/CtaBlock.astro';
@@ -46,7 +47,7 @@ const nodes = [
   <link
     rel="alternate"
     type="application/rss+xml"
-    title="meshin.co — Case studies"
+    title={`${SITE.name} — Case studies`}
     href="/case-studies/rss.xml"
     slot="head"
   />
@@ -88,7 +89,6 @@ const nodes = [
       body="The 90-Day Production Sprint is the offer these came out of. It starts with the two-week Assessment."
       label="Book a 30-min fit call"
       href="https://cal.com/meshin"
-      note="Or email hello@meshin.co"
     />
   </Section>
 </Layout>

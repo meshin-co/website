@@ -17,7 +17,7 @@ const pageOf = (dist, route) => {
 
 const GAP_ROW = /^\| [\d, ]+\s*\| ([^|]+?)\s*\| ([^|]+?)\s*\|/gm;
 const RECOGNISED_GAP_PHRASING =
-  /no route|absent|missing|never appears|no anchor|no playbook|no prose owner|no artifact/i;
+  /no route|absent|missing|never appears|no anchor|no playbook|no prose owner|no artifact|no [\w -]*article/i;
 
 export function promptGapRows(coreDoc) {
   const rows = [...coreDoc.matchAll(GAP_ROW)];

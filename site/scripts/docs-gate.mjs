@@ -33,6 +33,14 @@ export function isBuildOutput(path) {
   return BUILD_OUTPUT_ROOTS.some((root) => path.startsWith(root));
 }
 
+export function summaryLine({ fileCount, findingCount, skippedBuildOutputCount }) {
+  const skipped =
+    skippedBuildOutputCount > 0
+      ? `, ${skippedBuildOutputCount} build-output citation${skippedBuildOutputCount === 1 ? '' : 's'} unverified (no build present)`
+      : '';
+  return `docs: ${fileCount} files checked, ${findingCount} findings${skipped}`;
+}
+
 export function resolveCandidates(path, citingDoc) {
   const directory = citingDoc.includes('/') ? citingDoc.slice(0, citingDoc.lastIndexOf('/')) : '';
   const beside = directory ? `${directory}/${path}` : path;

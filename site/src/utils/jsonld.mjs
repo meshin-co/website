@@ -1,8 +1,10 @@
 import { ogImagePath } from './machine-links.mjs';
+import { brandFromDisk, contactEmail } from './brand.mjs';
 
+const BRAND = brandFromDisk();
 const PERSON_NAME = 'Dmitri Meshin';
 const PERSON_ROLE = 'Fractional Chief AI Officer';
-const ORG_NAME = 'meshin.co';
+const ORG_NAME = BRAND.name;
 const PERSON_SAME_AS = ['https://www.linkedin.com/in/meshin/', 'https://github.com/meshin-dev'];
 const ORG_SAME_AS = ['https://www.linkedin.com/company/144892973', 'https://github.com/meshin-co'];
 const KNOWS_ABOUT = [
@@ -96,7 +98,7 @@ export function orgNode(
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'sales',
-      email: 'hello@meshin.co',
+      email: contactEmail(BRAND),
       availableLanguage: 'en',
     },
   };

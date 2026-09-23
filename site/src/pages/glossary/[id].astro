@@ -3,6 +3,7 @@ import { externalRelAttrs } from '~/utils/pipeline.mjs';
 import type { GetStaticPaths } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 import { getCollection, render } from 'astro:content';
+import { SITE } from 'astrowind:config';
 
 import AnswerBlock from '~/components/site/AnswerBlock.astro';
 import CtaBlock from '~/components/site/CtaBlock.astro';
@@ -27,9 +28,10 @@ import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 import RelatedContent from '~/components/site/RelatedContent.astro';
 import { distinctByKeyword, firstMention, textMentionsKeyword, resolveByIds } from '~/utils/related-content.mjs';
 import { lastmod } from '~/utils/lastmod.mjs';
+import { isPublished } from '~/utils/feeds.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const terms = await getCollection('glossary');
+  const terms = await getCollection('glossary', isPublished);
   return terms.map((term) => ({ params: { id: term.id }, props: { term } }));
 };
 
@@ -54,6 +56,7 @@ const metadata = articleMetadata(site, {
   id: term.id,
   publishDate: data.publishDate,
   updatedDate: data.updatedDate,
+  noindex: data.noindex,
 });
 
 const otherTerms = terms.filter((entry) => entry.id !== term.id);
@@ -125,7 +128,13 @@ const nodes = [
 
   <Breadcrumbs crumbs={crumbs} />
   <MarkdownAlternate path={`/glossary/${term.id}`} slot="head" />
-  <link rel="alternate" type="application/rss+xml" title="meshin.co — Glossary" href="/glossary/rss.xml" slot="head" />
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title={`${SITE.name} — Glossary`}
+    href="/glossary/rss.xml"
+    slot="head"
+  />
 
   <article>
     <Section bordered={false} headingLevel={1} eyebrow="Glossary" title={data.term} />
@@ -181,7 +190,6 @@ const nodes = [
       body="The Governance Starter Kit has the register, the policy and the classification table this term belongs in."
       label="Open the Starter Kit"
       href="/resources/ai-governance-starter-kit"
-      note="Or email hello@meshin.co"
     />
   </Section>
 </Layout>

@@ -6,14 +6,15 @@ import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { contactPageNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { SITE } from 'astrowind:config';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
+const CONTACT_EMAIL = `hello@${SITE.name}`;
 
 const metadata = {
   title: 'Contact',
-  description:
-    'Book a 30-minute fit call or email hello@meshin.co. Remote worldwide, on site when the trip is worth it.',
+  description: `Book a 30-minute fit call or email ${CONTACT_EMAIL}. Remote worldwide, on site when the trip is worth it.`,
 };
 
 const crumbs = [
@@ -32,7 +33,7 @@ const channels = [
   {
     label: 'Email',
     body: 'Written questions get written answers, usually the same day.',
-    action: { label: 'hello@meshin.co', href: 'mailto:hello@meshin.co' },
+    action: { label: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}` },
   },
   {
     label: 'Security reports',
@@ -101,7 +102,6 @@ const channels = [
       body="If the answer is that you do not need me yet, that is a useful answer and it is free."
       label="Book a 30-min fit call"
       href="https://cal.com/meshin"
-      note="Or email hello@meshin.co"
     />
   </Section>
 </Layout>

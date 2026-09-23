@@ -77,3 +77,23 @@ test('a canonical override is carried through, and omitted when absent', () => {
   });
   assert.equal(withoutCanonical.canonical, undefined);
 });
+
+test('a noindex entry sets robots index false, follow true; a live entry sets no robots field at all', () => {
+  const noindexed = articleMetadata('https://meshin.co', {
+    title: 'A post',
+    description: 'A description.',
+    collection: 'post',
+    id: 'a-post',
+    noindex: true,
+  });
+  assert.deepEqual(noindexed.robots, { index: false, follow: true });
+
+  const live = articleMetadata('https://meshin.co', {
+    title: 'A post',
+    description: 'A description.',
+    collection: 'post',
+    id: 'a-post',
+    noindex: false,
+  });
+  assert.equal(live.robots, undefined);
+});

@@ -3,7 +3,7 @@ import { join } from 'node:path';
 
 import type { APIRoute, GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
-import { METADATA } from 'astrowind:config';
+import { METADATA, SITE } from 'astrowind:config';
 
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
@@ -40,7 +40,7 @@ function findFont(files: ReturnType<typeof loadFontFiles>, family: string, style
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const defaultTitle = METADATA.title?.default ?? 'meshin.co';
+  const defaultTitle = METADATA.title?.default ?? SITE.name;
   const paths: { params: { slug: string }; props: OgProps }[] = [
     {
       params: { slug: 'default' },

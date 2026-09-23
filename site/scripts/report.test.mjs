@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { test } from 'node:test';
 
 import {
+  assertedFamilies,
   byteBudgetSentence,
   byteBudgets,
   metricBudgets,
@@ -253,4 +254,23 @@ test('a measured row inside every real budgets.json limit produces no budget fai
     failures.filter((failure) => failure.startsWith('budget:')),
     []
   );
+});
+
+test('a report names the assertion families it actually ran, so a dead assertion cannot read as a pass', () => {
+  const withBytes = assertedFamilies({ overBudget: [] });
+  const withoutBytes = assertedFamilies({});
+  assert.ok(withBytes.includes('byte budgets'));
+  assert.ok(!withoutBytes.includes('byte budgets'));
+});
+
+test('the rendered report carries the revision it was generated from', () => {
+  const { markdown } = renderReport({
+    phase: '9',
+    gate: { routes: [], measured: [], overBudget: [] },
+    mobile: [],
+    desktop: [],
+    generator: 'abc1234',
+  });
+  assert.match(markdown, /Generated-from: abc1234/);
+  assert.match(markdown, /Asserted: .*byte budgets/);
 });

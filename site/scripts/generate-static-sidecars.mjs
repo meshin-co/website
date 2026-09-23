@@ -10,8 +10,9 @@ import {
   sidecarRoutes,
 } from '../src/utils/machine-text.mjs';
 import { siteLastmods } from '../src/utils/sitemap-lastmod.mjs';
+import { brandFromDisk } from '../src/utils/brand.mjs';
 
-const SITE_ORIGIN = 'https://meshin.co';
+const SITE_ORIGIN = `https://${brandFromDisk().name}`;
 
 async function routeHtml(distDir, route) {
   const withoutSlash = route.slice(1);

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-22",
+  "generated": "2026-09-23",
   "counts": {
     "untraceable": 0,
     "dead": 9,
@@ -4533,15 +4533,6 @@
       "reason": "sr-only brand text 'Fractional CAIO' matches L9b brand decision, no change needed"
     },
     {
-      "location": "attribute.title",
-      "text": "meshin.co — JSON Feed",
-      "status": "verified",
-      "usedIn": [
-        "src/components/common/CommonMeta.astro"
-      ],
-      "reason": "feed link titles ('meshin.co', 'meshin.co — JSON Feed') already match brand naming pattern used everywhere else"
-    },
-    {
       "location": "attribute.aria-label",
       "text": "About the author",
       "status": "verified",
@@ -4760,117 +4751,6 @@
       "reason": "Direct, concrete, sources every claim to the author entry; no invented facts beyond what's already confirmed. Meets voice and sentence-length standard."
     },
     {
-      "location": "attribute.note",
-      "text": "Or email hello@meshin.co",
-      "status": "verified",
-      "usedIn": [
-        "src/pages/about.astro",
-        "src/pages/ai-policy.astro",
-        "src/pages/approach.astro",
-        "src/pages/blog/[id].astro",
-        "src/pages/blog/category/[category].astro",
-        "src/pages/case-studies/[id].astro",
-        "src/pages/case-studies/index.astro",
-        "src/pages/contact.astro",
-        "src/pages/faq/[id].astro",
-        "src/pages/faq.astro",
-        "src/pages/glossary/[id].astro",
-        "src/pages/now.astro",
-        "src/pages/pricing.astro",
-        "src/pages/resources/[id].astro",
-        "src/pages/resources/index.astro",
-        "src/pages/security.astro",
-        "src/pages/services/[id].astro",
-        "src/pages/services/index.astro",
-        "src/data/home.ts",
-        "/",
-        "/about",
-        "/ai-policy",
-        "/approach",
-        "/blog/ai-acceptable-use-policy-for-a-50-person-company",
-        "/blog/category/agentic-architecture",
-        "/blog/category/executive",
-        "/blog/category/governance",
-        "/blog/category/operating-model",
-        "/blog/evals-in-ci-for-llm-agents",
-        "/blog/how-to-build-an-ai-system-register-in-a-week",
-        "/blog/why-your-ai-pilot-never-reached-production",
-        "/case-studies",
-        "/case-studies/only-help-agentic-support",
-        "/contact",
-        "/faq",
-        "/faq/are-models-trained-on-our-customer-data",
-        "/faq/can-you-get-us-iso-iec-42001-certified-or-just-a-working-system",
-        "/faq/can-you-work-with-our-existing-ai-vendor-or-platform",
-        "/faq/how-do-you-charge-for-the-work",
-        "/faq/how-does-ai-risk-get-recorded-and-who-signs-it-off",
-        "/faq/how-does-the-retainer-end",
-        "/faq/how-is-a-prompt-or-model-change-stopped-from-shipping-unnoticed",
-        "/faq/how-is-cost-per-outcome-measured",
-        "/faq/how-quickly-can-you-start-and-how-does-availability-work-for-a-remote-officer",
-        "/faq/is-my-company-too-small-or-too-early-for-a-fractional-chief-ai-officer",
-        "/faq/what-counts-as-in-production-for-the-90-day-sprint",
-        "/faq/what-do-nist-ai-rmf-iso-iec-42001-and-the-eu-ai-act-require",
-        "/faq/what-do-we-do-about-tools-staff-are-already-using-without-approval",
-        "/faq/what-does-a-fractional-chief-ai-officer-actually-do",
-        "/faq/what-does-the-two-week-assessment-produce-and-is-the-fee-credited-if-we-continue",
-        "/faq/what-happens-if-the-evals-say-a-workflow-isnt-good-enough",
-        "/faq/what-happens-on-a-fit-call-and-does-it-cost-anything",
-        "/faq/what-if-the-ai-we-are-building-goes-into-a-product-we-sell",
-        "/faq/what-if-we-already-have-a-data-science-team-or-an-internal-ai-lead",
-        "/faq/what-size-of-company-do-you-actually-work-with",
-        "/faq/whats-the-difference-between-the-assessment-the-sprint-and-the-retainer",
-        "/faq/who-answers-customer-security-questionnaires",
-        "/faq/who-owns-the-code-and-the-data",
-        "/faq/who-owns-the-frameworks-templates-and-playbooks-built-during-the-engagement",
-        "/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai",
-        "/glossary/agentic-workflow",
-        "/glossary/ai-governance",
-        "/glossary/ai-impact-assessment",
-        "/glossary/ai-management-system",
-        "/glossary/ai-register",
-        "/glossary/conformity-assessment",
-        "/glossary/data-classification",
-        "/glossary/dpia",
-        "/glossary/eu-ai-act",
-        "/glossary/evals",
-        "/glossary/guardrails",
-        "/glossary/hallucination-rate",
-        "/glossary/high-risk-ai-system",
-        "/glossary/human-in-the-loop",
-        "/glossary/human-oversight",
-        "/glossary/iso-iec-42001",
-        "/glossary/llm-gateway",
-        "/glossary/model-card",
-        "/glossary/model-provenance",
-        "/glossary/nist-ai-rmf",
-        "/glossary/observability",
-        "/glossary/post-market-monitoring",
-        "/glossary/prompt-injection",
-        "/glossary/provider-vs-deployer",
-        "/glossary/red-teaming",
-        "/glossary/retrieval-augmented-generation",
-        "/glossary/serious-incident-reporting",
-        "/glossary/shadow-ai",
-        "/glossary/sub-processor",
-        "/glossary/technical-documentation",
-        "/now",
-        "/pricing",
-        "/resources",
-        "/resources/agent-evals-ci-starter",
-        "/resources/ai-governance-starter-kit",
-        "/resources/ai-readiness-scorecard",
-        "/resources/build-vs-buy-ai-kit",
-        "/resources/llm-gateway-governance-config",
-        "/security",
-        "/services",
-        "/services/90-day-production-sprint",
-        "/services/ai-readiness-and-risk-assessment",
-        "/services/fractional-caio-retainer"
-      ],
-      "reason": "H1/lead/CTA compliant, no prices stated (L8); composed title matches the static-family /services row"
-    },
-    {
       "location": "text",
       "text": "I'm Dmitri Meshin, a platform engineer by trade. My work is getting one AI system through a corporate security review and into production, then hand the keys to the team that has to keep it running.",
       "status": "verified",
@@ -5066,16 +4946,6 @@
         "/approach"
       ],
       "reason": "Six measures/sequence items are concrete and answer-first. \"Fractional AI Officer\" (no \"Chief\") in H1/lead matches the semantic core's locked generated row and target query; not a terminology drift defect."
-    },
-    {
-      "location": "attribute.title",
-      "text": "meshin.co — Writing",
-      "status": "verified",
-      "usedIn": [
-        "src/pages/blog/[id].astro",
-        "src/pages/blog/index.astro"
-      ],
-      "reason": "H1 'Writing on AI governance' and lead are answer-first and under length; composed title 'Writing' + template matches the static-family /blog row in SEMANTIC-CORE"
     },
     {
       "location": "attribute.title",
@@ -5303,16 +5173,6 @@
     },
     {
       "location": "attribute.title",
-      "text": "meshin.co — Case studies",
-      "status": "verified",
-      "usedIn": [
-        "src/pages/case-studies/[id].astro",
-        "src/pages/case-studies/index.astro"
-      ],
-      "reason": "H1/lead answer-first and honest about the single-entry policy (L11); composed title matches the static-family /case-studies SEMANTIC-CORE row"
-    },
-    {
-      "location": "attribute.title",
       "text": "Before and after",
       "status": "verified",
       "usedIn": [
@@ -5465,16 +5325,6 @@
     },
     {
       "location": "attribute.title",
-      "text": "meshin.co — Questions and answers",
-      "status": "verified",
-      "usedIn": [
-        "src/pages/faq/[id].astro",
-        "src/pages/faq.astro"
-      ],
-      "reason": "'The answer' section, related headings and CTA copy compliant; composed title (data.question + template) matches the faq-answer family pattern"
-    },
-    {
-      "location": "attribute.title",
       "text": "The answer",
       "status": "verified",
       "usedIn": [
@@ -5603,16 +5453,6 @@
         "/faq"
       ],
       "reason": "Hub lead is answer-first and accurate; per-group teasers pull from FAQ collection entries (FaqEditor's scope), hub's own copy meets the standard."
-    },
-    {
-      "location": "attribute.title",
-      "text": "meshin.co — Glossary",
-      "status": "verified",
-      "usedIn": [
-        "src/pages/glossary/[id].astro",
-        "src/pages/glossary/index.astro"
-      ],
-      "reason": "lead and the 'evals' hub definition already use locked terminology correctly; composed title matches the static-family /glossary row"
     },
     {
       "location": "attribute.title",
@@ -5946,16 +5786,6 @@
     },
     {
       "location": "attribute.title",
-      "text": "meshin.co — Resources",
-      "status": "verified",
-      "usedIn": [
-        "src/pages/resources/[id].astro",
-        "src/pages/resources/index.astro"
-      ],
-      "reason": "lead and CTA copy answer-first, no banned phrases; composed title matches the static-family /resources row"
-    },
-    {
-      "location": "attribute.title",
       "text": "What is inside",
       "status": "verified",
       "usedIn": [
@@ -6223,15 +6053,6 @@
     },
     {
       "location": "text",
-      "text": "hello@meshin.co",
-      "status": "verified",
-      "usedIn": [
-        "src/pages/security.astro"
-      ],
-      "reason": "Four-part posture list matches confirmed facts in COPY-CHECKLIST §7/§9 (full-disk encryption, 2FA, no client-data copies, 24-hour breach notice). No claim strengthened or weakened."
-    },
-    {
-      "location": "text",
       "text": "with what you found and how to reproduce it. I reply within two working days and I will tell you when it is fixed. No bounty, no legal threats, and credit on request.",
       "status": "verified",
       "usedIn": [
@@ -6248,16 +6069,6 @@
         "/security"
       ],
       "reason": "Four-part posture list matches confirmed facts in COPY-CHECKLIST §7/§9 (full-disk encryption, 2FA, no client-data copies, 24-hour breach notice). No claim strengthened or weakened."
-    },
-    {
-      "location": "attribute.title",
-      "text": "meshin.co — Offers",
-      "status": "verified",
-      "usedIn": [
-        "src/pages/services/[id].astro",
-        "src/pages/services/index.astro"
-      ],
-      "reason": "H1/lead/CTA compliant, no prices stated (L8); composed title matches the static-family /services row"
     },
     {
       "location": "attribute.title",
@@ -7332,6 +7143,99 @@
       "reason": "Normalized a stray U+2011 non-breaking hyphen to ASCII in cta.title (\"30-minute\"); removed the unconfirmed \"12–24 months\" retainer-handover track-record claim (COPY-CHECKLIST 3.7) from the Retainer deliverables list, replaced with a fact-preserving line with no timeframe. Hero title/sub left unchanged per L9a (conflict noted in report)."
     },
     {
+      "location": "constant.note",
+      "text": "Or email hello@meshin.co",
+      "status": "rewritten",
+      "usedIn": [
+        "src/data/home.ts",
+        "/",
+        "/about",
+        "/ai-policy",
+        "/approach",
+        "/blog/ai-acceptable-use-policy-for-a-50-person-company",
+        "/blog/category/agentic-architecture",
+        "/blog/category/executive",
+        "/blog/category/governance",
+        "/blog/category/operating-model",
+        "/blog/evals-in-ci-for-llm-agents",
+        "/blog/how-to-build-an-ai-system-register-in-a-week",
+        "/blog/why-your-ai-pilot-never-reached-production",
+        "/case-studies",
+        "/case-studies/only-help-agentic-support",
+        "/contact",
+        "/faq",
+        "/faq/are-models-trained-on-our-customer-data",
+        "/faq/can-you-get-us-iso-iec-42001-certified-or-just-a-working-system",
+        "/faq/can-you-work-with-our-existing-ai-vendor-or-platform",
+        "/faq/how-do-you-charge-for-the-work",
+        "/faq/how-does-ai-risk-get-recorded-and-who-signs-it-off",
+        "/faq/how-does-the-retainer-end",
+        "/faq/how-is-a-prompt-or-model-change-stopped-from-shipping-unnoticed",
+        "/faq/how-is-cost-per-outcome-measured",
+        "/faq/how-quickly-can-you-start-and-how-does-availability-work-for-a-remote-officer",
+        "/faq/is-my-company-too-small-or-too-early-for-a-fractional-chief-ai-officer",
+        "/faq/what-counts-as-in-production-for-the-90-day-sprint",
+        "/faq/what-do-nist-ai-rmf-iso-iec-42001-and-the-eu-ai-act-require",
+        "/faq/what-do-we-do-about-tools-staff-are-already-using-without-approval",
+        "/faq/what-does-a-fractional-chief-ai-officer-actually-do",
+        "/faq/what-does-the-two-week-assessment-produce-and-is-the-fee-credited-if-we-continue",
+        "/faq/what-happens-if-the-evals-say-a-workflow-isnt-good-enough",
+        "/faq/what-happens-on-a-fit-call-and-does-it-cost-anything",
+        "/faq/what-if-the-ai-we-are-building-goes-into-a-product-we-sell",
+        "/faq/what-if-we-already-have-a-data-science-team-or-an-internal-ai-lead",
+        "/faq/what-size-of-company-do-you-actually-work-with",
+        "/faq/whats-the-difference-between-the-assessment-the-sprint-and-the-retainer",
+        "/faq/who-answers-customer-security-questionnaires",
+        "/faq/who-owns-the-code-and-the-data",
+        "/faq/who-owns-the-frameworks-templates-and-playbooks-built-during-the-engagement",
+        "/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai",
+        "/glossary/agentic-workflow",
+        "/glossary/ai-governance",
+        "/glossary/ai-impact-assessment",
+        "/glossary/ai-management-system",
+        "/glossary/ai-register",
+        "/glossary/conformity-assessment",
+        "/glossary/data-classification",
+        "/glossary/dpia",
+        "/glossary/eu-ai-act",
+        "/glossary/evals",
+        "/glossary/guardrails",
+        "/glossary/hallucination-rate",
+        "/glossary/high-risk-ai-system",
+        "/glossary/human-in-the-loop",
+        "/glossary/human-oversight",
+        "/glossary/iso-iec-42001",
+        "/glossary/llm-gateway",
+        "/glossary/model-card",
+        "/glossary/model-provenance",
+        "/glossary/nist-ai-rmf",
+        "/glossary/observability",
+        "/glossary/post-market-monitoring",
+        "/glossary/prompt-injection",
+        "/glossary/provider-vs-deployer",
+        "/glossary/red-teaming",
+        "/glossary/retrieval-augmented-generation",
+        "/glossary/serious-incident-reporting",
+        "/glossary/shadow-ai",
+        "/glossary/sub-processor",
+        "/glossary/technical-documentation",
+        "/now",
+        "/pricing",
+        "/resources",
+        "/resources/agent-evals-ci-starter",
+        "/resources/ai-governance-starter-kit",
+        "/resources/ai-readiness-scorecard",
+        "/resources/build-vs-buy-ai-kit",
+        "/resources/llm-gateway-governance-config",
+        "/security",
+        "/services",
+        "/services/90-day-production-sprint",
+        "/services/ai-readiness-and-risk-assessment",
+        "/services/fractional-caio-retainer"
+      ],
+      "reason": "Normalized a stray U+2011 non-breaking hyphen to ASCII in cta.title (\"30-minute\"); removed the unconfirmed \"12–24 months\" retainer-handover track-record claim (COPY-CHECKLIST 3.7) from the Retainer deliverables list, replaced with a fact-preserving line with no timeframe. Hero title/sub left unchanged per L9a (conflict noted in report)."
+    },
+    {
       "location": "constant.label",
       "text": "years building and shipping software",
       "status": "rewritten",
@@ -7885,16 +7789,6 @@
       "reason": "Hub lead is answer-first and accurate; per-group teasers pull from FAQ collection entries (FaqEditor's scope), hub's own copy meets the standard."
     },
     {
-      "location": "constant.description",
-      "text": "Book a 30-minute fit call or email hello@meshin.co. Remote worldwide, on site when the trip is worth it.",
-      "status": "verified",
-      "usedIn": [
-        "src/utils/machine-text.mjs",
-        "src/pages/contact.astro"
-      ],
-      "reason": "Channel copy is concrete and answer-first; CTA wording consistent with the rest of the site."
-    },
-    {
       "location": "constant.title",
       "text": "AI acceptable-use policy",
       "status": "rewritten",
@@ -7996,16 +7890,6 @@
     },
     {
       "location": "constant.description",
-      "text": "This page does not exist on meshin.co. Start from the home page.",
-      "status": "verified",
-      "usedIn": [
-        "src/utils/machine-text.mjs",
-        "src/pages/404.astro"
-      ],
-      "reason": "Concise, accurate, single clear CTA (\"Home\"). No machine fingerprints."
-    },
-    {
-      "location": "constant.description",
       "text": "Notes on getting AI systems past security review and into production, written for founders and boards.",
       "status": "verified",
       "usedIn": [
@@ -8054,6 +7938,26 @@
         "src/pages/case-studies/index.astro"
       ],
       "reason": "H1/lead answer-first and honest about the single-entry policy (L11); composed title matches the static-family /case-studies SEMANTIC-CORE row"
+    },
+    {
+      "location": "constant.description",
+      "text": "Book a 30-minute fit call or email",
+      "status": "verified",
+      "usedIn": [
+        "src/utils/machine-text.mjs",
+        "src/pages/contact.astro"
+      ],
+      "reason": "Channel copy is concrete and answer-first; CTA wording consistent with the rest of the site."
+    },
+    {
+      "location": "constant.description",
+      "text": "This page does not exist on",
+      "status": "verified",
+      "usedIn": [
+        "src/utils/machine-text.mjs",
+        "src/pages/404.astro"
+      ],
+      "reason": "Concise, accurate, single clear CTA (\"Home\"). No machine fingerprints."
     },
     {
       "location": "constant.textContent",
@@ -8763,15 +8667,6 @@
       "reason": "lead and the 'evals' hub definition already use locked terminology correctly; composed title matches the static-family /glossary row"
     },
     {
-      "location": "constant.value",
-      "text": "Dmitri Meshin, Fractional Chief AI Officer, trading as meshin.co",
-      "status": "verified",
-      "usedIn": [
-        "src/pages/imprint.astro"
-      ],
-      "reason": "Matches the currently-confirmed identity/contact/hosting facts on record; entity form, registration number, jurisdiction, address and VAT remain correctly unstated pending COPY-CHECKLIST §8 (already open, no new row needed)."
-    },
-    {
       "location": "constant.label",
       "text": "Working from",
       "status": "verified",
@@ -8810,6 +8705,15 @@
     {
       "location": "constant.label",
       "text": "Responsible for content",
+      "status": "verified",
+      "usedIn": [
+        "src/pages/imprint.astro"
+      ],
+      "reason": "Matches the currently-confirmed identity/contact/hosting facts on record; entity form, registration number, jurisdiction, address and VAT remain correctly unstated pending COPY-CHECKLIST §8 (already open, no new row needed)."
+    },
+    {
+      "location": "constant.value",
+      "text": "Dmitri Meshin, Fractional Chief AI Officer, trading as",
       "status": "verified",
       "usedIn": [
         "src/pages/imprint.astro"
@@ -8909,16 +8813,6 @@
       "reason": "Retention periods (12 months enquiries, 6 years invoiced) match the confirmed, live COPY-CHECKLIST §9 row exactly. Left untouched — retention periods are a protected legal claim."
     },
     {
-      "location": "constant.body",
-      "text": "If you email hello@meshin.co or book a call, I keep that thread and the booking so I can answer and account for the work. Enquiries that never become paid work are deleted twelve months after the last message. Anything I have invoiced is kept for six years, for accounting. There is no mailing list to be added to.",
-      "status": "verified",
-      "usedIn": [
-        "src/pages/privacy.astro",
-        "/privacy"
-      ],
-      "reason": "Retention periods (12 months enquiries, 6 years invoiced) match the confirmed, live COPY-CHECKLIST §9 row exactly. Left untouched — retention periods are a protected legal claim."
-    },
-    {
       "location": "constant.title",
       "text": "Client material",
       "status": "verified",
@@ -8948,11 +8842,28 @@
     },
     {
       "location": "constant.body",
-      "text": "You can ask what I hold about you, ask for it to be corrected, or ask for it to be deleted, and I will answer within thirty days. Email hello@meshin.co. If you are unhappy with the answer you can complain to your local data protection authority.",
+      "text": "If you email hello@",
       "status": "verified",
       "usedIn": [
-        "src/pages/privacy.astro",
-        "/privacy"
+        "src/pages/privacy.astro"
+      ],
+      "reason": "Retention periods (12 months enquiries, 6 years invoiced) match the confirmed, live COPY-CHECKLIST §9 row exactly. Left untouched — retention periods are a protected legal claim."
+    },
+    {
+      "location": "constant.body",
+      "text": "or book a call, I keep that thread and the booking so I can answer and account for the work. Enquiries that never become paid work are deleted twelve months after the last message. Anything I have invoiced is kept for six years, for accounting. There is no mailing list to be added to.",
+      "status": "verified",
+      "usedIn": [
+        "src/pages/privacy.astro"
+      ],
+      "reason": "Retention periods (12 months enquiries, 6 years invoiced) match the confirmed, live COPY-CHECKLIST §9 row exactly. Left untouched — retention periods are a protected legal claim."
+    },
+    {
+      "location": "constant.body",
+      "text": "You can ask what I hold about you, ask for it to be corrected, or ask for it to be deleted, and I will answer within thirty days. Email hello@",
+      "status": "verified",
+      "usedIn": [
+        "src/pages/privacy.astro"
       ],
       "reason": "Retention periods (12 months enquiries, 6 years invoiced) match the confirmed, live COPY-CHECKLIST §9 row exactly. Left untouched — retention periods are a protected legal claim."
     },
@@ -9351,6 +9262,15 @@
       "reason": "aria-label 'About the author', visible text 'Written by' and link default 'More about me' are already direct and non-vague"
     },
     {
+      "location": "constant.note",
+      "text": "Or email hello@",
+      "status": "verified",
+      "usedIn": [
+        "src/components/site/CtaBlock.astro"
+      ],
+      "reason": "pass-through only, no hardcoded copy Re-read 2026-09-23 after the CTA note stopped being typed at 20 call sites and started deriving from the one brand declaration; the rendered sentence is unchanged."
+    },
+    {
       "location": "constant.label",
       "text": "Key takeaways",
       "status": "verified",
@@ -9394,7 +9314,7 @@
       "usedIn": [
         "/"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page. Re-read 2026-09-22 after the homepage stopped declaring its own title: the rendered <title> is byte-identical, the change removed a duplicate declaration of the brand suffix rather than any word a reader sees."
+      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page. Re-read 2026-09-22 after the homepage stopped declaring its own title: the rendered <title> is byte-identical, the change removed a duplicate declaration of the brand suffix rather than any word a reader sees. Re-read 2026-09-23 after the brand gate landed: the page derives the same words from src/config.yaml that it previously repeated."
     },
     {
       "location": "body.h1",
@@ -9442,7 +9362,7 @@
       "usedIn": [
         "/about"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page. Re-read 2026-09-23 after the brand gate landed: same words, now derived rather than typed."
     },
     {
       "location": "head.title",
@@ -13206,6 +13126,24 @@
     {
       "location": "head.title",
       "text": "Privacy — meshin.co",
+      "status": "verified",
+      "usedIn": [
+        "/privacy"
+      ],
+      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+    },
+    {
+      "location": "body.p",
+      "text": "If you email hello@meshin.co or book a call, I keep that thread and the booking so I can answer and account for the work. Enquiries that never become paid work are deleted twelve months after the last message. Anything I have invoiced is kept for six years, for accounting. There is no mailing list to be added to.",
+      "status": "verified",
+      "usedIn": [
+        "/privacy"
+      ],
+      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+    },
+    {
+      "location": "body.p",
+      "text": "You can ask what I hold about you, ask for it to be corrected, or ask for it to be deleted, and I will answer within thirty days. Email hello@meshin.co. If you are unhappy with the answer you can complain to your local data protection authority.",
       "status": "verified",
       "usedIn": [
         "/privacy"

@@ -20,6 +20,8 @@ const toProps =
           summary: entry.description,
           body: entry.body,
           updated: entry.updated,
+          draft: entry.draft,
+          noindex: entry.noindex,
         })),
       },
     }));

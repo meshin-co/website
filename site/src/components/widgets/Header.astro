@@ -54,7 +54,7 @@ const isActive = (href?: string) => typeof href === 'string' && `/${trimSlash(hr
   <header
     class:list={[
       { sticky: isSticky, relative: !isSticky, dark: isDark },
-      'top-0 z-40 flex-none mx-auto w-full border-b border-gray-50/0 transition-[opacity] ease-in-out',
+      'top-0 z-40 flex-none mx-auto w-full border-b border-line/0 transition-[opacity] ease-in-out',
     ]}
     {...isSticky ? { 'data-aw-sticky-header': true } : {}}
     {...id ? { id } : {}}
@@ -100,7 +100,7 @@ const isActive = (href?: string) => typeof href === 'string' && `/${trimSlash(hr
                   <>
                     <button
                       type="button"
-                      class="hover:text-link dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap"
+                      class="hover:text-link dark:hover:text-(--aw-color-ink-dark) px-4 py-3 flex items-center whitespace-nowrap"
                     >
                       {text}{' '}
                       <Icon
@@ -108,12 +108,12 @@ const isActive = (href?: string) => typeof href === 'string' && `/${trimSlash(hr
                         class="w-3.5 h-3.5 ml-0.5 rtl:ml-0 rtl:mr-0.5 hidden lg:inline"
                       />
                     </button>
-                    <ul class="dropdown-menu lg:backdrop-blur-md dark:lg:bg-slate-900 dark:lg:border dark:lg:border-slate-700/50 rounded lg:absolute pl-4 lg:pl-0 lg:hidden font-medium lg:bg-white/90 lg:min-w-[200px] drop-shadow-xl">
+                    <ul class="dropdown-menu lg:backdrop-blur-md dark:lg:bg-(--aw-color-dropdown-bg-dark) dark:lg:border dark:lg:border-(--aw-color-dropdown-border-dark)/50 rounded lg:absolute pl-4 lg:pl-0 lg:hidden font-medium lg:bg-(--aw-color-dropdown-bg-light)/90 lg:min-w-[200px] drop-shadow-xl">
                       {links.map(({ text: text2, href: href2 }) => (
                         <li>
                           <a
                             class:list={[
-                              'first:rounded-t last:rounded-b lg:hover:bg-gray-100 hover:text-link dark:hover:text-white dark:hover:bg-gray-700 py-2 px-5 block whitespace-nowrap',
+                              'first:rounded-t last:rounded-b lg:hover:bg-(--aw-color-toggle-hover-light) hover:text-link dark:hover:text-(--aw-color-ink-dark) dark:hover:bg-(--aw-color-toggle-hover-dark) py-2 px-5 block whitespace-nowrap',
                               { 'aw-link-active': isActive(href2) },
                             ]}
                             href={href2}
@@ -127,7 +127,7 @@ const isActive = (href?: string) => typeof href === 'string' && `/${trimSlash(hr
                 ) : (
                   <a
                     class:list={[
-                      'hover:text-link dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap',
+                      'hover:text-link dark:hover:text-(--aw-color-ink-dark) px-4 py-3 flex items-center whitespace-nowrap',
                       { 'aw-link-active': isActive(href) },
                     ]}
                     href={href}
