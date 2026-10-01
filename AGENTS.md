@@ -117,6 +117,11 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
   CI never installs, or when `localOnlyGates` declares a gate that no longer exists. A gate stays
   out of CI only via a `localOnlyGates` entry carrying a reason. Procedure:
   `site/.agents/skills/keep-the-harness-honest.md`.
+- `investigation/` holds dated records, listed in `investigation/00-INDEX.md`. A record opens with
+  `record: true` front matter, and `npm run gate:docs` does not resolve the paths, commands or
+  locked-row ranges it cites, because it may describe another repository or a past day. A document
+  that instructs is never a record: the marker is honoured only under `investigation/`, never on
+  the index, and the gate prints how many records it skipped.
 - Work is finished when the procedure that produced it lives in the methodology layer: a skill, a
   hard rule here, a locked row in the plan, or a machine check (L49).
 - Ask Context7 about Astro 7, Tailwind v4 and satori APIs before relying on memory.
@@ -138,8 +143,8 @@ not kept for the count.
   and an emulated container is never evidence about a runner (`visual-baselines.md`).
 - **Self-validating** — the test asserts; it never prints for a human to read. A guard is only
   trusted once a planted specimen has made it fail.
-- **Timely** — written before the code, red first. `npm run test:smoke` proves all 15 guard
-  families can still fail.
+- **Timely** — written before the code, red first. `npm run test:smoke` proves every guard
+  family can still fail.
 
 ## Commands
 
@@ -149,14 +154,14 @@ npm run build      # production build, the only build Lighthouse may measure
 npm run check      # astro check, eslint, prettier
 npm run preview    # serve dist for local gate runs
 npm run gate:lh    # both form factors, all audited routes, ~30 min
-npm run gate:docs  # every path, command and locked-row range a document claims
+npm run gate:docs  # every path, command and locked-row range a document cites; a path git ignores fails; records exempt
 npm run smoke:prod # 18 live requests against an origin, default https://meshin.co
 npm run test:smoke # every guard family proven able to fail, ~60 s
 ```
 
-CI classifies the diff first. A commit touching only `docs/`, `audits/`, `site/.agents/` or
-root-level Markdown runs `check`+units+`gate:skills`+`gate:plan` and nothing else, because prose
-cannot change what Lighthouse measures. Anything else — source, config, content Markdown under
+CI classifies the diff first. A commit touching only `docs/`, `audits/`, `site/.agents/` or any
+other Markdown (`investigation/` included) runs the `types-and-units` job and nothing else, because
+prose cannot change what Lighthouse measures. Anything else — source, config, content Markdown under
 `site/src/data/`, the workflow itself — runs the full parallel graph: one build, then
 check+units, guard-mutations, cheap gates, Playwright (3 shards) and Lighthouse (2 form factors
 x 4 route shards) in parallel, merged by `gate-report`.

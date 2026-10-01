@@ -1,5 +1,6 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { PENDING } from './mutation-pending.mjs';
 
 const PLAN_DIR = resolve(process.cwd(), '..', 'docs', 'plan');
 const STATUSES = new Set(['done', 'active', 'next', 'planned', 'dropped']);
@@ -125,6 +126,35 @@ function namesRequiringCi(scripts, index) {
   return [...names];
 }
 
+function phaseFileFor(phaseId, presentPhaseFiles) {
+  return presentPhaseFiles.find((file) => file.startsWith(`${phaseId}-`));
+}
+
+export function pendingPhaseFindings(pending, presentPhaseFiles) {
+  const findings = [];
+  for (const entry of pending) {
+    const file = phaseFileFor(entry.phase, presentPhaseFiles);
+    if (!file) {
+      findings.push({
+        rule: 'pending-specimen-unknown-phase',
+        detail: `mutation-pending.mjs names ${entry.phase} for ${entry.gate}, and no file under docs/plan/phases/ starts with ${entry.phase}-`,
+      });
+    } else if (parseStatus(file) === 'done') {
+      findings.push({
+        rule: 'pending-specimen-phase-done',
+        detail: `mutation-pending.mjs names ${entry.phase} for ${entry.gate}, and ${file} is already done, so the specimen is overdue`,
+      });
+    }
+    if (!hasReason(entry.reason)) {
+      findings.push({
+        rule: 'pending-specimen-no-reason',
+        detail: `mutation-pending.mjs lists ${entry.gate} with no reason why its specimen is owed`,
+      });
+    }
+  }
+  return findings;
+}
+
 function main() {
   const present = readdirSync(join(PLAN_DIR, 'phases')).filter((name) => name.endsWith('.md'));
   const index = readFileSync(join(PLAN_DIR, 'INDEX.md'), 'utf8');
@@ -161,6 +191,7 @@ function main() {
       detail: `playwright.config.ts runs a ${browser} project, and at least one npx playwright install line in ci.yml does not include it`,
     })),
     ...knownGapsFindings(knownGaps),
+    ...pendingPhaseFindings(PENDING, present),
   ];
 
   for (const finding of findings) console.error(`PLAN ${finding.rule} ${finding.detail}`);

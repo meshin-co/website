@@ -3,6 +3,8 @@ import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 
+import { auditableRoutes, canonicalRoute, isNoindexByDesign, NOINDEX_BY_DESIGN } from './lh-routes.cjs';
+
 const CATEGORIES = ['performance', 'accessibility', 'best-practices', 'seo'];
 
 export async function metricBudgets() {
@@ -57,13 +59,30 @@ export async function readReports(dir) {
   return reports;
 }
 
+const UNSCORED = new Set(['notApplicable', 'manual', 'informative']);
+
+function scoreWithout(report, category, excluded) {
+  const scored = report.categories[category].auditRefs.filter(
+    (ref) => ref.weight > 0 && ref.id !== excluded && !UNSCORED.has(report.audits[ref.id]?.scoreDisplayMode)
+  );
+  const weight = scored.reduce((total, ref) => total + ref.weight, 0);
+  if (weight === 0) return 1;
+  return scored.reduce((total, ref) => total + ref.weight * (report.audits[ref.id].score ?? 0), 0) / weight;
+}
+
+export function categoryScore(report, category, route) {
+  const named = category === 'seo' && isNoindexByDesign(route);
+  const score = named ? scoreWithout(report, category, 'is-crawlable') : report.categories[category].score;
+  return Math.round(score * 100);
+}
+
 function scoreTable(reports) {
   const byRoute = new Map();
   for (const report of reports) {
     const path = new URL(report.finalUrl).pathname.replace(/index\.html$/, '').replace(/\.html$/, '') || '/';
     const entry = byRoute.get(path) ?? {};
     for (const category of CATEGORIES) {
-      entry[category] = [...(entry[category] ?? []), Math.round(report.categories[category].score * 100)];
+      entry[category] = [...(entry[category] ?? []), categoryScore(report, category, path)];
     }
     entry.metrics ??= {};
     for (const [audit, data] of Object.entries(report.audits)) {
@@ -78,10 +97,6 @@ function scoreTable(reports) {
     metrics: scores.metrics,
     scores: Object.fromEntries(CATEGORIES.map((category) => [category, median(scores[category])])),
   }));
-}
-
-function canonicalRoute(route) {
-  return route.length > 1 && route.endsWith('/') ? route.slice(0, -1) : route;
 }
 
 export function generatorRevision() {
@@ -101,26 +116,29 @@ export function assertedFamilies(gate) {
 export function renderReport({
   phase,
   gate,
+  expectedRoutes,
   mobile,
   desktop,
   budgets = {},
   byteBudgets: byteBudgetLimits = {},
   generator = 'unknown',
 }) {
+  if (!Array.isArray(expectedRoutes)) {
+    throw new Error('renderReport: expectedRoutes is required, derived independently of gate-routes.json');
+  }
   const failures = [];
-  const noindex = new Set(gate.measured.filter((row) => row.noindex).map((row) => canonicalRoute(row.route)));
+  if (expectedRoutes.length === 0) failures.push('no routes to audit: the built html yielded an empty Lighthouse set');
   for (const [form, rows] of [
     ['mobile', mobile],
     ['desktop', desktop],
   ]) {
-    for (const route of gate.lighthouseRoutes ?? gate.routes) {
+    for (const route of expectedRoutes) {
       if (!rows.some((row) => canonicalRoute(row.route) === canonicalRoute(route)))
         failures.push(`${form}: no Lighthouse run for ${route}`);
     }
     for (const row of rows) {
       if (row.runs !== 3) failures.push(`${form} ${row.route}: ${row.runs} runs, gate requires 3`);
       for (const [category, score] of Object.entries(row.scores)) {
-        if (category === 'seo' && noindex.has(canonicalRoute(row.route))) continue;
         if (score !== 100) failures.push(`${form} ${row.route} ${category}: ${score}`);
       }
     }
@@ -143,6 +161,10 @@ export function renderReport({
     '',
     `Asserted: ${assertedFamilies(gate).join(', ')}`,
     '',
+    `SEO on ${NOINDEX_BY_DESIGN.map((route) => `\`${route}\``).join(', ')} is scored without \`is-crawlable\`: noindex by design, named in \`scripts/lh-routes.cjs\`.`,
+    '',
+    `Lighthouse scope: ${expectedRoutes.length} route(s) expected`,
+    '',
     `Result: ${failures.length === 0 ? 'PASS' : 'FAIL'}`,
     '',
     '## Lighthouse (median of 3 runs)',
@@ -155,9 +177,8 @@ export function renderReport({
     ['desktop', desktop],
   ]) {
     for (const row of rows) {
-      const seo = noindex.has(canonicalRoute(row.route)) ? 'n/a (noindex)' : row.scores.seo;
       lines.push(
-        `| ${form} | \`${row.route}\` | ${row.scores.performance} | ${row.scores.accessibility} | ${row.scores['best-practices']} | ${seo} |`
+        `| ${form} | \`${row.route}\` | ${row.scores.performance} | ${row.scores.accessibility} | ${row.scores['best-practices']} | ${row.scores.seo} |`
       );
     }
   }
@@ -176,7 +197,7 @@ export function renderReport({
     '## Lighthouse route selection',
     '',
     'One leaf per repeated template family (heaviest by built bytes) plus every unique page:',
-    (gate.lighthouseRoutes ?? gate.routes).map((route) => `\`${route}\``).join(', '),
+    expectedRoutes.map((route) => `\`${route}\``).join(', '),
     '',
     '## Derived route list (all gates)',
     '',
@@ -187,11 +208,13 @@ export function renderReport({
   return { markdown: `${lines.join('\n')}`, failures };
 }
 
-async function main(phase, auditDir) {
-  const gate = JSON.parse(await readFile(join('dist', 'gate-routes.json'), 'utf8'));
+export async function main(phase, auditDir) {
+  const distDir = process.env.LH_DIST_DIR || 'dist';
+  const gate = JSON.parse(await readFile(join(distDir, 'gate-routes.json'), 'utf8'));
   const { markdown, failures } = renderReport({
     phase,
     gate,
+    expectedRoutes: auditableRoutes(distDir),
     mobile: scoreTable(await readReports(join(auditDir, 'lh-mobile'))),
     desktop: scoreTable(await readReports(join(auditDir, 'lh-desktop'))),
     budgets: await metricBudgets(),

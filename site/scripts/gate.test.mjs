@@ -4,16 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
 
-import {
-  discoverRoutes,
-  diffRoutes,
-  assetsOfPage,
-  overBudget,
-  measureRoute,
-  isNoindex,
-  lighthouseSet,
-  main,
-} from './gate.mjs';
+import { discoverRoutes, diffRoutes, assetsOfPage, overBudget, measureRoute, isNoindex, main } from './gate.mjs';
 
 async function fixtureDist(pages) {
   const dir = await mkdtemp(join(tmpdir(), 'gate-'));
@@ -43,30 +34,6 @@ test('a flat 404.html is measurable, not just discoverable', async () => {
 
   assert.deepEqual(await discoverRoutes(dist), ['/404']);
 
-  test('lighthouse audits every unique page and only the heaviest leaf of each repeated family', () => {
-    const measured = [
-      { route: '/', page: 10 },
-      { route: '/blog', page: 12 },
-      { route: '/blog/short-post', page: 10 },
-      { route: '/blog/long-post', page: 30 },
-      { route: '/blog/third-post', page: 20 },
-      { route: '/glossary/one', page: 5 },
-      { route: '/pricing', page: 9 },
-    ];
-
-    assert.deepEqual(lighthouseSet(measured).sort(), ['/', '/blog', '/blog/long-post', '/glossary/one', '/pricing']);
-  });
-
-  test('a family with a single leaf is audited as itself, and nested families collapse separately', () => {
-    const measured = [
-      { route: '/blog', page: 12 },
-      { route: '/blog/category/governance', page: 20 },
-      { route: '/blog/category/executive', page: 25 },
-      { route: '/case-studies/solo', page: 15 },
-    ];
-
-    assert.deepEqual(lighthouseSet(measured).sort(), ['/blog', '/blog/category/executive', '/case-studies/solo']);
-  });
   const measured = await measureRoute(dist, '/404');
   assert.ok(measured.css > 0, 'stylesheet bytes charged to the route');
   assert.ok(measured.page > measured.css, 'page total includes the html itself');
@@ -142,23 +109,6 @@ test('an override raises only the keys it names', () => {
   assert.deepEqual(overBudget({ route: '/search', js: 40000, css: 30000, page: 60000 }, budgets), [
     '/search css 30000 > 20480',
   ]);
-});
-
-test('the development-only styleguide is not audited, because nothing there competes for a query', () => {
-  const measured = [
-    { route: '/', page: 100, noindex: false },
-    { route: '/styleguide', page: 300, noindex: true },
-    { route: '/about', page: 120, noindex: false },
-  ];
-  assert.deepEqual(lighthouseSet(measured).sort(), ['/', '/about']);
-});
-
-test('every other noindex route stays audited, so the exclusion cannot widen', () => {
-  const measured = [
-    { route: '/404', page: 90, noindex: true },
-    { route: '/search', page: 95, noindex: true },
-  ];
-  assert.deepEqual(lighthouseSet(measured).sort(), ['/404', '/search']);
 });
 
 test('gate-routes.json carries the over-budget findings the gate already computed', async () => {

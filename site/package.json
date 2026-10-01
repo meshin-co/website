@@ -23,7 +23,7 @@
     "gate:visual": "playwright test",
     "gate:html": "html-validate \"dist/**/*.html\"",
     "gate:links": "linkinator dist --recurse --silent --skip \"plausible.io|linkedin.com|cal.com|github.com/meshin-co|apps.apple.com|^https://meshin.co\"",
-    "gate:lh": "rm -rf .lighthouseci && lhci autorun --config=lighthouserc.cjs && node scripts/collect-reports.mjs mobile && rm -rf .lighthouseci && LHCI_FORM_FACTOR=desktop lhci autorun --config=lighthouserc.cjs && node scripts/collect-reports.mjs desktop",
+    "gate:lh": "LHCI_FORM_FACTOR=mobile npm run gate:lh:one && LHCI_FORM_FACTOR=desktop npm run gate:lh:one",
     "gate:machine": "node scripts/machine.mjs dist",
     "gate:jsonld": "node scripts/jsonld-gate.mjs dist",
     "gate:skills": "node scripts/check-skills.mjs",
@@ -33,7 +33,7 @@
     "gate:routes": "node scripts/routes-gate.mjs dist",
     "assets:og-default": "node scripts/generate-og-default.mjs",
     "assets:favicons": "node scripts/generate-favicons.mjs",
-    "gate:lh:one": "rm -rf .lighthouseci && lhci autorun --config=lighthouserc.cjs && node scripts/collect-reports.mjs \"$LHCI_FORM_FACTOR\"",
+    "gate:lh:one": "if [ \"$(node scripts/lh-routes.cjs --count)\" = 0 ]; then echo '0 touched routes to audit'; else rm -rf .lighthouseci && { lhci autorun --config=lighthouserc.cjs; status=$?; node scripts/collect-reports.mjs \"$LHCI_FORM_FACTOR\" && exit $status; }; fi",
     "assets:robots": "node scripts/gen-robots.mjs",
     "gate:plan": "node scripts/plan-gate.mjs",
     "assets:logo": "node scripts/generate-logo.mjs && node scripts/generate-favicons.mjs && prettier --write src/components/common/LogoMark.astro src/components/common/LogoSymbol.astro --log-level warn",
@@ -51,7 +51,8 @@
     "audit:geo-probe": "node scripts/run-geo-probe.mjs",
     "gate:external": "node scripts/run-external-links.mjs dist",
     "gate:search": "node scripts/search-budget.mjs dist",
-    "gate:brand": "node scripts/brand-gate.mjs"
+    "gate:brand": "node scripts/brand-gate.mjs",
+    "gate:human": "node scripts/run-human-gate.mjs dist"
   },
   "dependencies": {
     "@astro-community/astro-embed-twitter": "^0.5.11",
@@ -124,7 +125,7 @@
   "localOnlyGates": {
     "gate:lh": "the CI lighthouse matrix runs gate:lh:one per form factor and route shard; the full local run would be one 30-minute job",
     "audit:polish": "run-polish-sweep.mjs walks the built dist at six widths with a real Chromium instance and writes audits/phase-5/polish-sweep.md as generated evidence for one phase; it is run manually when that phase is reviewed, not per commit",
-    "audit:prelaunch": "run-pre-launch.mjs reads other phase-5 audit artifacts (REPORT.md, polish-sweep.md) already committed under audits/, shells out to git log across full history, and re-runs the visual and cross-browser Playwright suites; it is the manual pre-launch checklist run once before shipping, not a per-commit CI gate (tracked as a residual gap: docs/plan/reference/known-gaps.md#G3)",
+    "audit:prelaunch": "run-pre-launch.mjs reads other phase-5 audit artifacts (REPORT.md, polish-sweep.md) already committed under audits/, and re-runs the visual and cross-browser Playwright suites; it is the manual pre-launch checklist run once before shipping, not a per-commit CI gate (tracked as a residual gap: docs/plan/reference/known-gaps.md#G3)",
     "smoke:prod": "run-smoke-prod.mjs makes live HTTP requests against the production origin (default https://meshin.co) and writes audits/phase-5/smoke-prod.md; it can only run after a real deploy, not from a CI build artifact",
     "audit:geo": "generate-geo-baseline.mjs writes audits/geo-baseline.md, a structural readiness baseline captured once per phase from docs/SEMANTIC-CORE.md and dist, not re-derived every commit",
     "audit:geo-probe": "run-geo-probe.mjs calls four live external answer-engine APIs (OpenAI and others) and writes audits/geo-probe.md; it is a manual, rate-limited, credentialed probe against third-party services, not a CI-safe per-commit check",

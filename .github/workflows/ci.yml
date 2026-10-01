@@ -74,6 +74,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version-file: site/.nvmrc
@@ -100,6 +102,7 @@ jobs:
           cache: npm
           cache-dependency-path: site/package-lock.json
       - run: npm ci
+      - run: npx playwright install --with-deps chromium webkit firefox
       - name: every guard proven able to fail
         run: npm run test:smoke
 
@@ -123,6 +126,7 @@ jobs:
       - run: npm run gate:html
       - run: npm run gate:links
       - run: npm run gate:content
+      - run: npm run gate:human
       - run: npm run gate:orphans
       - run: npm run gate:machine
       - run: npm run gate:jsonld
@@ -210,6 +214,7 @@ jobs:
           LH_SHARD_TOTAL: 4
 
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: lh-${{ matrix.form_factor }}-${{ matrix.shard }}
           path: audits/phase-ci/lh-${{ matrix.form_factor }}/

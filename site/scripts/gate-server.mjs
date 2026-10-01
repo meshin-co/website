@@ -87,6 +87,15 @@ function matchingHeaders(rules, requestPath) {
   return applied;
 }
 
+export function overPlainHttp(name, value) {
+  if (name.toLowerCase() !== 'content-security-policy') return value;
+  return value
+    .split(';')
+    .map((directive) => directive.trim())
+    .filter((directive) => directive !== 'upgrade-insecure-requests')
+    .join('; ');
+}
+
 export function startGateServer({ root, port = 0, headersPath }) {
   const rootDir = resolve(root);
   const rules = headersPath && existsSync(headersPath) ? headerRulesFor(readFileSync(headersPath, 'utf8')) : [];
@@ -116,7 +125,8 @@ export function startGateServer({ root, port = 0, headersPath }) {
     const file = relative(rootDir, target);
     const status = found ? 200 : 404;
     const headers = { 'Content-Type': contentTypeFor(file) };
-    for (const [name, value] of matchingHeaders(rules, `/${file}`.replace(/index\.html$/, ''))) headers[name] = value;
+    for (const [name, value] of matchingHeaders(rules, `/${file}`.replace(/index\.html$/, '')))
+      headers[name] = overPlainHttp(name, value);
 
     const gzip = acceptsGzip(request.headers['accept-encoding']) && COMPRESSIBLE.has(extname(file));
     if (gzip) {

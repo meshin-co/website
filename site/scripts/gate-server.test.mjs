@@ -4,7 +4,14 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { after, before, test } from 'node:test';
 
-import { acceptsGzip, contentTypeFor, headerRulesFor, resolveRequest, startGateServer } from './gate-server.mjs';
+import {
+  acceptsGzip,
+  contentTypeFor,
+  headerRulesFor,
+  overPlainHttp,
+  resolveRequest,
+  startGateServer,
+} from './gate-server.mjs';
 import { renderHeaders } from './gen-headers.mjs';
 
 const BUILT = [
@@ -166,4 +173,39 @@ test('a host-scoped noindex rule from the generated _headers never reaches a loc
   assert.ok(page.headers.get('content-security-policy'));
   assert.equal(page.headers.get('x-robots-tag'), null);
   assert.equal(feed.headers.get('x-robots-tag'), 'noindex');
+});
+
+test('overPlainHttp drops upgrade-insecure-requests and keeps every other directive', () => {
+  const policy = "default-src 'self'; script-src 'self'; upgrade-insecure-requests";
+  assert.equal(overPlainHttp('Content-Security-Policy', policy), "default-src 'self'; script-src 'self'");
+});
+
+test('overPlainHttp leaves a policy without the directive byte-identical', () => {
+  const policy = "default-src 'self'; img-src 'self' data:";
+  assert.equal(overPlainHttp('Content-Security-Policy', policy), policy);
+});
+
+test('overPlainHttp never edits a header that is not the policy', () => {
+  assert.equal(overPlainHttp('X-Robots-Tag', 'upgrade-insecure-requests'), 'upgrade-insecure-requests');
+});
+
+test('overPlainHttp drops the directive when it is written first or alone', () => {
+  assert.equal(
+    overPlainHttp('Content-Security-Policy', "upgrade-insecure-requests; default-src 'self'"),
+    "default-src 'self'"
+  );
+  assert.equal(overPlainHttp('Content-Security-Policy', 'upgrade-insecure-requests'), '');
+});
+
+test('overPlainHttp does not match a directive that merely starts with the same words', () => {
+  const policy = "default-src 'self'; upgrade-insecure-requests-later";
+  assert.equal(overPlainHttp('Content-Security-Policy', policy), policy);
+});
+
+test('the served policy carries no upgrade-insecure-requests', async () => {
+  const response = await fetch(`${origin}/`);
+  const policy = response.headers.get('content-security-policy');
+  assert.ok(policy, 'the fixture serves a policy');
+  assert.ok(!policy.includes('upgrade-insecure-requests'), policy);
+  assert.ok(policy.includes("default-src 'self'"), policy);
 });

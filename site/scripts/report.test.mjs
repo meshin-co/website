@@ -8,12 +8,14 @@ import {
   assertedFamilies,
   byteBudgetSentence,
   byteBudgets,
+  categoryScore,
   metricBudgets,
   metricFailures,
   readReports,
   renderReport,
 } from './report.mjs';
 import { overBudget } from './gate.mjs';
+import { NOINDEX_BY_DESIGN } from './lh-routes.cjs';
 
 const row = (route, scores, runs = 3) => ({ route, runs, scores });
 const perfect = { performance: 100, accessibility: 100, 'best-practices': 100, seo: 100 };
@@ -23,6 +25,7 @@ test('a clean run reports PASS', () => {
   const { markdown, failures } = renderReport({
     phase: '1',
     gate,
+    expectedRoutes: ['/'],
     mobile: [row('/', perfect)],
     desktop: [row('/', perfect)],
   });
@@ -35,6 +38,7 @@ test('a 99 anywhere is a failure, not a footnote', () => {
   const { markdown, failures } = renderReport({
     phase: '1',
     gate,
+    expectedRoutes: ['/'],
     mobile: [row('/', { ...perfect, performance: 99 })],
     desktop: [row('/', perfect)],
   });
@@ -47,6 +51,7 @@ test('fewer than three runs is a failure even when every score is 100', () => {
   const { failures } = renderReport({
     phase: '1',
     gate,
+    expectedRoutes: ['/'],
     mobile: [row('/', perfect, 1)],
     desktop: [row('/', perfect)],
   });
@@ -58,6 +63,7 @@ test('an over-budget route fails the report', () => {
   const { failures } = renderReport({
     phase: '1',
     gate: { ...gate, overBudget: ['/ css 21000 > 20480'] },
+    expectedRoutes: ['/'],
     mobile: [row('/', perfect)],
     desktop: [row('/', perfect)],
   });
@@ -66,7 +72,13 @@ test('an over-budget route fails the report', () => {
 });
 
 test('the report carries no waiver or deferral vocabulary', () => {
-  const { markdown } = renderReport({ phase: '1', gate, mobile: [row('/', perfect)], desktop: [row('/', perfect)] });
+  const { markdown } = renderReport({
+    phase: '1',
+    gate,
+    expectedRoutes: ['/'],
+    mobile: [row('/', perfect)],
+    desktop: [row('/', perfect)],
+  });
 
   assert.doesNotMatch(markdown, /waiver|waived|known issue|next phase|accepted/i);
 });
@@ -75,6 +87,7 @@ test('a form factor missing a derived route is a failure, not an empty table', (
   const { failures } = renderReport({
     phase: '1',
     gate: { routes: ['/', '/404'], measured: [{ route: '/', js: 1, css: 1, page: 1 }], overBudget: [] },
+    expectedRoutes: ['/', '/404'],
     mobile: [],
     desktop: [row('/', perfect), row('/404', perfect)],
   });
@@ -82,37 +95,123 @@ test('a form factor missing a derived route is a failure, not an empty table', (
   assert.deepEqual(failures, ['mobile: no Lighthouse run for /', 'mobile: no Lighthouse run for /404']);
 });
 
-test('SEO is not graded on a noindex route, but everything else still is', () => {
-  const noindexGate = {
-    routes: ['/styleguide'],
-    measured: [{ route: '/styleguide', js: 1, css: 1, page: 1, noindex: true }],
-    overBudget: [],
-  };
+test('renderReport refuses to run without an explicit expectedRoutes list, so nothing can fall back to gate-routes.json', () => {
+  assert.throws(
+    () => renderReport({ phase: '1', gate, mobile: [row('/', perfect)], desktop: [row('/', perfect)] }),
+    /expectedRoutes is required/
+  );
+});
 
-  const clean = renderReport({
-    phase: '2',
-    gate: noindexGate,
-    mobile: [row('/styleguide', { ...perfect, seo: 66 })],
-    desktop: [row('/styleguide', { ...perfect, seo: 66 })],
+test('the expected route list drives the floor, never gate.routes or gate.lighthouseRoutes, so a stale gate-routes.json cannot hide a gap', () => {
+  const staleGate = { routes: ['/totally-unrelated'], lighthouseRoutes: [], measured: [], overBudget: [] };
+
+  const { failures } = renderReport({
+    phase: '1',
+    gate: staleGate,
+    expectedRoutes: ['/', '/about'],
+    mobile: [row('/', perfect)],
+    desktop: [row('/', perfect)],
   });
 
-  assert.deepEqual(clean.failures, []);
-  assert.match(clean.markdown, /n\/a \(noindex\)/);
+  assert.deepEqual(failures, ['mobile: no Lighthouse run for /about', 'desktop: no Lighthouse run for /about']);
+});
 
-  const broken = renderReport({
-    phase: '2',
-    gate: noindexGate,
-    mobile: [row('/styleguide', { ...perfect, seo: 66, accessibility: 98 })],
-    desktop: [row('/styleguide', { ...perfect, seo: 66 })],
+test('an empty expected set is a failure, because a gate that audited nothing has proved nothing', () => {
+  const { failures } = renderReport({ phase: '1', gate, expectedRoutes: [], mobile: [], desktop: [] });
+
+  assert.deepEqual(failures, ['no routes to audit: the built html yielded an empty Lighthouse set']);
+});
+
+test('the markdown names how many routes it expected, so a shrunken scope is visible', () => {
+  const { markdown } = renderReport({
+    phase: '1',
+    gate,
+    expectedRoutes: ['/'],
+    mobile: [row('/', perfect)],
+    desktop: [row('/', perfect)],
   });
 
-  assert.deepEqual(broken.failures, ['mobile /styleguide accessibility: 98']);
+  assert.match(markdown, /Lighthouse scope: 1 route\(s\) expected/);
+});
+
+test('the markdown names every route scored without is-crawlable, taken from the list the assertions use', () => {
+  const { markdown } = renderReport({
+    phase: '1',
+    gate,
+    expectedRoutes: ['/'],
+    mobile: [row('/', perfect)],
+    desktop: [row('/', perfect)],
+  });
+
+  for (const entry of NOINDEX_BY_DESIGN) assert.ok(markdown.includes(`\`${entry}\``), entry);
+});
+
+test('a noindex flag in gate-routes.json waives nothing: categories:seo is graded on that route like any other', () => {
+  const { markdown, failures } = renderReport({
+    phase: '2',
+    gate: {
+      routes: ['/about'],
+      measured: [{ route: '/about', js: 1, css: 1, page: 1, noindex: true }],
+      overBudget: [],
+    },
+    expectedRoutes: ['/about'],
+    mobile: [row('/about', { ...perfect, seo: 66 })],
+    desktop: [row('/about', { ...perfect, seo: 66 })],
+  });
+
+  assert.deepEqual(failures, ['mobile /about seo: 66', 'desktop /about seo: 66']);
+  assert.doesNotMatch(markdown, /n\/a \(noindex\)/);
+  assert.match(markdown, /\| mobile \| `\/about` \| 100 \| 100 \| 100 \| 66 \|/);
+});
+
+const seoRun = (failing = []) => ({
+  categories: {
+    performance: { score: 0.97 },
+    seo: {
+      score: 0.33,
+      auditRefs: [
+        { id: 'is-crawlable', weight: 4.04 },
+        { id: 'meta-description', weight: 1 },
+        { id: 'document-title', weight: 1 },
+        { id: 'hreflang', weight: 1 },
+        { id: 'structured-data', weight: 0 },
+      ],
+    },
+  },
+  audits: {
+    'is-crawlable': { score: 0, scoreDisplayMode: 'binary' },
+    'meta-description': { score: failing.includes('meta-description') ? 0 : 1, scoreDisplayMode: 'binary' },
+    'document-title': { score: 1, scoreDisplayMode: 'binary' },
+    hreflang: { score: null, scoreDisplayMode: 'notApplicable' },
+    'structured-data': { score: null, scoreDisplayMode: 'manual' },
+  },
+});
+
+test('a route named noindex by design scores SEO without is-crawlable, and only that audit', () => {
+  assert.equal(categoryScore(seoRun(), 'seo', '/404'), 100);
+  assert.equal(categoryScore(seoRun(), 'seo', '/search/'), 100);
+  assert.equal(categoryScore(seoRun(), 'seo', '/blog/category/executive/'), 100);
+  assert.equal(categoryScore(seoRun(), 'seo', '/blog/page/2/'), 100);
+});
+
+test('a route named noindex by design still fails SEO on any other audit', () => {
+  assert.equal(categoryScore(seoRun(['meta-description']), 'seo', '/search'), 50);
+});
+
+test('any route not named keeps the whole SEO category as Lighthouse scored it, noindex or not', () => {
+  assert.equal(categoryScore(seoRun(), 'seo', '/about'), 33);
+  assert.equal(categoryScore(seoRun(), 'seo', '/blog/tag/ai-governance/'), 33);
+});
+
+test('a named route changes only the SEO category: every other category is exactly as Lighthouse scored it', () => {
+  assert.equal(categoryScore(seoRun(), 'performance', '/search'), 97);
 });
 
 test('SEO is still graded on an indexable route', () => {
   const { failures } = renderReport({
     phase: '2',
     gate,
+    expectedRoutes: ['/'],
     mobile: [row('/', { ...perfect, seo: 66 })],
     desktop: [row('/', perfect)],
   });
@@ -120,26 +219,13 @@ test('SEO is still graded on an indexable route', () => {
   assert.deepEqual(failures, ['mobile / seo: 66']);
 });
 
-test('a trailing slash on a Lighthouse route still matches the gate route it came from', () => {
+test('a trailing slash on a Lighthouse route still matches the expected route it came from', () => {
   const { markdown } = renderReport({
     phase: '2',
-    gate: { routes: ['/', '/styleguide'], measured: [{ route: '/styleguide', js: 1, css: 1, page: 1, noindex: true }] },
-    mobile: [
-      { route: '/', runs: 3, scores: { performance: 100, accessibility: 100, 'best-practices': 100, seo: 100 } },
-      {
-        route: '/styleguide/',
-        runs: 3,
-        scores: { performance: 100, accessibility: 100, 'best-practices': 100, seo: 66 },
-      },
-    ],
-    desktop: [
-      { route: '/', runs: 3, scores: { performance: 100, accessibility: 100, 'best-practices': 100, seo: 100 } },
-      {
-        route: '/styleguide/',
-        runs: 3,
-        scores: { performance: 100, accessibility: 100, 'best-practices': 100, seo: 66 },
-      },
-    ],
+    gate: { routes: ['/', '/about'], measured: [], overBudget: [] },
+    expectedRoutes: ['/', '/about'],
+    mobile: [row('/', perfect), row('/about/', perfect)],
+    desktop: [row('/', perfect), row('/about/', perfect)],
   });
 
   assert.match(markdown, /Result: PASS/);
@@ -198,6 +284,23 @@ test('a metric inside its budget passes, and the median decides', () => {
   );
 });
 
+test('a metric over its budget fails the report while every category reads 100, and the median run decides', async () => {
+  const budgets = await metricBudgets();
+  const withLcp = (values) => ({ ...row('/', perfect), metrics: { 'largest-contentful-paint': values } });
+  const render = (values) =>
+    renderReport({
+      phase: '1',
+      gate,
+      expectedRoutes: ['/'],
+      budgets,
+      mobile: [withLcp(values)],
+      desktop: [row('/', perfect)],
+    }).failures;
+
+  assert.deepEqual(render([1000, 2400, 2500]), ['metric: mobile / largest-contentful-paint: 2400 over budget 1850']);
+  assert.deepEqual(render([1000, 1100, 2400]), []);
+});
+
 test('the budgets come from the lighthouse config, not from a copy in the report generator', async () => {
   const budgets = await metricBudgets();
   assert.equal(budgets['largest-contentful-paint'], 1850);
@@ -223,6 +326,7 @@ test('the printed byte-budget sentence comes from budgets.json, not a hardcoded 
   const { markdown } = renderReport({
     phase: '1',
     gate,
+    expectedRoutes: ['/'],
     mobile: [row('/', perfect)],
     desktop: [row('/', perfect)],
     byteBudgets: limits,
@@ -238,6 +342,7 @@ test('a measured row that exceeds a real budgets.json limit fails the report end
   const { failures } = renderReport({
     phase: '1',
     gate: { routes: ['/heavy'], measured: [measured], overBudget: findings },
+    expectedRoutes: ['/heavy'],
     mobile: [row('/heavy', perfect)],
     desktop: [row('/heavy', perfect)],
   });
@@ -253,6 +358,7 @@ test('a measured row whose fonts exceed the real fonts limit fails the report en
   const { failures } = renderReport({
     phase: '1',
     gate: { routes: ['/heavy'], measured: [measured], overBudget: findings },
+    expectedRoutes: ['/heavy'],
     mobile: [row('/heavy', perfect)],
     desktop: [row('/heavy', perfect)],
   });
@@ -266,6 +372,7 @@ test('the measured byte table prints the font bytes the gate measured, not a typ
     const { markdown } = renderReport({
       phase: '1',
       gate: { routes: ['/'], measured, overBudget: [] },
+      expectedRoutes: ['/'],
       mobile: [row('/', perfect)],
       desktop: [row('/', perfect)],
       byteBudgets: byteBudgets(),
@@ -285,6 +392,7 @@ test('a measured row inside every real budgets.json limit produces no budget fai
   const { failures } = renderReport({
     phase: '1',
     gate: { routes: ['/light'], measured: [measured], overBudget: findings },
+    expectedRoutes: ['/light'],
     mobile: [row('/light', perfect)],
     desktop: [row('/light', perfect)],
   });
@@ -306,6 +414,7 @@ test('the rendered report carries the revision it was generated from', () => {
   const { markdown } = renderReport({
     phase: '9',
     gate: { routes: [], measured: [], overBudget: [] },
+    expectedRoutes: [],
     mobile: [],
     desktop: [],
     generator: 'abc1234',

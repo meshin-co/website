@@ -9,6 +9,7 @@ import {
   indexFindings,
   knownGapsFindings,
   parseStatus,
+  pendingPhaseFindings,
   statusFindings,
 } from './plan-gate.mjs';
 
@@ -212,5 +213,51 @@ test('a known-gap row with the wrong cell count is reported, because a silently 
   assert.deepEqual(
     knownGapsFindings(markdown).map(({ rule }) => rule),
     ['known-gap-malformed-row']
+  );
+});
+
+const PHASE_FILES = [
+  'phase-4.5a-machine-layer-every-surface-complete.done.md',
+  'phase-5.1-harness-integrity-and-geo-features.active.md',
+  'phase-5-launch.next.md',
+];
+
+const pendingRules = (entry, files = PHASE_FILES) =>
+  pendingPhaseFindings([{ gate: 'gate:visual', reason: 'no specimen yet', ...entry }], files).map(({ rule }) => rule);
+
+test('a pending entry naming a phase that does not exist is a finding, so a typo cannot park a debt for ever', () => {
+  assert.deepEqual(pendingRules({ phase: 'phase-99' }), ['pending-specimen-unknown-phase']);
+});
+
+test('a pending entry whose phase is already done is a finding, because the specimen is then overdue', () => {
+  assert.deepEqual(pendingRules({ phase: 'phase-4.5a' }), ['pending-specimen-phase-done']);
+});
+
+test('a pending entry whose phase is still open is quiet, whether the phase is active or next', () => {
+  assert.deepEqual(pendingRules({ phase: 'phase-5.1' }), []);
+  assert.deepEqual(pendingRules({ phase: 'phase-5' }), []);
+});
+
+test('a phase id matches its own file and never a sibling that shares its prefix', () => {
+  const siblingsOnly = ['phase-4.5a-machine-layer-every-surface-complete.done.md'];
+  assert.deepEqual(pendingRules({ phase: 'phase-4' }, siblingsOnly), ['pending-specimen-unknown-phase']);
+});
+
+test('a pending entry with no reason is a finding, because a debt nobody explains is a waiver', () => {
+  assert.deepEqual(pendingRules({ phase: 'phase-5', reason: ' ' }), ['pending-specimen-no-reason']);
+  assert.deepEqual(pendingRules({ phase: 'phase-5', reason: undefined }), ['pending-specimen-no-reason']);
+});
+
+test('every pending entry is judged, not only the first', () => {
+  const findings = pendingPhaseFindings(
+    [
+      { gate: 'gate:a', phase: 'phase-99', reason: 'x' },
+      { gate: 'gate:b', phase: 'phase-4.5a', reason: 'x' },
+    ],
+    PHASE_FILES
+  );
+  assert.deepEqual(
+    findings.map(({ rule }) => rule),
+    ['pending-specimen-unknown-phase', 'pending-specimen-phase-done']
   );
 });

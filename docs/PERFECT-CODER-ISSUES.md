@@ -166,3 +166,22 @@ needs no sibling test.
 - **Suggested fix:** `isExistingFileAt` is referenced but not in scope in the extension's
   enforcement path. A crash there should fail open with one warning per session, not per file, and
   must not produce a refusal whose stated reason ("no test file found") contradicts the disk.
+
+## Test-existence check treats a test file as source needing its own test
+
+Date: 2026-10-01. Staging eight new files produced eight blocks of the form
+
+    perfect-coder: no test file found for the new source file site/scripts/human-gate.test.mjs
+
+for `human-gate.test.mjs`, `lh-routes.test.mjs`, `lighthouserc.test.mjs`,
+`mutation-pending.test.mjs`, `mutation-specimens.test.mjs`, `report-main.test.mjs` and
+`run-human-gate.test.mjs`. Each is itself a test file, so the check is asking for
+`human-gate.test.test.mjs`. Every one of them has the real source beside it.
+
+The eighth, `site/scripts/lh-routes.cjs`, is a different bug: `scripts/lh-routes.test.mjs` exists
+and tests it, but the lookup appears to derive the sibling name from the full extension, so a
+`.cjs` source is never matched to a `.test.mjs` test. The project runs CommonJS only where
+Lighthouse's config loader requires it, so this will recur on exactly those files.
+
+Both make strict mode unusable here: the warnings are unactionable, and a real missing test would
+be invisible among them.
