@@ -11,7 +11,10 @@ interface Props {
 const { name, feeShape, duration, outcome, deliverables, href } = Astro.props;
 ---
 
-<article class="card group relative flex h-full flex-col p-7 hover:card-hover sm:p-8" data-gate-ignore>
+<article
+  class="card group relative flex h-full flex-col p-7 focus-within:border-primary hover:card-hover sm:p-8"
+  data-gate-ignore
+>
   <div>
     <span class="eyebrow">{duration}</span>
 
