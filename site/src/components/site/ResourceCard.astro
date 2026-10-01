@@ -11,7 +11,10 @@ interface Props {
 const { name, summary, format, status, href } = Astro.props;
 ---
 
-<article class="card group relative flex h-full flex-col p-7 hover:card-hover" data-gate-ignore>
+<article
+  class="card group relative flex h-full flex-col p-7 focus-within:border-primary hover:card-hover"
+  data-gate-ignore
+>
   <p class="eyebrow">{format}</p>
 
   <h3 class="mt-4 font-heading text-xl leading-snug font-semibold text-heading">

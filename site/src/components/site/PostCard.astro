@@ -17,7 +17,10 @@ const pillar = category ? (categoryPillars[category as keyof typeof categoryPill
 const categoryTitle = category ? (pillar?.title ?? category) : undefined;
 ---
 
-<article class="flex h-full flex-col border border-line p-6" data-gate-ignore>
+<article
+  class="group relative flex h-full flex-col border border-line p-6 focus-within:border-primary"
+  data-gate-ignore
+>
   <p class="eyebrow">
     <time datetime={published.toISOString().slice(0, 10)}>
       {published.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
@@ -29,7 +32,7 @@ const categoryTitle = category ? (pillar?.title ?? category) : undefined;
           {' · '}
           {pillar && (
             <a
-              class="text-link underline decoration-2 underline-offset-4 hover:decoration-primary"
+              class="relative z-[1] text-link underline decoration-2 underline-offset-4 hover:decoration-primary"
               href={`/blog/category/${category}`}
             >
               {categoryTitle}
@@ -42,7 +45,7 @@ const categoryTitle = category ? (pillar?.title ?? category) : undefined;
   </p>
 
   <h3 class="mt-5 font-heading text-xl font-semibold text-heading">
-    <a class="text-link inline-block py-1" href={href}>{title}</a>
+    <a class="text-link after:absolute after:inset-0 after:content-['']" href={href}>{title}</a>
   </h3>
 
   <p class="mt-4 grow text-muted">{excerpt}</p>
@@ -54,7 +57,7 @@ const categoryTitle = category ? (pillar?.title ?? category) : undefined;
           <>
             {index > 0 && ' · '}
             <a
-              class="text-link underline decoration-2 underline-offset-4 hover:decoration-primary"
+              class="relative z-[1] text-link underline decoration-2 underline-offset-4 hover:decoration-primary"
               href={`/blog/tag/${tag}`}
             >
               {tag}
