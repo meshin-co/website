@@ -154,14 +154,13 @@ fourth external audit. Two things rule it out as currently buildable:
    documentation lagged 26 commits and three audit rounds. A gate that resets on a trivial
    companion bump is the same shape of problem this whole audit exists to fix: a check that looks
    green without being able to fail on the thing it claims to guard.
-2. **The one signal narrow enough to mean something is not available where the gate runs.**
-   Anchoring instead to the last *rename* in `docs/plan/phases/` (git detects both `15ba58e` and
-   `82740c2` as renames, at 96% and 100% similarity — a real, hard-to-game signal) would correctly
-   reproduce the 26-commit, 2026-09-15 fact this file opens with. But `gate:plan` runs in CI's
-   `build` job, whose `actions/checkout@v4` step takes the default shallow clone; only the
-   `changes` job requests `fetch-depth: 0`. A rename-since-last-rename count needs full history
-   `git log` cannot see there, and building it anyway means either a CI checkout change outside
-   this pass's ownership or a check that silently reports a wrong answer on every real CI run.
+2. **The signal narrow enough to mean something was, at the time, unreachable where the gate
+   runs.** Anchoring instead to the last _rename_ in `docs/plan/phases/` (git detects both
+   `15ba58e` and `82740c2` as renames, at 96% and 100% similarity — a real, hard-to-game signal)
+   would correctly reproduce the 26-commit, 2026-09-15 fact this file opens with. `gate:plan` runs
+   in CI's `types-and-units` job, which took the default shallow clone, so the `git log` such a
+   count needs could not see the history. That half is now resolved: `types-and-units` requests
+   `fetch-depth: 0`. Reason 1 stands on its own, and it is the one that decides this.
 
 Recorded as `known-gaps.md` G14 rather than built. Building a gate that cannot fail on the failure
 it claims to catch would be the exact fake-green pattern this repository's own audits keep

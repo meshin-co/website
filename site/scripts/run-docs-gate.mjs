@@ -8,9 +8,13 @@ import {
   citedPaths,
   emptyDiscoveryFinding,
   enforcesRowRange,
+  ignoredCitation,
   isBuildOutput,
   isExternal,
+  isRecord,
   lockedRowClaims,
+  mayBeRecord,
+  parseIgnoreReport,
   resolveCandidates,
   summaryLine,
 } from './docs-gate.mjs';
@@ -39,12 +43,28 @@ const tracked = discoverDocs(
 const docs = tracked.map((path) => join(repo, path)).filter((path) => existsSync(path));
 const buildPresent = existsSync(join(repo, 'site/dist'));
 
+const ignoredPaths = (paths) => {
+  if (paths.length === 0) return new Map();
+  try {
+    const output = execFileSync('git', ['-C', repo, 'check-ignore', '--stdin', '-z', '-v'], {
+      encoding: 'utf8',
+      input: paths.join('\0'),
+      stdio: ['pipe', 'pipe', 'pipe'],
+    });
+    return parseIgnoreReport(output);
+  } catch (error) {
+    return error.status === 1 ? new Map() : null;
+  }
+};
+
 const scripts = JSON.parse(readFileSync(join(repo, 'site/package.json'), 'utf8')).scripts;
 const lockedRows = readFileSync(join(repo, 'docs/plan/reference/locked-decisions.md'), 'utf8');
 const highestRow = Math.max(...[...lockedRows.matchAll(/^\| L(\d+)/gm)].map(([, number]) => Number(number)));
 
 const findings = [];
 const skippedBuildOutput = [];
+let recordCount = 0;
+const resolvedCitations = [];
 
 const emptyFinding = emptyDiscoveryFinding(docs.length);
 if (emptyFinding) findings.push(emptyFinding);
@@ -52,6 +72,10 @@ if (emptyFinding) findings.push(emptyFinding);
 for (const doc of docs) {
   const text = readFileSync(doc, 'utf8');
   const relative = doc.slice(repo.length + 1);
+  if (mayBeRecord(relative) && isRecord(text)) {
+    recordCount += 1;
+    continue;
+  }
 
   for (const cited of citedPaths(text)) {
     if (isExternal(cited)) continue;
@@ -59,12 +83,15 @@ for (const doc of docs) {
       skippedBuildOutput.push({ doc: relative, detail: cited });
       continue;
     }
-    const resolved = resolveCandidates(cited, relative).some((candidate) => {
+    const present = resolveCandidates(cited, relative).filter((candidate) => {
       const absolute = join(repo, candidate);
       return existsSync(absolute) && statSync(absolute).isFile();
     });
-    if (resolved) continue;
-    findings.push({ doc: relative, rule: 'dead-path', detail: cited });
+    if (present.length === 0) {
+      findings.push({ doc: relative, rule: 'dead-path', detail: cited });
+      continue;
+    }
+    if (!isBuildOutput(cited)) resolvedCitations.push({ doc: relative, cited, present });
   }
 
   for (const command of citedCommands(text)) {
@@ -82,11 +109,19 @@ for (const doc of docs) {
   }
 }
 
+const ignoreReport = ignoredPaths([...new Set(resolvedCitations.flatMap(({ present }) => present))]);
+for (const { doc, cited, present } of resolvedCitations) {
+  const detail = ignoreReport && ignoredCitation(cited, present, ignoreReport);
+  if (detail) findings.push({ doc, rule: 'ignored-path', detail });
+}
+
 console.log(
   summaryLine({
-    fileCount: docs.length,
+    fileCount: docs.length - recordCount,
     findingCount: findings.length,
     skippedBuildOutputCount: skippedBuildOutput.length,
+    recordCount,
+    ignoreCheckSkipped: ignoreReport === null,
   })
 );
 for (const finding of findings) console.log(`  ${finding.rule} ${finding.doc}: ${finding.detail}`);

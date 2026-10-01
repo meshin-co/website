@@ -8,21 +8,6 @@ test.describe.configure({ mode: 'parallel' });
 
 for (const route of routes) {
   test(`${route} renders in this engine with no console error and no sideways scroll`, async ({ page }, testInfo) => {
-    await page.route('**/*', async (route_) => {
-      if (route_.request().resourceType() !== 'document') return route_.fallback();
-      const response = await route_.fetch();
-      const headers = { ...response.headers() };
-      const csp = headers['content-security-policy'];
-      if (csp) {
-        headers['content-security-policy'] = csp
-          .split(';')
-          .map((directive) => directive.trim())
-          .filter((directive) => directive !== 'upgrade-insecure-requests')
-          .join('; ');
-      }
-      await route_.fulfill({ response, headers });
-    });
-
     const errors: string[] = [];
     const ownOrigin = (url: string) => url === '' || url.startsWith('http://127.0.0.1');
     page.on('console', (message) => {

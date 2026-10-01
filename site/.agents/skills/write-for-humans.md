@@ -1,0 +1,71 @@
+# Write for Humans
+
+Run `npm run gate:human` after any change to page prose, before you ask anyone to read the copy. It turns
+`write-copy.md` into numbers: can a busy engineering leader read the page without effort, and does it read
+as written by a person. `content-gate.md` is the other prose gate (banned phrases, sources, length caps).
+A page needs both green.
+
+## Run it
+
+Build, then from `site/` run `npm run gate:human`. The runner `scripts/run-human-gate.mjs` reads every built
+page except /404, /search, /styleguide and blog pagination, then prints
+`human: N pages checked, M measured for reading level, K findings` and one line per finding:
+`HUMAN <route> <rule>: <detail> | <excerpt>`. Exit 1 on any finding. The rules and ceilings sit in
+`scripts/human-gate.mjs`; the plain-word list sits in `site/controlled-words.json`.
+
+## What it refuses
+
+The first four are AI tells and hold at full strength. The rest are ceilings tuned for a technical reader.
+
+| Rule                                      | Refused when                                                                       | Worst today |
+| ----------------------------------------- | ---------------------------------------------------------------------------------- | ----------- |
+| `antithesis-template`                     | a sentence says "not X, it is Y", also "isn't X, it's Y"                           | none        |
+| `bolded-lead`                             | a list item opens in bold (a day, week or step label is fine)                      | none        |
+| `emoji-bullet`                            | a list item opens with an emoji, tick, arrow or bullet character                   | none        |
+| `controlled-word`                         | a word in `site/controlled-words.json` appears, such as commence                   | none        |
+| `reading-grade`, `reading-ease`           | grade above 14, or ease below 30                                                   | 12.8, 37.5  |
+| `sentence-average`, `sentence-longest`    | average above 25 words, or any sentence above 45                                   | 22.0, 39    |
+| `long-word-share`, `passive-voice`        | over 30% words of three syllables, or over 60% passive sentences                   | 23%, 50%    |
+| `sentence-variance`, `paragraph-variance` | 8+ paragraph sentences with variance under 6, or 3+ paragraphs with spread under 5 | 9.6, 6.1    |
+| `list-variety`, `heading-variety`         | three lists of one length, or three headings opening on one word                   | none        |
+| `no-pages`, `nothing-measured`            | no built page, or no page with three sentences of prose                            | none        |
+
+"Worst today" is the closest graded route at 712a471 across 85 graded routes. The last row is a guard: a
+gate that checked nothing must not read as a pass.
+
+## Fix the prose, do not move the number
+
+A finding names the route and quotes the sentence. Split a long sentence at its "and" or "which". Name who
+acts instead of using the passive. State Y and drop the denied X. Use the shorter word the finding names.
+A grade-6 ceiling would flag 77 of the 85 graded routes; that is a rewrite project, not a gate.
+
+## What it cannot see
+
+- A page with fewer than three sentences of prose (17 routes, 13 of them blog tag pages) is checked for tells
+  and controlled words but never graded for reading level.
+- The antithesis rule reads one sentence. The two-sentence form "It is not X. It is Y." passes; five such
+  negation-then-"It is" pairs sit in today's copy, so widening the rule is a policy call (G16 in
+  `docs/plan/reference/known-gaps.md`).
+- Syllables are counted by vowel groups, so grade is good to about one level. Ceilings catch drift and
+  outliers, not mediocre prose; `judge-panel.md` still reads the copy.
+
+## Escape hatch
+
+Mark a block `data-gate-ignore` only when you quote a source word for word. Never use it to silence your own copy.
+
+## Prove it can fail
+
+`npm run test:smoke` plants the word commence on a page (family `controlled-word-on-a-page`) and needs red
+after green. Write the failing test in `site/scripts/human-gate.test.mjs` before changing a rule.
+
+## Add a controlled word
+
+A word needs a shorter twin that keeps its meaning, and it must not be a term of art in the regulations and
+standards the site covers: requirement, demonstrate, obtain, sufficient and individual stay out. Never repeat
+a phrase from `site/banned-phrases.json`; `human-gate.test.mjs` fails on a repeat.
+
+## Move a ceiling
+
+Re-measure first: read each built page with `pageFromHtml`, grade its `prose` with `sentenceStats` (both
+exported by `scripts/human-gate.mjs`), and set the ceiling above the worst graded route with room to spare
+(today about 10% to 31%). Put the measured numbers in the commit message and update the table above.

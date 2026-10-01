@@ -33,12 +33,53 @@ export function isBuildOutput(path) {
   return BUILD_OUTPUT_ROOTS.some((root) => path.startsWith(root));
 }
 
-export function summaryLine({ fileCount, findingCount, skippedBuildOutputCount }) {
+const RECORD_FRONT_MATTER = /^---\nrecord: true\n---(?:\n|$)/;
+
+export function isRecord(text) {
+  return RECORD_FRONT_MATTER.test(text);
+}
+
+const RECORD_ROOT = 'investigation/';
+const RECORD_INDEX = 'investigation/00-INDEX.md';
+
+export function mayBeRecord(doc) {
+  return doc.startsWith(RECORD_ROOT) && doc !== RECORD_INDEX;
+}
+
+export function parseIgnoreReport(output) {
+  const fields = output.split('\0');
+  if (fields.at(-1) === '') fields.pop();
+  const ignored = new Map();
+  for (let at = 0; at + 4 <= fields.length; at += 4) {
+    const [source, line, pattern, path] = fields.slice(at, at + 4);
+    if (!pattern.startsWith('!')) ignored.set(path, { source, line, pattern });
+  }
+  return ignored;
+}
+
+export function ignoredCitation(cited, present, report) {
+  const rules = present.map((candidate) => report.get(candidate));
+  if (rules.length === 0 || rules.includes(undefined)) return null;
+  const [candidate] = present;
+  const { source, line, pattern } = rules[0];
+  const where = candidate === cited ? cited : `${cited} as ${candidate}`;
+  return `${where} exists on disk, but ${source}:${line} (${pattern}) ignores it, so a clean checkout does not hold it`;
+}
+
+export function summaryLine({
+  fileCount,
+  findingCount,
+  skippedBuildOutputCount,
+  recordCount = 0,
+  ignoreCheckSkipped = false,
+}) {
   const skipped =
     skippedBuildOutputCount > 0
       ? `, ${skippedBuildOutputCount} build-output citation${skippedBuildOutputCount === 1 ? '' : 's'} unverified (no build present)`
       : '';
-  return `docs: ${fileCount} files checked, ${findingCount} findings${skipped}`;
+  const exempt = recordCount > 0 ? `, ${recordCount} record${recordCount === 1 ? '' : 's'} exempt (record: true)` : '';
+  const unchecked = ignoreCheckSkipped ? ', ignored-path check skipped (git could not answer)' : '';
+  return `docs: ${fileCount} files checked, ${findingCount} findings${skipped}${exempt}${unchecked}`;
 }
 
 export function resolveCandidates(path, citingDoc) {

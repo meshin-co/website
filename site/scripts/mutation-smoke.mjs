@@ -4,6 +4,8 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+import { SPECIMENS, assertStandaloneRepo, flatten, proveWithSpecimen } from './mutation-specimens.mjs';
+
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SITE = resolve(HERE, '..');
 const REPO = resolve(SITE, '..');
@@ -16,6 +18,7 @@ export const FAMILIES = [
   {
     id: 'faq-question-length',
     kind: 'build',
+    proves: 'build',
     fixture: 'faq-question-too-long.md',
     plant: 'src/data/faq',
     tokens: ['question: must be 98 characters or fewer'],
@@ -23,6 +26,7 @@ export const FAMILIES = [
   {
     id: 'og-title-length',
     kind: 'build',
+    proves: 'build',
     fixture: 'post-title-too-long.md',
     plant: 'src/data/post',
     tokens: ['title: must be 98 characters or fewer'],
@@ -30,6 +34,7 @@ export const FAMILIES = [
   {
     id: 'faq-missing-updated-date',
     kind: 'build',
+    proves: 'build',
     fixture: 'faq-missing-updated-date.md',
     plant: 'src/data/faq',
     tokens: ['updatedDate: Required'],
@@ -37,6 +42,7 @@ export const FAMILIES = [
   {
     id: 'post-unknown-tag',
     kind: 'build',
+    proves: 'build',
     fixture: 'post-unknown-tag.md',
     plant: 'src/data/post',
     tokens: ['tags.0: Invalid option'],
@@ -44,47 +50,106 @@ export const FAMILIES = [
   {
     id: 'content-banned-phrase',
     kind: 'build-then-gate',
+    proves: 'gate:content',
     fixture: 'post-banned-phrase.md',
     plant: 'src/data/post',
     gate: 'content-gate',
     tokens: ['banned-phrase [leverage]'],
   },
-  { id: 'budget-page-cap', kind: 'gate', gate: 'budget', tokens: ['OVER BUDGET / page'] },
-  { id: 'docs-dead-path', kind: 'gate', gate: 'docs', tokens: ['dead-path'] },
-  { id: 'external-link-rel', kind: 'gate', gate: 'external', tokens: ['is missing nofollow'] },
-  { id: 'jsonld-fail-closed', kind: 'gate', gate: 'jsonld', tokens: ['matches no known jsonld route family'] },
+  { id: 'budget-page-cap', kind: 'gate', proves: 'build', gate: 'budget', tokens: ['OVER BUDGET / page'] },
+  { id: 'docs-dead-path', kind: 'gate', proves: 'gate:docs', gate: 'docs', tokens: ['dead-path'] },
+  { id: 'record-marker-must-be-exact', kind: 'specimen', specimen: 'docsRecord' },
+  { id: 'record-marker-never-exempts-the-index', kind: 'specimen', specimen: 'docsIndexMarked' },
+  { id: 'record-marker-never-exempts-a-live-doc', kind: 'specimen', specimen: 'docsRecordOutsideCorpus' },
+  { id: 'citation-of-an-ignored-file-is-not-held', kind: 'specimen', specimen: 'docsIgnoredPath' },
+  {
+    id: 'external-link-rel',
+    kind: 'gate',
+    proves: 'gate:external',
+    gate: 'external',
+    tokens: ['is missing nofollow'],
+  },
+  {
+    id: 'jsonld-fail-closed',
+    kind: 'gate',
+    proves: 'gate:jsonld',
+    gate: 'jsonld',
+    tokens: ['matches no known jsonld route family'],
+  },
   {
     id: 'jsonld-property-completeness',
     kind: 'gate',
+    proves: 'gate:jsonld',
     gate: 'jsonld-properties',
     tokens: ['is missing required property logo'],
   },
   {
     id: 'faq-description-floor',
     kind: 'build',
+    proves: 'build',
     fixture: 'faq-description-too-short.md',
     plant: 'src/data/faq',
     tokens: ['description: must be 120 characters or more'],
   },
-  { id: 'semantic-title-pattern', kind: 'pure', check: 'semantic-title' },
-  { id: 'machine-feed-coverage', kind: 'unit-covered' },
-  { id: 'gate-wiring-removed-from-ci', kind: 'wiring' },
-  { id: 'brand-literal-typed-into-a-module', kind: 'brand' },
-  { id: 'pagination-page-2', kind: 'pagination', fixture: 'live-post.md', slow: true },
-  { id: 'category-pagination-page-2', kind: 'pagination', fixture: 'live-post.md', scope: 'category', slow: true },
+  { id: 'semantic-title-pattern', kind: 'pure', proves: 'gate:content', check: 'semantic-title' },
+  { id: 'machine-feed-coverage', kind: 'specimen', specimen: 'machine' },
+  { id: 'gate-wiring-removed-from-ci', kind: 'specimen', specimen: 'wiringRemoved' },
+  { id: 'pending-specimen-names-a-missing-phase', kind: 'specimen', specimen: 'pendingUnknownPhase' },
+  { id: 'pending-specimen-phase-already-done', kind: 'specimen', specimen: 'pendingPhaseDone' },
+  { id: 'brand-literal-typed-into-a-module', kind: 'specimen', specimen: 'brand' },
+  { id: 'editorial-row-without-a-disposition', kind: 'specimen', specimen: 'editorialRowUnreviewed' },
+  { id: 'route-removed-without-an-explanation', kind: 'specimen', specimen: 'routesShrink' },
+  { id: 'html-duplicate-id', kind: 'specimen', specimen: 'html' },
+  { id: 'link-to-a-missing-route', kind: 'specimen', specimen: 'links' },
+  { id: 'route-nothing-links-to', kind: 'specimen', specimen: 'orphans' },
+  { id: 'search-shard-over-budget', kind: 'specimen', specimen: 'search' },
+  { id: 'skill-names-a-missing-script', kind: 'specimen', specimen: 'skills' },
+  { id: 'generated-report-without-provenance', kind: 'specimen', specimen: 'evidence' },
+  { id: 'registers-block-drifted', kind: 'specimen', specimen: 'registers' },
+  { id: 'axe-violation-in-a-real-browser', kind: 'specimen', specimen: 'visualAxe', slow: true },
+  { id: 'controlled-word-on-a-page', kind: 'specimen', specimen: 'humanControlledWord' },
+  { id: 'lighthouse-shard-unlabelled-image', kind: 'specimen', specimen: 'lighthouseShard', slow: true },
+  { id: 'lighthouse-both-factors-unlabelled-image', kind: 'specimen', specimen: 'lighthouseBothFactors', slow: true },
+  { id: 'noindex-page-cannot-waive-its-seo', kind: 'specimen', specimen: 'lighthouseSelfWaivingNoindex', slow: true },
+  { id: 'pagination-page-2', kind: 'pagination', proves: 'build', fixture: 'live-post.md', slow: true },
+  {
+    id: 'category-pagination-page-2',
+    kind: 'pagination',
+    proves: 'build',
+    fixture: 'live-post.md',
+    scope: 'category',
+    slow: true,
+  },
 ];
 
-const KINDS = ['build', 'build-then-gate', 'gate', 'pure', 'pagination', 'unit-covered', 'wiring', 'brand'];
+const KINDS = ['build', 'build-then-gate', 'gate', 'pure', 'pagination', 'specimen'];
 const REQUIREMENTS = {
-  build: ['fixture', 'plant', 'tokens'],
-  'build-then-gate': ['fixture', 'plant', 'tokens', 'gate'],
-  gate: ['gate', 'tokens'],
-  pure: ['check'],
-  pagination: ['fixture'],
-  'unit-covered': [],
-  wiring: [],
-  brand: [],
+  build: ['proves', 'fixture', 'plant', 'tokens'],
+  'build-then-gate': ['proves', 'fixture', 'plant', 'tokens', 'gate'],
+  gate: ['proves', 'gate', 'tokens'],
+  pure: ['proves', 'check'],
+  pagination: ['proves', 'fixture'],
+  specimen: ['specimen'],
 };
+
+export const provesOf = (entry) => (entry.kind === 'specimen' ? SPECIMENS[entry.specimen]?.gate : entry.proves);
+
+export function unprovenGates(scripts, families, pending) {
+  const proven = new Set(families.map(provesOf));
+  const waiting = new Set(pending.map((entry) => entry.gate));
+  return Object.keys(scripts)
+    .filter((name) => name.startsWith('gate:'))
+    .filter((gate) => !proven.has(gate) && !waiting.has(gate))
+    .sort();
+}
+
+export function stalePending(scripts, families, pending) {
+  const proven = new Set(families.map(provesOf));
+  return pending
+    .filter((entry) => !(entry.gate in scripts) || proven.has(entry.gate))
+    .map((entry) => entry.gate)
+    .sort();
+}
 
 const invalid = (field, value) =>
   field === 'tokens'
@@ -108,19 +173,15 @@ export function manifestFamilies(manifest) {
       throw new Error(`mutation smoke: family ${id} has unknown gate ${entry.gate}`);
     if ('check' in entry && !CHECKS.includes(entry.check))
       throw new Error(`mutation smoke: family ${id} has unknown check ${entry.check}`);
+    if (entry.kind === 'specimen' && !Object.hasOwn(SPECIMENS, entry.specimen))
+      throw new Error(`mutation smoke: family ${id} has unknown specimen ${entry.specimen}`);
     return { ...entry };
   });
 }
 
-const ANSI_SEQUENCE = new RegExp(`${String.fromCharCode(27)}\\[[0-9;]*m`, 'g');
-
-function flattenOutput(output) {
-  return String(output).replace(ANSI_SEQUENCE, '').replace(/\s+/g, ' ');
-}
-
 export function expectedFailure(run, tokens) {
   if (!Number.isInteger(run.code) || run.code === 0) return { ok: false, reason: 'guard exited zero' };
-  const flattened = flattenOutput(run.output);
+  const flattened = flatten(run.output);
   for (const token of tokens) {
     if (!flattened.includes(token)) {
       return { ok: false, reason: `output did not name "${token}": ...${flattened.slice(-300)}` };
@@ -151,6 +212,12 @@ function run(command, args, cwd) {
 }
 
 const build = (cwd) => run('npm', ['run', 'build'], cwd);
+
+const pristineDist = (work) => `${join(work, 'pristine-dist')}/`;
+const snapshotDist = (copySite, work) =>
+  run('rsync', ['-a', '--delete', `${join(copySite, 'dist')}/`, pristineDist(work)]);
+const restoreDist = (copySite, work) =>
+  run('rsync', ['-a', '--delete', pristineDist(work), `${join(copySite, 'dist')}/`]);
 
 async function plantFixture(copySite, entry) {
   const target = join(copySite, entry.plant, entry.fixture);
@@ -402,53 +469,13 @@ async function prepareCopy(work) {
     '--exclude=dist',
     '--exclude=.og-cache',
     '--exclude=test-results',
-    '--exclude=.git',
     `${REPO}/`,
     join(work, 'repo/'),
   ]);
   const copySite = join(work, 'repo/site');
   await symlink(join(SITE, 'node_modules'), join(copySite, 'node_modules'));
+  assertStandaloneRepo(copySite);
   return copySite;
-}
-
-async function runBrandFamily(copySite) {
-  const module = join(copySite, 'src/utils/pipeline.mjs');
-  const pristine = await readFile(module, 'utf8');
-  const { brandFromDisk } = await import(pathToFileURL(join(copySite, 'src/utils/brand.mjs')).href);
-  const brand = brandFromDisk(join(copySite, 'src/config.yaml')).name;
-
-  await writeFile(module, `const typed = '${brand}';\n${pristine}`);
-  const planted = await run('node', ['scripts/brand-gate.mjs'], copySite);
-  await writeFile(module, pristine);
-  const restored = await run('node', ['scripts/brand-gate.mjs'], copySite);
-
-  if (planted.code === 0) return { ok: false, reason: 'brand gate stayed green on a typed brand literal' };
-  if (!planted.output.includes('src/utils/pipeline.mjs'))
-    return { ok: false, reason: `brand gate failed without naming the file: ${planted.output.slice(-200)}` };
-  if (restored.code !== 0)
-    return { ok: false, reason: `brand gate stayed red after restore: ${restored.output.slice(-200)}` };
-  return { ok: true, reason: 'typed literal named by file and line, green after restore' };
-}
-
-async function runWiringFamily(copySite) {
-  const workflow = join(copySite, '../.github/workflows/ci.yml');
-  const pristine = await readFile(workflow, 'utf8');
-  const gate = 'npm run gate:editorial';
-  if (!pristine.includes(gate))
-    return { ok: false, reason: `${gate} is not in ci.yml, so the specimen cannot be planted` };
-
-  await writeFile(workflow, pristine.replace(gate, 'echo skipped'));
-  const planted = await run('node', ['scripts/plan-gate.mjs'], copySite);
-  await writeFile(workflow, pristine);
-  const restored = await run('node', ['scripts/plan-gate.mjs'], copySite);
-
-  if (planted.code === 0)
-    return { ok: false, reason: 'plan gate stayed green with gate:editorial removed from ci.yml' };
-  if (!planted.output.includes('gate-not-in-ci'))
-    return { ok: false, reason: `plan gate failed for the wrong reason: ${planted.output.slice(-200)}` };
-  if (restored.code !== 0)
-    return { ok: false, reason: `plan gate stayed red after restore: ${restored.output.slice(-200)}` };
-  return { ok: true, reason: 'gate-not-in-ci on the planted specimen, green after restore' };
 }
 
 const EXECUTORS = {
@@ -456,13 +483,11 @@ const EXECUTORS = {
   'build-then-gate': (copySite, entry) => runPlantedFamily(copySite, entry, true),
   gate: (copySite, entry, work) => runGateFamily(copySite, entry, work),
   pure: (copySite) => runPureFamily(copySite),
-  wiring: (copySite) => runWiringFamily(copySite),
-  brand: (copySite) => runBrandFamily(copySite),
   pagination: (copySite, entry) => runPaginationFamily(copySite, entry),
-  'unit-covered': () => ({
-    ok: true,
-    reason: 'proven by unit tests (machine.test.mjs feedCoverageFailures); no repo-copy run',
-  }),
+  specimen: async (copySite, entry, work) => {
+    await restoreDist(copySite, work);
+    return proveWithSpecimen(SPECIMENS[entry.specimen], { copySite, run });
+  },
 };
 
 export function label(result) {
@@ -496,11 +521,12 @@ async function main() {
       reason: baseline.code === 0 ? 'pristine copy builds green' : baseline.output.slice(-400),
     });
     if (baseline.code === 0) {
+      await snapshotDist(copySite, work);
       for (const entry of manifestFamilies(FAMILIES)) {
         const familyStart = Date.now();
         let outcome;
         if (fast && entry.slow)
-          outcome = { skipped: true, reason: 'skipped: --fast (pagination proof needs a full build)' };
+          outcome = { skipped: true, reason: 'skipped: --fast (needs a full build or a browser)' };
         else outcome = await EXECUTORS[entry.kind](copySite, entry, work);
         results.push({ id: entry.id, ...outcome, seconds: Math.round((Date.now() - familyStart) / 1000) });
       }

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { extractPage } from './content-html.mjs';
+import { extractPage, pageBody } from './content-html.mjs';
 
 const PAGE = `<!doctype html><html><head><title>t</title></head><body>
 <header><nav><a href="/services">Services</a></nav><p>Book a call today with the team</p></header>
@@ -157,4 +157,12 @@ test('markup written inside a script string is never read as a paragraph, a head
   assert.deepEqual(page.headings.sub, []);
   assert.deepEqual(page.links.external, []);
   assert.doesNotMatch(page.text, /Injected/);
+});
+
+test('the page body is the main markup with chrome, ignored blocks and scripts cut away', () => {
+  const body = pageBody(
+    '<html><body><header><p>Chrome text.</p></header><main><script>var x = 1;</script><p>Kept prose.</p>' +
+      '<div data-gate-ignore><p>Ignored card.</p></div></main><footer><p>Footer text.</p></footer></body></html>'
+  );
+  assert.equal(body.trim(), '<p>Kept prose.</p>');
 });

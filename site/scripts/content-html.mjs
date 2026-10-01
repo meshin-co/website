@@ -26,7 +26,7 @@ const decode = (text) =>
     return match;
   });
 
-const stripTags = (html) =>
+export const stripTags = (html) =>
   decode(html.replace(/<[^>]*>/g, ' '))
     .replace(/\s+/g, ' ')
     .replace(/ ([,.;:!?)\]}])/g, '$1')
@@ -68,6 +68,11 @@ const NON_TEXT = /<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi;
 function newestDate(html) {
   const days = matchAll(html, /<time\b[^>]*\bdatetime="([^"]+)"/gi).map((value) => value.slice(0, 10));
   return days.length > 0 ? days.sort().at(-1) : null;
+}
+
+export function pageBody(source) {
+  const chromeFree = cutBalanced(source.replace(NON_TEXT, ' '), CHROME);
+  return cutBalanced(MAIN.exec(chromeFree)?.[1] ?? chromeFree, IGNORED);
 }
 
 export function extractPage(route, source) {

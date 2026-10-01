@@ -64,11 +64,13 @@ origin logs an error or fails to load. Chromium is covered by the rest of the su
 
 Two harness facts, both measured:
 
-- **WebKit applies `upgrade-insecure-requests` to `127.0.0.1`; Chromium exempts localhost.** Left
-  alone, WebKit upgrades every request to `https://127.0.0.1:4340`, the TLS handshake fails, and
-  the page renders with no CSS at all. The spec strips that one directive from the document
-  response and leaves the rest of the CSP intact, so the gate server keeps serving the real
-  header. A "table overflows in WebKit" finding was this, not a layout bug.
+- **`upgrade-insecure-requests` cannot apply on a plain-http fixture.** WebKit applies it to
+  `127.0.0.1` (Chromium exempts localhost), and Chrome's prefetch tries the https form of every
+  linked route; either way the handshake fails, so WebKit rendered with no CSS and Lighthouse
+  scored best-practices 96 on any route with prefetched links. `gate-server.mjs` drops that one
+  directive when it serves over http and leaves the rest of the policy intact; `dist/_headers`
+  still ships it, because in production every request is already https. A "table overflows in
+  WebKit" finding was this, not a layout bug.
 - **Navigation under load.** These projects carry a 90 s test timeout and a 60 s navigation
   timeout. In isolation the spec is stable: 315 of 315 over three repeats. Inside the full
   906-test suite at 8 workers, one navigation can still exceed the budget; CI's single retry

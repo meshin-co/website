@@ -50,9 +50,10 @@ routes round-robin (`scripts/lh-shards.cjs`), each binds port `4330 + index - 1`
 
 Lighthouse audits every unique page plus ONE leaf per repeated template family — the heaviest
 by built bytes — because leaves of one template differ only in content, not in what Lighthouse
-measures. The set is derived by `lighthouseSet()` in `scripts/gate.mjs`, exported into the
-build output as `gate-routes.json`, and never hand-authored. Visual snapshots follow the same
-family logic via `scripts/templates.mjs`.
+measures. `auditableRoutes()` in `scripts/lh-routes.cjs` derives the set from `dist/**/*.html`,
+never from `gate-routes.json`; `/styleguide` is excluded by name. Routes in `NOINDEX_BY_DESIGN`
+skip only `is-crawlable`; every other page gets the whole SEO category, so no page can waive itself
+by declaring noindex. Visual snapshots follow the same family logic via `scripts/templates.mjs`.
 
 ## Known traps (docs/FRONTEND-EXCELLENCE-ISSUES.md)
 
@@ -66,6 +67,7 @@ family logic via `scripts/templates.mjs`.
   charges the simulated graph: see `diagnose-a-lighthouse-lcp-plateau.md`.
 - A category score of 100 does not mean the metric assertions passed. `report.mjs` enforces the
   LCP, CLS and TBT budgets it reads from `lighthouserc.cjs` on each route's median run.
+- lhci asserts the best run by default; every rule in `lighthouserc.cjs` goes through `onMedian`.
 - A scratch page left in the build silently widens every downstream gate; delete throwaway
   routes before the audited build.
 - perfect-coder strict mode refuses test, config and data-only files with no sibling test: create
