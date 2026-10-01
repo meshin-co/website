@@ -35,10 +35,9 @@ The Calibration Gate's edge checks were prose until 2026-09-15. They are now a c
 18 real requests: all six security headers present with no unsafe CSP directive, no `noindex`
 robots meta on the home page, and ten canonical routes plus six machine surfaces answering 200 —
 a 301 or 308 fails, because after the flip a canonical route lands directly. It writes
-`audits/phase-5/smoke-prod.md`, which currently records 9 failures against the local gate server:
-the nine canonical routes answer 308 there, as a directory build does on Pages (G15 in
-`docs/plan/reference/known-gaps.md`). CG-5 is not closed until it records a pass against
-`https://meshin.co`. Procedure: `site/.agents/skills/smoke-the-live-site.md`.
+`audits/phase-5/smoke-prod.md`, which currently records a pass, 18 of 18, against the local gate
+server, which answers the way Pages does for the flat build. CG-5 is not closed until it records a
+pass against `https://meshin.co`. Procedure: `site/.agents/skills/smoke-the-live-site.md`.
 
 ## Blocked on the owner
 

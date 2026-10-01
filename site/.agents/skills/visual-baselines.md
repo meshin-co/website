@@ -63,6 +63,7 @@ wordmark, or description change and commit the resulting PNGs.
 
 ## Four workers, measured
 
-`playwright.config.ts` pins `workers: 4`. The gate server is one process, and since it started
-modelling Pages every slashless navigation costs two requests. At the machine default the suite
-fails in the hundreds while every project passes alone; at four, 906 of 906 pass.
+`playwright.config.ts` pins `workers: 4`. The gate server is one process. Measured while it still
+answered every slashless navigation with a 308 followed by a 200, the machine default failed in
+the hundreds while every project passed alone; at four, 906 of 906 pass. The flat build answers
+each page with one request, and the default has not been re-measured since.

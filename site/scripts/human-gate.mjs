@@ -205,7 +205,7 @@ export function pageFromHtml(route, source) {
 }
 
 const CONTROLLED_WORDS = new URL('../controlled-words.json', import.meta.url);
-const routeFile = (route) => (route === '/404' ? '404.html' : join(route.slice(1), 'index.html'));
+const routeFile = (route) => (route === '/' ? 'index.html' : `${route.slice(1)}.html`);
 
 export async function runGate(distDir) {
   const controlled = JSON.parse(await readFile(CONTROLLED_WORDS, 'utf8'));

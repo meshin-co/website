@@ -11,7 +11,7 @@ import PaginationLinks from '~/components/site/PaginationLinks.astro';
 import PostCard from '~/components/site/PostCard.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { categoryPillars } from '~/data/categories.mjs';
+import { archiveTitleOf, categoryPillars } from '~/data/categories.mjs';
 import { collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
 import { firstPage, paginationLinks } from '~/utils/paginate.mjs';
 import { readingTime } from '~/utils/reading-time.mjs';
@@ -37,9 +37,10 @@ const site = import.meta.env.SITE.replace(/\/$/, '');
 const sorted = posts.sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
 const visible = firstPage(sorted);
 const basePath = `/blog/category/${category}`;
+const heading = archiveTitleOf(pillar);
 
 const metadata = {
-  title: pillar.title,
+  title: heading,
   description: pillar.description,
   ...(posts.length === 0 ? { robots: { index: false, follow: true } } : {}),
 };
@@ -50,7 +51,7 @@ const nodes = [
   websiteNode(site),
   collectionNode(site, {
     path: basePath,
-    name: pillar.title,
+    name: heading,
     description: pillar.description,
     items: visible.map((post) => ({ url: `/blog/${post.id}` })),
   }),
@@ -64,11 +65,11 @@ const nodes = [
     crumbs={[
       { name: 'Home', path: '/' },
       { name: 'Writing', path: '/blog' },
-      { name: pillar.title, path: basePath },
+      { name: heading, path: basePath },
     ]}
   />
 
-  <Section bordered={false} headingLevel={1} eyebrow="Category" title={pillar.title} lead={pillar.description} />
+  <Section bordered={false} headingLevel={1} eyebrow="Category" title={heading} lead={pillar.description} />
 
   <Section eyebrow="Position" title="Where I stand on this" tone="surface">
     <div class="grid max-w-[68ch] gap-6 text-lg leading-relaxed text-muted">

@@ -149,7 +149,7 @@ export function ownsNode(route, node) {
   return (path === '' ? '/' : path) === route;
 }
 
-export function missingProperties(graphs, required, route) {
+export function missingProperties(graphs, route) {
   const byType = new Map();
   for (const node of nodesOf(graphs)) {
     for (const type of [node['@type']].flat()) {
@@ -190,10 +190,8 @@ export async function main(distDir) {
       failures.push(`${route} matches no known jsonld route family`);
       continue;
     }
-    const file = route === '/' ? 'index.html' : `${route.slice(1)}/index.html`;
-    const html = await readFile(`${distDir}/${file}`, 'utf8').catch(() =>
-      readFile(`${distDir}/${route.slice(1)}.html`, 'utf8')
-    );
+    const file = route === '/' ? 'index.html' : `${route.slice(1)}.html`;
+    const html = await readFile(`${distDir}/${file}`, 'utf8');
     const graphs = extractGraphs(html);
     if (graphs.length === 0) {
       failures.push(`${route} carries no ld+json graph`);
@@ -204,7 +202,7 @@ export async function main(distDir) {
     for (const id of danglingIds(graphs)) failures.push(`${route} references undeclared ${id}`);
     for (const id of duplicateIds(graphs)) failures.push(`${route} declares ${id} twice`);
     for (const type of missingTypes(graphs, required)) failures.push(`${route} has no ${type} node`);
-    for (const failure of missingProperties(graphs, required, route)) failures.push(`${route} ${failure}`);
+    for (const failure of missingProperties(graphs, route)) failures.push(`${route} ${failure}`);
   }
 
   console.log(`jsonld: ${checked} of ${routes.length} routes carry a graph`);

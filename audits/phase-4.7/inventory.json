@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-23",
+  "generated": "2026-10-01",
   "counts": {
     "untraceable": 0,
     "dead": 9,
@@ -869,8 +869,6 @@
         "src/data/categories.mjs",
         "src/data/tags.mjs",
         "src/utils/jsonld.mjs",
-        "/blog/category/governance",
-        "/blog/tag/ai-governance",
         "/glossary/ai-governance"
       ],
       "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
@@ -1040,7 +1038,6 @@
       "usedIn": [
         "src/data/glossary/ai-register.md",
         "src/data/tags.mjs",
-        "/blog/tag/ai-register",
         "/glossary/ai-register"
       ],
       "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
@@ -2231,7 +2228,6 @@
       "usedIn": [
         "src/data/glossary/shadow-ai.md",
         "src/data/tags.mjs",
-        "/blog/tag/shadow-ai",
         "/glossary/shadow-ai"
       ],
       "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
@@ -2386,7 +2382,7 @@
     {
       "location": "frontmatter.description",
       "text": "What a working AI acceptable use policy has to decide, what it must refuse to do, and how a company of 30 to 300 people gets staff to follow it.",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "src/data/post/ai-acceptable-use-policy-for-a-50-person-company.md",
         "/blog",
@@ -2398,7 +2394,7 @@
         "/blog/tag/policy-enforcement",
         "/blog/tag/shadow-ai"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"shadow ai posts\". The bare term \"shadow ai\" now belongs only to /glossary/shadow-ai. Lead reads \"All posts tagged Shadow AI, newest first.\" with no claim beyond the tag list."
     },
     {
       "location": "frontmatter.shortAnswer",
@@ -2582,7 +2578,7 @@
     {
       "location": "frontmatter.description",
       "text": "How to build an eval set from production traffic, score an LLM agent without a golden answer, and fail a merge in CI when it regresses.",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "src/data/post/evals-in-ci-for-llm-agents.md",
         "/blog",
@@ -2592,7 +2588,7 @@
         "/blog/tag/evals-in-ci",
         "/blog/tag/llm-as-judge"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1 and lead now follow the tag template change: \"LLM as judge posts\" and \"All posts tagged LLM as judge, newest first.\"; query updated to \"llm as judge posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
     },
     {
       "location": "frontmatter.shortAnswer",
@@ -2757,7 +2753,7 @@
     {
       "location": "frontmatter.description",
       "text": "A step-by-step way to build an AI system register in a week without buying a tool, so a security reviewer gets the document they ask for first.",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "src/data/post/how-to-build-an-ai-system-register-in-a-week.md",
         "/blog",
@@ -2769,7 +2765,7 @@
         "/blog/tag/eu-ai-act",
         "/blog/tag/security-review"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1 and lead now follow the tag template change: \"Security review posts\" and \"All posts tagged Security review, newest first.\"; query updated to \"security review posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
     },
     {
       "location": "frontmatter.shortAnswer",
@@ -5145,11 +5141,11 @@
     {
       "location": "text",
       "text": "Nothing carries this tag yet.",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "src/pages/blog/tag/[tag].astro"
       ],
-      "reason": "empty state copy is fine; composed title tag.name + template matches the tag family pattern in SEMANTIC-CORE"
+      "reason": "Hard-coded lead \"Every article tagged ...\" removed; title, H1, breadcrumb and lead now come from tagArchive in tags.mjs. Remaining copy (\"Tag\" eyebrow, \"Articles\" heading, empty state) unchanged and compliant."
     },
     {
       "location": "attribute.lead",
@@ -6621,36 +6617,54 @@
       "reason": "Fixed a stale factual claim: the \"Prices\" section and meta description referred to \"published prices\" that were removed sitewide by locked decision L8 (closed 2026-09-12); this page predates that change (UPDATED was 2026-09-08) and was never updated. Renamed the section \"Fees\" and rewrote it to state no price is published, only fee shapes, matching /pricing's language. Did not touch jurisdiction, liability, IP, or governing-law clauses. Bumped UPDATED to 2026-09-15."
     },
     {
-      "location": "constant.description",
-      "text": "AI governance in a company of 30 to 300 people is four documents on a shared drive, not a maturity model built for a bank.",
-      "status": "verified",
+      "location": "constant.archiveTitle",
+      "text": "AI governance articles",
+      "status": "rewritten",
       "usedIn": [
         "src/data/categories.mjs",
         "/blog/category/governance"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"ai governance articles\". The bare term \"ai governance\" now belongs only to /glossary/ai-governance. The description names the four documents the category body already covers (register, acceptable-use policy, data classification, named owner) and the 30 to 300 company range already in content-facts numbers; no owner fact added."
+    },
+    {
+      "location": "constant.description",
+      "text": "Articles on AI governance for companies of 30 to 300 people: the register, acceptable-use policy, data classification and a named owner.",
+      "status": "rewritten",
+      "usedIn": [
+        "src/data/categories.mjs",
+        "/blog/category/governance"
+      ],
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"ai governance articles\". The bare term \"ai governance\" now belongs only to /glossary/ai-governance. The description names the four documents the category body already covers (register, acceptable-use policy, data classification, named owner) and the 30 to 300 company range already in content-facts numbers; no owner fact added."
     },
     {
       "location": "constant.title",
       "text": "Agentic architecture",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "src/data/categories.mjs",
-        "src/data/tags.mjs",
-        "/blog/category/agentic-architecture",
-        "/blog/tag/agentic-architecture"
+        "src/data/tags.mjs"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Tag names unchanged and still 12 short names with no prose. New tagArchive(tag) supplies the archive title \"{name} posts\" and lead \"All posts tagged {name}, newest first.\", replacing \"Every article tagged {name}, newest first.\" so page, llms.txt and search index read one string. Plain, no banned phrasing, no fact claimed."
     },
     {
-      "location": "constant.description",
-      "text": "Agentic architecture here means agent systems built to survive production: evals in CI, tracing, cost ceilings and a rollback path.",
-      "status": "verified",
+      "location": "constant.archiveTitle",
+      "text": "Agentic architecture articles",
+      "status": "rewritten",
       "usedIn": [
         "src/data/categories.mjs",
         "/blog/category/agentic-architecture"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"agentic architecture articles\". No glossary page owns \"agentic architecture\", so the conflict was category versus tag; the tag archive now targets \"agentic architecture posts\", and each archive claims its own query. The description names the controls the category body covers: evals in CI, tracing, cost ceilings, rollback path."
+    },
+    {
+      "location": "constant.description",
+      "text": "Articles on agentic architecture for production: evals in CI, tracing, cost ceilings and a rollback path for agent systems.",
+      "status": "rewritten",
+      "usedIn": [
+        "src/data/categories.mjs",
+        "/blog/category/agentic-architecture"
+      ],
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"agentic architecture articles\". No glossary page owns \"agentic architecture\", so the conflict was category versus tag; the tag archive now targets \"agentic architecture posts\", and each archive claims its own query. The description names the controls the category body covers: evals in CI, tracing, cost ceilings, rollback path."
     },
     {
       "location": "constant.title",
@@ -6695,132 +6709,132 @@
     {
       "location": "constant.body",
       "text": "Governance has a bad name in small companies because most of what is sold under that name is written for a bank. A three hundred person company does not need a committee, a maturity model or a consultant to run a workshop. It needs four things that fit on a shared drive and get updated when something changes.",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "src/data/categories.mjs",
         "/blog/category/governance"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"ai governance articles\". The bare term \"ai governance\" now belongs only to /glossary/ai-governance. The description names the four documents the category body already covers (register, acceptable-use policy, data classification, named owner) and the 30 to 300 company range already in content-facts numbers; no owner fact added."
     },
     {
       "location": "constant.body",
       "text": "The first is a register: every AI system in use, who owns it, what data reaches it. It also records whether a person checks its output before a customer sees it. Companies usually find more AI in the building than they expected, because someone signed up for a tool with a credit card and nobody wrote it down.",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "src/data/categories.mjs",
         "/blog/category/governance"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"ai governance articles\". The bare term \"ai governance\" now belongs only to /glossary/ai-governance. The description names the four documents the category body already covers (register, acceptable-use policy, data classification, named owner) and the 30 to 300 company range already in content-facts numbers; no owner fact added."
     },
     {
       "location": "constant.body",
       "text": "The second is an acceptable-use policy short enough that people read it. One page. What you may paste into a chat window, what you may not, and who to ask when the answer is unclear. A policy that requires a training course to understand is a policy that gets ignored by the people whose behaviour it was written to change.",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "src/data/categories.mjs",
         "/blog/category/governance"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"ai governance articles\". The bare term \"ai governance\" now belongs only to /glossary/ai-governance. The description names the four documents the category body already covers (register, acceptable-use policy, data classification, named owner) and the 30 to 300 company range already in content-facts numbers; no owner fact added."
     },
     {
       "location": "constant.body",
       "text": "The third is a data classification table. Three or four tiers, each with a rule about which vendors may see that tier. This is the document that answers most of a customer security questionnaire. It is also the one companies most often skip, because it requires a decision rather than a description.",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "src/data/categories.mjs",
         "/blog/category/governance"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"ai governance articles\". The bare term \"ai governance\" now belongs only to /glossary/ai-governance. The description names the four documents the category body already covers (register, acceptable-use policy, data classification, named owner) and the 30 to 300 company range already in content-facts numbers; no owner fact added."
     },
     {
       "location": "constant.body",
       "text": "The fourth is a named owner: one person whose job description says they own AI risk and who has the authority to stop a launch. Frameworks like ISO/IEC 42001 and the NIST AI Risk Management Framework both assume this person exists. Without them, every answer in a questionnaire is a guess, and every incident becomes a search for who should have been watching.",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "src/data/categories.mjs",
         "/blog/category/governance"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"ai governance articles\". The bare term \"ai governance\" now belongs only to /glossary/ai-governance. The description names the four documents the category body already covers (register, acceptable-use policy, data classification, named owner) and the 30 to 300 company range already in content-facts numbers; no owner fact added."
     },
     {
       "location": "constant.body",
       "text": "That is the whole set. It takes about two weeks to produce honestly, and the honest version is worth more than a thorough version that describes a company you are not. A customer may ask who owns AI risk. A board may ask what happens if a model leaks a document. Either way, you want to answer from a document that was true last week, not one that was impressive last year.",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "src/data/categories.mjs",
         "/blog/category/governance"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"ai governance articles\". The bare term \"ai governance\" now belongs only to /glossary/ai-governance. The description names the four documents the category body already covers (register, acceptable-use policy, data classification, named owner) and the 30 to 300 company range already in content-facts numbers; no owner fact added."
     },
     {
       "location": "constant.body",
       "text": "An agent demo is easy and an agent in production is not, and the gap between them is almost never about the model. It is about the same engineering discipline any other system needs, applied to a component whose output is not deterministic.",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "src/data/categories.mjs",
         "/blog/category/agentic-architecture"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"agentic architecture articles\". No glossary page owns \"agentic architecture\", so the conflict was category versus tag; the tag archive now targets \"agentic architecture posts\", and each archive claims its own query. The description names the controls the category body covers: evals in CI, tracing, cost ceilings, rollback path."
     },
     {
       "location": "constant.body",
       "text": "Start with evaluation, before the prompt. You need to say what a good answer looks like on a set of real cases. Otherwise you cannot tell whether a change made the system better or simply different. Build the eval set from work people have already done, so there is a known-good answer to compare against. Sample it across a window long enough that seasonality does not flatter you.",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "src/data/categories.mjs",
         "/blog/category/agentic-architecture"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"agentic architecture articles\". No glossary page owns \"agentic architecture\", so the conflict was category versus tag; the tag archive now targets \"agentic architecture posts\", and each archive claims its own query. The description names the controls the category body covers: evals in CI, tracing, cost ceilings, rollback path."
     },
     {
       "location": "constant.body",
       "text": "Put that eval run in continuous integration. This is the single change that most often turns a prototype into something a team will let near a customer. It moves the question from an argument about vibes to a number that blocks a merge. A regression should fail the build, in the same job, with the same authority as a broken unit test.",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "src/data/categories.mjs",
         "/blog/category/agentic-architecture"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"agentic architecture articles\". No glossary page owns \"agentic architecture\", so the conflict was category versus tag; the tag archive now targets \"agentic architecture posts\", and each archive claims its own query. The description names the controls the category body covers: evals in CI, tracing, cost ceilings, rollback path."
     },
     {
       "location": "constant.body",
       "text": "Instrument every call. When an answer is wrong you want to see which retrieval returned which document and what the model was given, not reconstruct it from memory. Tracing turns a support escalation into a quick check instead of a day of guessing.",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "src/data/categories.mjs",
         "/blog/category/agentic-architecture"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"agentic architecture articles\". No glossary page owns \"agentic architecture\", so the conflict was category versus tag; the tag archive now targets \"agentic architecture posts\", and each archive claims its own query. The description names the controls the category body covers: evals in CI, tracing, cost ceilings, rollback path."
     },
     {
       "location": "constant.body",
       "text": "Set a cost ceiling per outcome and check it in the same job as the evals. A loop that retries three times on a bad tool response is fine in a demo and ruinous at volume. If you cannot state the cost of one completed task, you do not yet know whether the system makes sense.",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "src/data/categories.mjs",
         "/blog/category/agentic-architecture"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"agentic architecture articles\". No glossary page owns \"agentic architecture\", so the conflict was category versus tag; the tag archive now targets \"agentic architecture posts\", and each archive claims its own query. The description names the controls the category body covers: evals in CI, tracing, cost ceilings, rollback path."
     },
     {
       "location": "constant.body",
       "text": "Then design the boundary. Tool interfaces are where agents actually break. That is why an explicit protocol between the model and your systems is worth adopting, rather than one improvised inside a prompt. Keep the tools narrow, validate their inputs, and make every destructive action reversible.",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "src/data/categories.mjs",
         "/blog/category/agentic-architecture"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"agentic architecture articles\". No glossary page owns \"agentic architecture\", so the conflict was category versus tag; the tag archive now targets \"agentic architecture posts\", and each archive claims its own query. The description names the controls the category body covers: evals in CI, tracing, cost ceilings, rollback path."
     },
     {
       "location": "constant.body",
       "text": "Finally, keep a rollback path. A prompt is a deployment. Version it, ship it behind the same controls as code, and be able to put yesterday back quickly.",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "src/data/categories.mjs",
         "/blog/category/agentic-architecture"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"agentic architecture articles\". No glossary page owns \"agentic architecture\", so the conflict was category versus tag; the tag archive now targets \"agentic architecture posts\", and each archive claims its own query. The description names the controls the category body covers: evals in CI, tracing, cost ceilings, rollback path."
     },
     {
       "location": "constant.body",
@@ -7566,72 +7580,74 @@
     {
       "location": "constant.TAGS",
       "text": "Acceptable use policy",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
-        "src/data/tags.mjs",
-        "/blog/tag/acceptable-use-policy"
+        "src/data/tags.mjs"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Tag names unchanged and still 12 short names with no prose. New tagArchive(tag) supplies the archive title \"{name} posts\" and lead \"All posts tagged {name}, newest first.\", replacing \"Every article tagged {name}, newest first.\" so page, llms.txt and search index read one string. Plain, no banned phrasing, no fact claimed."
     },
     {
       "location": "constant.TAGS",
       "text": "AI pilots",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
-        "src/data/tags.mjs",
-        "/blog/tag/ai-pilots"
+        "src/data/tags.mjs"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Tag names unchanged and still 12 short names with no prose. New tagArchive(tag) supplies the archive title \"{name} posts\" and lead \"All posts tagged {name}, newest first.\", replacing \"Every article tagged {name}, newest first.\" so page, llms.txt and search index read one string. Plain, no banned phrasing, no fact claimed."
     },
     {
       "location": "constant.TAGS",
       "text": "Evals in CI",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
-        "src/data/tags.mjs",
-        "/blog/tag/evals-in-ci"
+        "src/data/tags.mjs"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Tag names unchanged and still 12 short names with no prose. New tagArchive(tag) supplies the archive title \"{name} posts\" and lead \"All posts tagged {name}, newest first.\", replacing \"Every article tagged {name}, newest first.\" so page, llms.txt and search index read one string. Plain, no banned phrasing, no fact claimed."
     },
     {
       "location": "constant.TAGS",
       "text": "LLM as judge",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
-        "src/data/tags.mjs",
-        "/blog/tag/llm-as-judge"
+        "src/data/tags.mjs"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Tag names unchanged and still 12 short names with no prose. New tagArchive(tag) supplies the archive title \"{name} posts\" and lead \"All posts tagged {name}, newest first.\", replacing \"Every article tagged {name}, newest first.\" so page, llms.txt and search index read one string. Plain, no banned phrasing, no fact claimed."
     },
     {
       "location": "constant.TAGS",
       "text": "Policy enforcement",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
-        "src/data/tags.mjs",
-        "/blog/tag/policy-enforcement"
+        "src/data/tags.mjs"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Tag names unchanged and still 12 short names with no prose. New tagArchive(tag) supplies the archive title \"{name} posts\" and lead \"All posts tagged {name}, newest first.\", replacing \"Every article tagged {name}, newest first.\" so page, llms.txt and search index read one string. Plain, no banned phrasing, no fact claimed."
     },
     {
       "location": "constant.TAGS",
       "text": "Production readiness",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
-        "src/data/tags.mjs",
-        "/blog/tag/production-readiness"
+        "src/data/tags.mjs"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Tag names unchanged and still 12 short names with no prose. New tagArchive(tag) supplies the archive title \"{name} posts\" and lead \"All posts tagged {name}, newest first.\", replacing \"Every article tagged {name}, newest first.\" so page, llms.txt and search index read one string. Plain, no banned phrasing, no fact claimed."
     },
     {
       "location": "constant.TAGS",
       "text": "Security review",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
-        "src/data/tags.mjs",
-        "/blog/tag/security-review"
+        "src/data/tags.mjs"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Tag names unchanged and still 12 short names with no prose. New tagArchive(tag) supplies the archive title \"{name} posts\" and lead \"All posts tagged {name}, newest first.\", replacing \"Every article tagged {name}, newest first.\" so page, llms.txt and search index read one string. Plain, no banned phrasing, no fact claimed."
+    },
+    {
+      "location": "constant.description",
+      "text": "All posts tagged",
+      "status": "rewritten",
+      "usedIn": [
+        "src/data/tags.mjs"
+      ],
+      "reason": "Tag names unchanged and still 12 short names with no prose. New tagArchive(tag) supplies the archive title \"{name} posts\" and lead \"All posts tagged {name}, newest first.\", replacing \"Every article tagged {name}, newest first.\" so page, llms.txt and search index read one string. Plain, no banned phrasing, no fact claimed."
     },
     {
       "location": "constant.message",
@@ -8437,15 +8453,6 @@
         "src/pages/blog/page/[page].astro"
       ],
       "reason": "'Older articles, continuing from the first page.' is short and direct; noindex pagination route, not a gated family"
-    },
-    {
-      "location": "constant.description",
-      "text": "Every article tagged",
-      "status": "verified",
-      "usedIn": [
-        "src/pages/blog/tag/[tag].astro"
-      ],
-      "reason": "empty state copy is fine; composed title tag.name + template matches the tag family pattern in SEMANTIC-CORE"
     },
     {
       "location": "constant.label",
@@ -9403,7 +9410,7 @@
     {
       "location": "body.p",
       "text": "08 Sept 2026 · 6 min read · AI governance",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "/blog",
         "/blog/category/governance",
@@ -9413,12 +9420,12 @@
         "/blog/tag/policy-enforcement",
         "/blog/tag/shadow-ai"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"shadow ai posts\". The bare term \"shadow ai\" now belongs only to /glossary/shadow-ai. Lead reads \"All posts tagged Shadow AI, newest first.\" with no claim beyond the tag list."
     },
     {
       "location": "body.p",
       "text": "acceptable-use-policy · ai-governance · shadow-ai · policy-enforcement",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "/blog",
         "/blog/category/governance",
@@ -9427,12 +9434,12 @@
         "/blog/tag/policy-enforcement",
         "/blog/tag/shadow-ai"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"shadow ai posts\". The bare term \"shadow ai\" now belongs only to /glossary/shadow-ai. Lead reads \"All posts tagged Shadow AI, newest first.\" with no claim beyond the tag list."
     },
     {
       "location": "body.p",
       "text": "08 Sept 2026 · 8 min read · Agentic architecture",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "/blog",
         "/blog/category/agentic-architecture",
@@ -9440,12 +9447,12 @@
         "/blog/tag/evals-in-ci",
         "/blog/tag/llm-as-judge"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1 and lead now follow the tag template change: \"LLM as judge posts\" and \"All posts tagged LLM as judge, newest first.\"; query updated to \"llm as judge posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
     },
     {
       "location": "body.p",
       "text": "evals-in-ci · llm-as-judge · agentic-architecture",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "/blog",
         "/blog/category/agentic-architecture",
@@ -9453,12 +9460,12 @@
         "/blog/tag/evals-in-ci",
         "/blog/tag/llm-as-judge"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1 and lead now follow the tag template change: \"LLM as judge posts\" and \"All posts tagged LLM as judge, newest first.\"; query updated to \"llm as judge posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
     },
     {
       "location": "body.p",
       "text": "08 Sept 2026 · 5 min read · AI governance",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "/blog",
         "/blog/ai-acceptable-use-policy-for-a-50-person-company",
@@ -9468,12 +9475,12 @@
         "/blog/tag/eu-ai-act",
         "/blog/tag/security-review"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1 and lead now follow the tag template change: \"Security review posts\" and \"All posts tagged Security review, newest first.\"; query updated to \"security review posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
     },
     {
       "location": "body.p",
       "text": "ai-register · security-review · ai-governance · eu-ai-act",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "/blog",
         "/blog/category/governance",
@@ -9482,12 +9489,12 @@
         "/blog/tag/eu-ai-act",
         "/blog/tag/security-review"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1 and lead now follow the tag template change: \"Security review posts\" and \"All posts tagged Security review, newest first.\"; query updated to \"security review posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
     },
     {
       "location": "body.p",
       "text": "08 Sept 2026 · 6 min read · AI operating model",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "/blog",
         "/blog/category/operating-model",
@@ -9496,12 +9503,12 @@
         "/blog/tag/evals-in-ci",
         "/blog/tag/production-readiness"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1 and lead now follow the tag template change: \"Production readiness posts\" and \"All posts tagged Production readiness, newest first.\"; query updated to \"production readiness posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
     },
     {
       "location": "body.p",
       "text": "ai-pilots · production-readiness · ai-governance · evals-in-ci",
-      "status": "verified",
+      "status": "rewritten",
       "usedIn": [
         "/blog",
         "/blog/category/operating-model",
@@ -9510,7 +9517,7 @@
         "/blog/tag/evals-in-ci",
         "/blog/tag/production-readiness"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1 and lead now follow the tag template change: \"Production readiness posts\" and \"All posts tagged Production readiness, newest first.\"; query updated to \"production readiness posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
     },
     {
       "location": "body.p",
@@ -9793,13 +9800,12 @@
     },
     {
       "location": "head.title",
-      "text": "Agentic architecture — meshin.co",
-      "status": "verified",
+      "text": "Agentic architecture articles — meshin.co",
+      "status": "rewritten",
       "usedIn": [
-        "/blog/category/agentic-architecture",
-        "/blog/tag/agentic-architecture"
+        "/blog/category/agentic-architecture"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"agentic architecture articles\". No glossary page owns \"agentic architecture\", so the conflict was category versus tag; the tag archive now targets \"agentic architecture posts\", and each archive claims its own query. The description names the controls the category body covers: evals in CI, tracing, cost ceilings, rollback path."
     },
     {
       "location": "head.title",
@@ -9812,13 +9818,12 @@
     },
     {
       "location": "head.title",
-      "text": "AI governance — meshin.co",
-      "status": "verified",
+      "text": "AI governance articles — meshin.co",
+      "status": "rewritten",
       "usedIn": [
-        "/blog/category/governance",
-        "/blog/tag/ai-governance"
+        "/blog/category/governance"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"ai governance articles\". The bare term \"ai governance\" now belongs only to /glossary/ai-governance. The description names the four documents the category body already covers (register, acceptable-use policy, data classification, named owner) and the 30 to 300 company range already in content-facts numbers; no owner fact added."
     },
     {
       "location": "head.title",
@@ -10195,211 +10200,327 @@
     },
     {
       "location": "head.title",
-      "text": "Acceptable use policy — meshin.co",
-      "status": "verified",
+      "text": "Acceptable use policy posts — meshin.co",
+      "status": "rewritten",
       "usedIn": [
         "/blog/tag/acceptable-use-policy"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
-    },
-    {
-      "location": "body.p",
-      "text": "Every article tagged Acceptable use policy, newest first.",
-      "status": "verified",
-      "usedIn": [
-        "/blog/tag/acceptable-use-policy"
-      ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
-    },
-    {
-      "location": "body.p",
-      "text": "Every article tagged Agentic architecture, newest first.",
-      "status": "verified",
-      "usedIn": [
-        "/blog/tag/agentic-architecture"
-      ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
-    },
-    {
-      "location": "body.p",
-      "text": "Every article tagged AI governance, newest first.",
-      "status": "verified",
-      "usedIn": [
-        "/blog/tag/ai-governance"
-      ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
-    },
-    {
-      "location": "head.title",
-      "text": "AI pilots — meshin.co",
-      "status": "verified",
-      "usedIn": [
-        "/blog/tag/ai-pilots"
-      ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
-    },
-    {
-      "location": "body.p",
-      "text": "Every article tagged AI pilots, newest first.",
-      "status": "verified",
-      "usedIn": [
-        "/blog/tag/ai-pilots"
-      ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
-    },
-    {
-      "location": "head.title",
-      "text": "AI register — meshin.co",
-      "status": "verified",
-      "usedIn": [
-        "/blog/tag/ai-register"
-      ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
-    },
-    {
-      "location": "body.p",
-      "text": "Every article tagged AI register, newest first.",
-      "status": "verified",
-      "usedIn": [
-        "/blog/tag/ai-register"
-      ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
-    },
-    {
-      "location": "head.title",
-      "text": "EU AI Act — meshin.co",
-      "status": "verified",
-      "usedIn": [
-        "/blog/tag/eu-ai-act"
-      ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1 and lead now follow the tag template change: \"Acceptable use policy posts\" and \"All posts tagged Acceptable use policy, newest first.\"; query updated to \"acceptable use policy posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
     },
     {
       "location": "body.h1",
-      "text": "EU AI Act",
-      "status": "verified",
+      "text": "Acceptable use policy posts",
+      "status": "rewritten",
       "usedIn": [
-        "/blog/tag/eu-ai-act",
-        "/glossary/eu-ai-act"
+        "/blog/tag/acceptable-use-policy"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1 and lead now follow the tag template change: \"Acceptable use policy posts\" and \"All posts tagged Acceptable use policy, newest first.\"; query updated to \"acceptable use policy posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
     },
     {
       "location": "body.p",
-      "text": "Every article tagged EU AI Act, newest first.",
-      "status": "verified",
+      "text": "All posts tagged Acceptable use policy, newest first.",
+      "status": "rewritten",
+      "usedIn": [
+        "/blog/tag/acceptable-use-policy"
+      ],
+      "reason": "Title, H1 and lead now follow the tag template change: \"Acceptable use policy posts\" and \"All posts tagged Acceptable use policy, newest first.\"; query updated to \"acceptable use policy posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
+    },
+    {
+      "location": "head.title",
+      "text": "Agentic architecture posts — meshin.co",
+      "status": "rewritten",
+      "usedIn": [
+        "/blog/tag/agentic-architecture"
+      ],
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"agentic architecture posts\", distinct from the category archive query \"agentic architecture articles\". No glossary page owns the bare term. Lead reads \"All posts tagged Agentic architecture, newest first.\" with no claim beyond the tag list."
+    },
+    {
+      "location": "body.h1",
+      "text": "Agentic architecture posts",
+      "status": "rewritten",
+      "usedIn": [
+        "/blog/tag/agentic-architecture"
+      ],
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"agentic architecture posts\", distinct from the category archive query \"agentic architecture articles\". No glossary page owns the bare term. Lead reads \"All posts tagged Agentic architecture, newest first.\" with no claim beyond the tag list."
+    },
+    {
+      "location": "body.p",
+      "text": "All posts tagged Agentic architecture, newest first.",
+      "status": "rewritten",
+      "usedIn": [
+        "/blog/tag/agentic-architecture"
+      ],
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"agentic architecture posts\", distinct from the category archive query \"agentic architecture articles\". No glossary page owns the bare term. Lead reads \"All posts tagged Agentic architecture, newest first.\" with no claim beyond the tag list."
+    },
+    {
+      "location": "head.title",
+      "text": "AI governance posts — meshin.co",
+      "status": "rewritten",
+      "usedIn": [
+        "/blog/tag/ai-governance"
+      ],
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"ai governance posts\". The bare term \"ai governance\" now belongs only to /glossary/ai-governance. Lead reads \"All posts tagged AI governance, newest first.\" with no claim beyond the tag list."
+    },
+    {
+      "location": "body.h1",
+      "text": "AI governance posts",
+      "status": "rewritten",
+      "usedIn": [
+        "/blog/tag/ai-governance"
+      ],
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"ai governance posts\". The bare term \"ai governance\" now belongs only to /glossary/ai-governance. Lead reads \"All posts tagged AI governance, newest first.\" with no claim beyond the tag list."
+    },
+    {
+      "location": "body.p",
+      "text": "All posts tagged AI governance, newest first.",
+      "status": "rewritten",
+      "usedIn": [
+        "/blog/tag/ai-governance"
+      ],
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"ai governance posts\". The bare term \"ai governance\" now belongs only to /glossary/ai-governance. Lead reads \"All posts tagged AI governance, newest first.\" with no claim beyond the tag list."
+    },
+    {
+      "location": "head.title",
+      "text": "AI pilots posts — meshin.co",
+      "status": "rewritten",
+      "usedIn": [
+        "/blog/tag/ai-pilots"
+      ],
+      "reason": "Title, H1 and lead now follow the tag template change: \"AI pilots posts\" and \"All posts tagged AI pilots, newest first.\"; query updated to \"ai pilots posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
+    },
+    {
+      "location": "body.h1",
+      "text": "AI pilots posts",
+      "status": "rewritten",
+      "usedIn": [
+        "/blog/tag/ai-pilots"
+      ],
+      "reason": "Title, H1 and lead now follow the tag template change: \"AI pilots posts\" and \"All posts tagged AI pilots, newest first.\"; query updated to \"ai pilots posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
+    },
+    {
+      "location": "body.p",
+      "text": "All posts tagged AI pilots, newest first.",
+      "status": "rewritten",
+      "usedIn": [
+        "/blog/tag/ai-pilots"
+      ],
+      "reason": "Title, H1 and lead now follow the tag template change: \"AI pilots posts\" and \"All posts tagged AI pilots, newest first.\"; query updated to \"ai pilots posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
+    },
+    {
+      "location": "head.title",
+      "text": "AI register posts — meshin.co",
+      "status": "rewritten",
+      "usedIn": [
+        "/blog/tag/ai-register"
+      ],
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"ai register posts\". The bare term \"ai register\" now belongs only to /glossary/ai-register. Lead reads \"All posts tagged AI register, newest first.\" with no claim beyond the tag list."
+    },
+    {
+      "location": "body.h1",
+      "text": "AI register posts",
+      "status": "rewritten",
+      "usedIn": [
+        "/blog/tag/ai-register"
+      ],
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"ai register posts\". The bare term \"ai register\" now belongs only to /glossary/ai-register. Lead reads \"All posts tagged AI register, newest first.\" with no claim beyond the tag list."
+    },
+    {
+      "location": "body.p",
+      "text": "All posts tagged AI register, newest first.",
+      "status": "rewritten",
+      "usedIn": [
+        "/blog/tag/ai-register"
+      ],
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"ai register posts\". The bare term \"ai register\" now belongs only to /glossary/ai-register. Lead reads \"All posts tagged AI register, newest first.\" with no claim beyond the tag list."
+    },
+    {
+      "location": "head.title",
+      "text": "EU AI Act posts — meshin.co",
+      "status": "rewritten",
       "usedIn": [
         "/blog/tag/eu-ai-act"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"eu ai act posts\". The bare term \"eu ai act\" now belongs only to /glossary/eu-ai-act. Lead reads \"All posts tagged EU AI Act, newest first.\" with no claim beyond the tag list."
+    },
+    {
+      "location": "body.h1",
+      "text": "EU AI Act posts",
+      "status": "rewritten",
+      "usedIn": [
+        "/blog/tag/eu-ai-act"
+      ],
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"eu ai act posts\". The bare term \"eu ai act\" now belongs only to /glossary/eu-ai-act. Lead reads \"All posts tagged EU AI Act, newest first.\" with no claim beyond the tag list."
+    },
+    {
+      "location": "body.p",
+      "text": "All posts tagged EU AI Act, newest first.",
+      "status": "rewritten",
+      "usedIn": [
+        "/blog/tag/eu-ai-act"
+      ],
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"eu ai act posts\". The bare term \"eu ai act\" now belongs only to /glossary/eu-ai-act. Lead reads \"All posts tagged EU AI Act, newest first.\" with no claim beyond the tag list."
     },
     {
       "location": "head.title",
-      "text": "Evals in CI — meshin.co",
-      "status": "verified",
+      "text": "Evals in CI posts — meshin.co",
+      "status": "rewritten",
       "usedIn": [
         "/blog/tag/evals-in-ci"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1 and lead now follow the tag template change: \"Evals in CI posts\" and \"All posts tagged Evals in CI, newest first.\"; query updated to \"evals in ci posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
     },
     {
-      "location": "body.p",
-      "text": "Every article tagged Evals in CI, newest first.",
-      "status": "verified",
+      "location": "body.h1",
+      "text": "Evals in CI posts",
+      "status": "rewritten",
       "usedIn": [
         "/blog/tag/evals-in-ci"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1 and lead now follow the tag template change: \"Evals in CI posts\" and \"All posts tagged Evals in CI, newest first.\"; query updated to \"evals in ci posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
+    },
+    {
+      "location": "body.p",
+      "text": "All posts tagged Evals in CI, newest first.",
+      "status": "rewritten",
+      "usedIn": [
+        "/blog/tag/evals-in-ci"
+      ],
+      "reason": "Title, H1 and lead now follow the tag template change: \"Evals in CI posts\" and \"All posts tagged Evals in CI, newest first.\"; query updated to \"evals in ci posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
     },
     {
       "location": "head.title",
-      "text": "LLM as judge — meshin.co",
-      "status": "verified",
+      "text": "LLM as judge posts — meshin.co",
+      "status": "rewritten",
       "usedIn": [
         "/blog/tag/llm-as-judge"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1 and lead now follow the tag template change: \"LLM as judge posts\" and \"All posts tagged LLM as judge, newest first.\"; query updated to \"llm as judge posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
     },
     {
-      "location": "body.p",
-      "text": "Every article tagged LLM as judge, newest first.",
-      "status": "verified",
+      "location": "body.h1",
+      "text": "LLM as judge posts",
+      "status": "rewritten",
       "usedIn": [
         "/blog/tag/llm-as-judge"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1 and lead now follow the tag template change: \"LLM as judge posts\" and \"All posts tagged LLM as judge, newest first.\"; query updated to \"llm as judge posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
+    },
+    {
+      "location": "body.p",
+      "text": "All posts tagged LLM as judge, newest first.",
+      "status": "rewritten",
+      "usedIn": [
+        "/blog/tag/llm-as-judge"
+      ],
+      "reason": "Title, H1 and lead now follow the tag template change: \"LLM as judge posts\" and \"All posts tagged LLM as judge, newest first.\"; query updated to \"llm as judge posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
     },
     {
       "location": "head.title",
-      "text": "Policy enforcement — meshin.co",
-      "status": "verified",
+      "text": "Policy enforcement posts — meshin.co",
+      "status": "rewritten",
       "usedIn": [
         "/blog/tag/policy-enforcement"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1 and lead now follow the tag template change: \"Policy enforcement posts\" and \"All posts tagged Policy enforcement, newest first.\"; query updated to \"policy enforcement posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
     },
     {
-      "location": "body.p",
-      "text": "Every article tagged Policy enforcement, newest first.",
-      "status": "verified",
+      "location": "body.h1",
+      "text": "Policy enforcement posts",
+      "status": "rewritten",
       "usedIn": [
         "/blog/tag/policy-enforcement"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1 and lead now follow the tag template change: \"Policy enforcement posts\" and \"All posts tagged Policy enforcement, newest first.\"; query updated to \"policy enforcement posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
+    },
+    {
+      "location": "body.p",
+      "text": "All posts tagged Policy enforcement, newest first.",
+      "status": "rewritten",
+      "usedIn": [
+        "/blog/tag/policy-enforcement"
+      ],
+      "reason": "Title, H1 and lead now follow the tag template change: \"Policy enforcement posts\" and \"All posts tagged Policy enforcement, newest first.\"; query updated to \"policy enforcement posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
     },
     {
       "location": "head.title",
-      "text": "Production readiness — meshin.co",
-      "status": "verified",
+      "text": "Production readiness posts — meshin.co",
+      "status": "rewritten",
       "usedIn": [
         "/blog/tag/production-readiness"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1 and lead now follow the tag template change: \"Production readiness posts\" and \"All posts tagged Production readiness, newest first.\"; query updated to \"production readiness posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
     },
     {
-      "location": "body.p",
-      "text": "Every article tagged Production readiness, newest first.",
-      "status": "verified",
+      "location": "body.h1",
+      "text": "Production readiness posts",
+      "status": "rewritten",
       "usedIn": [
         "/blog/tag/production-readiness"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
-    },
-    {
-      "location": "head.title",
-      "text": "Security review — meshin.co",
-      "status": "verified",
-      "usedIn": [
-        "/blog/tag/security-review"
-      ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1 and lead now follow the tag template change: \"Production readiness posts\" and \"All posts tagged Production readiness, newest first.\"; query updated to \"production readiness posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
     },
     {
       "location": "body.p",
-      "text": "Every article tagged Security review, newest first.",
-      "status": "verified",
+      "text": "All posts tagged Production readiness, newest first.",
+      "status": "rewritten",
       "usedIn": [
-        "/blog/tag/security-review"
+        "/blog/tag/production-readiness"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1 and lead now follow the tag template change: \"Production readiness posts\" and \"All posts tagged Production readiness, newest first.\"; query updated to \"production readiness posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
     },
     {
       "location": "head.title",
-      "text": "Shadow AI — meshin.co",
-      "status": "verified",
+      "text": "Security review posts — meshin.co",
+      "status": "rewritten",
       "usedIn": [
-        "/blog/tag/shadow-ai"
+        "/blog/tag/security-review"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1 and lead now follow the tag template change: \"Security review posts\" and \"All posts tagged Security review, newest first.\"; query updated to \"security review posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
+    },
+    {
+      "location": "body.h1",
+      "text": "Security review posts",
+      "status": "rewritten",
+      "usedIn": [
+        "/blog/tag/security-review"
+      ],
+      "reason": "Title, H1 and lead now follow the tag template change: \"Security review posts\" and \"All posts tagged Security review, newest first.\"; query updated to \"security review posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
     },
     {
       "location": "body.p",
-      "text": "Every article tagged Shadow AI, newest first.",
-      "status": "verified",
+      "text": "All posts tagged Security review, newest first.",
+      "status": "rewritten",
+      "usedIn": [
+        "/blog/tag/security-review"
+      ],
+      "reason": "Title, H1 and lead now follow the tag template change: \"Security review posts\" and \"All posts tagged Security review, newest first.\"; query updated to \"security review posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list."
+    },
+    {
+      "location": "head.title",
+      "text": "Shadow AI posts — meshin.co",
+      "status": "rewritten",
       "usedIn": [
         "/blog/tag/shadow-ai"
       ],
-      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"shadow ai posts\". The bare term \"shadow ai\" now belongs only to /glossary/shadow-ai. Lead reads \"All posts tagged Shadow AI, newest first.\" with no claim beyond the tag list."
+    },
+    {
+      "location": "body.h1",
+      "text": "Shadow AI posts",
+      "status": "rewritten",
+      "usedIn": [
+        "/blog/tag/shadow-ai"
+      ],
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"shadow ai posts\". The bare term \"shadow ai\" now belongs only to /glossary/shadow-ai. Lead reads \"All posts tagged Shadow AI, newest first.\" with no claim beyond the tag list."
+    },
+    {
+      "location": "body.p",
+      "text": "All posts tagged Shadow AI, newest first.",
+      "status": "rewritten",
+      "usedIn": [
+        "/blog/tag/shadow-ai"
+      ],
+      "reason": "Title, H1, lead and meta description rewritten to the navigational query \"shadow ai posts\". The bare term \"shadow ai\" now belongs only to /glossary/shadow-ai. Lead reads \"All posts tagged Shadow AI, newest first.\" with no claim beyond the tag list."
     },
     {
       "location": "head.title",
@@ -11830,6 +11951,15 @@
     {
       "location": "head.title",
       "text": "What is the EU AI Act? — meshin.co",
+      "status": "verified",
+      "usedIn": [
+        "/glossary/eu-ai-act"
+      ],
+      "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page."
+    },
+    {
+      "location": "body.h1",
+      "text": "EU AI Act",
       "status": "verified",
       "usedIn": [
         "/glossary/eu-ai-act"

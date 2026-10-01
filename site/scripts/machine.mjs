@@ -130,6 +130,30 @@ export function hubFeedLinkGaps(hubRoutes, htmlByRoute) {
   return hubRoutes.filter((route) => !hasCollectionFeedLink(htmlByRoute[route] ?? '', route));
 }
 
+const META_TAG = /<meta\b[^>]*>/gi;
+
+const attributeOf = (tag, name) => new RegExp(`\\b${name}=["']([^"']*)["']`).exec(tag)?.[1];
+
+function declaredUrl(html, pattern, identifyingAttribute, identity, valueAttribute) {
+  const tag = [...html.matchAll(pattern)].find(([found]) => attributeOf(found, identifyingAttribute) === identity);
+  return tag === undefined ? undefined : attributeOf(tag[0], valueAttribute);
+}
+
+export function canonicalGaps(htmlByRoute, { site }) {
+  const gaps = [];
+  for (const [route, html] of Object.entries(htmlByRoute)) {
+    const expected = route === '/' ? site : `${site}${route}`;
+    const declared = [
+      ['canonical', declaredUrl(html, LINK_TAG, 'rel', 'canonical', 'href')],
+      ['og:url', declaredUrl(html, META_TAG, 'property', 'og:url', 'content')],
+    ];
+    for (const [label, found] of declared) {
+      if (found !== expected) gaps.push(`${route} ${label} is ${found ?? '(missing)'}, expected ${expected}`);
+    }
+  }
+  return gaps;
+}
+
 function toPath(url) {
   const path = url.replace(/^https?:\/\/[^/]+/, '');
   return path === '' ? '/' : path;
@@ -185,12 +209,8 @@ export function feedCoverageFailures(collections, { perCollectionFeeds, mergedFe
 }
 
 async function routeHtml(distDir, route) {
-  const withoutSlash = route.slice(1);
-  for (const candidate of [join(distDir, withoutSlash, 'index.html'), join(distDir, `${withoutSlash}.html`)]) {
-    const html = await readFile(candidate, 'utf8').catch(() => null);
-    if (html !== null) return html;
-  }
-  return '';
+  const file = join(distDir, route === '/' ? 'index.html' : `${route.slice(1)}.html`);
+  return readFile(file, 'utf8').catch(() => '');
 }
 
 async function noindexRoutesOf(distDir, routes) {
@@ -293,6 +313,10 @@ async function main(distDir) {
   for (const gap of sidecarGaps(routes, sidecarTextByRoute)) failures.push(`no markdown sidecar for ${gap}`);
   for (const gap of sidecarContentGaps(routes, sidecarTextByRoute, { site: SITE_ORIGIN })) failures.push(gap);
 
+  const htmlByRoute = {};
+  for (const route of routes) htmlByRoute[route] = await routeHtml(distDir, route);
+  for (const gap of canonicalGaps(htmlByRoute, { site: SITE_ORIGIN })) failures.push(gap);
+
   const hubRoutes = [...new Set(Object.values(COLLECTION_BASES))].map((base) => `/${base}`);
   const hubHtml = {};
   for (const route of hubRoutes) hubHtml[route] = await routeHtml(distDir, route);
@@ -324,10 +348,10 @@ async function main(distDir) {
   const catalog = [...STATIC_PAGE_CATALOG, ...HUB_PAGES.map((hub) => ({ ...hub, path: hub.base }))];
   const builtDescriptions = {};
   for (const entry of catalog) {
-    const nested = join(distDir, entry.path === '/' ? 'index.html' : join(entry.path.slice(1), 'index.html'));
-    const html = await readFile(nested, 'utf8').catch(() =>
-      readFile(join(distDir, `${entry.path.slice(1)}.html`), 'utf8').catch(() => null)
-    );
+    const html = await readFile(
+      join(distDir, entry.path === '/' ? 'index.html' : `${entry.path.slice(1)}.html`),
+      'utf8'
+    ).catch(() => null);
     if (html === null) continue;
     const tag =
       [...html.matchAll(/<meta\b[^>]*>/gi)].map(([found]) => found).find((found) => /name="description"/.test(found)) ??

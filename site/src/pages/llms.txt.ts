@@ -9,8 +9,8 @@ import {
   renderLlmsTxt,
 } from '~/utils/machine-text.mjs';
 import { LLMS_COLLECTIONS, latestUpdated, llmsFeedPointers, toLlmsEntry } from '~/utils/llms-collections.mjs';
-import { categoryPillars } from '~/data/categories.mjs';
-import { tagBySlug } from '~/data/tags.mjs';
+import { archiveTitleOf, categoryPillars } from '~/data/categories.mjs';
+import { tagArchive, tagBySlug } from '~/data/tags.mjs';
 import { lastmod } from '~/utils/lastmod.mjs';
 
 export const prerender = true;
@@ -73,22 +73,27 @@ export const GET = async () => {
   }));
 
   const categoryItems = [...liveTopicMap(postFacts, 'category').entries()]
-    .map(([slug, updated]) => ({
-      title: categoryPillars[slug as keyof typeof categoryPillars]?.title ?? slug,
-      description:
-        categoryPillars[slug as keyof typeof categoryPillars]?.description ?? `Articles in the ${slug} category.`,
-      updated,
-      url: absoluteUrl(site, `/blog/category/${slug}`),
-    }))
+    .map(([slug, updated]) => {
+      const pillar = categoryPillars[slug as keyof typeof categoryPillars];
+      return {
+        title: pillar ? archiveTitleOf(pillar) : slug,
+        description: pillar?.description ?? `Articles in the ${slug} category.`,
+        updated,
+        url: absoluteUrl(site, `/blog/category/${slug}`),
+      };
+    })
     .sort((a, b) => a.url.localeCompare(b.url));
 
   const tagItems = [...liveTopicMap(postFacts, 'tags').entries()]
-    .map(([slug, updated]) => ({
-      title: tagBySlug[slug]?.name ?? slug,
-      description: `Every article tagged ${tagBySlug[slug]?.name ?? slug}, newest first.`,
-      updated,
-      url: absoluteUrl(site, `/blog/tag/${slug}`),
-    }))
+    .map(([slug, updated]) => {
+      const archive = tagBySlug[slug] ? tagArchive(tagBySlug[slug]) : null;
+      return {
+        title: archive?.title ?? slug,
+        description: archive?.description ?? `All posts tagged ${slug}, newest first.`,
+        updated,
+        url: absoluteUrl(site, `/blog/tag/${slug}`),
+      };
+    })
     .sort((a, b) => a.url.localeCompare(b.url));
 
   sections.push({ title: 'Topics', items: [...categoryItems, ...tagItems] });

@@ -77,13 +77,13 @@ test('runGate names the route of each finding and leaves utility and pagination 
   const flawed = document(`<p>${PLAIN}</p><p>${ANTITHESIS} The owner updates it every month.</p>`);
   await withDist(
     {
-      'about/index.html': flawed,
-      'fine/index.html': document(`<p>${PLAIN}</p>`),
+      'about.html': flawed,
+      'fine.html': document(`<p>${PLAIN}</p>`),
       '404.html': flawed,
-      'search/index.html': flawed,
-      'styleguide/index.html': flawed,
-      'blog/page/2/index.html': flawed,
-      'blog/category/ops/page/3/index.html': flawed,
+      'search.html': flawed,
+      'styleguide.html': flawed,
+      'blog/page/2.html': flawed,
+      'blog/category/ops/page/3.html': flawed,
     },
     async (dist) => {
       const { checked, findings } = await runGate(dist);
@@ -99,8 +99,8 @@ test('runGate names the route of each finding and leaves utility and pagination 
 test('the bolded-lead and emoji-bullet tells are read from the built markup', async () => {
   await withDist(
     {
-      'a/index.html': document(`<p>${PLAIN}</p><ul><li><strong>Governance:</strong> the owner signs it off.</li></ul>`),
-      'b/index.html': document(`<p>${PLAIN}</p><ul><li>✅ Done and signed off.</li></ul>`),
+      'a.html': document(`<p>${PLAIN}</p><ul><li><strong>Governance:</strong> the owner signs it off.</li></ul>`),
+      'b.html': document(`<p>${PLAIN}</p><ul><li>✅ Done and signed off.</li></ul>`),
     },
     async (dist) => {
       const { findings } = await runGate(dist);
@@ -117,7 +117,7 @@ test('the bolded-lead and emoji-bullet tells are read from the built markup', as
 
 test('a page with too little prose to grade is still checked for the templates', async () => {
   await withDist(
-    { 'a/index.html': document(`<p>${PLAIN}</p>`), 'b/index.html': document(`<p>${ANTITHESIS}</p>`) },
+    { 'a.html': document(`<p>${PLAIN}</p>`), 'b.html': document(`<p>${ANTITHESIS}</p>`) },
     async (dist) => {
       const { checked, measured, findings } = await runGate(dist);
       assert.equal(checked, 2);
@@ -142,7 +142,7 @@ test('a tree with no pages is a finding, because a gate that checked nothing rea
 });
 
 test('a tree where no page has enough prose to grade is a finding, because extraction may have broken', async () => {
-  await withDist({ 'a/index.html': document('<p>One short line.</p>') }, async (dist) => {
+  await withDist({ 'a.html': document('<p>One short line.</p>') }, async (dist) => {
     const { checked, measured, findings } = await runGate(dist);
     assert.equal(checked, 1);
     assert.equal(measured, 0);
@@ -170,7 +170,7 @@ test('the report opens with the counts, then names the route and rule of every f
 });
 
 test('the runner exits 0 on a clean tree and prints the summary', async () => {
-  await withDist({ 'a/index.html': document(`<p>${PLAIN}</p>`) }, (dist) => {
+  await withDist({ 'a.html': document(`<p>${PLAIN}</p>`) }, (dist) => {
     const run = spawnSync(process.execPath, [RUNNER, dist], { encoding: 'utf8' });
     assert.equal(run.status, 0, run.stdout + run.stderr);
     assert.match(run.stdout, /^human: 1 pages checked, 1 measured for reading level, 0 findings$/m);
@@ -180,8 +180,8 @@ test('the runner exits 0 on a clean tree and prints the summary', async () => {
 test('the runner exits 1 and names the route and the rule of a finding', async () => {
   await withDist(
     {
-      'a/index.html': document(`<p>${PLAIN}</p>`),
-      'b/index.html': document(`<p>${PLAIN}</p><p>You can commence the task now.</p>`),
+      'a.html': document(`<p>${PLAIN}</p>`),
+      'b.html': document(`<p>${PLAIN}</p><p>You can commence the task now.</p>`),
     },
     (dist) => {
       const run = spawnSync(process.execPath, [RUNNER, dist], { encoding: 'utf8' });

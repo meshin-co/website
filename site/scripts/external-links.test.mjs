@@ -1,7 +1,14 @@
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { test } from 'node:test';
+import { fileURLToPath } from 'node:url';
 
 import { EXTERNAL_REL, externalAnchors, internalNofollowFindings, relFindings } from './external-links.mjs';
+
+const RUNNER = fileURLToPath(new URL('./run-external-links.mjs', import.meta.url));
 
 test('the required rel is exactly nofollow, noopener and noreferrer', () => {
   assert.deepEqual([...EXTERNAL_REL].sort(), ['nofollow', 'noopener', 'noreferrer']);
@@ -56,4 +63,16 @@ test('an internal link without nofollow is clean, and an outbound one is not thi
   assert.deepEqual(internalNofollowFindings('/x', '<a href="/about">a</a>'), []);
   assert.deepEqual(internalNofollowFindings('/x', '<a href="https://iso.org" rel="nofollow">i</a>'), []);
   assert.deepEqual(internalNofollowFindings('/x', '<a href="https://meshin.co/about">a</a>'), []);
+});
+
+test('a flat page whose file name ends in index is reported under its own route, not a truncated one', () => {
+  const dist = mkdtempSync(join(tmpdir(), 'run-external-links-'));
+  mkdirSync(join(dist, 'blog'), { recursive: true });
+  writeFileSync(join(dist, 'index.html'), '<html></html>');
+  writeFileSync(join(dist, 'blog', 'reindex.html'), '<a href="https://iso.org/" rel="noopener">iso</a>');
+
+  const { stdout, status } = spawnSync(process.execPath, [RUNNER, dist], { encoding: 'utf8' });
+
+  assert.equal(status, 1);
+  assert.match(stdout, /missing nofollow, noreferrer on 1 route\(s\), e\.g\. \/blog\/reindex\n/);
 });

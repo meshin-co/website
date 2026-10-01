@@ -18,6 +18,7 @@ import {
   sitemapNoindexLeaks,
   COLLECTION_BASES,
   humansTxtFindings,
+  canonicalGaps,
 } from './machine.mjs';
 
 const CONFIG = `
@@ -152,6 +153,64 @@ test('hubFeedLinkGaps reports a hub whose head only advertises the merged feed, 
 test('hubFeedLinkGaps ignores a plain href match that never carries rel="alternate"', () => {
   const html = '<a href="/blog/rss.xml">feed</a>';
   assert.deepEqual(hubFeedLinkGaps(['/blog'], { '/blog': html }), ['/blog']);
+});
+
+const SITE = { site: 'https://meshin.co' };
+const head = (canonical, ogUrl) =>
+  `<head><link rel="canonical" href="${canonical}"><meta property="og:url" content="${ogUrl}"></head>`;
+
+test('canonicalGaps reports nothing when every page names its own bare URL, the home page naming the origin', () => {
+  const pages = {
+    '/': head('https://meshin.co', 'https://meshin.co'),
+    '/about': head('https://meshin.co/about', 'https://meshin.co/about'),
+    '/blog/page/2': head('https://meshin.co/blog/page/2', 'https://meshin.co/blog/page/2'),
+  };
+  assert.deepEqual(canonicalGaps(pages, SITE), []);
+});
+
+test('canonicalGaps reports a canonical that names the built file instead of the route', () => {
+  const pages = { '/about': head('https://meshin.co/about.html', 'https://meshin.co/about') };
+  assert.deepEqual(canonicalGaps(pages, SITE), [
+    '/about canonical is https://meshin.co/about.html, expected https://meshin.co/about',
+  ]);
+});
+
+test('canonicalGaps reports the home page canonical when it names index.html or carries a trailing slash', () => {
+  const named = { '/': head('https://meshin.co/index.html', 'https://meshin.co') };
+  const slashed = { '/': head('https://meshin.co/', 'https://meshin.co') };
+  assert.deepEqual(canonicalGaps(named, SITE), [
+    '/ canonical is https://meshin.co/index.html, expected https://meshin.co',
+  ]);
+  assert.deepEqual(canonicalGaps(slashed, SITE), ['/ canonical is https://meshin.co/, expected https://meshin.co']);
+});
+
+test('canonicalGaps reports a canonical with a trailing slash on a non-root route', () => {
+  const pages = { '/about': head('https://meshin.co/about/', 'https://meshin.co/about') };
+  assert.deepEqual(canonicalGaps(pages, SITE), [
+    '/about canonical is https://meshin.co/about/, expected https://meshin.co/about',
+  ]);
+});
+
+test('canonicalGaps reports an og:url that drifts from the route even when the canonical is right', () => {
+  const pages = { '/about': head('https://meshin.co/about', 'https://meshin.co/about.html') };
+  assert.deepEqual(canonicalGaps(pages, SITE), [
+    '/about og:url is https://meshin.co/about.html, expected https://meshin.co/about',
+  ]);
+});
+
+test('canonicalGaps reports a page that carries no canonical link and no og:url', () => {
+  assert.deepEqual(canonicalGaps({ '/about': '<head><title>x</title></head>' }, SITE), [
+    '/about canonical is (missing), expected https://meshin.co/about',
+    '/about og:url is (missing), expected https://meshin.co/about',
+  ]);
+});
+
+test('canonicalGaps reads both tags whatever order their attributes come in, and ignores every other link and meta', () => {
+  const html =
+    '<head><link rel="alternate" type="text/markdown" href="https://meshin.co/about.html">' +
+    '<meta property="og:image" content="https://meshin.co/og/about.html">' +
+    '<link href="https://meshin.co/about" rel="canonical"><meta content="https://meshin.co/about" property="og:url"></head>';
+  assert.deepEqual(canonicalGaps({ '/about': html }, SITE), []);
 });
 
 test('an indexable dist route missing from llms.txt is reported as a coverage gap', () => {

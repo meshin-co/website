@@ -11,12 +11,12 @@ Default origin is `https://meshin.co`. Any origin works, which is how the check 
     GATE_SERVER_PORT=4340 node scripts/gate-server.mjs dist &
     npm run smoke:prod http://127.0.0.1:4340
 
-The gate server answers the way Cloudflare Pages does for a directory build: `/about/` is 200
-and `/about` is a 308 to `/about/`. Every canonical route here is emitted without the trailing
-slash, so the rehearsal fails the nine canonical routes other than `/` with
-`answered 308, expected 200` and exits 1. That is what production is expected to answer too
-(G15 in `docs/plan/reference/known-gaps.md`); the run passes only once the build serves the
-slashless URL directly.
+The gate server answers the way Cloudflare Pages does for a flat build: `/about` is 200, while
+`/about/` and `/about.html` are a 308 to `/about`, and `/` is 200. Every canonical route here is
+emitted without the trailing slash and built as `<route>.html`, so the rehearsal passes 18 of 18
+and exits 0. A canonical route that answers 308 means the build went back to directory output
+(`build.format` in `site/astro.config.ts` must stay `'file'`) or a route is emitted in the wrong
+form.
 
 ## What it asserts
 
@@ -31,8 +31,8 @@ slashless URL directly.
 ## Proven able to fail
 
 Serve `dist/` with a plain server that sends no headers and the gate reports 8 of 18, naming every
-missing header and every 301. Run it that way after changing the checks; a smoke test that cannot
-fail is decoration.
+missing header, every 301 and every 404, because the plain server knows nothing of `<route>.html`.
+Run it that way after changing the checks; a smoke test that cannot fail is decoration.
 
     cd dist && python3 -m http.server 4344 --bind 127.0.0.1 &
     node scripts/run-smoke-prod.mjs http://127.0.0.1:4344 /tmp/planted.md

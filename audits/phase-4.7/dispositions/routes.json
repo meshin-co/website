@@ -43,9 +43,9 @@
   },
   {
     "target": "/blog/category/agentic-architecture",
-    "status": "verified",
-    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "de87b7baf46c"
+    "status": "rewritten",
+    "reason": "Title, H1, lead and meta description rewritten to the navigational query \"agentic architecture articles\". No glossary page owns \"agentic architecture\", so the conflict was category versus tag; the tag archive now targets \"agentic architecture posts\", and each archive claims its own query. The description names the controls the category body covers: evals in CI, tracing, cost ceilings, rollback path.",
+    "digest": "098d278a8bf5"
   },
   {
     "target": "/blog/category/executive",
@@ -55,9 +55,9 @@
   },
   {
     "target": "/blog/category/governance",
-    "status": "verified",
-    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "5c28dafa6599"
+    "status": "rewritten",
+    "reason": "Title, H1, lead and meta description rewritten to the navigational query \"ai governance articles\". The bare term \"ai governance\" now belongs only to /glossary/ai-governance. The description names the four documents the category body already covers (register, acceptable-use policy, data classification, named owner) and the 30 to 300 company range already in content-facts numbers; no owner fact added.",
+    "digest": "ec7a274517bf"
   },
   {
     "target": "/blog/category/operating-model",
@@ -79,75 +79,75 @@
   },
   {
     "target": "/blog/tag/acceptable-use-policy",
-    "status": "verified",
-    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "7d80f922db60"
+    "status": "rewritten",
+    "reason": "Title, H1 and lead now follow the tag template change: \"Acceptable use policy posts\" and \"All posts tagged Acceptable use policy, newest first.\"; query updated to \"acceptable use policy posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list.",
+    "digest": "2fa226b09c2e"
   },
   {
     "target": "/blog/tag/agentic-architecture",
-    "status": "verified",
-    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "9050f93c901c"
+    "status": "rewritten",
+    "reason": "Title, H1, lead and meta description rewritten to the navigational query \"agentic architecture posts\", distinct from the category archive query \"agentic architecture articles\". No glossary page owns the bare term. Lead reads \"All posts tagged Agentic architecture, newest first.\" with no claim beyond the tag list.",
+    "digest": "033c5faeffca"
   },
   {
     "target": "/blog/tag/ai-governance",
-    "status": "verified",
-    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "4d2dd80e42bd"
+    "status": "rewritten",
+    "reason": "Title, H1, lead and meta description rewritten to the navigational query \"ai governance posts\". The bare term \"ai governance\" now belongs only to /glossary/ai-governance. Lead reads \"All posts tagged AI governance, newest first.\" with no claim beyond the tag list.",
+    "digest": "a9df488f6884"
   },
   {
     "target": "/blog/tag/ai-pilots",
-    "status": "verified",
-    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "da55332ec5f1"
+    "status": "rewritten",
+    "reason": "Title, H1 and lead now follow the tag template change: \"AI pilots posts\" and \"All posts tagged AI pilots, newest first.\"; query updated to \"ai pilots posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list.",
+    "digest": "6246b007a55d"
   },
   {
     "target": "/blog/tag/ai-register",
-    "status": "verified",
-    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "5537be5972ca"
+    "status": "rewritten",
+    "reason": "Title, H1, lead and meta description rewritten to the navigational query \"ai register posts\". The bare term \"ai register\" now belongs only to /glossary/ai-register. Lead reads \"All posts tagged AI register, newest first.\" with no claim beyond the tag list.",
+    "digest": "f8ceee7b54a0"
   },
   {
     "target": "/blog/tag/eu-ai-act",
-    "status": "verified",
-    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "78ac44186c22"
+    "status": "rewritten",
+    "reason": "Title, H1, lead and meta description rewritten to the navigational query \"eu ai act posts\". The bare term \"eu ai act\" now belongs only to /glossary/eu-ai-act. Lead reads \"All posts tagged EU AI Act, newest first.\" with no claim beyond the tag list.",
+    "digest": "9c06d0470d56"
   },
   {
     "target": "/blog/tag/evals-in-ci",
-    "status": "verified",
-    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "eeba90387a4b"
+    "status": "rewritten",
+    "reason": "Title, H1 and lead now follow the tag template change: \"Evals in CI posts\" and \"All posts tagged Evals in CI, newest first.\"; query updated to \"evals in ci posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list.",
+    "digest": "258ea2737a09"
   },
   {
     "target": "/blog/tag/llm-as-judge",
-    "status": "verified",
-    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "3417a0fde0e7"
+    "status": "rewritten",
+    "reason": "Title, H1 and lead now follow the tag template change: \"LLM as judge posts\" and \"All posts tagged LLM as judge, newest first.\"; query updated to \"llm as judge posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list.",
+    "digest": "20befb6aee99"
   },
   {
     "target": "/blog/tag/policy-enforcement",
-    "status": "verified",
-    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "aa372a8bc09e"
+    "status": "rewritten",
+    "reason": "Title, H1 and lead now follow the tag template change: \"Policy enforcement posts\" and \"All posts tagged Policy enforcement, newest first.\"; query updated to \"policy enforcement posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list.",
+    "digest": "d256ca4f3ab9"
   },
   {
     "target": "/blog/tag/production-readiness",
-    "status": "verified",
-    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "55dca73c81f6"
+    "status": "rewritten",
+    "reason": "Title, H1 and lead now follow the tag template change: \"Production readiness posts\" and \"All posts tagged Production readiness, newest first.\"; query updated to \"production readiness posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list.",
+    "digest": "da750fc32b15"
   },
   {
     "target": "/blog/tag/security-review",
-    "status": "verified",
-    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "14734d95f406"
+    "status": "rewritten",
+    "reason": "Title, H1 and lead now follow the tag template change: \"Security review posts\" and \"All posts tagged Security review, newest first.\"; query updated to \"security review posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list.",
+    "digest": "623631946d3b"
   },
   {
     "target": "/blog/tag/shadow-ai",
-    "status": "verified",
-    "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "80fa38c0fe5c"
+    "status": "rewritten",
+    "reason": "Title, H1, lead and meta description rewritten to the navigational query \"shadow ai posts\". The bare term \"shadow ai\" now belongs only to /glossary/shadow-ai. Lead reads \"All posts tagged Shadow AI, newest first.\" with no claim beyond the tag list.",
+    "digest": "eacca2fbb11f"
   },
   {
     "target": "/blog/tags",

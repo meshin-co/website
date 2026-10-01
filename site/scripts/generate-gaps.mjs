@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { parse } from 'yaml';
@@ -12,8 +12,7 @@ const CORE = '../docs/SEMANTIC-CORE.md';
 const OUT = '../audits/phase-4.7/gaps.md';
 
 const pageOf = (dist, route) => {
-  const nested = join(dist, route === '/' ? 'index.html' : join(route.slice(1), 'index.html'));
-  return readFileSync(existsSync(nested) ? nested : join(dist, `${route.slice(1)}.html`), 'utf8');
+  return readFileSync(join(dist, route === '/' ? 'index.html' : `${route.slice(1)}.html`), 'utf8');
 };
 
 const GAP_ROW = /^\| [\d, ]+\s*\| ([^|]+?)\s*\| ([^|]+?)\s*\|/gm;

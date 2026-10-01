@@ -5,7 +5,7 @@ This document has two layers, and they are maintained differently:
 - **Generated layer — the facts.** One table per route family, rebuilt from `site/content-facts.json` and the built `site/dist/` by `node scripts/semantic-core.mjs` (run from `site/`). It never drifts because it is never hand-edited: regeneration rewrites only the block between the `semantic-core` markers below. The Opening column reuses the content gate's own query rules (`h1-query`, `query-opening` in `site/scripts/content-rows.mjs`), so ✓ here means the same thing as green there.
 - **Hand-authored layer — the why.** Everything below the markers: why each family exists, and the mapping of the 30 buyer prompts (PRD §17.3) to the route that must win each one, with the passage that answers it and the business reason. Regeneration leaves all of it intact.
 
-Drift protection is a real doc-diff gate (L48). `node scripts/semantic-core.mjs --check` recomputes the generated table in memory from the same inputs `node scripts/semantic-core.mjs` regenerates from, and fails — naming every drifted route — if that differs from the committed block below; a stale `docs/SEMANTIC-CORE.md` cannot pass CI, because the same check rides `gate:content` (`site/scripts/content-gate.mjs` invoking `checkFindings()`), and `gate:content` is a CI step (L36). The same run also verifies: every `targetQuery` row maps to a built route and every gated built route has a row (no orphans either way); every built `<title>` follows its family's title grammar; every buyer-prompt "Must win" route below is actually built; every buyer-prompt "Passage" quote is still a literal substring of its cited route's rendered text; and every buyer-prompt GAP absence-claim (for example, "Israel" appears on no built page) still holds. Route coverage: **102 of 105** built routes carry a generated row below; the remaining 3 are intentionally ungated utility routes, documented with their reason in the table right after this paragraph.
+Drift protection is a real doc-diff gate (L48). `node scripts/semantic-core.mjs --check` recomputes the generated table in memory from the same inputs `node scripts/semantic-core.mjs` regenerates from, and fails — naming every drifted route — if that differs from the committed block below; a stale `docs/SEMANTIC-CORE.md` cannot pass CI, because the same check rides `gate:content` (`site/scripts/content-gate.mjs` invoking `checkFindings()`), and `gate:content` is a CI step (L36). The same run also verifies: every `targetQuery` row maps to a built route and every gated built route has a row (no orphans either way); no two routes declare the same target query, ignoring case and spacing (`duplicate-query`); every built `<title>` follows its family's title grammar; every buyer-prompt "Must win" route below is actually built; every buyer-prompt "Passage" quote is still a literal substring of its cited route's rendered text; and every buyer-prompt GAP absence-claim (for example, "Israel" appears on no built page) still holds. Route coverage: **102 of 105** built routes carry a generated row below; the remaining 3 are intentionally ungated utility routes, documented with their reason in the table right after this paragraph.
 
 ### Ungated utility routes — the other 3 of 105
 
@@ -89,9 +89,9 @@ title `{category name} — meshin.co` · meta: what the category covers, scoped 
 
 | Route | Query | Title | Description | H1 | Links | Opening |
 |---|---|---|---|---|---|---|
-| `/blog/category/agentic-architecture` | agentic architecture | Agentic architecture — meshin.co | Agentic architecture here means agent systems built to survive production: evals in CI, tracing, cost ceilings and a rollback path. | Agentic architecture | 22 | ✓ |
+| `/blog/category/agentic-architecture` | agentic architecture articles | Agentic architecture articles — meshin.co | Articles on agentic architecture for production: evals in CI, tracing, cost ceilings and a rollback path for agent systems. | Agentic architecture articles | 22 | ✓ |
 | `/blog/category/executive` | ai for boards | AI for boards — meshin.co | AI for boards is accountability, not literacy: what you are on the hook for, what to ask for in writing, and what not to ask for. | AI for boards | 22 | ✓ |
-| `/blog/category/governance` | ai governance | AI governance — meshin.co | AI governance in a company of 30 to 300 people is four documents on a shared drive, not a maturity model built for a bank. | AI governance | 22 | ✓ |
+| `/blog/category/governance` | ai governance articles | AI governance articles — meshin.co | Articles on AI governance for companies of 30 to 300 people: the register, acceptable-use policy, data classification and a named owner. | AI governance articles | 22 | ✓ |
 | `/blog/category/operating-model` | ai operating model | AI operating model — meshin.co | An AI operating model is the decision structure that moves AI work from a pilot nobody owns to a process a team runs. | AI operating model | 22 | ✓ |
 
 ### tag-index (1)
@@ -104,22 +104,22 @@ title `Tags — meshin.co` · meta: what tags exist and how many articles carry 
 
 ### tag (12)
 
-title `{tag name} — meshin.co` · meta: every article tagged {tag}, newest first · body intent: thin archive list; route straight to the tagged articles
+title `{tag name} posts — meshin.co` · meta: all posts tagged {tag}, newest first · body intent: thin archive list; route straight to the tagged articles
 
 | Route | Query | Title | Description | H1 | Links | Opening |
 |---|---|---|---|---|---|---|
-| `/blog/tag/acceptable-use-policy` | acceptable use policy | Acceptable use policy — meshin.co | Every article tagged Acceptable use policy, newest first. | Acceptable use policy | 23 | ✓ |
-| `/blog/tag/agentic-architecture` | agentic architecture | Agentic architecture — meshin.co | Every article tagged Agentic architecture, newest first. | Agentic architecture | 23 | ✓ |
-| `/blog/tag/ai-governance` | ai governance | AI governance — meshin.co | Every article tagged AI governance, newest first. | AI governance | 23 | ✓ |
-| `/blog/tag/ai-pilots` | ai pilots | AI pilots — meshin.co | Every article tagged AI pilots, newest first. | AI pilots | 23 | ✓ |
-| `/blog/tag/ai-register` | ai register | AI register — meshin.co | Every article tagged AI register, newest first. | AI register | 23 | ✓ |
-| `/blog/tag/eu-ai-act` | eu ai act | EU AI Act — meshin.co | Every article tagged EU AI Act, newest first. | EU AI Act | 23 | ✓ |
-| `/blog/tag/evals-in-ci` | evals in ci | Evals in CI — meshin.co | Every article tagged Evals in CI, newest first. | Evals in CI | 23 | ✓ |
-| `/blog/tag/llm-as-judge` | llm as judge | LLM as judge — meshin.co | Every article tagged LLM as judge, newest first. | LLM as judge | 23 | ✓ |
-| `/blog/tag/policy-enforcement` | policy enforcement | Policy enforcement — meshin.co | Every article tagged Policy enforcement, newest first. | Policy enforcement | 23 | ✓ |
-| `/blog/tag/production-readiness` | production readiness | Production readiness — meshin.co | Every article tagged Production readiness, newest first. | Production readiness | 23 | ✓ |
-| `/blog/tag/security-review` | security review | Security review — meshin.co | Every article tagged Security review, newest first. | Security review | 23 | ✓ |
-| `/blog/tag/shadow-ai` | shadow ai | Shadow AI — meshin.co | Every article tagged Shadow AI, newest first. | Shadow AI | 23 | ✓ |
+| `/blog/tag/acceptable-use-policy` | acceptable use policy posts | Acceptable use policy posts — meshin.co | All posts tagged Acceptable use policy, newest first. | Acceptable use policy posts | 23 | ✓ |
+| `/blog/tag/agentic-architecture` | agentic architecture posts | Agentic architecture posts — meshin.co | All posts tagged Agentic architecture, newest first. | Agentic architecture posts | 23 | ✓ |
+| `/blog/tag/ai-governance` | ai governance posts | AI governance posts — meshin.co | All posts tagged AI governance, newest first. | AI governance posts | 23 | ✓ |
+| `/blog/tag/ai-pilots` | ai pilots posts | AI pilots posts — meshin.co | All posts tagged AI pilots, newest first. | AI pilots posts | 23 | ✓ |
+| `/blog/tag/ai-register` | ai register posts | AI register posts — meshin.co | All posts tagged AI register, newest first. | AI register posts | 23 | ✓ |
+| `/blog/tag/eu-ai-act` | eu ai act posts | EU AI Act posts — meshin.co | All posts tagged EU AI Act, newest first. | EU AI Act posts | 23 | ✓ |
+| `/blog/tag/evals-in-ci` | evals in ci posts | Evals in CI posts — meshin.co | All posts tagged Evals in CI, newest first. | Evals in CI posts | 23 | ✓ |
+| `/blog/tag/llm-as-judge` | llm as judge posts | LLM as judge posts — meshin.co | All posts tagged LLM as judge, newest first. | LLM as judge posts | 23 | ✓ |
+| `/blog/tag/policy-enforcement` | policy enforcement posts | Policy enforcement posts — meshin.co | All posts tagged Policy enforcement, newest first. | Policy enforcement posts | 23 | ✓ |
+| `/blog/tag/production-readiness` | production readiness posts | Production readiness posts — meshin.co | All posts tagged Production readiness, newest first. | Production readiness posts | 23 | ✓ |
+| `/blog/tag/security-review` | security review posts | Security review posts — meshin.co | All posts tagged Security review, newest first. | Security review posts | 23 | ✓ |
+| `/blog/tag/shadow-ai` | shadow ai posts | Shadow AI posts — meshin.co | All posts tagged Shadow AI, newest first. | Shadow AI posts | 23 | ✓ |
 
 ### term (30)
 

@@ -22,15 +22,14 @@ const TYPES = {
 
 const COMPRESSIBLE = new Set(['.html', '.css', '.js', '.mjs', '.json', '.txt', '.xml', '.svg']);
 
-const candidatesFor = (relativePath) => {
-  if (relativePath === '') return ['index.html'];
-  if (relativePath.endsWith('/')) return [`${relativePath}index.html`, `${relativePath.slice(0, -1)}.html`];
-  return extname(relativePath) === '' ? [`${relativePath}/index.html`, `${relativePath}.html`] : [relativePath];
+const fileFor = (relativePath) => {
+  if (relativePath === '') return 'index.html';
+  if (relativePath.endsWith('/')) return `${relativePath.slice(0, -1)}.html`;
+  return extname(relativePath) === '' ? `${relativePath}.html` : relativePath;
 };
 
 const canonicalPathOf = (file) => {
   if (file === 'index.html') return '/';
-  if (file.endsWith('/index.html')) return `/${file.slice(0, -'index.html'.length)}`;
   if (file.endsWith('.html')) return `/${file.slice(0, -'.html'.length)}`;
   return `/${file}`;
 };
@@ -47,8 +46,8 @@ export function resolveRequest(requestUrl, isFile) {
   }
   if (decoded.split('/').includes('..')) return { status: 404 };
   const requested = normalize(decoded);
-  const file = candidatesFor(requested.replace(/^\/+/, '')).find(isFile);
-  if (file === undefined) return { status: 404 };
+  const file = fileFor(requested.replace(/^\/+/, ''));
+  if (!isFile(file)) return { status: 404 };
   const canonical = canonicalPathOf(file);
   if (canonical === requested) return { status: 200, file };
   return { status: 308, location: `${encodeURI(canonical)}${search}` };
@@ -125,7 +124,7 @@ export function startGateServer({ root, port = 0, headersPath }) {
     const file = relative(rootDir, target);
     const status = found ? 200 : 404;
     const headers = { 'Content-Type': contentTypeFor(file) };
-    for (const [name, value] of matchingHeaders(rules, `/${file}`.replace(/index\.html$/, '')))
+    for (const [name, value] of matchingHeaders(rules, canonicalPathOf(file)))
       headers[name] = overPlainHttp(name, value);
 
     const gzip = acceptsGzip(request.headers['accept-encoding']) && COMPRESSIBLE.has(extname(file));

@@ -27,11 +27,6 @@ function isNoindexByDesign(route) {
   return NOINDEX_ROUTE_MATCHER.test(canonicalRoute(route));
 }
 
-function urlPathOf(route) {
-  if (route === '/404') return '/404';
-  return route === '/' ? '/' : `${route}/`;
-}
-
 function discoverBuiltRoutes(distDir) {
   if (!existsSync(distDir)) return [];
   const entries = readdirSync(distDir, { withFileTypes: true, recursive: true });
@@ -45,12 +40,8 @@ function discoverBuiltRoutes(distDir) {
 }
 
 function routeFilePath(distDir, route) {
-  const candidates = route === '/' ? ['index.html'] : [`${route.slice(1)}/index.html`, `${route.slice(1)}.html`];
-  for (const candidate of candidates) {
-    const path = join(distDir, candidate);
-    if (existsSync(path)) return path;
-  }
-  return null;
+  const path = join(distDir, route === '/' ? 'index.html' : `${route.slice(1)}.html`);
+  return existsSync(path) ? path : null;
 }
 
 function builtByteSize(distDir, route) {
@@ -134,7 +125,6 @@ module.exports = {
   SEO_AUDITS_EXCEPT_CRAWLABLE,
   canonicalRoute,
   isNoindexByDesign,
-  urlPathOf,
   discoverBuiltRoutes,
   auditableRoutes,
   resolveOnlyRoutesPath,

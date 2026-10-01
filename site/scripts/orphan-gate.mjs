@@ -66,24 +66,31 @@ export function findOrphans({ routes, inbound, exempt }) {
   return routes.filter((route) => !exempt.has(route) && !inbound.get(route)?.size);
 }
 
-async function discoverIndexPages(distDir) {
+const ERROR_PAGE_ROUTE = '/404';
+
+const routeOfFile = (routePath) => {
+  const route = `/${routePath.slice(0, -'.html'.length)}`;
+  return route === '/index' ? '/' : route;
+};
+
+export async function discoverPages(distDir) {
   const entries = await readdir(distDir, { withFileTypes: true, recursive: true });
   const files = entries
-    .filter((entry) => entry.isFile() && entry.name === 'index.html')
+    .filter((entry) => entry.isFile() && entry.name.endsWith('.html'))
     .map((entry) => join(entry.parentPath, entry.name));
 
   const pages = [];
   for (const file of files) {
-    const routePath = relative(distDir, file).split(sep).join('/');
-    const route = routePath.replace(/\/?index\.html$/, '') || '/';
+    const route = routeOfFile(relative(distDir, file).split(sep).join('/'));
+    if (route === ERROR_PAGE_ROUTE) continue;
     const html = await readFile(file, 'utf8');
-    pages.push({ route: route.startsWith('/') ? route : `/${route}`, hrefs: extractHrefs(html) });
+    pages.push({ route, hrefs: extractHrefs(html) });
   }
   return pages;
 }
 
 async function main(distDir) {
-  const pages = await discoverIndexPages(distDir);
+  const pages = await discoverPages(distDir);
   const routes = pages.map((page) => page.route);
   const inbound = collectInboundLinks(pages);
   const exempt = new Set(EXEMPT_ROUTES.map((entry) => entry.route));

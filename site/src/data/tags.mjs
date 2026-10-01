@@ -20,3 +20,8 @@ export const TAG_SLUGS = TAGS.map((tag) => tag.slug);
 export const tagBySlug = Object.fromEntries(TAGS.map((tag) => [tag.slug, tag]));
 
 export const postTagSchema = z.array(z.enum(TAG_SLUGS));
+
+export const tagArchive = (tag) => ({
+  title: `${tag.name} posts`,
+  description: `All posts tagged ${tag.name}, newest first.`,
+});

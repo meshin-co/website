@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { mkdir, mkdtemp, readFile, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { mock, test } from 'node:test';
 
 import { main } from './report.mjs';
@@ -30,8 +30,8 @@ const lighthouseRun = (path, { lcp = 1000, crawlable = 1, seo = 1 } = {}) => ({
 async function fixtureRoot(routes, gateRoutes = routes) {
   const root = await mkdtemp(join(tmpdir(), 'report-main-'));
   for (const route of routes) {
-    const file = route === '/' ? 'index.html' : `${route.slice(1)}/index.html`;
-    await mkdir(join(root, 'dist', file, '..'), { recursive: true });
+    const file = route === '/' ? 'index.html' : `${route.slice(1)}.html`;
+    await mkdir(dirname(join(root, 'dist', file)), { recursive: true });
     await writeFile(join(root, 'dist', file), '<html></html>');
   }
   await writeFile(

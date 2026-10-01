@@ -15,7 +15,7 @@ const decode = (text) =>
     .replace(/&#39;|&apos;/g, "'")
     .replace(/&nbsp;/g, ' ');
 
-const distFile = (href) => (href === '/' ? 'index.html' : join(href.slice(1), 'index.html'));
+const distFile = (href) => (href === '/' ? 'index.html' : `${href.slice(1)}.html`);
 
 async function readRouteHtml(distDir, href) {
   try {

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { ogImagePath, markdownPath, articleMetadata } from './machine-links.mjs';
+import { ogImagePath, markdownPath, articleMetadata, routeOfPathname } from './machine-links.mjs';
 
 test('an og image path is derived from the collection and entry id', () => {
   assert.equal(ogImagePath('post', 'why-pilots-stall'), '/og/post/why-pilots-stall.png');
@@ -96,4 +96,24 @@ test('a noindex entry sets robots index false, follow true; a live entry sets no
     noindex: false,
   });
   assert.equal(live.robots, undefined);
+});
+
+test('a flat page built as about.html stands for the route /about', () => {
+  assert.equal(routeOfPathname('/about.html'), '/about');
+  assert.equal(routeOfPathname('/blog/page/2.html'), '/blog/page/2');
+  assert.equal(routeOfPathname('/404.html'), '/404');
+});
+
+test('the home page built as index.html stands for the root route', () => {
+  assert.equal(routeOfPathname('/index.html'), '/');
+});
+
+test('a page whose slug ends in index keeps its whole name', () => {
+  assert.equal(routeOfPathname('/blog/reindex.html'), '/blog/reindex');
+});
+
+test('a pathname with no .html suffix, as the dev server reports it, is returned unchanged', () => {
+  assert.equal(routeOfPathname('/'), '/');
+  assert.equal(routeOfPathname('/about'), '/about');
+  assert.equal(routeOfPathname('/blog/ai-index'), '/blog/ai-index');
 });

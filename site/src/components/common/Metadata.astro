@@ -7,6 +7,7 @@ import type { SEOProps } from 'astro-seo';
 import { SITE, METADATA, I18N } from 'astrowind:config';
 import type { MetaData, MetaDataOpenGraph } from '~/types';
 import { getCanonical } from '~/utils/permalinks';
+import { routeOfPathname } from '~/utils/machine-links.mjs';
 
 import { adaptOpenGraphImages } from '~/utils/images';
 import { escapeHtmlText } from '~/utils/html-text.mjs';
@@ -18,7 +19,7 @@ export interface Props extends MetaData {
 const {
   title,
   ignoreTitleTemplate = false,
-  canonical = String(getCanonical(String(Astro.url.pathname))),
+  canonical = String(getCanonical(routeOfPathname(Astro.url.pathname))),
   robots = {},
   description,
   openGraph = {},

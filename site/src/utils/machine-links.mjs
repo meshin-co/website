@@ -9,6 +9,11 @@ export function markdownPath(pagePath) {
   return `${pagePath}.md`;
 }
 
+export function routeOfPathname(pathname) {
+  if (pathname === '/index.html') return '/';
+  return pathname.endsWith('.html') ? pathname.slice(0, -'.html'.length) : pathname;
+}
+
 export function articleMetadata(site, entry) {
   const { title, description, collection, id, publishDate, updatedDate, section, tags, ogImage, canonical, noindex } =
     entry;

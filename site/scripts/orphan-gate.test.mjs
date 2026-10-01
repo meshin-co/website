@@ -1,7 +1,23 @@
 import assert from 'node:assert/strict';
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 
-import { collectInboundLinks, findOrphans, extractHrefs, EXEMPT_ROUTES } from './orphan-gate.mjs';
+import { collectInboundLinks, discoverPages, findOrphans, extractHrefs, EXEMPT_ROUTES } from './orphan-gate.mjs';
+
+const withFlatDist = async (files, check) => {
+  const dir = await mkdtemp(join(tmpdir(), 'orphan-gate-'));
+  try {
+    for (const [name, html] of Object.entries(files)) {
+      await mkdir(dirname(join(dir, name)), { recursive: true });
+      await writeFile(join(dir, name), html);
+    }
+    await check(dir);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+};
 
 test('a route with zero inbound links is reported by findOrphans', () => {
   const pages = [
@@ -102,4 +118,52 @@ test('extractHrefs reads href and rel off every anchor tag, ignoring non-anchor 
   const html = '<p><a href="/services" rel="nofollow">Services</a></p><link rel="canonical" href="/services">';
 
   assert.deepEqual(extractHrefs(html), [{ href: '/services', rel: 'nofollow' }]);
+});
+
+test('discoverPages reads every flat page as a route and leaves the 404 page out', async () => {
+  await withFlatDist(
+    {
+      'index.html': '<a href="/about">About</a>',
+      'about.html': '',
+      'blog.html': '',
+      'blog/post.html': '',
+      '404.html': '',
+    },
+    async (dist) => {
+      const pages = await discoverPages(dist);
+
+      assert.deepEqual(pages.map((page) => page.route).sort(), ['/', '/about', '/blog', '/blog/post']);
+    }
+  );
+});
+
+test('a page whose file name ends in index.html keeps its full route', async () => {
+  await withFlatDist({ 'index.html': '', 'blog/reindex.html': '' }, async (dist) => {
+    const pages = await discoverPages(dist);
+
+    assert.deepEqual(pages.map((page) => page.route).sort(), ['/', '/blog/reindex']);
+  });
+});
+
+test('a page nothing links to is reported as an orphan from a flat tree', async () => {
+  await withFlatDist(
+    {
+      'index.html': '<a href="/about">About</a><a href="/blog">Blog</a>',
+      'about.html': '<a href="/">Home</a>',
+      'blog.html': '<a href="/blog/post">Post</a>',
+      'blog/post.html': '<a href="/blog">Blog</a>',
+      'lonely.html': '<a href="/">Home</a>',
+      '404.html': '<a href="/">Home</a>',
+    },
+    async (dist) => {
+      const pages = await discoverPages(dist);
+      const orphans = findOrphans({
+        routes: pages.map((page) => page.route),
+        inbound: collectInboundLinks(pages),
+        exempt: new Set(),
+      });
+
+      assert.deepEqual(orphans, ['/lonely']);
+    }
+  );
 });

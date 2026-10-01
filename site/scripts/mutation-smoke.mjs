@@ -93,6 +93,7 @@ export const FAMILIES = [
   },
   { id: 'semantic-title-pattern', kind: 'pure', proves: 'gate:content', check: 'semantic-title' },
   { id: 'machine-feed-coverage', kind: 'specimen', specimen: 'machine' },
+  { id: 'canonical-names-a-built-file', kind: 'specimen', specimen: 'canonical' },
   { id: 'gate-wiring-removed-from-ci', kind: 'specimen', specimen: 'wiringRemoved' },
   { id: 'pending-specimen-names-a-missing-phase', kind: 'specimen', specimen: 'pendingUnknownPhase' },
   { id: 'pending-specimen-phase-already-done', kind: 'specimen', specimen: 'pendingPhaseDone' },
@@ -311,8 +312,8 @@ async function runGateFamily(copySite, entry, work) {
     return expectedFailure(await run('node', ['scripts/jsonld-gate.mjs', dist], copySite), entry.tokens);
   }
   const dist = join(work, 'jsonld-dist');
-  await mkdir(join(dist, 'unknown-route'), { recursive: true });
-  await writeFile(join(dist, 'unknown-route/index.html'), '<!doctype html><html><head></head><body>x</body></html>');
+  await mkdir(dist, { recursive: true });
+  await writeFile(join(dist, 'unknown-route.html'), '<!doctype html><html><head></head><body>x</body></html>');
   return expectedFailure(await run('node', ['scripts/jsonld-gate.mjs', dist], copySite), entry.tokens);
 }
 
@@ -332,14 +333,14 @@ const canonicalHref = (html) => /<link[^>]*canonical[^>]*>/.exec(html)?.[0]?.mat
 const robotsMeta = (html) => /<meta[^>]*robots[^>]*>/.exec(html)?.[0] ?? '';
 
 async function paginationArtifacts(copySite) {
-  const page2Html = await readFile(join(copySite, 'dist/blog/page/2/index.html'), 'utf8').catch(() => null);
-  if (page2Html === null) throw new Error('dist/blog/page/2/index.html was not built');
+  const page2Html = await readFile(join(copySite, 'dist/blog/page/2.html'), 'utf8').catch(() => null);
+  if (page2Html === null) throw new Error('dist/blog/page/2.html was not built');
   const robots = robotsMeta(page2Html);
   if (!/noindex/.test(robots) || !/follow/.test(robots))
     throw new Error(`page 2 robots is not noindex, follow: ${robots}`);
   if (!canonicalHref(page2Html).endsWith('/blog/page/2'))
     throw new Error(`page 2 canonical is not self: ${canonicalHref(page2Html)}`);
-  const blogHtml = await readFile(join(copySite, 'dist/blog/index.html'), 'utf8');
+  const blogHtml = await readFile(join(copySite, 'dist/blog.html'), 'utf8');
   if (/noindex/.test(robotsMeta(blogHtml))) throw new Error('page 1 carries noindex');
   if (!/\/blog$/.test(canonicalHref(blogHtml)))
     throw new Error(`page 1 canonical is not the bare route: ${canonicalHref(blogHtml)}`);
@@ -381,7 +382,7 @@ async function livePostCountByCategory(copySite, category) {
 }
 
 async function categoryPaginationArtifacts(copySite, category) {
-  const page2Path = `dist/blog/category/${category}/page/2/index.html`;
+  const page2Path = `dist/blog/category/${category}/page/2.html`;
   const page2Html = await readFile(join(copySite, page2Path), 'utf8').catch(() => null);
   if (page2Html === null) throw new Error(`${page2Path} was not built`);
   const robots = robotsMeta(page2Html);
@@ -389,7 +390,7 @@ async function categoryPaginationArtifacts(copySite, category) {
     throw new Error(`category page 2 robots is not noindex, follow: ${robots}`);
   if (!canonicalHref(page2Html).endsWith(`/blog/category/${category}/page/2`))
     throw new Error(`category page 2 canonical is not self: ${canonicalHref(page2Html)}`);
-  const page1Html = await readFile(join(copySite, `dist/blog/category/${category}/index.html`), 'utf8');
+  const page1Html = await readFile(join(copySite, `dist/blog/category/${category}.html`), 'utf8');
   if (/noindex/.test(robotsMeta(page1Html))) throw new Error('category page 1 carries noindex');
   if (!canonicalHref(page1Html).endsWith(`/blog/category/${category}`))
     throw new Error(`category page 1 canonical is not the bare route: ${canonicalHref(page1Html)}`);
@@ -413,7 +414,7 @@ async function runCategoryPaginationFamily(copySite, entry) {
     const proof = await categoryPaginationArtifacts(copySite, category);
     if (
       clones > 0 &&
-      !(await readFile(join(copySite, `dist/blog/category/${category}/page/2/index.html`), 'utf8')).includes(
+      !(await readFile(join(copySite, `dist/blog/category/${category}/page/2.html`), 'utf8')).includes(
         'mutation-category-post'
       )
     )
@@ -441,10 +442,7 @@ async function runBlogPaginationFamily(copySite, entry) {
     if (built.code !== 0)
       return { ok: false, reason: `build with ${clones} live clones failed: ${built.output.slice(-400)}` };
     const proof = await paginationArtifacts(copySite);
-    if (
-      clones > 0 &&
-      !(await readFile(join(copySite, 'dist/blog/page/2/index.html'), 'utf8')).includes('mutation-live-post')
-    )
+    if (clones > 0 && !(await readFile(join(copySite, 'dist/blog/page/2.html'), 'utf8')).includes('mutation-live-post'))
       return { ok: false, reason: 'page 2 lists no planted live post' };
     return {
       ok: true,

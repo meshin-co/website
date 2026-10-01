@@ -30,7 +30,7 @@ export function profileFor(route) {
   return 'page';
 }
 
-const routeFile = (route) => (route === '/404' ? '404.html' : join(route.slice(1), 'index.html'));
+const routeFile = (route) => (route === '/' ? 'index.html' : `${route.slice(1)}.html`);
 
 export async function collectPages(distDir) {
   const routes = await discoverRoutes(distDir);

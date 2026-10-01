@@ -48,11 +48,12 @@ test('phases sort by numeric position, not string order', () => {
 
 test('a page built as a bare .html file is a route, because /404 was invisible to the shrink gate', () => {
   const dir = mkdtempSync(join(tmpdir(), 'routes-gate-'));
-  mkdirSync(join(dir, 'about'), { recursive: true });
+  mkdirSync(join(dir, 'blog'), { recursive: true });
   writeFileSync(join(dir, 'index.html'), '<html></html>');
-  writeFileSync(join(dir, 'about', 'index.html'), '<html></html>');
+  writeFileSync(join(dir, 'about.html'), '<html></html>');
   writeFileSync(join(dir, '404.html'), '<html></html>');
-  assert.deepEqual(collectRoutes(dir).sort(), ['/', '/404', '/about']);
+  writeFileSync(join(dir, 'blog', 'reindex.html'), '<html></html>');
+  assert.deepEqual(collectRoutes(dir).sort(), ['/', '/404', '/about', '/blog/reindex']);
 });
 
 test('previousPhase finds the latest numbered phase and ignores a same-named run directory', () => {
