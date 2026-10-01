@@ -88,6 +88,7 @@ be tested without a build.
 | `lh-routes.cjs`           | `lighthouserc.cjs`, `report.mjs`, `gate:lh:one` (`--count`)                                                       | Audited routes, the noindex-by-design list, `LH_ONLY_ROUTES`          |
 | `mutation-specimens.mjs`  | `mutation-smoke.mjs`                                                                                              | Per gate: the planted defect and the output token it must name        |
 | `mutation-pending.mjs`    | `plan-gate.mjs`                                                                                                   | Gates still owed a specimen, each with the phase that owes it         |
+| `pagination-markup.mjs`   | `mutation-smoke.mjs`                                                                                              | What a built tag archive must say: head, control, sitemap             |
 
 ## Servers
 

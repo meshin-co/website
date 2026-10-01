@@ -19,6 +19,10 @@ what the family is evidence for: `build`, or the `gate:*` script that the family
 | `pagination`      | `proves`, `fixture`                            | pagination behavior at a real 13th live post                                                 |
 | `specimen`        | `specimen`                                     | the real `gate:*` npm script is green on the copy, red on the planted specimen, green again  |
 
+A `pagination` family takes an optional `scope` (`category` or `tag`; none builds the blog hub), and
+`manifestFamilies()` throws on any other value. The tag family's head, control and sitemap checks are
+pure functions in `scripts/pagination-markup.mjs`, so its test plants each defect without a build.
+
 A `specimen` family names an entry in `scripts/mutation-specimens.mjs`. Each entry holds the gate, the
 output token that proves the right rule fired, and a `plant(copySite)` that makes the change and returns
 its own undo. `proveWithSpecimen()` runs the npm command CI runs and requires four things: the gate is

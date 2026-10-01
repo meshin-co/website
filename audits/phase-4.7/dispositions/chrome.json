@@ -102,12 +102,6 @@
     "digest": "e3b0c44298fc"
   },
   {
-    "target": "site/src/components/site/PaginationLinks.astro",
-    "status": "verified",
-    "reason": "aria-label='Pagination' and per-link aria-label='Page N' already say what the control does, standard pattern",
-    "digest": "e3b0c44298fc"
-  },
-  {
     "target": "site/src/components/site/ServiceCard.astro",
     "status": "verified",
     "reason": "pass-through only, no hardcoded copy",
@@ -268,5 +262,11 @@
     "status": "rewritten",
     "reason": "Tag names unchanged and still 12 short names with no prose. New tagArchive(tag) supplies the archive title \"{name} posts\" and lead \"All posts tagged {name}, newest first.\", replacing \"Every article tagged {name}, newest first.\" so page, llms.txt and search index read one string. Plain, no banned phrasing, no fact claimed.",
     "digest": "544f764d900f"
+  },
+  {
+    "target": "site/src/components/site/PaginationLinks.astro",
+    "status": "verified",
+    "reason": "Four new control strings, all navigation chrome rather than prose: the visible 'Previous' and 'Next' labels and the 'Previous page' and 'Next page' aria-labels behind them. Read against simple-language level 1: one common word each, no word over two syllables, and the accessible name says which page it means rather than repeating the visible word. The numeric links keep the existing 'Page N' aria-label and the current page is a span with aria-current, so it carries no new string. Checked in the built output on /blog/tag/ai-governance/page/2 of the 150-post fixture, not in source.",
+    "digest": "76de3bd84813"
   }
 ]

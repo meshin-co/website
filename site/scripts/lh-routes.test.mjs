@@ -131,6 +131,8 @@ test('a route named noindex by design is recognised exactly, trailing slash or n
     '/blog/page/2/',
     '/blog/category/governance/page/2',
     '/blog/category/governance/page/12/',
+    '/blog/tag/ai-governance/page/2',
+    '/blog/tag/shadow-ai/page/12/',
   ]) {
     assert.equal(isNoindexByDesign(route), true, route);
   }
@@ -149,6 +151,10 @@ test('a route that merely resembles a named one is not waived: indexable pages s
     '/blog/tag/ai-governance',
     '/blog/category/governance',
     '/blog/category/governance/page',
+    '/blog/tag/ai-governance/page',
+    '/blog/tag/ai-governance/page/',
+    '/blog/tag/ai-governance/page/2/extra',
+    '/blog/tag/page/2',
     '/blog/category/page/2',
     '/search/results',
     '/searching',

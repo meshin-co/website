@@ -12,6 +12,7 @@ const ROUTE_TYPES = [
   { pattern: /^\/blog\/tag\/[^/]+$/, types: ['CollectionPage', 'BreadcrumbList'] },
   { pattern: /^\/blog\/page\/\d+$/, types: ['CollectionPage', 'BreadcrumbList'] },
   { pattern: /^\/blog\/category\/[^/]+\/page\/\d+$/, types: ['CollectionPage', 'BreadcrumbList'] },
+  { pattern: /^\/blog\/tag\/[^/]+\/page\/\d+$/, types: ['CollectionPage', 'BreadcrumbList'] },
   { pattern: /^\/blog\/[^/]+$/, types: ['BlogPosting', 'BreadcrumbList'] },
   { pattern: /^\/glossary$/, types: ['DefinedTermSet', 'CollectionPage', 'BreadcrumbList'] },
   { pattern: /^\/glossary\/[^/]+$/, types: ['DefinedTerm', 'DefinedTermSet', 'BreadcrumbList'] },

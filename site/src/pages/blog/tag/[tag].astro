@@ -6,11 +6,13 @@ import { getCollection } from 'astro:content';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import CardGrid from '~/components/site/CardGrid.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
+import PaginationLinks from '~/components/site/PaginationLinks.astro';
 import PostCard from '~/components/site/PostCard.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { TAGS, tagArchive } from '~/data/tags.mjs';
 import { collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { firstPage, paginationLinks } from '~/utils/paginate.mjs';
 import { readingTime } from '~/utils/reading-time.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 import { isPublished } from '~/utils/feeds.mjs';
@@ -33,6 +35,7 @@ interface Props {
 const { tag, posts } = Astro.props;
 const site = import.meta.env.SITE.replace(/\/$/, '');
 const basePath = `/blog/tag/${tag.slug}`;
+const visible = firstPage(posts);
 
 const archive = tagArchive(tag);
 const metadata = {
@@ -48,7 +51,7 @@ const nodes = [
     path: basePath,
     name: archive.title,
     description: metadata.description,
-    items: posts.map((post) => ({ url: `/blog/${post.id}` })),
+    items: visible.map((post) => ({ url: `/blog/${post.id}` })),
   }),
 ];
 ---
@@ -73,7 +76,7 @@ const nodes = [
         <p class="max-w-[62ch] text-muted">Nothing carries this tag yet.</p>
       ) : (
         <CardGrid columns={2}>
-          {posts.map((post) => (
+          {visible.map((post) => (
             <PostCard
               title={post.data.title}
               href={`/blog/${post.id}`}
@@ -88,4 +91,6 @@ const nodes = [
       )
     }
   </Section>
+
+  <PaginationLinks links={paginationLinks(basePath, posts)} currentPage={1} />
 </Layout>
