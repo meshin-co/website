@@ -10,7 +10,11 @@ const DUPLICATE_MINIMUM_WORDS = 12;
 
 const UNGATED = new Set(['/404', '/search', '/styleguide']);
 
-const UNGATED_PATTERNS = [/^\/blog\/page\/\d+$/, /^\/blog\/category\/[^/]+\/page\/\d+$/];
+const UNGATED_PATTERNS = [
+  /^\/blog\/page\/\d+$/,
+  /^\/blog\/category\/[^/]+\/page\/\d+$/,
+  /^\/blog\/tag\/[^/]+\/page\/\d+$/,
+];
 const PROFILE_BY_PREFIX = [
   ['/blog/tags', 'page'],
   ['/blog/tag/', 'page'],

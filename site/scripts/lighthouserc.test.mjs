@@ -74,6 +74,7 @@ test('every route named noindex by design asserts each SEO audit except is-crawl
     '/blog/category/executive',
     '/blog/page/2',
     '/blog/category/governance/page/2',
+    '/blog/tag/ai-governance/page/2',
   ]) {
     const [group, ...others] = groupsFor(config, `${ORIGIN}${path}`);
     assert.deepEqual(others, [], path);

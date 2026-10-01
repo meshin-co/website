@@ -1,33 +1,58 @@
 ---
+import { pageWindow } from '~/utils/page-window.mjs';
+
 interface Props {
   links: Array<{ pageNumber: number; href: string }>;
-  currentPage?: number;
+  currentPage: number;
 }
 
 const { links, currentPage } = Astro.props;
+const paging = links.length > 1 ? pageWindow(currentPage, links.length) : null;
+const hrefs = new Map(links.map(({ pageNumber, href }) => [pageNumber, href]));
+const hrefOf = (page: number) => hrefs.get(page);
+const pages = paging?.items.flatMap((item, index, items) =>
+  item.kind === 'gap' ? [] : [{ ...item, gapAfter: items[index + 1]?.kind === 'gap' }]
+);
+const box = 'border border-line px-3 py-1';
+const boxLink = `${box} text-muted hover:border-primary hover:text-primary`;
 ---
 
 {
-  links.length > 1 && (
+  paging && (
     <nav aria-label="Pagination" class="mx-auto w-full max-w-6xl px-5 pb-16 sm:px-8">
-      <ol class="flex list-none flex-wrap gap-3 font-mono text-sm">
-        {links.map(({ pageNumber, href }) => (
-          <li>
-            {pageNumber === currentPage ? (
-              <span aria-current="page" class="border border-line px-3 py-1 text-heading">
-                {pageNumber}
+      <ol class="flex list-none flex-wrap items-center gap-3 font-mono text-sm">
+        {paging.previous !== null && (
+          <li class="flex items-center">
+            <a aria-label="Previous page" class={boxLink} href={hrefOf(paging.previous)}>
+              Previous
+            </a>
+          </li>
+        )}
+        {pages?.map(({ kind, page, gapAfter }) => (
+          <li class="flex items-center gap-3">
+            {kind === 'current' ? (
+              <span aria-current="page" class={`${box} text-heading`}>
+                {page}
               </span>
             ) : (
-              <a
-                aria-label={`Page ${pageNumber}`}
-                class="border border-line px-3 py-1 text-muted hover:border-primary hover:text-primary"
-                href={href}
-              >
-                {pageNumber}
+              <a aria-label={`Page ${page}`} class={boxLink} href={hrefOf(page)}>
+                {page}
               </a>
+            )}
+            {gapAfter && (
+              <span aria-hidden="true" class="px-1 text-muted">
+                …
+              </span>
             )}
           </li>
         ))}
+        {paging.next !== null && (
+          <li class="flex items-center">
+            <a aria-label="Next page" class={boxLink} href={hrefOf(paging.next)}>
+              Next
+            </a>
+          </li>
+        )}
       </ol>
     </nav>
   )

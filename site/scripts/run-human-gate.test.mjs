@@ -84,6 +84,7 @@ test('runGate names the route of each finding and leaves utility and pagination 
       'styleguide.html': flawed,
       'blog/page/2.html': flawed,
       'blog/category/ops/page/3.html': flawed,
+      'blog/tag/ai-governance/page/2.html': flawed,
     },
     async (dist) => {
       const { checked, findings } = await runGate(dist);

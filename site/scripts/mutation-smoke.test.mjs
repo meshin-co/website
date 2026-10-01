@@ -29,6 +29,15 @@ test('a family naming a specimen that does not exist fails at collection, never 
   assert.throws(() => manifestFamilies([{ id: 'x', kind: 'specimen', specimen: 'nope' }]), /unknown specimen nope/);
 });
 
+test('a pagination family naming a scope that does not exist fails at collection, never by quietly running the blog family', () => {
+  const family = { id: 'x', kind: 'pagination', proves: 'build', fixture: 'live-post.md' };
+  assert.throws(() => manifestFamilies([{ ...family, scope: 'tags' }]), /unknown scope tags/);
+  assert.deepEqual(
+    manifestFamilies([{ ...family, scope: 'tag' }]).map((entry) => entry.scope),
+    ['tag']
+  );
+});
+
 test('the free pass is gone: a family kind that runs nothing is rejected', () => {
   assert.throws(() => manifestFamilies([{ id: 'x', kind: 'unit-covered' }]), /unknown kind unit-covered/);
 });

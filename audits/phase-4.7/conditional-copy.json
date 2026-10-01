@@ -32,7 +32,15 @@
     "reason": "public/search/box.mjs shows it only when a search shard fails to fetch; the smoke test in test:smoke exercises that path"
   },
   {
-    "text": "Searching for “",
+    "text": "Searching for \u201c",
     "reason": "public/search/box.mjs composes it with the live query at runtime, so no build output contains the literal"
+  },
+  {
+    "text": "Previous page",
+    "reason": "src/components/site/PaginationLinks.astro renders it only on an archive with a second page; at 12 posts per page the blog has 4 posts and the largest tag has 3, so no archive paginates yet. Proven in a throwaway 150-post fixture, where the control renders it on every page"
+  },
+  {
+    "text": "Next page",
+    "reason": "src/components/site/PaginationLinks.astro renders it only on an archive with a second page; at 12 posts per page the blog has 4 posts and the largest tag has 3, so no archive paginates yet. Proven in a throwaway 150-post fixture, where the control renders it on every page"
   }
 ]

@@ -5,6 +5,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { SPECIMENS, assertStandaloneRepo, flatten, proveWithSpecimen } from './mutation-specimens.mjs';
+import { canonicalHref, robotsContent, robotsMeta, tagArchiveFindings } from './pagination-markup.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SITE = resolve(HERE, '..');
@@ -13,6 +14,7 @@ const FIXTURES = join(SITE, 'tests', 'guard-mutations', 'fixtures');
 const LIVE_POST_TARGET = 13;
 const GATES = ['budget', 'jsonld', 'jsonld-properties', 'content-gate', 'docs', 'external'];
 const CHECKS = ['semantic-title'];
+const SCOPES = ['category', 'tag'];
 
 export const FAMILIES = [
   {
@@ -121,6 +123,14 @@ export const FAMILIES = [
     scope: 'category',
     slow: true,
   },
+  {
+    id: 'tag-pagination-page-2',
+    kind: 'pagination',
+    proves: 'build',
+    fixture: 'live-post.md',
+    scope: 'tag',
+    slow: true,
+  },
 ];
 
 const KINDS = ['build', 'build-then-gate', 'gate', 'pure', 'pagination', 'specimen'];
@@ -174,6 +184,8 @@ export function manifestFamilies(manifest) {
       throw new Error(`mutation smoke: family ${id} has unknown gate ${entry.gate}`);
     if ('check' in entry && !CHECKS.includes(entry.check))
       throw new Error(`mutation smoke: family ${id} has unknown check ${entry.check}`);
+    if ('scope' in entry && !SCOPES.includes(entry.scope))
+      throw new Error(`mutation smoke: family ${id} has unknown scope ${entry.scope}`);
     if (entry.kind === 'specimen' && !Object.hasOwn(SPECIMENS, entry.specimen))
       throw new Error(`mutation smoke: family ${id} has unknown specimen ${entry.specimen}`);
     return { ...entry };
@@ -329,9 +341,6 @@ async function runPureFamily(copySite) {
   return { ok: true, reason: 'title-suffix finding on wrong suffix, none on compliant title' };
 }
 
-const canonicalHref = (html) => /<link[^>]*canonical[^>]*>/.exec(html)?.[0]?.match(/href="([^"]+)"/)?.[1] ?? '';
-const robotsMeta = (html) => /<meta[^>]*robots[^>]*>/.exec(html)?.[0] ?? '';
-
 async function paginationArtifacts(copySite) {
   const page2Html = await readFile(join(copySite, 'dist/blog/page/2.html'), 'utf8').catch(() => null);
   if (page2Html === null) throw new Error('dist/blog/page/2.html was not built');
@@ -428,6 +437,48 @@ async function runCategoryPaginationFamily(copySite, entry) {
   }
 }
 
+async function fixtureTag(entry) {
+  const frontmatter = (await readFile(join(FIXTURES, entry.fixture), 'utf8')).split(/^---$/m)[1] ?? '';
+  const match = /^tags:\s*\n\s+-\s+(\S+)\s*$/m.exec(frontmatter);
+  if (!match) throw new Error(`mutation smoke: fixture ${entry.fixture} has no tag for tag-pagination`);
+  return match[1];
+}
+
+async function runTagPaginationFamily(copySite, entry) {
+  const tag = await fixtureTag(entry);
+  const route = `/blog/tag/${tag}`;
+  const planted = [];
+  for (let index = 1; index <= LIVE_POST_TARGET; index += 1) {
+    const target = join(copySite, 'src/data/post', `mutation-tag-post-${String(index).padStart(2, '0')}.md`);
+    await copyFile(join(FIXTURES, entry.fixture), target);
+    planted.push(target);
+  }
+  try {
+    const built = await build(copySite);
+    if (built.code !== 0)
+      return { ok: false, reason: `build with ${planted.length} tag clones failed: ${built.output.slice(-400)}` };
+    const read = (file) => readFile(join(copySite, 'dist', file), 'utf8').catch(() => '');
+    const page2Html = await read(`${route}/page/2.html`);
+    const problems = [
+      ...tagArchiveFindings({
+        route,
+        page1Html: await read(`${route}.html`),
+        page2Html,
+        hasPage3: (await read(`${route}/page/3.html`)) !== '',
+        sitemap: await read('sitemap-0.xml'),
+      }),
+      ...(page2Html.includes('mutation-tag-post') ? [] : ['tag page 2 lists no planted live post']),
+    ];
+    if (problems.length > 0) return { ok: false, reason: problems.join('; ') };
+    return {
+      ok: true,
+      reason: `${tag}: ${planted.length} clones; robots ${robotsContent(page2Html)}, canonical ${canonicalHref(page2Html)}`,
+    };
+  } finally {
+    await Promise.all(planted.map((path) => rm(path, { force: true })));
+  }
+}
+
 async function runBlogPaginationFamily(copySite, entry) {
   const live = await livePostCount(copySite);
   const clones = Math.max(0, LIVE_POST_TARGET - live);
@@ -453,10 +504,10 @@ async function runBlogPaginationFamily(copySite, entry) {
   }
 }
 
+const PAGINATION_RUNNERS = { category: runCategoryPaginationFamily, tag: runTagPaginationFamily };
+
 async function runPaginationFamily(copySite, entry) {
-  return entry.scope === 'category'
-    ? runCategoryPaginationFamily(copySite, entry)
-    : runBlogPaginationFamily(copySite, entry);
+  return (PAGINATION_RUNNERS[entry.scope] ?? runBlogPaginationFamily)(copySite, entry);
 }
 
 async function prepareCopy(work) {

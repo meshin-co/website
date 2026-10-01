@@ -114,6 +114,18 @@ test('a route of a known family is required to carry that family node', () => {
   assert.deepEqual(requiredTypesFor('/'), ['Organization', 'Person', 'WebSite']);
 });
 
+test('every page of a paginated archive, in all three families, is required to carry the collection node', () => {
+  for (const route of ['/blog/page/2', '/blog/category/governance/page/2', '/blog/tag/ai-governance/page/2']) {
+    assert.deepEqual(requiredTypesFor(route), ['CollectionPage', 'BreadcrumbList'], route);
+  }
+});
+
+test('a paginated archive route that is not page-number shaped matches no family and fails closed', () => {
+  for (const route of ['/blog/tag/ai-governance/page', '/blog/tag/ai-governance/page/two', '/blog/tag/page/2']) {
+    assert.equal(requiredTypesFor(route), undefined, route);
+  }
+});
+
 test('a route matching no family yields no requirements instead of an empty pass', () => {
   assert.equal(requiredTypesFor('/blog/tags/extra'), undefined);
   assert.equal(requiredTypesFor('/speaking'), undefined);

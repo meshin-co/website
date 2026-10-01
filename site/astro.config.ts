@@ -74,7 +74,10 @@ export default defineConfig({
   integrations: [
     sitemap({
       filter: (page) => {
-        if (/\/styleguide|\/search|\/blog\/page\/|\/blog\/category\/[^/]+\/page\//.test(page)) return false;
+        if (
+          /\/styleguide|\/search|\/blog\/page\/|\/blog\/category\/[^/]+\/page\/|\/blog\/tag\/[^/]+\/page\//.test(page)
+        )
+          return false;
         const pathname = new URL(page).pathname.replace(/\/$/, '') || '/';
         return !NOINDEX_ROUTES.has(pathname);
       },

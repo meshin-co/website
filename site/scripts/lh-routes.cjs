@@ -2,7 +2,14 @@ const { existsSync, readdirSync, readFileSync, statSync } = require('node:fs');
 const { join, relative, sep } = require('node:path');
 
 const UNAUDITED_ROUTES = new Set(['/styleguide']);
-const NOINDEX_BY_DESIGN = ['/404', '/search', '/blog/category/executive', '/blog/page/*', '/blog/category/*/page/*'];
+const NOINDEX_BY_DESIGN = [
+  '/404',
+  '/search',
+  '/blog/category/executive',
+  '/blog/page/*',
+  '/blog/category/*/page/*',
+  '/blog/tag/*/page/*',
+];
 const SEO_AUDITS_EXCEPT_CRAWLABLE = [
   'document-title',
   'meta-description',

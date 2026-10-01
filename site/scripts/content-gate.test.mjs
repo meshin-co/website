@@ -75,6 +75,7 @@ test('collectPages reads every gated route from a flat tree and skips the ungate
       'styleguide.html',
       'blog/page/2.html',
       'blog/category/ops/page/3.html',
+      'blog/tag/ai-governance/page/2.html',
     ];
     for (const file of files) {
       await mkdir(dirname(join(dist, file)), { recursive: true });

@@ -20,7 +20,11 @@ export const SENTENCE_MINIMUM_FOR_VARIANCE = 8;
 export const PARAGRAPH_MINIMUM_FOR_VARIANCE = 3;
 
 const UNGATED = new Set(['/404', '/search', '/styleguide']);
-const UNGATED_PATTERNS = [/^\/blog\/page\/\d+$/, /^\/blog\/category\/[^/]+\/page\/\d+$/];
+const UNGATED_PATTERNS = [
+  /^\/blog\/page\/\d+$/,
+  /^\/blog\/category\/[^/]+\/page\/\d+$/,
+  /^\/blog\/tag\/[^/]+\/page\/\d+$/,
+];
 const EXCERPT_LENGTH = 100;
 
 const VOWEL_GROUPS = /[aeiouy]+/g;
