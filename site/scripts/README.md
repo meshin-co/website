@@ -91,8 +91,8 @@ be tested without a build.
 
 ## Servers
 
-| Script            | Invoked by                             | What it does                                                                                                         |
-| ----------------- | -------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `gate-server.mjs` | Playwright, every gate that needs HTTP | Serves `dist/` as Cloudflare Pages would: the real `_headers` and CSP, and a 308 on a directory page's slashless URL |
+| Script            | Invoked by                             | What it does                                                                                                                                         |
+| ----------------- | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `gate-server.mjs` | Playwright, every gate that needs HTTP | Serves `dist/` as Cloudflare Pages serves a flat build: the real `_headers` and CSP, `/about` answered 200, and a 308 on `/about/` and `/about.html` |
 
 → verify: `node --test scripts/scripts-index.test.mjs`

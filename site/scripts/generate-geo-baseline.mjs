@@ -11,8 +11,7 @@ function pagesFrom(dist) {
   const llms = readFileSync(join(dist, 'llms.txt'), 'utf8');
   const pages = {};
   for (const route of routes) {
-    const nested = join(dist, route === '/' ? 'index.html' : join(route.slice(1), 'index.html'));
-    const file = existsSync(nested) ? nested : join(dist, `${route.slice(1)}.html`);
+    const file = join(dist, route === '/' ? 'index.html' : `${route.slice(1)}.html`);
     if (!existsSync(file)) continue;
     const html = readFileSync(file, 'utf8');
     const main = /<main\b[^>]*>([\s\S]*?)<\/main>/i.exec(html)?.[1] ?? html;

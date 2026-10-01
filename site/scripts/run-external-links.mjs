@@ -17,11 +17,7 @@ const pages = (dir) => {
 
 const routeOf = (file) => {
   const rel = relative(dist, file).split(sep).join('/');
-  if (rel === 'index.html') return '/';
-  return `/${rel
-    .replace(/index\.html$/, '')
-    .replace(/\.html$/, '')
-    .replace(/\/$/, '')}`;
+  return rel === 'index.html' ? '/' : `/${rel.replace(/\.html$/, '')}`;
 };
 
 const files = pages(dist);

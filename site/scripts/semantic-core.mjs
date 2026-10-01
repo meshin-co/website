@@ -69,8 +69,8 @@ export const FAMILY_GRAMMAR = {
     intent: 'browse the tag list, then route into one tag',
   },
   tag: {
-    pattern: `{tag name}${TITLE_SUFFIX}`,
-    meta: 'every article tagged {tag}, newest first',
+    pattern: `{tag name} posts${TITLE_SUFFIX}`,
+    meta: 'all posts tagged {tag}, newest first',
     intent: 'thin archive list; route straight to the tagged articles',
   },
   term: {
@@ -147,11 +147,32 @@ export function orphanFindings(routes, queries) {
   return findings;
 }
 
+const normaliseQuery = (query) => query.trim().toLowerCase().replace(/\s+/g, ' ');
+
+export function duplicateQueryFindings(targetQuery) {
+  const owners = new Map();
+  for (const [route, query] of Object.entries(targetQuery)) {
+    const key = normaliseQuery(query);
+    owners.set(key, [...(owners.get(key) ?? []), route]);
+  }
+
+  return [...owners]
+    .filter(([, routes]) => routes.length > 1)
+    .flatMap(([query, routes]) =>
+      routes.map((route) => ({
+        route,
+        rule: 'duplicate-query',
+        detail: `"${query}" is also claimed by ${routes.filter((other) => other !== route).join(', ')}`,
+        excerpt: '',
+      }))
+    );
+}
+
 async function collectSemantic(distDir, facts, pages) {
   const rows = [];
 
   for (const page of pages) {
-    const html = await readFile(join(distDir, page.route.slice(1), 'index.html'), 'utf8');
+    const html = await readRouteHtml(distDir, page.route);
     const title = decodeText(/<title>([^<]*)<\/title>/.exec(html)?.[1] ?? '');
     const descriptionTag = /<meta[^>]*name="description"[^>]*>/.exec(html)?.[0] ?? '';
     const description = decodeText(/content="([^"]*)"/.exec(descriptionTag)?.[1] ?? '');
@@ -182,16 +203,13 @@ async function collectGated(distDir) {
   return collectPages(distDir);
 }
 
-async function readRouteHtml(distDir, route) {
-  const candidates = route === '/' ? ['index.html'] : [`${route.slice(1)}/index.html`, `${route.slice(1)}.html`];
-  for (const candidate of candidates) {
-    try {
-      return await readFile(join(distDir, candidate), 'utf8');
-    } catch {
-      // try the next candidate
-    }
+export async function readRouteHtml(distDir, route) {
+  const file = route === '/' ? 'index.html' : `${route.slice(1)}.html`;
+  try {
+    return await readFile(join(distDir, file), 'utf8');
+  } catch {
+    throw new Error(`semantic-core: no built html for route ${route}`);
   }
-  throw new Error(`semantic-core: no built html for route ${route}`);
 }
 
 async function collectAllPages(distDir) {
@@ -349,6 +367,7 @@ export async function checkFindings(distDir, pages) {
   const findings = orphanFindings(built, queries).filter((finding) => finding.rule === 'query-without-route');
   findings.push(...orphanFindings(gated, queries).filter((finding) => finding.rule === 'route-without-query'));
   findings.push(...titleFindings(rows));
+  findings.push(...duplicateQueryFindings(facts.targetQuery));
 
   const doc = await readFile(DOC, 'utf8');
   findings.push(...docDriftFindings(doc, renderFamilies(rows)));

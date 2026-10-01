@@ -1,4 +1,7 @@
 import assert from 'node:assert/strict';
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 
 import {
@@ -8,11 +11,13 @@ import {
   GENERATED_END,
   absenceFindings,
   docDriftFindings,
+  duplicateQueryFindings,
   familyFor,
   mustWinFindings,
   orphanFindings,
   parseBuyerPrompts,
   passageFindings,
+  readRouteHtml,
   renderFamilies,
   spliceGenerated,
   titleFindings,
@@ -92,6 +97,25 @@ test('facts rows without a built route and built routes without a facts row are 
 
 test('a fully aligned facts and route set has no orphans', () => {
   assert.deepEqual(orphanFindings(['/', '/pricing'], ['/', '/pricing']), []);
+});
+
+test('two routes claiming one query, differing only in case or spacing, are both reported', () => {
+  const findings = duplicateQueryFindings({
+    '/glossary/ai-register': 'ai register',
+    '/blog/tag/ai-register': 'AI  Register ',
+    '/blog/tag/ai-pilots': 'ai pilots',
+  });
+
+  assert.deepEqual(
+    findings.map((finding) => finding.route),
+    ['/glossary/ai-register', '/blog/tag/ai-register']
+  );
+  assert.ok(findings.every((finding) => finding.rule === 'duplicate-query'));
+  assert.match(findings[0].detail, /\/blog\/tag\/ai-register/);
+});
+
+test('distinct queries produce no duplicate finding', () => {
+  assert.deepEqual(duplicateQueryFindings({ '/a': 'ai register', '/b': 'ai register posts' }), []);
 });
 
 test('renderFamilies emits one table per family with its grammar and every column', () => {
@@ -371,4 +395,31 @@ test('absenceFindings is silent while the claimed absent term stays absent', () 
   const pages = [{ route: '/about', text: 'Remote worldwide.' }];
 
   assert.deepEqual(absenceFindings(pages, ABSENCE_CLAIMS), []);
+});
+
+const withDist = async (files, check) => {
+  const dist = await mkdtemp(join(tmpdir(), 'semantic-core-'));
+  try {
+    for (const [file, html] of Object.entries(files)) {
+      await mkdir(dirname(join(dist, file)), { recursive: true });
+      await writeFile(join(dist, file), html);
+    }
+    await check(dist);
+  } finally {
+    await rm(dist, { recursive: true, force: true });
+  }
+};
+
+test('readRouteHtml reads the flat file for home, a one-segment route and a two-segment route', async () => {
+  await withDist({ 'index.html': 'home', 'about.html': 'about', 'blog/post.html': 'post' }, async (dist) => {
+    assert.equal(await readRouteHtml(dist, '/'), 'home');
+    assert.equal(await readRouteHtml(dist, '/about'), 'about');
+    assert.equal(await readRouteHtml(dist, '/blog/post'), 'post');
+  });
+});
+
+test('readRouteHtml does not fall back to a nested index file and names the missing route', async () => {
+  await withDist({ 'about/index.html': 'nested' }, async (dist) => {
+    await assert.rejects(readRouteHtml(dist, '/about'), /semantic-core: no built html for route \/about/);
+  });
 });

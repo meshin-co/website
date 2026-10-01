@@ -49,9 +49,9 @@
   },
   {
     "target": "src/pages/blog/tag/[tag].astro",
-    "status": "verified",
-    "reason": "empty state copy is fine; composed title tag.name + template matches the tag family pattern in SEMANTIC-CORE",
-    "digest": "b311fdaeab8d"
+    "status": "rewritten",
+    "reason": "Hard-coded lead \"Every article tagged ...\" removed; title, H1, breadcrumb and lead now come from tagArchive in tags.mjs. Remaining copy (\"Tag\" eyebrow, \"Articles\" heading, empty state) unchanged and compliant.",
+    "digest": "896dda4acfd4"
   },
   {
     "target": "src/pages/blog/tags.astro",

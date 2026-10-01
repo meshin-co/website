@@ -23,7 +23,7 @@ const MEDIAN = ['error', { minScore: 1, aggregationMethod: 'median' }];
 async function fixtureDist(pages) {
   const dir = await mkdtemp(join(tmpdir(), 'lighthouserc-'));
   for (const [route, html] of Object.entries(pages)) {
-    const file = route === '/' ? 'index.html' : route === '/404' ? '404.html' : `${route.slice(1)}/index.html`;
+    const file = route === '/' ? 'index.html' : route === '/404' ? '404.html' : `${route.slice(1)}.html`;
     await mkdir(join(dir, file, '..'), { recursive: true });
     await writeFile(join(dir, file), html);
   }
@@ -60,7 +60,7 @@ test('a noindex page that is not named keeps the whole SEO category, so a page c
   );
   const config = loadConfig({ LH_DIST_DIR: dist });
 
-  const [group, ...others] = groupsFor(config, `${ORIGIN}/about/`);
+  const [group, ...others] = groupsFor(config, `${ORIGIN}/about`);
   assert.deepEqual(others, []);
   assert.deepEqual(group.assertions['categories:seo'], MEDIAN);
 });
@@ -70,10 +70,10 @@ test('every route named noindex by design asserts each SEO audit except is-crawl
 
   for (const path of [
     '/404',
-    '/search/',
-    '/blog/category/executive/',
-    '/blog/page/2/',
-    '/blog/category/governance/page/2/',
+    '/search',
+    '/blog/category/executive',
+    '/blog/page/2',
+    '/blog/category/governance/page/2',
   ]) {
     const [group, ...others] = groupsFor(config, `${ORIGIN}${path}`);
     assert.deepEqual(others, [], path);
@@ -88,14 +88,7 @@ test('every route named noindex by design asserts each SEO audit except is-crawl
 test('every indexable url falls in exactly one group and is graded on the whole SEO category', async () => {
   const config = loadConfig({ LH_DIST_DIR: await fixtureDist({ '/': '<html></html>' }) });
 
-  for (const path of [
-    '/',
-    '/about/',
-    '/blog/',
-    '/blog/tag/ai-governance/',
-    '/blog/category/governance/',
-    '/searching/',
-  ]) {
+  for (const path of ['/', '/about', '/blog', '/blog/tag/ai-governance', '/blog/category/governance', '/searching']) {
     const [group, ...others] = groupsFor(config, `${ORIGIN}${path}`);
     assert.deepEqual(others, [], path);
     assert.deepEqual(group.assertions['categories:seo'], MEDIAN, path);
@@ -136,7 +129,7 @@ test('the url list derives from the built html, never from gate-routes.json, and
 
   const config = loadConfig({ LH_DIST_DIR: dist });
 
-  assert.deepEqual(config.ci.collect.url.sort(), [`${ORIGIN}/`, `${ORIGIN}/404`, `${ORIGIN}/about/`]);
+  assert.deepEqual(config.ci.collect.url.sort(), [`${ORIGIN}/`, `${ORIGIN}/404`, `${ORIGIN}/about`]);
 });
 
 test('the gate server serves the same directory the url list was derived from', async () => {
@@ -160,7 +153,7 @@ test('sharding applies on top of the derived url list, each shard on its own por
   );
 
   const paths = shards.flatMap((config) => config.ci.collect.url.map((url) => new URL(url).pathname));
-  assert.deepEqual(paths.sort(), ['/', '/about/', '/faq/', '/pricing/']);
+  assert.deepEqual(paths.sort(), ['/', '/about', '/faq', '/pricing']);
   assert.deepEqual(
     shards.map((config) =>
       config.ci.collect.url.every((url) => url.startsWith(`http://127.0.0.1:${4330 + shards.indexOf(config)}/`))
@@ -181,7 +174,7 @@ test('LH_ONLY_ROUTES narrows the urls to the listed built routes instead of fall
 
   const config = loadConfig({ LH_DIST_DIR: dist, LH_ONLY_ROUTES: await touchedFile(['/about']) });
 
-  assert.deepEqual(config.ci.collect.url, [`${ORIGIN}/about/`]);
+  assert.deepEqual(config.ci.collect.url, [`${ORIGIN}/about`]);
 });
 
 test('an empty-string LH_ONLY_ROUTES audits everything, exactly like unset', async () => {
@@ -200,7 +193,7 @@ test('a planted page that declares its own noindex is graded on the whole SEO ca
 
   const config = loadConfig({ LH_DIST_DIR: dist, LH_ONLY_ROUTES: await touchedFile(['/zz-specimen']) });
 
-  assert.deepEqual(config.ci.collect.url, [`${ORIGIN}/zz-specimen/`]);
+  assert.deepEqual(config.ci.collect.url, [`${ORIGIN}/zz-specimen`]);
   const [group, ...others] = groupsFor(config, config.ci.collect.url[0]);
   assert.deepEqual(others, []);
   assert.deepEqual(group.assertions['categories:seo'], MEDIAN);

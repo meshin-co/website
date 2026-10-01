@@ -297,3 +297,36 @@ test('the pending-phase specimens plant an entry the real pending module then ex
     rmSync(copySite, { recursive: true, force: true });
   }
 });
+
+test('the page specimens plant and restore flat route files, never a route directory', async () => {
+  const copySite = scratch();
+  try {
+    mkdirSync(join(copySite, 'dist'));
+    const aboutFile = join(copySite, 'dist/about.html');
+    const plantedFile = join(copySite, 'dist/zz-specimen.html');
+    writeFileSync(aboutFile, '<html><body>about</body></html>');
+
+    const restoreHtml = await SPECIMENS.html.plant(copySite);
+    assert.equal(existsSync(plantedFile), true);
+    assert.equal(existsSync(join(copySite, 'dist/zz-specimen')), false);
+    await restoreHtml();
+    assert.equal(existsSync(plantedFile), false);
+
+    const restoreLinks = await SPECIMENS.links.plant(copySite);
+    assert.match(readFileSync(aboutFile, 'utf8'), /zz-specimen-missing/);
+    await restoreLinks();
+    assert.equal(readFileSync(aboutFile, 'utf8'), '<html><body>about</body></html>');
+
+    const restoreOrphans = await SPECIMENS.orphans.plant(copySite);
+    assert.match(readFileSync(plantedFile, 'utf8'), /about/);
+    await restoreOrphans();
+    assert.equal(existsSync(plantedFile), false);
+
+    const restoreShrink = await SPECIMENS.routesShrink.plant(copySite);
+    assert.equal(existsSync(aboutFile), false);
+    await restoreShrink();
+    assert.equal(existsSync(aboutFile), true);
+  } finally {
+    rmSync(copySite, { recursive: true, force: true });
+  }
+});

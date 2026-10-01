@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 
-import { gateFindings, profileFor } from './content-gate.mjs';
+import { collectPages, gateFindings, profileFor } from './content-gate.mjs';
 
 test('route shape decides which profile a page is gated against', () => {
   assert.equal(profileFor('/blog/why-your-ai-pilot-never-reached-production'), 'article');
@@ -58,4 +61,30 @@ test('a sentence shared by two pages is reported once, naming both routes', () =
     ['duplicate-sentence']
   );
   assert.equal(findings[0].route, '/pricing + /about');
+});
+
+test('collectPages reads every gated route from a flat tree and skips the ungated ones', async () => {
+  const dist = await mkdtemp(join(tmpdir(), 'content-gate-'));
+  try {
+    const files = [
+      'index.html',
+      'about.html',
+      'blog/post.html',
+      '404.html',
+      'search.html',
+      'styleguide.html',
+      'blog/page/2.html',
+      'blog/category/ops/page/3.html',
+    ];
+    for (const file of files) {
+      await mkdir(dirname(join(dist, file)), { recursive: true });
+      await writeFile(join(dist, file), '<html><body><main><h1>Title</h1></main></body></html>');
+    }
+
+    const pages = await collectPages(dist);
+
+    assert.deepEqual(pages.map((page) => page.route).sort(), ['/', '/about', '/blog/post']);
+  } finally {
+    await rm(dist, { recursive: true, force: true });
+  }
 });

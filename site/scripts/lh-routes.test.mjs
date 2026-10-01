@@ -17,7 +17,6 @@ import {
   readTouchedRoutes,
   resolveAuditPlan,
   resolveOnlyRoutesPath,
-  urlPathOf,
 } from './lh-routes.cjs';
 
 const require = createRequire(import.meta.url);
@@ -25,7 +24,7 @@ const require = createRequire(import.meta.url);
 async function fixtureDist(pages) {
   const dir = await mkdtemp(join(tmpdir(), 'lh-routes-'));
   for (const [route, html] of Object.entries(pages)) {
-    const file = route === '/' ? 'index.html' : route === '/404' ? '404.html' : `${route.slice(1)}/index.html`;
+    const file = route === '/' ? 'index.html' : route === '/404' ? '404.html' : `${route.slice(1)}.html`;
     await mkdir(join(dir, file, '..'), { recursive: true });
     await writeFile(join(dir, file), html);
   }
@@ -116,7 +115,8 @@ test('every audited url is answered 200 by the gate server itself, so the url re
   const isFile = (candidate) => existsSync(join(dist, candidate)) && statSync(join(dist, candidate)).isFile();
 
   for (const route of auditableRoutes(dist)) {
-    assert.equal(resolveRequest(urlPathOf(route), isFile).status, 200, route);
+    assert.equal(resolveRequest(route, isFile).status, 200, route);
+    if (route !== '/' && route !== '/404') assert.equal(resolveRequest(`${route}/`, isFile).status, 308, route);
   }
 });
 

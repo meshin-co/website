@@ -1,9 +1,9 @@
 import type { APIRoute } from 'astro';
 import { getCollection, getEntry } from 'astro:content';
 
-import { categoryPillars } from '~/data/categories.mjs';
+import { archiveTitleOf, categoryPillars } from '~/data/categories.mjs';
 import { artifacts, drivers, hero, services, shift, signals } from '~/data/home';
-import { TAGS } from '~/data/tags.mjs';
+import { TAGS, tagArchive } from '~/data/tags.mjs';
 import { FEED_BASES, isLive } from '~/utils/feeds.mjs';
 import { LLMS_COLLECTIONS } from '~/utils/llms-collections.mjs';
 import { collectionHubs, publicIndexableStaticPages } from '~/utils/machine-text.mjs';
@@ -150,20 +150,21 @@ const shardBuilders: Record<string, () => Promise<ShardEntry[]>> = {
       .map(([slug, pillar]) =>
         buildShardEntry('page', {
           href: `/blog/category/${slug}`,
-          title: pillar.title,
+          title: archiveTitleOf(pillar),
           description: pillar.description,
           body: pillar.body.join(' '),
         })
       );
 
-    const tagEntries = liveTags.map((tag) =>
-      buildShardEntry('page', {
+    const tagEntries = liveTags.map((tag) => {
+      const archive = tagArchive(tag);
+      return buildShardEntry('page', {
         href: `/blog/tag/${tag.slug}`,
-        title: tag.name,
-        description: `Every article tagged ${tag.name}, newest first.`,
-        body: `Every article tagged ${tag.name}, newest first.`,
-      })
-    );
+        title: archive.title,
+        description: archive.description,
+        body: archive.description,
+      });
+    });
 
     return [...staticPageEntries, ...hubEntries, ...categoryEntries, ...tagEntries];
   },

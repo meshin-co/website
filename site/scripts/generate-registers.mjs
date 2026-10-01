@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { parse } from 'yaml';
@@ -37,8 +37,8 @@ function glossaryTerms() {
 function builtPages(dist) {
   const routes = JSON.parse(readFileSync(join(dist, 'gate-routes.json'), 'utf8')).routes;
   return routes.map((route) => {
-    const nested = join(dist, route === '/' ? 'index.html' : join(route.slice(1), 'index.html'));
-    const html = readFileSync(existsSync(nested) ? nested : join(dist, `${route.slice(1)}.html`), 'utf8');
+    const file = join(dist, route === '/' ? 'index.html' : `${route.slice(1)}.html`);
+    const html = readFileSync(file, 'utf8');
     const main = /<main\b[^>]*>([\s\S]*?)<\/main>/i.exec(html)?.[1] ?? html;
     return {
       route,

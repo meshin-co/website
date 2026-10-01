@@ -7,6 +7,7 @@ import Button from '~/components/ui/Button.astro';
 
 import { getHomePermalink } from '~/utils/permalinks';
 import { trimSlash } from '~/utils/permalinks';
+import { routeOfPathname } from '~/utils/machine-links.mjs';
 import type { CallToAction } from '~/types';
 
 interface Link {
@@ -42,7 +43,7 @@ const {
   position = 'center',
 } = Astro.props;
 
-const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
+const currentPath = `/${trimSlash(routeOfPathname(new URL(Astro.url).pathname))}`;
 
 // Compare paths without trailing slashes so the active link is detected
 // regardless of the `trailingSlash` setting (`getPermalink()` emits `/contact/`

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { mkdtemp, mkdir, writeFile, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 
 import { discoverRoutes, diffRoutes, assetsOfPage, overBudget, measureRoute, isNoindex, main } from './gate.mjs';
@@ -9,8 +9,8 @@ import { discoverRoutes, diffRoutes, assetsOfPage, overBudget, measureRoute, isN
 async function fixtureDist(pages) {
   const dir = await mkdtemp(join(tmpdir(), 'gate-'));
   for (const [route, html] of Object.entries(pages)) {
-    const file = route === '/' ? 'index.html' : `${route.slice(1)}/index.html`;
-    await mkdir(join(dir, file, '..'), { recursive: true });
+    const file = route === '/' ? 'index.html' : `${route.slice(1)}.html`;
+    await mkdir(dirname(join(dir, file)), { recursive: true });
     await writeFile(join(dir, file), html);
   }
   return dir;

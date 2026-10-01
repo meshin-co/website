@@ -10,6 +10,8 @@ const ANSI_SEQUENCE = new RegExp(`${String.fromCharCode(27)}\\[[0-9;]*m`, 'g');
 export const flatten = (output) => String(output).replace(ANSI_SEQUENCE, '').replace(/\s+/g, ' ');
 const tail = (output) => flatten(output).slice(-300);
 
+const ORIGIN = `https://${brandFromDisk().name}`;
+
 const git = (path, ...args) => execFileSync('git', [...args, path], { cwd: dirname(path), stdio: 'ignore' });
 
 const gitOutput = (cwd, ...args) =>
@@ -48,10 +50,10 @@ export async function editFile(path, change) {
 }
 
 async function addPage(copySite, route, html) {
-  const dir = join(copySite, 'dist', route);
-  await mkdir(dir, { recursive: true });
-  await writeFile(join(dir, 'index.html'), html);
-  return () => rm(dir, { recursive: true, force: true });
+  const file = join(copySite, 'dist', `${route}.html`);
+  await mkdir(dirname(file), { recursive: true });
+  await writeFile(file, html);
+  return () => rm(file, { force: true });
 }
 
 async function moveAside(path) {
@@ -60,7 +62,7 @@ async function moveAside(path) {
   return () => rename(aside, path);
 }
 
-const movePage = (copySite, route) => moveAside(join(copySite, 'dist', route));
+const movePage = (copySite, route) => moveAside(join(copySite, 'dist', `${route}.html`));
 
 const PENDING_FILE = 'scripts/mutation-pending.mjs';
 const PENDING_ANCHOR = 'export const PENDING = [';
@@ -93,7 +95,7 @@ export const SPECIMENS = {
     gate: 'gate:links',
     token: 'zz-specimen-missing',
     plant: (copySite) =>
-      editFile(join(copySite, 'dist/about/index.html'), (html) =>
+      editFile(join(copySite, 'dist/about.html'), (html) =>
         html.replace('</body>', '<a href="/zz-specimen-missing/">x</a></body>')
       ),
   },
@@ -101,7 +103,7 @@ export const SPECIMENS = {
     gate: 'gate:orphans',
     token: 'zero inbound links /zz-specimen',
     plant: async (copySite) =>
-      addPage(copySite, 'zz-specimen', await readFile(join(copySite, 'dist/about/index.html'), 'utf8')),
+      addPage(copySite, 'zz-specimen', await readFile(join(copySite, 'dist/about.html'), 'utf8')),
   },
   machine: {
     gate: 'gate:machine',
@@ -112,6 +114,17 @@ export const SPECIMENS = {
         feed.items.pop();
         return JSON.stringify(feed);
       }),
+  },
+  canonical: {
+    gate: 'gate:machine',
+    token: `/about canonical is ${ORIGIN}/about.html, expected ${ORIGIN}/about`,
+    plant: (copySite) =>
+      editFile(join(copySite, 'dist/about.html'), (html) =>
+        html.replace(
+          `<link href="${ORIGIN}/about" rel="canonical">`,
+          `<link href="${ORIGIN}/about.html" rel="canonical">`
+        )
+      ),
   },
   search: {
     gate: 'gate:search',

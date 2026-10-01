@@ -15,12 +15,8 @@ import { brandFromDisk } from '../src/utils/brand.mjs';
 const SITE_ORIGIN = `https://${brandFromDisk().name}`;
 
 async function routeHtml(distDir, route) {
-  const withoutSlash = route.slice(1);
-  for (const candidate of [join(distDir, withoutSlash, 'index.html'), join(distDir, `${withoutSlash}.html`)]) {
-    const html = await readFile(candidate, 'utf8').catch(() => null);
-    if (html !== null) return html;
-  }
-  return null;
+  const file = join(distDir, route === '/' ? 'index.html' : `${route.slice(1)}.html`);
+  return readFile(file, 'utf8').catch(() => null);
 }
 
 export function buildSidecar({ page, html, updatedIso, site = SITE_ORIGIN }) {

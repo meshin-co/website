@@ -12,8 +12,8 @@ Run from `site/`. Each step green before the next.
 2. `npm run check` — astro check, eslint, prettier. Run it before every push, including a
    Markdown-only commit: prettier checks `.md`, and `npm test` says nothing about formatting.
 3. `npm test` — unit tests for `scripts/`, `src/utils/` and `src/data/`.
-4. `npm run gate:html`, then `npm run gate:links` — html-validate, then linkinator with the
-   plausible.io, linkedin.com, cal.com, github.com/meshin-co and meshin.co skips.
+4. `npm run gate:html`, then `npm run gate:links` — html-validate, then linkinator (skips: plausible.io,
+   linkedin.com, cal.com, github.com/meshin-co, meshin.co; local `/blog` is rewritten to `blog.html`).
 5. `npm run gate:content` — content Half A plus the semantic-core drift check
    (content-gate.md).
 6. `npm run gate:orphans` — every route needs an inbound link; the exempt list in

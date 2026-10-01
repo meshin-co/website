@@ -4,7 +4,7 @@ import { test } from 'node:test';
 
 import yaml from 'js-yaml';
 
-import { TAGS, TAG_SLUGS, tagBySlug, postTagSchema } from './tags.mjs';
+import { TAGS, TAG_SLUGS, tagArchive, tagBySlug, postTagSchema } from './tags.mjs';
 
 const frontmatter = (markdown) => {
   const match = /^---\n([\s\S]*?)\n---/.exec(markdown);
@@ -47,4 +47,9 @@ test('a post frontmatter tag outside the vocabulary is rejected', () => {
 
 test('the whole vocabulary parses as post tags', () => {
   assert.equal(postTagSchema.safeParse(TAG_SLUGS).success, true);
+});
+
+test('every tag archive has a distinct title', () => {
+  const titles = TAGS.map((tag) => tagArchive(tag).title);
+  assert.equal(new Set(titles).size, titles.length);
 });

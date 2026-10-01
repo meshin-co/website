@@ -260,13 +260,13 @@
   {
     "target": "site/src/data/categories.mjs",
     "status": "rewritten",
-    "reason": "terminology (register, acceptable-use policy, data classification, ISO/IEC 42001, NIST AI Risk Management Framework) confirmed against the glossary by GlossaryEditor with no drift; nine sentences across the four category bodies exceeded the 34-word hard stop (up to 40 words) and were split into shorter sentences without changing any fact, number, or claim; longest sentence is now 27 words",
-    "digest": "4aefcde369ee"
+    "reason": "Review of the four category bodies unchanged and re-read: terminology (register, acceptable-use policy, data classification, ISO/IEC 42001, NIST AI Risk Management Framework) confirmed against the glossary, longest body sentence 27 words. New in this pass: governance and agentic-architecture gain archiveTitle (\"AI governance articles\", \"Agentic architecture articles\") and a rewritten description that lists what the category covers instead of defining the term, which the glossary owns. Every figure in the new descriptions (30 to 300) is already in content-facts numbers.",
+    "digest": "f8be8d4db6e6"
   },
   {
     "target": "site/src/data/tags.mjs",
-    "status": "verified",
-    "reason": "12 short tag names, no prose to edit, no banned phrasing",
-    "digest": "2033dc870f3b"
+    "status": "rewritten",
+    "reason": "Tag names unchanged and still 12 short names with no prose. New tagArchive(tag) supplies the archive title \"{name} posts\" and lead \"All posts tagged {name}, newest first.\", replacing \"Every article tagged {name}, newest first.\" so page, llms.txt and search index read one string. Plain, no banned phrasing, no fact claimed.",
+    "digest": "544f764d900f"
   }
 ]

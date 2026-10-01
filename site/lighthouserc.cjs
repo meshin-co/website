@@ -1,10 +1,5 @@
 const { shardOf, shardRoutes } = require('./scripts/lh-shards.cjs');
-const {
-  NOINDEX_ROUTE_PATTERN,
-  SEO_AUDITS_EXCEPT_CRAWLABLE,
-  resolveAuditPlan,
-  urlPathOf,
-} = require('./scripts/lh-routes.cjs');
+const { NOINDEX_ROUTE_PATTERN, SEO_AUDITS_EXCEPT_CRAWLABLE, resolveAuditPlan } = require('./scripts/lh-routes.cjs');
 
 const desktop = process.env.LHCI_FORM_FACTOR === 'desktop';
 const distDir = process.env.LH_DIST_DIR || 'dist';
@@ -31,7 +26,7 @@ const shard = shardOf(process.env);
 const audited = shardRoutes(resolveAuditPlan({ distDir, env: process.env }).expected, shard);
 const port = Number(process.env.GATE_SERVER_PORT ?? 4330) + shard.index - 1;
 const origin = `http://127.0.0.1:${port}`;
-const url = audited.map((route) => `${origin}${urlPathOf(route)}`);
+const url = audited.map((route) => `${origin}${route}`);
 
 module.exports = {
   ci: {

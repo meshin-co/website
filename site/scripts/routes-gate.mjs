@@ -41,11 +41,8 @@ export function collectRoutes(distDir) {
       if (entry.isDirectory()) {
         walk(full);
       } else if (entry.name.endsWith('.html')) {
-        const rel = relative(distDir, full)
-          .replace(/index\.html$/, '')
-          .replace(/\.html$/, '')
-          .replace(/\/$/, '');
-        routes.push(`/${rel}`.replace(/^\/$/, '/'));
+        const rel = relative(distDir, full);
+        routes.push(rel === 'index.html' ? '/' : `/${rel.replace(/\.html$/, '')}`);
       }
     }
   };

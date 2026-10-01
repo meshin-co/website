@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 
 import { ENTRY_TEXT_CAPS } from '../public/search/shards.mjs';
@@ -20,9 +20,9 @@ ${main}
 function distWith(files) {
   const dir = mkdtempSync(join(tmpdir(), 'search-page-text-'));
   for (const [route, html] of Object.entries(files)) {
-    const routeDir = route === '/' ? dir : join(dir, route.slice(1));
-    mkdirSync(routeDir, { recursive: true });
-    writeFileSync(join(routeDir, 'index.html'), html);
+    const file = join(dir, route === '/' ? 'index.html' : `${route.slice(1)}.html`);
+    mkdirSync(dirname(file), { recursive: true });
+    writeFileSync(file, html);
   }
   return dir;
 }

@@ -9,7 +9,7 @@ import JsonLd from '~/components/common/JsonLd.astro';
 import PostCard from '~/components/site/PostCard.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { TAGS } from '~/data/tags.mjs';
+import { TAGS, tagArchive } from '~/data/tags.mjs';
 import { collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
 import { readingTime } from '~/utils/reading-time.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
@@ -34,9 +34,10 @@ const { tag, posts } = Astro.props;
 const site = import.meta.env.SITE.replace(/\/$/, '');
 const basePath = `/blog/tag/${tag.slug}`;
 
+const archive = tagArchive(tag);
 const metadata = {
-  title: tag.name,
-  description: `Every article tagged ${tag.name}, newest first.`,
+  title: archive.title,
+  description: archive.description,
 };
 
 const nodes = [
@@ -45,7 +46,7 @@ const nodes = [
   websiteNode(site),
   collectionNode(site, {
     path: basePath,
-    name: tag.name,
+    name: archive.title,
     description: metadata.description,
     items: posts.map((post) => ({ url: `/blog/${post.id}` })),
   }),
@@ -60,17 +61,11 @@ const nodes = [
       { name: 'Home', path: '/' },
       { name: 'Writing', path: '/blog' },
       { name: 'Tags', path: '/blog/tags' },
-      { name: tag.name, path: basePath },
+      { name: archive.title, path: basePath },
     ]}
   />
 
-  <Section
-    bordered={false}
-    headingLevel={1}
-    eyebrow="Tag"
-    title={tag.name}
-    lead={`Every article tagged ${tag.name}, newest first.`}
-  />
+  <Section bordered={false} headingLevel={1} eyebrow="Tag" title={archive.title} lead={archive.description} />
 
   <Section title="Articles">
     {

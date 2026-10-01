@@ -1,8 +1,9 @@
 export const categoryPillars = {
   governance: {
     title: 'AI governance',
+    archiveTitle: 'AI governance articles',
     description:
-      'AI governance in a company of 30 to 300 people is four documents on a shared drive, not a maturity model built for a bank.',
+      'Articles on AI governance for companies of 30 to 300 people: the register, acceptable-use policy, data classification and a named owner.',
     body: [
       'Governance has a bad name in small companies because most of what is sold under that name is written for a bank. A three hundred person company does not need a committee, a maturity model or a consultant to run a workshop. It needs four things that fit on a shared drive and get updated when something changes.',
       'The first is a register: every AI system in use, who owns it, what data reaches it. It also records whether a person checks its output before a customer sees it. Companies usually find more AI in the building than they expected, because someone signed up for a tool with a credit card and nobody wrote it down.',
@@ -14,8 +15,9 @@ export const categoryPillars = {
   },
   'agentic-architecture': {
     title: 'Agentic architecture',
+    archiveTitle: 'Agentic architecture articles',
     description:
-      'Agentic architecture here means agent systems built to survive production: evals in CI, tracing, cost ceilings and a rollback path.',
+      'Articles on agentic architecture for production: evals in CI, tracing, cost ceilings and a rollback path for agent systems.',
     body: [
       'An agent demo is easy and an agent in production is not, and the gap between them is almost never about the model. It is about the same engineering discipline any other system needs, applied to a component whose output is not deterministic.',
       'Start with evaluation, before the prompt. You need to say what a good answer looks like on a set of real cases. Otherwise you cannot tell whether a change made the system better or simply different. Build the eval set from work people have already done, so there is a known-good answer to compare against. Sample it across a window long enough that seasonality does not flatter you.',
@@ -52,3 +54,5 @@ export const categoryPillars = {
     ],
   },
 };
+
+export const archiveTitleOf = (pillar) => pillar.archiveTitle ?? pillar.title;

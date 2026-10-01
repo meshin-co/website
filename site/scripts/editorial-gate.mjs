@@ -91,9 +91,8 @@ function buildLedger(dist) {
 
   const routes = JSON.parse(readFileSync(join(dist, 'gate-routes.json'), 'utf8')).routes;
   const pages = routes.map((route) => {
-    const nested = join(dist, route === '/' ? 'index.html' : join(route.slice(1), 'index.html'));
-    const flat = join(dist, `${route.slice(1)}.html`);
-    return { route, html: readFileSync(existsSync(nested) ? nested : flat, 'utf8') };
+    const file = join(dist, route === '/' ? 'index.html' : `${route.slice(1)}.html`);
+    return { route, html: readFileSync(file, 'utf8') };
   });
 
   const machineSurfaces = walk(dist, (name) => /\.(txt|md|json|xml)$/.test(name))
