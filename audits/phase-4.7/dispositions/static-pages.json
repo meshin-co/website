@@ -8,8 +8,8 @@
   {
     "target": "site/src/data/home.ts",
     "status": "rewritten",
-    "reason": "Normalized a stray U+2011 non-breaking hyphen to ASCII in cta.title (\"30-minute\"); removed the unconfirmed \"12–24 months\" retainer-handover track-record claim (COPY-CHECKLIST 3.7) from the Retainer deliverables list, replaced with a fact-preserving line with no timeframe. Hero title/sub left unchanged per L9a (conflict noted in report).",
-    "digest": "e5cb2f268707"
+    "reason": "Normalized a stray U+2011 non-breaking hyphen to ASCII in cta.title (\"30-minute\"); removed the unconfirmed \"12–24 months\" retainer-handover track-record claim (COPY-CHECKLIST 3.7) from the Retainer deliverables list, replaced with a fact-preserving line with no timeframe. Hero title/sub left unchanged per L9a (conflict noted in report). Re-read 2026-10-01: the services and artifacts arrays were deleted because they duplicated src/data/service/*.md and src/data/resource/*.md; what remains is artifactIds, a list of three entry ids that carries no prose.",
+    "digest": "9d09fb7534ff"
   },
   {
     "target": "site/src/pages/about.astro",

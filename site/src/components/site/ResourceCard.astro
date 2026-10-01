@@ -11,14 +11,14 @@ interface Props {
 const { name, summary, format, status, href } = Astro.props;
 ---
 
-<article class="card group flex h-full flex-col p-7 hover:card-hover" data-gate-ignore>
+<article class="card group relative flex h-full flex-col p-7 hover:card-hover" data-gate-ignore>
   <p class="eyebrow">{format}</p>
 
   <h3 class="mt-4 font-heading text-xl leading-snug font-semibold text-heading">
     {
       href ? (
         <a
-          class="link-signature group-hover:link-signature-hover"
+          class="text-link after:absolute after:inset-0 after:content-['']"
           href={href}
           {...externalRelAttrs(href)}
           {...(externalRelAttrs(href).rel ? { target: '_blank' } : {})}

@@ -20,48 +20,6 @@ export const signals = {
   verdict: "Three or more of these five signs? You're exactly who this is for.",
 };
 
-export const services = [
-  {
-    name: 'AI Readiness & Risk Assessment',
-    feeShape: 'Fixed fee',
-    duration: '2 weeks',
-    outcome:
-      'Two weeks of interviews and reading your systems, ending in a memo your board can act on. You learn exactly where you stand, what a customer audit would find, and which three processes are worth automating first.',
-    deliverables: [
-      'Readiness score across strategy, data, delivery, people and governance',
-      'Gap list against NIST AI RMF, ISO/IEC 42001 and the EU AI Act',
-      'Inventory of the AI tools and data flows already in the building',
-      'Fee credited if you go on to a Sprint',
-    ],
-  },
-  {
-    name: '90-Day Production Sprint',
-    feeShape: 'Fixed scope, quoted once',
-    duration: '90 days',
-    outcome:
-      'Ninety days to get one process running in production and keep it there. I build it with your engineers rather than beside them, so your team can change it after I leave.',
-    deliverables: [
-      'One agentic workflow live, with rollback and a named owner',
-      'Evals in CI, so a prompt or model change cannot ship unnoticed',
-      'Tracing and cost per outcome on a dashboard your CFO can read',
-      'A success number written into the SOW before I start',
-    ],
-  },
-  {
-    name: 'Fractional CAIO Retainer',
-    feeShape: 'Monthly fee',
-    duration: '1–2 days a week',
-    outcome:
-      'One or two days a week as the AI officer your customers can ask for by name. The week is procurement answers, design reviews and a board update, in that order of urgency.',
-    deliverables: [
-      'Named officer for security questionnaires, contracts and audits',
-      'Quarterly roadmap with a budget next to each item',
-      'Review of every AI initiative, including the shadow tools nobody approved',
-      'Handover plan, so an internal owner can run this without me',
-    ],
-  },
-];
-
 export const drivers = [
   {
     name: 'Data readiness',
@@ -89,29 +47,7 @@ export const drivers = [
   },
 ];
 
-export const artifacts = [
-  {
-    name: 'AI Governance Starter Kit',
-    summary:
-      'The paperwork that gets an AI system past a corporate security review: register, acceptable-use policy, data classification, and a vendor questionnaire you can fill in.',
-    format: 'Repo · templates',
-    status: 'Written out in full on its own page',
-  },
-  {
-    name: 'AI Readiness Scorecard',
-    summary:
-      'The five-driver model from the Assessment, with the questions behind each score, so you can run a first pass without me.',
-    format: 'Repo · spreadsheet',
-    status: 'Written out in full on its own page',
-  },
-  {
-    name: 'Agent Evals CI Starter',
-    summary:
-      'A small harness that runs evals on an agentic system inside CI and records cost and latency for every run.',
-    format: 'Repo · CI workflow',
-    status: 'Written out in full on its own page',
-  },
-];
+export const artifactIds = ['ai-governance-starter-kit', 'ai-readiness-scorecard', 'agent-evals-ci-starter'];
 
 export const cta = {
   title: 'Start with a 30-minute fit call.',
