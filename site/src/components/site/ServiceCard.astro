@@ -11,7 +11,7 @@ interface Props {
 const { name, feeShape, duration, outcome, deliverables, href } = Astro.props;
 ---
 
-<article class="card group flex h-full flex-col p-7 hover:card-hover sm:p-8" data-gate-ignore>
+<article class="card group relative flex h-full flex-col p-7 hover:card-hover sm:p-8" data-gate-ignore>
   <div>
     <span class="eyebrow">{duration}</span>
 
@@ -20,7 +20,7 @@ const { name, feeShape, duration, outcome, deliverables, href } = Astro.props;
     >
       {
         href ? (
-          <a class="link-signature group-hover:link-signature-hover" href={href}>
+          <a class="text-link after:absolute after:inset-0 after:content-['']" href={href}>
             {name}
           </a>
         ) : (

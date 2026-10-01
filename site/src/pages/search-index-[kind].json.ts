@@ -2,9 +2,9 @@ import type { APIRoute } from 'astro';
 import { getCollection, getEntry } from 'astro:content';
 
 import { archiveTitleOf, categoryPillars } from '~/data/categories.mjs';
-import { artifacts, drivers, hero, services, shift, signals } from '~/data/home';
+import { artifactIds, drivers, hero, shift, signals } from '~/data/home';
 import { TAGS, tagArchive } from '~/data/tags.mjs';
-import { FEED_BASES, isLive } from '~/utils/feeds.mjs';
+import { FEED_BASES, isLive, isPublished } from '~/utils/feeds.mjs';
 import { LLMS_COLLECTIONS } from '~/utils/llms-collections.mjs';
 import { collectionHubs, publicIndexableStaticPages } from '~/utils/machine-text.mjs';
 import { buildShardEntry, KINDS, words } from '../../public/search/shards.mjs';
@@ -23,17 +23,15 @@ interface ShardEntry {
   text: string;
 }
 
-const HOME_BODY = words([
+const HOME_BODY_WITHOUT_SERVICES = [
   hero.sub,
   hero.proof.join(' '),
   ...signals.items,
   signals.verdict,
-  ...services.flatMap(({ name, outcome, deliverables }) => [name, outcome, ...deliverables]),
   ...drivers.map(({ name, detail }) => `${name} ${detail}`),
   ...shift.before.items,
   ...shift.after.items,
-  ...artifacts.map(({ name, summary }) => `${name} ${summary}`),
-]);
+];
 
 const shardBuilders: Record<string, () => Promise<ShardEntry[]>> = {
   post: async () =>
@@ -101,10 +99,21 @@ const shardBuilders: Record<string, () => Promise<ShardEntry[]>> = {
       })
     ),
   page: async () => {
-    const [author, posts, faqEntries] = await Promise.all([
+    const [author, posts, faqEntries, serviceEntries, resourceEntries] = await Promise.all([
       getEntry('author', 'dmitri'),
       getCollection('post', isLive),
       getCollection('faq', isLive),
+      getCollection('service', isPublished),
+      getCollection('resource', ({ data }) => !data.draft),
+    ]);
+
+    const homeBody = words([
+      ...HOME_BODY_WITHOUT_SERVICES,
+      ...serviceEntries.flatMap(({ data }) => [data.name, data.tagline, ...data.deliverables]),
+      ...artifactIds.flatMap((id) => {
+        const entry = resourceEntries.find((candidate) => candidate.id === id);
+        return entry ? [entry.data.name, entry.data.description] : [];
+      }),
     ]);
 
     const aboutBody = author ? words([author.data.role, author.data.bio, author.data.credentials.join(' ')]) : '';
@@ -121,7 +130,7 @@ const shardBuilders: Record<string, () => Promise<ShardEntry[]>> = {
     const liveCategorySlugs = new Set<string>(posts.map((post) => post.data.category));
 
     const staticPageBodyFromSource: Record<string, string> = {
-      '/': HOME_BODY,
+      '/': homeBody,
       '/about': aboutBody,
       '/faq': faqBody,
       '/blog/tags': blogTagsBody,

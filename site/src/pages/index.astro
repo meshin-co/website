@@ -1,4 +1,6 @@
 ---
+import { getCollection } from 'astro:content';
+
 import CardGrid from '~/components/site/CardGrid.astro';
 import CtaBlock from '~/components/site/CtaBlock.astro';
 import FigureStrip from '~/components/site/FigureStrip.astro';
@@ -9,9 +11,10 @@ import Section from '~/components/site/Section.astro';
 import ServiceCard from '~/components/site/ServiceCard.astro';
 import SignalList from '~/components/site/SignalList.astro';
 import StepList from '~/components/site/StepList.astro';
-import { artifacts, cta, drivers, figures, hero, heroOffers, nudge, services, shift, signals } from '~/data/home';
+import { artifactIds, cta, drivers, figures, hero, heroOffers, nudge, shift, signals } from '~/data/home';
 import JsonLd from '~/components/common/JsonLd.astro';
 import Layout from '~/layouts/PageLayout.astro';
+import { isPublished } from '~/utils/feeds.mjs';
 import { orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
@@ -22,6 +25,11 @@ const metadata = {
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
 const nodes = [orgNode(site, { logoPath: ogDefaultPath }), personNode(site), websiteNode(site)];
+const services = (await getCollection('service', isPublished)).sort((a, b) => a.data.order - b.data.order);
+const resourcesById = new Map(
+  (await getCollection('resource', ({ data }) => !data.draft)).map((entry) => [entry.id, entry])
+);
+const resources = artifactIds.map((id) => resourcesById.get(id)).filter((entry) => entry !== undefined);
 ---
 
 <Layout metadata={metadata}>
@@ -55,7 +63,18 @@ const nodes = [orgNode(site, { logoPath: ogDefaultPath }), personNode(site), web
     lead="Three ways in. Each one ends with an artifact you can hand to a customer, a board or an auditor."
   >
     <CardGrid>
-      {services.map((service) => <ServiceCard {...service} />)}
+      {
+        services.map((service) => (
+          <ServiceCard
+            name={service.data.name}
+            feeShape={service.data.feeShape}
+            duration={service.data.duration}
+            outcome={service.data.tagline}
+            deliverables={service.data.deliverables}
+            href={`/services/${service.id}`}
+          />
+        ))
+      }
     </CardGrid>
 
     <div class="mt-10 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-4 border-t border-line pt-8">
@@ -82,7 +101,17 @@ const nodes = [orgNode(site, { logoPath: ogDefaultPath }), personNode(site), web
     lead="Every template I use in engagements is written out in full on its own page, so you can read the method before you buy it."
   >
     <CardGrid>
-      {artifacts.map((artifact) => <ResourceCard {...artifact} />)}
+      {
+        resources.map((resource) => (
+          <ResourceCard
+            name={resource.data.name}
+            summary={resource.data.description}
+            format={`${resource.data.type} · v${resource.data.version} · ${resource.data.license}`}
+            status={resource.data.status}
+            href={`/resources/${resource.id}`}
+          />
+        ))
+      }
     </CardGrid>
   </Section>
 
