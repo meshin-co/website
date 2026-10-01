@@ -40,6 +40,16 @@ three were the detector's own noise:
 The fourth was real: the runner called `editorial-gate.mjs` with the wrong arguments and read the
 sweep's prose instead of its count. Both are now derived from the same strings the gates print.
 
+## Where the real-build assertions live
+
+Anything that must read `dist/` is asserted here, never in `npm test`: the CI unit job has no build,
+so a unit test that reads `dist/` fails there. The font row passes only for exactly the L39 faces
+(Fraunces 600, IBM Plex Sans 400 and 500). `pre-launch.test.mjs` keeps the `@font-face` blocks Astro
+emits as a fixture, so the parser stays covered without a build. The font bytes are gated apart from
+this row, by the `fonts` key in `budgets.json`, which `scripts/gate.mjs` checks in the build job.
+The "valid markup" row runs `html-validate` and `content-gate.mjs` itself; it once ran
+`content-html.mjs`, a library with no entry point, which exits 0 whatever `dist/` holds.
+
 ## When a row fails
 
 Read the row's evidence, reproduce the named command, and fix the site or the detector; never the

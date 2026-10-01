@@ -56,3 +56,14 @@ test('taxonomy hub leads are excluded, because the term is injected by the templ
     [{ route: '/services' }, { route: '/blog/a-real-post' }]
   );
 });
+
+test('the gap analysis names the revision it was generated from', () => {
+  const report = renderGaps({
+    ledger: { rows: 0, unreviewed: 0, untraceable: 0, dead: 0 },
+    concepts: [],
+    orphans: [],
+    promptGaps: [],
+    revision: 'abc1234',
+  });
+  assert.match(report, /^Generated-from: abc1234$/m);
+});

@@ -1,5 +1,9 @@
 # Phase 0 baseline — untouched AstroWind template
 
+Generated-from: 9fd5605 (the template as scaffolded, the revision whose build was measured)
+
+Summarised by hand from Lighthouse runs of that build. No script writes this file.
+
 Route: `/` from the production build of the template exactly as scaffolded.
 Median of 3 runs per form factor. Informational only: this is the starting point, not a gate.
 

@@ -2,6 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { generatorRevision } from './report.mjs';
 import {
   checkCookies,
   checkFontPolicy,
@@ -33,8 +34,6 @@ const runs = (command, args) => {
   }
 };
 
-const gitOutput = (args) => execFileSync('git', args, { encoding: 'utf8' }).trim();
-
 const artifact = (name) => {
   const path = join('../audits/phase-5', name);
   return existsSync(path) ? readFileSync(path, 'utf8') : '';
@@ -50,7 +49,11 @@ const components = walk('src', /\.(astro|css)$/).map((file) => ({
 const css = walk(join(dist, '_astro'), /\.css$/)
   .map((file) => readFileSync(file, 'utf8'))
   .join('\n');
-const routes = JSON.parse(readFileSync(join(dist, 'gate-routes.json'), 'utf8')).routes;
+const assetBudgets = runs('node', ['scripts/gate.mjs', dist, 'budgets.json']);
+const gate = JSON.parse(readFileSync(join(dist, 'gate-routes.json'), 'utf8'));
+const routes = gate.routes;
+const shippedFontBytes = Math.max(...gate.measured.map((row) => row.fonts));
+const budgets = JSON.parse(readFileSync('budgets.json', 'utf8'));
 
 const report = artifact('REPORT.md');
 const sweep = artifact('polish-sweep.md');
@@ -69,12 +72,6 @@ const conditional = existsSync('../audits/phase-4.7/conditional-copy.json')
   : [];
 const statesDeclared = conditional.length > 0 && conditional.every((entry) => entry.reason && entry.text);
 
-const lastVisualCommit = gitOutput(['log', '-1', '--format=%H', '--', 'src']);
-const filesInThatCommit = gitOutput(['show', '--name-only', '--pretty=format:', lastVisualCommit])
-  .split('\n')
-  .filter(Boolean);
-const changelogRode = filesInThatCommit.includes('docs/VISUAL_CHANGELOG.md') ? 'pass' : 'fail';
-
 const axe = runs('npx', ['playwright', 'test', 'tests/visual.spec.ts', '--reporter=dot']);
 const crossBrowser = runs('npx', [
   'playwright',
@@ -85,6 +82,10 @@ const crossBrowser = runs('npx', [
   '--workers=4',
   '--reporter=dot',
 ]);
+
+const htmlValid = runs('npx', ['html-validate', join(dist, '**', '*.html')]);
+const contentClean = runs('node', ['scripts/content-gate.mjs', dist]);
+const markupClean = htmlValid === 'pass' && contentClean === 'pass' ? 'pass' : 'fail';
 
 const rows = [
   {
@@ -101,9 +102,9 @@ const rows = [
   },
   {
     section: '3. Asset budgets',
-    item: 'JS, CSS and page bytes from the shipped build',
-    status: runs('node', ['scripts/gate.mjs', dist, 'budgets.json']),
-    detail: 'node scripts/gate.mjs dist budgets.json, real gzip bytes including lazy chunks',
+    item: 'JS, CSS, page and font bytes from the shipped build',
+    status: assetBudgets,
+    detail: `node scripts/gate.mjs dist budgets.json, real gzip bytes including lazy chunks; fonts ${shippedFontBytes} of ${budgets.fonts} bytes raw`,
   },
   {
     section: '3. Asset budgets',
@@ -120,7 +121,7 @@ const rows = [
   {
     section: '4. Accessibility, automated',
     item: 'valid markup, one H1, no duplicate ids, alt on every image',
-    status: runs('node', ['scripts/content-html.mjs', dist]),
+    status: markupClean,
     detail: 'gate:html and gate:content over every built route',
   },
   {
@@ -229,8 +230,9 @@ const rows = [
   {
     section: '20. Documentation',
     item: 'the last commit touching markup also updated the visual changelog',
-    status: changelogRode,
-    detail: 'git show --name-only ' + lastVisualCommit.slice(0, 7) + ' lists docs/VISUAL_CHANGELOG.md',
+    status: 'n/a',
+    detail:
+      'no such rule: the CI regen-baselines job commits the linux baselines as baseline-bot, which cannot write a changelog entry, so docs/VISUAL_CHANGELOG.md is optional and no gate checks it',
   },
   {
     section: '21. Git and review',
@@ -260,7 +262,7 @@ const rows = [
 ];
 
 mkdirSync('../audits/phase-5', { recursive: true });
-writeFileSync(out, renderChecklist(rows));
+writeFileSync(out, renderChecklist(rows, generatorRevision()));
 
 const failures = rows.filter((row) => row.status === 'fail');
 console.log(

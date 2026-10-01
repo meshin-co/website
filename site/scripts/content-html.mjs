@@ -63,13 +63,15 @@ const CHROME = /<(header|footer|nav)\b[^>]*>/gi;
 const IGNORED = /<(\w+)\b[^>]*\bdata-gate-ignore\b[^>]*>/gi;
 const LEAD = /<p\b[^>]*\bdata-gate-lead\b[^>]*>([\s\S]*?)<\/p>/i;
 const LEADS = /<p\b[^>]*\bdata-gate-lead\b[^>]*>([\s\S]*?)<\/p>/gi;
+const NON_TEXT = /<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi;
 
 function newestDate(html) {
   const days = matchAll(html, /<time\b[^>]*\bdatetime="([^"]+)"/gi).map((value) => value.slice(0, 10));
   return days.length > 0 ? days.sort().at(-1) : null;
 }
 
-export function extractPage(route, html) {
+export function extractPage(route, source) {
+  const html = source.replace(NON_TEXT, ' ');
   const chromeFree = cutBalanced(html, CHROME);
   const main = MAIN.exec(chromeFree)?.[1] ?? chromeFree;
   const body = cutBalanced(main, IGNORED);

@@ -2,6 +2,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { chromium } from '@playwright/test';
 
 import { classifyFindings, MIN_TARGET, renderSweep, WIDTHS } from './polish-sweep.mjs';
+import { generatorRevision } from './report.mjs';
 
 const PORT = Number(process.env.GATE_SERVER_PORT ?? 4340);
 const OUT = '../audits/phase-5/polish-sweep.md';
@@ -70,7 +71,7 @@ async function main() {
 
   await browser.close();
   mkdirSync('../audits/phase-5', { recursive: true });
-  writeFileSync(OUT, renderSweep({ routes: routes.length, widths: WIDTHS, findings }));
+  writeFileSync(OUT, renderSweep({ routes: routes.length, widths: WIDTHS, findings, revision: generatorRevision() }));
   console.log(`polish sweep: ${findings.length} findings -> ${OUT}`);
 }
 

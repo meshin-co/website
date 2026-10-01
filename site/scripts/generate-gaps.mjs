@@ -5,6 +5,7 @@ import { parse } from 'yaml';
 
 import { authoredRoutesOnly, groupByConcept, indexableOnly, orphanEntities, renderGaps } from './editorial-gaps.mjs';
 import { conceptRegister, entityRegister, prosePassages, undefinedConceptFindings } from './registers.mjs';
+import { generatorRevision } from './report.mjs';
 
 const LEDGER = '../audits/phase-4.7/inventory.json';
 const CORE = '../docs/SEMANTIC-CORE.md';
@@ -71,6 +72,7 @@ function main() {
     ),
     orphans: orphanEntities(entityRegister(terms, pages)),
     promptGaps,
+    revision: generatorRevision(),
   });
 
   writeFileSync(OUT, report);

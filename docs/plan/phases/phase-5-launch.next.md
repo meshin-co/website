@@ -4,7 +4,8 @@ Goal: public, indexed, measured.
 
 - Full 19-phase polish loop over every route; `pre-launch.md` checklist; self-improvement
   checklist all "yes".
-- Attach apex `meshin.co` to Pages, `www` → apex 301, remove `noindex`, keep L4 TXT record.
+- Attach apex `meshin.co` to Pages, `www` → apex 301, keep L4 TXT record. No `noindex` to remove:
+  `gen-headers.mjs` sends it only on `*.pages.dev` hosts.
 - Sitemap to GSC and Bing, IndexNow ping, Plausible goals (`book_call`, `download_resource`),
   LinkedIn person and company pointing at the site.
 - Baseline the 30 buyer prompts (PRD §17.3) → `audits/geo-baseline.md`.
@@ -33,17 +34,18 @@ The Calibration Gate's edge checks were prose until 2026-09-15. They are now a c
 
 18 real requests: all six security headers present with no unsafe CSP directive, no `noindex`
 robots meta on the home page, and ten canonical routes plus six machine surfaces answering 200 —
-a 301 fails, because after the flip a canonical route lands directly. It writes
-`audits/phase-5/smoke-prod.md`, which currently records a pass against the local gate server;
-CG-5 is not closed until it records one against `https://meshin.co`. Procedure:
-`site/.agents/skills/smoke-the-live-site.md`.
+a 301 or 308 fails, because after the flip a canonical route lands directly. It writes
+`audits/phase-5/smoke-prod.md`, which currently records 9 failures against the local gate server:
+the nine canonical routes answer 308 there, as a directory build does on Pages (G15 in
+`docs/plan/reference/known-gaps.md`). CG-5 is not closed until it records a pass against
+`https://meshin.co`. Procedure: `site/.agents/skills/smoke-the-live-site.md`.
 
 ## Blocked on the owner
 
 Nothing below can be measured from this machine.
 
-- Cloudflare: attach apex `meshin.co` to Pages, `www` → apex 301, remove `noindex`, keep the L4
-  TXT record.
+- Cloudflare: attach apex `meshin.co` to Pages, `www` → apex 301, keep the L4 TXT record. No
+  `noindex` to remove; the header is scoped to `*.pages.dev`.
 - Search: sitemap to GSC and Bing, both verifications, the IndexNow key.
 - Plausible goals `book_call` and `download_resource`; LinkedIn person and company pointing at
   the site.

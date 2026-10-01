@@ -7,9 +7,8 @@ steps 1–11; this file is the command-level runbook. One exit code decides the 
 
 Run from `site/`. Each step green before the next.
 
-1. `npm run build` — chains `astro build`, `scripts/gen-headers.mjs dist` (writes the CSP and
-   cache headers into the output) and `scripts/gate.mjs dist budgets.json` (byte budgets, route
-   derivation).
+1. `npm run build` — chains `astro build`, `scripts/gen-headers.mjs dist` (CSP and cache headers)
+   and `scripts/gate.mjs dist budgets.json` (byte budgets, route derivation).
 2. `npm run check` — astro check, eslint, prettier. Run it before every push, including a
    Markdown-only commit: prettier checks `.md`, and `npm test` says nothing about formatting.
 3. `npm test` — unit tests for `scripts/`, `src/utils/` and `src/data/`.
@@ -19,13 +18,11 @@ Run from `site/`. Each step green before the next.
    (content-gate.md).
 6. `npm run gate:orphans` — every route needs an inbound link; the exempt list in
    `scripts/orphan-gate.mjs` is closed and carries a reason per entry.
-7. `npm run gate:machine`, then `npm run gate:jsonld` — machine-interface coverage (including
-   every indexable route appearing in `llms.txt`) and JSON-LD graph integrity
-   (structured-data.md).
+7. `npm run gate:machine`, then `npm run gate:jsonld` — machine-interface coverage (every
+   indexable route must appear in `llms.txt`) and JSON-LD graph integrity (structured-data.md).
 8. `npm run gate:skills` — skills lint: every path real, no forbidden claims, length caps.
-9. `GATE_PHASE=phase-N npm run gate:routes` — writes `audits/phase-N/routes.json` and fails on
-   an unexplained shrink against the previous phase, or on a stale entry in
-   `routes-removed.json`.
+9. `GATE_PHASE=phase-N npm run gate:routes` — writes `audits/phase-N/routes.json`, fails on an
+   unexplained shrink or a stale `routes-removed.json` entry.
 10. `npm run test:smoke` — every guard family plants a violating specimen in a repo copy and
     must fail naming the offending field (CG §3). About 40 s.
 11. `npm run gate:lh` — Lighthouse mobile then desktop, 3 runs each, median, served through
@@ -34,7 +31,8 @@ Run from `site/`. Each step green before the next.
 12. `npm run gate:visual` — Playwright snapshots and axe, both themes (visual-baselines.md).
 13. `node scripts/report.mjs <phase> ../audits/phase-<phase>` — generates REPORT.md from the raw
     JSON of the steps above. No waiver field, no "fix next phase".
-14. `npm run gate:brand` — no code outside `src/data/` types the brand name; it derives via `src/utils/brand.mjs` or `SITE.name` from `astrowind:config`.
+14. `npm run gate:brand` — no code outside `src/data/` types the brand name; it derives via
+    `src/utils/brand.mjs` or `SITE.name` from `astrowind:config`.
 
 ## In CI the same gates run in parallel
 
@@ -45,9 +43,8 @@ runs `types-and-units` alone (`changes` job classifies the diff).
 
 One shard by hand:
 `LHCI_FORM_FACTOR=mobile LH_SHARD_INDEX=1 LH_SHARD_TOTAL=4 npm run gate:lh:one`. Shards deal
-routes round-robin (`scripts/lh-shards.cjs`), each binds port `4330 + index - 1`, and each
-writes `lh-<factor>/shard-<index>/`. A lost or empty shard cannot shrink the gate: the report
-fails any audited route with no run or fewer than 3 runs.
+routes round-robin (`scripts/lh-shards.cjs`), each binds port `4330 + index - 1` and writes
+`lh-<factor>/shard-<index>/`. The report fails any audited route with no run or fewer than 3.
 
 ## Representative Lighthouse set
 
@@ -62,14 +59,15 @@ family logic via `scripts/templates.mjs`.
 - lhci has no `settings.preset`; form factors come from `formFactor` plus `screenEmulation`
   in `lighthouserc.cjs`.
 - Two Lighthouse runs must never share an output directory. `gate:lh` clears it between form
-  factors; a shard writes `lh-<factor>/shard-<index>/` and binds its own port.
+  factors; a shard writes its own directory and binds its own port.
 - Assert the North Star numbers, not 0.9x thresholds. A run at 97–99 re-runs three times, then
   the phase fails (L13).
 - Plausible is blocked inside lab runs and verified by a separate live check. Blocking it still
   charges the simulated graph: see `diagnose-a-lighthouse-lcp-plateau.md`.
 - A category score of 100 does not mean the metric assertions passed. `report.mjs` enforces the
   LCP, CLS and TBT budgets it reads from `lighthouserc.cjs` on each route's median run.
-- A scratch page left in the build silently widens every downstream gate; delete throwaway routes before the audited build.
+- A scratch page left in the build silently widens every downstream gate; delete throwaway
+  routes before the audited build.
 - perfect-coder strict mode refuses test, config and data-only files with no sibling test: create
   those with a shell heredoc (`docs/PERFECT-CODER-ISSUES.md`).
 

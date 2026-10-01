@@ -1,7 +1,9 @@
 # Visual changelog
 
-Every commit that adds or updates a Playwright visual baseline must add an entry here in the same
-commit. An updated baseline without an entry fails review.
+A hand-written record of intent: what a visual change was meant to do and why. It is not a gate
+condition. CI's `regen-baselines` job commits the linux baselines as `baseline-bot`, which cannot
+also write an entry, so no check requires one and a baseline update without an entry is valid. Add
+an entry when the reason for a deliberate visual change is worth keeping.
 
 Format: `YYYY-MM-DD · route or component · what changed visually · why`.
 

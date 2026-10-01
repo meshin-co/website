@@ -1,3 +1,5 @@
+import { isDeepStrictEqual } from 'node:util';
+
 const RAW_COLOUR = /#[0-9a-f]{3,8}\b|\brgba?\(|\bhsla?\(/i;
 const TAILWIND_COLOUR_UTILITY =
   /\b(?:bg|text|border|ring|fill|stroke|from|via|to|shadow|outline|divide|caret|accent|decoration)-(?:red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|slate|gray|zinc|neutral|stone)-\d{2,3}\b|\b(?:bg|text|border|ring|fill|stroke|from|via|to|shadow|outline|divide|caret|accent|decoration)-(?:white|black)\b/;
@@ -14,7 +16,7 @@ const FONT_FACE_BLOCK = /@font-face\{([^}]*)\}/g;
 const FONT_FAMILY = /font-family:"?([^";]+)"?/;
 const FONT_WEIGHT = /font-weight:(\d+)/;
 const HASHED_FAMILY_SUFFIX = /-[0-9a-f]{16}$/;
-const FONT_POLICY = { families: 2, weights: 3 };
+const FONT_POLICY = { faces: ['fraunces-600', 'ibm plex sans-400', 'ibm plex sans-500'] };
 
 const finding = (status, detail) => ({ status, detail });
 
@@ -86,25 +88,27 @@ export function checkFontPolicy(css) {
       detail: 'no @font-face rule with a src:url() was found, so the font policy cannot be verified',
     };
   }
-  const matchesPolicy = families.size === FONT_POLICY.families && weights.size === FONT_POLICY.weights;
+  const matchesPolicy = isDeepStrictEqual(list, FONT_POLICY.faces);
   return {
     families: families.size,
     weights: weights.size,
     list,
     status: matchesPolicy ? 'pass' : 'fail',
-    detail: `${families.size} families, ${weights.size} faces: ${list.join(', ')}; L39 requires exactly ${FONT_POLICY.families} families and ${FONT_POLICY.weights} faces`,
+    detail: `${families.size} families, ${weights.size} faces: ${list.join(', ')}; L39 requires exactly ${FONT_POLICY.faces.join(', ')}`,
   };
 }
 
 const STATUS_ORDER = { fail: 0, 'owner-blocked': 1, 'n/a': 2, pass: 3 };
 
-export function renderChecklist(rows) {
+export function renderChecklist(rows, revision) {
   const counts = rows.reduce((totals, row) => ({ ...totals, [row.status]: (totals[row.status] ?? 0) + 1 }), {});
   const ordered = [...rows].sort(
     (a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status] || a.section.localeCompare(b.section)
   );
   return [
     '# Pre-launch checklist',
+    '',
+    `Generated-from: ${revision}`,
     '',
     'Every item carries a status and evidence. `pass` was measured from the shipped build,',
     '`n/a` names why the item cannot apply to this site, and `owner-blocked` names what is',

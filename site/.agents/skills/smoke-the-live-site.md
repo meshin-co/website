@@ -6,10 +6,17 @@ which were prose until 2026-09-15.
 
     npm run smoke:prod https://meshin.co
 
-Default origin is `https://meshin.co`. Any origin works, which is how the check is proven:
+Default origin is `https://meshin.co`. Any origin works, which is how the check is rehearsed:
 
     GATE_SERVER_PORT=4340 node scripts/gate-server.mjs dist &
     npm run smoke:prod http://127.0.0.1:4340
+
+The gate server answers the way Cloudflare Pages does for a directory build: `/about/` is 200
+and `/about` is a 308 to `/about/`. Every canonical route here is emitted without the trailing
+slash, so the rehearsal fails the nine canonical routes other than `/` with
+`answered 308, expected 200` and exits 1. That is what production is expected to answer too
+(G15 in `docs/plan/reference/known-gaps.md`); the run passes only once the build serves the
+slashless URL directly.
 
 ## What it asserts
 
@@ -17,7 +24,7 @@ Default origin is `https://meshin.co`. Any origin works, which is how the check 
   `unsafe-eval`. Verified on the response, never read from the source header file.
 - The home page does not carry a `noindex` robots meta. Removing it is what the launch flip does,
   so this is the check that proves the flip happened.
-- Ten canonical routes and six machine surfaces answer 200. A 301 fails: after the flip a
+- Ten canonical routes and six machine surfaces answer 200. A 301 or 308 fails: after the flip a
   canonical route lands directly, and a redirect means the apex or the trailing-slash rule is
   wrong.
 

@@ -109,7 +109,13 @@ test('a route over any budget is reported with the measured bytes', () => {
 });
 
 test('a route inside every budget reports nothing', () => {
-  assert.deepEqual(overBudget({ route: '/', js: 1, css: 1, page: 1 }, { js: 10240, css: 20480, page: 256000 }), []);
+  assert.deepEqual(
+    overBudget(
+      { route: '/', js: 1, css: 1, page: 1, fonts: 1 },
+      { js: 10240, css: 20480, page: 256000, fonts: 122880 }
+    ),
+    []
+  );
 });
 
 test('a page carrying meta robots noindex is detected', () => {
@@ -170,11 +176,57 @@ test('gate-routes.json carries the over-budget findings the gate already compute
 
 test('gate-routes.json reports no over-budget findings when every route is inside its budget', async () => {
   const dist = await fixtureDist({ '/': '<html><body>ok</body></html>' });
+  await mkdir(join(dist, '_astro/fonts'), { recursive: true });
+  await writeFile(join(dist, '_astro/fonts/a.woff2'), 'a'.repeat(1000));
   const budgetPath = join(dist, 'budgets.json');
-  await writeFile(budgetPath, JSON.stringify({ js: 10240, css: 20480, page: 256000 }));
+  await writeFile(budgetPath, JSON.stringify({ js: 10240, css: 20480, page: 256000, fonts: 122880 }));
 
   await main(dist, budgetPath);
   const written = JSON.parse(await readFile(join(dist, 'gate-routes.json'), 'utf8'));
 
   assert.deepEqual(written.overBudget, []);
+});
+
+test('the woff2 files under _astro/fonts are measured raw, not gzipped, because font bytes are the shipped bytes', async () => {
+  const dist = await fixtureDist({ '/': '<html></html>' });
+  await mkdir(join(dist, '_astro/fonts'), { recursive: true });
+  await writeFile(join(dist, '_astro/fonts/a.woff2'), 'a'.repeat(29732));
+  await writeFile(join(dist, '_astro/fonts/b.woff'), 'b'.repeat(39128));
+  await writeFile(join(dist, '_astro/fonts/notes.txt'), 'c'.repeat(500));
+
+  const measured = await measureRoute(dist, '/');
+  assert.equal(measured.fonts, 68860);
+});
+
+test('fonts over the fonts budget fail the gate on every route, because the figure is site-wide', async () => {
+  const dist = await fixtureDist({ '/': '<html></html>', '/about': '<html></html>' });
+  await mkdir(join(dist, '_astro/fonts'), { recursive: true });
+  await writeFile(join(dist, '_astro/fonts/a.woff2'), 'a'.repeat(3000));
+  const budgetPath = join(dist, 'budgets.json');
+  await writeFile(budgetPath, JSON.stringify({ js: 10240, css: 20480, page: 256000, fonts: 2048 }));
+
+  await main(dist, budgetPath);
+  const exitCode = process.exitCode;
+  process.exitCode = 0;
+  const written = JSON.parse(await readFile(join(dist, 'gate-routes.json'), 'utf8'));
+
+  assert.deepEqual(
+    written.measured.map((row) => row.fonts),
+    [3000, 3000]
+  );
+  assert.deepEqual(written.overBudget, ['/ fonts 3000 > 2048', '/about fonts 3000 > 2048']);
+  assert.equal(exitCode, 1);
+});
+
+test('a fonts budget with no font file to measure is a finding, because 0 bytes would pass for a build that moved its fonts', async () => {
+  const dist = await fixtureDist({ '/': '<html></html>' });
+  const budgetPath = join(dist, 'budgets.json');
+  await writeFile(budgetPath, JSON.stringify({ js: 10240, css: 20480, page: 256000, fonts: 122880 }));
+
+  await main(dist, budgetPath);
+  process.exitCode = 0;
+  const written = JSON.parse(await readFile(join(dist, 'gate-routes.json'), 'utf8'));
+
+  assert.equal(written.overBudget.length, 1);
+  assert.match(written.overBudget[0], /fonts.*measured 0 bytes/);
 });

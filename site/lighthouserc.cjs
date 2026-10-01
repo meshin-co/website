@@ -25,7 +25,7 @@ const noindexRoutes = measured.filter((row) => row.noindex).map((row) => row.rou
 const port = Number(process.env.GATE_SERVER_PORT ?? 4330) + shard.index - 1;
 const origin = `http://127.0.0.1:${port}`;
 const url = audited.map((route) =>
-  `${origin}${route === '/404' ? '/404.html' : `${route}/`.replace('//', '/')}`.replace(/\/$/, '/')
+  `${origin}${route === '/404' ? '/404' : `${route}/`.replace('//', '/')}`.replace(/\/$/, '/')
 );
 
 const escaped = noindexRoutes.map((route) => route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));

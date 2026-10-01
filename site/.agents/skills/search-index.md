@@ -20,7 +20,8 @@ Those entries are built empty at Astro-build time, then `scripts/search-page-tex
 postbuild step — `npm run build` calls it after `gen-headers.mjs` and before `gate.mjs`, once
 `dist/` exists — and reads each entry's own built HTML back out, taking the title from `<title>`,
 the description from the description meta and the body from `content-html.mjs`'s `extractPage`,
-which already strips header, footer and nav chrome. It only fills an entry whose text is still
+which already strips header, footer and nav chrome and every `<script>` and `<style>` block, so a
+page's inline JSON-LD never becomes search text. It only fills an entry whose text is still
 empty, so sourced entries are never overwritten. Search text therefore cannot drift from a page's
 copy, because it is that copy's rendered output. `categoryPillars`, `TAGS`, `~/data/home` and the
 `author` and `faq` collections remain the direct source for `/`, `/about`, `/faq`, `/blog/tags`,
