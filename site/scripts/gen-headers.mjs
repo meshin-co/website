@@ -72,6 +72,12 @@ export function renderHeaders(scriptHashes, styleHashes = []) {
 /*.md
   X-Robots-Tag: noindex
 
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex
+
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
 

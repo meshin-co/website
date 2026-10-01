@@ -138,3 +138,23 @@ test('every paragraph marked as a citable answer is exempt from the prose caps, 
   assert.equal(page.paragraphs[0], 'Ordinary body prose.');
   assert.match(page.opening, /The section lead/);
 });
+
+test('a JSON-LD or inline script inside main is never page text, so search and the prose rules read only what a person reads', () => {
+  const html =
+    '<main><script type="application/ld+json">{"@type":"BreadcrumbList","name":"Pricing"}</script>' +
+    '<style>.x{color:red}</style><p>What it costs depends on the fit.</p></main>';
+  const page = extractPage('/pricing', html);
+  assert.equal(page.text, 'What it costs depends on the fit.');
+});
+
+test('markup written inside a script string is never read as a paragraph, a heading or a link', () => {
+  const html =
+    '<main><h1>Real</h1><p>Real prose.</p>' +
+    '<script>box.innerHTML = \'<h2>Injected heading</h2><p>Injected prose.</p><a href="https://injected.example/x">x</a>\';</script>' +
+    '</main>';
+  const page = extractPage('/x', html);
+  assert.deepEqual(page.paragraphs, ['Real prose.']);
+  assert.deepEqual(page.headings.sub, []);
+  assert.deepEqual(page.links.external, []);
+  assert.doesNotMatch(page.text, /Injected/);
+});

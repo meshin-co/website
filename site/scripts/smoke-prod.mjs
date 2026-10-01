@@ -34,10 +34,12 @@ export function verdictFor({ route, status }) {
     : finding(`route ${route}`, 'fail', `answered ${status}, expected 200`);
 }
 
-export function renderSmoke(origin, rows) {
+export function renderSmoke(origin, rows, revision) {
   const failures = rows.filter((row) => row.status === 'fail');
   return [
     '# Production smoke',
+    '',
+    `Generated-from: ${revision}`,
     '',
     `Measured against \`${origin}\` by \`npm run smoke:prod\`. Every row is one request; nothing`,
     'here is read from a config file.',

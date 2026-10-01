@@ -23,8 +23,9 @@ export function byteBudgets() {
   return createRequire(import.meta.url)('../budgets.json');
 }
 
-export function byteBudgetSentence({ js, css, page } = {}) {
-  return `Budgets: JS ≤${js} · CSS ≤${css} · page ≤${page} bytes gzip.`;
+export function byteBudgetSentence({ js, css, page, fonts } = {}) {
+  const gz = `Budgets: JS ≤${js} · CSS ≤${css} · page ≤${page} bytes gzip.`;
+  return fonts === undefined ? gz : `${gz.slice(0, -1)} · fonts ≤${fonts} bytes raw.`;
 }
 
 export function metricFailures(rows, budgets) {
@@ -160,9 +161,15 @@ export function renderReport({
       );
     }
   }
-  lines.push('', '## Measured byte budgets (gzip)', '', '| Route | JS | CSS | Page total |', '|---|---|---|---|');
+  lines.push(
+    '',
+    '## Measured byte budgets (gzip)',
+    '',
+    '| Route | JS | CSS | Page total | Fonts (raw) |',
+    '|---|---|---|---|---|'
+  );
   for (const row of gate.measured) {
-    lines.push(`| \`${row.route}\` | ${row.js} | ${row.css} | ${row.page} |`);
+    lines.push(`| \`${row.route}\` | ${row.js} | ${row.css} | ${row.page} | ${row.fonts} |`);
   }
   lines.push('', byteBudgetSentence(byteBudgetLimits), '');
   lines.push(

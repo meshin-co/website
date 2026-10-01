@@ -1,5 +1,5 @@
 import { gzipSync } from 'node:zlib';
-import { readdir, readFile, writeFile } from 'node:fs/promises';
+import { readdir, readFile, stat, writeFile } from 'node:fs/promises';
 import { join, relative, sep } from 'node:path';
 
 const ASSET_REF = /(?:href|src)\s*=\s*["']([^"']+)["']/gi;
@@ -81,7 +81,15 @@ async function routeFile(distDir, route) {
   throw new Error(`gate: no built html for route ${route}`);
 }
 
-export async function measureRoute(distDir, route) {
+export async function fontBytes(distDir) {
+  const dir = join(distDir, '_astro', 'fonts');
+  const entries = await readdir(dir, { withFileTypes: true }).catch(() => []);
+  const files = entries.filter((entry) => entry.isFile() && /\.woff2?$/.test(entry.name));
+  const sizes = await Promise.all(files.map((entry) => stat(join(dir, entry.name)).then(({ size }) => size)));
+  return sizes.reduce((total, size) => total + size, 0);
+}
+
+export async function measureRoute(distDir, route, fonts) {
   const html = await readFile(await routeFile(distDir, route), 'utf8');
   let js = 0;
   let css = 0;
@@ -90,22 +98,34 @@ export async function measureRoute(distDir, route) {
     if (asset.endsWith('.css')) css += bytes;
     else js += bytes;
   }
-  return { route, js, css, page: gzipBytes(Buffer.from(html)) + js + css, noindex: isNoindex(html) };
+  return {
+    route,
+    js,
+    css,
+    page: gzipBytes(Buffer.from(html)) + js + css,
+    fonts: fonts ?? (await fontBytes(distDir)),
+    noindex: isNoindex(html),
+  };
 }
 
 export async function main(distDir, budgetPath) {
   const budgets = JSON.parse(await readFile(budgetPath, 'utf8'));
   const routes = await discoverRoutes(distDir);
+  const fonts = await fontBytes(distDir);
   const measured = [];
-  for (const route of routes) measured.push(await measureRoute(distDir, route));
+  for (const route of routes) measured.push(await measureRoute(distDir, route, fonts));
 
   const findings = measured.flatMap((row) => overBudget(row, budgets));
+  if (budgets.fonts !== undefined && fonts === 0) {
+    findings.push(`fonts measured 0 bytes in ${distDir}/_astro/fonts, so the fonts budget proved nothing`);
+  }
   await writeFile(
     join(distDir, 'gate-routes.json'),
     `${JSON.stringify({ routes, measured, lighthouseRoutes: lighthouseSet(measured), overBudget: findings }, null, 2)}\n`
   );
 
-  for (const row of measured) console.log(`${row.route} js=${row.js} css=${row.css} page=${row.page}`);
+  for (const row of measured)
+    console.log(`${row.route} js=${row.js} css=${row.css} page=${row.page} fonts=${row.fonts}`);
   if (findings.length > 0) {
     for (const finding of findings) console.error(`OVER BUDGET ${finding}`);
     process.exitCode = 1;

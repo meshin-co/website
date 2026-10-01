@@ -120,9 +120,9 @@ content gate's sentence-length, banned-phrase and duplicate-sentence rules hold 
 Unknown facts become `TODO(owner)` rows in `docs/COPY-CHECKLIST.md`, never a plausible guess.
 
 **Steps 4 to 6 landed 2026-09-15.** Eight agents on disjoint file sets did the editing, then the
-remaining rows were reviewed by owner. Ledger: **1412 rows, 388 rewritten, 1024 verified, zero
-unreviewed**; shipped text tracing to no source row **0**; source copy no page ships **9**, each
-declared in `audits/phase-4.7/conditional-copy.json` with the state that renders it and a stale
+remaining rows were reviewed by owner. Ledger at the seal, `11db074`: **1412 rows, 377 rewritten,
+1035 verified, zero unreviewed**; shipped text tracing to no source row **0**; source copy no page
+ships **9**, each declared in `audits/phase-4.7/conditional-copy.json` with the state that renders it and a stale
 check so the list cannot rot. 259 dispositions, all sealed against the text they reviewed.
 
 Real defects found by the pass, not by the gate: `/terms` still said "the published prices" three

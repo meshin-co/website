@@ -1,6 +1,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { generatorRevision } from './report.mjs';
 import { checkHeaders, checkNoindex, renderSmoke, verdictFor } from './smoke-prod.mjs';
 import { brandFromDisk } from '../src/utils/brand.mjs';
 
@@ -47,7 +48,7 @@ for (const route of MACHINE) {
 }
 
 mkdirSync(join(out, '..'), { recursive: true });
-writeFileSync(out, renderSmoke(origin, rows));
+writeFileSync(out, renderSmoke(origin, rows, generatorRevision()));
 
 const failures = rows.filter((row) => row.status === 'fail');
 console.log(`smoke: ${rows.length - failures.length} of ${rows.length} checks pass against ${origin} -> ${out}`);

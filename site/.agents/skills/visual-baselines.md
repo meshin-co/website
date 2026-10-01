@@ -3,7 +3,7 @@
 Snapshots cover one representative route per template family (`scripts/templates.mjs`), at
 1440x900 and 375x812, light and dark. Baselines are per-platform under
 `site/tests/__screenshots__/` — macOS and Linux rasterize fonts differently, so each OS keeps
-its own set, and BOTH sets are regenerated together, in the same commit.
+its own set, and BOTH sets are regenerated together (the linux set arrives as a separate commit).
 
 ## darwin (local)
 
@@ -36,11 +36,13 @@ apart, symmetric between runs — never same-size pixel noise. Emulated failures
 about the site, and baselines recorded under emulation may not match the runner. Use the
 container only to reproduce a failure the runner already reported, and regenerate on the runner.
 
-## Same-commit rule
+## Changelog
 
-Every baseline change adds an entry to `docs/VISUAL_CHANGELOG.md` in the same commit, format
-`YYYY-MM-DD · route or component · what changed visually · why`. An updated baseline without
-an entry fails review. The platform-scoped snapshot path template lives in
+A baseline change does not need a `docs/VISUAL_CHANGELOG.md` entry, and no gate checks for one: the
+`regen-baselines` job commits the linux set as `baseline-bot`, which cannot also write prose. The
+log is a hand-written record of intent. When a visual change is deliberate and its reason is worth
+keeping, add an entry in the format `YYYY-MM-DD · route or component · what changed visually ·
+why`, in the same commit or later. The platform-scoped snapshot path template lives in
 `site/playwright.config.ts`; the spec is `site/tests/visual.spec.ts`.
 
 ## Traps (docs/FRONTEND-EXCELLENCE-ISSUES.md)
@@ -58,3 +60,9 @@ an entry fails review. The platform-scoped snapshot path template lives in
 `src/config.yaml`'s `metadata.description`; `npm run assets:favicons` regenerates
 `src/assets/favicons/apple-touch-icon.png` and `favicon.ico`. Run both after any brand color,
 wordmark, or description change and commit the resulting PNGs.
+
+## Four workers, measured
+
+`playwright.config.ts` pins `workers: 4`. The gate server is one process, and since it started
+modelling Pages every slashless navigation costs two requests. At the machine default the suite
+fails in the hundreds while every project passes alone; at four, 906 of 906 pass.

@@ -46,4 +46,4 @@ page with shared ids is invalid HTML and `gate:html` fails on it.
 3. `node scripts/gate.mjs dist budgets.json` — the inline mark counts against the page budget
 4. `npx playwright test --update-snapshots`, then the linux baselines per
    `visual-baselines.md`, because the mark appears in the header and footer of every route
-5. Add an entry to `docs/VISUAL_CHANGELOG.md`
+5. Optionally add an entry to `docs/VISUAL_CHANGELOG.md` recording why the mark changed

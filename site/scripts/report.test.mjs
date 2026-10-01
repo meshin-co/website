@@ -209,9 +209,16 @@ test('byteBudgetSentence renders whatever limits it is given, not a fixed string
   assert.equal(byteBudgetSentence({ js: 1, css: 2, page: 3 }), 'Budgets: JS ≤1 · CSS ≤2 · page ≤3 bytes gzip.');
 });
 
+test('byteBudgetSentence names the fonts limit in raw bytes, because woff2 is already compressed', () => {
+  assert.equal(
+    byteBudgetSentence({ js: 1, css: 2, page: 3, fonts: 4 }),
+    'Budgets: JS ≤1 · CSS ≤2 · page ≤3 bytes gzip · fonts ≤4 bytes raw.'
+  );
+});
+
 test('the printed byte-budget sentence comes from budgets.json, not a hardcoded copy', async () => {
   const limits = byteBudgets();
-  assert.deepEqual(limits, { js: 10240, css: 20480, page: 256000 });
+  assert.deepEqual(limits, { js: 10240, css: 20480, page: 256000, fonts: 122880 });
 
   const { markdown } = renderReport({
     phase: '1',
@@ -220,7 +227,7 @@ test('the printed byte-budget sentence comes from budgets.json, not a hardcoded 
     desktop: [row('/', perfect)],
     byteBudgets: limits,
   });
-  assert.match(markdown, /Budgets: JS ≤10240 · CSS ≤20480 · page ≤256000 bytes gzip\./);
+  assert.match(markdown, /Budgets: JS ≤10240 · CSS ≤20480 · page ≤256000 bytes gzip · fonts ≤122880 bytes raw\./);
 });
 
 test('a measured row that exceeds a real budgets.json limit fails the report end to end', async () => {
@@ -238,9 +245,41 @@ test('a measured row that exceeds a real budgets.json limit fails the report end
   assert.deepEqual(failures, [`budget: /heavy js ${limits.js + 1} > ${limits.js}`]);
 });
 
+test('a measured row whose fonts exceed the real fonts limit fails the report end to end', async () => {
+  const limits = byteBudgets();
+  const measured = { route: '/heavy', js: 1, css: 1, page: 1, fonts: limits.fonts + 1 };
+  const findings = overBudget(measured, limits);
+
+  const { failures } = renderReport({
+    phase: '1',
+    gate: { routes: ['/heavy'], measured: [measured], overBudget: findings },
+    mobile: [row('/heavy', perfect)],
+    desktop: [row('/heavy', perfect)],
+  });
+
+  assert.deepEqual(failures, [`budget: /heavy fonts ${limits.fonts + 1} > ${limits.fonts}`]);
+});
+
+test('the measured byte table prints the font bytes the gate measured, not a typed figure', () => {
+  const render = (fonts) => {
+    const measured = [{ route: '/', js: 1108, css: 18921, page: 26195, fonts }];
+    const { markdown } = renderReport({
+      phase: '1',
+      gate: { routes: ['/'], measured, overBudget: [] },
+      mobile: [row('/', perfect)],
+      desktop: [row('/', perfect)],
+      byteBudgets: byteBudgets(),
+    });
+    return markdown;
+  };
+
+  assert.match(render(64868), /^\| `\/` \| 1108 \| 18921 \| 26195 \| 64868 \|$/m);
+  assert.match(render(70001), /^\| `\/` \| 1108 \| 18921 \| 26195 \| 70001 \|$/m);
+});
+
 test('a measured row inside every real budgets.json limit produces no budget failure', async () => {
   const limits = byteBudgets();
-  const measured = { route: '/light', js: 1, css: 1, page: 1 };
+  const measured = { route: '/light', js: 1, css: 1, page: 1, fonts: 1 };
   const findings = overBudget(measured, limits);
 
   const { failures } = renderReport({

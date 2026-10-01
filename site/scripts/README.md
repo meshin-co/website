@@ -14,7 +14,7 @@ a build.
 
 | Script                   | Invoked by                           | What it refuses                                                                                                 |
 | ------------------------ | ------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
-| `gate.mjs`               | `npm run build`                      | A byte budget exceeded, measured from real gzip bytes                                                           |
+| `gate.mjs`               | `npm run build`                      | A byte budget exceeded: JS, CSS and page from real gzip bytes, fonts from raw woff2 bytes                       |
 | `content-gate.mjs`       | `gate:content`                       | Banned phrase, missing source, prose rule violation                                                             |
 | `jsonld-gate.mjs`        | `gate:jsonld`                        | A graph node with no `@id`, or a reference that resolves nowhere                                                |
 | `machine.mjs`            | `gate:machine`                       | A machine surface missing from `dist/`, or a catalog that drifted                                               |
@@ -23,7 +23,7 @@ a build.
 | `editorial-gate.mjs`     | `gate:editorial`, `assets:seal`      | An unreviewed string, dead copy, or untraceable rendered text                                                   |
 | `generate-registers.mjs` | `gate:registers`, `assets:registers` | A hand-edited register block that drifted from the source; a dangling concept is only reported, never a failure |
 | `plan-gate.mjs`          | `gate:plan`                          | Two phases claiming `active`, or an index that disagrees with the directory                                     |
-| `run-evidence-gate.mjs`  | `gate:evidence`                      | A generated artefact under `audits/` that does not name the revision it came from                               |
+| `run-evidence-gate.mjs`  | `gate:evidence`                      | A markdown file under `audits/phase-N/`, or any file that says it is generated, with no `Generated-from:` line  |
 | `run-docs-gate.mjs`      | `gate:docs`                          | A document citing a dead path, a dead command, or a stale locked-row range                                      |
 | `run-external-links.mjs` | `gate:external`                      | An outbound link missing `nofollow`, `noopener` or `noreferrer`                                                 |
 | `check-skills.mjs`       | `gate:skills`                        | A skill naming a path or command that does not exist                                                            |
@@ -65,7 +65,7 @@ be tested without a build.
 
 | Script                    | Imported by                                                                                     | What it holds                                                         |
 | ------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| `evidence-gate.mjs`       | `run-evidence-gate.mjs`                                                                         | Whether a generated artefact names its provenance                     |
+| `evidence-gate.mjs`       | `run-evidence-gate.mjs`                                                                         | Whether a phase artefact or a self-declared one names its revision    |
 | `docs-gate.mjs`           | `run-docs-gate.mjs`                                                                             | Which citations are checkable, and which are excluded by name         |
 | `external-links.mjs`      | `run-external-links.mjs`                                                                        | The required rel set, and what counts as outbound                     |
 | `smoke-prod.mjs`          | `run-smoke-prod.mjs`                                                                            | The required header set and the per-route verdict                     |
@@ -86,8 +86,8 @@ be tested without a build.
 
 ## Servers
 
-| Script            | Invoked by                             | What it does                                                        |
-| ----------------- | -------------------------------------- | ------------------------------------------------------------------- |
-| `gate-server.mjs` | Playwright, every gate that needs HTTP | Serves `dist/` with the real `_headers` response, including the CSP |
+| Script            | Invoked by                             | What it does                                                                                                         |
+| ----------------- | -------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `gate-server.mjs` | Playwright, every gate that needs HTTP | Serves `dist/` as Cloudflare Pages would: the real `_headers` and CSP, and a 308 on a directory page's slashless URL |
 
 → verify: `node --test scripts/scripts-index.test.mjs`

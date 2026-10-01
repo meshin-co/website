@@ -110,3 +110,8 @@ test('the report states the floor it actually enforces and a machine-readable co
   assert.doesNotMatch(md, /under 44 px/);
   assert.match(md, /^findings: 0$/m);
 });
+
+test('the report names the revision it was generated from', () => {
+  const md = renderSweep({ routes: 105, widths: WIDTHS, findings: [], revision: 'abc1234' });
+  assert.match(md, /^Generated-from: abc1234$/m);
+});

@@ -134,3 +134,22 @@ test('the shard file on disk is rewritten with the derived entries', async () =>
     clean(dist);
   }
 });
+
+test('derived text is the prose a person reads, never the JSON-LD or inline style a page ships inside its main', async () => {
+  const dist = distWith({
+    '/pricing': page(
+      'Pricing — meshin.co',
+      'What it costs.',
+      '<main><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList"}]}</script>' +
+        '<style>.x{color:red}</style><h1>Pricing</h1><p>What it costs depends on the fit.</p></main>'
+    ),
+  });
+  shard(dist, [{ href: '/pricing', title: 'Pricing', description: 'What it costs.', kind: 'Page', text: '' }]);
+
+  try {
+    const { entries } = await fillPageShardText(dist);
+    assert.equal(entries[0].text, 'Pricing What it costs depends on the fit.');
+  } finally {
+    clean(dist);
+  }
+});

@@ -46,8 +46,6 @@ Reach for an existing utility before writing classes: `eyebrow`, `figure-num`, `
   API emits one inline `<style>` per family; `scripts/gen-headers.mjs` hashes those into
   `style-src`. Anything else you inline will be blocked in production and will drop
   best-practices to 0.93 in the gate.
-- Every visual change needs an entry in `docs/VISUAL_CHANGELOG.md` in the same commit as the
-  regenerated baselines (visual-baselines.md).
 
 ## Checking your work
 

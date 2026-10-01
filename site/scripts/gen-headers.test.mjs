@@ -104,3 +104,11 @@ test('style-src carries every collected style hash and nothing else', () => {
 test('with no inline styles the policy stays exactly self', () => {
   assert.match(renderHeaders([], []), /style-src 'self';/);
 });
+
+test('pages.dev hosts carry X-Robots-Tag: noindex, versioned and plain', () => {
+  const header = renderHeaders([]);
+
+  for (const rule of ['https://:project.pages.dev/*', 'https://:version.:project.pages.dev/*']) {
+    assert.ok(header.includes(`${rule}\n  X-Robots-Tag: noindex`), `${rule} misses X-Robots-Tag`);
+  }
+});

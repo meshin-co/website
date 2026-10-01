@@ -23,8 +23,6 @@ async function routeHtml(distDir, route) {
   return null;
 }
 
-const NON_PROSE_BLOCK = /<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi;
-
 export function buildSidecar({ page, html, updatedIso, site = SITE_ORIGIN }) {
   if (!updatedIso) throw new Error(`generate-static-sidecars: no lastmod for ${page.path}`);
 
@@ -32,7 +30,7 @@ export function buildSidecar({ page, html, updatedIso, site = SITE_ORIGIN }) {
     title: page.title,
     description: page.description,
     updated: new Date(updatedIso),
-    body: extractPage(page.path, html.replace(NON_PROSE_BLOCK, '')).text,
+    body: extractPage(page.path, html).text,
     url: absoluteUrl(site, page.path),
   });
 }

@@ -20,8 +20,8 @@ it touches only the routes the new content creates or changes.
 6. **Run the full gate only when a template changed.** New content on an existing template does
    not change what Lighthouse measures; a template edit does. The rule is in
    `calibration-gate.md`, and the CI diff classifier applies the same distinction.
-7. **Refresh the baselines** if the visual output moved, per `visual-baselines.md`, and add the
-   `docs/VISUAL_CHANGELOG.md` entry in the same commit.
+7. **Refresh the baselines** if the visual output moved, per `visual-baselines.md`, and optionally
+   add a `docs/VISUAL_CHANGELOG.md` entry recording why.
 8. **Re-baseline the buyer prompts** monthly, not fortnightly: `baseline-the-buyer-prompts.md`
    writes `audits/geo-baseline.md`, and the number only moves when routes or passages change.
 

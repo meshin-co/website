@@ -62,3 +62,7 @@ test('the report prints the origin it measured and every failing row', () => {
   assert.match(md, /^failures: 1$/m);
   assert.match(md, /strict-transport-security/);
 });
+
+test('the smoke report names the revision it was run from', () => {
+  assert.match(renderSmoke('https://meshin.co', [], 'abc1234'), /^Generated-from: abc1234$/m);
+});

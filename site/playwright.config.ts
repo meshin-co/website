@@ -5,6 +5,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
+  workers: 4,
   reporter: process.env.CI ? 'github' : 'list',
   snapshotPathTemplate: '{testDir}/__screenshots__/{platform}/{arg}{ext}',
   webServer: {

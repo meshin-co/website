@@ -16,7 +16,8 @@ whose evidence nobody can reproduce.
 - One commit per article or resource, never one per fortnight.
 - Every cheap gate at 0, including `npm run gate:docs`, and no `unreviewed` row in the editorial
   ledger.
-- A `docs/VISUAL_CHANGELOG.md` entry in the same commit as any visual change.
+- A `docs/VISUAL_CHANGELOG.md` entry for any deliberate visual change, if its reason is worth
+  keeping; no gate requires one.
 - `audits/geo-baseline.md` refreshed monthly, not fortnightly: the number only moves when a route
   or a passage changes.
 
