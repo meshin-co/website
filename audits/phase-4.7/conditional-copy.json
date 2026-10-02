@@ -42,5 +42,9 @@
   {
     "text": "Next page",
     "reason": "src/components/site/PaginationLinks.astro renders it only on an archive with a second page; at 12 posts per page the blog has 4 posts and the largest tag has 3, so no archive paginates yet. Proven in a throwaway 150-post fixture, where the control renders it on every page"
+  },
+  {
+    "text": "Open the repository",
+    "reason": "src/pages/resources/[id].astro renders the button only when a resource declares repoUrl. No entry declares one: all five github.com/meshin-co/<slug> URLs returned HTTP 404, so the field was removed rather than ship a button to a missing page. docs/COPY-CHECKLIST.md rows 6.2 and 6.8 carry what the owner must publish to restore it"
   }
 ]

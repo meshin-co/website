@@ -2,9 +2,9 @@
 title: Fractional CAIO Retainer
 name: Fractional CAIO Retainer
 tagline: The AI officer your customers can ask for by name.
-description: 'One or two days a week as your named AI officer: procurement answers, design reviews, board updates and a handover plan.'
+description: 'Fractional CAIO retainer: one or two days a week as your named AI officer, with procurement answers, design reviews, board updates and a handover plan.'
 publishDate: 2026-09-08
-updatedDate: 2026-09-15
+updatedDate: 2026-10-02
 shortAnswer: 'This fractional CAIO retainer buys one or two days a week as the AI officer your customers can ask for by name. The week is procurement answers, design reviews and a board update, in that order of urgency. The engagement is built to end: there is a handover plan from the first month.'
 feeShape: Monthly fee
 duration: 1–2 days a week
@@ -31,7 +31,7 @@ process:
     detail: Procurement answers and design reviews as they arrive, plus one written update a month.
   - step: 3
     title: Board rhythm
-    detail: A quarterly roadmap with costs, risks and the decisions you are being asked to make.
+    detail: A quarterly roadmap with costs, risks and the decisions you need to make.
   - step: 4
     title: Handover
     detail: Named internal owner, written decisions, and a date when the retainer ends.
@@ -54,7 +54,7 @@ faq:
   - q: 'How is this different from an advisor?'
     a: An advisor gives an opinion. I sign the answers, review the initiatives, and carry the AI risk register.
   - q: 'How long does the retainer run?'
-    a: The engagement is built to end, not continue indefinitely. A named internal owner takes over, with written decisions handed off. If you still need me once that handover is done, I did it wrong.
+    a: The engagement is built to end, not to continue indefinitely. A named internal owner takes over, with written decisions handed off. If you still need me once that handover is done, I did it wrong.
 cta:
   label: Book a 30-min fit call
   href: https://cal.com/meshin
@@ -79,4 +79,4 @@ With an internal owner and written decisions. The handover plan exists from the 
 
 ## What the register maps to
 
-The register, the policy and the classification are the GOVERN function (one of the framework's four functions) of the [NIST AI Risk Management Framework (AI RMF)](https://www.nist.gov/itl/ai-risk-management-framework), applied to one company, not a whole sector. [ISO/IEC 42001](https://www.iso.org/standard/42001) asks for the same three documents inside a certified management system. This retainer keeps them current without pursuing the certification.
+The register, policy and classification are the GOVERN function (one of the framework's four functions) of the [NIST AI Risk Management Framework (AI RMF)](https://www.nist.gov/itl/ai-risk-management-framework). The scope is one company, not a whole sector. [ISO/IEC 42001](https://www.iso.org/standard/42001) asks for the same three documents inside a certified management system. This retainer keeps them current without pursuing the certification.

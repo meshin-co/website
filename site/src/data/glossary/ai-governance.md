@@ -3,8 +3,8 @@ title: What is AI governance?
 term: AI governance
 description: AI governance is the decisions, roles and controls a company uses to manage the risk of the AI systems it builds or buys.
 publishDate: 2026-09-08
-updatedDate: 2026-09-08
-shortDefinition: AI governance is the accountability layer above an AI system - who is allowed to build or buy it, and who answers, by name, when it fails. It runs through the policies, roles and controls that decide what data a system may touch and who signs off before it reaches customers.
+updatedDate: 2026-10-02
+shortDefinition: AI governance means deciding who may build or buy an AI system, and who answers, by name, when it fails. Policies, roles and controls set what data a system may touch and who signs off before it reaches customers.
 definition: |
   AI governance sits above the technology itself. It covers who owns each AI system, what data it may touch, which use cases are off limits, and who signs off before a system reaches customers. That shows up as a register of the systems in use, a policy engineers actually follow, and a review step before anything new goes live.
 
@@ -30,4 +30,4 @@ An insurer asks who owns AI risk before writing a policy. A board member reads a
 
 ## What to do about it
 
-Start with a one-page register: every AI system in use, who owns it, what data it touches, and whether customer data leaves the building. Assign one named owner per system, not a team. Add a single sign-off step before a new system reaches production. Map what you already do against the NIST AI RMF or ISO/IEC 42001, not to get certified immediately, but so you have a recognised structure to point at.
+Start with a one-page register: every AI system in use, who owns it, what data it touches, and whether customer data leaves the building. Assign one named owner per system, not a team. Add a single sign-off step before a new system reaches production. Map what you already do against the NIST AI RMF or ISO/IEC 42001. Do this so you have a recognised structure to point at, not to get certified immediately.

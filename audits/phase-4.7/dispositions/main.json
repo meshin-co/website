@@ -20,7 +20,7 @@
   {
     "target": "src/data/faq/what-does-a-fractional-chief-ai-officer-actually-do.md",
     "status": "rewritten",
-    "reason": "first sentence cut to 9 words so the /faq teaser stops mid-clause truncation, and AI risk register corrected to the canonical AI register; the quoted passage in docs/SEMANTIC-CORE.md was updated in the same commit",
-    "digest": "0691b98eed5a"
+    "reason": "first sentence cut to 9 words so the /faq teaser stops mid-clause truncation, and AI risk register corrected to the canonical AI register; the quoted passage in docs/SEMANTIC-CORE.md was updated in the same commit. Phase 5.2: shortTitle changed from \"What does a Fractional Chief AI Officer do?\" to \"What does a Fractional Chief AI Officer do vs an advisor?\", which adds the advisor contrast the question already makes; the question and the answer are unchanged.",
+    "digest": "f0dc45fed317"
   }
 ]

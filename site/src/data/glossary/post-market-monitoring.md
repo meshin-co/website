@@ -3,12 +3,12 @@ title: What is post-market monitoring under the EU AI Act?
 term: Post-market monitoring
 description: Post-market monitoring is the EU AI Act duty to keep collecting real-world data on a high-risk system after it ships, not just before.
 publishDate: 2026-09-08
-updatedDate: 2026-09-08
-shortDefinition: Post-market monitoring is the EU AI Act duty on a provider to keep collecting and analysing real-world performance data on a high-risk AI system for as long as it is in use. Problems that appear after launch get caught this way, rather than assumed away by the original testing.
+updatedDate: 2026-10-02
+shortDefinition: Post-market monitoring is the EU AI Act duty on a provider to keep collecting and analysing real-world performance data on a high-risk AI system. It lasts as long as the system is in use. Monitoring catches problems that appear after launch, instead of assuming the original testing ruled them out.
 definition: |-
   Article 72 requires a documented monitoring system, sized to the technology and the risk of the specific system. It has to actively and systematically collect and analyse data on how the system performs once it is actually in use. Deployers feed into it directly, since Article 26 requires them to monitor the system on their end and report back to the provider. That way, the provider is not relying on its own visibility alone.
 
-  The monitoring plan is not a separate document. Article 72 makes it part of the system's technical documentation, built and updated alongside it, not bolted on after a complaint. A pattern the monitoring turns up is also the raw material for the next duty in the chain: deciding whether what happened counts as a serious incident that has to be reported.
+  The monitoring plan is not a separate document. Article 72 makes it part of the system's technical documentation, built and updated alongside it, not added after a complaint. A pattern the monitoring finds also feeds the next duty in the chain. That duty is to decide whether what happened counts as a serious incident that requires a report.
 relatedTerms:
   - serious-incident-reporting
   - high-risk-ai-system
@@ -28,6 +28,6 @@ Does anyone keep watching this system, or was it tested once and left alone? Tha
 
 ## What to do about it
 
-Write the monitoring plan before launch - what gets measured, who reviews it, how often - since a plan invented after a problem appears is not the same thing. Build a route for deployer-reported issues to reach the provider.
+Write the monitoring plan before launch, since a plan invented after a problem appears is not the same thing. In the plan, say what you measure, who reviews it and how often. Build a route for deployer-reported issues to reach the provider.
 
 A monitoring system that never hears from the people using it day to day is monitoring very little. The [Fractional CAIO Retainer](/services/fractional-caio-retainer) I run keeps this review on a fixed schedule, not only when a customer complains.

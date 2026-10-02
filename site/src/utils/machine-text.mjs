@@ -126,7 +126,7 @@ export const STATIC_PAGE_CATALOG = [
     title: 'Home',
     file: 'src/pages/index.astro',
     description:
-      'Fractional AI leadership for 30–300 person companies: governance that passes enterprise procurement, and agentic systems shipped to production with evals and observability.',
+      'Fractional Chief AI Officer for 30–300 person companies: governance that passes enterprise procurement, and agentic systems shipped to production with evals.',
   },
   {
     path: '/blog/tags',
@@ -139,34 +139,34 @@ export const STATIC_PAGE_CATALOG = [
     title: 'About Dmitri Meshin',
     file: 'src/pages/about.astro',
     description:
-      'Platform engineer working as a Fractional Chief AI Officer for companies of 30 to 300 people. Remote worldwide.',
+      'Dmitri Meshin is a platform engineer working as a Fractional Chief AI Officer for companies of 30 to 300 people. Remote worldwide.',
   },
   {
     path: '/approach',
-    title: 'How I work',
+    title: 'How a Fractional AI Officer works',
     file: 'src/pages/approach.astro',
     description:
-      'The six things that decide whether an AI initiative reaches production, and the order I work through them.',
+      'How a Fractional AI Officer works: the six things that decide whether an AI initiative reaches production, and the order I work through them.',
   },
   {
     path: '/pricing',
-    title: 'Pricing',
+    title: 'Pricing: what a Fractional Chief AI Officer costs',
     file: 'src/pages/pricing.astro',
     description:
-      'Three fixed structures and no hourly billing: a two-week Assessment, a 90-Day Sprint, and a monthly Retainer. Every fee reaches you in writing before work starts.',
+      'Fractional Chief AI Officer cost: two-week Assessment, 90-Day Sprint or monthly Retainer. Fixed, no hourly billing, every fee in writing before work starts.',
   },
   {
     path: '/faq',
-    title: 'Questions and answers',
+    title: 'Fractional Chief AI Officer questions',
     file: 'src/pages/faq.astro',
     description:
-      'What a Fractional Chief AI Officer does, what each offer produces, and how AI risk gets recorded and signed off.',
+      'Fractional Chief AI Officer questions answered: what the role does, what each offer produces, and how AI risk gets recorded and signed off.',
   },
   {
     path: '/contact',
-    title: 'Contact',
+    title: 'Contact: book an AI leadership call',
     file: 'src/pages/contact.astro',
-    description: `Book a 30-minute fit call or email ${contactEmail(BRAND)}. Remote worldwide, on site when the trip is worth it.`,
+    description: `Book an AI leadership call: a 30-minute fit call, or email ${contactEmail(BRAND)}. Remote worldwide, on site when the trip is worth it.`,
   },
   {
     path: '/ai-policy',
@@ -177,28 +177,28 @@ export const STATIC_PAGE_CATALOG = [
   },
   {
     path: '/security',
-    title: 'Security',
+    title: 'Security practices',
     file: 'src/pages/security.astro',
-    description: 'How this site is built and served, how client data is handled, and where to report a vulnerability.',
+    description: `Security practices for ${BRAND.name}: how this site is built and served, how client data is handled, and where to report a vulnerability.`,
   },
   {
     path: '/now',
-    title: 'Now',
+    title: 'What I am working on now',
     file: 'src/pages/now.astro',
     description:
-      'A dated log of what I am building and studying, newest first. A line is added when something happens and never edited after.',
+      'What I am working on now: a dated log of what I am building and studying, newest first. A line is added when something happens and never edited after.',
   },
   {
     path: '/imprint',
     title: 'Imprint',
     file: 'src/pages/imprint.astro',
-    description: 'Who is responsible for this site, how to reach them, and what it is hosted on.',
+    description: `Imprint for ${BRAND.name}: who is responsible for this site, how to reach them by email, where they work from, and what it is hosted on.`,
   },
   {
     path: '/privacy',
-    title: 'Privacy',
+    title: 'Privacy policy',
     file: 'src/pages/privacy.astro',
-    description: 'What this site collects, which is almost nothing, and what happens to an email you send me.',
+    description: `Privacy policy for ${BRAND.name}: what this site collects, which is almost nothing, and what happens to an email you send me.`,
   },
   {
     path: '/terms',
@@ -255,37 +255,39 @@ export function collectionHubs({ collections, staticPaths }) {
 export const HUB_PAGES = [
   {
     base: '/blog',
-    title: 'Writing',
+    title: 'AI governance writing',
     description:
-      'Notes on getting AI systems past security review and into production, written for founders and boards.',
+      'AI governance writing: notes on getting AI systems past security review and into production, written for founders and boards.',
   },
   {
     base: '/faq',
-    title: 'Questions and answers',
+    title: 'Fractional Chief AI Officer questions',
     description:
-      'What a Fractional Chief AI Officer does, what each offer produces, and how AI risk gets recorded and signed off.',
+      'Fractional Chief AI Officer questions answered: what the role does, what each offer produces, and how AI risk gets recorded and signed off.',
   },
   {
     base: '/glossary',
     title: 'AI governance glossary',
-    description: 'Plain definitions of the AI governance terms that come up in security reviews and board meetings.',
+    description:
+      'An AI governance glossary: plain definitions of the terms, standards and laws that come up in security reviews and board meetings.',
   },
   {
     base: '/resources',
-    title: 'Resources',
+    title: 'AI governance templates and checklists',
     description:
-      'Open templates and checklists for AI governance: register, acceptable-use policy, data classification, vendor questionnaire.',
+      'Open AI governance templates and checklists: register, acceptable-use policy, data classification, vendor questionnaire.',
   },
   {
     base: '/services',
-    title: 'Services',
+    title: 'Fractional AI leadership services',
     description:
-      'Three ways to work with a Fractional Chief AI Officer: a two-week assessment, a 90-day production sprint, a retainer.',
+      'Fractional AI leadership services in three offers: a two-week assessment, a 90-day production sprint or a retainer, run by a Fractional Chief AI Officer.',
   },
   {
     base: '/case-studies',
-    title: 'Case studies',
-    description: 'One entry, not a client case: only.help, my own product, built with the method I use for clients.',
+    title: 'Fractional Chief AI Officer case study',
+    description:
+      'One Fractional Chief AI Officer case study, not a client case: only.help, my own product, built with the method I use for clients.',
   },
 ];
 

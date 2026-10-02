@@ -41,6 +41,15 @@ test('a paragraph is flagged over the word cap, and a single runaway sentence is
   );
 });
 
+test('a sentence of forty words passes the length cap, and one of forty-one is flagged', () => {
+  const sentenceOf = (count) => `${Array.from({ length: count }, (_, i) => `w${i}`).join(' ')}.`;
+  assert.deepEqual(paragraphViolations([sentenceOf(40)]), []);
+  assert.deepEqual(
+    paragraphViolations([sentenceOf(41)]).map((finding) => finding.rule),
+    ['sentence-length']
+  );
+});
+
 test('banned phrases match case-insensitively on word boundaries and report the excerpt', () => {
   const hits = bannedPhraseHits('We leverage AI to Delve into synergies.', ['leverage', 'delve', 'unlock']);
   assert.deepEqual(

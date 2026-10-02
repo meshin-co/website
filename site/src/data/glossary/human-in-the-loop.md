@@ -3,12 +3,12 @@ title: What is human-in-the-loop?
 term: Human-in-the-loop
 description: Human-in-the-loop means a person reviews or can stop an AI system's output before it takes effect, not the system acting alone.
 publishDate: 2026-09-08
-updatedDate: 2026-09-08
-shortDefinition: Human-in-the-loop means a person reviews or can stop an AI system's output before it takes effect, rather than the system acting on its own once it starts.
+updatedDate: 2026-10-02
+shortDefinition: Human-in-the-loop means a person reviews or can stop an AI system's output before it takes effect, rather than the system acting alone once it starts.
 definition: |
-  The concept sits on a spectrum, from full autonomy at one end to human-on-the-loop at the other, where a person can intervene but does not have to act. Human-in-the-loop sits in between: a person must actively approve each step before it happens.
+  The concept sits on a spectrum, from full autonomy at one end to human-in-the-loop at the other. With human-in-the-loop, a person must actively approve each step before it happens. Human-on-the-loop sits in between: a person can intervene but does not have to act.
 
-  Where a system falls on that spectrum is a design decision, not a fixed property of the technology. It is one of the first things a customer's security team or a regulator asks about, for anything that can affect a person's money, employment or legal standing.
+  Where a system falls on that spectrum is a design decision, not a fixed property of the technology. For anything that can affect a person's money, employment or legal standing, this decision is one of the first things a customer's security team or a regulator asks about.
 
   Article 14 of the EU AI Act requires "effective" human oversight for high-risk systems: oversight that can genuinely catch and correct a bad output, not a person who clicks approve without reading it. In practice, this decides where a company can safely remove a person from a workflow, and where it still needs one.
 relatedTerms:

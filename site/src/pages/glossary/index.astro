@@ -17,7 +17,8 @@ const terms = (await getCollection('glossary', ({ data }) => !data.draft)).sort(
 
 const metadata = {
   title: 'AI governance glossary',
-  description: 'Plain definitions of the AI governance terms that come up in security reviews and board meetings.',
+  description:
+    'An AI governance glossary: plain definitions of the terms, standards and laws that come up in security reviews and board meetings.',
 };
 
 const crumbs = [

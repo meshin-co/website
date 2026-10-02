@@ -23,8 +23,9 @@ const posts = (await getCollection('post', ({ data }) => !data.draft)).sort(
 const visible = firstPage(posts);
 
 const metadata = {
-  title: 'Writing',
-  description: 'Notes on getting AI systems past security review and into production, written for founders and boards.',
+  title: 'AI governance writing',
+  description:
+    'AI governance writing: notes on getting AI systems past security review and into production, written for founders and boards.',
 };
 
 const nodes = [

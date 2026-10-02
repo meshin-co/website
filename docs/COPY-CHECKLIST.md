@@ -43,7 +43,7 @@ not support it, the row says so, and I have already removed or softened it — t
 | 3.1 | Assessment price and that it is fixed | **DECIDED 2026-09-12: no prices on the public site at all.** Fee shapes only ("Fixed fee", "Fixed scope, quoted once", "Monthly fee"); numbers are given on the fit call and written into the SOW | decided |
 | 3.2 | Sprint entry price | Removed from the site with 3.1 | decided |
 | 3.3 | Retainer entry price | Removed from the site with 3.1 | decided |
-| 3.4 | Fee-credit window for the Assessment | credited against a Sprint starting within three months | |
+| 3.4 | Fee-credit window for the Assessment | Four places state it, in different words. The Assessment page summary: "The fee is credited if a Sprint follows within three months". That page's FAQ: "If you go on to a 90-Day Production Sprint within three months, the full Assessment fee comes off the Sprint price". The FAQ "What does the two-week Assessment produce…": "if you move to the 90-Day Sprint within three months, the full Assessment fee is credited off the Sprint price". `/pricing`: "credited against a Sprint inside three months". `docs/PRD.md` says only "If we continue, the fee is credited toward the Sprint". None says when the three months start, or whether signing the Sprint or starting it counts. Change all four together once you answer | TODO(owner) |
 | 3.5 | Cancellation notice on the retainer | thirty days | |
 | 3.6 | Travel billed at cost, agreed in advance | yes | |
 | 3.7 | Typical retainer length before handover | **REMOVED 2026-09-15:** `home.ts` and `src/data/service/fractional-caio-retainer.md` (deliverable + FAQ answer) no longer state a specific duration ("twelve to twenty-four months" / "12 to 24 months" / "two years") — the unconfirmed track-record claim is gone, wording now just says the engagement is built to end with a named internal owner | |
@@ -87,12 +87,15 @@ The plan (L19) names five: `ai-governance-starter-kit`, `ai-readiness-scorecard`
 | # | Fact | Currently on the site | Answer |
 |---|---|---|---|
 | 6.1 | Which of the five exist as real artifacts today? | Starter Kit page shipped, others not | |
-| 6.2 | Repo URL for each that exists | `github.com/meshin-co/ai-governance-starter-kit` — does not resolve | |
+| 6.2 | Repo URL for each that exists | All five `github.com/meshin-co/<slug>` URLs return HTTP 404 (checked 2026-10-02): `agent-evals-ci-starter`, `ai-governance-starter-kit`, `ai-readiness-scorecard`, `build-vs-buy-ai-kit`, `llm-gateway-governance-config`. The `github.com/meshin-co` organisation resolves. **REMOVED PENDING YOU:** the five `repoUrl` lines, so no page shows an "Open the repository" button | TODO(owner) |
 | 6.3 | Licence for each | MIT assumed | |
 | 6.4 | Version to show | v0.1 | |
 | 6.5 | Status line per artifact | **REMOVED PENDING YOU** (I had invented "Published with the first engagement") | |
-| 6.6 | Should I write the pages now and leave the download link off until the repos exist? | | |
+| 6.6 | Should I write the pages now and leave the download link off until the repos exist? | The pages are written and carry no repository link; their status line reads "Available as a page on this site. A repository copy is not published yet." | |
 | 6.7 | `/resources/sample-readiness-report` — may I write a fictional-but-labelled sample, or does it wait for a real redacted one? | Not written | |
+| 6.8 | How do I bring the "Open the repository" button back? | Nothing links to a repository today. For each repository you publish, add `repoUrl: <url>` to `site/src/data/resource/<slug>.md` and replace that file's `status` line, which says a repository copy is not published yet. The page renders the button only when `repoUrl` is set, and its JSON-LD type goes back from `CreativeWork` to `SoftwareSourceCode` with a `codeRepository`. Make both edits together, or the page shows a button beside a line that denies the repository exists | TODO(owner) |
+| 6.9 | Do the files the "What is inside" lists used to name exist? | **REMOVED PENDING YOU** because no page contains them: the four templates (Starter Kit); a workflow file and a failure log format (CI starter); a worked example score (scorecard); a vendor due-diligence checklist and a build-path checklist (build vs buy kit); a redaction rule set, a logging schema and an escalation rule (gateway config). The CI starter's how-to line no longer says "Copy the job outline on this page", because the page never had one | TODO(owner) |
+| 6.10 | Home-page proof line "Open-source AI Governance Starter Kit" (`site/src/data/home.ts`): is it true while no repository is published? | Unchanged on the home page and the styleguide | TODO(owner) |
 
 ## 7. Practice claims that assert infrastructure
 
@@ -185,3 +188,29 @@ no `dateModified`. Four were wired to the date they already display (`/ai-policy
 
 Confirm `2026-09-13` is the date a reader should understand as "last reviewed" for these three
 pages, or supply the real review date for each.
+
+---
+
+## 11. Blog and case-study copy: counts that disagree with their own page
+
+The Phase 5.2 rewrite of the four blog posts and the case study kept each of these exactly as written,
+because fixing one means choosing a number only you can pick. Rows 11.1 and 11.2 were then changed on
+2026-10-02 to the count the page's own list supports; confirm or correct them.
+
+| # | Fact | Currently on the site | Answer |
+|---|---|---|---|
+| 11.1 | AI acceptable use policy post: how many sections does a working policy have? | **CHANGED 2026-10-02** from "Six sections make up a working one" to "Nine sections make up a working one", to match the nine-row table directly below it (scope, data classification, approved tools and requests, human review, customer disclosure, vendor training use, ownership and review, incident reporting, enforcement). Confirm nine, or tell me which three rows are not sections | TODO(owner) |
+| 11.2 | AI system register post: how many interviews, and with which teams? | **CHANGED 2026-10-02** from "five interviews" (short answer) and "five short conversations" (week plan) to "four" in both, to match the four teams the Tuesday and Wednesday step names: engineering, marketing, finance and support. Confirm four, or name the fifth team | TODO(owner) |
+| 11.3 | AI system register post: which "three columns" does the Monday step mean? | Monday: "Create the spreadsheet with those three columns." Thursday: "Fill in the vendor, data and risk-tier columns". The table above them has three columns (What to record, Why a reviewer wants it, Who fills it in) and eight rows | TODO(owner) |
+
+---
+
+## 12. Commitments restored on 2026-10-02: confirm the claim before it stands
+
+The site-wide copy rewrite named an actor on sentences that had none, which turned descriptions of the
+work into first-person promises you never made. Those sentences are back to their earlier wording. The
+row below is the one place where the restored wording itself rests on a fact only you can supply.
+
+| # | Fact | Currently on the site | Answer |
+|---|---|---|---|
+| 12.1 | `/now`: is the log the whole of what you work on? | The lead ends "What is not on the list is not being worked on." The rewrite had changed it to "If it is not on the list, I am not working on it." Both are total claims. `/about` shows "1,000+ person fraud-detection company, my day job as a platform engineer", and the log does not list it. Keep the sentence, scope it (for example "on this practice"), or drop it | TODO(owner) |

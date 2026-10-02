@@ -2,181 +2,181 @@
   {
     "target": "src/data/glossary/agentic-workflow.md",
     "status": "rewritten",
-    "reason": "description was 117 chars (below 120 floor) and said \"LLM agents\" while shortDefinition/body say \"AI agents\" - fixed length to 145 chars and standardized on \"AI agents\" throughout. updatedDate bumped.",
-    "digest": "063c70b6736e"
+    "reason": "Two sentences that held two ideas are split (the support-ticket example, and the reviewer's question versus why the exposure sits there, which now reads as an explicit 'because'), and the description drops from 27 to 25 words. Two single-idea sentences stay over 25 words on purpose: the 'especially' list of three costly actions and the 'because nothing stood between the decision and the outcome' cause. Over-25 sentences go from 4 to 2.",
+    "digest": "a3545c65a80c"
   },
   {
     "target": "src/data/glossary/ai-governance.md",
-    "status": "verified",
-    "reason": "already answer-first, tight paragraphs each carrying a fact, description in range, no banned phrases, no long sentences.",
-    "digest": "bd8fc4aa95b7"
+    "status": "rewritten",
+    "reason": "The shortDefinition no longer defines the term as an 'accountability layer above' the system. It now says what governance means in plain verbs: deciding who may build or buy a system and who answers by name when it fails, while policies, roles and controls set what data a system may touch and who signs off. The advice to map work to the NIST AI RMF or ISO/IEC 42001 is split in two around both names and keeps 'not to get certified immediately'. Over-25 sentences go from 3 to 1; the one left is the four-item list of what governance covers.",
+    "digest": "ae822f46d784"
   },
   {
     "target": "src/data/glossary/ai-impact-assessment.md",
-    "status": "verified",
-    "reason": "already meets the standard; findings.json's untraceable \"Concerns\" hit for this route is the RelatedContent template heading, not missing copy.",
-    "digest": "792654b14993"
+    "status": "rewritten",
+    "reason": "The 27-word opening sentence of the shortDefinition now ends at 'before launch' (25 words), and 'the decision' now reads 'the system's decision' so the answer stands alone. The 'is offered' passive becomes 'the offer a real person gets' and the sentence is split after 'gets' ('That includes a loan, a job interview, an insurance price or a public benefit'). The 28-word closing sentence puts its condition first ('Before a customer's legal team asks') and drops 'instead of from me'. In the content paragraph 'kick in' became 'take effect' and 'shows up' became 'appears'. Article 27, the three deployer groups and the DPIA reuse rule are unchanged. Over-25 sentences go from 3 to 0 and agentless passives from 1 to 0.",
+    "digest": "c49b77a7827e"
   },
   {
     "target": "src/data/glossary/ai-management-system.md",
-    "status": "verified",
-    "reason": "already meets the standard, sentences and paragraphs within limits.",
-    "digest": "0b8a7f4612e2"
+    "status": "rewritten",
+    "reason": "Three sentences over 25 words are split: the Article 17 sentence into a duty sentence and a coverage sentence, the questionnaire sentence into the request and its reason, and the 'so the gap list' sentence. Every 'every', 'because', 'so' and 'tends to' is kept. The 'Why it comes up' paragraph is now two paragraphs so the added words stay under 75 per paragraph. Over-25 sentences go from 3 to 0.",
+    "digest": "1318cfc2f15a"
   },
   {
     "target": "src/data/glossary/ai-register.md",
     "status": "rewritten",
-    "reason": "description was 111 chars, below the 120 floor - rewrote to 125 chars, same claim, no new facts. updatedDate bumped.",
-    "digest": "784dcfe3759f"
+    "reason": "The shortDefinition and the 27-word spreadsheet sentence each carried two ideas and are now two sentences each, and the 'raises the stakes' idiom is replaced while Article 71 stays exact. The 'What to do about it' paragraph is split in two so the added words stay under 75 per paragraph, and 'quarterly is reasonable' in the review sentence becomes its own sentence, 'Quarterly is reasonable.' One sentence stays over 25 words on purpose: the five-item list of what a working entry covers. Over-25 sentences go from 3 to 1.",
+    "digest": "4b5d1607a5f0"
   },
   {
     "target": "src/data/glossary/conformity-assessment.md",
-    "status": "verified",
-    "reason": "already meets the standard; the \"Concerns\" untraceable hit is the template's RelatedContent group heading, not missing copy.",
-    "digest": "f9827bf936a4"
+    "status": "rewritten",
+    "reason": "Five sentences over 25 words are split or trimmed: the filler 'the outcome is simple:' is gone, the harmonised-standards gloss has its own sentence, and the 33-word investor sentence is two sentences. 'Before the system is built' now names the actor. The 30-word shortDefinition sentence is split after 'market' into 'Either the provider checks the system internally, or an accredited outside body checks it.' and 'The assessment shows...'. The description is split to two short sentences (24 words in total). Article 43, Annex III, Annex VI, Annex VII, 'notified body' and the 'not fully applied or do not yet exist' condition are untouched, and that condition is why one agentless passive remains. Over-25 sentences go from 5 to 0 and agentless passives from 2 to 1.",
+    "digest": "300257eb2c87"
   },
   {
     "target": "src/data/glossary/data-classification.md",
     "status": "rewritten",
-    "reason": "definition's first paragraph had a 40-word sentence built on a colon-plus-question clause - split into two sentences at the question mark, no fact lost. updatedDate bumped.",
-    "digest": "7056d9226e16"
+    "reason": "The 28-word NIST sentence carried a claim and a question; it is now two sentences with the same attribution, the same contrast with a subjective label, and the same three properties. The agentless passive in the shortDefinition is gone, 'the hard way' is now 'too late', 'Every additional tool' now reads 'Every new tool', and 'Without one' now says 'Without a scheme'. The first sentence of the shortDefinition is unchanged. Over-25 sentences go from 1 to 0 and agentless passives from 1 to 0.",
+    "digest": "28f7a13e9bfd"
   },
   {
     "target": "src/data/glossary/dpia.md",
     "status": "rewritten",
-    "reason": "\"Why it comes up\" opened with a 42-word sentence - split at the comma-and clause into two sentences. updatedDate bumped.",
-    "digest": "ec4a5725a8cd"
+    "reason": "Four sentences over 25 words and four agentless passives are gone, by splitting and by naming the actor (the company collects, the company reduces, your team builds, the company must consult the officer). The idiom 'points the other way too' becomes 'also refers to the DPIA', and 'the decision itself' in the shortDefinition now says 'the system's decision'. 'Short for' becomes 'or' in the shortDefinition, the officer sentence now says the company 'carries out' the assessment, 'It gets confused with ... often enough that clarifying' becomes 'People often confuse it with ... That is why explaining', and the body says the system 'collects' where the data 'is being collected'. The three Article 35 situations, the officer rule, Articles 13 and 26 and both distinctions are intact.",
+    "digest": "5e76fdb47253"
   },
   {
     "target": "src/data/glossary/eu-ai-act.md",
     "status": "rewritten",
-    "reason": "shortDefinition (35 words) and one definition sentence (35 words) were both one word over the 34-word hard cap - trimmed shortDefinition (\"from banned practices to high-risk systems\" folded into \"heaviest for high-risk systems\") and split the definition sentence at the comma. updatedDate bumped.",
-    "digest": "86b57328179d"
+    "reason": "Two over-25 sentences are split (the 34-word 'in practice' sentence and the 28-word 'most products' sentence, which now says 'high-risk' where it was left implied), and 'Everything else is left largely unregulated' now names the Act as the actor. The shortDefinition, 'Regulation (EU) 2024/1689', 1 August 2024 and the sentence on who the Act reaches are verbatim. Over-25 sentences go from 3 to 1; the one left is the 33-word shortDefinition, which a buyer-prompt contract pins character for character.",
+    "digest": "6261786ac357"
   },
   {
     "target": "src/data/glossary/evals.md",
-    "status": "verified",
-    "reason": "already meets the standard, shortDefinition answers first with no restatement.",
-    "digest": "dbd6b91d3044"
+    "status": "rewritten",
+    "reason": "Six sentences over 25 words each carried two ideas (a trigger and a tracking habit, a quote and its aftermath, a question and its answer); five are split at that joint. 'Six months later', the 'it worked when I tried it a few times' quote, 'twenty to fifty real cases' and the ordinary-test-suite comparison are unchanged. 'Which otherwise has no answer better than trust' became 'Without an eval suite, that question has no answer better than trust' so the condition stays explicit. Over-25 sentences go from 6 to 1.",
+    "digest": "70d0f88581bf"
   },
   {
     "target": "src/data/glossary/guardrails.md",
     "status": "rewritten",
-    "reason": "two consecutive question-mark sentences in \"Why it comes up\" (new gate rule, cap 1) - merged into one question. Also fixed a malformed \"one of three things: A, or B. The third, C\" list into a proper three-item list, which then ran 42 words - split at the resulting boundary. updatedDate bumped.",
-    "digest": "7ff28e6b0ffa"
+    "reason": "Three agentless passives (two in the shortDefinition, one in the board question) now say who acts, the 34-word board sentence is split, and the three kinds of guardrail are one short sentence each instead of an 'or / the third' run. 'Checks on what the model will respond to' replaces 'what it can be asked', so no asker is named, and the description is reworded the same way ('code checks on what a model responds to'). 'This is closer to what NIST...' now opens 'Guardrails are closer to what NIST...' so 'this' has one referent, and the next sentence now starts 'They are how that function shows up'. In the shortDefinition 'simply talk the system out of a rule' became 'just persuade the system to drop a rule', and the OWASP sentence is split after 'prompt injection' ('That list reads like a checklist'). The 'not model behaviour' contrast, the OWASP attribution and the NIST clause are kept as written. Over-25 sentences go from 3 to 1; the one left is the NIST Manage-function sentence.",
+    "digest": "4548fff2e1aa"
   },
   {
     "target": "src/data/glossary/hallucination-rate.md",
-    "status": "verified",
-    "reason": "already meets the standard; a 37-word flag on one sentence was a false positive from a quoted-string period (\"we do not know.\" That reads...) - the sentence is 21 words, correctly punctuated already.",
-    "digest": "cb3f170760d0"
+    "status": "rewritten",
+    "reason": "Three agentless passives ('measured', 'is invented', 'is tracked') now say who measures and tracks, or what invents. The 32-word shortDefinition is two sentences, and the 'I don't know' sentence is three short ones, so the reason the rate must be measured stays but each step stands alone. 'Never a reliable guide', 'rarely' and the NIST attribution are unchanged. Over-25 sentences go from 2 to 0.",
+    "digest": "204c7985cf6d"
   },
   {
     "target": "src/data/glossary/high-risk-ai-system.md",
-    "status": "verified",
-    "reason": "already meets the standard; a 44-word flag was the same quoted-string false positive (actual sentence is 21 words). The 4 untraceable definition-paragraph findings in findings.json trace directly to this file's own multi-paragraph `definition` field - real copy, ledger-granularity artifact, not missing source.",
-    "digest": "83ca74860504"
+    "status": "rewritten",
+    "reason": "The 28-word description is now 25 words, and 'a safety component of, or itself, a product' reads as two plain clauses, with the examples moved into their own sentence ('Medical devices and machinery are examples.'). 'That underlying law' now reads 'That product-safety law'. Three idioms ('landing in ... alone', ', say', 'survives contact with') became plain words. All four Article 6(3) reasons, the eight Annex III areas, profiling and every example are kept. The 28-word second sentence of the shortDefinition stays whole because it carries both routes into the category and its three examples within the 50-word limit.",
+    "digest": "1219e0f64a63"
   },
   {
     "target": "src/data/glossary/human-in-the-loop.md",
-    "status": "verified",
-    "reason": "already meets the standard.",
-    "digest": "c800a72573f5"
+    "status": "rewritten",
+    "reason": "'Acting on its own' is now 'acting alone', the spectrum sentence is split so the human-on-the-loop gloss is its own sentence, and the closing sentence puts its condition first and says 'this decision' where it said 'it'. The Article 14 sentence with 'effective' is verbatim. Over-25 sentences go from 4 to 2: the Article 14 sentence and the sentence on anything that can affect a person's money, employment or legal standing, both left whole because each is one claim with its scope attached.",
+    "digest": "113ad376061a"
   },
   {
     "target": "src/data/glossary/human-oversight.md",
-    "status": "verified",
-    "reason": "already meets the standard.",
-    "digest": "2441a34c7862"
+    "status": "rewritten",
+    "reason": "The five capacities now read as four short sentences, the two kinds of measure are named by who acts, 'the mechanism' became the term itself, and the one agentless passive ('is equipped') is active. The shortDefinition now moves 'training, time and authority' into a second sentence, the automation-bias capacity gains a gloss ('the tendency to trust the output by default'), and the 30-word advice sentence in 'What to do about it' is split in two. Article 14, 'five capacities' and 'two kinds of measure' are unchanged. Over-25 sentences go from 6 to 1; the one left is the first sentence of the shortDefinition at 30 words, which holds the whole definition in one idea.",
+    "digest": "41621b0a93e2"
   },
   {
     "target": "src/data/glossary/iso-iec-42001.md",
-    "status": "verified",
-    "reason": "already meets the standard; the \"Concerns\" untraceable hit is the template's RelatedContent group heading, not missing copy.",
-    "digest": "3c9d24bb836f"
+    "status": "rewritten",
+    "reason": "Four sentences over 25 words and one agentless passive are gone. 'That means' in the shortDefinition had no clear referent, so it now says what an AI management system is, and 'It was published' now names ISO and IEC as the publishers. The certification contrast with the NIST AI RMF, the Plan-Do-Check-Act structure, the 'three things' list and December 2023 are unchanged. The first sentence of the shortDefinition is verbatim and the 'What to do about it' paragraph is split in two. Over-25 sentences go from 4 to 0.",
+    "digest": "9e6273d15455"
   },
   {
     "target": "src/data/glossary/llm-gateway.md",
     "status": "rewritten",
-    "reason": "description was 114 chars, below the 120 floor - rewrote to 145 chars, same claim. updatedDate bumped.",
-    "digest": "2a11a5680ced"
+    "reason": "The definition opened on 'Every call to any model' without saying what the thing is; it now opens 'An LLM gateway is one service that every call to any model passes through'. Three agentless passives name the company as actor, 'is allowed to' became 'may', the 27-word leak sentence and the opening sentence of the shortDefinition are split, and 'so' became 'can then' in the shortDefinition. The definition also drops 'instead of going straight' and 'Through that point', and the redaction clause is now its own sentence. All five functions, 'every', 'any' and the hedge 'rarely' are kept. Over-25 sentences go from 2 to 0 and agentless passives from 4 to 0.",
+    "digest": "ae3cd4454417"
   },
   {
     "target": "src/data/glossary/model-card.md",
-    "status": "verified",
-    "reason": "already meets the standard.",
-    "digest": "29b8ac8ca231"
+    "status": "rewritten",
+    "reason": "Five agentless passives, one of them in a 26-word description, are gone because the actors (the maker, the company, the models' makers) are now named. The NIST attribution, the four evaluation groups and the four-document Starter Kit line are untouched. One agentless passive stays in the NIST expectation ('A model should be explained, validated and documented') because it states a standard's expectation and has no single actor.",
+    "digest": "9b8f79b3db7a"
   },
   {
     "target": "src/data/glossary/model-provenance.md",
-    "status": "verified",
-    "reason": "already meets the standard.",
-    "digest": "717796c49b23"
+    "status": "rewritten",
+    "reason": "The description and the shortDefinition now say 'where a model comes from' instead of the passive 'built from', and the 29-word 'is signed' sentence is split with the company named as the reader. 'Is allowed to' became 'may', and a gerund-subject sentence and a garbled 'different answer than' became plain verbs. The vendor question 'what the model was trained on' now reads 'what data trained the model'. Article 53 and its 'sufficiently detailed summary' clause are unchanged. Agentless passives go from 5 to 0.",
+    "digest": "57974f06cd94"
   },
   {
     "target": "src/data/glossary/nist-ai-rmf.md",
     "status": "rewritten",
-    "reason": "shortDefinition (35 words) and one definition sentence (40 words) were over the 34-word cap - trimmed the redundant \"published by NIST\" (NIST already named as subject) and split the long sentence at the colon. updatedDate bumped.",
-    "digest": "2ed94b9b8d96"
+    "reason": "Three sentences over 25 words are split around the unchanged NIST clauses. The first sentence of the shortDefinition (voluntary, US framework, January 2023) is verbatim, and the description now carries the abbreviation 'AI RMF' for the target query. 'Not a law', the four functions GOVERN, MAP, MEASURE and MANAGE, and the ten-person-startup example are kept. The one agentless passive ('risks are actually managed') is now active ('your company actually manages an AI system's risks'). Over-25 sentences go from 4 to 1; the one left is the pinned shortDefinition.",
+    "digest": "7267bd83fb47"
   },
   {
     "target": "src/data/glossary/observability.md",
-    "status": "verified",
-    "reason": "already meets the standard.",
-    "digest": "268f4f2ff090"
+    "status": "rewritten",
+    "reason": "The agentless passive in the shortDefinition ('what a live AI system was asked') now says 'what a user asked' (the description likewise), the gloss of agentic workflow has its own sentence, and the 'simple uptime dashboard' sentence is split from what the dashboard can show. The NIST Measure sentence and its 'only if' condition are unchanged. One sentence over 25 words and one agentless passive remain in that NIST sentence, which attributes a function to the framework and has no single actor; the advice sentence 'any one case can be pulled up by its own reference' is also an unchanged passive. Over-25 sentences go from 2 to 1 and agentless passives from 3 to 2.",
+    "digest": "097c86a84357"
   },
   {
     "target": "src/data/glossary/post-market-monitoring.md",
-    "status": "verified",
-    "reason": "already meets the standard; one \"not only\" without a paired \"but also\" is not the banned formulaic construction.",
-    "digest": "3d323573115f"
+    "status": "rewritten",
+    "reason": "The 32-word shortDefinition opener, the 32-word hand-off to serious incident reporting and the 29-word plan instruction now say one thing each. The idioms 'bolted on' and 'raw material for' and the passives 'get caught' and 'has to be reported' became plain verbs with the same duty. Articles 72 and 26 are kept, and 'as long as it is in use' now reads 'as long as the system is in use'. Over-25 sentences go from 3 to 0 and the two agentless passives named above are gone.",
+    "digest": "26fb8a8b1a5e"
   },
   {
     "target": "src/data/glossary/prompt-injection.md",
     "status": "verified",
-    "reason": "already meets the standard.",
+    "reason": "Measured on the built page in phase 5.2: reading ease 50.1, grade 9.9, no sentence over 25 words, no agentless passive. Nothing to fix, so the text is left as it is on purpose.",
     "digest": "c7e900603c85"
   },
   {
     "target": "src/data/glossary/provider-vs-deployer.md",
     "status": "rewritten",
-    "reason": "two sentences ran over the 34-word cap (35 and 35 words), one each in \"Why it comes up\" and \"What to do about it\" - split both at their existing clause boundaries, no fact lost. updatedDate bumped.",
+    "reason": "two sentences ran over the 34-word cap (35 and 35 words), one each in \"Why it comes up\" and \"What to do about it\" - split both at their existing clause boundaries, no fact lost. updatedDate bumped. Re-measured in phase 5.2 on the built page: reading ease 50.5, grade 9.9, no sentence over 25 words, no agentless passive, so it is left unchanged.",
     "digest": "517e17e91e93"
   },
   {
     "target": "src/data/glossary/red-teaming.md",
     "status": "verified",
-    "reason": "already meets the standard.",
+    "reason": "Measured on the built page in phase 5.2: reading ease 51.9, grade 10.4, no sentence over 25 words, no agentless passive. Nothing to fix, so the text is left as it is on purpose.",
     "digest": "6e6998af77f4"
   },
   {
     "target": "src/data/glossary/retrieval-augmented-generation.md",
-    "status": "verified",
-    "reason": "already meets the standard; one \"not only\" without a paired \"but also\" is not the banned formulaic construction.",
-    "digest": "a17fe7ab7491"
+    "status": "rewritten",
+    "reason": "Named the actor for the embeddings conversion, the inversion risk and the accuracy trigger, and removed the 'not exact keyword. That is what lets' pair while keeping the similarity-versus-keyword contrast and both OWASP risks. Embeddings now 'carry a second risk' where they could 'be inverted, too'. Agentless passives go from 5 to 0.",
+    "digest": "eb90e7d14908"
   },
   {
     "target": "src/data/glossary/serious-incident-reporting.md",
     "status": "rewritten",
-    "reason": "\"Why it comes up\" ran a 39-word sentence with an embedded rhetorical question - split into three sentences, kept the single remaining question intact (still only one question mark on the page, gate-compliant). updatedDate bumped.",
-    "digest": "aa155510a946"
+    "reason": "The vague last line of the shortDefinition ('The clock is tight and legally fixed') now gives the fifteen-day default. The 'clock' sentence, the 32-word closing question and the 30-word advice sentence were merged or split, and 'the report is filed' now names the provider. The title now says 'serious incident reporting' so it carries the target query. Every deadline (fifteen, two and ten days), the pinned first sentence and the property-and-environment fifteen-day case are unchanged; the contrast 'not in vague urgency' is dropped because the next sentence gives the days.",
+    "digest": "bbbe76e062d5"
   },
   {
     "target": "src/data/glossary/shadow-ai.md",
-    "status": "verified",
-    "reason": "already meets the standard; confirms canonical casing - \"Shadow AI\" at sentence start, lowercase \"shadow AI\" mid-sentence.",
-    "digest": "dc01b4bf5b8a"
+    "status": "rewritten",
+    "reason": "Replaced the idiom 'burned before', which was also an agentless passive, with 'having had a bad experience before', and split the body paragraph so the longer sentence stays under the 75-word paragraph cap. The definition and the examples are verbatim.",
+    "digest": "78ab58cee921"
   },
   {
     "target": "src/data/glossary/sub-processor.md",
-    "status": "verified",
-    "reason": "already meets the standard.",
-    "digest": "6b484e92627b"
+    "status": "rewritten",
+    "reason": "The one agentless passive ('are built') now has a subject, and two phrasal verbs ('bring in', 'fold into') became 'add'. Both authorisation routes, the contract flow-down and the hops sentence are untouched.",
+    "digest": "15f4ca19123b"
   },
   {
     "target": "src/data/glossary/technical-documentation.md",
     "status": "rewritten",
-    "reason": "two sentences ran over the 34-word cap (35 words each), one each in \"Why it comes up\" and \"What to do about it\" - split both at existing clause boundaries. updatedDate bumped.",
-    "digest": "d0ae50ff6640"
+    "reason": "Both agentless passives now name who acts (the provider places the system on the market; you make the design decisions), and 'has to survive' became 'to keep'. Annex IV, Article 11, Article 18, the ten years and the retention duty over the quality management system records and the declaration of conformity are untouched.",
+    "digest": "ddeccfa6f0d9"
   }
 ]

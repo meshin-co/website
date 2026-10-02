@@ -13,8 +13,8 @@ const site = import.meta.env.SITE.replace(/\/$/, '');
 const CONTACT_EMAIL = `hello@${SITE.name}`;
 
 const metadata = {
-  title: 'Contact',
-  description: `Book a 30-minute fit call or email ${CONTACT_EMAIL}. Remote worldwide, on site when the trip is worth it.`,
+  title: 'Contact: book an AI leadership call',
+  description: `Book an AI leadership call: a 30-minute fit call, or email ${CONTACT_EMAIL}. Remote worldwide, on site when the trip is worth it.`,
 };
 
 const crumbs = [
@@ -63,7 +63,7 @@ const channels = [
           <div class="bg-page p-6">
             <dt class="eyebrow">{channel.label}</dt>
             <dd class="mt-3 max-w-[42ch] text-muted">
-              {channel.body}
+              {channel.body}{' '}
               <a
                 class="text-link mt-4 inline-block py-1 font-mono text-sm"
                 href={channel.action.href}
@@ -83,9 +83,9 @@ const channels = [
       {
         [
           'The one process you would most like to see running in production.',
-          'Whether anyone is currently named as the owner of AI risk.',
+          'Whether your company has named an owner of AI risk.',
           'Which vendors already hold your data, and under what contract.',
-          'What has already been tried, and where it stopped.',
+          'What you have already tried, and where it stopped.',
         ].map((item) => (
           <li class="grid grid-cols-[auto_1fr] gap-3">
             <span class="mt-2 inline-block size-1.5 bg-primary" aria-hidden="true" />

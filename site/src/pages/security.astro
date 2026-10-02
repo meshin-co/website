@@ -13,8 +13,8 @@ const CONTACT_EMAIL = `hello@${SITE.name}`;
 const UPDATED = '2026-09-13';
 
 const metadata = {
-  title: 'Security',
-  description: 'How this site is built and served, how client data is handled, and where to report a vulnerability.',
+  title: 'Security practices',
+  description: `Security practices for ${SITE.name}: how this site is built and served, how client data is handled, and where to report a vulnerability.`,
 };
 
 const crumbs = [
@@ -86,7 +86,7 @@ const posture = [
             <dt class="eyebrow">{block.label}</dt>
             <dd class="mt-4 grid gap-3">
               {block.items.map((item) => (
-                <span class="block max-w-[44ch] text-muted">{item}</span>
+                <div class="max-w-[44ch] text-muted">{item}</div>
               ))}
             </dd>
           </div>

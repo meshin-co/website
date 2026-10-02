@@ -15,7 +15,7 @@ export const signals = {
     'Your board or investors are asking for an AI strategy and nobody owns it.',
     'Nobody can say which company data employees are pasting into public models.',
     "A customer's procurement team asked who is accountable for your AI risks, and the deal stalled.",
-    'AI budget is being spent, but no process has actually changed.',
+    'You are spending AI budget, but no process has changed.',
   ],
   verdict: "Three or more of these five signs? You're exactly who this is for.",
 };
@@ -72,7 +72,7 @@ export const shift = {
       'Pilots stall somewhere before production.',
       'Nobody is accountable for AI risk by name.',
       'Security questionnaires stall deals for weeks.',
-      'AI budget is spent and no process has changed.',
+      'You have spent AI budget and no process has changed.',
     ],
   },
   after: {

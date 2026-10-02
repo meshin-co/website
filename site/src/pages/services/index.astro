@@ -18,9 +18,9 @@ const site = import.meta.env.SITE.replace(/\/$/, '');
 const services = (await getCollection('service', isPublished)).sort((a, b) => a.data.order - b.data.order);
 
 const metadata = {
-  title: 'Services',
+  title: 'Fractional AI leadership services',
   description:
-    'Three ways to work with a Fractional Chief AI Officer: a two-week assessment, a 90-day production sprint, a retainer.',
+    'Fractional AI leadership services in three offers: a two-week assessment, a 90-day production sprint or a retainer, run by a Fractional Chief AI Officer.',
 };
 
 const crumbs = [

@@ -34,7 +34,7 @@ page around it.
   thought leader
 - semicolons and em dashes above 6 per 1000 words, once a page has at least 3
 - more than one question sentence in a row
-- a sentence over 45 words, a paragraph over 75 words
+- a sentence over 40 words, a paragraph over 75 words
 - the same sentence on two routes
 
 Zero of the machine patterns exist in the corpus today. Keep it that way.

@@ -18,7 +18,7 @@ const author = await getEntry('author', 'dmitri');
 const metadata = {
   title: 'About Dmitri Meshin',
   description:
-    'Platform engineer working as a Fractional Chief AI Officer for companies of 30 to 300 people. Remote worldwide.',
+    'Dmitri Meshin is a platform engineer working as a Fractional Chief AI Officer for companies of 30 to 300 people. Remote worldwide.',
 };
 
 const crumbs = [
@@ -31,9 +31,9 @@ const nodes = [orgNode(site, { logoPath: ogDefaultPath }), personNode(site), web
 const principles = {
   items: [
     'One process in production is worth more than five pilots in a demo environment.',
-    'If nobody is named as the owner of AI risk, the answer to a security questionnaire is a guess.',
+    'If AI risk has no named owner, the answer to a security questionnaire is a guess.',
     'A governance document nobody updates is worse than none, because it looks like a control.',
-    'Engagements should end. Handover is a deliverable, not a courtesy.',
+    'Engagements should end. Handover is a deliverable: the runbook and the decisions go to a named internal owner.',
   ],
 };
 ---
@@ -45,8 +45,8 @@ const principles = {
 
   <Section bordered={false} headingLevel={1} eyebrow="About" title="Dmitri Meshin" lead={author?.data.role}>
     <p class="mt-2 max-w-[68ch] text-lg leading-relaxed text-muted">
-      I'm Dmitri Meshin, a platform engineer by trade. My work is getting one AI system through a corporate security
-      review and into production, then hand the keys to the team that has to keep it running.
+      I'm Dmitri Meshin, a platform engineer by trade. My work is to get one AI system through a corporate security
+      review and into production. Then I hand it over to the team that has to keep it running.
     </p>
   </Section>
 

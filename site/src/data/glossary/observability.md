@@ -1,14 +1,14 @@
 ---
 title: What is observability for an AI system?
 term: Observability
-description: Observability is the ability to see exactly what a live AI system was asked, what it did, and what it answered, for any one case.
+description: Observability means seeing exactly what a user asked a live AI system, what it did and what it answered, for any one case.
 publishDate: 2026-09-08
-updatedDate: 2026-09-08
-shortDefinition: Observability is the ability to see, after the fact, exactly what a live AI system was asked. For any one case someone points to, it also shows what the system retrieved or called, and what it answered. An aggregate chart alone cannot explain one specific customer's bad experience.
+updatedDate: 2026-10-02
+shortDefinition: Observability is the ability to see, after the fact, exactly what a user asked a live AI system. For any one case someone points to, it also shows what the system retrieved or called, and what it answered. An aggregate chart alone cannot explain one specific customer's bad experience.
 definition: |
-  For an agentic workflow, a system that also calls tools to look things up or take actions on its own, the record has to extend further. It needs every tool call made along the way, and what each one returned, not just the final input and output. A wrong outcome usually traces back to one step in a longer chain. Skipping tool-call logging leaves exactly that step unrecorded.
+  An agentic workflow is a system that also calls tools to look things up or take actions on its own. Its record has to extend further. It needs every tool call made along the way, and what each one returned, not just the final input and output. A wrong outcome usually traces back to one step in a longer chain. Skipping tool-call logging leaves exactly that step unrecorded.
 
-  This differs from a simple uptime dashboard. It can show a system is running while saying nothing about whether one specific answer, given to one specific person, was actually right. NIST's risk management framework calls this its Measure function: a system only counts as measured if it keeps being tested and tracked after release, not just before.
+  Observability differs from a simple uptime dashboard. It can show a system is running while saying nothing about whether one specific answer, given to one specific person, was actually right. NIST's risk management framework calls this its Measure function: a system only counts as measured if it keeps being tested and tracked after release, not just before.
 relatedTerms:
   - post-market-monitoring
   - red-teaming

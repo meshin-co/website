@@ -1,5 +1,5 @@
 const PARAGRAPH_WORD_CAP = 75;
-const SENTENCE_WORD_CAP = 45;
+const SENTENCE_WORD_CAP = 40;
 
 const ABBREVIATIONS = ['approx', 'e.g', 'i.e', 'etc', 'vs', 'no', 'fig', 'dr', 'mr', 'mrs', 'ms', 'prof', 'st'];
 

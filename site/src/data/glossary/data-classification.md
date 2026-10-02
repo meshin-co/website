@@ -3,12 +3,12 @@ title: What is data classification?
 term: Data classification
 description: Data classification is labelling data by sensitivity, such as public, internal or restricted, before deciding what may reach an AI tool.
 publishDate: 2026-09-08
-updatedDate: 2026-09-15
-shortDefinition: Data classification means labelling what is in a dataset, document or prompt by sensitivity. Common tiers are public, internal, confidential and restricted. A company can then decide what is allowed to reach a given AI tool. That way nobody pastes something in and finds out the hard way.
+updatedDate: 2026-10-02
+shortDefinition: Data classification means labelling what is in a dataset, document or prompt by sensitivity. Common tiers are public, internal, confidential and restricted. A company can then decide what may reach a given AI tool. That way nobody pastes something in and finds out too late.
 definition: |
-  NIST's own method for federal systems ties each category to a real question, not a subjective label: what actually happens to confidentiality, integrity or availability if this breaks? That means naming who could see this data, alter it, or take it offline. A scheme built the same way works for AI. That is what makes classification useful for a real decision, not a compliance exercise nobody consults.
+  NIST's own method for federal systems ties each category to a real question, not a subjective label. The question is what actually happens to confidentiality, integrity or availability if this breaks. That means naming who could see this data, alter it, or take it offline. A scheme built the same way works for AI. That is what makes classification useful for a real decision, not a compliance exercise nobody consults.
 
-  Every additional tool a company adopts multiplies the places a given tier could leak from. That is why the scheme has to live inside the AI register, not beside it. Without one, two employees facing the same document reach different answers. The wrong answer usually only surfaces after the data has already left the building through a chat prompt.
+  Every new tool a company adopts multiplies the places a given tier could leak from. That is why the scheme has to live inside the AI register, not beside it. Without a scheme, two employees facing the same document reach different answers. The wrong answer usually only surfaces after the data has already left the building through a chat prompt.
 relatedTerms:
   - dpia
   - sub-processor

@@ -4,8 +4,8 @@ name: AI Readiness & Risk Assessment
 tagline: Two weeks to a memo your board can act on.
 description: A two-week AI readiness and risk assessment for companies of 30 to 300 people, ending in a memo your board can act on, gap list included.
 publishDate: 2026-09-08
-updatedDate: 2026-09-15
-shortAnswer: This AI readiness assessment takes two weeks of interviews and reading your systems, and ends in a memo your board can act on. You learn where you stand against the frameworks your customers ask about, what a customer audit would find today and which three processes are worth automating first. The fee is credited if you continue.
+updatedDate: 2026-10-02
+shortAnswer: This AI readiness assessment takes two weeks of interviews and reading your systems, ending in a memo your board can act on. You learn where you stand against the frameworks your customers ask about, what a customer audit would find today and which three processes are worth automating first. The fee is credited if a Sprint follows within three months.
 feeShape: Fixed fee
 duration: 2 weeks
 order: 1
@@ -69,12 +69,12 @@ sources:
 
 ## What this is
 
-Two weeks. I interview the people doing the work, read your systems and your vendor list, and write one memo you can hand to a board or a customer.
+Two weeks. I interview the people doing the work and read your systems and your vendor list. I write one memo you can hand to a board or a customer.
 
 ## What you keep
 
-One document, whether or not you continue: the readiness score, the gap list, and the three processes ranked by what automating them is worth this quarter.
+You keep one document, whether or not you continue. It holds the readiness score, the gap list, and the three processes ranked by what automating them is worth this quarter.
 
 ## Why it is two weeks and not two days
 
-A readiness claim you cannot show evidence for is worth nothing in a security review. Two weeks is the shortest span in which I can read the code, talk to the people who use the tools, and check what your vendors actually do with your data.
+A readiness claim you cannot show evidence for is worth nothing in a security review. I read the code, talk to the people who use the tools, and check what your vendors actually do with your data. Two weeks is the shortest span in which I can do all three.
