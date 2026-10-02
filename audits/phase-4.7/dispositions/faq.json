@@ -1,45 +1,45 @@
 [
   {
     "target": "site/src/data/faq/are-models-trained-on-our-customer-data.md",
-    "status": "verified",
-    "reason": "Already answer-first ('Not by default.'), within word/description limits, no banned phrases, teaser does not truncate.",
-    "digest": "31dcb1bec039"
+    "status": "rewritten",
+    "reason": "Answer: the 34-word sentence is split where its two clauses meet (\"...a compliance team would ask about. I check that clause before any tool touches your data.\"), and \"that tool does not get used on your systems\" now names the actor (\"I do not use that tool on your systems\"). Kept: \"Not by default\", \"vendor terms that exclude your data from model training\", \"enterprise or business-tier\", \"before any tool touches your data\", and the condition \"if a vendor will not commit to that in writing\". Explicit meta description added so the 160-character description carries the scope \"before any tool touches your data\" instead of depending on a clause trim. Built output: 1 sentence over 25 words to 0.",
+    "digest": "e7dd222e8cf8"
   },
   {
     "target": "site/src/data/faq/can-you-get-us-iso-iec-42001-certified-or-just-a-working-system.md",
     "status": "rewritten",
-    "reason": "First sentence shortened from 19 to 9 words ('I build a working system, not the certification itself.') to stop the /faq index teaser cutting mid-clause; the locked SEMANTIC-CORE.md buyer-prompt passage (2nd sentence, 'My work is built to get your management system, risk register...') kept byte-identical.",
-    "digest": "a62ef84c1921"
+    "reason": "Answer: \"My work is built to get your management system...\" (agentless passive) becomes \"I work to get your management system, risk register, and evidence trail to the point an auditor would recognise as ready.\" That sentence is the locked SEMANTIC-CORE.md passage for buyer prompt 4; Main and HeadAndStatic changed the Passage line to the same bytes before this edit. The first sentence, the accredited-body sentence and the \"separate decision\" sentence are unchanged. The existing meta description is rewritten: it now names ISO/IEC 42001, says I build the working system and that an accredited body runs the independent audit that grants certification; the old description's \"not from me\" and \"audit-ready\" wording is gone from it, and the readiness claim stays in the answer as \"to the point an auditor would recognise as ready\". Built output: agentless passives 1 to 0; reading ease 49.8 to 48.5 because the locked sentence dominates the answer.",
+    "digest": "06fa76289d1b"
   },
   {
     "target": "site/src/data/faq/can-you-work-with-our-existing-ai-vendor-or-platform.md",
     "status": "rewritten",
-    "reason": "First sentence split from 18 to 7 words to stop teaser truncation; rest of answer unchanged, matches Retainer service scope.",
-    "digest": "e83cba75785d"
+    "reason": "shortTitle completed from \"...existing AI vendor?\" to \"...existing AI vendor or platform?\" so the title carries the H1 term \"platform\". Answer: the 33-word sentence after \"the tools you keep\" is split into three at its colon and at \"already running\" (\"What changes is the governance layer around the tools you keep. That means a data flow review, contract terms checked for training exclusions, and evals wrapped around workflows already running. It is not a rebuild from scratch.\"). Same three deliverables, same \"does not require a vendor switch\" claim. Built output: 1 sentence over 25 words to 0; reading ease 52.6 to 63.0.",
+    "digest": "6693c8ed5028"
   },
   {
     "target": "site/src/data/faq/how-do-you-charge-for-the-work.md",
-    "status": "verified",
-    "reason": "Already answer-first, matches all three service fee shapes exactly, within limits.",
+    "status": "rewritten",
+    "reason": "Two agentless passives name an actor: \"The Sprint is quoted once\" becomes \"I quote the Sprint once, from the scope in the statement of work\", and \"it is written down before any work starts\" becomes \"we write it down before any work starts\". \"We\" because the statement of work is written between both parties; no owner fact is added. Kept: three fixed structures, no hourly billing, the Assessment fixed fee for the two weeks, the Retainer monthly fee for one or two days a week, \"You hear the number on the fit call\", \"before any work starts\", and the reason \"so there is no surprise invoice partway through\". No price, number or date touched. Built output: agentless passives 2 to 0.",
     "digest": "aec728fe33e4"
   },
   {
     "target": "site/src/data/faq/how-does-ai-risk-get-recorded-and-who-signs-it-off.md",
     "status": "rewritten",
-    "reason": "First sentence split from 17 to 4 words ('In an AI register.') to stop teaser truncation; already used canonical 'AI register' term.",
-    "digest": "6711b8747a83"
+    "reason": "Commitment sentence (39 words) split at its semicolon into two sentences: \"Under the Retainer, I review every entry and sign it as the named officer.\" and \"Your organisation still holds final accountability for anything that reaches customers or the board, as it does for any other risk register you keep.\" Every element kept: who signs (I, as the named officer); scope (\"Under the Retainer\", \"every entry\"); where accountability sits (your organisation); \"final\"; its scope (\"anything that reaches customers or the board\"); and the comparison to any other risk register you keep. \"still sits with\" became \"still holds\". The earlier-pass first sentence (\"In an AI register.\") is unchanged. Built output: 1 sentence over 25 words to 0; reading ease 47.4 to 51.4.",
+    "digest": "0e3f62e7b245"
   },
   {
     "target": "site/src/data/faq/how-does-the-retainer-end.md",
     "status": "rewritten",
-    "reason": "First sentence shortened from 24 to 11 words to stop teaser truncation; the locked SEMANTIC-CORE.md passage ('The handover plan exists from the first month, not the last.') kept byte-identical; description re-verified in range after restructure (150 chars).",
+    "reason": "Two agentless passives name an actor: \"The decisions that got made are written down, not quietly dropped\" becomes \"I write down the decisions we make, instead of quietly dropping them\", and \"the plan is written to end well before that\" becomes \"I write the plan to end well before that\". The locked SEMANTIC-CORE.md passage \"The handover plan exists from the first month, not the last.\" is byte-identical. Kept: \"a named internal owner\", \"not a fading call\", \"A retainer running past two years would mean the design was wrong\". Built output: agentless passives 2 to 0.",
     "digest": "f1d394abd882"
   },
   {
     "target": "site/src/data/faq/how-is-a-prompt-or-model-change-stopped-from-shipping-unnoticed.md",
     "status": "rewritten",
-    "reason": "First sentence shortened from 28 to 4 words ('Evals in continuous integration.') to stop teaser truncation.",
-    "digest": "1a5efca8cd45"
+    "reason": "shortTitle only: \"How is a prompt or model change caught?\" becomes \"What stops a prompt or model change shipping unnoticed?\" so the title carries the H1 terms \"shipping\" and \"unnoticed\" and still has a question stem (the title-stem rule rejected a noun-phrase version). Answer untouched: clean prose, longest sentence 23 words.",
+    "digest": "897775da435d"
   },
   {
     "target": "site/src/data/faq/how-is-cost-per-outcome-measured.md",
@@ -55,15 +55,15 @@
   },
   {
     "target": "site/src/data/faq/is-my-company-too-small-or-too-early-for-a-fractional-chief-ai-officer.md",
-    "status": "verified",
-    "reason": "Already answer-first, direct, within limits.",
-    "digest": "b1e3d966ec2c"
+    "status": "rewritten",
+    "reason": "shortTitle \"Is my company too small for a Fractional CAIO?\" becomes \"Too small or too early for a Fractional Chief AI Officer?\" so the title carries \"early\" and spells out the H1 term \"Chief AI Officer\". Answer: one colon becomes a full stop (\"you're early. Fix that first, then book a call.\"), which splits the 26-word closing sentence into two; nothing else touched. Built output: 1 sentence over 25 words to 0.",
+    "digest": "2f2a60ee9e94"
   },
   {
     "target": "site/src/data/faq/what-counts-as-in-production-for-the-90-day-sprint.md",
     "status": "rewritten",
-    "reason": "First sentence shortened from 19 to 10 words to stop teaser truncation; matches Sprint service's 'in production' definition.",
-    "digest": "93694b151a67"
+    "reason": "Two agentless passives name an actor: \"The success measure gets written into the statement of work before the Sprint starts, so whether it actually shipped is settled before the work even begins\" becomes \"We write the success measure into the statement of work before the Sprint starts. That settles what counts as actually shipped before the work even begins.\" Reading note: \"whether it actually shipped is settled\" is restated as the criterion being fixed in advance, which is what a measure written into the statement of work before the start can settle. Kept: real users, real transactions, a rollback path, someone on call, \"monitored end to end\", both exclusions (a demo behind a feature flag; a workflow only your team tried). Built output: 1 sentence over 25 words to 0; agentless passives 1 to 0.",
+    "digest": "d1ec3cf43b12"
   },
   {
     "target": "site/src/data/faq/what-do-nist-ai-rmf-iso-iec-42001-and-the-eu-ai-act-require.md",
@@ -74,26 +74,26 @@
   {
     "target": "site/src/data/faq/what-do-we-do-about-tools-staff-are-already-using-without-approval.md",
     "status": "rewritten",
-    "reason": "First sentence shortened from 23 to 11 words and 'the register' clarified to 'the AI register' (canonical glossary term); matches Retainer service's process step 1 wording; description re-verified in range (140 chars).",
-    "digest": "51fa9a758505"
+    "reason": "First sentence reworded to stand alone: \"Put them in the AI register, not on a ban list.\" becomes \"Add unapproved tools to the AI register, not a ban list.\" (the earlier \"them\" pointed back to the question). The 32-word Retainer sentence is split in two: \"I inventory the AI tools and data flows already in the building. Then I write a data classification and an acceptable-use policy your engineers can actually follow.\" The sequence \"then\" was in the original. Kept: the claim that banning pushes the same behaviour underground, and that this is the Retainer's first step. Built output: 1 sentence over 25 words to 0. The Retainer sentence had no subject for \"inventory\" and \"write\"; both now name \"I\" as the actor.",
+    "digest": "881e3015e869"
   },
   {
     "target": "site/src/data/faq/what-does-a-fractional-chief-ai-officer-actually-do.md",
-    "status": "verified",
-    "reason": "CONFLICT, not fixed: first sentence is 28 words and uses 'AI risk register' instead of the glossary's canonical 'AI register', both of which normally warrant a rewrite. It is byte-identical to the locked passage docs/SEMANTIC-CORE.md quotes for buyer prompt 27 ('I carry the AI risk register, review every initiative...'). Editing it would desync a drift-gated document I do not own. Left untouched; reported in the final summary for Main to resolve (update the locked passage and the faq-meta.mjs teaser truncation together, or accept the drift).",
-    "digest": "0691b98eed5a"
+    "status": "rewritten",
+    "reason": "shortTitle only: \"What does a Fractional Chief AI Officer do?\" becomes \"What does a Fractional Chief AI Officer do vs an advisor?\" so the title carries the second half of the H1 (title coverage was 0.57). Answer untouched: its first two sentences are the locked SEMANTIC-CORE.md passage for buyer prompt 27, and the prose is clean (longest sentence 16 words).",
+    "digest": "f0dc45fed317"
   },
   {
     "target": "site/src/data/faq/what-does-the-two-week-assessment-produce-and-is-the-fee-credited-if-we-continue.md",
     "status": "rewritten",
-    "reason": "First sentence shortened from 43 to 7 words ('A memo your board can act on.') to stop teaser truncation; matches AI Readiness & Risk Assessment service fee-credit terms exactly.",
-    "digest": "caa67913055b"
+    "reason": "First sentence now names its subject: \"A memo your board can act on.\" becomes \"The two-week Assessment produces a memo your board can act on.\" so the teaser and any extractor reads a full answer. The 38-word list sentence is split into three with every item kept: readiness score across strategy, data, delivery, people and governance; a gap list against NIST AI RMF, ISO/IEC 42001 and the EU AI Act (standard names unchanged); three processes ranked by what automating them is worth this quarter. The credit sentence keeps its conditions and names the actor: \"Yes: if you move to the 90-Day Sprint within three months, I credit the full Assessment fee off the Sprint price.\" Built output: 1 sentence over 25 words to 0; agentless passives 1 to 0.",
+    "digest": "78d4e63ba178"
   },
   {
     "target": "site/src/data/faq/what-happens-if-the-evals-say-a-workflow-isnt-good-enough.md",
-    "status": "verified",
-    "reason": "Already answer-first ('Then it does not ship.'), matches Sprint service FAQ, within limits.",
-    "digest": "391e2aea63c6"
+    "status": "rewritten",
+    "reason": "shortTitle \"What if the evals say a workflow is not enough?\" becomes \"What if the evals say a workflow isn't good enough?\" (the H1 wording). Explicit meta description added so it states the outcome and the written account without relying on the old fragment \"Then it does not ship.\". Answer: the first sentence carries its condition (\"If the evals say no, the workflow does not ship.\"), the 30-word second sentence is split in two, and the closing sentence is recast as \"The eval numbers decide whether the workflow ships, whatever the deadline is.\" Kept: a written account of why the workflow fell short and what would need to change; the comparison with a launch that quietly under-performs until a customer notices; \"the eval numbers decide whether the workflow ships, whatever the deadline is\". Built output: 1 sentence over 25 words to 0.",
+    "digest": "7b426ee44416"
   },
   {
     "target": "site/src/data/faq/what-happens-on-a-fit-call-and-does-it-cost-anything.md",
@@ -104,14 +104,14 @@
   {
     "target": "site/src/data/faq/what-if-the-ai-we-are-building-goes-into-a-product-we-sell.md",
     "status": "rewritten",
-    "reason": "'the risk register' corrected to 'the AI register' (canonical glossary term); teaser was already fine, no other change.",
-    "digest": "f57b8dd15dc0"
+    "reason": "First sentence says what is covered (\"I cover products you sell as well as internal workflows, and the obligations differ.\") instead of \"Both are covered\", which pointed back to the question (an agentless passive, flagged by the baseline). \"it gets decided early, not discovered after the feature has shipped\" becomes \"That way you decide it early instead of discovering it after the feature has shipped.\" Kept: provider rather than deployer under the EU AI Act; \"a higher compliance bar than using AI only inside the business\"; the distinction recorded in the AI register from the first review. Built output: agentless passives 1 to 0; reading ease 55.5 to 60.1.",
+    "digest": "927b7775e01d"
   },
   {
     "target": "site/src/data/faq/what-if-we-already-have-a-data-science-team-or-an-internal-ai-lead.md",
     "status": "rewritten",
-    "reason": "First sentence shortened from 19 to 9 words to stop teaser truncation; 'AI risk register' corrected to 'AI register' (canonical glossary term).",
-    "digest": "102705bd77aa"
+    "reason": "shortTitle only: \"What if we already have a data science team?\" becomes \"What if we already have a data science team or AI lead?\" so the title carries \"AI lead\" from the H1. Answer untouched: clean prose, longest sentence 23 words.",
+    "digest": "8b7b46f2a8d7"
   },
   {
     "target": "site/src/data/faq/what-size-of-company-do-you-actually-work-with.md",
@@ -122,31 +122,31 @@
   {
     "target": "site/src/data/faq/whats-the-difference-between-the-assessment-the-sprint-and-the-retainer.md",
     "status": "rewritten",
-    "reason": "First sentence shortened from 23 to 5 words ('Three fixed offers, three stages.') to stop teaser truncation.",
-    "digest": "211565484514"
+    "reason": "shortTitle \"Assessment, Sprint or Retainer: what differs?\" becomes \"Assessment, Sprint and Retainer: what is the difference?\" so the title carries \"difference\" and matches the H1's \"and\". Answer: the 26-word Sprint sentence is split in two (\"The Sprint is 90 days at a fee quoted from the agreed scope. It puts one agentic workflow live in production, with evals and a rollback path.\"). Kept: two weeks at a fixed fee ending in a memo; 90 days; monthly fee, one or two days a week, as the named AI officer; \"If unsure, start with the Assessment.\" Built output: 1 sentence over 25 words to 0.",
+    "digest": "6248b4de5c19"
   },
   {
     "target": "site/src/data/faq/who-answers-customer-security-questionnaires.md",
-    "status": "verified",
-    "reason": "Already answer-first ('I do, as the named officer on record.'), byte-identical to the locked SEMANTIC-CORE.md passage for buyer prompt 5, already short enough that the teaser does not truncate.",
-    "digest": "ddf8380c20ce"
+    "status": "rewritten",
+    "reason": "First sentence \"I do, as the named officer on record.\" is kept byte-identical because it is the locked SEMANTIC-CORE.md passage for buyer prompt 5 (a standalone rewrite broke the passage check and was reverted). The 33-word second sentence is split at \"as they arrive\": \"That is a core part of the Retainer: procurement answers and questionnaire responses as they arrive. My answers rest on the AI register and the acceptable-use policy, so they match what is actually running.\" \"backed by\" became \"rest on\"; the causal \"so they match what is actually running\" is kept. Built output: 1 sentence over 25 words to 0.",
+    "digest": "60187f0983c5"
   },
   {
     "target": "site/src/data/faq/who-owns-the-code-and-the-data.md",
-    "status": "verified",
-    "reason": "Already answer-first ('You do, both.'), matches Sprint service's code-ownership FAQ, within limits.",
-    "digest": "a63187d5f56d"
+    "status": "rewritten",
+    "reason": "Commitment sentence (39 words) split in two with every element kept: the code lives in your repositories from the first commit, under your licence and your review rules; the same principle applies to your data; nothing about the engagement moves ownership of the code or the data to me or to a vendor (\"either\" replaced by \"the code or the data\" so the sentence no longer depends on a pronoun). The first sentence is self-contained (\"You own both the code and the data.\" replaces \"You do, both.\"). The last sentence is unchanged: \"What can change hands is access, temporarily and by agreement, for the work that needs it.\" Built output: 1 sentence over 25 words to 0; reading ease 57.4 to 64.5.",
+    "digest": "5753bf3006e2"
   },
   {
     "target": "site/src/data/faq/who-owns-the-frameworks-templates-and-playbooks-built-during-the-engagement.md",
     "status": "rewritten",
-    "reason": "First sentence shortened from 24 to 8 words to stop teaser truncation; 'the register' clarified to 'the AI register' for terminology consistency.",
-    "digest": "20021735b064"
+    "reason": "shortTitle only: \"Who owns the frameworks and playbooks I build?\" becomes \"Who owns the frameworks, templates and playbooks I build?\" so the title carries \"templates\" from the H1. Answer untouched: clean prose, longest sentence 19 words.",
+    "digest": "554c505f013b"
   },
   {
     "target": "site/src/data/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai.md",
-    "status": "verified",
-    "reason": "CONFLICT, not fixed: first sentence is 35 words, which normally warrants a rewrite to stop the /faq index teaser cutting it off mid-clause ('A named officer on your customers' security reviews and your board's.'). It is byte-identical to the locked passage docs/SEMANTIC-CORE.md quotes for buyer prompt 2. Editing it would desync a drift-gated document I do not own. Left untouched; reported in the final summary for Main to resolve.",
-    "digest": "c6e7098ea4b7"
+    "status": "rewritten",
+    "reason": "The 35-word first sentence is split in two so the teaser and extractors get a complete first answer: \"You get a named officer's accountability, without a full-time salary, a hiring process, or a seat that sits empty between AI decisions.\" and \"That means a named officer on your customers' security reviews and your board's roadmap.\" The dash clause is dropped without losing a fact. These two sentences are the locked SEMANTIC-CORE.md passage for buyer prompt 2; Main and HeadAndStatic changed the Passage line to the same bytes before this edit. The \"five systems\" sentence is unchanged. shortTitle \"Why hire a fractional officer over a full-time head?\" becomes \"...head of AI?\". Explicit meta description added: question plus \"You get a named officer's accountability without the salary, hiring process or idle seat.\" Built output: 1 sentence over 25 words to 0.",
+    "digest": "1bca7e056b84"
   }
 ]

@@ -1,16 +1,16 @@
 ---
 title: What are guardrails in an AI system?
 term: Guardrails
-description: Guardrails are checks enforced in code around what a model can be asked and what it can say or do, not rules typed into a prompt.
+description: Guardrails are code checks on what a model responds to, what it can say and what it can do, not rules typed into a prompt.
 publishDate: 2026-09-08
-updatedDate: 2026-09-15
-shortDefinition: Guardrails are the checks placed around what an AI model can be asked, what it can say, and what it can do. They are enforced in the surrounding code, not left to the model's training. That way an unusual input cannot simply talk the system out of a rule.
+updatedDate: 2026-10-02
+shortDefinition: Guardrails are checks on what an AI model will respond to, what it can say, and what it can do. The surrounding code enforces them, not the model's training. That way an unusual input cannot just persuade the system to drop a rule.
 definition: |
-  In practice a guardrail is one of three things: a topic restriction on what the model will engage with, or an output filter on what a user sees. The third is an action gate, which controls what the system may do without a check first.
+  In practice a guardrail is one of three things. A topic restriction limits what the model will engage with. An output filter limits what a user sees. An action gate controls what the system may do without a check first.
 
-  OWASP, an independent security-standards group, publishes its own mitigation list for prompt injection, which reads like a checklist for these three. Privilege control and human approval for high-risk actions are guardrails, not model behaviour.
+  OWASP, an independent security-standards group, publishes its own mitigation list for prompt injection. That list reads like a checklist for these three. Privilege control and human approval for high-risk actions are guardrails, not model behaviour.
 
-  This is closer to what NIST's AI Risk Management Framework calls its Manage function: turning a risk decision into something the system enforces, not something merely written down. Guardrails are how that function shows up in code, not in a policy document nobody checks against production.
+  Guardrails are closer to what NIST's AI Risk Management Framework calls its Manage function: turning a risk decision into something the system enforces, not something merely written down. They are how that function shows up in code, not in a policy document nobody checks against production.
 relatedTerms:
   - prompt-injection
   - red-teaming
@@ -24,7 +24,7 @@ sources:
 
 ## Why it comes up
 
-Asking what guardrails a system has is one of the shortest, most common questions in a security review. It is a hard one to answer honestly if the only guardrail is the model's own training and good manners. A board hears it as a proxy for a bigger question: what is the actual worst thing this system could be tricked into doing, and what stands between that action and a real customer?
+Asking what guardrails a system has is one of the shortest, most common questions in a security review. It is a hard one to answer honestly if the only guardrail is the model's own training and good manners. A board hears it as a proxy for a bigger question. What is the actual worst thing someone could trick this system into doing, and what stands between that action and a real customer?
 
 ## What to do about it
 

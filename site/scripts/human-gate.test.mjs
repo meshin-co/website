@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { test } from 'node:test';
 
-import { controlledWordHits, humanFindings, sentenceStats } from './human-gate.mjs';
+import { controlledWordHits, humanFindings, pageFromHtml, sentenceStats } from './human-gate.mjs';
 
 const read = (relative) => readFileSync(fileURLToPath(new URL(relative, import.meta.url)), 'utf8');
 const CONTROLLED = JSON.parse(read('../controlled-words.json'));
@@ -16,8 +16,6 @@ const PARAGRAPHS = [
   'Someone reviews the tiers every quarter.',
   'A first version takes a week, and most of that week is interviews rather than spreadsheet work, because the hard part is finding the systems nobody wrote down.',
 ];
-const COMPETENT =
-  'ISO/IEC 42001 asks an organisation to run a management system that covers every AI system it builds or buys. The standard prescribes no single technical control, so each company records its own risk assessment, names who answers for each system, and keeps the evidence that the controls it chose are working as described. An auditor samples a few systems, and each one is traced from the register entry to the monitoring records. That is why the register has to stay current, and why an out-of-date entry counts as a finding rather than a typo.';
 const UNIFORM = 'One two three four five six seven eight nine ten.';
 
 const rules = (findings) => findings.map((finding) => finding.rule);
@@ -29,15 +27,12 @@ const findingsFor = (overrides) =>
 const rulesFor = (overrides) => rules(findingsFor(overrides));
 const withText = (text) => ({ text, paragraphs: [text] });
 const repeated = (sentence, count) => Array.from({ length: count }, () => sentence).join(' ');
+const sentenceOf = (count, first = 'Plan') =>
+  `${[first, ...Array.from({ length: count - 1 }, () => 'plan')].join(' ')}.`;
+const pageOf = (...lengths) => lengths.map((length) => sentenceOf(length)).join(' ');
 
 test('plain technical prose passes every human rule', () => {
   assert.deepEqual(findingsFor({}), []);
-});
-
-test('a dense but competent compliance paragraph passes, where a consumer-app reading ceiling would refuse it', () => {
-  const stats = sentenceStats(COMPETENT);
-  assert.ok(stats.average > 20 && stats.longest > 30 && stats.passiveShare > 0.1);
-  assert.deepEqual(findingsFor(withText(COMPETENT)), []);
 });
 
 test('syllable counting follows the vowel-group heuristic with a silent-e discount', () => {
@@ -64,6 +59,29 @@ test('an oversized sentence trips the longest cap and quotes its start, and a ru
   assert.ok(longest, 'expected sentence-longest');
   assert.ok(longest.excerpt.startsWith('The register names an owner'), `excerpt was ${longest.excerpt}`);
   assert.ok(rulesFor(withText(repeated(oversized, 3))).includes('sentence-average'));
+});
+
+test('a sentence is long above twenty-five words, and the stats count the long ones', () => {
+  assert.equal(sentenceStats(pageOf(5, 25, 26, 40, 8)).longSentences, 2);
+});
+
+test('a page over its long-sentence limit is refused once, and the finding gives the count, the limit and the longest', () => {
+  const text = [pageOf(5, 6, 7, 8, 9, 10, 11), sentenceOf(26, 'Alpha'), sentenceOf(31, 'Bravo')].join(' ');
+  const found = findingsFor(withText(text)).filter((finding) => finding.rule === 'long-sentences');
+  assert.equal(found.length, 1);
+  assert.equal(found[0].detail, '2 of 9 sentences over 25 words, limit 1');
+  assert.ok(found[0].excerpt.startsWith('Bravo plan'), `excerpt was ${found[0].excerpt}`);
+});
+
+test('one long sentence never trips the rule, however short or long the page', () => {
+  for (const count of [3, 4, 9, 10, 14, 15, 34, 35, 36, 200]) {
+    const lengths = [...Array.from({ length: count - 1 }, () => 5), 26];
+    assert.ok(!rulesFor(withText(pageOf(...lengths))).includes('long-sentences'), `${count} sentences`);
+  }
+});
+
+test('a page under three sentences is not graded for long sentences', () => {
+  assert.deepEqual(rulesFor(withText(pageOf(30, 30))), []);
 });
 
 test('prose that is passive from end to end trips the passive ceiling', () => {
@@ -213,6 +231,12 @@ test('a controlled word is red and the finding names its shorter twin', () => {
   assert.ok(hit, 'expected a controlled-word finding');
   assert.match(hit.detail, /commence/);
   assert.ok(hit.detail.includes(CONTROLLED.commence), `${hit.detail} must name the twin`);
+});
+
+test('a controlled word on a page too short to grade is still refused', () => {
+  const html =
+    '<!DOCTYPE html><html lang="en"><head><title>Specimen</title></head><body><main><h1>Specimen</h1><p>We commence the work on Monday.</p></main></body></html>';
+  assert.deepEqual(rules(humanFindings(pageFromHtml('/specimen', html), CONTROLLED)), ['controlled-word']);
 });
 
 test('every controlled word names a shorter twin', () => {

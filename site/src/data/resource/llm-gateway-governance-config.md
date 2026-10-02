@@ -2,19 +2,17 @@
 title: LLM Gateway Governance Config
 name: LLM Gateway Governance Config
 type: template
-repoUrl: https://github.com/meshin-co/llm-gateway-governance-config
-description: 'A governance config for an LLM gateway. It decides what gets logged, redacted, who may call which model, and what happens on a policy break.'
+description: 'A governance config for an LLM gateway. It decides who may call which model, what gets redacted, how long logs are kept and the rate and fallback rules.'
 publishDate: 2026-09-08
-updatedDate: 2026-09-15
+updatedDate: 2026-10-02
 version: '0.1'
 license: MIT
-status: Written out in full on this page. A repository copy is not published yet.
+status: Available as a page on this site. A repository copy is not published yet.
 whatInside:
   - A policy file format — one entry per team or service, with its allowed models, rate limit and redaction rule
-  - A redaction rule set for the fields most vendor contracts already forbid sending out, from names and emails to government IDs and payment details
-  - A logging schema for what gets written on every call, and how long it is kept
-  - An escalation rule for what happens when a call breaks policy, beyond a rejected request
-howToUse: Use the schema on this page to build your own policy file, one row per team or workflow that calls a model, starting with whatever is already in production. Route every model call through the gateway before a second application starts talking to a model directly, and review your file on the same schedule as your AI register.
+  - Example fields to redact before a prompt or response is logged or forwarded, such as email, national_id and card_number
+  - A log_retention key for how long a request and response pair is kept
+howToUse: Use the schema on this page to build your own policy file, with one row per team or workflow that calls a model. Start with whatever is already in production. Route every model call through the gateway before a second application starts talking to a model directly. Review your file on the same schedule as your AI register.
 sources:
   - title: 'Regulation (EU) 2024/1689 (Artificial Intelligence Act) — Article 12, record-keeping'
     url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ%3AL_202401689
@@ -44,7 +42,7 @@ A policy file for whichever [LLM gateway](/glossary/llm-gateway) you run, hosted
 
 The logging schema borrows its shape from [the EU AI Act's Article 12](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ%3AL_202401689), which requires automatic event logs for high-risk systems. Not every call through a gateway is high-risk. The habit costs little to build in now. It is expensive to retrofit once a regulator or a customer asks first.
 
-The `allowed_models` and `log_retention` keys map to two [NIST SP 800-53](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final) control families: Access Control and Audit and Accountability. A procurement questionnaire is often built from this catalogue, even when nobody names it.
+The `allowed_models` and `log_retention` keys map to two [NIST SP 800-53](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final) control families: Access Control and Audit and Accountability. Procurement questionnaires often draw on this catalogue, even when nobody names it.
 
 ## What it is not
 

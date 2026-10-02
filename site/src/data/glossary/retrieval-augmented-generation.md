@@ -3,12 +3,12 @@ title: What is retrieval augmented generation?
 term: Retrieval augmented generation
 description: Retrieval augmented generation, or RAG, has a model look up relevant passages at answer time instead of relying only on its training.
 publishDate: 2026-09-08
-updatedDate: 2026-09-08
+updatedDate: 2026-10-02
 shortDefinition: Retrieval augmented generation, shortened to RAG, is an architecture where a model looks up relevant passages from a document store at answer time. It reads them alongside the question. This means an answer can cite a current document, rather than relying only on training data.
 definition: |
-  The document store is usually a vector index. Passages are converted into embeddings, numerical representations of meaning, and a query is matched against them by similarity, not exact keyword. That is what lets the system find a relevant passage even when the question shares none of the same words as the document.
+  The document store is usually a vector index. The system converts passages into embeddings, numerical representations of meaning, and matches a query against them by similarity, not exact keyword. Matching on meaning lets the system find a relevant passage even when the question shares none of the same words as the document.
 
-  OWASP, the group that publishes widely used security-risk lists, tracks this as its own risk category. In a shared vector database, one customer's data can leak into another customer's results. Embeddings themselves can sometimes be inverted, too, to recover the source text they were built from. Both risks sit inside the retrieval layer, invisible to anyone reviewing only the model or the prompts it receives.
+  OWASP, the group that publishes widely used security-risk lists, tracks this as its own risk category. In a shared vector database, one customer's data can leak into another customer's results. Embeddings carry a second risk: someone can sometimes invert them to recover the source text they came from. Both risks sit inside the retrieval layer, invisible to anyone reviewing only the model or the prompts it receives.
 relatedTerms:
   - model-provenance
   - prompt-injection
@@ -20,7 +20,7 @@ sources:
 
 ## Why it comes up
 
-Procurement asks "is this RAG, or did you train on our data," because the two have different data-handling implications. RAG typically sends only retrieved snippets to the model at query time, rather than baking a customer's content into the model's own weights. It also comes up once accuracy is questioned. A wrong answer usually traces to a retrieval problem, not a flaw in the model itself.
+Procurement asks "is this RAG, or did you train on our data," because the two have different data-handling implications. RAG typically sends only retrieved snippets to the model at query time, rather than baking a customer's content into the model's own weights. It also comes up once someone questions accuracy. A wrong answer usually traces to a retrieval problem, not a flaw in the model itself.
 
 ## What to do about it
 

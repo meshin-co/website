@@ -2,49 +2,49 @@
   {
     "target": "site/src/data/service/90-day-production-sprint.md",
     "status": "rewritten",
-    "reason": "description extended 108->125 chars to meet the 120-155 floor; NIST function reference fixed from 'areas' to 'functions' and given its first-mention (AI RMF) short form, matching glossary/nist-ai-rmf.md wording",
-    "digest": "c3e25af7240e"
+    "reason": "shortAnswer \"is built to get one process running\" becomes \"exists to get one process running\" (agentless passive). \"The measure of success is written into the statement of work before the first day\" becomes \"We write the measure of success into the statement of work before the first day.\" The process detail \"whether the outcome can be measured without a survey\" becomes \"is measurable without a survey\". The MEASURE sentence is split after the cited NIST AI RMF link: \"Evals in CI apply the MEASURE function (one of the framework's four functions) inside the NIST AI Risk Management Framework (AI RMF).\" stays word for word; the scope follows as \"The scope is one production workflow, not a whole AI programme.\" The 90-day, evals-in-CI, tracing, cost-per-outcome and rollback claims are unchanged. Built output: agentless passives 3 to 0; 1 sentence over 25 words to 0.",
+    "digest": "2cf6816df247"
   },
   {
     "target": "site/src/data/service/ai-readiness-and-risk-assessment.md",
     "status": "rewritten",
-    "reason": "description extended 118->137 chars to meet the 120-155 floor; added a 'What you keep' section stating explicit ownership of the memo, readiness score, gap list and ranked shortlist - the sprint and retainer pages already had an ownership section, this one did not",
-    "digest": "91d3c5f3f0c3"
+    "reason": "shortAnswer: the 3-part sentence is split in two (\"You learn where you stand against the frameworks your customers ask about and what a customer audit would find today. You also learn which three processes are worth automating first.\"), and \"The fee is credited if you continue\" becomes \"I credit the fee if you continue\" (same condition as the source text). Body: the \"Two weeks.\" paragraph is split (\"I interview the people doing the work and read your systems and your vendor list. I write one memo you can hand to a board or a customer.\"); \"One document, whether or not you continue:\" becomes \"You keep one document, whether or not you continue. It holds the readiness score, the gap list, and the three processes ranked by what automating them is worth this quarter.\" under the existing \"What you keep\" heading; the \"shortest span\" paragraph keeps its superlative and all three activities (read the code; talk to the people who use the tools; check what your vendors actually do with your data). Built output: 4 sentences over 25 words to 0; agentless passives 1 to 0.",
+    "digest": "86bbc107cd08"
   },
   {
     "target": "site/src/data/service/fractional-caio-retainer.md",
     "status": "rewritten",
-    "reason": "description already at 120 chars, unchanged; NIST function reference fixed from 'areas' to 'functions' and given its first-mention (AI RMF) short form; trimmed 'instead of a whole sector' to 'not a whole sector' to hold the sentence at the 34-word hard stop after the added words; also removed the unconfirmed 'twelve to twenty-four months' / '12 to 24 months' / 'two years' retainer-length claim from the deliverables bullet and the FAQ answer, per COPY-CHECKLIST 3.7 (unanswered) and to match home.ts's already-softened wording (coordinated with StaticPageEditor over hub) - checklist row updated to REMOVED",
-    "digest": "f8dc229d7992"
+    "reason": "Meta description now opens with the query term it lacked (\"Fractional CAIO retainer: one or two days a week as your named AI officer, with procurement answers, design reviews, board updates and a handover plan.\"); the content gate scored the old description 0.00 against \"fractional caio retainer\". shortAnswer and the FAQ answer: \"The engagement is built to end\" becomes \"I build the engagement to end\" (agentless passive), and \"once that handover is done\" becomes \"after the handover\"; the handover-plan-from-the-first-month commitment is unchanged. Roadmap detail: \"the decisions you are being asked to make\" becomes \"the decisions you need to make\" (the asker was never named). The GOVERN sentence is split after the cited NIST link: \"The register, policy and classification are the GOVERN function (one of the framework's four functions) of the NIST AI Risk Management Framework (AI RMF).\" then \"The scope is one company, not a whole sector.\" The ISO/IEC 42001 sentence is unchanged. Built output: agentless passives 4 to 0; 1 sentence over 25 words to 0.",
+    "digest": "23fae15ce6b4"
   },
   {
     "target": "site/src/data/resource/agent-evals-ci-starter.md",
     "status": "rewritten",
-    "reason": "description extended 108->140 chars to meet the 120-155 floor, naming the plain YAML case format already documented in whatInside; NIST function reference fixed from 'areas' to 'functions' with first-mention (AI RMF) short form",
-    "digest": "12a7b2445ee9"
+    "reason": "Status line gives the passive an actor: \"A repository copy is not published yet.\" becomes \"I have not published a repository copy yet.\" (same fact, no promise that a repository will follow). \"show up\" becomes \"appear\", which takes that sentence under the 25-word line without changing the claim (prompt injection and excessive agency appear in a support agent as often as in a public chatbot). The MEASURE sentence is split after \"which cases you pick.\" and continues \"Choosing the cases still maps to the MEASURE function (one of the framework's four functions) in NIST's AI Risk Management Framework (AI RMF)\", so the standard clause is untouched. Built output: 2 sentences over 25 words to 0; agentless passives 1 to 0.",
+    "digest": "3cd19d4ac1ee"
   },
   {
     "target": "site/src/data/resource/ai-governance-starter-kit.md",
     "status": "rewritten",
-    "reason": "description already at 135 chars, unchanged; added the (AI RMF) short form on the page's only NIST Risk Management Framework mention for corpus-wide terminology consistency",
-    "digest": "6690c1c70ddb"
+    "reason": "Status line as on the sibling resources (\"I have not published a repository copy yet.\"). Table cells: \"Which vendors are allowed to see which tier of data.\" becomes \"...may see...\", and \"before a vendor contract is signed\" becomes \"before anyone signs a vendor contract\"; the table keeps three columns and every cell. \"without requiring either\" becomes its own sentence, \"It does not require either.\", after \"It maps loosely to what ISO/IEC 42001 and the NIST AI Risk Management Framework (AI RMF) both expect a company to have on file.\" (\"loosely\" and \"both\" kept; both standard names unchanged). Built output: agentless passives 3 to 0; 1 sentence over 25 words to 0.",
+    "digest": "6fbbfec188c0"
   },
   {
     "target": "site/src/data/resource/ai-readiness-scorecard.md",
     "status": "rewritten",
-    "reason": "description extended 100->120 chars to meet the 120-155 floor, adding 'in an afternoon' which the body already states; NIST reference given its first-mention (AI RMF) short form",
-    "digest": "701acdbad560"
+    "reason": "Status line as on the sibling resources. \"until someone outside your team checks what is actually written down\" becomes \"...checks what you have actually written down\" (the scorecard is self-scored, so the writer is you). The five-axis list and the \"It is not the Assessment\" caveat are unchanged. Built output: agentless passives 2 to 0.",
+    "digest": "e410a02748a5"
   },
   {
     "target": "site/src/data/resource/build-vs-buy-ai-kit.md",
     "status": "rewritten",
-    "reason": "description extended 109->136 chars to meet the 120-155 floor; NIST function reference fixed from 'areas' to 'functions' with first-mention (AI RMF) short form",
-    "digest": "81a15b961b10"
+    "reason": "Status line as on the sibling resources. The MAP sentence is split after \"the same as one you trained\": \"NIST's AI Risk Management Framework (AI RMF) treats a vendor's model the same as one you trained. That sits under its MAP function (one of the framework's four functions).\" The clause naming the function and the framework is unchanged. Built output: agentless passives 1 to 0; 1 sentence over 25 words to 0.",
+    "digest": "7d551da7f4af"
   },
   {
     "target": "site/src/data/resource/llm-gateway-governance-config.md",
     "status": "rewritten",
-    "reason": "description extended 108->140 chars to meet the 120-155 floor, adding the escalation-on-policy-break behaviour already documented in whatInside; no NIST AI RMF mention on this page (it cites NIST SP 800-53 instead), no terminology fix needed",
-    "digest": "7654301d597e"
+    "reason": "Status line as on the sibling resources. howToUse: the comma chain becomes four sentences that keep every instruction: one row per team or workflow that calls a model; start with whatever is already in production; route every model call through the gateway before a second application starts talking to a model directly; review your file on the same schedule as your AI register. \"A procurement questionnaire is often built from this catalogue\" becomes \"Procurement questionnaires often draw on this catalogue\" (\"often\" kept; the NIST SP 800-53 Access Control and Audit and Accountability mapping is unchanged). Built output: agentless passives 2 to 0; 2 sentences over 25 words to 0.",
+    "digest": "888c5987f75e"
   }
 ]

@@ -2,18 +2,15 @@
 title: Build vs Buy AI Kit
 name: Build vs Buy AI Kit
 type: kit
-repoUrl: https://github.com/meshin-co/build-vs-buy-ai-kit
 description: 'The build vs buy AI kit: a one-page worksheet of the six criteria I work through before recommending either path, and how to score them.'
 publishDate: 2026-09-08
-updatedDate: 2026-09-15
+updatedDate: 2026-10-02
 version: '0.1'
 license: MIT
-status: Written out in full on this page. A repository copy is not published yet.
+status: Available as a page on this site. A repository copy is not published yet.
 whatInside:
   - Six criteria that decide more of the answer than most teams expect, from data residency to who owns it when it breaks
-  - A worked scoring method — weight each criterion for your situation, score build and buy against it, and compare totals
-  - A vendor due-diligence checklist for the buy path, asking the questions a security review will ask anyway
-  - A build-path checklist covering what a build commits your engineering team to maintaining afterwards
+  - A scoring method — weight each criterion for your situation, score build and buy against it, and compare totals
 howToUse: Score build and buy against the same six criteria before anyone states a preference out loud. Weight each criterion for your situation first. A tool that only reads data scores differently on residency than one that writes to a customer record. Keep your scored worksheet with the register entry once you decide.
 sources:
   - title: AI Risk Management Framework
@@ -41,7 +38,7 @@ A worksheet for one recurring decision: build the workflow yourself, or buy a ve
 
 Weight the six criteria for your situation, score build and buy against each one, and let the total argue with your gut feeling. A bought tool still needs an owner and a place in your [AI register](/glossary/ai-register).
 
-[NIST's AI Risk Management Framework (AI RMF)](https://www.nist.gov/itl/ai-risk-management-framework) treats a vendor's model the same as one you trained, under its MAP function (one of the framework's four functions). The risk to your customer does not care who wrote the code.
+[NIST's AI Risk Management Framework (AI RMF)](https://www.nist.gov/itl/ai-risk-management-framework) treats a vendor's model the same as one you trained. That sits under its MAP function (one of the framework's four functions). The risk to your customer does not care who wrote the code.
 
 ## What it is not
 

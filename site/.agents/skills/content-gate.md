@@ -9,9 +9,9 @@ ship, and neither half can excuse the other.
 Run `node scripts/content-gate.mjs dist` from `site/`. It reads every derived route except
 /404, /search and /styleguide, judges each page under a profile (article, offer, term,
 faq-answer, pillar, page — chosen by route prefix), and exits non-zero on any finding.
-Two numeric rules gate most articles: every paragraph ≤75 words with no single-sentence
-paragraph over 45 words, and median sentence length ≤22 words per page with the longest
-sentence ≤45 words (full row spec: `docs/CONTENT-GATE.md` rows 5–6). Inputs:
+Two numeric rules gate most articles: every paragraph ≤75 words with no sentence in it over
+40 words, and median sentence length ≤22 words per page with the longest sentence ≤40 words
+(full row spec: `docs/CONTENT-GATE.md` rows 5–6; `npm run gate:human` holds the same 40). Inputs:
 
 - `site/content-facts.json` — the facts file: one `targetQuery` row per route, plus the
   `numbers` allowlist. Every number on every page must be computed in code, sourced to a

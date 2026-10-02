@@ -5,12 +5,16 @@ import { pageBody, stripTags } from './content-html.mjs';
 import { discoverRoutes } from './gate.mjs';
 import { splitSentences } from './prose-rules.mjs';
 
-export const GRADE_MAX = 14;
-export const READING_EASE_MIN = 30;
-export const SENTENCE_AVERAGE_MAX = 25;
-export const SENTENCE_LONGEST_MAX = 45;
-export const LONG_WORD_SHARE_MAX = 0.3;
-export const PASSIVE_SHARE_MAX = 0.6;
+export const GRADE_MAX = 12.5;
+export const READING_EASE_MIN = 36;
+export const SENTENCE_AVERAGE_MAX = 21;
+export const SENTENCE_LONGEST_MAX = 40;
+export const LONG_SENTENCE_WORDS = 25;
+export const LONG_SENTENCE_SHARE_MAX = 0.2;
+export const LONG_SENTENCE_COUNT_MAX = 7;
+export const LONG_SENTENCE_FREE = 1;
+export const LONG_WORD_SHARE_MAX = 0.25;
+export const PASSIVE_SHARE_MAX = 0.5;
 export const SENTENCE_VARIANCE_MIN = 6;
 export const PARAGRAPH_VARIANCE_MIN = 5;
 export const LIST_MINIMUM_FOR_VARIETY = 3;
@@ -70,6 +74,7 @@ export function sentenceStats(text) {
     counts.length > 1 ? counts.reduce((sum, count) => sum + (count - average) ** 2, 0) / counts.length : 0;
   const syllables = wordList.reduce((sum, word) => sum + syllablesIn(word), 0);
   const longest = counts.length ? Math.max(...counts) : 0;
+  const longSentences = counts.filter((count) => count > LONG_SENTENCE_WORDS).length;
   return {
     sentences: sentences.length,
     words: total,
@@ -77,6 +82,7 @@ export function sentenceStats(text) {
     average,
     longest,
     longestSentence: sentences[counts.indexOf(longest)] ?? '',
+    longSentences,
     variance,
     longWordShare: total ? wordList.filter((word) => syllablesIn(word) >= 3).length / total : 0,
     passiveShare: sentences.length ? sentences.filter(isPassive).length / sentences.length : 0,
@@ -84,6 +90,9 @@ export function sentenceStats(text) {
     ease: total && sentences.length ? 206.835 - 1.015 * average - 84.6 * (syllables / total) : 0,
   };
 }
+
+export const longSentencesAllowed = (sentences) =>
+  Math.min(LONG_SENTENCE_COUNT_MAX, Math.max(LONG_SENTENCE_FREE, Math.floor(sentences * LONG_SENTENCE_SHARE_MAX)));
 
 const stdev = (values) => {
   if (values.length < 2) return 0;
@@ -123,6 +132,13 @@ function readabilityFindings(stats) {
     findings.push({
       rule: 'sentence-longest',
       detail: `${stats.longest} > ${SENTENCE_LONGEST_MAX}`,
+      excerpt: excerptOf(stats.longestSentence),
+    });
+  const allowed = longSentencesAllowed(stats.sentences);
+  if (stats.longSentences > allowed)
+    findings.push({
+      rule: 'long-sentences',
+      detail: `${stats.longSentences} of ${stats.sentences} sentences over ${LONG_SENTENCE_WORDS} words, limit ${allowed}`,
       excerpt: excerptOf(stats.longestSentence),
     });
   if (stats.longWordShare > LONG_WORD_SHARE_MAX)

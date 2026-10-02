@@ -11,9 +11,9 @@ const site = import.meta.env.SITE.replace(/\/$/, '');
 const UPDATED = new Date('2026-09-16');
 
 const metadata = {
-  title: 'Now',
+  title: 'What I am working on now',
   description:
-    'A dated log of what I am building and studying, newest first. A line is added when something happens and never edited after.',
+    'What I am working on now: a dated log of what I am building and studying, newest first. A line is added when something happens and never edited after.',
 };
 
 const crumbs = [
@@ -58,7 +58,7 @@ const log = [
     headingLevel={1}
     eyebrow={`Updated ${UPDATED.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}`}
     title="What I am working on now"
-    lead="What I am working on now, kept as a log with the newest line first. A line is added when something actually happens and is not edited afterwards, so nothing here has to be kept in sync. What is not on the list is not being worked on."
+    lead="What I am working on now, kept as a log with the newest line first. A line is added when something actually happens and is not edited afterwards, so there is nothing here to keep in sync. What is not on the list is not being worked on."
   />
 
   <Section title="The log">

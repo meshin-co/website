@@ -242,8 +242,8 @@
   {
     "target": "site/src/utils/machine-text.mjs",
     "status": "rewritten",
-    "reason": "Rewritten 2026-09-16: the static page catalog's /now description was updated to match the page's new meta description after /now became a dated log. gate:machine caught the drift, which is what the catalog guard exists for. Re-read 2026-09-23 after the draft and noindex flags began reaching the live filter; no user-facing sentence changed.",
-    "digest": "f18f785dfa6e"
+    "reason": "Rewritten 2026-09-16: the static page catalog's /now description was updated to match the page's new meta description after /now became a dated log. gate:machine caught the drift, which is what the catalog guard exists for. Re-read 2026-09-23 after the draft and noindex flags began reaching the live filter; no user-facing sentence changed. Phase 5.2: the catalog and hub titles and descriptions were updated to match the new page heads for /, /about, /approach, /pricing, /faq, /contact, /security, /now, /imprint, /privacy and the blog, faq, glossary, resources, services and case-studies hubs. The catalog-drift check in gate:machine is the guard that compares the descriptions with the built pages; it does not compare titles.",
+    "digest": "2799b42c7472"
   },
   {
     "target": "site/src/utils/faq-meta.mjs",
@@ -254,8 +254,8 @@
   {
     "target": "site/src/data/categories.mjs",
     "status": "rewritten",
-    "reason": "Review of the four category bodies unchanged and re-read: terminology (register, acceptable-use policy, data classification, ISO/IEC 42001, NIST AI Risk Management Framework) confirmed against the glossary, longest body sentence 27 words. New in this pass: governance and agentic-architecture gain archiveTitle (\"AI governance articles\", \"Agentic architecture articles\") and a rewritten description that lists what the category covers instead of defining the term, which the glossary owns. Every figure in the new descriptions (30 to 300) is already in content-facts numbers.",
-    "digest": "f8be8d4db6e6"
+    "reason": "Review of the four category bodies unchanged and re-read: terminology (register, acceptable-use policy, data classification, ISO/IEC 42001, NIST AI Risk Management Framework) confirmed against the glossary, longest body sentence 27 words. New in this pass: governance and agentic-architecture gain archiveTitle (\"AI governance articles\", \"Agentic architecture articles\") and a rewritten description that lists what the category covers instead of defining the term, which the glossary owns. Every figure in the new descriptions (30 to 300) is already in content-facts numbers. Phase 5.2: the operating-model body said \"Handover is a deliverable, not a formality, and it only counts once someone is actually watching the dashboard\". The contrast clause \"not a formality\" is the antithesis tell the baseline lists; it is removed and the claim that carries weight, \"it only counts once someone is actually watching the dashboard\", is kept word for word.",
+    "digest": "a340d59e3719"
   },
   {
     "target": "site/src/data/tags.mjs",

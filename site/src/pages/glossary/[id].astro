@@ -140,7 +140,7 @@ const nodes = [
     <Section bordered={false} headingLevel={1} eyebrow="Glossary" title={data.term} />
 
     <Section eyebrow="Definition" title="What it means" tone="surface">
-      <AnswerBlock question={`What is ${data.term}?`} answer={data.shortDefinition} />
+      <AnswerBlock question={data.title} answer={data.shortDefinition} />
       {
         definitionParagraphs.map((paragraph, index) =>
           index === 0 && linkedFirstParagraph ? (
@@ -187,7 +187,7 @@ const nodes = [
   <Section title="Next step">
     <CtaBlock
       title="Need this in your own paperwork?"
-      body="The Governance Starter Kit has the register, the policy and the classification table this term belongs in."
+      body="The Governance Starter Kit describes the register, the policy and the classification table this term belongs in."
       label="Open the Starter Kit"
       href="/resources/ai-governance-starter-kit"
     />

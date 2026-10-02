@@ -2,18 +2,16 @@
 title: AI Governance Starter Kit
 name: AI Governance Starter Kit
 type: kit
-repoUrl: https://github.com/meshin-co/ai-governance-starter-kit
 description: 'AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire.'
 publishDate: 2026-09-08
-updatedDate: 2026-09-15
+updatedDate: 2026-10-02
 version: '0.1'
 license: MIT
-status: Written out in full on this page. A repository copy is not published yet.
+status: Available as a page on this site. A repository copy is not published yet.
 whatInside:
-  - AI register template, with the fields procurement asks about.
-  - Acceptable-use policy your engineers can follow without a lawyer.
-  - Data classification table, mapped to what may reach a vendor.
-  - Vendor questionnaire you can fill in once and reuse.
+  - 'A list of the documents a security review asks for: AI register, acceptable-use policy, data classification table and vendor questionnaire.'
+  - What each document is for.
+  - Who signs each document.
 howToUse: The table on this page sets out what the register and the policy need to cover, so draft both yourself. Add the data classification for the systems you already run, and keep the vendor questionnaire beside your procurement process. Nothing here needs a tool or a subscription.
 sources:
   - title: AI Risk Management Framework
@@ -40,7 +38,7 @@ It is not a compliance certificate, and it is not legal advice. It is the paperw
 | ------------------------- | ---------------------------------------------------------- | ------------------------------------------------------- |
 | AI register               | Every AI system in use, who owns it, what data reaches it. | The named AI risk owner keeps it current.               |
 | Acceptable-use policy     | What you may paste into a tool, and what you may not.      | Every employee who uses an AI tool for work.            |
-| Data classification table | Which vendors are allowed to see which tier of data.       | The AI risk owner, together with whoever owns the data. |
-| Vendor questionnaire      | One answer set procurement can reuse for every new vendor. | Procurement, before a vendor contract is signed.        |
+| Data classification table | Which vendors may see which tier of data.                  | The AI risk owner, together with whoever owns the data. |
+| Vendor questionnaire      | One answer set procurement can reuse for every new vendor. | Procurement, before anyone signs a vendor contract.     |
 
-It maps loosely to what ISO/IEC 42001 and the NIST AI Risk Management Framework (AI RMF) both expect a company to have on file, without requiring either.
+It maps loosely to what ISO/IEC 42001 and the NIST AI Risk Management Framework (AI RMF) both expect a company to have on file. It does not require either.

@@ -3,8 +3,8 @@ title: What is an AI register?
 term: AI register
 description: An AI register is a company's own inventory of every AI system it builds, buys or uses, naming its owner and how risky it is.
 publishDate: 2026-09-08
-updatedDate: 2026-09-15
-shortDefinition: An AI register is a company's own inventory of every AI system it builds, buys or uses, listing what it does, what data it touches, who owns it and how risky it is.
+updatedDate: 2026-10-02
+shortDefinition: An AI register is a company's own inventory of every AI system it builds, buys or uses. Each entry lists what the system does, what data it touches, who owns it and how risky it is.
 definition: |
   A working entry covers what a system does, what data it can see, which vendor or model sits behind it, who owns it, and a rough risk tier. That applies as much to a vendor tool an ops team subscribed to on a card as to a flagship product.
 
@@ -24,8 +24,10 @@ sources:
 
 ## Why it comes up
 
-It is usually the first document a procurement team or an investor's checklist asks for, and the first one a company discovers it lacks. A security review cannot get past "what AI systems touch our data" without one. A board asking about AI risk gets a shorter conversation once a real list sits in front of it. The EU AI Act raises the stakes for high-risk systems: Article 71 requires joining a public EU database.
+It is usually the first document a procurement team or an investor's checklist asks for, and the first one a company discovers it lacks. A security review cannot get past "what AI systems touch our data" without one. A board asking about AI risk gets a shorter conversation once a real list sits in front of it. For high-risk systems, the EU AI Act goes further: Article 71 requires joining a public EU database.
 
 ## What to do about it
 
-Build a spreadsheet before anything more elaborate: system name, what it does, vendor or model, data it can see, owner, and risk tier, one row per system. Interview engineering, marketing, finance and support instead of relying on a self-reported survey. That is how tools added outside a formal process get missed. Review the list on a fixed schedule, quarterly is reasonable, since a stale register looks worse in review than admitting you lack one.
+Build a spreadsheet before anything more elaborate. Use one row per system, with columns for name, what it does, vendor or model, data it can see, owner and risk tier. Interview engineering, marketing, finance and support instead of relying on a self-reported survey. That is how tools added outside a formal process get missed.
+
+Review the list on a fixed schedule, since a stale register looks worse in review than admitting you lack one. Quarterly is reasonable.

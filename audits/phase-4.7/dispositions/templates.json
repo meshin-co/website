@@ -37,15 +37,15 @@
   },
   {
     "target": "src/pages/blog/index.astro",
-    "status": "verified",
-    "reason": "H1 'Writing on AI governance' and lead are answer-first and under length; composed title 'Writing' + template matches the static-family /blog row in SEMANTIC-CORE",
-    "digest": "8fdffb3110a6"
+    "status": "rewritten",
+    "reason": "Phase 5.2 head pass. Title \"AI governance writing\" and a description opening \"AI governance writing:\" carry the target query (title coverage 0.33 to 1.00, description 0.33 to 1.00); the description keeps the claim that the notes are about getting AI systems past security review and into production, for founders and boards. H1 and lead untouched. The machine-text hub catalog carries the same strings.",
+    "digest": "7cbe3296f5e4"
   },
   {
     "target": "src/pages/blog/page/[page].astro",
-    "status": "verified",
-    "reason": "'Older articles, continuing from the first page.' is short and direct; noindex pagination route, not a gated family",
-    "digest": "4d1cc75df340"
+    "status": "rewritten",
+    "reason": "Phase 5.2: the pagination description repeats the /blog description, so it follows it (\"AI governance writing: notes on ...\"). The page stays noindex and its title keeps the \"Writing, page N\" pattern. The short pagination line 'Older articles, continuing from the first page.' is untouched.",
+    "digest": "1226d79bc087"
   },
   {
     "target": "src/pages/blog/tag/[tag].astro",
@@ -67,9 +67,9 @@
   },
   {
     "target": "src/pages/case-studies/index.astro",
-    "status": "verified",
-    "reason": "H1/lead answer-first and honest about the single-entry policy (L11); composed title matches the static-family /case-studies SEMANTIC-CORE row",
-    "digest": "05e0f6e71c55"
+    "status": "rewritten",
+    "reason": "Phase 5.2 head pass. Title \"Fractional Chief AI Officer case study\" and a description opening \"One Fractional Chief AI Officer case study\" carry the target query (title coverage 0.33 to 1.00, description 0.17 to 1.00). The description keeps every fact: one entry, not a client case, only.help is my own product, built with the method used for clients (L11). H1 and lead untouched.",
+    "digest": "ee355a1d89aa"
   },
   {
     "target": "src/pages/faq/[id].astro",
@@ -81,13 +81,13 @@
     "target": "src/pages/glossary/[id].astro",
     "status": "verified",
     "reason": "section titles and CTA body compliant; composed title (data.term + template) is only the raw term name, and the 'What is {term}?' phrasing documented for the term family in SEMANTIC-CORE comes from content data, not this template, so there is nothing here to fix",
-    "digest": "51d8cc307e38"
+    "digest": "977d689393fa"
   },
   {
     "target": "src/pages/glossary/index.astro",
-    "status": "verified",
-    "reason": "lead and the 'evals' hub definition already use locked terminology correctly; composed title matches the static-family /glossary row",
-    "digest": "9553dc5f9b2f"
+    "status": "rewritten",
+    "reason": "Phase 5.2 head pass. The description now contains the word \"glossary\" (\"An AI governance glossary: ...\"), which lifts description coverage of \"ai governance glossary\" from 0.67 to 1.00. \"Standards and laws\" is checked against the glossary: ISO/IEC 42001 and the NIST AI RMF are a standard and a framework, the EU AI Act is a law. Title, lead and hub definitions untouched.",
+    "digest": "7abf8f7c539c"
   },
   {
     "target": "src/pages/resources/[id].astro",
@@ -97,9 +97,9 @@
   },
   {
     "target": "src/pages/resources/index.astro",
-    "status": "verified",
-    "reason": "lead and CTA copy answer-first, no banned phrases; composed title matches the static-family /resources row",
-    "digest": "7166aaebcb58"
+    "status": "rewritten",
+    "reason": "Phase 5.2 head pass. Title \"AI governance templates and checklists\" lifts title coverage of \"ai governance templates\" from 0.00 to 1.00. The description now leads with the target words (\"Open AI governance templates and checklists\") and still lists the same four artifacts: register, acceptable-use policy, data classification, vendor questionnaire. Lead and CTA untouched.",
+    "digest": "93140a04e07b"
   },
   {
     "target": "src/pages/services/[id].astro",
@@ -109,9 +109,9 @@
   },
   {
     "target": "src/pages/services/index.astro",
-    "status": "verified",
-    "reason": "H1/lead/CTA compliant, no prices stated (L8); composed title matches the static-family /services row",
-    "digest": "9b039b2e2603"
+    "status": "rewritten",
+    "reason": "Phase 5.2 head pass. Title \"Fractional AI leadership services\" and a description opening with the same words lift coverage of the target query from 0.25 (title) and 0.50 (description) to 1.00. The description keeps the three offers (two-week assessment, 90-day production sprint, retainer) and says who runs them, a Fractional Chief AI Officer. No price stated (L8). H1, lead and CTA untouched.",
+    "digest": "62f3167afee8"
   },
   {
     "target": "src/utils/llms-collections.mjs",

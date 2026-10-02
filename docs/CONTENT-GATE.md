@@ -49,8 +49,10 @@ Checked by script. Each row names the failure message the script prints.
 3. `shortAnswer` 40–60 words, self-contained: no `this article`, `this post`, `below`, `we will`,
    `in this guide`, no pronoun whose referent is only in the title.
 4. `fullAnswer` (article lead) 130–170 words.
-5. Every paragraph ≤ 75 words. No paragraph is a single sentence longer than 45 words.
-6. Median sentence length ≤ 22 words across the page; longest sentence ≤ 45 words.
+5. Every paragraph ≤ 75 words, and no sentence in it longer than 40 words.
+6. Median sentence length ≤ 22 words across the page; longest sentence ≤ 40 words. `npm run gate:human`
+   holds the same 40 over every prose block, and also limits how many sentences run past 25 words on a page
+   (`site/.agents/skills/write-for-humans.md`).
 7. Zero banned phrases (`site/banned-phrases.json`): AI fingerprints, filler, hedges,
    marketing verbs.
 8. No sentence longer than 12 words appears on two different routes. Boilerplate CTAs and nav are
@@ -133,3 +135,99 @@ The mechanical half alone is gameable: a page can hit every word range, carry th
 table, and still be semantically empty. The judged half alone is unrepeatable: judgement drifts
 between pages and between days. Together, Half A makes the floor unforgeable and Half B makes the
 ceiling worth reaching.
+
+---
+
+## Human gate limits
+
+`npm run gate:human` (`site/scripts/human-gate.mjs`; how to run it:
+`site/.agents/skills/write-for-humans.md`) is the second prose gate. It holds the same 40-word
+sentence ceiling as row 6, and it adds a limit on how many sentences run past 25 words.
+
+### One sentence-length number: 40
+
+This gate once said 45 while `gate:human` said 40, so a sentence of 41 to 45 words passed one gate
+and failed the other. Both gates, `write-copy.md` and `content-gate.md` now say 40. Keeping the
+lower number loses nothing: no route holds a sentence of 41 words or more in the current build
+(longest 38) or in the pre-rewrite build (longest 39), so lowering this gate changed no verdict on
+either. Raising `gate:human` to 45 instead would have undone a tightening it had just made.
+
+### Long sentences per page
+
+A page may hold one sentence over 25 words, then one more for every five sentences it has, and
+never more than seven: `min(7, max(1, floor(sentences / 5)))`. The finding is `long-sentences`.
+
+Measured through the gate's own code on the 87 graded routes of the current build, 41 of 1,691
+sentences are long, on 24 routes. The most any route holds is 6
+(`/blog/how-to-build-an-ai-system-register-in-a-week`), so the cap sits one sentence above the
+busiest post. The three routes closest to their limit:
+
+| Route | Long | Of | Limit |
+|---|---|---|---|
+| `/faq/what-do-nist-ai-rmf-iso-iec-42001-and-the-eu-ai-act-require` | 1 | 4 | 1 |
+| `/glossary/human-in-the-loop` | 2 | 17 | 3 |
+| `/glossary/agentic-workflow` | 2 | 19 | 3 |
+
+`/terms` (1 of 13, limit 2) and the register post (6 of 104, limit 7) also have one sentence to
+spare; every other route has more. The four-sentence answer is the one route with none: its single
+long sentence has 38 words, and it is why a page may always keep one. Of 8,407 one-sentence edits
+tried on the 87 routes (add, duplicate, delete, lengthen, merge or split a sentence), six trip the
+rule, all on that answer.
+
+### Why a share and a cap, and what that accepts
+
+A count alone passes any short page and refuses only four of the 85 graded routes of the
+pre-rewrite build. A share alone refuses today's four-sentence answer and lets two of the four
+worst old posts through (16 in 93 sentences, 14 in 134). Together they refuse 11 of those 85
+routes, which hold 105 of the 180 long sentences the old build had. The current build has 41.
+
+The share is the tightest that keeps every real route but one a sentence to spare, and it was
+fixed on the current build, not the old one: a tighter share would refuse more old routes (one in
+eight, 21) but leaves real routes at their limit. One in six leaves a second route,
+`/glossary/human-in-the-loop`, with none, and 33 of the 8,407 one-sentence edits would then trip the
+rule instead of six.
+
+Two failures are accepted:
+
+- A page can always keep one long sentence, so a short answer with one 38-word sentence passes
+  (one in four). The 40-word ceiling and the average still bind it.
+- The cap counts length, not density. At the busiest post's 6 in 104, a post of about 140
+  sentences would hold eight and be refused, though it reads no denser than the 104-sentence post
+  that passes. Shorten the sentences, or raise the cap in the same change with the numbers.
+
+The rule also counts per page, so a slow drift across many pages passes: with every graded page at
+its limit the site could hold 257 long sentences. A build-wide ceiling is G19 in
+`docs/plan/reference/known-gaps.md`. No count rule is set for passive sentences; G18 in the same
+register has the numbers.
+
+### Proof that the limits can fail
+
+`npm run test:smoke` plants one page per limit and needs the gate red on it and green without it:
+`sentence-one-word-over-the-length-ceiling` (one 41-word sentence),
+`long-sentences-one-over-the-share-limit` (two 30-word sentences in nine, where one is allowed) and
+`long-sentences-one-over-the-cap-on-a-long-page` (eight in forty, where seven is the cap). Each
+catches a loosened limit: the ceiling raised to 41 or more, the cap raised to 8 or removed, the
+share raised to 25%, the free sentence raised to two. `site/scripts/human-gate-limits.test.mjs`
+pins one step inside and one step past each limit.
+
+### Moving a limit
+
+Re-measure first with the gate's own code, not a fresh walk of `dist`: a walk that finds other
+routes measures something else. Take routes from `discoverRoutes` in `site/scripts/gate.mjs`, drop
+/404, /search, /styleguide and the pagination patterns in `site/scripts/human-gate.mjs`, read each
+page with `pageFromHtml`, and grade its `prose` with `sentenceStats` when it has three sentences.
+For `long-sentences`, read `stats.longSentences` and `longSentencesAllowed(stats.sentences)` in the
+same walk. Take sentence variance from `paragraphs.join(' ')` and paragraph spread from the word
+count of each paragraph. Your walk must report the same pages checked and measured as
+`npm run gate:human`.
+
+Set a ceiling above the worst graded route with room to spare (today about 2% to 14%), then check
+that one ordinary edit to that route, such as adding or splitting a sentence, does not cross it.
+Keep the cap one sentence above the route that holds the most, and the share wide enough that every
+route has a sentence to spare apart from the free one. Put the measured numbers in the commit
+message and update the table in `site/.agents/skills/write-for-humans.md`.
+
+The floors stay at 6 and 5 because two pages sit on them. Splitting the one 17-word sentence on
+`/faq` (variance 8.9) into 8 and 9 words gives 6.0, and cutting the 36-word opening paragraph on
+`/approach` (spread 5.6) by 3 words gives 4.9. Raise a floor only after those two pages gain
+spread.

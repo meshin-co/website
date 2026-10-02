@@ -2,17 +2,15 @@
 title: AI Readiness Scorecard
 name: AI Readiness Scorecard
 type: scorecard
-repoUrl: https://github.com/meshin-co/ai-readiness-scorecard
 description: 'A five-axis AI readiness scorecard you score yourself in an afternoon: strategy, data, delivery, people, and governance.'
 publishDate: 2026-09-08
-updatedDate: 2026-09-15
+updatedDate: 2026-10-02
 version: '0.1'
 license: MIT
-status: Written out in full on this page. A repository copy is not published yet.
+status: Available as a page on this site. A repository copy is not published yet.
 whatInside:
   - Five scored axes, the same groupings as the paid Assessment — strategy, data, delivery, people and governance
-  - A scoring table for each axis, from nothing written down to reviewed on a fixed schedule
-  - A worked example score for a small support-automation pilot, so you can see the rubric applied once
+  - A scoring table with a row for each axis, from nothing written down to reviewed on a fixed schedule
   - A note on reading a low score, since most first attempts land low and that is not a verdict on the engineering
 howToUse: Copy the table into a spreadsheet or your own wiki. Score each axis yourself, or better, ask three people to score it separately and compare notes. A gap between an engineer's score and a board member's score is often more telling than the total.
 sources:
@@ -48,4 +46,4 @@ The five axes are not a substitute for the [NIST AI Risk Management Framework (A
 
 ## What it is not
 
-It is not the Assessment, and it carries no evidence a reviewer would accept. A self-given three is a claim until someone outside your team checks what is actually written down.
+It is not the Assessment, and it carries no evidence a reviewer would accept. A self-given three is a claim until someone outside your team checks what you have actually written down.

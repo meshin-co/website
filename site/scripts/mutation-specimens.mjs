@@ -82,6 +82,22 @@ const UNLABELLED_IMAGE_PAGE =
   '<body><main><h1>Specimen</h1><img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="10" height="10"></main></body></html>';
 const CONTROLLED_WORD_PAGE =
   '<!DOCTYPE html><html lang="en"><head><title>Specimen</title></head><body><main><h1>Specimen</h1><p>We commence the work on Monday.</p></main></body></html>';
+const LONG_SENTENCE_PAGE =
+  '<!DOCTYPE html><html lang="en"><head><title>Specimen</title></head><body><main><h1>Specimen</h1><p>We keep the plan short. The owner reads it each week. Every row names one person. The register lists every system the company runs, and each row names one owner, one risk tier, one review date and one short note on what the system does, who may use it and what data it may see at work. A new row takes a day.</p></main></body></html>';
+const specimenPage = (sentences) =>
+  `<!DOCTYPE html><html lang="en"><head><title>Specimen</title></head><body><main><h1>Specimen</h1><p>${sentences.join(' ')}</p></main></body></html>`;
+const LONG_ROW_SENTENCE =
+  'Each row names one owner, one risk tier, one review date and one short note on what the system does, who may use it and what data it may see.';
+const SHORT_ROW_SENTENCE = 'A new row takes a day.';
+const sentencesOf = (sentence, count) => Array.from({ length: count }, () => sentence);
+const LONG_SENTENCES_OVER_SHARE_PAGE = specimenPage([
+  ...sentencesOf(LONG_ROW_SENTENCE, 2),
+  ...sentencesOf(SHORT_ROW_SENTENCE, 7),
+]);
+const LONG_SENTENCES_OVER_CAP_PAGE = specimenPage([
+  ...sentencesOf(LONG_ROW_SENTENCE, 8),
+  ...sentencesOf(SHORT_ROW_SENTENCE, 32),
+]);
 const LIGHTHOUSE_ROUTES = 'tests/guard-mutations/fixtures/lighthouse-specimen-routes.json';
 const DEAD_PATH_SENTENCE = 'Read `docs/zz-specimen-missing.md` first.';
 
@@ -250,6 +266,21 @@ export const SPECIMENS = {
     gate: 'gate:human',
     token: '/zz-specimen controlled-word: commence',
     plant: (copySite) => addPage(copySite, 'zz-specimen', CONTROLLED_WORD_PAGE),
+  },
+  humanSentenceOverCeiling: {
+    gate: 'gate:human',
+    token: '/zz-specimen sentence-longest:',
+    plant: (copySite) => addPage(copySite, 'zz-specimen', LONG_SENTENCE_PAGE),
+  },
+  humanLongSentencesOverShare: {
+    gate: 'gate:human',
+    token: '/zz-specimen long-sentences: 2 of 9 sentences over 25 words, limit 1',
+    plant: (copySite) => addPage(copySite, 'zz-specimen', LONG_SENTENCES_OVER_SHARE_PAGE),
+  },
+  humanLongSentencesOverCap: {
+    gate: 'gate:human',
+    token: '/zz-specimen long-sentences: 8 of 40 sentences over 25 words, limit 7',
+    plant: (copySite) => addPage(copySite, 'zz-specimen', LONG_SENTENCES_OVER_CAP_PAGE),
   },
   lighthouseShard: {
     gate: 'gate:lh:one',
