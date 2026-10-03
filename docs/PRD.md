@@ -2,7 +2,7 @@
 
 **Status: frozen 2026-09-06, superseded in places.** Extracted verbatim from
 `docs/sources/prd-v2.mhtml`. It records what was asked for at handover, in Russian, and is never
-edited to match what was built. Where `docs/plan/reference/locked-decisions.md` (rows L1–L56)
+edited to match what was built. Where `docs/plan/reference/locked-decisions.md` (rows L1–L57)
 contradicts this document, the locked row wins — and the locked rows contradict it in several
 places, including the contact form, the newsletter, prices, and the `/ru` section (L54).
 

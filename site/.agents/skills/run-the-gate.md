@@ -57,21 +57,21 @@ by declaring noindex. Visual snapshots follow the same family logic via `scripts
 
 ## Known traps (docs/FRONTEND-EXCELLENCE-ISSUES.md)
 
-- lhci has no `settings.preset`; form factors come from `formFactor` plus `screenEmulation`
-  in `lighthouserc.cjs`.
+- lhci has no `settings.preset`; form factors come from `formFactor` plus `screenEmulation` in
+  `lighthouserc.cjs`.
 - Two Lighthouse runs must never share an output directory. `gate:lh` clears it between form
   factors; a shard writes its own directory and binds its own port.
-- Assert the North Star numbers, not 0.9x thresholds. A run at 97–99 re-runs three times, then
-  the phase fails (L13).
+- Assert the North Star numbers, not 0.9x thresholds. A run at 97–99 re-runs three times, then the
+  phase fails (L13).
 - Plausible is blocked inside lab runs and verified by a separate live check. Blocking it still
   charges the simulated graph: see `diagnose-a-lighthouse-lcp-plateau.md`.
 - A category score of 100 does not mean the metric assertions passed. `report.mjs` enforces the
-  LCP, CLS and TBT budgets it reads from `lighthouserc.cjs` on each route's median run.
+  LCP, CLS and TBT budgets from `lighthouserc.cjs` on each route's median run.
 - lhci asserts the best run by default; every rule in `lighthouserc.cjs` goes through `onMedian`.
-- A scratch page left in the build silently widens every downstream gate; delete throwaway
-  routes before the audited build.
-- perfect-coder strict mode refuses test, config and data-only files with no sibling test: create
-  those with a shell heredoc (`docs/PERFECT-CODER-ISSUES.md`).
+- A scratch page left in the build widens every downstream gate; delete throwaway routes first.
+- Lighthouse measures the machine. Run shards alone, logs outside `/tmp`: on 2026-10-02 four
+  desktop shards run beside a baseline regeneration took 2h37m and all failed, then four minutes
+  each and all passed run singly. Under load it reads as a regression (0.99, TBT over budget).
 
 ## Manual pass (calibration gate step 10)
 

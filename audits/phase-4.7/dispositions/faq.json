@@ -2,7 +2,7 @@
   {
     "target": "site/src/data/faq/are-models-trained-on-our-customer-data.md",
     "status": "rewritten",
-    "reason": "Answer: the 34-word sentence is split where its two clauses meet (\"...a compliance team would ask about. I check that clause before any tool touches your data.\"), and \"that tool does not get used on your systems\" now names the actor (\"I do not use that tool on your systems\"). Kept: \"Not by default\", \"vendor terms that exclude your data from model training\", \"enterprise or business-tier\", \"before any tool touches your data\", and the condition \"if a vendor will not commit to that in writing\". Explicit meta description added so the 160-character description carries the scope \"before any tool touches your data\" instead of depending on a clause trim. Built output: 1 sentence over 25 words to 0.",
+    "reason": "Answer: the 34-word sentence is split where its two clauses meet (\"...a compliance team would ask about. I check that clause before any tool touches your data.\"), and the closing sentence keeps \"that tool does not get used on your systems\". Kept: \"Not by default\", \"vendor terms that exclude your data from model training\", \"enterprise or business-tier\", \"before any tool touches your data\", and the condition \"if a vendor will not commit to that in writing\". Explicit meta description added so the 160-character description carries the scope \"before any tool touches your data\" instead of depending on a clause trim. Built output: 1 sentence over 25 words to 0.",
     "digest": "e7dd222e8cf8"
   },
   {
@@ -20,7 +20,7 @@
   {
     "target": "site/src/data/faq/how-do-you-charge-for-the-work.md",
     "status": "rewritten",
-    "reason": "Two agentless passives name an actor: \"The Sprint is quoted once\" becomes \"I quote the Sprint once, from the scope in the statement of work\", and \"it is written down before any work starts\" becomes \"we write it down before any work starts\". \"We\" because the statement of work is written between both parties; no owner fact is added. Kept: three fixed structures, no hourly billing, the Assessment fixed fee for the two weeks, the Retainer monthly fee for one or two days a week, \"You hear the number on the fit call\", \"before any work starts\", and the reason \"so there is no surprise invoice partway through\". No price, number or date touched. Built output: agentless passives 2 to 0.",
+    "reason": "Two agentless passives remain in the answer: \"The Sprint is quoted once, from the scope in the statement of work\" and \"it is written down before any work starts\". \"We\" because the statement of work is written between both parties; no owner fact is added. Kept: three fixed structures, no hourly billing, the Assessment fixed fee for the two weeks, the Retainer monthly fee for one or two days a week, \"You hear the number on the fit call\", \"before any work starts\", and the reason \"so there is no surprise invoice partway through\". No price, number or date touched. Built output: agentless passives 2.",
     "digest": "aec728fe33e4"
   },
   {
@@ -32,7 +32,7 @@
   {
     "target": "site/src/data/faq/how-does-the-retainer-end.md",
     "status": "rewritten",
-    "reason": "Two agentless passives name an actor: \"The decisions that got made are written down, not quietly dropped\" becomes \"I write down the decisions we make, instead of quietly dropping them\", and \"the plan is written to end well before that\" becomes \"I write the plan to end well before that\". The locked SEMANTIC-CORE.md passage \"The handover plan exists from the first month, not the last.\" is byte-identical. Kept: \"a named internal owner\", \"not a fading call\", \"A retainer running past two years would mean the design was wrong\". Built output: agentless passives 2 to 0.",
+    "reason": "Two agentless passives remain in the answer: \"The decisions that got made are written down, not quietly dropped\" and \"the plan is written to end well before that\". The locked SEMANTIC-CORE.md passage \"The handover plan exists from the first month, not the last.\" is byte-identical. Kept: \"a named internal owner\", \"not a fading call\", \"A retainer running past two years would mean the design was wrong\". Built output: agentless passives 2.",
     "digest": "f1d394abd882"
   },
   {
@@ -62,7 +62,7 @@
   {
     "target": "site/src/data/faq/what-counts-as-in-production-for-the-90-day-sprint.md",
     "status": "rewritten",
-    "reason": "Two agentless passives name an actor: \"The success measure gets written into the statement of work before the Sprint starts, so whether it actually shipped is settled before the work even begins\" becomes \"We write the success measure into the statement of work before the Sprint starts. That settles what counts as actually shipped before the work even begins.\" Reading note: \"whether it actually shipped is settled\" is restated as the criterion being fixed in advance, which is what a measure written into the statement of work before the start can settle. Kept: real users, real transactions, a rollback path, someone on call, \"monitored end to end\", both exclusions (a demo behind a feature flag; a workflow only your team tried). Built output: 1 sentence over 25 words to 0; agentless passives 1 to 0.",
+    "reason": "The closing sentence is split in two: \"The success measure gets written into the statement of work before the Sprint starts, so whether it actually shipped is settled before the work even begins\" becomes \"The success measure gets written into the statement of work before the Sprint starts. That settles whether it actually shipped before the work even begins.\" Kept: real users, real transactions, a rollback path, someone on call, \"monitored end to end\", both exclusions (a demo behind a feature flag; a workflow only your team tried). Built output: 1 sentence over 25 words to 0; agentless passives 1 to 0.",
     "digest": "d1ec3cf43b12"
   },
   {
@@ -74,7 +74,7 @@
   {
     "target": "site/src/data/faq/what-do-we-do-about-tools-staff-are-already-using-without-approval.md",
     "status": "rewritten",
-    "reason": "First sentence reworded to stand alone: \"Put them in the AI register, not on a ban list.\" becomes \"Add unapproved tools to the AI register, not a ban list.\" (the earlier \"them\" pointed back to the question). The 32-word Retainer sentence is split in two: \"I inventory the AI tools and data flows already in the building. Then I write a data classification and an acceptable-use policy your engineers can actually follow.\" The sequence \"then\" was in the original. Kept: the claim that banning pushes the same behaviour underground, and that this is the Retainer's first step. Built output: 1 sentence over 25 words to 0. The Retainer sentence had no subject for \"inventory\" and \"write\"; both now name \"I\" as the actor.",
+    "reason": "First sentence reworded to stand alone: \"Put them in the AI register, not on a ban list.\" becomes \"Add unapproved tools to the AI register, not a ban list.\" (the earlier \"them\" pointed back to the question). The 32-word Retainer sentence is not split: \"The Retainer's first step is exactly this: inventory the AI tools and data flows already in the building, then write a data classification and an acceptable-use policy your engineers can actually follow.\" The sequence \"then\" was in the original. Kept: the claim that banning pushes the same behaviour underground, and that this is the Retainer's first step. Built output: 1 sentence over 25 words (the 32-word Retainer sentence). The Retainer sentence had no subject for \"inventory\" and \"write\"; it still has none.",
     "digest": "881e3015e869"
   },
   {
@@ -86,7 +86,7 @@
   {
     "target": "site/src/data/faq/what-does-the-two-week-assessment-produce-and-is-the-fee-credited-if-we-continue.md",
     "status": "rewritten",
-    "reason": "First sentence now names its subject: \"A memo your board can act on.\" becomes \"The two-week Assessment produces a memo your board can act on.\" so the teaser and any extractor reads a full answer. The 38-word list sentence is split into three with every item kept: readiness score across strategy, data, delivery, people and governance; a gap list against NIST AI RMF, ISO/IEC 42001 and the EU AI Act (standard names unchanged); three processes ranked by what automating them is worth this quarter. The credit sentence keeps its conditions and names the actor: \"Yes: if you move to the 90-Day Sprint within three months, I credit the full Assessment fee off the Sprint price.\" Built output: 1 sentence over 25 words to 0; agentless passives 1 to 0.",
+    "reason": "First sentence now names its subject: \"A memo your board can act on.\" becomes \"The two-week Assessment produces a memo your board can act on.\" so the teaser and any extractor reads a full answer. The 38-word list sentence is split into three with every item kept: readiness score across strategy, data, delivery, people and governance; a gap list against NIST AI RMF, ISO/IEC 42001 and the EU AI Act (standard names unchanged); three processes ranked by what automating them is worth this quarter. The credit sentence keeps its conditions: \"Yes: if you move to the 90-Day Sprint within three months, the full Assessment fee is credited off the Sprint price.\" Built output: 1 sentence over 25 words to 0; agentless passives stay at 1.",
     "digest": "78d4e63ba178"
   },
   {
@@ -146,7 +146,7 @@
   {
     "target": "site/src/data/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai.md",
     "status": "rewritten",
-    "reason": "The 35-word first sentence is split in two so the teaser and extractors get a complete first answer: \"You get a named officer's accountability, without a full-time salary, a hiring process, or a seat that sits empty between AI decisions.\" and \"That means a named officer on your customers' security reviews and your board's roadmap.\" The dash clause is dropped without losing a fact. These two sentences are the locked SEMANTIC-CORE.md passage for buyer prompt 2; Main and HeadAndStatic changed the Passage line to the same bytes before this edit. The \"five systems\" sentence is unchanged. shortTitle \"Why hire a fractional officer over a full-time head?\" becomes \"...head of AI?\". Explicit meta description added: question plus \"You get a named officer's accountability without the salary, hiring process or idle seat.\" Built output: 1 sentence over 25 words to 0.",
-    "digest": "1bca7e056b84"
+    "reason": "The 35-word first sentence is split in two so the teaser and extractors get a complete first answer: \"You get a named officer's accountability, without a full-time salary, a hiring process, or a seat that sits empty between AI decisions.\" and \"That means a named officer on your customers' security reviews and your board's roadmap.\" The dash clause is dropped without losing a fact. docs/SEMANTIC-CORE.md lists these two sentences, in this order, as a Passage line for buyer prompt 2, and the answer matches that line byte for byte. The \"five systems\" sentence is unchanged. shortTitle \"Why hire a fractional officer over a full-time head?\" becomes \"...head of AI?\". Explicit meta description added: question plus \"You get a named officer's accountability without the salary, hiring process or idle seat.\" Built output: 1 sentence over 25 words (the 26-word Phase 6 sentence quoted below). Phase 6 worklist item 2 (prompt 2), 2026-10-02: one sentence is added to the answer, \"The comparison is between different kinds of cost, not price against price: a monthly retainer fee against a full-time hire's salary, equity, recruiting and ramp time.\" It names the cost categories on each side and no amount (L8); a scan of the sentence finds no digit, currency, percent, multiple or range. \"Monthly\" is the retainer fee shape L8 already allows. It is the second Passage line in docs/SEMANTIC-CORE.md for prompt 2, and the \"five systems\" sentence after it is unchanged.",
+    "digest": "af9ce8f730c1"
   }
 ]

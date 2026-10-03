@@ -185,3 +185,26 @@ Lighthouse's config loader requires it, so this will recur on exactly those file
 
 Both make strict mode unusable here: the warnings are unactionable, and a real missing test would
 be invisible among them.
+
+## Source-code line caps are applied to prose documents
+
+Date: 2026-10-02. Staging five dated investigation records produced five warnings of the form
+
+    perfect-coder: investigation/02-mcp-security-research.md is 636 lines, over the
+    generic-fallback soft cap of 300 (flagged in shadow mode)
+
+The five files are research records: 497 to 682 lines of prose, between 32 and 82 numbered
+sources each. The generic fallback treats any extension it has no table row for as source code,
+so Markdown inherits a cap written for functions and modules.
+
+The cap is the wrong instrument here. A long source file is a cohesion signal, because one file
+doing several jobs is harder to change safely. A long record is not: it is one day's evidence on
+one question, and splitting it to satisfy a line count would scatter the evidence across files
+and break the one-record-one-question rule the directory is built on. The repository's own rule
+is the opposite of the warning: `investigation/00-INDEX.md` requires a record to say what was
+examined and at which commit, which makes length a function of how much was examined.
+
+A documentation extension should either carry no cap or carry one expressed in a unit that means
+something for prose. As it stands the warning fires on every record this project will ever write,
+which is the same failure as the test-existence noise above: a real signal would be invisible
+among the false ones.

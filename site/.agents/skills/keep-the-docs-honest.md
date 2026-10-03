@@ -13,8 +13,8 @@ precision control and a test. The rules live in `scripts/docs-gate.mjs`, their t
   on disk but a clean checkout does not hold it, so the finding names the path and the rule that
   ignores it. When git cannot answer, the check is skipped and the summary line says so.
 - **dead-command** — an `npm run X` that `site/package.json` does not define.
-- **stale-row-range** — a claim of the form `L1-L56` whose highest row disagrees with
-  `docs/plan/reference/locked-decisions.md`.
+- **stale-row-range** — a claim naming the locked rows as a span from the first to a highest row
+  whose number disagrees with `docs/plan/reference/locked-decisions.md`.
 
 ## Why the ranges are checked
 

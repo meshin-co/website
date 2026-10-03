@@ -2,7 +2,7 @@
   {
     "target": "site/src/pages/index.astro",
     "status": "rewritten",
-    "reason": "Phase 5.2 level-1 pass. The description now says \"Fractional Chief AI Officer\" where it said \"Fractional AI leadership\", which lifts description coverage of the target query from 0.50 to 1.00; every other fact is kept: 30–300 person companies, governance that passes enterprise procurement, agentic systems shipped to production, evals and observability. The Proof lead named no actor (\"is written out in full\"); it now reads \"I write out in full every template I use in engagements\", the same claim in the active voice. Hero title and sub are locked by L9a and untouched; hero sub sentence 2 is 30 words and stays, and a split is proposed in the phase 5.2 report.",
+    "reason": "Phase 5.2 level-1 pass. The description now says \"Fractional Chief AI Officer\" where it said \"Fractional AI leadership\", which lifts description coverage of the target query from 0.50 to 1.00; every other fact is kept except observability: 30–300 person companies, governance that passes enterprise procurement, agentic systems shipped to production, evals. The Proof lead named no actor (\"is written out in full\"); it now reads \"Every template I use in engagements is described on its own page\", which still names no actor. Hero title and sub are locked by L9a and untouched; hero sub sentence 2 is 30 words and stays, and a split is proposed in the phase 5.2 report.",
     "digest": "5243010bdc4e"
   },
   {
@@ -26,7 +26,7 @@
   {
     "target": "site/src/pages/pricing.astro",
     "status": "rewritten",
-    "reason": "Phase 5.2 level-1 pass. Title and description now carry the target query \"fractional chief ai officer cost\" (both were 0.00 coverage); the description keeps the two-week Assessment, the 90-Day Sprint, the monthly Retainer, fixed structures, no hourly billing, and every fee in writing before work starts. Two agentless passives name the actor: \"I quote each Sprint per engagement, from the scope agreed in the statement of work, never per hour\" and \"If you want me on site, I bill travel at cost and we agree it in advance\". Scope, the conditional and \"never per hour\" are intact. No dollar figure added, per L8.",
+    "reason": "Phase 5.2 level-1 pass. Title and description now carry the target query \"fractional chief ai officer cost\" (both were 0.00 coverage); the description keeps the two-week Assessment, the 90-Day Sprint, the monthly Retainer, fixed structures, no hourly billing, and every fee in writing before work starts. The two billing items read \"Sprints are quoted per engagement from the scope agreed in the statement of work, never per hour\" and \"Travel, if you want me on site, is billed at cost and agreed in advance\". Scope, the conditional and \"never per hour\" are intact. No dollar figure added, per L8.",
     "digest": "449bed26dc43"
   },
   {
@@ -38,7 +38,7 @@
   {
     "target": "site/src/pages/now.astro",
     "status": "rewritten",
-    "reason": "Rewritten 2026-09-16: /now is a dated log, and the August entry now carries two outbound links (smarter.day and the App Store listing), both with rel=nofollow noopener noreferrer per L55. Facts from Apple's lookup API; the day job stays unnamed at the owner's request. Phase 5.2: title and description now carry the target query \"what I am working on now\" (both 0.33 to 1.00); the lead's two agentless passives name the actor (\"I add a line ... and never edit it afterwards\", \"If it is not on the list, I am not working on it\"). The description's second sentence is reworded the same way (\"I add a line when something happens and never edit one later\"), and in the lead \"nothing here has to be kept in sync\" now reads \"there is nothing here to keep in sync\". The log entries are untouched, because the page's own rule is that a line is never edited once written.",
+    "reason": "Rewritten 2026-09-16: /now is a dated log, and the August entry now carries two outbound links (smarter.day and the App Store listing), both with rel=nofollow noopener noreferrer per L55. Facts from Apple's lookup API; the day job stays unnamed at the owner's request. Phase 5.2: title and description now carry the target query \"what I am working on now\" (both 0.33 to 1.00); in the lead \"nothing here has to be kept in sync\" now reads \"there is nothing here to keep in sync\". The log entries are untouched, because the page's own rule is that a line is never edited once written.",
     "digest": "0955a6de2f8d"
   },
   {

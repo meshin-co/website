@@ -5,7 +5,7 @@ This document has two layers, and they are maintained differently:
 - **Generated layer — the facts.** One table per route family, rebuilt from `site/content-facts.json` and the built `site/dist/` by `node scripts/semantic-core.mjs` (run from `site/`). It never drifts because it is never hand-edited: regeneration rewrites only the block between the `semantic-core` markers below. The Opening column reuses the content gate's own query rules (`h1-query`, `query-opening` in `site/scripts/content-rows.mjs`), so ✓ here means the same thing as green there.
 - **Hand-authored layer — the why.** Everything below the markers: why each family exists, and the mapping of the 30 buyer prompts (PRD §17.3) to the route that must win each one, with the passage that answers it and the business reason. Regeneration leaves all of it intact.
 
-Drift protection is a real doc-diff gate (L48). `node scripts/semantic-core.mjs --check` recomputes the generated table in memory from the same inputs `node scripts/semantic-core.mjs` regenerates from, and fails — naming every drifted route — if that differs from the committed block below; a stale `docs/SEMANTIC-CORE.md` cannot pass CI, because the same check rides `gate:content` (`site/scripts/content-gate.mjs` invoking `checkFindings()`), and `gate:content` is a CI step (L36). The same run also verifies: every `targetQuery` row maps to a built route and every gated built route has a row (no orphans either way); no two routes declare the same target query, ignoring case and spacing (`duplicate-query`); every built `<title>` follows its family's title grammar; every buyer-prompt "Must win" route below is actually built; every buyer-prompt "Passage" quote is still a literal substring of its cited route's rendered text; and every buyer-prompt GAP absence-claim (for example, "Israel" appears on no built page) still holds. Route coverage: **102 of 105** built routes carry a generated row below; the remaining 3 are intentionally ungated utility routes, documented with their reason in the table right after this paragraph.
+Drift protection is a real doc-diff gate (L48). `node scripts/semantic-core.mjs --check` recomputes the generated table in memory from the same inputs `node scripts/semantic-core.mjs` regenerates from, and fails — naming every drifted route — if that differs from the committed block below; a stale `docs/SEMANTIC-CORE.md` cannot pass CI, because the same check rides `gate:content` (`site/scripts/content-gate.mjs` invoking `checkFindings()`), and `gate:content` is a CI step (L36). The same run also verifies: every `targetQuery` row maps to a built route and every gated built route has a row (no orphans either way); no two routes declare the same target query, ignoring case and spacing (`duplicate-query`); every built `<title>` follows its family's title grammar; every buyer-prompt "Must win" route below is actually built; every buyer-prompt "Passage" quote is still a literal substring of its cited route's rendered text; and every buyer-prompt GAP absence-claim registered in `ABSENCE_CLAIMS` still holds. Route coverage: **102 of 105** built routes carry a generated row below; the remaining 3 are intentionally ungated utility routes, documented with their reason in the table right after this paragraph.
 
 ### Ungated utility routes — the other 3 of 105
 
@@ -32,7 +32,7 @@ title `{page name} — meshin.co` · meta: value-proposition clause naming the o
 | `/case-studies` | fractional chief ai officer case study | Fractional Chief AI Officer case study — meshin.co | One Fractional Chief AI Officer case study, not a client case: only.help, my own product, built with the method I use for clients. | Fractional chief AI officer case study | 22 | ✓ |
 | `/contact` | book an ai leadership call | Contact: book an AI leadership call — meshin.co | Book an AI leadership call: a 30-minute fit call, or email hello@meshin.co. Remote worldwide, on site when the trip is worth it. | Book an AI leadership call | 23 | ✓ |
 | `/faq` | fractional chief ai officer questions | Fractional Chief AI Officer questions — meshin.co | Fractional Chief AI Officer questions answered: what the role does, what each offer produces, and how AI risk gets recorded and signed off. | Fractional Chief AI Officer questions, answered | 47 | ✓ |
-| `/glossary` | ai governance glossary | AI governance glossary — meshin.co | An AI governance glossary: plain definitions of the terms, standards and laws that come up in security reviews and board meetings. | AI governance glossary | 52 | ✓ |
+| `/glossary` | ai governance glossary | AI governance glossary — meshin.co | An AI governance glossary: plain definitions of the terms, standards and laws that come up in security reviews and board meetings. | AI governance glossary | 54 | ✓ |
 | `/imprint` | imprint | Imprint — meshin.co | Imprint for meshin.co: who is responsible for this site, how to reach them by email, where they work from, and what it is hosted on. | Imprint | 22 | ✓ |
 | `/now` | what i am working on now | What I am working on now — meshin.co | What I am working on now: a dated log of what I am building and studying, newest first. A line is added when something happens and never edited after. | What I am working on now | 22 | ✓ |
 | `/pricing` | fractional chief ai officer cost | Pricing: what a Fractional Chief AI Officer costs — meshin.co | Fractional Chief AI Officer cost: two-week Assessment, 90-Day Sprint or monthly Retainer. Fixed, no hourly billing, every fee in writing before work starts. | What a Fractional Chief AI Officer costs | 25 | ✓ |
@@ -49,19 +49,21 @@ title `{offer name} — meshin.co` · meta: one outcome sentence: what ships, in
 | Route | Query | Title | Description | H1 | Links | Opening |
 |---|---|---|---|---|---|---|
 | `/services/90-day-production-sprint` | 90-day production sprint | 90-Day Production Sprint — meshin.co | A 90-day sprint that puts one agentic workflow into production with evals in CI, tracing, a named owner, and a rollback path. | 90-Day Production Sprint | 23 | ✓ |
-| `/services/ai-readiness-and-risk-assessment` | ai readiness assessment | AI Readiness & Risk Assessment — meshin.co | A two-week AI readiness and risk assessment for companies of 30 to 300 people, ending in a memo your board can act on, gap list included. | AI Readiness & Risk Assessment | 22 | ✓ |
+| `/services/ai-readiness-and-risk-assessment` | ai readiness assessment | AI Readiness & Risk Assessment — meshin.co | A two-week AI readiness and risk assessment for companies of 30 to 300 people, ending in a memo your board can act on, gap list included. | AI Readiness & Risk Assessment | 24 | ✓ |
 | `/services/fractional-caio-retainer` | fractional caio retainer | Fractional CAIO Retainer — meshin.co | Fractional CAIO retainer: one or two days a week as your named AI officer, with procurement answers, design reviews, board updates and a handover plan. | Fractional CAIO Retainer | 22 | ✓ |
 
-### resource (5)
+### resource (7)
 
 title `{artifact name} — meshin.co` · meta: one sentence naming the artifact and what you do with it · body intent: what it is → what is inside → how to use it
 
 | Route | Query | Title | Description | H1 | Links | Opening |
 |---|---|---|---|---|---|---|
+| `/resources/adoption-telemetry-dashboard-template` | adoption telemetry dashboard template | Adoption Telemetry Dashboard Template — meshin.co | An adoption telemetry dashboard template: eight panels, each with its question, data source and the decision it supports. | Adoption Telemetry Dashboard Template | 26 | ✓ |
 | `/resources/agent-evals-ci-starter` | agent evals ci starter | Agent Evals CI Starter — meshin.co | A starter CI pipeline for agent evals. It runs on every pull request and blocks a bad merge before it ships, using a plain YAML case format. | Agent Evals CI Starter | 24 | ✓ |
-| `/resources/ai-governance-starter-kit` | ai governance starter kit | AI Governance Starter Kit — meshin.co | AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire. | AI Governance Starter Kit | 23 | ✓ |
+| `/resources/ai-governance-starter-kit` | ai governance starter kit | AI Governance Starter Kit — meshin.co | AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire. | AI Governance Starter Kit | 26 | ✓ |
 | `/resources/ai-readiness-scorecard` | ai readiness scorecard | AI Readiness Scorecard — meshin.co | A five-axis AI readiness scorecard you score yourself in an afternoon: strategy, data, delivery, people, and governance. | AI Readiness Scorecard | 24 | ✓ |
-| `/resources/build-vs-buy-ai-kit` | build vs buy ai kit | Build vs Buy AI Kit — meshin.co | The build vs buy AI kit: a one-page worksheet of the six criteria I work through before recommending either path, and how to score them. | Build vs Buy AI Kit | 25 | ✓ |
+| `/resources/build-vs-buy-ai-kit` | build vs buy ai kit | Build vs Buy AI Kit — meshin.co | The build vs buy AI kit: a one-page worksheet of the six criteria I work through before recommending either path, and how to score them. | Build vs Buy AI Kit | 26 | ✓ |
+| `/resources/handover-playbook` | handover playbook | Handover Playbook — meshin.co | The Handover Playbook is six fill-in tables for moving AI leadership from an outside lead to a named owner, from the test to a later check. | Handover Playbook | 28 | ✓ |
 | `/resources/llm-gateway-governance-config` | llm gateway governance config | LLM Gateway Governance Config — meshin.co | A governance config for an LLM gateway. It decides who may call which model, what gets redacted, how long logs are kept and the rate and fallback rules. | LLM Gateway Governance Config | 26 | ✓ |
 
 ### case-study (1)
@@ -70,18 +72,22 @@ title `{client} — {engagement} — meshin.co` · meta: how the system went fro
 
 | Route | Query | Title | Description | H1 | Links | Opening |
 |---|---|---|---|---|---|---|
-| `/case-studies/only-help-agentic-support` | agentic support triage | only.help — agentic support triage, on my own product — meshin.co | An agentic support triage workflow that went from a demo notebook to a production path with evals in CI and a named owner. | only.help — agentic support triage, on my own product | 22 | ✓ |
+| `/case-studies/only-help-agentic-support` | agentic support triage | only.help — agentic support triage, on my own product — meshin.co | An agentic support triage workflow that went from a demo notebook to a production path with evals in CI and a named owner. | only.help — agentic support triage, on my own product | 23 | ✓ |
 
-### article (4)
+### article (8)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
 | Route | Query | Title | Description | H1 | Links | Opening |
 |---|---|---|---|---|---|---|
+| `/blog/adoption-telemetry-measuring-if-ai-is-actually-used` | adoption telemetry for ai tools | Adoption telemetry for AI tools: what a trial found — meshin.co | In METR's 2025 trial, 16 developers believed AI made them 20% faster. Tasks took 19% longer with AI allowed. METR now marks that result out of date. | Adoption telemetry for AI tools: what a trial found | 42 | ✓ |
 | `/blog/ai-acceptable-use-policy-for-a-50-person-company` | ai acceptable use policy | What actually belongs in an AI acceptable use policy — meshin.co | What a working AI acceptable use policy has to decide, what it must refuse to do, and how a company of 30 to 300 people gets staff to follow it. | What actually belongs in an AI acceptable use policy | 31 | ✓ |
-| `/blog/evals-in-ci-for-llm-agents` | evals in ci without a golden answer | Evals in CI for LLM agents, without a golden answer — meshin.co | How to build an eval set from production traffic, score an LLM agent without a golden answer, and fail a merge in CI when it regresses. | Evals in CI for LLM agents, without a golden answer | 28 | ✓ |
+| `/blog/evals-in-ci-for-llm-agents` | evals in ci without a golden answer | Evals in CI for LLM agents, without a golden answer — meshin.co | How to build an eval set from production traffic, score an LLM agent without a golden answer, and fail a merge in CI when it regresses. | Evals in CI for LLM agents, without a golden answer | 29 | ✓ |
+| `/blog/handing-over-ai-leadership-to-an-internal-owner` | how to hand over ai leadership to internal team | How to hand over AI leadership to an internal team — meshin.co | How to hand over AI leadership in steps that end in a test: what moves, who takes the role and how to tell it worked. | How to hand over AI leadership to an internal team | 36 | ✓ |
 | `/blog/how-to-build-an-ai-system-register-in-a-week` | ai system register | How to build an AI system register in a week — meshin.co | A step-by-step way to build an AI system register in a week without buying a tool, so a security reviewer gets the document they ask for first. | How to build an AI system register in a week | 32 | ✓ |
-| `/blog/why-your-ai-pilot-never-reached-production` | ai pilot never reached production | Why your AI pilot never reached production — meshin.co | Most AI pilots stall on ownership, data rules and a missing outcome metric, not the model. Here is what has to be true before one reaches production. | Why your AI pilot never reached production | 26 | ✓ |
+| `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company` | ai operating model for mid-size company | How to choose an AI operating model for a mid-size company — meshin.co | How to choose an operating model for AI work in a mid-size company, starting from what the law requires and what the evidence supports. | How to choose an AI operating model for a mid-size company | 37 | ✓ |
+| `/blog/multi-agent-reference-architecture-in-production` | multi-agent reference architecture production | Multi-agent reference architecture in production — meshin.co | What the sources say about multi-agent systems in production: where vendors agree, where they split, and what the research did not find. | Multi-agent reference architecture in production | 40 | ✓ |
+| `/blog/why-your-ai-pilot-never-reached-production` | ai pilot never reached production | Why your AI pilot never reached production — meshin.co | Most AI pilots stall on ownership, data rules and a missing outcome metric, not the model. Here is what has to be true before one reaches production. | Why your AI pilot never reached production | 28 | ✓ |
 
 ### blog-category (4)
 
@@ -92,7 +98,7 @@ title `{category name} — meshin.co` · meta: what the category covers, scoped 
 | `/blog/category/agentic-architecture` | agentic architecture articles | Agentic architecture articles — meshin.co | Articles on agentic architecture for production: evals in CI, tracing, cost ceilings and a rollback path for agent systems. | Agentic architecture articles | 22 | ✓ |
 | `/blog/category/executive` | ai for boards | AI for boards — meshin.co | AI for boards is accountability, not literacy: what you are on the hook for, what to ask for in writing, and what not to ask for. | AI for boards | 22 | ✓ |
 | `/blog/category/governance` | ai governance articles | AI governance articles — meshin.co | Articles on AI governance for companies of 30 to 300 people: the register, acceptable-use policy, data classification and a named owner. | AI governance articles | 22 | ✓ |
-| `/blog/category/operating-model` | ai operating model | AI operating model — meshin.co | An AI operating model is the decision structure that moves AI work from a pilot nobody owns to a process a team runs. | AI operating model | 22 | ✓ |
+| `/blog/category/operating-model` | ai operating model articles | AI operating model articles — meshin.co | Articles on the operating model for AI work in companies of 30 to 300 people: who chooses, who reviews, who runs it. The glossary holds the definition. | AI operating model articles | 22 | ✓ |
 
 ### tag-index (1)
 
@@ -121,7 +127,7 @@ title `{tag name} posts — meshin.co` · meta: all posts tagged {tag}, newest f
 | `/blog/tag/security-review` | security review posts | Security review posts — meshin.co | All posts tagged Security review, newest first. | Security review posts | 23 | ✓ |
 | `/blog/tag/shadow-ai` | shadow ai posts | Shadow AI posts — meshin.co | All posts tagged Shadow AI, newest first. | Shadow AI posts | 23 | ✓ |
 
-### term (30)
+### term (32)
 
 title `What is {term}? — meshin.co` · meta: the definition sentence · body intent: definition → why it matters → adjacent terms
 
@@ -131,6 +137,7 @@ title `What is {term}? — meshin.co` · meta: the definition sentence · body i
 | `/glossary/ai-governance` | ai governance | What is AI governance? — meshin.co | AI governance is the decisions, roles and controls a company uses to manage the risk of the AI systems it builds or buys. | AI governance | 22 | ✓ |
 | `/glossary/ai-impact-assessment` | ai impact assessment | What is an AI impact assessment? — meshin.co | An AI impact assessment is a written check, before a high-risk system goes live, of who it affects and whether they can challenge its decision. | AI impact assessment | 24 | ✓ |
 | `/glossary/ai-management-system` | ai management system | What is an AI management system? — meshin.co | An AI management system is the recurring set of policies, roles and reviews a company runs to govern its AI, not a one-off risk assessment. | AI management system | 23 | ✓ |
+| `/glossary/ai-operating-model` | ai operating model | What is an AI operating model? — meshin.co | An AI operating model names who chooses, reviews and runs a company's AI work. What it covers has no standard definition, so check which one is in use. | AI operating model | 23 | ✓ |
 | `/glossary/ai-register` | ai register | What is an AI register? — meshin.co | An AI register is a company's own inventory of every AI system it builds, buys or uses, naming its owner and how risky it is. | AI register | 22 | ✓ |
 | `/glossary/conformity-assessment` | conformity assessment | What is a conformity assessment? — meshin.co | A conformity assessment proves a high-risk AI system meets the EU AI Act before sale. Either the provider or an outside body runs it. | Conformity assessment | 23 | ✓ |
 | `/glossary/data-classification` | data classification | What is data classification? — meshin.co | Data classification is labelling data by sensitivity, such as public, internal or restricted, before deciding what may reach an AI tool. | Data classification | 23 | ✓ |
@@ -142,15 +149,16 @@ title `What is {term}? — meshin.co` · meta: the definition sentence · body i
 | `/glossary/high-risk-ai-system` | high-risk ai system | What makes an AI system high-risk? — meshin.co | A high-risk AI system is one the EU AI Act puts under its heaviest duties, through product-safety law or use cases like hiring or credit. | High-risk AI system | 24 | ✓ |
 | `/glossary/human-in-the-loop` | human-in-the-loop | What is human-in-the-loop? — meshin.co | Human-in-the-loop means a person reviews or can stop an AI system's output before it takes effect, not the system acting alone. | Human-in-the-loop | 22 | ✓ |
 | `/glossary/human-oversight` | human oversight | What does human oversight require under the EU AI Act? — meshin.co | Human oversight is the EU AI Act duty that a person assigned to watch a high-risk system can actually understand it and stop it. | Human oversight | 23 | ✓ |
-| `/glossary/iso-iec-42001` | iso/iec 42001 | What is ISO/IEC 42001? — meshin.co | ISO/IEC 42001 is the first international, certifiable standard for the management system a company runs to govern its AI. | ISO/IEC 42001 | 23 | ✓ |
-| `/glossary/llm-gateway` | llm gateway | What is an LLM gateway? — meshin.co | An LLM gateway is a single service every call to a language model passes through, for authentication, logging, rate limits and content filtering. | LLM gateway | 22 | ✓ |
+| `/glossary/iso-iec-42001` | iso/iec 42001 | What is ISO/IEC 42001? — meshin.co | ISO/IEC 42001 is the first international, certifiable standard for the management system a company runs to govern its AI. | ISO/IEC 42001 | 24 | ✓ |
+| `/glossary/llm-gateway` | llm gateway | What is an LLM gateway? — meshin.co | An LLM gateway is a single service every call to a language model passes through, for authentication, logging, rate limits and content filtering. | LLM gateway | 23 | ✓ |
+| `/glossary/mcp` | model context protocol | What is the Model Context Protocol (MCP)? — meshin.co | The Model Context Protocol (MCP) connects AI agents to tools and data, but cannot enforce consent, data privacy or tool safety at the protocol level. | Model Context Protocol | 27 | ✓ |
 | `/glossary/model-card` | model card | What is a model card? — meshin.co | A model card is a short document that a model's maker publishes about the model's intended use, its performance and where not to use it. | Model card | 23 | ✓ |
 | `/glossary/model-provenance` | model provenance | What is model provenance? — meshin.co | Model provenance is a traceable record of where a model comes from - its base model, its training data, and the licence covering both. | Model provenance | 24 | ✓ |
 | `/glossary/nist-ai-rmf` | nist ai rmf | What is the NIST AI RMF? — meshin.co | The NIST AI Risk Management Framework (AI RMF) is a voluntary US framework for managing AI risk across a system's whole lifecycle. | NIST AI RMF | 22 | ✓ |
 | `/glossary/observability` | observability | What is observability for an AI system? — meshin.co | Observability means seeing exactly what a user asked a live AI system, what it did and what it answered, for any one case. | Observability | 24 | ✓ |
 | `/glossary/post-market-monitoring` | post-market monitoring | What is post-market monitoring under the EU AI Act? — meshin.co | Post-market monitoring is the EU AI Act duty to keep collecting real-world data on a high-risk system after it ships, not just before. | Post-market monitoring | 23 | ✓ |
 | `/glossary/prompt-injection` | prompt injection | What is prompt injection? — meshin.co | Prompt injection is text, typed directly or hidden in a document a model reads, that gets the model to follow it as an instruction. | Prompt injection | 23 | ✓ |
-| `/glossary/provider-vs-deployer` | provider vs deployer | What is the difference between a provider and a deployer? — meshin.co | Provider and deployer are EU AI Act roles - a provider builds or brands a system, a deployer uses it, and the two owe different duties. | Provider vs deployer | 23 | ✓ |
+| `/glossary/provider-vs-deployer` | provider vs deployer | What is the difference between a provider and a deployer? — meshin.co | Provider and deployer are EU AI Act roles - a provider builds or brands a system, a deployer uses it, and the two owe different duties. | Provider vs deployer | 27 | ✓ |
 | `/glossary/red-teaming` | red teaming | What is red teaming for an AI system? — meshin.co | Red teaming is deliberately trying to break an AI system the way an attacker would, before they do, to find the failure nobody tested. | Red teaming | 23 | ✓ |
 | `/glossary/retrieval-augmented-generation` | retrieval augmented generation | What is retrieval augmented generation? — meshin.co | Retrieval augmented generation, or RAG, has a model look up relevant passages at answer time instead of relying only on its training. | Retrieval augmented generation | 23 | ✓ |
 | `/glossary/serious-incident-reporting` | serious incident reporting | What is serious incident reporting under the EU AI Act? — meshin.co | Serious incident reporting is the EU AI Act duty to tell a regulator, fast, when a high-risk system causes real harm or a rights breach. | Serious incident reporting | 23 | ✓ |
@@ -169,7 +177,7 @@ title `{question} — meshin.co` · meta: first sentence of the answer · body i
 | `/faq/can-you-work-with-our-existing-ai-vendor-or-platform` | can you work with our existing ai vendor or platform, or do you bring your own tools? | Can you work with our existing AI vendor or platform? — meshin.co | Can you work with our existing AI vendor or platform, or do you bring your own tools? I work with what you already run. OpenAI, Anthropic, Azure. | Can you work with our existing AI vendor or platform, or do you bring your own tools? | 23 | ✓ |
 | `/faq/how-do-you-charge-for-the-work` | how do you charge for the work? | How do you charge for the work? — meshin.co | How do you charge for the work? Three fixed structures, no hourly billing. The Assessment is a fixed fee for the two weeks. | How do you charge for the work? | 23 | ✓ |
 | `/faq/how-does-ai-risk-get-recorded-and-who-signs-it-off` | how does ai risk get recorded, and who signs it off? | How does AI risk get recorded, and who signs it off? — meshin.co | How does AI risk get recorded, and who signs it off? In an AI register. One line per initiative: its data flows, its risk level, and its owner. | How does AI risk get recorded, and who signs it off? | 23 | ✓ |
-| `/faq/how-does-the-retainer-end` | how does the retainer end? | How does the Retainer end? — meshin.co | How does the Retainer end? With a named internal owner in place, not a fading call. The decisions that got made are written down, not quietly dropped. | How does the Retainer end? | 23 | ✓ |
+| `/faq/how-does-the-retainer-end` | how does the retainer end? | How does the Retainer end? — meshin.co | How does the Retainer end? With a named internal owner in place, not a fading call. The decisions that got made are written down, not quietly dropped. | How does the Retainer end? | 24 | ✓ |
 | `/faq/how-is-a-prompt-or-model-change-stopped-from-shipping-unnoticed` | how is a prompt or model change stopped from shipping unnoticed? | What stops a prompt or model change shipping unnoticed? — meshin.co | How is a prompt or model change stopped from shipping unnoticed? Evals in continuous integration. A test set runs on every change. | How is a prompt or model change stopped from shipping unnoticed? | 23 | ✓ |
 | `/faq/how-is-cost-per-outcome-measured` | how is cost per outcome measured? | How is cost per outcome measured? — meshin.co | How is cost per outcome measured? On a dashboard built during the Sprint. Total spend on the workflow, model calls included. | How is cost per outcome measured? | 23 | ✓ |
 | `/faq/how-quickly-can-you-start-and-how-does-availability-work-for-a-remote-officer` | how quickly can you start, and how does availability work for a remote officer? | How quickly can you start as a remote officer? — meshin.co | How quickly can you start, and how does availability work for a remote officer? One client at a time. That is what keeps me reachable: one, or two days a week. | How quickly can you start, and how does availability work for a remote officer? | 22 | ✓ |
@@ -242,8 +250,8 @@ Why: the primary entity query — the site must _be_ the answer, because the Fou
 **2. fractional CAIO vs full-time CAIO cost**
 Must win: `/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai`, support `/pricing`.
 Passage: "You get a named officer's accountability, without a full-time salary, a hiring process, or a seat that sits empty between AI decisions. That means a named officer on your customers' security reviews and your board's roadmap." (`/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai`)
-Why: the honest comparison is the sales objection to overcome before any call (PRD §6 CTO persona).
-GAP: no side-by-side cost comparison with numbers — public prices are deliberately withheld (L8), so the comparison must argue cost _shape_, not figures; a dedicated comparison article is Phase 6.
+Passage: "The comparison is between different kinds of cost, not price against price: a monthly retainer fee against a full-time hire's salary, equity, recruiting and ramp time." (`/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai`)
+Why: the honest comparison is the sales objection to overcome before any call (PRD §6 CTO persona). Public prices are deliberately withheld (L8), so the answer argues cost _shape_, not figures.
 
 **3. AI readiness assessment template for SMB**
 Must win: `/resources/ai-readiness-scorecard`, support `/services/ai-readiness-and-risk-assessment`.
@@ -253,8 +261,8 @@ Why: "template" intent wants an artifact, not a service page — the free scorec
 **4. AI governance consultant ISO 42001 small company**
 Must win: `/services/ai-readiness-and-risk-assessment`, support `/faq/can-you-get-us-iso-iec-42001-certified-or-just-a-working-system`, `/glossary/iso-iec-42001`.
 Passage: "I work to get your management system, risk register, and evidence trail to the point an auditor would recognise as ready." (`/faq/can-you-get-us-iso-iec-42001-certified-or-just-a-working-system`)
-Why: consultant-intent query with a standard named — the service page must own it before a directory or agency does (PRD §6).
-GAP (thin): the planned article "ISO 42001 for companies without a compliance team" (PRD §15 row 10) would strengthen it; today's coverage is service + FAQ + definition.
+Passage: "The gap list compares your company with ISO/IEC 42001, the standard for an AI management system that an accredited body can certify." (`/services/ai-readiness-and-risk-assessment`)
+Why: consultant-intent query with a standard named — the service page must own it before a directory or agency does (PRD §6), so its "ISO/IEC 42001 gap assessment" section names the standard in plain words.
 
 **5. named person responsible for AI risk in vendor procurement**
 Must win: `/faq/who-answers-customer-security-questionnaires`, support `/services/fractional-caio-retainer`.
@@ -274,8 +282,8 @@ Why: template-intent with SMB scoping; the article carries the decisions, the ki
 **8. EU AI Act obligations for deployers small business**
 Must win: `/glossary/eu-ai-act` + `/glossary/provider-vs-deployer`, support `/faq/what-do-nist-ai-rmf-iso-iec-42001-and-the-eu-ai-act-require`.
 Passage: "The EU AI Act is an EU regulation, in force since August 2024, that sorts AI systems into risk tiers and sets legal obligations that scale with the tier, heaviest for high-risk systems." (`/glossary/eu-ai-act`)
-Why: regulatory facts must come from primary sources and be dated (PRD §15 editorial rules); definitions are the citable unit.
-GAP (thin): the planned deployer-obligations article for small B2B (PRD §15 row 6) is not built; today's answer is definitional, not a checklist.
+Passage: "Article 26 of the EU AI Act sets these duties for a deployer of a high-risk AI system." (`/glossary/provider-vs-deployer`)
+Why: regulatory facts must come from primary sources and be dated (PRD §15 editorial rules); definitions are the citable unit, and the deployer duties are a checklist on the role's own page.
 
 **9. why do AI pilots fail to reach production**
 Must win: `/blog/why-your-ai-pilot-never-reached-production`.
@@ -285,8 +293,8 @@ Why: the #1 founder trigger (PRD §6 persona "пилоты не доходят �
 **10. LLM gateway for governance and audit**
 Must win: `/glossary/llm-gateway`, support `/resources/llm-gateway-governance-config`.
 Passage: "A governance config for an LLM gateway. It decides who may call which model, what gets redacted, how long logs are kept and the rate and fallback rules." (`/resources/llm-gateway-governance-config`)
-Why: engineering-intent query from the CTO persona (PRD §6); the config artifact proves practice, feeding the downloads metric.
-GAP (thin): the planned "LLM gateway as a governance control" article (PRD §15 row 7) would own the long-form answer.
+Passage: "A written policy says what staff may do with a model. A gateway is the control that enforces it, because every model call passes through one place where the policy runs." (`/glossary/llm-gateway`)
+Why: engineering-intent query from the CTO persona (PRD §6); the config artifact proves practice, feeding the downloads metric, and the term page explains the gateway as a governance control.
 
 **11. how to put evals for AI agents into CI**
 Must win: `/blog/evals-in-ci-for-llm-agents`, support `/resources/agent-evals-ci-starter`.
@@ -295,36 +303,39 @@ Why: the engineering credibility wedge — evals in CI is the Sprint's success c
 
 **12. AI vendor assessment questionnaire template**
 Must win: `/resources/ai-governance-starter-kit`.
-Passage: "AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire." (kit lead)
-Why: the questionnaire is inside the kit; one artifact page covering four procurement documents matches how the buyer searches.
-GAP (thin): if the kit under-performs for this prompt, split the questionnaire into its own resource page in Phase 6.
+Passage: "AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire." (`/resources/ai-governance-starter-kit`)
+Passage: "The other three documents describe how you handle AI. This one asks each vendor how it handles your data." (`/resources/ai-governance-starter-kit`)
+Why: the questionnaire is inside the kit; one artifact page covering four procurement documents matches how the buyer searches, and the questionnaire has its own section on that page.
 
 **13. build vs buy AI 3-year TCO**
 Must win: `/resources/build-vs-buy-ai-kit`.
-Passage: "The build vs buy AI kit: a one-page worksheet of the six criteria I work through before recommending either path, and how to score them." (kit lead)
-Why: executive-intent query (PRD §15 row 8 theme); worksheet answers the decision frame.
-GAP: no 3-year TCO _model_ with worked numbers — the planned TCO template article (PRD §15 row 8) is not built. Client-side generic math is compatible with L8 (no public prices); Phase 6.
+Passage: "The build vs buy AI kit: a one-page worksheet of the six criteria I work through before recommending either path, and how to score them." (`/resources/build-vs-buy-ai-kit`)
+Passage: "The Total cost over years criterion needs a total cost of ownership (TCO) estimate, and a vendor quote covers only part of it." (`/resources/build-vs-buy-ai-kit`)
+Why: executive-intent query (PRD §15 row 8 theme); the worksheet answers the decision frame, and its total cost of ownership section names the cost categories to fill in, with no amounts (L8).
 
 **14. AI operating model for mid-size company**
 Must win: `/approach` + `/blog/category/operating-model`.
 Passage: "This is how a Fractional AI Officer works: six signals, always in the same order, before I touch any code." (`/approach`)
 Why: the operating model IS the approach's subject; the category clusters the supporting articles.
-GAP: no dedicated "AI operating model" anchor article — the hub lists related articles but none owns the phrase. Phase 6.
+CLOSED 2026-10-02: `/glossary/ai-operating-model` owns the definition and
+`/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company` owns the argument. The category
+page no longer defines the phrase.
 
 **15. how to hand over AI leadership to internal team**
 Must win: `/faq/how-does-the-retainer-end`, support `/services/fractional-caio-retainer`, `/approach` (sixth signal).
 Passage: "The handover plan exists from the first month, not the last." (`/faq/how-does-the-retainer-end`)
 Why: handover is the retainer's exit promise (PRD §4) and the approach's structurally hardest signal.
-GAP: the planned handover playbook article + Handover Playbook artifact (PRD §15 row 13) are not built. Phase 6.
+CLOSED 2026-10-02: `/blog/handing-over-ai-leadership-to-an-internal-owner` and
+`/resources/handover-playbook`. Stage lengths, names and sign-off are owner blanks, section 16.
 
 #### Locale prompts
 
 **16. fractional AI officer Israel**
 **17. fractional AI leader Europe remote**
-Must win: `/about` (intended), support `/`, `/contact`.
-Passage: "I'm Dmitri Meshin, a platform engineer by trade." (`/about`); "Remote worldwide." is the only location line, on `/about`, `/contact` and `/imprint` — Israel is never named.
-Why: PRD §1 fixes LOCATION_TEXT "Israel · remote worldwide"; local queries are won by local evidence.
-**GAP (hard for 16, thin for 17):** "Israel" appears on **no built page** as of 2026-09-13 (checked `dist/` site-wide); "Europe" appears only inside EU AI Act regulation names on `/glossary/eu-ai-act`, never as a location. The about page must state the full location line before prompt 16 can be won. Phase 6, copy fix.
+Must win: nothing. Retired 2026-10-02 by L57: the site never publishes a physical location, so no
+route is asked to win a query that names one. `absenceFindings` fails `--check` if the term reaches
+a built page. This supersedes PRD §1 LOCATION_TEXT; the two prompts stay listed so a later reader
+meets the decision instead of re-raising them as missing copy.
 
 #### Engineering prompts
 
@@ -334,22 +345,26 @@ Passage: "One process live in production, with evals in CI." (`/services/90-day-
 Why: consultant-intent mapped to the delivery offer; the sprint page is the transactional answer.
 
 **19. MCP security best practices**
-**GAP (hard):** no route. The glossary has no MCP term and no article covers it (the approach stack mentions "Tools via MCP (least privilege)" only in diagram labels). Needs a glossary term first (cheap, citable), an article second. Phase 6.
+**CLOSED 2026-10-02:** `/glossary/mcp`. Note the premise in the old wording was wrong: there are no
+diagram labels on `/approach`, and the abbreviation "MCP" appeared on no built page. The one
+on-site mention was "Model Context Protocol" in `/case-studies/only-help-agentic-support`. Needs a glossary term first (cheap, citable), an article second. Phase 6.
 
 **20. multi-agent reference architecture production**
 Must win (partial): `/approach` (referenced stack, PRD Appendix B).
 Passage: the stack diagram layers agents, tools, gateway, evals, governance — strong material, but a diagram is not a citable reference architecture.
 Why: the CTO persona validates the consultant on architecture before anything else (PRD §6 path `/approach → /resources → GitHub`); the diagram is that proof, prose is what retrieval can cite.
-**GAP:** no article owns "reference architecture" as prose. Phase 6 (PRD §15 agentic-architecture theme).
+**CLOSED 2026-10-02:** `/blog/multi-agent-reference-architecture-in-production` owns it as prose.
+The diagram this row assumed exists was never built.
 
 **21. adoption telemetry for AI tools**
-**GAP (hard):** no route. The planned article + dashboard template (PRD §15 row 12) are not built. Phase 6.
+**CLOSED 2026-10-02:** `/blog/adoption-telemetry-measuring-if-ai-is-actually-used` and
+`/resources/adoption-telemetry-dashboard-template`.
 
 **22. AI incident response plan template**
-Must win (partial): `/glossary/serious-incident-reporting`.
-Passage: "Serious incident reporting is the EU AI Act duty to notify the relevant national authority after a high-risk AI system causes serious harm." (term definition)
-Why: the regulatory duty is defined; the _template_ the prompt asks for does not exist.
-**GAP:** incident-response plan artifact. Candidate addition to the starter kit or a standalone resource. Phase 6.
+Must win: `/resources/ai-governance-starter-kit`, support `/glossary/serious-incident-reporting`.
+Passage: "Serious incident reporting is the EU AI Act duty to notify the relevant national authority after a high-risk AI system causes serious harm." (`/glossary/serious-incident-reporting`)
+Passage: "For a high-risk system you deploy, Article 26 of the EU AI Act asks the deployer to give notice at once when it identifies a serious incident." (`/resources/ai-governance-starter-kit`)
+Why: the regulatory duty is defined on its own page; the _template_ the prompt asks for is the incident response plan section of the starter kit, which links to the duty instead of repeating its deadlines (L50, L51).
 
 **23. data classification for LLM usage**
 Must win: `/glossary/data-classification`, support `/resources/ai-governance-starter-kit` (classification included).
@@ -358,9 +373,9 @@ Why: the exact bridge between the compliance term and the LLM use case; NIST-anc
 
 **24. ISO 42001 gap assessment**
 Must win: `/glossary/iso-iec-42001` + `/faq/can-you-get-us-iso-iec-42001-certified-or-just-a-working-system`.
-Passage: "ISO/IEC 42001 is an international standard that sets out what an AI management system must do." (term definition)
-Why: gap-assessment intent is Assessment-adjacent — the service page maps gaps against ISO/IEC 42001 (PRD §4 Assessment).
-GAP (thin): the gap-assessment sheet artifact (PRD §15 row 10) is not built.
+Passage: "ISO/IEC 42001 is an international standard that sets out what an AI management system must do." (`/glossary/iso-iec-42001`)
+Passage: "A gap assessment compares what your company does today with what ISO/IEC 42001 asks for, and lists the difference." (`/glossary/iso-iec-42001`)
+Why: gap-assessment intent is Assessment-adjacent — the service page maps gaps against ISO/IEC 42001 (PRD §4 Assessment), and the term page explains what a gap assessment is.
 
 **25. NIST AI RMF for small companies**
 Must win: `/glossary/nist-ai-rmf`, support `/faq/what-do-nist-ai-rmf-iso-iec-42001-and-the-eu-ai-act-require`, `/services/ai-readiness-and-risk-assessment` (scores against NIST AI RMF).
@@ -398,44 +413,46 @@ Generated by `npm run assets:registers`; `npm run gate:registers` fails when the
 no longer matches the content.
 
 <!-- REGISTERS:BEGIN -->
-#### Entity register (30)
+#### Entity register (32)
 
 One owning route per entity. The mention count is inbound references from other routes.
 
 | Entity | Owned by | Mentioned by |
 |---|---|---|
-| Agentic workflow | `/glossary/agentic-workflow` | 11 |
-| AI governance | `/glossary/ai-governance` | 30 |
+| Agentic workflow | `/glossary/agentic-workflow` | 13 |
+| AI governance | `/glossary/ai-governance` | 34 |
 | AI impact assessment | `/glossary/ai-impact-assessment` | 2 |
-| AI management system | `/glossary/ai-management-system` | 4 |
-| AI register | `/glossary/ai-register` | 27 |
+| AI management system | `/glossary/ai-management-system` | 6 |
+| AI operating model | `/glossary/ai-operating-model` | 13 |
+| AI register | `/glossary/ai-register` | 32 |
 | Conformity assessment | `/glossary/conformity-assessment` | 5 |
 | Data classification | `/glossary/data-classification` | 15 |
-| DPIA | `/glossary/dpia` | 4 |
-| EU AI Act | `/glossary/eu-ai-act` | 35 |
-| Evals | `/glossary/evals` | 30 |
-| Guardrails | `/glossary/guardrails` | 5 |
+| DPIA | `/glossary/dpia` | 5 |
+| EU AI Act | `/glossary/eu-ai-act` | 41 |
+| Evals | `/glossary/evals` | 35 |
+| Guardrails | `/glossary/guardrails` | 7 |
 | Hallucination rate | `/glossary/hallucination-rate` | 4 |
-| High-risk AI system | `/glossary/high-risk-ai-system` | 9 |
-| Human oversight | `/glossary/human-oversight` | 6 |
+| High-risk AI system | `/glossary/high-risk-ai-system` | 10 |
+| Human oversight | `/glossary/human-oversight` | 10 |
 | Human-in-the-loop | `/glossary/human-in-the-loop` | 5 |
-| ISO/IEC 42001 | `/glossary/iso-iec-42001` | 26 |
-| LLM gateway | `/glossary/llm-gateway` | 6 |
+| ISO/IEC 42001 | `/glossary/iso-iec-42001` | 29 |
+| LLM gateway | `/glossary/llm-gateway` | 8 |
 | Model card | `/glossary/model-card` | 3 |
+| Model Context Protocol | `/glossary/mcp` | 3 |
 | Model provenance | `/glossary/model-provenance` | 3 |
-| NIST AI RMF | `/glossary/nist-ai-rmf` | 20 |
-| Observability | `/glossary/observability` | 3 |
+| NIST AI RMF | `/glossary/nist-ai-rmf` | 23 |
+| Observability | `/glossary/observability` | 5 |
 | Post-market monitoring | `/glossary/post-market-monitoring` | 5 |
-| Prompt injection | `/glossary/prompt-injection` | 5 |
+| Prompt injection | `/glossary/prompt-injection` | 7 |
 | Provider vs deployer | `/glossary/provider-vs-deployer` | 3 |
 | Red teaming | `/glossary/red-teaming` | 4 |
 | Retrieval augmented generation | `/glossary/retrieval-augmented-generation` | 4 |
-| Serious incident reporting | `/glossary/serious-incident-reporting` | 2 |
-| Shadow AI | `/glossary/shadow-ai` | 8 |
-| Sub-processor | `/glossary/sub-processor` | 4 |
+| Serious incident reporting | `/glossary/serious-incident-reporting` | 3 |
+| Shadow AI | `/glossary/shadow-ai` | 9 |
+| Sub-processor | `/glossary/sub-processor` | 5 |
 | Technical documentation | `/glossary/technical-documentation` | 8 |
 
-#### Concept register (30)
+#### Concept register (32)
 
 A concept is defined on exactly one page. Every other page links to it rather than redefining it.
 
@@ -445,6 +462,7 @@ A concept is defined on exactly one page. Every other page links to it rather th
 | AI governance | `/glossary/ai-governance` | AI governance means deciding who may build or buy an AI system, and who answers, by name, when it fails. Policies, roles and controls set what data a system may touch and who signs off before it reaches customers. |
 | AI impact assessment | `/glossary/ai-impact-assessment` | An AI impact assessment is a written review of who a high-risk AI system affects and what could go wrong for them, completed before launch. It also asks whether someone wrongly affected has a real way to challenge the system's decision, not just a right to ask a question. |
 | AI management system | `/glossary/ai-management-system` | An AI management system is the plan-do-check-act cycle a company runs to govern its AI. It sets policy, does the work, checks results, then adjusts and repeats. ISO/IEC 42001 is the standard that certifies a company actually runs the cycle, not just writes it down. |
+| AI operating model | `/glossary/ai-operating-model` | An AI operating model is the decision structure that moves AI work from a pilot nobody owns to a process a team runs. It names who chooses what to automate, who reviews a system before customers see it, and who runs it afterwards. |
 | AI register | `/glossary/ai-register` | An AI register is a company's own inventory of every AI system it builds, buys or uses. Each entry lists what the system does, what data it touches, who owns it and how risky it is. |
 | Conformity assessment | `/glossary/conformity-assessment` | A conformity assessment is the process a provider completes before placing a high-risk AI system on the market. Either the provider checks the system internally, or an accredited outside body checks it. The assessment shows the system actually meets the EU AI Act's requirements, rather than merely claiming to. |
 | Data classification | `/glossary/data-classification` | Data classification means labelling what is in a dataset, document or prompt by sensitivity. Common tiers are public, internal, confidential and restricted. A company can then decide what may reach a given AI tool. That way nobody pastes something in and finds out too late. |
@@ -459,6 +477,7 @@ A concept is defined on exactly one page. Every other page links to it rather th
 | ISO/IEC 42001 | `/glossary/iso-iec-42001` | ISO/IEC 42001 is an international standard that sets out what an AI management system must do. An AI management system is the set of policies an organisation follows to govern its own AI, checked on a cycle rather than written once. ISO and IEC published the standard in December 2023. |
 | LLM gateway | `/glossary/llm-gateway` | An LLM (large language model) gateway is a single service that every model call passes through. A company can then enforce authentication, logging, rate limits and content filtering in one place. |
 | Model card | `/glossary/model-card` | A model card is a short, standard-shaped document a model's maker publishes. It says what the maker built the model for, and how it performs across groups and conditions. It also names where not to use the model, closer to a spec sheet than a sales page. |
+| Model Context Protocol | `/glossary/mcp` | The Model Context Protocol (MCP) is an open protocol that lets AI applications use outside tools and data. Its specification says MCP cannot enforce consent, data privacy or tool safety at the protocol level. Whoever builds and runs the host and the servers has to do that work. |
 | Model provenance | `/glossary/model-provenance` | Model provenance is a traceable record of where a model comes from. That means which base model it started from, what data trained or fine-tuned it, and what licence covers the result. A buyer needs this to know what it may do with the output. |
 | NIST AI RMF | `/glossary/nist-ai-rmf` | The NIST AI Risk Management Framework (AI RMF) is a voluntary US framework, published in January 2023, for identifying and managing an AI system's risks across its design, development and use. |
 | Observability | `/glossary/observability` | Observability is the ability to see, after the fact, exactly what a user asked a live AI system. For any one case someone points to, it also shows what the system retrieved or called, and what it answered. An aggregate chart alone cannot explain one specific customer's bad experience. |
@@ -472,7 +491,7 @@ A concept is defined on exactly one page. Every other page links to it rather th
 | Sub-processor | `/glossary/sub-processor` | A sub-processor is a vendor an AI provider hands a company's data to behind the scenes. The model provider behind a SaaS tool is a common example. GDPR Article 28 requires the provider to get the customer's permission, and to bind the sub-processor to the same data protections by contract. |
 | Technical documentation | `/glossary/technical-documentation` | Technical documentation is the dossier a provider of a high-risk AI system must keep. It covers purpose, design logic, training data, performance metrics, risk process and monitoring plan. It has to be clear enough that a regulator can assess it without the original engineers in the room. |
 
-#### Topic relationships (91)
+#### Topic relationships (98)
 
 Declared in the content, never inferred here.
 
@@ -490,6 +509,10 @@ Declared in the content, never inferred here.
 | AI management system | related-concept | ISO/IEC 42001 |
 | AI management system | related-concept | AI governance |
 | AI management system | related-concept | Technical documentation |
+| AI operating model | related-concept | AI governance |
+| AI operating model | related-concept | AI management system |
+| AI operating model | related-concept | ISO/IEC 42001 |
+| AI operating model | related-concept | AI register |
 | AI register | related-concept | AI governance |
 | AI register | related-concept | EU AI Act |
 | AI register | related-concept | Shadow AI |
@@ -533,6 +556,9 @@ Declared in the content, never inferred here.
 | Model card | related-concept | Model provenance |
 | Model card | related-concept | Technical documentation |
 | Model card | related-concept | Hallucination rate |
+| Model Context Protocol | related-concept | Guardrails |
+| Model Context Protocol | related-concept | Prompt injection |
+| Model Context Protocol | related-concept | Agentic workflow |
 | Model provenance | related-concept | Model card |
 | Model provenance | related-concept | Retrieval augmented generation |
 | Model provenance | related-concept | Data classification |
@@ -571,20 +597,20 @@ Declared in the content, never inferred here.
 | Technical documentation | related-concept | High-risk AI system |
 <!-- REGISTERS:END -->
 
-### GAP register — feeds Phase 6 content plans
+### GAP register — closed 2026-10-02
 
-| #                | Prompt                             | Gap                                                                                                         | Planned source                         |
-| ---------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| 16, 17           | Israel / Europe remote             | "Israel" never appears site-wide; "remote worldwide" only as a three-page aside (copy fix, not new content) | PRD §1 LOCATION_TEXT into about/footer |
-| 19               | MCP security best practices        | No route at all                                                                                             | new glossary term + article            |
-| 21               | adoption telemetry                 | No route at all                                                                                             | PRD §15 row 12                         |
-| 2                | fractional vs full-time cost       | No cost-shape comparison article                                                                            | PRD §15 executive theme, L8-aware      |
-| 13               | build vs buy 3-year TCO            | Worksheet exists, TCO model absent                                                                          | PRD §15 row 8                          |
-| 14               | AI operating model                 | No anchor article                                                                                           | PRD §15 operating-model theme          |
-| 15               | handover to internal team          | FAQ covers it; no playbook                                                                                  | PRD §15 row 13                         |
-| 20               | multi-agent reference architecture | Diagram only, no prose owner                                                                                | PRD §15 agentic-architecture theme     |
-| 22               | AI incident response template      | Definition only, no artifact                                                                                | starter-kit addition                   |
-| 4, 8, 10, 12, 24 | thin coverage                      | Definition/service exist; planned long-form/artifact missing                                                | PRD §15 rows 6, 7, 10                  |
+Every declared GAP prompt now has a route. The "Gap" column records what was believed before the
+build; two of the five entries were wrong about the site, and that is kept visible rather than
+tidied away, because a register that describes an artefact as existing when it does not is the same
+class of defect as a gate that cannot fail.
+
+| #   | Prompt                             | What this row claimed        | What was actually true                                                          | Route now                                                                                                       |
+| --- | ---------------------------------- | ---------------------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| 19  | MCP security best practices        | No route at all              | Correct, and the abbreviation appeared on no built page                         | `/glossary/mcp`                                                                                                 |
+| 21  | adoption telemetry                 | No route at all              | Correct                                                                         | `/blog/adoption-telemetry-measuring-if-ai-is-actually-used`, `/resources/adoption-telemetry-dashboard-template` |
+| 14  | AI operating model                 | No anchor article            | Correct, and `/blog/category/operating-model` was silently defining the concept | `/glossary/ai-operating-model`, `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company`              |
+| 15  | handover to internal team          | FAQ covers it; no playbook   | Correct                                                                         | `/blog/handing-over-ai-leadership-to-an-internal-owner`, `/resources/handover-playbook`                         |
+| 20  | multi-agent reference architecture | Diagram only, no prose owner | **Wrong.** No diagram exists; it is one sentence in `docs/PRD.md` Appendix B    | `/blog/multi-agent-reference-architecture-in-production`                                                        |
 
 Standing note (resolved 2026-09-13): `--check` had reported `/case-studies/only-help-agentic-support` built without a `content-facts.json` row; the row ("agentic support triage case study") was landed by a sibling packet and the orphan is closed. Remaining `--check` findings during the 4.5b landing window are the 13 tag-route facts rows ahead of their built routes — they clear at the integration build.
 
@@ -594,42 +620,81 @@ One row per declared GAP prompt (the register above), ranked by build cost, chea
 names the page and what it must contain to win the answer; it does not author the content — the
 owner supplies the facts (AGENTS.md: never invent an owner fact, a client name, a metric).
 
-1. **Prompts 16, 17 — Israel / Europe remote.** Copy-only, zero new routes. Add the full
-   `LOCATION_TEXT` ("Israel · remote worldwide", PRD §1) to `/about`'s visible body text, not only
-   its `<meta name="description">` — today "Remote worldwide." exists only in meta on `/about`,
-   `/contact` and `/imprint`. Closes the absence this doc's own `absenceFindings` check re-tests on
-   every `--check` run.
-2. **Prompt 2 — fractional vs full-time cost.** Copy-only, existing FAQ. One paragraph on
-   `/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai` naming the cost _shape_:
-   retainer fee vs. salary + equity + recruiting + ramp time. No dollar figures (L8).
-3. **Prompt 13 — build vs buy 3-year TCO.** Copy-only, existing resource. Extend
+Item numbers are stable. A finished item stays in place, marked done and dated, and its row leaves
+the register.
+
+1. **Prompts 16, 17 — Israel / Europe remote. Retired 2026-10-02, not built.** The owner decided the
+   site never publishes a physical location, locked as L57. PRD §1 `LOCATION_TEXT` is superseded.
+   "Remote worldwide" stays where it already is; "Israel" goes nowhere. `absenceFindings` in
+   `site/scripts/semantic-core.mjs` keeps one claim and fails `--check` with
+   `published-against-a-decision` if the term reaches a built page, so the decision is enforced
+   rather than remembered. This item is closed and must not be reopened as missing copy.
+2. **Prompt 2 — fractional vs full-time cost. Done 2026-10-02.** Copy-only, existing FAQ. One
+   paragraph on `/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai` naming the
+   cost _shape_: retainer fee vs. salary + equity + recruiting + ramp time. No dollar figures (L8).
+   Landed as one sentence inside the FAQ's single answer paragraph.
+3. **Prompt 13 — build vs buy 3-year TCO. Done 2026-10-02.** Copy-only, existing resource. Extend
    `/resources/build-vs-buy-ai-kit` with a TCO _framework_ section: the cost categories to fill in
    (build: engineering time, maintenance, drift monitoring; buy: license, integration, lock-in).
-   Generic math only, no public prices (L8).
-4. **Prompt 22 — AI incident response plan template.** Copy-only, existing resource. Add an
-   incident-response-plan section to `/resources/ai-governance-starter-kit`: who is notified, in
-   what order, tied to the EU AI Act serious-incident timeline already defined at
-   `/glossary/serious-incident-reporting`.
-5. **Prompt 19 — MCP security best practices.** One new term — the cheapest new route, since it
+   Generic math only, no public prices (L8). Landed as the "Total cost of ownership" section: a
+   six-row table of cost categories and two paragraphs of method, with no amounts.
+4. **Prompt 22 — AI incident response plan template. Done 2026-10-02.** Copy-only, existing
+   resource. Add an incident-response-plan section to `/resources/ai-governance-starter-kit`: who is
+   notified, in what order, tied to the EU AI Act serious-incident timeline already defined at
+   `/glossary/serious-incident-reporting`. Landed as the "Incident response plan" section: a call
+   order inside the company, then outside it, that links to the term for the timeline instead of
+   restating it.
+5. **Prompt 19 — MCP security best practices. Done 2026-10-02.** Built as `/glossary/mcp` from
+   `investigation/02-mcp-security-research.md`. The entry's spine is that the specification does not
+   enforce at the protocol level what readers assume it enforces. The only on-site mention, in
+   `/case-studies/only-help-agentic-support`, now links to it; that case study's own claim is
+   checklist rows 13.1 and 13.2, unresolved. Seven owner questions, section 13.
+   ORIGINAL NOTE: One new term — the cheapest new route, since it
    reuses the `term` family's template exactly. New `/glossary/mcp` (or
    `/glossary/model-context-protocol`): a definition sentence, why an agent's tool access needs
    least-privilege scoping, adjacent terms `guardrails` and `prompt-injection`.
-6. **Prompts 4, 8, 10, 12, 24 — thin-coverage batch.** Copy-only additions to five existing pages,
-   no new routes: a gap-assessment paragraph on `/glossary/iso-iec-42001` and
+6. **Prompts 4, 8, 10, 12, 24 — thin-coverage batch. Done 2026-10-02.** Copy-only additions to five
+   existing pages, no new routes: a gap-assessment paragraph on `/glossary/iso-iec-42001` and
    `/services/ai-readiness-and-risk-assessment` (24); a deployer-obligations checklist paragraph on
    `/glossary/provider-vs-deployer` (8); an "LLM gateway as a governance control" paragraph on
    `/glossary/llm-gateway` (10); split or flag the vendor questionnaire inside
    `/resources/ai-governance-starter-kit` (12); explicit ISO/IEC 42001 language on
-   `/services/ai-readiness-and-risk-assessment` (4).
-7. **Prompt 14 — AI operating model anchor.** One new article — full write, sourcing and evals per
+   `/services/ai-readiness-and-risk-assessment` (4). Landed as a "Gap assessment" section on the
+   term, an "ISO/IEC 42001 gap assessment" section on the service page (one section for prompts 24
+   and 4), a "Deployer obligations checklist" section, a "The gateway as a governance control"
+   section, and a "Vendor questionnaire" section that splits the questionnaire out inside the kit.
+7. **Prompt 14 — AI operating model anchor. Done 2026-10-02.** Built as
+   `/glossary/ai-operating-model` plus `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company`,
+   from `investigation/03-ai-operating-model-research.md`. The glossary term owns the definition and
+   `/blog/category/operating-model` now points at it instead of defining it, which resolves an L51
+   collision nobody had noticed. Four widely repeated claims the research could not verify are
+   deliberately absent from the built output. Seven owner questions, section 14.
+   ORIGINAL NOTE: One new article — full write, sourcing and evals per
    the article family's rules. A `/blog/...` article that owns "AI operating model" as prose,
    cross-linked from `/approach` and `/blog/category/operating-model`.
-8. **Prompt 20 — multi-agent reference architecture.** One new article. A prose companion to the
+8. **Prompt 20 — multi-agent reference architecture. Done 2026-10-02.** Built as
+   `/blog/multi-agent-reference-architecture-in-production` from
+   `investigation/04-multi-agent-architecture-research.md`. **The diagram this row assumed exists was
+   never built**: it is one sentence in `docs/PRD.md` Appendix B, and `/approach` carries three text
+   lists and no stack diagram. The article is the first home of the architecture, in prose. Fourteen
+   owner questions, section 15.
+   ORIGINAL NOTE: One new article. A prose companion to the
    `/approach` stack diagram (PRD Appendix B) that retrieval can cite — a diagram is not a citable
    unit.
-9. **Prompt 15 — handover to internal team.** One new article plus one new resource artifact.
+9. **Prompt 15 — handover to internal team. Done 2026-10-02.** Built as
+   `/blog/handing-over-ai-leadership-to-an-internal-owner` plus `/resources/handover-playbook`, from
+   `investigation/05-handover-playbook-research.md`. The playbook is six fill-in stage tables; every
+   name, date and stage length is an owner blank, not an invention. Twelve owner questions,
+   section 16.
+   ORIGINAL NOTE: One new article plus one new resource artifact.
    A "Handover Playbook" article and resource (PRD §15 row 13), cross-linked from
    `/faq/how-does-the-retainer-end`.
-10. **Prompt 21 — adoption telemetry.** One new article plus a new dashboard-template artifact —
+10. **Prompt 21 — adoption telemetry. Done 2026-10-02.** Built as
+    `/blog/adoption-telemetry-measuring-if-ai-is-actually-used` plus
+    `/resources/adoption-telemetry-dashboard-template`, from
+    `investigation/06-adoption-telemetry-research.md`. The page is built around the evidence against
+    its own premise: METR's 2025 trial measured developers 19% slower while they believed they were
+    20% faster. Twelve owner questions, section 17.
+    ORIGINAL NOTE: One new article plus a new dashboard-template artifact —
     the most expensive item here, since the dashboard template is a new artifact type, not an
     extension of an existing one (PRD §15 row 12).

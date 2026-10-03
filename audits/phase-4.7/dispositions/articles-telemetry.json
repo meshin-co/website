@@ -1,0 +1,142 @@
+[
+  {
+    "target": "src/data/post/adoption-telemetry-measuring-if-ai-is-actually-used.md",
+    "location": "frontmatter.description",
+    "status": "rewritten",
+    "reason": "Checked 2026-10-03 against dist/blog/adoption-telemetry-measuring-if-ai-is-actually-used.html. Rewritten today: the fix for the METR 2025 trial (D4) put the 'out of date' hedge into every place the trial appears. The same sentence appears four times in the built HTML, including the meta, og and twitter descriptions. Each claim is carried by the record: 'In METR's 2025 trial, 16 developers' and 'believed AI made them 20% faster' are lines 131-133 (16 experienced open-source developers; afterwards they still believed in 20%); 'Tasks took 19% longer with AI allowed' is line 132; 'METR now marks that result out of date' is lines 133-134 and 410-411, and METR's live 2025 post carries the banner (fetched 2026-10-03, outside the record). '2025 trial' is the year the trial ran; the July 2025 publication date appears only in the body. The row states what the trial found. It does not say how task time was recorded: the record is silent, and METR's own post (outside the record) says developers self-reported the total implementation time while recording their screens. The row does not call the figure a measurement. No owner key applies.",
+    "digest": "14704dff173e"
+  },
+  {
+    "target": "src/data/post/adoption-telemetry-measuring-if-ai-is-actually-used.md",
+    "location": "frontmatter.shortAnswer",
+    "status": "owner-blocked",
+    "reason": "Checked 2026-10-03 against dist/blog/adoption-telemetry-measuring-if-ai-is-actually-used.html. Verified in this row: “developers believed AI made them 20% faster, while their tasks took 19% longer” matches §2.2 line 131-134 and §3.1 item 1 lines 354-355 (METR 2025 post, read in full, primary), and the required hedge “METR now marks that result out of date” is present in the next sentence (lines 133-134 and 410-411; METR’s live 2025 post carries the banner, fetched 2026-10-03, outside the record). Provisional pending the owner: “Count use by team” prints the team-level default that row 17.6 asks the owner to confirm [telemetry-people-data]; “read one outcome per use case against a baseline or comparison group” prints a method whose setting at 30 to 300 people is the owner’s to give [telemetry-baseline-outcomes]; “should show whether use lasted” restates the /approach adoption line while no page gives the counting rule [telemetry-approach-count]. The telemetry-is-theatre voice question (checklist row 17.8) does not attach to this row: it recommends what telemetry should show and does not say what most telemetry counts. The record offers each as the writer’s recommendation (Verdict, lines 20-27; §3.1 verdict, lines 384-401), not as a sourced finding.",
+    "digest": "14704dff173e"
+  },
+  {
+    "target": "src/data/post/adoption-telemetry-measuring-if-ai-is-actually-used.md",
+    "location": "frontmatter.fullAnswer",
+    "status": "owner-blocked",
+    "reason": "Checked 2026-10-03 against dist/blog/adoption-telemetry-measuring-if-ai-is-actually-used.html. Rewritten today (the METR hedge and the scoped absence). Verified in this row: 'usually reports seats, logins, active users and prompts' carries its own label, 'That is an inference from the sources cited here', which matches the record's 'This is my reading' (lines 16-19); 'None of them shows any of those counts predicting a business result' is scoped to the cited sources, as lines 17-19 scope it. The METR sentences (16 experienced developers expected a 24% speed-up, believed they had been 20% faster, tasks took 19% longer, 'METR now marks that result out of date') are lines 131-134. The row states them as the trial's findings and does not say how task time was recorded (the record is silent; METR's post, outside the record, says developers self-reported the time while recording their screens). The NBER sentences match lines 169-172: working paper issued in February 2026, nearly 6,000 senior executives, 69% of firms use AI, nine in ten report no impact on employment or productivity over three years, and 'That is also self-report' (line 172). 'A smaller set is easier to defend: coverage, retention by team, one agreed outcome, delivery health, cost per outcome and a trust survey read as opinion' is lines 20-24 (a) to (f); the next sentence labels it 'a synthesis, not a finding any source states', as line 401 requires. 'Collect it by team, and screen any per-person view first' is lines 25-27. Provisional pending the owner: the set names retention by team while no page gives the owner's counting rule [telemetry-approach-count]. The voice question of row 17.8 is met by the labels inside the row.",
+    "digest": "14704dff173e"
+  },
+  {
+    "target": "src/data/post/adoption-telemetry-measuring-if-ai-is-actually-used.md",
+    "location": "frontmatter.keyTakeaways.0",
+    "status": "owner-blocked",
+    "reason": "Checked 2026-10-03 against dist/blog/adoption-telemetry-measuring-if-ai-is-actually-used.html. Second sentence verified: “None of the sources cited here shows such a count predicting a business result” matches the Verdict (lines 16-19: ‘none of them is shown to predict a business outcome’, record’s own reading) and is scoped to the cited sources as the record scopes it. The first sentence, “A seat or login count shows exposure.”, is the record’s synthesis stated flat: lines 16-19 say ‘This is my reading’ and lines 384-385 and 401 say ‘This verdict is my synthesis’; no source says it. That is the stronger voice that row 17.8 puts to the owner [telemetry-theatre-voice]. Checklist row 17.8 and the TODO(owner) marker say the answer fields do not state it flatly, and this takeaway does, with no label in the sentence. It also sits oddly beside the page’s own table, where seats count ‘Money spent’ (record line 192). Provisional until the owner answers.",
+    "digest": "14704dff173e"
+  },
+  {
+    "target": "src/data/post/adoption-telemetry-measuring-if-ai-is-actually-used.md",
+    "location": "frontmatter.keyTakeaways.1",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/adoption-telemetry-measuring-if-ai-is-actually-used.html. “In METR’s 2025 trial, developers believed they were 20% faster while their tasks took 19% longer” matches §2.2 lines 131-134 and §3.1 item 1 lines 354-355 (METR 2025 post, read in full, primary). The required hedge is in the row: “METR now marks that result out of date” (lines 133-134, 410-411; the live METR post carries the banner, fetched 2026-10-03, outside the record). “People can misjudge what AI does for them” is a modal claim resting on this one trial and on the record’s note that METR’s later survey work says self-reports run high (lines 355-356, 145-147); it states no rule. The row names no position, practice or commitment of the owner, so no key applies.",
+    "digest": "14704dff173e"
+  },
+  {
+    "target": "src/data/post/adoption-telemetry-measuring-if-ai-is-actually-used.md",
+    "location": "frontmatter.keyTakeaways.2",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/adoption-telemetry-measuring-if-ai-is-actually-used.html. Figures match §2.2 lines 169-172 (Yotzov and others, NBER working paper 34836, issued February 2026; abstract read; grade: working paper, executive self-report): ‘nearly 6,000 senior executives’, and the record’s ‘nine-in-ten’ who report no impact on employment or productivity over three years (the page writes nine in ten). Qualifiers present in the row: working paper, issued February 2026, senior executives, ‘over three years’, and ‘that is also self-report’ (the record, line 172, grades the survey as executive self-report). Checked outside the record against the live NBER abstract (fetched 2026-10-03): the nine-in-ten are executives, not firms (‘executives report little own-firm impact of AI over the last 3 years, with nine-in-ten reporting no impact on employment or productivity’). Non-blocking: this row does not repeat the abstract-only grade (the page’s table does), does not say the three years are the last three, and drops ‘own-firm’; ‘too’ and ‘little effect’ are the writer’s wording. No owner key applies.",
+    "digest": "14704dff173e"
+  },
+  {
+    "target": "src/data/post/adoption-telemetry-measuring-if-ai-is-actually-used.md",
+    "location": "frontmatter.keyTakeaways.3",
+    "status": "owner-blocked",
+    "reason": "Checked 2026-10-03 against dist/blog/adoption-telemetry-measuring-if-ai-is-actually-used.html. Verified: “only the outcome measure can show whether it worked” is the record’s ‘only panel that can show value’ (lines 392-393), and the row labels it “a synthesis, not a finding any source states”, which is what line 401 requires; the hedge is present. “Telemetry shows whether use lasted” is the line the record tells the page to say (lines 461-463) and it echoes the /approach adoption measure and the home line. Provisional pending the owner: the sentence is the verdict voice that row 17.8 puts to the owner, including how it sits beside /approach [telemetry-theatre-voice]; and it says what telemetry shows while no page states what the owner counts [telemetry-approach-count]. Nothing else in the row is contested.",
+    "digest": "14704dff173e"
+  },
+  {
+    "target": "src/data/post/adoption-telemetry-measuring-if-ai-is-actually-used.md",
+    "location": "frontmatter.keyTakeaways.4",
+    "status": "owner-blocked",
+    "reason": "Checked 2026-10-03 against dist/blog/adoption-telemetry-measuring-if-ai-is-actually-used.html. “Collect by team” and “Screen any per-person view for a DPIA first” restate the record’s Verdict (lines 25-27: aggregate by default; a per-person view needs a stated purpose and a DPIA screening; where a works council exists in Germany, the Netherlands or France, its involvement). The record gives these as the writer’s advice, noting that no source gives a bright line; the row states no figure, date or quote, and it carries the condition “where a works council exists”. Provisional pending the owner: the team-level default and the screening-first step are choices row 17.6 asks the owner to confirm [telemetry-people-data]; checking works-council rights before switch-on is the sequence step row 17.7 asks about [telemetry-works-councils-dpia].",
+    "digest": "14704dff173e"
+  },
+  {
+    "target": "src/data/post/adoption-telemetry-measuring-if-ai-is-actually-used.md",
+    "location": "frontmatter.faq.0.q",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/adoption-telemetry-measuring-if-ai-is-actually-used.html. The question 'Is a daily active user count a useful adoption metric?' states no figure, date, attribution or position. It matches the daily or weekly active users row of §2.3 (line 193) and the master-plan wording 'DAU/WAU of AI tools' quoted in §1 (lines 36-38). No checklist key waits on the question itself.",
+    "digest": "14704dff173e"
+  },
+  {
+    "target": "src/data/post/adoption-telemetry-measuring-if-ai-is-actually-used.md",
+    "location": "frontmatter.faq.0.a",
+    "status": "owner-blocked",
+    "reason": "Checked 2026-10-03 against dist/blog/adoption-telemetry-measuring-if-ai-is-actually-used.html. Verified: “GitHub, Microsoft and DORA each define use differently” matches §2.1 lines 55-57, 68-70 and 75-78, §2.2 lines 119-121 and §3.2 lines 405-407 (GitHub two active days in 28; Microsoft one action in a period over a rolling 12 weeks; DORA a survey factor, not logs). Provisional pending the owner: “Not as a measure of value. A count says someone used the tool. It does not say work improved.” is the record’s verdict (lines 384-386; ‘my synthesis’, line 401) stated flat with no label. Checklist row 17.8 and the TODO(owner) marker say the answer fields do not say it flatly, and this answer does [telemetry-theatre-voice]. “Paid versus active use and retention by team are the usage views this article supports” names retention as the supported view while no page gives the owner’s counting rule [telemetry-approach-count]. Non-blocking, added after the 2026-10-03 fixes: 'the usage views this article supports' is not the whole supported set, because the six-measure table also supports coverage (record lines 20-21), which counts use by channel.",
+    "digest": "14704dff173e"
+  },
+  {
+    "target": "src/data/post/adoption-telemetry-measuring-if-ai-is-actually-used.md",
+    "location": "frontmatter.faq.1.q",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/adoption-telemetry-measuring-if-ai-is-actually-used.html. The question “Do vendor hours-saved figures show value?” states no figure, date, attribution or position. It matches the vendor hours saved and ROI row of §2.3 (line 197). No checklist key waits on the question itself.",
+    "digest": "14704dff173e"
+  },
+  {
+    "target": "src/data/post/adoption-telemetry-measuring-if-ai-is-actually-used.md",
+    "location": "frontmatter.faq.2.a",
+    "status": "rewritten",
+    "reason": "Checked 2026-10-03 against dist/blog/adoption-telemetry-measuring-if-ai-is-actually-used.html and the FAQPage JSON-LD, where the answer is identical. Rewritten today: fix D4 put the 'METR now marks that result out of date' hedge into this answer. 'Belief can run ahead of what a trial finds' and 'developers believed AI had sped them up by 20% while their tasks took 19% longer' are lines 131-134; METR's 40-point overestimate and the note that survey estimates run larger than field-experiment estimates are lines 145-147; the hedge is lines 133-134 and 410-411 (METR's live post carries the banner, fetched 2026-10-03, outside the record). The row says 'a trial finds', not 'measured', and does not say how task time was recorded (the record is silent; METR's post, outside the record, says developers self-reported it while recording their screens). 'Use a survey for trust and friction, and read it as opinion' is the survey measure (f) at lines 23-24 and is advice. No owner key applies.",
+    "digest": "14704dff173e"
+  },
+  {
+    "target": "src/data/post/adoption-telemetry-measuring-if-ai-is-actually-used.md",
+    "location": "frontmatter.faq.2.q",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/adoption-telemetry-measuring-if-ai-is-actually-used.html. The question “Can a staff survey tell us whether an AI tool works?” states no figure, date, attribution or position. It matches the self-reported speed-up row of §2.3 (line 198). No checklist key waits on the question itself.",
+    "digest": "14704dff173e"
+  },
+  {
+    "target": "src/data/post/adoption-telemetry-measuring-if-ai-is-actually-used.md",
+    "location": "frontmatter.faq.3.a",
+    "status": "rewritten",
+    "reason": "Checked 2026-10-03 against dist/blog/adoption-telemetry-measuring-if-ai-is-actually-used.html and the FAQPage JSON-LD, where the answer is identical. Rewritten today: the country sentences were brought down to what the body table shows. 'Not by default' and 'A DPIA screening comes first' are the record's default (lines 25-27: aggregate by default; a per-person view needs a stated purpose and a DPIA screening). 'A log that names people is personal data' rests on the record's own note at lines 464-465, a statement of EU law by the record's writer and not a quoted article. 'In Germany a works council has a say over tools that can monitor staff' is § 87(1) Nr. 6 BetrVG as the Federal Labour Court reads it (lines 248-253: objective suitability, employer intent does not matter). 'The Netherlands and France involve staff representatives in different ways' is Article 27(1) WOR, which needs works-council consent (lines 262-264), and the CNIL's three conditions, which include submission to the CSE at employers with 50 or more staff (lines 269-271). 'Whether these rules cover an AI usage log is an inference' matches the record (lines 204-205 and 256: applied by analogy, my reading, no court decision on AI usage dashboards found) and sits on the sentence it qualifies. 'Ask your data protection officer or counsel' is advice to the reader, not a referral route of the owner's, so row 17.7 does not attach.",
+    "digest": "14704dff173e"
+  },
+  {
+    "target": "src/data/post/adoption-telemetry-measuring-if-ai-is-actually-used.md",
+    "location": "frontmatter.faq.3.q",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/adoption-telemetry-measuring-if-ai-is-actually-used.html. The question “Can we report AI usage by named employee?” states no figure, date, attribution or position. It matches the people-data scope of record §2.4 (lines 202-313) and the Verdict (lines 25-27). No checklist key waits on the question itself.",
+    "digest": "14704dff173e"
+  },
+  {
+    "target": "src/data/post/adoption-telemetry-measuring-if-ai-is-actually-used.md",
+    "location": "frontmatter.title",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/adoption-telemetry-measuring-if-ai-is-actually-used.html. 'Adoption telemetry for AI tools: what a trial found' names the subject and promises a trial finding; the article's lead table and opening section are the METR 2025 randomised trial, so the promise is kept. The title states no figure, date or attribution, and takes no verdict voice, so telemetry-theatre-voice (17.8) does not attach: the checklist records that the title deliberately does not say the flat verdict. The h1, the breadcrumb and the JSON-LD headline carry the same words.",
+    "digest": "14704dff173e"
+  },
+  {
+    "target": "src/data/post/adoption-telemetry-measuring-if-ai-is-actually-used.md",
+    "location": "frontmatter.faq.1.a",
+    "status": "rewritten",
+    "reason": "Checked 2026-10-03 against dist/blog/adoption-telemetry-measuring-if-ai-is-actually-used.html and the FAQPage JSON-LD, where the answer is identical. Rewritten today to match the addendum to record 06 (addendum item 1): the assisted-hours method now reads 'action counts, fixed minutes per action, and meeting recaps counted by meeting length', which carries both halves of the corrected method (the 6-minutes-per-action fixed minutes, and the half-hour-into-a-one-hour-meeting recap counting), and 'A default hourly rate then values those hours' states the rate as a valuation, not an input, exactly as the addendum corrects it. 'GitHub says its ROI figures are estimates rather than exact financial results' is record 06 section 2.1. 'Not on their own' is the scoped verdict this FAQ is allowed. No owner fact waits on the row.",
+    "digest": "14704dff173e"
+  },
+  {
+    "target": "src/data/post/adoption-telemetry-measuring-if-ai-is-actually-used.md",
+    "location": "body",
+    "status": "rewritten",
+    "reason": "Read the whole built article in dist/blog/adoption-telemetry-measuring-if-ai-is-actually-used.html on 2026-10-03 against record 06 and its 2026-10-03 addendum. Verified: the METR opening (16 developers, 246 issues, 24% expected, 20% believed, 19% longer) with the out-of-date hedge in every appearance, the method-not-size lesson, and the six-source table (trial, follow-up with both intervals including a slowdown, Brynjolfsson 15% over 5,172 agents, survey medians and the near-2% response rate, NBER 69% and nine in ten, DORA 80% with the snapshot and vendor gradings); the follow-up paragraph splits METR's two stated reasons exactly as addendum item 2 corrects them (developers choosing not to participate rather than work without AI, listed first; selective task submission listed separately); the active-user rules (two days in 28 with the 'Passive' quote, the rolling 12 weeks and returning user, the DORA survey factor) and the 'no shared definition' finding; the misleading-measures table (seat data in a separate API, the DORA 2024 reliance quote, the Cursor transient-lines and lasting-complexity finding, Faros 21%/98%/91% observational, the 2022 acceptance-rate preprint, the Microsoft method per the addendum, the 40-point overestimate hedged, Intercom's assumed resolutions charged unless escalated, the adoption multiplier with the marked inference); the 'none shows a count predicting a result' absence, scoped; the six-measure set with its 'synthesis of the evidence above. No source states it in these words' label, the diagnostics-versus-value split, the DORA throughput-and-instability comparison framing, and the approach-page reconciliation ('Telemetry shows whether use lasted. An outcome measure shows whether it worked'), which is the record's own reconcile note; the outcome section (system of record, the before-and-after inference labelled, METR's unreliable signal); the people-data section (the ICO re-use example marked UK law, Article 5, the WP248 criteria with the vulnerable-group and two-criteria reading marked as inference, the WP249 consent opinion with the old-directive caveat, the works-council table with Germany's objective-suitability reading and the marked inference, the Netherlands secondary copy, the CNIL three conditions dated 9 July 2026, the Claude Code email default with the marked collector inference, the Viva minimum of five as a product setting with no legal figure, the row-level opt-out note marked as inference, and the tell-staff duties); the dashboard-fit paragraphs (eight panels, cross-references that hold on the built pages); and the leave-out section ('It reports no client results', the undated AI-system question, the not-legal-advice line). Riders: the 'Keep three things off any dashboard' paragraph and the team-level advice restate the record's hard-rules synthesis with their reasons shown, and telemetry-people-data (17.6) keeps the owner's confirmation of those defaults open behind them; nothing in the row blesses an owner practice, because none is stated. Rewritten this session under the D4 and addendum fixes; read correct as built.",
+    "digest": "14704dff173e"
+  },
+  {
+    "target": "/blog/adoption-telemetry-measuring-if-ai-is-actually-used",
+    "location": "head.title",
+    "status": "verified",
+    "reason": "Read as built on 2026-10-03: the article title 'Adoption telemetry for AI tools: what a trial found', plus the site suffix ' — meshin.co'. It asserts no fact beyond the title read on frontmatter.title.",
+    "digest": "4fc8084fd765"
+  },
+  {
+    "target": "/blog/adoption-telemetry-measuring-if-ai-is-actually-used",
+    "location": "body.p",
+    "status": "rewritten",
+    "reason": "Read every paragraph rendered in dist/blog/adoption-telemetry-measuring-if-ai-is-actually-used.html on 2026-10-03 (the description and short-answer and full-answer twins, the takeaways, every section paragraph and FAQ answer, the composed read-time and date rows, the 'EUR-Lex · retrieved 2026-10-02'-style attribution strings, and the related-card paragraphs). The entity-encoded twins are verified against record 06 and its addendum exactly as recorded for the body row of src/data/post/adoption-telemetry-measuring-if-ai-is-actually-used.md, including the METR out-of-date hedge in the card text, the Microsoft assisted-hours method per addendum item 1 and the METR two-reason split per addendum item 2. The composed rows ('02 Oct 2026 · 14 min read · AI operating model', '08 Sept 2026 · 6 min read · AI operating model', 'Published 2 October 2026 · Updated 3 October 2026', the retrieval-date strings and the bare publisher domains) carry no claim of their own. The answer-field rows that state the verdict flat remain blocked on their own entries under telemetry-theatre-voice (17.8); the body paragraphs carry the synthesis labels the record requires. Rewritten this session under the fix rounds; read correct as built.",
+    "digest": "4fc8084fd765"
+  }
+]

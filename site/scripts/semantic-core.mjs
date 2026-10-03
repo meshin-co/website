@@ -340,7 +340,13 @@ export function passageFindings(prompts, pages) {
   return findings;
 }
 
-export const ABSENCE_CLAIMS = [{ prompt: 16, term: 'Israel', claim: '"Israel" appears on no built page' }];
+const ABSENCE_CLAIMS = [
+  {
+    term: 'Israel',
+    decision: 'L57',
+    claim: 'the location line is deliberately not published on the site',
+  },
+];
 
 export function absenceFindings(pages, claims = ABSENCE_CLAIMS) {
   const findings = [];
@@ -349,8 +355,8 @@ export function absenceFindings(pages, claims = ABSENCE_CLAIMS) {
     if (hit)
       findings.push({
         route: hit.route,
-        rule: 'gap-claim-stale',
-        detail: `prompt ${claim.prompt} GAP claim (${claim.claim}) no longer holds`,
+        rule: 'published-against-a-decision',
+        detail: `${claim.decision} says ${claim.claim}; read docs/plan/reference/locked-decisions.md before publishing it`,
         excerpt: claim.term,
       });
   }

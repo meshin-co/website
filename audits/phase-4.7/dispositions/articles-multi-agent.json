@@ -1,0 +1,149 @@
+[
+  {
+    "target": "/blog/multi-agent-reference-architecture-in-production",
+    "location": "head.title",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/multi-agent-reference-architecture-in-production.html. The built <title> reads “Multi-agent reference architecture in production — meshin.co”, 60 characters including the “ — meshin.co” suffix (counted from the built file), inside the 70-character limit. The h1 reads “Multi-agent reference architecture in production”, and the last breadcrumb item, the BlogPosting headline in the JSON-LD, the og:title and the twitter:title carry the same words, so the title text, h1 and breadcrumb agree. The title states no figure, date, attribution or absence, and no ma-* checklist key attaches to it.",
+    "digest": "116c730dfd8b"
+  },
+  {
+    "target": "src/data/post/multi-agent-reference-architecture-in-production.md",
+    "location": "frontmatter.title",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/multi-agent-reference-architecture-in-production.html. The row is the title “Multi-agent reference architecture in production”, the topic of buyer prompt 20 (record section 1, line 13: “multi-agent reference architecture production”). It contains no figure, date, quote, attribution or absence. The built h1 and the last breadcrumb item read exactly the same, the BlogPosting headline in the JSON-LD repeats it, and the <title> adds only the “ — meshin.co” suffix (60 characters in all). No ma-* checklist key (rows 15.1 to 15.14) attaches to the title, so nothing in the row waits on an owner fact.",
+    "digest": "dd8a5a8ca847"
+  },
+  {
+    "target": "src/data/post/multi-agent-reference-architecture-in-production.md",
+    "location": "frontmatter.description",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/multi-agent-reference-architecture-in-production.html. The meta description, og:description, twitter:description and the BlogPosting description all equal the row. It promises “where vendors agree, where they split, and what the research did not find”, and the page has a section for each: “Do the big vendors agree on a shape?” (record 2.1, lines 56 to 65, the record’s own [INFERENCE]), “Should the default be one agent or several?” (record 3.1, lines 191 to 197: the split is between Anthropic and Cognition, with a Google study by task) and “Which claims have no source?” (record 3.12, lines 244 to 254). The row names no party to the split, and states no figure, no date and no absence beyond “what the research did not find”, which is scoped to the research. No ma-* key attaches.",
+    "digest": "dd8a5a8ca847"
+  },
+  {
+    "target": "src/data/post/multi-agent-reference-architecture-in-production.md",
+    "location": "frontmatter.keyTakeaways.0",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/multi-agent-reference-architecture-in-production.html. “The sources reviewed include no multi-agent reference architecture from a standards body” is scoped to the sources reviewed, which fits the record: 2.1 (line 43) says the searches did not turn one up, that the ISO, IEC and IEEE catalogues were not browsed and that the result is “not found”, and 3.12 (line 247) repeats it. “What exists is vendor guidance” matches line 43 (“vendor or foundation guidance”; the CNCF checklist is a foundation’s, so the row is slightly narrower than the record). “Almost none of it reports measured results” is softer than line 43 (“None of it is measured data”). Non-blocking note: the ISO, IEC and IEEE hedge sits in the FAQ and the body, not in this row. ma-search-method (15.14) is attached to the body section on absences; this row prints no search count and names no page searched, so it does not wait on that key.",
+    "digest": "dd8a5a8ca847"
+  },
+  {
+    "target": "src/data/post/multi-agent-reference-architecture-in-production.md",
+    "location": "frontmatter.keyTakeaways.2",
+    "status": "rewritten",
+    "reason": "Checked 2026-10-03 against dist/blog/multi-agent-reference-architecture-in-production.html. Rewritten today. 'Failure studies cover open-source frameworks, benchmarks and a scan of public code' names three record sources: Cemri et al. on seven open-source frameworks (line 81), Google Research and Kim et al. on benchmark tasks (line 86), and Hou et al., a static-analysis scan of 6,549 public repositories that the record says 'does not show a loop that ran in production' (line 91). 'The Microsoft AI Red Team says its taxonomy rests on engagements against deployed systems, but that account comes from the vendor itself' is line 82: the update 'grounds the framework in 12 months of red team engagements against deployed agentic systems', graded as a vendor security team's own taxonomy with quotes from the blog post and not the full taxonomy. 'The research found no dated, checkable post-mortem of a production runaway loop' is scoped to the research and matches lines 95 and 246. ma-failures-seen (15.10) asks what the owner has seen in client work; the row claims nothing of the owner's, so the key does not block it. Note: the body section on failure studies does not repeat the Microsoft taxonomy sentence (Microsoft's AI Red Team appears elsewhere in the body only for the approval-bypass point), so this takeaway has no twin in the body; the claim itself is carried by line 82.",
+    "digest": "dd8a5a8ca847"
+  },
+  {
+    "target": "src/data/post/multi-agent-reference-architecture-in-production.md",
+    "location": "frontmatter.keyTakeaways.4",
+    "status": "rewritten",
+    "reason": "Checked 2026-10-03 against dist/blog/multi-agent-reference-architecture-in-production.html. Rewritten today. 'I found no target time for rollback in the sources I read' is the scoped first-person absence of lines 229 and 250 (3.12: 'A target time for rollback'). 'Pinning a model ID may not freeze behaviour' rests on line 161, where Anthropic says a model ID identifies a pinned version and then 'Occasionally, infrastructure updates produce minor differences in observable behavior even when the model ID and weights have not changed'; the hedge 'may not' is the writer's inference at line 229 ('rolling back a model ID does not always roll back behaviour'). ma-rollback (15.7) and ma-model (15.3) ask for the owner's own target time and pinning practice; the row states neither.",
+    "digest": "dd8a5a8ca847"
+  },
+  {
+    "target": "src/data/post/multi-agent-reference-architecture-in-production.md",
+    "location": "frontmatter.faq.0.q",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/multi-agent-reference-architecture-in-production.html. The row is the question “Is there a standard multi-agent reference architecture?”. It is a question and states no figure, date, attribution or absence. It equals the FAQ summary heading rendered on the page and the question name in the FAQPage JSON-LD (all five questions in the JSON-LD equal the front matter). No ma-* key attaches to the question.",
+    "digest": "dd8a5a8ca847"
+  },
+  {
+    "target": "src/data/post/multi-agent-reference-architecture-in-production.md",
+    "location": "frontmatter.faq.0.a",
+    "status": "rewritten",
+    "reason": "Checked 2026-10-03 against dist/blog/multi-agent-reference-architecture-in-production.html and the FAQPage JSON-LD, where the answer is identical. Rewritten today. 'Not in the sources reviewed here' and 'treat this as not found' are scoped. 'The ISO, IEC and IEEE catalogues were not browsed' is lines 247 and 43. 'Microsoft, Google Cloud and AWS each publish vendor guidance' is line 43 (three clouds; all of it vendor or foundation guidance). 'NIST announced an AI agent standards initiative on 17 February 2026' and 'Its page, updated on 14 August 2026, describes convenings and gap analyses' are line 183 (S76: announced 2026-02-17, page updated 2026-08-14; the page says NIST hosts technical convenings and conducts gap analyses). The record's sentence about the stage of NIST's work is marked [INFERENCE]; the row only says what the page describes. 'I found no finished NIST guidance for agents' is the record's first-person absence at line 183. The row states no owner practice and prints no search count, so no ma-* key blocks it.",
+    "digest": "dd8a5a8ca847"
+  },
+  {
+    "target": "src/data/post/multi-agent-reference-architecture-in-production.md",
+    "location": "frontmatter.faq.1.q",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/multi-agent-reference-architecture-in-production.html. The row is the question “Should a production system use one agent or several?”. It is a question and states no figure, date, attribution or absence. It equals the FAQ summary heading rendered on the page and the question name in the FAQPage JSON-LD (all five questions in the JSON-LD equal the front matter). No ma-* key attaches to the question itself.",
+    "digest": "dd8a5a8ca847"
+  },
+  {
+    "target": "src/data/post/multi-agent-reference-architecture-in-production.md",
+    "location": "frontmatter.faq.1.a",
+    "status": "owner-blocked",
+    "reason": "Checked 2026-10-03 against dist/blog/multi-agent-reference-architecture-in-production.html and the FAQPage JSON-LD, where the answer is identical. Rewritten today. 'Microsoft, Google Cloud and Anthropic advise the simplest design that works' is line 58, item 1 (the AWS module says it too). 'AWS warns of coordination overhead' is line 49 (AWS Well-Architected agentic lens: 'Multi-agent systems introduce coordination overhead, handoff complexity, and distributed failure modes'). 'On 22 April 2026 Cognition said its observations still hold for agents that write in parallel' is line 194 (primary; 'Our original observations still hold today for parallel-writer swarms'). 'Anthropic reports that its own multi-agent research system does best on breadth-first queries' is line 53, quoting Anthropic's 'internal evaluations'; the record's weak-point note is that it is one vendor's own system and own evaluations, and the row attributes it to Anthropic as a report. 'I would expect the line to fall between reading and writing' is labelled as the writer's expectation and is the [INFERENCE] of line 197; 'I found no source that tested that in a production workload' matches lines 197 and 248. Provisional pending the owner: 'Start with one' and the reads-versus-writes expectation are the working reading that row 15.1 asks the owner to confirm or replace [ma-position].",
+    "digest": "dd8a5a8ca847"
+  },
+  {
+    "target": "src/data/post/multi-agent-reference-architecture-in-production.md",
+    "location": "frontmatter.faq.2.q",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/multi-agent-reference-architecture-in-production.html. The row is the question “How many steps should an agent be allowed to take?”. It is a question and states no figure, date, attribution or absence. It equals the FAQ summary heading rendered on the page and the question name in the FAQPage JSON-LD (all five questions in the JSON-LD equal the front matter). No ma-* key attaches to the question itself.",
+    "digest": "dd8a5a8ca847"
+  },
+  {
+    "target": "src/data/post/multi-agent-reference-architecture-in-production.md",
+    "location": "frontmatter.faq.3.a",
+    "status": "rewritten",
+    "reason": "Checked 2026-10-03 against dist/blog/multi-agent-reference-architecture-in-production.html and the FAQPage JSON-LD, where the answer is identical. Rewritten today. 'I found no target time in the sources I read' is the scoped absence of lines 229 and 250. 'Microsoft says to enable immediate rollback' is line 163 (S2: 'Always enable immediate rollback to a previous version if anomalies are detected'). 'Temporal promises instant rollback, with no measurement behind the word' is line 129 (the page says 'instant rollback' and gives no measurement behind 'instant'; vendor documentation that sells the product). 'Anthropic says infrastructure updates occasionally produce minor differences in behaviour even when the model ID is unchanged' is line 161 (Anthropic's model IDs page: 'Occasionally, infrastructure updates produce minor differences in observable behavior even when the model ID and weights have not changed'). 'So a pinned ID may not freeze behaviour' is the writer's hedged inference from line 229. 'Run evals after any rollback' is advice. ma-rollback (15.7) and ma-model (15.3) ask for the owner's own target time and pinning practice; the row states neither.",
+    "digest": "dd8a5a8ca847"
+  },
+  {
+    "target": "src/data/post/multi-agent-reference-architecture-in-production.md",
+    "location": "frontmatter.faq.3.q",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/multi-agent-reference-architecture-in-production.html. The row is the question “Can a multi-agent system be rolled back quickly?”. It is a question and states no figure, date, attribution or absence. It equals the FAQ summary heading rendered on the page and the question name in the FAQPage JSON-LD (all five questions in the JSON-LD equal the front matter). No ma-* key attaches to the question itself.",
+    "digest": "dd8a5a8ca847"
+  },
+  {
+    "target": "src/data/post/multi-agent-reference-architecture-in-production.md",
+    "location": "frontmatter.faq.4.q",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/multi-agent-reference-architecture-in-production.html. The row is the question “Do runaway agent loops really run up large bills?”. It is a question and states no figure, date, attribution or absence. It equals the FAQ summary heading rendered on the page and the question name in the FAQPage JSON-LD (all five questions in the JSON-LD equal the front matter). No ma-* key attaches to the question itself.",
+    "digest": "dd8a5a8ca847"
+  },
+  {
+    "target": "src/data/post/multi-agent-reference-architecture-in-production.md",
+    "location": "frontmatter.faq.4.a",
+    "status": "rewritten",
+    "reason": "Checked 2026-10-03 against dist/blog/multi-agent-reference-architecture-in-production.html; the FAQPage JSON-LD carries the same answer. Rewritten today: the first-person source wording replaced the earlier sentence about stories of an overnight bill. 'The research found no dated, checkable post-mortem of one in production' is scoped to the research and matches line 95 ('Not found: a dated, checkable post-mortem of a production agent loop that ran away and cost real money') and line 246. 'The only accounts I found were blog posts that repeat one set of figures with no primary record' is the next sentence of line 95. 'Anthropic says early versions of its research system spawned 50 subagents for simple queries' matches S12 (line 93: 'Early agents made errors like spawning 50 subagents for simple queries'), a vendor's account of its own early prototypes with no incident date. 'The Claude Agent SDK documentation advises a budget for production agents' matches S45 (line 122: 'Setting a budget is a good default for production agents'). The row claims no case of the owner's, so ma-failures-seen (15.10) does not block it.",
+    "digest": "dd8a5a8ca847"
+  },
+  {
+    "target": "src/data/post/multi-agent-reference-architecture-in-production.md",
+    "location": "frontmatter.shortAnswer",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/multi-agent-reference-architecture-in-production.html and the FAQPage and BlogPosting JSON-LD, which carry the same text. 'The sources reviewed here include no multi-agent reference architecture from a standards body' is the scoped absence of record 04 section 2.1 (not found; the ISO, IEC and IEEE catalogues were not browsed). 'Microsoft, Google Cloud and Anthropic advise starting small' is agreement point 1 (S3, S4, S11 and the AWS module S8 say it in so many words). 'In my reading, Anthropic and Cognition mark out the two sides of one agent versus several' is marked as the site's reading, which the 2026-10-03 addendum to record 04 (item 2) says is exactly what such a sentence must be: the disagreement itself is documented (S12 against S31), the framing is not. 'The guidance says least about limits, rollback and ownership' matches the word-family searches (rollback as a practice in 3 of 14 pages, budget terms in 6, owner terms in 5). 'Little of it is measured' matches 'None of it is measured data' read softly. The answer prints no position and no owner practice, so ma-position (15.1) does not attach to it.",
+    "digest": "dd8a5a8ca847"
+  },
+  {
+    "target": "src/data/post/multi-agent-reference-architecture-in-production.md",
+    "location": "frontmatter.fullAnswer",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/multi-agent-reference-architecture-in-production.html, where the full answer renders after the short answer in the answer block. 'There is no standard multi-agent reference architecture in the sources reviewed here' and 'What exists is vendor guidance from Microsoft, Google Cloud, AWS and Anthropic' are record 04 section 2.1. The four repeated ideas (coordinating agent, one controlled tool boundary, state outside the model, calls logged against a named identity) are agreement points 2, 3, 4 and 8. 'The disagreement is between Anthropic and Cognition, not among the clouds' is sections 3.1 and 2.1. Anthropic's breadth-first gains are S12 ('Our internal evaluations show that multi-agent research systems excel especially for breadth-first queries'); Cognition 2025 and the April 2026 parallel-writers holding are S31 and S80; the Google Research range 'from large gains to large losses' is S25 (+80.8% to −70.0%). The closing needs-list (limits on every run, crash-surviving state, a trace of every call, approval for high-impact actions, versioned changes with a way back, one accountable person) summarises section 2.3's eight items, and 'The sources back these unevenly' is the record's own grading. The row prints no first-person default and no owner practice.",
+    "digest": "dd8a5a8ca847"
+  },
+  {
+    "target": "src/data/post/multi-agent-reference-architecture-in-production.md",
+    "location": "frontmatter.keyTakeaways.1",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/multi-agent-reference-architecture-in-production.html. The four repeated ideas are agreement points 2, 3, 4 and 8 of record 04 section 2.1, each marked 'In my reading' as the record's inference. 'Starting small is the one every guide leans to' is point 1. 'I found no source that tests it in a production workload' is section 3.12 ('A measured comparison of single-agent and multi-agent systems in one company's production workload', not found). No owner fact waits on the row.",
+    "digest": "dd8a5a8ca847"
+  },
+  {
+    "target": "src/data/post/multi-agent-reference-architecture-in-production.md",
+    "location": "frontmatter.keyTakeaways.3",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/multi-agent-reference-architecture-in-production.html. 'Framework loop limits differ in unit and in default' is record 04 section 2.3 item 1: OpenAI's DEFAULT_MAX_TURNS = 10, Microsoft's default 100 iterations, LangGraph's 1000 steps since 1.0.6, all vendor-documented and in different units (the record's [INFERENCE]). 'Choose one from your own traces' is generic instruction to the reader; the page prints no step limit, cost limit, unit or alert level of the owner's, which is exactly what ma-limits (15.2) records as open, so the row does not take the owner's place.",
+    "digest": "dd8a5a8ca847"
+  },
+  {
+    "target": "src/data/post/multi-agent-reference-architecture-in-production.md",
+    "location": "frontmatter.faq.2.a",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/multi-agent-reference-architecture-in-production.html and the FAQPage JSON-LD, where the answer is identical. 'Frameworks ship different defaults and count different things: turns, steps or iterations' is record 04 section 2.3 item 1 (S40-S45). 'In my reading, a limit that suits one framework does not carry over to another' is the record's own marked inference. 'Set the limit from your own traces and evals, and decide in advance what happens when a run reaches it' is instruction to the reader, printed in place of the owner's numbers, which ma-limits (15.2) keeps open. 'The Claude Agent SDK documentation advises setting a budget for production agents' is S45 ('Setting a budget is a good default for production agents').",
+    "digest": "dd8a5a8ca847"
+  },
+  {
+    "target": "src/data/post/multi-agent-reference-architecture-in-production.md",
+    "location": "body",
+    "status": "rewritten",
+    "reason": "Read the whole built article in dist/blog/multi-agent-reference-architecture-in-production.html on 2026-10-03 against record 04 and its 2026-10-03 addendum. Rewritten this session, not merely re-read: the trust cell of the Evals-in-CI row in the 'How far can each claim be trusted?' table was corrected after I held this row open — it now reads 'Two primary sources among the pages searched. A practice, not a standard.' (source line 215, confirmed in the built page), where it had said 'One primary source among nine pages searched'. The correction carries addendum item 1, which found the record's original count wrong: Anthropic's evals post ('Automated evals are especially useful pre-launch and in CI/CD', S19, dated 9 January 2026, updated 18 March 2026) says it alongside Microsoft's Cloud Adoption Framework (S16, 3 December 2025), so the count is two. The body had already carried the corrected count in both places before the cell was fixed: 'Two primary sources say it: Microsoft's Cloud Adoption Framework and Anthropic's evals post' and 'Evals in CI appears in the two primary sources named above'; the what-cell names both sources with their dates. The rest of the body reads as verified for the route row: the vendor-guidance framing, the one-agent-first advice, the Anthropic/Cognition split with dates and quotes, MAST 41% to 86.7% peer reviewed, the Gartner forecast and its poll, the missing production post-mortem, the 50-subagents account, the 2 July 2026 preprint counting code patterns, NIST CAISI 81%/11%, the framework-limits table, durable state and tracing with the OTel development status, approval and ownership, rollback with no target time and the model-ID caveat, the not-found list, and the only.help paragraph. The ma-position working rule and the other ma-* owner questions stay open on the checklist; the TODO(owner) markers at the top of the file, including ma-eval-gate's corrected wording, ask the owner to confirm the pairing, not to fix the text. The grammar slip in the ma-eval-gate marker is gone.",
+    "digest": "dd8a5a8ca847"
+  }
+]

@@ -65,15 +65,15 @@ function toFeedItem(entry) {
     title: entry.title,
     summary: entry.summary,
     content_text: stripMarkdown(entry.body ?? ''),
-    date_published: lastmod(entry),
-    date_modified: new Date(entry.updatedDate ?? entry.publishDate).toISOString(),
+    date_published: new Date(entry.publishDate).toISOString(),
+    date_modified: lastmod(entry),
     tags: entry.tags ?? [],
     kind: entry.kind ?? null,
   };
 }
 
 function byNewestFirst(a, b) {
-  return a.date_published < b.date_published ? 1 : a.date_published > b.date_published ? -1 : 0;
+  return a.date_modified < b.date_modified ? 1 : a.date_modified > b.date_modified ? -1 : 0;
 }
 
 export function buildFeedItems(entries) {

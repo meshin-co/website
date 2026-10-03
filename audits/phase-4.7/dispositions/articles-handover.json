@@ -1,0 +1,156 @@
+[
+  {
+    "target": "/blog/handing-over-ai-leadership-to-an-internal-owner",
+    "location": "head.title",
+    "status": "owner-blocked",
+    "reason": "Checked 2026-10-03 against dist/blog/handing-over-ai-leadership-to-an-internal-owner.html. The rendered <title> is 'How to hand over AI leadership to an internal team — meshin.co', 62 characters against the 70-character limit. The h1 and the last breadcrumb item both read the 50-character title 'How to hand over AI leadership to an internal team', and the BlogPosting headline and the last item of the BreadcrumbList in the JSON-LD match it. The words state no figure, date, attribution or absence. Owner-blocked on [handover-term] on the same footing as the front-matter title: the TODO(owner) marker and checklist row 16.7 name the title as following the owner's choice of term, although the title says 'internal team' and uses neither candidate term. The owner should rule. The slug still says 'internal-owner'.",
+    "digest": "95bef8650294"
+  },
+  {
+    "target": "src/data/post/handing-over-ai-leadership-to-an-internal-owner.md",
+    "location": "frontmatter.title",
+    "status": "owner-blocked",
+    "reason": "Checked 2026-10-03 against dist/blog/handing-over-ai-leadership-to-an-internal-owner.html. The title reads 'How to hand over AI leadership to an internal team' (50 characters). It states no figure, date, attribution or absence. It echoes the buyer prompt quoted in the record (section 1, line 20: 'how to hand over AI leadership to internal team') and the title planned for this route in docs/SEMANTIC-CORE.md (line 86). The h1, the heading in the short-answer block and the last breadcrumb item render the same string. Owner-blocked on [handover-term] only because the TODO(owner) marker at the top of the source file and checklist row 16.7 both name the title, together with the body, as text that follows the owner's choice between 'internal owner' (live site) and 'internal CAIO' (master plan; record section 5 item 26, line 635). The title itself uses neither term (it says 'team'), so no sentence in the row visibly depends on that choice, and the marker may be stale for the title. The owner should rule on whether the title stays as built. The slug still says 'internal-owner'.",
+    "digest": "08328759999b"
+  },
+  {
+    "target": "src/data/post/handing-over-ai-leadership-to-an-internal-owner.md",
+    "location": "frontmatter.description",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/handing-over-ai-leadership-to-an-internal-owner.html. Row text: 'How to hand over AI leadership in steps that end in a test: what moves, who takes the role and how to tell it worked.' It states no figure, date, attribution or absence. It describes the page, and the built page has a section for each of the three things it names: 'What has to move in a handover?', 'Who should take the role?' and 'How do you know the handover worked?'. 'Steps that end in a test' is the page's own method; the description does not say the method is proven, and the body says 'None of it is proven' and 'nothing here shows that a practice leads to better results later' (record section 3 items 2 and 10, lines 428-431 and 477-478: thin evidence, no outcome study found). The row names no pass criterion, so it does not wait on the pass-criterion question (checklist row 16.1). The same string renders as the hero paragraph and on listing cards.",
+    "digest": "08328759999b"
+  },
+  {
+    "target": "src/data/post/handing-over-ai-leadership-to-an-internal-owner.md",
+    "location": "frontmatter.shortAnswer",
+    "status": "owner-blocked",
+    "reason": "Checked 2026-10-03 against dist/blog/handing-over-ai-leadership-to-an-internal-owner.html. Rewritten today: the absence is now dated and scoped. 'Searches in October 2026 found no standard or study on AI-leadership handovers' matches lines 51-52 ('I found no standard, law or published study that sets out how to hand AI leadership to an internal team. I looked in standards bodies, regulators, journals and practitioner writing'; the record's sources were read on 2026-10-02) and differs from the record's wording in two ways: it drops 'law' (so it claims less) and 'published' (so 'no study' is marginally wider than the record's 'no published study'); it names no search scope. The FCA's handover rule (lines 214-216) is not an AI-leadership rule, and the record files it under neighbouring bodies of practice (lines 53-55), so the absence does not collide with the page's FCA citation. 'Steps that end in a test' is the page's own method (the body says 'None of it is proven'). 'Record the decisions and why' follows the FCA's 'judgement and opinion, not just facts and figures' (lines 214-216) as advice. 'Check that the team can change the system and undo a bad change alone' restates Esya's acceptance test (lines 174-176; a studio that sells related work, lines 167-170) as the page's advice. Provisional on owner facts: 'Name one owner early' commits to one owner [handover-successor] and names the role 'owner' [handover-term]; 'while the outside lead watches' describes an overlap [handover-length]; the final check is a pass criterion whose full list the owner supplies [handover-checks]. No record line says an owner should run the system while the outside lead watches; that clause is the page's own advice, and the overlap is the open question in [handover-length].",
+    "digest": "08328759999b"
+  },
+  {
+    "target": "src/data/post/handing-over-ai-leadership-to-an-internal-owner.md",
+    "location": "frontmatter.fullAnswer",
+    "status": "owner-blocked",
+    "reason": "Checked 2026-10-03 against dist/blog/handing-over-ai-leadership-to-an-internal-owner.html. Rewritten today. 'Name the receiving owner early', 'Let that person run the system while the outside lead watches' and 'Agree who signs what from the handover date' are the page's advice; the row closes by saying the advice is 'practice that others found sensible, plus some points that have no outside source'. 'Write down the decisions and the reasons for them, not only the facts' follows the FCA rule (lines 214-216). 'One vendor advises ending access for the outside lead in a single coordinated step on or before the last day' is Fractionus (lines 160-161: 'in a single, coordinated process on or before the final day'; a marketplace that sells fractional executives, lines 152-155). 'A good test is behaviour: the team can change the system and undo a bad change without the outside lead' is Esya's acceptance test (lines 174-176). 'Searches in October 2026 found no standard, law or published study on how to hand over AI leadership' matches lines 51-52. 'Most checklists come from firms that sell interim or fractional staff' is lines 430-431, which name three checklists: CE Interim and Fractionus sell such staff (lines 142-144, 152-155) and Esya sells related AI work (lines 167-170), so 'most' is two of the three the record names. 'The sources that say how long a handover takes disagree, and none is about AI' is lines 432-439 (four duration sources: a US nonprofit, fractional executives, Google services, interim managers). Provisional pending the owner: naming the receiving owner early [handover-successor] [handover-term]; the overlap while the outside lead watches [handover-length]; 'who signs what from the handover date' [handover-signoff]; the behavioural test and 'write your own checks before the handover starts' [handover-checks]. Two further notes: 'Let that person run the system while the outside lead watches' has no record line and is the page's own advice; 'Agree who signs what from the handover date' is advice with no outside source, which the body labels ('None of the sources in the table above lists who may sign what, so this part is the page's own advice') while this row carries only the closing frame. 'Single coordinated step' paraphrases the source's 'single, coordinated process'.",
+    "digest": "08328759999b"
+  },
+  {
+    "target": "src/data/post/handing-over-ai-leadership-to-an-internal-owner.md",
+    "location": "frontmatter.keyTakeaways.0",
+    "status": "rewritten",
+    "reason": "Checked 2026-10-03 against dist/blog/handing-over-ai-leadership-to-an-internal-owner.html. Rewritten today. 'Plan a handover as a sequence of small transfers that ends in a test, not as one meeting on the last day' is advice in the page's own voice, and the page says so: the body reads the sources as 'practice that others found sensible, plus some points that have no outside source. None of it is proven.' The record shows staged practice in its sources (CompassPoint: one week of overlap, then drop-in days, lines 102-104; Google: the development team 'must be available to back up and advise the SRE team for a period of time as it settles', lines 198-199) and found no study linking any handover practice to later success (line 431). The row names no stage length and no pass criterion, so [handover-length] and [handover-checks] do not wait on it.",
+    "digest": "08328759999b"
+  },
+  {
+    "target": "src/data/post/handing-over-ai-leadership-to-an-internal-owner.md",
+    "location": "frontmatter.keyTakeaways.1",
+    "status": "rewritten",
+    "reason": "Checked 2026-10-03 against dist/blog/handing-over-ai-leadership-to-an-internal-owner.html. Rewritten today. 'No standard, law or published study that turned up in October 2026 says how to hand over AI leadership' matches lines 51-52 and keeps the record's scope (standards bodies, regulators, journals and practitioner writing). 'What does exist comes from neighbouring fields' is lines 53-55: exits of interim and fractional executives, transfer of operational ownership in engineering and regulated finance, AI frameworks that name roles and records, and the EU AI Act's rules on people. The FCA rule on handover material (lines 214-216) sits inside that neighbouring field, which is why the page can cite it without contradicting the absence. 'Most checklists come from firms that sell interim or fractional staff' is lines 430-431 (S6, S7, S8): CE Interim and Fractionus sell such staff (lines 142-144, 152-155) and Esya sells related AI work (lines 167-170), so 'most' is two of the three the record names. No owner key attaches. The wording differs from the short answer by dropped words only (the short answer drops 'law' and 'published'); this row keeps the record's full list.",
+    "digest": "08328759999b"
+  },
+  {
+    "target": "src/data/post/handing-over-ai-leadership-to-an-internal-owner.md",
+    "location": "frontmatter.keyTakeaways.2",
+    "status": "owner-blocked",
+    "reason": "Checked 2026-10-03 against dist/blog/handing-over-ai-leadership-to-an-internal-owner.html. Row text: 'The new owner should be able to change the system and undo a bad change without the outside lead. They should also have practised the response to a failure.' It states the page's pass criterion as advice. Support: Esya's acceptance test, that the receiving team 'have practised the response and can make the next change without waiting for the delivery team to return' (record S8, lines 174-176; secondary, a vendor that sells related work, which the body says), and the site's own rollback checks on /approach ('can already roll back a bad model without waiting on me') and in the pilot article (rollback rehearsal), both confirmed on the built pages. 'Undo a bad change' and 'response to a failure' are the page's glosses, not Esya's words. No figure, date or absence. Provisional: the pass criterion waits on [handover-checks] (the owner supplies the full list of checks, who judges each and what counts as a pass), and 'The new owner' uses the role name that [handover-term] leaves open.",
+    "digest": "08328759999b"
+  },
+  {
+    "target": "src/data/post/handing-over-ai-leadership-to-an-internal-owner.md",
+    "location": "frontmatter.keyTakeaways.3",
+    "status": "rewritten",
+    "reason": "Checked 2026-10-03 against dist/blog/handing-over-ai-leadership-to-an-internal-owner.html. Rewritten today. 'A UK financial regulator tells its own firms that handover material should include judgement and opinion, not just facts' is FCA SYSC 25.9.7G (lines 214-216: it should 'include judgement and opinion, not just facts and figures'); it is regulator guidance for UK financial firms, which the table beside it calls 'an analogy only'. 'The Google SRE book says the development team must stay available to advise the receiving team while it settles' is lines 198-199 ('must be available to back up and advise the SRE team for a period of time as it settles'). 'One vendor advises ending access in a single coordinated step' is Fractionus (lines 160-161; 'step' paraphrases the source's 'single, coordinated process'). 'None of the sources compared here lists who may sign what, so the advice on signers has no outside source' is scoped to the sources compared and matches the record's rule that items with no outside source are meshin.co's own (line 420). [handover-signoff] asks which decisions the owner signs; the row names none.",
+    "digest": "08328759999b"
+  },
+  {
+    "target": "src/data/post/handing-over-ai-leadership-to-an-internal-owner.md",
+    "location": "frontmatter.keyTakeaways.4",
+    "status": "rewritten",
+    "reason": "Checked 2026-10-03 against dist/blog/handing-over-ai-leadership-to-an-internal-owner.html. Rewritten today: the start dates and the separate rule for systems already on the market were added. 'The EU AI Act articles checked do not ask anyone to appoint an AI officer' is scoped to the articles the record read (Articles 3, 14, 17, 18, 19, 26 and 72, lines 315-316, and the replaced Article 4, lines 348-351); line 449 states the same conclusion. 'For high-risk systems they ask deployers to give oversight to people with the competence, training and authority for it' is Article 26(2) (lines 323-325; high-risk systems only). 'That duty starts in December 2027 or August 2028, depending on the system' is Article 113 as amended by Regulation (EU) 2026/1744 (lines 352-353; line 451: 2027-12-02 for Annex III, 2028-08-02 for Annex I). 'Systems already on the market follow a separate rule' is Article 111(2) as replaced (lines 354-356); the row does not state the rule. No owner key applies.",
+    "digest": "08328759999b"
+  },
+  {
+    "target": "src/data/post/handing-over-ai-leadership-to-an-internal-owner.md",
+    "location": "frontmatter.faq.0.q",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/handing-over-ai-leadership-to-an-internal-owner.html. Row text: 'How long should a handover of AI leadership take?'. It is a question and asserts nothing. It matches the built section 'How long does a handover take?', and it renders as an FAQ heading and as a Question in the FAQPage JSON-LD (five questions in all). No checklist key waits on the question itself.",
+    "digest": "08328759999b"
+  },
+  {
+    "target": "src/data/post/handing-over-ai-leadership-to-an-internal-owner.md",
+    "location": "frontmatter.faq.0.a",
+    "status": "owner-blocked",
+    "reason": "Checked 2026-10-03 against dist/blog/handing-over-ai-leadership-to-an-internal-owner.html. Rewritten today. 'The sources that say how long a handover takes disagree, and none is about AI' matches lines 432-439: four duration sources, S3 (one week of overlap, then two or three weeks of drop-ins; a US nonprofit director), S7 (at least four weeks out, six to eight if complex; fractional executives), S9 (two or three quarters; Google services) and S2 (hiring a senior successor can take six months or more; interim managers). 'Lengths run from a few weeks to a few quarters, depending on the setting' is the range of that table. The row gives no length of its own, as [handover-length] expects. Provisional: 'Agree a date and a test together, and write down who may move the date' prescribes how the end date is set, which [handover-length] asks the owner to decide.",
+    "digest": "08328759999b"
+  },
+  {
+    "target": "src/data/post/handing-over-ai-leadership-to-an-internal-owner.md",
+    "location": "frontmatter.faq.1.q",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/handing-over-ai-leadership-to-an-internal-owner.html. Row text: 'Does the EU AI Act require a chief AI officer?'. It is a question and asserts nothing. It mirrors the Commission's own AI Literacy Q&A question 'Is an AI officer necessary similarly as for the GDPR?' (the record, S21 lines 372-373, gives the answer; the question wording comes from a read of the Q&A page on 2026-10-03, not from the record). It asks about the law, not about the term for the internal role, so the row does not wait on the term question (checklist row 16.7). It does spell out 'chief AI officer', which the TODO(owner) marker for the term question (checklist row 16.7, 'never CAIO') does not literally allow.",
+    "digest": "08328759999b"
+  },
+  {
+    "target": "src/data/post/handing-over-ai-leadership-to-an-internal-owner.md",
+    "location": "frontmatter.faq.1.a",
+    "status": "rewritten",
+    "reason": "Checked 2026-10-03 against dist/blog/handing-over-ai-leadership-to-an-internal-owner.html. Rewritten today. 'No article checked requires one' is scoped to the articles the record read (Articles 3, 14, 17, 18, 19, 26 and 72, lines 315-316, and the replaced Article 4, lines 348-351); line 449 states the conclusion. 'For high-risk systems the Act asks deployers to give oversight to people with the competence, training and authority for it' is Article 26(2) (lines 323-325; high-risk systems only). 'That starts on 2 December 2027 for Annex III systems and on 2 August 2028 for Annex I systems' is Article 113 as amended by Regulation (EU) 2026/1744 (lines 352-353; line 451). 'Systems already on the market before those dates follow a separate rule' is Article 111(2) as replaced (lines 354-356); the row does not state the rule, and 'ask counsel how it applies to yours' is advice. The row no longer says one named owner is a sensible choice, so [handover-successor] does not wait on it.",
+    "digest": "08328759999b"
+  },
+  {
+    "target": "src/data/post/handing-over-ai-leadership-to-an-internal-owner.md",
+    "location": "frontmatter.faq.2.q",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/handing-over-ai-leadership-to-an-internal-owner.html. Row text: 'Who should take over AI leadership from an outside lead?'. It is a question and asserts nothing. It matches the built section 'Who should take the role?', and it renders as an FAQ heading and as a Question in the FAQPage JSON-LD. No checklist key waits on the question itself.",
+    "digest": "08328759999b"
+  },
+  {
+    "target": "src/data/post/handing-over-ai-leadership-to-an-internal-owner.md",
+    "location": "frontmatter.faq.2.a",
+    "status": "owner-blocked",
+    "reason": "Checked 2026-10-03 against dist/blog/handing-over-ai-leadership-to-an-internal-owner.html. Rewritten today. 'A search in October 2026 found no competence framework for a chief AI officer or head of AI from a standards body or regulator' matches lines 383-384 (OMB's memo, S18, is the closest and sets seniority, authority and expertise, not skills). 'One named person with the authority to pause the system, who has also seen it built' and 'Where answering for risk and running the system fall to different people, name both' are the page's own two-job reading (lines 443-448: signals conflict; 'one person or two is the owner's call'), not a sourced rule. Provisional on [handover-successor]: the row commits to one person and says when to split the role.",
+    "digest": "08328759999b"
+  },
+  {
+    "target": "src/data/post/handing-over-ai-leadership-to-an-internal-owner.md",
+    "location": "frontmatter.faq.3.q",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/handing-over-ai-leadership-to-an-internal-owner.html. Row text: 'What should an AI handover include?'. It is a question and asserts nothing. It matches the built section 'What has to move in a handover?', and it renders as an FAQ heading and as a Question in the FAQPage JSON-LD. No checklist key waits on the question itself.",
+    "digest": "08328759999b"
+  },
+  {
+    "target": "src/data/post/handing-over-ai-leadership-to-an-internal-owner.md",
+    "location": "frontmatter.faq.3.a",
+    "status": "rewritten",
+    "reason": "Checked 2026-10-03 against dist/blog/handing-over-ai-leadership-to-an-internal-owner.html. Rewritten today: the last sentence now attributes the folder-of-documents point to one vendor. The first two sentences are advice in the page's own voice that tracks its nine-row table; the row does not say a source requires them. Record support: decisions and reasons (FCA, lines 214-216; Fractionus's four layers of knowledge, lines 156-157), work in progress (CompassPoint's status report, lines 106-109), the list of AI systems (NIST GOVERN 1.6, line 247; applying it to a handover is the record's own reading, lines 55-57), and who to ask afterwards (Google, lines 198-199). 'How to run and roll back the system' is the runbook, evals and rollback row of the record's table (line 413: Esya; Google SRE training). 'Who may sign what' has no outside source, which the record states for such items (line 420). 'One vendor says a folder of documents can be complete while the handover is not' is Esya (lines 175-176), a UK studio that sells related work (lines 167-170). No owner key applies. The row states the list as advice and does not carry the weight labels the table gives each item: signers have no outside source, the list of AI systems is a NIST row the page marks as its own reading, and decisions-and-reasons rests on an FCA analogy.",
+    "digest": "08328759999b"
+  },
+  {
+    "target": "src/data/post/handing-over-ai-leadership-to-an-internal-owner.md",
+    "location": "frontmatter.faq.4.q",
+    "status": "verified",
+    "reason": "Checked 2026-10-03 against dist/blog/handing-over-ai-leadership-to-an-internal-owner.html. Row text: 'How do you know an AI handover worked?'. It is a question and asserts nothing. It matches the built section 'How do you know the handover worked?', and it renders as an FAQ heading and as a Question in the FAQPage JSON-LD. No checklist key waits on the question itself.",
+    "digest": "08328759999b"
+  },
+  {
+    "target": "src/data/post/handing-over-ai-leadership-to-an-internal-owner.md",
+    "location": "frontmatter.faq.4.a",
+    "status": "owner-blocked",
+    "reason": "Checked 2026-10-03 against dist/blog/handing-over-ai-leadership-to-an-internal-owner.html. Rewritten today. 'Check that the receiving team can change the system and undo a bad change without the outside lead, and has practised the response to a failure' restates Esya's acceptance test (lines 174-176; a studio that sells related work, lines 167-170) as the page's advice; 'undo a bad change' and 'response to a failure' are the page's glosses. 'One vendor suggests asking the successor, a month later, what they wish they had known on day one' is Fractionus (line 165: it suggests asking the successor at the 30-day mark what they wish they had known on day one). The row now attributes the check-in to a vendor and does not promise one, so [handover-after] does not wait on it. Provisional: the first sentence states a pass criterion, and the owner supplies the full list of checks, who judges each and what counts as a pass [handover-checks].",
+    "digest": "08328759999b"
+  },
+  {
+    "target": "src/data/post/handing-over-ai-leadership-to-an-internal-owner.md",
+    "location": "body",
+    "status": "owner-blocked",
+    "reason": "Read the whole built article in dist/blog/handing-over-ai-leadership-to-an-internal-owner.html on 2026-10-03 against record 05. Verified: the absence finding ('None turned up… searches of standards bodies, regulators and journals', with the neighbouring-fields frame); the evidence-weight paragraph (the interim-model authors' own gap admission and the funded literature search); the what-moves table and its sources (FCA judgement-and-opinion and unresolved concerns, CompassPoint's status report, NIST GOVERN 1.6 and 2.1 and MANAGE 4.1 each marked 'this row is the page's reading', Esya's deploy route and practised knowledge, Fractionus's one-coordinated-step revocation, Google SRE's back-up-and-advise duty, the IIM exit review); the SRE readiness-review paragraph marked as a reading; the successor section (the pilot article's eval case and rollback rehearsal, the NIST playbook separation, the OMB memo with its 30-day notification and 'later revisions were not checked', the six-month recruiting figure, the no-competence-framework finding); the worked section (CE Interim's three causes and the confirmation-not-critical-moment line, Esya's promises-that-are-not-enough, the Fractionus 30-day question); the signers section, which states plainly that no source lists signers and the part is the page's own advice, with the deployer-duty reading marked and disclaimed; the AI-rules section (Commission Q&A, Art 26 dates 2 December 2027 and 2 August 2028, the legacy and 2030 rules, NIST voluntary and under revision, ISO paid and unquoted, the closing marked reading); the length section (the four duration sources presented as disagreeing, the IIM formal-terms duty, the post-exit help differences with Fractionus's two windows); and 'What this does not solve' (no outcome study, not legal advice, the nobody-inside case, the retainer cross-references). Owner-blocked on the printed words the checklist names: [handover-term] (16.7) scopes the body's choice between 'internal owner' and 'internal CAIO'; the step-and-test method, the 'write the full list of checks… name who judges' paragraph and the date paragraph print the advice that [handover-checks] (16.1), [handover-length] (16.3) and [handover-after] (16.4) ask the owner to replace with his own; the who-signs-what section prints example signers in place of the owner's answers to [handover-signoff] (16.5). [handover-precedent] (16.6) stays satisfied: the page states no result and cites no client.",
+    "digest": "08328759999b"
+  },
+  {
+    "target": "/blog/handing-over-ai-leadership-to-an-internal-owner",
+    "location": "body.p",
+    "status": "owner-blocked",
+    "reason": "Read every paragraph rendered in dist/blog/handing-over-ai-leadership-to-an-internal-owner.html on 2026-10-03 (the short-answer and full-answer twins, the takeaways, every section paragraph and FAQ answer, the composed date line, the 'EUR-Lex · retrieved 2026-10-02'-style attribution strings and the related-card rows). The entity-encoded twins are verified against record 05 exactly as recorded for the body row of src/data/post/handing-over-ai-leadership-to-an-internal-owner.md: the absence finding, the evidence weights, the what-moves sources, the successor and readiness sections, the signers section's own-advice marker, the AI-rules dates, the length disagreements and the leave-out section. The composed rows ('Published 2 October 2026 · Updated 3 October 2026', the retrieval-date strings, the card text) carry no claim of their own. Blocked on the same keys as the body row: [handover-term] (16.7), [handover-checks] (16.1), [handover-length] (16.3), [handover-after] (16.4) and [handover-signoff] (16.5), each naming printed advice or term choices the owner must confirm or replace. All sourced paragraphs in this set read correct as built.",
+    "digest": "95bef8650294"
+  }
+]

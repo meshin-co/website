@@ -60,3 +60,14 @@ for a query.
 
 Buyer-prompt gaps need owner facts or a new page. They stay `owner-blocked` in Phase 4.7 and feed
 the Phase 6 content plan.
+
+## Regenerate last, after the formatter
+
+Both generated blocks in `docs/SEMANTIC-CORE.md` are compared byte for byte by `--check`, and
+prettier reformats Markdown tables: it re-pads every cell to the widest one in the column. So
+running `npm run assets:registers` and `node scripts/semantic-core.mjs` before prettier leaves the
+file drifted against itself, and the gate reports `doc-drift-structure` on a file nobody edited by
+hand. Regenerating again does not help while the formatter still runs afterwards.
+
+The order is: edit the hand-written sections, format, then regenerate. On 2026-10-02 the wrong
+order survived two regeneration passes and read as a content defect rather than a formatting one.

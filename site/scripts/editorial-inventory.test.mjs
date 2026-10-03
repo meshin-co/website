@@ -227,6 +227,34 @@ test('render-composed metadata lines are not authored copy, so they do not count
   assert.deepEqual(untraceable, []);
 });
 
+test('a source line stays composed metadata however many words the publisher name holds', () => {
+  const untraceable = untraceableText(
+    [
+      { route: '/a', html: '<main><p>European Commission · retrieved 2026-10-02</p></main>' },
+      { route: '/b', html: '<main><p>UK Financial Conduct Authority · retrieved 2026-10-02</p></main>' },
+      {
+        route: '/c',
+        html: '<main><p>European Commission, AI Act Service Desk · retrieved 2026-10-02</p></main>',
+      },
+    ],
+    []
+  );
+  assert.deepEqual(untraceable, []);
+});
+
+test('a sentence that merely mentions retrieval is still authored copy', () => {
+  const untraceable = untraceableText(
+    [
+      {
+        route: '/x',
+        html: '<main><p>The European Commission retrieved the register before 2026-10-02 and published it.</p></main>',
+      },
+    ],
+    []
+  );
+  assert.equal(untraceable.length, 1);
+});
+
 test('a real sentence is still untraceable even when it contains a date or a separator', () => {
   const untraceable = untraceableText(
     [

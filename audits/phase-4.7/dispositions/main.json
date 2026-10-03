@@ -14,7 +14,7 @@
   {
     "target": "src/pages/styleguide.astro",
     "status": "rewritten",
-    "reason": "removed three dead duplicate Hero attributes that a second set of the same attributes overrode, so the literal demo strings never rendered Re-read 2026-09-22 after the mono specimen line dropped a price literal that locked row L8 forbids on every route; the sample now reads \"42 findings\" and carries no currency, and the rest of the page is unchanged.",
+    "reason": "removed three dead duplicate Hero attributes that a second set of the same attributes overrode, so the literal demo strings never rendered Re-read 2026-09-22 after the mono specimen line dropped a price literal that locked row L8 forbids on every route; the sample now reads \"42 findings\" and carries no currency.",
     "digest": "58d1b278f5fa"
   },
   {

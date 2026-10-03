@@ -246,9 +246,12 @@ export function deadCopy(rows, pages) {
 const SENTENCE_WORD = /^[A-Za-z][A-Za-z'’]*$/;
 
 const BARE_HOST = /^[a-z0-9-]+(\.[a-z0-9-]+)+$/i;
+const RETRIEVED_SUFFIX = /·\s*retrieved\s+\d{4}-\d{2}-\d{2}\s*$/i;
 
 const isComposedMetadata = (text) => {
-  if (BARE_HOST.test(text.trim())) return true;
+  const trimmed = text.trim();
+  if (BARE_HOST.test(trimmed)) return true;
+  if (RETRIEVED_SUFFIX.test(trimmed)) return true;
   const tokens = text.split(/\s+/).filter((token) => token !== '·' && token !== '|');
   if (tokens.length === 0) return true;
   const words = tokens.filter((token) => SENTENCE_WORD.test(token));

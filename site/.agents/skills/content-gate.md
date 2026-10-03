@@ -50,8 +50,9 @@ as its last step — one call, no separate npm script. That call:
   family's title grammar.
 - Confirms every buyer-prompt "Must win" route (docs/SEMANTIC-CORE.md's 30 buyer prompts,
   PRD §17.3) is actually built, every quoted "Passage" is still a literal substring of its
-  cited route's rendered text, and every GAP absence-claim (for example, "Israel" appears on
-  no built page) still holds.
+  cited route's rendered text, and every GAP absence-claim listed in `ABSENCE_CLAIMS` in
+  `scripts/semantic-core.mjs` still holds. A page that carries a term a GAP row claims is absent
+  fails with rule `gap-claim-stale`: close the GAP row and delete the claim in the same edit.
 
 To regenerate the doc after adding, removing or reclassifying a route: run
 `node scripts/semantic-core.mjs` from `site/` (writes `docs/SEMANTIC-CORE.md`), then

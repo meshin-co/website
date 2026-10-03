@@ -75,6 +75,12 @@ Two weeks. I interview the people doing the work and read your systems and your 
 
 You keep one document, whether or not you continue. It holds the readiness score, the gap list, and the three processes ranked by what automating them is worth this quarter.
 
+## ISO/IEC 42001 gap assessment
+
+The gap list compares your company with [ISO/IEC 42001](/glossary/iso-iec-42001), the standard for an AI management system that an accredited body can certify. It shows where you fall short of what the standard asks.
+
+This is a gap assessment, not a certification. An accredited body runs the independent audit that grants certification, and the [certification FAQ](/faq/can-you-get-us-iso-iec-42001-certified-or-just-a-working-system) covers the difference between a working system and a certificate.
+
 ## Why it is two weeks and not two days
 
 A readiness claim you cannot show evidence for is worth nothing in a security review. I read the code, talk to the people who use the tools, and check what your vendors actually do with your data. Two weeks is the shortest span in which I can do all three.
