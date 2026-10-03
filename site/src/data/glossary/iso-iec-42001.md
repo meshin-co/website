@@ -31,3 +31,9 @@ A procurement team building a vendor shortlist asks for it by name. A board that
 Full certification is a real project with an external auditor, and most companies at seed to growth stage do not need it yet. What is worth doing now is running the standard's own structure without the audit.
 
 The structure is a documented risk-assessment method, an AI system inventory, and a review of that inventory on a fixed schedule. That gives you "built to the same structure, without the certificate," a stronger position than silence or an unsupported claim.
+
+## Gap assessment
+
+A gap assessment compares what your company does today with what ISO/IEC 42001 asks for, and lists the difference. Take the requirements one by one, mark each as in place, partly in place or missing, and note the evidence you can show for it.
+
+Rank the missing ones by what a customer or auditor would ask about first. The result is a work list, not a certificate and not a pass or fail grade. The [AI Readiness & Risk Assessment](/services/ai-readiness-and-risk-assessment) includes a gap list against this standard.

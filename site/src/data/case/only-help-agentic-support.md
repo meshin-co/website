@@ -30,12 +30,12 @@ Three things, in this order. An eval set built from tickets that already had ans
 
 ## What I built, in order
 
-| Part                                                                           | What it's for                                                                                  |
-| ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
-| Eval set from real tickets                                                     | A known-good answer to check every change against, before it reaches a customer.               |
-| [Model Context Protocol](https://modelcontextprotocol.io) as the tool boundary | Keeps what the agent may call explicit and narrow, instead of improvised inside a prompt.      |
-| [OpenTelemetry](https://opentelemetry.io) tracing                              | Every call recorded, so a wrong answer traces back to a retrieval step, not a guess.           |
-| GitHub Actions eval gate                                                       | Runs the eval set on every change so a regression blocks the merge before it reaches a ticket. |
+| Part                                                         | What it's for                                                                                  |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| Eval set from real tickets                                   | A known-good answer to check every change against, before it reaches a customer.               |
+| [Model Context Protocol](/glossary/mcp) as the tool boundary | Keeps what the agent may call explicit and narrow, instead of improvised inside a prompt.      |
+| [OpenTelemetry](https://opentelemetry.io) tracing            | Every call recorded, so a wrong answer traces back to a retrieval step, not a guess.           |
+| GitHub Actions eval gate                                     | Runs the eval set on every change so a regression blocks the merge before it reaches a ticket. |
 
 ## What I would do differently
 

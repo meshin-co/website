@@ -366,7 +366,7 @@ test('buildFeedItems sorts by lastmod newest first, not by publishDate alone', (
     items.map((item) => item.id),
     ['updated-newest', 'published-newest']
   );
-  assert.equal(items[0].date_published, '2026-08-01T00:00:00.000Z');
+  assert.equal(items[0].date_published, '2026-01-01T00:00:00.000Z');
   assert.equal(items[0].date_modified, '2026-08-01T00:00:00.000Z');
   assert.equal(items[1].date_published, '2026-06-01T00:00:00.000Z');
   assert.equal(items[1].date_modified, '2026-06-01T00:00:00.000Z');
@@ -564,7 +564,7 @@ test('toRssItems maps a JSON Feed item onto an rss.xml item with the kind as its
       title: 'A',
       description: 'Short answer.',
       link: `${ORIGIN}/faq/a`,
-      pubDate: '2026-02-01T00:00:00.000Z',
+      pubDate: '2026-01-01T00:00:00.000Z',
       categories: ['faq'],
       content: 'Full text.',
     }

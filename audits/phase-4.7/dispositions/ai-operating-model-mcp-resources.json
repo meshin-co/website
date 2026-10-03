@@ -1,0 +1,408 @@
+[
+  {
+    "target": "src/data/glossary/mcp.md",
+    "location": "frontmatter.title",
+    "status": "verified",
+    "reason": "Read in dist/glossary/mcp.html on 2026-10-03. A question that names the protocol and its abbreviation. It asserts no fact. The route and the bare-term heading are still an owner choice (mcp-slug, COPY-CHECKLIST 13.7), but no word in this row depends on that choice.",
+    "digest": "7004d347be4e"
+  },
+  {
+    "target": "src/data/glossary/mcp.md",
+    "location": "frontmatter.description",
+    "status": "verified",
+    "reason": "Read in dist/glossary/mcp.html on 2026-10-03 and checked against record 02. Clause 1, \"connects AI agents to tools and data\": the specification defines MCP as \"an open protocol that enables seamless integration between LLM applications and external data sources and tools\" (L60-61). The row says \"AI agents\" where the specification says \"LLM applications\", a looser noun. Clause 2, \"cannot enforce consent, data privacy or tool safety at the protocol level\": the overview page lists user consent and control, data privacy and tool safety (L92-95) and says MCP itself \"cannot enforce these security principles at the protocol level\" (L96-98). The row names the three principles in place of \"these security principles\". The row names no revision. No defect in this row. The defects earlier found in frontmatter.definition, body and body.p were fixed by the fix rounds, and those rows are dispositioned rewritten on their own entries.",
+    "digest": "7004d347be4e"
+  },
+  {
+    "target": "src/data/glossary/mcp.md",
+    "location": "frontmatter.shortDefinition",
+    "status": "verified",
+    "reason": "Read in dist/glossary/mcp.html on 2026-10-03 and checked against record 02. Sentence 1, \"an open protocol that lets AI applications use outside tools and data\", restates the specification's definition (L60-61). Sentence 2, \"Its specification says MCP cannot enforce consent, data privacy or tool safety at the protocol level\", is the overview-page statement (L92-98), credited to the specification where the record places it. Sentence 3, \"Whoever builds and runs the host and the servers has to do that work\", is the page's plain statement of positions carried at their own strength: the specification asks implementors to build consent and authorization flows and access controls (L96-98), and SECURITY.md makes users and administrators responsible for server selection (L102-104). Riders: the specification says SHOULD where the row says \"has to\"; \"AI applications\" for \"LLM applications\". No defect in this row.",
+    "digest": "7004d347be4e"
+  },
+  {
+    "target": "/glossary/mcp",
+    "location": "head.title",
+    "status": "verified",
+    "reason": "Read as built on 2026-10-03: the entry title, plus the site suffix ' — meshin.co'. It asserts no fact beyond the title read on frontmatter.title.",
+    "digest": "28b709665480"
+  },
+  {
+    "target": "src/data/glossary/ai-operating-model.md",
+    "location": "frontmatter.title",
+    "status": "verified",
+    "reason": "Read as built on 2026-10-03. A question that names the term; it asserts no fact.",
+    "digest": "590d7a6418c2"
+  },
+  {
+    "target": "src/data/glossary/ai-operating-model.md",
+    "location": "frontmatter.term",
+    "status": "verified",
+    "reason": "Read as built on 2026-10-03. The name of the term; it asserts no claim. The same string is a row on three targets, so entries for the other two cover the row as well.",
+    "digest": "590d7a6418c2"
+  },
+  {
+    "target": "src/data/glossary/ai-operating-model.md",
+    "location": "frontmatter.description",
+    "status": "owner-blocked",
+    "reason": "Read in dist/glossary/ai-operating-model.html on 2026-10-03 against record 03. Sentence 1, \"An AI operating model names who chooses, reviews and runs a company's AI work\", is the site's own three-question definition. The owner has not confirmed it: COPY-CHECKLIST 14.1, key aom-definition, TODO(owner). Sentence 2, \"What it covers has no standard definition, so check which one is in use\", is carried: record 03 says the term \"has no standard definition\" (L33), \"No standard defines it\" after a full-text search of NIST AI 100-1 and a read of the ISO/IEC 42001 preview (L78), and \"No standard defines the term\" (L313-315). The closing clause is advice. Rider: the record's evidence for the absence is those two documents. No defect in this row; it stays provisional only on the owner's confirmation of the definition.",
+    "digest": "590d7a6418c2"
+  },
+  {
+    "target": "src/data/glossary/ai-operating-model.md",
+    "location": "frontmatter.shortDefinition",
+    "status": "owner-blocked",
+    "reason": "Read in dist/glossary/ai-operating-model.html on 2026-10-03. Both sentences are the site's own definition: a decision structure that moves AI work from a pilot nobody owns to a process a team runs, naming who chooses what to automate, who reviews a system before customers see it, and who runs it afterwards. It asserts no outside fact and no figure, and the adjudication found no defect in it. It stays provisional because COPY-CHECKLIST 14.1 (key aom-definition, TODO(owner)) asks the owner to confirm the definition's wording.",
+    "digest": "590d7a6418c2"
+  },
+  {
+    "target": "/glossary/ai-operating-model",
+    "location": "head.title",
+    "status": "verified",
+    "reason": "Read as built on 2026-10-03: the entry title, plus the site suffix ' — meshin.co'. It asserts no fact beyond the title read on frontmatter.title.",
+    "digest": "4e564ea81f0a"
+  },
+  {
+    "target": "src/data/post/how-to-choose-an-ai-operating-model-for-a-mid-size-company.md",
+    "location": "frontmatter.title",
+    "status": "verified",
+    "reason": "Read as built on 2026-10-03. A label that names the question the article answers; it asserts no fact. Rider: \"mid-size\" is not defined on the page; the FAQ row on who owns AI risk scopes the question to 30 to 300 people.",
+    "digest": "bb7e9a45934b"
+  },
+  {
+    "target": "src/data/post/how-to-choose-an-ai-operating-model-for-a-mid-size-company.md",
+    "location": "frontmatter.description",
+    "status": "verified",
+    "reason": "Read as built on 2026-10-03. It describes the article's order, the law first and then the evidence, and the built page has both sections (\"What does the law require instead?\" and \"Which structures do companies use, and how good is the evidence?\"). It makes no claim about a source.",
+    "digest": "bb7e9a45934b"
+  },
+  {
+    "target": "src/data/post/how-to-choose-an-ai-operating-model-for-a-mid-size-company.md",
+    "location": "frontmatter.keyTakeaways.0",
+    "status": "verified",
+    "reason": "Read in dist on 2026-10-03 and checked against record 03. L25-27: \"No law or standard I read requires a private company to have a committee, a centre of excellence, a hub-and-spoke model or a Chief AI Officer. The one binding instrument that requires such structures covers US federal agencies only\". The row keeps the record's scope in sentence 1 (\"reviewed here\"), and \"The one binding rule that does\" points back at the structures sentence 1 names, so sentence 2 stays inside that scope. Riders: the row drops \"a centre of excellence\" and the record's \"only\"; the record scopes the board duty to CFO Act agencies (L131); ISO/IEC 42001 was read only as a free preview, so \"no standard reviewed here\" rests on its contents list for that standard. No defect in this row.",
+    "digest": "bb7e9a45934b"
+  },
+  {
+    "target": "src/data/post/how-to-choose-an-ai-operating-model-for-a-mid-size-company.md",
+    "location": "frontmatter.keyTakeaways.2",
+    "status": "verified",
+    "reason": "Read in dist on 2026-10-03 and checked against record 03 L31-32: \"Every pattern (centralised, hub-and-spoke, decentralised, embedded) is observed or recommended. None is proven. The outcome links come from self-reported surveys, mostly of large companies.\" The row names three of the four patterns and says \"outcome figures\" where the record says \"outcome links\". No defect in this row.",
+    "digest": "bb7e9a45934b"
+  },
+  {
+    "target": "src/data/post/how-to-choose-an-ai-operating-model-for-a-mid-size-company.md",
+    "location": "frontmatter.keyTakeaways.4",
+    "status": "verified",
+    "reason": "Read in dist on 2026-10-03 and checked against record 03. Dates: 2 December 2027 for systems high-risk under Annex III and 2 August 2028 for those under Annex I (L34-36). \"Under three months old\": the record says the omnibus is under three months old (L340), counting from signature on 8 July 2026 (L247), so this claim is time-bound and expires about 8 October 2026; counted from publication or entry into force it expires later. Re-read this row if the seal happens after 8 October 2026. Riders: the row does not say which date belongs to which Annex; the record also lists 2 August 2030 for high-risk systems intended for public authorities that were already on the market (L262-266). The last clause is advice. No defect in this row today.",
+    "digest": "bb7e9a45934b"
+  },
+  {
+    "target": "src/data/post/how-to-choose-an-ai-operating-model-for-a-mid-size-company.md",
+    "location": "frontmatter.faq.0.q",
+    "status": "verified",
+    "reason": "Read as built on 2026-10-03. A question; it asserts no fact. Its answer is row frontmatter.faq.0.a, which is dispositioned verified on its own entry against record 03.",
+    "digest": "bb7e9a45934b"
+  },
+  {
+    "target": "src/data/post/how-to-choose-an-ai-operating-model-for-a-mid-size-company.md",
+    "location": "frontmatter.faq.1.q",
+    "status": "verified",
+    "reason": "Read as built on 2026-10-03. A question; it states no ranking, and its answer denies one.",
+    "digest": "bb7e9a45934b"
+  },
+  {
+    "target": "src/data/post/how-to-choose-an-ai-operating-model-for-a-mid-size-company.md",
+    "location": "frontmatter.faq.1.a",
+    "status": "verified",
+    "reason": "Read in dist on 2026-10-03 and checked against record 03. \"The evidence does not say\" and \"Advisers recommend it\": the record grades hub-and-spoke observed and recommended with no outcome proven (L31-32, L179). The IBM survey: L179 has IBM reporting that Chief AI Officers leading hub-and-spoke or centralised models \"move twice as many AI pilots into production\" and see \"36% higher ROI on AI investments\"; the record grades the outcome links self-reported (L31-32) and deduces that every respondent already had a central AI leader (L324-326). \"No source reviewed gives its cost or its failure rate\": the record's cost and failure-rate lines (L204-207). Riders: the IBM comparison sets hub-and-spoke or centralised models together against decentralised ones and the row does not name that; \"every respondent already had a central AI leader\" is the record's own deduction, not an IBM statement; no adviser is named. No defect in this row.",
+    "digest": "bb7e9a45934b"
+  },
+  {
+    "target": "src/data/post/how-to-choose-an-ai-operating-model-for-a-mid-size-company.md",
+    "location": "frontmatter.faq.2.q",
+    "status": "verified",
+    "reason": "Read as built on 2026-10-03. A question; it asserts nothing.",
+    "digest": "bb7e9a45934b"
+  },
+  {
+    "target": "src/data/post/how-to-choose-an-ai-operating-model-for-a-mid-size-company.md",
+    "location": "frontmatter.faq.3.q",
+    "status": "verified",
+    "reason": "Read as built on 2026-10-03. A question; the band \"30 to 300 people\" is the site's own scope, not a claim about a source.",
+    "digest": "bb7e9a45934b"
+  },
+  {
+    "target": "/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company",
+    "location": "head.title",
+    "status": "verified",
+    "reason": "Read as built on 2026-10-03: the article title, plus the site suffix ' — meshin.co'. It asserts no fact beyond the title read on frontmatter.title.",
+    "digest": "1f11bc119a16"
+  },
+  {
+    "target": "src/data/resource/handover-playbook.md",
+    "location": "frontmatter.status",
+    "status": "owner-blocked",
+    "reason": "Read in dist on 2026-10-03. This is one shared row: the same status line is the status of the resource pages. Sentence 1, \"Available as a page on this site.\", is true of the built page. Sentence 2, \"A repository copy is not published yet.\", states the state of the owner's repositories and an intent to publish, which no research record can carry. Open TODO(owner) keys: handover-playbook-format (COPY-CHECKLIST 16.8, with rows 6.3, 6.4, 6.6 and 6.8) and telemetry-template-artifact (17.12). Provisional until the owner answers.",
+    "digest": "132f5163bc39"
+  },
+  {
+    "target": "src/data/resource/handover-playbook.md",
+    "location": "frontmatter.title",
+    "status": "verified",
+    "reason": "Read as built on 2026-10-03. \"Handover Playbook\" is a name, and record 05 gives the artifact that name (L26). It asserts nothing about the world, and the page says of itself \"It is not a standard\".",
+    "digest": "132f5163bc39"
+  },
+  {
+    "target": "src/data/resource/handover-playbook.md",
+    "location": "frontmatter.description",
+    "status": "verified",
+    "reason": "Read in dist on 2026-10-03. Every checkable item holds on the built page: \"six fill-in tables\" (the page has exactly six tables), \"the test\" (Stage 1, \"The owner and the test\"), \"a later check\" (Stage 6, \"The check after handover\") and \"a named owner\" (Stage 1 asks \"Who takes the role?\" and \"Write one name\"). It is a purpose statement, not an efficacy claim. Verified on the page's own count and headings; record 05 does not carry these words.",
+    "digest": "132f5163bc39"
+  },
+  {
+    "target": "src/data/resource/handover-playbook.md",
+    "location": "frontmatter.whatInside.0",
+    "status": "verified",
+    "reason": "Read in dist on 2026-10-03. A count and a list, both true of the built page: six items that map one to one onto the six stage headings (the owner and the test, what moves, who signs what, access, after the last day, the check after handover). Page-internal; no record line is involved.",
+    "digest": "132f5163bc39"
+  },
+  {
+    "target": "src/data/resource/handover-playbook.md",
+    "location": "frontmatter.whatInside.1",
+    "status": "verified",
+    "reason": "Read in dist on 2026-10-03. Verified for presence only: the Stage 2 table has eight rows, and each has a \"Why it is here\" cell. The two cells earlier reported as defects, \"Open risks and concerns\" and \"Monitoring and logs\", were fixed by the fix rounds and now read as carried: the FCA's unresolved-concerns guidance (SYSC 25.9.6G) and NIST MANAGE 4.1 with Article 26(6)'s six-month logs and dates. The body row is dispositioned rewritten on its own entry.",
+    "digest": "132f5163bc39"
+  },
+  {
+    "target": "src/data/resource/handover-playbook.md",
+    "location": "frontmatter.whatInside.2",
+    "status": "verified",
+    "reason": "Read in dist on 2026-10-03. It describes the blank columns, and they exist: Stage 2 has \"Held today by\", \"Held after by\" (names), \"Where it lives\" (place) and \"Done on\" (date), and the later stages carry name and date columns. It says \"Blank columns\", not \"every row\", which is why it holds where the body sentence \"Every row asks for a name, a place or a date\" (hp-03) does not.",
+    "digest": "132f5163bc39"
+  },
+  {
+    "target": "src/data/resource/handover-playbook.md",
+    "location": "frontmatter.howToUse",
+    "status": "verified",
+    "reason": "Read in dist on 2026-10-03. The row gives instructions: copy the tables, fill them in with the outside lead and the person taking over starting with table one, read a blank cell as a decision nobody has made yet, and do not mark the handover done until the new owner has passed the test written in table one. These are the page's own design rules; none states a fact about a source or an offer by the owner, and no word waits on handover-playbook-stages, -vendors, -after or -access (16.9 to 16.12), which only disclose what the tables leave blank. Changed from owner-blocked. Rider: the last sentence is a rule the page sets, not a finding; the hp-06 defect on the body's test rationale was fixed by the fix rounds, and Stage 1 now reads \"This playbook asks for a written test so that the handover can end on a result, not only on a date\", which presents the test as the playbook's own ask. The body row is dispositioned rewritten on its own entry.",
+    "digest": "132f5163bc39"
+  },
+  {
+    "target": "/resources/handover-playbook",
+    "location": "head.title",
+    "status": "verified",
+    "reason": "Read as built on 2026-10-03: the resource title, plus the site suffix ' — meshin.co'. It asserts no fact beyond the title read on frontmatter.title.",
+    "digest": "e8fe693ae61e"
+  },
+  {
+    "target": "src/data/resource/adoption-telemetry-dashboard-template.md",
+    "location": "frontmatter.title",
+    "status": "verified",
+    "reason": "Read as built on 2026-10-03. \"Adoption Telemetry Dashboard Template\" is a name; it asserts no fact. Record 06 names the artifact a dashboard template (L30-36), and the body says the page is a panel specification and \"It is not a live dashboard\". Changed from owner-blocked: the earlier entry parked the row on telemetry-template-artifact (17.12) because of the word \"template\", but that key decides what is published and in what form, which belongs to the status row, not to the words of a name.",
+    "digest": "994e85c1e818"
+  },
+  {
+    "target": "src/data/resource/adoption-telemetry-dashboard-template.md",
+    "location": "frontmatter.description",
+    "status": "verified",
+    "reason": "Read in dist on 2026-10-03. It offers a structure with one checkable count, and the built page has it: one table of eight panels whose columns are \"Question it answers\", \"Data source\" and \"Decision it supports\"; record 06 lists the same eight panels (L321-330). It states no outside claim. Changed from owner-blocked: the earlier entry turned on the word \"template\" alone (telemetry-template-artifact, 17.12), which belongs to the status row.",
+    "digest": "994e85c1e818"
+  },
+  {
+    "target": "src/data/resource/adoption-telemetry-dashboard-template.md",
+    "location": "frontmatter.status",
+    "status": "owner-blocked",
+    "reason": "Read in dist on 2026-10-03. This is one shared row: the same status line is the status of the resource pages. Sentence 1, \"Available as a page on this site.\", is true of the built page. Sentence 2, \"A repository copy is not published yet.\", states the state of the owner's repositories and an intent to publish, which no research record can carry. Open TODO(owner) keys: handover-playbook-format (COPY-CHECKLIST 16.8, with rows 6.3, 6.4, 6.6 and 6.8) and telemetry-template-artifact (17.12). Provisional until the owner answers.",
+    "digest": "994e85c1e818"
+  },
+  {
+    "target": "src/data/resource/adoption-telemetry-dashboard-template.md",
+    "location": "frontmatter.whatInside.0",
+    "status": "verified",
+    "reason": "Read in dist on 2026-10-03. The count holds: the built page has one table with eight panel rows and the columns \"Question it answers\", \"Data source\" and \"Decision it supports\", and record 06 lists the same panels (L321-330).",
+    "digest": "994e85c1e818"
+  },
+  {
+    "target": "src/data/resource/adoption-telemetry-dashboard-template.md",
+    "location": "frontmatter.whatInside.1",
+    "status": "verified",
+    "reason": "Read in dist on 2026-10-03. Verified on the built page, not on the record: the section \"Fix these definitions before you build\" has exactly three bullets, \"What counts as active\", \"When you check retention\" and \"The smallest group you show\". The two defects earlier reported on bullet 3 (tel-14, tel-15) were fixed by the fix rounds: the bullet now reads the Viva minimum of five as a product setting and says the sources give no legal figure, which is record 06's own instruction. The body row is dispositioned owner-blocked on telemetry-template-panels on its own entry.",
+    "digest": "994e85c1e818"
+  },
+  {
+    "target": "src/data/resource/adoption-telemetry-dashboard-template.md",
+    "location": "frontmatter.whatInside.2",
+    "status": "verified",
+    "reason": "Read in dist on 2026-10-03. Verified on the built page: the section \"What stays off the dashboard\" has eight bullets, each followed by a reason. Riders: the record's list has seven items and the eighth comes from separate record lines (L336-338, L196, L385), so \"eight\" is carried only by combining them; \"measures\" is loose, since rankings of named people and prompt content are not measures and four of the eight are conditional exclusions.",
+    "digest": "994e85c1e818"
+  },
+  {
+    "target": "src/data/resource/adoption-telemetry-dashboard-template.md",
+    "location": "frontmatter.whatInside.3",
+    "status": "owner-blocked",
+    "reason": "Read in dist on 2026-10-03. The row states the kit's own defaults for people data: team level by default, a screening before any named view, no rankings and no prompt content. No phrase in it is a record defect: each is the kit's own rule, carried as the record's recommendation (L25-27, L336-338, L398). The row stays provisional because the default and the rule for named views are what the owner is asked to set, under the TODO(owner) keys telemetry-people-data (COPY-CHECKLIST 17.6) and telemetry-template-seat-names (17.11). Riders: \"no rankings\" is wider than the body's \"Rankings of named people\"; \"a screening\" names one of the record's three conditions.",
+    "digest": "994e85c1e818"
+  },
+  {
+    "target": "src/data/resource/adoption-telemetry-dashboard-template.md",
+    "location": "frontmatter.howToUse",
+    "status": "verified",
+    "reason": "Read in dist on 2026-10-03. Sentences 1 to 3 are instructions: copy the panel table into a spreadsheet or the dashboard tool already in use, write the one outcome for each use case before rollout, and write down the definition of active and the smallest group size before the first chart exists. Sentence 4, the weighting that puts the weight on the outcome, delivery health, cost and trust panels with coverage, seat and retention as diagnostics, is the record's own reading (L334-335) and is labelled on the page as a synthesis of the sources. None states a fact about a source or an offer by the owner. Changed from owner-blocked. Rider: that label sits in the body, not in this row.",
+    "digest": "994e85c1e818"
+  },
+  {
+    "target": "src/data/glossary/ai-operating-model.md",
+    "location": "frontmatter.definition",
+    "status": "owner-blocked",
+    "reason": "Read in dist/glossary/ai-operating-model.html on 2026-10-03; the field renders as the paragraphs under 'What it means' between the shortDefinition and the date line. Checked against record 03: 'No standard defines the term, and the three definitions compared here differ in size' (record section 2.1, full-text searches of NIST AI 100-1 and the ISO/IEC 42001 preview found no hits); McKinsey 'covers every decision about staffing, structure, technology and compliance' (S22: 'every decision — from staffing and organizational structures to technology development and compliance'); the UTS four parts 'strategy, AI governance structure, AI governance practices and AI governance enablers' (S18); 'This site uses the narrow version above' describes the built page. The 'An AI management system' paragraph follows ISO/IEC 42001 clause 3.4 (policies and objectives plus processes to achieve them) and the record's 'certifiable management-system standard' grading (S8). Owner-blocked on [aom-definition] (checklist 14.1): 'It answers three questions, each with a name rather than a team' is the category page's published wording moved here, and 'The operating model adds who chooses the work and who runs it after launch' states the wider-than-AI-governance boundary; 14.1 asks the owner to confirm both, and to say whether strategy sits inside the model as UTS has it.",
+    "digest": "590d7a6418c2"
+  },
+  {
+    "target": "src/data/glossary/ai-operating-model.md",
+    "location": "body",
+    "status": "rewritten",
+    "reason": "Read as built on 2026-10-03 in dist/glossary/ai-operating-model.html, sections 'Why it comes up', 'What to do about it' and 'Sources and neighbours'. 'No standard defines the term, so a board that asks someone to build one has no standard definition to hand them' follows record 03 section 2.1. The instruction to answer the three questions for one real system, write a name beside each and 'then decide what else the company needs' is generic advice that asserts no engagement of the owner's, so aom-practice (14.3) does not wait on it. The closing cross-reference — the article covers the legal duties and the evidence, and 'no source reviewed shows that one structure works best' — matches record 03's in-brief (every pattern observed or recommended, none proven). The source hostnames render as bare domains and carry no claim. Rewritten this session: the file is new since the 2026-10-02 seal and its text changed under the old route disposition.",
+    "digest": "590d7a6418c2"
+  },
+  {
+    "target": "/glossary/ai-operating-model",
+    "location": "body.p",
+    "status": "owner-blocked",
+    "reason": "Read every paragraph rendered in dist/glossary/ai-operating-model.html on 2026-10-03 (the definition paragraphs, 'Why it comes up', 'What to do about it', the closing cross-reference, the composed date line, and the bare hostnames uts.edu.au and hkdca.com). Checked against record 03 as recorded for the definition and body rows of src/data/glossary/ai-operating-model.md: the McKinsey/UTS/ISO sentences, the no-standard finding, the management-system paragraph and the closing 'no source reviewed shows that one structure works best' all hold. The composed 'Published 2 October 2026 · Updated 2 October 2026' line and the two hostnames carry no claim. Blocked on [aom-definition] (checklist 14.1) for the two rendered definition sentences named there: the moved category wording ('It answers three questions, each with a name rather than a team') and the wider-than-governance boundary ('The operating model adds who chooses the work and who runs it after launch'). Every other paragraph in this set is verified against the record as above.",
+    "digest": "4e564ea81f0a"
+  },
+  {
+    "target": "src/data/post/how-to-choose-an-ai-operating-model-for-a-mid-size-company.md",
+    "location": "frontmatter.shortAnswer",
+    "status": "owner-blocked",
+    "reason": "Read in dist/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company.html on 2026-10-03 in the 'The short answer' block. Sentences 1 and 2 are carried by record 03: 'No law or standard reviewed here requires a mid-size company to use a committee, a hub-and-spoke model or a Chief AI Officer' is the in-brief finding (the one binding instrument covers US federal agencies only), and the high-risk duties sentence matches Art 26(2) overseers with competence, training and authority, Art 17(1)(m) accountability framework and Art 26(6) logs. Owner-blocked on [aom-positions] (checklist 14.2): the final sentence 'Choose the smallest structure that covers them, and change it on evidence from your own company' is position one and position two as 14.2 lists them, taken on the owner's behalf and awaiting his confirm-or-replace.",
+    "digest": "bb7e9a45934b"
+  },
+  {
+    "target": "src/data/post/how-to-choose-an-ai-operating-model-for-a-mid-size-company.md",
+    "location": "frontmatter.fullAnswer",
+    "status": "owner-blocked",
+    "reason": "Read in dist/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company.html on 2026-10-03. Checked against record 03: Art 4 in application since 2 February 2025 with national enforcement from 2 August 2026; Art 50 from 2 August 2026 with marking for pre-existing generative systems until 2 December 2026; accountability framework and trained overseers from 2 December 2027 (Annex III) or 2 August 2028 (Annex I); the Digital Omnibus moved the dates in July 2026 and Commission guidelines are pending; the one binding rule naming a Chief AI Officer and a governance board is OMB M-25-21, US federal agencies only; 'None of the structures is proven. The surveys cover mostly large organisations, and the outcome figures are self-reported' matches the record's grading; the switch-point numbers are vendors' with no data behind the one page read in full. Owner-blocked on [aom-positions] (checklist 14.2) for the closing sentence only: 'Choose the smallest structure that covers your duties, and test it against your own register' is positions one and two as 14.2 lists them. Every earlier sentence in the row is verified against the record.",
+    "digest": "bb7e9a45934b"
+  },
+  {
+    "target": "src/data/post/how-to-choose-an-ai-operating-model-for-a-mid-size-company.md",
+    "location": "frontmatter.keyTakeaways.1",
+    "status": "verified",
+    "reason": "Read in dist on 2026-10-03 and checked against record 03. The EU AI Act names duties, not structures — literacy measures (Art 4), transparency duties (Art 50), an accountability framework for high-risk providers (Art 17(1)(m)) and trained human overseers (Art 26(2)) — and none requires a committee or an officer (the Commission's AI-literacy Q&A: 'No, no specific governance structure is mandated'). The closing honesty clause 'Articles 9, 47 and the Annex III text were not read' names exactly the articles record 03 lists as not read. No owner fact waits on this row.",
+    "digest": "bb7e9a45934b"
+  },
+  {
+    "target": "src/data/post/how-to-choose-an-ai-operating-model-for-a-mid-size-company.md",
+    "location": "frontmatter.keyTakeaways.3",
+    "status": "owner-blocked",
+    "reason": "Read in dist on 2026-10-03 and checked against record 03. 'Every switch-point number found for this page comes from a vendor. The one vendor page read in full cites no data for its numbers' is carried: Assembly Inc's '12 to 18 months of rework' and '15–20 active initiatives' threshold have no data behind them (S29), and the other two switch-point pages were search snippets only (S31). Owner-blocked on [aom-positions] (checklist 14.2) for the final imperative 'Use events in your own register instead', which is position two ('change it on evidence from your own register, not on a vendor number') taken on the owner's behalf. The absence statements before it are verified.",
+    "digest": "bb7e9a45934b"
+  },
+  {
+    "target": "src/data/post/how-to-choose-an-ai-operating-model-for-a-mid-size-company.md",
+    "location": "frontmatter.faq.0.a",
+    "status": "verified",
+    "reason": "Read in dist/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company.html on 2026-10-03 under 'Does the EU AI Act require an AI committee or a Chief AI Officer?'. Checked against record 03: the Commission's Q&A answer 'no specific governance structure is mandated' for Article 4; Art 17's accountability framework setting out responsibilities; Art 26's 'necessary competence, training and authority' plus logs kept at least six months; 'Articles 9 and 47 were not read' matches the record's not-read list. The row claims nothing beyond the record.",
+    "digest": "bb7e9a45934b"
+  },
+  {
+    "target": "src/data/post/how-to-choose-an-ai-operating-model-for-a-mid-size-company.md",
+    "location": "frontmatter.faq.2.a",
+    "status": "verified",
+    "reason": "Read in dist on 2026-10-03 under 'When should a company change its AI structure?'. The vendor provenance of every switch-point number and the absence of data behind the one page read in full are carried by record 03 (S29, S31). The operative advice is explicitly framed as 'In this page's reading of the sources' and names register events (new high-risk system, risk-tier or owner change, duty dates, incidents); it asserts no practice of the owner's, and aom-switch (14.6) records that the page deliberately prints no switch point and no vendor number, which holds.",
+    "digest": "bb7e9a45934b"
+  },
+  {
+    "target": "src/data/post/how-to-choose-an-ai-operating-model-for-a-mid-size-company.md",
+    "location": "frontmatter.faq.3.a",
+    "status": "verified",
+    "reason": "Read in dist on 2026-10-03 under 'Who should own AI risk in a company of 30 to 300 people?'. Checked against record 03: NIST GOVERN 2.3 puts decisions about AI risk with executive leadership; the UTS Human Technology Institute describes 'a single accountable executive supported by a small cross-functional working group' (S17) and says the CEO may take the role in smaller organisations. The row adds no owner fact and takes no position on the successor's shape.",
+    "digest": "bb7e9a45934b"
+  },
+  {
+    "target": "src/data/post/how-to-choose-an-ai-operating-model-for-a-mid-size-company.md",
+    "location": "body",
+    "status": "owner-blocked",
+    "reason": "Read the whole built article in dist/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company.html on 2026-10-03 against record 03. Verified content: the Commission Q&A quotes ('No, no specific governance structure is mandated…', 'remains in place'); the OMB M-25-21 paragraph (dated 3 April 2025, CFO Act governance boards, 'are permitted to rely on existing governance bodies', binds federal agencies only); NIST 'use-case agnostic' and ISO 'any organization, regardless of size' with the sold-not-published honesty clause; the duties table (Art 4, 50, 17, 26, 25, with dates 2 February 2025, 2 August 2026, the 2 December 2026 marking grace, 2 December 2027 and 2 August 2028, six-month logs, 'freedom to organise its own resources', and no start date stated for Art 25 in the sources reviewed); the omnibus paragraph (signed 8 July 2026, in force 27 July, the preamble reason quoted, rewrote Art 4 and 17(2)); the SME/SMC fines sentence (lower-of-two extended to small mid-caps for all but the highest tier); the decision-rights, structures and samples tables and their introductions (BoE/FCA 118 firms and 72%, ASIC 23 licensees 'not representative' and 7 with or setting up a committee, IBM CAIOs self-reported with every respondent already a CAIO, Gartner's seven-question maturity score, MIT NANDA preliminary with selection bias read from a third-party copy, IAPP 670+ in 45 countries, Gradient Flow 351 with small meaning 500 or fewer, UTS recommendations not outcomes, Microsoft 2021 self-description); the switch-point section (no data behind any threshold, no cost figure for any structure anywhere); the size section (the only size-split survey, Art 17(2) scaling, the Australian guidance's senior owner and per-system person); and the leave-out section (no results for 30-to-300 companies, the agentic gap, NIST under revision, two pages carrying no date). Owner-blocked on [aom-positions] (checklist 14.2) for the 'How do you choose?' section, which prints both positions on the owner's behalf ('Choose the smallest structure that covers them', 'Pick triggers from your own events, not from a vendor number', 'Test the structure on your own records at a fixed date'), with [aom-dates] (14.5) open behind the printed dates; the dates themselves are the Regulation's as recorded.",
+    "digest": "bb7e9a45934b"
+  },
+  {
+    "target": "/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company",
+    "location": "body.p",
+    "status": "owner-blocked",
+    "reason": "Read every paragraph rendered in dist/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company.html on 2026-10-03 (the short-answer and full-answer twins, the takeaways, every section paragraph and FAQ answer, the source hostnames, the composed read-time and date rows, and the related-card paragraphs). The entity-encoded twins of the sourced paragraphs are verified against record 03 exactly as recorded for the body row of src/data/post/how-to-choose-an-ai-operating-model-for-a-mid-size-company.md: the law and dates paragraphs, the duties, decision-rights, structures and samples tables, the switch-point and size paragraphs, and the leave-out paragraphs. The composed rows ('02 Oct 2026 · 13 min read · AI operating model', 'Published 2 October 2026 · Updated 2 October 2026', the bare hostnames, the METR and pilot card text) carry no claim of their own. Blocked on [aom-positions] (checklist 14.2): the rendered short answer, full answer, the switch-point takeaway and the whole 'How do you choose?' list print the two positions 14.2 asks the owner to confirm or replace. All other paragraphs in this set read correct as built.",
+    "digest": "1f11bc119a16"
+  },
+  {
+    "target": "src/data/resource/handover-playbook.md",
+    "location": "body",
+    "status": "rewritten",
+    "reason": "Read the whole built page in dist/resources/handover-playbook.html on 2026-10-03 against record 05. The Stage 2 reasons are carried: FCA 'judgement and opinion, not just facts and figures' and the unresolved-concerns row (SYSC 25.9.7G and 25.9.6G, analogy flagged); Fractionus for work-in-progress status and the one-coordinated-step access revocation with written confirmation, flagged as one vendor's opinion; NIST GOVERN 1.6, 2.1 and MANAGE 4.1 marked as the page's reading, with the Art 26(6) six-month logs and the 2 December 2027 / 2 August 2028 dates; Google SRE hands-on exercises; CompassPoint on announcing the new leader. Stage 1 and Stage 3 cite the site's own pilot and approach pages and mark the signature rows as examples no source lists. Stage 4's places-to-look list is marked 'the page's own'. Stage 5 and Stage 6 print blank cells and the Fractionus 30-day question, attributed. 'What it is not' states the October 2026 absence finding and disclaims legal advice and certification. The keys that stay open (16.9 stages, 16.10 vendors, 16.11 after, 16.12 access) ask for owner content the page deliberately does not print, so no printed word waits on them. Rewritten this session: the file is new and changed under the fix rounds.",
+    "digest": "132f5163bc39"
+  },
+  {
+    "target": "/resources/handover-playbook",
+    "location": "body.p",
+    "status": "rewritten",
+    "reason": "Read every paragraph rendered in dist/resources/handover-playbook.html on 2026-10-03 (the 'What this is' paragraphs, the six stage introductions, the 'What it is not' paragraph, the composed date line and the publisher-attribution strings 'NIST · retrieved 2026-10-02' and the like). Each stage introduction and the 'What it is not' paragraph are verified against record 05 as recorded for the body row of src/data/resource/handover-playbook.md; the table cells carry the sourced reasons (FCA, Fractionus, NIST, Google SRE, CompassPoint) and the attribution strings only name the source list. The composed 'Published 2 October 2026 · Updated 2 October 2026' line carries no claim. The open keys 16.9 to 16.12 ask for content the tables leave blank on purpose. Rewritten this session under the fix rounds; read correct as built.",
+    "digest": "e8fe693ae61e"
+  },
+  {
+    "target": "src/data/resource/adoption-telemetry-dashboard-template.md",
+    "location": "body",
+    "status": "owner-blocked",
+    "reason": "Read the whole built page in dist/resources/adoption-telemetry-dashboard-template.html on 2026-10-03 against record 06. Verified: the eight-panel table maps one to one onto record 06 section 2.5 (coverage sources including gateway logs, sign-in list, expenses, API bills and the register; GitHub last_activity_at; retention at 4, 8 and 12 weeks; the outcome from the system of record; DORA's delivery-health measures; cost per outcome as the FAQ defines it; DORA's trust and reliance items; the four AI-stance items), with panels 5 and 6 marked engineering and workflow only as the record notes. The three fixed definitions match the record (GitHub's two active days in 28, Microsoft's returning user, Viva's minimum group of five as a product setting with no legal figure). The off-dashboard list holds: the record's seven exclusions plus acceptance rate, which record 06 section 2.3 grades as tracking perceived productivity. 'Who sees what' matches the record's people-data rules and the Claude Code email default. 'What it is not' marks the synthesis and disclaims legal advice. Owner-blocked on [telemetry-template-panels] (checklist 17.10): the page prints these eight panels, taken from the research record and not from the owner's practice, as version 0.1, and 17.10 asks the owner to confirm that set or cut and add. The status-line and artifact questions are already blocked on their own rows (17.12).",
+    "digest": "994e85c1e818"
+  },
+  {
+    "target": "/resources/adoption-telemetry-dashboard-template",
+    "location": "body.p",
+    "status": "owner-blocked",
+    "reason": "Read every paragraph rendered in dist/resources/adoption-telemetry-dashboard-template.html on 2026-10-03 (the 'What this is' and three-kind paragraphs, the panels-table rider, the definitions and off-list introductions, the 'Who sees what' paragraphs, 'What it is not', the composed date line and the publisher-attribution strings). The entity-encoded twins are verified against record 06 as recorded for the body row of src/data/resource/adoption-telemetry-dashboard-template.md; the attribution strings ('GitHub · retrieved 2026-10-02' and the rest) carry no claim. Blocked on [telemetry-template-panels] (checklist 17.10) because the rendered 'What this is' paragraphs print the eight panels and the weighting as this template's specification, which the owner has not confirmed as his version 0.1. Every checkable sentence in the set is verified against the record as above.",
+    "digest": "afc15dcfe9a7"
+  },
+  {
+    "target": "/blog/multi-agent-reference-architecture-in-production",
+    "location": "body.p",
+    "status": "owner-blocked",
+    "reason": "Read every paragraph rendered in dist/blog/multi-agent-reference-architecture-in-production.html on 2026-10-03 (the short-answer and full-answer twins, the takeaways, the framing and method paragraphs, every section paragraph and FAQ answer, the source publisher strings, the composed date line and the related-card rows). Verified against record 04 and its 2026-10-03 addendum: the vendor-guidance framing and four recurring ideas; the one-agent-first advice with the Microsoft, Google Cloud, Anthropic and AWS attributions and dates; the Anthropic/Cognition disagreement with the 12/13 June 2025 and 22 April 2026 dates and verbatim quotes; the Google Research study (+80.8% to −70.0%, 17.2x and 4.4x with the blog-versus-paper configuration caveat); MAST's 41% to 86.7% on seven open-source frameworks, peer reviewed; the Gartner forecast and its 3,412-attendee poll; the missing production post-mortem; Anthropic's 50-subagents account; the 2 July 2026 preprint counting code patterns in 47 projects; NIST CAISI's 81%/11% hijacking result with dates; the framework-limits table (10 turns, 1000 steps, 100 iterations, different units, Claude budget advice); durable state (Temporal, LangGraph, the session log outside the process) with the no-separate-engine finding; tracing (OTel development status, the unconfirmed core-signal stability, OpenAI default tracing and zero-retention limits); evals in CI now named to its two primary sources per the addendum, and the LangChain ~20-datapoints figure refused; approval (MCP 'should', the 93% telemetry, the most-exploited failure mode); ownership (Microsoft CAF, the committee reading marked as such); rollback ('immediate' and 'instant' with no target time anywhere, the model-ID caveat, deprecation pages); the not-found list with the honest 'not found' wording; and the only.help paragraph that uses the case study as evidence for neither shape. Blocked on [ma-position] (checklist 15.1): the section 'Should the default be one agent or several?' and the matching FAQ answer print the writer's working rule — many independent reads suit several agents, writes that must agree suit one — which no source states and 15.1 asks the owner to confirm or replace. Flagged to Main, not blessed: the AWS tier names 'autonomous, notify and approve' are not carried in record 04's quotes, so that clause stays unverified against the record; and the table cell 'One primary source among nine pages searched' contradicts the addendum and the page's own 'Two primary sources' paragraphs — that cell lives in the source body row, which is left unreviewed.",
+    "digest": "116c730dfd8b"
+  },
+  {
+    "target": "src/data/glossary/mcp.md",
+    "location": "frontmatter.stack.1",
+    "status": "verified",
+    "reason": "Read in dist/glossary/mcp.html on 2026-10-03. The string 'Model Context Protocol' renders as the h1 and the last breadcrumb item of the term page; the same row is the stack entry of the case study, which record 02 section 4 notes (front matter line 16) and which the owner has confirmed as his own product (checklist 2.1, confirmed 2026-09-12). It is the protocol's proper name and asserts nothing beyond the name.",
+    "digest": "7004d347be4e"
+  },
+  {
+    "target": "src/data/glossary/mcp.md",
+    "location": "frontmatter.definition",
+    "status": "rewritten",
+    "reason": "Read in dist/glossary/mcp.html on 2026-10-03 and checked against record 02. Host, clients and servers: the spec names hosts (the LLM application), clients inside the host with a one-to-one link per server, and servers offering resources, prompts and tools (P1, P5); 'a file write' as a tool example sits inside SECURITY.md's list of what servers can do (P9). The principles paragraph: the three principles (P1), 'hosts must obtain explicit user consent before invoking any tool' (P1), the quoted 'cannot enforce these security principles at the protocol level' (P1), the Tools page's server MUSTs on inputs and access controls (P4), and 'Authorization is OPTIONAL' (P6). The security-policy paragraph: 'MCP clients trust MCP servers they connect to' and 'Users and administrators are responsible for server selection' (P9), with the closing inference marked as what 'we use MCP' does and does not say. Rewritten this session under the fix rounds; read correct as built.",
+    "digest": "7004d347be4e"
+  },
+  {
+    "target": "src/data/glossary/mcp.md",
+    "location": "body",
+    "status": "rewritten",
+    "reason": "Read in dist/glossary/mcp.html on 2026-10-03 and checked against record 02. 'Why it comes up': the 'In this site's reading' framing carries no outside claim; the NSA sheet is quoted verbatim ('remains uneven and highly dependent on implementation discipline rather than protocol guarantees') with its May 2026 date and its citation of the November 2025 revision, both carried by record 02 section 2.7. 'What to do about it': the prompt-injection paragraph follows SECURITY.md ('Reports about “LLM invoked unexpected tool” are not MCP vulnerabilities', P9) and links guardrails in code to the glossary entry; the least-privilege paragraph matches the NSA recommendation to constrain and sandbox tool execution. 'Where the specification stops': the four bullets match P4 (SHOULD human in the loop with the ability to deny, servers MUST validate inputs and implement access controls, clients SHOULD log tool usage) and P9/P8 (STDIO servers run with the client's privileges; the SDK transport 'is not a sandbox'), with the intro sentence carrying the protocol's own cannot-enforce line. The mcp-scoping to mcp-logging keys ask for owner method the entry deliberately does not state. Rewritten this session under the fix rounds; read correct as built.",
+    "digest": "7004d347be4e"
+  },
+  {
+    "target": "/glossary/mcp",
+    "location": "body.p",
+    "status": "rewritten",
+    "reason": "Read every paragraph rendered in dist/glossary/mcp.html on 2026-10-03 (the three definition twins, the two 'Why it comes up' paragraphs, the two 'What to do about it' paragraphs, the 'Where the specification stops' introduction, the composed date line and the bare hostnames modelcontextprotocol.io, github.com and web.archive.org). The entity-encoded twins are verified against record 02 exactly as recorded for the definition and body rows of src/data/glossary/mcp.md. The composed 'Published 2 October 2026 · Updated 2 October 2026' line and the three hostnames carry no claim; the hostnames are the rendered source URLs. No printed word on this page waits on an owner answer (13.1 to 13.7 ask for owner method, sections and choices the entry does not state). Rewritten this session under the fix rounds; read correct as built.",
+    "digest": "28b709665480"
+  },
+  {
+    "target": "/resources/adoption-telemetry-dashboard-template",
+    "location": "head.title",
+    "status": "verified",
+    "reason": "Read as built on 2026-10-03: the resource title, plus the site suffix ' — meshin.co'. It asserts no fact beyond the title read on frontmatter.title.",
+    "digest": "afc15dcfe9a7"
+  }
+]

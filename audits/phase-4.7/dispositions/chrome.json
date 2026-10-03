@@ -122,7 +122,7 @@
   {
     "target": "site/src/components/site/SourceList.astro",
     "status": "verified",
-    "reason": "aria-label/heading default 'Sources' names the landmark correctly, standard pattern",
+    "reason": "aria-label/heading default 'Sources' names the landmark correctly, standard pattern. The one other hardcoded literal is ' · retrieved ' placed before the retrieved date in each source line; the source title, publisher and date come from the entry's own data. Read 2026-10-02: the file contains no other text.",
     "digest": "e3b0c44298fc"
   },
   {
@@ -236,7 +236,7 @@
   {
     "target": "site/src/config.yaml",
     "status": "verified",
-    "reason": "default title/description match the '/' route's own metadata and machine-text.mjs catalog entry exactly, already consistent",
+    "reason": "Read 2026-10-02. src/config.yaml is outside the directories the ledger extractors scan, so it has no source rows; its copy is the default title 'Fractional Chief AI Officer' and the default description 'Fractional AI leadership for 30–300 person companies: AI governance that passes procurement and agentic automation shipped to production.' The default title matches the home page: the built home <title> is 'Fractional Chief AI Officer — meshin.co'. The default description does NOT match the home page: src/pages/index.astro and the STATIC_PAGE_CATALOG entry for '/' in src/utils/machine-text.mjs both carry 'Fractional Chief AI Officer for 30–300 person companies: governance that passes enterprise procurement, and agentic systems shipped to production with evals.' The config description ships as the llms.txt tagline and as the channel description of rss.xml, the six per-collection rss.xml feeds and feed.json, where no ledger row covers it. Reported, not fixed: the site has two different taglines. Status stays verified because each string is correct on its own; they disagree with each other.",
     "digest": "e3b0c44298fc"
   },
   {
@@ -248,14 +248,14 @@
   {
     "target": "site/src/utils/faq-meta.mjs",
     "status": "verified",
-    "reason": "pure formatting/trimming utilities (teaser, clauseTrim, pageTitle, faqDescription), no hardcoded prose beyond the ' — meshin.co' title suffix which matches the site brand suffix used everywhere",
+    "reason": "Read 2026-10-02. No prose: the file holds formatting and trimming functions (firstSentence, teaser, clauseTrim, pageTitle, faqDescription, faqMetadata), numeric limits (140-character teaser, 12-word floor, 70-character title, 120 to 160 character description) and regular expressions. It has no ' — meshin.co' literal: the title suffix comes from titleSuffix(brandFromDisk()) in src/utils/brand.mjs, which reads site.name from src/config.yaml. The strings it builds are rows on the /faq routes, not here.",
     "digest": "e3b0c44298fc"
   },
   {
     "target": "site/src/data/categories.mjs",
     "status": "rewritten",
-    "reason": "Review of the four category bodies unchanged and re-read: terminology (register, acceptable-use policy, data classification, ISO/IEC 42001, NIST AI Risk Management Framework) confirmed against the glossary, longest body sentence 27 words. New in this pass: governance and agentic-architecture gain archiveTitle (\"AI governance articles\", \"Agentic architecture articles\") and a rewritten description that lists what the category covers instead of defining the term, which the glossary owns. Every figure in the new descriptions (30 to 300) is already in content-facts numbers. Phase 5.2: the operating-model body said \"Handover is a deliverable, not a formality, and it only counts once someone is actually watching the dashboard\". The contrast clause \"not a formality\" is the antithesis tell the baseline lists; it is removed and the claim that carries weight, \"it only counts once someone is actually watching the dashboard\", is kept word for word.",
-    "digest": "a340d59e3719"
+    "reason": "Re-read 2026-10-02 against the built category pages and the file. Changed today in the operating-model entry: archiveTitle 'AI operating model articles' is added; the description changed from a definition ('An AI operating model is the decision structure that moves AI work from a pilot nobody owns to a process a team runs.') to 'Articles on the operating model for AI work in companies of 30 to 300 people: who chooses, who reviews, who runs it. The glossary holds the definition.'; and the second body paragraph changed from a three-question definition to 'The glossary entry defines the term and names three decisions: choice, review and ownership.', so the definition now lives only in /glossary/ai-operating-model (L50, L51). The ownership paragraph reads 'Handover is a deliverable, and it only counts once someone is actually watching the dashboard.'; 'not a formality' was removed in the Phase 5.2 pass as an antithesis tell, and the clause that carries the claim is kept word for word. The other paragraphs of that body, and the governance, agentic-architecture and executive entries, are unchanged by today's edit. Governance and agentic-architecture have carried archiveTitles ('AI governance articles', 'Agentic architecture articles') and descriptions that list what the category covers, instead of defining the term, since 1 October; the executive entry has no archiveTitle. Longest sentence in any body or description is 27 words, counted on the built text. The figures 30 and 300 are in the content-facts numbers. Terms used in the governance body: ai-register, data-classification, iso-iec-42001 and nist-ai-rmf have glossary pages; acceptable-use policy has none. Provisional on an owner answer: the 'three decisions' wording defers to /glossary/ai-operating-model, whose definition waits on TODO(owner) aom-definition (docs/COPY-CHECKLIST.md 14.1). Reported, not fixed: the glossary names the decisions 'who chooses, who reviews, who runs it' while this body says 'choice, review and ownership', and the built /blog/category/operating-model page says 'the glossary' with no link to it.",
+    "digest": "0f81154154b6"
   },
   {
     "target": "site/src/data/tags.mjs",

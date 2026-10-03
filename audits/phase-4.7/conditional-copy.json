@@ -20,10 +20,6 @@
     "reason": "src/pages/case-studies/[id].astro renders this section only when outcome.metrics is non-empty; the one case study carries no metrics, because L11 forbids inventing them"
   },
   {
-    "text": "Related posts",
-    "reason": "a relatedGroups heading in src/pages/resources/[id].astro rendered only when that group resolves to at least one post; none of the five resources currently match one"
-  },
-  {
     "text": "characters or fewer",
     "reason": "part of a zod validation message in src/utils/content-rules.mjs; it reaches a build log, never a page"
   },
@@ -32,7 +28,7 @@
     "reason": "public/search/box.mjs shows it only when a search shard fails to fetch; the smoke test in test:smoke exercises that path"
   },
   {
-    "text": "Searching for \u201c",
+    "text": "Searching for “",
     "reason": "public/search/box.mjs composes it with the live query at runtime, so no build output contains the literal"
   },
   {
@@ -46,5 +42,9 @@
   {
     "text": "Open the repository",
     "reason": "src/pages/resources/[id].astro renders the button only when a resource declares repoUrl. No entry declares one: all five github.com/meshin-co/<slug> URLs returned HTTP 404, so the field was removed rather than ship a button to a missing page. docs/COPY-CHECKLIST.md rows 6.2 and 6.8 carry what the owner must publish to restore it"
+  },
+  {
+    "text": "Nothing published in this category yet.",
+    "reason": "src/pages/blog/category/[category].astro renders it only for a category with no posts; every one of the categories carries at least one"
   }
 ]

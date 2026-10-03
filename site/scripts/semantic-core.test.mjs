@@ -5,7 +5,6 @@ import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 
 import {
-  ABSENCE_CLAIMS,
   FAMILY_GRAMMAR,
   GENERATED_BEGIN,
   GENERATED_END,
@@ -380,21 +379,36 @@ test('passageFindings is silent when the passage is still a literal substring of
   assert.deepEqual(passageFindings(prompts, pages), []);
 });
 
-test('absenceFindings flags a GAP claim once the claimed absent term is found on a page', () => {
+const LOCATION_DECISION_CLAIM = {
+  term: 'Israel',
+  decision: 'L57',
+  claim: 'the location line is deliberately not published on the site',
+};
+
+test('absenceFindings flags a page that publishes a term a locked decision keeps off the site', () => {
   const pages = [{ route: '/about', text: 'Based in Israel, remote worldwide.' }];
 
-  const findings = absenceFindings(pages, ABSENCE_CLAIMS);
+  const findings = absenceFindings(pages, [LOCATION_DECISION_CLAIM]);
 
   assert.deepEqual(
     findings.map((finding) => [finding.route, finding.rule]),
-    [['/about', 'gap-claim-stale']]
+    [['/about', 'published-against-a-decision']]
   );
 });
 
-test('absenceFindings is silent while the claimed absent term stays absent', () => {
+test('the finding names the decision row, so the reader can resolve it without hunting', () => {
+  const pages = [{ route: '/about', text: 'Based in Israel, remote worldwide.' }];
+
+  const [finding] = absenceFindings(pages, [LOCATION_DECISION_CLAIM]);
+
+  assert.match(finding.detail, /L57/);
+  assert.match(finding.detail, /locked-decisions\.md/);
+});
+
+test('absenceFindings is silent while the term the decision excludes stays off the page', () => {
   const pages = [{ route: '/about', text: 'Remote worldwide.' }];
 
-  assert.deepEqual(absenceFindings(pages, ABSENCE_CLAIMS), []);
+  assert.deepEqual(absenceFindings(pages, [LOCATION_DECISION_CLAIM]), []);
 });
 
 const withDist = async (files, check) => {

@@ -68,7 +68,7 @@
   {
     "target": "src/pages/case-studies/index.astro",
     "status": "rewritten",
-    "reason": "Phase 5.2 head pass. Title \"Fractional Chief AI Officer case study\" and a description opening \"One Fractional Chief AI Officer case study\" carry the target query (title coverage 0.33 to 1.00, description 0.17 to 1.00). The description keeps every fact: one entry, not a client case, only.help is my own product, built with the method used for clients (L11). H1 and lead untouched.",
+    "reason": "Phase 5.2 head pass. Title \"Fractional Chief AI Officer case study\" and a description opening \"One Fractional Chief AI Officer case study\" carry the target query (title coverage 0.33 to 1.00, description 0.17 to 1.00). The description keeps every fact: one entry, not a client case, only.help is my own product, built with the method used for clients (L11). H1 untouched.",
     "digest": "ee355a1d89aa"
   },
   {
@@ -80,7 +80,7 @@
   {
     "target": "src/pages/glossary/[id].astro",
     "status": "verified",
-    "reason": "section titles and CTA body compliant; composed title (data.term + template) is only the raw term name, and the 'What is {term}?' phrasing documented for the term family in SEMANTIC-CORE comes from content data, not this template, so there is nothing here to fix",
+    "reason": "section titles and CTA body compliant; composed title (data.term + template) is only the raw term name, and the H2 of every term page is the term's authored title question, equal to the page title on all 30 pages (for example 'What are evals?' on /glossary/evals, where 'What is Evals?' used to be), so there is nothing here to fix",
     "digest": "977d689393fa"
   },
   {
@@ -98,8 +98,8 @@
   {
     "target": "src/pages/resources/index.astro",
     "status": "rewritten",
-    "reason": "Phase 5.2 head pass. Title \"AI governance templates and checklists\" lifts title coverage of \"ai governance templates\" from 0.00 to 1.00. The description now leads with the target words (\"Open AI governance templates and checklists\") and still lists the same four artifacts: register, acceptable-use policy, data classification, vendor questionnaire. Lead and CTA untouched.",
-    "digest": "93140a04e07b"
+    "reason": "Phase 5.2 head pass. Title \"AI governance templates and checklists\" lifts title coverage of \"ai governance templates\" from 0.00 to 1.00. The description now leads with the target words (\"Open AI governance templates and checklists\") and still lists the same four artifacts: register, acceptable-use policy, data classification, vendor questionnaire. CTA untouched. Lead: \"each written out in full on its own page\" became \"each described on its own page\"; the rest of the lead is unchanged.",
+    "digest": "0c10e1c550f5"
   },
   {
     "target": "src/pages/services/[id].astro",
@@ -122,7 +122,7 @@
   {
     "target": "src/utils/og-template.mjs",
     "status": "verified",
-    "reason": "'IBM Plex Sans' is a CSS font-family value used only in inline styles for OG-image rendering, never rendered as visible page text - likely an extractor false positive worth excluding the same way Tailwind class lists and structural keys already are (editorial-ledger.md); left unchanged since it is correct as a design token",
+    "reason": "Read 2026-10-02. No prose: 'Fraunces' and 'IBM Plex Sans' are font-family names in inline style objects, the colours are hex values, title, eyebrow and footer are passed in by the caller, and the brand text is read from src/config.yaml through brand.mjs. The extractor now produces no row for this file, which is correct; the earlier suggestion that 'IBM Plex Sans' was an extractor false positive is closed. The text this template lays out appears only inside the /og/*.png images.",
     "digest": "e3b0c44298fc"
   }
 ]

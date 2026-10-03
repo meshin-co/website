@@ -30,11 +30,12 @@ export const categoryPillars = {
   },
   'operating-model': {
     title: 'AI operating model',
+    archiveTitle: 'AI operating model articles',
     description:
-      'An AI operating model is the decision structure that moves AI work from a pilot nobody owns to a process a team runs.',
+      'Articles on the operating model for AI work in companies of 30 to 300 people: who chooses, who reviews, who runs it. The glossary holds the definition.',
     body: [
       'Most stalled AI programmes are not blocked on technology. They are blocked because nobody can say who decides whether a system is allowed to touch customer data. Nobody owns the outcome once the pilot team moves on, either.',
-      'An operating model answers three questions. Who chooses which processes get automated. Who reviews a system before it reaches a customer. Who runs it afterwards. If the answer to any of those is a team name rather than a person, the work will drift until someone senior gets nervous and stops it.',
+      'The glossary entry defines the term and names three questions: who chooses the work, who reviews it, and who runs it. If any of them answers with a team name instead of a person, the work will drift until someone senior gets nervous and stops it.',
       'Choice comes first, and it is mostly a filter. A candidate process needs volume, a measurable outcome, and a tolerable failure mode. Volume, because a system used twice a week never accumulates enough signal to improve. A measurable outcome, because a metric you have to survey for cannot gate a release. A tolerable failure mode, because the first version will be wrong sometimes and you need to know what that costs.',
       'Review comes second. It should be boring and written down: what evidence a launch needs, who signs, and what evidence would stop it. In practice this is a short checklist attached to the register entry, not a governance ceremony. The point is that the answer exists before someone needs it at eleven at night.',
       'Ownership comes third and is the one that gets skipped. A pilot that reaches production without a named internal owner becomes shadow infrastructure: nobody updates it, nobody watches its cost, and its failure surprises everyone. Handover is a deliverable, and it only counts once someone is actually watching the dashboard.',

@@ -29,3 +29,9 @@ A security questionnaire almost always asks how the company controls and logs ac
 ## What to do about it
 
 Put one gateway in front of every model call before adding a second application that talks to a model, not after. Route all API keys through it rather than into individual codebases, and log every request and response. Redact anything that looks like a customer identifier or a secret before it leaves. Solid open-source and hosted options already exist, so this is rarely worth building in house.
+
+## The gateway as a governance control
+
+A written policy says what staff may do with a model. A gateway is the control that enforces it, because every model call passes through one place where the policy runs. It decides who may call which model, strips sensitive data before it leaves, applies rate limits, and logs each request and response.
+
+That log is the evidence a security questionnaire asks for: it shows the policy ran, not only that it exists. The limit is coverage: a gateway controls only the calls that go through it, so an application that calls a vendor directly sits outside the control. The [LLM Gateway Governance Config](/resources/llm-gateway-governance-config) gives a policy file format for one.

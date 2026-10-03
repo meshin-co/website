@@ -4,6 +4,6 @@ answer: 'With a named internal owner in place, not a fading call. The decisions 
 publishDate: 2026-09-12
 updatedDate: 2026-09-15
 category: operating-model
-relatedPage: /services
+relatedPage: /blog/handing-over-ai-leadership-to-an-internal-owner
 order: 8
 ---
