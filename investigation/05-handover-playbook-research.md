@@ -62,6 +62,7 @@ a US federal memo (S18). That a handover is the moment those clauses apply is my
 **S1. Institute of Interim Management (UK), Code of Conduct.** Page published 2022-11-08, last
 modified 2026-07-21. https://iim.org.uk/resources/code-of-conduct/ A professional body's code for
 its members.
+
 - Section 4 is "Conduct on and following termination of an assignment". Members must "Agree
   formally with the Client terms for termination of the assignment". The list includes a "handover
   period to new or existing employees" and a "period of notice of termination".
@@ -79,6 +80,7 @@ development of a cyclical model of interim assignments".** Journal of Organizati
 People and Performance 7(2):173-190, June 2020. https://doi.org/10.1108/JOEPP-10-2019-0094 A
 journal paper. I read the author manuscript at https://livrepository.liverpool.ac.uk/3095138/
 (repository record dated 2020-07-09).
+
 - The model has four stages: preparation, entry, delivery and exit. Delivery has three parts:
   post-entry, main delivery and pre-exit. Pre-exit is "legacy building".
 - The exit stage "comprises the transferring of knowledge, competence and understanding to
@@ -99,6 +101,7 @@ journal paper. I read the author manuscript at https://livrepository.liverpool.a
 Monograph Series, Volume 2, CompassPoint Nonprofit Services, copyright 2005 The Evelyn and Walter
 Haas, Jr. Fund. https://www.compasspoint.org/sites/default/files/documents/Interim%20EDs%20-%20final.pdf
 A practitioner monograph on US nonprofits. The author served 16 times as an interim executive director.
+
 - "A one-week overlap in the job is usually sufficient to show the administrative ropes to the new
   hire." For "the following two or three weeks" the organisation "may retain the interim to drop in
   one or two days a week to answer questions". After that the interim "might then be available by
@@ -117,6 +120,7 @@ A practitioner monograph on US nonprofits. The author served 16 times as an inte
 Engineering Management in Production and Services 16(1):48-64, March 2024.
 https://doi.org/10.2478/emj-2024-0004 A journal paper, open access. The study ran in Poland from
 2019 to 2021 across ten enterprises that used an interim manager.
+
 - Clients and project teams scored trust, power and knowledge. Median answers on a seven-step
   agree/disagree scale, shown as percentages: trust 88% (clients) and 80% (teams), power 77% and
   68%, knowledge 69% and 72%.
@@ -132,6 +136,7 @@ https://doi.org/10.2478/emj-2024-0004 A journal paper, open access. The study ra
 practice within the firm".** Strategic Management Journal 17(S2):27-43, December 1996.
 https://doi.org/10.1002/smj.4250171105 A journal paper. I read the abstract as indexed by
 OpenAlex; the publisher page failed to load.
+
 - It covers 271 observations of 122 best-practice transfers in eight companies. "Contrary to
   conventional wisdom that blames primarily motivational factors, the study findings show the major
   barriers to internal knowledge transfer to be knowledge-related factors such as the recipient's
@@ -142,6 +147,7 @@ OpenAlex; the publisher page failed to load.
 **S6. CE Interim, "Interim Manager Exit Strategy and Handover Explained".** No date on the page.
 https://ceinterim.com/interim-manager-exit-strategy-and-handover-explained/ Secondary: an interim
 provider's marketing page.
+
 - It names three causes of failed handovers: changes made without enough involvement of the internal
   team, knowledge transfer treated as a final step, and over-reliance on the interim as the central
   decision maker, which creates dependency.
@@ -153,6 +159,7 @@ provider's marketing page.
 2026-05-26 as shown on the page (its data reads 2026-05-25T22:00Z).
 https://fractionus.com/blog/fractional-executive-offboarding
 Secondary: a marketplace that sells fractional executives. The numbers are one vendor's opinion.
+
 - Four layers of knowledge to capture: deliverables, decisions and reasoning, in-progress work
   (status, owner, next action) and institutional context.
 - Offboarding should begin "at least four weeks before the final day", and six to eight weeks for
@@ -168,6 +175,7 @@ Secondary: a marketplace that sells fractional executives. The numbers are one v
 2026-08-29, modified 2026-08-30. https://esya.studio/notes/ai-evals-runbook-handover Secondary: a UK
 studio whose site says "We build AI inside your business, until it ships", so it sells related
 work. Read it as a peer's view.
+
 - "Repository access is necessary and incomplete. The receiving team needs the route to deploy,
   controlled access to required systems, telemetry, the eval harness, the runbook, incident
   authority and practised knowledge."
@@ -185,6 +193,7 @@ work. Read it as a peer's view.
 **S9. Google, "Site Reliability Engineering", chapter 32, "The Evolving SRE Engagement Model".**
 Copyright 2017 Google, Inc., published by O'Reilly Media, CC BY-NC-ND 4.0.
 https://sre.google/sre-book/evolving-sre-engagement-model/ Primary: the operator's own account.
+
 - A production readiness review "is considered a prerequisite for an SRE team to accept
   responsibility for managing the production aspects of a service." So the receiving team sets a
   bar before it takes ownership `[INFERENCE]`.
@@ -205,6 +214,7 @@ https://sre.google/sre-book/evolving-sre-engagement-model/ Primary: the operator
 Last updated 2021-01-01; the rules took effect 2018-12-10. https://handbook.fca.org.uk/handbook/sysc25/sysc25s9
 Primary: regulator text. It binds UK firms under the Senior Managers regime. For meshin.co's
 clients it is an analogy only.
+
 - 25.9.4R: a firm must take "all reasonable steps" so a manager taking over a role has, when they
   start, "all information and material that a person ... could reasonably expect to have to perform
   those responsibilities ... effectively".
@@ -221,6 +231,7 @@ clients it is an analogy only.
 **S11. Starmer et al., "Changes in medical errors after implementation of a handoff program".** New
 England Journal of Medicine 371(19):1803-1812, 2014-11-06.
 https://pubmed.ncbi.nlm.nih.gov/25372088/ A journal paper; I read the abstract.
+
 - A prospective study in nine hospitals of a resident handoff program: a mnemonic for oral and
   written handoffs, training, a faculty development and observation program and a sustainability
   campaign.
@@ -235,6 +246,7 @@ https://pubmed.ncbi.nlm.nih.gov/25372088/ A journal paper; I read the abstract.
 **S12. NIST, "Artificial Intelligence Risk Management Framework (AI RMF 1.0)", NIST AI 100-1.**
 Released 2023-01-26. https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf Core text read at
 https://airc.nist.gov/airmf-resources/airmf/5-sec-core/ Primary. Voluntary.
+
 - GOVERN 2: "Accountability structures are in place so that the appropriate teams and individuals
   are empowered, responsible, and trained for mapping, measuring, and managing AI risks."
 - GOVERN 2.1: "Roles and responsibilities and lines of communication related to mapping,
@@ -251,12 +263,14 @@ https://airc.nist.gov/airmf-resources/airmf/5-sec-core/ Primary. Voluntary.
 
 **S13. NIST, AI Risk Management Framework page.** Page last modified 2026-08-13.
 https://www.nist.gov/itl/ai-risk-management-framework Primary.
+
 - "The AI RMF 1.0 is being revised as part of the White House AI Action Plan." The page links no
   revised text. On 2026-04-07 NIST released a concept note for a critical-infrastructure profile.
 
 **S14. NIST AI Resource Center, AI RMF Playbook, GOVERN section.** Page updated 2026-06-18.
 https://airc.nist.gov/airmf-resources/playbook/govern/ and
 https://airc.nist.gov/airmf-resources/playbook/ Primary.
+
 - The Playbook "is neither a checklist nor set of steps to be followed in its entirety", and its
   suggestions "are voluntary". It says it will be updated after the RMF revision.
 - For GOVERN 2.1 it suggests documenting: "To what extent has the entity clarified the roles,
@@ -270,6 +284,7 @@ https://airc.nist.gov/airmf-resources/playbook/ Primary.
   modify, limit, or stop the use of the AI".
 
 **S15 to S17. ISO/IEC 42001:2023 and the shared management-system text.**
+
 - S15, ISO catalogue page, read 2026-10-02, https://www.iso.org/standard/42001 Primary. Edition 1,
   published 2023-12-18, 51 pages, CHF 225. It is for "Organizations of any size". The page shows no
   amendment, review or revision stage.
@@ -294,6 +309,7 @@ through Innovation, Governance, and Public Trust".** Dated 2025-04-03.
 https://www.whitehouse.gov/wp-content/uploads/2025/02/M-25-21-Accelerating-Federal-Use-of-AI-through-Innovation-Governance-and-Public-Trust.pdf
 Primary. It binds US federal agencies only, so it is an analogy. I read the text I extracted from
 the PDF, and I did not check for later revisions.
+
 - It is the only official text I found that requires an organisation to have a "Chief AI Officer".
   Within 60 days of the memo, the head of each agency "must retain or designate a Chief AI Officer
   (CAIO)".
@@ -317,6 +333,7 @@ the same address for articles 3, 14, 17, 18, 19 and 72. Primary. Every page carr
 provision has been amended by the Digital Omnibus on AI. The text displayed on this page has not yet
 been updated to reflect those amendments." It appeared on all 13 pages I fetched, so it is a general
 banner, not proof that a given article changed. S20 says what changed.
+
 - Article 3(4): a deployer is "a natural or legal person, public authority, agency or other body
   using an AI system under its authority". The role attaches to the body that uses the system, not
   to an officer or adviser. So an adviser's departure does not move the legal duty `[INFERENCE]`.
@@ -345,6 +362,7 @@ published OJ L 2026-07-24; it enters into force "on the third day following that
 publication", which I compute as 2026-07-27. http://data.europa.eu/eli/reg/2026/1744/oj I read the
 text at https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=OJ%3AL_202601744 through a
 web-to-text converter. Primary.
+
 - Article 4 is replaced. Providers and deployers "shall take measures to support the development of
   AI literacy of their staff and other persons dealing with the operation and use of AI systems on
   their behalf". "This obligation does not require providers or deployers to guarantee any specific
@@ -364,6 +382,7 @@ web-to-text converter. Primary.
 **S21. European Commission, "AI Literacy - Questions & Answers".** Page shows "Last update 27 July
 2026". https://digital-strategy.ec.europa.eu/en/faqs/ai-literacy-questions-answers Primary: the
 Commission's own guidance, not binding law.
+
 - "Persons dealing with the operation and use of AI systems on behalf of providers/deployers"
   means "not employees, but persons broadly under the organisational remit. It could be, for
   example, a contractor, a service provider, a client."
@@ -402,20 +421,20 @@ test of it as a readiness check.
 
 ### 2.6 What the sources ask a handover to contain
 
-| Item | Who asks for it | Source |
-|---|---|---|
-| Status of work in progress and open issues | FCA; CompassPoint; Fractionus | S10, S3, S7 |
-| Decisions and the reasoning, not just facts | FCA ("judgement and opinion"); Fractionus | S10, S7 |
-| Inventory of AI systems | NIST GOVERN 1.6 | S12 |
-| Roles and authority documented and clear | NIST GOVERN 2.1; shared ISO text 5.3 | S12, S17 |
-| Training or competence, with evidence | NIST GOVERN 2.2; ISO 7.2; AI Act Art 26(2) | S12, S17, S19 |
-| Access and credentials moved in one controlled step | Google SRE; Fractionus; NIST Playbook 1.7 | S9, S7, S14 |
-| Runbook, evals and rollback practised by the receiver | Esya; Google SRE training | S8, S9 |
-| Monitoring, logs and incident duty carried on | AI Act Art 26(5)-(6); NIST MANAGE 4.1 | S19, S12 |
-| Exit review or goals-status report | IIM; CompassPoint | S1, S3 |
-| Adviser reachable for a period afterwards | Google SRE; CompassPoint; Fractionus | S9, S3, S7 |
-| Check with the successor after 30 days | Fractionus | S7 |
-| Tell outside parties about the change | CompassPoint (letter to funders and peers); OMB (agencies notify OMB within 30 days) | S3, S18 |
+| Item                                                  | Who asks for it                                                                      | Source        |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------ | ------------- |
+| Status of work in progress and open issues            | FCA; CompassPoint; Fractionus                                                        | S10, S3, S7   |
+| Decisions and the reasoning, not just facts           | FCA ("judgement and opinion"); Fractionus                                            | S10, S7       |
+| Inventory of AI systems                               | NIST GOVERN 1.6                                                                      | S12           |
+| Roles and authority documented and clear              | NIST GOVERN 2.1; shared ISO text 5.3                                                 | S12, S17      |
+| Training or competence, with evidence                 | NIST GOVERN 2.2; ISO 7.2; AI Act Art 26(2)                                           | S12, S17, S19 |
+| Access and credentials moved in one controlled step   | Google SRE; Fractionus; NIST Playbook 1.7                                            | S9, S7, S14   |
+| Runbook, evals and rollback practised by the receiver | Esya; Google SRE training                                                            | S8, S9        |
+| Monitoring, logs and incident duty carried on         | AI Act Art 26(5)-(6); NIST MANAGE 4.1                                                | S19, S12      |
+| Exit review or goals-status report                    | IIM; CompassPoint                                                                    | S1, S3        |
+| Adviser reachable for a period afterwards             | Google SRE; CompassPoint; Fractionus                                                 | S9, S3, S7    |
+| Check with the successor after 30 days                | Fractionus                                                                           | S7            |
+| Tell outside parties about the change                 | CompassPoint (letter to funders and peers); OMB (agencies notify OMB within 30 days) | S3, S18       |
 
 Items with no outside source behind them are meshin.co's own, and the owner must supply them.
 
@@ -431,15 +450,16 @@ Items with no outside source behind them are meshin.co's own, and the owner must
    (S6, S7, S8). I found no study that links any handover practice to later success with AI.
 3. **Durations disagree, and none is about AI.**
 
-   | Source | What it says | Setting |
-   |---|---|---|
-   | S3 | One week of overlap, then two or three weeks of drop-ins | US nonprofit director |
-   | S7 | Start at least four weeks out, six to eight if complex; notice "typically two to four weeks" | Fractional executives |
-   | S9 | Two or three quarters with two or three people; one person for one quarter later | Google services |
-   | S2 | Hiring a senior successor can take six months or more | Interim managers |
+   | Source | What it says                                                                                 | Setting               |
+   | ------ | -------------------------------------------------------------------------------------------- | --------------------- |
+   | S3     | One week of overlap, then two or three weeks of drop-ins                                     | US nonprofit director |
+   | S7     | Start at least four weeks out, six to eight if complex; notice "typically two to four weeks" | Fractional executives |
+   | S9     | Two or three quarters with two or three people; one person for one quarter later             | Google services       |
+   | S2     | Hiring a senior successor can take six months or more                                        | Interim managers      |
 
    S7 also gives two different post-exit advice windows (30 days; 30 to 60 days). The page should
    state no duration until the owner gives one.
+
 4. **Who the successor should be.** Signals conflict. S18 lets an agency name an existing
    CIO, CDO or CTO if they have significant AI expertise. S14 suggests separating development from
    testing. On meshin.co, the FAQ says a company lacks "someone accountable for AI outside the team
@@ -488,20 +508,20 @@ length, an overlap, support after the last day, a handover fee or a completed ha
 
 ### 4.1 Routes the page must link to, and what each already owns
 
-| Route (date shown) | What it already says | The new page |
-|---|---|---|
-| `/faq/how-does-the-retainer-end` (2026-09-15) | "With a named internal owner in place, not a fading call. The decisions that got made are written down, not quietly dropped. The handover plan exists from the first month, not the last. A retainer running past two years would mean the design was wrong; the plan is written to end well before that." | Link both ways. Do not rephrase the promise. |
-| `/services/fractional-caio-retainer` (2026-10-02) | "How it ends: With an internal owner and written decisions." Process step 4: "a date when the retainer ends". Schedule: "A named owner and a closing date". FAQ: "If you still need me once that handover is done, I did it wrong." Not for: "You already have a full-time AI leader in place". | Link. |
-| `/approach` (2026-09-23) | Sixth signal: "I close every engagement by naming an internal owner and writing down the decisions. Needing me two years later means I failed at this one." "The sixth, handover, is the hardest one, because nothing forces it once a system is live." Step 2 "Name the owner". Step 6 "Hand it over". Engineering signal: "I test whether your engineers can already roll back a bad model without waiting on me." | Link. Owns the six-step order. |
-| `/` (home) | Handover signal: "A named owner and a fixed end date." | Do not repeat "fixed end date" until question 1. |
-| `/pricing` (2026-09-23) | "The retainer is monthly, cancellable with thirty days of notice, and ends in a handover." Fee shape only (L8). | Link. Publish no price. |
-| `/security` (2026-09-23), `/privacy` (2026-09-23) | "I ask for a named account in your own systems ... so you hold the off-switch and revoke it at handover." "My own working notes are deleted at handover, and the handover lists every credential I held so revoking them is a checklist rather than a memory." | Link. Owns credential revocation. |
-| `/resources/ai-governance-starter-kit` (2026-10-02) | Four documents. "Who signs what": register, "The named AI risk owner keeps it current"; policy, every employee; classification, the owner with the data owner; vendor questionnaire, procurement. "It is not a compliance certificate, and it is not legal advice." | Link. Do not rebuild the table. |
-| `/blog/why-your-ai-pilot-never-reached-production` (2026-10-02) | Owner: "one name attached to the outcome, with the budget and the authority to pause the system if it misbehaves." "The internal owner should have written at least one eval case and watched the rollback rehearsal ... A handover document given to someone who was not part of the build is a liability with a due date, not a transfer of knowledge." | Link. Owns the readiness idea. |
-| `/resources/ai-readiness-scorecard` (2026-10-02) | People axis: 0 "Only the original builder understands any AI system in use"; 1 "One other person has read the code"; 2 "A second person has changed it and shipped"; 3 "Ownership is written down and handed over on a schedule". | Use as the existing ladder. Do not invent a second one. |
-| `/blog/how-to-build-an-ai-system-register-in-a-week` | "a person who can answer for the system, not a distribution list nobody reads"; "one named owner and a fixed date to recheck every row". | Link. |
-| `/services/90-day-production-sprint` | "an engineer on your team who has built it with me and can change it without me." | Link. |
-| `/blog/category/operating-model` (hub text in `site/src/data/categories.mjs`) | "Handover is a deliverable, and it only counts once someone is actually watching the dashboard." "You need the decisions made properly once, written down, and handed to someone inside the company." "An engagement that does not end has usually replaced an operating model rather than built one." | Link. Match this bar; do not restate it. |
+| Route (date shown)                                                            | What it already says                                                                                                                                                                                                                                                                                                                                                                                                 | The new page                                            |
+| ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| `/faq/how-does-the-retainer-end` (2026-09-15)                                 | "With a named internal owner in place, not a fading call. The decisions that got made are written down, not quietly dropped. The handover plan exists from the first month, not the last. A retainer running past two years would mean the design was wrong; the plan is written to end well before that."                                                                                                           | Link both ways. Do not rephrase the promise.            |
+| `/services/fractional-caio-retainer` (2026-10-02)                             | "How it ends: With an internal owner and written decisions." Process step 4: "a date when the retainer ends". Schedule: "A named owner and a closing date". FAQ: "If you still need me once that handover is done, I did it wrong." Not for: "You already have a full-time AI leader in place".                                                                                                                      | Link.                                                   |
+| `/approach` (2026-09-23)                                                      | Sixth signal: "I close every engagement by naming an internal owner and writing down the decisions. Needing me two years later means I failed at this one." "The sixth, handover, is the hardest one, because nothing forces it once a system is live." Step 2 "Name the owner". Step 6 "Hand it over". Engineering signal: "I test whether your engineers can already roll back a bad model without waiting on me." | Link. Owns the six-step order.                          |
+| `/` (home)                                                                    | Handover signal: "A named owner and a fixed end date."                                                                                                                                                                                                                                                                                                                                                               | Do not repeat "fixed end date" until question 1.        |
+| `/pricing` (2026-09-23)                                                       | "The retainer is monthly, cancellable with thirty days of notice, and ends in a handover." Fee shape only (L8).                                                                                                                                                                                                                                                                                                      | Link. Publish no price.                                 |
+| `/security` (2026-09-23), `/privacy` (2026-09-23)                             | "I ask for a named account in your own systems ... so you hold the off-switch and revoke it at handover." "My own working notes are deleted at handover, and the handover lists every credential I held so revoking them is a checklist rather than a memory."                                                                                                                                                       | Link. Owns credential revocation.                       |
+| `/resources/ai-governance-starter-kit` (2026-10-02)                           | Four documents. "Who signs what": register, "The named AI risk owner keeps it current"; policy, every employee; classification, the owner with the data owner; vendor questionnaire, procurement. "It is not a compliance certificate, and it is not legal advice."                                                                                                                                                  | Link. Do not rebuild the table.                         |
+| `/blog/why-your-ai-pilot-never-reached-production` (2026-10-02)               | Owner: "one name attached to the outcome, with the budget and the authority to pause the system if it misbehaves." "The internal owner should have written at least one eval case and watched the rollback rehearsal ... A handover document given to someone who was not part of the build is a liability with a due date, not a transfer of knowledge."                                                            | Link. Owns the readiness idea.                          |
+| `/resources/ai-readiness-scorecard` (2026-10-02)                              | People axis: 0 "Only the original builder understands any AI system in use"; 1 "One other person has read the code"; 2 "A second person has changed it and shipped"; 3 "Ownership is written down and handed over on a schedule".                                                                                                                                                                                    | Use as the existing ladder. Do not invent a second one. |
+| `/blog/how-to-build-an-ai-system-register-in-a-week`                          | "a person who can answer for the system, not a distribution list nobody reads"; "one named owner and a fixed date to recheck every row".                                                                                                                                                                                                                                                                             | Link.                                                   |
+| `/services/90-day-production-sprint`                                          | "an engineer on your team who has built it with me and can change it without me."                                                                                                                                                                                                                                                                                                                                    | Link.                                                   |
+| `/blog/category/operating-model` (hub text in `site/src/data/categories.mjs`) | "Handover is a deliverable, and it only counts once someone is actually watching the dashboard." "You need the decisions made properly once, written down, and handed to someone inside the company." "An engagement that does not end has usually replaced an operating model rather than built one."                                                                                                               | Link. Match this bar; do not restate it.                |
 
 ### 4.2 Other pages to link, not repeat
 
@@ -558,12 +578,12 @@ length, an overlap, support after the last day, a handover fee or a completed ha
 
 ### 4.5 Live wording that needs the owner before the page repeats or sharpens it
 
-| Wording | Where | Open question |
-|---|---|---|
-| "a fixed end date", "a closing date", "a date when the retainer ends" | home; retainer page | Question 1 |
-| "two years" as the failure line | FAQ; `/approach` | Question 2 |
-| "thirty days of notice" | `/pricing` | Question 3 |
-| "a named internal owner" or "internal CAIO" | site; master plan | Question 26 |
+| Wording                                                               | Where               | Open question |
+| --------------------------------------------------------------------- | ------------------- | ------------- |
+| "a fixed end date", "a closing date", "a date when the retainer ends" | home; retainer page | Question 1    |
+| "two years" as the failure line                                       | FAQ; `/approach`    | Question 2    |
+| "thirty days of notice"                                               | `/pricing`          | Question 3    |
+| "a named internal owner" or "internal CAIO"                           | site; master plan   | Question 26   |
 
 `docs/COPY-CHECKLIST.md` rows 3.5 (notice) and 3.7 (typical length) have an empty Answer column
 today. Row 3.7 records that stated durations were removed on 2026-09-15 as an unconfirmed claim.
@@ -573,6 +593,7 @@ today. Row 3.7 records that stated durations were removed on 2026-09-15 as an un
 Each item is a question the owner can answer directly. "None" is a valid answer to any of them.
 
 **A. Promises already live**
+
 1. The home page says "a fixed end date". The retainer page says "a date when the retainer ends".
    `/pricing` says "monthly, cancellable with thirty days of notice". Is the end date written into
    the statement of work at the start, set in the month-one plan, or set later? Who can move it?
@@ -582,63 +603,38 @@ Each item is a question the owner can answer directly. "None" is a valid answer 
 4. "The handover plan exists from the first month." What exists in month one: an outline, a named
    candidate, a dated checklist? Where is it kept, and who sees it?
 
-**B. Sequence and timing**
-5. List your stages from month one to the last day, in order, with the length of each.
-6. Is there an overlap when you and the internal owner are both active? How many days a week, for
-   how many weeks?
-7. Do you offer anything after the last day: calls, questions, reviews? If yes, state hours,
-   duration and fee shape (no numbers, L8).
-8. Do you check in after handover at 30, 60 or 90 days? The site promises none.
-9. Does the handover include an exit review or a goals-status report (S1, S3)? Who receives it:
-   the CEO, the board?
+**B. Sequence and timing** 5. List your stages from month one to the last day, in order, with the length of each. 6. Is there an overlap when you and the internal owner are both active? How many days a week, for
+how many weeks? 7. Do you offer anything after the last day: calls, questions, reviews? If yes, state hours,
+duration and fee shape (no numbers, L8). 8. Do you check in after handover at 30, 60 or 90 days? The site promises none. 9. Does the handover include an exit review or a goals-status report (S1, S3)? Who receives it:
+the CEO, the board?
 
-**C. The successor and the readiness test**
-10. Who is the usual internal owner: engineering lead, COO, security lead, head of data, a new
-    hire? What do you do when the person does not exist yet?
-11. Is the owner one person or two: a risk owner outside the technical team, and a technical owner
-    who writes evals (section 3, item 4)?
-12. What must the successor show before you step back? The blog gives two items: wrote one eval
-    case, watched a rollback rehearsal. `/approach` tests whether engineers "can already roll back a
-    bad model without waiting on me". List every item, who judges, and what counts as a pass. Is it
-    the scorecard People axis at level 3?
-13. If the successor is not ready on the planned date, do you extend (at what fee shape), hand over
-    anyway, or decline to close?
-14. Who trains the successor, with what, and how many retainer days does that take?
-15. What will you refuse to do: recruit or interview the successor, act as legal adviser, stay the
-    named officer past the date?
+**C. The successor and the readiness test** 10. Who is the usual internal owner: engineering lead, COO, security lead, head of data, a new
+hire? What do you do when the person does not exist yet? 11. Is the owner one person or two: a risk owner outside the technical team, and a technical owner
+who writes evals (section 3, item 4)? 12. What must the successor show before you step back? The blog gives two items: wrote one eval
+case, watched a rollback rehearsal. `/approach` tests whether engineers "can already roll back a
+bad model without waiting on me". List every item, who judges, and what counts as a pass. Is it
+the scorecard People axis at level 3? 13. If the successor is not ready on the planned date, do you extend (at what fee shape), hand over
+anyway, or decline to close? 14. Who trains the successor, with what, and how many retainer days does that take? 15. What will you refuse to do: recruit or interview the successor, act as legal adviser, stay the
+named officer past the date?
 
-**D. Sign-off and accountability**
-16. After handover, who signs each of these: register entries, security questionnaire answers,
-    risk acceptances, policy exceptions, vendor approvals, eval-threshold changes, rollback calls,
-    serious-incident calls? Today you sign as "the named officer".
-17. On what date does "named officer on record" pass to the internal owner, and who tells the
-    customers whose questionnaires carry your name?
-18. How do you record a risk acceptance today: fields, template, who may accept, review date?
-19. For a client that is an EU deployer of a high-risk system, do you name the oversight person
-    (Article 26(2)) in the handover, or leave it to the client's counsel? What may the page say,
-    given "not legal advice"?
+**D. Sign-off and accountability** 16. After handover, who signs each of these: register entries, security questionnaire answers,
+risk acceptances, policy exceptions, vendor approvals, eval-threshold changes, rollback calls,
+serious-incident calls? Today you sign as "the named officer". 17. On what date does "named officer on record" pass to the internal owner, and who tells the
+customers whose questionnaires carry your name? 18. How do you record a risk acceptance today: fields, template, who may accept, review date? 19. For a client that is an EU deployer of a high-risk system, do you name the oversight person
+(Article 26(2)) in the handover, or leave it to the client's counsel? What may the page say,
+given "not legal advice"?
 
-**E. Access, vendors and records**
-20. What is on your credential list beyond the `/security` sentence? Who revokes, and how is
-    revocation confirmed in writing?
-21. Do you hold any vendor or sub-processor contact personally? What review cadence and renewal
-    calendar passes to the owner?
-22. Where do evals, runbooks, decisions and the register live: client repository, wiki, drive? How
-    is the successor added to the repository and CI?
-23. Which model inventory fields do you use, and what do you add at handover (model version, eval
-    suite reference, rollback reference, last review date)?
-24. Who keeps logs and traces after handover, and for how long?
+**E. Access, vendors and records** 20. What is on your credential list beyond the `/security` sentence? Who revokes, and how is
+revocation confirmed in writing? 21. Do you hold any vendor or sub-processor contact personally? What review cadence and renewal
+calendar passes to the owner? 22. Where do evals, runbooks, decisions and the register live: client repository, wiki, drive? How
+is the successor added to the repository and CI? 23. Which model inventory fields do you use, and what do you add at handover (model version, eval
+suite reference, rollback reference, last review date)? 24. Who keeps logs and traces after handover, and for how long?
 
-**F. Evidence and wording**
-25. Has any engagement ended in a handover? If yes: which facts (dates, durations, the successor's
-    role) may be published, with what consent? If no, the page must say nothing about results.
-26. Which term does the page use: "internal owner" (site) or "internal CAIO" (master plan)?
-27. Do you want to cite SECI (Nonaka and Takeuchi), as the PRD and master plan ask? Section 3,
-    item 8, gives the limits.
-28. For the Handover Playbook resource: format (Markdown, PDF or repository), licence, version, and
-    the slug under `github.com/meshin-co`.
-29. Which rules may the page cite: the EU AI Act only, or also NIST and ISO? Which framing is safe,
-    given the Starter Kit says "not legal advice"?
+**F. Evidence and wording** 25. Has any engagement ended in a handover? If yes: which facts (dates, durations, the successor's
+role) may be published, with what consent? If no, the page must say nothing about results. 26. Which term does the page use: "internal owner" (site) or "internal CAIO" (master plan)? 27. Do you want to cite SECI (Nonaka and Takeuchi), as the PRD and master plan ask? Section 3,
+item 8, gives the limits. 28. For the Handover Playbook resource: format (Markdown, PDF or repository), licence, version, and
+the slug under `github.com/meshin-co`. 29. Which rules may the page cite: the EU AI Act only, or also NIST and ISO? Which framing is safe,
+given the Starter Kit says "not legal advice"?
 
 ## 6. Sources
 
@@ -646,34 +642,34 @@ Primary means a standard, a law, a regulator's text, an official memo, a profess
 or a published paper. Dates are publication or last-update dates as I found them. "Read" notes what
 I could access.
 
-| Source | Date and kind | URL |
-|---|---|---|
-| S1. Institute of Interim Management, Code of Conduct | 2022-11-08, modified 2026-07-21; primary | https://iim.org.uk/resources/code-of-conduct/ |
-| S2. Woods et al., cyclical model of interim assignments, JOEPP 7(2) | 2020-06; primary (author manuscript read) | https://doi.org/10.1108/JOEPP-10-2019-0094 |
-| S3. Wolfred, Interim Executive Directors, CompassPoint | 2005; secondary (practitioner monograph) | https://www.compasspoint.org/sites/default/files/documents/Interim%20EDs%20-%20final.pdf |
-| S4. Skowron-Mielnik and Sobiecki, knowledge transfer in interim projects | 2024-03; primary | https://doi.org/10.2478/emj-2024-0004 |
-| S5. Szulanski, Exploring internal stickiness, SMJ 17(S2) | 1996-12; primary (abstract read) | https://doi.org/10.1002/smj.4250171105 |
-| S6. CE Interim, exit strategy and handover | undated; secondary | https://ceinterim.com/interim-manager-exit-strategy-and-handover-explained/ |
-| S7. Fractionus, offboarding a fractional executive | 2026-05-26 (page data 2026-05-25T22:00Z); secondary | https://fractionus.com/blog/fractional-executive-offboarding |
-| S8. Esya, evals, runbook and handover | 2026-08-29; secondary | https://esya.studio/notes/ai-evals-runbook-handover |
-| S9. Google, SRE book ch. 32, evolving SRE engagement model | 2017; primary | https://sre.google/sre-book/evolving-sre-engagement-model/ |
-| S10. FCA Handbook SYSC 25.9 | updated 2021-01-01; primary | https://handbook.fca.org.uk/handbook/sysc25/sysc25s9 |
-| S11. Starmer et al., handoff program, NEJM 371(19) | 2014-11-06; primary (abstract read) | https://pubmed.ncbi.nlm.nih.gov/25372088/ |
-| S12. NIST AI RMF 1.0, NIST AI 100-1 | 2023-01-26; primary | https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf |
-| S13. NIST, AI Risk Management Framework page | modified 2026-08-13; primary | https://www.nist.gov/itl/ai-risk-management-framework |
-| S14. NIST AIRC, AI RMF Playbook | updated 2026-06-18; primary | https://airc.nist.gov/airmf-resources/playbook/govern/ |
-| S15. ISO, ISO/IEC 42001:2023 catalogue page | published 2023-12-18; primary (full text not read) | https://www.iso.org/standard/42001 |
-| S16. ISO/IEC 42001:2023 free sample, hosted by iTeh | 2023-12; primary (contents and clauses 1 to 4.4 only) | https://cdn.standards.iteh.ai/samples/81230/4c1911ebc9a641fcb6ee21aa09c28ad3/ISO-IEC-42001-2023.pdf |
-| S17. ISO/IEC harmonized structure for management system standards | approved 2025-07-30; primary | https://www.iso.org/home.isoDocumentsDownload.do?t=2EVmNRpfMEK8NcTL_uoAJceDlxYmmqpQWNk3r1MeLNWCXk6i10vZ-R5FEjIK-UOe |
-| S18. US OMB, memorandum M-25-21 | 2025-04-03; primary | https://www.whitehouse.gov/wp-content/uploads/2025/02/M-25-21-Accelerating-Federal-Use-of-AI-through-Innovation-Governance-and-Public-Trust.pdf |
-| S19. Regulation (EU) 2024/1689, via the Commission's AI Act Service Desk | 2024-06-13; primary | https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-26 |
-| S20. Regulation (EU) 2026/1744, Digital Omnibus on AI | 2026-07-08, OJ 2026-07-24; primary | http://data.europa.eu/eli/reg/2026/1744/oj |
-| S21. European Commission, AI Literacy Q&A | last update 2026-07-27; primary (guidance) | https://digital-strategy.ec.europa.eu/en/faqs/ai-literacy-questions-answers |
-| S22. IAPP, AIGP certification page | undated; primary for its own claims | https://iapp.org/certify/aigp |
-| S23. Bock and von der Oelsnitz, leadership competences in the AI era | 2025-02-28; primary (abstract only) | https://doi.org/10.1108/SL-09-2024-0100 |
-| S24. Hossain, Fernando and Akter, AI-driven leader capabilities | 2025-02-16; primary (abstract only) | https://doi.org/10.1177/15480518251319624 |
-| S25. Nonaka, A Dynamic Theory of Organizational Knowledge Creation | 1994-02; primary (abstract only) | https://doi.org/10.1287/orsc.5.1.14 |
-| S26. Gourlay, Conceptualizing Knowledge Creation: a critique of Nonaka's theory | 2006-08-22; primary (abstract only) | https://doi.org/10.1111/j.1467-6486.2006.00637.x |
+| Source                                                                          | Date and kind                                         | URL                                                                                                                                             |
+| ------------------------------------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| S1. Institute of Interim Management, Code of Conduct                            | 2022-11-08, modified 2026-07-21; primary              | https://iim.org.uk/resources/code-of-conduct/                                                                                                   |
+| S2. Woods et al., cyclical model of interim assignments, JOEPP 7(2)             | 2020-06; primary (author manuscript read)             | https://doi.org/10.1108/JOEPP-10-2019-0094                                                                                                      |
+| S3. Wolfred, Interim Executive Directors, CompassPoint                          | 2005; secondary (practitioner monograph)              | https://www.compasspoint.org/sites/default/files/documents/Interim%20EDs%20-%20final.pdf                                                        |
+| S4. Skowron-Mielnik and Sobiecki, knowledge transfer in interim projects        | 2024-03; primary                                      | https://doi.org/10.2478/emj-2024-0004                                                                                                           |
+| S5. Szulanski, Exploring internal stickiness, SMJ 17(S2)                        | 1996-12; primary (abstract read)                      | https://doi.org/10.1002/smj.4250171105                                                                                                          |
+| S6. CE Interim, exit strategy and handover                                      | undated; secondary                                    | https://ceinterim.com/interim-manager-exit-strategy-and-handover-explained/                                                                     |
+| S7. Fractionus, offboarding a fractional executive                              | 2026-05-26 (page data 2026-05-25T22:00Z); secondary   | https://fractionus.com/blog/fractional-executive-offboarding                                                                                    |
+| S8. Esya, evals, runbook and handover                                           | 2026-08-29; secondary                                 | https://esya.studio/notes/ai-evals-runbook-handover                                                                                             |
+| S9. Google, SRE book ch. 32, evolving SRE engagement model                      | 2017; primary                                         | https://sre.google/sre-book/evolving-sre-engagement-model/                                                                                      |
+| S10. FCA Handbook SYSC 25.9                                                     | updated 2021-01-01; primary                           | https://handbook.fca.org.uk/handbook/sysc25/sysc25s9                                                                                            |
+| S11. Starmer et al., handoff program, NEJM 371(19)                              | 2014-11-06; primary (abstract read)                   | https://pubmed.ncbi.nlm.nih.gov/25372088/                                                                                                       |
+| S12. NIST AI RMF 1.0, NIST AI 100-1                                             | 2023-01-26; primary                                   | https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf                                                                                          |
+| S13. NIST, AI Risk Management Framework page                                    | modified 2026-08-13; primary                          | https://www.nist.gov/itl/ai-risk-management-framework                                                                                           |
+| S14. NIST AIRC, AI RMF Playbook                                                 | updated 2026-06-18; primary                           | https://airc.nist.gov/airmf-resources/playbook/govern/                                                                                          |
+| S15. ISO, ISO/IEC 42001:2023 catalogue page                                     | published 2023-12-18; primary (full text not read)    | https://www.iso.org/standard/42001                                                                                                              |
+| S16. ISO/IEC 42001:2023 free sample, hosted by iTeh                             | 2023-12; primary (contents and clauses 1 to 4.4 only) | https://cdn.standards.iteh.ai/samples/81230/4c1911ebc9a641fcb6ee21aa09c28ad3/ISO-IEC-42001-2023.pdf                                             |
+| S17. ISO/IEC harmonized structure for management system standards               | approved 2025-07-30; primary                          | https://www.iso.org/home.isoDocumentsDownload.do?t=2EVmNRpfMEK8NcTL_uoAJceDlxYmmqpQWNk3r1MeLNWCXk6i10vZ-R5FEjIK-UOe                             |
+| S18. US OMB, memorandum M-25-21                                                 | 2025-04-03; primary                                   | https://www.whitehouse.gov/wp-content/uploads/2025/02/M-25-21-Accelerating-Federal-Use-of-AI-through-Innovation-Governance-and-Public-Trust.pdf |
+| S19. Regulation (EU) 2024/1689, via the Commission's AI Act Service Desk        | 2024-06-13; primary                                   | https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-26                                                                                   |
+| S20. Regulation (EU) 2026/1744, Digital Omnibus on AI                           | 2026-07-08, OJ 2026-07-24; primary                    | http://data.europa.eu/eli/reg/2026/1744/oj                                                                                                      |
+| S21. European Commission, AI Literacy Q&A                                       | last update 2026-07-27; primary (guidance)            | https://digital-strategy.ec.europa.eu/en/faqs/ai-literacy-questions-answers                                                                     |
+| S22. IAPP, AIGP certification page                                              | undated; primary for its own claims                   | https://iapp.org/certify/aigp                                                                                                                   |
+| S23. Bock and von der Oelsnitz, leadership competences in the AI era            | 2025-02-28; primary (abstract only)                   | https://doi.org/10.1108/SL-09-2024-0100                                                                                                         |
+| S24. Hossain, Fernando and Akter, AI-driven leader capabilities                 | 2025-02-16; primary (abstract only)                   | https://doi.org/10.1177/15480518251319624                                                                                                       |
+| S25. Nonaka, A Dynamic Theory of Organizational Knowledge Creation              | 1994-02; primary (abstract only)                      | https://doi.org/10.1287/orsc.5.1.14                                                                                                             |
+| S26. Gourlay, Conceptualizing Knowledge Creation: a critique of Nonaka's theory | 2006-08-22; primary (abstract only)                   | https://doi.org/10.1111/j.1467-6486.2006.00637.x                                                                                                |
 
 Could not read, so not relied on: the full text of ISO/IEC 42001, the IAPP body-of-knowledge PDF
 (HTTP 403), the Council press release of 2026-05-07 (HTTP 403), a 2026 MDPI review of AI

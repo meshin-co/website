@@ -2,16 +2,16 @@
 record: true
 ---
 
-# 01 — What meshin.co absorbed from smarter.day v2, 2026-10-01
+# 01 — What meshin.co absorbed from the donor v2, 2026-10-01
 
-Dated 2026-10-01. Audits `smarter.day/website-v2` as it stood on 2026-10-01, against meshin.co at
+Dated 2026-10-01. Audits `the donor repository` as it stood on 2026-10-01, against meshin.co at
 `a96c323`, the commit the fork copied. This is a record, not an instruction: it describes another
 repository at a moment in time, and the paths it names outside this tree are not expected to resolve
 here.
 
 ## Why this record exists
 
-`smarter.day/website-v2` was forked from this repository, kept the engineering, and replaced the
+`the donor repository` was forked from this repository, kept the engineering, and replaced the
 brand, the content and the purpose. While doing that it audited what it inherited. The owner asked
 for the reverse trip: find everything in the fork worth bringing home, decide what fits a
 single-practitioner consulting site, and take it.

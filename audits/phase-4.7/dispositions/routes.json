@@ -530,7 +530,7 @@
   {
     "target": "/now",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-02. In src/pages/now.astro the lead paragraph reads 'A line is added when something actually happens and is not edited afterwards, so there is nothing here to keep in sync. What is not on the list is not being worked on.' and the title was lengthened from 'Now' to the page's own title string; the meta description was also reworded (OLD 'A dated log of what I am building and studying, newest first. A line is added when something happens and never edited after.', NEW as quoted below). Title read: 'What I am working on now — meshin.co'; H1 read: 'What I am working on now'; both fit the static grammar and carry the target query 'what i am working on now'. The opening reads 'What I am working on now, kept as a log with the newest line first.' It repeats the query but is a verbless fragment and names nothing being worked on; the answer sits in the log below. Composed strings checked: the date line 'Updated September 2026' agrees with the newest dt 'September 2026'; the meta 'What I am working on now: a dated log of what I am building and studying, newest first. A line is added when something happens and never edited after.' is two whole sentences and matches the lead's promise; the three dated entries and the August link pair (smarter.day, App Store) read as whole sentences. Status is rewritten because the page's own authored lead and title changed.",
+    "reason": "Re-read 2026-10-03. The August and November product entries were removed at the owner's request; the page names and links no product. The lead paragraph and the September 2026 entry are unchanged.",
     "digest": "879acd4a2cd1"
   },
   {

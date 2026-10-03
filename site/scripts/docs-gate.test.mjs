@@ -158,7 +158,7 @@ test('the words "record: true" appearing in prose, not as a fence, is not a mark
 });
 
 test('a file under investigation/ may be a record, and nothing outside it may', () => {
-  assert.equal(mayBeRecord('investigation/01-absorption-from-smarter-day-v2.md'), true);
+  assert.equal(mayBeRecord('investigation/01-absorption-from-donor-harness.md'), true);
   assert.equal(mayBeRecord('docs/plan/INDEX.md'), false);
   assert.equal(mayBeRecord('site/investigation/01-note.md'), false);
 });

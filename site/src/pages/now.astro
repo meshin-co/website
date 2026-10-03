@@ -28,22 +28,12 @@ const nodes = [
   webPageNode(site, '/now', UPDATED, metadata.title),
 ];
 
-const log = [
+type LogEntry = { date: string; text: string; links?: { label: string; href: string }[] };
+
+const log: LogEntry[] = [
   {
     date: 'September 2026',
     text: 'Working through ISO/IEC 42001, the AI management system standard. Studying it, not certified against it: no exam booked and no certificate to claim.',
-  },
-  {
-    date: 'August 2026',
-    text: 'Shipped Smarter Day 3.7.0, the iOS app I build and publish myself. Free on the App Store, filed under Productivity.',
-    links: [
-      { label: 'smarter.day', href: 'https://smarter.day/' },
-      { label: 'App Store', href: 'https://apps.apple.com/app/apple-store/id6736619323' },
-    ],
-  },
-  {
-    date: 'November 2025',
-    text: 'First release of Smarter Day: a structured day, tasks, habits and an Eisenhower priority matrix in one app.',
   },
 ];
 ---
