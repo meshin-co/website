@@ -31,7 +31,7 @@ test('a mailto or tel link is not an outbound web link', () => {
 });
 
 test('an outbound link missing any required token is a finding that names the missing tokens', () => {
-  const findings = relFindings('/now', '<a href="https://smarter.day/" rel="noopener">s</a>');
+  const findings = relFindings('/now', '<a href="https://example.org/" rel="noopener">s</a>');
   assert.equal(findings.length, 1);
   assert.equal(findings[0].route, '/now');
   assert.deepEqual(findings[0].missing, ['nofollow', 'noreferrer']);

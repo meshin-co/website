@@ -38,8 +38,8 @@
   {
     "target": "site/src/pages/now.astro",
     "status": "rewritten",
-    "reason": "Rewritten 2026-09-16: /now is a dated log, and the August entry now carries two outbound links (smarter.day and the App Store listing), both with rel=nofollow noopener noreferrer per L55. Facts from Apple's lookup API; the day job stays unnamed at the owner's request. Phase 5.2: title and description now carry the target query \"what I am working on now\" (both 0.33 to 1.00); in the lead \"nothing here has to be kept in sync\" now reads \"there is nothing here to keep in sync\". The log entries are untouched, because the page's own rule is that a line is never edited once written.",
-    "digest": "0955a6de2f8d"
+    "reason": "Rewritten 2026-10-03: /now is a dated log; the August and November product entries were removed at the owner's request, so the page no longer names or links any product. The September 2026 entry stands.",
+    "digest": "1664d948a09a"
   },
   {
     "target": "site/src/pages/ai-policy.astro",

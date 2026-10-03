@@ -55,8 +55,8 @@ not support it, the row says so, and I have already removed or softened it — t
 
 `/now` was an empty holding line early on. Since commit `0534b44` (2026-09-16) it ships as a
 dated log — "newest first", a line added only when something happens and never edited after —
-with three real entries already live (the ISO/IEC 42001 study, and the Smarter Day 3.7.0 and
-first-release dates). It is not blocked on the rows below; they stay open only if you want
+with one real entry already live (the ISO/IEC 42001 study). The two product entries were
+removed on 2026-10-03 at the owner's request: this site names and links no product. It is not blocked on the rows below; they stay open only if you want
 capacity or availability lines added to the log format.
 
 | #   | Fact                                                                        | Answer |

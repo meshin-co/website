@@ -199,7 +199,7 @@ D24 |
 
 4.1 Кто
 
-{{OWNER_FIRST_NAME}} {{OWNER_SURNAME}} — full-stack инженер с 15+ годами, senior platform engineer в компании по fraud detection (1000+ человек), основатель AI-продуктов: платформа оркестрации агентов (Fleet), AI-receptionist для SMB (only.help), планировщик Smarter Day (App Store), open-source скиллы для coding-агентов (@ctxr). Israel, remote. Самозанятый (Esek Patur). Языки: EN, RU, HE.
+{{OWNER_FIRST_NAME}} {{OWNER_SURNAME}} — full-stack инженер с 15+ годами, senior platform engineer в компании по fraud detection (1000+ человек), основатель AI-продуктов: платформа оркестрации агентов (Fleet), AI-receptionist для SMB (only.help), open-source скиллы для coding-агентов (@ctxr). Israel, remote. Самозанятый (Esek Patur). Языки: EN, RU, HE.
 
 4.2 Что продаём (три оффера)
 

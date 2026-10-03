@@ -28,7 +28,7 @@ same sentence. Claims marked "my reading" are inference, not something a source 
 
 ## 1. What the page must answer
 
-**Buyer prompt, verbatim** (`docs/SEMANTIC-CORE.md` line 345): *adoption telemetry for AI tools*
+**Buyer prompt, verbatim** (`docs/SEMANTIC-CORE.md` line 345): _adoption telemetry for AI tools_
 
 Today it is a hard gap: "no route" (line 346). The plan is one article plus a dashboard-template
 artifact, which is a new artifact type for this repo (SEMANTIC-CORE lines 634-636; PRD §15 row 12;
@@ -187,17 +187,17 @@ Evidence is mixed, and it depends on the method. Each entry below says which met
 
 ### 2.3 Measures that mislead
 
-| Measure | What it counts | Why it misleads | Source |
-| ------- | -------------- | --------------- | ------ |
-| Seats or licences | Money spent | Says nothing about use; GitHub keeps seats in a separate API | [GitHub Docs](https://docs.github.com/en/copilot/concepts/billing-and-usage/copilot-usage-metrics/copilot-metrics) |
-| Daily or weekly active users | One event in a window | Window and event differ by vendor; no shared definition | GitHub and Microsoft pages in 2.1 |
-| Usage frequency | How often | DORA 2024 found reliance more meaningful than frequency | [DORA 2024](https://dora.dev/research/2024/dora-report/2024-dora-accelerate-state-of-devops-report.pdf) |
-| Lines or code accepted | Output volume | GitHub calls it "directional"; the Cursor study found transient volume gains and sustained complexity; DX warns of gaming | [Cursor study](https://arxiv.org/abs/2511.04427), [DX](https://getdx.com/research/measuring-ai-code-assistants-and-agents/) |
-| Acceptance rate | Suggestions taken | Tracks perceived productivity, not measured output | [Ziegler 2022](https://arxiv.org/abs/2205.06537) |
-| Vendor "hours saved" and ROI | Actions times fixed minutes times a wage | Assumption times count; Microsoft says it is a "general estimate" | [Microsoft Learn](https://learn.microsoft.com/en-us/viva/insights/org-team-insights/copilot-dashboard) |
-| Self-reported speed-up | Opinion | 40-point overestimate in the 2025 trial | [METR 2026-05-11](https://metr.org/blog/2026-05-11-ai-usage-survey/) |
-| Vendor "resolution" or "deflection" | Conversations that ended | Can include customers who left unhelped | [Intercom](https://www.intercom.com/help/en/articles/8205718-fin-ai-agent-outcomes) |
-| Adoption multiplier | Engaged versus passive users | Self-selected groups | [GitHub Docs](https://docs.github.com/en/copilot/concepts/billing-and-usage/copilot-usage-metrics/copilot-metrics) |
+| Measure                             | What it counts                           | Why it misleads                                                                                                           | Source                                                                                                                      |
+| ----------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Seats or licences                   | Money spent                              | Says nothing about use; GitHub keeps seats in a separate API                                                              | [GitHub Docs](https://docs.github.com/en/copilot/concepts/billing-and-usage/copilot-usage-metrics/copilot-metrics)          |
+| Daily or weekly active users        | One event in a window                    | Window and event differ by vendor; no shared definition                                                                   | GitHub and Microsoft pages in 2.1                                                                                           |
+| Usage frequency                     | How often                                | DORA 2024 found reliance more meaningful than frequency                                                                   | [DORA 2024](https://dora.dev/research/2024/dora-report/2024-dora-accelerate-state-of-devops-report.pdf)                     |
+| Lines or code accepted              | Output volume                            | GitHub calls it "directional"; the Cursor study found transient volume gains and sustained complexity; DX warns of gaming | [Cursor study](https://arxiv.org/abs/2511.04427), [DX](https://getdx.com/research/measuring-ai-code-assistants-and-agents/) |
+| Acceptance rate                     | Suggestions taken                        | Tracks perceived productivity, not measured output                                                                        | [Ziegler 2022](https://arxiv.org/abs/2205.06537)                                                                            |
+| Vendor "hours saved" and ROI        | Actions times fixed minutes times a wage | Assumption times count; Microsoft says it is a "general estimate"                                                         | [Microsoft Learn](https://learn.microsoft.com/en-us/viva/insights/org-team-insights/copilot-dashboard)                      |
+| Self-reported speed-up              | Opinion                                  | 40-point overestimate in the 2025 trial                                                                                   | [METR 2026-05-11](https://metr.org/blog/2026-05-11-ai-usage-survey/)                                                        |
+| Vendor "resolution" or "deflection" | Conversations that ended                 | Can include customers who left unhelped                                                                                   | [Intercom](https://www.intercom.com/help/en/articles/8205718-fin-ai-agent-outcomes)                                         |
+| Adoption multiplier                 | Engaged versus passive users             | Self-selected groups                                                                                                      | [GitHub Docs](https://docs.github.com/en/copilot/concepts/billing-and-usage/copilot-usage-metrics/copilot-metrics)          |
 
 ### 2.4 EU and UK limits on measuring people
 
@@ -318,16 +318,16 @@ This is what the template must specify, from the sources above. It is a requirem
 copy. Items (a) to (f) in the Verdict map to panels 1 to 8 here. Panels 2 and 3 can run on team-level
 data; panel 2's reclaim step needs person-level data (see Section 5, question 10).
 
-| # | Panel | Question it answers | Data source | Decision it supports |
-| - | ----- | ------------------- | ----------- | -------------------- |
-| 1 | Coverage | What share of AI use at work runs through approved tools? | Gateway request logs, SSO app inventory, expense and API billing (the site's `shadow-ai` page names the last two), the AI register | Which tools to approve, replace or block; where the approved path is too hard |
-| 2 | Paid versus active | Which paid seats see no use? | Vendor admin APIs: GitHub user-management `last_activity_at`; Microsoft licence view | Reclaim or reassign seats; target enablement |
-| 3 | Retention by team | Do people who tried it keep using it, at 4, 8 and 12 weeks? | Gateway or vendor logs; published "returning user" (Microsoft) and "two active days in 28" (GitHub) rules as templates for the definition | Retrain, change the workflow, or retire the tool |
-| 4 | Outcome per use case | Did the one outcome agreed before rollout move, against a baseline or comparison group? | The system of record for that outcome (ticketing, CI, CRM), not the AI tool's own logs | Scale, fix or retire the use case |
-| 5 | Delivery-health guardrail (engineering use cases) | Did throughput or instability get worse as use grew? | CI/CD and version control: DORA's lead time for changes, deployment frequency, failed deployment recovery time, change fail rate, rework rate; plus review time | Slow or pause a rollout when instability rises |
-| 6 | Cost per outcome | What does one unit of the outcome cost? | Billing and API cost, divided by panel 4's outcome count; defined on the existing FAQ page | Budget, build-versus-buy, model choice |
-| 7 | Trust and friction pulse | Do people trust the output, rely on it, and say where it gets in the way? | A short repeated survey; DORA publishes trust and reliance items; minimum group size applies | Training and verification effort, tool choice |
-| 8 | Policy clarity | Do staff know what is expected, permitted and applicable to them? | The same survey, using DORA's four "AI stance" items | Fix how the acceptable-use policy is communicated |
+| #   | Panel                                             | Question it answers                                                                     | Data source                                                                                                                                                     | Decision it supports                                                          |
+| --- | ------------------------------------------------- | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| 1   | Coverage                                          | What share of AI use at work runs through approved tools?                               | Gateway request logs, SSO app inventory, expense and API billing (the site's `shadow-ai` page names the last two), the AI register                              | Which tools to approve, replace or block; where the approved path is too hard |
+| 2   | Paid versus active                                | Which paid seats see no use?                                                            | Vendor admin APIs: GitHub user-management `last_activity_at`; Microsoft licence view                                                                            | Reclaim or reassign seats; target enablement                                  |
+| 3   | Retention by team                                 | Do people who tried it keep using it, at 4, 8 and 12 weeks?                             | Gateway or vendor logs; published "returning user" (Microsoft) and "two active days in 28" (GitHub) rules as templates for the definition                       | Retrain, change the workflow, or retire the tool                              |
+| 4   | Outcome per use case                              | Did the one outcome agreed before rollout move, against a baseline or comparison group? | The system of record for that outcome (ticketing, CI, CRM), not the AI tool's own logs                                                                          | Scale, fix or retire the use case                                             |
+| 5   | Delivery-health guardrail (engineering use cases) | Did throughput or instability get worse as use grew?                                    | CI/CD and version control: DORA's lead time for changes, deployment frequency, failed deployment recovery time, change fail rate, rework rate; plus review time | Slow or pause a rollout when instability rises                                |
+| 6   | Cost per outcome                                  | What does one unit of the outcome cost?                                                 | Billing and API cost, divided by panel 4's outcome count; defined on the existing FAQ page                                                                      | Budget, build-versus-buy, model choice                                        |
+| 7   | Trust and friction pulse                          | Do people trust the output, rely on it, and say where it gets in the way?               | A short repeated survey; DORA publishes trust and reliance items; minimum group size applies                                                                    | Training and verification effort, tool choice                                 |
+| 8   | Policy clarity                                    | Do staff know what is expected, permitted and applicable to them?                       | The same survey, using DORA's four "AI stance" items                                                                                                            | Fix how the acceptable-use policy is communicated                             |
 
 Notes for the writer (my reading from the sources):
 
@@ -434,26 +434,26 @@ Checked in `site/src/data` and the built `site/dist` (built 2026-10-02 06:13, HE
 L51: one concept is defined on exactly one page, so the new page links to these and does not redefine
 them.
 
-| Route | What it already covers | What the new page does |
-| ----- | ---------------------- | ---------------------- |
-| `/faq/how-is-cost-per-outcome-measured` | The home of "cost per outcome" | Link for panel 6. Do not redefine it |
-| `/glossary/shadow-ai` | "Look rather than ask": browser extension inventories, expense reports, API billing; fold findings into the register | Link for panel 1 |
-| `/glossary/ai-register` | The register | Link for panel 1 |
-| `/glossary/dpia` | Mirrors Article 35(3) only. It does not define the employee-monitoring trigger (WP248 criteria, national lists) | Gap. Either extend this page (one definition, per L50) and link to it, or define it in the article and link from the glossary. Owner decides (question 22) |
-| `/glossary/observability` | Tracing of systems, not user adoption | Link and distinguish. Do not redefine |
-| `/glossary/llm-gateway` and `/resources/llm-gateway-governance-config` | Gateway policy schema with a `log_retention` key; "rate limit per team, not per user" | Link as the log source and as the team-not-user precedent |
-| `/glossary/post-market-monitoring`, `/glossary/evals`, `/glossary/human-oversight`, `/glossary/ai-impact-assessment`, `/glossary/data-classification`, `/glossary/eu-ai-act` | Adjacent terms | Link where used. `eu-ai-act` cites the consolidated text dated 2026-07-27 and, in the lines I grepped, states no application dates that the Omnibus changed |
-| `/blog/ai-acceptable-use-policy-for-a-50-person-company` | "Check instead of asking". Says nothing on telemetry about staff or on telling staff they are monitored | Link; the new page adds what it lacks, by link and not by repeating |
-| `/blog/why-your-ai-pilot-never-reached-production` | "A measurable outcome", "measure without a survey", tracing and cost per outcome | Link for panel 4 |
-| `/blog/evals-in-ci-for-llm-agents` | Cost per completed run | Link; distinguish evals from adoption telemetry |
-| `/blog/how-to-build-an-ai-system-register-in-a-week` | The register build | Link for panel 1 |
-| `/faq/what-do-we-do-about-tools-staff-are-already-using-without-approval` | Unapproved tools | Link for panel 1 |
-| `/resources/ai-governance-starter-kit`, `/resources/ai-readiness-scorecard`, `/resources/agent-evals-ci-starter`, `/resources/build-vs-buy-ai-kit` | Existing resources; none is a dashboard or telemetry resource | Link where relevant. The template is a new artifact type |
-| `/services/90-day-production-sprint` | Deliverable: "Tracing and cost per outcome on a dashboard your finance team can read" | Link; the new page must not promise more than this |
-| `/services/fractional-caio-retainer` | The retainer | Link as the next step |
-| `/approach` and the home page `drivers` | "I check who is still using the system a month after launch, from logs, not from the announcement email"; "Telemetry, not a launch email, says if it lasted." | Reconcile (see below) |
-| `site/src/data/categories.mjs` (`operating-model`, `executive`) | "A metric you have to survey for cannot gate a release"; "Do not ask for a token count … those measure activity, not risk." | Consistent with the verdict. Link `/blog/category/operating-model` |
-| `/ai-policy`, `/case-studies/only-help-agentic-support` | The owner's policy; a case that mentions OpenTelemetry tracing and records no metrics | Do not cite as evidence of adoption results |
+| Route                                                                                                                                                                        | What it already covers                                                                                                                                        | What the new page does                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/faq/how-is-cost-per-outcome-measured`                                                                                                                                      | The home of "cost per outcome"                                                                                                                                | Link for panel 6. Do not redefine it                                                                                                                        |
+| `/glossary/shadow-ai`                                                                                                                                                        | "Look rather than ask": browser extension inventories, expense reports, API billing; fold findings into the register                                          | Link for panel 1                                                                                                                                            |
+| `/glossary/ai-register`                                                                                                                                                      | The register                                                                                                                                                  | Link for panel 1                                                                                                                                            |
+| `/glossary/dpia`                                                                                                                                                             | Mirrors Article 35(3) only. It does not define the employee-monitoring trigger (WP248 criteria, national lists)                                               | Gap. Either extend this page (one definition, per L50) and link to it, or define it in the article and link from the glossary. Owner decides (question 22)  |
+| `/glossary/observability`                                                                                                                                                    | Tracing of systems, not user adoption                                                                                                                         | Link and distinguish. Do not redefine                                                                                                                       |
+| `/glossary/llm-gateway` and `/resources/llm-gateway-governance-config`                                                                                                       | Gateway policy schema with a `log_retention` key; "rate limit per team, not per user"                                                                         | Link as the log source and as the team-not-user precedent                                                                                                   |
+| `/glossary/post-market-monitoring`, `/glossary/evals`, `/glossary/human-oversight`, `/glossary/ai-impact-assessment`, `/glossary/data-classification`, `/glossary/eu-ai-act` | Adjacent terms                                                                                                                                                | Link where used. `eu-ai-act` cites the consolidated text dated 2026-07-27 and, in the lines I grepped, states no application dates that the Omnibus changed |
+| `/blog/ai-acceptable-use-policy-for-a-50-person-company`                                                                                                                     | "Check instead of asking". Says nothing on telemetry about staff or on telling staff they are monitored                                                       | Link; the new page adds what it lacks, by link and not by repeating                                                                                         |
+| `/blog/why-your-ai-pilot-never-reached-production`                                                                                                                           | "A measurable outcome", "measure without a survey", tracing and cost per outcome                                                                              | Link for panel 4                                                                                                                                            |
+| `/blog/evals-in-ci-for-llm-agents`                                                                                                                                           | Cost per completed run                                                                                                                                        | Link; distinguish evals from adoption telemetry                                                                                                             |
+| `/blog/how-to-build-an-ai-system-register-in-a-week`                                                                                                                         | The register build                                                                                                                                            | Link for panel 1                                                                                                                                            |
+| `/faq/what-do-we-do-about-tools-staff-are-already-using-without-approval`                                                                                                    | Unapproved tools                                                                                                                                              | Link for panel 1                                                                                                                                            |
+| `/resources/ai-governance-starter-kit`, `/resources/ai-readiness-scorecard`, `/resources/agent-evals-ci-starter`, `/resources/build-vs-buy-ai-kit`                           | Existing resources; none is a dashboard or telemetry resource                                                                                                 | Link where relevant. The template is a new artifact type                                                                                                    |
+| `/services/90-day-production-sprint`                                                                                                                                         | Deliverable: "Tracing and cost per outcome on a dashboard your finance team can read"                                                                         | Link; the new page must not promise more than this                                                                                                          |
+| `/services/fractional-caio-retainer`                                                                                                                                         | The retainer                                                                                                                                                  | Link as the next step                                                                                                                                       |
+| `/approach` and the home page `drivers`                                                                                                                                      | "I check who is still using the system a month after launch, from logs, not from the announcement email"; "Telemetry, not a launch email, says if it lasted." | Reconcile (see below)                                                                                                                                       |
+| `site/src/data/categories.mjs` (`operating-model`, `executive`)                                                                                                              | "A metric you have to survey for cannot gate a release"; "Do not ask for a token count … those measure activity, not risk."                                   | Consistent with the verdict. Link `/blog/category/operating-model`                                                                                          |
+| `/ai-policy`, `/case-studies/only-help-agentic-support`                                                                                                                      | The owner's policy; a case that mentions OpenTelemetry tracing and records no metrics                                                                         | Do not cite as evidence of adoption results                                                                                                                 |
 
 Findings:
 
@@ -540,10 +540,10 @@ documentation for its own product. S means secondary: a summary, a copy or a new
 "Vendor" flags a commercial interest in the result. Read: **full** is the whole text; **part** is the
 relevant sections; **abstract** is the abstract only; **snippet** is a search result only.
 
-1. DORA, *State of AI-assisted Software Development 2025*. Google Cloud / DORA. Announced 2025-09-24
+1. DORA, _State of AI-assisted Software Development 2025_. Google Cloud / DORA. Announced 2025-09-24
    (report v2025.2). P (survey authors); vendor-published. Read: full text.
    https://services.google.com/fh/files/misc/2025_state_of_ai_assisted_software_development.pdf
-2. DORA, *Accelerate State of DevOps 2024*. Google Cloud / DORA. 2024, v2024.3 (month not in the PDF
+2. DORA, _Accelerate State of DevOps 2024_. Google Cloud / DORA. 2024, v2024.3 (month not in the PDF
    text). P; vendor-published. Read: part.
    https://dora.dev/research/2024/dora-report/2024-dora-accelerate-state-of-devops-report.pdf
 3. DORA, "Measurement frameworks". dora.dev. 2025-08-06, updated 2025-08-26. P. Read: full.
@@ -556,18 +556,17 @@ relevant sections; **abstract** is the abstract only; **snippet** is a search re
    https://metr.org/blog/2026-02-24-uplift-update/
 7. METR, AI usage survey. METR. 2026-05-11. P. Read: full.
    https://metr.org/blog/2026-05-11-ai-usage-survey/
-8. *Speed at the Cost of Quality: How Cursor AI Increases Short-Term Velocity and Long-Term
-   Complexity in Open-Source Projects* (arXiv 2511.04427). arXiv. Submitted 2025-11-06. P; preprint.
+8. _Speed at the Cost of Quality: How Cursor AI Increases Short-Term Velocity and Long-Term
+   Complexity in Open-Source Projects_ (arXiv 2511.04427). arXiv. Submitted 2025-11-06. P; preprint.
    Read: abstract and results text. https://arxiv.org/abs/2511.04427
 9. Faros AI, "The AI Productivity Paradox Report 2025". Faros. 2025-07-23. P for its own data;
    vendor; observational. Read: part. https://www.faros.ai/blog/ai-software-engineering
-10. Brynjolfsson, Li, Raymond, "Generative AI at Work", *Quarterly Journal of Economics* 140(2),
+10. Brynjolfsson, Li, Raymond, "Generative AI at Work", _Quarterly Journal of Economics_ 140(2),
     889-942. Publisher per RePEc: President and Fellows of Harvard College. 2025. P; peer reviewed. Read: abstract (RePEc).
     https://ideas.repec.org/a/oup/qjecon/v140y2025i2p889-942..html
 11. Humlum, Vestergaard, NBER WP 33777. NBER. Issued May 2025, revised March 2026. P; working paper.
     Read: abstract. https://www.nber.org/papers/w33777
-12. Yotzov and others, "Firm Data on AI", NBER WP 34836. NBER. Issued February 2026, revised March
-    2026. P; working paper; executive self-report. Read: abstract. https://www.nber.org/papers/w34836
+12. Yotzov and others, "Firm Data on AI", NBER WP 34836. NBER. Issued February 2026, revised March 2026. P; working paper; executive self-report. Read: abstract. https://www.nber.org/papers/w34836
 13. Anthropic, AI assistance and coding skills (arXiv 2601.20245). Anthropic. Published 2026-01-29,
     modified 2026-09-09. P; vendor-authored. Read: full.
     https://www.anthropic.com/research/AI-assistance-coding-skills

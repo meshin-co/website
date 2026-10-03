@@ -2,6 +2,30 @@
   "untraceable": [],
   "dead": [
     {
+      "location": "attribute.aria-label",
+      "text": "Previous page",
+      "status": "unreviewed",
+      "usedIn": [
+        "src/components/site/PaginationLinks.astro"
+      ]
+    },
+    {
+      "location": "attribute.aria-label",
+      "text": "Next page",
+      "status": "unreviewed",
+      "usedIn": [
+        "src/components/site/PaginationLinks.astro"
+      ]
+    },
+    {
+      "location": "text",
+      "text": "Nothing published in this category yet.",
+      "status": "unreviewed",
+      "usedIn": [
+        "src/pages/blog/category/[category].astro"
+      ]
+    },
+    {
       "location": "text",
       "text": "Nothing published yet.",
       "status": "unreviewed",
@@ -36,6 +60,14 @@
       ]
     },
     {
+      "location": "text",
+      "text": "Open the repository",
+      "status": "unreviewed",
+      "usedIn": [
+        "src/pages/resources/[id].astro"
+      ]
+    },
+    {
       "location": "constant.message",
       "text": "characters or fewer",
       "status": "unreviewed",
@@ -65,14 +97,6 @@
       "status": "unreviewed",
       "usedIn": [
         "src/pages/blog/page/[page].astro"
-      ]
-    },
-    {
-      "location": "constant.heading",
-      "text": "Related posts",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/resources/[id].astro"
       ]
     }
   ],
@@ -163,12 +187,6 @@
       "digest": "e3b0c44298fc"
     },
     {
-      "target": "site/src/components/site/PaginationLinks.astro",
-      "status": "verified",
-      "reason": "aria-label='Pagination' and per-link aria-label='Page N' already say what the control does, standard pattern",
-      "digest": "e3b0c44298fc"
-    },
-    {
       "target": "site/src/components/site/ServiceCard.astro",
       "status": "verified",
       "reason": "pass-through only, no hardcoded copy",
@@ -183,7 +201,7 @@
     {
       "target": "site/src/components/site/SourceList.astro",
       "status": "verified",
-      "reason": "aria-label/heading default 'Sources' names the landmark correctly, standard pattern",
+      "reason": "aria-label/heading default 'Sources' names the landmark correctly, standard pattern. The one other hardcoded literal is ' · retrieved ' placed before the retrieved date in each source line; the source title, publisher and date come from the entry's own data. Read 2026-10-02: the file contains no other text.",
       "digest": "e3b0c44298fc"
     },
     {
@@ -237,19 +255,19 @@
     {
       "target": "site/src/config.yaml",
       "status": "verified",
-      "reason": "default title/description match the '/' route's own metadata and machine-text.mjs catalog entry exactly, already consistent",
+      "reason": "Read 2026-10-02. src/config.yaml is outside the directories the ledger extractors scan, so it has no source rows; its copy is the default title 'Fractional Chief AI Officer' and the default description 'Fractional AI leadership for 30–300 person companies: AI governance that passes procurement and agentic automation shipped to production.' The default title matches the home page: the built home <title> is 'Fractional Chief AI Officer — meshin.co'. The default description does NOT match the home page: src/pages/index.astro and the STATIC_PAGE_CATALOG entry for '/' in src/utils/machine-text.mjs both carry 'Fractional Chief AI Officer for 30–300 person companies: governance that passes enterprise procurement, and agentic systems shipped to production with evals.' The config description ships as the llms.txt tagline and as the channel description of rss.xml, the six per-collection rss.xml feeds and feed.json, where no ledger row covers it. Reported, not fixed: the site has two different taglines. Status stays verified because each string is correct on its own; they disagree with each other.",
       "digest": "e3b0c44298fc"
     },
     {
       "target": "site/src/utils/faq-meta.mjs",
       "status": "verified",
-      "reason": "pure formatting/trimming utilities (teaser, clauseTrim, pageTitle, faqDescription), no hardcoded prose beyond the ' — meshin.co' title suffix which matches the site brand suffix used everywhere",
+      "reason": "Read 2026-10-02. No prose: the file holds formatting and trimming functions (firstSentence, teaser, clauseTrim, pageTitle, faqDescription, faqMetadata), numeric limits (140-character teaser, 12-word floor, 70-character title, 120 to 160 character description) and regular expressions. It has no ' — meshin.co' literal: the title suffix comes from titleSuffix(brandFromDisk()) in src/utils/brand.mjs, which reads site.name from src/config.yaml. The strings it builds are rows on the /faq routes, not here.",
       "digest": "e3b0c44298fc"
     },
     {
       "target": "src/utils/og-template.mjs",
       "status": "verified",
-      "reason": "'IBM Plex Sans' is a CSS font-family value used only in inline styles for OG-image rendering, never rendered as visible page text - likely an extractor false positive worth excluding the same way Tailwind class lists and structural keys already are (editorial-ledger.md); left unchanged since it is correct as a design token",
+      "reason": "Read 2026-10-02. No prose: 'Fraunces' and 'IBM Plex Sans' are font-family names in inline style objects, the colours are hex values, title, eyebrow and footer are passed in by the caller, and the brand text is read from src/config.yaml through brand.mjs. The extractor now produces no row for this file, which is correct; the earlier suggestion that 'IBM Plex Sans' was an extractor false positive is closed. The text this template lays out appears only inside the /og/*.png images.",
       "digest": "e3b0c44298fc"
     }
   ],
@@ -339,12 +357,6 @@
       "digest": "e3b0c44298fc"
     },
     {
-      "target": "site/src/components/site/PaginationLinks.astro",
-      "status": "verified",
-      "reason": "aria-label='Pagination' and per-link aria-label='Page N' already say what the control does, standard pattern",
-      "digest": "e3b0c44298fc"
-    },
-    {
       "target": "site/src/components/site/ServiceCard.astro",
       "status": "verified",
       "reason": "pass-through only, no hardcoded copy",
@@ -359,7 +371,7 @@
     {
       "target": "site/src/components/site/SourceList.astro",
       "status": "verified",
-      "reason": "aria-label/heading default 'Sources' names the landmark correctly, standard pattern",
+      "reason": "aria-label/heading default 'Sources' names the landmark correctly, standard pattern. The one other hardcoded literal is ' · retrieved ' placed before the retrieved date in each source line; the source title, publisher and date come from the entry's own data. Read 2026-10-02: the file contains no other text.",
       "digest": "e3b0c44298fc"
     },
     {
@@ -413,19 +425,19 @@
     {
       "target": "site/src/config.yaml",
       "status": "verified",
-      "reason": "default title/description match the '/' route's own metadata and machine-text.mjs catalog entry exactly, already consistent",
+      "reason": "Read 2026-10-02. src/config.yaml is outside the directories the ledger extractors scan, so it has no source rows; its copy is the default title 'Fractional Chief AI Officer' and the default description 'Fractional AI leadership for 30–300 person companies: AI governance that passes procurement and agentic automation shipped to production.' The default title matches the home page: the built home <title> is 'Fractional Chief AI Officer — meshin.co'. The default description does NOT match the home page: src/pages/index.astro and the STATIC_PAGE_CATALOG entry for '/' in src/utils/machine-text.mjs both carry 'Fractional Chief AI Officer for 30–300 person companies: governance that passes enterprise procurement, and agentic systems shipped to production with evals.' The config description ships as the llms.txt tagline and as the channel description of rss.xml, the six per-collection rss.xml feeds and feed.json, where no ledger row covers it. Reported, not fixed: the site has two different taglines. Status stays verified because each string is correct on its own; they disagree with each other.",
       "digest": "e3b0c44298fc"
     },
     {
       "target": "site/src/utils/faq-meta.mjs",
       "status": "verified",
-      "reason": "pure formatting/trimming utilities (teaser, clauseTrim, pageTitle, faqDescription), no hardcoded prose beyond the ' — meshin.co' title suffix which matches the site brand suffix used everywhere",
+      "reason": "Read 2026-10-02. No prose: the file holds formatting and trimming functions (firstSentence, teaser, clauseTrim, pageTitle, faqDescription, faqMetadata), numeric limits (140-character teaser, 12-word floor, 70-character title, 120 to 160 character description) and regular expressions. It has no ' — meshin.co' literal: the title suffix comes from titleSuffix(brandFromDisk()) in src/utils/brand.mjs, which reads site.name from src/config.yaml. The strings it builds are rows on the /faq routes, not here.",
       "digest": "e3b0c44298fc"
     },
     {
       "target": "src/utils/og-template.mjs",
       "status": "verified",
-      "reason": "'IBM Plex Sans' is a CSS font-family value used only in inline styles for OG-image rendering, never rendered as visible page text - likely an extractor false positive worth excluding the same way Tailwind class lists and structural keys already are (editorial-ledger.md); left unchanged since it is correct as a design token",
+      "reason": "Read 2026-10-02. No prose: 'Fraunces' and 'IBM Plex Sans' are font-family names in inline style objects, the colours are hex values, title, eyebrow and footer are passed in by the caller, and the brand text is read from src/config.yaml through brand.mjs. The extractor now produces no row for this file, which is correct; the earlier suggestion that 'IBM Plex Sans' was an extractor false positive is closed. The text this template lays out appears only inside the /og/*.png images.",
       "digest": "e3b0c44298fc"
     }
   ]
