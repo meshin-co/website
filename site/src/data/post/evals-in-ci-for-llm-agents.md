@@ -2,7 +2,7 @@
 title: Evals in CI for LLM agents, without a golden answer
 description: 'How to build an eval set from production traffic, score an LLM agent without a golden answer, and fail a merge in CI when it regresses.'
 publishDate: 2026-09-08
-updatedDate: 2026-10-02
+updatedDate: 2026-10-07
 shortAnswer: 'Without a golden answer, evals in CI score agent output with a rubric-based judge, a groundedness check, or a comparison against the last good version. Most agent tasks have no single right answer. A fixed test set runs on every change, and a regression then fails the build like a broken unit test. Track the pass rate over time.'
 fullAnswer: 'Evals in CI put a fixed test set on every prompt, model, or code change. The build fails when the pass rate drops. A regression gets caught before a reviewer approves the pull request, not after a customer notices. Build the set from real production traffic. Sample across a period long enough that one quiet week does not flatter the result. Most agent tasks have no single correct answer. Score them in layers instead. Start with deterministic checks: a tool call shape, a required field, a data format. Add a reference-free judge for whether an answer is grounded in what the agent retrieved. Fall back to a comparison against the last known-good version for everything else. Treat the judge as a component that needs calibration against a human-labelled sample, not as ground truth. A cost ceiling per completed run sits in the same job as the score. An expensive change then fails the build for the same reason a wrong one does.'
 keyTakeaways:
@@ -43,7 +43,7 @@ An eval suite that only runs on a laptop protects nobody. The same regression a 
 
 Pull the first cases from what the agent has actually handled, not from what a spec said it should handle. Real traces carry the phrasing, the edge cases, and the odd multi-step requests. A person writing test data from imagination never thinks to include them. A support agent's eval set should read like a week of its own transcripts, because that is exactly what it is.
 
-Sample across a period long enough that one good or bad week does not decide the result. On only.help, my own product, the support-triage rollout built its first eval set from tickets already answered. It then found that the [first week looked better than the system really was](/case-studies/only-help-agentic-support), purely from seasonal timing. A month of traffic spans weekdays, weekends, and spikes the business already expects, which is a sturdier base than one convenient week.
+Sample across a period long enough that one good or bad week does not decide the result. A month of traffic spans weekdays, weekends, and spikes the business already expects, which is a sturdier base than one convenient week.
 
 Mix the set on purpose. Include three kinds of case: routine ones that should always pass, a handful known to be hard, and a few with no single acceptable answer. Most agent tasks in production fall into that last kind. Store the set next to the code it tests, in a format a reviewer can read in a pull request. Change it through the same review a code change gets.
 

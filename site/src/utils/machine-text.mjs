@@ -287,7 +287,7 @@ export const HUB_PAGES = [
     base: '/case-studies',
     title: 'Fractional Chief AI Officer case study',
     description:
-      'One Fractional Chief AI Officer case study, not a client case: only.help, my own product, built with the method I use for clients.',
+      'I have not published a Fractional Chief AI Officer case study yet. Client case studies appear here only once a client agrees in writing.',
   },
 ];
 

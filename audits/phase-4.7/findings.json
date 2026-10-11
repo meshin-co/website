@@ -26,16 +26,6 @@
       ]
     },
     {
-      "location": "text",
-      "text": "Nothing published yet.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/blog/index.astro",
-        "src/pages/case-studies/index.astro",
-        "src/pages/glossary/index.astro"
-      ]
-    },
-    {
       "location": "attribute.lead",
       "text": "Older articles, continuing from the first page.",
       "status": "unreviewed",
@@ -54,6 +44,30 @@
     {
       "location": "attribute.title",
       "text": "Before and after",
+      "status": "unreviewed",
+      "usedIn": [
+        "src/pages/case-studies/[id].astro"
+      ]
+    },
+    {
+      "location": "attribute.title",
+      "text": "Problem and approach",
+      "status": "unreviewed",
+      "usedIn": [
+        "src/pages/case-studies/[id].astro"
+      ]
+    },
+    {
+      "location": "attribute.title",
+      "text": "What it runs on",
+      "status": "unreviewed",
+      "usedIn": [
+        "src/pages/case-studies/[id].astro"
+      ]
+    },
+    {
+      "location": "attribute.label",
+      "text": "See the offer",
       "status": "unreviewed",
       "usedIn": [
         "src/pages/case-studies/[id].astro"

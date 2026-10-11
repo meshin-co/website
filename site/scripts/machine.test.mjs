@@ -6,6 +6,9 @@ import {
   llmsRouteGaps,
   publicCollections,
   missingFromGenerator,
+  populatedCollections,
+  emptyCollections,
+  entryCoverageFailures,
   feedBaseGaps,
   sidecarCandidateRoutes,
   sidecarGaps,
@@ -77,6 +80,57 @@ test('a generator covering every public collection including faq reports nothing
   const text = '/blog/a /services/b /resources/c /glossary/d /case-studies/e /faq/f';
 
   assert.deepEqual(missingFromGenerator(text, ['post', 'service', 'resource', 'glossary', 'case', 'faq']), []);
+});
+
+const LIVE = { post: ['/blog/a-post'], glossary: ['/glossary/evals'], case: [] };
+const COLLECTIONS = ['post', 'glossary', 'case'];
+const generators = (overrides = {}) => ({
+  'llms.txt': '/blog/a-post /glossary/evals',
+  'feed.json': '/blog/a-post /glossary/evals',
+  sitemap: '/blog/a-post /glossary/evals',
+  ...overrides,
+});
+
+test('a collection with no live entry has nothing to cover, a populated one does not escape', () => {
+  assert.deepEqual(populatedCollections(COLLECTIONS, LIVE), ['post', 'glossary']);
+  assert.deepEqual(emptyCollections(COLLECTIONS, LIVE), ['case']);
+  assert.deepEqual(populatedCollections(['post', 'faq'], { post: ['/blog/a-post'] }), ['post']);
+  assert.deepEqual(emptyCollections(['post', 'faq'], { post: ['/blog/a-post'] }), ['faq']);
+});
+
+test('an emptied collection needs no entry in any generator', () => {
+  assert.deepEqual(entryCoverageFailures(COLLECTIONS, LIVE, generators()), []);
+});
+
+test('a populated collection missing from one generator is still reported, with an empty collection beside it', () => {
+  const failures = entryCoverageFailures(
+    COLLECTIONS,
+    LIVE,
+    generators({ 'feed.json': '/blog/a-post', sitemap: '/glossary/evals' })
+  );
+
+  assert.deepEqual(failures, ['feed.json covers no glossary entry', 'sitemap covers no post entry']);
+});
+
+test('every populated collection is reported by every generator that omits it, and the empty one is never named', () => {
+  const omitted = generators({ 'llms.txt': '', 'feed.json': '', sitemap: '' });
+
+  assert.deepEqual(entryCoverageFailures(COLLECTIONS, LIVE, omitted), [
+    'llms.txt covers no post entry',
+    'llms.txt covers no glossary entry',
+    'feed.json covers no post entry',
+    'feed.json covers no glossary entry',
+    'sitemap covers no post entry',
+    'sitemap covers no glossary entry',
+  ]);
+});
+
+test('when no collection has a live entry the gate says it checked nothing, it does not pass', () => {
+  const none = { post: [], glossary: [], case: [] };
+
+  assert.deepEqual(entryCoverageFailures(COLLECTIONS, none, generators()), [
+    'no public collection has a live entry, so generator coverage was not checked',
+  ]);
 });
 
 test('a page whose markdown sidecar was not built is reported', () => {
@@ -370,10 +424,10 @@ test('a feed.json whose items drift from the merged feed in order or count is re
 
 test('a kind with fewer live entries than the floor is held to its full live count, not to five', () => {
   const single = {
-    perCollectionFeeds: { case: buildFeed([`${ORIGIN}/case-studies/only-help`]) },
-    mergedFeed: buildFeed([`${ORIGIN}/case-studies/only-help`]),
-    jsonFeedItems: [`${ORIGIN}/case-studies/only-help`],
-    liveRoutesByKind: { case: ['/case-studies/only-help'] },
+    perCollectionFeeds: { case: buildFeed([`${ORIGIN}/case-studies/example-case`]) },
+    mergedFeed: buildFeed([`${ORIGIN}/case-studies/example-case`]),
+    jsonFeedItems: [`${ORIGIN}/case-studies/example-case`],
+    liveRoutesByKind: { case: ['/case-studies/example-case'] },
   };
 
   assert.deepEqual(feedCoverageFailures(['case'], single), []);

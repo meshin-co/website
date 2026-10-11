@@ -1,34 +1,27 @@
 ---
-# TODO(owner) [handover-checks] section "How do you know the handover worked?": the full list of checks the receiving owner must pass before the role moves, who judges each one, and what counts as a pass. The page names only the two checks already published on /blog/why-your-ai-pilot-never-reached-production and /approach.
-# TODO(owner) [handover-successor] section "Who should take the role?": who the usual internal owner is (engineering lead, COO, security lead, head of data or a new hire), whether one person or two hold the role, and what the Retainer does when nobody inside can take it yet. The page names the two jobs and leaves the choice open.
-# TODO(owner) [handover-length] section "How long does a handover take?": the stages from month one to the last day with the length of each, any overlap where both people are active, and whether the end date is fixed in the statement of work, set in the month-one plan or set later. The page gives no length of its own.
-# TODO(owner) [handover-after] section "How long does a handover take?", last paragraph: what the outside lead offers after the last day (calls, questions, reviews), for how long and in what fee shape (no numbers), and whether any check-in at 30, 60 or 90 days exists. The page promises none.
-# TODO(owner) [handover-signoff] section "Who signs what after the handover date?": which of the listed decisions the owner signs today as named officer, the date the named-officer role passes to the internal owner, and who tells the customers whose questionnaires carry the owner's name.
-# TODO(owner) [handover-precedent] whole page: whether any engagement has ended in a handover, and which facts about it may be published with consent. The page states no result and cites no client.
-# TODO(owner) [handover-term] title and body: "internal owner" (live site) or "internal CAIO" (master plan). The page says "owner" and "outside lead" and never "CAIO".
-title: How to hand over AI leadership to an internal team
+title: How to hand over AI leadership to an internal owner
 description: 'How to hand over AI leadership in steps that end in a test: what moves, who takes the role and how to tell it worked.'
 publishDate: 2026-10-02
-updatedDate: 2026-10-03
-shortAnswer: 'Hand AI leadership to an internal team in steps that end in a test. Name one owner early, let them run the system while the outside lead watches, and record the decisions and why. Check that the team can change the system and undo a bad change alone. Searches in October 2026 found no standard or study on AI-leadership handovers.'
-fullAnswer: 'To hand over AI leadership to an internal team, move the role in steps and finish with a test. Name the receiving owner early. Let that person run the system while the outside lead watches. Write down the decisions and the reasons for them, not only the facts. Agree who signs what from the handover date. One vendor advises ending access for the outside lead in a single coordinated step on or before the last day. A good test is behaviour: the team can change the system and undo a bad change without the outside lead. Searches in October 2026 found no standard, law or published study on how to hand over AI leadership. Most checklists come from firms that sell interim or fractional staff. The sources that say how long a handover takes disagree, and none is about AI. Treat the advice as practice that others found sensible, plus some points that have no outside source. Write your own checks before the handover starts.'
+updatedDate: 2026-10-07
+shortAnswer: 'Hand over AI leadership in steps that end in a test. My method takes three months and ends with three checks: the new owner writes an eval case, runs a rollback rehearsal and handles one incident without me. No engagement has yet ended in a full handover by this method. Searches in October 2026 found no AI-handover standard.'
+fullAnswer: 'To hand over AI leadership to an internal owner, move the role in steps and finish with a test. Name one owner early, usually the tech lead or the head of data. My handover takes three months: two side by side, then one led by the new owner. The final test and the signatures come at the end of month three. Three checks close it, and I judge each one. The new owner writes an eval case, runs a rollback rehearsal and handles one incident without me in the room. Until the handover date I sign risk acceptances and the customer security questionnaires that carry my name. After that the internal owner signs. For thirty days after the last day I answer questions by email within one working day and hold one review call on day 30. No engagement has yet ended in a full handover by this method. Searches in October 2026 found no standard, law or study on how to hand over AI leadership.'
 keyTakeaways:
-  - 'Plan a handover as a sequence of small transfers that ends in a test, not as one meeting on the last day.'
-  - 'No standard, law or published study that turned up in October 2026 says how to hand over AI leadership. What does exist comes from neighbouring fields, and most checklists come from firms that sell interim or fractional staff.'
-  - 'The new owner should be able to change the system and undo a bad change without the outside lead. They should also have practised the response to a failure.'
-  - 'A UK financial regulator tells its own firms that handover material should include judgement and opinion, not just facts. The Google SRE book says the development team must stay available to advise the receiving team while it settles. One vendor advises ending access in a single coordinated step. None of the sources compared here lists who may sign what, so the advice on signers has no outside source.'
+  - 'Plan a handover as a sequence of small transfers that ends in a test, not as one meeting on the last day. Mine takes three months, then thirty days of questions by email and one review call.'
+  - 'No standard, law or published study that turned up in October 2026 says how to hand over AI leadership. What does exist comes from neighbouring fields, and most checklists come from firms that sell interim or fractional staff. No engagement has yet ended in a full handover by my method.'
+  - 'One person takes the role, usually the tech lead or the head of data. Three checks close my handover, and I judge each one. The new owner writes an eval case, runs a rollback rehearsal and handles one incident without me in the room.'
+  - 'A UK financial regulator says handover material should include judgement and opinion, not just facts. Until the handover date I sign risk acceptances and the customer security questionnaires that carry my name. From that date the internal owner signs. No source compared here lists who may sign what, so this part is my own advice.'
   - 'The EU AI Act articles checked do not ask anyone to appoint an AI officer. For high-risk systems they ask deployers to give oversight to people with the competence, training and authority for it. That duty starts in December 2027 or August 2028, depending on the system. Systems already on the market follow a separate rule.'
 faq:
   - q: 'How long should a handover of AI leadership take?'
-    a: 'The sources that say how long a handover takes disagree, and none is about AI. Lengths run from a few weeks to a few quarters, depending on the setting. Agree a date and a test together, and write down who may move the date.'
+    a: 'The sources that say how long a handover takes disagree, and none is about AI. Lengths run from a few weeks to a few quarters, depending on the setting. Mine takes three months: two side by side, then one led by the new owner. The final test and the signatures come at the end of month three. The end date is fixed in the month-one plan, not the contract.'
   - q: 'Does the EU AI Act require a chief AI officer?'
     a: 'No article checked requires one. For high-risk systems the Act asks deployers to give oversight to people with the competence, training and authority for it. That starts on 2 December 2027 for Annex III systems and on 2 August 2028 for Annex I systems. Systems already on the market before those dates follow a separate rule, so ask counsel how it applies to yours.'
   - q: 'Who should take over AI leadership from an outside lead?'
-    a: 'One named person with the authority to pause the system, who has also seen it built. Where answering for risk and running the system fall to different people, name both. A search in October 2026 found no competence framework for a chief AI officer or head of AI from a standards body or regulator.'
+    a: 'One named person with the authority to pause the system, who has also seen it built. The usual successor is the tech lead or the head of data. A COO takes the role when AI sits deep in company processes. A search in October 2026 found no competence framework for a chief AI officer or head of AI from a standards body or regulator.'
   - q: 'What should an AI handover include?'
-    a: 'It should hold the decisions and the reasons for them, work in progress and the list of AI systems. It should also say who may sign what, how to run and roll back the system, and who to ask afterwards. Documents alone can fall short: one vendor says a folder of documents can be complete while the handover is not.'
+    a: 'It should hold the decisions and the reasons for them, work in progress and the list of AI systems. It should also say who may sign what, how to run and roll back the system, and who to ask afterwards. For thirty days after the last day I answer questions by email within one working day and hold one review call on day 30. Anything beyond that is a separate agreement.'
   - q: 'How do you know an AI handover worked?'
-    a: 'Check that the receiving team can change the system and undo a bad change without the outside lead, and has practised the response to a failure. One vendor suggests asking the successor, a month later, what they wish they had known on day one.'
+    a: 'Test behaviour, not paperwork. Three checks close my handover, and I judge each one. The new owner writes an eval case, runs a rollback rehearsal and handles one incident without me in the room. One vendor suggests asking the successor, a month later, what they wish they had known on day one.'
 category: executive
 tags:
   - ai-governance
@@ -146,11 +139,15 @@ The table shows what each source asks for, and how much weight it can bear. Six 
 
 Nine rows are a lot to move on one day. Google's book describes a progressive transfer of responsibilities and ownership, including parts of operations, the change management process and access rights. This page reads that as support for moving a handover in steps.
 
+My access list has six categories: the [AI register](/glossary/ai-register), the [LLM gateway](/glossary/llm-gateway), CI/CD, the cloud consoles, the vendor panels and the SSO admin. The client's internal owner or IT lead revokes each one. Revocation is confirmed in writing the same day. A revoke-all line sits on the last-day checklist.
+
 ## Who should take the role?
 
 The company side needs one named person with the authority to pause the system. The [pilot article](/blog/why-your-ai-pilot-never-reached-production) says the same. It adds that the person should have written at least one eval case and watched a rollback rehearsal. Someone who was not part of the build inherits a document, not an understanding.
 
-This site's own pages point to two jobs inside the role. One is answering for risk, including the authority to stop a launch. The other is keeping the system working, including the eval case and the rollback rehearsal. One person can hold both. Where the jobs split, name both people and write down who decides what.
+The usual successor is the tech lead or the head of data. A COO takes the role when AI sits deep in company processes. One person holds the role.
+
+This site's own pages point to two jobs inside the role. One is answering for risk, including the authority to stop a launch. The other is keeping the system working, including the eval case and the rollback rehearsal. One person holds both jobs.
 
 [NIST's playbook](https://airc.nist.gov/airmf-resources/playbook/govern/) suggests managing development apart from testing, so that someone can correct a system independently of its builders. That is about testing, not owners, but it shows why a company might split the jobs.
 
@@ -170,6 +167,8 @@ Esya's test is short: the receiving team has practised the response and can make
 
 Some checks already appear on this site. The pilot article says the new owner should have written at least one eval case and watched a rollback rehearsal. The [approach page](/approach) lists a related measure under engineering capability. It tests whether your engineers can already roll back a bad model without waiting on the outside lead.
 
+Three checks close my handover, and I judge each one. The new owner writes an eval case. The new owner runs a rollback rehearsal. The new owner handles one incident without me in the room.
+
 Write the full list of checks with the outside lead before the handover starts. For each check, name who judges it and what counts as a pass.
 
 [CE Interim](https://ceinterim.com/interim-manager-exit-strategy-and-handover-explained/), which supplies interim managers, lists three causes of failed handovers. The first is making changes without enough involvement of the internal team. The second is treating knowledge transfer as a final step. The third is relying too heavily on the interim as the central decision maker.
@@ -185,6 +184,8 @@ One more check comes later. [Fractionus](https://fractionus.com/blog/fractional-
 Every decision that carries a signature needs a name on the handover date. Examples are risk acceptances, policy exceptions, vendor approvals, changes to eval thresholds, rollback calls and answers to customer security questionnaires. Write the old signer and the new signer next to each one, with the date the change takes effect. Customer paperwork that names the outside lead needs a new name, and someone has to tell the customer.
 
 None of the sources in the table above lists who may sign what, so this part is the page's own advice.
+
+Until the handover date, I sign risk acceptances and the customer security questionnaires that carry my name. From that date, the internal owner signs. The client tells its own customers, and I provide the letter template.
 
 The [FAQ on how AI risk is recorded and signed off](/faq/how-does-ai-risk-get-recorded-and-who-signs-it-off) explains how AI risk is recorded and how the Retainer signs each entry while it is running.
 
@@ -212,16 +213,22 @@ None of the NIST or EU texts checked says what to do when the person changes, an
 
 The sources that say how long a handover takes disagree, and none is about AI. Lengths run from a few weeks to a few quarters, depending on the setting. CompassPoint's guide for nonprofits describes a short overlap, then a few weeks of drop-in help. Fractionus suggests starting weeks before the last day. Google describes quarters for engineering teams taking over a service.
 
+My handover takes three months, in three phases. In months one and two, the new owner and I work side by side. In month three, the new owner leads and I review. At the end of month three come the final test and the signatures. The end date is fixed in the month-one plan, not the contract.
+
 A fixed date and a ready receiver can pull against each other. Write down both, and agree who may move the date. The [Institute of Interim Management](https://iim.org.uk/resources/code-of-conduct/) code of conduct asks members to agree formal termination terms with the client. These include a handover period and a period of notice.
 
 Sources agree that some reachable help after the last day is useful, and differ on how much. Google's book says the development team must stay available to advise the receiving team while it settles. CompassPoint's guide suggests drop-in days, then availability by phone as needed. Fractionus suggests optional advisory time after the exit, though its own page gives two different windows. Whatever is agreed, write down the length, the scope and who may call.
+
+For thirty days after the last day, I answer questions by email within one working day. I hold one review call on day 30. Anything beyond that is a separate agreement.
 
 ## What this does not solve
 
 The sources are neighbouring fields, vendor advice and voluntary frameworks. No outcome study of AI-leadership handovers turned up, so nothing here shows that a practice leads to better results later.
 
+No engagement has yet ended in a full handover by this method.
+
 It is not legal advice. The readings of the EU AI Act here are plain-language summaries and need counsel before anyone relies on them.
 
 It does not cover the case where nobody inside can take the role. That calls for a hiring or reassignment decision, and no handover method replaces it.
 
-It does not say how any particular engagement ends. The [Fractional CAIO Retainer](/services/fractional-caio-retainer) is built to end with a named internal owner and written decisions. [The FAQ on how the Retainer ends](/faq/how-does-the-retainer-end) and the [approach page](/approach) say more. The [Handover Playbook](/resources/handover-playbook) turns these questions into six tables to fill in.
+The [Fractional CAIO Retainer](/services/fractional-caio-retainer) is built to end with a named internal owner and written decisions. [The FAQ on how the Retainer ends](/faq/how-does-the-retainer-end) and the [approach page](/approach) say more. The [Handover Playbook](/resources/handover-playbook) turns these questions into six tables to fill in.

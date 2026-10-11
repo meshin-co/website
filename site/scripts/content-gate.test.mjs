@@ -12,7 +12,7 @@ test('route shape decides which profile a page is gated against', () => {
   assert.equal(profileFor('/blog/category/governance'), 'page');
   assert.equal(profileFor('/services/90-day-production-sprint'), 'offer');
   assert.equal(profileFor('/resources/ai-governance-starter-kit'), 'offer');
-  assert.equal(profileFor('/case-studies/only-help-agentic-support'), 'offer');
+  assert.equal(profileFor('/case-studies/example-case'), 'offer');
   assert.equal(profileFor('/glossary/evals'), 'term');
   assert.equal(profileFor('/glossary'), 'page');
   assert.equal(profileFor('/pricing'), 'page');

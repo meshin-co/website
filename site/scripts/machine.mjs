@@ -38,6 +38,27 @@ export function feedBaseGaps(collections) {
 export function missingFromGenerator(text, collections) {
   return collections.filter((collection) => !text.includes(`/${COLLECTION_BASES[collection]}/`));
 }
+
+export function populatedCollections(collections, liveRoutesByKind) {
+  return collections.filter((collection) => (liveRoutesByKind[collection] ?? []).length > 0);
+}
+
+export function emptyCollections(collections, liveRoutesByKind) {
+  return collections.filter((collection) => (liveRoutesByKind[collection] ?? []).length === 0);
+}
+
+const COVERAGE_GENERATORS = ['llms.txt', 'feed.json', 'sitemap'];
+
+export function entryCoverageFailures(collections, liveRoutesByKind, generatorTexts) {
+  const populated = populatedCollections(collections, liveRoutesByKind);
+  if (populated.length === 0) return ['no public collection has a live entry, so generator coverage was not checked'];
+  return COVERAGE_GENERATORS.flatMap((generator) =>
+    missingFromGenerator(generatorTexts[generator], populated).map(
+      (missing) => `${generator} covers no ${missing} entry`
+    )
+  );
+}
+
 export function sizeGuardFailure(label, bytes, maxBytes) {
   return bytes > maxBytes ? [`${label} is ${bytes} bytes, over the ${maxBytes} byte guard`] : [];
 }
@@ -253,12 +274,6 @@ async function main(distDir) {
   }
 
   const liveByKind = await liveRoutesByKind(distDir, collections, routes);
-  for (const generator of ['llms.txt', 'feed.json']) {
-    const text = await readFile(join(distDir, generator), 'utf8');
-    for (const missing of missingFromGenerator(text, collections)) {
-      failures.push(`${generator} covers no ${missing} entry`);
-    }
-  }
 
   const llmsTxt = await readFile(join(distDir, 'llms.txt'), 'utf8');
   for (const path of noindexStaticListings(llmsTxt)) failures.push(`llms.txt lists noindex page ${path}`);
@@ -289,8 +304,13 @@ async function main(distDir) {
   }
 
   const sitemap = await readFile(join(distDir, 'sitemap-0.xml'), 'utf8');
-  for (const missing of missingFromGenerator(sitemap, collections)) {
-    failures.push(`sitemap covers no ${missing} entry`);
+  const feedJson = await readFile(join(distDir, 'feed.json'), 'utf8');
+  failures.push(
+    ...entryCoverageFailures(collections, liveByKind, { 'llms.txt': llmsTxt, 'feed.json': feedJson, sitemap })
+  );
+  const emptyKinds = emptyCollections(collections, liveByKind);
+  if (emptyKinds.length > 0) {
+    console.log(`machine: no live entry in ${emptyKinds.join(', ')}; entry coverage was not checked for it`);
   }
   for (const gap of sitemapNoindexLeaks(sitemap, noindexRoutes)) {
     failures.push(`sitemap lists noindex route ${gap}`);

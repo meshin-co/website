@@ -1,14 +1,8 @@
 ---
-# TODO(owner) [aom-positions] whole article: the page takes two positions on the owner's behalf and claims no practice. Position one: choose the smallest structure that covers the duties you have. Position two: change it on evidence from your own register, not on a vendor number. Confirm or replace both. Say also which contested points the owner will take a side on (central versus decentralised, and whether a centre of excellence makes sense below some company size).
-# TODO(owner) [aom-practice] section "How do you choose?": nothing here speaks from the owner's engagements. If the page may say "in my engagements", add: how many engagements and over which years, which pattern each used, who approves a system at a client of 30 to 300 people, who signs risk acceptance and where the signature lives, the risk levels, and who owns an eval set after handover.
-# TODO(owner) [aom-case] whole article: whether the article may cite the one anonymised case study as operating-model evidence, and which of its facts about ownership after handover are publishable.
-# TODO(owner) [aom-dates] section "What does the law require instead?": which EU AI Act dates the owner plans client work against, and whether any date is stated in contracts or elsewhere on the site. The page prints the dates from the Regulation and says they are untested.
-# TODO(owner) [aom-switch] section "Where do the switch-point numbers come from?": the owner's own switch point in people or systems, if one exists. The page deliberately prints none and names no vendor.
-# TODO(owner) [aom-literacy] section "What does the law require instead?": whether the owner runs AI-literacy work for clients, what the minimum is, and who signs the internal record.
 title: How to choose an AI operating model for a mid-size company
 description: 'How to choose an operating model for AI work in a mid-size company, starting from what the law requires and what the evidence supports.'
 publishDate: 2026-10-02
-updatedDate: 2026-10-02
+updatedDate: 2026-10-07
 shortAnswer: 'No law or standard reviewed here requires a mid-size company to use a committee, a hub-and-spoke model or a Chief AI Officer. For high-risk systems the duties point to roles and records: overseers with competence, training and authority, an accountability framework, and logs. Choose the smallest structure that covers them, and change it on evidence from your own company.'
 fullAnswer: 'No law or standard reviewed here requires a mid-size company to use a committee, a hub-and-spoke model or a Chief AI Officer. The EU AI Act asks for trained human overseers, an accountability framework for high-risk providers, and logs, each from its own start date. AI literacy applies now. Transparency applies from 2 August 2026. An accountability framework and trained human overseers apply from 2 December 2027 or 2 August 2028. The Digital Omnibus moved those dates in July 2026, and Commission guidance on applying it is still pending. The one binding rule found for this page names a Chief AI Officer and a governance board, and covers US federal agencies only. None of the structures is proven. The surveys cover mostly large organisations, and the outcome figures are self-reported. Advisers recommend hub-and-spoke. The switch-point numbers found here come from vendors, and the one page read in full gives no data behind them. Choose the smallest structure that covers your duties, and test it against your own register.'
 keyTakeaways:
@@ -23,7 +17,7 @@ faq:
   - q: 'Is hub-and-spoke the best structure for AI?'
     a: 'The evidence does not say. Advisers recommend it, and an IBM survey of Chief AI Officers links it to better results. That survey is self-reported, and every respondent already had a central AI leader. No source reviewed gives its cost or its failure rate.'
   - q: 'When should a company change its AI structure?'
-    a: "The switch-point numbers found for this page come from vendors, and no data was found behind the one page read in full. In this page's reading of the sources, the trigger to use is a change in your own register: a new high-risk system, or a change of risk tier or owner. Duty dates and incidents also deserve a review, by the same reading."
+    a: "The switch-point numbers found for this page come from vendors, and the one page read in full gives no data. In this page's reading, the trigger is a change in your own register: a new high-risk system, or a change of risk tier or owner. Duty dates and incidents deserve a review too. My switch point has no number: the structure grows when the queue of decisions outruns what one named owner can review."
   - q: 'Who should own AI risk in a company of 30 to 300 people?'
     a: 'The sources point to senior ownership, but not to one shape. NIST puts decisions about AI risk with executive leadership. The UTS Human Technology Institute describes one accountable executive supported by a small cross-functional working group. In a smaller organisation, it says, the CEO may take the role.'
 category: operating-model
@@ -105,11 +99,15 @@ Look at what these duties name. They name an accountability framework (Article 1
 
 In practice, Article 4 needs someone to run the literacy measures and Article 50 needs an owner for disclosure wording; that is a reading, not law text. The Commission adds that, for deployers of high-risk systems, the duty to train staff for human oversight "remains in place" alongside Article 4.
 
+I deliver the Article 4 literacy measures for clients. Each role gets a short session built for that role and a one-page list of dos and don'ts. The client signs the internal record.
+
 ### How firm are the EU dates?
 
 The omnibus was signed on 8 July 2026 and is in force from 27 July. It moved the high-risk dates to 2 December 2027 (Annex III systems) and 2 August 2028 (Annex I systems). Its preamble gives the reason: "the delayed availability of standards, common specifications, and alternative guidance and the delayed establishment of national competent authorities." It also rewrote Article 4 and Article 17(2).
 
 Treat the new dates with care. The omnibus dates from July 2026, and several Commission guidelines are still pending, so the practical detail is still to come.
+
+I plan client work against the dates recorded on this page: Annex III from 2 December 2027 and Annex I from 2 August 2028. I do not put dates in contracts.
 
 Company size also changes the exposure to fines. Small and medium-sized companies pay the lower of the two fine limits. The omnibus extends that rule to small mid-cap companies, a new size class just above them, for all but the highest tier.
 
@@ -158,11 +156,15 @@ The next table gives the sample behind eight of these sources and the main limit
 
 Most surveys are self-reported and lean toward large companies. ASIC's data is from December 2023. The sources also disagree about where authority should sit. IBM and Gartner lean central. MIT NANDA leans local for implementation. They may describe different layers: central for policy and risk, local for finding use cases. No source tests that reading.
 
+I take no public side on centralised versus decentralised.
+
 ## Where do the switch-point numbers come from?
 
 Vendor pages tell readers to change structure at a set number of AI projects or business units. The numbers differ from page to page. No data was found behind any of them: the one vendor page read in full cites no data for its numbers, and the other two were seen only as search snippets. One page also puts a figure on rework. That figure has no data behind it either.
 
 This page does not repeat those numbers. Printing a number gives it weight the evidence does not give it. The three vendor thresholds found have no data behind them. No source reviewed reports a cost for any structure in headcount, budget or time.
+
+My own switch point has no number. The structure grows when the queue of decisions outruns what one named owner can review.
 
 One ASIC finding is about the order of events. Among the licensees ASIC reviewed that planned to use more AI, nearly all were only planning or starting a governance uplift. Only one appeared to have done it before the rise in use it expected. In that sample, most governance uplifts were still being planned or started when the licensees expected their use of AI to rise.
 
