@@ -498,18 +498,18 @@ test('a post node re-based for case studies moves its ids, url and image', () =>
   const node = postNode(
     SITE,
     {
-      id: 'only-help',
-      title: 'only.help',
+      id: 'example-case',
+      title: 'Example case',
       description: 'D.',
       publishDate: new Date('2026-08-01T00:00:00Z'),
       updatedDate: new Date('2026-09-01T00:00:00Z'),
     },
     { basePath: '/case-studies', ogCollection: 'case' }
   );
-  assert.equal(node['@id'], `${SITE}/case-studies/only-help#post`);
-  assert.equal(node.url, `${SITE}/case-studies/only-help`);
-  assert.equal(node.image, `${SITE}/og/case/only-help.png`);
-  assert.deepEqual(node.mainEntityOfPage, { '@id': `${SITE}/case-studies/only-help#webpage` });
+  assert.equal(node['@id'], `${SITE}/case-studies/example-case#post`);
+  assert.equal(node.url, `${SITE}/case-studies/example-case`);
+  assert.equal(node.image, `${SITE}/og/case/example-case.png`);
+  assert.deepEqual(node.mainEntityOfPage, { '@id': `${SITE}/case-studies/example-case#webpage` });
 });
 
 test('a case study page graph resolves mainEntityOfPage through its own webpage node', () => {
@@ -517,7 +517,7 @@ test('a case study page graph resolves mainEntityOfPage through its own webpage 
     postNode(
       SITE,
       {
-        id: 'only-help',
+        id: 'example-case',
         title: 'T',
         description: 'D.',
         publishDate: new Date('2026-08-01T00:00:00Z'),
@@ -525,7 +525,7 @@ test('a case study page graph resolves mainEntityOfPage through its own webpage 
       },
       { basePath: '/case-studies', ogCollection: 'case' }
     ),
-    webPageNode(SITE, '/case-studies/only-help', new Date('2026-09-01T00:00:00Z')),
+    webPageNode(SITE, '/case-studies/example-case', new Date('2026-09-01T00:00:00Z')),
   ]);
   const ids = new Set(document['@graph'].map((node) => node['@id']));
   assert.ok(ids.has(document['@graph'][0].mainEntityOfPage['@id']));

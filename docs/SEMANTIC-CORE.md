@@ -29,7 +29,7 @@ title `{page name} — meshin.co` · meta: value-proposition clause naming the o
 | `/ai-policy` | ai policy | AI acceptable-use policy — meshin.co | My own acceptable-use policy for AI systems: what data may reach a vendor, what may not, and who decides. | My AI acceptable-use policy | 22 | ✓ |
 | `/approach` | how a fractional ai officer works | How a Fractional AI Officer works — meshin.co | How a Fractional AI Officer works: the six things that decide whether an AI initiative reaches production, and the order I work through them. | How a Fractional AI Officer works with your team | 22 | ✓ |
 | `/blog` | ai governance writing | AI governance writing — meshin.co | AI governance writing: notes on getting AI systems past security review and into production, written for founders and boards. | Writing on AI governance | 23 | ✓ |
-| `/case-studies` | fractional chief ai officer case study | Fractional Chief AI Officer case study — meshin.co | One Fractional Chief AI Officer case study, not a client case: only.help, my own product, built with the method I use for clients. | Fractional chief AI officer case study | 22 | ✓ |
+| `/case-studies` | fractional chief ai officer case study | Fractional Chief AI Officer case study — meshin.co | I have not published a Fractional Chief AI Officer case study yet. Client case studies appear here only once a client agrees in writing. | Fractional chief AI officer case study | 22 | ✓ |
 | `/contact` | book an ai leadership call | Contact: book an AI leadership call — meshin.co | Book an AI leadership call: a 30-minute fit call, or email hello@meshin.co. Remote worldwide, on site when the trip is worth it. | Book an AI leadership call | 23 | ✓ |
 | `/faq` | fractional chief ai officer questions | Fractional Chief AI Officer questions — meshin.co | Fractional Chief AI Officer questions answered: what the role does, what each offer produces, and how AI risk gets recorded and signed off. | Fractional Chief AI Officer questions, answered | 47 | ✓ |
 | `/glossary` | ai governance glossary | AI governance glossary — meshin.co | An AI governance glossary: plain definitions of the terms, standards and laws that come up in security reviews and board meetings. | AI governance glossary | 54 | ✓ |
@@ -63,16 +63,8 @@ title `{artifact name} — meshin.co` · meta: one sentence naming the artifact 
 | `/resources/ai-governance-starter-kit` | ai governance starter kit | AI Governance Starter Kit — meshin.co | AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire. | AI Governance Starter Kit | 26 | ✓ |
 | `/resources/ai-readiness-scorecard` | ai readiness scorecard | AI Readiness Scorecard — meshin.co | A five-axis AI readiness scorecard you score yourself in an afternoon: strategy, data, delivery, people, and governance. | AI Readiness Scorecard | 24 | ✓ |
 | `/resources/build-vs-buy-ai-kit` | build vs buy ai kit | Build vs Buy AI Kit — meshin.co | The build vs buy AI kit: a one-page worksheet of the six criteria I work through before recommending either path, and how to score them. | Build vs Buy AI Kit | 26 | ✓ |
-| `/resources/handover-playbook` | handover playbook | Handover Playbook — meshin.co | The Handover Playbook is six fill-in tables for moving AI leadership from an outside lead to a named owner, from the test to a later check. | Handover Playbook | 28 | ✓ |
+| `/resources/handover-playbook` | handover playbook | Handover Playbook — meshin.co | The Handover Playbook is six fill-in tables for moving AI leadership from an outside lead to a named owner, from the test to a later check. | Handover Playbook | 31 | ✓ |
 | `/resources/llm-gateway-governance-config` | llm gateway governance config | LLM Gateway Governance Config — meshin.co | A governance config for an LLM gateway. It decides who may call which model, what gets redacted, how long logs are kept and the rate and fallback rules. | LLM Gateway Governance Config | 26 | ✓ |
-
-### case-study (1)
-
-title `{client} — {engagement} — meshin.co` · meta: how the system went from demo to production · body intent: problem → approach → outcome
-
-| Route | Query | Title | Description | H1 | Links | Opening |
-|---|---|---|---|---|---|---|
-| `/case-studies/only-help-agentic-support` | agentic support triage | only.help — agentic support triage, on my own product — meshin.co | An agentic support triage workflow that went from a demo notebook to a production path with evals in CI and a named owner. | only.help — agentic support triage, on my own product | 23 | ✓ |
 
 ### article (8)
 
@@ -82,11 +74,11 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 |---|---|---|---|---|---|---|
 | `/blog/adoption-telemetry-measuring-if-ai-is-actually-used` | adoption telemetry for ai tools | Adoption telemetry for AI tools: what a trial found — meshin.co | In METR's 2025 trial, 16 developers believed AI made them 20% faster. Tasks took 19% longer with AI allowed. METR now marks that result out of date. | Adoption telemetry for AI tools: what a trial found | 42 | ✓ |
 | `/blog/ai-acceptable-use-policy-for-a-50-person-company` | ai acceptable use policy | What actually belongs in an AI acceptable use policy — meshin.co | What a working AI acceptable use policy has to decide, what it must refuse to do, and how a company of 30 to 300 people gets staff to follow it. | What actually belongs in an AI acceptable use policy | 31 | ✓ |
-| `/blog/evals-in-ci-for-llm-agents` | evals in ci without a golden answer | Evals in CI for LLM agents, without a golden answer — meshin.co | How to build an eval set from production traffic, score an LLM agent without a golden answer, and fail a merge in CI when it regresses. | Evals in CI for LLM agents, without a golden answer | 29 | ✓ |
-| `/blog/handing-over-ai-leadership-to-an-internal-owner` | how to hand over ai leadership to internal team | How to hand over AI leadership to an internal team — meshin.co | How to hand over AI leadership in steps that end in a test: what moves, who takes the role and how to tell it worked. | How to hand over AI leadership to an internal team | 36 | ✓ |
+| `/blog/evals-in-ci-for-llm-agents` | evals in ci without a golden answer | Evals in CI for LLM agents, without a golden answer — meshin.co | How to build an eval set from production traffic, score an LLM agent without a golden answer, and fail a merge in CI when it regresses. | Evals in CI for LLM agents, without a golden answer | 28 | ✓ |
+| `/blog/handing-over-ai-leadership-to-an-internal-owner` | how to hand over ai leadership to internal owner | How to hand over AI leadership to an internal owner — meshin.co | How to hand over AI leadership in steps that end in a test: what moves, who takes the role and how to tell it worked. | How to hand over AI leadership to an internal owner | 38 | ✓ |
 | `/blog/how-to-build-an-ai-system-register-in-a-week` | ai system register | How to build an AI system register in a week — meshin.co | A step-by-step way to build an AI system register in a week without buying a tool, so a security reviewer gets the document they ask for first. | How to build an AI system register in a week | 32 | ✓ |
 | `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company` | ai operating model for mid-size company | How to choose an AI operating model for a mid-size company — meshin.co | How to choose an operating model for AI work in a mid-size company, starting from what the law requires and what the evidence supports. | How to choose an AI operating model for a mid-size company | 37 | ✓ |
-| `/blog/multi-agent-reference-architecture-in-production` | multi-agent reference architecture production | Multi-agent reference architecture in production — meshin.co | What the sources say about multi-agent systems in production: where vendors agree, where they split, and what the research did not find. | Multi-agent reference architecture in production | 40 | ✓ |
+| `/blog/multi-agent-reference-architecture-in-production` | multi-agent reference architecture production | Multi-agent reference architecture in production — meshin.co | What the sources say about multi-agent systems in production: where vendors agree, where they split, and what the research did not find. | Multi-agent reference architecture in production | 38 | ✓ |
 | `/blog/why-your-ai-pilot-never-reached-production` | ai pilot never reached production | Why your AI pilot never reached production — meshin.co | Most AI pilots stall on ownership, data rules and a missing outcome metric, not the model. Here is what has to be true before one reaches production. | Why your AI pilot never reached production | 28 | ✓ |
 
 ### blog-category (4)
@@ -151,7 +143,7 @@ title `What is {term}? — meshin.co` · meta: the definition sentence · body i
 | `/glossary/human-oversight` | human oversight | What does human oversight require under the EU AI Act? — meshin.co | Human oversight is the EU AI Act duty that a person assigned to watch a high-risk system can actually understand it and stop it. | Human oversight | 23 | ✓ |
 | `/glossary/iso-iec-42001` | iso/iec 42001 | What is ISO/IEC 42001? — meshin.co | ISO/IEC 42001 is the first international, certifiable standard for the management system a company runs to govern its AI. | ISO/IEC 42001 | 24 | ✓ |
 | `/glossary/llm-gateway` | llm gateway | What is an LLM gateway? — meshin.co | An LLM gateway is a single service every call to a language model passes through, for authentication, logging, rate limits and content filtering. | LLM gateway | 23 | ✓ |
-| `/glossary/mcp` | model context protocol | What is the Model Context Protocol (MCP)? — meshin.co | The Model Context Protocol (MCP) connects AI agents to tools and data, but cannot enforce consent, data privacy or tool safety at the protocol level. | Model Context Protocol | 27 | ✓ |
+| `/glossary/mcp` | model context protocol | What is the Model Context Protocol (MCP)? — meshin.co | The Model Context Protocol (MCP) connects AI agents to tools and data, but cannot enforce consent, data privacy or tool safety at the protocol level. | Model Context Protocol | 30 | ✓ |
 | `/glossary/model-card` | model card | What is a model card? — meshin.co | A model card is a short document that a model's maker publishes about the model's intended use, its performance and where not to use it. | Model card | 23 | ✓ |
 | `/glossary/model-provenance` | model provenance | What is model provenance? — meshin.co | Model provenance is a traceable record of where a model comes from - its base model, its training data, and the licence covering both. | Model provenance | 24 | ✓ |
 | `/glossary/nist-ai-rmf` | nist ai rmf | What is the NIST AI RMF? — meshin.co | The NIST AI Risk Management Framework (AI RMF) is a voluntary US framework for managing AI risk across a system's whole lifecycle. | NIST AI RMF | 22 | ✓ |
@@ -228,7 +220,7 @@ invented.
 | static        | Mixed: navigational for hub/trust pages (`/blog`, `/glossary`, `/resources`, `/faq`, `/imprint`, `/privacy`, `/terms`, `/security`); commercial for `/pricing`, `/contact`, `/services`; informational for `/approach`, `/now`, `/ai-policy` | Short answer (H1-adjacent lead sentence)                                   | Home → `/services`, `/approach`, `/case-studies`, `/faq`, `/contact`; every hub page → its own child routes | Quarterly (PRD §12 Polish Loop + SEO audit); `/now` monthly (PRD §12); any static "Must win" route rechecked monthly with the §17.3 buyer-prompt walk | hatchworks.com/blog/gen-ai/fractional-chief-ai-officer, chiefaiofficer.com, fractionus.com/blog/fractional-chief-ai-officer — rank for "fractional chief ai officer"                                                                          |
 | service       | Commercial (transactional)                                                                                                                                                                                                                   | Short answer (offer + timeframe sentence) plus a step list of deliverables | Service → `/pricing`, `/faq/how-do-you-charge-for-the-work`, `/contact`, `/case-studies`                    | Quarterly; scope/timeframe wording rechecked with the monthly buyer-prompt walk for prompts 3, 4, 18, 26, 30                                          | entrans.ai/blog/ai-readiness-assessment-consulting-firms, 0260.ai/ai-readiness-assessment, octopusbuilds.com/blog/top-ai-readiness-assessment-companies — rank for "ai readiness and risk assessment for mid-size companies"                  |
 | resource      | Commercial (lead-gen artifact)                                                                                                                                                                                                               | Definition sentence plus a table of what's inside                          | Resource → its paired service page, `/contact`                                                              | Quarterly artifact-content review (PRD §12)                                                                                                           | trustarc.com/resource/ai-governance-practice-privacy-hero-starter-kit, notion.com/templates/ai-governance-starter-kit, aona.ai/resources/templates — rank for "ai governance starter kit template"                                            |
-| case-study    | Commercial (proof)                                                                                                                                                                                                                           | Step list (problem → approach → outcome)                                   | Case study → `/services/90-day-production-sprint`, `/approach`                                              | No scheduled refresh — updated only if the underlying engagement changes (L11: one anonymized entry, no invented metrics)                             | None named — an anonymized proof-of-practice page has no comparable page to cite against                                                                                                                                                      |
+| case-study    | Commercial (proof)                                                                                                                                                                                                                           | Step list (problem → approach → outcome)                                   | Case study → `/services/90-day-production-sprint`, `/approach`                                              | No scheduled refresh — updated only if the underlying engagement changes (L11: anonymized entries only, no invented metrics)                          | None named — an anonymized proof-of-practice page has no comparable page to cite against                                                                                                                                                      |
 | article       | Informational                                                                                                                                                                                                                                | Short answer (the `shortAnswer` lead sentence)                             | Article → its `/glossary` term(s), its `/blog/category/*`, its `/blog/tag/*`                                | Quarterly baseline; any dated regulatory claim rechecked against its primary source whenever that source updates (PRD §15 sourcing rules)             | mindstudio.ai/blog/why-ai-pilots-never-reach-production, unifyapps.com/resources/blog/why-95-of-generative-ai-pilots-never-reach-production — rank for "why ai pilots never reach production"                                                 |
 | blog-category | Navigational (topic hub)                                                                                                                                                                                                                     | Table (curated list with one-line stakes per entry)                        | Category → its member articles, `/blog/tags`                                                                | Passive — regenerates whenever a post is tagged into the category; no independent schedule                                                            | digitalstaff.ca/ai-governance/smb-governance-starter, mis-solutions.com/2026/06/ai-governance-vs-ai-usage-policy, layer27.com/blog/practical-ai-governance-for-small-businesses — rank for "ai governance policy for a 30–300 person company" |
 | tag-index     | Navigational                                                                                                                                                                                                                                 | Table (tag list + article counts)                                          | Tag index → every `/blog/tag/*`, `/blog`                                                                    | Passive — regenerates with the tag vocabulary                                                                                                         | None — internal navigation aid, not written to rank; ALL tags stay indexed by design (L31) but compete against nothing                                                                                                                        |
@@ -346,8 +338,7 @@ Why: consultant-intent mapped to the delivery offer; the sprint page is the tran
 
 **19. MCP security best practices**
 **CLOSED 2026-10-02:** `/glossary/mcp`. Note the premise in the old wording was wrong: there are no
-diagram labels on `/approach`, and the abbreviation "MCP" appeared on no built page. The one
-on-site mention was "Model Context Protocol" in `/case-studies/only-help-agentic-support`. Needs a glossary term first (cheap, citable), an article second. Phase 6.
+diagram labels on `/approach`, and the abbreviation "MCP" appeared on no built page. Needs a glossary term first (cheap, citable), an article second. Phase 6.
 
 **20. multi-agent reference architecture production**
 Must win (partial): `/approach` (referenced stack, PRD Appendix B).
@@ -424,21 +415,21 @@ One owning route per entity. The mention count is inbound references from other 
 | AI impact assessment | `/glossary/ai-impact-assessment` | 2 |
 | AI management system | `/glossary/ai-management-system` | 6 |
 | AI operating model | `/glossary/ai-operating-model` | 13 |
-| AI register | `/glossary/ai-register` | 32 |
+| AI register | `/glossary/ai-register` | 34 |
 | Conformity assessment | `/glossary/conformity-assessment` | 5 |
 | Data classification | `/glossary/data-classification` | 15 |
 | DPIA | `/glossary/dpia` | 5 |
 | EU AI Act | `/glossary/eu-ai-act` | 41 |
-| Evals | `/glossary/evals` | 35 |
+| Evals | `/glossary/evals` | 33 |
 | Guardrails | `/glossary/guardrails` | 7 |
 | Hallucination rate | `/glossary/hallucination-rate` | 4 |
 | High-risk AI system | `/glossary/high-risk-ai-system` | 10 |
 | Human oversight | `/glossary/human-oversight` | 10 |
 | Human-in-the-loop | `/glossary/human-in-the-loop` | 5 |
 | ISO/IEC 42001 | `/glossary/iso-iec-42001` | 29 |
-| LLM gateway | `/glossary/llm-gateway` | 8 |
+| LLM gateway | `/glossary/llm-gateway` | 10 |
 | Model card | `/glossary/model-card` | 3 |
-| Model Context Protocol | `/glossary/mcp` | 3 |
+| Model Context Protocol | `/glossary/mcp` | 2 |
 | Model provenance | `/glossary/model-provenance` | 3 |
 | NIST AI RMF | `/glossary/nist-ai-rmf` | 23 |
 | Observability | `/glossary/observability` | 5 |
@@ -449,7 +440,7 @@ One owning route per entity. The mention count is inbound references from other 
 | Retrieval augmented generation | `/glossary/retrieval-augmented-generation` | 4 |
 | Serious incident reporting | `/glossary/serious-incident-reporting` | 3 |
 | Shadow AI | `/glossary/shadow-ai` | 9 |
-| Sub-processor | `/glossary/sub-processor` | 5 |
+| Sub-processor | `/glossary/sub-processor` | 6 |
 | Technical documentation | `/glossary/technical-documentation` | 8 |
 
 #### Concept register (32)
@@ -612,7 +603,7 @@ class of defect as a gate that cannot fail.
 | 15  | handover to internal team          | FAQ covers it; no playbook   | Correct                                                                         | `/blog/handing-over-ai-leadership-to-an-internal-owner`, `/resources/handover-playbook`                         |
 | 20  | multi-agent reference architecture | Diagram only, no prose owner | **Wrong.** No diagram exists; it is one sentence in `docs/PRD.md` Appendix B    | `/blog/multi-agent-reference-architecture-in-production`                                                        |
 
-Standing note (resolved 2026-09-13): `--check` had reported `/case-studies/only-help-agentic-support` built without a `content-facts.json` row; the row ("agentic support triage case study") was landed by a sibling packet and the orphan is closed. Remaining `--check` findings during the 4.5b landing window are the 13 tag-route facts rows ahead of their built routes — they clear at the integration build.
+Standing note (resolved 2026-09-13): `--check` findings during the 4.5b landing window are the 13 tag-route facts rows ahead of their built routes — they clear at the integration build.
 
 ### Phase 6 worklist — cheapest fix first
 
@@ -646,9 +637,7 @@ the register.
    restating it.
 5. **Prompt 19 — MCP security best practices. Done 2026-10-02.** Built as `/glossary/mcp` from
    `investigation/02-mcp-security-research.md`. The entry's spine is that the specification does not
-   enforce at the protocol level what readers assume it enforces. The only on-site mention, in
-   `/case-studies/only-help-agentic-support`, now links to it; that case study's own claim is
-   checklist rows 13.1 and 13.2, unresolved. Seven owner questions, section 13.
+   enforce at the protocol level what readers assume it enforces. Seven owner questions, section 13.
    ORIGINAL NOTE: One new term — the cheapest new route, since it
    reuses the `term` family's template exactly. New `/glossary/mcp` (or
    `/glossary/model-context-protocol`): a definition sentence, why an agent's tool access needs

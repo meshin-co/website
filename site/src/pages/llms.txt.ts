@@ -24,7 +24,7 @@ const HUB_DESCRIPTIONS: Record<string, string> = {
   service: 'The three ways to work together: assessment, sprint, retainer.',
   resource: 'Open templates and checklists for AI governance.',
   glossary: 'Plain definitions of the AI governance terms used across the site.',
-  case: 'Case studies of the method applied in production.',
+  case: 'Client case studies, listed once a client agrees in writing. None is published yet.',
 };
 
 export const GET = async () => {

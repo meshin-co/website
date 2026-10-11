@@ -30,7 +30,7 @@ test('route shape decides which semantic family a route belongs to', () => {
   assert.equal(familyFor('/blog/tag/shadow-ai'), 'tag');
   assert.equal(familyFor('/services/90-day-production-sprint'), 'service');
   assert.equal(familyFor('/resources/ai-governance-starter-kit'), 'resource');
-  assert.equal(familyFor('/case-studies/only-help-agentic-support'), 'case-study');
+  assert.equal(familyFor('/case-studies/example-case'), 'case-study');
   assert.equal(familyFor('/glossary/ai-register'), 'term');
   assert.equal(familyFor('/faq/how-do-you-charge-for-the-work'), 'faq-answer');
   assert.equal(familyFor('/pricing'), 'static');

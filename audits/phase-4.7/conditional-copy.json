@@ -1,9 +1,5 @@
 [
   {
-    "text": "Nothing published yet.",
-    "reason": "src/pages/blog/index.astro renders it only when no post is published; four are"
-  },
-  {
     "text": "Nothing carries this tag yet.",
     "reason": "src/pages/blog/tag/[tag].astro renders it only for a tag with no posts; every one of the 12 tags carries at least one"
   },
@@ -17,7 +13,19 @@
   },
   {
     "text": "Before and after",
-    "reason": "src/pages/case-studies/[id].astro renders this section only when outcome.metrics is non-empty; the one case study carries no metrics, because L11 forbids inventing them"
+    "reason": "src/pages/case-studies/[id].astro renders this section only when outcome.metrics is non-empty; no case study is published, and L11 forbids inventing metrics"
+  },
+  {
+    "text": "Problem and approach",
+    "reason": "src/pages/case-studies/[id].astro renders it on every case study page; no case study is published, so no page builds from the template"
+  },
+  {
+    "text": "What it runs on",
+    "reason": "src/pages/case-studies/[id].astro renders it on every case study page; no case study is published, so no page builds from the template"
+  },
+  {
+    "text": "See the offer",
+    "reason": "src/pages/case-studies/[id].astro renders it as the call to action on every case study page; no case study is published, so no page builds from the template"
   },
   {
     "text": "characters or fewer",

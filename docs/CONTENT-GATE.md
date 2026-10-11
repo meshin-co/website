@@ -23,18 +23,18 @@ A page that passes Half A and fails Half B does not ship. Neither half can excus
 
 ## Scope
 
-| Page family | Half A | Half B judges |
-|---|---|---|
-| Articles (`/blog/:entry`) | full | all six |
-| Services (`/services/:entry`) | full minus article-only rows | all six |
-| Resources (`/resources/:entry`) | full minus article-only rows | all six |
-| Case studies (`/case-studies/:entry`) | full minus article-only rows | all six |
-| Category pillars (`/blog/category/:entry`) | pillar rows | all six |
-| Money pages (`/`, `/pricing`, `/approach`, `/about`, `/contact`) | page rows | all six |
-| Glossary terms (`/glossary/:entry`) | term rows | answer engine, buyer, plain language |
-| FAQ entries | entry rows | answer engine, plain language |
-| Legal and policy (`/privacy`, `/terms`, `/imprint`, `/ai-policy`, `/security`) | page rows | procurement reviewer, plain language |
-| Utility (`/search`, `/styleguide`, `/404`) | none | none |
+| Page family                                                                    | Half A                       | Half B judges                        |
+| ------------------------------------------------------------------------------ | ---------------------------- | ------------------------------------ |
+| Articles (`/blog/:entry`)                                                      | full                         | all six                              |
+| Services (`/services/:entry`)                                                  | full minus article-only rows | all six                              |
+| Resources (`/resources/:entry`)                                                | full minus article-only rows | all six                              |
+| Case studies (`/case-studies/:entry`)                                          | full minus article-only rows | all six                              |
+| Category pillars (`/blog/category/:entry`)                                     | pillar rows                  | all six                              |
+| Money pages (`/`, `/pricing`, `/approach`, `/about`, `/contact`)               | page rows                    | all six                              |
+| Glossary terms (`/glossary/:entry`)                                            | term rows                    | answer engine, buyer, plain language |
+| FAQ entries                                                                    | entry rows                   | answer engine, plain language        |
+| Legal and policy (`/privacy`, `/terms`, `/imprint`, `/ai-policy`, `/security`) | page rows                    | procurement reviewer, plain language |
+| Utility (`/search`, `/styleguide`, `/404`)                                     | none                         | none                                 |
 
 ---
 
@@ -93,14 +93,14 @@ Each judge is a separate agent, run in parallel, given the rendered page text an
 no sibling verdicts, no author intent. Each returns `BLOCKER`, `NIT`, or `CLEAN` per finding, and
 one sentence of reasoning per finding. A finding without a quoted excerpt is discarded.
 
-| # | Frame | The one question it answers |
-|---|---|---|
-| 1 | Answer engine | Would I quote this page as the answer, and could I attribute the claim? |
-| 2 | The buyer | I run a 140-person company and I have 40 seconds. Is this for me, and what do I do next? |
-| 3 | Procurement and security reviewer | Which sentence here would I make them prove, and which creates liability? |
-| 4 | Competing consultant | Which parts could any agency have written, and where is the substitutable filler? |
-| 5 | Search intent | Someone typed the target query. Does this beat what they would otherwise find? |
-| 6 | Plain-language editor, read aloud | Where does a non-native reader stall, and which sentence sounds machine-written? |
+| #   | Frame                             | The one question it answers                                                              |
+| --- | --------------------------------- | ---------------------------------------------------------------------------------------- |
+| 1   | Answer engine                     | Would I quote this page as the answer, and could I attribute the claim?                  |
+| 2   | The buyer                         | I run a 140-person company and I have 40 seconds. Is this for me, and what do I do next? |
+| 3   | Procurement and security reviewer | Which sentence here would I make them prove, and which creates liability?                |
+| 4   | Competing consultant              | Which parts could any agency have written, and where is the substitutable filler?        |
+| 5   | Search intent                     | Someone typed the target query. Does this beat what they would otherwise find?           |
+| 6   | Plain-language editor, read aloud | Where does a non-native reader stall, and which sentence sounds machine-written?         |
 
 ### Judge output contract
 
@@ -162,11 +162,11 @@ sentences are long, on 24 routes. The most any route holds is 6
 (`/blog/how-to-build-an-ai-system-register-in-a-week`), so the cap sits one sentence above the
 busiest post. The three routes closest to their limit:
 
-| Route | Long | Of | Limit |
-|---|---|---|---|
-| `/faq/what-do-nist-ai-rmf-iso-iec-42001-and-the-eu-ai-act-require` | 1 | 4 | 1 |
-| `/glossary/human-in-the-loop` | 2 | 17 | 3 |
-| `/glossary/agentic-workflow` | 2 | 19 | 3 |
+| Route                                                              | Long | Of  | Limit |
+| ------------------------------------------------------------------ | ---- | --- | ----- |
+| `/faq/what-do-nist-ai-rmf-iso-iec-42001-and-the-eu-ai-act-require` | 1    | 4   | 1     |
+| `/glossary/human-in-the-loop`                                      | 2    | 17  | 3     |
+| `/glossary/agentic-workflow`                                       | 2    | 19  | 3     |
 
 `/terms` (1 of 13, limit 2) and the register post (6 of 104, limit 7) also have one sentence to
 spare; every other route has more. The four-sentence answer is the one route with none: its single

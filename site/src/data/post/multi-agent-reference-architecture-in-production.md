@@ -1,41 +1,27 @@
 ---
-# TODO(owner) [ma-position] section "Should the default be one agent or several?": the page reports that Microsoft, Google Cloud and Anthropic each advise starting small, then offers one working reading in the first person: reads suit several agents and writes that must agree suit one. That reading is the writer's inference and no source states it. Confirm it, or replace it with your own default shape and the test and number that move you from one agent to several.
-# TODO(owner) [ma-limits] section "Where do limits and cost controls belong?": the page prints no step limit, cost limit, unit or alert level of yours. Add your step limit per run and its unit, what happens when a run reaches it, cost limits per run, ticket, key and day, who is alerted, and what happens at the cap. Also say whether the only.help per-ticket cost ceiling is a check on the eval set, a limit at run time, or both.
-# TODO(owner) [ma-model] section "Can you roll back a multi-agent change?": whether you pin models by ID, which fallback model you use and what triggers it, and who reads the providers' retirement notices. The page states none of this as your practice.
-# TODO(owner) [ma-approval-access] section "Who approves what, and who owns the system?": which actions you put behind a person, what the approver is shown, how agent identity and tool access are set, and how approval fatigue is handled. The page states no practice of yours.
-# TODO(owner) [ma-eval-gate] section "Does an agent need durable state and traces?": what blocks a merge in your eval gate, where its thresholds come from, and who may override it. The page says evals in CI rests on two primary sources (Microsoft CAF and Anthropic), and that /approach commits to it. Confirm that pairing is acceptable.
-# TODO(owner) [ma-tracing] section "Does an agent need durable state and traces?": what you trace per run, how long traces are kept, and how sensitive data is redacted. The page states none of this as your practice.
-# TODO(owner) [ma-rollback] section "Can you roll back a multi-agent change?": any rollback target time you hold yourself to, and any rollback you have done and how long it took. The page says it found no target time in the sources it read.
-# TODO(owner) [ma-owner] section "Who approves what, and who owns the system?": what the one accountable person owns and cannot decide alone, and who the "someone on call" in the in-production FAQ is for a system of several agents.
-# TODO(owner) [ma-only-help] section "Does this site commit to any of it?": whether the only.help workflow used one agent or several. The page says the case study does not say, and uses it as evidence for neither.
-# TODO(owner) [ma-failures-seen] section "What do the failure studies show?": whether you have seen a runaway loop or a hijack in client work that you may describe, anonymised.
-# TODO(owner) [ma-eu-dates] section "Who approves what, and who owns the system?": the page prints no EU AI Act dates and links only the glossary entries. Confirm the dates you work to, and whether they belong on this page or only in the glossary.
-# TODO(owner) [ma-vendors] whole article: the page names products only where a source names them, each with a date. Say which durable execution engine, framework, gateway and tracing stack you run in client work, and whether the page may name them.
-# TODO(owner) [ma-checked-on] whole article: whether every outside claim may carry the "read on 2 October 2026" date the page prints. The research record recommends it in section 3.5.
-# TODO(owner) [ma-search-method] section "Which claims have no source?": the page states absences found by searching named pages, including that two primary sources say evals in CI (Microsoft CAF and Anthropic). Confirm you stand behind that wording before it is published.
 title: 'Multi-agent reference architecture in production'
 description: 'What the sources say about multi-agent systems in production: where vendors agree, where they split, and what the research did not find.'
 publishDate: 2026-10-02
-updatedDate: 2026-10-02
+updatedDate: 2026-10-07
 shortAnswer: 'The sources reviewed here include no multi-agent reference architecture from a standards body. Microsoft, Google Cloud and Anthropic advise starting small. In my reading, Anthropic and Cognition mark out the two sides of one agent versus several, and the guidance says least about limits, rollback and ownership. Little of it is measured.'
 fullAnswer: 'There is no standard multi-agent reference architecture in the sources reviewed here. What exists is vendor guidance from Microsoft, Google Cloud, AWS and Anthropic. In my reading, it repeats four ideas: a coordinating agent routes work, tools sit behind one controlled boundary, state lives outside the model, and every call is logged against a named identity. On whether several agents beat one, the disagreement is between Anthropic and Cognition, not among the clouds. Anthropic reports gains from its own multi-agent research system on breadth-first queries. Cognition argued in 2025 against agents working together, and in April 2026 said its observations still hold for parallel writers. A Google Research study found results from large gains to large losses, depending on the task. Production work needs limits on every run, state that survives a crash, and a trace of every call. It needs approval for high-impact actions, versioned changes with a way back, and one accountable person. The sources back these unevenly, and the table grades the points that matter most.'
 keyTakeaways:
   - 'The sources reviewed include no multi-agent reference architecture from a standards body. What exists is vendor guidance, and almost none of it reports measured results.'
-  - 'In my reading, the vendor guides repeat four ideas: a coordinating agent, controlled tool access, state outside the model, and a named identity per call. Starting small is the one every guide leans to. On whether several agents beat one, my reading is that Anthropic and Cognition mark out the two sides, and I found no source that tests it in a production workload.'
-  - 'Failure studies cover open-source frameworks, benchmarks and a scan of public code. The Microsoft AI Red Team says its taxonomy rests on engagements against deployed systems, but that account comes from the vendor itself. The research found no dated, checkable post-mortem of a production runaway loop.'
-  - 'Framework loop limits differ in unit and in default. Choose one from your own traces.'
-  - 'I found no target time for rollback in the sources I read, and pinning a model ID may not freeze behaviour.'
+  - 'In my reading, the vendor guides repeat four ideas: a coordinating agent, controlled tool access, state outside the model, and a named identity per call. Starting small is the one every guide leans to. On whether several agents beat one, my reading is that Anthropic and Cognition mark out the two sides, and I found no source that tests it in a production workload. My default is several agents for reads and one agent for writes that must agree.'
+  - 'Failure studies cover open-source frameworks, benchmarks and a scan of public code. The Microsoft AI Red Team says its taxonomy rests on engagements against deployed systems, but that account comes from the vendor itself. The research found no dated, checkable post-mortem of a production runaway loop. The one first-hand example here is mine, from client work, and an automatic stop ended it.'
+  - 'Framework loop limits differ in unit and in default. Choose one from your own traces. I give every run a step limit. At the limit the run stops, an alert goes out, and a person decides whether it resumes.'
+  - 'I found no target time for rollback in the sources I read. My target is that the last deploy rolls back in minutes with one command. I pin models by exact ID, but a pinned ID may not freeze behaviour.'
 faq:
   - q: 'Is there a standard multi-agent reference architecture?'
     a: 'Not in the sources reviewed here. Microsoft, Google Cloud and AWS each publish vendor guidance. NIST announced an AI agent standards initiative on 17 February 2026. Its page, updated on 14 August 2026, describes convenings and gap analyses, and I found no finished NIST guidance for agents. The ISO, IEC and IEEE catalogues were not browsed, so treat this as not found.'
   - q: 'Should a production system use one agent or several?'
-    a: 'Start with one. Microsoft, Google Cloud and Anthropic advise the simplest design that works, and AWS warns of coordination overhead. On 22 April 2026 Cognition said its observations still hold for agents that write in parallel. Anthropic reports that its own multi-agent research system does best on breadth-first queries. I would expect the line to fall between reading and writing, but I found no source that tested that in a production workload.'
+    a: 'Start with one. Microsoft, Google Cloud and Anthropic advise the simplest design that works, and AWS warns of coordination overhead. On 22 April 2026 Cognition said its observations still hold for agents that write in parallel. Anthropic reports that its own multi-agent research system does best on breadth-first queries. My default: many independent reads suit several agents, and writes that must agree suit one. I found no source that tested this in production.'
   - q: 'How many steps should an agent be allowed to take?'
-    a: 'Frameworks ship different defaults and count different things: turns, steps or iterations. In my reading, a limit that suits one framework does not carry over to another. Set the limit from your own traces and evals, and decide in advance what happens when a run reaches it. The Claude Agent SDK documentation advises setting a budget for production agents.'
+    a: 'Frameworks ship different defaults and count different things: turns, steps or iterations. In my reading, a limit that suits one framework does not carry over to another. Set yours from your own traces and evals. I give every run a step limit. At the limit the run stops, an alert goes out, and a person decides whether it resumes. I print no numbers.'
   - q: 'Can a multi-agent system be rolled back quickly?'
-    a: 'I found no target time in the sources I read. Microsoft says to enable immediate rollback. Temporal promises instant rollback, with no measurement behind the word. Anthropic says infrastructure updates occasionally produce minor differences in behaviour even when the model ID is unchanged, so a pinned ID may not freeze behaviour. Run evals after any rollback.'
+    a: 'My target: the last deploy rolls back in minutes with one command. I pin models by exact ID; a model changes only through a commit, and a rollback reverts it. No measured case is published until one happens. Anthropic says infrastructure updates occasionally produce minor behavioural differences even with the model ID unchanged, so a pinned ID may not freeze behaviour. Run evals after any rollback.'
   - q: 'Do runaway agent loops really run up large bills?'
-    a: 'The research found no dated, checkable post-mortem of one in production. The only accounts I found were blog posts that repeat one set of figures with no primary record. Anthropic says early versions of its research system spawned 50 subagents for simple queries. The Claude Agent SDK documentation advises a budget for production agents.'
+    a: 'The research found no dated, checkable post-mortem of one in production, only blog posts that repeat one set of figures with no primary record. I have seen a runaway loop in client work, and an automatic stop ended it: a step limit and a cost ceiling. Anthropic says early versions of its research system spawned 50 subagents for simple queries. The Claude Agent SDK documentation advises a budget for production agents.'
 category: agentic-architecture
 tags:
   - agentic-architecture
@@ -205,15 +191,15 @@ Outside claims name their source, and a date where the page has one. I read each
 
 Treat most of it as advice. Almost none of it was measured in a production workload. The table grades the points that matter most, and the sections after it give the detail.
 
-| Point                | What the sources show                                                                                                                                                                                                    | How far to trust it                                                                                                       |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
-| One agent or several | Anthropic (13 June 2025) reports gains from its multi-agent research system. Cognition (12 June 2025) argued against agents working together. On 22 April 2026 it said its observations still hold for parallel writers. | Each is one vendor's own work. I found no source that compares both in a production workload.                             |
-| Test failure rates   | A NeurIPS 2025 paper (revised 26 October 2025) found failure rates from 41% to 86.7% across seven open-source frameworks.                                                                                                | Peer reviewed. It tested open-source frameworks, not production systems with an eval gate.                                |
-| Cancelled projects   | Gartner (25 June 2025) forecasts that over 40% of agentic AI projects will be cancelled by the end of 2027.                                                                                                              | A forecast. The release leans on a poll of 3,412 webinar attendees.                                                       |
-| Runaway loops        | Anthropic says early versions spawned 50 subagents for simple queries. A preprint (2 July 2026) found loop-prone code in 47 projects.                                                                                    | Not found: a dated post-mortem from production. The only accounts found repeat one set of figures with no primary record. |
-| Human approval       | Anthropic (25 May 2026) says users approved roughly 93% of permission prompts. Microsoft (4 June 2026) calls bypass of the human step the most consistently exploited failure mode.                                      | Each is the vendor's own finding. Anthropic's post gives no method for its figure.                                        |
-| Evals in CI          | Microsoft's Cloud Adoption Framework (3 December 2025) and Anthropic's evals post (9 January 2026) say to run evaluations in CI/CD pipelines.                                                                            | Two primary sources among the pages searched. A practice, not a standard.                                                 |
-| Rollback speed       | Microsoft says "immediate". Temporal says "instant".                                                                                                                                                                     | Not found: a target time in any source reviewed.                                                                          |
+| Point                | What the sources show                                                                                                                                                                                                    | How far to trust it                                                                                                                  |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| One agent or several | Anthropic (13 June 2025) reports gains from its multi-agent research system. Cognition (12 June 2025) argued against agents working together. On 22 April 2026 it said its observations still hold for parallel writers. | Each is one vendor's own work. I found no source that compares both in a production workload.                                        |
+| Test failure rates   | A NeurIPS 2025 paper (revised 26 October 2025) found failure rates from 41% to 86.7% across seven open-source frameworks.                                                                                                | Peer reviewed. It tested open-source frameworks, not production systems with an eval gate.                                           |
+| Cancelled projects   | Gartner (25 June 2025) forecasts that over 40% of agentic AI projects will be cancelled by the end of 2027.                                                                                                              | A forecast. The release leans on a poll of 3,412 webinar attendees.                                                                  |
+| Runaway loops        | Anthropic says early versions spawned 50 subagents for simple queries. A preprint (2 July 2026) found loop-prone code in 47 projects.                                                                                    | Not found: a dated, checkable post-mortem from production. The only accounts found repeat one set of figures with no primary record. |
+| Human approval       | Anthropic (25 May 2026) says users approved roughly 93% of permission prompts. Microsoft (4 June 2026) calls bypass of the human step the most consistently exploited failure mode.                                      | Each is the vendor's own finding. Anthropic's post gives no method for its figure.                                                   |
+| Evals in CI          | Microsoft's Cloud Adoption Framework (3 December 2025) and Anthropic's evals post (9 January 2026) say to run evaluations in CI/CD pipelines.                                                                            | Two primary sources among the pages searched. A practice, not a standard.                                                            |
+| Rollback speed       | Microsoft says "immediate". Temporal says "instant".                                                                                                                                                                     | Not found: a target time in any source reviewed.                                                                                     |
 
 ## Do the big vendors agree on a shape?
 
@@ -237,7 +223,7 @@ Cognition came back to the question on 22 April 2026. Its original observations,
 
 The same post gives two rules that pull apart. One says to "share as much context as possible between the agents". For review agents, it says the technique works best when the coding and review agents "do not share any context beforehand".
 
-I would expect the line to fall between reading and writing. Many independent reads suit several agents. Writes that must agree suit one. I found no source that tested that expectation in a production workload, so treat it as a working rule.
+My default puts the line between reading and writing. Many independent reads suit several agents. Writes that must agree suit one. I found no source that tested this in a production workload.
 
 The closest measurement found is a Google Research study of agent designs on benchmark tasks. Its [paper](https://arxiv.org/abs/2512.08296), posted on 9 December 2025 and revised on 8 April 2026, compared several designs with a single agent. Results ran from a gain of 80.8% to a loss of 70.0%, depending on the task.
 
@@ -254,6 +240,8 @@ The paper is peer reviewed. It tested open-source frameworks, not production sys
 A runaway loop is a different case, because it costs money. The research found no dated, checkable post-mortem of one in production. The only accounts I found were blog posts that repeat one set of figures with no primary record.
 
 What I found is weaker. Anthropic says early versions of its research system made errors such as spawning 50 subagents for simple queries. A [preprint of 2 July 2026](https://arxiv.org/abs/2607.01641), "When Agents Do Not Stop", scanned public agent repositories for code that can start an infinite loop. It counts code patterns and does not show a loop that ran in production.
+
+My own case is the one first-hand example here: a runaway loop in client work, with no client named. An automatic stop ended it: a step limit and a cost ceiling. The account is anonymised.
 
 Hijacking is another documented failure. NIST's CAISI tested agent hijacking on a public benchmark. The strongest new attack succeeded 81% of the time, against 11% for the strongest baseline attack.
 
@@ -273,6 +261,8 @@ On every run, set by a person, with a defined result when the limit is reached. 
 
 A turn, a step and an iteration are different units, so in my reading the three numbers cannot be compared. Step limits and cost limits are also separate controls.
 
+I give every run a step limit. A run that reaches it stops, an alert goes out, and a person decides whether it resumes. I print no numbers.
+
 The Claude Agent SDK documentation says the loop runs until Claude finishes if you set no limits. It calls a budget a good default for production agents. The [FAQ on cost per outcome](/faq/how-is-cost-per-outcome-measured) gives this site's definition of the measure, and I would set a ceiling from your own traces.
 
 ## Does an agent need durable state and traces?
@@ -287,9 +277,13 @@ Microsoft's Cloud Adoption Framework (3 December 2025) says to attribute every a
 
 OpenAI's Agents SDK turns tracing on by default, warns that traces may capture sensitive data, and does not offer tracing under zero data retention.
 
+A full trace is kept for 30 days, then only metrics are kept. Personal data is masked before it enters the trace.
+
 Anthropic (9 January 2026, updated 18 March 2026) says an eval suite makes problems visible before they reach users, and that it needs clear ownership. Running [evals](/glossary/evals) in the pipeline that ships changes is a narrower claim. Two primary sources say it: Microsoft's Cloud Adoption Framework and Anthropic's evals post, which calls automated evals especially useful pre-launch and in CI/CD.
 
-That source is the Microsoft Cloud Adoption Framework, which says to integrate evaluations into CI/CD pipelines before production. The [post on evals in CI](/blog/evals-in-ci-for-llm-agents) is about running them without a golden answer.
+The Microsoft Cloud Adoption Framework says to integrate evaluations into CI/CD pipelines before production. The [post on evals in CI](/blog/evals-in-ci-for-llm-agents) is about running them without a golden answer.
+
+In my work, a failing eval blocks the merge. I set the threshold on the first run against historical data, and it only rises, never falls. The owner can override a block, in writing in the pull request.
 
 ## Who approves what, and who owns the system?
 
@@ -301,19 +295,25 @@ Approval is also a control that can fail. Anthropic reports that its telemetry s
 
 Microsoft's [AI Red Team](/glossary/red-teaming) calls bypass of the human step the most consistently exploited failure mode (4 June 2026). Both are the vendors' own findings. Anthropic's post gives no method for its figure. This page cannot say how many prompts is too many.
 
+In my work, two things always need a person: money, and anything that goes outside the company. Everything else runs within limits.
+
 Access follows the same logic. Microsoft's Cloud Adoption Framework (page updated 26 June 2026) says agent actions must be attributable and enforceable to a unique identity. The MCP authorization specification says authorization is optional for implementations. I read that as follows: a claim of least privilege through MCP describes how someone configured it, and the protocol does not guarantee it.
 
 On ownership, Microsoft's framework says to give agent governance to the leaders who already own cloud governance, security and compliance. It also says to designate a human role accountable for approving deployments and monitoring compliance.
 
 Microsoft's reference architecture site describes a cross-functional governance committee. In my reading these fit together if the committee advises and one person decides. This site's [approach page](/approach) asks for one named person who can refuse a launch and is accountable for AI risk.
 
+In my work, one named owner holds the budget, the access rights and the stop button. That owner cannot change the risk policy or switch off the eval gate alone. Both need a second person.
+
 The [EU AI Act](/glossary/eu-ai-act) names people with competence and authority too. Its [human oversight](/glossary/human-oversight) duties apply to [high-risk systems](/glossary/high-risk-ai-system) only. The Commission's AI Act service desk still shows the 2024 text of those articles.
 
 ## Can you roll back a multi-agent change?
 
-Microsoft's guidance says yes, if you version everything that shapes behaviour. I found no target time in the sources I read, so I cannot say how fast.
+Microsoft's guidance says yes, if you version everything that shapes behaviour. I found no target time in the sources I read, so they cannot say how fast. My target is that the last deploy rolls back in minutes with one command. I publish no measured case until one happens and is written up.
 
 Microsoft's security page for its reference architecture (updated 12 May 2025) says to version every agent's logic, prompt configuration and communication contract. It also says to enable immediate rollback to a previous version when anomalies are detected. Temporal's "Why Temporal?" page promises instant rollback, with no measurement behind the word.
+
+I pin models by exact ID. A model changes only through a commit in version control, and a rollback reverts that commit.
 
 Pinning a model does not always pin behaviour. Anthropic's documentation says infrastructure updates occasionally produce minor differences in observable behaviour even when the model ID and weights have not changed. I read that as follows: rolling back the model ID does not always roll back behaviour. Evals run after a rollback are how you would see the difference.
 
@@ -338,5 +338,3 @@ Retrieval and memory design were outside this research. The [retrieval-augmented
 Yes, to five controls. The [approach page](/approach) names evals in CI, tracing, cost per outcome, a rollback path and a named owner. In my reading, the sources above back them unevenly. Tracing recurs across the guides, and a named owner is clearest in Microsoft's Cloud Adoption Framework.
 
 Rollback appears as a practice in three of the 14 pages I searched. Evals in CI appears in the two primary sources named above. The outside sources cover spend limits and spend per reasoning cycle or per agent, which is a different measure from cost per outcome. I found no target time for rollback in the sources I read. The FAQ on [what counts as in production](/faq/what-counts-as-in-production-for-the-90-day-sprint) gives the bar this site uses.
-
-The [only.help case study](/case-studies/only-help-agentic-support) reports tracing on every call and a per-ticket cost ceiling checked in the same CI job as the evals. Its summary also names evals in CI and a named owner. It does not say whether the workflow used one agent or several, so this page does not use it as evidence for either. For one workflow taken to production, see the [90-day production sprint](/services/90-day-production-sprint).

@@ -93,15 +93,24 @@ export async function staticPageLastmods(pages, { cwd } = {}) {
   return lastmods;
 }
 
+export function hubPagesWithoutDate(hubs, staticPages) {
+  const dated = new Set([...Object.keys(hubs), ...staticPages.map((page) => page.path)]);
+  return Object.values(FEED_BASES)
+    .map((base) => `/${base}`)
+    .filter((path) => !dated.has(path))
+    .map((path) => ({ path, file: `src/pages${path}/index.astro` }));
+}
+
 export async function siteLastmods({ dataDir, staticPages, cwd }) {
   const hubs = await hubLastmods(dataDir);
   const hubBases = new Set(Object.keys(hubs));
   const taxonomies = await taxonomyLastmods(dataDir);
   const pagesNeedingFileDates = staticPages.filter((page) => !hubBases.has(page.path) && !(page.path in taxonomies));
+  const hubPagesNeedingFileDates = hubPagesWithoutDate(hubs, staticPages);
 
   return {
     ...(await collectionLastmods(dataDir)),
-    ...(await staticPageLastmods(pagesNeedingFileDates, { cwd })),
+    ...(await staticPageLastmods([...pagesNeedingFileDates, ...hubPagesNeedingFileDates], { cwd })),
     ...hubs,
     ...taxonomies,
   };

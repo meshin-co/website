@@ -67,10 +67,9 @@ correcting or extending the skill. Append; do not rewrite history.
   nudge token lightness. The actual cause is that the element is invisible when measured, and the
   deeper defect is that the content depends on JavaScript and a scroll event to become visible at
   all.
-- **Suggested fix:** add a row to `defects.md`'s lookup — *symptom:* many contrast failures with a
-  ~1:1 ratio, one viewport only; *cause:* element measured while `opacity: 0` behind a scroll or
-  intersect animation; *fix:* remove the animation or make the resting state visible.
-
+- **Suggested fix:** add a row to `defects.md`'s lookup — _symptom:_ many contrast failures with a
+  ~1:1 ratio, one viewport only; _cause:_ element measured while `opacity: 0` behind a scroll or
+  intersect animation; _fix:_ remove the animation or make the resting state visible.
 
 ## 006 · The visual-regression recipe names the OS problem but its CI wiring ignores it
 
@@ -90,7 +89,9 @@ correcting or extending the skill. Append; do not rewrite history.
 - **Suggested fix:** put `{platform}` in the example `snapshotPathTemplate`, and add the docker
   command for recording baselines to the same section. Otherwise the warning is prose that the
   code sample contradicts.
+
 ## 007 · Visual verification against a long-running dev server can read stale scoped CSS
+
 - **When:** 2026-09-07, Phase 2, adding a new component with its own scoped `<style>` block.
 - **What happened:** the browser sweep showed the new widget completely unstyled (computed
   `font-size: 18px` instead of `9px`, zero-width nodes) even though the built `dist` HTML and CSS

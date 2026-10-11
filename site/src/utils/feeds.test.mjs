@@ -70,10 +70,10 @@ test('toFeedSource maps a dated collection entry onto its body, shortAnswer summ
 test('toFeedSource prefers the description when an entry has no shortAnswer and defaults tags to empty', () => {
   const source = toFeedSource(
     {
-      id: 'only-help',
+      id: 'example-case',
       body: 'Case body.',
       data: {
-        title: 'OnlyHelp',
+        title: 'ExampleCase',
         description: 'Support automation.',
         publishDate: new Date('2026-05-01'),
         updatedDate: new Date('2026-06-01'),

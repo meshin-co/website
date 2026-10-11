@@ -7,9 +7,129 @@
   },
   {
     "target": "src/data/post/evals-in-ci-for-llm-agents.md",
+    "location": "body",
     "status": "rewritten",
-    "reason": "Phase 5.2 plain-language pass, measured on the built page: reading ease 66.0 to 67.2, grade 7.9 to 7.4, sentences over 25 words 14 to 2, agentless passives 5 to 4. Split comma- and semicolon-joined sentences; named actors where implied ('how people use the agent', 'the team imagined'); numbered the two ways an eval set goes stale ('First... Second...'). Three small word swaps are also in the text: 'just' became 'only', 'surfacing' became 'showing', and 'the code that it tests' became 'the code it tests'; 'which is the failure mode a plain accuracy score misses entirely' became 'A plain accuracy score misses that failure mode entirely'. shortAnswer now opens 'Without a golden answer, evals in CI score agent output with a rubric-based judge, a groundedness check, or a comparison against the last good version', so its first sentence answers the title and keeps the three methods scoped to the no-golden-answer case; 'Most agent tasks have no single right answer' follows at once. It keeps every original statement (a fixed test set on every change, a regression fails the build like a broken unit test, track the pass rate over time). Kept byte-identical: description (pinned), the NIST AI RMF Measure sentence and the sentence after it ('Which method fits depends on what is actually being measured'), the OWASP excessive-agency paragraph, headings, links, all numbers. Two over-25 sentences remain on purpose: the pinned description and the latency-or-cost warning sentence, which is one idea with its conditions. Four passives remain where no actor is known or the text is a standards-adjacent sentence. updatedDate bumped to 2026-10-02.",
-    "digest": "3b9794dbb55c"
+    "reason": "Changed in this pass: two sentences were removed from one paragraph, not the whole paragraph. The paragraph that opens \"Sample across a period long enough that one good or bad week does not decide the result.\" lost \"On only.help, my own product, the support-triage rollout built its first eval set from tickets already answered. It then found that the first week looked better than the system really was, purely from seasonal timing.\" The first of those sentences called only.help \"my own product\" and described its rollout, and the second reported a finding from that rollout and carried the link to the only.help case study; answers 14.4 and 15.9 (COPY-CHECKLIST sections 14 and 15, answered 2026-10-07) record that the case study was removed (never implemented). What remains reads \"Sample across a period long enough that one good or bad week does not decide the result. A month of traffic spans weekdays, weekends, and spikes the business already expects, which is a sturdier base than one convenient week.\" and stands alone: the first sentence is the instruction, the second gives its reason, and neither refers to the removed rollout, tickets or first week. The paragraph before it ends on the support agent's transcripts, and the paragraph after it (\"Mix the set on purpose.\") does not depend on it. The front matter makes the same point without the example (\"Sample across a period long enough that one quiet week does not flatter the result\" in the full answer). A search of the source file and of the built page finds no only.help, case-study, seasonal-timing or first-week reference; the only /case-studies link left on the built page is the site-wide navigation entry. The rest of the body is unchanged since the 2026-10-02 review, which kept the NIST AI RMF Measure sentence and the sentence after it (\"Which method fits depends on what is actually being measured.\"), the OWASP excessive-agency paragraph, the headings, the links and all numbers byte-identical; it was re-read for consistency with the removal. It makes no first-person claim about the owner and gives no figure from the owner's or a client's telemetry. \"A 90-Day Production Sprint puts this gate in place before a workflow takes its first real user.\" agrees with the service page, which lists evals in CI in the sprint. Two nits reported on 2026-10-02 are untouched and still stand: the first FAQ answer's \"support has already seen\" reads as a garden path, and the gate-table cell \"Blocks the merge immediately, with no override.\" conflicts with the paragraph that says a named reviewer can override a hard block. Verdict: the removal adds no claim and leaves no dangling reference.",
+    "digest": "489dd687b1f6"
+  },
+  {
+    "target": "src/data/post/evals-in-ci-for-llm-agents.md",
+    "location": "frontmatter.title",
+    "status": "verified",
+    "reason": "Re-read on 2026-10-08; the text is unchanged since the last seal (this pass changed only updatedDate and one body paragraph). \"Evals in CI for LLM agents, without a golden answer\" is one string used as the title and the h1 of the built page; it fits the article grammar and holds every word of the query the page targets, as checked on 2026-10-02. It asserts no fact.",
+    "digest": "489dd687b1f6"
+  },
+  {
+    "target": "src/data/post/evals-in-ci-for-llm-agents.md",
+    "location": "frontmatter.description",
+    "status": "verified",
+    "reason": "Re-read on 2026-10-08; the text is unchanged since the last seal (this pass changed only updatedDate and one body paragraph). \"How to build an eval set from production traffic, score an LLM agent without a golden answer, and fail a merge in CI when it regresses.\" is the pinned description (kept byte-identical in the 2026-10-02 plain-language pass) and summarises what the body answers: how to build the set from production traffic, how to score without a golden answer, and what a failing check does to the build.",
+    "digest": "489dd687b1f6"
+  },
+  {
+    "target": "src/data/post/evals-in-ci-for-llm-agents.md",
+    "location": "frontmatter.shortAnswer",
+    "status": "verified",
+    "reason": "Re-read on 2026-10-08; the text is unchanged since the last seal (this pass changed only updatedDate and one body paragraph). Sentence 1, \"Without a golden answer, evals in CI score agent output with a rubric-based judge, a groundedness check, or a comparison against the last good version.\", names the three scoring methods the body develops: the rubric-based judge (gate-table row \"Task success with no golden answer\"), the reference-free groundedness judge (\"Faithfulness to retrieved context\") and the comparison against the last known-good version (\"Preference against the last good version\"). \"A fixed test set runs on every change, and a regression then fails the build like a broken unit test.\" agrees with the opening paragraph (\"The pull request cannot merge until the numbers clear\") and with \"A failing check blocks the merge by default.\" \"Track the pass rate over time.\" is advice; the gate table acts on the pass rate (\"Blocks the merge once the pass rate drops below the floor set for that task.\").",
+    "digest": "489dd687b1f6"
+  },
+  {
+    "target": "src/data/post/evals-in-ci-for-llm-agents.md",
+    "location": "frontmatter.fullAnswer",
+    "status": "verified",
+    "reason": "Re-read on 2026-10-08; the text is unchanged since the last seal (this pass changed only updatedDate and one body paragraph). Each part of the row has its body section. \"Build the set from real production traffic.\" is the first section (\"Pull the first cases from what the agent has actually handled\"). \"Sample across a period long enough that one quiet week does not flatter the result.\" is the point of the paragraph that lost the two only.help sentences and still holds without them. The layered scoring (deterministic checks, a reference-free judge, a comparison against the last known-good version) is the section \"How do you score an agent when there is no golden answer?\". \"Treat the judge as a component that needs calibration against a human-labelled sample, not as ground truth.\" agrees with \"Calibrate the judge on a fixed schedule against a small set of cases a human has already scored.\" The cost ceiling is the section \"Where does the cost ceiling sit?\", and \"An expensive change then fails the build for the same reason a wrong one does.\" agrees with the gate-table row \"Blocks the merge once the run exceeds the ceiling set in the pipeline config.\"",
+    "digest": "489dd687b1f6"
+  },
+  {
+    "target": "src/data/post/evals-in-ci-for-llm-agents.md",
+    "location": "frontmatter.keyTakeaways.0",
+    "status": "verified",
+    "reason": "Re-read on 2026-10-08; the text is unchanged since the last seal (this pass changed only updatedDate and one body paragraph). \"Build the eval set from real production traffic sampled across a window long enough that a quiet period does not flatter the result.\" agrees with the first section (cases pulled from what the agent has actually handled) and with the paragraph on sampling across a month. That paragraph is the one that lost the two only.help sentences, and it still states the point.",
+    "digest": "489dd687b1f6"
+  },
+  {
+    "target": "src/data/post/evals-in-ci-for-llm-agents.md",
+    "location": "frontmatter.keyTakeaways.1",
+    "status": "verified",
+    "reason": "Re-read on 2026-10-08; the text is unchanged since the last seal (this pass changed only updatedDate and one body paragraph). \"Score agentic tasks in layers.\" agrees with the body's \"Score in layers instead, cheapest and most reliable checks first\", and the three layers the row names are the three body paragraphs that follow it: \"Start with deterministic checks on anything mechanical\", \"add a reference-free judge\" and \"fall back to a comparison against the last known-good version\".",
+    "digest": "489dd687b1f6"
+  },
+  {
+    "target": "src/data/post/evals-in-ci-for-llm-agents.md",
+    "location": "frontmatter.keyTakeaways.2",
+    "status": "verified",
+    "reason": "Re-read on 2026-10-08; the text is unchanged since the last seal (this pass changed only updatedDate and one body paragraph). \"Calibrate the judge against a human-labelled sample on a fixed schedule, and let it skip a case rather than force a score it cannot support.\" agrees with the body's \"Calibrate the judge on a fixed schedule against a small set of cases a human has already scored.\" and \"Let the judge decline a case it cannot confidently assess.\"",
+    "digest": "489dd687b1f6"
+  },
+  {
+    "target": "src/data/post/evals-in-ci-for-llm-agents.md",
+    "location": "frontmatter.keyTakeaways.3",
+    "status": "verified",
+    "reason": "Re-read on 2026-10-08; the text is unchanged since the last seal (this pass changed only updatedDate and one body paragraph). \"Put a cost ceiling per completed run in the same job as the quality score.\" agrees with the cost section (\"Put a cost ceiling in the same job as the quality score.\" and \"Measure cost per completed run\"). The second sentence, \"That way an expensive change fails the build for the same reason a wrong one does.\", agrees with \"A change that makes the agent slower or more expensive without a real gain is a regression, even if every other score stays green.\" and with the gate-table row \"Blocks the merge once the run exceeds the ceiling set in the pipeline config.\"",
+    "digest": "489dd687b1f6"
+  },
+  {
+    "target": "src/data/post/evals-in-ci-for-llm-agents.md",
+    "location": "frontmatter.keyTakeaways.4",
+    "status": "verified",
+    "reason": "Re-read on 2026-10-08; the text is unchanged since the last seal (this pass changed only updatedDate and one body paragraph). \"A failing check blocks the merge by default. Only a named reviewer can override it, and every override is logged next to the run it overrode.\" agrees with the final section (\"A failing check blocks the merge by default.\" and \"Only a named reviewer, not the author of the change, can override a hard block.\"), and the logging clause agrees with \"That override has to write itself into the same log the eval results live in.\" Rider carried from 2026-10-02 and untouched: the gate-table cell \"Blocks the merge immediately, with no override.\" reads against the sentence that lets a named reviewer override a hard block. That is a nit in the unchanged table, reported before with no copy touched, and not a claim of this row.",
+    "digest": "489dd687b1f6"
+  },
+  {
+    "target": "src/data/post/evals-in-ci-for-llm-agents.md",
+    "location": "frontmatter.faq.0.q",
+    "status": "verified",
+    "reason": "Re-read on 2026-10-08; the text is unchanged since the last seal (this pass changed only updatedDate and one body paragraph). The question \"How many cases does an eval set need before it is useful in CI?\" states no figure and no position of its own.",
+    "digest": "489dd687b1f6"
+  },
+  {
+    "target": "src/data/post/evals-in-ci-for-llm-agents.md",
+    "location": "frontmatter.faq.0.a",
+    "status": "verified",
+    "reason": "Re-read on 2026-10-08; the text is unchanged since the last seal (this pass changed only updatedDate and one body paragraph). \"Fewer than most teams assume. A few dozen real, representative cases that cover the failure modes support has already seen catch most regressions.\" is a rule of thumb stated as advice; no source or answer attaches to \"A few dozen\", and the page does not present it as a measured count or as a figure from the owner's or a client's telemetry. The 2026-10-02 nit stands: \"support has already seen\" reads as a garden path. \"Add a case the day a bug reaches production.\" agrees with the body's \"Add one the day a new failure reaches production.\", and the closing contrast about how people actually use the agent agrees with \"That keeps the set tracking how people actually use the agent.\"",
+    "digest": "489dd687b1f6"
+  },
+  {
+    "target": "src/data/post/evals-in-ci-for-llm-agents.md",
+    "location": "frontmatter.faq.1.q",
+    "status": "verified",
+    "reason": "Re-read on 2026-10-08; the text is unchanged since the last seal (this pass changed only updatedDate and one body paragraph). The question \"Can an eval set built from old tickets go stale?\" states no figure and no position. After the removal it is the only mention of tickets in the article, because the removed sentence built a set \"from tickets already answered\", so \"old tickets\" is now a plain example and points at no deleted text.",
+    "digest": "489dd687b1f6"
+  },
+  {
+    "target": "src/data/post/evals-in-ci-for-llm-agents.md",
+    "location": "frontmatter.faq.1.a",
+    "status": "verified",
+    "reason": "Re-read on 2026-10-08; the text is unchanged since the last seal (this pass changed only updatedDate and one body paragraph). \"Yes, in two ways. First, the product changes and old cases stop representing real traffic. Second, a case with a wrong or outdated expected answer starts failing runs that are actually correct.\" names two causes, and its remedy agrees with the body's \"Revisit the set on a fixed schedule rather than whenever someone remembers. Retire a case once the product has genuinely outgrown it.\"",
+    "digest": "489dd687b1f6"
+  },
+  {
+    "target": "src/data/post/evals-in-ci-for-llm-agents.md",
+    "location": "frontmatter.faq.2.q",
+    "status": "verified",
+    "reason": "Re-read on 2026-10-08; the text is unchanged since the last seal (this pass changed only updatedDate and one body paragraph). The question \"Should a flaky eval block a merge the same way a clear regression does?\" states no figure and no position of its own.",
+    "digest": "489dd687b1f6"
+  },
+  {
+    "target": "src/data/post/evals-in-ci-for-llm-agents.md",
+    "location": "frontmatter.faq.2.a",
+    "status": "verified",
+    "reason": "Re-read on 2026-10-08; the text is unchanged since the last seal (this pass changed only updatedDate and one body paragraph). \"No. A check that disagrees with itself run to run is broken, not informative.\" agrees with the body's \"treat that case as broken, not the whole gate. Quarantine it.\", and \"Leave it running and visible, and stop it from blocking anything.\" matches \"Keep it running so you can see it, stop it from blocking a merge\".",
+    "digest": "489dd687b1f6"
+  },
+  {
+    "target": "src/data/post/evals-in-ci-for-llm-agents.md",
+    "location": "frontmatter.faq.3.q",
+    "status": "verified",
+    "reason": "Re-read on 2026-10-08; the text is unchanged since the last seal (this pass changed only updatedDate and one body paragraph). The question \"Does the judge need to be a stronger model than the one being tested?\" states no figure and no position of its own.",
+    "digest": "489dd687b1f6"
+  },
+  {
+    "target": "src/data/post/evals-in-ci-for-llm-agents.md",
+    "location": "frontmatter.faq.3.a",
+    "status": "verified",
+    "reason": "Re-read on 2026-10-08; the text is unchanged since the last seal (this pass changed only updatedDate and one body paragraph). \"Not necessarily, but many teams find a stronger judge catches subtler failures than a same-tier one, since judging is its own hard task.\" is hedged twice (\"Not necessarily\", \"many teams find\") and gives no figure or source. The cost warning that follows, \"A large judge model on a large eval set is usually where the cost ceiling gets tested first.\", agrees with the body's cost section.",
+    "digest": "489dd687b1f6"
   },
   {
     "target": "src/data/post/how-to-build-an-ai-system-register-in-a-week.md",
@@ -22,11 +142,5 @@
     "status": "rewritten",
     "reason": "Phase 5.2 plain-language pass, measured on the built page: reading ease 58.6 to 60.9, grade 9.4 to 8.6, sentences over 25 words 16 to 3, agentless passives 6 to 3. Split comma- and semicolon-joined sentences; 'Ownership is not a shared inbox. It is one name' became 'Ownership means one name... A shared inbox or a Slack channel does not count'; 'four things production always needs:' (which listed two) became 'Two of them are... The other two are...' so the count of four holds; 'is allowed to' became 'may'. Several sentences were reworded beyond splits: the key takeaway 'A system without a measured outcome cannot be defended in a security review, because there is nothing to point to' became 'Nobody can defend a system with no measured outcome in a security review, because there is nothing to show'; 'turning every release into a gamble' became 'making every release a gamble'; in fullAnswer 'the rest cannot be built until those exist' became 'a team cannot build the rest until those exist'; 'surfaces' became 'appears'; 'such as' became 'Examples are'; and 'It is usually the reason a platform or security review declines to sign off' became 'This gap is usually the reason ...'. Description: the first sentence is pinned verbatim by the SEMANTIC-CORE passage and is unchanged; the second sentence reads 'Here is what has to be true before one reaches production.' Kept byte-identical: shortAnswer, every sentence naming NIST AI RMF, the EU AI Act or OWASP, the six-condition table, all numbers (four, six, ninety days, a year), headings, links. Three over-25 sentences and three passives remain on purpose: two shortAnswer sentences that carry three causes and four conditions, the FAQ lead, 'The pilot waits on a decision nobody has been asked to make yet', and 'The sequence above is built for one workflow with one owner' where no actor is known. updatedDate bumped to 2026-10-02.",
     "digest": "4877bf2581ba"
-  },
-  {
-    "target": "src/data/case/only-help-agentic-support.md",
-    "status": "rewritten",
-    "reason": "Phase 5.2 plain-language pass (was 'verified' in Phase 4.7), measured on the built page: reading ease 61.5 to 66.4, grade 9.3 to 7.6, longest sentence 38 to 23 words, sentences over 25 words 3 to 0, agentless passives 4 to 1. The 66.4, 7.6, 23 and 0 were measured again on 2026-10-02 on the built /case-studies/only-help-agentic-support (20 sentences, 1 matching the gate:human passive pattern). approach was one 38-word sentence and is now three, keeping its four load items: the 'one' flow ('Pick the one flow'), volume AND a measurable outcome ('that has both volume and a measurable outcome'), eval set BEFORE touching the prompt ('Build an eval set from real tickets before you touch the prompt'), and the regression blocking the merge INSTEAD of reaching the customer ('a regression blocks the merge instead of reaching the customer'). The problem fragment became two sentences with the same three claims (inbox growing faster than the people reading it; nobody would let the prototype agent near a customer; no way to tell whether an answer was good). 'Every other candidate needed a survey...' was split from its second clause; 'had already been answered' became 'already had answers'. The second clause was recast rather than only split: 'a metric you have to ask about is a metric you cannot gate a release on' became 'You cannot gate a release on a metric you have to ask about.' Two further wording changes: the table cell 'what the agent is allowed to call' became 'what the agent may call', and 'tickets that had already been answered well' became 'tickets that already had good answers'. Changed 2026-10-02: the MCP row of the table now links to /glossary/mcp where it linked to modelcontextprotocol.io; the link text 'Model Context Protocol' and the cell text are unchanged, the OpenTelemetry link is unchanged, and the link target is provisional on TODO(owner) mcp-slug (docs/COPY-CHECKLIST.md 13.7), which asks the owner to confirm the /glossary/mcp route. Kept byte-identical: description, the sentence 'Tracing on every call, so a bad answer could be traced to the retrieval step rather than argued about' (the baseline lists it as load-bearing: scope, quantifier, causal, uncertainty), tool names, client block. outcome.metrics stays empty (COPY-CHECKLIST 2.3 to 2.7). updatedDate is 2026-10-02.",
-    "digest": "3cc72e39dd8a"
   }
 ]

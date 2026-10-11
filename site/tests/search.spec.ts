@@ -91,11 +91,6 @@ test('a glossary term is found', async ({ page }) => {
   expect(await resultHrefs(page)).toContain('/glossary/prompt-injection');
 });
 
-test('a case study is found', async ({ page }) => {
-  await searchFor(page, 'agentic support triage');
-  expect(await resultHrefs(page)).toContain('/case-studies/only-help-agentic-support');
-});
-
 test('a hand-authored static page is found by a phrase from its own body copy, not its title or description', async ({
   page,
 }) => {

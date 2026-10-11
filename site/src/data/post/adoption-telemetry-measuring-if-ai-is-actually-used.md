@@ -1,16 +1,8 @@
 ---
-# TODO(owner) [telemetry-provenance] section "What does this article leave out?": whether any figure from your own telemetry, or a client's, may be published, anonymised. Until you answer, the page says it reports no client results and carries none of yours. (record question 1, blocker)
-# TODO(owner) [telemetry-approach-count] page-wide: /approach says "I check who is still using the system a month after launch, from logs, not from the announcement email." No page says what you count. Give the rule: what is counted (for example users active in week 4 over users active in week 1), from which log (gateway, vendor admin or SSO), what counts as using (one request, or two active days in four weeks), whether you count people or accounts, and what you do when a team stops using a tool (retire, retrain or change the workflow) and whether you commit to a floor. Until then the article treats retention as a diagnostic and states no rule of yours. (record questions 2, 3 and the accounts half of 11, blocker)
-# TODO(owner) [telemetry-baseline-outcomes] section "How do you tell whether it worked?": how you set a baseline or comparison group before rollout at 30 to 300 people (staggered rollout by team, before-and-after, or none), which one outcome per use case you pick and who signs it off, two or three outcomes you have really used without client names, and your own definitions of deflection rate and time-to-resolution from the master plan. The page names no outcome of yours and marks "a company this size will probably do no better than before-and-after" as an inference. (record questions 4 and 5, blockers)
-# TODO(owner) [telemetry-survey-items] section "What should adoption telemetry measure instead?": which survey questions you ask and how often, and whether DORA's published trust, reliance and AI-stance items may be reused with credit. The page cites them by reference only. (record question 8)
-# TODO(owner) [telemetry-cost-home] section "What should adoption telemetry measure instead?": confirm /faq/how-is-cost-per-outcome-measured as the one home of cost per outcome. The page links to it and does not define it. (record question 21)
-# TODO(owner) [telemetry-people-data] section "What should you check before collecting data about people?": the minimum group size you use for a breakdown and why (the page shows Microsoft's five as a product setting only), what log retention you advise next to the log_retention key in the gateway config, whether you ever look at named people's usage (for example to reclaim a seat), under what rule, who sees it and for how long, your default (no person-level view, pseudonymised, or named for one narrow purpose), whether you advise collecting prompt content, and whether and how you tell staff before telemetry starts (policy clause, notice or both). The page says team level by default, a DPIA screening before any named view, no prompt content and notice first, each on the public sources it cites, and none of it as your practice. (record questions 6, 7, 10, 11, 12 and 13, 10 and 11 are blockers)
-# TODO(owner) [telemetry-works-councils-dpia] section "What should you check before collecting data about people?" and "What does this article leave out?": whether you take clients with works councils, in which countries, and whether involving the council before switch-on is a standard step in your sequence; who runs the DPIA screening for a client (you, the client's DPO or their counsel), your referral route and the exact "not legal advice" wording; and whether the employee-monitoring DPIA trigger stays explained here or moves to /glossary/dpia with a link from here (that page mirrors Article 35(3) only, and one concept has one home, L50). The page states the public rules and none of your practice. (record questions 14, 15 and 22, 14 and 15 are blockers)
-# TODO(owner) [telemetry-theatre-voice] page-wide: the record asks whether you accept publishing that most adoption telemetry counts exposure and cannot show value, and how that sits beside the /approach measure "Adoption" and the home line "Telemetry, not a launch email, says if it lasted". The record marks that verdict as its own synthesis and notes that no source says it in those words. So the title and answer fields do not say it flatly. They say what the sources show and that the set of measures is a synthesis. Tell me whether you want the stronger voice. (record question 20, blocker)
 title: 'Adoption telemetry for AI tools: what a trial found'
 description: "In METR's 2025 trial, 16 developers believed AI made them 20% faster. Tasks took 19% longer with AI allowed. METR now marks that result out of date."
 publishDate: 2026-10-02
-updatedDate: 2026-10-03
+updatedDate: 2026-10-07
 shortAnswer: "Adoption telemetry for AI tools should show whether use lasted and whether an agreed outcome moved. In METR's 2025 trial, developers believed AI made them 20% faster, while their tasks took 19% longer. METR now marks that result out of date. Count use by team, then read one outcome per use case against a baseline or comparison group."
 fullAnswer: "Adoption telemetry for AI tools usually reports seats, logins, active users and prompts. That is an inference from the sources cited here. None of them shows any of those counts predicting a business result. Self-reports can mislead too. In METR's 2025 trial, 16 experienced developers expected a 24% speed-up. Afterwards they believed they had been 20% faster. Their tasks took 19% longer. METR now marks that result out of date. In an NBER working paper issued in February 2026, nearly 6,000 senior executives reported that 69% of firms use AI. Nine in ten reported no impact on employment or productivity over three years. That is also self-report. A smaller set is easier to defend: coverage, retention by team, one agreed outcome, delivery health, cost per outcome and a trust survey read as opinion. That set is a synthesis, not a finding any source states. Collect it by team, and screen any per-person view first."
 keyTakeaways:
@@ -18,16 +10,16 @@ keyTakeaways:
   - "People can misjudge what AI does for them. In METR's 2025 trial, developers believed they were 20% faster while their tasks took 19% longer. METR now marks that result out of date."
   - 'Executives report little effect, and that is also self-report. In an NBER working paper issued in February 2026, nine in ten of nearly 6,000 senior executives reported no impact on employment or productivity over three years.'
   - 'Telemetry shows whether use lasted. In this set, only the outcome measure can show whether it worked, against a baseline or comparison group. That is a synthesis, not a finding any source states.'
-  - 'Collect by team. Screen any per-person view for a DPIA first, and where a works council exists, check its rights before you switch anything on.'
+  - 'Collect by team, in groups of five or more. Screen any per-person view for a DPIA first, and where a works council exists, check its rights and engage it before you switch anything on.'
 faq:
   - q: 'Is a daily active user count a useful adoption metric?'
-    a: 'Not as a measure of value. A count says someone used the tool. It does not say work improved. If you show one, write the definition on the panel, because GitHub, Microsoft and DORA each define use differently. Paid versus active use and retention by team are the usage views this article supports.'
+    a: 'Not as a measure of value. A count says someone used the tool. It does not say work improved. If you show one, write the definition on the panel, because GitHub, Microsoft and DORA each define use differently. Mine is two different active days within four weeks. Paid versus active use and retention by team are the usage views this article supports.'
   - q: 'Do vendor hours-saved figures show value?'
     a: 'Not on their own. Microsoft builds its assisted-hours figure from action counts, fixed minutes per action, and meeting recaps counted by meeting length. A default hourly rate then values those hours. GitHub says its ROI figures are estimates rather than exact financial results.'
   - q: 'Can a staff survey tell us whether an AI tool works?'
-    a: "It tells you what people believe, and belief can run ahead of what a trial finds. In METR's 2025 trial, developers believed AI had sped them up by 20% while their tasks took 19% longer. METR now marks that result out of date. Use a survey for trust and friction, and read it as opinion."
+    a: "It tells you what people believe, and belief can run ahead of what a trial finds. In METR's 2025 trial, developers believed AI had sped them up by 20% while their tasks took 19% longer. METR now marks that result out of date. Use a survey for trust and friction, and read it as opinion. I reuse DORA's published items word for word, with credit, once a quarter."
   - q: 'Can we report AI usage by named employee?'
-    a: 'Not by default. A log that names people is personal data. A DPIA screening comes first. In Germany a works council has a say over tools that can monitor staff. The Netherlands and France involve staff representatives in different ways. Whether these rules cover an AI usage log is an inference. Ask your data protection officer or counsel before a named view goes live.'
+    a: 'Not by default. I report by team only, in groups of five or more. A named view needs a narrow stated purpose, a written record and approval by two people. It is kept 30 days. A DPIA screening comes first. In Germany a works council has a say over tools that can monitor staff. Whether that covers an AI usage log is an inference. Ask your data protection officer or counsel first.'
 category: operating-model
 tags:
   - production-readiness
@@ -106,10 +98,6 @@ sources:
   - title: 'Regulation (EU) 2016/679 (GDPR), Articles 5 and 35 - EUR-Lex'
     url: 'https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng'
     publisher: EUR-Lex
-    retrieved: '2026-10-02'
-  - title: 'Article 29 Working Party: Guidelines on data protection impact assessment (WP 248 rev.01)'
-    url: 'https://ec.europa.eu/newsroom/article29/redirection/document/47711'
-    publisher: Article 29 Working Party
     retrieved: '2026-10-02'
   - title: 'Article 29 Working Party: Opinion 2/2017 on data processing at work (WP 249)'
     url: 'https://ec.europa.eu/newsroom/article29/redirection/document/45631'
@@ -210,9 +198,15 @@ Sort every number by where it came from. Logs show what people did. Surveys show
 | Cost per outcome                          | What does one unit of the outcome cost?                                               | Whether it is the right outcome.             |
 | A short repeated survey                   | Do people trust the output, rely on it, and say where it gets in the way?             | Whether work got faster. Read it as opinion. |
 
-The first two rows are diagnostics. Coverage is a governance question about where AI is used. Paid versus active use and retention show where a tool sits unused, which wastes money and points to a training or workflow problem. In this set, only the third row can show value. Put the weight on the outcome, delivery health, cost and survey rows, and read the survey as opinion.
+The first two rows are diagnostics. Coverage is a governance question about where AI is used. Paid versus active use and retention show where a tool sits unused, which wastes money and points to a workflow problem. In this set, only the third row can show value. Put the weight on the outcome, delivery health, cost and survey rows, and read the survey as opinion.
+
+The [approach page](/approach) says I check who is still using the system a month after launch. The rule is people active in week four over people active in week one, per team, from gateway logs. Active means two different active days within four weeks. I count people, not accounts.
+
+When a team stops using a tool, I treat it as a workflow question, not a people question.
 
 Delivery health is on the list because DORA's 2025 report, published by Google Cloud, found AI adoption going with higher delivery throughput and still with higher instability. DORA describes that as a comparison in a snapshot, not an effect.
+
+For the survey, I reuse the items DORA publishes on trust, reliance and AI stance. I use them word for word and credit DORA. I ask once a quarter, and it takes five minutes to answer.
 
 This agrees with the [approach page](/approach). There, [evals](/glossary/evals) in CI, [tracing](/glossary/observability), [cost per outcome](/faq/how-is-cost-per-outcome-measured) and a rollback path come before a workflow touches a customer. The measures here add one line. Telemetry shows whether use lasted. An outcome measure shows whether it worked.
 
@@ -222,11 +216,13 @@ These are different jobs. The [evals in CI article](/blog/evals-in-ci-for-llm-ag
 
 Agree the outcome before rollout. Read it from the system that already records it, such as ticketing, CI or your CRM, and not from the AI tool's own logs. The [pilot article](/blog/why-your-ai-pilot-never-reached-production) covers how to pick an outcome you can measure.
 
+Each use case gets one outcome metric. The client's owner chooses it and signs it before the start.
+
 The support-agent study in the table read its outcome, issues resolved per hour, from work-system data and not from tool logs. It used a staggered rollout.
 
 Then compare against something. A clean comparison is hard, even for researchers. METR's 2026 follow-up produced what it called an unreliable signal. METR's stated reasons include developers choosing not to participate rather than work without AI. It also lists developers becoming more selective about which tasks they submitted.
 
-A company of 30 to 300 people will probably not do better than a before-and-after view. That is an inference, not a finding.
+I roll a tool out in waves by team. The teams still waiting are the comparison group.
 
 ## What should you check before collecting data about people?
 
@@ -234,11 +230,11 @@ The rules below are general rules for monitoring staff, applied here by analogy.
 
 Start with the risk that is easy to miss. A team count built to plan training can turn into a person-level view used to judge performance. The ICO, the UK regulator, gives a clear example. Data collected to manage workspace capacity should not be re-used for performance management without a new lawful basis and a test of necessity and proportionality. That is UK law, not EU law.
 
-Treat a log that names a person as personal data about staff. The GDPR asks for a stated purpose, no more data than needed and no longer retention than needed (Article 5). Screen the plan for a [DPIA](/glossary/dpia) first.
+Treat a log that names a person as personal data about staff. The GDPR asks for a stated purpose, no more data than needed and no longer retention than needed (Article 5). Screen the plan for a DPIA first, and read the [DPIA entry](/glossary/dpia) for when monitoring staff triggers one.
 
-The Article 29 Working Party's 2017 guidelines list systematic monitoring and data about vulnerable people among their criteria. Employees may count as vulnerable because of the power imbalance. Meeting two criteria means a DPIA in most cases. Whether a usage dashboard counts as systematic monitoring depends on how person-level it is. That is an inference, not a regulator's ruling.
+A client's data protection officer or counsel runs the DPIA screening. I hand them the question set.
 
-Do not rely on staff consent. The same body said consent is highly unlikely to be a legal basis for data processing at work, unless employees can refuse without adverse consequence. That opinion was written under the old Data Protection Directive, so treat it as persuasive guidance, not current law.
+Do not rely on staff consent. The Article 29 Working Party's 2017 opinion said consent is highly unlikely to be a legal basis for data processing at work. The exception is where employees can refuse without adverse consequence. That opinion was written under the old Data Protection Directive, so treat it as persuasive guidance, not current law.
 
 Where a works council or staff body exists, check its rights before you switch anything on.
 
@@ -247,6 +243,8 @@ Where a works council or staff body exists, check its rights before you switch a
 | Germany     | Works Constitution Act, section 87(1) no. 6: the works council has a say over technical devices meant to monitor behaviour or performance. The Federal Labour Court (1 ABR 20/21, 8 March 2022) reads this as objective suitability: a device counts if it can collect such data, whatever the employer intends. That case concerned Microsoft Office 365, where the parties did not dispute that the data could be used to check behaviour or performance. Applying it to AI usage logs is an inference. | Statute and court decision, both read in the original.                                   |
 | Netherlands | Works Councils Act, article 27(1): the works council must consent to rules on the processing and protection of staff personal data. It must also consent to provisions aimed at or suitable for checking presence, behaviour or performance, where they cover all or a group of staff.                                                                                                                                                                                                                    | Secondary copy of the statute. The official text was not read.                           |
 | France      | CNIL: a monitoring device must pass tests of justification and proportionality, go to staff representatives (the CSE, at employers with 50 or more staff) and be announced to staff beforehand.                                                                                                                                                                                                                                                                                                           | Regulator guidance, dated 9 July 2026, read in the original French and paraphrased here. |
+
+I take clients with works councils. Engaging the council before switch-on is a standard step.
 
 Keep three things off any dashboard: rankings of named people, prompt content and re-use for performance reviews. The reasons are the ICO example above, the GDPR rule on data minimisation and a warning from DX, a vendor of measurement software. DX warns against using these metrics to judge individuals and says code volume is "particularly susceptible to gaming".
 
@@ -258,9 +256,13 @@ The same page says the end-user opt-out does not apply to Copilot usage data, wh
 
 Tell staff before the first log is collected. The CNIL says staff must be told beforehand. The ICO says to seek and document workers' views unless there is a good reason not to. The [acceptable use policy article](/blog/ai-acceptable-use-policy-for-a-50-person-company) covers the policy itself, not the telemetry behind it.
 
+I show breakdowns by team only, and a group needs at least five people. I collect no prompt content. I tell staff before telemetry starts.
+
+A named-person view is never the default. It exists only for a narrow stated purpose, recorded, approved by two people and kept 30 days.
+
 ## Where does the dashboard template fit?
 
-The [Adoption Telemetry Dashboard Template](/resources/adoption-telemetry-dashboard-template) turns these measures into eight panels. Paid versus active and retention become two panels, and the survey splits into trust and policy clarity. Each panel names the question it answers, the data source and the decision it supports. It is a page to copy into your own tool, not a live dashboard.
+The [Adoption Telemetry Dashboard Template](/resources/adoption-telemetry-dashboard-template) turns these measures into eight panels. Paid versus active and retention become two panels, and the survey splits into trust and policy clarity. Each panel names the question it answers, the data source and the decision it supports. It is a page to copy into your own tool, not a live dashboard. Version 0.1 covers coding assistants and chat assistants.
 
 The coverage panel reads gateway logs, sign-in app lists, expense lines, API bills and the [AI register](/glossary/ai-register). The [register article](/blog/how-to-build-an-ai-system-register-in-a-week) shows how to build one. The [unapproved tools answer](/faq/what-do-we-do-about-tools-staff-are-already-using-without-approval) covers what to do about tools staff already use without approval. The [gateway config](/resources/llm-gateway-governance-config) already sets rate limits per team, not per user.
 
@@ -268,8 +270,8 @@ The [90-Day Production Sprint](/services/90-day-production-sprint) builds a dash
 
 ## What does this article leave out?
 
-It reports no client results. The method comes from public studies and vendor documents. Most of the experimental evidence predates agentic tools, so treat each figure as a dated finding.
+It reports no client results and no numbers from my own telemetry. The evidence it cites comes from public studies and vendor documents. Most of the experimental evidence predates agentic tools, so treat each figure as a dated finding.
 
-It does not say which baseline method suits your company, which person-level views to allow or who should run the privacy screening. Those depend on your company, your country and your staff representatives. It does not say whether a plain count dashboard is an AI system under the [EU AI Act](/glossary/eu-ai-act), and no source cited here settles that.
+It does not say which baseline method suits your company or which person-level views to allow. Those depend on your company, your country and your staff representatives. It does not say whether a plain count dashboard is an AI system under the [EU AI Act](/glossary/eu-ai-act), and no source cited here settles that.
 
 It is a summary of public texts, not legal advice. Take the legal questions to your data protection officer or counsel.
