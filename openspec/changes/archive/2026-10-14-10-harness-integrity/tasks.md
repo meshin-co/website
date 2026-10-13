@@ -12,8 +12,8 @@
 - [x] 2.4 Retarget every reader of `docs/plan/` and import the closed phases verbatim (PR #21)
 - [x] 2.5 Land the `.ignore` entry last, with a rehearsed revert (PR #21)
 - [x] 2.6 Report an unresolvable push range instead of reading it as an empty one (PR #23)
-- [ ] 2.7 Replace the frozen route baseline with a named ledger
+- [x] 2.7 Replace the frozen route baseline with a named ledger (PR #24)
 
 ## 3. Calibration Gate
 
-- [ ] 3.1 Run the Calibration Gate and commit its report under `audits/`
+- [x] 3.1 Run the Calibration Gate and commit its report under `audits/phase-10-harness-integrity/` — Result PASS, 26 routes, 52 rows at 100/100/100/100, 954 visual and cross-browser tests, 62 of 62 mutation families

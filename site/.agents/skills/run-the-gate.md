@@ -25,12 +25,13 @@ Run from `site/`. Each step green before the next.
    removal or a stale `routes-removed.json` entry, and never writes the ledger; `npm run assets:routes` does.
 10. `npm run test:smoke` — every guard family plants a violating specimen in a repo copy and
     must fail naming the offending field (CG §3). About 40 s.
-11. `npm run gate:lh` — Lighthouse mobile then desktop, 3 runs each, median, served through
-    `scripts/gate-server.mjs` so the measurement carries production gzip and the real
-    `_headers`. About 30 min locally; see the CI section for the parallel form.
+11. `GATE_PHASE=<bucket> npm run gate:lh` — Lighthouse mobile then desktop, 3 runs each, median,
+    served through `scripts/gate-server.mjs` so the measurement carries production gzip and the
+    real `_headers`. The bucket is the change this evidence belongs to; a run that names none
+    refuses. About 30 min locally; see the CI section for the parallel form.
 12. `npm run gate:visual` — Playwright snapshots and axe, both themes (visual-baselines.md).
-13. `node scripts/report.mjs <phase> ../audits/phase-<phase>` — generates REPORT.md from the raw
-    JSON of the steps above. No waiver field, no "fix next phase".
+13. `node scripts/report.mjs <bucket> ../audits/<bucket>` — generates REPORT.md from the raw JSON
+    of the steps above, into the same folder step 11 wrote. No waiver field, no "fix next phase".
 14. `npm run gate:brand` — no code outside `src/data/` types the brand name; it derives via
     `src/utils/brand.mjs` or `SITE.name` from `astrowind:config`.
 
@@ -39,12 +40,10 @@ Run from `site/`. Each step green before the next.
 `build` runs once and uploads `dist`; `types-and-units`, `guard-mutations`, `cheap-gates`,
 `visual-and-axe` (3 Playwright shards) and `lighthouse` (2 form factors x 4 route shards) fan out
 from that artifact, and `gate-report` merges them. Whole gate: about 8 minutes. A docs-only commit
-runs `types-and-units` alone (`changes` job classifies the diff).
-
-One shard by hand:
-`LHCI_FORM_FACTOR=mobile LH_SHARD_INDEX=1 LH_SHARD_TOTAL=4 npm run gate:lh:one`. Shards deal
-routes round-robin (`scripts/lh-shards.cjs`), each binds port `4330 + index - 1` and writes
-`lh-<factor>/shard-<index>/`. The report fails any audited route with no run or fewer than 3.
+runs `types-and-units` alone (`changes` classifies the diff). One shard by hand, naming its bucket:
+`GATE_PHASE=<bucket> LHCI_FORM_FACTOR=mobile LH_SHARD_INDEX=1 LH_SHARD_TOTAL=4 npm run gate:lh:one`.
+Shards deal routes round-robin (`scripts/lh-shards.cjs`), each binds port `4330 + index - 1` and
+writes `lh-<factor>/shard-<index>/`. The report fails an audited route with no run or fewer than 3.
 
 ## Representative Lighthouse set
 
@@ -65,9 +64,9 @@ by declaring noindex. Visual snapshots follow the same family logic via `scripts
   phase fails (L13).
 - Plausible is blocked inside lab runs and verified by a separate live check. Blocking it still
   charges the simulated graph: see `diagnose-a-lighthouse-lcp-plateau.md`.
-- A category score of 100 does not mean the metric assertions passed. `report.mjs` enforces the
-  LCP, CLS and TBT budgets from `lighthouserc.cjs` on each route's median run.
-- lhci asserts the best run by default; every rule in `lighthouserc.cjs` goes through `onMedian`.
+- A category score of 100 does not mean the metric assertions passed: `report.mjs` enforces the
+  LCP, CLS and TBT budgets from `lighthouserc.cjs` on each route's median run, and lhci asserts
+  the best run by default, so every rule in `lighthouserc.cjs` goes through `onMedian`.
 - A scratch page left in the build widens every downstream gate; delete throwaway routes first.
 - Lighthouse measures the machine. Run shards alone, logs outside `/tmp`: on 2026-10-02 four
   desktop shards run beside a baseline regeneration took 2h37m and all failed, then four minutes

@@ -43,7 +43,7 @@ Audits, skills and commit messages still name work by phase. Phases 0 to 5.1 are
 | 4.6   | `openspec/changes/archive/2026-10-13-08-answer-engine-hardening/`                                                 |
 | 4.7   | `openspec/changes/archive/2026-10-13-09-editorial-pass-every-text/`                                               |
 | 5     | `openspec/changes/11-launch/`                                                                                     |
-| 5.1   | `openspec/changes/10-harness-integrity/`                                                                          |
+| 5.1   | `openspec/changes/archive/2026-10-14-10-harness-integrity/`                                                       |
 | 6     | No change: growth repeats, so it is the skill `run-the-growth-loop.md`. Its cadence is `docs/PRD.md` §14, Фаза 6. |
 
 ## Where the old PLAN.md sections went

@@ -304,19 +304,19 @@ export const SPECIMENS = {
   },
   lighthouseShard: {
     gate: 'gate:lh:one',
-    env: { LH_ONLY_ROUTES: LIGHTHOUSE_ROUTES, LHCI_FORM_FACTOR: 'mobile' },
+    env: { LH_ONLY_ROUTES: LIGHTHOUSE_ROUTES, LHCI_FORM_FACTOR: 'mobile', GATE_PHASE: 'specimen' },
     token: 'categories.accessibility failure for minScore assertion',
     plant: (copySite) => addPage(copySite, 'zz-specimen', UNLABELLED_IMAGE_PAGE),
   },
   lighthouseBothFactors: {
     gate: 'gate:lh',
-    env: { LH_ONLY_ROUTES: LIGHTHOUSE_ROUTES },
+    env: { LH_ONLY_ROUTES: LIGHTHOUSE_ROUTES, GATE_PHASE: 'specimen' },
     token: 'categories.accessibility failure for minScore assertion',
     plant: (copySite) => addPage(copySite, 'zz-specimen', UNLABELLED_IMAGE_PAGE),
   },
   lighthouseSelfWaivingNoindex: {
     gate: 'gate:lh:one',
-    env: { LH_ONLY_ROUTES: LIGHTHOUSE_ROUTES, LHCI_FORM_FACTOR: 'mobile' },
+    env: { LH_ONLY_ROUTES: LIGHTHOUSE_ROUTES, LHCI_FORM_FACTOR: 'mobile', GATE_PHASE: 'specimen' },
     token: 'categories.seo failure for minScore assertion',
     plant: (copySite) =>
       addPage(
