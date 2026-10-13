@@ -326,12 +326,23 @@ test('the page specimens plant and restore flat route files, never a route direc
     assert.match(readFileSync(plantedFile, 'utf8'), /about/);
     await restoreOrphans();
     assert.equal(existsSync(plantedFile), false);
-
-    const restoreShrink = await SPECIMENS.routesShrink.plant(copySite);
-    assert.equal(existsSync(aboutFile), false);
-    await restoreShrink();
-    assert.equal(existsSync(aboutFile), true);
   } finally {
     rmSync(copySite, { recursive: true, force: true });
+  }
+});
+
+test('the routes specimen lists a route no build makes in the ledger, and restores the ledger', async () => {
+  const root = scratch();
+  try {
+    const ledger = join(root, 'audits/routes.json');
+    mkdirSync(join(root, 'audits'));
+    writeFileSync(ledger, '["/"]');
+    const restore = await SPECIMENS.routesShrink.plant(join(root, 'site'));
+    assert.deepEqual(JSON.parse(readFileSync(ledger, 'utf8')), ['/', '/zz-specimen-route']);
+    assert.ok(SPECIMENS.routesShrink.token.endsWith(' /zz-specimen-route'));
+    await restore();
+    assert.equal(readFileSync(ledger, 'utf8'), '["/"]');
+  } finally {
+    rmSync(root, { recursive: true, force: true });
   }
 });

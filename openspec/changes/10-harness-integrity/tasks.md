@@ -9,8 +9,10 @@
 - [x] 2.1 Pin the CLI, add the spec tree, narrow the archive exemption (PR #19)
 - [x] 2.2 Write ten capability specs and the gate that proves them (PR #20)
 - [x] 2.3 Close the two ways `gate:spec` could pass vacuously
-- [ ] 2.4 Retarget every reader of `docs/plan/` and import the closed phases verbatim
-- [ ] 2.5 Land the root `.ignore` entry last, with a rehearsed revert
+- [x] 2.4 Retarget every reader of `docs/plan/` and import the closed phases verbatim (PR #21)
+- [x] 2.5 Land the `.ignore` entry last, with a rehearsed revert (PR #21)
+- [x] 2.6 Report an unresolvable push range instead of reading it as an empty one (PR #23)
+- [ ] 2.7 Replace the frozen route baseline with a named ledger
 
 ## 3. Calibration Gate
 

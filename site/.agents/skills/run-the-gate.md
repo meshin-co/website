@@ -21,8 +21,8 @@ Run from `site/`. Each step green before the next.
 7. `npm run gate:machine`, then `npm run gate:jsonld` — machine-interface coverage (every
    indexable route must appear in `llms.txt`) and JSON-LD graph integrity (structured-data.md).
 8. `npm run gate:skills` — skills lint: every path real, no forbidden claims, length caps.
-9. `GATE_PHASE=phase-N npm run gate:routes` — writes `audits/phase-N/routes.json`, fails on an
-   unexplained shrink or a stale `routes-removed.json` entry.
+9. `npm run gate:routes` — compares the build against `audits/routes.json`, fails on an unexplained
+   removal or a stale `routes-removed.json` entry, and never writes the ledger; `npm run assets:routes` does.
 10. `npm run test:smoke` — every guard family plants a violating specimen in a repo copy and
     must fail naming the offending field (CG §3). About 40 s.
 11. `npm run gate:lh` — Lighthouse mobile then desktop, 3 runs each, median, served through

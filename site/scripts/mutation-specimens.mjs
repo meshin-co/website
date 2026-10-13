@@ -64,8 +64,6 @@ async function moveAside(path) {
   return () => rename(aside, path);
 }
 
-const movePage = (copySite, route) => moveAside(join(copySite, 'dist', `${route}.html`));
-
 const PENDING_FILE = 'scripts/mutation-pending.mjs';
 const PENDING_ANCHOR = 'export const PENDING = [';
 const plantPendingEntry = (copySite, change) =>
@@ -231,8 +229,11 @@ export const SPECIMENS = {
   },
   routesShrink: {
     gate: 'gate:routes',
-    token: 'ROUTES UNEXPLAINED REMOVAL /about',
-    plant: (copySite) => movePage(copySite, 'about'),
+    token: 'ROUTES UNEXPLAINED REMOVAL /zz-specimen-route',
+    plant: (copySite) =>
+      editFile(join(copySite, '../audits/routes.json'), (ledger) =>
+        JSON.stringify([...JSON.parse(ledger), '/zz-specimen-route'])
+      ),
   },
   brand: {
     gate: 'gate:brand',

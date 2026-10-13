@@ -31,6 +31,7 @@
     "gate:content": "node scripts/content-gate.mjs dist",
     "gate:orphans": "node scripts/orphan-gate.mjs dist",
     "gate:routes": "node scripts/routes-gate.mjs dist",
+    "assets:routes": "node scripts/routes-gate.mjs dist --write",
     "assets:og-default": "node scripts/generate-og-default.mjs",
     "assets:favicons": "node scripts/generate-favicons.mjs",
     "gate:lh:one": "if [ \"$(node scripts/lh-routes.cjs --count)\" = 0 ]; then echo '0 touched routes to audit'; else rm -rf .lighthouseci && { lhci autorun --config=lighthouserc.cjs; status=$?; node scripts/collect-reports.mjs \"$LHCI_FORM_FACTOR\" && exit $status; }; fi",
@@ -133,6 +134,7 @@
     "smoke:prod": "run-smoke-prod.mjs makes live HTTP requests against the production origin (default https://meshin.co) and writes audits/phase-5/smoke-prod.md; it can only run after a real deploy, not from a CI build artifact",
     "audit:geo": "generate-geo-baseline.mjs writes audits/geo-baseline.md, a structural readiness baseline captured once per phase from docs/SEMANTIC-CORE.md and dist, not re-derived every commit",
     "audit:geo-probe": "run-geo-probe.mjs calls four live external answer-engine APIs (OpenAI and others) and writes audits/geo-probe.md; it is a manual, rate-limited, credentialed probe against third-party services, not a CI-safe per-commit check",
-    "assets:gaps": "generate-gaps.mjs writes audits/phase-4.7/gaps.md from the ledger and registers; it is a generator run manually when the ledger changes, not a gate CI needs to enforce every commit"
+    "assets:gaps": "generate-gaps.mjs writes audits/phase-4.7/gaps.md from the ledger and registers; it is a generator run manually when the ledger changes, not a gate CI needs to enforce every commit",
+    "assets:routes": "routes-gate.mjs --write rewrites audits/routes.json, the ledger gate:routes compares the build against; it is run by hand in the commit that changes the route set on purpose, because a CI run before gate:routes would compare the build with itself and pass every time"
   }
 }
