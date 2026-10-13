@@ -45,6 +45,5 @@ async function main(formFactor) {
 }
 
 if (import.meta.filename === process.argv[1]) {
-  process.env.GATE_PHASE ||= 'local';
   await main(process.argv[2]);
 }
