@@ -8,6 +8,15 @@ const SINGLETONS = [
   ['active', 'multiple-active'],
   ['next', 'multiple-next'],
 ];
+const UNWAIVABLE = new Set([
+  'gate:spec',
+  'gate:docs',
+  'gate:plan',
+  'gate:skills',
+  'gate:evidence',
+  'gate:brand',
+  'test:smoke',
+]);
 
 export function parseStatus(file) {
   const match = /\.([a-z]+)\.md$/.exec(file);
@@ -178,6 +187,10 @@ function main() {
       rule: 'stale-gate-declaration',
       detail: `package.json declares ${gate} local-only, but no such gate exists`,
     })),
+    ...unwaivableGates(localOnly).map((gate) => ({
+      rule: 'unwaivable-gate-declared-local-only',
+      detail: `package.json waives ${gate} out of CI; a harness-integrity gate has no waiver`,
+    })),
     ...gatesMissingFromCi(scripts, workflow, localOnly, scriptIndex).map((gate) => ({
       rule: 'gate-not-in-ci',
       detail: `${gate} is defined in package.json but never runs in ci.yml; L36 says a gate not in ci.yml is not a gate`,
@@ -214,6 +227,10 @@ export function gatesMissingFromCi(scripts, workflow, localOnly = {}, index = ''
 
 export function staleGateDeclarations(scripts, localOnly = {}) {
   return Object.keys(localOnly).filter((gate) => !(gate in scripts));
+}
+
+export function unwaivableGates(localOnly = {}) {
+  return Object.keys(localOnly).filter((gate) => UNWAIVABLE.has(gate));
 }
 
 export function gatesCitedButUndefined(scripts, index) {

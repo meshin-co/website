@@ -262,7 +262,7 @@ const rows = [
 ];
 
 mkdirSync('../audits/phase-5', { recursive: true });
-writeFileSync(out, renderChecklist(rows, generatorRevision()));
+writeFileSync(out, renderChecklist(rows, generatorRevision(out)));
 
 const failures = rows.filter((row) => row.status === 'fail');
 console.log(

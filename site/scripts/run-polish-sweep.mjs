@@ -71,7 +71,10 @@ async function main() {
 
   await browser.close();
   mkdirSync('../audits/phase-5', { recursive: true });
-  writeFileSync(OUT, renderSweep({ routes: routes.length, widths: WIDTHS, findings, revision: generatorRevision() }));
+  writeFileSync(
+    OUT,
+    renderSweep({ routes: routes.length, widths: WIDTHS, findings, revision: generatorRevision(OUT) })
+  );
   console.log(`polish sweep: ${findings.length} findings -> ${OUT}`);
 }
 

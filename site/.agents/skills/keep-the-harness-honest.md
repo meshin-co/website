@@ -51,22 +51,30 @@ publishing a false result:
 4. **Its artefact is fresh.** Eight phase reports under `audits/` printed `Result: PASS` computed
    from an assertion array nothing wrote.
 
-`gate:plan` covers 1 and 2. `npm run test:smoke` covers 3. `npm run gate:evidence` covers 4, via `scripts/evidence-gate.mjs` and `scripts/run-evidence-gate.mjs`: every
-Markdown file under `audits/phase-N/` must carry a `Generated-from:` line naming the revision it
-describes, by path, whether or not the file says it is generated. A file that decides for itself
-whether it counts as evidence can leave itself out. A generator writes the line from
-`generatorRevision()`, and `scripts/report.mjs` also stamps `Asserted:` into each report so it
-cannot claim a family it never ran. A record no script regenerates (a baseline measured once on an
-early revision, a review run) carries the revision its content describes and says
-that nothing regenerates it. There is no exempt directory and no allowlist.
+`gate:plan` covers 1 and 2. `npm run test:smoke` covers 3. `npm run gate:evidence` covers 4, via
+`scripts/evidence-gate.mjs` and `scripts/run-evidence-gate.mjs`: every Markdown file under
+`audits/` must carry a `Generated-from:` line whose first word is a commit hash — 7 to 40 lowercase
+hex digits that `git cat-file -t` calls a `commit` — by path, whether or not the file says it is
+generated. A file that decides for itself whether it counts as evidence can leave itself out. A
+generator writes the line from `generatorRevision()`, which throws, naming the file it was
+stamping, when git cannot name the revision; `scripts/report.mjs` also stamps `Asserted:` so a
+report cannot claim a family it never ran. A record no script regenerates carries the commit its
+content describes and says that nothing regenerates it. The one exemption is
+`LEGACY_PROSE_PROVENANCE`: the 8 Calibration Gate reports of phases 1 to 5, written before any
+generator stamped a revision. They may keep prose in place of a hash, but they still need the line,
+and a hash on them must still name a commit. A unit test pins the 8 keys, and the gate prints them.
+
 Check all four before believing a green result.
 
 ## What this cannot catch
 
 Whether a gate's assertion is _meaningful_. `gate:plan` proves a gate runs; only a planted
 specimen in `test:smoke` proves it can fail. Both are required, and one without the other is
-theatre. Likewise `gate:evidence` proves a revision is named, not that it is the true one:
-`generatorRevision()` returns `unknown` outside a git checkout, and the gate accepts that.
+theatre. Likewise `gate:evidence` proves the named commit exists, not that the content was
+generated from it: any commit in the repository passes. Ancestry is not checked, because the
+2026-09-15 rewrite changed every earlier hash and an ancestry rule would fail on honest history. A
+clone without full history cannot resolve the hashes, so the gate fails there: run it on a full
+clone (`fetch-depth: 0`).
 
 Related: `run-the-gate.md` for the gate list, `keep-the-docs-honest.md` for the document rules,
 `extend-mutation-smoke.md` for proving a new gate can fail.

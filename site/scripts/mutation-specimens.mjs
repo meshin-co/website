@@ -4,7 +4,9 @@ import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 
 import { brandFromDisk } from '../src/utils/brand.mjs';
+import { evidenceSpecimens } from './evidence-specimens.mjs';
 import { REGISTERS_BEGIN } from './registers.mjs';
+import { SPEC_SPECIMENS } from './spec-specimens.mjs';
 
 const ANSI_SEQUENCE = new RegExp(`${String.fromCharCode(27)}\\[[0-9;]*m`, 'g');
 export const flatten = (output) => String(output).replace(ANSI_SEQUENCE, '').replace(/\s+/g, ' ');
@@ -264,6 +266,14 @@ export const SPECIMENS = {
         text.replace('npm run gate:editorial', 'echo skipped')
       ),
   },
+  gateWaivedByProse: {
+    gate: 'gate:plan',
+    token: 'unwaivable-gate-declared-local-only',
+    plant: (copySite) =>
+      editFile(join(copySite, 'package.json'), (text) =>
+        text.replace('"localOnlyGates": {', '"localOnlyGates": {\n    "gate:spec": "slow on my laptop",')
+      ),
+  },
   visualAxe: {
     gate: 'gate:visual',
     env: { CI: '1' },
@@ -317,6 +327,8 @@ export const SPECIMENS = {
         )
       ),
   },
+  ...evidenceSpecimens({ addUntrackedFile }),
+  ...SPEC_SPECIMENS,
 };
 
 const commandFor = (specimen, copySite) => {

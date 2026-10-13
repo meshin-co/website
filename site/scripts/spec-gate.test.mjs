@@ -1,0 +1,180 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+
+import {
+  builtByteFiles,
+  calibrationFindings,
+  changedFiles,
+  censusFindings,
+  censusFromSpecs,
+  changeNameFindings,
+  indexFromSpecs,
+  lockedRowFindings,
+  parseSpec,
+  singleActiveFindings,
+  skipSpecsFindings,
+  tasksFindings,
+  vacuityFindings,
+} from './spec-gate.mjs';
+
+const specText = (purpose, requirements) =>
+  [
+    '# x Specification',
+    '',
+    '## Purpose',
+    purpose,
+    '',
+    '## Requirements',
+    ...requirements.flatMap((name) => [
+      `### Requirement: ${name}`,
+      'It SHALL hold.',
+      '',
+      '#### Scenario: broken',
+      '- **WHEN** x',
+      '- **THEN** y',
+      '',
+    ]),
+  ].join('\n');
+
+const spec = (capability, purpose, requirements) => ({ capability, ...parseSpec(specText(purpose, requirements)) });
+
+test('a spec yields its first purpose sentence and its requirement names in file order', () => {
+  const parsed = parseSpec(
+    specText('Governs budgets. Measured from the build.', ['A route stays under the cap', 'Fonts are measured'])
+  );
+  assert.equal(parsed.purpose, 'Governs budgets.');
+  assert.deepEqual(parsed.requirements, ['A route stays under the cap', 'Fonts are measured']);
+});
+
+test('the census records requirement names, so an equal-count substitution is still a change', () => {
+  const before = censusFromSpecs([spec('delivery/budgets', 'Governs budgets.', ['A route stays under the cap'])]);
+  const after = censusFromSpecs([spec('delivery/budgets', 'Governs budgets.', ['A route is checked somehow'])]);
+  assert.deepEqual(before, { 'delivery/budgets': ['A route stays under the cap'] });
+  assert.equal(censusFindings(before, after).length, 1);
+  assert.equal(censusFindings(before, before).length, 0);
+});
+
+test('a capability that disappears from the tree is a census finding, not a silent pass', () => {
+  const committed = {
+    'delivery/budgets': ['A route stays under the cap'],
+    'content/gate': ['A post carries a source'],
+  };
+  const walked = { 'delivery/budgets': ['A route stays under the cap'] };
+  const findings = censusFindings(committed, walked);
+  assert.equal(findings.length, 1);
+  assert.match(findings[0], /content\/gate/);
+});
+
+test('the index is one line per capability taken from the purpose, so it cannot drift silently', () => {
+  const index = indexFromSpecs([
+    spec('delivery/budgets', 'Governs the byte budgets. Second sentence.', ['A route stays under the cap']),
+    spec('content/gate', 'Governs what a post must carry.', ['A post carries a source']),
+  ]);
+  assert.match(index, /- \[content\/gate\]\(specs\/content\/gate\/spec\.md\) — Governs what a post must carry\./);
+  assert.ok(!index.includes('Second sentence.'));
+});
+
+test('a validator that reports fewer specs than the tree holds is a disagreement, not a pass', () => {
+  assert.equal(vacuityFindings({ cliSpecs: 10, walkedSpecs: 10, items: 12 }).length, 0);
+  assert.equal(vacuityFindings({ cliSpecs: 0, walkedSpecs: 0, items: 0 }).length, 1);
+  assert.equal(vacuityFindings({ cliSpecs: 9, walkedSpecs: 10, items: 12 }).length, 1);
+});
+
+test('an active change is numbered from ten up, with a unique prefix, so it cannot collide with a phase bucket', () => {
+  assert.equal(changeNameFindings(['10-launch', '20-growth'], []).length, 0);
+  assert.equal(changeNameFindings(['9-launch'], []).length, 1);
+  assert.equal(changeNameFindings(['10-launch', '10-other'], []).length, 1);
+  assert.equal(changeNameFindings([], ['2026-10-13-10-phase-0']).length, 0);
+  assert.equal(changeNameFindings([], ['phase-0-initialization']).length, 1);
+});
+
+test('an active change without a task list cannot owe anything, so the gate refuses it', () => {
+  assert.equal(tasksFindings([{ name: '10-launch', hasTasks: true }]).length, 0);
+  assert.equal(tasksFindings([{ name: '10-launch', hasTasks: false }]).length, 1);
+});
+
+test('the validation opt-out belongs to history, never to work in flight', () => {
+  assert.equal(skipSpecsFindings([{ name: '10-launch', archived: false, skipSpecs: true }]).length, 1);
+  assert.equal(skipSpecsFindings([{ name: '2026-10-13-10-phase-0', archived: true, skipSpecs: true }]).length, 0);
+});
+
+test('a second unblocked change breaks the one-at-a-time rule the plan tree used to enforce', () => {
+  const blocked = { name: '20-launch', blocked: 'owner access to DNS', ticked: 0, risk: 'R3' };
+  assert.equal(singleActiveFindings([{ name: '10-work', ticked: 2 }, blocked]).length, 0);
+  assert.equal(
+    singleActiveFindings([
+      { name: '10-work', ticked: 2 },
+      { name: '20-other', ticked: 0 },
+    ]).length,
+    1
+  );
+});
+
+test('a blocked change that is being worked on is active, whatever its sidecar says', () => {
+  const working = { name: '20-launch', blocked: 'owner access', ticked: 3, risk: 'R3' };
+  assert.equal(singleActiveFindings([{ name: '10-work', ticked: 1 }, working]).length, 1);
+});
+
+test('the built-byte surface covers shipped client scripts and the budget file, not only src', () => {
+  const changed = [
+    'site/public/search/index-model.mjs',
+    'site/budgets.json',
+    'docs/PRD.md',
+    'openspec/specs/delivery/budgets/spec.md',
+  ];
+  assert.deepEqual(builtByteFiles(changed), ['site/public/search/index-model.mjs', 'site/budgets.json']);
+});
+
+test('a change that moves built bytes owes a calibration group; a prose change does not', () => {
+  const touching = { changed: ['site/src/pages/index.astro'], changes: [{ name: '10-work', calibration: false }] };
+  assert.equal(calibrationFindings(touching).length, 1);
+  assert.equal(calibrationFindings({ ...touching, changes: [{ name: '10-work', calibration: true }] }).length, 0);
+  assert.equal(
+    calibrationFindings({ changed: ['docs/PRD.md'], changes: [{ name: '10-work', calibration: false }] }).length,
+    0
+  );
+});
+
+test('an empty changed-file set is reported while work is in flight, and is silent when none is', () => {
+  const findings = calibrationFindings({ changed: [], changes: [{ name: '10-work', calibration: false }] });
+  assert.equal(findings.length, 1);
+  assert.match(findings[0], /no files/);
+  assert.deepEqual(calibrationFindings({ changed: [], changes: [] }), []);
+});
+
+test('a requirement citing a locked row that does not exist is a dead citation', () => {
+  const specs = [spec('delivery/budgets', 'Governs budgets.', ['A route stays under the cap'])];
+  specs[0].lockedRows = ['L13'];
+  assert.equal(lockedRowFindings(specs, new Set(['L13'])).length, 0);
+  assert.equal(lockedRowFindings(specs, new Set(['L12'])).length, 1);
+});
+
+test('two requirements claiming the same locked row means one of them is not the row owner', () => {
+  const a = spec('delivery/budgets', 'Governs budgets.', ['A route stays under the cap']);
+  const b = spec('content/gate', 'Governs posts.', ['A post carries a source']);
+  a.lockedRows = ['L13'];
+  b.lockedRows = ['L13'];
+  assert.equal(lockedRowFindings([a, b], new Set(['L13'])).length, 1);
+});
+
+test('an explicit range wins, and otherwise committed, working and untracked files are merged once', () => {
+  const calls = [];
+  const git = (args) => {
+    const call = args.join(' ');
+    calls.push(call);
+    if (call === 'diff --name-only x..y') return 'ranged.md\n';
+    if (call === 'merge-base HEAD origin/main') return 'base1\n';
+    if (call === 'diff --name-only base1..HEAD') return 'a.md\nb.md\n';
+    if (call === 'diff --name-only HEAD') return 'b.md\n';
+    return 'c.md\n';
+  };
+  assert.deepEqual(changedFiles({ git, range: 'x..y' }), ['ranged.md']);
+  assert.deepEqual(calls, ['diff --name-only x..y']);
+  assert.deepEqual(changedFiles({ git }), ['a.md', 'b.md', 'c.md']);
+});
+
+test('a range that resolves to nothing yields no files rather than a blank entry', () => {
+  const git = (args) => (args[0] === 'merge-base' ? 'base1\n' : '\n  \n');
+  assert.deepEqual(changedFiles({ git }), []);
+  assert.deepEqual(changedFiles({ git: () => '' }), []);
+});

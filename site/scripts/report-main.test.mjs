@@ -1,10 +1,14 @@
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import { mkdir, mkdtemp, readFile, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { mock, test } from 'node:test';
+import { fileURLToPath } from 'node:url';
 
 import { main } from './report.mjs';
+
+const REPORT = fileURLToPath(new URL('./report.mjs', import.meta.url));
 
 const lighthouseRun = (path, { lcp = 1000, crawlable = 1, seo = 1 } = {}) => ({
   finalUrl: `http://127.0.0.1:4330${path}`,
@@ -193,4 +197,44 @@ test('a missing dist/gate-routes.json is refused rather than reported over, sinc
   await writeFile(join(root, 'dist', 'index.html'), '<html></html>');
 
   await assert.rejects(() => runMain(root, join(root, 'audits')));
+});
+
+test('a run that names no bucket is refused and rewrites nothing, since a bare run once rewrote the frozen phase-1 report', async () => {
+  const root = await fixtureRoot(['/']);
+  const frozen = join(root, 'audits', 'phase-1');
+  for (const form of FORMS) await writeRuns(join(frozen, form), '/');
+  await writeFile(join(frozen, 'REPORT.md'), '# Phase 1, frozen\n');
+  const site = join(root, 'site');
+  await mkdir(site);
+
+  const bare = spawnSync(process.execPath, [REPORT], {
+    cwd: site,
+    env: { ...process.env, LH_DIST_DIR: join(root, 'dist') },
+    encoding: 'utf8',
+  });
+
+  assert.notEqual(bare.status, 0);
+  assert.match(bare.stderr, /node scripts\/report\.mjs <phase> <audit-dir>/);
+  assert.equal(await readFile(join(frozen, 'REPORT.md'), 'utf8'), '# Phase 1, frozen\n');
+  await assert.rejects(() => main('9'), /<phase> <audit-dir>/);
+});
+
+test('a report whose revision git cannot name is refused, naming the file it was stamping, never stamped unknown', async () => {
+  const root = await fixtureRoot(['/']);
+  const auditDir = join(root, 'audits');
+  for (const form of FORMS) await writeRuns(join(auditDir, form), '/');
+  const path = process.env.PATH;
+  process.env.PATH = root;
+  let refusal;
+  try {
+    await runMain(root, auditDir).catch((error) => (refusal = error));
+  } finally {
+    process.env.PATH = path;
+  }
+
+  assert.ok(refusal, 'main stamped a report although git could not name the revision');
+  assert.ok(refusal.message.includes(join(auditDir, 'REPORT.md')), refusal.message);
+  assert.match(refusal.message, /git is not on PATH/);
+  assert.match(refusal.message, /inside a git checkout/);
+  await assert.rejects(() => readFile(join(auditDir, 'REPORT.md')), { code: 'ENOENT' });
 });

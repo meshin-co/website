@@ -1,5 +1,7 @@
 # GEO probe — measured answers from live engines
 
+Generated-from: 0534b44 (the commit that recorded this probe, before its generator stamped a revision)
+
 Each row is one buyer prompt sent to one engine with retrieval enabled. `cited` means the
 engine returned a `meshin.co` URL among its sources. `mentioned` means the answer named the
 site or the owner without citing it. `absent` means neither.

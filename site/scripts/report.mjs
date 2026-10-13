@@ -99,11 +99,18 @@ function scoreTable(reports) {
   }));
 }
 
-export function generatorRevision() {
+export function generatorRevision(stampedFile) {
   try {
-    return execFileSync('git', ['rev-parse', '--short', 'HEAD'], { encoding: 'utf8' }).trim();
-  } catch {
-    return 'unknown';
+    return execFileSync('git', ['rev-parse', '--short', 'HEAD'], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    }).trim();
+  } catch (error) {
+    const reason = error.code === 'ENOENT' ? 'git is not on PATH' : String(error.stderr ?? '').trim() || error.message;
+    throw new Error(
+      `cannot stamp "Generated-from:" into ${stampedFile}: ${reason}. Run the generator inside a git checkout with git on PATH, so the line names a real commit.`,
+      { cause: error }
+    );
   }
 }
 
@@ -209,7 +216,12 @@ export function renderReport({
 }
 
 export async function main(phase, auditDir) {
+  if (!phase || !auditDir)
+    throw new Error(
+      'name the bucket to write: node scripts/report.mjs <phase> <audit-dir>, for example node scripts/report.mjs ci ../audits/phase-ci'
+    );
   const distDir = process.env.LH_DIST_DIR || 'dist';
+  const out = join(auditDir, 'REPORT.md');
   const gate = JSON.parse(await readFile(join(distDir, 'gate-routes.json'), 'utf8'));
   const { markdown, failures } = renderReport({
     phase,
@@ -219,13 +231,13 @@ export async function main(phase, auditDir) {
     desktop: scoreTable(await readReports(join(auditDir, 'lh-desktop'))),
     budgets: await metricBudgets(),
     byteBudgets: byteBudgets(),
-    generator: generatorRevision(),
+    generator: generatorRevision(out),
   });
-  await writeFile(join(auditDir, 'REPORT.md'), markdown);
+  await writeFile(out, markdown);
   console.log(markdown);
   if (failures.length > 0) process.exitCode = 1;
 }
 
 if (import.meta.filename === process.argv[1]) {
-  await main(process.argv[2] ?? '1', process.argv[3] ?? '../audits/phase-1');
+  await main(process.argv[2], process.argv[3]);
 }

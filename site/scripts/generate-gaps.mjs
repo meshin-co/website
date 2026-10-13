@@ -71,7 +71,7 @@ function main() {
     ),
     orphans: orphanEntities(entityRegister(terms, pages)),
     promptGaps,
-    revision: generatorRevision(),
+    revision: generatorRevision(OUT),
   });
 
   writeFileSync(OUT, report);

@@ -88,6 +88,9 @@ jobs:
       - run: npm run gate:plan
       - run: npm run gate:docs
       - run: npm run gate:evidence
+      - run: npm run gate:spec
+        env:
+          SPEC_GATE_RANGE: ${{ github.event_name == 'pull_request' && format('{0}..{1}', github.event.pull_request.base.sha, github.event.pull_request.head.sha) || format('{0}..{1}', github.event.before, github.sha) }}
       - run: npm run gate:brand
 
   guard-mutations:
@@ -96,6 +99,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version-file: site/.nvmrc

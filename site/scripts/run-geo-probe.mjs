@@ -1,13 +1,16 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 
+import { withProvenance } from './evidence-gate.mjs';
 import { parsePrompts } from './geo-baseline.mjs';
 import { classify, competitorHosts, providerRoster, renderProbe, resolveCitationHosts } from './geo-probe.mjs';
+import { generatorRevision } from './report.mjs';
 
 const CORE = process.argv[2] ?? '../docs/SEMANTIC-CORE.md';
 const OUT = process.argv[3] ?? '../audits/geo-probe.md';
 const LIMIT = Number(process.env.GEO_PROBE_LIMIT ?? 0);
 const CONCURRENCY = Number(process.env.GEO_PROBE_CONCURRENCY ?? 4);
 const TIMEOUT = 180_000;
+const REVISION = generatorRevision(OUT);
 
 const ask = {
   async openai(prompt, model) {
@@ -169,7 +172,7 @@ const header = [
 ].join(' ');
 
 mkdirSync(OUT.slice(0, OUT.lastIndexOf('/')), { recursive: true });
-const report = renderProbe(rows);
+const report = withProvenance(renderProbe(rows), REVISION);
 writeFileSync(OUT, `${report}\n## Method\n\n${header}\n`);
 writeFileSync(
   OUT.replace(/\.md$/, '.json'),
