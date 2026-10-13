@@ -148,11 +148,13 @@ test('a change that moves built bytes owes a calibration group; a prose change d
   );
 });
 
-test('an empty changed-file set is reported while work is in flight, and is silent when none is', () => {
-  const findings = calibrationFindings({ changed: [], changes: [{ name: '10-work', calibration: false }] });
-  assert.equal(findings.length, 1);
-  assert.match(findings[0], /no files/);
-  assert.deepEqual(calibrationFindings({ changed: [], changes: [] }), []);
+test('an empty range is reported only when a range was named, because a clean checkout has nothing to judge', () => {
+  const inFlight = [{ name: '10-work', calibration: false }];
+  const named = calibrationFindings({ changed: [], changes: inFlight, rangeWasNamed: true });
+  assert.equal(named.length, 1);
+  assert.match(named[0], /no files/);
+  assert.deepEqual(calibrationFindings({ changed: [], changes: inFlight, rangeWasNamed: false }), []);
+  assert.deepEqual(calibrationFindings({ changed: [], changes: [], rangeWasNamed: true }), []);
 });
 
 test('a requirement citing a locked row that does not exist is a dead citation', () => {

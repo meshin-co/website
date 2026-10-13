@@ -19,6 +19,11 @@ Every .html file in the build, the 404 page and /styleguide included, SHALL pass
 
 `npm run gate:links` SHALL start at the home page of the build, follow every same-site link recursively and fail on any link whose target answers with an error status or cannot be reached. Extensionless local URLs are rewritten to the flat .html file the build holds. Outbound links are fetched too, except those matching plausible.io, linkedin.com, cal.com, github.com/meshin-co, apps.apple.com or an absolute https://meshin.co URL, which are skipped.
 
+#### Scenario: An outbound host answers 500 once
+
+- **WHEN** an outbound link returns a 429 or a 5xx and succeeds within three retries, which carry jitter
+- **THEN** `npm run gate:links` exits 0 and counts the link as scanned, because a third party having a bad minute is not a broken link
+
 #### Scenario: A link names a page that was never built
 
 - **WHEN** a page links to /missing and the build holds no missing.html

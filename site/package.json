@@ -22,7 +22,7 @@
     "test": "node --test \"scripts/*.test.mjs\" \"src/utils/*.test.mjs\" \"src/data/*.test.mjs\"",
     "gate:visual": "playwright test",
     "gate:html": "html-validate \"dist/**/*.html\"",
-    "gate:links": "linkinator dist --recurse --silent --url-rewrite-search '^(http://(?:localhost|127\\.0\\.0\\.1):\\d+/(?:[^/?#]+/)*[^/?#.]+)([?#].*)?$' --url-rewrite-replace '$1.html$2' --skip \"plausible.io|linkedin.com|cal.com|github.com/meshin-co|apps.apple.com|^https://meshin.co\"",
+    "gate:links": "linkinator dist --recurse --silent --retry --retry-errors --retry-errors-count 3 --retry-errors-jitter 500 --url-rewrite-search '^(http://(?:localhost|127\\.0\\.0\\.1):\\d+/(?:[^/?#]+/)*[^/?#.]+)([?#].*)?$' --url-rewrite-replace '$1.html$2' --skip \"plausible.io|linkedin.com|cal.com|github.com/meshin-co|apps.apple.com|^https://meshin.co\"",
     "gate:lh": "LHCI_FORM_FACTOR=mobile npm run gate:lh:one && LHCI_FORM_FACTOR=desktop npm run gate:lh:one",
     "gate:machine": "node scripts/machine.mjs dist",
     "gate:jsonld": "node scripts/jsonld-gate.mjs dist",
