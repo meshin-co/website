@@ -31,6 +31,11 @@ then `### Requirement: <a sentence>` with SHALL or MUST under 500 characters, th
 `#### Scenario:` with WHEN and THEN bullets. A requirement without a scenario is a validator error,
 and so is a spec without requirements.
 
+`openspec/changes/archive/.ignore` holds `*`, so ripgrep and every tool that honours an ignore file
+skips the archive: nine closed phases would otherwise answer most searches of this repository. Git
+still tracks all 19 files, and `gate:docs`, `gate:spec` and the OpenSpec CLI all still read them —
+only interactive search is quieter. Name a path under the archive explicitly to read it.
+
 ## Working a change
 
 `openspec list --sort name` is the board; status is computed from ticked task boxes, so tick them as
