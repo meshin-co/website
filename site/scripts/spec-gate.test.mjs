@@ -206,7 +206,15 @@ test('an unusable range falls back to the merge base rather than judging nothing
   };
   assert.deepEqual(changedFiles({ git, range: '0000000000000000000000000000000000000000..abc1234' }), ['fallback.md']);
   assert.ok(resolved.includes('merge-base HEAD origin/main'));
-  assert.deepEqual(changedFiles({ git: () => null, range: 'x..y' }), []);
+
+  const failing = (args) => {
+    const call = args.join(' ');
+    if (call === 'diff --name-only gone..HEAD') return null;
+    if (call === 'merge-base HEAD origin/main') return 'base1\n';
+    if (call === 'diff --name-only base1..HEAD') return 'fallback.md\n';
+    return '';
+  };
+  assert.deepEqual(changedFiles({ git: failing, range: 'gone..HEAD' }), ['fallback.md']);
 });
 
 test('a blocked change escapes the single-active rule only by citing a gap row that exists', () => {

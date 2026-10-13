@@ -17,7 +17,7 @@ Every .html file in the build, the 404 page and /styleguide included, SHALL pass
 
 ### Requirement: Every link reachable from the home page resolves
 
-`npm run gate:links` SHALL start at the home page of the build, follow every same-site link recursively and fail on any link whose target answers with an error status or cannot be reached. Extensionless local URLs are rewritten to the flat .html file the build holds. Outbound links are fetched too, except those matching plausible.io, linkedin.com, cal.com, github.com/meshin-co, apps.apple.com or an absolute https://meshin.co URL, which are skipped.
+`npm run gate:links` SHALL start at the home page of the build, follow every same-site link recursively and fail on any link that still answers with an error status after its retries, or cannot be reached. Extensionless local URLs are rewritten to the flat .html file the build holds. Outbound links are fetched too, except those matching plausible.io, linkedin.com, cal.com, github.com/meshin-co, apps.apple.com or an absolute https://meshin.co URL, which are skipped.
 
 #### Scenario: An outbound host answers 500 once
 
