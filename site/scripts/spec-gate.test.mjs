@@ -75,9 +75,8 @@ test('the index is one line per capability taken from the purpose, so it cannot 
 });
 
 test('a validator that reports fewer specs than the tree holds is a disagreement, not a pass', () => {
-  assert.equal(vacuityFindings({ cliSpecs: 10, walkedSpecs: 10, items: 12 }).length, 0);
-  assert.equal(vacuityFindings({ cliSpecs: 0, walkedSpecs: 0, items: 0 }).length, 1);
-  assert.equal(vacuityFindings({ cliSpecs: 9, walkedSpecs: 10, items: 12 }).length, 1);
+  assert.equal(vacuityFindings({ cliSpecs: 10, walkedSpecs: 10, specItems: 10 }).length, 0);
+  assert.equal(vacuityFindings({ cliSpecs: 9, walkedSpecs: 10, specItems: 9 }).length, 1);
 });
 
 test('an active change is numbered from ten up, with a unique prefix, so it cannot collide with a phase bucket', () => {
@@ -93,9 +92,19 @@ test('an active change without a task list cannot owe anything, so the gate refu
   assert.equal(tasksFindings([{ name: '10-launch', hasTasks: false }]).length, 1);
 });
 
-test('the validation opt-out belongs to history, never to work in flight', () => {
-  assert.equal(skipSpecsFindings([{ name: '10-launch', archived: false, skipSpecs: true }]).length, 1);
-  assert.equal(skipSpecsFindings([{ name: '2026-10-13-10-phase-0', archived: true, skipSpecs: true }]).length, 0);
+test('a change cannot both opt out of spec validation and carry a delta', () => {
+  assert.equal(skipSpecsFindings([{ name: '10-tooling', archived: false, skipSpecs: true, deltas: 0 }]).length, 0);
+  assert.equal(skipSpecsFindings([{ name: '10-tooling', archived: false, skipSpecs: true, deltas: 1 }]).length, 1);
+  assert.equal(skipSpecsFindings([{ name: '10-tooling', archived: false, skipSpecs: false, deltas: 1 }]).length, 0);
+  assert.equal(
+    skipSpecsFindings([{ name: '2026-10-13-01-phase-0', archived: true, skipSpecs: true, deltas: 2 }]).length,
+    0
+  );
+});
+
+test('a validator run that saw no specs is vacuous even when it saw changes', () => {
+  assert.equal(vacuityFindings({ cliSpecs: 0, walkedSpecs: 0, specItems: 0 }).length, 1);
+  assert.equal(vacuityFindings({ cliSpecs: 10, walkedSpecs: 10, specItems: 10 }).length, 0);
 });
 
 test('a second unblocked change breaks the one-at-a-time rule the plan tree used to enforce', () => {

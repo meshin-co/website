@@ -1,7 +1,7 @@
 # site
 
 The Astro application behind meshin.co. The methodology that governs it lives one level up:
-read `../AGENTS.md` first, then `../docs/plan/INDEX.md`.
+read `../AGENTS.md` first, then `../openspec/INDEX.md`.
 
 Scaffolded from AstroWind and since rewritten: the template's demo pages, widgets, analytics and
 client runtime are gone, and the design lane, content model, gates and skills are this project's
@@ -26,7 +26,7 @@ npm run build       # production build, the only build Lighthouse may measure
 npm run check       # astro check, eslint, prettier
 npm test            # unit tests
 npm run test:smoke  # every guard family proven able to fail
-npm run gate:plan   # phase tree, gate wiring, CI browser coverage
+npm run gate:plan   # gate wiring, CI browser coverage
 ```
 
 The full gate list, with what each one refuses, is in `scripts/README.md`. Every `gate:*` script

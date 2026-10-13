@@ -6,7 +6,7 @@ edited to match what was built. Where `docs/plan/reference/locked-decisions.md` 
 contradicts this document, the locked row wins — and the locked rows contradict it in several
 places, including the contact form, the newsletter, prices, and the `/ru` section (L54).
 
-For what the site actually is, read `AGENTS.md` and the active phase file. Read this document for
+For what the site actually is, read `AGENTS.md` and `openspec/INDEX.md`. Read this document for
 the original intent behind a requirement, not for its current shape.
 
 ---

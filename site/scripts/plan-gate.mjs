@@ -1,13 +1,10 @@
 import { readFileSync, readdirSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { PENDING } from './mutation-pending.mjs';
 
-const PLAN_DIR = resolve(process.cwd(), '..', 'docs', 'plan');
-const STATUSES = new Set(['done', 'active', 'next', 'planned', 'dropped']);
-const SINGLETONS = [
-  ['active', 'multiple-active'],
-  ['next', 'multiple-next'],
-];
+const ARCHIVE_DATE = /^\d{4}-\d{2}-\d{2}-/;
 const UNWAIVABLE = new Set([
   'gate:spec',
   'gate:docs',
@@ -18,56 +15,22 @@ const UNWAIVABLE = new Set([
   'test:smoke',
 ]);
 
-export function parseStatus(file) {
-  const match = /\.([a-z]+)\.md$/.exec(file);
-  return match ? match[1] : null;
-}
+const cellsOf = (line) =>
+  line
+    .split('|')
+    .slice(1, -1)
+    .map((cell) => cell.trim());
 
-export function statusFindings(phases) {
-  const findings = [];
-  for (const phase of phases) {
-    if (!STATUSES.has(phase.status)) {
-      findings.push({
-        rule: 'unknown-status',
-        detail: `${phase.file} carries status "${phase.status}", not one of ${[...STATUSES].join(', ')}`,
-      });
-    }
-  }
-  for (const [status, rule] of SINGLETONS) {
-    const held = phases.filter((phase) => phase.status === status);
-    if (held.length > 1) {
-      findings.push({ rule, detail: `${held.map((phase) => phase.file).join(', ')} are all ${status}` });
-    }
-  }
-  return findings;
-}
-
-export function indexFindings({ listed, present }) {
-  const findings = [];
-  for (const file of present) {
-    if (!listed.includes(file)) {
-      findings.push({ rule: 'unlisted-phase', detail: `${file} exists but docs/plan/INDEX.md never lists it` });
-    }
-  }
-  for (const file of listed) {
-    if (!present.includes(file)) {
-      findings.push({ rule: 'missing-phase', detail: `docs/plan/INDEX.md lists ${file}, which does not exist` });
-    }
-  }
-  return findings;
-}
-
-export function knownGapsFindings(markdown) {
-  const cellsOf = (line) =>
-    line
-      .split('|')
-      .slice(1, -1)
-      .map((cell) => cell.trim());
-  const candidates = markdown
+export function knownGapRows(markdown) {
+  return markdown
     .split('\n')
     .filter((line) => line.trim().startsWith('|'))
     .map(cellsOf)
     .filter((cells) => cells[0] !== 'id' && !/^-+$/.test(cells[0] ?? ''));
+}
+
+export function knownGapsFindings(markdown) {
+  const candidates = knownGapRows(markdown);
 
   const findings = [];
   for (const cells of candidates.filter((cells) => cells.length !== 5 && /^G\d+$/.test(cells[0] ?? ''))) {
@@ -135,23 +98,31 @@ function namesRequiringCi(scripts, index) {
   return [...names];
 }
 
-function phaseFileFor(phaseId, presentPhaseFiles) {
-  return presentPhaseFiles.find((file) => file.startsWith(`${phaseId}-`));
+const directoryNames = (dir) =>
+  readdirSync(dir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name);
+
+export function changeDirectories(changesDir) {
+  return {
+    active: directoryNames(changesDir).filter((name) => name !== 'archive'),
+    archived: directoryNames(join(changesDir, 'archive')),
+  };
 }
 
-export function pendingPhaseFindings(pending, presentPhaseFiles) {
+export function pendingChangeFindings(pending, { active, archived }) {
+  const archivedAs = new Map(archived.map((dir) => [dir.replace(ARCHIVE_DATE, ''), dir]));
   const findings = [];
   for (const entry of pending) {
-    const file = phaseFileFor(entry.phase, presentPhaseFiles);
-    if (!file) {
+    if (archivedAs.has(entry.change)) {
       findings.push({
-        rule: 'pending-specimen-unknown-phase',
-        detail: `mutation-pending.mjs names ${entry.phase} for ${entry.gate}, and no file under docs/plan/phases/ starts with ${entry.phase}-`,
+        rule: 'pending-specimen-change-archived',
+        detail: `mutation-pending.mjs owes ${entry.gate} to ${entry.change}, which is archived as openspec/changes/archive/${archivedAs.get(entry.change)}/, so the specimen is overdue`,
       });
-    } else if (parseStatus(file) === 'done') {
+    } else if (!active.includes(entry.change)) {
       findings.push({
-        rule: 'pending-specimen-phase-done',
-        detail: `mutation-pending.mjs names ${entry.phase} for ${entry.gate}, and ${file} is already done, so the specimen is overdue`,
+        rule: 'pending-specimen-unknown-change',
+        detail: `mutation-pending.mjs owes ${entry.gate} to ${entry.change}, which names no change under openspec/changes/`,
       });
     }
     if (!hasReason(entry.reason)) {
@@ -164,13 +135,11 @@ export function pendingPhaseFindings(pending, presentPhaseFiles) {
   return findings;
 }
 
+export function summaryLine({ scripts, gapRows, pending, findings }) {
+  return `plan: ${scripts} scripts checked against ci.yml, ${gapRows} gap rows, ${pending} pending specimens, ${findings} findings`;
+}
+
 function main() {
-  const present = readdirSync(join(PLAN_DIR, 'phases')).filter((name) => name.endsWith('.md'));
-  const index = readFileSync(join(PLAN_DIR, 'INDEX.md'), 'utf8');
-  const listed = [...index.matchAll(/\(phases\/([^)]+\.md)\)/g)].map((match) => match[1]);
-
-  const phases = present.map((file) => ({ file, status: parseStatus(file) }));
-
   const manifest = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
   const scripts = manifest.scripts;
   const localOnly = manifest.localOnlyGates ?? {};
@@ -179,10 +148,9 @@ function main() {
   const playwrightConfig = readFileSync(new URL('../playwright.config.ts', import.meta.url), 'utf8');
   const installLines = [...workflow.matchAll(/npx playwright install[^\n]*/g)].map((match) => match[0]);
   const knownGaps = readFileSync(new URL('../../docs/plan/reference/known-gaps.md', import.meta.url), 'utf8');
+  const changes = changeDirectories(fileURLToPath(new URL('../../openspec/changes', import.meta.url)));
 
   const findings = [
-    ...statusFindings(phases),
-    ...indexFindings({ listed, present: [...new Set(present)] }),
     ...staleGateDeclarations(scripts, localOnly).map((gate) => ({
       rule: 'stale-gate-declaration',
       detail: `package.json declares ${gate} local-only, but no such gate exists`,
@@ -204,11 +172,18 @@ function main() {
       detail: `playwright.config.ts runs a ${browser} project, and at least one npx playwright install line in ci.yml does not include it`,
     })),
     ...knownGapsFindings(knownGaps),
-    ...pendingPhaseFindings(PENDING, present),
+    ...pendingChangeFindings(PENDING, changes),
   ];
 
   for (const finding of findings) console.error(`PLAN ${finding.rule} ${finding.detail}`);
-  console.log(`plan: ${present.length} phase files, ${findings.length} findings`);
+  console.log(
+    summaryLine({
+      scripts: namesRequiringCi(scripts, scriptIndex).length,
+      gapRows: knownGapRows(knownGaps).length,
+      pending: PENDING.length,
+      findings: findings.length,
+    })
+  );
   if (findings.length > 0) process.exitCode = 1;
 }
 

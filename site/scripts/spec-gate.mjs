@@ -93,9 +93,9 @@ export function indexFromSpecs(specs) {
   ].join('\n');
 }
 
-export function vacuityFindings({ cliSpecs, walkedSpecs, items }) {
+export function vacuityFindings({ cliSpecs, walkedSpecs, specItems }) {
   const findings = [];
-  if (items === 0) findings.push('spec-vacuous: the validator reported zero items, so nothing was checked');
+  if (specItems === 0) findings.push('spec-vacuous: the validator reported zero specs, so nothing was checked');
   if (cliSpecs !== walkedSpecs) {
     findings.push(`spec-count-disagreement: the validator sees ${cliSpecs} specs, the tree holds ${walkedSpecs}`);
   }
@@ -133,8 +133,11 @@ export function tasksFindings(changes) {
 
 export function skipSpecsFindings(changes) {
   return changes
-    .filter((change) => change.skipSpecs && !change.archived)
-    .map((change) => `skip-specs-active ${change.name}: the validation opt-out belongs to the archive`);
+    .filter((change) => change.skipSpecs && !change.archived && change.deltas > 0)
+    .map(
+      (change) =>
+        `skip-specs-with-deltas ${change.name}: the change opts out of spec validation and carries ${change.deltas} delta file(s)`
+    );
 }
 
 export function singleActiveFindings(changes, gapRows = new Set()) {

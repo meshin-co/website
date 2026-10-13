@@ -138,7 +138,7 @@
     "A row-range claim names the highest locked-decision row",
     "A specimen counts only when its gate is green without it and red with it",
     "An archived change skips the row-range rule and nothing else",
-    "An owed specimen names an open phase and a reason",
+    "An owed specimen names an open change and a reason",
     "Every gate script is proven by a mutation family or listed as owed",
     "Every gate script, test script and harness script is named by a skill",
     "Every markdown file under audits names a commit that exists",

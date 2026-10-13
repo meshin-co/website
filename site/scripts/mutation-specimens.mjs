@@ -68,11 +68,11 @@ const movePage = (copySite, route) => moveAside(join(copySite, 'dist', `${route}
 
 const PENDING_FILE = 'scripts/mutation-pending.mjs';
 const PENDING_ANCHOR = 'export const PENDING = [';
-const plantPendingEntry = (copySite, phase) =>
+const plantPendingEntry = (copySite, change) =>
   editFile(join(copySite, PENDING_FILE), (text) =>
     text.replace(
       PENDING_ANCHOR,
-      `${PENDING_ANCHOR}\n  { gate: 'gate:zz-specimen', phase: '${phase}', reason: 'planted specimen' },`
+      `${PENDING_ANCHOR}\n  { gate: 'gate:zz-specimen', change: '${change}', reason: 'planted specimen' },`
     )
   );
 
@@ -248,15 +248,15 @@ export const SPECIMENS = {
     token: 'unreviewed:',
     plant: (copySite) => moveAside(join(copySite, '../audits/phase-4.7/dispositions/faq.json')),
   },
-  pendingUnknownPhase: {
+  pendingUnknownChange: {
     gate: 'gate:plan',
-    token: 'pending-specimen-unknown-phase',
-    plant: (copySite) => plantPendingEntry(copySite, 'phase-99'),
+    token: 'pending-specimen-unknown-change',
+    plant: (copySite) => plantPendingEntry(copySite, '99-zz-specimen'),
   },
-  pendingPhaseDone: {
+  pendingChangeArchived: {
     gate: 'gate:plan',
-    token: 'pending-specimen-phase-done',
-    plant: (copySite) => plantPendingEntry(copySite, 'phase-0'),
+    token: 'pending-specimen-change-archived',
+    plant: (copySite) => plantPendingEntry(copySite, '01-initialization'),
   },
   wiringRemoved: {
     gate: 'gate:plan',

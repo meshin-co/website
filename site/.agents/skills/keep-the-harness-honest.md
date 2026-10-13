@@ -4,7 +4,7 @@ A gate that never runs reads exactly like a gate that passes. So does a document
 command nobody defined. This project found four of the first and two of the second in one review,
 and L56 now makes the harness check its own wiring.
 
-`npm run gate:plan` fails on five things beyond the phase tree:
+`npm run gate:plan` fails on five wiring faults:
 
 - **gate-not-in-ci** — a `gate:*` script in `package.json` that `ci.yml` never runs. This is L36
   ("a gate not in `ci.yml` is not a gate") made mechanical instead of asserted.
@@ -12,7 +12,7 @@ and L56 now makes the harness check its own wiring.
 - **browser-not-installed** — `playwright.config.ts` runs a project whose browser `ci.yml` never
   installs. The suite would die on the first CI run, long after the change that caused it.
 - **stale-gate-declaration** — `localOnlyGates` names a gate that no longer exists.
-- the phase-status rules that were always there.
+- **unwaivable-gate-declared-local-only** — `localOnlyGates` names a harness-integrity gate, such as `gate:docs`.
 
 ## The only way out of CI
 

@@ -36,17 +36,20 @@ and so is a spec without requirements.
 `openspec list --sort name` is the board; status is computed from ticked task boxes, so tick them as
 the work lands. Prefixes start at 10, because `audits/phase-0` through `phase-5.2` already own the
 lower numbers. One change is in flight at a time unless another is blocked and untouched — a
-blocked change carries a `blocked:` line in its `.openspec.yaml` naming a gap row that exists in
+blocked change carries a `blocked.md` naming a gap row that exists in
 `docs/plan/reference/known-gaps.md`, and has no ticked boxes. A sentence alone does not park a
-change: `gate:spec` counts it as in flight.
+change: `gate:spec` counts it as in flight. The block lives in its own file because the CLI
+rejects an unknown key in `.openspec.yaml`.
 
 A change that touches the built-byte surface (`site/src`, `site/public`, `site/scripts`,
 `astro.config.ts`, `budgets.json`, `lighthouserc.cjs`, the manifests) carries a
 `## N. Calibration Gate` task group and names the report it generates. The procedure is
 `docs/plan/reference/calibration-gate.md` and it has no waiver path.
 
-`skip_specs: true` belongs to the archive only. The CLI accepts it on active work; this repository
-does not.
+`skip_specs: true` says the change alters no specified behaviour. `gate:spec` refuses it only when
+the change also carries a delta file under its own `specs/`, which is a contradiction. It cannot
+tell whether the commits landing beside the change moved shipped source, because nothing ties a
+commit to a change: rows G29 and G36 record that.
 
 ## After editing the tree
 
@@ -54,5 +57,5 @@ does not.
 npm run assets:spec-census && npm run assets:spec-index && npm run gate:spec
 ```
 
-`gate:spec` prints how many files it saw in the diff range. A zero there means the calibration rule
-judged nothing, which is a finding, not a pass.
+`gate:spec` prints how many files it saw in the diff range. A zero there while a change is in
+flight means the calibration rule judged nothing, which is a finding, not a pass.

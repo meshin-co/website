@@ -11,8 +11,8 @@ Each agent gets a named file list in its assignment. Touch only those files. If 
 a file you do not own, send the file owner the exact text or line, and keep working on your own
 scope — never edit around the boundary "just this once." A handful of files are effectively
 always owned by the dispatching agent across every wave: `package.json`,
-`.github/workflows/ci.yml`, `docs/plan/INDEX.md`, `AGENTS.md`, and any single data file multiple agents
-would otherwise race on (e.g. `site/content-facts.json`). Confirm current ownership from the
+`.github/workflows/ci.yml`, `AGENTS.md`, and any single data file multiple agents would otherwise
+race on (e.g. `site/content-facts.json`). Confirm current ownership from the
 wave's dispatch message; it can rotate between waves.
 
 ## Shared-file protocol

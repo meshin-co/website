@@ -50,11 +50,12 @@ const DELTA =
 const CALIBRATED_TASKS = '## 1. Calibration Gate\n\n- [ ] 1.1 Run the Calibration Gate and commit its report\n';
 const UNCALIBRATED_TASKS = '## 1. Specimen\n\n- [ ] 1.1 Plant the specimen\n';
 
-async function addChange(tree, name, { metadata = '', tasks = CALIBRATED_TASKS, delta = DELTA } = {}) {
+async function addChange(tree, name, { metadata = '', tasks = CALIBRATED_TASKS, delta = DELTA, blocked = null } = {}) {
   const dir = join(tree, 'changes', name);
   await mkdir(dir, { recursive: true });
   await writeFile(join(dir, '.openspec.yaml'), `schema: spec-driven\n${metadata}`);
   await writeFile(join(dir, 'proposal.md'), PROPOSAL);
+  if (blocked) await writeFile(join(dir, 'blocked.md'), blocked);
   if (tasks) await writeFile(join(dir, 'tasks.md'), tasks);
   if (delta) {
     await mkdir(join(dir, 'specs', 'zz-specimen'), { recursive: true });
@@ -77,7 +78,7 @@ export const SPEC_SPECIMENS = {
   specScenarioMissing: specimen(`validate spec ${CAPABILITY}: Requirement must have at least one scenario`, (tree) =>
     rewrite(capabilitySpec(tree), (text) => text.replace(/\n#### Scenario:[\s\S]*?(?=\n### Requirement: )/, '\n'))
   ),
-  specValidatorSawNothing: specimen('spec-vacuous: the validator reported zero items', async (tree, copySite) => {
+  specValidatorSawNothing: specimen('spec-vacuous: the validator reported zero specs', async (tree, copySite) => {
     await rm(join(tree, 'specs'), { recursive: true });
     await mkdir(join(tree, 'specs'));
     regenerate(copySite, 'census', 'index');
@@ -122,8 +123,8 @@ export const SPEC_SPECIMENS = {
   changeWithoutTasks: specimen('change-without-tasks 10-zz-specimen', (tree) =>
     addChange(tree, '10-zz-specimen', { tasks: null })
   ),
-  changeSkippingSpecs: specimen('skip-specs-active 10-zz-specimen', (tree) =>
-    addChange(tree, '10-zz-specimen', { metadata: 'skip_specs: true\n', delta: null })
+  changeSkippingSpecs: specimen('skip-specs-with-deltas 10-zz-specimen', (tree) =>
+    addChange(tree, '10-zz-specimen', { metadata: 'skip_specs: true\n' })
   ),
   changesInFlight: specimen('two-active-changes:', async (tree) => {
     await addChange(tree, '10-zz-specimen');
@@ -131,11 +132,11 @@ export const SPEC_SPECIMENS = {
   }),
   changeParkedWithoutAGapRow: specimen('two-active-changes:', async (tree) => {
     await addChange(tree, '10-zz-specimen');
-    await addChange(tree, '11-zz-specimen', { metadata: 'blocked: waiting for a quiet week\n' });
+    await addChange(tree, '11-zz-specimen', { blocked: 'waiting for a quiet week' });
   }),
   changeParkedOnAGapRowThatDoesNotExist: specimen('two-active-changes:', async (tree) => {
     await addChange(tree, '10-zz-specimen');
-    await addChange(tree, '11-zz-specimen', { metadata: 'blocked: G999 keeps this parked\n' });
+    await addChange(tree, '11-zz-specimen', { blocked: 'G999 keeps this parked' });
   }),
   changeOwingCalibration: specimen(
     'change-without-calibration 10-zz-specimen',

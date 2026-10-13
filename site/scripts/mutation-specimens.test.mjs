@@ -4,7 +4,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import {
   SPECIMENS,
@@ -15,6 +15,7 @@ import {
   flatten,
   proveWithSpecimen,
 } from './mutation-specimens.mjs';
+import { changeDirectories, pendingChangeFindings } from './plan-gate.mjs';
 
 const scripts = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).scripts;
 
@@ -275,24 +276,28 @@ test('every specimen names a gate the package defines, a token to look for and a
   }
 });
 
-test('the pending-phase specimens plant an entry the real pending module then exports, and restore it', async () => {
+test('the pending-change specimens each plant an entry that trips its own rule, and restore the module', async () => {
   const copySite = scratch();
   try {
     mkdirSync(join(copySite, 'scripts'));
     const target = join(copySite, 'scripts/mutation-pending.mjs');
     writeFileSync(target, readFileSync(new URL('./mutation-pending.mjs', import.meta.url)));
     const before = readFileSync(target, 'utf8');
+    const changes = changeDirectories(fileURLToPath(new URL('../../openspec/changes', import.meta.url)));
+    const rulesOf = (pending) => pendingChangeFindings(pending, changes).map(({ rule }) => rule);
 
-    const restore = await SPECIMENS.pendingUnknownPhase.plant(copySite);
+    const restore = await SPECIMENS.pendingUnknownChange.plant(copySite);
     const planted = await import(`${pathToFileURL(target).href}?planted`);
-    assert.ok(planted.PENDING.some((entry) => entry.phase === 'phase-99' && entry.gate === 'gate:zz-specimen'));
+    assert.ok(planted.PENDING.some((entry) => entry.change === '99-zz-specimen' && entry.gate === 'gate:zz-specimen'));
+    assert.deepEqual(rulesOf(planted.PENDING), ['pending-specimen-unknown-change']);
 
     await restore();
     assert.equal(readFileSync(target, 'utf8'), before);
 
-    await SPECIMENS.pendingPhaseDone.plant(copySite);
-    const doneVariant = await import(`${pathToFileURL(target).href}?done`);
-    assert.ok(doneVariant.PENDING.some((entry) => entry.phase === 'phase-0'));
+    await SPECIMENS.pendingChangeArchived.plant(copySite);
+    const archivedVariant = await import(`${pathToFileURL(target).href}?archived`);
+    assert.ok(archivedVariant.PENDING.some((entry) => entry.change === '01-initialization'));
+    assert.deepEqual(rulesOf(archivedVariant.PENDING), ['pending-specimen-change-archived']);
   } finally {
     rmSync(copySite, { recursive: true, force: true });
   }

@@ -157,26 +157,26 @@ For each Markdown file under `site/.agents/skills/`, `site/scripts/check-skills.
 #### Scenario: A new gate ships with no specimen
 
 - **WHEN** a new `gate:` script is added with no family and no pending entry
-- **THEN** `npm test` fails the test `every gate:* script is proven by a family or named as pending with the phase that adds it`, and its diff lists the gate
+- **THEN** `npm test` fails the test `every gate:* script is proven by a family or named as pending with the change that owes it`, and its diff lists the gate
 
 #### Scenario: A paid debt stays listed
 
 - **WHEN** a pending entry stays after its gate gains a family
 - **THEN** `npm test` fails the test `the real pending list owes only gates that exist and still have no family`
 
-### Requirement: An owed specimen names an open phase and a reason
+### Requirement: An owed specimen names an open change and a reason
 
-Each entry in `site/scripts/mutation-pending.mjs` SHALL name a phase whose file under `docs/plan/phases/` exists and is not marked done, and SHALL give a non-blank reason. `site/scripts/plan-gate.mjs` fails otherwise, both in npm run gate:plan and in `site/scripts/mutation-pending.test.mjs`. The specimens pendingUnknownPhase and pendingPhaseDone prove the first two checks.
+Each entry in `site/scripts/mutation-pending.mjs` SHALL name a change directory under `openspec/changes/` that exists and is not archived, and SHALL give a non-blank reason. `site/scripts/plan-gate.mjs` fails otherwise, both in npm run gate:plan and in `site/scripts/mutation-pending.test.mjs`. The specimens pendingUnknownChange and pendingChangeArchived prove the first two checks.
 
-#### Scenario: The owing phase does not exist
+#### Scenario: The owing change does not exist
 
-- **WHEN** an entry names a phase that no file under `docs/plan/phases/` starts with
-- **THEN** npm run gate:plan exits 1 with `PLAN pending-specimen-unknown-phase mutation-pending.mjs names <phase> for <gate>, and no file under docs/plan/phases/ starts with <phase>-`
+- **WHEN** an entry names a change that is no directory under `openspec/changes/`
+- **THEN** npm run gate:plan exits 1 with `PLAN pending-specimen-unknown-change mutation-pending.mjs owes <gate> to <change>, which names no change under openspec/changes/`
 
-#### Scenario: The owing phase is already done
+#### Scenario: The owing change is already archived
 
-- **WHEN** an entry names a phase whose file is marked done
-- **THEN** npm run gate:plan exits 1 with `PLAN pending-specimen-phase-done mutation-pending.mjs names <phase> for <gate>, and <file> is already done, so the specimen is overdue`
+- **WHEN** an entry names a change that sits under `openspec/changes/archive/`
+- **THEN** npm run gate:plan exits 1 with `PLAN pending-specimen-change-archived mutation-pending.mjs owes <gate> to <change>, which is archived as openspec/changes/archive/<YYYY-MM-DD-change>/, so the specimen is overdue`
 
 #### Scenario: The debt gives no reason
 

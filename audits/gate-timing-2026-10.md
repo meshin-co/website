@@ -14,7 +14,7 @@ Every number is a wall-clock measurement of the real command, not an estimate.
 | `npm run build`                            | 6       | 112 built pages, the only build Lighthouse may measure            |
 | `npm test`                                 | 2       | 1073 unit tests                                                   |
 | `npm run check`                            | 17      | `astro check`, eslint, prettier                                   |
-| `npm run gate:plan`                        | <1      | 12 phase files, the CI wiring rules, the gap register             |
+| `npm run gate:plan`                        | <1      | the CI wiring rules, the gap register, the pending specimens      |
 | `npm run gate:skills`                      | 1       | 39 skill files, every path and command they name                  |
 | `npm run gate:docs`                        | <1      | 87 documents, 6 records exempt                                    |
 | `npm run gate:evidence`                    | <1      | 23 artefacts under `audits/`                                      |

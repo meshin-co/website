@@ -18,7 +18,7 @@ precision control and a test. The rules live in `scripts/docs-gate.mjs`, their t
 
 ## Why the ranges are checked
 
-`AGENTS.md`, `docs/PRD.md`, `docs/DECISIONS.md` and `docs/plan/INDEX.md` each quoted a locked-row
+`AGENTS.md`, `docs/PRD.md`, `docs/DECISIONS.md` and the old plan index each quoted a locked-row
 range. Three of the four had gone stale as rows were added, so a reader was told the decisions
 ended at L19 or L49 when they ran to L54. Nothing caught it, because prose is not built.
 
