@@ -8,14 +8,14 @@ import { SPECIMENS } from './mutation-specimens.mjs';
 
 const packageScripts = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).scripts;
 
-test('every gate:* script is proven by a family or named as pending with the phase that adds it', () => {
+test('every gate:* script is proven by a family or named as pending with the change that owes it', () => {
   assert.deepEqual(unprovenGates(packageScripts, manifestFamilies(FAMILIES), PENDING), []);
 });
 
 test('a gate with no family and no pending entry is reported, and a pending one is not', () => {
   const scripts = { 'gate:a': 'x', 'gate:b': 'x', 'gate:c': 'x', build: 'x' };
   const families = [{ id: 'f', kind: 'pure', proves: 'gate:a' }];
-  const pending = [{ gate: 'gate:c', phase: 'phase-5', reason: 'no baselines yet' }];
+  const pending = [{ gate: 'gate:c', change: '11-launch', reason: 'no baselines yet' }];
   assert.deepEqual(unprovenGates(scripts, families, pending), ['gate:b']);
 });
 
@@ -53,14 +53,14 @@ test('a pending entry for a gate that has a family is stale, because the debt is
   const scripts = { 'gate:a': 'x', 'gate:b': 'x' };
   const families = [{ id: 'f', kind: 'pure', proves: 'gate:a' }];
   const pending = [
-    { gate: 'gate:a', phase: 'phase-5', reason: 'paid' },
-    { gate: 'gate:b', phase: 'phase-5', reason: 'owed' },
+    { gate: 'gate:a', change: '11-launch', reason: 'paid' },
+    { gate: 'gate:b', change: '11-launch', reason: 'owed' },
   ];
   assert.deepEqual(stalePending(scripts, families, pending), ['gate:a']);
 });
 
 test('a pending entry for a gate that no script defines is stale', () => {
-  assert.deepEqual(stalePending({ 'gate:a': 'x' }, [], [{ gate: 'gate:gone', phase: 'phase-5', reason: 'x' }]), [
+  assert.deepEqual(stalePending({ 'gate:a': 'x' }, [], [{ gate: 'gate:gone', change: '11-launch', reason: 'x' }]), [
     'gate:gone',
   ]);
 });

@@ -236,7 +236,7 @@ const rows = [
   },
   {
     section: '21. Git and review',
-    item: 'the plan tree, its index and its phase statuses agree',
+    item: 'gate wiring, the gap register and pending specimens agree',
     status: runs('node', ['scripts/plan-gate.mjs']),
     detail: 'gate:plan; check, unit tests and the production build run in the same sweep',
   },

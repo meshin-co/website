@@ -39,6 +39,6 @@ Run it that way after changing the checks; a smoke test that cannot fail is deco
 
 ## When the flip happens
 
-Run it against the production URL immediately, commit the artifact, and strike the matching line
-from `docs/plan/phases/phase-5-launch.next.md`. CG-5 is not closed until this file records a pass
+Run it against the production URL immediately, commit the artifact, and tick the matching box in
+`openspec/changes/11-launch/tasks.md`. CG-5 is not closed until the artifact records a pass
 against `https://meshin.co`.

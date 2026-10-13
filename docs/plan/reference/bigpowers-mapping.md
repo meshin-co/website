@@ -25,11 +25,11 @@ machine check. It became a skill.
 
 | Skill                               | Already done by                                                                                                               |
 | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `survey-context`, `using-bigpowers` | `AGENTS.md` read order plus `docs/plan/INDEX.md` and `navigate-the-plan.md`                                                   |
-| `session-state`                     | Each phase file's "Done, with evidence" and "Blocked on the owner" sections, which cite artifacts rather than asserting state |
+| `survey-context`, `using-bigpowers` | `AGENTS.md` read order plus `openspec/INDEX.md` and `navigate-the-plan.md`                                                    |
+| `session-state`                     | Each change's `tasks.md`, whose ticked boxes `openspec list --sort name` reads as status, and the `blocked.md` that parks one |
 | `verify-work`                       | `docs/plan/reference/calibration-gate.md`, eleven steps, no waiver path                                                       |
-| `execute-plan`, `build-epic`        | The numbered work items in the active phase file, each closed by a gate                                                       |
-| `change-request`                    | Appending a locked row and editing the phase file in the same commit                                                          |
+| `execute-plan`, `build-epic`        | The numbered tasks of the change in flight, each ticked as it lands                                                           |
+| `change-request`                    | Appending a locked row and editing the change in flight in the same commit                                                    |
 | `deploy`                            | L16: Cloudflare Pages builds and deploys from git; there is no CLI step to orchestrate                                        |
 | `wire-ci`                           | `.github/workflows/ci.yml`, which classifies the diff before choosing how much of the graph to run                            |
 | `audit-code`                        | `npm run check`, `gate:skills`, and the generated phase report                                                                |
@@ -41,14 +41,15 @@ machine check. It became a skill.
 ## Skipped, with the reason
 
 - `orchestrate-project` and `gate-trace` both carry waiver-capable status models. The gate has no
-  waiver field and status lives only in a filename. Adopting either would weaken both rules.
+  waiver field and status is computed from ticked task boxes. Adopting either would weaken both
+  rules.
 - `slice-tasks`, `plan-work`, `plan-release`, `scope-work`, `run-planning` describe a greenfield
   discover phase. Phases 0 to 4.7 are done and the scope is fixed by the PRD and the locked rows.
 - `trace-requirement` wants story tags in code comments. This project verifies claims in `dist/`,
   never in source, and comments are banned.
 - `release-branch` gates on coverage percentage, which means nothing against a Lighthouse and
   byte-budget bar. Pushes to `main` are already gated by the CI graph.
-- `inspect-quality` would add a second issue tracker beside the phase files.
+- `inspect-quality` would add a second issue tracker beside `openspec/changes/`.
 - `migrate-spec`, `spike-prototype`, `design-interface`, `seed-conventions` have no target: there
   is no foreign spec to convert, no unexplored domain, no pending interface decision, and the
   conventions already exist in `AGENTS.md`.

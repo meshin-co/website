@@ -1,84 +1,21 @@
 import assert from 'node:assert/strict';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { test } from 'node:test';
 
 import {
   browsersMissingFromCi,
+  changeDirectories,
   staleGateDeclarations,
   unwaivableGates,
   gatesCitedButUndefined,
   gatesMissingFromCi,
-  indexFindings,
+  knownGapRows,
   knownGapsFindings,
-  parseStatus,
-  pendingPhaseFindings,
-  statusFindings,
+  pendingChangeFindings,
+  summaryLine,
 } from './plan-gate.mjs';
-
-test('the status is read from the filename, not from prose', () => {
-  assert.equal(parseStatus('phase-5-launch.next.md'), 'next');
-  assert.equal(parseStatus('phase-4.6-answer-engine-hardening.done.md'), 'done');
-  assert.equal(parseStatus('phase-9-whatever.md'), null);
-});
-
-test('an unknown status word is refused', () => {
-  assert.deepEqual(
-    statusFindings([{ file: 'phase-1-x.finished.md', status: 'finished' }]).map((f) => f.rule),
-    ['unknown-status']
-  );
-});
-
-test('two active phases fail, because only one thing is in flight', () => {
-  const findings = statusFindings([
-    { file: 'a.active.md', status: 'active' },
-    { file: 'b.active.md', status: 'active' },
-  ]);
-  assert.deepEqual(
-    findings.map((f) => f.rule),
-    ['multiple-active']
-  );
-});
-
-test('two next phases fail for the same reason', () => {
-  const findings = statusFindings([
-    { file: 'a.next.md', status: 'next' },
-    { file: 'b.next.md', status: 'next' },
-  ]);
-  assert.deepEqual(
-    findings.map((f) => f.rule),
-    ['multiple-next']
-  );
-});
-
-test('a normal board with one next and the rest done passes', () => {
-  assert.deepEqual(
-    statusFindings([
-      { file: 'a.done.md', status: 'done' },
-      { file: 'b.next.md', status: 'next' },
-      { file: 'c.planned.md', status: 'planned' },
-    ]),
-    []
-  );
-});
-
-test('a phase file the index never lists is reported', () => {
-  const findings = indexFindings({ listed: ['a.done.md'], present: ['a.done.md', 'b.next.md'] });
-  assert.deepEqual(
-    findings.map((f) => f.rule),
-    ['unlisted-phase']
-  );
-});
-
-test('an index row pointing at a file that does not exist is reported', () => {
-  const findings = indexFindings({ listed: ['a.done.md', 'gone.done.md'], present: ['a.done.md'] });
-  assert.deepEqual(
-    findings.map((f) => f.rule),
-    ['missing-phase']
-  );
-});
-
-test('a matching index and directory passes', () => {
-  assert.deepEqual(indexFindings({ listed: ['a.done.md'], present: ['a.done.md'] }), []);
-});
 
 test('every gate script defined in package.json runs in CI, because L36 says a gate not in ci.yml is not a gate', () => {
   const missing = gatesMissingFromCi(
@@ -217,50 +154,87 @@ test('a known-gap row with the wrong cell count is reported, because a silently 
   );
 });
 
-const PHASE_FILES = [
-  'phase-4.5a-machine-layer-every-surface-complete.done.md',
-  'phase-5.1-harness-integrity-and-geo-features.active.md',
-  'phase-5-launch.next.md',
-];
-
-const pendingRules = (entry, files = PHASE_FILES) =>
-  pendingPhaseFindings([{ gate: 'gate:visual', reason: 'no specimen yet', ...entry }], files).map(({ rule }) => rule);
-
-test('a pending entry naming a phase that does not exist is a finding, so a typo cannot park a debt for ever', () => {
-  assert.deepEqual(pendingRules({ phase: 'phase-99' }), ['pending-specimen-unknown-phase']);
+test('every gap row is counted, the malformed one too, and never the header or the separator', () => {
+  const markdown = [
+    '| id | claim | why it is not closed | owner | opened |',
+    '| --- | --- | --- | --- | --- |',
+    '| G1 | a claim | a reason | owner | 2026-09-23 |',
+    '| G2 | a claim | a reason | 2026-09-23 |',
+  ].join('\n');
+  assert.deepEqual(
+    knownGapRows(markdown).map(([id]) => id),
+    ['G1', 'G2']
+  );
 });
 
-test('a pending entry whose phase is already done is a finding, because the specimen is then overdue', () => {
-  assert.deepEqual(pendingRules({ phase: 'phase-4.5a' }), ['pending-specimen-phase-done']);
+const CHANGES = {
+  active: ['10-harness-integrity', '11-launch'],
+  archived: ['2026-10-13-01-initialization', '2026-10-13-09-editorial-pass-every-text'],
+};
+
+const pendingRules = (entry, changes = CHANGES) =>
+  pendingChangeFindings([{ gate: 'gate:visual', reason: 'no specimen yet', ...entry }], changes).map(
+    ({ rule }) => rule
+  );
+
+test('a pending entry naming a change that does not exist is a finding, so a typo cannot park a debt for ever', () => {
+  assert.deepEqual(pendingRules({ change: '99-nowhere' }), ['pending-specimen-unknown-change']);
 });
 
-test('a pending entry whose phase is still open is quiet, whether the phase is active or next', () => {
-  assert.deepEqual(pendingRules({ phase: 'phase-5.1' }), []);
-  assert.deepEqual(pendingRules({ phase: 'phase-5' }), []);
+test('a pending entry whose change is archived is a finding, because the specimen is then overdue', () => {
+  assert.deepEqual(pendingRules({ change: '01-initialization' }), ['pending-specimen-change-archived']);
 });
 
-test('a phase id matches its own file and never a sibling that shares its prefix', () => {
-  const siblingsOnly = ['phase-4.5a-machine-layer-every-surface-complete.done.md'];
-  assert.deepEqual(pendingRules({ phase: 'phase-4' }, siblingsOnly), ['pending-specimen-unknown-phase']);
+test('a pending entry whose change is still open is quiet, whether the change is in flight or parked', () => {
+  assert.deepEqual(pendingRules({ change: '10-harness-integrity' }), []);
+  assert.deepEqual(pendingRules({ change: '11-launch' }), []);
+});
+
+test('a change is matched by its whole name, never by its number or its slug alone', () => {
+  assert.deepEqual(pendingRules({ change: '10' }), ['pending-specimen-unknown-change']);
+  assert.deepEqual(pendingRules({ change: 'launch' }), ['pending-specimen-unknown-change']);
+  assert.deepEqual(pendingRules({ change: 'initialization' }), ['pending-specimen-unknown-change']);
+});
+
+test('an entry that still names a phase instead of a change is a finding, because the phase files are gone', () => {
+  assert.deepEqual(pendingRules({ phase: 'phase-5' }), ['pending-specimen-unknown-change']);
+});
+
+test('an archived change stays overdue when an open folder of the same name comes back', () => {
+  const reopened = { active: ['01-initialization'], archived: ['2026-10-13-01-initialization'] };
+  assert.deepEqual(pendingRules({ change: '01-initialization' }, reopened), ['pending-specimen-change-archived']);
 });
 
 test('a pending entry with no reason is a finding, because a debt nobody explains is a waiver', () => {
-  assert.deepEqual(pendingRules({ phase: 'phase-5', reason: ' ' }), ['pending-specimen-no-reason']);
-  assert.deepEqual(pendingRules({ phase: 'phase-5', reason: undefined }), ['pending-specimen-no-reason']);
+  assert.deepEqual(pendingRules({ change: '11-launch', reason: ' ' }), ['pending-specimen-no-reason']);
+  assert.deepEqual(pendingRules({ change: '11-launch', reason: undefined }), ['pending-specimen-no-reason']);
 });
 
 test('every pending entry is judged, not only the first', () => {
-  const findings = pendingPhaseFindings(
+  const findings = pendingChangeFindings(
     [
-      { gate: 'gate:a', phase: 'phase-99', reason: 'x' },
-      { gate: 'gate:b', phase: 'phase-4.5a', reason: 'x' },
+      { gate: 'gate:a', change: '99-nowhere', reason: 'x' },
+      { gate: 'gate:b', change: '01-initialization', reason: 'x' },
     ],
-    PHASE_FILES
+    CHANGES
   );
   assert.deepEqual(
     findings.map(({ rule }) => rule),
-    ['pending-specimen-unknown-phase', 'pending-specimen-phase-done']
+    ['pending-specimen-unknown-change', 'pending-specimen-change-archived']
   );
+});
+
+test('the change tree lists the open changes and the archived ones, never the archive folder or a loose file', () => {
+  const root = mkdtempSync(join(tmpdir(), 'plan-gate-changes-'));
+  try {
+    mkdirSync(join(root, '10-open'));
+    mkdirSync(join(root, 'archive', '2026-01-01-01-closed'), { recursive: true });
+    writeFileSync(join(root, 'notes.md'), '');
+    writeFileSync(join(root, 'archive', '.gitkeep'), '');
+    assert.deepEqual(changeDirectories(root), { active: ['10-open'], archived: ['2026-01-01-01-closed'] });
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });
 
 test('a harness-integrity gate cannot be waived out of CI by a sentence', () => {
@@ -270,4 +244,11 @@ test('a harness-integrity gate cannot be waived out of CI by a sentence', () => 
     'gate:docs',
     'test:smoke',
   ]);
+});
+
+test('the summary names what the gate read: the scripts held to ci.yml, the gap rows and the pending specimens', () => {
+  assert.equal(
+    summaryLine({ scripts: 31, gapRows: 32, pending: 0, findings: 0 }),
+    'plan: 31 scripts checked against ci.yml, 32 gap rows, 0 pending specimens, 0 findings'
+  );
 });

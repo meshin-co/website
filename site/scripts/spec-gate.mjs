@@ -15,14 +15,19 @@ const BUILT_BYTE_SURFACE = [
 ];
 
 const nonBlankLines = (text) =>
-  text
+  (text ?? '')
     .split('\n')
     .map((line) => line.trim())
     .filter(Boolean);
 
+const UNBORN = /^0{7,40}\.\./;
+
 export function changedFiles({ git, range }) {
-  if (range) return nonBlankLines(git(['diff', '--name-only', range]));
-  const base = git(['merge-base', 'HEAD', 'origin/main']).trim();
+  if (range && !UNBORN.test(range)) {
+    const ranged = git(['diff', '--name-only', range]);
+    if (ranged !== null && ranged !== undefined) return nonBlankLines(ranged);
+  }
+  const base = (git(['merge-base', 'HEAD', 'origin/main']) ?? '').trim();
   const committed = base ? nonBlankLines(git(['diff', '--name-only', `${base}..HEAD`])) : [];
   const working = nonBlankLines(git(['diff', '--name-only', 'HEAD']));
   const untracked = nonBlankLines(git(['ls-files', '--others', '--exclude-standard']));
@@ -88,9 +93,9 @@ export function indexFromSpecs(specs) {
   ].join('\n');
 }
 
-export function vacuityFindings({ cliSpecs, walkedSpecs, items }) {
+export function vacuityFindings({ cliSpecs, walkedSpecs, specItems }) {
   const findings = [];
-  if (items === 0) findings.push('spec-vacuous: the validator reported zero items, so nothing was checked');
+  if (specItems === 0) findings.push('spec-vacuous: the validator reported zero specs, so nothing was checked');
   if (cliSpecs !== walkedSpecs) {
     findings.push(`spec-count-disagreement: the validator sees ${cliSpecs} specs, the tree holds ${walkedSpecs}`);
   }
@@ -128,15 +133,25 @@ export function tasksFindings(changes) {
 
 export function skipSpecsFindings(changes) {
   return changes
-    .filter((change) => change.skipSpecs && !change.archived)
-    .map((change) => `skip-specs-active ${change.name}: the validation opt-out belongs to the archive`);
+    .filter((change) => change.skipSpecs && !change.archived && change.deltas > 0)
+    .map(
+      (change) =>
+        `skip-specs-with-deltas ${change.name}: the change opts out of spec validation and carries ${change.deltas} delta file(s)`
+    );
 }
 
-export function singleActiveFindings(changes) {
-  const unblocked = changes.filter((change) => !change.blocked || change.ticked > 0);
+export function singleActiveFindings(changes, gapRows = new Set()) {
+  const parked = (change) => {
+    if (!change.blocked || change.ticked > 0) return false;
+    const cited = [...String(change.blocked).matchAll(/\bG(\d{1,3})\b/g)].map(([row]) => row);
+    return cited.length > 0 && cited.every((row) => gapRows.has(row));
+  };
+  const unblocked = changes.filter((change) => !parked(change));
   if (unblocked.length <= 1) return [];
   const names = unblocked.map((change) => change.name).join(', ');
-  return [`two-active-changes: ${names} are all in flight; one at a time unless a change is blocked and untouched`];
+  return [
+    `two-active-changes: ${names} are all in flight; one at a time unless a change is blocked, untouched and cites a gap row`,
+  ];
 }
 
 export function builtByteFiles(changed) {

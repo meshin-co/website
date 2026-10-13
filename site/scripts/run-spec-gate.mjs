@@ -60,14 +60,11 @@ const readSpecs = () => {
 };
 
 const sidecar = (dir) => {
-  const file = join(dir, '.openspec.yaml');
-  const text = existsSync(file) ? readFileSync(file, 'utf8') : '';
-  const blocked = text.match(/^blocked:\s*(.+)$/m);
-  const risk = text.match(/\bR\d{1,3}\b/);
+  const metadata = join(dir, '.openspec.yaml');
+  const blockFile = join(dir, 'blocked.md');
   return {
-    skipSpecs: /^skip_specs:\s*true\s*$/m.test(text),
-    blocked: blocked ? blocked[1].trim() : '',
-    risk: risk ? risk[0] : '',
+    skipSpecs: existsSync(metadata) && /^skip_specs:\s*true\s*$/m.test(readFileSync(metadata, 'utf8')),
+    blocked: existsSync(blockFile) ? readFileSync(blockFile, 'utf8').trim() : '',
   };
 };
 
@@ -82,7 +79,15 @@ const taskState = (dir) => {
   };
 };
 
-const changeModel = (dir, name, archived) => ({ name, archived, ...sidecar(dir), ...taskState(dir) });
+const deltaCount = (dir) => (existsSync(join(dir, 'specs')) ? walkSpecs(join(dir, 'specs')).length : 0);
+
+const changeModel = (dir, name, archived) => ({
+  name,
+  archived,
+  deltas: deltaCount(dir),
+  ...sidecar(dir),
+  ...taskState(dir),
+});
 
 const changed = changedFiles({ git, range: process.env.SPEC_GATE_RANGE });
 
@@ -96,13 +101,16 @@ const validate = (args) => {
   }
 };
 
-const lockedRows = () => {
-  const file = join(repo, 'docs/plan/reference/locked-decisions.md');
+const tableIds = (relative, pattern) => {
+  const file = join(repo, relative);
   if (!existsSync(file)) return new Set();
-  return new Set(
-    (readFileSync(file, 'utf8').match(/^\|\s*(L\d{1,3})\s*\|/gm) ?? []).map((row) => row.match(/L\d{1,3}/)[0])
-  );
+  return new Set((readFileSync(file, 'utf8').match(pattern.row) ?? []).map((row) => row.match(pattern.id)[0]));
 };
+
+const lockedRows = () =>
+  tableIds('docs/plan/reference/locked-decisions.md', { row: /^\|\s*(L\d{1,3})\s*\|/gm, id: /L\d{1,3}/ });
+
+const gapRows = () => tableIds('docs/plan/reference/known-gaps.md', { row: /^\|\s*(G\d{1,3})\s*\|/gm, id: /G\d{1,3}/ });
 
 const specs = readSpecs();
 const activeNames = directories(join(root, 'changes')).filter((name) => name !== 'archive');
@@ -125,7 +133,7 @@ const committedIndex = existsSync(indexFile) ? readFileSync(indexFile, 'utf8') :
 
 const findings = [
   ...invalid,
-  ...vacuityFindings({ cliSpecs, walkedSpecs: specs.length, items: all.items.length + archivedReport.items.length }),
+  ...vacuityFindings({ cliSpecs, walkedSpecs: specs.length, specItems: cliSpecs }),
   ...(committedCensus
     ? censusFindings(committedCensus, censusFromSpecs(specs))
     : ['census-missing-file: openspec/CENSUS.json is not committed']),
@@ -133,7 +141,7 @@ const findings = [
   ...changeNameFindings(activeNames, archivedNames),
   ...tasksFindings(active),
   ...skipSpecsFindings([...active, ...archived]),
-  ...singleActiveFindings(active),
+  ...singleActiveFindings(active, gapRows()),
   ...calibrationFindings({ changed, changes: active }),
   ...lockedRowFindings(specs, lockedRows()),
 ];

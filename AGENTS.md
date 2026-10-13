@@ -4,15 +4,17 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
 
 ## Read order
 
-1. `docs/plan/INDEX.md` — the plan index, and the only plan file you read up front. It names each
-   phase, its status (carried in the filename: `.done.md`, `.active.md`, `.next.md`,
-   `.planned.md`, `.dropped.md`) and where the reference material lives. Read the index, then the
-   one `.active` or `.next` phase file, and nothing more until you need it. The locked decisions
-   L1–L57 live in `docs/plan/reference/locked-decisions.md`; the gate procedure in
-   `docs/plan/reference/calibration-gate.md`. Finishing a phase means renaming its file to
-   `.done.md` and updating its index row in the same commit; `npm run gate:plan` fails when a
-   status word is unknown, when two phases claim `active` or `next`, or when the index and the
-   phases directory disagree.
+1. `openspec/INDEX.md` — the generated map of what the site does, one line per capability, and
+   the only file under `openspec/` you read up front. The work lives in `openspec/changes/`, one
+   directory per change, and `openspec list --sort name` is the board. Read the one change in
+   flight, its `proposal.md` and `tasks.md`, and nothing more until you need it; a change parked
+   by a `blocked.md` is not in flight. Closed changes are archived under
+   `openspec/changes/archive/`. The locked decisions L1–L57 live in
+   `docs/plan/reference/locked-decisions.md`; the gate procedure in
+   `docs/plan/reference/calibration-gate.md`. `npm run gate:spec` refuses the mistakes, among them
+   a spec the validator rejects, an index that differs from a regeneration and a second change in
+   flight that no gap row parks. How to open, work and close a change:
+   `site/.agents/skills/work-a-change-in-the-spec-tree.md`.
 
    **On any conflict the order is: a locked row, then `docs/DECISIONS.md`, then `docs/PRD.md`,
    then this file's hard rules — and above all of them, the built output.**
@@ -30,8 +32,8 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
    parallel agents, clearing dead weight, verifying in the built output, keeping the docs honest,
    smoking the live site, running the growth loop, and the launch checklist. Read the matching one
    before doing that job by hand; `design-lane.md` comes before any markup or CSS.
-   `navigate-the-plan.md` explains the plan tree. `gate:skills` fails if a skill names a path or
-   command that does not exist.
+   `navigate-the-plan.md` maps the reference files and where each phase went. `gate:skills` fails
+   if a skill names a path or command that does not exist.
 
    `site/scripts/README.md` is the map of every script, grouped into gates, generators, audits,
    modules and servers, with the npm command that invokes each. Read it instead of listing the
@@ -159,10 +161,10 @@ npm run smoke:prod # 18 live requests against an origin, default https://meshin.
 npm run test:smoke # every guard family proven able to fail, ~60 s
 ```
 
-CI classifies the diff first. A commit touching only `docs/`, `audits/`, `site/.agents/` or any
-other Markdown (`investigation/` included) runs the `types-and-units` job and nothing else, because
-prose cannot change what Lighthouse measures. Anything else — source, config, content Markdown under
-`site/src/data/`, the workflow itself — runs the full parallel graph: one build, then
+CI classifies the diff first. A commit touching only `docs/`, `audits/`, `site/.agents/`, `openspec/`
+or any other Markdown (`investigation/` included) runs the `types-and-units` job and nothing else,
+because prose cannot change what Lighthouse measures. Anything else — source, config, content
+Markdown under `site/src/data/`, the workflow itself — runs the full parallel graph: one build, then
 check+units, guard-mutations, cheap gates, Playwright (3 shards) and Lighthouse (2 form factors
 x 4 route shards) in parallel, merged by `gate-report`.
 A single shard locally: `LHCI_FORM_FACTOR=mobile LH_SHARD_INDEX=1 LH_SHARD_TOTAL=4 npm run gate:lh:one`.

@@ -41,8 +41,8 @@ unknown `specimen` — a malformed entry fails loud, never silently skips.
 ## Every gate is covered, or owed
 
 `mutation-smoke.test.mjs` fails when a `gate:*` script in `package.json` is proven by no family and is
-not in `scripts/mutation-pending.mjs`. A pending entry names the phase that owes the specimen and says
-why, and `gate:plan` fails when that phase does not exist, is already done, or the reason is blank.
+not in `scripts/mutation-pending.mjs`. A pending entry names the change under `openspec/changes/` that owes the
+specimen and says why, and `gate:plan` fails when that change does not exist, is archived, or the reason is blank.
 Pending is a dated debt, never a waiver. The same test fails the other way too: an entry for a gate
 that now has a family, or for a script that no longer exists, is stale and must be deleted.
 

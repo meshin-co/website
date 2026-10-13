@@ -1,56 +1,58 @@
 # Navigate the Plan Without Reading It All
 
-The plan used to be one 457-line file every session read in full. It is now a tree under
-`docs/plan/`, and the point of the tree is that you read a few hundred words instead of the whole
+The plan was one 457-line file every session read in full, then a tree of phase files. It is now
+two places: `openspec/`, which holds what the site does, mapped by `openspec/INDEX.md`, and the
+work changing it, under `openspec/changes/`; and the reference files below, all but one under
+`docs/plan/reference/`. This file maps both, so you read a few hundred words instead of the
 history of the project.
 
-## What to read, in order
+What to open first is the read order in `AGENTS.md`. How to open, work and close a change is
+`work-a-change-in-the-spec-tree.md`.
 
-1. `docs/plan/INDEX.md`. Always. It is a pointer file: the phase table, the status of each phase,
-   and where the reference material lives. It never duplicates a phase's content.
-2. The one phase file whose status is `.active` or `.next`. That is the work in flight.
-3. Only then, and only if you need it: a reference file, or a past phase you have a specific
-   question about.
-
-Reading a `.done` phase to learn how something works is usually the wrong move. The plan records
+Reading a closed change to learn how something works is usually the wrong move. A change records
 intent; `site/.agents/skills/` records procedure and `dist/` records reality.
 
-## Status lives in the filename
+## The reference files
 
-`phase-5-launch.next.md` is the phase 5 file and its status is `next`. The five words are `done`,
-`active`, `next`, `planned`, `dropped`. Nothing else is accepted.
+| File                                                | What it holds                                                                                                            |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `docs/plan/reference/locked-decisions.md`           | The locked rows that override or extend the PRD. Read before proposing anything that contradicts one, and quote the row. |
+| `docs/plan/reference/calibration-gate.md`           | The eleven-step gate, and the two rules that make a fake-green hard.                                                     |
+| `docs/plan/reference/known-gaps.md`                 | Real problems found but deliberately not closed in the pass that found them, with the reason why and an owner.           |
+| `docs/plan/reference/must-not-do.md`                | What was rejected as overengineering, written down so it does not creep back in.                                         |
+| `docs/plan/reference/test-strategy.md`              | What is unit-tested, what is snapshotted, what is gated.                                                                 |
+| `docs/plan/reference/risk-register.md`              | Known risks and their mitigations.                                                                                       |
+| `docs/plan/reference/bigpowers-mapping.md`          | Which bigpowers skills were adopted, which map onto what already exists, and which are skipped and why.                  |
+| `docs/plan/reference/history-rewrite-2026-09-15.md` | Old commit hash to new, after the 761 MB to 113 MB rewrite.                                                              |
+| `docs/briefs/refine-all-texts.md`                   | The owner brief Phase 4.7 executed, stored verbatim.                                                                     |
 
-Filenames carry status because a status column in a table is something a tired agent forgets to
-update, while renaming the file is the same action as finishing the work. `ls docs/plan/phases`
-is then an honest board.
+## Where the phases went
 
-Changing a phase's state is two edits in one commit: rename the file, update its row in
-`INDEX.md`.
+Audits, skills and commit messages still name work by phase. Phases 0 to 5.1 are changes now: each
+`proposal.md` is the old phase file byte for byte, so its first line is still `# Phase N · Name`.
 
-## What the gate proves
+| Phase | Where it is                                                                                                       |
+| ----- | ----------------------------------------------------------------------------------------------------------------- |
+| 0     | `openspec/changes/archive/2026-10-13-01-initialization/`                                                          |
+| 1     | `openspec/changes/archive/2026-10-13-02-skeleton-and-infrastructure/`                                             |
+| 2     | `openspec/changes/archive/2026-10-13-03-design-system-and-home-page/`                                             |
+| 3     | `openspec/changes/archive/2026-10-13-04-content-model-templates-machine-interfaces/`                              |
+| 4     | `openspec/changes/archive/2026-10-13-05-core-content/`                                                            |
+| 4.5a  | `openspec/changes/archive/2026-10-13-06-machine-layer-every-surface-complete/`                                    |
+| 4.5b  | `openspec/changes/archive/2026-10-13-07-human-layer-navigation-standards-semantic-core/`                          |
+| 4.6   | `openspec/changes/archive/2026-10-13-08-answer-engine-hardening/`                                                 |
+| 4.7   | `openspec/changes/archive/2026-10-13-09-editorial-pass-every-text/`                                               |
+| 5     | `openspec/changes/11-launch/`                                                                                     |
+| 5.1   | `openspec/changes/10-harness-integrity/`                                                                          |
+| 6     | No change: growth repeats, so it is the skill `run-the-growth-loop.md`. Its cadence is `docs/PRD.md` §14, Фаза 6. |
 
-`npm run gate:plan` (`site/scripts/plan-gate.mjs`) fails when:
+## Where the old PLAN.md sections went
 
-- a filename carries a status word outside the five,
-- two phases claim `active`, or two claim `next` — only one thing is in flight at a time,
-- a phase file exists that `INDEX.md` never lists,
-- `INDEX.md` lists a phase file that does not exist.
-
-It runs in the `types-and-units` CI job, so a half-renamed phase cannot merge.
-
-## Adding a phase
-
-Write `docs/plan/phases/phase-N-<slug>.planned.md` with a `# Phase N · Name` heading, a one-line
-`Goal:` (the index reads that line), the numbered work, and the phase's own gate additions. Add
-the row to `INDEX.md`. Run `npm run gate:plan`.
-
-## Where the old sections went
-
-| Was                                   | Is                                           |
-| ------------------------------------- | -------------------------------------------- |
-| `PLAN.md` §1 locked decisions         | `docs/plan/reference/locked-decisions.md`    |
-| `PLAN.md` §2 what a phase must not do | `docs/plan/reference/must-not-do.md`         |
-| `PLAN.md` §3 the Calibration Gate     | `docs/plan/reference/calibration-gate.md`    |
-| `PLAN.md` §4 the phases               | one file per phase under `docs/plan/phases/` |
-| `PLAN.md` §5 test strategy            | `docs/plan/reference/test-strategy.md`       |
-| `PLAN.md` §6 risk register            | `docs/plan/reference/risk-register.md`       |
+| Was                                   | Is                                        |
+| ------------------------------------- | ----------------------------------------- |
+| `PLAN.md` §1 locked decisions         | `docs/plan/reference/locked-decisions.md` |
+| `PLAN.md` §2 what a phase must not do | `docs/plan/reference/must-not-do.md`      |
+| `PLAN.md` §3 the Calibration Gate     | `docs/plan/reference/calibration-gate.md` |
+| `PLAN.md` §4 the phases               | the changes above                         |
+| `PLAN.md` §5 test strategy            | `docs/plan/reference/test-strategy.md`    |
+| `PLAN.md` §6 risk register            | `docs/plan/reference/risk-register.md`    |

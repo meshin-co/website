@@ -2,7 +2,7 @@
 
 Handed over 2026-09-14. This is the source command for Phase 4.7. Where it conflicts with a
 locked row in `docs/plan/reference/locked-decisions.md`, the locked row wins and the conflict is
-recorded in the phase file.
+recorded in `openspec/changes/archive/2026-10-13-09-editorial-pass-every-text/proposal.md`.
 
 One deliberate deviation, stated by the owner when handing this over: step 2 of the brief asks for
 a semantic core to be built. One already exists at `docs/SEMANTIC-CORE.md`, generated and
