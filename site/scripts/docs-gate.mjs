@@ -89,9 +89,11 @@ export function resolveCandidates(path, citingDoc) {
 }
 
 const ROW_REFERENCE = 'docs/plan/reference/locked-decisions.md';
+const ARCHIVED_CHANGES = 'openspec/changes/archive/';
 
 export function enforcesRowRange(doc) {
   if (doc.endsWith('.done.md') || doc.endsWith('.dropped.md')) return false;
+  if (doc.startsWith(ARCHIVED_CHANGES)) return false;
   return doc !== ROW_REFERENCE;
 }
 

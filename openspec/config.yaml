@@ -1,0 +1,33 @@
+schema: spec-driven
+
+context: |
+  meshin.co is a static Astro site whose behaviour is enforced by about twenty gate scripts under
+  site/scripts, run by npm from the site directory. A claim counts only when a gate, a unit test or
+  a planted mutation specimen can fail on it.
+
+  A requirement belongs in a spec only when something in the harness already enforces it. Cite that
+  guard in the requirement body as a path containing a slash, such as site/scripts/human-gate.mjs,
+  or as a command written npm run gate:content. Those are the only citation shapes the docs gate
+  resolves, so any other form is never checked.
+
+  Behaviour that nothing can fail on belongs in docs/plan/reference/known-gaps.md as a numbered row,
+  not in a spec. Decisions and their reasons stay in docs/plan/reference/locked-decisions.md, which
+  keeps the numbered rows that AGENTS.md, the PRD and three gate scripts cite by number.
+
+  Evidence lives under audits/. The Calibration Gate procedure is docs/plan/reference/calibration-gate.md
+  and has no waiver path.
+
+rules:
+  proposal:
+    - State what is out of scope, because a change that never says so grows until it cannot be gated.
+  tasks:
+    - Carry a Calibration Gate task group when the change touches the built-byte surface; name the generated report it produces.
+    - Tag a task the owner must do, such as issuing a token or verifying a search console, with (owner).
+  spec:
+    - Describe behaviour that exists today, never a plan; a spec is what the site does, and a change is how it got there.
+    - Cite the guard that enforces the requirement, so a requirement whose guard disappears becomes a dead citation.
+
+operations:
+  archive:
+    guidance:
+      - Keep the ticked task list; an archived change is the record of what was actually done.

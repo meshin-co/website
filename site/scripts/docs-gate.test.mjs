@@ -73,6 +73,13 @@ test('a finished phase file is a historical record, so its row-range claim is no
   assert.equal(enforcesRowRange('AGENTS.md'), true);
 });
 
+test('an archived change is verbatim history, so only its row-range claim is exempt and its citations still count', () => {
+  const archived = 'openspec/changes/archive/2026-09-07-10-phase-0-initialization/design.md';
+  assert.equal(enforcesRowRange(archived), false);
+  assert.equal(enforcesRowRange('openspec/changes/20-launch/proposal.md'), true);
+  assert.equal(enforcesRowRange('openspec/specs/content/content-gate/spec.md'), true);
+});
+
 test('the reference itself may cite a past range in a row, so only the docs pointing at it are checked', () => {
   assert.equal(enforcesRowRange('docs/plan/reference/locked-decisions.md'), false);
 });

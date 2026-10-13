@@ -218,6 +218,15 @@ export const SPECIMENS = {
       };
     },
   },
+  docsArchiveDeadPath: {
+    gate: 'gate:docs',
+    token: 'dead-path openspec/changes/archive/2026-01-01-zz-specimen/design.md',
+    plant: (copySite) =>
+      addFile(
+        join(copySite, '../openspec/changes/archive/2026-01-01-zz-specimen/design.md'),
+        `# Archived specimen\n\n${DEAD_PATH_SENTENCE}\n`
+      ),
+  },
   routesShrink: {
     gate: 'gate:routes',
     token: 'ROUTES UNEXPLAINED REMOVAL /about',

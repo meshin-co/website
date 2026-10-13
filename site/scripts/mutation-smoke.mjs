@@ -64,6 +64,7 @@ export const FAMILIES = [
   { id: 'record-marker-never-exempts-the-index', kind: 'specimen', specimen: 'docsIndexMarked' },
   { id: 'record-marker-never-exempts-a-live-doc', kind: 'specimen', specimen: 'docsRecordOutsideCorpus' },
   { id: 'citation-of-an-ignored-file-is-not-held', kind: 'specimen', specimen: 'docsIgnoredPath' },
+  { id: 'archived-change-is-still-checked-for-citations', kind: 'specimen', specimen: 'docsArchiveDeadPath' },
   {
     id: 'external-link-rel',
     kind: 'gate',
