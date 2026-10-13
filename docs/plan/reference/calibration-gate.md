@@ -4,9 +4,10 @@ Steps 1–11 all run. A step that cannot run yet (edge checks before the first d
 only by the rule that names it, never by judgement.
 
 1. `npm run build && npm run check` — zero errors, zero warnings.
-2. `site/scripts/routes-gate.mjs` — enumerate every `dist/**/*.html`, write
-   `audits/phase-N/routes.json`, diff against the previous phase's file. The audited route list is
-   **derived, never hand-authored**. An unexplained shrink fails the gate.
+2. `npm run gate:routes` — enumerate every `dist/**/*.html` and compare the set against the
+   committed ledger `audits/routes.json`; an unexplained removal fails the gate. The audited route
+   list is **derived, never hand-authored**. `npm run assets:routes` writes the ledger, deliberately,
+   in the same commit as the route change.
 3. Lighthouse CI over a **representative list derived from `dist/`**: every unique page plus ONE
    leaf per repeated template family, chosen as the heaviest by built bytes (`auditableRoutes` in
    `scripts/lh-routes.cjs`, read from `dist/**/*.html`, never from `dist/gate-routes.json`). Leaves

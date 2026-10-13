@@ -26,7 +26,7 @@ ended at L19 or L49 when they ran to L54. Nothing caught it, because prose is no
 
 A citation that resolves only to an ignored file passes on the machine that holds the file and fails
 on a clean checkout, so the gate read green where nobody was looking. A known-gaps row once cited a
-route list that `gate:routes` writes into an ignored audits directory: the gate passed wherever
+route list that `gate:routes` used to write into an ignored audits directory: the gate passed wherever
 `gate:routes` had run once and failed in a clean export, and rewording the row kept the backticked
 path, so the defect survived the rewording. Describe such a file in words, or cite the generator
 that writes it. Build output under `dist/` is the exception: it is ignored by design and is checked

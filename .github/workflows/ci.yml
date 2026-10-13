@@ -142,8 +142,6 @@ jobs:
 
       - name: route set never shrinks unexplained
         run: npm run gate:routes
-        env:
-          GATE_PHASE: ci
 
       - name: restore the route set last announced to indexnow
         if: github.ref == 'refs/heads/main'
