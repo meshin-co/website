@@ -99,13 +99,17 @@ test('the validation opt-out belongs to history, never to work in flight', () =>
 });
 
 test('a second unblocked change breaks the one-at-a-time rule the plan tree used to enforce', () => {
-  const blocked = { name: '20-launch', blocked: 'owner access to DNS', ticked: 0, risk: 'R3' };
-  assert.equal(singleActiveFindings([{ name: '10-work', ticked: 2 }, blocked]).length, 0);
+  const rows = new Set(['G22']);
+  const blocked = { name: '20-launch', blocked: 'G22: owner access to DNS', ticked: 0, risk: 'R3' };
+  assert.equal(singleActiveFindings([{ name: '10-work', ticked: 2 }, blocked], rows).length, 0);
   assert.equal(
-    singleActiveFindings([
-      { name: '10-work', ticked: 2 },
-      { name: '20-other', ticked: 0 },
-    ]).length,
+    singleActiveFindings(
+      [
+        { name: '10-work', ticked: 2 },
+        { name: '20-other', ticked: 0 },
+      ],
+      rows
+    ).length,
     1
   );
 });
@@ -177,4 +181,29 @@ test('a range that resolves to nothing yields no files rather than a blank entry
   const git = (args) => (args[0] === 'merge-base' ? 'base1\n' : '\n  \n');
   assert.deepEqual(changedFiles({ git }), []);
   assert.deepEqual(changedFiles({ git: () => '' }), []);
+});
+
+test('an unusable range falls back to the merge base rather than judging nothing', () => {
+  const resolved = [];
+  const git = (args) => {
+    const call = args.join(' ');
+    resolved.push(call);
+    if (call.startsWith('diff --name-only 0000000')) return null;
+    if (call === 'merge-base HEAD origin/main') return 'base1\n';
+    if (call === 'diff --name-only base1..HEAD') return 'fallback.md\n';
+    return '';
+  };
+  assert.deepEqual(changedFiles({ git, range: '0000000000000000000000000000000000000000..abc1234' }), ['fallback.md']);
+  assert.ok(resolved.includes('merge-base HEAD origin/main'));
+  assert.deepEqual(changedFiles({ git: () => null, range: 'x..y' }), []);
+});
+
+test('a blocked change escapes the single-active rule only by citing a gap row that exists', () => {
+  const rows = new Set(['G21']);
+  const flight = { name: '10-one', blocked: null, ticked: 1 };
+  const parked = { name: '11-two', blocked: 'G21 keeps this parked', ticked: 0 };
+  assert.deepEqual(singleActiveFindings([flight, parked], rows), []);
+  assert.equal(singleActiveFindings([flight, { ...parked, blocked: 'waiting for a quiet week' }], rows).length, 1);
+  assert.equal(singleActiveFindings([flight, { ...parked, blocked: 'G99 does not exist' }], rows).length, 1);
+  assert.equal(singleActiveFindings([flight, { ...parked, ticked: 2 }], rows).length, 1);
 });

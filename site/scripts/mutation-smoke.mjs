@@ -125,6 +125,12 @@ export const FAMILIES = [
   { id: 'change-without-a-task-list', kind: 'specimen', specimen: 'changeWithoutTasks' },
   { id: 'active-change-that-skips-spec-validation', kind: 'specimen', specimen: 'changeSkippingSpecs' },
   { id: 'two-changes-in-flight-at-once', kind: 'specimen', specimen: 'changesInFlight' },
+  { id: 'change-parked-on-a-sentence', kind: 'specimen', specimen: 'changeParkedWithoutAGapRow' },
+  {
+    id: 'change-parked-on-a-gap-row-that-does-not-exist',
+    kind: 'specimen',
+    specimen: 'changeParkedOnAGapRowThatDoesNotExist',
+  },
   { id: 'change-owing-a-calibration-gate', kind: 'specimen', specimen: 'changeOwingCalibration' },
   { id: 'registers-block-drifted', kind: 'specimen', specimen: 'registers' },
   { id: 'axe-violation-in-a-real-browser', kind: 'specimen', specimen: 'visualAxe', slow: true },

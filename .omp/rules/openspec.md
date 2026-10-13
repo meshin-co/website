@@ -36,8 +36,9 @@ and so is a spec without requirements.
 `openspec list --sort name` is the board; status is computed from ticked task boxes, so tick them as
 the work lands. Prefixes start at 10, because `audits/phase-0` through `phase-5.2` already own the
 lower numbers. One change is in flight at a time unless another is blocked and untouched — a
-blocked change carries a `blocked:` line in its `.openspec.yaml`, cites a risk-register row, and
-has no ticked boxes.
+blocked change carries a `blocked:` line in its `.openspec.yaml` naming a gap row that exists in
+`docs/plan/reference/known-gaps.md`, and has no ticked boxes. A sentence alone does not park a
+change: `gate:spec` counts it as in flight.
 
 A change that touches the built-byte surface (`site/src`, `site/public`, `site/scripts`,
 `astro.config.ts`, `budgets.json`, `lighthouserc.cjs`, the manifests) carries a

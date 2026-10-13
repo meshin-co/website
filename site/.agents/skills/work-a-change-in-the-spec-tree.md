@@ -51,8 +51,10 @@ rather than a silent substitution, and the index is compared byte for byte.
 ## Opening and closing a change
 
 Prefixes start at 10, because `audits/phase-0` through `phase-5.2` own the lower numbers. One
-change is in flight at a time, unless another carries a `blocked:` line in its `.openspec.yaml`,
-cites a risk-register row, and has no ticked boxes. `skip_specs: true` belongs to the archive only.
+change is in flight at a time, unless another carries a `blocked:` line in its `.openspec.yaml`
+naming a gap row that exists in `docs/plan/reference/known-gaps.md`, and has no ticked boxes. A
+sentence alone does not park a change, and neither does a row number nobody wrote down:
+`gate:spec` counts both as in flight. `skip_specs: true` belongs to the archive only.
 
 A change touching the built-byte surface — `site/src`, `site/public`, `site/scripts`,
 `astro.config.ts`, `budgets.json`, `lighthouserc.cjs`, the manifests — carries a

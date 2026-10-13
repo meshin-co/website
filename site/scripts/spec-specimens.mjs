@@ -129,6 +129,14 @@ export const SPEC_SPECIMENS = {
     await addChange(tree, '10-zz-specimen');
     await addChange(tree, '11-zz-specimen');
   }),
+  changeParkedWithoutAGapRow: specimen('two-active-changes:', async (tree) => {
+    await addChange(tree, '10-zz-specimen');
+    await addChange(tree, '11-zz-specimen', { metadata: 'blocked: waiting for a quiet week\n' });
+  }),
+  changeParkedOnAGapRowThatDoesNotExist: specimen('two-active-changes:', async (tree) => {
+    await addChange(tree, '10-zz-specimen');
+    await addChange(tree, '11-zz-specimen', { metadata: 'blocked: G999 keeps this parked\n' });
+  }),
   changeOwingCalibration: specimen(
     'change-without-calibration 10-zz-specimen',
     (tree) => addChange(tree, '10-zz-specimen', { tasks: UNCALIBRATED_TASKS }),
