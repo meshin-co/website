@@ -35,7 +35,7 @@ jobs:
           while IFS= read -r file; do
             [ -z "$file" ] && continue
             case "$file" in
-              docs/*|audits/*|site/.agents/*) ;;
+              docs/*|audits/*|site/.agents/*|openspec/*) ;;
               site/src/data/*) code=true ;;
               *.md) ;;
               */*) code=true ;;

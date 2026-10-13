@@ -19,7 +19,17 @@ const FORBIDDEN = [
 ];
 
 const SCHEME = /^[a-z][\w+.-]*:\/\//i;
-const KNOWN_ROOT_SEGMENTS = new Set(['site', 'docs', 'audits', 'src', 'scripts', 'tests', 'public', '.github']);
+const KNOWN_ROOT_SEGMENTS = new Set([
+  'site',
+  'docs',
+  'audits',
+  'openspec',
+  'src',
+  'scripts',
+  'tests',
+  'public',
+  '.github',
+]);
 const GENERATED_PREFIXES = ['dist/', 'site/dist/', '.lighthouseci', 'node_modules/', 'test-results/'];
 
 const isDirectory = (path) => existsSync(path) && statSync(path).isDirectory();

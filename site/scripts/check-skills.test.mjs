@@ -41,6 +41,12 @@ test('pathCandidates picks backticked and bare paths, drops commands and URIs', 
   assert.deepEqual(candidates, ['docs/plan/reference/calibration-gate.md']);
 });
 
+test('a spec path is a repository path, so a skill citing one is checked like any other citation', () => {
+  assert.deepEqual(pathCandidates('the rule lives in openspec/specs/content/content-gate/spec.md'), [
+    'openspec/specs/content/content-gate/spec.md',
+  ]);
+});
+
 test('resolveCandidate tries repo root then site root and expands the ~/ alias', () => {
   assert.equal(resolveCandidate('docs/plan/INDEX.md', roots), join(roots[0], 'docs', 'plan', 'INDEX.md'));
   assert.equal(resolveCandidate('scripts/gate.mjs', roots), join(roots[1], 'scripts', 'gate.mjs'));
