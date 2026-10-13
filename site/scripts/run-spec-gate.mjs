@@ -142,7 +142,7 @@ const findings = [
   ...tasksFindings(active),
   ...skipSpecsFindings([...active, ...archived]),
   ...singleActiveFindings(active, gapRows()),
-  ...calibrationFindings({ changed, changes: active }),
+  ...calibrationFindings({ changed, changes: active, rangeWasNamed: Boolean(process.env.SPEC_GATE_RANGE) }),
   ...lockedRowFindings(specs, lockedRows()),
 ];
 

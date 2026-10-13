@@ -62,5 +62,7 @@ commit to a change: rows G29 and G36 record that.
 npm run assets:spec-census && npm run assets:spec-index && npm run gate:spec
 ```
 
-`gate:spec` prints how many files it saw in the diff range. A zero there while a change is in
-flight means the calibration rule judged nothing, which is a finding, not a pass.
+`gate:spec` prints how many files it saw in the diff range. A zero there fails only when the range
+was named — `SPEC_GATE_RANGE`, which CI always sets — because then the range was expected to hold
+the push and resolved to nothing. On a clean checkout with no range named, zero files is the honest
+answer and the gate passes.

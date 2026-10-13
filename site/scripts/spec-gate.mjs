@@ -158,12 +158,12 @@ export function builtByteFiles(changed) {
   return changed.filter((file) => BUILT_BYTE_SURFACE.some((prefix) => file === prefix || file.startsWith(prefix)));
 }
 
-export function calibrationFindings({ changed, changes }) {
+export function calibrationFindings({ changed, changes, rangeWasNamed = false }) {
   if (changed.length === 0) {
-    return changes.length === 0
+    return changes.length === 0 || !rangeWasNamed
       ? []
       : [
-          'calibration-input-empty: no files in the range, so the calibration rule judged nothing while a change is in flight',
+          'calibration-input-empty: the named range holds no files, so the calibration rule judged nothing while a change is in flight',
         ];
   }
   const built = builtByteFiles(changed);
