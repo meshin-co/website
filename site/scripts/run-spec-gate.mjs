@@ -89,7 +89,7 @@ const changeModel = (dir, name, archived) => ({
   ...taskState(dir),
 });
 
-const changed = changedFiles({ git, range: process.env.SPEC_GATE_RANGE });
+const changed = changedFiles({ git: (args) => git(args, null), range: process.env.SPEC_GATE_RANGE });
 
 const validate = (args) => {
   try {
