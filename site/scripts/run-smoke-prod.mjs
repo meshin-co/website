@@ -48,7 +48,7 @@ for (const route of MACHINE) {
 }
 
 mkdirSync(join(out, '..'), { recursive: true });
-writeFileSync(out, renderSmoke(origin, rows, generatorRevision()));
+writeFileSync(out, renderSmoke(origin, rows, generatorRevision(out)));
 
 const failures = rows.filter((row) => row.status === 'fail');
 console.log(`smoke: ${rows.length - failures.length} of ${rows.length} checks pass against ${origin} -> ${out}`);

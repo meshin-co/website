@@ -1,7 +1,9 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { withProvenance } from './evidence-gate.mjs';
 import { parsePrompts, renderBaseline, scorePrompt } from './geo-baseline.mjs';
+import { generatorRevision } from './report.mjs';
 
 const CORE = '../docs/SEMANTIC-CORE.md';
 const OUT = '../audits/geo-baseline.md';
@@ -30,7 +32,7 @@ function main(dist) {
   if (prompts.length === 0) throw new Error('no buyer prompts parsed from docs/SEMANTIC-CORE.md');
   const pages = pagesFrom(dist);
   const scores = prompts.map((prompt) => scorePrompt(prompt, pages));
-  writeFileSync(OUT, renderBaseline(scores));
+  writeFileSync(OUT, withProvenance(renderBaseline(scores), generatorRevision(OUT)));
   const ready = scores.filter((score) => score.state === 'ready').length;
   console.log(`geo baseline: ${ready}/${scores.length} prompts on-site ready -> ${OUT}`);
 }

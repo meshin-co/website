@@ -4,6 +4,7 @@ import { test } from 'node:test';
 import {
   browsersMissingFromCi,
   staleGateDeclarations,
+  unwaivableGates,
   gatesCitedButUndefined,
   gatesMissingFromCi,
   indexFindings,
@@ -260,4 +261,13 @@ test('every pending entry is judged, not only the first', () => {
     findings.map(({ rule }) => rule),
     ['pending-specimen-unknown-phase', 'pending-specimen-phase-done']
   );
+});
+
+test('a harness-integrity gate cannot be waived out of CI by a sentence', () => {
+  assert.deepEqual(unwaivableGates({ 'gate:lh': 'the matrix runs it per shard' }), []);
+  assert.deepEqual(unwaivableGates({ 'gate:spec': 'slow on my laptop' }), ['gate:spec']);
+  assert.deepEqual(unwaivableGates({ 'gate:docs': 'a', 'test:smoke': 'b', 'audit:polish': 'c' }).sort(), [
+    'gate:docs',
+    'test:smoke',
+  ]);
 });

@@ -1,5 +1,7 @@
 # GEO baseline — structural readiness of the 30 buyer prompts
 
+Generated-from: 3e436cd (the commit that recorded this baseline, before its generator stamped a revision)
+
 **This is structural readiness, not a citation baseline. No AI engine was queried.** The
 protocol in `docs/SEMANTIC-CORE.md` asks for each prompt to be run through ChatGPT, Claude,
 Perplexity, Gemini and Google AI Mode and recorded as mentioned, cited or absent. That

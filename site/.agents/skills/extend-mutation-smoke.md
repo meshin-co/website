@@ -23,13 +23,13 @@ A `pagination` family takes an optional `scope` (`category` or `tag`; none build
 `manifestFamilies()` throws on any other value. The tag family's head, control and sitemap checks are
 pure functions in `scripts/pagination-markup.mjs`, so its test plants each defect without a build.
 
-A `specimen` family names an entry in `scripts/mutation-specimens.mjs`. Each entry holds the gate, the
-output token that proves the right rule fired, and a `plant(copySite)` that makes the change and returns
-its own undo. `proveWithSpecimen()` runs the npm command CI runs and requires four things: the gate is
-green on the pristine copy, the pristine output does not already contain the token, the planted run is
-red, and the planted output contains the token. The undo runs in a `finally`. An entry may also carry
-`env` (variables for the npm run) and `args` (passed to the tool after `--`). Prefer this kind for any
-new gate: it runs the command CI runs, not a function beside it.
+A `specimen` family names an entry in `SPECIMENS` (`scripts/mutation-specimens.mjs`, which spreads in the entries of
+`scripts/spec-specimens.mjs` and `scripts/evidence-specimens.mjs`). Each entry holds the gate, the output token that
+proves the right rule fired, and a `plant(copySite)` that makes the change and returns its own undo.
+`proveWithSpecimen()` runs the npm command CI runs and requires four things: the gate is green on the pristine copy,
+the pristine output does not already contain the token, the planted run is red, and the planted output contains the
+token. The undo runs in a `finally`. An entry may also carry `env` (variables for the npm run) and `args` (passed to
+the tool after `--`). Prefer this kind for any new gate: it runs the command CI runs, not a function beside it.
 
 There is no kind that runs nothing. A `unit-covered` kind used to return a pass without executing
 anything, so a family that could not fail was counted as proven; it was removed.
