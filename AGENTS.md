@@ -30,10 +30,10 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
    gate, the content gate, the judge panel, adding a collection entry, restoring a collection,
    visual baselines, extending the mutation smoke, explaining a route removal, coordinating
    parallel agents, clearing dead weight, verifying in the built output, keeping the docs honest,
-   smoking the live site, running the growth loop, and the launch checklist. Read the matching one
-   before doing that job by hand; `design-lane.md` comes before any markup or CSS.
-   `navigate-the-plan.md` maps the reference files and where each phase went. `gate:skills` fails
-   if a skill names a path or command that does not exist.
+   smoking the live site, publishing the build, running the growth loop, and the launch checklist.
+   Read the matching one before doing that job by hand; `design-lane.md` comes before any markup
+   or CSS. `navigate-the-plan.md` maps the reference files and where each phase went.
+   `gate:skills` fails if a skill names a path or command that does not exist.
 
    `site/scripts/README.md` is the map of every script, grouped into gates, generators, audits,
    modules and servers, with the npm command that invokes each. Read it instead of listing the
