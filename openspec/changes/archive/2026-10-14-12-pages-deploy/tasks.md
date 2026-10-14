@@ -23,4 +23,4 @@
 
 ## 5. Calibration Gate
 
-- [ ] 5.1 Run the Calibration Gate and commit its report
+- [x] 5.1 Run the Calibration Gate and commit its report, `audits/phase-12-pages-deploy/REPORT.md`
