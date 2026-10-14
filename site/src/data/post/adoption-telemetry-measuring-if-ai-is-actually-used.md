@@ -111,10 +111,10 @@ sources:
     url: 'https://www.bundesarbeitsgericht.de/entscheidung/1-abr-20-21/'
     publisher: Bundesarbeitsgericht
     retrieved: '2026-10-02'
-  - title: 'Wet op de ondernemingsraden, article 27 (secondary copy, official text not read)'
-    url: 'https://maxius.nl/wet-op-de-ondernemingsraden/artikel27'
-    publisher: Maxius
-    retrieved: '2026-10-02'
+  - title: 'Wet op de ondernemingsraden, article 27'
+    url: 'https://wetten.overheid.nl/BWBR0002747/2023-02-18#HoofdstukIVA_Artikel27'
+    publisher: Overheid.nl
+    retrieved: '2026-10-14'
   - title: "CNIL: Le contrôle de l'activité des personnes employées"
     url: 'https://www.cnil.fr/fr/controle-de-lactivite-des-personnes-employees'
     publisher: CNIL

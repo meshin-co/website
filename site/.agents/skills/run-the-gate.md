@@ -24,14 +24,14 @@ Run from `site/`. Each step green before the next.
 9. `npm run gate:routes` — compares the build against `audits/routes.json`, fails on an unexplained
    removal or a stale `routes-removed.json` entry, and never writes the ledger; `npm run assets:routes` does.
 10. `npm run test:smoke` — every guard family plants a violating specimen in a repo copy and
-    must fail naming the offending field (CG §3). About 40 s.
-11. `GATE_PHASE=<bucket> npm run gate:lh` — Lighthouse mobile then desktop, 3 runs each, median,
-    served through `scripts/gate-server.mjs` so the measurement carries production gzip and the
-    real `_headers`. The bucket is the change this evidence belongs to; a run that names none
-    refuses. About 30 min locally; see the CI section for the parallel form.
+    must fail naming the offending field (CG §3). About 5 min.
+11. `GATE_PHASE=<bucket> npm run gate:lh` — mobile then desktop, 3 runs each, median, served by
+    `scripts/gate-server.mjs`. A run naming no bucket refuses. About 30 min; CI runs it sharded.
 12. `npm run gate:visual` — Playwright snapshots and axe, both themes (visual-baselines.md).
-13. `node scripts/report.mjs <bucket> ../audits/<bucket>` — generates REPORT.md from the raw JSON
-    of the steps above, into the same folder step 11 wrote. No waiver field, no "fix next phase".
+13. `node scripts/report.mjs <bucket> ../audits/phase-<bucket>` — generates REPORT.md from the raw
+    JSON of the steps above, into the folder step 11 wrote: `collect-reports.mjs` files every run
+    under `audits/phase-$GATE_PHASE/`, so the `phase-` prefix stays even when the bucket names a
+    change. No waiver field, no "fix next phase".
 14. `npm run gate:brand` — no code outside `src/data/` types the brand name; it derives via
     `src/utils/brand.mjs` or `SITE.name` from `astrowind:config`.
 

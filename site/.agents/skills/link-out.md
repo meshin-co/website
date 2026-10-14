@@ -46,3 +46,11 @@ the cache before you suspect a second renderer.
 
 `test:smoke` family `external-link-rel` writes a one-page site whose only link carries
 `rel="noopener"` and asserts the gate names the missing `nofollow`. Run it after touching the rule.
+
+## Whether the destination is still there
+
+`gate:external` judges the markup; `gate:links` fetches. `scripts/links-gate.mjs` holds its crawl
+arguments, the hosts skipped by name, and the retry for a 429 or a 5xx; `scripts/run-links-gate.mjs`
+runs it. `LINKS_SKIP_EXTERNAL=1` crawls the build alone, which is how `test:smoke` stays hermetic:
+a family about a local missing route must not red because somebody else's server is down. The live
+run keeps fetching outbound hosts, so an outage blocks until a person judges it (G38).

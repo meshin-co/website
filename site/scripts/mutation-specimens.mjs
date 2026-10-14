@@ -109,6 +109,7 @@ export const SPECIMENS = {
   },
   links: {
     gate: 'gate:links',
+    env: { LINKS_SKIP_EXTERNAL: '1' },
     token: 'zz-specimen-missing',
     plant: (copySite) =>
       editFile(join(copySite, 'dist/about.html'), (html) =>
