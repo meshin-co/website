@@ -143,6 +143,9 @@ jobs:
       - name: route set never shrinks unexplained
         run: npm run gate:routes
 
+      - name: nothing the site loads is a paid service
+        run: npm run gate:paid
+
   visual-and-axe:
     if: github.event_name != 'workflow_dispatch' && needs.changes.outputs.code == 'true'
     needs: [changes, build]

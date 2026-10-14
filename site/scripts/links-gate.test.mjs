@@ -12,7 +12,7 @@ test('the crawl covers the build recursively and rewrites extensionless local UR
 
 test('a host that bot-blocks or needs a session is skipped by name, and the list is pinned', () => {
   assert.deepEqual(THIRD_PARTY_HOSTS, [
-    'plausible.io',
+    'static.cloudflareinsights.com',
     'linkedin.com',
     'cal.com',
     'github.com/meshin-co',

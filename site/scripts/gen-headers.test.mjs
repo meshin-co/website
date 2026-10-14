@@ -25,8 +25,22 @@ test('ignores json-ld and other non-executable script types', () => {
 test('script-src carries every hash and never unsafe-inline', () => {
   const policy = renderHeaders(['sha256-aaa', 'sha256-bbb']);
 
-  assert.match(policy, /script-src 'self' https:\/\/plausible\.io 'sha256-aaa' 'sha256-bbb';/);
+  assert.match(policy, /script-src 'self' 'sha256-aaa' 'sha256-bbb';/);
   assert.doesNotMatch(policy, /unsafe-inline|unsafe-eval/);
+});
+
+test('no analytics host is allowed while no analytics is configured', () => {
+  const policy = renderHeaders(['sha256-aaa']);
+
+  assert.doesNotMatch(policy, /plausible\.io/);
+  assert.doesNotMatch(policy, /cloudflareinsights\.com/);
+});
+
+test('the beacon host is allowed only when the build actually ships it', () => {
+  const policy = renderHeaders(['sha256-aaa'], [], { analyticsBeacon: true });
+
+  assert.match(policy, /script-src 'self' https:\/\/static\.cloudflareinsights\.com 'sha256-aaa';/);
+  assert.match(policy, /connect-src 'self' https:\/\/cloudflareinsights\.com;/);
 });
 
 test('style-src stays self-only', () => {
@@ -97,7 +111,7 @@ test('identical inline styles across pages collapse to one hash', () => {
 test('style-src carries every collected style hash and nothing else', () => {
   const header = renderHeaders(['sha256-script'], ['sha256-style']);
   assert.match(header, /style-src 'self' 'sha256-style'/);
-  assert.match(header, /script-src 'self' https:\/\/plausible\.io 'sha256-script'/);
+  assert.match(header, /script-src 'self' 'sha256-script'/);
   assert.ok(!/style-src[^;]*unsafe-inline/.test(header));
 });
 

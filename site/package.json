@@ -59,6 +59,7 @@
     "gate:external": "node scripts/run-external-links.mjs dist",
     "gate:search": "node scripts/search-budget.mjs dist",
     "gate:brand": "node scripts/brand-gate.mjs",
+    "gate:paid": "node scripts/run-paid-gate.mjs dist",
     "gate:human": "node scripts/run-human-gate.mjs dist"
   },
   "dependencies": {

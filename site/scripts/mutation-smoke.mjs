@@ -102,6 +102,7 @@ export const FAMILIES = [
   { id: 'pending-specimen-names-a-missing-change', kind: 'specimen', specimen: 'pendingUnknownChange' },
   { id: 'pending-specimen-names-an-archived-change', kind: 'specimen', specimen: 'pendingChangeArchived' },
   { id: 'brand-literal-typed-into-a-module', kind: 'specimen', specimen: 'brand' },
+  { id: 'paid-service-shipped-on-a-route', kind: 'specimen', specimen: 'paid' },
   { id: 'editorial-row-without-a-disposition', kind: 'specimen', specimen: 'editorialRowUnreviewed' },
   { id: 'route-removed-without-an-explanation', kind: 'specimen', specimen: 'routesShrink' },
   { id: 'html-duplicate-id', kind: 'specimen', specimen: 'html' },

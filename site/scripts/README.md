@@ -33,6 +33,7 @@ a build.
 | `search-budget.mjs`      | `gate:search`                        | A search shard over its byte budget                                                                                                                                  |
 | `mutation-smoke.mjs`     | `test:smoke`                         | A guard family that can no longer be made to fail                                                                                                                    |
 | `brand-gate.mjs`         | `gate:brand`                         | A typed brand-name literal in code that should derive it from `src/config.yaml` instead                                                                              |
+| `run-paid-gate.mjs`      | `gate:paid`                          | A built route loading an undeclared third-party origin, or claiming analytics the build does not ship (L58)                                                          |
 
 ## Generators
 
@@ -84,6 +85,7 @@ be tested without a build.
 | `external-links.mjs`      | `run-external-links.mjs`                                                                                          | The required rel set, and what counts as outbound                                                                             |
 | `links-gate.mjs`          | `run-links-gate.mjs`                                                                                              | The crawl arguments, the skipped hosts, and the hermetic mode                                                                 |
 | `deploy.mjs`              | `run-deploy.mjs`, `run-deploy-check.mjs`                                                                          | The required credentials, the wrangler arguments, and the route-ledger refusal                                                |
+| `third-party.mjs`         | `run-paid-gate.mjs`                                                                                               | Every third-party origin the build may load, with the reason each is free (L58)                                               |
 | `smoke-prod.mjs`          | `run-smoke-prod.mjs`                                                                                              | The required header set and the per-route verdict                                                                             |
 | `polish-sweep.mjs`        | `run-polish-sweep.mjs`                                                                                            | Finding classification and the six audit widths                                                                               |
 | `pre-launch.mjs`          | `run-pre-launch.mjs`                                                                                              | The checklist rules and the four statuses                                                                                     |

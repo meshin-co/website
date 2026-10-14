@@ -39,4 +39,4 @@
 
 ## 7. Calibration Gate
 
-- [ ] 7.1 Run the Calibration Gate and commit `audits/phase-14-visibility-repairs/REPORT.md`
+- [ ] 7.1 Run the Calibration Gate and commit the report it generates for this change

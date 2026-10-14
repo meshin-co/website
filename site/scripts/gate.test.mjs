@@ -60,7 +60,7 @@ test('assets of a page include stylesheets, scripts and modulepreloads', () => {
 });
 
 test('external assets are not charged to the page budget', () => {
-  const html = `<script src="https://plausible.io/js/script.js"></script>`;
+  const html = `<script src="https://static.cloudflareinsights.com/beacon.min.js"></script>`;
 
   assert.deepEqual(assetsOfPage(html), []);
 });

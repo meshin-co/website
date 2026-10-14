@@ -46,7 +46,7 @@ export function overBudget(measured, budgets) {
 
 const gzipBytes = (buffer) => gzipSync(buffer, { level: 9 }).length;
 
-async function routeFile(distDir, route) {
+export async function routeFile(distDir, route) {
   const path = join(distDir, route === '/' ? 'index.html' : `${route.slice(1)}.html`);
   if (
     await readFile(path).then(

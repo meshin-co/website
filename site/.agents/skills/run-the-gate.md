@@ -12,10 +12,9 @@ Run from `site/`. Each step green before the next.
 2. `npm run check` — astro check, eslint, prettier. Run it before every push, including a
    Markdown-only commit: prettier checks `.md`, and `npm test` says nothing about formatting.
 3. `npm test` — unit tests for `scripts/`, `src/utils/` and `src/data/`.
-4. `npm run gate:html`, then `npm run gate:links` — html-validate, then linkinator (skips: plausible.io,
-   linkedin.com, cal.com, github.com/meshin-co, meshin.co; local `/blog` is rewritten to `blog.html`).
-5. `npm run gate:content` — content Half A plus the semantic-core drift check
-   (content-gate.md).
+4. `npm run gate:html`, then `npm run gate:links` — html-validate, then linkinator; third-party
+   hosts are skipped by `THIRD_PARTY_HOSTS` in `scripts/links-gate.mjs`.
+5. `npm run gate:content` — content Half A plus the semantic-core drift check (content-gate.md).
 6. `npm run gate:orphans` — every route needs an inbound link; the exempt list in
    `scripts/orphan-gate.mjs` is closed and carries a reason per entry.
 7. `npm run gate:machine`, then `npm run gate:jsonld` — machine-interface coverage (every
@@ -34,6 +33,8 @@ Run from `site/`. Each step green before the next.
     change. No waiver field, no "fix next phase".
 14. `npm run gate:brand` — no code outside `src/data/` types the brand name; it derives via
     `src/utils/brand.mjs` or `SITE.name` from `astrowind:config`.
+15. `npm run gate:paid` — no route loads a third-party origin `scripts/third-party.mjs` does not
+    declare free, and no page claims analytics the build does not ship (L58).
 
 ## In CI the same gates run in parallel
 
@@ -50,8 +51,8 @@ writes `lh-<factor>/shard-<index>/`. The report fails an audited route with no r
 Lighthouse audits every unique page plus ONE leaf per repeated template family — the heaviest
 by built bytes — because leaves of one template differ only in content, not in what Lighthouse
 measures. `auditableRoutes()` in `scripts/lh-routes.cjs` derives the set from `dist/**/*.html`,
-never from `gate-routes.json`; `/styleguide` is excluded by name. Routes in `NOINDEX_BY_DESIGN`
-skip only `is-crawlable`; every other page gets the whole SEO category, so no page can waive itself
+never from `gate-routes.json`; `/styleguide` is excluded. Routes in `NOINDEX_BY_DESIGN` skip only
+`is-crawlable`; every other page gets the whole SEO category, so no page waives itself
 by declaring noindex. Visual snapshots follow the same family logic via `scripts/templates.mjs`.
 
 ## Known traps (docs/FRONTEND-EXCELLENCE-ISSUES.md)
@@ -67,7 +68,7 @@ by declaring noindex. Visual snapshots follow the same family logic via `scripts
 - A category score of 100 does not mean the metric assertions passed: `report.mjs` enforces the
   LCP, CLS and TBT budgets from `lighthouserc.cjs` on each route's median run, and lhci asserts
   the best run by default, so every rule in `lighthouserc.cjs` goes through `onMedian`.
-- A scratch page left in the build widens every downstream gate; delete throwaway routes first.
+- A scratch route left in the build widens every downstream gate; delete throwaways first.
 - Lighthouse measures the machine. Run shards alone, logs outside `/tmp`: on 2026-10-02 four
   desktop shards run beside a baseline regeneration took 2h37m and all failed, then four minutes
   each and all passed run singly. Under load it reads as a regression (0.99, TBT over budget).

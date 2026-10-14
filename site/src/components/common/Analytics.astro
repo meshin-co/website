@@ -1,17 +1,16 @@
 ---
 import { SITE } from 'astrowind:config';
+
+const token = SITE.analyticsSiteToken ?? '';
 ---
 
-<script is:inline define:vars={{ analyticsDomain: SITE.name }}>
-  addEventListener(
-    'load',
-    () => {
-      const tag = document.createElement('script');
-      tag.defer = true;
-      tag.dataset.domain = analyticsDomain;
-      tag.src = 'https://plausible.io/js/script.outbound-links.file-downloads.js';
-      document.head.append(tag);
-    },
-    { once: true }
-  );
-</script>
+{
+  token && (
+    <script
+      is:inline
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon={JSON.stringify({ token })}
+    />
+  )
+}
