@@ -15,7 +15,7 @@ const CREDENTIALS = {
   CLOUDFLARE_PAGES_PROJECT: 'meshin',
 };
 
-function workspace({ routes, pages = 'meshin', wranglerStatus = 0 }) {
+function workspace({ routes, pages = 'meshin', wranglerStatus = 0, silent = false }) {
   const root = mkdtempSync(join(tmpdir(), 'deploy-'));
   const site = join(root, 'site');
   mkdirSync(join(site, 'dist'), { recursive: true });
@@ -36,7 +36,7 @@ function workspace({ routes, pages = 'meshin', wranglerStatus = 0 }) {
       '#!/bin/sh',
       `printf '%s\\n' "$@" > "${log}"`,
       `echo "\u2502 ${pages} \u2502 ${pages}.pages.dev \u2502"`,
-      'echo "https://abc123.meshin.pages.dev"',
+      silent ? 'true' : 'echo "\u2728 Deployment complete! Take a peek over at https://abc123.meshin.pages.dev"',
       `exit ${wranglerStatus}`,
     ].join('\n')
   );
@@ -125,4 +125,32 @@ test('a token that cannot list Pages fails the check, naming the scope it needs'
 
   assert.equal(result.status, 1);
   assert.match(result.stderr, /Cloudflare Pages \| Edit/);
+});
+
+test('the deploy prints the address it produced, so nothing downstream guesses it', () => {
+  const { site } = workspace({ routes: ['/'] });
+
+  const result = runIn(site, RUN_DEPLOY, [], CREDENTIALS);
+
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /^deploy: url=https:\/\/abc123\.meshin\.pages\.dev$/m);
+});
+
+test('a deploy that printed no address fails rather than publishing a blank link', () => {
+  const { site } = workspace({ routes: ['/'], silent: true });
+
+  const result = runIn(site, RUN_DEPLOY, [], CREDENTIALS);
+
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /no deployment address/);
+});
+
+test('a preview labelled main is refused before wrangler is spawned', () => {
+  const { site, log } = workspace({ routes: ['/'] });
+
+  const result = runIn(site, RUN_DEPLOY, ['--preview', 'main'], CREDENTIALS);
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /may not be labelled main/);
+  assert.throws(() => readFileSync(log, 'utf8'), 'wrangler must not be spawned');
 });

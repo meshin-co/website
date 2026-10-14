@@ -135,17 +135,15 @@ export function pendingChangeFindings(pending, { active, archived }) {
   return findings;
 }
 
-export function summaryLine({ scripts, workflows, gapRows, pending, findings }) {
-  return `plan: ${scripts} scripts checked against ${workflows} workflows, ${gapRows} gap rows, ${pending} pending specimens, ${findings} findings`;
+export function summaryLine({ scripts, gapRows, pending, findings }) {
+  return `plan: ${scripts} scripts checked against ci.yml, ${gapRows} gap rows, ${pending} pending specimens, ${findings} findings`;
 }
 
 function main() {
   const manifest = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
   const scripts = manifest.scripts;
   const localOnly = manifest.localOnlyGates ?? {};
-  const workflowDir = fileURLToPath(new URL('../../.github/workflows', import.meta.url));
-  const workflowFiles = readdirSync(workflowDir).filter((name) => name.endsWith('.yml'));
-  const workflow = workflowFiles.map((name) => readFileSync(join(workflowDir, name), 'utf8')).join('\n');
+  const workflow = readFileSync(new URL('../../.github/workflows/ci.yml', import.meta.url), 'utf8');
   const scriptIndex = readFileSync(new URL('./README.md', import.meta.url), 'utf8');
   const playwrightConfig = readFileSync(new URL('../playwright.config.ts', import.meta.url), 'utf8');
   const installLines = [...workflow.matchAll(/npx playwright install[^\n]*/g)].map((match) => match[0]);
@@ -163,7 +161,7 @@ function main() {
     })),
     ...gatesMissingFromCi(scripts, workflow, localOnly, scriptIndex).map((gate) => ({
       rule: 'gate-not-in-ci',
-      detail: `${gate} is defined in package.json but never runs in any workflow; L36 says a gate not in CI is not a gate`,
+      detail: `${gate} is defined in package.json but never runs in ci.yml; L36 says a gate not in ci.yml is not a gate`,
     })),
     ...gatesCitedButUndefined(scripts, scriptIndex).map((gate) => ({
       rule: 'gate-undefined',
@@ -181,7 +179,6 @@ function main() {
   console.log(
     summaryLine({
       scripts: namesRequiringCi(scripts, scriptIndex).length,
-      workflows: workflowFiles.length,
       gapRows: knownGapRows(knownGaps).length,
       pending: PENDING.length,
       findings: findings.length,

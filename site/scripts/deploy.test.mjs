@@ -1,7 +1,14 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { REQUIRED_ENV, credentialFindings, deployArgs, ledgerFindings } from './deploy.mjs';
+import {
+  REQUIRED_ENV,
+  credentialFindings,
+  deployArgs,
+  deploymentUrl,
+  ledgerFindings,
+  previewBranch,
+} from './deploy.mjs';
 
 const filled = {
   CLOUDFLARE_API_TOKEN: 't'.repeat(40),
@@ -63,4 +70,32 @@ test('a build the route ledger has not seen is refused, naming what differs', ()
   assert.match(added[0], /assets:routes/);
   const removed = ledgerFindings(ledger, ['/']);
   assert.match(removed[0], /about/);
+});
+
+test('the deployment url is read from what wrangler actually printed', () => {
+  const output = [
+    '✨ Success! Uploaded 308 files (12.03 sec)',
+    '🌎 Deploying...',
+    '✨ Deployment complete! Take a peek over at https://1e05d601.meshin.pages.dev',
+    '✨ Deployment alias URL: https://pr-42.meshin.pages.dev',
+  ].join('\n');
+
+  assert.equal(deploymentUrl(output), 'https://pr-42.meshin.pages.dev');
+});
+
+test('a deploy with no alias falls back to the unique deployment address', () => {
+  const output = '✨ Deployment complete! Take a peek over at https://844f2192.meshin.pages.dev';
+
+  assert.equal(deploymentUrl(output), 'https://844f2192.meshin.pages.dev');
+});
+
+test('output with no address at all yields nothing to publish', () => {
+  assert.equal(deploymentUrl('✘ [ERROR] Authentication error'), null);
+});
+
+test('a preview may never be labelled main, which would publish to production', () => {
+  assert.equal(previewBranch(['--preview', 'pr-42']), 'pr-42');
+  assert.equal(previewBranch(['--preview']), 'preview');
+  assert.throws(() => previewBranch(['--preview', 'main']), /main/);
+  assert.throws(() => previewBranch(['--preview', 'MAIN']), /main/);
 });

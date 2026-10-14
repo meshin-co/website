@@ -6,9 +6,10 @@ and L56 now makes the harness check its own wiring.
 
 `npm run gate:plan` fails on five wiring faults:
 
-- **gate-not-in-ci** — a `gate:*` script in `package.json` that no workflow under
-  `.github/workflows/` ever runs. This is L36 ("a gate not in CI is not a gate") made mechanical
-  instead of asserted. Every `.yml` there is read, so moving a step out of `ci.yml` hides nothing.
+- **gate-not-in-ci** — a `gate:*` script in `package.json` that `ci.yml` never runs. This is L36
+  ("a gate not in `ci.yml` is not a gate") made mechanical instead of asserted. Only `ci.yml`
+  counts: a gate named in `deploy.yml`, which a person dispatches by hand, is not run on every
+  change, and reading both files would let it pass as if it were.
 - **gate-undefined** — `scripts/README.md` names a gate `package.json` does not define.
 - **browser-not-installed** — `playwright.config.ts` runs a project whose browser `ci.yml` never
   installs. The suite would die on the first CI run, long after the change that caused it.
