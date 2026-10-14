@@ -1,8 +1,8 @@
 # Production smoke
 
-Generated-from: 47807c8
+Generated-from: 112686d
 
-Measured against `https://meshin.pages.dev` by `npm run smoke:prod`. Every row is one request; nothing
+Measured against `https://pr-28.meshin.pages.dev` by `npm run smoke:prod`. Every row is one request; nothing
 here is read from a config file.
 
 failures: 0

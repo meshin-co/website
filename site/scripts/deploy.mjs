@@ -14,6 +14,21 @@ export function branchLabel(branch) {
     .slice(0, 28);
 }
 
+export function previewBranch(argv) {
+  const label = argv[argv.indexOf('--preview') + 1] ?? 'preview';
+  if (branchLabel(label) === 'main') {
+    throw new Error('a preview branch may not be labelled main; that is the production branch');
+  }
+  return label;
+}
+
+export function deploymentUrl(output) {
+  const alias = output.match(/alias URL:\s*(https:\/\/[a-z0-9.-]+\.pages\.dev)/i);
+  if (alias) return alias[1];
+  const any = output.match(/https:\/\/[a-z0-9.-]+\.pages\.dev/i);
+  return any ? any[0] : null;
+}
+
 export function deployArgs({ project, dist, branch }) {
   return [
     'pages',

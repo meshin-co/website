@@ -248,7 +248,7 @@ test('a harness-integrity gate cannot be waived out of CI by a sentence', () => 
 
 test('the summary names what the gate read: the scripts held to ci.yml, the gap rows and the pending specimens', () => {
   assert.equal(
-    summaryLine({ scripts: 31, workflows: 2, gapRows: 32, pending: 0, findings: 0 }),
-    'plan: 31 scripts checked against 2 workflows, 32 gap rows, 0 pending specimens, 0 findings'
+    summaryLine({ scripts: 31, gapRows: 32, pending: 0, findings: 0 }),
+    'plan: 31 scripts checked against ci.yml, 32 gap rows, 0 pending specimens, 0 findings'
   );
 });

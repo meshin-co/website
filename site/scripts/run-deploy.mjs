@@ -2,12 +2,11 @@ import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { credentialFindings, deployArgs, ledgerFindings } from './deploy.mjs';
+import { credentialFindings, deployArgs, deploymentUrl, ledgerFindings, previewBranch } from './deploy.mjs';
 import { collectRoutes } from './routes-gate.mjs';
 
-const previewIndex = process.argv.indexOf('--preview');
-const production = previewIndex === -1;
-const branch = production ? 'main' : (process.argv[previewIndex + 1] ?? 'preview');
+const production = !process.argv.includes('--preview');
+const branch = production ? 'main' : previewBranch(process.argv);
 
 const findings = credentialFindings(process.env);
 if (findings.length > 0) {
@@ -31,7 +30,18 @@ const result = spawnSync(
     dist: 'dist',
     branch,
   }),
-  { stdio: 'inherit', env: process.env }
+  { encoding: 'utf8', env: process.env }
 );
 
-process.exit(result.status ?? 1);
+process.stdout.write(result.stdout ?? '');
+process.stderr.write(result.stderr ?? '');
+
+if (result.status !== 0) process.exit(result.status ?? 1);
+
+const url = deploymentUrl(`${result.stdout ?? ''}\n${result.stderr ?? ''}`);
+if (!url) {
+  console.error('DEPLOY wrangler reported no deployment address; nothing can be smoked or linked');
+  process.exit(1);
+}
+
+console.log(`deploy: url=${url}`);

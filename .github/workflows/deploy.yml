@@ -13,21 +13,15 @@ defaults:
 
 jobs:
   production:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: production
     permissions:
       contents: read
       actions: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: site/.nvmrc
-          cache: npm
-          cache-dependency-path: site/package-lock.json
-      - run: npm ci
-
       - name: refuse a run that did not pass, or that is not main
+        id: gated
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -38,7 +32,19 @@ jobs:
           echo "run ${{ inputs.run_id }}: $branch $sha $conclusion"
           [ "$conclusion" = "success" ] || { echo "DEPLOY run ${{ inputs.run_id }} concluded $conclusion"; exit 1; }
           [ "$branch" = "main" ] || { echo "DEPLOY run ${{ inputs.run_id }} is on $branch, not main"; exit 1; }
-          echo "sha=$sha" >> "$GITHUB_ENV"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+
+      - name: take the deploy scripts and the route ledger from that same commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.gated.outputs.sha }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: site/.nvmrc
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - run: npm ci
 
       - name: publish the very bytes those gates measured, never a second build
         uses: actions/download-artifact@v4

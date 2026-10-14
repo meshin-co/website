@@ -66,7 +66,7 @@ jobs:
         with:
           name: dist
           path: site/dist
-          retention-days: 3
+          retention-days: 14
           include-hidden-files: true
 
   types-and-units:
@@ -278,14 +278,30 @@ jobs:
 
       - name: deploy a preview for this pull request
         id: preview
+        shell: bash
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_PAGES_PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT }}
         run: |
+          set -o pipefail
           node scripts/run-deploy.mjs --preview "pr-${{ github.event.number }}" | tee deploy.log
-          url="$(grep -o 'https://[a-z0-9-]*\.pages\.dev' deploy.log | tail -1)"
+          url="$(sed -n 's/^deploy: url=//p' deploy.log | tail -1)"
+          [ -n "$url" ] || { echo "DEPLOY the deploy printed no address"; exit 1; }
           echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: wait for the certificate on a host Cloudflare has not served before
+        shell: bash
+        run: |
+          for attempt in $(seq 1 20); do
+            if curl -sSf -o /dev/null --max-time 15 "${{ steps.preview.outputs.url }}/"; then
+              echo "reachable after $attempt attempt(s)"
+              exit 0
+            fi
+            sleep 15
+          done
+          echo "DEPLOY ${{ steps.preview.outputs.url }} never answered"
+          exit 1
 
       - name: smoke the preview origin, because only a live response proves the headers
         run: npm run smoke:prod "${{ steps.preview.outputs.url }}"
