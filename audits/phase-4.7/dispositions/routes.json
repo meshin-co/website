@@ -721,7 +721,7 @@
     "target": "/privacy",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. The only changes are the head title in src/pages/privacy.astro, lengthened from 'Privacy' to 'Privacy policy', and the meta description, which went from 'What this site collects, which is almost nothing, and what happens to an email you send me.' to the same words prefixed with 'Privacy policy for meshin.co: '; the body was not touched, but I read all of it anyway. Title read: 'Privacy policy — meshin.co'; H1 read: 'Privacy policy'; both fit the static grammar and carry the whole target query 'privacy policy'. The opening, 'This privacy policy covers a static site with no accounts and no cookies.', is a complete sentence that says what the policy covers, and the next sentence ('It exists so you do not have to take that on trust.') points at the rest. Composed strings checked: the meta 'Privacy policy for meshin.co: what this site collects, which is almost nothing, and what happens to an email you send me.' is one whole sentence and matches the body headings 'What this site collects' and 'Email and calls'; the date line 'Updated 2026-09-08' reads cleanly. The five sections (collects, host, email and calls, client material, rights) are coherent, with no half-rewritten sentence, and agree with /security on notes deleted at handover and cookieless analytics. No defects. Status is rewritten because the title is the page's own authored copy and it changed.",
-    "digest": "9d1fc6382771"
+    "digest": "5bc71ae60ae8"
   },
   {
     "target": "/resources",

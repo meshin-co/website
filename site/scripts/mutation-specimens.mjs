@@ -102,6 +102,14 @@ const LIGHTHOUSE_ROUTES = 'tests/guard-mutations/fixtures/lighthouse-specimen-ro
 const DEAD_PATH_SENTENCE = 'Read `docs/zz-specimen-missing.md` first.';
 
 export const SPECIMENS = {
+  paid: {
+    gate: 'gate:paid',
+    token: 'loads https://widget.zz-specimen-vendor.example',
+    plant: (copySite) =>
+      editFile(join(copySite, 'dist/about.html'), (html) =>
+        html.replace('</body>', '<script src="https://widget.zz-specimen-vendor.example/w.js"></script></body>')
+      ),
+  },
   html: {
     gate: 'gate:html',
     token: 'no-dup-id',

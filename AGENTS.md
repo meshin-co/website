@@ -9,7 +9,7 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
    directory per change, and `openspec list --sort name` is the board. Read the one change in
    flight, its `proposal.md` and `tasks.md`, and nothing more until you need it; a change parked
    by a `blocked.md` is not in flight. Closed changes are archived under
-   `openspec/changes/archive/`. The locked decisions L1–L57 live in
+   `openspec/changes/archive/`. The locked decisions L1–L58 live in
    `docs/plan/reference/locked-decisions.md`; the gate procedure in
    `docs/plan/reference/calibration-gate.md`. `npm run gate:spec` refuses the mistakes, among them
    a spec the validator rejects, an index that differs from a regeneration and a second change in
@@ -56,10 +56,15 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
 - Blocking budgets, measured from the shipped build and never from a config file: JS ≤10 KB gz,
   CSS ≤20 KB gz, page ≤250 KB without images, fonts ≤120 KB across 2 families and 3 faces,
   CLS ≤0.02, LCP ≤1.85 s mobile (L13, amended 2026-09-15; `/styleguide` is not audited).
-- Client JavaScript is limited to Plausible, the theme toggle, and the lazy search-index
-  fetch on first query (custom build-time index, `public/search/index-model.mjs`; no
-  third-party search runtime). No `ClientRouter`, no islands, no third-party embeds, no
-  cookies.
+- Client JavaScript is limited to the Cloudflare Web Analytics beacon, the theme toggle, and the
+  lazy search-index fetch on first query (custom build-time index,
+  `public/search/index-model.mjs`; no third-party search runtime). No `ClientRouter`, no islands,
+  no third-party embeds, no cookies. The beacon ships only when `site.analyticsSiteToken` is set,
+  and `scripts/gen-headers.mjs` allows its host in the CSP only when the built HTML carries it.
+- Every service the site depends on carries a permanent free tier; the domain is the only thing
+  bought (L58). `npm run gate:paid` fails on any built route that loads a third-party origin
+  `site/scripts/third-party.mjs` does not declare free, and on a page that claims analytics the
+  build does not ship. Plausible was removed under this rule on 2026-10-14.
 - No contact form, no Pages Function, no Resend. `/contact` is an email address plus a Cal.com
   button. No newsletter anywhere.
 - The route lists are derived from `dist/**/*.html`, never hand-authored. Cheap gates (content, links, budgets,

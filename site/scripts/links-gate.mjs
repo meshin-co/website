@@ -8,7 +8,13 @@ export function siteOrigin(configPath) {
   return origin;
 }
 
-export const THIRD_PARTY_HOSTS = ['plausible.io', 'linkedin.com', 'cal.com', 'github.com/meshin-co', 'apps.apple.com'];
+export const THIRD_PARTY_HOSTS = [
+  'static.cloudflareinsights.com',
+  'linkedin.com',
+  'cal.com',
+  'github.com/meshin-co',
+  'apps.apple.com',
+];
 
 export const skippedHosts = (origin) => [...THIRD_PARTY_HOSTS, `^${origin}`];
 

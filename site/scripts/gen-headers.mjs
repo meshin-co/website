@@ -17,6 +17,8 @@ export function collectInlineScriptHashes(html) {
   return [...hashes];
 }
 
+export const BEACON_HOST = 'static.cloudflareinsights.com';
+
 export function collectInlineStyleHashes(html) {
   const hashes = new Set();
   for (const [, , body] of html.matchAll(INLINE_STYLE)) {
@@ -25,13 +27,15 @@ export function collectInlineStyleHashes(html) {
   return [...hashes];
 }
 
-export function renderHeaders(scriptHashes, styleHashes = []) {
-  const scriptSrc = ["'self'", 'https://plausible.io', ...scriptHashes.map((hash) => `'${hash}'`)].join(' ');
+export function renderHeaders(scriptHashes, styleHashes = [], { analyticsBeacon = false } = {}) {
+  const beacon = analyticsBeacon ? ['https://static.cloudflareinsights.com'] : [];
+  const scriptSrc = ["'self'", ...beacon, ...scriptHashes.map((hash) => `'${hash}'`)].join(' ');
   const styleSrc = ["'self'", ...styleHashes.map((hash) => `'${hash}'`)].join(' ');
+  const connectSrc = ["'self'", ...(analyticsBeacon ? ['https://cloudflareinsights.com'] : [])].join(' ');
   const policy = [
     `default-src 'self'`,
     `script-src ${scriptSrc}`,
-    `connect-src 'self' https://plausible.io`,
+    `connect-src ${connectSrc}`,
     `img-src 'self' data:`,
     `font-src 'self'`,
     `style-src ${styleSrc}`,
@@ -100,14 +104,16 @@ async function main(distDir) {
   const files = await htmlFilesIn(distDir);
   const scripts = new Set();
   const styles = new Set();
+  let analyticsBeacon = false;
   for (const file of files) {
     const html = await readFile(file, 'utf8');
     for (const hash of collectInlineScriptHashes(html)) scripts.add(hash);
     for (const hash of collectInlineStyleHashes(html)) styles.add(hash);
+    if (html.includes(BEACON_HOST)) analyticsBeacon = true;
   }
   const sortedScripts = [...scripts].sort();
   const sortedStyles = [...styles].sort();
-  await writeFile(join(distDir, '_headers'), renderHeaders(sortedScripts, sortedStyles));
+  await writeFile(join(distDir, '_headers'), renderHeaders(sortedScripts, sortedStyles, { analyticsBeacon }));
   console.log(
     `_headers written for ${files.length} pages, ${sortedScripts.length} inline script hash(es), ${sortedStyles.length} inline style hash(es)`
   );

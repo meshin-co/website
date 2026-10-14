@@ -6,6 +6,11 @@ site:
 
   googleSiteVerificationId: JzDVNYl7fyNlWq2UAtXGzgKmxjemBpi44BYH1_ahKgY
 
+  # Cloudflare Web Analytics site token. Public by design: it is served in the HTML.
+  # Empty means the site ships no analytics at all, which is the state until the owner
+  # creates the site in the Cloudflare dashboard.
+  analyticsSiteToken: ''
+
 # Default SEO metadata
 metadata:
   title:

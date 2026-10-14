@@ -4,7 +4,7 @@
 replacement.
 
 Rows D1–D24 are the PRD §2 log, in English, and record what was decided before the build began.
-Rows L1–L57 in `docs/plan/reference/locked-decisions.md` are what the build actually locked, and
+Rows L1–L58 in `docs/plan/reference/locked-decisions.md` are what the build actually locked, and
 they override any D row they name. Where a D row below is marked _superseded_, the L row is the
 answer. On a conflict the order is always: locked row, then this log, then `docs/PRD.md`.
 
