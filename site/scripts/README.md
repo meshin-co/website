@@ -63,6 +63,13 @@ a build.
 | `generate-geo-baseline.mjs` | `audit:geo`            | `audits/geo-baseline.md`, buyer-prompt structural readiness       |
 | `run-geo-probe.mjs`         | `audit:geo-probe`      | `audits/geo-probe.md`, what four live answer engines actually say |
 
+## Publishing
+
+| Script                 | Invoked by                 | What it does                                                                      |
+| ---------------------- | -------------------------- | --------------------------------------------------------------------------------- |
+| `run-deploy-check.mjs` | `deploy:check`             | Reports whether the token authenticates, Pages is readable and the project exists |
+| `run-deploy.mjs`       | `deploy`, `deploy:preview` | Uploads `dist/` to Pages, refusing a build the route ledger has not seen          |
+
 ## Modules
 
 Imported, never run directly. Each holds the rules its gate or report enforces, so the rules can
@@ -76,6 +83,7 @@ be tested without a build.
 | `spec-tree.mjs`           | `generate-spec-census.mjs`, `generate-spec-index.mjs`                                                             | Reading the capability tree from disk                                                                                         |
 | `external-links.mjs`      | `run-external-links.mjs`                                                                                          | The required rel set, and what counts as outbound                                                                             |
 | `links-gate.mjs`          | `run-links-gate.mjs`                                                                                              | The crawl arguments, the skipped hosts, and the hermetic mode                                                                 |
+| `deploy.mjs`              | `run-deploy.mjs`, `run-deploy-check.mjs`                                                                          | The required credentials, the wrangler arguments, and the route-ledger refusal                                                |
 | `smoke-prod.mjs`          | `run-smoke-prod.mjs`                                                                                              | The required header set and the per-route verdict                                                                             |
 | `polish-sweep.mjs`        | `run-polish-sweep.mjs`                                                                                            | Finding classification and the six audit widths                                                                               |
 | `pre-launch.mjs`          | `run-pre-launch.mjs`                                                                                              | The checklist rules and the four statuses                                                                                     |

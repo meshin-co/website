@@ -143,20 +143,6 @@ jobs:
       - name: route set never shrinks unexplained
         run: npm run gate:routes
 
-      - name: restore the route set last announced to indexnow
-        if: github.ref == 'refs/heads/main'
-        uses: actions/cache@v4
-        with:
-          path: site/.indexnow-routes.json
-          key: indexnow-routes-${{ github.run_id }}
-          restore-keys: indexnow-routes-
-
-      - name: ping indexnow when the dist route set changed
-        if: github.ref == 'refs/heads/main'
-        run: node scripts/indexnow-ping.mjs dist --previous .indexnow-routes.json
-        env:
-          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
-
   visual-and-axe:
     if: github.event_name != 'workflow_dispatch' && needs.changes.outputs.code == 'true'
     needs: [changes, build]
@@ -225,7 +211,16 @@ jobs:
 
   gate-report:
     if: github.event_name != 'workflow_dispatch' && needs.changes.outputs.code == 'true'
-    needs: [changes, build, types-and-units, guard-mutations, cheap-gates, visual-and-axe, lighthouse]
+    needs:
+      [
+        changes,
+        build,
+        types-and-units,
+        guard-mutations,
+        cheap-gates,
+        visual-and-axe,
+        lighthouse,
+      ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -259,6 +254,54 @@ jobs:
           name: gate-report
           path: audits/phase-ci/REPORT.md
           retention-days: 14
+  deploy-preview:
+    if: github.event_name == 'pull_request' && needs.changes.outputs.code == 'true'
+    needs: [changes, gate-report]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: site/.nvmrc
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - run: npm ci
+
+      - name: publish the very bytes the gates measured, never a second build
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: site/dist
+
+      - name: deploy a preview for this pull request
+        id: preview
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_PAGES_PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT }}
+        run: |
+          node scripts/run-deploy.mjs --preview "pr-${{ github.event.number }}" | tee deploy.log
+          url="$(grep -o 'https://[a-z0-9-]*\.pages\.dev' deploy.log | tail -1)"
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: smoke the preview origin, because only a live response proves the headers
+        run: npm run smoke:prod "${{ steps.preview.outputs.url }}"
+
+      - name: tell the pull request where to look
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const url = '${{ steps.preview.outputs.url }}';
+            const body = `Preview: ${url}\n\nThese are the bytes the gates measured. \`*.pages.dev\` is served \`noindex\`.`;
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const comments = await github.rest.issues.listComments({ owner, repo, issue_number });
+            const mine = comments.data.find((c) => c.user.type === 'Bot' && c.body.startsWith('Preview: '));
+            if (mine) await github.rest.issues.updateComment({ owner, repo, comment_id: mine.id, body });
+            else await github.rest.issues.createComment({ owner, repo, issue_number, body });
 
   regen-baselines:
     if: github.event_name == 'workflow_dispatch'
