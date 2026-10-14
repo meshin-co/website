@@ -6,7 +6,7 @@ import { dirname, join } from 'node:path';
 import { promisify } from 'node:util';
 import { test } from 'node:test';
 
-import { changedRoutes, pingIndexNow, run } from './indexnow-ping.mjs';
+import { changedRoutes, keyIsServed, pingIndexNow, publishedKey, run } from './indexnow-ping.mjs';
 
 const runFile = promisify(execFile);
 
@@ -45,7 +45,7 @@ test('changedRoutes reports added, removed and unchanged sets', () => {
 test('pingIndexNow posts key, key location and absolute urls', async () => {
   const fetchImpl = fakeFetch(202);
 
-  const result = await pingIndexNow({ host: 'meshin.co', key: 'the-key', urls: ['/', '/about'], fetchImpl });
+  const result = await pingIndexNow({ host: 'meshin.co', key: 'the-key-0123', urls: ['/', '/about'], fetchImpl });
 
   assert.deepEqual(result, { ok: true, status: 202 });
   const [call] = fetchImpl.calls;
@@ -53,8 +53,8 @@ test('pingIndexNow posts key, key location and absolute urls', async () => {
   assert.equal(call.options.method, 'POST');
   assert.deepEqual(JSON.parse(call.options.body), {
     host: 'meshin.co',
-    key: 'the-key',
-    keyLocation: 'https://meshin.co/the-key.txt',
+    key: 'the-key-0123',
+    keyLocation: 'https://meshin.co/the-key-0123.txt',
     urlList: ['https://meshin.co/', 'https://meshin.co/about'],
   });
 });
@@ -64,23 +64,38 @@ test('run skips without side effects when the route set is unchanged', async () 
   const previousPath = join(dist, 'previous.json');
   await writeFile(previousPath, `${JSON.stringify(['/', '/about'], null, 2)}\n`);
 
-  const result = await run({ distDir: dist, previousPath, key: 'the-key', fetchImpl: explodingFetch });
+  const result = await run({ distDir: dist, previousPath, key: 'the-key-0123', fetchImpl: explodingFetch });
 
   assert.deepEqual(result, { action: 'skipped', reason: 'unchanged' });
   assert.equal(JSON.stringify(JSON.parse(await readFile(previousPath, 'utf8'))), JSON.stringify(['/', '/about']));
 });
 
-test('run skips gracefully when the key is missing and keeps the announce pending', async () => {
+test('run skips gracefully when the build publishes no key and keeps the announce pending', async () => {
   const dist = await makeDist(['/']);
   const previousPath = join(dist, 'previous.json');
 
-  const result = await run({ distDir: dist, previousPath, key: undefined, fetchImpl: fakeFetch() });
+  const result = await run({ distDir: dist, previousPath, fetchImpl: fakeFetch() });
 
   assert.equal(result.action, 'skipped');
   assert.equal(result.reason, 'missing-key');
   assert.deepEqual(result.added, ['/']);
   const files = await readdir(dist);
   assert.ok(!files.includes('previous.json'), 'route set must not be persisted before a ping');
+});
+
+test('the key is the one the build publishes, so it can never name a file the site does not serve', async () => {
+  const dist = await makeDist(['/']);
+  assert.equal(await publishedKey(dist), null);
+
+  await writeFile(join(dist, 'deadbeefcafe1234.txt'), 'deadbeefcafe1234');
+  assert.equal(await publishedKey(dist), 'deadbeefcafe1234');
+});
+
+test('a text file whose body does not equal its name is not a key, however much it looks like one', async () => {
+  const dist = await makeDist(['/']);
+  await writeFile(join(dist, 'robots.txt'), 'User-agent: *');
+  await writeFile(join(dist, 'aabbccddeeff0011.txt'), 'something else');
+  assert.equal(await publishedKey(dist), null);
 });
 
 test('run dry-run reports the plan without network or file writes', async () => {
@@ -90,26 +105,27 @@ test('run dry-run reports the plan without network or file writes', async () => 
     throw new Error('network must not be touched in dry-run');
   };
 
-  const result = await run({ distDir: dist, previousPath, key: 'the-key', dryRun: true, fetchImpl: exploding });
+  const result = await run({ distDir: dist, previousPath, dryRun: true, fetchImpl: exploding });
 
   assert.equal(result.action, 'dry-run');
   assert.deepEqual(result.added, ['/', '/about']);
   assert.deepEqual(result.removed, []);
   assert.deepEqual(result.urls, ['/', '/about']);
-  assert.ok(!(await readdir(dist)).includes('the-key.txt'));
+  assert.ok(!(await readdir(dist)).includes('the-key-0123.txt'));
   assert.ok(!(await readdir(dist)).includes('previous.json'));
 });
 
-test('run pings every route, serves the key file and persists the announced set', async () => {
+test('run pings every route with the published key and persists the announced set', async () => {
   const dist = await makeDist(['/', '/about']);
   const previousPath = join(dist, 'previous.json');
+  await writeFile(join(dist, 'the-key-0123.txt'), 'the-key-0123');
   const fetchImpl = fakeFetch(200);
 
-  const result = await run({ distDir: dist, previousPath, key: 'the-key', fetchImpl });
+  const result = await run({ distDir: dist, previousPath, fetchImpl, keyCheck: async () => true });
 
   assert.equal(result.action, 'pinged');
   assert.equal(result.count, 2);
-  assert.equal(await readFile(join(dist, 'the-key.txt'), 'utf8'), 'the-key');
+  assert.equal(JSON.parse(fetchImpl.calls[0].options.body).key, 'the-key-0123');
   assert.deepEqual(JSON.parse(await readFile(previousPath, 'utf8')), ['/', '/about']);
   assert.equal(fetchImpl.calls.length, 1);
 });
@@ -118,7 +134,8 @@ test('run fails the step when the endpoint rejects the ping', async () => {
   const dist = await makeDist(['/']);
   const previousPath = join(dist, 'previous.json');
 
-  const result = await run({ distDir: dist, previousPath, key: 'the-key', fetchImpl: fakeFetch(400) });
+  await writeFile(join(dist, 'the-key-0123.txt'), 'the-key-0123');
+  const result = await run({ distDir: dist, previousPath, fetchImpl: fakeFetch(400), keyCheck: async () => true });
 
   assert.equal(result.action, 'error');
   assert.deepEqual(result, { action: 'error', ok: false, status: 400 });
@@ -145,3 +162,40 @@ test('the cli dry-run exits zero over a real dist tree', async () => {
 const explodingFetch = async () => {
   throw new Error('network must not be touched when the route set is unchanged');
 };
+
+test('a key the live host does not serve is never announced', async () => {
+  const serving = async () => ({ ok: true, text: async () => 'abcdefgh1234\n' });
+  assert.equal(await keyIsServed({ host: 'meshin.co', key: 'abcdefgh1234', fetchImpl: serving }), true);
+
+  const missing = async () => ({ ok: false, text: async () => 'Not found' });
+  assert.equal(await keyIsServed({ host: 'meshin.co', key: 'abcdefgh1234', fetchImpl: missing }), false);
+
+  const other = async () => ({ ok: true, text: async () => 'a different key' });
+  assert.equal(await keyIsServed({ host: 'meshin.co', key: 'abcdefgh1234', fetchImpl: other }), false);
+
+  const offline = async () => {
+    throw new Error('getaddrinfo ENOTFOUND');
+  };
+  assert.equal(await keyIsServed({ host: 'meshin.co', key: 'abcdefgh1234', fetchImpl: offline }), false);
+});
+
+test('run stops before the endpoint when the host does not serve the key yet', async () => {
+  const dist = await makeDist(['/']);
+  const previousPath = join(dist, 'previous.json');
+  await writeFile(join(dist, 'the-key-0123.txt'), 'the-key-0123');
+  const fetchImpl = fakeFetch(200);
+  fetchImpl.calls.length = 0;
+
+  const result = await run({
+    distDir: dist,
+    previousPath,
+    fetchImpl,
+    keyCheck: async () => false,
+  });
+
+  assert.equal(result.action, 'skipped');
+  assert.equal(result.reason, 'key-not-served');
+  assert.equal(fetchImpl.calls.length, 0, 'nothing may reach the endpoint');
+  const files = await readdir(dist);
+  assert.ok(!files.includes('previous.json'), 'an unannounced route set must stay pending');
+});

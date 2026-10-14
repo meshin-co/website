@@ -47,6 +47,9 @@
     "audit:polish": "node scripts/run-polish-sweep.mjs",
     "audit:prelaunch": "node scripts/run-pre-launch.mjs dist",
     "smoke:prod": "node scripts/run-smoke-prod.mjs",
+    "deploy:check": "node --env-file-if-exists=.env scripts/run-deploy-check.mjs",
+    "deploy:preview": "node --env-file-if-exists=.env scripts/run-deploy.mjs --preview",
+    "deploy": "node --env-file-if-exists=.env scripts/run-deploy.mjs",
     "gate:docs": "node scripts/run-docs-gate.mjs ..",
     "gate:evidence": "node scripts/run-evidence-gate.mjs ..",
     "gate:spec": "node scripts/run-spec-gate.mjs ..",
@@ -110,7 +113,8 @@
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.66.0"
+    "typescript-eslint": "^8.66.0",
+    "wrangler": "4.151.0"
   },
   "overrides": {
     "yaml": ">=2.8.3",

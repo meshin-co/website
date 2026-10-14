@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, readdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 import { diffRoutes, discoverRoutes } from './gate.mjs';
@@ -26,16 +26,49 @@ export async function pingIndexNow({ host, key, urls, fetchImpl = fetch }) {
   return { ok: response.ok, status: response.status };
 }
 
-export async function run({ distDir, previousPath, key, dryRun = false, host = DEFAULT_HOST, fetchImpl = fetch }) {
+const KEY_FILE = /^[A-Za-z0-9-]{8,128}\.txt$/;
+
+export async function publishedKey(distDir) {
+  for (const name of await readdir(distDir)) {
+    if (!KEY_FILE.test(name)) continue;
+    const key = name.slice(0, -4);
+    if ((await readFile(join(distDir, name), 'utf8')).trim() === key) return key;
+  }
+  return null;
+}
+
+export async function keyIsServed({ host, key, fetchImpl = fetch }) {
+  try {
+    const response = await fetchImpl(`https://${host}/${key}.txt`);
+    if (!response.ok) return false;
+    return (await response.text()).trim() === key;
+  } catch {
+    return false;
+  }
+}
+
+export async function run({
+  distDir,
+  previousPath,
+  dryRun = false,
+  host = DEFAULT_HOST,
+  fetchImpl = fetch,
+  keyCheck = keyIsServed,
+}) {
   const routes = await discoverRoutes(distDir);
   const previous = await readRoutes(previousPath);
   const { added, removed, changed } = changedRoutes(previous ?? [], routes);
 
   if (!changed) return { action: 'skipped', reason: 'unchanged' };
   if (dryRun) return { action: 'dry-run', urls: routes, added, removed };
+
+  const key = await publishedKey(distDir);
   if (!key) return { action: 'skipped', reason: 'missing-key', added, removed };
 
-  await writeFile(join(distDir, `${key}.txt`), key);
+  if (!(await keyCheck({ host, key }))) {
+    return { action: 'skipped', reason: 'key-not-served', added, removed };
+  }
+
   const result = await pingIndexNow({ host, key, urls: routes, fetchImpl });
   if (!result.ok) return { action: 'error', ...result };
 
@@ -58,7 +91,6 @@ async function main(argv) {
     distDir: positional[0] ?? 'dist',
     previousPath: previousIndex === -1 ? '.indexnow-routes.json' : argv[previousIndex + 1],
     dryRun: argv.includes('--dry-run'),
-    key: process.env.INDEXNOW_KEY,
   });
 
   switch (result.action) {

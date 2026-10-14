@@ -1,0 +1,69 @@
+name: deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: The ci run whose gates passed; its dist artifact is what gets published
+        required: true
+
+defaults:
+  run:
+    working-directory: site
+
+jobs:
+  production:
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: site/.nvmrc
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - run: npm ci
+
+      - name: refuse a run that did not pass, or that is not main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run="$(gh api "repos/${{ github.repository }}/actions/runs/${{ inputs.run_id }}")"
+          conclusion="$(echo "$run" | jq -r .conclusion)"
+          branch="$(echo "$run" | jq -r .head_branch)"
+          sha="$(echo "$run" | jq -r .head_sha)"
+          echo "run ${{ inputs.run_id }}: $branch $sha $conclusion"
+          [ "$conclusion" = "success" ] || { echo "DEPLOY run ${{ inputs.run_id }} concluded $conclusion"; exit 1; }
+          [ "$branch" = "main" ] || { echo "DEPLOY run ${{ inputs.run_id }} is on $branch, not main"; exit 1; }
+          echo "sha=$sha" >> "$GITHUB_ENV"
+
+      - name: publish the very bytes those gates measured, never a second build
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: site/dist
+          run-id: ${{ inputs.run_id }}
+          github-token: ${{ github.token }}
+
+      - name: deploy to production
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_PAGES_PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT }}
+        run: npm run deploy
+
+      - name: smoke the production origin, because only a live response proves the headers
+        run: npm run smoke:prod "https://${{ vars.CLOUDFLARE_PAGES_PROJECT }}.pages.dev"
+
+      - name: restore the route set last announced to indexnow
+        uses: actions/cache@v4
+        with:
+          path: site/.indexnow-routes.json
+          key: indexnow-routes-${{ github.run_id }}
+          restore-keys: indexnow-routes-
+
+      - name: announce the changed routes, now that the key file is served
+        run: node scripts/indexnow-ping.mjs dist --previous .indexnow-routes.json

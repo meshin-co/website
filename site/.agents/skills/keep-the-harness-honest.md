@@ -6,8 +6,9 @@ and L56 now makes the harness check its own wiring.
 
 `npm run gate:plan` fails on five wiring faults:
 
-- **gate-not-in-ci** — a `gate:*` script in `package.json` that `ci.yml` never runs. This is L36
-  ("a gate not in `ci.yml` is not a gate") made mechanical instead of asserted.
+- **gate-not-in-ci** — a `gate:*` script in `package.json` that no workflow under
+  `.github/workflows/` ever runs. This is L36 ("a gate not in CI is not a gate") made mechanical
+  instead of asserted. Every `.yml` there is read, so moving a step out of `ci.yml` hides nothing.
 - **gate-undefined** — `scripts/README.md` names a gate `package.json` does not define.
 - **browser-not-installed** — `playwright.config.ts` runs a project whose browser `ci.yml` never
   installs. The suite would die on the first CI run, long after the change that caused it.
@@ -63,8 +64,6 @@ content describes and says that nothing regenerates it. The one exemption is
 `LEGACY_PROSE_PROVENANCE`: the 8 Calibration Gate reports of phases 1 to 5, written before any
 generator stamped a revision. They may keep prose in place of a hash, but they still need the line,
 and a hash on them must still name a commit. A unit test pins the 8 keys, and the gate prints them.
-
-Check all four before believing a green result.
 
 ## What this cannot catch
 
