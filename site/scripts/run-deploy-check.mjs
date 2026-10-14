@@ -22,7 +22,7 @@ if (projects.status !== 0) {
 }
 
 const project = process.env.CLOUDFLARE_PAGES_PROJECT;
-const exists = new RegExp(`\\b${project}\\b`).test(projects.stdout);
+const exists = new RegExp(`\u2502\\s*${project}\\s*\u2502`).test(projects.stdout);
 
 console.log(`deploy:check: token reaches Pages in account ${process.env.CLOUDFLARE_ACCOUNT_ID.slice(0, 6)}…`);
 console.log(
