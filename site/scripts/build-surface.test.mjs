@@ -35,3 +35,8 @@ test('a test file cannot change the built output, however much it is edited', ()
   ])
     assert.equal(affectsBuild(path), false, path);
 });
+
+test('a shipped directory merely named tests or fixtures is still a build input', () => {
+  for (const path of ['site/src/data/fixtures/x.md', 'site/public/tests/a.png', 'site/src/components/tests/Card.astro'])
+    assert.equal(affectsBuild(path), true, path);
+});
