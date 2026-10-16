@@ -18,177 +18,179 @@ Drift protection is a real doc-diff gate (L48). `node scripts/semantic-core.mjs 
 ## Generated layer — the facts
 
 <!-- semantic-core:begin generated -->
+
 ### static (17)
 
 title `{page name} — meshin.co` · meta: value-proposition clause naming the offer and the buyer · body intent: answer the query, then route to the next step
 
-| Route | Query | Title | Description | H1 | Links | Opening |
-|---|---|---|---|---|---|---|
-| `/` | fractional chief ai officer | Fractional Chief AI Officer — meshin.co | Fractional Chief AI Officer for 30–300 person companies: governance that passes enterprise procurement, and agentic systems shipped to production with evals. | A Fractional Chief AI Officer you can name on the org chart. | 22 | ✓ |
-| `/about` | dmitri meshin | About Dmitri Meshin — meshin.co | Dmitri Meshin is a platform engineer working as a Fractional Chief AI Officer for companies of 30 to 300 people. Remote worldwide. | Dmitri Meshin | 22 | ✓ |
-| `/ai-policy` | ai policy | AI acceptable-use policy — meshin.co | My own acceptable-use policy for AI systems: what data may reach a vendor, what may not, and who decides. | My AI acceptable-use policy | 22 | ✓ |
-| `/approach` | how a fractional ai officer works | How a Fractional AI Officer works — meshin.co | How a Fractional AI Officer works: the six things that decide whether an AI initiative reaches production, and the order I work through them. | How a Fractional AI Officer works with your team | 22 | ✓ |
-| `/blog` | ai governance writing | AI governance writing — meshin.co | AI governance writing: notes on getting AI systems past security review and into production, written for founders and boards. | Writing on AI governance | 23 | ✓ |
-| `/case-studies` | fractional chief ai officer case study | Fractional Chief AI Officer case study — meshin.co | I have not published a Fractional Chief AI Officer case study yet. Client case studies appear here only once a client agrees in writing. | Fractional chief AI officer case study | 22 | ✓ |
-| `/contact` | book an ai leadership call | Contact: book an AI leadership call — meshin.co | Book an AI leadership call: a 30-minute fit call, or email hello@meshin.co. Remote worldwide, on site when the trip is worth it. | Book an AI leadership call | 23 | ✓ |
-| `/faq` | fractional chief ai officer questions | Fractional Chief AI Officer questions — meshin.co | Fractional Chief AI Officer questions answered: what the role does, what each offer produces, and how AI risk gets recorded and signed off. | Fractional Chief AI Officer questions, answered | 47 | ✓ |
-| `/glossary` | ai governance glossary | AI governance glossary — meshin.co | An AI governance glossary: plain definitions of the terms, standards and laws that come up in security reviews and board meetings. | AI governance glossary | 54 | ✓ |
-| `/imprint` | imprint | Imprint — meshin.co | Imprint for meshin.co: who is responsible for this site, how to reach them by email, where they work from, and what it is hosted on. | Imprint | 22 | ✓ |
-| `/now` | what i am working on now | What I am working on now — meshin.co | What I am working on now: a dated log of what I am building and studying, newest first. A line is added when something happens and never edited after. | What I am working on now | 22 | ✓ |
-| `/pricing` | fractional chief ai officer cost | Pricing: what a Fractional Chief AI Officer costs — meshin.co | Fractional Chief AI Officer cost: two-week Assessment, 90-Day Sprint or monthly Retainer. Fixed, no hourly billing, every fee in writing before work starts. | What a Fractional Chief AI Officer costs | 25 | ✓ |
-| `/privacy` | privacy policy | Privacy policy — meshin.co | Privacy policy for meshin.co: what this site collects, which is almost nothing, and what happens to an email you send me. | Privacy policy | 22 | ✓ |
-| `/resources` | ai governance templates | AI governance templates and checklists — meshin.co | Open AI governance templates and checklists: register, acceptable-use policy, data classification, vendor questionnaire. | AI governance templates | 22 | ✓ |
-| `/security` | security practices | Security practices — meshin.co | Security practices for meshin.co: how this site is built and served, how client data is handled, and where to report a vulnerability. | Security practices for client work | 23 | ✓ |
-| `/services` | fractional ai leadership services | Fractional AI leadership services — meshin.co | Fractional AI leadership services in three offers: a two-week assessment, a 90-day production sprint or a retainer, run by a Fractional Chief AI Officer. | Fractional AI leadership services | 22 | ✓ |
-| `/terms` | terms | Terms — meshin.co | What this site is, why no price appears on it, and which terms actually govern an engagement. | Terms. | 22 | ✓ |
+| Route           | Query                                  | Title                                                         | Description                                                                                                                                                   | H1                                                           | Links | Opening |
+| --------------- | -------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ----- | ------- |
+| `/`             | fractional chief ai officer            | Fractional Chief AI Officer — meshin.co                       | Fractional Chief AI Officer for 30–300 person companies: governance that passes enterprise procurement, and agentic systems shipped to production with evals. | A Fractional Chief AI Officer you can name on the org chart. | 22    | ✓       |
+| `/about`        | dmitri meshin                          | About Dmitri Meshin — meshin.co                               | Dmitri Meshin is a platform engineer working as a Fractional Chief AI Officer for companies of 30 to 300 people. Remote worldwide.                            | Dmitri Meshin                                                | 22    | ✓       |
+| `/ai-policy`    | ai policy                              | AI acceptable-use policy — meshin.co                          | My own acceptable-use policy for AI systems: what data may reach a vendor, what may not, and who decides.                                                     | My AI acceptable-use policy                                  | 22    | ✓       |
+| `/approach`     | how a fractional ai officer works      | How a Fractional AI Officer works — meshin.co                 | How a Fractional AI Officer works: the six things that decide whether an AI initiative reaches production, and the order I work through them.                 | How a Fractional AI Officer works with your team             | 22    | ✓       |
+| `/blog`         | ai governance writing                  | AI governance writing — meshin.co                             | AI governance writing: notes on getting AI systems past security review and into production, written for founders and boards.                                 | Writing on AI governance                                     | 23    | ✓       |
+| `/case-studies` | fractional chief ai officer case study | Fractional Chief AI Officer case study — meshin.co            | I have not published a Fractional Chief AI Officer case study yet. Client case studies appear here only once a client agrees in writing.                      | Fractional chief AI officer case study                       | 22    | ✓       |
+| `/contact`      | book an ai leadership call             | Contact: book an AI leadership call — meshin.co               | Book an AI leadership call: a 30-minute fit call, or email hello@meshin.co. Remote worldwide, on site when the trip is worth it.                              | Book an AI leadership call                                   | 23    | ✓       |
+| `/faq`          | fractional chief ai officer questions  | Fractional Chief AI Officer questions — meshin.co             | Fractional Chief AI Officer questions answered: what the role does, what each offer produces, and how AI risk gets recorded and signed off.                   | Fractional Chief AI Officer questions, answered              | 47    | ✓       |
+| `/glossary`     | ai governance glossary                 | AI governance glossary — meshin.co                            | An AI governance glossary: plain definitions of the terms, standards and laws that come up in security reviews and board meetings.                            | AI governance glossary                                       | 54    | ✓       |
+| `/imprint`      | imprint                                | Imprint — meshin.co                                           | Imprint for meshin.co: who is responsible for this site, how to reach them by email, where they work from, and what it is hosted on.                          | Imprint                                                      | 22    | ✓       |
+| `/now`          | what i am working on now               | What I am working on now — meshin.co                          | What I am working on now: a dated log of what I am building and studying, newest first. A line is added when something happens and never edited after.        | What I am working on now                                     | 22    | ✓       |
+| `/pricing`      | fractional chief ai officer cost       | Pricing: what a Fractional Chief AI Officer costs — meshin.co | Fractional Chief AI Officer cost: two-week Assessment, 90-Day Sprint or monthly Retainer. Fixed, no hourly billing, every fee in writing before work starts.  | What a Fractional Chief AI Officer costs                     | 25    | ✓       |
+| `/privacy`      | privacy policy                         | Privacy policy — meshin.co                                    | Privacy policy for meshin.co: what this site collects, which is almost nothing, and what happens to an email you send me.                                     | Privacy policy                                               | 22    | ✓       |
+| `/resources`    | ai governance templates                | AI governance templates and checklists — meshin.co            | Open AI governance templates and checklists: register, acceptable-use policy, data classification, vendor questionnaire.                                      | AI governance templates                                      | 22    | ✓       |
+| `/security`     | security practices                     | Security practices — meshin.co                                | Security practices for meshin.co: how this site is built and served, how client data is handled, and where to report a vulnerability.                         | Security practices for client work                           | 23    | ✓       |
+| `/services`     | fractional ai leadership services      | Fractional AI leadership services — meshin.co                 | Fractional AI leadership services in three offers: a two-week assessment, a 90-day production sprint or a retainer, run by a Fractional Chief AI Officer.     | Fractional AI leadership services                            | 22    | ✓       |
+| `/terms`        | terms                                  | Terms — meshin.co                                             | What this site is, why no price appears on it, and which terms actually govern an engagement.                                                                 | Terms.                                                       | 22    | ✓       |
 
 ### service (3)
 
 title `{offer name} — meshin.co` · meta: one outcome sentence: what ships, in what timeframe · body intent: offer → deliverables → fit → CTA
 
-| Route | Query | Title | Description | H1 | Links | Opening |
-|---|---|---|---|---|---|---|
-| `/services/90-day-production-sprint` | 90-day production sprint | 90-Day Production Sprint — meshin.co | A 90-day sprint that puts one agentic workflow into production with evals in CI, tracing, a named owner, and a rollback path. | 90-Day Production Sprint | 23 | ✓ |
-| `/services/ai-readiness-and-risk-assessment` | ai readiness assessment | AI Readiness & Risk Assessment — meshin.co | A two-week AI readiness and risk assessment for companies of 30 to 300 people, ending in a memo your board can act on, gap list included. | AI Readiness & Risk Assessment | 24 | ✓ |
-| `/services/fractional-caio-retainer` | fractional caio retainer | Fractional CAIO Retainer — meshin.co | Fractional CAIO retainer: one or two days a week as your named AI officer, with procurement answers, design reviews, board updates and a handover plan. | Fractional CAIO Retainer | 22 | ✓ |
+| Route                                        | Query                    | Title                                      | Description                                                                                                                                             | H1                             | Links | Opening |
+| -------------------------------------------- | ------------------------ | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ | ----- | ------- |
+| `/services/90-day-production-sprint`         | 90-day production sprint | 90-Day Production Sprint — meshin.co       | A 90-day sprint that puts one agentic workflow into production with evals in CI, tracing, a named owner, and a rollback path.                           | 90-Day Production Sprint       | 23    | ✓       |
+| `/services/ai-readiness-and-risk-assessment` | ai readiness assessment  | AI Readiness & Risk Assessment — meshin.co | A two-week AI readiness and risk assessment for companies of 30 to 300 people, ending in a memo your board can act on, gap list included.               | AI Readiness & Risk Assessment | 24    | ✓       |
+| `/services/fractional-caio-retainer`         | fractional caio retainer | Fractional CAIO Retainer — meshin.co       | Fractional CAIO retainer: one or two days a week as your named AI officer, with procurement answers, design reviews, board updates and a handover plan. | Fractional CAIO Retainer       | 22    | ✓       |
 
 ### resource (7)
 
 title `{artifact name} — meshin.co` · meta: one sentence naming the artifact and what you do with it · body intent: what it is → what is inside → how to use it
 
-| Route | Query | Title | Description | H1 | Links | Opening |
-|---|---|---|---|---|---|---|
-| `/resources/adoption-telemetry-dashboard-template` | adoption telemetry dashboard template | Adoption Telemetry Dashboard Template — meshin.co | An adoption telemetry dashboard template: eight panels, each with its question, data source and the decision it supports. | Adoption Telemetry Dashboard Template | 26 | ✓ |
-| `/resources/agent-evals-ci-starter` | agent evals ci starter | Agent Evals CI Starter — meshin.co | A starter CI pipeline for agent evals. It runs on every pull request and blocks a bad merge before it ships, using a plain YAML case format. | Agent Evals CI Starter | 24 | ✓ |
-| `/resources/ai-governance-starter-kit` | ai governance starter kit | AI Governance Starter Kit — meshin.co | AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire. | AI Governance Starter Kit | 26 | ✓ |
-| `/resources/ai-readiness-scorecard` | ai readiness scorecard | AI Readiness Scorecard — meshin.co | A five-axis AI readiness scorecard you score yourself in an afternoon: strategy, data, delivery, people, and governance. | AI Readiness Scorecard | 24 | ✓ |
-| `/resources/build-vs-buy-ai-kit` | build vs buy ai kit | Build vs Buy AI Kit — meshin.co | The build vs buy AI kit: a one-page worksheet of the six criteria I work through before recommending either path, and how to score them. | Build vs Buy AI Kit | 26 | ✓ |
-| `/resources/handover-playbook` | handover playbook | Handover Playbook — meshin.co | The Handover Playbook is six fill-in tables for moving AI leadership from an outside lead to a named owner, from the test to a later check. | Handover Playbook | 31 | ✓ |
-| `/resources/llm-gateway-governance-config` | llm gateway governance config | LLM Gateway Governance Config — meshin.co | A governance config for an LLM gateway. It decides who may call which model, what gets redacted, how long logs are kept and the rate and fallback rules. | LLM Gateway Governance Config | 26 | ✓ |
+| Route                                              | Query                                 | Title                                             | Description                                                                                                                                              | H1                                    | Links | Opening |
+| -------------------------------------------------- | ------------------------------------- | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- | ----- | ------- |
+| `/resources/adoption-telemetry-dashboard-template` | adoption telemetry dashboard template | Adoption Telemetry Dashboard Template — meshin.co | An adoption telemetry dashboard template: eight panels, each with its question, data source and the decision it supports.                                | Adoption Telemetry Dashboard Template | 26    | ✓       |
+| `/resources/agent-evals-ci-starter`                | agent evals ci starter                | Agent Evals CI Starter — meshin.co                | A starter CI pipeline for agent evals. It runs on every pull request and blocks a bad merge before it ships, using a plain YAML case format.             | Agent Evals CI Starter                | 24    | ✓       |
+| `/resources/ai-governance-starter-kit`             | ai governance starter kit             | AI Governance Starter Kit — meshin.co             | AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire.                  | AI Governance Starter Kit             | 26    | ✓       |
+| `/resources/ai-readiness-scorecard`                | ai readiness scorecard                | AI Readiness Scorecard — meshin.co                | A five-axis AI readiness scorecard you score yourself in an afternoon: strategy, data, delivery, people, and governance.                                 | AI Readiness Scorecard                | 24    | ✓       |
+| `/resources/build-vs-buy-ai-kit`                   | build vs buy ai kit                   | Build vs Buy AI Kit — meshin.co                   | The build vs buy AI kit: a one-page worksheet of the six criteria I work through before recommending either path, and how to score them.                 | Build vs Buy AI Kit                   | 26    | ✓       |
+| `/resources/handover-playbook`                     | handover playbook                     | Handover Playbook — meshin.co                     | The Handover Playbook is six fill-in tables for moving AI leadership from an outside lead to a named owner, from the test to a later check.              | Handover Playbook                     | 31    | ✓       |
+| `/resources/llm-gateway-governance-config`         | llm gateway governance config         | LLM Gateway Governance Config — meshin.co         | A governance config for an LLM gateway. It decides who may call which model, what gets redacted, how long logs are kept and the rate and fallback rules. | LLM Gateway Governance Config         | 26    | ✓       |
 
 ### article (8)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
-| Route | Query | Title | Description | H1 | Links | Opening |
-|---|---|---|---|---|---|---|
-| `/blog/adoption-telemetry-measuring-if-ai-is-actually-used` | adoption telemetry for ai tools | Adoption telemetry for AI tools: what a trial found — meshin.co | In METR's 2025 trial, 16 developers believed AI made them 20% faster. Tasks took 19% longer with AI allowed. METR now marks that result out of date. | Adoption telemetry for AI tools: what a trial found | 42 | ✓ |
-| `/blog/ai-acceptable-use-policy-for-a-50-person-company` | ai acceptable use policy | What actually belongs in an AI acceptable use policy — meshin.co | What a working AI acceptable use policy has to decide, what it must refuse to do, and how a company of 30 to 300 people gets staff to follow it. | What actually belongs in an AI acceptable use policy | 31 | ✓ |
-| `/blog/evals-in-ci-for-llm-agents` | evals in ci without a golden answer | Evals in CI for LLM agents, without a golden answer — meshin.co | How to build an eval set from production traffic, score an LLM agent without a golden answer, and fail a merge in CI when it regresses. | Evals in CI for LLM agents, without a golden answer | 28 | ✓ |
-| `/blog/handing-over-ai-leadership-to-an-internal-owner` | how to hand over ai leadership to internal owner | How to hand over AI leadership to an internal owner — meshin.co | How to hand over AI leadership in steps that end in a test: what moves, who takes the role and how to tell it worked. | How to hand over AI leadership to an internal owner | 38 | ✓ |
-| `/blog/how-to-build-an-ai-system-register-in-a-week` | ai system register | How to build an AI system register in a week — meshin.co | A step-by-step way to build an AI system register in a week without buying a tool, so a security reviewer gets the document they ask for first. | How to build an AI system register in a week | 32 | ✓ |
-| `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company` | ai operating model for mid-size company | How to choose an AI operating model for a mid-size company — meshin.co | How to choose an operating model for AI work in a mid-size company, starting from what the law requires and what the evidence supports. | How to choose an AI operating model for a mid-size company | 37 | ✓ |
-| `/blog/multi-agent-reference-architecture-in-production` | multi-agent reference architecture production | Multi-agent reference architecture in production — meshin.co | What the sources say about multi-agent systems in production: where vendors agree, where they split, and what the research did not find. | Multi-agent reference architecture in production | 38 | ✓ |
-| `/blog/why-your-ai-pilot-never-reached-production` | ai pilot never reached production | Why your AI pilot never reached production — meshin.co | Most AI pilots stall on ownership, data rules and a missing outcome metric, not the model. Here is what has to be true before one reaches production. | Why your AI pilot never reached production | 28 | ✓ |
+| Route                                                              | Query                                            | Title                                                                  | Description                                                                                                                                           | H1                                                         | Links | Opening |
+| ------------------------------------------------------------------ | ------------------------------------------------ | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ----- | ------- |
+| `/blog/adoption-telemetry-measuring-if-ai-is-actually-used`        | adoption telemetry for ai tools                  | Adoption telemetry for AI tools: what a trial found — meshin.co        | In METR's 2025 trial, 16 developers believed AI made them 20% faster. Tasks took 19% longer with AI allowed. METR now marks that result out of date.  | Adoption telemetry for AI tools: what a trial found        | 42    | ✓       |
+| `/blog/ai-acceptable-use-policy-for-a-50-person-company`           | ai acceptable use policy                         | What actually belongs in an AI acceptable use policy — meshin.co       | What a working AI acceptable use policy has to decide, what it must refuse to do, and how a company of 30 to 300 people gets staff to follow it.      | What actually belongs in an AI acceptable use policy       | 31    | ✓       |
+| `/blog/evals-in-ci-for-llm-agents`                                 | evals in ci without a golden answer              | Evals in CI for LLM agents, without a golden answer — meshin.co        | How to build an eval set from production traffic, score an LLM agent without a golden answer, and fail a merge in CI when it regresses.               | Evals in CI for LLM agents, without a golden answer        | 28    | ✓       |
+| `/blog/handing-over-ai-leadership-to-an-internal-owner`            | how to hand over ai leadership to internal owner | How to hand over AI leadership to an internal owner — meshin.co        | How to hand over AI leadership in steps that end in a test: what moves, who takes the role and how to tell it worked.                                 | How to hand over AI leadership to an internal owner        | 38    | ✓       |
+| `/blog/how-to-build-an-ai-system-register-in-a-week`               | ai system register                               | How to build an AI system register in a week — meshin.co               | A step-by-step way to build an AI system register in a week without buying a tool, so a security reviewer gets the document they ask for first.       | How to build an AI system register in a week               | 32    | ✓       |
+| `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company` | ai operating model for mid-size company          | How to choose an AI operating model for a mid-size company — meshin.co | How to choose an operating model for AI work in a mid-size company, starting from what the law requires and what the evidence supports.               | How to choose an AI operating model for a mid-size company | 37    | ✓       |
+| `/blog/multi-agent-reference-architecture-in-production`           | multi-agent reference architecture production    | Multi-agent reference architecture in production — meshin.co           | What the sources say about multi-agent systems in production: where vendors agree, where they split, and what the research did not find.              | Multi-agent reference architecture in production           | 38    | ✓       |
+| `/blog/why-your-ai-pilot-never-reached-production`                 | ai pilot never reached production                | Why your AI pilot never reached production — meshin.co                 | Most AI pilots stall on ownership, data rules and a missing outcome metric, not the model. Here is what has to be true before one reaches production. | Why your AI pilot never reached production                 | 28    | ✓       |
 
 ### blog-category (4)
 
 title `{category name} — meshin.co` · meta: what the category covers, scoped to the 30–300 person buyer · body intent: curated list with one-line stakes per entry
 
-| Route | Query | Title | Description | H1 | Links | Opening |
-|---|---|---|---|---|---|---|
-| `/blog/category/agentic-architecture` | agentic architecture articles | Agentic architecture articles — meshin.co | Articles on agentic architecture for production: evals in CI, tracing, cost ceilings and a rollback path for agent systems. | Agentic architecture articles | 22 | ✓ |
-| `/blog/category/executive` | ai for boards | AI for boards — meshin.co | AI for boards is accountability, not literacy: what you are on the hook for, what to ask for in writing, and what not to ask for. | AI for boards | 22 | ✓ |
-| `/blog/category/governance` | ai governance articles | AI governance articles — meshin.co | Articles on AI governance for companies of 30 to 300 people: the register, acceptable-use policy, data classification and a named owner. | AI governance articles | 22 | ✓ |
-| `/blog/category/operating-model` | ai operating model articles | AI operating model articles — meshin.co | Articles on the operating model for AI work in companies of 30 to 300 people: who chooses, who reviews, who runs it. The glossary holds the definition. | AI operating model articles | 22 | ✓ |
+| Route                                 | Query                         | Title                                     | Description                                                                                                                                             | H1                            | Links | Opening |
+| ------------------------------------- | ----------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- | ----- | ------- |
+| `/blog/category/agentic-architecture` | agentic architecture articles | Agentic architecture articles — meshin.co | Articles on agentic architecture for production: evals in CI, tracing, cost ceilings and a rollback path for agent systems.                             | Agentic architecture articles | 22    | ✓       |
+| `/blog/category/executive`            | ai for boards                 | AI for boards — meshin.co                 | AI for boards is accountability, not literacy: what you are on the hook for, what to ask for in writing, and what not to ask for.                       | AI for boards                 | 22    | ✓       |
+| `/blog/category/governance`           | ai governance articles        | AI governance articles — meshin.co        | Articles on AI governance for companies of 30 to 300 people: the register, acceptable-use policy, data classification and a named owner.                | AI governance articles        | 22    | ✓       |
+| `/blog/category/operating-model`      | ai operating model articles   | AI operating model articles — meshin.co   | Articles on the operating model for AI work in companies of 30 to 300 people: who chooses, who reviews, who runs it. The glossary holds the definition. | AI operating model articles   | 22    | ✓       |
 
 ### tag-index (1)
 
 title `Tags — meshin.co` · meta: what tags exist and how many articles carry each one · body intent: browse the tag list, then route into one tag
 
-| Route | Query | Title | Description | H1 | Links | Opening |
-|---|---|---|---|---|---|---|
-| `/blog/tags` | tags | Tags — meshin.co | The tags used across the writing, with how many articles carry each one. | Tags | 34 | ✓ |
+| Route        | Query | Title            | Description                                                              | H1   | Links | Opening |
+| ------------ | ----- | ---------------- | ------------------------------------------------------------------------ | ---- | ----- | ------- |
+| `/blog/tags` | tags  | Tags — meshin.co | The tags used across the writing, with how many articles carry each one. | Tags | 34    | ✓       |
 
 ### tag (12)
 
 title `{tag name} posts — meshin.co` · meta: all posts tagged {tag}, newest first · body intent: thin archive list; route straight to the tagged articles
 
-| Route | Query | Title | Description | H1 | Links | Opening |
-|---|---|---|---|---|---|---|
-| `/blog/tag/acceptable-use-policy` | acceptable use policy posts | Acceptable use policy posts — meshin.co | All posts tagged Acceptable use policy, newest first. | Acceptable use policy posts | 23 | ✓ |
-| `/blog/tag/agentic-architecture` | agentic architecture posts | Agentic architecture posts — meshin.co | All posts tagged Agentic architecture, newest first. | Agentic architecture posts | 23 | ✓ |
-| `/blog/tag/ai-governance` | ai governance posts | AI governance posts — meshin.co | All posts tagged AI governance, newest first. | AI governance posts | 23 | ✓ |
-| `/blog/tag/ai-pilots` | ai pilots posts | AI pilots posts — meshin.co | All posts tagged AI pilots, newest first. | AI pilots posts | 23 | ✓ |
-| `/blog/tag/ai-register` | ai register posts | AI register posts — meshin.co | All posts tagged AI register, newest first. | AI register posts | 23 | ✓ |
-| `/blog/tag/eu-ai-act` | eu ai act posts | EU AI Act posts — meshin.co | All posts tagged EU AI Act, newest first. | EU AI Act posts | 23 | ✓ |
-| `/blog/tag/evals-in-ci` | evals in ci posts | Evals in CI posts — meshin.co | All posts tagged Evals in CI, newest first. | Evals in CI posts | 23 | ✓ |
-| `/blog/tag/llm-as-judge` | llm as judge posts | LLM as judge posts — meshin.co | All posts tagged LLM as judge, newest first. | LLM as judge posts | 23 | ✓ |
-| `/blog/tag/policy-enforcement` | policy enforcement posts | Policy enforcement posts — meshin.co | All posts tagged Policy enforcement, newest first. | Policy enforcement posts | 23 | ✓ |
-| `/blog/tag/production-readiness` | production readiness posts | Production readiness posts — meshin.co | All posts tagged Production readiness, newest first. | Production readiness posts | 23 | ✓ |
-| `/blog/tag/security-review` | security review posts | Security review posts — meshin.co | All posts tagged Security review, newest first. | Security review posts | 23 | ✓ |
-| `/blog/tag/shadow-ai` | shadow ai posts | Shadow AI posts — meshin.co | All posts tagged Shadow AI, newest first. | Shadow AI posts | 23 | ✓ |
+| Route                             | Query                       | Title                                   | Description                                           | H1                          | Links | Opening |
+| --------------------------------- | --------------------------- | --------------------------------------- | ----------------------------------------------------- | --------------------------- | ----- | ------- |
+| `/blog/tag/acceptable-use-policy` | acceptable use policy posts | Acceptable use policy posts — meshin.co | All posts tagged Acceptable use policy, newest first. | Acceptable use policy posts | 23    | ✓       |
+| `/blog/tag/agentic-architecture`  | agentic architecture posts  | Agentic architecture posts — meshin.co  | All posts tagged Agentic architecture, newest first.  | Agentic architecture posts  | 23    | ✓       |
+| `/blog/tag/ai-governance`         | ai governance posts         | AI governance posts — meshin.co         | All posts tagged AI governance, newest first.         | AI governance posts         | 23    | ✓       |
+| `/blog/tag/ai-pilots`             | ai pilots posts             | AI pilots posts — meshin.co             | All posts tagged AI pilots, newest first.             | AI pilots posts             | 23    | ✓       |
+| `/blog/tag/ai-register`           | ai register posts           | AI register posts — meshin.co           | All posts tagged AI register, newest first.           | AI register posts           | 23    | ✓       |
+| `/blog/tag/eu-ai-act`             | eu ai act posts             | EU AI Act posts — meshin.co             | All posts tagged EU AI Act, newest first.             | EU AI Act posts             | 23    | ✓       |
+| `/blog/tag/evals-in-ci`           | evals in ci posts           | Evals in CI posts — meshin.co           | All posts tagged Evals in CI, newest first.           | Evals in CI posts           | 23    | ✓       |
+| `/blog/tag/llm-as-judge`          | llm as judge posts          | LLM as judge posts — meshin.co          | All posts tagged LLM as judge, newest first.          | LLM as judge posts          | 23    | ✓       |
+| `/blog/tag/policy-enforcement`    | policy enforcement posts    | Policy enforcement posts — meshin.co    | All posts tagged Policy enforcement, newest first.    | Policy enforcement posts    | 23    | ✓       |
+| `/blog/tag/production-readiness`  | production readiness posts  | Production readiness posts — meshin.co  | All posts tagged Production readiness, newest first.  | Production readiness posts  | 23    | ✓       |
+| `/blog/tag/security-review`       | security review posts       | Security review posts — meshin.co       | All posts tagged Security review, newest first.       | Security review posts       | 23    | ✓       |
+| `/blog/tag/shadow-ai`             | shadow ai posts             | Shadow AI posts — meshin.co             | All posts tagged Shadow AI, newest first.             | Shadow AI posts             | 23    | ✓       |
 
 ### term (32)
 
 title `What is {term}? — meshin.co` · meta: the definition sentence · body intent: definition → why it matters → adjacent terms
 
-| Route | Query | Title | Description | H1 | Links | Opening |
-|---|---|---|---|---|---|---|
-| `/glossary/agentic-workflow` | agentic workflow | What is an agentic workflow? — meshin.co | An agentic workflow is a task where one or more AI agents plan steps, call tools and choose the next move without a person's approval. | Agentic workflow | 22 | ✓ |
-| `/glossary/ai-governance` | ai governance | What is AI governance? — meshin.co | AI governance is the decisions, roles and controls a company uses to manage the risk of the AI systems it builds or buys. | AI governance | 22 | ✓ |
-| `/glossary/ai-impact-assessment` | ai impact assessment | What is an AI impact assessment? — meshin.co | An AI impact assessment is a written check, before a high-risk system goes live, of who it affects and whether they can challenge its decision. | AI impact assessment | 24 | ✓ |
-| `/glossary/ai-management-system` | ai management system | What is an AI management system? — meshin.co | An AI management system is the recurring set of policies, roles and reviews a company runs to govern its AI, not a one-off risk assessment. | AI management system | 23 | ✓ |
-| `/glossary/ai-operating-model` | ai operating model | What is an AI operating model? — meshin.co | An AI operating model names who chooses, reviews and runs a company's AI work. What it covers has no standard definition, so check which one is in use. | AI operating model | 23 | ✓ |
-| `/glossary/ai-register` | ai register | What is an AI register? — meshin.co | An AI register is a company's own inventory of every AI system it builds, buys or uses, naming its owner and how risky it is. | AI register | 22 | ✓ |
-| `/glossary/conformity-assessment` | conformity assessment | What is a conformity assessment? — meshin.co | A conformity assessment proves a high-risk AI system meets the EU AI Act before sale. Either the provider or an outside body runs it. | Conformity assessment | 23 | ✓ |
-| `/glossary/data-classification` | data classification | What is data classification? — meshin.co | Data classification is labelling data by sensitivity, such as public, internal or restricted, before deciding what may reach an AI tool. | Data classification | 23 | ✓ |
-| `/glossary/dpia` | dpia | What is a DPIA? — meshin.co | A DPIA, or data protection impact assessment, is a written GDPR check of privacy risk before high-risk personal-data processing begins. | DPIA | 23 | ✓ |
-| `/glossary/eu-ai-act` | eu ai act | What is the EU AI Act? — meshin.co | The EU AI Act is an EU regulation that sorts AI systems into risk tiers and sets legal obligations, heaviest for high-risk systems. | EU AI Act | 22 | ✓ |
-| `/glossary/evals` | evals | What are evals? — meshin.co | Evals are repeatable tests that score an AI system's output against fixed examples, run before release and after every change. | Evals | 22 | ✓ |
-| `/glossary/guardrails` | guardrails | What are guardrails in an AI system? — meshin.co | Guardrails are code checks on what a model responds to, what it can say and what it can do, not rules typed into a prompt. | Guardrails | 23 | ✓ |
-| `/glossary/hallucination-rate` | hallucination rate | What is a hallucination rate? — meshin.co | A hallucination rate is the share of a model's answers that are confidently wrong, measured against real questions with known correct answers. | Hallucination rate | 23 | ✓ |
-| `/glossary/high-risk-ai-system` | high-risk ai system | What makes an AI system high-risk? — meshin.co | A high-risk AI system is one the EU AI Act puts under its heaviest duties, through product-safety law or use cases like hiring or credit. | High-risk AI system | 24 | ✓ |
-| `/glossary/human-in-the-loop` | human-in-the-loop | What is human-in-the-loop? — meshin.co | Human-in-the-loop means a person reviews or can stop an AI system's output before it takes effect, not the system acting alone. | Human-in-the-loop | 22 | ✓ |
-| `/glossary/human-oversight` | human oversight | What does human oversight require under the EU AI Act? — meshin.co | Human oversight is the EU AI Act duty that a person assigned to watch a high-risk system can actually understand it and stop it. | Human oversight | 23 | ✓ |
-| `/glossary/iso-iec-42001` | iso/iec 42001 | What is ISO/IEC 42001? — meshin.co | ISO/IEC 42001 is the first international, certifiable standard for the management system a company runs to govern its AI. | ISO/IEC 42001 | 24 | ✓ |
-| `/glossary/llm-gateway` | llm gateway | What is an LLM gateway? — meshin.co | An LLM gateway is a single service every call to a language model passes through, for authentication, logging, rate limits and content filtering. | LLM gateway | 23 | ✓ |
-| `/glossary/mcp` | model context protocol | What is the Model Context Protocol (MCP)? — meshin.co | The Model Context Protocol (MCP) connects AI agents to tools and data, but cannot enforce consent, data privacy or tool safety at the protocol level. | Model Context Protocol | 30 | ✓ |
-| `/glossary/model-card` | model card | What is a model card? — meshin.co | A model card is a short document that a model's maker publishes about the model's intended use, its performance and where not to use it. | Model card | 23 | ✓ |
-| `/glossary/model-provenance` | model provenance | What is model provenance? — meshin.co | Model provenance is a traceable record of where a model comes from - its base model, its training data, and the licence covering both. | Model provenance | 24 | ✓ |
-| `/glossary/nist-ai-rmf` | nist ai rmf | What is the NIST AI RMF? — meshin.co | The NIST AI Risk Management Framework (AI RMF) is a voluntary US framework for managing AI risk across a system's whole lifecycle. | NIST AI RMF | 22 | ✓ |
-| `/glossary/observability` | observability | What is observability for an AI system? — meshin.co | Observability means seeing exactly what a user asked a live AI system, what it did and what it answered, for any one case. | Observability | 24 | ✓ |
-| `/glossary/post-market-monitoring` | post-market monitoring | What is post-market monitoring under the EU AI Act? — meshin.co | Post-market monitoring is the EU AI Act duty to keep collecting real-world data on a high-risk system after it ships, not just before. | Post-market monitoring | 23 | ✓ |
-| `/glossary/prompt-injection` | prompt injection | What is prompt injection? — meshin.co | Prompt injection is text, typed directly or hidden in a document a model reads, that gets the model to follow it as an instruction. | Prompt injection | 23 | ✓ |
-| `/glossary/provider-vs-deployer` | provider vs deployer | What is the difference between a provider and a deployer? — meshin.co | Provider and deployer are EU AI Act roles - a provider builds or brands a system, a deployer uses it, and the two owe different duties. | Provider vs deployer | 27 | ✓ |
-| `/glossary/red-teaming` | red teaming | What is red teaming for an AI system? — meshin.co | Red teaming is deliberately trying to break an AI system the way an attacker would, before they do, to find the failure nobody tested. | Red teaming | 23 | ✓ |
-| `/glossary/retrieval-augmented-generation` | retrieval augmented generation | What is retrieval augmented generation? — meshin.co | Retrieval augmented generation, or RAG, has a model look up relevant passages at answer time instead of relying only on its training. | Retrieval augmented generation | 23 | ✓ |
-| `/glossary/serious-incident-reporting` | serious incident reporting | What is serious incident reporting under the EU AI Act? — meshin.co | Serious incident reporting is the EU AI Act duty to tell a regulator, fast, when a high-risk system causes real harm or a rights breach. | Serious incident reporting | 23 | ✓ |
-| `/glossary/shadow-ai` | shadow ai | What is shadow AI? — meshin.co | Shadow AI is any AI tool staff use for company work without IT or security's knowledge, from an app to a browser extension. | Shadow AI | 22 | ✓ |
-| `/glossary/sub-processor` | sub-processor | What is a sub-processor? — meshin.co | A sub-processor is a vendor an AI provider uses behind the scenes to handle a company's data, and GDPR requires permission before it does. | Sub-processor | 23 | ✓ |
-| `/glossary/technical-documentation` | technical documentation | What is technical documentation under the EU AI Act? — meshin.co | Technical documentation is the dossier a provider keeps on a high-risk AI system - its purpose, design, data, performance and monitoring plan. | Technical documentation | 24 | ✓ |
+| Route                                      | Query                          | Title                                                                 | Description                                                                                                                                             | H1                             | Links | Opening |
+| ------------------------------------------ | ------------------------------ | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ | ----- | ------- |
+| `/glossary/agentic-workflow`               | agentic workflow               | What is an agentic workflow? — meshin.co                              | An agentic workflow is a task where one or more AI agents plan steps, call tools and choose the next move without a person's approval.                  | Agentic workflow               | 22    | ✓       |
+| `/glossary/ai-governance`                  | ai governance                  | What is AI governance? — meshin.co                                    | AI governance is the decisions, roles and controls a company uses to manage the risk of the AI systems it builds or buys.                               | AI governance                  | 22    | ✓       |
+| `/glossary/ai-impact-assessment`           | ai impact assessment           | What is an AI impact assessment? — meshin.co                          | An AI impact assessment is a written check, before a high-risk system goes live, of who it affects and whether they can challenge its decision.         | AI impact assessment           | 24    | ✓       |
+| `/glossary/ai-management-system`           | ai management system           | What is an AI management system? — meshin.co                          | An AI management system is the recurring set of policies, roles and reviews a company runs to govern its AI, not a one-off risk assessment.             | AI management system           | 23    | ✓       |
+| `/glossary/ai-operating-model`             | ai operating model             | What is an AI operating model? — meshin.co                            | An AI operating model names who chooses, reviews and runs a company's AI work. What it covers has no standard definition, so check which one is in use. | AI operating model             | 23    | ✓       |
+| `/glossary/ai-register`                    | ai register                    | What is an AI register? — meshin.co                                   | An AI register is a company's own inventory of every AI system it builds, buys or uses, naming its owner and how risky it is.                           | AI register                    | 22    | ✓       |
+| `/glossary/conformity-assessment`          | conformity assessment          | What is a conformity assessment? — meshin.co                          | A conformity assessment proves a high-risk AI system meets the EU AI Act before sale. Either the provider or an outside body runs it.                   | Conformity assessment          | 23    | ✓       |
+| `/glossary/data-classification`            | data classification            | What is data classification? — meshin.co                              | Data classification is labelling data by sensitivity, such as public, internal or restricted, before deciding what may reach an AI tool.                | Data classification            | 23    | ✓       |
+| `/glossary/dpia`                           | dpia                           | What is a DPIA? — meshin.co                                           | A DPIA, or data protection impact assessment, is a written GDPR check of privacy risk before high-risk personal-data processing begins.                 | DPIA                           | 23    | ✓       |
+| `/glossary/eu-ai-act`                      | eu ai act                      | What is the EU AI Act? — meshin.co                                    | The EU AI Act is an EU regulation that sorts AI systems into risk tiers and sets legal obligations, heaviest for high-risk systems.                     | EU AI Act                      | 22    | ✓       |
+| `/glossary/evals`                          | evals                          | What are evals? — meshin.co                                           | Evals are repeatable tests that score an AI system's output against fixed examples, run before release and after every change.                          | Evals                          | 22    | ✓       |
+| `/glossary/guardrails`                     | guardrails                     | What are guardrails in an AI system? — meshin.co                      | Guardrails are code checks on what a model responds to, what it can say and what it can do, not rules typed into a prompt.                              | Guardrails                     | 23    | ✓       |
+| `/glossary/hallucination-rate`             | hallucination rate             | What is a hallucination rate? — meshin.co                             | A hallucination rate is the share of a model's answers that are confidently wrong, measured against real questions with known correct answers.          | Hallucination rate             | 23    | ✓       |
+| `/glossary/high-risk-ai-system`            | high-risk ai system            | What makes an AI system high-risk? — meshin.co                        | A high-risk AI system is one the EU AI Act puts under its heaviest duties, through product-safety law or use cases like hiring or credit.               | High-risk AI system            | 24    | ✓       |
+| `/glossary/human-in-the-loop`              | human-in-the-loop              | What is human-in-the-loop? — meshin.co                                | Human-in-the-loop means a person reviews or can stop an AI system's output before it takes effect, not the system acting alone.                         | Human-in-the-loop              | 22    | ✓       |
+| `/glossary/human-oversight`                | human oversight                | What does human oversight require under the EU AI Act? — meshin.co    | Human oversight is the EU AI Act duty that a person assigned to watch a high-risk system can actually understand it and stop it.                        | Human oversight                | 23    | ✓       |
+| `/glossary/iso-iec-42001`                  | iso/iec 42001                  | What is ISO/IEC 42001? — meshin.co                                    | ISO/IEC 42001 is the first international, certifiable standard for the management system a company runs to govern its AI.                               | ISO/IEC 42001                  | 24    | ✓       |
+| `/glossary/llm-gateway`                    | llm gateway                    | What is an LLM gateway? — meshin.co                                   | An LLM gateway is a single service every call to a language model passes through, for authentication, logging, rate limits and content filtering.       | LLM gateway                    | 23    | ✓       |
+| `/glossary/mcp`                            | model context protocol         | What is the Model Context Protocol (MCP)? — meshin.co                 | The Model Context Protocol (MCP) connects AI agents to tools and data, but cannot enforce consent, data privacy or tool safety at the protocol level.   | Model Context Protocol         | 30    | ✓       |
+| `/glossary/model-card`                     | model card                     | What is a model card? — meshin.co                                     | A model card is a short document that a model's maker publishes about the model's intended use, its performance and where not to use it.                | Model card                     | 23    | ✓       |
+| `/glossary/model-provenance`               | model provenance               | What is model provenance? — meshin.co                                 | Model provenance is a traceable record of where a model comes from - its base model, its training data, and the licence covering both.                  | Model provenance               | 24    | ✓       |
+| `/glossary/nist-ai-rmf`                    | nist ai rmf                    | What is the NIST AI RMF? — meshin.co                                  | The NIST AI Risk Management Framework (AI RMF) is a voluntary US framework for managing AI risk across a system's whole lifecycle.                      | NIST AI RMF                    | 22    | ✓       |
+| `/glossary/observability`                  | observability                  | What is observability for an AI system? — meshin.co                   | Observability means seeing exactly what a user asked a live AI system, what it did and what it answered, for any one case.                              | Observability                  | 24    | ✓       |
+| `/glossary/post-market-monitoring`         | post-market monitoring         | What is post-market monitoring under the EU AI Act? — meshin.co       | Post-market monitoring is the EU AI Act duty to keep collecting real-world data on a high-risk system after it ships, not just before.                  | Post-market monitoring         | 23    | ✓       |
+| `/glossary/prompt-injection`               | prompt injection               | What is prompt injection? — meshin.co                                 | Prompt injection is text, typed directly or hidden in a document a model reads, that gets the model to follow it as an instruction.                     | Prompt injection               | 23    | ✓       |
+| `/glossary/provider-vs-deployer`           | provider vs deployer           | What is the difference between a provider and a deployer? — meshin.co | Provider and deployer are EU AI Act roles - a provider builds or brands a system, a deployer uses it, and the two owe different duties.                 | Provider vs deployer           | 27    | ✓       |
+| `/glossary/red-teaming`                    | red teaming                    | What is red teaming for an AI system? — meshin.co                     | Red teaming is deliberately trying to break an AI system the way an attacker would, before they do, to find the failure nobody tested.                  | Red teaming                    | 23    | ✓       |
+| `/glossary/retrieval-augmented-generation` | retrieval augmented generation | What is retrieval augmented generation? — meshin.co                   | Retrieval augmented generation, or RAG, has a model look up relevant passages at answer time instead of relying only on its training.                   | Retrieval augmented generation | 23    | ✓       |
+| `/glossary/serious-incident-reporting`     | serious incident reporting     | What is serious incident reporting under the EU AI Act? — meshin.co   | Serious incident reporting is the EU AI Act duty to tell a regulator, fast, when a high-risk system causes real harm or a rights breach.                | Serious incident reporting     | 23    | ✓       |
+| `/glossary/shadow-ai`                      | shadow ai                      | What is shadow AI? — meshin.co                                        | Shadow AI is any AI tool staff use for company work without IT or security's knowledge, from an app to a browser extension.                             | Shadow AI                      | 22    | ✓       |
+| `/glossary/sub-processor`                  | sub-processor                  | What is a sub-processor? — meshin.co                                  | A sub-processor is a vendor an AI provider uses behind the scenes to handle a company's data, and GDPR requires permission before it does.              | Sub-processor                  | 23    | ✓       |
+| `/glossary/technical-documentation`        | technical documentation        | What is technical documentation under the EU AI Act? — meshin.co      | Technical documentation is the dossier a provider keeps on a high-risk AI system - its purpose, design, data, performance and monitoring plan.          | Technical documentation        | 24    | ✓       |
 
 ### faq-answer (25)
 
 title `{question} — meshin.co` · meta: first sentence of the answer · body intent: direct answer → mechanism → next step
 
-| Route | Query | Title | Description | H1 | Links | Opening |
-|---|---|---|---|---|---|---|
-| `/faq/are-models-trained-on-our-customer-data` | are models trained on our customer data? | Are models trained on our customer data? — meshin.co | Are models trained on our customer data? Not by default. I use vendor terms that exclude it from training, and I check them before any tool touches your data. | Are models trained on our customer data? | 22 | ✓ |
-| `/faq/can-you-get-us-iso-iec-42001-certified-or-just-a-working-system` | can you get us certified to iso/iec 42001, or do you just build a working system? | Can you get us ISO/IEC 42001 certified? — meshin.co | Can you get us certified to ISO/IEC 42001? I build the working system. An accredited body runs the independent audit that grants certification. | Can you get us certified to ISO/IEC 42001, or do you just build a working system? | 23 | ✓ |
-| `/faq/can-you-work-with-our-existing-ai-vendor-or-platform` | can you work with our existing ai vendor or platform, or do you bring your own tools? | Can you work with our existing AI vendor or platform? — meshin.co | Can you work with our existing AI vendor or platform, or do you bring your own tools? I work with what you already run. OpenAI, Anthropic, Azure. | Can you work with our existing AI vendor or platform, or do you bring your own tools? | 23 | ✓ |
-| `/faq/how-do-you-charge-for-the-work` | how do you charge for the work? | How do you charge for the work? — meshin.co | How do you charge for the work? Three fixed structures, no hourly billing. The Assessment is a fixed fee for the two weeks. | How do you charge for the work? | 23 | ✓ |
-| `/faq/how-does-ai-risk-get-recorded-and-who-signs-it-off` | how does ai risk get recorded, and who signs it off? | How does AI risk get recorded, and who signs it off? — meshin.co | How does AI risk get recorded, and who signs it off? In an AI register. One line per initiative: its data flows, its risk level, and its owner. | How does AI risk get recorded, and who signs it off? | 23 | ✓ |
-| `/faq/how-does-the-retainer-end` | how does the retainer end? | How does the Retainer end? — meshin.co | How does the Retainer end? With a named internal owner in place, not a fading call. The decisions that got made are written down, not quietly dropped. | How does the Retainer end? | 24 | ✓ |
-| `/faq/how-is-a-prompt-or-model-change-stopped-from-shipping-unnoticed` | how is a prompt or model change stopped from shipping unnoticed? | What stops a prompt or model change shipping unnoticed? — meshin.co | How is a prompt or model change stopped from shipping unnoticed? Evals in continuous integration. A test set runs on every change. | How is a prompt or model change stopped from shipping unnoticed? | 23 | ✓ |
-| `/faq/how-is-cost-per-outcome-measured` | how is cost per outcome measured? | How is cost per outcome measured? — meshin.co | How is cost per outcome measured? On a dashboard built during the Sprint. Total spend on the workflow, model calls included. | How is cost per outcome measured? | 23 | ✓ |
-| `/faq/how-quickly-can-you-start-and-how-does-availability-work-for-a-remote-officer` | how quickly can you start, and how does availability work for a remote officer? | How quickly can you start as a remote officer? — meshin.co | How quickly can you start, and how does availability work for a remote officer? One client at a time. That is what keeps me reachable: one, or two days a week. | How quickly can you start, and how does availability work for a remote officer? | 22 | ✓ |
-| `/faq/is-my-company-too-small-or-too-early-for-a-fractional-chief-ai-officer` | is my company too small, or too early, for a fractional chief ai officer? | Too small or too early for a Fractional Chief AI Officer? — meshin.co | Is my company too small, or too early, for a Fractional Chief AI Officer? Size isn't the real test. If you're running pilots that never reach production. | Is my company too small, or too early, for a Fractional Chief AI Officer? | 22 | ✓ |
-| `/faq/what-counts-as-in-production-for-the-90-day-sprint` | what counts as 'in production' for the 90-day sprint? | What counts as 'in production' for the 90-day Sprint? — meshin.co | What counts as 'in production' for the 90-day Sprint? Real users, real transactions, a rollback path, someone on call. That is the bar, monitored end to end. | What counts as 'in production' for the 90-day Sprint? | 23 | ✓ |
-| `/faq/what-do-nist-ai-rmf-iso-iec-42001-and-the-eu-ai-act-require` | what do nist ai rmf, iso/iec 42001 and the eu ai act each require of a company our size? | What do NIST, ISO/IEC 42001 and the EU AI Act require? — meshin.co | What do NIST AI RMF, ISO/IEC 42001 and the EU AI Act each require of a company our size? None of the three sets a headcount threshold. | What do NIST AI RMF, ISO/IEC 42001 and the EU AI Act each require of a company our size? | 23 | ✓ |
-| `/faq/what-do-we-do-about-tools-staff-are-already-using-without-approval` | what do we do about tools staff are already using without approval? | What about tools staff use without approval? — meshin.co | What do we do about tools staff are already using without approval? Add unapproved tools to the AI register, not a ban list. | What do we do about tools staff are already using without approval? | 23 | ✓ |
-| `/faq/what-does-a-fractional-chief-ai-officer-actually-do` | what does a fractional chief ai officer actually do, and how is that different from an advisor? | What does a Fractional Chief AI Officer do vs an advisor? — meshin.co | What does a Fractional Chief AI Officer actually do, and how is that different from an advisor? I carry the AI register as a named officer. | What does a Fractional Chief AI Officer actually do, and how is that different from an advisor? | 23 | ✓ |
-| `/faq/what-does-the-two-week-assessment-produce-and-is-the-fee-credited-if-we-continue` | what does the two-week assessment produce, and is the fee credited if we continue? | What does the two-week Assessment produce? — meshin.co | What does the two-week Assessment produce, and is the fee credited if we continue? The two-week Assessment produces a memo your board can act on. | What does the two-week Assessment produce, and is the fee credited if we continue? | 23 | ✓ |
-| `/faq/what-happens-if-the-evals-say-a-workflow-isnt-good-enough` | what happens if the evals say a workflow isn't good enough? | What if the evals say a workflow isn't good enough? — meshin.co | What happens if the evals say a workflow isn't good enough? It does not ship. The Sprint ends with a written account of why it fell short. | What happens if the evals say a workflow isn't good enough? | 23 | ✓ |
-| `/faq/what-happens-on-a-fit-call-and-does-it-cost-anything` | what happens on a fit call, and does it cost anything? | What happens on a fit call, and does it cost anything? — meshin.co | What happens on a fit call, and does it cost anything? It costs nothing and runs thirty minutes, booked at cal.com/meshin. | What happens on a fit call, and does it cost anything? | 23 | ✓ |
-| `/faq/what-if-the-ai-we-are-building-goes-into-a-product-we-sell` | what if the ai we're building goes into a product we sell, not just an internal workflow? | What if our AI goes into a product we sell? — meshin.co | What if the AI we're building goes into a product we sell, not just an internal workflow? I cover products you sell as well as internal workflows. | What if the AI we're building goes into a product we sell, not just an internal workflow? | 23 | ✓ |
-| `/faq/what-if-we-already-have-a-data-science-team-or-an-internal-ai-lead` | what if we already have a data science team or an internal ai lead? | What if we already have a data science team or AI lead? — meshin.co | What if we already have a data science team or an internal AI lead? Your data science team stays exactly where it is. I do not write models, tune pipelines. | What if we already have a data science team or an internal AI lead? | 23 | ✓ |
-| `/faq/what-size-of-company-do-you-actually-work-with` | what size of company do you actually work with? | What size of company do you actually work with? — meshin.co | What size of company do you actually work with? Companies of 30 to 300 people, with at least one engineer. Most companies here have run AI pilots. | What size of company do you actually work with? | 22 | ✓ |
-| `/faq/whats-the-difference-between-the-assessment-the-sprint-and-the-retainer` | what's the difference between the assessment, the sprint and the retainer? | Assessment, Sprint and Retainer: what is the difference? — meshin.co | What's the difference between the Assessment, the Sprint and the Retainer? Three fixed offers, three stages. The Assessment is two weeks at a fixed fee. | What's the difference between the Assessment, the Sprint and the Retainer? | 23 | ✓ |
-| `/faq/who-answers-customer-security-questionnaires` | who answers customer security questionnaires? | Who answers customer security questionnaires? — meshin.co | Who answers customer security questionnaires? I do, as the named officer on record. That is a core part of the Retainer: procurement answers. | Who answers customer security questionnaires? | 23 | ✓ |
-| `/faq/who-owns-the-code-and-the-data` | who owns the code and the data? | Who owns the code and the data? — meshin.co | Who owns the code and the data? You own both the code and the data. The code lives in your repositories from the first commit, under your licence. | Who owns the code and the data? | 22 | ✓ |
-| `/faq/who-owns-the-frameworks-templates-and-playbooks-built-during-the-engagement` | who owns the frameworks, templates and playbooks built during the engagement? | Who owns the frameworks, templates and playbooks I build? — meshin.co | Who owns the frameworks, templates and playbooks built during the engagement? Everything written for your business belongs to you. | Who owns the frameworks, templates and playbooks built during the engagement? | 23 | ✓ |
-| `/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai` | why hire a fractional officer instead of a full-time head of ai? | Why hire a fractional officer over a full-time head of AI? — meshin.co | Why hire a fractional officer instead of a full-time head of AI? You get a named officer's accountability without the salary, hiring process or idle seat. | Why hire a fractional officer instead of a full-time head of AI? | 23 | ✓ |
+| Route                                                                                   | Query                                                                                           | Title                                                                  | Description                                                                                                                                                     | H1                                                                                              | Links | Opening |
+| --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ----- | ------- |
+| `/faq/are-models-trained-on-our-customer-data`                                          | are models trained on our customer data?                                                        | Are models trained on our customer data? — meshin.co                   | Are models trained on our customer data? Not by default. I use vendor terms that exclude it from training, and I check them before any tool touches your data.  | Are models trained on our customer data?                                                        | 22    | ✓       |
+| `/faq/can-you-get-us-iso-iec-42001-certified-or-just-a-working-system`                  | can you get us certified to iso/iec 42001, or do you just build a working system?               | Can you get us ISO/IEC 42001 certified? — meshin.co                    | Can you get us certified to ISO/IEC 42001? I build the working system. An accredited body runs the independent audit that grants certification.                 | Can you get us certified to ISO/IEC 42001, or do you just build a working system?               | 23    | ✓       |
+| `/faq/can-you-work-with-our-existing-ai-vendor-or-platform`                             | can you work with our existing ai vendor or platform, or do you bring your own tools?           | Can you work with our existing AI vendor or platform? — meshin.co      | Can you work with our existing AI vendor or platform, or do you bring your own tools? I work with what you already run. OpenAI, Anthropic, Azure.               | Can you work with our existing AI vendor or platform, or do you bring your own tools?           | 23    | ✓       |
+| `/faq/how-do-you-charge-for-the-work`                                                   | how do you charge for the work?                                                                 | How do you charge for the work? — meshin.co                            | How do you charge for the work? Three fixed structures, no hourly billing. The Assessment is a fixed fee for the two weeks.                                     | How do you charge for the work?                                                                 | 23    | ✓       |
+| `/faq/how-does-ai-risk-get-recorded-and-who-signs-it-off`                               | how does ai risk get recorded, and who signs it off?                                            | How does AI risk get recorded, and who signs it off? — meshin.co       | How does AI risk get recorded, and who signs it off? In an AI register. One line per initiative: its data flows, its risk level, and its owner.                 | How does AI risk get recorded, and who signs it off?                                            | 23    | ✓       |
+| `/faq/how-does-the-retainer-end`                                                        | how does the retainer end?                                                                      | How does the Retainer end? — meshin.co                                 | How does the Retainer end? With a named internal owner in place, not a fading call. The decisions that got made are written down, not quietly dropped.          | How does the Retainer end?                                                                      | 24    | ✓       |
+| `/faq/how-is-a-prompt-or-model-change-stopped-from-shipping-unnoticed`                  | how is a prompt or model change stopped from shipping unnoticed?                                | What stops a prompt or model change shipping unnoticed? — meshin.co    | How is a prompt or model change stopped from shipping unnoticed? Evals in continuous integration. A test set runs on every change.                              | How is a prompt or model change stopped from shipping unnoticed?                                | 23    | ✓       |
+| `/faq/how-is-cost-per-outcome-measured`                                                 | how is cost per outcome measured?                                                               | How is cost per outcome measured? — meshin.co                          | How is cost per outcome measured? On a dashboard built during the Sprint. Total spend on the workflow, model calls included.                                    | How is cost per outcome measured?                                                               | 23    | ✓       |
+| `/faq/how-quickly-can-you-start-and-how-does-availability-work-for-a-remote-officer`    | how quickly can you start, and how does availability work for a remote officer?                 | How quickly can you start as a remote officer? — meshin.co             | How quickly can you start, and how does availability work for a remote officer? One client at a time. That is what keeps me reachable: one, or two days a week. | How quickly can you start, and how does availability work for a remote officer?                 | 22    | ✓       |
+| `/faq/is-my-company-too-small-or-too-early-for-a-fractional-chief-ai-officer`           | is my company too small, or too early, for a fractional chief ai officer?                       | Too small or too early for a Fractional Chief AI Officer? — meshin.co  | Is my company too small, or too early, for a Fractional Chief AI Officer? Size isn't the real test. If you're running pilots that never reach production.       | Is my company too small, or too early, for a Fractional Chief AI Officer?                       | 22    | ✓       |
+| `/faq/what-counts-as-in-production-for-the-90-day-sprint`                               | what counts as 'in production' for the 90-day sprint?                                           | What counts as 'in production' for the 90-day Sprint? — meshin.co      | What counts as 'in production' for the 90-day Sprint? Real users, real transactions, a rollback path, someone on call. That is the bar, monitored end to end.   | What counts as 'in production' for the 90-day Sprint?                                           | 23    | ✓       |
+| `/faq/what-do-nist-ai-rmf-iso-iec-42001-and-the-eu-ai-act-require`                      | what do nist ai rmf, iso/iec 42001 and the eu ai act each require of a company our size?        | What do NIST, ISO/IEC 42001 and the EU AI Act require? — meshin.co     | What do NIST AI RMF, ISO/IEC 42001 and the EU AI Act each require of a company our size? None of the three sets a headcount threshold.                          | What do NIST AI RMF, ISO/IEC 42001 and the EU AI Act each require of a company our size?        | 23    | ✓       |
+| `/faq/what-do-we-do-about-tools-staff-are-already-using-without-approval`               | what do we do about tools staff are already using without approval?                             | What about tools staff use without approval? — meshin.co               | What do we do about tools staff are already using without approval? Add unapproved tools to the AI register, not a ban list.                                    | What do we do about tools staff are already using without approval?                             | 23    | ✓       |
+| `/faq/what-does-a-fractional-chief-ai-officer-actually-do`                              | what does a fractional chief ai officer actually do, and how is that different from an advisor? | What does a Fractional Chief AI Officer do vs an advisor? — meshin.co  | What does a Fractional Chief AI Officer actually do, and how is that different from an advisor? I carry the AI register as a named officer.                     | What does a Fractional Chief AI Officer actually do, and how is that different from an advisor? | 23    | ✓       |
+| `/faq/what-does-the-two-week-assessment-produce-and-is-the-fee-credited-if-we-continue` | what does the two-week assessment produce, and is the fee credited if we continue?              | What does the two-week Assessment produce? — meshin.co                 | What does the two-week Assessment produce, and is the fee credited if we continue? The two-week Assessment produces a memo your board can act on.               | What does the two-week Assessment produce, and is the fee credited if we continue?              | 23    | ✓       |
+| `/faq/what-happens-if-the-evals-say-a-workflow-isnt-good-enough`                        | what happens if the evals say a workflow isn't good enough?                                     | What if the evals say a workflow isn't good enough? — meshin.co        | What happens if the evals say a workflow isn't good enough? It does not ship. The Sprint ends with a written account of why it fell short.                      | What happens if the evals say a workflow isn't good enough?                                     | 23    | ✓       |
+| `/faq/what-happens-on-a-fit-call-and-does-it-cost-anything`                             | what happens on a fit call, and does it cost anything?                                          | What happens on a fit call, and does it cost anything? — meshin.co     | What happens on a fit call, and does it cost anything? It costs nothing and runs thirty minutes, booked at cal.com/meshin.                                      | What happens on a fit call, and does it cost anything?                                          | 23    | ✓       |
+| `/faq/what-if-the-ai-we-are-building-goes-into-a-product-we-sell`                       | what if the ai we're building goes into a product we sell, not just an internal workflow?       | What if our AI goes into a product we sell? — meshin.co                | What if the AI we're building goes into a product we sell, not just an internal workflow? I cover products you sell as well as internal workflows.              | What if the AI we're building goes into a product we sell, not just an internal workflow?       | 23    | ✓       |
+| `/faq/what-if-we-already-have-a-data-science-team-or-an-internal-ai-lead`               | what if we already have a data science team or an internal ai lead?                             | What if we already have a data science team or AI lead? — meshin.co    | What if we already have a data science team or an internal AI lead? Your data science team stays exactly where it is. I do not write models, tune pipelines.    | What if we already have a data science team or an internal AI lead?                             | 23    | ✓       |
+| `/faq/what-size-of-company-do-you-actually-work-with`                                   | what size of company do you actually work with?                                                 | What size of company do you actually work with? — meshin.co            | What size of company do you actually work with? Companies of 30 to 300 people, with at least one engineer. Most companies here have run AI pilots.              | What size of company do you actually work with?                                                 | 22    | ✓       |
+| `/faq/whats-the-difference-between-the-assessment-the-sprint-and-the-retainer`          | what's the difference between the assessment, the sprint and the retainer?                      | Assessment, Sprint and Retainer: what is the difference? — meshin.co   | What's the difference between the Assessment, the Sprint and the Retainer? Three fixed offers, three stages. The Assessment is two weeks at a fixed fee.        | What's the difference between the Assessment, the Sprint and the Retainer?                      | 23    | ✓       |
+| `/faq/who-answers-customer-security-questionnaires`                                     | who answers customer security questionnaires?                                                   | Who answers customer security questionnaires? — meshin.co              | Who answers customer security questionnaires? I do, as the named officer on record. That is a core part of the Retainer: procurement answers.                   | Who answers customer security questionnaires?                                                   | 23    | ✓       |
+| `/faq/who-owns-the-code-and-the-data`                                                   | who owns the code and the data?                                                                 | Who owns the code and the data? — meshin.co                            | Who owns the code and the data? You own both the code and the data. The code lives in your repositories from the first commit, under your licence.              | Who owns the code and the data?                                                                 | 22    | ✓       |
+| `/faq/who-owns-the-frameworks-templates-and-playbooks-built-during-the-engagement`      | who owns the frameworks, templates and playbooks built during the engagement?                   | Who owns the frameworks, templates and playbooks I build? — meshin.co  | Who owns the frameworks, templates and playbooks built during the engagement? Everything written for your business belongs to you.                              | Who owns the frameworks, templates and playbooks built during the engagement?                   | 23    | ✓       |
+| `/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai`                  | why hire a fractional officer instead of a full-time head of ai?                                | Why hire a fractional officer over a full-time head of AI? — meshin.co | Why hire a fractional officer instead of a full-time head of AI? You get a named officer's accountability without the salary, hiring process or idle seat.      | Why hire a fractional officer instead of a full-time head of AI?                                | 23    | ✓       |
+
 <!-- semantic-core:end generated -->
 
 ## Hand-authored layer — the why
@@ -404,188 +406,190 @@ Generated by `npm run assets:registers`; `npm run gate:registers` fails when the
 no longer matches the content.
 
 <!-- REGISTERS:BEGIN -->
+
 #### Entity register (32)
 
 One owning route per entity. The mention count is inbound references from other routes.
 
-| Entity | Owned by | Mentioned by |
-|---|---|---|
-| Agentic workflow | `/glossary/agentic-workflow` | 13 |
-| AI governance | `/glossary/ai-governance` | 34 |
-| AI impact assessment | `/glossary/ai-impact-assessment` | 2 |
-| AI management system | `/glossary/ai-management-system` | 6 |
-| AI operating model | `/glossary/ai-operating-model` | 13 |
-| AI register | `/glossary/ai-register` | 34 |
-| Conformity assessment | `/glossary/conformity-assessment` | 5 |
-| Data classification | `/glossary/data-classification` | 15 |
-| DPIA | `/glossary/dpia` | 5 |
-| EU AI Act | `/glossary/eu-ai-act` | 41 |
-| Evals | `/glossary/evals` | 33 |
-| Guardrails | `/glossary/guardrails` | 7 |
-| Hallucination rate | `/glossary/hallucination-rate` | 4 |
-| High-risk AI system | `/glossary/high-risk-ai-system` | 10 |
-| Human oversight | `/glossary/human-oversight` | 10 |
-| Human-in-the-loop | `/glossary/human-in-the-loop` | 5 |
-| ISO/IEC 42001 | `/glossary/iso-iec-42001` | 29 |
-| LLM gateway | `/glossary/llm-gateway` | 10 |
-| Model card | `/glossary/model-card` | 3 |
-| Model Context Protocol | `/glossary/mcp` | 2 |
-| Model provenance | `/glossary/model-provenance` | 3 |
-| NIST AI RMF | `/glossary/nist-ai-rmf` | 23 |
-| Observability | `/glossary/observability` | 5 |
-| Post-market monitoring | `/glossary/post-market-monitoring` | 5 |
-| Prompt injection | `/glossary/prompt-injection` | 7 |
-| Provider vs deployer | `/glossary/provider-vs-deployer` | 3 |
-| Red teaming | `/glossary/red-teaming` | 4 |
-| Retrieval augmented generation | `/glossary/retrieval-augmented-generation` | 4 |
-| Serious incident reporting | `/glossary/serious-incident-reporting` | 3 |
-| Shadow AI | `/glossary/shadow-ai` | 9 |
-| Sub-processor | `/glossary/sub-processor` | 6 |
-| Technical documentation | `/glossary/technical-documentation` | 8 |
+| Entity                         | Owned by                                   | Mentioned by |
+| ------------------------------ | ------------------------------------------ | ------------ |
+| Agentic workflow               | `/glossary/agentic-workflow`               | 13           |
+| AI governance                  | `/glossary/ai-governance`                  | 34           |
+| AI impact assessment           | `/glossary/ai-impact-assessment`           | 2            |
+| AI management system           | `/glossary/ai-management-system`           | 6            |
+| AI operating model             | `/glossary/ai-operating-model`             | 13           |
+| AI register                    | `/glossary/ai-register`                    | 34           |
+| Conformity assessment          | `/glossary/conformity-assessment`          | 5            |
+| Data classification            | `/glossary/data-classification`            | 15           |
+| DPIA                           | `/glossary/dpia`                           | 5            |
+| EU AI Act                      | `/glossary/eu-ai-act`                      | 41           |
+| Evals                          | `/glossary/evals`                          | 33           |
+| Guardrails                     | `/glossary/guardrails`                     | 7            |
+| Hallucination rate             | `/glossary/hallucination-rate`             | 4            |
+| High-risk AI system            | `/glossary/high-risk-ai-system`            | 10           |
+| Human oversight                | `/glossary/human-oversight`                | 10           |
+| Human-in-the-loop              | `/glossary/human-in-the-loop`              | 5            |
+| ISO/IEC 42001                  | `/glossary/iso-iec-42001`                  | 29           |
+| LLM gateway                    | `/glossary/llm-gateway`                    | 10           |
+| Model card                     | `/glossary/model-card`                     | 3            |
+| Model Context Protocol         | `/glossary/mcp`                            | 2            |
+| Model provenance               | `/glossary/model-provenance`               | 3            |
+| NIST AI RMF                    | `/glossary/nist-ai-rmf`                    | 23           |
+| Observability                  | `/glossary/observability`                  | 5            |
+| Post-market monitoring         | `/glossary/post-market-monitoring`         | 5            |
+| Prompt injection               | `/glossary/prompt-injection`               | 7            |
+| Provider vs deployer           | `/glossary/provider-vs-deployer`           | 3            |
+| Red teaming                    | `/glossary/red-teaming`                    | 4            |
+| Retrieval augmented generation | `/glossary/retrieval-augmented-generation` | 4            |
+| Serious incident reporting     | `/glossary/serious-incident-reporting`     | 3            |
+| Shadow AI                      | `/glossary/shadow-ai`                      | 9            |
+| Sub-processor                  | `/glossary/sub-processor`                  | 6            |
+| Technical documentation        | `/glossary/technical-documentation`        | 8            |
 
 #### Concept register (32)
 
 A concept is defined on exactly one page. Every other page links to it rather than redefining it.
 
-| Concept | Defined by | Definition |
-|---|---|---|
-| Agentic workflow | `/glossary/agentic-workflow` | An agentic workflow is a task one or more AI agents complete on their own once started. The system plans steps, calls tools or APIs, checks the result, and decides what happens next without a person approving each move. |
-| AI governance | `/glossary/ai-governance` | AI governance means deciding who may build or buy an AI system, and who answers, by name, when it fails. Policies, roles and controls set what data a system may touch and who signs off before it reaches customers. |
-| AI impact assessment | `/glossary/ai-impact-assessment` | An AI impact assessment is a written review of who a high-risk AI system affects and what could go wrong for them, completed before launch. It also asks whether someone wrongly affected has a real way to challenge the system's decision, not just a right to ask a question. |
-| AI management system | `/glossary/ai-management-system` | An AI management system is the plan-do-check-act cycle a company runs to govern its AI. It sets policy, does the work, checks results, then adjusts and repeats. ISO/IEC 42001 is the standard that certifies a company actually runs the cycle, not just writes it down. |
-| AI operating model | `/glossary/ai-operating-model` | An AI operating model is the decision structure that moves AI work from a pilot nobody owns to a process a team runs. It names who chooses what to automate, who reviews a system before customers see it, and who runs it afterwards. |
-| AI register | `/glossary/ai-register` | An AI register is a company's own inventory of every AI system it builds, buys or uses. Each entry lists what the system does, what data it touches, who owns it and how risky it is. |
-| Conformity assessment | `/glossary/conformity-assessment` | A conformity assessment is the process a provider completes before placing a high-risk AI system on the market. Either the provider checks the system internally, or an accredited outside body checks it. The assessment shows the system actually meets the EU AI Act's requirements, rather than merely claiming to. |
-| Data classification | `/glossary/data-classification` | Data classification means labelling what is in a dataset, document or prompt by sensitivity. Common tiers are public, internal, confidential and restricted. A company can then decide what may reach a given AI tool. That way nobody pastes something in and finds out too late. |
-| DPIA | `/glossary/dpia` | A DPIA, or data protection impact assessment, is a written GDPR review completed before a company begins personal-data processing likely to carry high privacy risk. It assesses what data the company collects, why, and how the company reduces that risk. It differs from a fairness review of the system's decision. |
-| EU AI Act | `/glossary/eu-ai-act` | The EU AI Act is an EU regulation, in force since August 2024, that sorts AI systems into risk tiers and sets legal obligations that scale with the tier, heaviest for high-risk systems. |
-| Evals | `/glossary/evals` | Evals are repeatable tests that score an AI system's outputs against a fixed set of examples and criteria. A team runs them before release and again whenever the prompt, data or model changes. |
-| Guardrails | `/glossary/guardrails` | Guardrails are checks on what an AI model will respond to, what it can say, and what it can do. The surrounding code enforces them, not the model's training. That way an unusual input cannot just persuade the system to drop a rule. |
-| Hallucination rate | `/glossary/hallucination-rate` | A hallucination rate is the share of a model's answers that state something false or invented in the same confident tone as a correct one. A team measures it against questions with known correct answers. |
-| High-risk AI system | `/glossary/high-risk-ai-system` | A high-risk AI system is one the EU AI Act classifies as carrying its heaviest legal duties. That happens either because it is a safety component of a regulated product, or because it serves a listed purpose such as hiring, credit scoring or law enforcement. A narrow exemption can apply. |
-| Human oversight | `/glossary/human-oversight` | Human oversight is the EU AI Act requirement that a person watching a high-risk AI system can understand what it is doing, catch a wrong output and stop the system. That takes training, time and authority, not just a name on a workflow diagram. |
-| Human-in-the-loop | `/glossary/human-in-the-loop` | Human-in-the-loop means a person reviews or can stop an AI system's output before it takes effect, rather than the system acting alone once it starts. |
-| ISO/IEC 42001 | `/glossary/iso-iec-42001` | ISO/IEC 42001 is an international standard that sets out what an AI management system must do. An AI management system is the set of policies an organisation follows to govern its own AI, checked on a cycle rather than written once. ISO and IEC published the standard in December 2023. |
-| LLM gateway | `/glossary/llm-gateway` | An LLM (large language model) gateway is a single service that every model call passes through. A company can then enforce authentication, logging, rate limits and content filtering in one place. |
-| Model card | `/glossary/model-card` | A model card is a short, standard-shaped document a model's maker publishes. It says what the maker built the model for, and how it performs across groups and conditions. It also names where not to use the model, closer to a spec sheet than a sales page. |
-| Model Context Protocol | `/glossary/mcp` | The Model Context Protocol (MCP) is an open protocol that lets AI applications use outside tools and data. Its specification says MCP cannot enforce consent, data privacy or tool safety at the protocol level. Whoever builds and runs the host and the servers has to do that work. |
-| Model provenance | `/glossary/model-provenance` | Model provenance is a traceable record of where a model comes from. That means which base model it started from, what data trained or fine-tuned it, and what licence covers the result. A buyer needs this to know what it may do with the output. |
-| NIST AI RMF | `/glossary/nist-ai-rmf` | The NIST AI Risk Management Framework (AI RMF) is a voluntary US framework, published in January 2023, for identifying and managing an AI system's risks across its design, development and use. |
-| Observability | `/glossary/observability` | Observability is the ability to see, after the fact, exactly what a user asked a live AI system. For any one case someone points to, it also shows what the system retrieved or called, and what it answered. An aggregate chart alone cannot explain one specific customer's bad experience. |
-| Post-market monitoring | `/glossary/post-market-monitoring` | Post-market monitoring is the EU AI Act duty on a provider to keep collecting and analysing real-world performance data on a high-risk AI system. It lasts as long as the system is in use. Monitoring catches problems that appear after launch, instead of assuming the original testing ruled them out. |
-| Prompt injection | `/glossary/prompt-injection` | Prompt injection is text that gets a model to treat it as an instruction rather than content. It can be typed by a user, or hidden inside a document, webpage or email the model reads. OWASP, a security-standards group, ranks it as the top risk for large language model applications. |
-| Provider vs deployer | `/glossary/provider-vs-deployer` | Provider vs deployer is the EU AI Act split between the company that builds an AI system and the company that runs it. Most of the Act's paperwork depends on which of the two roles a company holds. |
-| Red teaming | `/glossary/red-teaming` | Red teaming means deliberately trying to break an AI system, the way a motivated attacker or a determined bad-faith user would, before they actually do. It aims at finding the failure nobody wrote a test case for, not at confirming cases already known to work. |
-| Retrieval augmented generation | `/glossary/retrieval-augmented-generation` | Retrieval augmented generation, shortened to RAG, is an architecture where a model looks up relevant passages from a document store at answer time. It reads them alongside the question. This means an answer can cite a current document, rather than relying only on training data. |
-| Serious incident reporting | `/glossary/serious-incident-reporting` | Serious incident reporting is the EU AI Act duty to notify the relevant national authority after a high-risk AI system causes serious harm. It falls on the provider, the company that built the system, and sometimes the deployer, the company running it. The default deadline is fifteen days from awareness. |
-| Shadow AI | `/glossary/shadow-ai` | Shadow AI is any AI tool an employee uses for company work without IT or security's knowledge. Examples range from a personal chatbot account to a browser extension or a locally run model. |
-| Sub-processor | `/glossary/sub-processor` | A sub-processor is a vendor an AI provider hands a company's data to behind the scenes. The model provider behind a SaaS tool is a common example. GDPR Article 28 requires the provider to get the customer's permission, and to bind the sub-processor to the same data protections by contract. |
-| Technical documentation | `/glossary/technical-documentation` | Technical documentation is the dossier a provider of a high-risk AI system must keep. It covers purpose, design logic, training data, performance metrics, risk process and monitoring plan. It has to be clear enough that a regulator can assess it without the original engineers in the room. |
+| Concept                        | Defined by                                 | Definition                                                                                                                                                                                                                                                                                                               |
+| ------------------------------ | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Agentic workflow               | `/glossary/agentic-workflow`               | An agentic workflow is a task one or more AI agents complete on their own once started. The system plans steps, calls tools or APIs, checks the result, and decides what happens next without a person approving each move.                                                                                              |
+| AI governance                  | `/glossary/ai-governance`                  | AI governance means deciding who may build or buy an AI system, and who answers, by name, when it fails. Policies, roles and controls set what data a system may touch and who signs off before it reaches customers.                                                                                                    |
+| AI impact assessment           | `/glossary/ai-impact-assessment`           | An AI impact assessment is a written review of who a high-risk AI system affects and what could go wrong for them, completed before launch. It also asks whether someone wrongly affected has a real way to challenge the system's decision, not just a right to ask a question.                                         |
+| AI management system           | `/glossary/ai-management-system`           | An AI management system is the plan-do-check-act cycle a company runs to govern its AI. It sets policy, does the work, checks results, then adjusts and repeats. ISO/IEC 42001 is the standard that certifies a company actually runs the cycle, not just writes it down.                                                |
+| AI operating model             | `/glossary/ai-operating-model`             | An AI operating model is the decision structure that moves AI work from a pilot nobody owns to a process a team runs. It names who chooses what to automate, who reviews a system before customers see it, and who runs it afterwards.                                                                                   |
+| AI register                    | `/glossary/ai-register`                    | An AI register is a company's own inventory of every AI system it builds, buys or uses. Each entry lists what the system does, what data it touches, who owns it and how risky it is.                                                                                                                                    |
+| Conformity assessment          | `/glossary/conformity-assessment`          | A conformity assessment is the process a provider completes before placing a high-risk AI system on the market. Either the provider checks the system internally, or an accredited outside body checks it. The assessment shows the system actually meets the EU AI Act's requirements, rather than merely claiming to.  |
+| Data classification            | `/glossary/data-classification`            | Data classification means labelling what is in a dataset, document or prompt by sensitivity. Common tiers are public, internal, confidential and restricted. A company can then decide what may reach a given AI tool. That way nobody pastes something in and finds out too late.                                       |
+| DPIA                           | `/glossary/dpia`                           | A DPIA, or data protection impact assessment, is a written GDPR review completed before a company begins personal-data processing likely to carry high privacy risk. It assesses what data the company collects, why, and how the company reduces that risk. It differs from a fairness review of the system's decision. |
+| EU AI Act                      | `/glossary/eu-ai-act`                      | The EU AI Act is an EU regulation, in force since August 2024, that sorts AI systems into risk tiers and sets legal obligations that scale with the tier, heaviest for high-risk systems.                                                                                                                                |
+| Evals                          | `/glossary/evals`                          | Evals are repeatable tests that score an AI system's outputs against a fixed set of examples and criteria. A team runs them before release and again whenever the prompt, data or model changes.                                                                                                                         |
+| Guardrails                     | `/glossary/guardrails`                     | Guardrails are checks on what an AI model will respond to, what it can say, and what it can do. The surrounding code enforces them, not the model's training. That way an unusual input cannot just persuade the system to drop a rule.                                                                                  |
+| Hallucination rate             | `/glossary/hallucination-rate`             | A hallucination rate is the share of a model's answers that state something false or invented in the same confident tone as a correct one. A team measures it against questions with known correct answers.                                                                                                              |
+| High-risk AI system            | `/glossary/high-risk-ai-system`            | A high-risk AI system is one the EU AI Act classifies as carrying its heaviest legal duties. That happens either because it is a safety component of a regulated product, or because it serves a listed purpose such as hiring, credit scoring or law enforcement. A narrow exemption can apply.                         |
+| Human oversight                | `/glossary/human-oversight`                | Human oversight is the EU AI Act requirement that a person watching a high-risk AI system can understand what it is doing, catch a wrong output and stop the system. That takes training, time and authority, not just a name on a workflow diagram.                                                                     |
+| Human-in-the-loop              | `/glossary/human-in-the-loop`              | Human-in-the-loop means a person reviews or can stop an AI system's output before it takes effect, rather than the system acting alone once it starts.                                                                                                                                                                   |
+| ISO/IEC 42001                  | `/glossary/iso-iec-42001`                  | ISO/IEC 42001 is an international standard that sets out what an AI management system must do. An AI management system is the set of policies an organisation follows to govern its own AI, checked on a cycle rather than written once. ISO and IEC published the standard in December 2023.                            |
+| LLM gateway                    | `/glossary/llm-gateway`                    | An LLM (large language model) gateway is a single service that every model call passes through. A company can then enforce authentication, logging, rate limits and content filtering in one place.                                                                                                                      |
+| Model card                     | `/glossary/model-card`                     | A model card is a short, standard-shaped document a model's maker publishes. It says what the maker built the model for, and how it performs across groups and conditions. It also names where not to use the model, closer to a spec sheet than a sales page.                                                           |
+| Model Context Protocol         | `/glossary/mcp`                            | The Model Context Protocol (MCP) is an open protocol that lets AI applications use outside tools and data. Its specification says MCP cannot enforce consent, data privacy or tool safety at the protocol level. Whoever builds and runs the host and the servers has to do that work.                                   |
+| Model provenance               | `/glossary/model-provenance`               | Model provenance is a traceable record of where a model comes from. That means which base model it started from, what data trained or fine-tuned it, and what licence covers the result. A buyer needs this to know what it may do with the output.                                                                      |
+| NIST AI RMF                    | `/glossary/nist-ai-rmf`                    | The NIST AI Risk Management Framework (AI RMF) is a voluntary US framework, published in January 2023, for identifying and managing an AI system's risks across its design, development and use.                                                                                                                         |
+| Observability                  | `/glossary/observability`                  | Observability is the ability to see, after the fact, exactly what a user asked a live AI system. For any one case someone points to, it also shows what the system retrieved or called, and what it answered. An aggregate chart alone cannot explain one specific customer's bad experience.                            |
+| Post-market monitoring         | `/glossary/post-market-monitoring`         | Post-market monitoring is the EU AI Act duty on a provider to keep collecting and analysing real-world performance data on a high-risk AI system. It lasts as long as the system is in use. Monitoring catches problems that appear after launch, instead of assuming the original testing ruled them out.               |
+| Prompt injection               | `/glossary/prompt-injection`               | Prompt injection is text that gets a model to treat it as an instruction rather than content. It can be typed by a user, or hidden inside a document, webpage or email the model reads. OWASP, a security-standards group, ranks it as the top risk for large language model applications.                               |
+| Provider vs deployer           | `/glossary/provider-vs-deployer`           | Provider vs deployer is the EU AI Act split between the company that builds an AI system and the company that runs it. Most of the Act's paperwork depends on which of the two roles a company holds.                                                                                                                    |
+| Red teaming                    | `/glossary/red-teaming`                    | Red teaming means deliberately trying to break an AI system, the way a motivated attacker or a determined bad-faith user would, before they actually do. It aims at finding the failure nobody wrote a test case for, not at confirming cases already known to work.                                                     |
+| Retrieval augmented generation | `/glossary/retrieval-augmented-generation` | Retrieval augmented generation, shortened to RAG, is an architecture where a model looks up relevant passages from a document store at answer time. It reads them alongside the question. This means an answer can cite a current document, rather than relying only on training data.                                   |
+| Serious incident reporting     | `/glossary/serious-incident-reporting`     | Serious incident reporting is the EU AI Act duty to notify the relevant national authority after a high-risk AI system causes serious harm. It falls on the provider, the company that built the system, and sometimes the deployer, the company running it. The default deadline is fifteen days from awareness.        |
+| Shadow AI                      | `/glossary/shadow-ai`                      | Shadow AI is any AI tool an employee uses for company work without IT or security's knowledge. Examples range from a personal chatbot account to a browser extension or a locally run model.                                                                                                                             |
+| Sub-processor                  | `/glossary/sub-processor`                  | A sub-processor is a vendor an AI provider hands a company's data to behind the scenes. The model provider behind a SaaS tool is a common example. GDPR Article 28 requires the provider to get the customer's permission, and to bind the sub-processor to the same data protections by contract.                       |
+| Technical documentation        | `/glossary/technical-documentation`        | Technical documentation is the dossier a provider of a high-risk AI system must keep. It covers purpose, design logic, training data, performance metrics, risk process and monitoring plan. It has to be clear enough that a regulator can assess it without the original engineers in the room.                        |
 
 #### Topic relationships (98)
 
 Declared in the content, never inferred here.
 
-| From | Kind | To |
-|---|---|---|
-| Agentic workflow | related-concept | Human-in-the-loop |
-| Agentic workflow | related-concept | LLM gateway |
-| Agentic workflow | related-concept | Evals |
-| AI governance | related-concept | NIST AI RMF |
-| AI governance | related-concept | ISO/IEC 42001 |
-| AI governance | related-concept | AI register |
-| AI impact assessment | related-concept | EU AI Act |
-| AI impact assessment | related-concept | DPIA |
-| AI impact assessment | related-concept | High-risk AI system |
-| AI management system | related-concept | ISO/IEC 42001 |
-| AI management system | related-concept | AI governance |
-| AI management system | related-concept | Technical documentation |
-| AI operating model | related-concept | AI governance |
-| AI operating model | related-concept | AI management system |
-| AI operating model | related-concept | ISO/IEC 42001 |
-| AI operating model | related-concept | AI register |
-| AI register | related-concept | AI governance |
-| AI register | related-concept | EU AI Act |
-| AI register | related-concept | Shadow AI |
-| Conformity assessment | related-concept | High-risk AI system |
-| Conformity assessment | related-concept | Technical documentation |
-| Conformity assessment | related-concept | Post-market monitoring |
-| Data classification | related-concept | DPIA |
-| Data classification | related-concept | Sub-processor |
-| Data classification | related-concept | Guardrails |
-| DPIA | related-concept | AI impact assessment |
-| DPIA | related-concept | Sub-processor |
-| DPIA | related-concept | Data classification |
-| EU AI Act | related-concept | AI register |
-| EU AI Act | related-concept | Human-in-the-loop |
-| EU AI Act | related-concept | AI governance |
-| Evals | related-concept | Agentic workflow |
-| Evals | related-concept | LLM gateway |
-| Evals | related-concept | AI governance |
-| Guardrails | related-concept | Prompt injection |
-| Guardrails | related-concept | Red teaming |
-| Guardrails | related-concept | Observability |
-| Hallucination rate | related-concept | Evals |
-| Hallucination rate | related-concept | Retrieval augmented generation |
-| Hallucination rate | related-concept | Guardrails |
-| High-risk AI system | related-concept | EU AI Act |
-| High-risk AI system | related-concept | Conformity assessment |
-| High-risk AI system | related-concept | Technical documentation |
-| Human oversight | related-concept | Human-in-the-loop |
-| Human oversight | related-concept | High-risk AI system |
-| Human oversight | related-concept | Provider vs deployer |
-| Human-in-the-loop | related-concept | Agentic workflow |
-| Human-in-the-loop | related-concept | EU AI Act |
-| Human-in-the-loop | related-concept | NIST AI RMF |
-| Human-in-the-loop | related-concept | Human oversight |
-| ISO/IEC 42001 | related-concept | AI governance |
-| ISO/IEC 42001 | related-concept | NIST AI RMF |
-| ISO/IEC 42001 | related-concept | AI register |
-| LLM gateway | related-concept | Shadow AI |
-| LLM gateway | related-concept | Agentic workflow |
-| LLM gateway | related-concept | Evals |
-| Model card | related-concept | Model provenance |
-| Model card | related-concept | Technical documentation |
-| Model card | related-concept | Hallucination rate |
-| Model Context Protocol | related-concept | Guardrails |
-| Model Context Protocol | related-concept | Prompt injection |
-| Model Context Protocol | related-concept | Agentic workflow |
-| Model provenance | related-concept | Model card |
-| Model provenance | related-concept | Retrieval augmented generation |
-| Model provenance | related-concept | Data classification |
-| NIST AI RMF | related-concept | AI governance |
-| NIST AI RMF | related-concept | ISO/IEC 42001 |
-| NIST AI RMF | related-concept | Human-in-the-loop |
-| Observability | related-concept | Post-market monitoring |
-| Observability | related-concept | Red teaming |
-| Observability | related-concept | Hallucination rate |
-| Post-market monitoring | related-concept | Serious incident reporting |
-| Post-market monitoring | related-concept | High-risk AI system |
-| Post-market monitoring | related-concept | Observability |
-| Prompt injection | related-concept | Guardrails |
-| Prompt injection | related-concept | Red teaming |
-| Prompt injection | related-concept | Retrieval augmented generation |
-| Provider vs deployer | related-concept | High-risk AI system |
-| Provider vs deployer | related-concept | Human oversight |
-| Provider vs deployer | related-concept | Sub-processor |
-| Red teaming | related-concept | Guardrails |
-| Red teaming | related-concept | Evals |
-| Red teaming | related-concept | Prompt injection |
-| Retrieval augmented generation | related-concept | Model provenance |
-| Retrieval augmented generation | related-concept | Prompt injection |
-| Retrieval augmented generation | related-concept | Hallucination rate |
-| Serious incident reporting | related-concept | Post-market monitoring |
-| Serious incident reporting | related-concept | High-risk AI system |
-| Serious incident reporting | related-concept | Human oversight |
-| Shadow AI | related-concept | LLM gateway |
-| Shadow AI | related-concept | AI register |
-| Shadow AI | related-concept | AI governance |
-| Sub-processor | related-concept | DPIA |
-| Sub-processor | related-concept | Data classification |
-| Sub-processor | related-concept | Provider vs deployer |
-| Technical documentation | related-concept | Conformity assessment |
-| Technical documentation | related-concept | Model card |
-| Technical documentation | related-concept | High-risk AI system |
+| From                           | Kind            | To                             |
+| ------------------------------ | --------------- | ------------------------------ |
+| Agentic workflow               | related-concept | Human-in-the-loop              |
+| Agentic workflow               | related-concept | LLM gateway                    |
+| Agentic workflow               | related-concept | Evals                          |
+| AI governance                  | related-concept | NIST AI RMF                    |
+| AI governance                  | related-concept | ISO/IEC 42001                  |
+| AI governance                  | related-concept | AI register                    |
+| AI impact assessment           | related-concept | EU AI Act                      |
+| AI impact assessment           | related-concept | DPIA                           |
+| AI impact assessment           | related-concept | High-risk AI system            |
+| AI management system           | related-concept | ISO/IEC 42001                  |
+| AI management system           | related-concept | AI governance                  |
+| AI management system           | related-concept | Technical documentation        |
+| AI operating model             | related-concept | AI governance                  |
+| AI operating model             | related-concept | AI management system           |
+| AI operating model             | related-concept | ISO/IEC 42001                  |
+| AI operating model             | related-concept | AI register                    |
+| AI register                    | related-concept | AI governance                  |
+| AI register                    | related-concept | EU AI Act                      |
+| AI register                    | related-concept | Shadow AI                      |
+| Conformity assessment          | related-concept | High-risk AI system            |
+| Conformity assessment          | related-concept | Technical documentation        |
+| Conformity assessment          | related-concept | Post-market monitoring         |
+| Data classification            | related-concept | DPIA                           |
+| Data classification            | related-concept | Sub-processor                  |
+| Data classification            | related-concept | Guardrails                     |
+| DPIA                           | related-concept | AI impact assessment           |
+| DPIA                           | related-concept | Sub-processor                  |
+| DPIA                           | related-concept | Data classification            |
+| EU AI Act                      | related-concept | AI register                    |
+| EU AI Act                      | related-concept | Human-in-the-loop              |
+| EU AI Act                      | related-concept | AI governance                  |
+| Evals                          | related-concept | Agentic workflow               |
+| Evals                          | related-concept | LLM gateway                    |
+| Evals                          | related-concept | AI governance                  |
+| Guardrails                     | related-concept | Prompt injection               |
+| Guardrails                     | related-concept | Red teaming                    |
+| Guardrails                     | related-concept | Observability                  |
+| Hallucination rate             | related-concept | Evals                          |
+| Hallucination rate             | related-concept | Retrieval augmented generation |
+| Hallucination rate             | related-concept | Guardrails                     |
+| High-risk AI system            | related-concept | EU AI Act                      |
+| High-risk AI system            | related-concept | Conformity assessment          |
+| High-risk AI system            | related-concept | Technical documentation        |
+| Human oversight                | related-concept | Human-in-the-loop              |
+| Human oversight                | related-concept | High-risk AI system            |
+| Human oversight                | related-concept | Provider vs deployer           |
+| Human-in-the-loop              | related-concept | Agentic workflow               |
+| Human-in-the-loop              | related-concept | EU AI Act                      |
+| Human-in-the-loop              | related-concept | NIST AI RMF                    |
+| Human-in-the-loop              | related-concept | Human oversight                |
+| ISO/IEC 42001                  | related-concept | AI governance                  |
+| ISO/IEC 42001                  | related-concept | NIST AI RMF                    |
+| ISO/IEC 42001                  | related-concept | AI register                    |
+| LLM gateway                    | related-concept | Shadow AI                      |
+| LLM gateway                    | related-concept | Agentic workflow               |
+| LLM gateway                    | related-concept | Evals                          |
+| Model card                     | related-concept | Model provenance               |
+| Model card                     | related-concept | Technical documentation        |
+| Model card                     | related-concept | Hallucination rate             |
+| Model Context Protocol         | related-concept | Guardrails                     |
+| Model Context Protocol         | related-concept | Prompt injection               |
+| Model Context Protocol         | related-concept | Agentic workflow               |
+| Model provenance               | related-concept | Model card                     |
+| Model provenance               | related-concept | Retrieval augmented generation |
+| Model provenance               | related-concept | Data classification            |
+| NIST AI RMF                    | related-concept | AI governance                  |
+| NIST AI RMF                    | related-concept | ISO/IEC 42001                  |
+| NIST AI RMF                    | related-concept | Human-in-the-loop              |
+| Observability                  | related-concept | Post-market monitoring         |
+| Observability                  | related-concept | Red teaming                    |
+| Observability                  | related-concept | Hallucination rate             |
+| Post-market monitoring         | related-concept | Serious incident reporting     |
+| Post-market monitoring         | related-concept | High-risk AI system            |
+| Post-market monitoring         | related-concept | Observability                  |
+| Prompt injection               | related-concept | Guardrails                     |
+| Prompt injection               | related-concept | Red teaming                    |
+| Prompt injection               | related-concept | Retrieval augmented generation |
+| Provider vs deployer           | related-concept | High-risk AI system            |
+| Provider vs deployer           | related-concept | Human oversight                |
+| Provider vs deployer           | related-concept | Sub-processor                  |
+| Red teaming                    | related-concept | Guardrails                     |
+| Red teaming                    | related-concept | Evals                          |
+| Red teaming                    | related-concept | Prompt injection               |
+| Retrieval augmented generation | related-concept | Model provenance               |
+| Retrieval augmented generation | related-concept | Prompt injection               |
+| Retrieval augmented generation | related-concept | Hallucination rate             |
+| Serious incident reporting     | related-concept | Post-market monitoring         |
+| Serious incident reporting     | related-concept | High-risk AI system            |
+| Serious incident reporting     | related-concept | Human oversight                |
+| Shadow AI                      | related-concept | LLM gateway                    |
+| Shadow AI                      | related-concept | AI register                    |
+| Shadow AI                      | related-concept | AI governance                  |
+| Sub-processor                  | related-concept | DPIA                           |
+| Sub-processor                  | related-concept | Data classification            |
+| Sub-processor                  | related-concept | Provider vs deployer           |
+| Technical documentation        | related-concept | Conformity assessment          |
+| Technical documentation        | related-concept | Model card                     |
+| Technical documentation        | related-concept | High-risk AI system            |
+
 <!-- REGISTERS:END -->
 
 ### GAP register — closed 2026-10-02

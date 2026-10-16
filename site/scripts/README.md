@@ -71,6 +71,7 @@ a build.
 | `run-deploy-check.mjs`   | `deploy:check`             | Reports whether the token authenticates, Pages is readable and the project exists |
 | `run-deploy.mjs`         | `deploy`, `deploy:preview` | Uploads `dist/` to Pages, refusing a build the route ledger has not seen          |
 | `run-publish-target.mjs` | Publish Live workflow      | Resolves which gated build a press publishes, refusing a stale or missing one     |
+| `run-lh-evidence.mjs`    | `lh:record`, `lh:check`    | Records a green local lighthouse run, and refuses a push of a tree none measured  |
 
 ## Modules
 
@@ -86,6 +87,8 @@ be tested without a build.
 | `external-links.mjs`      | `run-external-links.mjs`                                                                                          | The required rel set, and what counts as outbound                                                                             |
 | `links-gate.mjs`          | `run-links-gate.mjs`                                                                                              | The crawl arguments, the skipped hosts, and the hermetic mode                                                                 |
 | `deploy.mjs`              | `run-deploy.mjs`, `run-deploy-check.mjs`                                                                          | The required credentials, the wrangler arguments, and the route-ledger refusal                                                |
+| `build-surface.mjs`       | `publish-target.mjs`, `lh-evidence.mjs`                                                                           | Whether a path can change the built output, which is not the same question as whether it is markdown                          |
+| `lh-evidence.mjs`         | `run-lh-evidence.mjs`                                                                                             | The fingerprint of everything that can change the build, and why a recorded lighthouse run no longer covers it                |
 | `publish-target.mjs`      | `run-publish-target.mjs`                                                                                          | Which gated ci run the Publish Live button may publish, and which later commits block it                                      |
 | `third-party.mjs`         | `run-paid-gate.mjs`                                                                                               | Every third-party origin the build may load, with the reason each is free (L58)                                               |
 | `smoke-prod.mjs`          | `run-smoke-prod.mjs`                                                                                              | The required header set and the per-route verdict                                                                             |

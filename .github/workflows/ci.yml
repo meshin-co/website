@@ -175,91 +175,9 @@ jobs:
           path: site/test-results/
           retention-days: 14
 
-  lighthouse:
-    if: github.event_name != 'workflow_dispatch' && needs.changes.outputs.code == 'true'
-    needs: [changes, build]
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        form_factor: [mobile, desktop]
-        shard: [1, 2, 3, 4]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: site/.nvmrc
-          cache: npm
-          cache-dependency-path: site/package-lock.json
-      - run: npm ci
-      - uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: site/dist
-
-      - name: lighthouse ${{ matrix.form_factor }} shard ${{ matrix.shard }} of 4
-        run: npm run gate:lh:one
-        env:
-          GATE_PHASE: ci
-          LHCI_FORM_FACTOR: ${{ matrix.form_factor }}
-          LH_SHARD_INDEX: ${{ matrix.shard }}
-          LH_SHARD_TOTAL: 4
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: lh-${{ matrix.form_factor }}-${{ matrix.shard }}
-          path: audits/phase-ci/lh-${{ matrix.form_factor }}/
-          retention-days: 14
-
-  gate-report:
-    if: github.event_name != 'workflow_dispatch' && needs.changes.outputs.code == 'true'
-    needs:
-      [
-        changes,
-        build,
-        types-and-units,
-        guard-mutations,
-        cheap-gates,
-        visual-and-axe,
-        lighthouse,
-      ]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: site/.nvmrc
-          cache: npm
-          cache-dependency-path: site/package-lock.json
-      - run: npm ci
-      - uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: site/dist
-
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: lh-mobile-*
-          merge-multiple: true
-          path: audits/phase-ci/lh-mobile
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: lh-desktop-*
-          merge-multiple: true
-          path: audits/phase-ci/lh-desktop
-
-      - name: every audited route reported once, from every shard
-        run: node scripts/report.mjs ci ../audits/phase-ci
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: gate-report
-          path: audits/phase-ci/REPORT.md
-          retention-days: 14
   deploy-preview:
     if: github.event_name == 'pull_request' && needs.changes.outputs.code == 'true'
-    needs: [changes, gate-report]
+    needs: [changes, build, types-and-units, guard-mutations, cheap-gates, visual-and-axe]
     runs-on: ubuntu-latest
     permissions:
       contents: read
