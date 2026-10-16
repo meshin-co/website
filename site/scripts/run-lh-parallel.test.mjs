@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
-import { mkdtemp, writeFile, chmod, mkdir } from 'node:fs/promises';
+import { mkdtemp, writeFile, chmod, mkdir, symlink } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, relative, resolve } from 'node:path';
 import { test } from 'node:test';
@@ -16,7 +16,8 @@ async function fakeNpm({ seconds, exitCode = 0, reports = 3 }) {
   const script = [
     '#!/bin/sh',
     'echo "shard $LHCI_FORM_FACTOR $LH_SHARD_INDEX port $GATE_SERVER_PORT cwd $(basename "$PWD") routes $LH_ONLY_ROUTES"',
-    'target="$AUDIT_ROOT/audits/phase-$GATE_PHASE/lh-$LHCI_FORM_FACTOR/shard-$LH_SHARD_INDEX"',
+    'target="$AUDIT_ROOT/audits/phase-$GATE_PHASE/lh-$LHCI_FORM_FACTOR"',
+    '[ "$LH_SHARD_TOTAL" = 1 ] || target="$target/shard-$LH_SHARD_INDEX"',
     'mkdir -p "$target"',
     'i=0',
     'while [ $i -lt ' + reports + ' ]; do echo "{}" > "$target/lhr-$i.json"; i=$((i+1)); done',
@@ -26,13 +27,29 @@ async function fakeNpm({ seconds, exitCode = 0, reports = 3 }) {
   ].join('\n');
   await writeFile(npm, script);
   await chmod(npm, 0o755);
-  return { binDir: join(dir, 'bin'), auditRoot: dir };
+  const site = join(dir, 'site');
+  await mkdir(join(site, 'dist'), { recursive: true });
+  await symlink(new URL('.', import.meta.url).pathname.replace(/\/$/, ''), join(site, 'scripts'));
+  for (const route of ['a', 'b', 'c', 'd', 'e', 'f', 'g']) {
+    await mkdir(join(site, 'dist', route), { recursive: true });
+    await writeFile(join(site, 'dist', route, 'index.html'), '<html></html>');
+  }
+  await writeFile(join(site, 'dist', 'index.html'), '<html></html>');
+
+  return { binDir: join(dir, 'bin'), auditRoot: dir, site };
 }
 
-const invoke = async ({ binDir, auditRoot }, env) => {
+const invoke = async ({ binDir, auditRoot, site }, env) => {
   try {
     const { stdout } = await run(process.execPath, [runner], {
-      env: { ...process.env, PATH: `${binDir}:${process.env.PATH}`, GATE_PHASE: 'test', AUDIT_ROOT: auditRoot, ...env },
+      cwd: site,
+      env: {
+        ...process.env,
+        PATH: `${binDir}:${process.env.PATH}`,
+        GATE_PHASE: 'test',
+        AUDIT_ROOT: auditRoot,
+        ...env,
+      },
     });
     return { code: 0, out: stdout };
   } catch (error) {
@@ -95,18 +112,19 @@ test('a route file named relatively still resolves from a shard directory', asyn
   const fake = await fakeNpm({ seconds: 0 });
   const routeFile = join(fake.auditRoot, 'routes.json');
   await writeFile(routeFile, '["/"]');
-  const named = relative(process.cwd(), routeFile);
+  const named = relative(fake.site, routeFile);
 
   const { out } = await invoke(fake, { LH_WORKERS: '1', LH_ONLY_ROUTES: named });
 
   assert.ok(named.startsWith('..'));
-  assert.match(out, new RegExp(`routes ${resolve(named)}`));
+  assert.match(out, /routes \/[^\n]*routes\.json/);
+  assert.doesNotMatch(out, /routes \.\./);
 });
 
 test('nothing to audit is a no-op, not a failure, so a specimen can plant the route it will measure', async () => {
   const fake = await fakeNpm({ seconds: 0 });
   const routeFile = join(fake.auditRoot, 'routes.json');
-  await writeFile(routeFile, '[]');
+  await writeFile(routeFile, '["/never-built"]');
 
   const { code, out } = await invoke(fake, { LH_WORKERS: '2', LH_ONLY_ROUTES: routeFile });
 
