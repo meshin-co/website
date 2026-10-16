@@ -33,7 +33,7 @@ a build.
 | `search-budget.mjs`      | `gate:search`                        | A search shard over its byte budget                                                                                                                                  |
 | `mutation-smoke.mjs`     | `test:smoke`                         | A guard family that can no longer be made to fail                                                                                                                    |
 | `brand-gate.mjs`         | `gate:brand`                         | A typed brand-name literal in code that should derive it from `src/config.yaml` instead                                                                              |
-| `run-paid-gate.mjs`      | `gate:paid`                          | A built route loading an undeclared third-party origin, or claiming analytics the build does not ship (L58)                                                          |
+| `run-paid-gate.mjs`      | `gate:paid`                          | A built route loading an undeclared third-party origin, or whose analytics copy disagrees with the shipped beacon (L58)                                              |
 
 ## Generators
 

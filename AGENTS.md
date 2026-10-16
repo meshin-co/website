@@ -63,8 +63,8 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
   and `scripts/gen-headers.mjs` allows its host in the CSP only when the built HTML carries it.
 - Every service the site depends on carries a permanent free tier; the domain is the only thing
   bought (L58). `npm run gate:paid` fails on any built route that loads a third-party origin
-  `site/scripts/third-party.mjs` does not declare free, and on a page that claims analytics the
-  build does not ship. Plausible was removed under this rule on 2026-10-14.
+  `site/scripts/third-party.mjs` does not declare free, and on a page whose analytics copy
+  disagrees with the beacon the build ships, in either direction. Plausible was removed under this rule on 2026-10-14.
 - No contact form, no Pages Function, no Resend. `/contact` is an email address plus a Cal.com
   button. No newsletter anywhere.
 - The route lists are derived from `dist/**/*.html`, never hand-authored. Cheap gates (content, links, budgets,
