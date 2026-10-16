@@ -67,3 +67,14 @@ wordmark, or description change and commit the resulting PNGs.
 answered every slashless navigation with a 308 followed by a 200, the machine default failed in
 the hundreds while every project passed alone; at four, 906 of 906 pass. The flat build answers
 each page with one request, and the default has not been re-measured since.
+
+## A capture timeout is not a visual regression
+
+On 2026-10-16 the first green CI graph was followed by a red one on `main`: shard 1 failed
+`home-light-desktop` and `home-dark-desktop` with "Failed to take two consecutive stable
+screenshots" inside 5000 ms. The downloaded artifact proved the point — `actual` and `expected`
+were **pixel-identical**, zero differing pixels of 9,203,040. The home page is 6391 px tall and a
+shared runner is slower than a laptop, so the capture, not the page, ran out of time.
+`toHaveScreenshot.timeout` is 20 s under `CI` and 5 s locally, so a slow runner waits and a local
+hang still fails fast. Read the artifact before regenerating a baseline: a regenerated baseline
+would have hidden this and recorded nothing.

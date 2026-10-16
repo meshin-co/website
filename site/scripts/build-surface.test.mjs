@@ -44,3 +44,11 @@ test('a workflow orchestrates gates but cannot change what npm run build produce
   for (const path of ['.github/workflows/ci.yml', '.github/workflows/publish-live.yml', '.githooks/pre-push'])
     assert.equal(affectsBuild(path), false, path);
 });
+
+test('the playwright config drives the visual suite, not the build', () => {
+  assert.equal(affectsBuild('site/playwright.config.ts'), false);
+});
+
+test('the lighthouse config is a build input, because it sets the verdict a record claims', () => {
+  assert.equal(affectsBuild('site/lighthouserc.cjs'), true);
+});
