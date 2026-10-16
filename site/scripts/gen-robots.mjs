@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 
 import { brandFromDisk } from '../src/utils/brand.mjs';
+import { invokedDirectly } from './invoked-directly.mjs';
 
 const SITE_ORIGIN = `https://${brandFromDisk().name}`;
 const TRAINING_AGENTS = [
@@ -52,6 +53,6 @@ async function main() {
   );
 }
 
-if (import.meta.filename === process.argv[1]) {
+if (invokedDirectly(import.meta.filename, process.argv[1])) {
   await main();
 }

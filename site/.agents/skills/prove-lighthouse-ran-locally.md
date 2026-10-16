@@ -14,10 +14,18 @@ GATE_PHASE=<bucket> npm run lh:record           # the evidence, only if that run
 ```
 
 `GATE_PHASE` is required: `collect-reports.mjs` files each run under `audits/phase-<bucket>/`, and
-`lh:record` reads that same folder. A bucket is a phase number or a change name.
+`lh:record` reads that same folder. `scripts/run-lh-parallel.mjs` shards both form factors across
+workers (`scripts/lh-parallel.mjs` decides how many, a quarter of the cores unless `LH_WORKERS`
+says otherwise), each in its own `.lh-run/<factor>-<index>` directory because lhci keeps its state
+in the working directory, each on its own port. A shard that outruns its finished peers by 2.5x,
+or that passes the 15-minute floor before any have finished, is stopped: `SIGTERM` to its process
+group, then `SIGKILL` after a grace period. Ctrl-C stops every live shard the same way. A shard
+that exits cleanly but files no report fails the run, because a silent zero is the oldest way for
+a gate to look green. A bucket is a phase number or a change name.
 
-Run nothing else while it runs. Four shards beside a baseline regeneration once took 2h37m and all
-failed; run singly they passed in four minutes each.
+Run nothing else _outside_ the sharded run while it works: four shards beside a baseline
+regeneration once took 2h37m and all failed, then passed singly in four minutes each. Sharding
+itself is fine, since each shard measures its own quiet port.
 
 ## What the record proves
 

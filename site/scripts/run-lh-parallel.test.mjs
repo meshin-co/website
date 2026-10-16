@@ -1,0 +1,92 @@
+import assert from 'node:assert/strict';
+import { execFile } from 'node:child_process';
+import { mkdtemp, writeFile, chmod, mkdir } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { test } from 'node:test';
+import { promisify } from 'node:util';
+
+const run = promisify(execFile);
+const runner = new URL('run-lh-parallel.mjs', import.meta.url).pathname;
+
+async function fakeNpm({ seconds, exitCode = 0, reports = 3 }) {
+  const dir = await mkdtemp(join(tmpdir(), 'lh-parallel-'));
+  await mkdir(join(dir, 'bin'), { recursive: true });
+  const npm = join(dir, 'bin', 'npm');
+  const script = [
+    '#!/bin/sh',
+    'echo "shard $LHCI_FORM_FACTOR $LH_SHARD_INDEX port $GATE_SERVER_PORT cwd $(basename "$PWD")"',
+    'target="$AUDIT_ROOT/audits/phase-$GATE_PHASE/lh-$LHCI_FORM_FACTOR/shard-$LH_SHARD_INDEX"',
+    'mkdir -p "$target"',
+    'i=0',
+    'while [ $i -lt ' + reports + ' ]; do echo "{}" > "$target/lhr-$i.json"; i=$((i+1)); done',
+    'sleep ' + seconds,
+    'exit ' + exitCode,
+    '',
+  ].join('\n');
+  await writeFile(npm, script);
+  await chmod(npm, 0o755);
+  return { binDir: join(dir, 'bin'), auditRoot: dir };
+}
+
+const invoke = async ({ binDir, auditRoot }, env) => {
+  try {
+    const { stdout } = await run(process.execPath, [runner], {
+      env: { ...process.env, PATH: `${binDir}:${process.env.PATH}`, GATE_PHASE: 'test', AUDIT_ROOT: auditRoot, ...env },
+    });
+    return { code: 0, out: stdout };
+  } catch (error) {
+    return { code: error.code, out: `${error.stdout}${error.stderr}` };
+  }
+};
+
+test('both form factors are measured in parallel, each shard on its own port', async () => {
+  const fake = await fakeNpm({ seconds: 0 });
+
+  const { code, out } = await invoke(fake, { LH_WORKERS: '2' });
+
+  assert.equal(code, 0, out);
+  assert.match(out, /shard mobile 1 port 4330/);
+  assert.match(out, /shard desktop 2 port 4333/);
+  assert.match(out, /4 shards across 2 workers, 0 failed/);
+});
+
+test('a shard that runs far past its floor is stopped rather than waited on', async () => {
+  const fake = await fakeNpm({ seconds: 30 });
+
+  const started = Date.now();
+  const { code, out } = await invoke(fake, { LH_WORKERS: '1', LH_SHARD_FLOOR_MS: '1200', LH_SHARD_GRACE_MS: '300' });
+  const took = Date.now() - started;
+
+  assert.equal(code, 1);
+  assert.match(out, /passed 1s, stopping it/);
+  assert.match(out, /exceeded 1s and was stopped/);
+  assert.ok(took < 25_000, `gave up waiting after ${took}ms`);
+});
+
+test('a failing shard is named and fails the run', async () => {
+  const fake = await fakeNpm({ seconds: 0, exitCode: 3 });
+
+  const { code, out } = await invoke(fake, { LH_WORKERS: '4' });
+
+  assert.equal(code, 1);
+  assert.match(out, /mobile 1\/4 exited 3/);
+});
+
+test('a shard that files no report fails the run, however cleanly it exited', async () => {
+  const fake = await fakeNpm({ seconds: 0, reports: 0 });
+
+  const { code, out } = await invoke(fake, { LH_WORKERS: '2' });
+
+  assert.equal(code, 1);
+  assert.match(out, /mobile 1\/2 collected no reports/);
+});
+
+test('each shard runs in its own directory, because lhci keeps its state in the working directory', async () => {
+  const fake = await fakeNpm({ seconds: 0 });
+
+  const { out } = await invoke(fake, { LH_WORKERS: '2' });
+
+  assert.match(out, /cwd mobile-1/);
+  assert.match(out, /cwd desktop-2/);
+});

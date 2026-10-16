@@ -1,6 +1,7 @@
 import { gzipSync } from 'node:zlib';
 import { readdir, readFile, stat, writeFile } from 'node:fs/promises';
 import { join, relative, sep } from 'node:path';
+import { invokedDirectly } from './invoked-directly.mjs';
 
 const ASSET_REF = /(?:href|src)\s*=\s*["']([^"']+)["']/gi;
 const LOCAL_ASSET = /^\/[^/].*\.(css|js|mjs)$/;
@@ -108,6 +109,6 @@ export async function main(distDir, budgetPath) {
   }
 }
 
-if (import.meta.filename === process.argv[1]) {
+if (invokedDirectly(import.meta.filename, process.argv[1])) {
   await main(process.argv[2] ?? 'dist', process.argv[3] ?? 'budgets.json');
 }

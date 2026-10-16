@@ -87,3 +87,21 @@ test('a form factor that is neither mobile nor desktop is refused before anythin
   await assert.rejects(() => collectIn(site, 'tablet', SHARD_TWO), /expected mobile or desktop, got tablet/);
   await assert.rejects(() => readdir(audits), { code: 'ENOENT' });
 });
+
+test('each shard collects from its own lhci output, so parallel shards cannot read each other', async () => {
+  const { sourceDir } = await import('./collect-reports.mjs');
+
+  assert.equal(sourceDir({ LH_OUTPUT_DIR: '.lighthouseci-mobile-2' }), '.lighthouseci-mobile-2');
+  assert.equal(sourceDir({}), '.lighthouseci');
+});
+
+test('a shard running in its own directory still files reports into the repository audits', async () => {
+  const { auditRoot } = await import('./collect-reports.mjs');
+
+  assert.equal(auditRoot({ AUDIT_ROOT: '/repo' }), '/repo');
+  assert.equal(auditRoot({}), '..');
+  assert.match(
+    targetDir('mobile', { GATE_PHASE: '13-free', AUDIT_ROOT: '/repo', LH_SHARD_INDEX: '2', LH_SHARD_TOTAL: '4' }),
+    /^\/repo\/audits\/phase-13-free\/lh-mobile\/shard-2$/
+  );
+});

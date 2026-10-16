@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { parse } from 'yaml';
 
 import {
+import { invokedDirectly } from './invoked-directly.mjs';
   conceptRegister,
   entityRegister,
   relationshipPairs,
@@ -81,4 +82,4 @@ function main() {
   console.log(`unlinked concept uses: ${built.undefined.length}`);
 }
 
-if (import.meta.filename === process.argv[1]) main();
+if (invokedDirectly(import.meta.filename, process.argv[1])) main();

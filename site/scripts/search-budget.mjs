@@ -3,6 +3,7 @@ import { basename, join } from 'node:path';
 import { gzipSync } from 'node:zlib';
 
 import { KINDS } from '../public/search/shards.mjs';
+import { invokedDirectly } from './invoked-directly.mjs';
 
 export const PER_SHARD_BUDGET_BYTES = 64 * 1024;
 export const SUM_BUDGET_BYTES = 192 * 1024;
@@ -58,6 +59,6 @@ function main(distDir) {
   if (!budgets.withinBudget) process.exitCode = 1;
 }
 
-if (import.meta.filename === process.argv[1]) {
+if (invokedDirectly(import.meta.filename, process.argv[1])) {
   main(process.argv[2] ?? 'dist');
 }

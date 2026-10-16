@@ -53,7 +53,7 @@ export function linkFindings(results) {
     if (state !== 'BROKEN') continue;
     const read = status > 0 ? status : 'no response';
     const finding = `${parent} -> ${url} (${read})`;
-    if (isLocal(url) || (status >= 400 && status < 500)) dead.push(finding);
+    if (isLocal(url) || status === 404 || status === 410) dead.push(finding);
     else unreachable.push(finding);
   }
   return { dead, unreachable };

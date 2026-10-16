@@ -11,9 +11,14 @@ for (const route of templates) {
       await page.emulateMedia({ colorScheme: theme });
       await page.goto(route);
       await page.waitForLoadState('networkidle');
+      const height = await page.evaluate(() => Math.floor(document.documentElement.getBoundingClientRect().height));
+      const width = page.viewportSize()!.width;
 
       const name = `${route === '/' ? 'home' : route.slice(1).replace(/\//g, '-')}-${theme}-${testInfo.project.name}.png`;
-      await expect(page).toHaveScreenshot(name, { fullPage: true, maxDiffPixelRatio: 0.002 });
+      await expect(page).toHaveScreenshot(name, {
+        clip: { x: 0, y: 0, width, height },
+        maxDiffPixelRatio: 0.002,
+      });
     });
   }
 }

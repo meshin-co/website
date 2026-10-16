@@ -36,7 +36,6 @@ module.exports = {
       url,
       numberOfRuns: 3,
       settings: {
-        blockedUrlPatterns: ['*plausible.io*'],
         formFactor: desktop ? 'desktop' : 'mobile',
         screenEmulation: desktop
           ? { mobile: false, width: 1350, height: 940, deviceScaleFactor: 1, disabled: false }

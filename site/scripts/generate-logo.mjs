@@ -1,4 +1,5 @@
 import { readFileSync, writeFileSync } from 'node:fs';
+import { invokedDirectly } from './invoked-directly.mjs';
 
 export const geometry = JSON.parse(readFileSync(new URL('./logo-geometry.json', import.meta.url), 'utf8'));
 const { centre, outerRadius, innerRadius, arcEnd, tailEnd, wedgeStep, viewBox, star, ramp } = geometry;
@@ -124,4 +125,4 @@ function main() {
   console.log(`logo written: ${wedgeSpans().length} graduations at ${wedgeStep} degrees`);
 }
 
-if (import.meta.filename === process.argv[1]) main();
+if (invokedDirectly(import.meta.filename, process.argv[1])) main();

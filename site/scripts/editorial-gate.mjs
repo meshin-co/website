@@ -4,6 +4,7 @@ import { join, relative, resolve } from 'node:path';
 import { parse } from 'yaml';
 
 import { applyConditionalCopy, applyDispositions, digestFor, inheritDerivedStatus } from './dispositions.mjs';
+import { invokedDirectly } from './invoked-directly.mjs';
 import {
   collectionRows,
   componentRows,
@@ -243,7 +244,7 @@ export function sealDispositions(dist) {
   console.log(`sealed ${sealed} dispositions against the current text`);
 }
 
-if (import.meta.filename === process.argv[1]) {
+if (invokedDirectly(import.meta.filename, process.argv[1])) {
   const dist = resolve(SITE, process.argv[3] ?? 'dist');
   if (process.argv.includes('--seal')) sealDispositions(dist);
   else report(dist, { write: !process.argv.includes('--check') });

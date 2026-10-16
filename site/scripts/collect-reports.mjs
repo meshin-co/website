@@ -2,6 +2,7 @@ import { copyFile, mkdir, readdir, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 
 import { shardOf } from './lh-shards.cjs';
+import { invokedDirectly } from './invoked-directly.mjs';
 
 export function resolvePhase(phase) {
   if (!phase) throw new Error('collect-reports: GATE_PHASE must name the phase these audits belong to');
@@ -10,11 +11,13 @@ export function resolvePhase(phase) {
 
 export function targetDir(formFactor, env) {
   const shard = shardOf(env);
-  const phaseDir = join('..', 'audits', `phase-${resolvePhase(env.GATE_PHASE)}`, `lh-${formFactor}`);
+  const phaseDir = join(auditRoot(env), 'audits', `phase-${resolvePhase(env.GATE_PHASE)}`, `lh-${formFactor}`);
   return shard.total === 1 ? phaseDir : join(phaseDir, `shard-${shard.index}`);
 }
 
-const SOURCE_DIR = '.lighthouseci';
+export const sourceDir = (env) => env.LH_OUTPUT_DIR ?? '.lighthouseci';
+
+export const auditRoot = (env) => env.AUDIT_ROOT ?? '..';
 
 async function listReports(dir) {
   try {
@@ -34,8 +37,9 @@ export async function collectReports(formFactor, env) {
   await rm(target, { recursive: true, force: true });
   await mkdir(target, { recursive: true });
 
-  const names = await listReports(SOURCE_DIR);
-  for (const name of names) await copyFile(join(SOURCE_DIR, name), join(target, name));
+  const source = sourceDir(env);
+  const names = await listReports(source);
+  for (const name of names) await copyFile(join(source, name), join(target, name));
   return { target, count: names.length };
 }
 
@@ -44,6 +48,6 @@ async function main(formFactor) {
   console.log(`${formFactor}: ${count} report(s) -> ${target}`);
 }
 
-if (import.meta.filename === process.argv[1]) {
+if (invokedDirectly(import.meta.filename, process.argv[1])) {
   await main(process.argv[2]);
 }

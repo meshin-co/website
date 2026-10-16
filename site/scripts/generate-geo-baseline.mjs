@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { withProvenance } from './evidence-gate.mjs';
 import { parsePrompts, renderBaseline, scorePrompt } from './geo-baseline.mjs';
 import { generatorRevision } from './report.mjs';
+import { invokedDirectly } from './invoked-directly.mjs';
 
 const CORE = '../docs/SEMANTIC-CORE.md';
 const OUT = '../audits/geo-baseline.md';
@@ -37,4 +38,4 @@ function main(dist) {
   console.log(`geo baseline: ${ready}/${scores.length} prompts on-site ready -> ${OUT}`);
 }
 
-if (import.meta.filename === process.argv[1]) main(process.argv[2] ?? 'dist');
+if (invokedDirectly(import.meta.filename, process.argv[1])) main(process.argv[2] ?? 'dist');

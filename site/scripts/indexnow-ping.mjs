@@ -3,6 +3,7 @@ import { join } from 'node:path';
 
 import { diffRoutes, discoverRoutes } from './gate.mjs';
 import { brandFromDisk } from '../src/utils/brand.mjs';
+import { invokedDirectly } from './invoked-directly.mjs';
 
 const DEFAULT_HOST = brandFromDisk().name;
 const ENDPOINT = 'https://api.indexnow.org/indexnow';
@@ -111,6 +112,6 @@ async function main(argv) {
   }
 }
 
-if (import.meta.filename === process.argv[1]) {
+if (invokedDirectly(import.meta.filename, process.argv[1])) {
   await main(process.argv.slice(2));
 }

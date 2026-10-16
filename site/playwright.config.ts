@@ -7,7 +7,6 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   workers: 4,
   reporter: process.env.CI ? 'github' : 'list',
-  expect: { toHaveScreenshot: { timeout: process.env.CI ? 20_000 : 5_000 } },
   snapshotPathTemplate: '{testDir}/__screenshots__/{platform}/{arg}{ext}',
   webServer: {
     command: 'GATE_SERVER_PORT=4322 node scripts/gate-server.mjs dist',

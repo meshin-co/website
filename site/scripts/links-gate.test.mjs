@@ -66,6 +66,25 @@ test('a citation answering 404 is our defect and fails the gate', () => {
   assert.match(dead[0], /dist\/blog\/a\.html/);
 });
 
+test('a datacentre-blocked answer is the destination refusing a runner, not a dead citation', () => {
+  const { dead, unreachable } = linkFindings([
+    { url: 'https://wall.example/a', status: 403, state: 'BROKEN', parent: 'dist/a.html' },
+    { url: 'https://wall.example/b', status: 429, state: 'BROKEN', parent: 'dist/a.html' },
+    { url: 'https://wall.example/c', status: 451, state: 'BROKEN', parent: 'dist/a.html' },
+  ]);
+
+  assert.deepEqual(dead, []);
+  assert.equal(unreachable.length, 3);
+});
+
+test('410 proves a page is gone, exactly as 404 does', () => {
+  const { dead } = linkFindings([
+    { url: 'https://example.com/x', status: 410, state: 'BROKEN', parent: 'dist/a.html' },
+  ]);
+
+  assert.equal(dead.length, 1);
+});
+
 test('a destination that is down is reported but does not fail the gate, because it is not our link', () => {
   const { dead, unreachable } = linkFindings([
     { url: 'https://down.example/page', status: 503, state: 'BROKEN', parent: 'dist/blog/a.html' },

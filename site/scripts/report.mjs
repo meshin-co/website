@@ -4,6 +4,7 @@ import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 
 import { auditableRoutes, canonicalRoute, isNoindexByDesign, NOINDEX_BY_DESIGN } from './lh-routes.cjs';
+import { invokedDirectly } from './invoked-directly.mjs';
 
 const CATEGORIES = ['performance', 'accessibility', 'best-practices', 'seo'];
 
@@ -240,6 +241,6 @@ export async function main(phase, auditDir) {
   if (failures.length > 0) process.exitCode = 1;
 }
 
-if (import.meta.filename === process.argv[1]) {
+if (invokedDirectly(import.meta.filename, process.argv[1])) {
   await main(process.argv[2], process.argv[3]);
 }
