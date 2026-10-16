@@ -3,8 +3,8 @@ import { join } from 'node:path';
 
 import { parse } from 'yaml';
 
-import {
 import { invokedDirectly } from './invoked-directly.mjs';
+import {
   conceptRegister,
   entityRegister,
   relationshipPairs,
