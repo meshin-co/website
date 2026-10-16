@@ -130,3 +130,16 @@ test('only resources the browser fetches count as a loaded origin', () => {
 
   assert.deepEqual(loadedOrigins(html).sort(), ['https://fonts.example', 'https://images.example']);
 });
+
+test('a protocol-relative script is a third-party load like any other', () => {
+  const html = '<script src="//widget.unknown-vendor.example/w.js"></script>';
+
+  assert.deepEqual(loadedOrigins(html), ['https://widget.unknown-vendor.example']);
+  assert.equal(originFindings([{ route: '/', html }]).length, 1);
+});
+
+test('a lazy-loading data-src is not a load the browser has made', () => {
+  const html = '<img data-src="https://images.example/a.png" src="/local.png">';
+
+  assert.deepEqual(loadedOrigins(html), []);
+});
