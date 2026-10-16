@@ -56,8 +56,8 @@
   {
     "target": "site/src/pages/privacy.astro",
     "status": "rewritten",
-    "reason": "Rewritten 2026-10-14 for L58. Plausible is removed and nothing replaces it yet, so the page says what is true of the build that ships it: no cookies, no accounts, no analytics at all. The sentence is scoped to analytics on purpose — it says this site counts nothing and names the host request log, described in the next section, as the only trace a visit leaves, because an unscoped 'nothing is recorded anywhere' would contradict that section on the same page. When a Cloudflare Web Analytics token is set (G41) this sentence is rewritten in the same change that ships the beacon: `npm run gate:paid` fails in both directions, so a beacon shipping under this wording is a red gate, not a remembered task.",
-    "digest": "ac89768c81c2"
+    "reason": "Rewritten 2026-10-16 when the owner supplied the Cloudflare Web Analytics token (G41 closed). The 'What this site collects' section now names what the beacon measures: path, referrer, browser, country and load time. It states the three things that make the measurement cookieless - no cookie, no device storage read, no identifier built - so a reader can check the claim against the response themselves, and says the figures arrive as per-page totals. The host request log section below is unchanged and still describes the separate trace Cloudflare keeps. `npm run gate:paid` fails in both directions, so this wording and the shipped beacon cannot drift apart.",
+    "digest": "61478d1ed093"
   },
   {
     "target": "site/src/pages/terms.astro",
@@ -68,8 +68,8 @@
   {
     "target": "site/src/pages/imprint.astro",
     "status": "rewritten",
-    "reason": "Rewritten 2026-10-14 for L58. The Analytics row no longer names Plausible; it reads 'None', which is what the build ships. `npm run gate:paid` fails on this row the moment a beacon ships, so it cannot be left behind when the token is set (G41).",
-    "digest": "783016fac2b0"
+    "reason": "Rewritten 2026-10-16 when the owner supplied the Cloudflare Web Analytics token (G41 closed). The Analytics row reads 'Cloudflare Web Analytics, cookieless', which is what the build now ships, and the cookieless qualifier is the fact a reader of an imprint is looking for. `npm run gate:paid` fails on this row if the beacon is ever removed.",
+    "digest": "ad5826b41cca"
   },
   {
     "target": "site/src/pages/404.astro",
