@@ -1,0 +1,4 @@
+#!/bin/sh
+set -e
+
+node site/scripts/run-lh-evidence.mjs check

@@ -9,7 +9,7 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
    directory per change, and `openspec list --sort name` is the board. Read the one change in
    flight, its `proposal.md` and `tasks.md`, and nothing more until you need it; a change parked
    by a `blocked.md` is not in flight. Closed changes are archived under
-   `openspec/changes/archive/`. The locked decisions L1–L58 live in
+   `openspec/changes/archive/`. The locked decisions L1–L59 live in
    `docs/plan/reference/locked-decisions.md`; the gate procedure in
    `docs/plan/reference/calibration-gate.md`. `npm run gate:spec` refuses the mistakes, among them
    a spec the validator rejects, an index that differs from a regeneration and a second change in
@@ -30,7 +30,8 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
    gate, the content gate, the judge panel, adding a collection entry, restoring a collection,
    visual baselines, extending the mutation smoke, explaining a route removal, coordinating
    parallel agents, clearing dead weight, verifying in the built output, keeping the docs honest,
-   smoking the live site, publishing the build, running the growth loop, and the launch checklist.
+   smoking the live site, publishing the build, proving Lighthouse ran locally, running the growth
+   loop, and the launch checklist.
    Read the matching one before doing that job by hand; `design-lane.md` comes before any markup
    or CSS. `navigate-the-plan.md` maps the reference files and where each phase went.
    `gate:skills` fails if a skill names a path or command that does not exist.
@@ -51,6 +52,8 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
 
 - Every phase ends with the Calibration Gate in `docs/plan/reference/calibration-gate.md`. No merge without a green gate
   and a generated `audits/phase-N/REPORT.md`. There is no waiver path and no "fix next phase".
+  Lighthouse is the local half of that gate (L59); `npm run gate:lh` ends by recording the tree it
+  measured, and a push of an unmeasured tree is refused by `.githooks/pre-push`.
 - Lighthouse must read 100/100/100/100 on mobile and desktop for every audited route. A run at
   97–99 is re-run up to three times, then it is a failure.
 - Blocking budgets, measured from the shipped build and never from a config file: JS ≤10 KB gz,
@@ -168,8 +171,9 @@ npm run test:smoke # every guard family proven able to fail, ~60 s
 
 CI classifies the diff first. A commit touching only `docs/`, `audits/`, `site/.agents/`, `openspec/`
 or any other Markdown (`investigation/` included) runs the `types-and-units` job and nothing else,
-because prose cannot change what Lighthouse measures. Anything else — source, config, content
+because prose cannot change what a gate measures. Anything else — source, config, content
 Markdown under `site/src/data/`, the workflow itself — runs the full parallel graph: one build, then
-check+units, guard-mutations, cheap gates, Playwright (3 shards) and Lighthouse (2 form factors
-x 4 route shards) in parallel, merged by `gate-report`.
-A single shard locally: `LHCI_FORM_FACTOR=mobile LH_SHARD_INDEX=1 LH_SHARD_TOTAL=4 npm run gate:lh:one`.
+check+units, guard-mutations, cheap gates and Playwright (3 shards) in parallel.
+Lighthouse is not in CI (L59): it runs locally on a quiet machine, `.githooks/pre-push` refuses a
+push whose tree no recorded green run measured, and a single shard by hand is
+`LHCI_FORM_FACTOR=mobile LH_SHARD_INDEX=1 LH_SHARD_TOTAL=4 npm run gate:lh:one`.
