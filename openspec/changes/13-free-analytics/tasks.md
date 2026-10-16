@@ -4,7 +4,8 @@
 
 - [x] 1.1 Add a locked row stating that every service the site depends on carries a permanent free
       tier, the domain excepted, and name the rule in `AGENTS.md`
-- [x] 1.2 Add a guard that fails when a known paid service appears in the built output, with a
+- [x] 1.2 Add a guard that fails when a built route loads a third-party origin not declared free,
+      and when a page's analytics copy disagrees with the beacon the build ships, in both directions
       planted specimen proving it fails
 
 ## 2. Remove Plausible

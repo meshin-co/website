@@ -77,3 +77,56 @@ test("the site's own origin is first party, however absolute the link", () => {
   assert.deepEqual(loadedOrigins(html, 'https://meshin.co'), ['https://static.cloudflareinsights.com']);
   assert.deepEqual(originFindings([{ route: '/terms', html }], 'https://meshin.co'), []);
 });
+
+test('a beacon shipping while a page still denies analytics is a finding', () => {
+  const privacy = '<p>No cookies are set, and no analytics runs at all on this site.</p>';
+  const home = '<script src="https://static.cloudflareinsights.com/beacon.min.js"></script>';
+
+  const findings = analyticsClaimFindings([
+    { route: '/privacy', html: privacy },
+    { route: '/', html: home },
+  ]);
+
+  assert.equal(findings.length, 1);
+  assert.match(findings[0], /\/privacy/);
+  assert.match(findings[0], /denies analytics/);
+});
+
+test("a beacon shipping while the imprint still reads 'None' is a finding", () => {
+  const imprint = '<dt>Analytics</dt><dd class="text-muted">None</dd>';
+  const home = '<script src="https://static.cloudflareinsights.com/beacon.min.js"></script>';
+
+  const findings = analyticsClaimFindings([
+    { route: '/imprint', html: imprint },
+    { route: '/', html: home },
+  ]);
+
+  assert.equal(findings.length, 1);
+  assert.match(findings[0], /\/imprint/);
+});
+
+test('both directions stay quiet when the copy matches the shipped build', () => {
+  const withBeacon = [
+    { route: '/', html: '<script src="https://static.cloudflareinsights.com/beacon.min.js"></script>' },
+    { route: '/privacy', html: '<p>Page views are counted by Cloudflare Web Analytics.</p>' },
+  ];
+  const without = [
+    { route: '/', html: '<p>nothing</p>' },
+    { route: '/privacy', html: '<p>no analytics runs at all</p>' },
+    { route: '/imprint', html: '<dt>Analytics</dt><dd>None</dd>' },
+  ];
+
+  assert.deepEqual(analyticsClaimFindings(withBeacon), []);
+  assert.deepEqual(analyticsClaimFindings(without), []);
+});
+
+test('only resources the browser fetches count as a loaded origin', () => {
+  const html = [
+    '<link rel="alternate" type="application/rss+xml" href="https://elsewhere.example/rss.xml">',
+    '<link rel="me" href="https://social.example/@someone">',
+    '<link rel="stylesheet" href="https://fonts.example/sheet.css">',
+    '<img src="https://images.example/a.png">',
+  ].join('');
+
+  assert.deepEqual(loadedOrigins(html).sort(), ['https://fonts.example', 'https://images.example']);
+});

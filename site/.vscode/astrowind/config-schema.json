@@ -19,6 +19,9 @@
         },
         "googleSiteVerificationId": {
           "type": "string"
+        },
+        "analyticsSiteToken": {
+          "type": "string"
         }
       },
       "required": ["name", "site", "base", "trailingSlash"],

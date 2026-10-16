@@ -34,7 +34,7 @@ Run from `site/`. Each step green before the next.
 14. `npm run gate:brand` — no code outside `src/data/` types the brand name; it derives via
     `src/utils/brand.mjs` or `SITE.name` from `astrowind:config`.
 15. `npm run gate:paid` — no route loads a third-party origin `scripts/third-party.mjs` does not
-    declare free, and no page claims analytics the build does not ship (L58).
+    declare free, and no page's analytics copy disagrees with the beacon the build ships (L58).
 
 ## In CI the same gates run in parallel
 

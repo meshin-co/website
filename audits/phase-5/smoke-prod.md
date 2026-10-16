@@ -1,6 +1,6 @@
 # Production smoke
 
-Generated-from: d46fd42
+Generated-from: 218b3b1
 
 Measured against `https://meshin.pages.dev` by `npm run smoke:prod`. Every row is one request; nothing
 here is read from a config file.
