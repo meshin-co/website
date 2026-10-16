@@ -63,8 +63,20 @@ export function undefinedConceptFindings(concepts, pages) {
   );
 }
 
-const table = (header, rows) =>
-  [`| ${header.join(' | ')} |`, `|${header.map(() => '---').join('|')}|`, ...rows].join('\n');
+const cells = (row) =>
+  row
+    .replace(/^\| ?/, '')
+    .replace(/ ?\|$/, '')
+    .split(' | ');
+
+const table = (header, rows) => {
+  const grid = [header, ...rows.map(cells)];
+  const widths = header.map((_, column) => Math.max(3, ...grid.map((row) => row[column].length)));
+  const line = (row) => `| ${row.map((cell, column) => cell.padEnd(widths[column])).join(' | ')} |`;
+  return [line(header), `| ${widths.map((width) => '-'.repeat(width)).join(' | ')} |`, ...grid.slice(1).map(line)].join(
+    '\n'
+  );
+};
 
 export function renderRegisters({ entities, concepts, relationships }) {
   const entityRows = entities.map(

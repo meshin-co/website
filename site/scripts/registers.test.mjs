@@ -157,3 +157,16 @@ test('prose passages keep list items, because definitions get used in lists', ()
   );
   assert.equal(findings.length, 1);
 });
+
+test('the rendered block is already prettier-formatted, so a formatted repo never reads as drift', async () => {
+  const prettier = await import('prettier');
+  const block = renderRegisters({
+    entities: [{ entity: 'AI governance', ownedBy: '/glossary/ai-governance', mentionedBy: ['/a', '/b'] }],
+    concepts: [{ concept: 'drift', definedBy: '/glossary/drift', definition: 'a short definition' }],
+    relationships: [{ from: 'a', kind: 'broader', to: 'b' }],
+  });
+
+  const formatted = await prettier.format(block, { parser: 'markdown' });
+
+  assert.equal(formatted.trim(), block.trim());
+});
