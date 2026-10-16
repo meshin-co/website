@@ -143,3 +143,16 @@ test('a lazy-loading data-src is not a load the browser has made', () => {
 
   assert.deepEqual(loadedOrigins(html), []);
 });
+
+test('an address no browser could fetch is skipped, not a crash that hides the rest', () => {
+  const pages = [
+    { route: '/broken', html: '<script src="https://[nope"></script>' },
+    { route: '/vendor', html: '<script src="https://widget.unknown-vendor.example/w.js"></script>' },
+  ];
+
+  assert.deepEqual(loadedOrigins(pages[0].html), []);
+
+  const findings = originFindings(pages);
+  assert.equal(findings.length, 1);
+  assert.match(findings[0], /\/vendor loads https:\/\/widget\.unknown-vendor\.example/);
+});
