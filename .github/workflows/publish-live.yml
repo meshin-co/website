@@ -1,18 +1,20 @@
-name: deploy
+name: Publish Live
+
+run-name: Publish Live by @${{ github.actor }}
 
 on:
   workflow_dispatch:
     inputs:
       run_id:
-        description: The ci run whose gates passed; its dist artifact is what gets published
-        required: true
+        description: Leave empty to publish the newest gated build of main. A ci run id publishes that run instead.
+        required: false
 
 defaults:
   run:
     working-directory: site
 
 jobs:
-  production:
+  publish:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: production
@@ -20,24 +22,18 @@ jobs:
       contents: read
       actions: read
     steps:
-      - name: refuse a run that did not pass, or that is not main
-        id: gated
+      - uses: actions/checkout@v4
+
+      - name: find the gated build this press may publish
+        id: target
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          run="$(gh api "repos/${{ github.repository }}/actions/runs/${{ inputs.run_id }}")"
-          conclusion="$(echo "$run" | jq -r .conclusion)"
-          branch="$(echo "$run" | jq -r .head_branch)"
-          sha="$(echo "$run" | jq -r .head_sha)"
-          echo "run ${{ inputs.run_id }}: $branch $sha $conclusion"
-          [ "$conclusion" = "success" ] || { echo "DEPLOY run ${{ inputs.run_id }} concluded $conclusion"; exit 1; }
-          [ "$branch" = "main" ] || { echo "DEPLOY run ${{ inputs.run_id }} is on $branch, not main"; exit 1; }
-          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+        run: node scripts/run-publish-target.mjs "${{ github.repository }}" "${{ inputs.run_id }}"
 
       - name: take the deploy scripts and the route ledger from that same commit
         uses: actions/checkout@v4
         with:
-          ref: ${{ steps.gated.outputs.sha }}
+          ref: ${{ steps.target.outputs.sha }}
 
       - uses: actions/setup-node@v4
         with:
@@ -51,7 +47,7 @@ jobs:
         with:
           name: dist
           path: site/dist
-          run-id: ${{ inputs.run_id }}
+          run-id: ${{ steps.target.outputs.run_id }}
           github-token: ${{ github.token }}
 
       - name: deploy to production
@@ -73,3 +69,6 @@ jobs:
 
       - name: announce the changed routes, now that the key file is served
         run: node scripts/indexnow-ping.mjs dist --previous .indexnow-routes.json
+
+      - name: say where it went
+        run: echo "### Published to https://${{ vars.CLOUDFLARE_PAGES_PROJECT }}.pages.dev" >> "$GITHUB_STEP_SUMMARY"
