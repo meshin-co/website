@@ -21,7 +21,6 @@ test('source, config, content and the workflows themselves do change it', () => 
     'site/src/data/post/a-post.md',
     'site/scripts/gate.mjs',
     'site/package.json',
-    '.github/workflows/ci.yml',
   ])
     assert.equal(affectsBuild(path), true, path);
 });
@@ -39,4 +38,9 @@ test('a test file cannot change the built output, however much it is edited', ()
 test('a shipped directory merely named tests or fixtures is still a build input', () => {
   for (const path of ['site/src/data/fixtures/x.md', 'site/public/tests/a.png', 'site/src/components/tests/Card.astro'])
     assert.equal(affectsBuild(path), true, path);
+});
+
+test('a workflow orchestrates gates but cannot change what npm run build produces', () => {
+  for (const path of ['.github/workflows/ci.yml', '.github/workflows/publish-live.yml', '.githooks/pre-push'])
+    assert.equal(affectsBuild(path), false, path);
 });

@@ -10,6 +10,7 @@ re-run. It runs on a quiet machine instead, and a push proves it ran (L59).
 cd site
 npm run build                                   # the only build that may be measured
 GATE_PHASE=<bucket> npm run gate:lh             # both form factors, ~40 min
+GATE_PHASE=<bucket> npm run lh:record           # the evidence, only if that run passes
 ```
 
 `GATE_PHASE` is required: `collect-reports.mjs` files each run under `audits/phase-<bucket>/`, and
@@ -20,7 +21,7 @@ failed; run singly they passed in four minutes each.
 
 ## What the record proves
 
-`gate:lh` ends in `lh:record`, which does not take the console's word for it. It calls
+`lh:record` is a separate command, not a step inside `gate:lh`, so a planted specimen can prove the gate still fails without writing evidence about its own defect. Forgetting it is caught by the hook, which names both commands. It does not take the console's word for it. It calls
 `phaseVerdict` in `scripts/report.mjs` — the same function that renders the committed REPORT.md —
 and writes `audits/lighthouse-green.json` only when that verdict has no failures. So the record
 means what the Calibration Gate means: every audited route present on both form factors, three runs

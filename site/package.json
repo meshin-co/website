@@ -43,9 +43,8 @@
     "gate:html": "html-validate \"dist/**/*.html\"",
     "gate:human": "node scripts/run-human-gate.mjs dist",
     "gate:jsonld": "node scripts/jsonld-gate.mjs dist",
-    "gate:lh": "node -e \"if(!process.env.GATE_PHASE)throw new Error('gate:lh: GATE_PHASE must name the bucket these audits belong to, for example GATE_PHASE=13-free-analytics')\" && npm run gate:lh:pair && npm run lh:record",
+    "gate:lh": "node -e \"if(!process.env.GATE_PHASE)throw new Error('gate:lh: GATE_PHASE must name the bucket these audits belong to, for example GATE_PHASE=13-free-analytics')\" && LHCI_FORM_FACTOR=mobile npm run gate:lh:one && LHCI_FORM_FACTOR=desktop npm run gate:lh:one",
     "gate:lh:one": "if [ \"$(node scripts/lh-routes.cjs --count)\" = 0 ]; then echo '0 touched routes to audit'; else rm -rf .lighthouseci && { lhci autorun --config=lighthouserc.cjs; status=$?; node scripts/collect-reports.mjs \"$LHCI_FORM_FACTOR\" && exit $status; }; fi",
-    "gate:lh:pair": "LHCI_FORM_FACTOR=mobile npm run gate:lh:one && LHCI_FORM_FACTOR=desktop npm run gate:lh:one",
     "gate:links": "node scripts/run-links-gate.mjs",
     "gate:machine": "node scripts/machine.mjs dist",
     "gate:orphans": "node scripts/orphan-gate.mjs dist",
@@ -137,7 +136,7 @@
     "esbuild": true
   },
   "localOnlyGates": {
-    "gate:lh": "lighthouse measures a browser under load, so a shared runner is the wrong instrument: on GitHub's hosted runners the matrix took most of the wall time of every run and still produced 97-99 scores that had to be re-run. It runs locally on a quiet machine instead, and the .githooks/pre-push hook refuses to push a tree no recorded passing run has measured (lh:check); the owner asked for this on 2026-10-16",
+    "gate:lh": "lighthouse measures a browser under load, so a shared runner is the wrong instrument: on GitHub's hosted runners the matrix took most of the wall time of every run and still produced 97-99 scores that had to be re-run. It runs locally on a quiet machine instead, and npm run lh:record then writes the evidence and the .githooks/pre-push hook refuses to push a tree no recorded passing run has measured (lh:check); recording is a separate command so a planted specimen can prove this gate fails without writing evidence about its own defect; the owner asked for this on 2026-10-16",
     "gate:lh:one": "one form factor of gate:lh, invoked by it twice; local for the same reason. The bookkeeping around it is deliberately not named gate:*: lh:record writes audits/lighthouse-green.json after a green local run and lh:check is the pre-push refusal, and a CI runner must never be able to vouch for a lighthouse run it did not perform",
     "audit:polish": "run-polish-sweep.mjs walks the built dist at six widths with a real Chromium instance and writes audits/phase-5/polish-sweep.md as generated evidence for one phase; it is run manually when that phase is reviewed, not per commit",
     "audit:prelaunch": "run-pre-launch.mjs reads other phase-5 audit artifacts (REPORT.md, polish-sweep.md) already committed under audits/, and re-runs the visual and cross-browser Playwright suites; it is the manual pre-launch checklist run once before shipping, not a per-commit CI gate (tracked as a residual gap: docs/plan/reference/known-gaps.md#G3)",
@@ -145,7 +144,6 @@
     "audit:geo": "generate-geo-baseline.mjs writes audits/geo-baseline.md, a structural readiness baseline captured once per phase from docs/SEMANTIC-CORE.md and dist, not re-derived every commit",
     "audit:geo-probe": "run-geo-probe.mjs calls four live external answer-engine APIs (OpenAI and others) and writes audits/geo-probe.md; it is a manual, rate-limited, credentialed probe against third-party services, not a CI-safe per-commit check",
     "assets:gaps": "generate-gaps.mjs writes audits/phase-4.7/gaps.md from the ledger and registers; it is a generator run manually when the ledger changes, not a gate CI needs to enforce every commit",
-    "assets:routes": "routes-gate.mjs --write rewrites audits/routes.json, the ledger gate:routes compares the build against; it is run by hand in the commit that changes the route set on purpose, because a CI run before gate:routes would compare the build with itself and pass every time",
-    "gate:lh:pair": "both form factors of gate:lh without the record step, so a mutation specimen can prove the lighthouse gate still fails without writing evidence about a planted defect; local for the same reason as gate:lh"
+    "assets:routes": "routes-gate.mjs --write rewrites audits/routes.json, the ledger gate:routes compares the build against; it is run by hand in the commit that changes the route set on purpose, because a CI run before gate:routes would compare the build with itself and pass every time"
   }
 }

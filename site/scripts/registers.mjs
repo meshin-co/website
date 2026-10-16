@@ -63,11 +63,7 @@ export function undefinedConceptFindings(concepts, pages) {
   );
 }
 
-const cells = (row) =>
-  row
-    .replace(/^\| ?/, '')
-    .replace(/ ?\|$/, '')
-    .split(' | ');
+const cells = (row) => row.replace(/^\| ?/, '').replace(/ ?\|$/, '').split(' | ');
 
 const table = (header, rows) => {
   const grid = [header, ...rows.map(cells)];

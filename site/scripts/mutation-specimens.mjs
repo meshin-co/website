@@ -326,7 +326,7 @@ export const SPECIMENS = {
     plant: (copySite) => addPage(copySite, 'zz-specimen', UNLABELLED_IMAGE_PAGE),
   },
   lighthouseBothFactors: {
-    gate: 'gate:lh:pair',
+    gate: 'gate:lh',
     env: { LH_ONLY_ROUTES: LIGHTHOUSE_ROUTES, GATE_PHASE: 'specimen' },
     token: 'categories.accessibility failure for minScore assertion',
     plant: (copySite) => addPage(copySite, 'zz-specimen', UNLABELLED_IMAGE_PAGE),
