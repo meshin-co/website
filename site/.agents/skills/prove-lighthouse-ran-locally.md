@@ -17,7 +17,9 @@ GATE_PHASE=<bucket> npm run lh:record           # the evidence, only if that run
 `lh:record` reads that same folder. `scripts/run-lh-parallel.mjs` shards both form factors across
 workers (`scripts/lh-parallel.mjs` decides how many, a quarter of the cores unless `LH_WORKERS`
 says otherwise), each in its own `.lh-run/<factor>-<index>` directory because lhci keeps its state
-in the working directory, each on its own port. A shard that outruns its finished peers by 2.5x,
+in the working directory, each on its own port. `scripts/lh-port.cjs` owns that choice: a shard uses the port it was handed
+and only falls back to spacing itself off 4330 when run by hand, because two owners of one port
+number collided at four workers. A shard that outruns its finished peers by 2.5x,
 or that passes the 15-minute floor before any have finished, is stopped: `SIGTERM` to its process
 group, then `SIGKILL` after a grace period. Ctrl-C stops every live shard the same way. A shard
 that exits cleanly but files no report fails the run, because a silent zero is the oldest way for
@@ -65,3 +67,13 @@ fingerprint and pushes freely.
 pushing, or the hook is simply absent.
 
 There is no waiver. A tree that needs a new measurement gets one.
+
+## The one request the run blocks
+
+`lighthouserc.cjs` blocks `https://cloudflareinsights.com/cdn-cgi/rum*`. Cloudflare answers a
+local analytics POST with `Access-Control-Allow-Origin: http://127.0.0.1`, without a port, so the
+gate server's own origin never matches and the browser logs a CORS error that costs
+best-practices 4 points. The block is scoped to that one endpoint: `beacon.min.js` is still
+fetched and still measured at its real transfer size, so the page weight a visitor pays is what
+the run reports. Confirm after any change to the beacon by reading `network-requests` in one
+report: the script must appear with status 200.

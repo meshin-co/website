@@ -114,6 +114,14 @@ export const SPECIMENS = {
     gate: 'gate:paid',
     token: '/privacy denies analytics',
     plant: (copySite) =>
+      editFile(join(copySite, 'dist/privacy.html'), (html) =>
+        html.replace(/Cloudflare Web Analytics counts page views/, 'No analytics runs at all')
+      ),
+  },
+  'paid-blocking': {
+    gate: 'gate:paid',
+    token: 'from a markup tag',
+    plant: (copySite) =>
       editFile(join(copySite, 'dist/about.html'), (html) =>
         html.replace('</body>', '<script src="https://static.cloudflareinsights.com/beacon.min.js"></script></body>')
       ),

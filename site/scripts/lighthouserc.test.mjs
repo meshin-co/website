@@ -150,7 +150,12 @@ test('sharding applies on top of the derived url list, each shard on its own por
   });
 
   const shards = [1, 2].map((index) =>
-    loadConfig({ LH_DIST_DIR: dist, GATE_SERVER_PORT: '4330', LH_SHARD_INDEX: String(index), LH_SHARD_TOTAL: '2' })
+    loadConfig({
+      LH_DIST_DIR: dist,
+      GATE_SERVER_PORT: String(4329 + index),
+      LH_SHARD_INDEX: String(index),
+      LH_SHARD_TOTAL: '2',
+    })
   );
 
   const paths = shards.flatMap((config) => config.ci.collect.url.map((url) => new URL(url).pathname));
@@ -161,6 +166,15 @@ test('sharding applies on top of the derived url list, each shard on its own por
     ),
     [true, true]
   );
+});
+
+test('the port the runner assigned is used as given, because it already spaced the shards apart', async () => {
+  const dist = await fixtureDist({ '/': '<html></html>' });
+
+  const config = loadConfig({ LH_DIST_DIR: dist, GATE_SERVER_PORT: '4336', LH_SHARD_INDEX: '3', LH_SHARD_TOTAL: '4' });
+
+  assert.ok(config.ci.collect.url.every((url) => url.startsWith('http://127.0.0.1:4336/')));
+  assert.match(config.ci.collect.startServerCommand, /GATE_SERVER_PORT=4336\b/);
 });
 
 async function touchedFile(routes) {

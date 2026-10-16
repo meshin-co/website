@@ -31,6 +31,7 @@ async function fixture({ runs = 3, score = 1 } = {}) {
     'lh-shards.cjs',
     'gate.mjs',
     'invoked-directly.mjs',
+    'lh-port.cjs',
   ])
     await cp(join(repoRoot, 'site/scripts', name), join(root, 'site/scripts', name));
   await cp(join(repoRoot, 'site/budgets.json'), join(root, 'site/budgets.json'));
