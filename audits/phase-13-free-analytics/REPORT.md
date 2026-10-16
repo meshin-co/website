@@ -2,7 +2,7 @@
 
 Generated from raw check output by `scripts/report.mjs`. Do not hand-edit.
 
-Generated-from: fcd22f4
+Generated-from: 320c1d5
 
 Asserted: lighthouse scores, lighthouse metric budgets, byte budgets
 
@@ -10,7 +10,7 @@ SEO on `/404`, `/search`, `/blog/category/executive`, `/blog/page/*`, `/blog/cat
 
 Lighthouse scope: 26 route(s) expected
 
-Result: FAIL
+Result: PASS
 
 ## Lighthouse (median of 3 runs)
 
@@ -59,7 +59,15 @@ Result: FAIL
 | desktop | `/glossary/mcp` | 100 | 100 | 100 | 100 |
 | desktop | `/imprint` | 100 | 100 | 100 | 100 |
 | desktop | `/now` | 100 | 100 | 100 | 100 |
-| desktop | `/pricing` | 100 | 100 | 100 | 92 |
+| desktop | `/pricing` | 100 | 100 | 100 | 100 |
+| desktop | `/privacy` | 100 | 100 | 100 | 100 |
+| desktop | `/resources` | 100 | 100 | 100 | 100 |
+| desktop | `/resources/handover-playbook` | 100 | 100 | 100 | 100 |
+| desktop | `/search` | 100 | 100 | 100 | 100 |
+| desktop | `/security` | 100 | 100 | 100 | 100 |
+| desktop | `/services` | 100 | 100 | 100 | 100 |
+| desktop | `/services/ai-readiness-and-risk-assessment` | 100 | 100 | 100 | 100 |
+| desktop | `/terms` | 100 | 100 | 100 | 100 |
 
 ## Measured byte budgets (gzip)
 
@@ -188,16 +196,3 @@ One leaf per repeated template family (heaviest by built bytes) plus every uniqu
 ## Derived route list (all gates)
 
 `/`, `/404`, `/about`, `/ai-policy`, `/approach`, `/blog`, `/blog/adoption-telemetry-measuring-if-ai-is-actually-used`, `/blog/ai-acceptable-use-policy-for-a-50-person-company`, `/blog/category/agentic-architecture`, `/blog/category/executive`, `/blog/category/governance`, `/blog/category/operating-model`, `/blog/evals-in-ci-for-llm-agents`, `/blog/handing-over-ai-leadership-to-an-internal-owner`, `/blog/how-to-build-an-ai-system-register-in-a-week`, `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company`, `/blog/multi-agent-reference-architecture-in-production`, `/blog/tag/acceptable-use-policy`, `/blog/tag/agentic-architecture`, `/blog/tag/ai-governance`, `/blog/tag/ai-pilots`, `/blog/tag/ai-register`, `/blog/tag/eu-ai-act`, `/blog/tag/evals-in-ci`, `/blog/tag/llm-as-judge`, `/blog/tag/policy-enforcement`, `/blog/tag/production-readiness`, `/blog/tag/security-review`, `/blog/tag/shadow-ai`, `/blog/tags`, `/blog/why-your-ai-pilot-never-reached-production`, `/case-studies`, `/contact`, `/faq`, `/faq/are-models-trained-on-our-customer-data`, `/faq/can-you-get-us-iso-iec-42001-certified-or-just-a-working-system`, `/faq/can-you-work-with-our-existing-ai-vendor-or-platform`, `/faq/how-do-you-charge-for-the-work`, `/faq/how-does-ai-risk-get-recorded-and-who-signs-it-off`, `/faq/how-does-the-retainer-end`, `/faq/how-is-a-prompt-or-model-change-stopped-from-shipping-unnoticed`, `/faq/how-is-cost-per-outcome-measured`, `/faq/how-quickly-can-you-start-and-how-does-availability-work-for-a-remote-officer`, `/faq/is-my-company-too-small-or-too-early-for-a-fractional-chief-ai-officer`, `/faq/what-counts-as-in-production-for-the-90-day-sprint`, `/faq/what-do-nist-ai-rmf-iso-iec-42001-and-the-eu-ai-act-require`, `/faq/what-do-we-do-about-tools-staff-are-already-using-without-approval`, `/faq/what-does-a-fractional-chief-ai-officer-actually-do`, `/faq/what-does-the-two-week-assessment-produce-and-is-the-fee-credited-if-we-continue`, `/faq/what-happens-if-the-evals-say-a-workflow-isnt-good-enough`, `/faq/what-happens-on-a-fit-call-and-does-it-cost-anything`, `/faq/what-if-the-ai-we-are-building-goes-into-a-product-we-sell`, `/faq/what-if-we-already-have-a-data-science-team-or-an-internal-ai-lead`, `/faq/what-size-of-company-do-you-actually-work-with`, `/faq/whats-the-difference-between-the-assessment-the-sprint-and-the-retainer`, `/faq/who-answers-customer-security-questionnaires`, `/faq/who-owns-the-code-and-the-data`, `/faq/who-owns-the-frameworks-templates-and-playbooks-built-during-the-engagement`, `/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai`, `/glossary`, `/glossary/agentic-workflow`, `/glossary/ai-governance`, `/glossary/ai-impact-assessment`, `/glossary/ai-management-system`, `/glossary/ai-operating-model`, `/glossary/ai-register`, `/glossary/conformity-assessment`, `/glossary/data-classification`, `/glossary/dpia`, `/glossary/eu-ai-act`, `/glossary/evals`, `/glossary/guardrails`, `/glossary/hallucination-rate`, `/glossary/high-risk-ai-system`, `/glossary/human-in-the-loop`, `/glossary/human-oversight`, `/glossary/iso-iec-42001`, `/glossary/llm-gateway`, `/glossary/mcp`, `/glossary/model-card`, `/glossary/model-provenance`, `/glossary/nist-ai-rmf`, `/glossary/observability`, `/glossary/post-market-monitoring`, `/glossary/prompt-injection`, `/glossary/provider-vs-deployer`, `/glossary/red-teaming`, `/glossary/retrieval-augmented-generation`, `/glossary/serious-incident-reporting`, `/glossary/shadow-ai`, `/glossary/sub-processor`, `/glossary/technical-documentation`, `/imprint`, `/now`, `/pricing`, `/privacy`, `/resources`, `/resources/adoption-telemetry-dashboard-template`, `/resources/agent-evals-ci-starter`, `/resources/ai-governance-starter-kit`, `/resources/ai-readiness-scorecard`, `/resources/build-vs-buy-ai-kit`, `/resources/handover-playbook`, `/resources/llm-gateway-governance-config`, `/search`, `/security`, `/services`, `/services/90-day-production-sprint`, `/services/ai-readiness-and-risk-assessment`, `/services/fractional-caio-retainer`, `/styleguide`, `/terms`
-
-## Failures
-
-- desktop: no Lighthouse run for /privacy
-- desktop: no Lighthouse run for /resources
-- desktop: no Lighthouse run for /resources/handover-playbook
-- desktop: no Lighthouse run for /search
-- desktop: no Lighthouse run for /security
-- desktop: no Lighthouse run for /services
-- desktop: no Lighthouse run for /services/ai-readiness-and-risk-assessment
-- desktop: no Lighthouse run for /terms
-- desktop /pricing: 1 runs, gate requires 3
-- desktop /pricing seo: 92
