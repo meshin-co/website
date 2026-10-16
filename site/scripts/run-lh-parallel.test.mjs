@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
 import { mkdtemp, writeFile, chmod, mkdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, relative, resolve } from 'node:path';
 import { test } from 'node:test';
 import { promisify } from 'node:util';
 
@@ -15,7 +15,7 @@ async function fakeNpm({ seconds, exitCode = 0, reports = 3 }) {
   const npm = join(dir, 'bin', 'npm');
   const script = [
     '#!/bin/sh',
-    'echo "shard $LHCI_FORM_FACTOR $LH_SHARD_INDEX port $GATE_SERVER_PORT cwd $(basename "$PWD")"',
+    'echo "shard $LHCI_FORM_FACTOR $LH_SHARD_INDEX port $GATE_SERVER_PORT cwd $(basename "$PWD") routes $LH_ONLY_ROUTES"',
     'target="$AUDIT_ROOT/audits/phase-$GATE_PHASE/lh-$LHCI_FORM_FACTOR/shard-$LH_SHARD_INDEX"',
     'mkdir -p "$target"',
     'i=0',
@@ -89,4 +89,28 @@ test('each shard runs in its own directory, because lhci keeps its state in the 
 
   assert.match(out, /cwd mobile-1/);
   assert.match(out, /cwd desktop-2/);
+});
+
+test('a route file named relatively still resolves from a shard directory', async () => {
+  const fake = await fakeNpm({ seconds: 0 });
+  const routeFile = join(fake.auditRoot, 'routes.json');
+  await writeFile(routeFile, '["/"]');
+  const named = relative(process.cwd(), routeFile);
+
+  const { out } = await invoke(fake, { LH_WORKERS: '1', LH_ONLY_ROUTES: named });
+
+  assert.ok(named.startsWith('..'));
+  assert.match(out, new RegExp(`routes ${resolve(named)}`));
+});
+
+test('nothing to audit is a no-op, not a failure, so a specimen can plant the route it will measure', async () => {
+  const fake = await fakeNpm({ seconds: 0 });
+  const routeFile = join(fake.auditRoot, 'routes.json');
+  await writeFile(routeFile, '[]');
+
+  const { code, out } = await invoke(fake, { LH_WORKERS: '2', LH_ONLY_ROUTES: routeFile });
+
+  assert.equal(code, 0);
+  assert.match(out, /0 touched routes to audit/);
+  assert.doesNotMatch(out, /shard mobile/);
 });

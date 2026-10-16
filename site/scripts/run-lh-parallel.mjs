@@ -1,4 +1,4 @@
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { mkdir, readdir, rm, symlink } from 'node:fs/promises';
 import { cpus } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -8,8 +8,26 @@ import { deadlineMs, shardPlan, workerCount } from './lh-parallel.mjs';
 const FLOOR_MS = Number(process.env.LH_SHARD_FLOOR_MS ?? 15 * 60 * 1000);
 const GRACE_MS = Number(process.env.LH_SHARD_GRACE_MS ?? 15 * 1000);
 
+const absoluteRouteFile = process.env.LH_ONLY_ROUTES ? { LH_ONLY_ROUTES: resolve(process.env.LH_ONLY_ROUTES) } : {};
+
+const routeCount = () => {
+  const counted = spawnSync('node', ['scripts/lh-routes.cjs', '--count'], {
+    encoding: 'utf8',
+    env: { ...process.env, ...absoluteRouteFile },
+  });
+  const parsed = Number((counted.stdout ?? '').trim());
+  return Number.isInteger(parsed) ? parsed : undefined;
+};
+
+const routes = routeCount();
+
+if (routes === 0) {
+  console.log('0 touched routes to audit');
+  process.exit(0);
+}
+
 const shards = workerCount({ cores: cpus().length, requested: process.env.LH_WORKERS });
-const plan = shardPlan({ factors: ['mobile', 'desktop'], shards, basePort: 4330 });
+const plan = shardPlan({ factors: ['mobile', 'desktop'], shards, routes, basePort: 4330 });
 
 if (process.env.GATE_PHASE) {
   const phase = process.env.GATE_PHASE.replace(/^phase-/, '');
@@ -81,6 +99,7 @@ async function runShard({ factor, index, total, port }) {
         LH_SHARD_TOTAL: String(total),
         GATE_SERVER_PORT: String(port),
         AUDIT_ROOT: repoRoot,
+        ...absoluteRouteFile,
       },
     });
     live.add(child);

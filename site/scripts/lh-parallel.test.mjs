@@ -29,3 +29,20 @@ test('once shards have finished, a straggler is judged against them', () => {
 
   assert.equal(deadline, 1_250_000);
 });
+
+test('a run of fewer routes than shards never cuts a shard with nothing in it', () => {
+  const plan = shardPlan({ factors: ['mobile', 'desktop'], shards: 4, routes: 1, basePort: 4330 });
+
+  assert.equal(plan.length, 2);
+  assert.deepEqual(
+    plan.map((shard) => `${shard.factor} ${shard.index}/${shard.total}`),
+    ['mobile 1/1', 'desktop 1/1']
+  );
+  assert.equal(new Set(plan.map((shard) => shard.port)).size, 2);
+});
+
+test('a route count it was never told does not cap anything', () => {
+  const plan = shardPlan({ factors: ['mobile'], shards: 3, basePort: 4330 });
+
+  assert.equal(plan.length, 3);
+});

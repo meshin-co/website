@@ -277,4 +277,5 @@ jobs:
           git config user.email 'baseline-bot@meshin.co'
           git add tests/__screenshots__/linux
           git commit -m 'test: regenerate linux baselines on the CI runner' || echo 'no changes'
-          git push
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

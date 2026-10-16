@@ -1,10 +1,11 @@
-export function shardPlan({ factors, shards, basePort }) {
+export function shardPlan({ factors, shards, routes, basePort }) {
+  const total = routes === undefined ? shards : Math.max(1, Math.min(shards, routes));
   return factors.flatMap((factor) =>
-    Array.from({ length: shards }, (_, offset) => ({
+    Array.from({ length: total }, (_, offset) => ({
       factor,
       index: offset + 1,
-      total: shards,
-      port: basePort + offset + (factor === 'desktop' ? shards : 0),
+      total,
+      port: basePort + offset + (factor === 'desktop' ? total : 0),
     }))
   );
 }
