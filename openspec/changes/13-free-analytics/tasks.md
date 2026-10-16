@@ -18,7 +18,7 @@
 
 - [x] 3.1 Enable it for the Pages project and confirm the beacon in the live response (G41)
 - [ ] 3.2 Confirm the site still sets no cookie, measured from a live response
-- [ ] 3.3 Confirm the JavaScript byte budget still holds in the shipped build
+- [x] 3.3 Confirm the JavaScript byte budget still holds in the shipped build
 - [x] 3.4 Rewrite the privacy sentence and the imprint row in the same change that ships the
       beacon, and re-disposition both
 
@@ -29,4 +29,4 @@
 
 ## 5. Calibration Gate
 
-- [ ] 5.1 Run the Calibration Gate and commit the report it generates for this change
+- [x] 5.1 Run the Calibration Gate and commit the report it generates for this change
