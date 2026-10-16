@@ -11,6 +11,7 @@ import {
 } from '../src/utils/machine-text.mjs';
 import { siteLastmods } from '../src/utils/sitemap-lastmod.mjs';
 import { brandFromDisk } from '../src/utils/brand.mjs';
+import { invokedDirectly } from './invoked-directly.mjs';
 
 const SITE_ORIGIN = `https://${brandFromDisk().name}`;
 
@@ -83,6 +84,6 @@ export async function main(distDir) {
   console.log(`generate-static-sidecars: wrote ${written} sidecar(s) for static pages and hubs`);
 }
 
-if (import.meta.filename === process.argv[1]) {
+if (invokedDirectly(import.meta.filename, process.argv[1])) {
   await main(process.argv[2] ?? 'dist');
 }

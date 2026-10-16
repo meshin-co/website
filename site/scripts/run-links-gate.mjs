@@ -22,6 +22,9 @@ for (const finding of dead) console.error(`LINKS dead ${finding}`);
 for (const finding of unreachable) console.error(`LINKS unreachable, not a dead citation: ${finding}`);
 
 if (hermetic) console.log('links: hermetic run, every host outside the build was skipped');
-console.log(`links: ${links.length} scanned, ${dead.length} dead, ${unreachable.length} unreachable`);
+const counted = (state) => links.filter((link) => link.state === state).length;
+console.log(
+  `links: ${links.length} found, ${counted('OK')} answered, ${counted('SKIPPED')} skipped, ${dead.length} dead, ${unreachable.length} unreachable`
+);
 
 if (dead.length > 0) process.exitCode = 1;

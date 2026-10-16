@@ -3,6 +3,7 @@ import { join } from 'node:path';
 
 import { parse } from 'yaml';
 
+import { invokedDirectly } from './invoked-directly.mjs';
 import {
   conceptRegister,
   entityRegister,
@@ -81,4 +82,4 @@ function main() {
   console.log(`unlinked concept uses: ${built.undefined.length}`);
 }
 
-if (import.meta.filename === process.argv[1]) main();
+if (invokedDirectly(import.meta.filename, process.argv[1])) main();

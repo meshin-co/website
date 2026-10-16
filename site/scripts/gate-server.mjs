@@ -2,6 +2,7 @@ import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { extname, join, normalize, relative, resolve } from 'node:path';
 import { createGzip } from 'node:zlib';
+import { invokedDirectly } from './invoked-directly.mjs';
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -148,7 +149,7 @@ export function startGateServer({ root, port = 0, headersPath }) {
   });
 }
 
-if (import.meta.filename === process.argv[1]) {
+if (invokedDirectly(import.meta.filename, process.argv[1])) {
   const port = Number(process.env.GATE_SERVER_PORT ?? 4330);
   const { port: bound } = await startGateServer({
     root: process.argv[2] ?? 'dist',

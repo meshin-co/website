@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
+import { invokedDirectly } from './invoked-directly.mjs';
 
 const AUDITS_DIR = resolve(process.cwd(), '..', 'audits');
 const LEDGER = join(AUDITS_DIR, 'routes.json');
@@ -76,4 +77,4 @@ function main(args) {
   else checkLedger(current, distDir);
 }
 
-if (import.meta.filename === process.argv[1]) main(process.argv.slice(2));
+if (invokedDirectly(import.meta.filename, process.argv[1])) main(process.argv.slice(2));

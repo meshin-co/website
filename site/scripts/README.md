@@ -66,12 +66,13 @@ a build.
 
 ## Publishing
 
-| Script                   | Invoked by                 | What it does                                                                      |
-| ------------------------ | -------------------------- | --------------------------------------------------------------------------------- |
-| `run-deploy-check.mjs`   | `deploy:check`             | Reports whether the token authenticates, Pages is readable and the project exists |
-| `run-deploy.mjs`         | `deploy`, `deploy:preview` | Uploads `dist/` to Pages, refusing a build the route ledger has not seen          |
-| `run-publish-target.mjs` | Publish Live workflow      | Resolves which gated build a press publishes, refusing a stale or missing one     |
-| `run-lh-evidence.mjs`    | `lh:record`, `lh:check`    | Records a green local lighthouse run, and refuses a push of a tree none measured  |
+| Script                   | Invoked by                 | What it does                                                                           |
+| ------------------------ | -------------------------- | -------------------------------------------------------------------------------------- |
+| `run-deploy-check.mjs`   | `deploy:check`             | Reports whether the token authenticates, Pages is readable and the project exists      |
+| `run-deploy.mjs`         | `deploy`, `deploy:preview` | Uploads `dist/` to Pages, refusing a build the route ledger has not seen               |
+| `run-publish-target.mjs` | Publish Live workflow      | Resolves which gated build a press publishes, refusing a stale or missing one          |
+| `run-lh-parallel.mjs`    | `gate:lh`                  | Runs both form factors sharded across workers, stopping a shard that outruns its peers |
+| `run-lh-evidence.mjs`    | `lh:record`, `lh:check`    | Records a green local lighthouse run, and refuses a push of a tree none measured       |
 
 ## Modules
 
@@ -87,6 +88,8 @@ be tested without a build.
 | `external-links.mjs`      | `run-external-links.mjs`                                                                                          | The required rel set, and what counts as outbound                                                                             |
 | `links-gate.mjs`          | `run-links-gate.mjs`                                                                                              | The crawl arguments, the skipped hosts, and the hermetic mode                                                                 |
 | `deploy.mjs`              | `run-deploy.mjs`, `run-deploy-check.mjs`                                                                          | The required credentials, the wrangler arguments, and the route-ledger refusal                                                |
+| `invoked-directly.mjs`    | every script with a `main`                                                                                        | Whether a module is the entry point, resolving symlinks, so a script run from a shard directory still starts                  |
+| `lh-parallel.mjs`         | `run-lh-parallel.mjs`                                                                                             | How many workers a machine may run, which shard takes which port, and when a straggler has run long enough                    |
 | `markdown-table.mjs`      | `registers.mjs`, `semantic-core.mjs`                                                                              | One definition of a markdown table shaped the way prettier shapes it, so a generated block never reads as drift               |
 | `build-surface.mjs`       | `publish-target.mjs`, `lh-evidence.mjs`                                                                           | Whether a path can change the built output, which is not the same question as whether it is markdown                          |
 | `lh-evidence.mjs`         | `run-lh-evidence.mjs`                                                                                             | The fingerprint of everything that can change the build, and why a recorded lighthouse run no longer covers it                |

@@ -1,0 +1,11 @@
+name: Cancel this run
+description: Cancels the run that calls it, so a failure stops the jobs still burning minutes beside it.
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        echo "a job failed, cancelling run ${GITHUB_RUN_ID}"
+        gh api -X POST "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/cancel"

@@ -7,6 +7,7 @@ import { table } from './markdown-table.mjs';
 import { discoverRoutes } from './gate.mjs';
 
 import { brandFromDisk, titleSuffix } from '../src/utils/brand.mjs';
+import { invokedDirectly } from './invoked-directly.mjs';
 
 const DOC = '../docs/SEMANTIC-CORE.md';
 const TITLE_SUFFIX = titleSuffix(brandFromDisk());
@@ -437,6 +438,6 @@ async function main() {
   console.log(`semantic-core: ${rows.length} rows, ${families.size} families -> ${DOC}`);
 }
 
-if (import.meta.filename === process.argv[1]) {
+if (invokedDirectly(import.meta.filename, process.argv[1])) {
   await main();
 }

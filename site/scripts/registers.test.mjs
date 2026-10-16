@@ -170,3 +170,24 @@ test('the rendered block is already prettier-formatted, so a formatted repo neve
 
   assert.equal(formatted.trim(), block.trim());
 });
+
+test('the spliced block is already shaped as prettier shapes it, so the generator and the formatter cannot disagree', async () => {
+  const doc = [
+    'intro',
+    '',
+    '<!-- REGISTERS:BEGIN -->',
+    '',
+    'stale',
+    '',
+    '<!-- REGISTERS:END -->',
+    '',
+    'outro',
+    '',
+  ].join('\n');
+
+  const { spliceRegisters } = await import('./registers.mjs');
+
+  const written = spliceRegisters(doc, '#### Entity register (1)');
+
+  assert.match(written, /<!-- REGISTERS:BEGIN -->\n\n#### Entity register \(1\)\n\n<!-- REGISTERS:END -->/);
+});

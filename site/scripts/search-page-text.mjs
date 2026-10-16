@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { buildShardEntry } from '../public/search/shards.mjs';
 import { extractPage } from './content-html.mjs';
 import { brandFromDisk, titleSuffix } from '../src/utils/brand.mjs';
+import { invokedDirectly } from './invoked-directly.mjs';
 
 const PAGE_SHARD = 'search-index-page.json';
 const TITLE_SUFFIX = titleSuffix(brandFromDisk());
@@ -63,6 +64,6 @@ async function main(distDir) {
   console.log(`search-page-text: derived ${derivedCount} of ${entries.length} page entries from dist`);
 }
 
-if (import.meta.filename === process.argv[1]) {
+if (invokedDirectly(import.meta.filename, process.argv[1])) {
   await main(process.argv[2] ?? 'dist');
 }

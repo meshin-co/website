@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 
 import { discoverRoutes } from './gate.mjs';
+import { invokedDirectly } from './invoked-directly.mjs';
 
 const LD_BLOCK = /<script[^>]+type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g;
 
@@ -213,6 +214,6 @@ export async function main(distDir) {
   }
 }
 
-if (import.meta.filename === process.argv[1]) {
+if (invokedDirectly(import.meta.filename, process.argv[1])) {
   await main(process.argv[2] ?? 'dist');
 }

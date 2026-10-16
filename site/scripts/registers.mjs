@@ -105,5 +105,5 @@ export function spliceRegisters(doc, block) {
   const begin = doc.indexOf(REGISTERS_BEGIN);
   const end = doc.indexOf(REGISTERS_END);
   if (begin === -1 || end === -1) throw new Error('registers markers missing from docs/SEMANTIC-CORE.md');
-  return `${doc.slice(0, begin + REGISTERS_BEGIN.length)}\n${block}\n${doc.slice(end)}`;
+  return `${doc.slice(0, begin + REGISTERS_BEGIN.length)}\n\n${block.trim()}\n\n${doc.slice(end)}`;
 }

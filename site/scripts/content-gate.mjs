@@ -5,6 +5,7 @@ import { discoverRoutes } from './gate.mjs';
 import { extractPage } from './content-html.mjs';
 import { judgePage, PROFILES } from './content-rows.mjs';
 import { duplicateSentences, machinePatternHits, punctuationFindings, questionRunLength } from './prose-rules.mjs';
+import { invokedDirectly } from './invoked-directly.mjs';
 
 const DUPLICATE_MINIMUM_WORDS = 12;
 
@@ -105,6 +106,6 @@ async function main(distDir) {
   if (findings.length > 0) process.exitCode = 1;
 }
 
-if (import.meta.filename === process.argv[1]) {
+if (invokedDirectly(import.meta.filename, process.argv[1])) {
   await main(process.argv[2] ?? 'dist');
 }

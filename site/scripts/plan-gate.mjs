@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { PENDING } from './mutation-pending.mjs';
+import { invokedDirectly } from './invoked-directly.mjs';
 
 const ARCHIVE_DATE = /^\d{4}-\d{2}-\d{2}-/;
 const UNWAIVABLE = new Set([
@@ -187,7 +188,7 @@ function main() {
   if (findings.length > 0) process.exitCode = 1;
 }
 
-if (import.meta.filename === process.argv[1]) main();
+if (invokedDirectly(import.meta.filename, process.argv[1])) main();
 
 function gateNames(scripts) {
   return Object.keys(scripts).filter((name) => name.startsWith('gate:'));

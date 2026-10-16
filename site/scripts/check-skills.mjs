@@ -2,6 +2,7 @@ import { readdir, readFile } from 'node:fs/promises';
 import { existsSync, statSync } from 'node:fs';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { invokedDirectly } from './invoked-directly.mjs';
 
 const MAX_LINES = 80;
 
@@ -229,6 +230,6 @@ async function main(skillsDirArg) {
   if (findings.length > 0) process.exitCode = 1;
 }
 
-if (import.meta.filename === process.argv[1]) {
+if (invokedDirectly(import.meta.filename, process.argv[1])) {
   await main(process.argv[2]);
 }

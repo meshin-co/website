@@ -6,6 +6,7 @@ import { parse } from 'yaml';
 import { authoredRoutesOnly, groupByConcept, indexableOnly, orphanEntities, renderGaps } from './editorial-gaps.mjs';
 import { conceptRegister, entityRegister, prosePassages, undefinedConceptFindings } from './registers.mjs';
 import { generatorRevision } from './report.mjs';
+import { invokedDirectly } from './invoked-directly.mjs';
 
 const LEDGER = '../audits/phase-4.7/inventory.json';
 const CORE = '../docs/SEMANTIC-CORE.md';
@@ -78,4 +79,4 @@ function main() {
   console.log(`gaps: ${OUT}, ${noindexRoutes.length} noindex routes excluded, ${promptGaps.length} prompt gaps`);
 }
 
-if (import.meta.filename === process.argv[1]) main();
+if (invokedDirectly(import.meta.filename, process.argv[1])) main();

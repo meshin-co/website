@@ -2,6 +2,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import { join, relative, sep } from 'node:path';
 
 import { brandFromDisk } from '../src/utils/brand.mjs';
+import { invokedDirectly } from './invoked-directly.mjs';
 
 const SITE_ORIGIN = `https://${brandFromDisk().name}`;
 
@@ -102,6 +103,6 @@ async function main(distDir) {
   if (orphans.length > 0) process.exitCode = 1;
 }
 
-if (import.meta.filename === process.argv[1]) {
+if (invokedDirectly(import.meta.filename, process.argv[1])) {
   await main(process.argv[2] ?? 'dist');
 }

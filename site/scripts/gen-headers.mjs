@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { invokedDirectly } from './invoked-directly.mjs';
 
 const INLINE_SCRIPT = /<script(?![^>]*\bsrc=)([^>]*)>([\s\S]*?)<\/script>/gi;
 const INLINE_STYLE = /<style([^>]*)>([\s\S]*?)<\/style>/gi;
@@ -119,6 +120,6 @@ async function main(distDir) {
   );
 }
 
-if (import.meta.filename === process.argv[1]) {
+if (invokedDirectly(import.meta.filename, process.argv[1])) {
   await main(process.argv[2] ?? 'dist');
 }

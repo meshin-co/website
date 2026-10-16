@@ -3,6 +3,7 @@ import { dirname, extname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { brandFromDisk } from '../src/utils/brand.mjs';
+import { invokedDirectly } from './invoked-directly.mjs';
 
 const GATED_ROOTS = ['src', 'scripts'];
 const GATED_EXTENSIONS = new Set(['.astro', '.ts', '.mjs']);
@@ -68,6 +69,6 @@ async function main(siteRootArg) {
   if (findings.length > 0) process.exitCode = 1;
 }
 
-if (import.meta.filename === process.argv[1]) {
+if (invokedDirectly(import.meta.filename, process.argv[1])) {
   await main(process.argv[2]);
 }
