@@ -1,9 +1,12 @@
 const FETCHED_REL = /^(?:stylesheet|preload|modulepreload|prefetch|icon|apple-touch-icon|manifest)$/i;
-const SCRIPT_OR_MEDIA =
-  /<(?:script|img|iframe|source|video|audio|embed)\b[^>]*?\bsrc\s*=\s*["'](https?:\/\/[^"']+)["']/gi;
+const ABSOLUTE = String.raw`(?:https?:)?\/\/[^"']+`;
+const SCRIPT_OR_MEDIA = new RegExp(
+  String.raw`<(?:script|img|iframe|source|video|audio|embed)\b[^>]*?(?<![-\w])src\s*=\s*["'](${ABSOLUTE})["']`,
+  'gi'
+);
 const LINK = /<link\b([^>]*)>/gi;
-const REL = /\brel\s*=\s*["']([^"']+)["']/i;
-const HREF = /\bhref\s*=\s*["'](https?:\/\/[^"']+)["']/i;
+const REL = /(?<![-\w])rel\s*=\s*["']([^"']+)["']/i;
+const HREF = new RegExp(String.raw`(?<![-\w])href\s*=\s*["'](${ABSOLUTE})["']`, 'i');
 const COUNTING_CLAIM = /counted by Cloudflare Web Analytics/i;
 const NO_COUNTING_CLAIM = /no analytics runs at all|Analytics<\/dt>\s*<dd[^>]*>\s*None/i;
 
@@ -25,7 +28,7 @@ export function loadedOrigins(html, selfOrigin = '') {
 
   const origins = new Set();
   for (const url of urls) {
-    const origin = new URL(url).origin;
+    const origin = new URL(url, 'https://inherited.invalid').origin;
     if (origin !== selfOrigin) origins.add(origin);
   }
   return [...origins];

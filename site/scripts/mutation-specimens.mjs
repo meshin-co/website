@@ -107,7 +107,7 @@ export const SPECIMENS = {
     token: 'loads https://widget.zz-specimen-vendor.example',
     plant: (copySite) =>
       editFile(join(copySite, 'dist/about.html'), (html) =>
-        html.replace('</body>', '<script src="https://widget.zz-specimen-vendor.example/w.js"></script></body>')
+        html.replace('</body>', '<script src="//widget.zz-specimen-vendor.example/w.js"></script></body>')
       ),
   },
   'paid-claim': {
