@@ -28,8 +28,8 @@ export function loadedOrigins(html, selfOrigin = '') {
 
   const origins = new Set();
   for (const url of urls) {
-    const origin = new URL(url, 'https://inherited.invalid').origin;
-    if (origin !== selfOrigin) origins.add(origin);
+    const parsed = URL.parse(url, 'https://inherited.invalid');
+    if (parsed && parsed.origin !== selfOrigin) origins.add(parsed.origin);
   }
   return [...origins];
 }
