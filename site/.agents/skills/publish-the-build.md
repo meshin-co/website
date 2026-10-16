@@ -55,9 +55,11 @@ build is a different artefact, and the Calibration Gate did not measure it.
 
 - **Every pull request** — `deploy-preview` in `ci.yml` runs after `gate-report`, deploys to the
   branch `pr-<number>`, smokes that origin and comments the URL on the pull request.
-- **Publishing** — the `deploy` workflow, run by hand from the Actions tab with the id of the ci
-  run to publish. It refuses a run that did not conclude `success` or that was not on `main`,
-  then deploys, smokes and announces to IndexNow.
+- **Publishing** — **Publish Live**, pressed by hand from the Actions tab. It needs no input:
+  `scripts/run-publish-target.mjs` finds the newest ci run on `main` that concluded `success` and
+  still carries an unexpired `dist`, refuses to publish behind any later source commit on `main`
+  (prose commits cannot change the build, so they do not block), then deploys, smokes the live
+  origin and announces the changed routes to IndexNow. A ci run id publishes that run instead.
 
 There is no automatic production deploy. A merge to `main` gates the build and stops; pressing
 Run workflow is the decision to publish.

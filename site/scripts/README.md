@@ -66,10 +66,11 @@ a build.
 
 ## Publishing
 
-| Script                 | Invoked by                 | What it does                                                                      |
-| ---------------------- | -------------------------- | --------------------------------------------------------------------------------- |
-| `run-deploy-check.mjs` | `deploy:check`             | Reports whether the token authenticates, Pages is readable and the project exists |
-| `run-deploy.mjs`       | `deploy`, `deploy:preview` | Uploads `dist/` to Pages, refusing a build the route ledger has not seen          |
+| Script                   | Invoked by                 | What it does                                                                      |
+| ------------------------ | -------------------------- | --------------------------------------------------------------------------------- |
+| `run-deploy-check.mjs`   | `deploy:check`             | Reports whether the token authenticates, Pages is readable and the project exists |
+| `run-deploy.mjs`         | `deploy`, `deploy:preview` | Uploads `dist/` to Pages, refusing a build the route ledger has not seen          |
+| `run-publish-target.mjs` | Publish Live workflow      | Resolves which gated build a press publishes, refusing a stale or missing one     |
 
 ## Modules
 
@@ -85,6 +86,7 @@ be tested without a build.
 | `external-links.mjs`      | `run-external-links.mjs`                                                                                          | The required rel set, and what counts as outbound                                                                             |
 | `links-gate.mjs`          | `run-links-gate.mjs`                                                                                              | The crawl arguments, the skipped hosts, and the hermetic mode                                                                 |
 | `deploy.mjs`              | `run-deploy.mjs`, `run-deploy-check.mjs`                                                                          | The required credentials, the wrangler arguments, and the route-ledger refusal                                                |
+| `publish-target.mjs`      | `run-publish-target.mjs`                                                                                          | Which gated ci run the Publish Live button may publish, and which later commits block it                                      |
 | `third-party.mjs`         | `run-paid-gate.mjs`                                                                                               | Every third-party origin the build may load, with the reason each is free (L58)                                               |
 | `smoke-prod.mjs`          | `run-smoke-prod.mjs`                                                                                              | The required header set and the per-route verdict                                                                             |
 | `polish-sweep.mjs`        | `run-polish-sweep.mjs`                                                                                            | Finding classification and the six audit widths                                                                               |
