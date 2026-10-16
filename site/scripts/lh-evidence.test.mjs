@@ -1,17 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { evidenceFindings, fingerprint, staleReason } from './lh-evidence.mjs';
-
-const reportFor = (route, score) => ({
-  finalUrl: `http://127.0.0.1:4330${route}`,
-  categories: {
-    performance: { score },
-    accessibility: { score },
-    'best-practices': { score },
-    seo: { score },
-  },
-});
+import { fingerprint, staleReason, uncommittedBuildFiles } from './lh-evidence.mjs';
 
 test('the fingerprint covers only what can change the built output', () => {
   const withProse = fingerprint([
@@ -59,60 +49,16 @@ test('a missing record is refused too, because no run has ever been recorded', (
   assert.match(staleReason(undefined, 'xyz'), /no local lighthouse run/i);
 });
 
-test('a form factor with no report at all is refused by name', () => {
-  const findings = evidenceFindings({ mobile: [], desktop: [reportFor('/', 1)] });
+test('an edit not yet committed is named, because the fingerprint would describe another tree', () => {
+  const porcelain = [' M site/src/pages/index.astro', '?? site/src/components/New.astro', ' M docs/PRD.md'].join('\n');
 
-  assert.equal(findings.length, 1);
-  assert.match(findings[0], /mobile/);
-  assert.match(findings[0], /no lighthouse reports/i);
+  assert.deepEqual(uncommittedBuildFiles(porcelain), ['site/src/pages/index.astro', 'site/src/components/New.astro']);
 });
 
-test('a category under 100 is refused, naming route, factor and category', () => {
-  const low = reportFor('/pricing', 1);
-  low.categories.seo.score = 0.98;
-
-  const findings = evidenceFindings({ mobile: [low], desktop: [reportFor('/pricing', 1)] });
-
-  assert.equal(findings.length, 1);
-  assert.match(findings[0], /mobile \/pricing seo 98/);
+test('a rename reports its destination, which is the file the build would read', () => {
+  assert.deepEqual(uncommittedBuildFiles('R  site/src/a.astro -> site/src/b.astro'), ['site/src/b.astro']);
 });
 
-test('four categories at 100 on both factors is evidence', () => {
-  const findings = evidenceFindings({
-    mobile: [reportFor('/', 1), reportFor('/pricing', 1)],
-    desktop: [reportFor('/', 1), reportFor('/pricing', 1)],
-  });
-
-  assert.deepEqual(findings, []);
-});
-
-test('a report missing a category is refused rather than read as a pass', () => {
-  const partial = reportFor('/', 1);
-  delete partial.categories.accessibility;
-
-  const findings = evidenceFindings({ mobile: [partial], desktop: [reportFor('/', 1)] });
-
-  assert.equal(findings.length, 1);
-  assert.match(findings[0], /accessibility/);
-});
-
-test('a route that is noindex by design is scored without is-crawlable, as the report scores it', () => {
-  const search = {
-    finalUrl: 'http://127.0.0.1:4330/search',
-    categories: {
-      performance: { score: 1 },
-      accessibility: { score: 1 },
-      'best-practices': { score: 1 },
-      seo: {
-        score: 0.66,
-        auditRefs: [
-          { id: 'is-crawlable', weight: 4.2 },
-          { id: 'document-title', weight: 1 },
-        ],
-      },
-    },
-    audits: { 'is-crawlable': { score: 0 }, 'document-title': { score: 1 } },
-  };
-
-  assert.deepEqual(evidenceFindings({ mobile: [search], desktop: [search] }), []);
+test('uncommitted prose is not a reason to refuse', () => {
+  assert.deepEqual(uncommittedBuildFiles(' M docs/PRD.md\n?? audits/phase-5/REPORT.md'), []);
 });

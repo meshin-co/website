@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { linkArgs, siteOrigin, skippedHosts, THIRD_PARTY_HOSTS } from './links-gate.mjs';
+import { linkArgs, siteOrigin, skippedHosts, THIRD_PARTY_HOSTS, linkFindings } from './links-gate.mjs';
 
 test('the crawl covers the build recursively and rewrites extensionless local URLs', () => {
   const args = linkArgs({ origin: 'https://example.test' });
@@ -52,4 +52,44 @@ test('the live run does not skip an outbound host it has no reason to skip', () 
     linkArgs({ origin: 'https://example.test' }).indexOf('--skip') + 1
   ];
   assert.equal(new RegExp(skip).test('https://maxius.nl/wet-op-de-ondernemingsraden/artikel27'), false);
+});
+
+test('a citation answering 404 is our defect and fails the gate', () => {
+  const { dead, unreachable } = linkFindings([
+    { url: 'https://example.com/gone', status: 404, state: 'BROKEN', parent: 'dist/blog/a.html' },
+    { url: 'https://example.com/here', status: 200, state: 'OK', parent: 'dist/blog/a.html' },
+  ]);
+
+  assert.deepEqual(unreachable, []);
+  assert.equal(dead.length, 1);
+  assert.match(dead[0], /404/);
+  assert.match(dead[0], /dist\/blog\/a\.html/);
+});
+
+test('a destination that is down is reported but does not fail the gate, because it is not our link', () => {
+  const { dead, unreachable } = linkFindings([
+    { url: 'https://down.example/page', status: 503, state: 'BROKEN', parent: 'dist/blog/a.html' },
+    { url: 'https://slow.example/page', status: 0, state: 'BROKEN', parent: 'dist/blog/b.html' },
+  ]);
+
+  assert.deepEqual(dead, []);
+  assert.equal(unreachable.length, 2);
+  assert.match(unreachable[0], /503/);
+  assert.match(unreachable[1], /no response/);
+});
+
+test('a local link is never excused: an unreachable build file is dead', () => {
+  const { dead } = linkFindings([
+    { url: 'http://localhost:4330/missing', status: 0, state: 'BROKEN', parent: 'dist/index.html' },
+  ]);
+
+  assert.equal(dead.length, 1);
+});
+
+test('a json run lists every link, so a count of zero can be read as a vacuous pass', () => {
+  const args = linkArgs({ origin: 'https://meshin.co', json: true });
+
+  assert.ok(args.includes('--format'));
+  assert.equal(args[args.indexOf('--format') + 1], 'json');
+  assert.ok(!args.includes('--silent'), 'silent mode reports only broken links, which hides the denominator');
 });

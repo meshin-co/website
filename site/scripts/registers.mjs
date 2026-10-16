@@ -1,3 +1,4 @@
+import { table } from './markdown-table.mjs';
 export const REGISTERS_BEGIN = '<!-- REGISTERS:BEGIN -->';
 export const REGISTERS_END = '<!-- REGISTERS:END -->';
 
@@ -63,15 +64,10 @@ export function undefinedConceptFindings(concepts, pages) {
   );
 }
 
-const table = (header, rows) =>
-  [`| ${header.join(' | ')} |`, `|${header.map(() => '---').join('|')}|`, ...rows].join('\n');
-
 export function renderRegisters({ entities, concepts, relationships }) {
-  const entityRows = entities.map(
-    (entry) => `| ${entry.entity} | \`${entry.ownedBy}\` | ${entry.mentionedBy.length} |`
-  );
-  const conceptRows = concepts.map((entry) => `| ${entry.concept} | \`${entry.definedBy}\` | ${entry.definition} |`);
-  const relationshipRows = relationships.map((entry) => `| ${entry.from} | ${entry.kind} | ${entry.to} |`);
+  const entityRows = entities.map((entry) => [entry.entity, `\`${entry.ownedBy}\``, String(entry.mentionedBy.length)]);
+  const conceptRows = concepts.map((entry) => [entry.concept, `\`${entry.definedBy}\``, entry.definition]);
+  const relationshipRows = relationships.map((entry) => [entry.from, entry.kind, entry.to]);
 
   return [
     `#### Entity register (${entities.length})`,

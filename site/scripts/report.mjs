@@ -215,15 +215,9 @@ export function renderReport({
   return { markdown: `${lines.join('\n')}`, failures };
 }
 
-export async function main(phase, auditDir) {
-  if (!phase || !auditDir)
-    throw new Error(
-      'name the bucket to write: node scripts/report.mjs <phase> <audit-dir>, for example node scripts/report.mjs ci ../audits/phase-ci'
-    );
-  const distDir = process.env.LH_DIST_DIR || 'dist';
-  const out = join(auditDir, 'REPORT.md');
+export async function phaseVerdict(phase, auditDir, distDir = process.env.LH_DIST_DIR || 'dist') {
   const gate = JSON.parse(await readFile(join(distDir, 'gate-routes.json'), 'utf8'));
-  const { markdown, failures } = renderReport({
+  return renderReport({
     phase,
     gate,
     expectedRoutes: auditableRoutes(distDir),
@@ -231,9 +225,17 @@ export async function main(phase, auditDir) {
     desktop: scoreTable(await readReports(join(auditDir, 'lh-desktop'))),
     budgets: await metricBudgets(),
     byteBudgets: byteBudgets(),
-    generator: generatorRevision(out),
+    generator: generatorRevision(join(auditDir, 'REPORT.md')),
   });
-  await writeFile(out, markdown);
+}
+
+export async function main(phase, auditDir) {
+  if (!phase || !auditDir)
+    throw new Error(
+      'name the bucket to write: node scripts/report.mjs <phase> <audit-dir>, for example node scripts/report.mjs ci ../audits/phase-ci'
+    );
+  const { markdown, failures } = await phaseVerdict(phase, auditDir);
+  await writeFile(join(auditDir, 'REPORT.md'), markdown);
   console.log(markdown);
   if (failures.length > 0) process.exitCode = 1;
 }

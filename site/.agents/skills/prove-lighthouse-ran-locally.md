@@ -10,6 +10,7 @@ re-run. It runs on a quiet machine instead, and a push proves it ran (L59).
 cd site
 npm run build                                   # the only build that may be measured
 GATE_PHASE=<bucket> npm run gate:lh             # both form factors, ~40 min
+GATE_PHASE=<bucket> npm run lh:record           # the evidence, only if that run passes
 ```
 
 `GATE_PHASE` is required: `collect-reports.mjs` files each run under `audits/phase-<bucket>/`, and
@@ -20,22 +21,30 @@ failed; run singly they passed in four minutes each.
 
 ## What the record proves
 
-`gate:lh` ends in `lh:record`, which does not take the console's word for it. It reads every
-collected report and writes `audits/lighthouse-green.json` only when all four categories read 100
-on both form factors. Noindex routes such as `/search` are scored without `is-crawlable` through
-`categoryScore` in `scripts/report.mjs` — the same scorer the committed report uses, so the two can
-never disagree.
+`lh:record` is a separate command, not a step inside `gate:lh`, so a planted specimen can prove the gate still fails without writing evidence about its own defect. Forgetting it is caught by the hook, which names both commands. It does not take the console's word for it. It calls
+`phaseVerdict` in `scripts/report.mjs` — the same function that renders the committed REPORT.md —
+and writes `audits/lighthouse-green.json` only when that verdict has no failures. So the record
+means what the Calibration Gate means: every audited route present on both form factors, three runs
+each, all four categories at 100 (noindex routes scored without `is-crawlable`), and the median LCP,
+CLS and TBT budgets met. A partial audit cannot satisfy it, because the expected route set is
+derived from `dist/` rather than from the run.
+
+It also refuses while any build-surface file is uncommitted: the record keys a fingerprint of HEAD,
+and a run measured from a dirty tree would certify bytes nobody measured. The order is commit,
+build, measure, record, then commit the record — which lands under `audits/`, so it does not move
+the fingerprint it just wrote.
 
 The record keys a fingerprint, from `scripts/lh-evidence.mjs`, of every tracked file that can
 change the built output. `scripts/build-surface.mjs` answers which: content markdown under
 `site/src/data/` counts, a test file or a fixture does not, and prose under `docs/`, `audits/`,
 `openspec/`, `investigation/` or `site/.agents/` never does.
 
-A refusal names the factor, the route and the category, and writes nothing:
+A refusal names the factor, the route and what failed, and writes nothing:
 
 ```
-LIGHTHOUSE desktop /search seo 66, not 100
-LIGHTHOUSE audits/phase-13-free-analytics does not hold a green run of both form factors
+LIGHTHOUSE mobile /pricing performance: 99
+LIGHTHOUSE desktop /blog: 2 runs, gate requires 3
+LIGHTHOUSE audits/phase-13-free-analytics is not a passing calibration run (2 failure(s))
 ```
 
 ## The push

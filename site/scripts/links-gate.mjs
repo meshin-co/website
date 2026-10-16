@@ -22,13 +22,13 @@ const EXTERNAL = '^https?://(?!localhost|127\\.0\\.0\\.1)';
 
 const EXTENSIONLESS_LOCAL = '^(http://(?:localhost|127\\.0\\.0\\.1):\\d+/(?:[^/?#]+/)*[^/?#.]+)([?#].*)?$';
 
-export function linkArgs({ skipExternal = false, origin } = {}) {
+export function linkArgs({ skipExternal = false, origin, json = false } = {}) {
   const hosts = skippedHosts(origin);
   const skip = skipExternal ? [...hosts, EXTERNAL] : hosts;
   return [
     'dist',
     '--recurse',
-    '--silent',
+    ...(json ? ['--format', 'json'] : ['--silent']),
     '--retry',
     '--retry-errors',
     '--retry-errors-count',
@@ -42,4 +42,19 @@ export function linkArgs({ skipExternal = false, origin } = {}) {
     '--skip',
     skip.join('|'),
   ];
+}
+
+const isLocal = (url) => /^https?:\/\/(?:localhost|127\.0\.0\.1)/.test(url) || url.startsWith('dist/');
+
+export function linkFindings(results) {
+  const dead = [];
+  const unreachable = [];
+  for (const { url, status, state, parent } of results) {
+    if (state !== 'BROKEN') continue;
+    const read = status > 0 ? status : 'no response';
+    const finding = `${parent} -> ${url} (${read})`;
+    if (isLocal(url) || (status >= 400 && status < 500)) dead.push(finding);
+    else unreachable.push(finding);
+  }
+  return { dead, unreachable };
 }
