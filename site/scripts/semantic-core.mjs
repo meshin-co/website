@@ -3,6 +3,7 @@ import { join } from 'node:path';
 
 import { extractPage } from './content-html.mjs';
 import { judgePage, PROFILES } from './content-rows.mjs';
+import { table } from './markdown-table.mjs';
 import { discoverRoutes } from './gate.mjs';
 
 import { brandFromDisk, titleSuffix } from '../src/utils/brand.mjs';
@@ -400,15 +401,11 @@ export function renderFamilies(rows) {
     const grammar = FAMILY_GRAMMAR[family];
     const head = `### ${family} (${familyRows.length})`;
     const grammarLine = `title \`${grammar.pattern}\` · meta: ${grammar.meta} · body intent: ${grammar.intent}`;
-    const header = '| Route | Query | Title | Description | H1 | Links | Opening |';
-    const divider = '|---|---|---|---|---|---|---|';
-    const body = familyRows
-      .map(
-        (row) =>
-          `| ${cell(row.route)} | ${row.query} | ${row.title} | ${row.description} | ${row.h1} | ${row.links} | ${row.opening} |`
-      )
-      .join('\n');
-    sections.push(`${head}\n\n${grammarLine}\n\n${header}\n${divider}\n${body}`);
+    const body = table(
+      ['Route', 'Query', 'Title', 'Description', 'H1', 'Links', 'Opening'],
+      familyRows.map((row) => [cell(row.route), row.query, row.title, row.description, row.h1, row.links, row.opening])
+    );
+    sections.push(`${head}\n\n${grammarLine}\n\n${body}`);
   }
 
   return sections.join('\n\n');
