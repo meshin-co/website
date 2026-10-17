@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 
-import { auditableRoutes, canonicalRoute, isNoindexByDesign, NOINDEX_BY_DESIGN } from './lh-routes.cjs';
+import { auditableRoutes, canonicalRoute, isNoindexByDesign } from './lh-routes.cjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 
 const CATEGORIES = ['performance', 'accessibility', 'best-practices', 'seo'];
