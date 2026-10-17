@@ -105,6 +105,7 @@ export const FAMILIES = [
   { id: 'brand-literal-typed-into-a-module', kind: 'specimen', specimen: 'brand' },
   { id: 'paid-service-shipped-on-a-route', kind: 'specimen', specimen: 'paid' },
   { id: 'analytics-copy-disagrees-with-the-shipped-beacon', kind: 'specimen', specimen: 'paid-claim' },
+  { id: 'third-party-script-loaded-from-a-markup-tag', kind: 'specimen', specimen: 'paid-blocking' },
   { id: 'editorial-row-without-a-disposition', kind: 'specimen', specimen: 'editorialRowUnreviewed' },
   { id: 'route-removed-without-an-explanation', kind: 'specimen', specimen: 'routesShrink' },
   { id: 'html-duplicate-id', kind: 'specimen', specimen: 'html' },

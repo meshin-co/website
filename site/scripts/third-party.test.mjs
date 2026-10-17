@@ -1,7 +1,13 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { ALLOWED_ORIGINS, analyticsClaimFindings, loadedOrigins, originFindings } from './third-party.mjs';
+import {
+  ALLOWED_ORIGINS,
+  analyticsClaimFindings,
+  blockingThirdPartyFindings,
+  loadedOrigins,
+  originFindings,
+} from './third-party.mjs';
 
 test('an origin the page loads is collected; one it only mentions is not', () => {
   const html = [
@@ -155,4 +161,63 @@ test('an address no browser could fetch is skipped, not a crash that hides the r
   const findings = originFindings(pages);
   assert.equal(findings.length, 1);
   assert.match(findings[0], /\/vendor loads https:\/\/widget\.unknown-vendor\.example/);
+});
+
+test('an origin a script injects at runtime is still an origin the page loads', () => {
+  const html = [
+    '<html><head><script>',
+    "addEventListener('load',function(){var b=document.createElement('script');",
+    "b.src='https://static.cloudflareinsights.com/beacon.min.js';document.head.appendChild(b)})",
+    '</script></head><body>No analytics runs at all.</body></html>',
+  ].join('');
+
+  assert.deepEqual(loadedOrigins(html), ['https://static.cloudflareinsights.com']);
+  assert.deepEqual(analyticsClaimFindings([{ route: '/privacy', html }]), [
+    '/privacy denies analytics, but the build loads the Cloudflare beacon',
+  ]);
+});
+
+test('an undeclared origin named only inside a script is reported, not waved through', () => {
+  const html = "<html><body><script>fetch('https://tracker.example/collect')</script></body></html>";
+
+  assert.deepEqual(originFindings([{ route: '/', html }]), [
+    '/ loads https://tracker.example, which no entry in ALLOWED_ORIGINS declares free (L58)',
+  ]);
+});
+
+test('prose that merely names a vendor is not a request to it', () => {
+  const html = '<html><body><p>Served from https://static.cloudflareinsights.com by Cloudflare.</p></body></html>';
+
+  assert.deepEqual(loadedOrigins(html), []);
+});
+
+test('a beacon shipped as a direct tag fails, because it costs mobile LCP', () => {
+  const direct =
+    '<html><head><script defer src="https://static.cloudflareinsights.com/beacon.min.js"></script></head></html>';
+  const deferred =
+    "<html><head><script>addEventListener('load',function(){var b=document.createElement('script');b.src='https://static.cloudflareinsights.com/beacon.min.js'})</script></head></html>";
+
+  assert.deepEqual(blockingThirdPartyFindings([{ route: '/', html: direct }]), [
+    '/ loads https://static.cloudflareinsights.com from a markup tag; measured on 2026-10-16 that costs 810ms of mobile LCP, so it is appended after the load event instead',
+  ]);
+  assert.deepEqual(blockingThirdPartyFindings([{ route: '/', html: deferred }]), []);
+});
+
+test('a JSON-LD graph names vendors without requesting them', () => {
+  const html = [
+    '<script type="application/ld+json">',
+    '{"@context":"https://schema.org","sameAs":["https://www.linkedin.com/in/someone"]}',
+    '</script>',
+  ].join('');
+
+  assert.deepEqual(loadedOrigins(html), []);
+  assert.deepEqual(originFindings([{ route: '/', html }]), []);
+});
+
+test('the counting claim the site actually ships is the one the guard looks for', () => {
+  const html = '<html><body><p>Cloudflare Web Analytics counts page views: the path you opened.</p></body></html>';
+
+  assert.deepEqual(analyticsClaimFindings([{ route: '/privacy', html }]), [
+    '/privacy tells a reader page views are counted, but the build loads no beacon',
+  ]);
 });

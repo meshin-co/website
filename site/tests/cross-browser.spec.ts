@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 
+import { answerTheAnalyticsBeacon } from './analytics-endpoint';
 import { routes } from './routes';
 
 const WIDTHS = [375, 1280];
@@ -8,6 +9,8 @@ test.describe.configure({ mode: 'parallel' });
 
 for (const route of routes) {
   test(`${route} renders in this engine with no console error and no sideways scroll`, async ({ page }, testInfo) => {
+    await answerTheAnalyticsBeacon(page);
+
     const errors: string[] = [];
     const ownOrigin = (url: string) => url === '' || url.startsWith('http://127.0.0.1');
     page.on('console', (message) => {

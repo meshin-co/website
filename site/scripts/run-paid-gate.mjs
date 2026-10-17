@@ -4,7 +4,7 @@ import { join } from 'node:path';
 
 import { discoverRoutes, routeFile } from './gate.mjs';
 import { siteOrigin } from './links-gate.mjs';
-import { ALLOWED_ORIGINS, analyticsClaimFindings, originFindings } from './third-party.mjs';
+import { ALLOWED_ORIGINS, analyticsClaimFindings, blockingThirdPartyFindings, originFindings } from './third-party.mjs';
 
 const distDir = process.argv[2] ?? 'dist';
 const routes = await discoverRoutes(distDir);
@@ -15,7 +15,11 @@ for (const route of routes) {
 }
 
 const origin = siteOrigin(join('src', 'config.yaml'));
-const findings = [...originFindings(pages, origin), ...analyticsClaimFindings(pages)];
+const findings = [
+  ...originFindings(pages, origin),
+  ...blockingThirdPartyFindings(pages, origin),
+  ...analyticsClaimFindings(pages),
+];
 
 console.log(
   `paid: ${routes.length} routes, ${Object.keys(ALLOWED_ORIGINS).length} declared third-party origin(s), ${findings.length} findings`

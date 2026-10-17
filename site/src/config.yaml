@@ -9,7 +9,7 @@ site:
   # Cloudflare Web Analytics site token. Public by design: it is served in the HTML.
   # Empty means the site ships no analytics at all, which is the state until the owner
   # creates the site in the Cloudflare dashboard.
-  analyticsSiteToken: ''
+  analyticsSiteToken: 'cb025f0f22c04bba85d2876ed4c854f4'
 
 # Default SEO metadata
 metadata:

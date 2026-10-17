@@ -2,15 +2,8 @@
 import { SITE } from 'astrowind:config';
 
 const token = SITE.analyticsSiteToken ?? '';
+
+const loader = `addEventListener('load',function(){var b=document.createElement('script');b.defer=true;b.src='https://static.cloudflareinsights.com/beacon.min.js';b.setAttribute('data-cf-beacon',${JSON.stringify(JSON.stringify({ token }))});document.head.appendChild(b)})`;
 ---
 
-{
-  token && (
-    <script
-      is:inline
-      defer
-      src="https://static.cloudflareinsights.com/beacon.min.js"
-      data-cf-beacon={JSON.stringify({ token })}
-    />
-  )
-}
+{token && <script is:inline set:html={loader} />}
