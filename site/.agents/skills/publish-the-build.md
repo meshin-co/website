@@ -50,19 +50,24 @@ intended.
 
 ## What CI does
 
-Both paths download the `dist` artifact a gated run produced. Neither builds again: a second
-build is a different artefact, and the Calibration Gate did not measure it.
+Neither path builds again: a second build is a different artefact the Calibration Gate never
+measured. `deploy-preview` in `ci.yml` deploys every pull request to `pr-<number>`, smokes it and
+comments the URL. Production is **Publish Live**, pressed by hand: `scripts/run-publish-target.mjs`
+picks the run, `scripts/publish-target.mjs` holds the rules.
 
-- **Every pull request** — `deploy-preview` in `ci.yml` runs after `gate-report`, deploys to the
-  branch `pr-<number>`, smokes that origin and comments the URL on the pull request.
-- **Publishing** — **Publish Live**, pressed by hand from the Actions tab. It needs no input:
-  `scripts/run-publish-target.mjs` finds the newest ci run on `main` that concluded `success` and
-  still carries an unexpired `dist`, refuses to publish behind any later source commit on `main`
-  (prose commits cannot change the build, so they do not block), then deploys, smokes the live
-  origin and announces the changed routes to IndexNow. A ci run id publishes that run instead.
+```mermaid
+flowchart LR
+    A["merge to main"] --> B["ci builds once<br/>and gates that build"]
+    B --> C["dist kept 90 days"]
+    C -.-> D{"Publish Live:<br/>empty ci_run = newest green run"}
+    D --> G["refuse if main moved on<br/>and a build file changed"]
+    G --> H["Pages, smoke, IndexNow"]
+```
 
-There is no automatic production deploy. A merge to `main` gates the build and stops; pressing
-Run workflow is the decision to publish.
+Prose commits never block. The refusal applies to a named run too, so `ci_run` re-publishes rather
+than undoes: an earlier build is refused once a build file changed. Reverting a release means
+reverting on `main`, gating that and publishing it, which keeps the live bytes equal to `main`;
+row G42 in `docs/plan/reference/known-gaps.md` records the cost. Run workflow is the decision.
 
 ## After deploying
 

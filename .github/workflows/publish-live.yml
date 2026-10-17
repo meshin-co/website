@@ -5,8 +5,8 @@ run-name: Publish Live by @${{ github.actor }}
 on:
   workflow_dispatch:
     inputs:
-      roll_back_to:
-        description: Leave empty to put the newest fully tested build of main live. To undo a bad release, paste the CI run number of the build you want back - nothing is rebuilt, the stored files of that run are served again.
+      ci_run:
+        description: Leave empty to put the newest fully tested build of main live. A CI run number serves that run's stored files instead - refused if main has changed any build file since, so it cannot undo a release that followed a source change.
         required: false
 
 defaults:
@@ -28,7 +28,7 @@ jobs:
         id: target
         env:
           GH_TOKEN: ${{ github.token }}
-        run: node scripts/run-publish-target.mjs "${{ github.repository }}" "${{ inputs.roll_back_to }}"
+        run: node scripts/run-publish-target.mjs "${{ github.repository }}" "${{ inputs.ci_run }}"
 
       - name: take the deploy scripts and the route ledger from that same commit
         uses: actions/checkout@v4
