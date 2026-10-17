@@ -83,16 +83,21 @@
     "The skip link takes the first keyboard focus on the home page"
   ],
   "discovery/machine-interfaces": [
+    "A collection file holds at most 100 entries and shards beyond that",
     "Draft and noindex entries never reach llms-full.txt, the collection files or the feeds",
     "Each collection feed carries every live entry of its collection",
     "Each collection hub advertises its own collection feed",
     "Every dated live route carries a lastmod in the sitemap",
     "Every entry, public static page and hub ships a complete markdown sidecar",
-    "Every live collection entry is listed in llms.txt, llms-full.txt and its collection file",
+    "Every indexable route is listed in llms.txt or in a collection file",
+    "Every live collection entry is in llms-full.txt and in its collection file",
     "Every page declares its own bare URL as canonical and og:url",
-    "Every populated collection reaches llms.txt, feed.json and the sitemap",
+    "Every populated collection reaches feed.json and the sitemap",
+    "Every shard is a shipped machine file, noindex and referenced",
     "Machine files carry an X-Robots-Tag noindex header and HTML pages never do",
     "Social cards are addressed per entry and drawn on a 1200×630 canvas",
+    "The llms files are byte-identical across builds and ordered by a total key",
+    "The llms files describe the build they came from",
     "The merged feed carries at least five entries of each collection, or all of a smaller one",
     "The page catalog behind the machine files matches every shipped description",
     "The sitemap never lists a noindex route",
@@ -102,7 +107,8 @@
     "llms-full.txt and the collection files carry each entry's full text",
     "llms-full.txt stays within its two-megabyte guard",
     "llms.txt entry lines carry their link and, when dated, an ISO update date",
-    "llms.txt lists every indexable route of the build",
+    "llms.txt inlines what is bounded and points at what is unbounded",
+    "llms.txt stays under 8192 bytes",
     "robots.txt is the generated crawler register"
   ],
   "discovery/site-search": [
