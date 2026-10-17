@@ -6,7 +6,7 @@ Goal: public, indexed, measured.
   checklist all "yes".
 - Attach apex `meshin.co` to Pages, `www` → apex 301, keep L4 TXT record. No `noindex` to remove:
   `gen-headers.mjs` sends it only on `*.pages.dev` hosts.
-- Sitemap to GSC and Bing, IndexNow ping, Plausible goals (`book_call`, `download_resource`),
+- Sitemap to GSC and Bing, IndexNow ping,
   LinkedIn person and company pointing at the site.
 - Baseline the 30 buyer prompts (PRD §17.3) → `audits/geo-baseline.md`.
 
@@ -46,8 +46,8 @@ Nothing below can be measured from this machine.
 - Cloudflare: attach apex `meshin.co` to Pages, `www` → apex 301, keep the L4 TXT record. No
   `noindex` to remove; the header is scoped to `*.pages.dev`.
 - Search: sitemap to GSC and Bing, both verifications, the IndexNow key.
-- Plausible goals `book_call` and `download_resource`; LinkedIn person and company pointing at
-  the site.
+- LinkedIn person and company pointing at the site. No analytics goals: L58 retired Plausible on
+  2026-10-14 and Cloudflare Web Analytics has no goal concept.
 - The five `github.com/meshin-co/<slug>` repos the resource pages link to (L10, L19).
 - `docs/COPY-CHECKLIST.md` §4-§8: `/now` content, `/speaking`, the five resource artifacts, the
   seven practice claims, the legal entity, jurisdiction and postal address.
