@@ -2,34 +2,28 @@ import type { APIRoute, GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 
 import { SITE } from 'astrowind:config';
-import { absoluteUrl, renderLlmsCollection } from '~/utils/machine-text.mjs';
-import { LLMS_COLLECTIONS, toLlmsEntry } from '~/utils/llms-collections.mjs';
+import { absoluteUrl } from '~/utils/machine-text.mjs';
+import { LLMS_COLLECTIONS, llmsCollectionFiles, toLlmsEntry } from '~/utils/llms-collections.mjs';
 
 export const prerender = true;
 
-const toProps =
-  (site: string) =>
-  ({ name, base, title }: (typeof LLMS_COLLECTIONS)[number]) =>
-    getCollection(name as Parameters<typeof getCollection>[0]).then((entries) => ({
-      params: { collection: name },
-      props: {
-        title,
-        entries: entries.map(toLlmsEntry()).map((entry) => ({
-          title: entry.title,
-          url: absoluteUrl(site, `${base}/${entry.id}`),
-          summary: entry.description,
-          body: entry.body,
-          updated: entry.updated,
-          draft: entry.draft,
-          noindex: entry.noindex,
-        })),
-      },
+const toPaths = async ({ name, base, title }: (typeof LLMS_COLLECTIONS)[number]) => {
+  const origin = import.meta.env.SITE.replace(/\/$/, '');
+  const entries = (await getCollection(name as Parameters<typeof getCollection>[0]))
+    .map(toLlmsEntry())
+    .map((entry) => ({
+      ...entry,
+      url: absoluteUrl(origin, `${base}/${entry.id}`),
+      summary: entry.description,
     }));
+  if (!entries.some((entry) => !entry.draft && !entry.noindex)) return [];
+  return llmsCollectionFiles({ site: SITE.name, origin, name, title, entries }).map(({ param, text }) => ({
+    params: { collection: param },
+    props: { text },
+  }));
+};
 
-export const getStaticPaths: GetStaticPaths = async () =>
-  Promise.all(LLMS_COLLECTIONS.map(toProps(import.meta.env.SITE.replace(/\/$/, ''))));
+export const getStaticPaths: GetStaticPaths = async () => (await Promise.all(LLMS_COLLECTIONS.map(toPaths))).flat();
 
 export const GET: APIRoute = ({ props }) =>
-  new Response(renderLlmsCollection({ site: SITE.name, title: props.title, entries: props.entries }), {
-    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-  });
+  new Response(props.text, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });

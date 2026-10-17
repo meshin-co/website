@@ -53,6 +53,19 @@ export function renderLlmsCollection({ site, title, entries }) {
   return `# ${site}\n\n${renderCollectionSection({ title, entries })}\n`;
 }
 
+export const entryCount = (count) => `${count} ${count === 1 ? 'entry' : 'entries'}`;
+
+export function renderLlmsIndex({ site, title, shards }) {
+  const lines = shards.map(({ url, from, to, count }) => `- [Entries ${from}-${to}](${url}): ${entryCount(count)}`);
+  return `# ${site}\n\n## ${title}\n\n${lines.join('\n')}\n`;
+}
+
+export function renderLlmsShard({ site, title, entries, from, to, nextUrl }) {
+  const body = entries.filter(isLive).map(renderEntry).join('\n\n---\n\n');
+  const closing = nextUrl ? `Next part: [${nextUrl}](${nextUrl})` : 'This is the last part.';
+  return `# ${site}\n\n## ${title}, entries ${from}-${to}\n\n${body}\n\n---\n\n${closing}\n`;
+}
+
 export function renderLlmsFull({ site, sections }) {
   const blocks = sections.map(renderCollectionSection);
   return `# ${site}\n\n${blocks.join('\n\n')}\n`;
@@ -247,8 +260,9 @@ export function renderSidecar({ title, url, description, updated, body }) {
   return `${head.join('\n')}\n${body}`;
 }
 
-export function collectionHubs({ collections, staticPaths }) {
-  const covered = staticPaths instanceof Set ? staticPaths : new Set(staticPaths);
+/** @param {{ collections: any[], staticPaths: string[], withheld?: string[] }} input */
+export function collectionHubs({ collections, staticPaths, withheld = [] }) {
+  const covered = new Set([...staticPaths, ...withheld]);
   return collections.filter((collection) => !covered.has(collection.base));
 }
 
@@ -295,9 +309,10 @@ export function sidecarFileForRoute(route) {
   return route === '/' ? 'index.md' : `${route.slice(1)}.md`;
 }
 
-export function sidecarRoutes({ staticPages = publicIndexableStaticPages(), hubs = HUB_PAGES } = {}) {
+/** @param {{ staticPages?: string[], hubs?: any[], withheld?: string[] }} [input] */
+export function sidecarRoutes({ staticPages = publicIndexableStaticPages(), hubs = HUB_PAGES, withheld = [] } = {}) {
   const staticPaths = staticPages.map((page) => page.path);
-  const hubPages = collectionHubs({ collections: hubs, staticPaths }).map((hub) => ({
+  const hubPages = collectionHubs({ collections: hubs, staticPaths, withheld }).map((hub) => ({
     path: hub.base,
     title: hub.title,
     description: hub.description,

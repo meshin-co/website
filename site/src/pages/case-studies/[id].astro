@@ -26,7 +26,7 @@ import {
 import { countWords } from '~/utils/content-rules.mjs';
 import { lastmod } from '~/utils/lastmod.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
-import { isPublished } from '~/utils/feeds.mjs';
+import { isLive, isPublished } from '~/utils/feeds.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const cases = await getCollection('case', isPublished);
@@ -46,6 +46,7 @@ const terms = (await getCollection('glossary', ({ data: term }) => !term.draft))
   term: glossaryEntry.data.term,
 }));
 const site = import.meta.env.SITE.replace(/\/$/, '');
+const feedShips = (await getCollection('case', isLive)).length > 0;
 
 const metadata = articleMetadata(site, {
   title: data.title,
@@ -104,13 +105,17 @@ const nodes = [
 
   <Breadcrumbs crumbs={crumbs} />
   <MarkdownAlternate path={`/case-studies/${entry.id}`} slot="head" />
-  <link
-    rel="alternate"
-    type="application/rss+xml"
-    title={`${SITE.name} — Case studies`}
-    href="/case-studies/rss.xml"
-    slot="head"
-  />
+  {
+    feedShips && (
+      <link
+        rel="alternate"
+        type="application/rss+xml"
+        title={`${SITE.name} — Case studies`}
+        href="/case-studies/rss.xml"
+        slot="head"
+      />
+    )
+  }
 
   <article>
     <Section
@@ -156,7 +161,7 @@ const nodes = [
       </ul>
     </Section>
 
-    <Section eyebrow="Detail" title="In my words" tone="surface">
+    <Section eyebrow="Long form" title="The detail" tone="surface">
       <div class="prose-brief prose-brief-headings max-w-[68ch]">
         <Content />
       </div>

@@ -127,6 +127,8 @@ test('a route named noindex by design is recognised exactly, trailing slash or n
     '/search/',
     '/blog/category/executive',
     '/blog/category/executive/',
+    '/case-studies',
+    '/case-studies/',
     '/blog/page/2',
     '/blog/page/2/',
     '/blog/category/governance/page/2',

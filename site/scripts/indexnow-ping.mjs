@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { readFile, readdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
@@ -7,10 +8,45 @@ import { invokedDirectly } from './invoked-directly.mjs';
 
 const DEFAULT_HOST = brandFromDisk().name;
 const ENDPOINT = 'https://api.indexnow.org/indexnow';
+const BUILD_HASHED_ASSET = /\/_astro\/[^"'\s)<>,]+/g;
+const ASSET_CONTENT_HASH = /\.[A-Za-z0-9_-]{8,}(?=\.[a-z0-9]+$)/;
+const SCOPE_HASH = /astro-cid-[a-z0-9]+/g;
+
+export function pageFingerprint(html) {
+  const stable = html
+    .replace(BUILD_HASHED_ASSET, (asset) => asset.replace(ASSET_CONTENT_HASH, ''))
+    .replace(SCOPE_HASH, 'astro-cid');
+  return createHash('sha256').update(stable).digest('hex').slice(0, 16);
+}
+
+function pageFiles(distDir, route) {
+  if (route === '/') return [join(distDir, 'index.html')];
+  const path = route.slice(1);
+  return [join(distDir, `${path}.html`), join(distDir, path, 'index.html')];
+}
+
+async function readPage(distDir, route) {
+  const pages = [];
+  for (const file of pageFiles(distDir, route)) {
+    try {
+      pages.push(await readFile(file, 'utf8'));
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+    }
+  }
+  return pages.join('\n');
+}
+
+export async function pageDigests(distDir, routes) {
+  const digests = {};
+  for (const route of routes) digests[route] = pageFingerprint(await readPage(distDir, route));
+  return digests;
+}
 
 export function changedRoutes(before, after) {
-  const { added, removed } = diffRoutes(before, after);
-  return { added, removed, changed: added.length > 0 || removed.length > 0 };
+  const { added, removed } = diffRoutes(Object.keys(before), Object.keys(after));
+  const edited = Object.keys(after).filter((route) => route in before && before[route] !== after[route]);
+  return { added, removed, edited, changed: added.length + removed.length + edited.length > 0 };
 }
 
 export async function pingIndexNow({ host, key, urls, fetchImpl = fetch }) {
@@ -57,31 +93,35 @@ export async function run({
   keyCheck = keyIsServed,
 }) {
   const routes = await discoverRoutes(distDir);
-  const previous = await readRoutes(previousPath);
-  const { added, removed, changed } = changedRoutes(previous ?? [], routes);
+  const digests = await pageDigests(distDir, routes);
+  const previous = await readAnnounced(previousPath);
+  const { added, removed, edited, changed } = changedRoutes(previous, digests);
 
   if (!changed) return { action: 'skipped', reason: 'unchanged' };
-  if (dryRun) return { action: 'dry-run', urls: routes, added, removed };
+
+  const announce = [...added, ...edited].sort();
+  if (dryRun) return { action: 'dry-run', urls: announce, added, removed, edited };
 
   const key = await publishedKey(distDir);
-  if (!key) return { action: 'skipped', reason: 'missing-key', added, removed };
+  if (!key) return { action: 'skipped', reason: 'missing-key', added, removed, edited };
 
   if (!(await keyCheck({ host, key }))) {
-    return { action: 'skipped', reason: 'key-not-served', added, removed };
+    return { action: 'skipped', reason: 'key-not-served', added, removed, edited };
   }
 
-  const result = await pingIndexNow({ host, key, urls: routes, fetchImpl });
+  const result = await pingIndexNow({ host, key, urls: announce, fetchImpl });
   if (!result.ok) return { action: 'error', ...result };
 
-  await writeFile(previousPath, `${JSON.stringify(routes, null, 2)}\n`);
-  return { action: 'pinged', ...result, added, removed, count: routes.length };
+  await writeFile(previousPath, `${JSON.stringify(digests, null, 2)}\n`);
+  return { action: 'pinged', ...result, added, removed, edited, count: announce.length };
 }
 
-async function readRoutes(previousPath) {
+async function readAnnounced(previousPath) {
   try {
-    return JSON.parse(await readFile(previousPath, 'utf8'));
+    const stored = JSON.parse(await readFile(previousPath, 'utf8'));
+    return stored !== null && typeof stored === 'object' && !Array.isArray(stored) ? stored : {};
   } catch {
-    return null;
+    return {};
   }
 }
 
@@ -100,7 +140,7 @@ async function main(argv) {
       break;
     case 'dry-run':
       console.log(
-        `indexnow: dry-run — would ping ${result.urls.length} url(s); added ${result.added.length}, removed ${result.removed.length}`
+        `indexnow: dry-run — would ping ${result.urls.length} url(s); added ${result.added.length}, removed ${result.removed.length}, edited ${result.edited.length}`
       );
       break;
     case 'error':

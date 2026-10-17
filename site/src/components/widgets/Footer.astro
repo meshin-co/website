@@ -33,12 +33,12 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '' } = Ast
 
         <ul class="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm">
           <li>
-            <a class="link-signature hover:link-signature-hover" href={getPermalink('/search')}> Search </a>
+            <a class="footer-link" href={getPermalink('/search')}> Search </a>
           </li>
           {
             secondaryLinks.map(({ text, href }) => (
               <li>
-                <a class="link-signature hover:link-signature-hover" href={href} set:html={text} />
+                <a class="footer-link" href={href} set:html={text} />
               </li>
             ))
           }
@@ -54,7 +54,7 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '' } = Ast
                 <ul class="mt-4 grid gap-2 text-sm">
                   {column.map(({ text, href }) => (
                     <li>
-                      <a class="link-signature hover:link-signature-hover" href={href} set:html={text} />
+                      <a class="footer-link" href={href} set:html={text} />
                     </li>
                   ))}
                 </ul>

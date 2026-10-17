@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { FEED_BASES, isPublished, toFeedSource } from './feeds.mjs';
+import { FEED_BASES, emptyHubRoutes, isPublished, toFeedSource } from './feeds.mjs';
 
 const ORIGIN = 'https://meshin.co';
 
@@ -84,4 +84,30 @@ test('toFeedSource prefers the description when an entry has no shortAnswer and 
 
   assert.equal(source.summary, 'Support automation.');
   assert.deepEqual(source.tags, []);
+});
+
+const livePerKind =
+  (overrides = {}) =>
+  async (kind) =>
+    overrides[kind] ?? [{ id: 'an-entry' }];
+
+test('emptyHubRoutes names the hub of a collection that loads no live entry, and only that hub', async () => {
+  assert.deepEqual(await emptyHubRoutes(livePerKind({ case: [] })), ['/case-studies']);
+});
+
+test('emptyHubRoutes names nothing while every collection holds a live entry', async () => {
+  assert.deepEqual(await emptyHubRoutes(livePerKind()), []);
+});
+
+test('emptyHubRoutes asks about every collection in FEED_BASES, so a collection added later is covered without an edit', async () => {
+  const asked = [];
+  const routes = await emptyHubRoutes(async (kind) => {
+    asked.push(kind);
+    return [];
+  });
+  assert.deepEqual(asked, Object.keys(FEED_BASES));
+  assert.deepEqual(
+    routes,
+    Object.values(FEED_BASES).map((base) => `/${base}`)
+  );
 });

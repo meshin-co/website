@@ -61,9 +61,9 @@
   },
   {
     "target": "src/pages/case-studies/[id].astro",
-    "status": "verified",
-    "reason": "Re-read 2026-10-08. The file and its 9 rows are unchanged since the last seal, but the pages it builds are gone: src/data/case holds no entry after the removal of the only.help case study (answers 14.4 and 15.9 in COPY-CHECKLIST), so getStaticPaths returns nothing and no /case-studies/<id> page builds. The template stays for the anonymised client case that L11 allows. Four strings now ship in no page and are declared state-conditional in audits/phase-4.7/conditional-copy.json: 'Before and after' (rendered only when outcome.metrics is non-empty; L11 forbids inventing metrics), 'Problem and approach', 'What it runs on' and 'See the offer'. The other rows are labels and titles ('Next step', 'In my words', 'Case studies', 'The problem', 'The approach'); the ledger does not list them as unshipped because the same words occur on built pages. None of these strings states a fact: they are section titles and labels with no number, client, date or promise, so the earlier finding that the section titles, ShiftPanel labels and call-to-action copy are compliant still holds. The call-to-action headline is composed at render time from the offer name and renders only for a published case; it is not a ledger row and needs a re-read when a real client case study is added.",
-    "digest": "109bd2c192c1"
+    "status": "rewritten",
+    "reason": "Rewritten 2026-10-17 under change 14-visibility-repairs, task 6.1. The section title 'In my words' became 'The detail'. 'In my words' implied the rest of the site was written by someone else; the new title names what the section holds, the long-form body of the entry, and states no fact, number, client, date or promise. Same change on src/pages/resources/[id].astro and src/pages/services/[id].astro. Re-read against the remaining rows: the page builds no route today, because src/data/case holds no entry after the removal of the only.help case study (answers 14.4 and 15.9 in COPY-CHECKLIST), so getStaticPaths returns nothing; the template stays for the anonymised client case that L11 allows. Four strings ship in no page and are declared state-conditional in audits/phase-4.7/conditional-copy.json: 'Before and after' (rendered only when outcome.metrics is non-empty; L11 forbids inventing metrics), 'Problem and approach', 'What it runs on' and 'See the offer'. The other rows are labels and titles ('Next step', 'The detail', 'Case studies', 'The problem', 'The approach'); the ledger does not list them as unshipped because the same words occur on built pages. The call-to-action headline is composed at render time from the offer name and renders only for a published case; it is not a ledger row and needs a re-read when a real client case study is added.",
+    "digest": "a380b0fb3cec"
   },
   {
     "target": "src/pages/case-studies/index.astro",
@@ -134,9 +134,9 @@
   },
   {
     "target": "src/pages/resources/[id].astro",
-    "status": "verified",
-    "reason": "section titles, 'Inside the kit' label and CTA copy compliant, no invented facts about repo state",
-    "digest": "312b702ca460"
+    "status": "rewritten",
+    "reason": "Rewritten 2026-10-17 under change 14-visibility-repairs, task 6.1. The section title 'In my words' became 'The detail'. 'In my words' implied the rest of the site was written by someone else; the new title names what the section holds, the long-form body of the resource, and states no fact. Other section titles, the 'Inside the kit' label and the CTA copy are unchanged and compliant, with no invented facts about repo state.",
+    "digest": "b22495f628bd"
   },
   {
     "target": "src/pages/resources/index.astro",
@@ -146,9 +146,9 @@
   },
   {
     "target": "src/pages/services/[id].astro",
-    "status": "verified",
-    "reason": "section titles, schedule table headers and ShiftPanel labels compliant; RSS link title follows the site's consistent feed-title convention, not the page <title> pattern",
-    "digest": "e0d1f187cdfd"
+    "status": "rewritten",
+    "reason": "Rewritten 2026-10-17 under change 14-visibility-repairs, task 6.1. The section title 'In my words' became 'The detail'. 'In my words' implied the rest of the site was written by someone else; the new title names what the section holds, the long-form body of the service, and states no fact. Other section titles, schedule table headers and ShiftPanel labels are unchanged and compliant; the RSS link title follows the site's consistent feed-title convention, not the page <title> pattern.",
+    "digest": "de0f4df7d4b3"
   },
   {
     "target": "src/pages/services/index.astro",
@@ -160,7 +160,7 @@
     "target": "src/utils/llms-collections.mjs",
     "status": "verified",
     "reason": "'All updates' feed title and description are short and consistent with the per-collection feed description pattern below it",
-    "digest": "88cad591c64c"
+    "digest": "f87df881b674"
   },
   {
     "target": "src/utils/og-template.mjs",

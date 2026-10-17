@@ -605,6 +605,15 @@ test('collectionHubs keeps every collection when no static page already covers i
   assert.deepEqual(hubs, collections);
 });
 
+test('collectionHubs drops a withheld hub, so a collection with no live entry is offered nowhere', () => {
+  const collections = [
+    { name: 'post', base: '/blog' },
+    { name: 'case', base: '/case-studies' },
+  ];
+  const hubs = collectionHubs({ collections, staticPaths: [], withheld: ['/case-studies'] });
+  assert.deepEqual(hubs, [{ name: 'post', base: '/blog' }]);
+});
+
 test('sidecarFileForRoute maps a leaf route onto a dist-relative markdown file path', () => {
   assert.equal(sidecarFileForRoute('/glossary/evals'), 'glossary/evals.md');
 });
@@ -636,6 +645,14 @@ test('sidecarRoutes drops a caller-supplied hub whose base a static page already
   ];
   const paths = sidecarRoutes({ staticPages, hubs }).map((page) => page.path);
   assert.deepEqual(paths, ['/about', '/blog']);
+});
+
+test('sidecarRoutes leaves out a withheld hub and keeps every other, so the mirror of an empty collection is not written', () => {
+  const paths = sidecarRoutes({ withheld: ['/case-studies'] }).map((page) => page.path);
+  assert.equal(paths.includes('/case-studies'), false);
+  for (const hub of ['/blog', '/glossary', '/resources', '/services']) {
+    assert.ok(paths.includes(hub), `${hub} missing from sidecarRoutes`);
+  }
 });
 
 test('every HUB_PAGES entry carries a non-empty title and description', () => {

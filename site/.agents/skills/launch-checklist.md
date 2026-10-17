@@ -27,7 +27,8 @@ URL, not a preview. Nothing here happens before 4.5b is green.
 
 ## After the flip
 
-- IndexNow: CI pings whenever the built route set changes (`scripts/indexnow-ping.mjs`,
+- IndexNow: CI pings whenever a route is added, removed or its built page changes, and submits
+  only the added and edited routes (`scripts/indexnow-ping.mjs`,
   wired in `.github/workflows/ci.yml`); confirm the key file answers on the production host.
 - Plausible: create the goals `book_call` and `download_resource`, and the AI-referrals
   segment from `docs/COPY-CHECKLIST.md` §9 — referrers chatgpt.com, perplexity.ai,

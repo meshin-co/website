@@ -6,6 +6,7 @@ const NOINDEX_BY_DESIGN = [
   '/404',
   '/search',
   '/blog/category/executive',
+  '/case-studies',
   '/blog/page/*',
   '/blog/category/*/page/*',
   '/blog/tag/*/page/*',

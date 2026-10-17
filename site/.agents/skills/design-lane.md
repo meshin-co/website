@@ -31,7 +31,7 @@ in `prose-brief-headings`.
 
 Reach for an existing utility before writing classes: `eyebrow`, `figure-num`, `text-numeral`,
 `accent-underline`, `rule-accent`, `card`, `card-hover`, `hairline-grid`, `link-signature`,
-`link-signature-hover`, `btn-primary`, `btn-secondary`, `btn-tertiary`, `prose-brief`,
+`footer-link`, `btn-primary`, `btn-secondary`, `btn-tertiary`, `prose-brief`,
 `table-scroll`.
 
 ## Rules the gates enforce

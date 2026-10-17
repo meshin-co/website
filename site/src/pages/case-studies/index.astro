@@ -12,16 +12,19 @@ import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+import { isLive, isPublished } from '~/utils/feeds.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
-const cases = (await getCollection('case', ({ data }) => !data.draft)).sort(
+const cases = (await getCollection('case', isPublished)).sort(
   (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime()
 );
+const hasLiveEntry = cases.some(isLive);
 
 const metadata = {
   title: 'Fractional Chief AI Officer case study',
   description:
     'I have not published a Fractional Chief AI Officer case study yet. Client case studies appear here only once a client agrees in writing.',
+  ...(hasLiveEntry ? {} : { robots: { index: false, follow: true } }),
 };
 
 const crumbs = [
@@ -44,14 +47,19 @@ const nodes = [
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
-  <MarkdownAlternate path="/case-studies" slot="head" />
-  <link
-    rel="alternate"
-    type="application/rss+xml"
-    title={`${SITE.name} — Case studies`}
-    href="/case-studies/rss.xml"
-    slot="head"
-  />
+  {
+    hasLiveEntry && (
+      <Fragment slot="head">
+        <MarkdownAlternate path="/case-studies" />
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title={`${SITE.name} — Case studies`}
+          href="/case-studies/rss.xml"
+        />
+      </Fragment>
+    )
+  }
 
   <Breadcrumbs crumbs={crumbs} />
 

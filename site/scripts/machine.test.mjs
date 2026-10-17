@@ -22,6 +22,11 @@ import {
   COLLECTION_BASES,
   humansTxtFindings,
   canonicalGaps,
+  machineHeaderGaps,
+  llmsInlinedRoutes,
+  isTaxonomyRoute,
+  LLMS_TXT_MAX_BYTES,
+  unreferencedMachineFiles,
 } from './machine.mjs';
 
 const CONFIG = `
@@ -85,7 +90,6 @@ test('a generator covering every public collection including faq reports nothing
 const LIVE = { post: ['/blog/a-post'], glossary: ['/glossary/evals'], case: [] };
 const COLLECTIONS = ['post', 'glossary', 'case'];
 const generators = (overrides = {}) => ({
-  'llms.txt': '/blog/a-post /glossary/evals',
   'feed.json': '/blog/a-post /glossary/evals',
   sitemap: '/blog/a-post /glossary/evals',
   ...overrides,
@@ -113,11 +117,9 @@ test('a populated collection missing from one generator is still reported, with 
 });
 
 test('every populated collection is reported by every generator that omits it, and the empty one is never named', () => {
-  const omitted = generators({ 'llms.txt': '', 'feed.json': '', sitemap: '' });
+  const omitted = generators({ 'feed.json': '', sitemap: '' });
 
   assert.deepEqual(entryCoverageFailures(COLLECTIONS, LIVE, omitted), [
-    'llms.txt covers no post entry',
-    'llms.txt covers no glossary entry',
     'feed.json covers no post entry',
     'feed.json covers no glossary entry',
     'sitemap covers no post entry',
@@ -463,4 +465,117 @@ test('every component backed by a dependency is clean, matched case- and space-i
 
 test('a humans.txt with no components line is a finding, because the file claims to describe the stack', () => {
   assert.equal(humansTxtFindings('/* TEAM */\nSite: https://meshin.co\n', { astro: '7' }).length, 1);
+});
+
+const HEADERS = `/*
+  X-Frame-Options: DENY
+
+/rss.xml
+  X-Robots-Tag: noindex
+
+/*/rss.xml
+  X-Robots-Tag: noindex
+
+/llms.txt
+  X-Robots-Tag: noindex
+
+/llms/*
+  X-Robots-Tag: noindex
+
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+`;
+
+test('every machine file matched by a noindex rule is clean', () => {
+  assert.deepEqual(machineHeaderGaps(HEADERS, ['/rss.xml', '/blog/rss.xml', '/llms.txt', '/llms/post.txt']), []);
+});
+
+test('a machine file no header rule matches is named, because it ships without the rule its siblings carry', () => {
+  assert.deepEqual(machineHeaderGaps(HEADERS, ['/llms.txt', '/llms-full.txt']), [
+    '/llms-full.txt carries no X-Robots-Tag rule, its siblings carry noindex',
+  ]);
+});
+
+test('a machine file whose rule differs from noindex is named with the value it carries', () => {
+  const headers = HEADERS.replace('/llms/*\n  X-Robots-Tag: noindex', '/llms/*\n  X-Robots-Tag: all');
+  assert.deepEqual(machineHeaderGaps(headers, ['/llms.txt', '/llms/faq.txt']), [
+    '/llms/faq.txt carries X-Robots-Tag "all", its siblings carry noindex',
+  ]);
+});
+
+test('the catch-all block and a preview-host rule never count as a machine file rule', () => {
+  assert.deepEqual(machineHeaderGaps(HEADERS, ['/other.txt']), [
+    '/other.txt carries no X-Robots-Tag rule, its siblings carry noindex',
+  ]);
+});
+
+test('a machine file named by a page, another machine file or nothing at all', () => {
+  const files = ['/llms.txt', '/llms-full.txt', '/rss.xml', '/blog/rss.xml'];
+  const referencing = {
+    '/index.html': '<link href="/llms.txt" rel="alternate"><link href="/rss.xml" rel="alternate">',
+    '/llms.txt': '- [Writing feed](https://meshin.co/blog/rss.xml)',
+  };
+  assert.deepEqual(unreferencedMachineFiles(files, referencing), ['/llms-full.txt']);
+});
+
+test('a file that names only itself is still unreferenced', () => {
+  assert.deepEqual(unreferencedMachineFiles(['/llms.txt'], { '/llms.txt': 'see https://meshin.co/llms.txt' }), [
+    '/llms.txt',
+  ]);
+});
+
+test('/rss.xml is not credited by a reference to /blog/rss.xml', () => {
+  assert.deepEqual(unreferencedMachineFiles(['/rss.xml'], { '/index.html': '<a href="/blog/rss.xml">' }), ['/rss.xml']);
+});
+
+const INLINE_LIVE = {
+  service: ['/services/sprint'],
+  post: ['/blog/a-post', '/blog/b-post'],
+  glossary: ['/glossary/evals'],
+};
+
+test('a bounded collection may list its entries inline, an unbounded one may not', () => {
+  const llms = '- [Sprint](https://meshin.co/services/sprint)\n- [A post](https://meshin.co/blog/a-post)\n';
+  assert.deepEqual(llmsInlinedRoutes(llms, INLINE_LIVE, ['service']), ['/blog/a-post']);
+});
+
+test('a collection pointed at by its /llms file and nothing else has no inlined entry', () => {
+  const llms = '- [Writing](https://meshin.co/llms/post.txt): 2 entries\n- [Hub](https://meshin.co/blog)\n';
+  assert.deepEqual(llmsInlinedRoutes(llms, INLINE_LIVE, ['service']), []);
+});
+
+test('every inlined entry of every unbounded collection is named, in collection order', () => {
+  const llms = 'https://meshin.co/glossary/evals\nhttps://meshin.co/blog/b-post\n';
+  assert.deepEqual(llmsInlinedRoutes(llms, INLINE_LIVE, ['service']), ['/blog/b-post', '/glossary/evals']);
+});
+
+test('taxonomy routes under a collection are not listed by design, hubs and leaves are', () => {
+  for (const route of ['/blog/tag/ai-pilots', '/blog/category/governance', '/blog/tags', '/blog/page/2']) {
+    assert.equal(isTaxonomyRoute(route), true, route);
+  }
+  for (const route of ['/blog', '/blog/a-post', '/about', '/']) assert.equal(isTaxonomyRoute(route), false, route);
+});
+
+test('the llms.txt byte budget is a whole-KiB figure well under the 2 MB llms-full guard', () => {
+  assert.equal(LLMS_TXT_MAX_BYTES % 1024, 0);
+  assert.ok(LLMS_TXT_MAX_BYTES <= 32 * 1024);
+});
+
+test('a file referenced only by another machine file is reached when that file is itself referenced', () => {
+  const files = ['/llms.txt', '/llms/post.txt', '/llms/post-1.txt'];
+  const referencing = {
+    '/index.html': '<link href="/llms.txt" rel="alternate">',
+    '/llms.txt': '- [Writing](https://meshin.co/llms/post.txt): 250 entries',
+    '/llms/post.txt': '- [Entries 1-100](https://meshin.co/llms/post-1.txt): 100 entries',
+  };
+  assert.deepEqual(unreferencedMachineFiles(files, referencing), []);
+});
+
+test('two machine files that name only each other are both unreferenced', () => {
+  const files = ['/llms/post-1.txt', '/llms/post-2.txt'];
+  const referencing = {
+    '/llms/post-1.txt': 'Next part: [https://meshin.co/llms/post-2.txt](https://meshin.co/llms/post-2.txt)',
+    '/llms/post-2.txt': 'Entries: [https://meshin.co/llms/post-1.txt](https://meshin.co/llms/post-1.txt)',
+  };
+  assert.deepEqual(unreferencedMachineFiles(files, referencing), ['/llms/post-1.txt', '/llms/post-2.txt']);
 });
