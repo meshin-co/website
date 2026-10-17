@@ -58,7 +58,7 @@ picks the run, `scripts/publish-target.mjs` holds the rules.
 ```mermaid
 flowchart LR
     A["merge to main"] --> B["ci builds once<br/>and gates that build"]
-    B --> C["dist kept 90 days"]
+    B --> C["dist kept until it expires<br/>(retention-days in ci.yml)"]
     C -.-> D{"Publish Live:<br/>empty ci_run = newest green run"}
     D --> G["refuse if main moved on<br/>and a build file changed"]
     G --> H["Pages, smoke, IndexNow"]
