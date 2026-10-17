@@ -412,7 +412,7 @@ export const SPECIMENS = {
   machineLlmsOrphanShard: {
     gate: 'gate:machine',
     token: '/llms/post-1.txt ships but the post index does not list it',
-    plant: (copySite) => addUntrackedFile(join(copySite, 'dist/llms/post-1.txt'), '# meshin.co\n'),
+    plant: (copySite) => addUntrackedFile(join(copySite, 'dist/llms/post-1.txt'), '# Orphan shard\n'),
   },
   emptyCollectionIndexable: withNoLiveServices('/services is indexable but has no live service entry'),
   emptyCollectionMirrorShips: withNoLiveServices('/services.md ships but /services has no live service entry'),
