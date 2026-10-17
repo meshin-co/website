@@ -4,14 +4,18 @@ interface Props {
   ordered?: boolean;
 }
 
-const { steps, ordered = true } = Astro.props;
+const { steps, ordered = false } = Astro.props;
 const Tag = ordered ? 'ol' : 'ul';
+const listClass = ordered ? 'list-decimal' : '';
+const itemClass = ordered
+  ? 'pl-10 marker:font-heading marker:text-xl marker:font-semibold marker:text-primary marker:tabular-nums'
+  : '';
 ---
 
-<Tag class="grid gap-x-14 gap-y-0 sm:grid-cols-2">
+<Tag class:list={['grid gap-x-14 gap-y-0 sm:grid-cols-2', listClass]}>
   {
     steps.map((step) => (
-      <li class="border-t border-line py-8">
+      <li class:list={['border-t border-line py-8', itemClass]}>
         <div>
           <h3 class="font-heading text-xl leading-snug font-semibold text-heading">{step.name}</h3>
           <p class="mt-3 max-w-[42ch] text-muted">{step.detail}</p>

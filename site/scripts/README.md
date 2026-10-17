@@ -50,7 +50,7 @@ a build.
 | `semantic-core.mjs`            | `node scripts/semantic-core.mjs` (no npm script; run from `site/`) | The generated blocks inside `docs/SEMANTIC-CORE.md`                |
 | `generate-spec-census.mjs`     | `assets:spec-census`                                               | `openspec/CENSUS.json`, the requirement names of every capability  |
 | `generate-spec-index.mjs`      | `assets:spec-index`                                                | `openspec/INDEX.md`, one line per capability                       |
-| `indexnow-ping.mjs`            | CI, when the route set changed                                     | The IndexNow submission                                            |
+| `indexnow-ping.mjs`            | CI, when a page's built HTML changed                               | The IndexNow submission of the added and edited routes             |
 
 ## Audits and reports
 
@@ -110,6 +110,7 @@ be tested without a build.
 | `editorial-gaps.mjs`      | `generate-gaps.mjs`                                                                                               | Unlinked concepts and orphan entities                                                                                         |
 | `dispositions.mjs`        | `editorial-gate.mjs`                                                                                              | Disposition validity and derived status                                                                                       |
 | `catalog-drift.mjs`       | `machine.mjs`                                                                                                     | Static page catalog versus the built pages                                                                                    |
+| `llms-corpus.mjs`         | `machine.mjs`                                                                                                     | The llms files against each other: counts, shard ranges, the next-part chain, no entry twice                                  |
 | `templates.mjs`           | nothing in `scripts/` — only `templates.test.mjs` exercises it                                                    | Template families and their leaves                                                                                            |
 | `lh-shards.cjs`           | `lighthouserc.cjs`, `collect-reports.mjs`                                                                         | Route sharding across the Lighthouse matrix                                                                                   |
 | `lh-routes.cjs`           | `lighthouserc.cjs`, `report.mjs`, `gate:lh:one` (`--count`)                                                       | Audited routes, the noindex-by-design list, `LH_ONLY_ROUTES`                                                                  |
@@ -118,6 +119,7 @@ be tested without a build.
 | `evidence-specimens.mjs`  | `mutation-specimens.mjs`                                                                                          | A `Generated-from:` token naming a tree, or prose off the allow-list                                                          |
 | `mutation-pending.mjs`    | `plan-gate.mjs`                                                                                                   | Gates still owed a specimen, each with the open change that owes it                                                           |
 | `pagination-markup.mjs`   | `mutation-smoke.mjs`                                                                                              | What a built tag archive must say: head, control, sitemap                                                                     |
+| `collection-gate.mjs`     | `machine.mjs`                                                                                                     | Which collections have no live entry, and whether an empty one is still indexable, mirrored, listed or fed                    |
 
 ## Servers
 

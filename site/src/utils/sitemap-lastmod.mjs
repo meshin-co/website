@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { promisify } from 'node:util';
 import yaml from 'js-yaml';
 
-import { FEED_BASES } from './feeds.mjs';
+import { FEED_BASES, emptyHubRoutes } from './feeds.mjs';
 import { lastmod } from './lastmod.mjs';
 import { liveTopicMap } from './machine-text.mjs';
 
@@ -83,6 +83,11 @@ export async function noindexCategoryRoutes(dataDir, categorySlugs) {
   return categorySlugs.filter((slug) => !withPosts.has(slug)).map((slug) => `/blog/category/${slug}`);
 }
 
+export const noindexHubRoutes = (dataDir) =>
+  emptyHubRoutes(async (kind) =>
+    (await frontmatterEntries(join(dataDir, kind))).filter(({ data }) => isLiveFrontmatter(data))
+  );
+
 export async function staticPageLastmods(pages, { cwd } = {}) {
   const lastmods = {};
   for (const { path, file } of pages) {
@@ -93,24 +98,15 @@ export async function staticPageLastmods(pages, { cwd } = {}) {
   return lastmods;
 }
 
-export function hubPagesWithoutDate(hubs, staticPages) {
-  const dated = new Set([...Object.keys(hubs), ...staticPages.map((page) => page.path)]);
-  return Object.values(FEED_BASES)
-    .map((base) => `/${base}`)
-    .filter((path) => !dated.has(path))
-    .map((path) => ({ path, file: `src/pages${path}/index.astro` }));
-}
-
 export async function siteLastmods({ dataDir, staticPages, cwd }) {
   const hubs = await hubLastmods(dataDir);
   const hubBases = new Set(Object.keys(hubs));
   const taxonomies = await taxonomyLastmods(dataDir);
   const pagesNeedingFileDates = staticPages.filter((page) => !hubBases.has(page.path) && !(page.path in taxonomies));
-  const hubPagesNeedingFileDates = hubPagesWithoutDate(hubs, staticPages);
 
   return {
     ...(await collectionLastmods(dataDir)),
-    ...(await staticPageLastmods([...pagesNeedingFileDates, ...hubPagesNeedingFileDates], { cwd })),
+    ...(await staticPageLastmods(pagesNeedingFileDates, { cwd })),
     ...hubs,
     ...taxonomies,
   };

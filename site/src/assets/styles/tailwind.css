@@ -220,8 +220,16 @@
   transition: border-bottom-color 160ms ease-out;
 }
 
-@utility link-signature-hover {
-  border-bottom-color: var(--aw-color-primary);
+@utility footer-link {
+  @apply inline-block py-1 text-muted no-underline;
+  text-underline-offset: 4px;
+  transition: color 160ms ease-out;
+
+  &:hover,
+  &:focus-visible,
+  &:active {
+    @apply text-link underline;
+  }
 }
 
 @utility card {

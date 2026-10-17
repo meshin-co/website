@@ -7,6 +7,7 @@ import { mock, test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 import { main } from './report.mjs';
+import { NOINDEX_BY_DESIGN } from './lh-routes.cjs';
 
 const REPORT = fileURLToPath(new URL('./report.mjs', import.meta.url));
 
@@ -36,7 +37,8 @@ async function fixtureRoot(routes, gateRoutes = routes) {
   for (const route of routes) {
     const file = route === '/' ? 'index.html' : `${route.slice(1)}.html`;
     await mkdir(dirname(join(root, 'dist', file)), { recursive: true });
-    await writeFile(join(root, 'dist', file), '<html></html>');
+    const robots = NOINDEX_BY_DESIGN.includes(route) ? '<meta name="robots" content="noindex, follow">' : '';
+    await writeFile(join(root, 'dist', file), `<html><head>${robots}</head></html>`);
   }
   await writeFile(
     join(root, 'dist', 'gate-routes.json'),
@@ -237,4 +239,19 @@ test('a report whose revision git cannot name is refused, naming the file it was
   assert.match(refusal.message, /git is not on PATH/);
   assert.match(refusal.message, /inside a git checkout/);
   await assert.rejects(() => readFile(join(auditDir, 'REPORT.md')), { code: 'ENOENT' });
+});
+
+test('the report names the pages whose exemption the build itself justifies, not a list that can go stale', async () => {
+  const root = await fixtureRoot(['/', '/search']);
+  const auditDir = join(root, 'audits');
+  await writeRuns(join(auditDir, 'lh-mobile'), '/');
+  await writeRuns(join(auditDir, 'lh-mobile'), '/search', [{ crawlable: 0 }, { crawlable: 0 }, { crawlable: 0 }]);
+  await writeRuns(join(auditDir, 'lh-desktop'), '/');
+  await writeRuns(join(auditDir, 'lh-desktop'), '/search', [{ crawlable: 0 }, { crawlable: 0 }, { crawlable: 0 }]);
+
+  const { failed, report } = await runMain(root, auditDir);
+
+  assert.equal(failed, false);
+  assert.match(report, /SEO on `\/search` is scored without/);
+  assert.ok(!report.includes('`/` is scored without'));
 });

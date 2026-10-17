@@ -1,5 +1,5 @@
-import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { readdir, readFile } from 'node:fs/promises';
+import { join, relative, sep } from 'node:path';
 
 import { discoverRoutes, isNoindex } from './gate.mjs';
 import { FEED_BASES } from '../src/utils/feeds.mjs';
@@ -14,12 +14,25 @@ import { siteLastmods } from '../src/utils/sitemap-lastmod.mjs';
 import { brandFromDisk } from '../src/utils/brand.mjs';
 
 import { catalogDriftFindings } from './catalog-drift.mjs';
+import { collectionGateFailures } from './collection-gate.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
+import { LLMS_FULL_MAX_BYTES, LLMS_COLLECTIONS } from '../src/utils/llms-collections.mjs';
+import { llmsCorpusGaps } from './llms-corpus.mjs';
 
 const NON_PUBLIC = new Set(['author', 'speaking']);
 const FEED_FLOOR = 5;
-const LLMS_FULL_MAX_BYTES = 2_000_000;
+export const LLMS_TXT_MAX_BYTES = 8 * 1024;
+const BOUNDED_INLINE_COLLECTIONS = ['service'];
 const SITE_ORIGIN = `https://${brandFromDisk().name}`;
+const REFERENCED_MACHINE_FILE = /^\/(?:llms(?:-full)?\.txt|llms\/[^/]+\.txt|feed\.json|(?:[^/]+\/)?rss\.xml)$/;
+const HEADER_GUARDED_MACHINE_FILE = /^\/(?:search-index-[^/]+\.json|.+\.md)$/;
+const REQUIRED_ROBOTS_VALUE = 'noindex';
+
+const patternMatcher = (pattern) =>
+  new RegExp(`^${pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*')}$`);
+
+const mentionsPath = (text, path) =>
+  new RegExp(`(?:^|["'(\\s<]|https?://[^/\\s"')<>]+)${path.replace(/[.]/g, '\\.')}(?=$|["')\\s<>#?])`, 'm').test(text);
 
 export const COLLECTION_BASES = FEED_BASES;
 
@@ -48,7 +61,7 @@ export function emptyCollections(collections, liveRoutesByKind) {
   return collections.filter((collection) => (liveRoutesByKind[collection] ?? []).length === 0);
 }
 
-const COVERAGE_GENERATORS = ['llms.txt', 'feed.json', 'sitemap'];
+const COVERAGE_GENERATORS = ['feed.json', 'sitemap'];
 
 export function entryCoverageFailures(collections, liveRoutesByKind, generatorTexts) {
   const populated = populatedCollections(collections, liveRoutesByKind);
@@ -275,16 +288,27 @@ async function main(distDir) {
   }
 
   const liveByKind = await liveRoutesByKind(distDir, collections, routes);
+  const emptyKinds = emptyCollections(collections, liveByKind);
+  const withheldHubs = emptyKinds.map((kind) => `/${COLLECTION_BASES[kind]}`);
 
   const llmsTxt = await readFile(join(distDir, 'llms.txt'), 'utf8');
   for (const path of noindexStaticListings(llmsTxt)) failures.push(`llms.txt lists noindex page ${path}`);
-  for (const collection of collections) {
-    for (const gap of llmsRouteGaps(llmsTxt, liveByKind[collection])) failures.push(`llms.txt omits ${gap}`);
+  failures.push(...sizeGuardFailure('llms.txt', Buffer.byteLength(llmsTxt, 'utf8'), LLMS_TXT_MAX_BYTES));
+  for (const collection of BOUNDED_INLINE_COLLECTIONS) {
+    for (const gap of llmsRouteGaps(llmsTxt, liveByKind[collection] ?? [])) failures.push(`llms.txt omits ${gap}`);
+  }
+  for (const route of llmsInlinedRoutes(llmsTxt, liveByKind, BOUNDED_INLINE_COLLECTIONS)) {
+    failures.push(`llms.txt lists ${route} inline, entries of an unbounded collection belong in /llms/`);
   }
 
   const noindexRoutes = await noindexRoutesOf(distDir, routes);
-  for (const gap of indexableCoverageGaps({ routes, listed: parseListedRoutes(llmsTxt), noindexRoutes })) {
-    failures.push(`llms.txt is missing indexable route ${gap}`);
+  const listed = parseListedRoutes(llmsTxt);
+  for (const name of await readdir(join(distDir, 'llms')).catch(() => [])) {
+    for (const route of parseListedRoutes(await readFile(join(distDir, 'llms', name), 'utf8'))) listed.add(route);
+  }
+  const coverageRoutes = routes.filter((route) => !isTaxonomyRoute(route));
+  for (const gap of indexableCoverageGaps({ routes: coverageRoutes, listed, noindexRoutes })) {
+    failures.push(`llms.txt and /llms/ are missing indexable route ${gap}`);
   }
 
   const llmsFull = await readFile(join(distDir, 'llms-full.txt'), 'utf8');
@@ -293,7 +317,7 @@ async function main(distDir) {
     for (const gap of llmsRouteGaps(llmsFull, liveByKind[collection])) failures.push(`llms-full.txt omits ${gap}`);
   }
 
-  for (const collection of collections) {
+  for (const collection of populatedCollections(collections, liveByKind)) {
     const file = await readFile(join(distDir, 'llms', `${collection}.txt`), 'utf8').catch(() => null);
     if (file === null) {
       failures.push(`no /llms/${collection}.txt full-text file`);
@@ -309,7 +333,6 @@ async function main(distDir) {
   failures.push(
     ...entryCoverageFailures(collections, liveByKind, { 'llms.txt': llmsTxt, 'feed.json': feedJson, sitemap })
   );
-  const emptyKinds = emptyCollections(collections, liveByKind);
   if (emptyKinds.length > 0) {
     console.log(`machine: no live entry in ${emptyKinds.join(', ')}; entry coverage was not checked for it`);
   }
@@ -326,19 +349,25 @@ async function main(distDir) {
     failures.push(`sitemap has no lastmod for ${gap}`);
   }
 
+  const offeredRoutes = routes.filter((route) => !withheldHubs.includes(route));
   const sidecarTextByRoute = {};
-  for (const route of sidecarCandidateRoutes(routes)) {
+  for (const route of sidecarCandidateRoutes(offeredRoutes)) {
     sidecarTextByRoute[route] = await readFile(join(distDir, sidecarFileForRoute(route)), 'utf8').catch(() => null);
   }
 
-  for (const gap of sidecarGaps(routes, sidecarTextByRoute)) failures.push(`no markdown sidecar for ${gap}`);
-  for (const gap of sidecarContentGaps(routes, sidecarTextByRoute, { site: SITE_ORIGIN })) failures.push(gap);
+  for (const gap of sidecarGaps(offeredRoutes, sidecarTextByRoute)) failures.push(`no markdown sidecar for ${gap}`);
+  for (const gap of sidecarContentGaps(offeredRoutes, sidecarTextByRoute, { site: SITE_ORIGIN })) failures.push(gap);
 
   const htmlByRoute = {};
   for (const route of routes) htmlByRoute[route] = await routeHtml(distDir, route);
   for (const gap of canonicalGaps(htmlByRoute, { site: SITE_ORIGIN })) failures.push(gap);
+  failures.push(
+    ...(await collectionGateFailures(distDir, { kinds: emptyKinds, routes, htmlByRoute, site: SITE_ORIGIN }))
+  );
 
-  const hubRoutes = [...new Set(Object.values(COLLECTION_BASES))].map((base) => `/${base}`);
+  const hubRoutes = [...new Set(Object.values(COLLECTION_BASES))]
+    .map((base) => `/${base}`)
+    .filter((route) => !withheldHubs.includes(route));
   const hubHtml = {};
   for (const route of hubRoutes) hubHtml[route] = await routeHtml(distDir, route);
   for (const gap of hubFeedLinkGaps(hubRoutes, hubHtml)) {
@@ -382,6 +411,8 @@ async function main(distDir) {
   for (const finding of catalogDriftFindings(catalog, builtDescriptions))
     failures.push(`${finding.route} ${finding.rule} [${finding.detail}]`);
 
+  failures.push(...(await machineFileFailures(distDir, htmlByRoute, llmsTxt)));
+
   console.log(
     `machine: ${collections.length} public collections, ${routes.length} routes, ${catalog.length} catalog entries`
   );
@@ -416,4 +447,95 @@ export function humansTxtFindings(text, dependencies) {
       rule: 'humans-component-absent',
       detail: `humans.txt names ${component}, which is not a dependency of this project`,
     }));
+}
+
+function headerRules(text) {
+  const rules = [];
+  for (const line of text.split('\n')) {
+    if (line.trim() === '') continue;
+    if (!/^\s/.test(line)) {
+      rules.push({ pattern: line.trim(), headers: [] });
+      continue;
+    }
+    const separator = line.indexOf(':');
+    rules.at(-1)?.headers.push([line.slice(0, separator).trim().toLowerCase(), line.slice(separator + 1).trim()]);
+  }
+  return rules.filter(({ pattern }) => pattern.startsWith('/'));
+}
+
+export function machineHeaderGaps(headersText, files) {
+  const rules = headerRules(headersText);
+  const gaps = [];
+  for (const file of files) {
+    const values = rules
+      .filter(({ pattern }) => patternMatcher(pattern).test(file))
+      .flatMap(({ headers }) => headers.filter(([name]) => name === 'x-robots-tag').map(([, value]) => value));
+    const different = values.find((value) => value !== REQUIRED_ROBOTS_VALUE);
+    if (values.length === 0)
+      gaps.push(`${file} carries no X-Robots-Tag rule, its siblings carry ${REQUIRED_ROBOTS_VALUE}`);
+    else if (different !== undefined)
+      gaps.push(`${file} carries X-Robots-Tag "${different}", its siblings carry ${REQUIRED_ROBOTS_VALUE}`);
+  }
+  return gaps;
+}
+
+export function unreferencedMachineFiles(files, referencingTexts) {
+  const reached = new Set();
+  let grew = true;
+  while (grew) {
+    grew = false;
+    const sources = Object.entries(referencingTexts).filter(
+      ([source]) => !files.includes(source) || reached.has(source)
+    );
+    for (const file of files.filter((candidate) => !reached.has(candidate))) {
+      if (sources.some(([source, text]) => source !== file && mentionsPath(text, file))) {
+        reached.add(file);
+        grew = true;
+      }
+    }
+  }
+  return files.filter((file) => !reached.has(file));
+}
+
+async function shippedMachineFiles(distDir) {
+  const entries = await readdir(distDir, { withFileTypes: true, recursive: true });
+  return entries
+    .filter((entry) => entry.isFile())
+    .map((entry) => `/${relative(distDir, join(entry.parentPath, entry.name)).split(sep).join('/')}`);
+}
+
+async function llmsCorpusFailures(distDir, llmsTxt) {
+  const files = {};
+  for (const name of await readdir(join(distDir, 'llms')).catch(() => [])) {
+    files[name.replace(/\.txt$/, '')] = await readFile(join(distDir, 'llms', name), 'utf8');
+  }
+  return llmsCorpusGaps({ llmsTxt, files, collections: LLMS_COLLECTIONS });
+}
+
+async function machineFileFailures(distDir, htmlByRoute, llmsTxt) {
+  const shipped = await shippedMachineFiles(distDir);
+  const referenced = shipped.filter((file) => REFERENCED_MACHINE_FILE.test(file));
+  const headerGuarded = [...referenced, ...shipped.filter((file) => HEADER_GUARDED_MACHINE_FILE.test(file))];
+  const headersText = await readFile(join(distDir, '_headers'), 'utf8').catch(() => '');
+  const machineTexts = {};
+  for (const file of referenced) machineTexts[file] = await readFile(join(distDir, file.slice(1)), 'utf8');
+  return [
+    ...machineHeaderGaps(headersText, headerGuarded),
+    ...unreferencedMachineFiles(referenced, { ...htmlByRoute, ...machineTexts }).map(
+      (file) => `${file} is shipped but nothing references it`
+    ),
+    ...(await llmsCorpusFailures(distDir, llmsTxt)),
+  ];
+}
+
+export function llmsInlinedRoutes(llmsText, liveRoutesByKind, boundedCollections) {
+  const listed = parseListedRoutes(llmsText);
+  return Object.entries(liveRoutesByKind)
+    .filter(([collection]) => !boundedCollections.includes(collection))
+    .flatMap(([, routes]) => routes.filter((route) => listed.has(route)));
+}
+
+export function isTaxonomyRoute(route) {
+  const [, second] = route.split('/').filter(Boolean);
+  return RESERVED_LEAF_SLUGS.has(second ?? '');
 }

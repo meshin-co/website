@@ -77,6 +77,7 @@ test('machine surfaces carry X-Robots-Tag: noindex', () => {
     '/feed.json',
     '/llms.txt',
     '/llms-full.txt',
+    '/llms/*',
     '/search-index*',
     '/*.md',
   ]) {

@@ -127,8 +127,12 @@ const artifacts = artifactIds.map((id) => resourcesById.get(id)).filter((entry) 
     </CardGrid>
   </Section>
 
-  <Section title="Step list">
+  <Section title="Step list, unordered">
     <StepList steps={drivers.slice(0, 3)} />
+  </Section>
+
+  <Section title="Step list, ordered">
+    <StepList steps={drivers.slice(0, 3)} ordered />
   </Section>
 
   <Section title="Resource cards">

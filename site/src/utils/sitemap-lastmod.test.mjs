@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { access, mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
+import { mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { tmpdir } from 'node:os';
@@ -9,14 +9,13 @@ import { test, before, after } from 'node:test';
 import {
   collectionLastmods,
   hubLastmods,
-  hubPagesWithoutDate,
   taxonomyLastmods,
   staticPageLastmods,
   siteLastmods,
   noindexEntryRoutes,
   noindexCategoryRoutes,
+  noindexHubRoutes,
 } from './sitemap-lastmod.mjs';
-import { publicIndexableStaticPages } from './machine-text.mjs';
 
 const execFileAsync = promisify(execFile);
 
@@ -139,6 +138,37 @@ test('noindexCategoryRoutes lists a category with zero live posts, treating a dr
   }
 });
 
+test('noindexHubRoutes lists the hub of every collection with no live entry, counting a draft or a noindex entry as none', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'sitemap-lastmod-hubs-'));
+  await Promise.all(['post', 'service', 'resource', 'glossary', 'case', 'faq'].map((kind) => mkdir(join(dir, kind))));
+  const entry = (extra) => `---\ntitle: T\npublishDate: 2026-01-01\nupdatedDate: 2026-01-01\n${extra}---\n\nBody.\n`;
+  await writeFile(join(dir, 'post', 'live.md'), entry(''));
+  await writeFile(join(dir, 'faq', 'live.md'), entry(''));
+  await writeFile(join(dir, 'glossary', 'live.mdx'), entry(''));
+  await writeFile(join(dir, 'service', 'draft.md'), entry('draft: true\n'));
+  await writeFile(join(dir, 'case', 'private.md'), entry('noindex: true\n'));
+  try {
+    assert.deepEqual((await noindexHubRoutes(dir)).sort(), ['/case-studies', '/resources', '/services']);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test('noindexHubRoutes keeps a hub the moment one live entry exists, with no other edit', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'sitemap-lastmod-first-case-'));
+  await mkdir(join(dir, 'case'));
+  try {
+    assert.ok((await noindexHubRoutes(dir)).includes('/case-studies'));
+    await writeFile(
+      join(dir, 'case', 'first.md'),
+      '---\ntitle: First\npublishDate: 2026-10-20\nupdatedDate: 2026-10-20\n---\n'
+    );
+    assert.equal((await noindexHubRoutes(dir)).includes('/case-studies'), false);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
 async function gitFixture() {
   const repo = await mkdtemp(join(tmpdir(), 'sitemap-lastmod-git-'));
   await execFileAsync('git', ['init', '-q'], { cwd: repo });
@@ -210,34 +240,14 @@ async function commitPage(repo, file, isoDate) {
   });
 }
 
-test('hubPagesWithoutDate names each collection hub with no entry-derived date, apart from a page a static file dates', () => {
-  const pages = hubPagesWithoutDate({ '/blog': '2026-07-15T00:00:00.000Z' }, [
-    { path: '/faq', file: 'src/pages/faq.astro' },
-  ]);
-
-  assert.deepEqual(pages, [
-    { path: '/services', file: 'src/pages/services/index.astro' },
-    { path: '/resources', file: 'src/pages/resources/index.astro' },
-    { path: '/glossary', file: 'src/pages/glossary/index.astro' },
-    { path: '/case-studies', file: 'src/pages/case-studies/index.astro' },
-  ]);
-});
-
-test('every collection hub no static page covers has its page file where the lastmod fallback looks', async () => {
-  const pages = hubPagesWithoutDate({}, publicIndexableStaticPages());
-
-  assert.ok(pages.length > 0);
-  await Promise.all(pages.map((page) => access(page.file)));
-});
-
-test('siteLastmods dates an empty collection hub from its own page file in git, never from the build clock', async () => {
+test('siteLastmods gives an empty collection hub no date, even when its page file has git history, because the hub is withheld', async () => {
   const repo = await gitFixture();
   try {
     await commitPage(repo, 'src/pages/case-studies/index.astro', '2026-10-02T09:30:00Z');
     const lastmods = await siteLastmods({ dataDir: root, staticPages: [], cwd: repo });
 
-    assert.equal(lastmods['/case-studies'], '2026-10-02T09:30:00.000Z');
-    assert.equal(lastmods['/services'], undefined);
+    assert.equal('/case-studies' in lastmods, false);
+    assert.equal('/services' in lastmods, false);
   } finally {
     await rm(repo, { recursive: true, force: true });
   }

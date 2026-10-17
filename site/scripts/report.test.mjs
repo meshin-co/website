@@ -15,7 +15,6 @@ import {
   renderReport,
 } from './report.mjs';
 import { overBudget } from './gate.mjs';
-import { NOINDEX_BY_DESIGN } from './lh-routes.cjs';
 
 const row = (route, scores, runs = 3) => ({ route, runs, scores });
 const perfect = { performance: 100, accessibility: 100, 'best-practices': 100, seo: 100 };
@@ -132,18 +131,6 @@ test('the markdown names how many routes it expected, so a shrunken scope is vis
   });
 
   assert.match(markdown, /Lighthouse scope: 1 route\(s\) expected/);
-});
-
-test('the markdown names every route scored without is-crawlable, taken from the list the assertions use', () => {
-  const { markdown } = renderReport({
-    phase: '1',
-    gate,
-    expectedRoutes: ['/'],
-    mobile: [row('/', perfect)],
-    desktop: [row('/', perfect)],
-  });
-
-  for (const entry of NOINDEX_BY_DESIGN) assert.ok(markdown.includes(`\`${entry}\``), entry);
 });
 
 test('a noindex flag in gate-routes.json waives nothing: categories:seo is graded on that route like any other', () => {

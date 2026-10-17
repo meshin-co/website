@@ -12,7 +12,7 @@ It measures only what the site controls, per prompt:
 - that route ships the passage the core quotes, compared with entities decoded and dashes and
   quotes normalised
 - the route carries a marked citable unit (`data-answer` or `data-gate-lead`), a JSON-LD graph and
-  an `llms.txt` line
+  a line in `llms.txt` or a `/llms/` file
 
 It cannot tell you whether an engine cites you. That is the hand protocol in the core: check each
 prompt in ChatGPT, Claude, Perplexity, Gemini and Google AI Mode, record mentioned / cited / no,
@@ -24,7 +24,7 @@ The generator is `scripts/generate-geo-baseline.mjs`; the parsing, scoring and r
 ## What this is not
 
 The score is structural readiness: whether a route exists, ships the promised passage, and carries
-a marked citable unit, a JSON-LD graph and an `llms.txt` line. The protocol in
+a marked citable unit, a JSON-LD graph and a line in `llms.txt` or a `/llms/` file. The protocol in
 `docs/SEMANTIC-CORE.md` also asks for each prompt to be run through ChatGPT, Claude, Perplexity,
 Gemini and Google AI Mode and recorded as mentioned, cited or absent. Nothing here queries an
 engine. Never present the readiness number as a citation rate, and never diff engine behaviour

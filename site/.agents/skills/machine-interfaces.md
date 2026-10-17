@@ -10,13 +10,15 @@ the collections. Verify in the built output, never in source. The gate is
   of 5, no global cap. Mirrored at /feed.json.
 - Six per-collection feeds — /blog/rss.xml, /glossary/rss.xml, /resources/rss.xml,
   /case-studies/rss.xml, /faq/rss.xml, /services/rss.xml — each listing every live entry of
-  its collection, generated from `src/pages/<base>/rss.xml.ts` endpoints.
-- /llms.txt — index with an ISO updatedDate on every entry line.
-- /llms-full.txt — the actual full body text of every collection, concatenated section by
-  section from `src/pages/llms-full.txt.ts` using the same `toLlmsEntry()` mapping as
-  `/llms/{collection}.txt` (`src/pages/llms/[collection].txt.ts`), which stays the per-kind
-  view. A 2 MB byte guard in `scripts/machine.mjs` fails loudly instead of letting the file
-  grow unbounded unnoticed.
+  its collection from `src/pages/<base>/rss.xml.ts`. A collection with no live entry is withheld from every
+  output here (`scripts/collection-gate.mjs`).
+- /llms.txt — the index, at most `LLMS_TXT_MAX_BYTES` (8 KiB): offers, pages, hubs and feeds inline,
+  one line per collection (name, entry count, link to its file). Pages link it from `CommonMeta.astro`.
+- /llms-full.txt — the full body of every collection, `src/pages/llms-full.txt.ts`, 2 MB guard.
+- /llms/{collection}.txt — the per-kind view, `src/pages/llms/[collection].txt.ts`. Above
+  `LLMS_SHARD_MAX_ENTRIES` (100) it indexes `/llms/{collection}-{n}.txt` shards chained by next links.
+  Entries sort by publish date then id and nothing reads a clock: `npm run build` is the only
+  regeneration step and a second build is byte-identical. `scripts/llms-corpus.mjs` checks the rest.
 - .md sidecars per page, from `src/pages/[...slug].md.ts`.
 - OG images rendered by satori at `src/pages/og/[...slug].png.ts`; template in
   `src/utils/og-template.mjs`; hash-keyed render cache in `src/utils/og-cache.mjs`.

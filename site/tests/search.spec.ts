@@ -82,8 +82,13 @@ test('a tag page is found by its name', async ({ page }) => {
 });
 
 test('a hub page is found by its name', async ({ page }) => {
+  await searchFor(page, 'AI governance glossary');
+  expect(await resultHrefs(page)).toContain('/glossary');
+});
+
+test('a hub with nothing in it is not offered, because the result would lead to an empty page', async ({ page }) => {
   await searchFor(page, 'Case studies');
-  expect(await resultHrefs(page)).toContain('/case-studies');
+  expect(await resultHrefs(page)).not.toContain('/case-studies');
 });
 
 test('a glossary term is found', async ({ page }) => {

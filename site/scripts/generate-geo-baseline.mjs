@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { withProvenance } from './evidence-gate.mjs';
@@ -11,7 +11,10 @@ const OUT = '../audits/geo-baseline.md';
 
 function pagesFrom(dist) {
   const routes = JSON.parse(readFileSync(join(dist, 'gate-routes.json'), 'utf8')).routes;
-  const llms = readFileSync(join(dist, 'llms.txt'), 'utf8');
+  const llmsFiles = readdirSync(join(dist, 'llms'), { withFileTypes: true }).map((entry) =>
+    join(dist, 'llms', entry.name)
+  );
+  const llms = [join(dist, 'llms.txt'), ...llmsFiles].map((file) => readFileSync(file, 'utf8')).join('\n');
   const pages = {};
   for (const route of routes) {
     const file = join(dist, route === '/' ? 'index.html' : `${route.slice(1)}.html`);

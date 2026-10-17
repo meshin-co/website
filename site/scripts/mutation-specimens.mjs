@@ -1,12 +1,13 @@
 import { execFileSync } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
-import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 
 import { brandFromDisk } from '../src/utils/brand.mjs';
 import { evidenceSpecimens } from './evidence-specimens.mjs';
 import { REGISTERS_BEGIN } from './registers.mjs';
 import { SPEC_SPECIMENS } from './spec-specimens.mjs';
+import { LLMS_TXT_MAX_BYTES } from './machine.mjs';
 
 const ANSI_SEQUENCE = new RegExp(`${String.fromCharCode(27)}\\[[0-9;]*m`, 'g');
 export const flatten = (output) => String(output).replace(ANSI_SEQUENCE, '').replace(/\s+/g, ' ');
@@ -100,6 +101,22 @@ const LONG_SENTENCES_OVER_CAP_PAGE = specimenPage([
 ]);
 const LIGHTHOUSE_ROUTES = 'tests/guard-mutations/fixtures/lighthouse-specimen-routes.json';
 const DEAD_PATH_SENTENCE = 'Read `docs/zz-specimen-missing.md` first.';
+
+const SERVICE_ROBOTS = [
+  '<meta content="index, follow" name="robots">',
+  '<meta content="noindex, follow" name="robots">',
+];
+
+async function noindexEveryServicePage(copySite) {
+  const directory = join(copySite, 'dist/services');
+  const pages = (await readdir(directory)).filter((name) => name.endsWith('.html'));
+  const restores = await Promise.all(
+    pages.map((page) => editFile(join(directory, page), (html) => html.replace(...SERVICE_ROBOTS)))
+  );
+  return () => Promise.all(restores.map((restore) => restore()));
+}
+
+const withNoLiveServices = (token) => ({ gate: 'gate:machine', token, plant: noindexEveryServicePage });
 
 export const SPECIMENS = {
   paid: {
@@ -353,6 +370,53 @@ export const SPECIMENS = {
         )
       ),
   },
+  machineLlmsLosesNoindex: {
+    gate: 'gate:machine',
+    token: 'carries X-Robots-Tag "all", its siblings carry noindex',
+    plant: (copySite) =>
+      editFile(join(copySite, 'dist/_headers'), (text) =>
+        text.replace('/llms/*\n  X-Robots-Tag: noindex', '/llms/*\n  X-Robots-Tag: all')
+      ),
+  },
+  machineFileUnreferenced: {
+    gate: 'gate:machine',
+    token: '/zz-specimen/rss.xml is shipped but nothing references it',
+    plant: (copySite) => addUntrackedFile(join(copySite, 'dist/zz-specimen/rss.xml'), '<rss></rss>'),
+  },
+  machineLlmsOverBudget: {
+    gate: 'gate:machine',
+    token: `bytes, over the ${LLMS_TXT_MAX_BYTES} byte guard`,
+    plant: (copySite) =>
+      editFile(join(copySite, 'dist/llms.txt'), (text) => `${text}\n${'padding '.repeat(LLMS_TXT_MAX_BYTES / 4)}\n`),
+  },
+  machineLlmsInlinesEntries: {
+    gate: 'gate:machine',
+    token: 'inline, entries of an unbounded collection belong in /llms/',
+    plant: async (copySite) => {
+      const posts = await readFile(join(copySite, 'dist/llms/post.txt'), 'utf8');
+      const url = /^\[(https:\/\/[^\]]+\/blog\/[^\]]+)\]/m.exec(posts)[1];
+      return editFile(
+        join(copySite, 'dist/llms.txt'),
+        (text) => `${text}\n- [Inlined](${url}): an entry listed inline\n`
+      );
+    },
+  },
+  machineLlmsCountDrifts: {
+    gate: 'gate:machine',
+    token: 'entries for post, its files hold',
+    plant: (copySite) =>
+      editFile(join(copySite, 'dist/llms.txt'), (text) =>
+        text.replace(/(llms\/post\.txt\): )(\d+)/, (_, lead, count) => `${lead}${Number(count) + 1}`)
+      ),
+  },
+  machineLlmsOrphanShard: {
+    gate: 'gate:machine',
+    token: '/llms/post-1.txt ships but the post index does not list it',
+    plant: (copySite) => addUntrackedFile(join(copySite, 'dist/llms/post-1.txt'), '# Orphan shard\n'),
+  },
+  emptyCollectionIndexable: withNoLiveServices('/services is indexable but has no live service entry'),
+  emptyCollectionMirrorShips: withNoLiveServices('/services.md ships but /services has no live service entry'),
+  emptyCollectionListed: withNoLiveServices('/sitemap-0.xml lists /services but /services has no live service entry'),
   ...evidenceSpecimens({ addUntrackedFile }),
   ...SPEC_SPECIMENS,
 };

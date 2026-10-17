@@ -16,7 +16,12 @@ import astrowind from './vendor/integration';
 
 import { readingTimeRemarkPlugin } from './src/utils/frontmatter';
 import { rehypeExternalLinks, rehypeHeadingAnchors, rehypeScrollableTables } from './src/utils/pipeline.mjs';
-import { siteLastmods, noindexEntryRoutes, noindexCategoryRoutes } from './src/utils/sitemap-lastmod.mjs';
+import {
+  siteLastmods,
+  noindexEntryRoutes,
+  noindexCategoryRoutes,
+  noindexHubRoutes,
+} from './src/utils/sitemap-lastmod.mjs';
 import { publicIndexableStaticPages } from './src/utils/machine-text.mjs';
 import { categoryPillars } from './src/data/categories.mjs';
 
@@ -32,6 +37,7 @@ const LASTMODS = (await siteLastmods({
 const NOINDEX_ROUTES = new Set([
   ...(await noindexEntryRoutes(DATA_DIR)),
   ...(await noindexCategoryRoutes(DATA_DIR, Object.keys(categoryPillars))),
+  ...(await noindexHubRoutes(DATA_DIR)),
 ]);
 
 export default defineConfig({

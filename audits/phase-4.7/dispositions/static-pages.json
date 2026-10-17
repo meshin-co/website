@@ -87,7 +87,7 @@
     "target": "site/src/pages/styleguide.astro",
     "status": "verified",
     "reason": "Internal noindex dev-reference page; description is accurate and not buyer-facing copy, no changes needed.",
-    "digest": "58d1b278f5fa"
+    "digest": "bf421d1e7f83"
   },
   {
     "target": "site/src/pages/faq.astro",

@@ -4,7 +4,7 @@ import { getCollection, getEntry } from 'astro:content';
 import { archiveTitleOf, categoryPillars } from '~/data/categories.mjs';
 import { artifactIds, drivers, hero, shift, signals } from '~/data/home';
 import { TAGS, tagArchive } from '~/data/tags.mjs';
-import { FEED_BASES, isLive, isPublished } from '~/utils/feeds.mjs';
+import { FEED_BASES, emptyHubRoutes, isLive, isPublished } from '~/utils/feeds.mjs';
 import { LLMS_COLLECTIONS } from '~/utils/llms-collections.mjs';
 import { collectionHubs, publicIndexableStaticPages } from '~/utils/machine-text.mjs';
 import { buildShardEntry, KINDS, words } from '../../public/search/shards.mjs';
@@ -150,6 +150,7 @@ const shardBuilders: Record<string, () => Promise<ShardEntry[]>> = {
     const hubEntries = collectionHubs({
       collections: LLMS_COLLECTIONS,
       staticPaths: staticPages.map((page) => page.path),
+      withheld: await emptyHubRoutes((kind: keyof typeof FEED_BASES) => getCollection(kind, isLive)),
     }).map(({ base }: { base: string }) =>
       buildShardEntry('page', { href: base, title: '', description: '', body: '' })
     );

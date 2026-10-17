@@ -71,6 +71,9 @@ export function renderHeaders(scriptHashes, styleHashes = [], { analyticsBeacon 
 /llms-full.txt
   X-Robots-Tag: noindex
 
+/llms/*
+  X-Robots-Tag: noindex
+
 /search-index*
   X-Robots-Tag: noindex
 

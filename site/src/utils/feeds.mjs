@@ -14,6 +14,15 @@ export const isLive = ({ data }) => !data.draft && !data.noindex;
 
 export const isPublished = ({ data }) => !data.draft;
 
+export async function emptyHubRoutes(loadLive) {
+  /** @type {string[]} */
+  const routes = [];
+  for (const [kind, base] of Object.entries(FEED_BASES)) {
+    if ((await loadLive(kind)).length === 0) routes.push(`/${base}`);
+  }
+  return routes;
+}
+
 export function toFeedSource(entry, { kind, base, site }) {
   const isQuestion = 'answer' in entry.data;
   return {

@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 
-import { auditableRoutes, canonicalRoute, isNoindexByDesign, NOINDEX_BY_DESIGN } from './lh-routes.cjs';
+import { auditableRoutes, canonicalRoute, isNoindexByDesign } from './lh-routes.cjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 
 const CATEGORIES = ['performance', 'accessibility', 'best-practices', 'seo'];
@@ -71,19 +71,19 @@ function scoreWithout(report, category, excluded) {
   return scored.reduce((total, ref) => total + ref.weight * (report.audits[ref.id].score ?? 0), 0) / weight;
 }
 
-export function categoryScore(report, category, route) {
-  const named = category === 'seo' && isNoindexByDesign(route);
+export function categoryScore(report, category, route, distDir) {
+  const named = category === 'seo' && isNoindexByDesign(route, distDir);
   const score = named ? scoreWithout(report, category, 'is-crawlable') : report.categories[category].score;
   return Math.round(score * 100);
 }
 
-function scoreTable(reports) {
+function scoreTable(reports, distDir) {
   const byRoute = new Map();
   for (const report of reports) {
     const path = new URL(report.finalUrl).pathname.replace(/index\.html$/, '').replace(/\.html$/, '') || '/';
     const entry = byRoute.get(path) ?? {};
     for (const category of CATEGORIES) {
-      entry[category] = [...(entry[category] ?? []), categoryScore(report, category, path)];
+      entry[category] = [...(entry[category] ?? []), categoryScore(report, category, path, distDir)];
     }
     entry.metrics ??= {};
     for (const [audit, data] of Object.entries(report.audits)) {
@@ -130,10 +130,12 @@ export function renderReport({
   budgets = {},
   byteBudgets: byteBudgetLimits = {},
   generator = 'unknown',
+  distDir,
 }) {
   if (!Array.isArray(expectedRoutes)) {
     throw new Error('renderReport: expectedRoutes is required, derived independently of gate-routes.json');
   }
+  const exempted = expectedRoutes.filter((route) => isNoindexByDesign(route, distDir));
   const failures = [];
   if (expectedRoutes.length === 0) failures.push('no routes to audit: the built html yielded an empty Lighthouse set');
   for (const [form, rows] of [
@@ -169,7 +171,7 @@ export function renderReport({
     '',
     `Asserted: ${assertedFamilies(gate).join(', ')}`,
     '',
-    `SEO on ${NOINDEX_BY_DESIGN.map((route) => `\`${route}\``).join(', ')} is scored without \`is-crawlable\`: noindex by design, named in \`scripts/lh-routes.cjs\`.`,
+    `SEO on ${exempted.map((route) => `\`${route}\``).join(', ')} is scored without \`is-crawlable\`: the built page carries \`noindex\`, so the exemption ends the day the page becomes indexable.`,
     '',
     `Lighthouse scope: ${expectedRoutes.length} route(s) expected`,
     '',
@@ -222,11 +224,12 @@ export async function phaseVerdict(phase, auditDir, distDir = process.env.LH_DIS
     phase,
     gate,
     expectedRoutes: auditableRoutes(distDir),
-    mobile: scoreTable(await readReports(join(auditDir, 'lh-mobile'))),
-    desktop: scoreTable(await readReports(join(auditDir, 'lh-desktop'))),
+    mobile: scoreTable(await readReports(join(auditDir, 'lh-mobile')), distDir),
+    desktop: scoreTable(await readReports(join(auditDir, 'lh-desktop')), distDir),
     budgets: await metricBudgets(),
     byteBudgets: byteBudgets(),
     generator: generatorRevision(join(auditDir, 'REPORT.md')),
+    distDir,
   });
 }
 

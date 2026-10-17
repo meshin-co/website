@@ -9,7 +9,7 @@ import {
   sidecarFileForRoute,
   sidecarRoutes,
 } from '../src/utils/machine-text.mjs';
-import { siteLastmods } from '../src/utils/sitemap-lastmod.mjs';
+import { noindexHubRoutes, siteLastmods } from '../src/utils/sitemap-lastmod.mjs';
 import { brandFromDisk } from '../src/utils/brand.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 
@@ -39,7 +39,7 @@ export function classifyPage({ page, html, updatedIso, site = SITE_ORIGIN }) {
 }
 
 export async function main(distDir) {
-  const pages = sidecarRoutes();
+  const pages = sidecarRoutes({ withheld: await noindexHubRoutes('src/data') });
   const lastmods = await siteLastmods({
     dataDir: 'src/data',
     staticPages: publicIndexableStaticPages(),

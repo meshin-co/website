@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { existsSync, statSync } from 'node:fs';
+import { existsSync, mkdtempSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { mkdir, mkdtemp, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
@@ -127,6 +127,8 @@ test('a route named noindex by design is recognised exactly, trailing slash or n
     '/search/',
     '/blog/category/executive',
     '/blog/category/executive/',
+    '/case-studies',
+    '/case-studies/',
     '/blog/page/2',
     '/blog/page/2/',
     '/blog/category/governance/page/2',
@@ -300,4 +302,23 @@ test('the count command reads LH_DIST_DIR when no directory is passed, so it cou
   }).trim();
 
   assert.equal(count, '2');
+});
+
+test('a page that stops being noindex is audited for crawlability again, with no hand edit', () => {
+  const dist = mkdtempSync(join(tmpdir(), 'lh-routes-'));
+  writeFileSync(
+    join(dist, 'case-studies.html'),
+    '<html><head><meta content="noindex, follow" name="robots"></head></html>'
+  );
+  writeFileSync(join(dist, 'search.html'), '<html><head><meta name="robots" content="noindex, follow"></head></html>');
+  writeFileSync(join(dist, 'about.html'), '<html><head></head></html>');
+
+  assert.equal(isNoindexByDesign('/case-studies', dist), true);
+  assert.equal(isNoindexByDesign('/search', dist), true);
+  assert.equal(isNoindexByDesign('/about', dist), false);
+
+  writeFileSync(join(dist, 'case-studies.html'), '<html><head></head><body>a case study</body></html>');
+
+  assert.equal(isNoindexByDesign('/case-studies', dist), false);
+  rmSync(dist, { recursive: true, force: true });
 });

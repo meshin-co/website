@@ -605,6 +605,15 @@ test('collectionHubs keeps every collection when no static page already covers i
   assert.deepEqual(hubs, collections);
 });
 
+test('collectionHubs drops a withheld hub, so a collection with no live entry is offered nowhere', () => {
+  const collections = [
+    { name: 'post', base: '/blog' },
+    { name: 'case', base: '/case-studies' },
+  ];
+  const hubs = collectionHubs({ collections, staticPaths: [], withheld: ['/case-studies'] });
+  assert.deepEqual(hubs, [{ name: 'post', base: '/blog' }]);
+});
+
 test('sidecarFileForRoute maps a leaf route onto a dist-relative markdown file path', () => {
   assert.equal(sidecarFileForRoute('/glossary/evals'), 'glossary/evals.md');
 });
@@ -636,6 +645,14 @@ test('sidecarRoutes drops a caller-supplied hub whose base a static page already
   ];
   const paths = sidecarRoutes({ staticPages, hubs }).map((page) => page.path);
   assert.deepEqual(paths, ['/about', '/blog']);
+});
+
+test('sidecarRoutes leaves out a withheld hub and keeps every other, so the mirror of an empty collection is not written', () => {
+  const paths = sidecarRoutes({ withheld: ['/case-studies'] }).map((page) => page.path);
+  assert.equal(paths.includes('/case-studies'), false);
+  for (const hub of ['/blog', '/glossary', '/resources', '/services']) {
+    assert.ok(paths.includes(hub), `${hub} missing from sidecarRoutes`);
+  }
 });
 
 test('every HUB_PAGES entry carries a non-empty title and description', () => {
@@ -674,4 +691,33 @@ test('liveTopicMap groups posts by an array-value key, sharing one slug across p
 test('liveTopicMap never invents a slug for a post carrying no tags', () => {
   const map = liveTopicMap([{ tags: [], updated: '2026-01-01T00:00:00.000Z' }], 'tags');
   assert.equal(map.size, 0);
+});
+
+test('the full-text file degrades to an index when the corpus outgrows its budget, instead of failing the build', () => {
+  const entry = (n) => ({ title: `Entry ${n}`, url: `https://x/post/${n}`, summary: 's', body: 'b'.repeat(400) });
+  const sections = [
+    { title: 'Writing', url: 'https://x/llms/post.txt', entries: Array.from({ length: 50 }, (_, n) => entry(n)) },
+  ];
+
+  const whole = renderLlmsFull({ site: 'x', sections, maxBytes: 1_000_000 });
+  const index = renderLlmsFull({ site: 'x', sections, maxBytes: 4_096 });
+
+  assert.ok(whole.includes('b'.repeat(400)));
+  assert.ok(!index.includes('b'.repeat(400)));
+  assert.match(index, /\[Writing\]\(https:\/\/x\/llms\/post\.txt\): 50 entries/);
+  assert.ok(Buffer.byteLength(index, 'utf8') < 4_096);
+});
+
+test('a corpus inside the budget is still served whole, so one fetch keeps working while it can', () => {
+  const sections = [
+    {
+      title: 'Writing',
+      url: 'https://x/llms/post.txt',
+      entries: [{ title: 'One', url: 'https://x/a', summary: 's', body: 'short' }],
+    },
+  ];
+
+  const rendered = renderLlmsFull({ site: 'x', sections, maxBytes: 1_000_000 });
+
+  assert.ok(rendered.includes('short'));
 });

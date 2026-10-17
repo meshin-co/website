@@ -18,7 +18,7 @@ Run at the end of every phase and before any merge to main. The procedure is
    `scripts/markdown-table.mjs`, already prettier-shaped; a script that can be both imported and run
    decides which it is through `scripts/invoked-directly.mjs`, which resolves symlinks.
 7. `npm run gate:machine`, then `npm run gate:jsonld` — machine-interface coverage (every
-   indexable route must appear in `llms.txt`) and JSON-LD graph integrity (structured-data.md).
+   indexable route must appear in `llms.txt` or a `/llms/` file) and JSON-LD graph integrity (structured-data.md).
 8. `npm run gate:skills` — skills lint: every path real, no forbidden claims, length caps.
 9. `npm run gate:routes` — compares the build against `audits/routes.json`, fails on an unexplained
    removal or a stale `routes-removed.json` entry, and never writes the ledger; `npm run assets:routes` does.

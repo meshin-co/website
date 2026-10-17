@@ -162,6 +162,15 @@ export const FAMILIES = [
     scope: 'tag',
     slow: true,
   },
+  { id: 'machine-llms-loses-noindex', kind: 'specimen', specimen: 'machineLlmsLosesNoindex' },
+  { id: 'machine-file-unreferenced', kind: 'specimen', specimen: 'machineFileUnreferenced' },
+  { id: 'machine-llms-over-budget', kind: 'specimen', specimen: 'machineLlmsOverBudget' },
+  { id: 'machine-llms-inlines-entries', kind: 'specimen', specimen: 'machineLlmsInlinesEntries' },
+  { id: 'machine-llms-count-drifts', kind: 'specimen', specimen: 'machineLlmsCountDrifts' },
+  { id: 'machine-llms-orphan-shard', kind: 'specimen', specimen: 'machineLlmsOrphanShard' },
+  { id: 'empty-collection-hub-is-indexable', kind: 'specimen', specimen: 'emptyCollectionIndexable' },
+  { id: 'empty-collection-mirror-ships', kind: 'specimen', specimen: 'emptyCollectionMirrorShips' },
+  { id: 'empty-collection-is-listed-in-a-machine-output', kind: 'specimen', specimen: 'emptyCollectionListed' },
 ];
 
 const KINDS = ['build', 'build-then-gate', 'gate', 'pure', 'pagination', 'specimen'];
