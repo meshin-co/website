@@ -27,6 +27,9 @@ form.
 - Ten canonical routes and six machine surfaces answer 200. A 301 or 308 fails: after the flip a
   canonical route lands directly, and a redirect means the apex or the trailing-slash rule is
   wrong.
+- `www` answers 301 to the apex, for `/` and for `/about`, with the path kept. Only when the
+  origin is the real host: a rehearsal against `127.0.0.1` has no `www` to ask, so it reports 18
+  of 18 while production reports 20 of 20.
 
 ## Proven able to fail
 

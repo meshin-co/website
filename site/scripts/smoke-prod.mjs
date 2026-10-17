@@ -34,6 +34,15 @@ export function verdictFor({ route, status }) {
     : finding(`route ${route}`, 'fail', `answered ${status}, expected 200`);
 }
 
+export function canonicalHostVerdict({ status, location }, origin, path) {
+  const check = `www redirect ${path}`;
+  const expected = `${origin}${path}`;
+  if (status !== 301) return finding(check, 'fail', `answered ${status}, expected 301`);
+  return location === expected
+    ? finding(check, 'pass', `301 to ${expected}`)
+    : finding(check, 'fail', `301 to ${location}, expected ${expected}`);
+}
+
 export function renderSmoke(origin, rows, revision) {
   const failures = rows.filter((row) => row.status === 'fail');
   return [

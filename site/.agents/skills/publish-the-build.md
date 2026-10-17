@@ -75,6 +75,6 @@ that and publishing it; row G42 in `docs/plan/reference/known-gaps.md` records t
 npm run smoke:prod <url>
 ```
 
-18 live requests against the real origin: status, headers, and the per-route verdict. A green
-local gate says nothing about what Cloudflare serves — the headers come from `dist/_headers`,
-which only the live response can confirm.
+20 live requests against the real origin: status, headers, the per-route verdict and the `www`
+301. A green local gate says nothing about what Cloudflare serves — the headers come from
+`dist/_headers`, which only the live response can confirm.
