@@ -39,4 +39,4 @@
 
 ## 7. Calibration Gate
 
-- [ ] 7.1 Run the Calibration Gate and commit the report it generates for this change
+- [x] 7.1 Run the Calibration Gate and commit the report it generates for this change
