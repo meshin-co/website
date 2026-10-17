@@ -7,4 +7,4 @@ Location: Remote worldwide
 /* SITE */
 Standards: HTML5, CSS, JSON-LD
 Components: Astro, Tailwind CSS
-Analytics: Plausible, no cookies
+Analytics: Cloudflare Web Analytics, no cookies

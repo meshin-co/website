@@ -1,1 +1,1 @@
-G35 — every remaining step needs owner access to Cloudflare, the search consoles, Plausible, LinkedIn and the five linked repositories, plus the facts in sections 4 to 8 of docs/COPY-CHECKLIST.md. Imported verbatim from docs/plan/phases/phase-5-launch.next.md.
+G35 — every remaining step needs owner access to Cloudflare, the search consoles, LinkedIn and the five linked repositories, plus the facts in sections 4 to 8 of docs/COPY-CHECKLIST.md. Imported verbatim from docs/plan/phases/phase-5-launch.next.md.
