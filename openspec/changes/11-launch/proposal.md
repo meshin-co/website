@@ -46,8 +46,9 @@ Nothing below can be measured from this machine.
 - Cloudflare: attach apex `meshin.co` to Pages, `www` → apex 301, keep the L4 TXT record. No
   `noindex` to remove; the header is scoped to `*.pages.dev`.
 - Search: sitemap to GSC and Bing, both verifications, the IndexNow key.
-- LinkedIn person and company pointing at the site. No analytics goals: L58 retired Plausible on
-  2026-10-14 and Cloudflare Web Analytics has no goal concept.
+- LinkedIn person and company pointing at the site. The analytics-goal step is dropped: L58
+  retired Plausible on 2026-10-14, and `site/src` names no `book_call`, `download_resource` or
+  Plausible anywhere.
 - The five `github.com/meshin-co/<slug>` repos the resource pages link to (L10, L19).
 - `docs/COPY-CHECKLIST.md` §4-§8: `/now` content, `/speaking`, the five resource artifacts, the
   seven practice claims, the legal entity, jurisdiction and postal address.

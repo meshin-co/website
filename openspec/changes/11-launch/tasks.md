@@ -4,8 +4,6 @@
       place: `dig meshin.co` answers `188.114.97.7` and the `google-site-verification` TXT
       resolves, while `https://www.meshin.co/` does not connect (curl 000) on 2026-10-17
 - [ ] 1.2 Submit the sitemap to Google Search Console and Bing, add both verifications and the IndexNow key
-- [x] 1.3 No analytics goals exist to create. L58 retired Plausible on 2026-10-14, and Cloudflare
-      Web Analytics carries no goal or custom-event concept the L13 JS budget would allow
 - [ ] 1.4 Point the LinkedIn person and company pages at the site
 - [ ] 1.5 Create the five `github.com/meshin-co/<slug>` repositories the resource pages link to (L10, L19)
 - [ ] 1.6 Answer `docs/COPY-CHECKLIST.md` sections 4 to 8: `/now`, `/speaking`, the five resource artefacts, the seven practice claims, the legal entity, the jurisdiction and the postal address
