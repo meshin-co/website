@@ -1,4 +1,4 @@
-const PROSE_DIRS = ['docs/', 'audits/', 'site/.agents/', 'openspec/', 'investigation/'];
+export const PROSE_DIRS = ['docs/', 'audits/', 'site/.agents/', 'openspec/', 'investigation/'];
 const AUTOMATION_DIRS = ['.github/', '.githooks/'];
 const TEST_TOOLING = ['site/playwright.config.ts'];
 const SHIPPED_DIRS = ['site/src/', 'site/public/'];
