@@ -49,7 +49,6 @@ Nothing below can be measured from this machine.
 - LinkedIn person and company pointing at the site. The analytics-goal step is dropped: L58
   retired Plausible on 2026-10-14, and `site/src` names no `book_call`, `download_resource` or
   Plausible anywhere.
-- The five `github.com/meshin-co/<slug>` repos the resource pages link to (L10, L19).
 - `docs/COPY-CHECKLIST.md` §4-§8: `/now` content, `/speaking`, the five resource artifacts, the
   seven practice claims, the legal entity, jurisdiction and postal address.
 - CG-5 itself: it measures real edge CSP headers and real compression against the production URL.
