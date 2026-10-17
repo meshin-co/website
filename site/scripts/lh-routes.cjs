@@ -31,7 +31,19 @@ function canonicalRoute(route) {
   return route.length > 1 && route.endsWith('/') ? route.slice(0, -1) : route;
 }
 
-function isNoindexByDesign(route) {
+const ROBOTS_NOINDEX = /<meta[^>]+name=["']robots["'][^>]+content=["'][^"']*noindex/i;
+
+function builtPage(distDir, route) {
+  const base = canonicalRoute(route).slice(1);
+  for (const candidate of [join(distDir, `${base}.html`), join(distDir, base, 'index.html')]) {
+    if (existsSync(candidate)) return readFileSync(candidate, 'utf8');
+  }
+  return null;
+}
+
+function isNoindexByDesign(route, distDir) {
+  const html = distDir ? builtPage(distDir, route) : null;
+  if (html !== null) return ROBOTS_NOINDEX.test(html);
   return NOINDEX_ROUTE_MATCHER.test(canonicalRoute(route));
 }
 

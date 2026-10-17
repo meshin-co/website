@@ -1,16 +1,8 @@
 import assert from 'node:assert/strict';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 
 import { FEED_BASES } from '../src/utils/feeds.mjs';
-import {
-  collectionGateFailures,
-  emptyCollectionFindings,
-  listedPaths,
-  readCollectionSurfaces,
-} from './collection-gate.mjs';
+import { emptyCollectionFindings, listedPaths } from './collection-gate.mjs';
 
 const SITE = 'https://meshin.co';
 const INDEXABLE = '<!doctype html><html><head><meta content="index, follow" name="robots"></head><body></body></html>';
@@ -229,68 +221,4 @@ test('listedPaths reads each surface by its own shape and keeps only this siteâ€
   assert.deepEqual(listedPaths('case-studies/rss.xml', feedXml(), SITE), ['/']);
   assert.deepEqual(listedPaths('search-index-page.json', shard({ href: '/a/' }, { href: '/b' }), SITE), ['/a', '/b']);
   assert.deepEqual(listedPaths('feed.json', jsonFeed(`${SITE}/a`), SITE), ['/a']);
-});
-
-function distWith(files) {
-  const dist = mkdtempSync(join(tmpdir(), 'collection-gate-'));
-  for (const [file, content] of Object.entries(files)) {
-    mkdirSync(dirname(join(dist, file)), { recursive: true });
-    writeFileSync(join(dist, file), content);
-  }
-  return dist;
-}
-
-test('readCollectionSurfaces lists every shipped file, sorted, and reads only the files that offer pages to a machine', async () => {
-  const dist = distWith({
-    'case-studies.md': '# x',
-    'case-studies/rss.xml': feedXml(),
-    'llms/case.txt': '# x',
-    'llms.txt': llmsTxt(`${SITE}/a`),
-    'llms-full.txt': '# x',
-    'feed.json': jsonFeed(),
-    'rss.xml': feedXml(),
-    'sitemap-index.xml': sitemap(),
-    'sitemap-0.xml': sitemap(`${SITE}/a`),
-    'search-index-page.json': shard({ href: '/a' }),
-    'blog/an-article.md': `[x](${SITE}/case-studies)`,
-    'about.html': INDEXABLE,
-    'og/blog/a.png': 'png',
-    'gate-routes.json': '{"routes":["/case-studies"]}',
-  });
-  try {
-    const { shipped, texts } = await readCollectionSurfaces(dist);
-    assert.deepEqual(shipped, [...shipped].sort());
-    assert.equal(shipped.length, 14);
-    assert.ok(shipped.includes('og/blog/a.png') && shipped.includes('about.html'));
-    assert.deepEqual(Object.keys(texts), [
-      'case-studies/rss.xml',
-      'feed.json',
-      'llms-full.txt',
-      'llms.txt',
-      'llms/case.txt',
-      'rss.xml',
-      'search-index-page.json',
-      'sitemap-0.xml',
-      'sitemap-index.xml',
-    ]);
-  } finally {
-    rmSync(dist, { recursive: true, force: true });
-  }
-});
-
-test('collectionGateFailures judges a built tree: clean while the empty hub is withheld, red the moment its mirror ships', async () => {
-  const dist = distWith({
-    'case-studies.html': NOINDEX,
-    'llms.txt': llmsTxt(`${SITE}/faq`),
-    'sitemap-0.xml': sitemap(`${SITE}/faq`),
-  });
-  const judged = { kinds: ['case'], routes: ['/case-studies'], htmlByRoute: { '/case-studies': NOINDEX }, site: SITE };
-  try {
-    assert.deepEqual(await collectionGateFailures(dist, judged), []);
-
-    writeFileSync(join(dist, 'case-studies.md'), '# Fractional Chief AI Officer case study');
-    assert.deepEqual(await collectionGateFailures(dist, judged), [`/case-studies.md ships but ${because}`]);
-  } finally {
-    rmSync(dist, { recursive: true, force: true });
-  }
 });

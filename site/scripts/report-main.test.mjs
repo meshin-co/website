@@ -7,6 +7,7 @@ import { mock, test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 import { main } from './report.mjs';
+import { NOINDEX_BY_DESIGN } from './lh-routes.cjs';
 
 const REPORT = fileURLToPath(new URL('./report.mjs', import.meta.url));
 
@@ -36,7 +37,8 @@ async function fixtureRoot(routes, gateRoutes = routes) {
   for (const route of routes) {
     const file = route === '/' ? 'index.html' : `${route.slice(1)}.html`;
     await mkdir(dirname(join(root, 'dist', file)), { recursive: true });
-    await writeFile(join(root, 'dist', file), '<html></html>');
+    const robots = NOINDEX_BY_DESIGN.includes(route) ? '<meta name="robots" content="noindex, follow">' : '';
+    await writeFile(join(root, 'dist', file), `<html><head>${robots}</head></html>`);
   }
   await writeFile(
     join(root, 'dist', 'gate-routes.json'),

@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import { SITE } from 'astrowind:config';
 import { absoluteUrl, renderLlmsFull } from '~/utils/machine-text.mjs';
 import { LLMS_COLLECTIONS, orderEntries, toLlmsEntry } from '~/utils/llms-collections.mjs';
+import { LLMS_FULL_MAX_BYTES } from '~/utils/llms-collections.mjs';
 
 export const prerender = true;
 
@@ -24,10 +25,10 @@ export const GET = async () => {
       body: entry.body,
       updated: entry.updated,
     }));
-    sections.push({ title, entries: mapped });
+    sections.push({ title, url: absoluteUrl(site, `/llms/${name}.txt`), entries: mapped });
   }
 
-  return new Response(renderLlmsFull({ site: SITE.name, sections }), {
+  return new Response(renderLlmsFull({ site: SITE.name, sections, maxBytes: LLMS_FULL_MAX_BYTES }), {
     headers: { 'Content-Type': 'text/plain; charset=utf-8' },
   });
 };

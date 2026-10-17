@@ -49,18 +49,25 @@ export function changedRoutes(before, after) {
   return { added, removed, edited, changed: added.length + removed.length + edited.length > 0 };
 }
 
+export const URLS_PER_REQUEST = 1000;
+
 export async function pingIndexNow({ host, key, urls, fetchImpl = fetch }) {
-  const response = await fetchImpl(ENDPOINT, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json; charset=utf-8' },
-    body: JSON.stringify({
-      host,
-      key,
-      keyLocation: `https://${host}/${key}.txt`,
-      urlList: urls.map((path) => `https://${host}${path}`),
-    }),
-  });
-  return { ok: response.ok, status: response.status };
+  let status = 200;
+  for (let from = 0; from < urls.length; from += URLS_PER_REQUEST) {
+    const response = await fetchImpl(ENDPOINT, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({
+        host,
+        key,
+        keyLocation: `https://${host}/${key}.txt`,
+        urlList: urls.slice(from, from + URLS_PER_REQUEST).map((path) => `https://${host}${path}`),
+      }),
+    });
+    status = response.status;
+    if (!response.ok) return { ok: false, status };
+  }
+  return { ok: true, status };
 }
 
 const KEY_FILE = /^[A-Za-z0-9-]{8,128}\.txt$/;
@@ -101,6 +108,11 @@ export async function run({
 
   const announce = [...added, ...edited].sort();
   if (dryRun) return { action: 'dry-run', urls: announce, added, removed, edited };
+
+  if (announce.length === 0) {
+    await writeFile(previousPath, `${JSON.stringify(digests, null, 2)}\n`);
+    return { action: 'recorded', reason: 'only-removals', added, removed, edited };
+  }
 
   const key = await publishedKey(distDir);
   if (!key) return { action: 'skipped', reason: 'missing-key', added, removed, edited };

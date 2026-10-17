@@ -16,12 +16,11 @@ import { brandFromDisk } from '../src/utils/brand.mjs';
 import { catalogDriftFindings } from './catalog-drift.mjs';
 import { collectionGateFailures } from './collection-gate.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
-import { LLMS_COLLECTIONS } from '../src/utils/llms-collections.mjs';
+import { LLMS_FULL_MAX_BYTES, LLMS_COLLECTIONS } from '../src/utils/llms-collections.mjs';
 import { llmsCorpusGaps } from './llms-corpus.mjs';
 
 const NON_PUBLIC = new Set(['author', 'speaking']);
 const FEED_FLOOR = 5;
-const LLMS_FULL_MAX_BYTES = 2_000_000;
 export const LLMS_TXT_MAX_BYTES = 8 * 1024;
 const BOUNDED_INLINE_COLLECTIONS = ['service'];
 const SITE_ORIGIN = `https://${brandFromDisk().name}`;

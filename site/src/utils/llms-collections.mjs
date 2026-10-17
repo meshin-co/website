@@ -66,6 +66,8 @@ export function llmsFullTextPointers(counts) {
 
 export const LLMS_SHARD_MAX_ENTRIES = 100;
 
+export const LLMS_FULL_MAX_BYTES = 2_000_000;
+
 const compare = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
 
 export function orderEntries(entries) {

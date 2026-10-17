@@ -692,3 +692,32 @@ test('liveTopicMap never invents a slug for a post carrying no tags', () => {
   const map = liveTopicMap([{ tags: [], updated: '2026-01-01T00:00:00.000Z' }], 'tags');
   assert.equal(map.size, 0);
 });
+
+test('the full-text file degrades to an index when the corpus outgrows its budget, instead of failing the build', () => {
+  const entry = (n) => ({ title: `Entry ${n}`, url: `https://x/post/${n}`, summary: 's', body: 'b'.repeat(400) });
+  const sections = [
+    { title: 'Writing', url: 'https://x/llms/post.txt', entries: Array.from({ length: 50 }, (_, n) => entry(n)) },
+  ];
+
+  const whole = renderLlmsFull({ site: 'x', sections, maxBytes: 1_000_000 });
+  const index = renderLlmsFull({ site: 'x', sections, maxBytes: 4_096 });
+
+  assert.ok(whole.includes('b'.repeat(400)));
+  assert.ok(!index.includes('b'.repeat(400)));
+  assert.match(index, /\[Writing\]\(https:\/\/x\/llms\/post\.txt\): 50 entries/);
+  assert.ok(Buffer.byteLength(index, 'utf8') < 4_096);
+});
+
+test('a corpus inside the budget is still served whole, so one fetch keeps working while it can', () => {
+  const sections = [
+    {
+      title: 'Writing',
+      url: 'https://x/llms/post.txt',
+      entries: [{ title: 'One', url: 'https://x/a', summary: 's', body: 'short' }],
+    },
+  ];
+
+  const rendered = renderLlmsFull({ site: 'x', sections, maxBytes: 1_000_000 });
+
+  assert.ok(rendered.includes('short'));
+});

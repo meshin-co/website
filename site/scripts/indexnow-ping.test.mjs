@@ -241,13 +241,15 @@ async function writePage(dist, route, body) {
   await writeFile(file, body);
 }
 
-async function rerun({ dist, previousPath }) {
-  const fetchImpl = fakeFetch(200);
+async function rerun({ dist, previousPath, status = 200 }) {
+  const fetchImpl = fakeFetch(status);
   const result = await run({ distDir: dist, previousPath, fetchImpl, keyCheck: async () => true });
   return { result, fetchImpl };
 }
 
-const announcedUrls = (fetchImpl) => JSON.parse(fetchImpl.calls[0].options.body).urlList;
+const announcedUrls = (fetchImpl) => fetchImpl.calls.flatMap((call) => JSON.parse(call.options.body).urlList);
+
+const batchSizes = (fetchImpl) => fetchImpl.calls.map((call) => JSON.parse(call.options.body).urlList.length);
 
 test('an edited page on an unchanged route is announced, even when its date was not bumped', async () => {
   const state = await announcedDist({
@@ -340,4 +342,39 @@ test('a removed route is not announced, because there is no page left to fetch',
 
   assert.deepEqual(result.removed, ['/gone']);
   assert.deepEqual(announcedUrls(fetchImpl), []);
+});
+
+test('a run with only removals records the new state instead of wedging on an empty submission', async () => {
+  const { dist, previousPath } = await announcedDist({ '/': '<html>home</html>', '/gone': '<html>gone</html>' });
+  await rm(join(dist, 'gone.html'), { force: true });
+
+  const first = await rerun({ dist, previousPath });
+  const second = await rerun({ dist, previousPath });
+
+  assert.equal(first.fetchImpl.calls.length, 0);
+  assert.equal(first.result.action, 'recorded');
+  assert.equal(second.result.action, 'skipped');
+  assert.equal(second.result.reason, 'unchanged');
+});
+
+test('a submission larger than one request is split, and the state is kept only when every part lands', async () => {
+  const pages = Object.fromEntries(Array.from({ length: 2501 }, (_, i) => [`/p${i}`, '<html>x</html>']));
+  const { dist, previousPath } = await announcedDist({ '/': '<html>home</html>' });
+  for (const [route, html] of Object.entries(pages)) await writePage(dist, route, html);
+
+  const { result, fetchImpl } = await rerun({ dist, previousPath });
+
+  assert.deepEqual(batchSizes(fetchImpl), [1000, 1000, 501]);
+  assert.equal(result.count, 2501);
+});
+
+test('a part that fails leaves the state untouched, so the next run announces the same pages again', async () => {
+  const { dist, previousPath } = await announcedDist({ '/': '<html>home</html>' });
+  await writePage(dist, '/fresh', '<html>new</html>');
+
+  const first = await rerun({ dist, previousPath, status: 500 });
+  const second = await rerun({ dist, previousPath });
+
+  assert.equal(first.result.action, 'error');
+  assert.deepEqual(announcedUrls(second.fetchImpl), ['https://meshin.co/fresh']);
 });

@@ -71,19 +71,19 @@ function scoreWithout(report, category, excluded) {
   return scored.reduce((total, ref) => total + ref.weight * (report.audits[ref.id].score ?? 0), 0) / weight;
 }
 
-export function categoryScore(report, category, route) {
-  const named = category === 'seo' && isNoindexByDesign(route);
+export function categoryScore(report, category, route, distDir) {
+  const named = category === 'seo' && isNoindexByDesign(route, distDir);
   const score = named ? scoreWithout(report, category, 'is-crawlable') : report.categories[category].score;
   return Math.round(score * 100);
 }
 
-function scoreTable(reports) {
+function scoreTable(reports, distDir) {
   const byRoute = new Map();
   for (const report of reports) {
     const path = new URL(report.finalUrl).pathname.replace(/index\.html$/, '').replace(/\.html$/, '') || '/';
     const entry = byRoute.get(path) ?? {};
     for (const category of CATEGORIES) {
-      entry[category] = [...(entry[category] ?? []), categoryScore(report, category, path)];
+      entry[category] = [...(entry[category] ?? []), categoryScore(report, category, path, distDir)];
     }
     entry.metrics ??= {};
     for (const [audit, data] of Object.entries(report.audits)) {
@@ -222,8 +222,8 @@ export async function phaseVerdict(phase, auditDir, distDir = process.env.LH_DIS
     phase,
     gate,
     expectedRoutes: auditableRoutes(distDir),
-    mobile: scoreTable(await readReports(join(auditDir, 'lh-mobile'))),
-    desktop: scoreTable(await readReports(join(auditDir, 'lh-desktop'))),
+    mobile: scoreTable(await readReports(join(auditDir, 'lh-mobile')), distDir),
+    desktop: scoreTable(await readReports(join(auditDir, 'lh-desktop')), distDir),
     budgets: await metricBudgets(),
     byteBudgets: byteBudgets(),
     generator: generatorRevision(join(auditDir, 'REPORT.md')),

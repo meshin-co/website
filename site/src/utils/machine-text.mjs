@@ -66,9 +66,14 @@ export function renderLlmsShard({ site, title, entries, from, to, nextUrl }) {
   return `# ${site}\n\n## ${title}, entries ${from}-${to}\n\n${body}\n\n---\n\n${closing}\n`;
 }
 
-export function renderLlmsFull({ site, sections }) {
-  const blocks = sections.map(renderCollectionSection);
-  return `# ${site}\n\n${blocks.join('\n\n')}\n`;
+export function renderLlmsFull({ site, sections, maxBytes = Infinity }) {
+  const whole = `# ${site}\n\n${sections.map(renderCollectionSection).join('\n\n')}\n`;
+  if (Buffer.byteLength(whole, 'utf8') <= maxBytes) return whole;
+
+  const pointers = sections.map(
+    ({ title, url, entries }) => `- [${title}](${url}): ${entries.length} entries, full body text of each.`
+  );
+  return `# ${site}\n\nThe corpus outgrew one file. Each collection carries the full body text of its entries.\n\n${pointers.join('\n')}\n`;
 }
 
 function toFeedItem(entry) {
