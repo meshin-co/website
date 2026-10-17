@@ -37,6 +37,10 @@ Serve `dist/` with a plain server that sends no headers and the gate reports 8 o
 missing header, every 301 and every 404, because the plain server knows nothing of `<route>.html`.
 Run it that way after changing the checks; a smoke test that cannot fail is decoration.
 
+The two `www` rows cannot be reached that way, because the plain server is not the apex. They are
+proven in `scripts/smoke-prod.test.mjs`, where `canonicalHostVerdict` fails a 200, a 302 and a 301
+to the wrong path.
+
     cd dist && python3 -m http.server 4344 --bind 127.0.0.1 &
     node scripts/run-smoke-prod.mjs http://127.0.0.1:4344 /tmp/planted.md
 

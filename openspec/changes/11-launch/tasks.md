@@ -17,9 +17,9 @@
 
 ## 2. Verify the flip
 
-- [x] 2.1 `npm run smoke:prod https://meshin.co` records 18 of 18 against the live origin, not the
-      gate server. Measured 2026-10-17 after the owner published: 18 of 18, written to
-      `audits/phase-5/smoke-prod.md`
+- [x] 2.1 `npm run smoke:prod https://meshin.co` passes against the live origin, not the gate
+      server. Measured 2026-10-17 after the owner published: 18 of 18, then 20 of 20 once the two
+      `www` rows were added. Written to `audits/phase-5/smoke-prod.md`
 
 ## 3. Calibration Gate
 
