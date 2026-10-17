@@ -190,3 +190,18 @@ test('a missing git stops the gate outright instead of blaming every hash in aud
     process.env.PATH = path;
   }
 });
+
+test('a report that says FAIL is not evidence, however well it names the commit it came from', () => {
+  const failing = '# Phase 9 report\n\nGenerated-from: abc1234\n\nResult: FAIL\n';
+  const passing = '# Phase 9 report\n\nGenerated-from: abc1234\n\nResult: PASS\n';
+  const commit = () => 'commit';
+
+  assert.deepEqual(provenanceFindings([{ path: 'audits/phase-9/REPORT.md', text: passing }], commit), []);
+  assert.deepEqual(provenanceFindings([{ path: 'audits/phase-9/REPORT.md', text: failing }], commit), [
+    {
+      path: 'audits/phase-9/REPORT.md',
+      rule: 'failing-report',
+      detail: 'reads "Result: FAIL": a report committed as evidence records a run that passed',
+    },
+  ]);
+});

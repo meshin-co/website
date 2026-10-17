@@ -2,7 +2,16 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-import { FAMILIES, label, manifestFamilies, provesOf, stalePending, tally, unprovenGates } from './mutation-smoke.mjs';
+import {
+  exitCodeFor,
+  FAMILIES,
+  label,
+  manifestFamilies,
+  provesOf,
+  stalePending,
+  tally,
+  unprovenGates,
+} from './mutation-smoke.mjs';
 import { PENDING } from './mutation-pending.mjs';
 import { SPECIMENS } from './mutation-specimens.mjs';
 
@@ -111,4 +120,18 @@ test('a failed family is named in the tally', () => {
   const results = [proven('a'), { id: 'b', ok: false, reason: 'guard stayed green on the specimen' }];
   assert.equal(tally(results, 2, 30), 'mutation smoke: 1/2 families proven, 1 FAILED in 30s');
   assert.equal(label(results[1]), 'FAIL');
+});
+
+test('a partial run exits with its own code, so a skipped family cannot read as a proven one', () => {
+  const proven = [{ id: 'a', ok: true }];
+  const skippedOne = [
+    { id: 'a', ok: true },
+    { id: 'b', ok: true, skipped: true },
+  ];
+  const failedOne = [{ id: 'a', ok: false, reason: 'stayed green' }];
+
+  assert.equal(exitCodeFor(proven), 0);
+  assert.equal(exitCodeFor(skippedOne), 2);
+  assert.equal(exitCodeFor(failedOne), 1);
+  assert.equal(exitCodeFor([...skippedOne, ...failedOne]), 1);
 });

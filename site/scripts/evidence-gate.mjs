@@ -41,9 +41,19 @@ function revisionFinding(path, provenance, objectType) {
   return type === 'commit' ? [] : [{ path, rule: 'provenance-not-a-commit', detail: notACommit(token, type) }];
 }
 
+const FAILING_RESULT = /^Result: FAIL$/m;
+
 export function provenanceFindings(artefacts, objectType) {
   return artefacts.flatMap(({ path, text }) => {
     if (!ARTEFACT.test(path)) return [];
+    if (FAILING_RESULT.test(text))
+      return [
+        {
+          path,
+          rule: 'failing-report',
+          detail: 'reads "Result: FAIL": a report committed as evidence records a run that passed',
+        },
+      ];
     const provenance = PROVENANCE.exec(text)?.[1]?.trim();
     if (!provenance)
       return [

@@ -116,6 +116,7 @@ export const FAMILIES = [
   { id: 'generated-report-without-provenance', kind: 'specimen', specimen: 'evidence' },
   { id: 'report-revision-that-is-not-a-commit', kind: 'specimen', specimen: 'evidenceRevisionNotACommit' },
   { id: 'report-prose-provenance-off-the-allow-list', kind: 'specimen', specimen: 'evidenceProseOffAllowList' },
+  { id: 'committed-report-that-says-fail', kind: 'specimen', specimen: 'evidenceFailingReport' },
   { id: 'spec-requirement-without-a-scenario', kind: 'specimen', specimen: 'specScenarioMissing' },
   { id: 'spec-validator-that-checked-nothing', kind: 'specimen', specimen: 'specValidatorSawNothing' },
   { id: 'spec-the-validator-never-reads', kind: 'specimen', specimen: 'specHiddenFromValidator' },
@@ -584,6 +585,12 @@ export function label(result) {
   return result.ok ? 'ok  ' : 'FAIL';
 }
 
+export function exitCodeFor(results) {
+  const families = results.filter((result) => result.id !== 'baseline-green-copy');
+  if (families.some((result) => !result.ok && !result.skipped)) return 1;
+  return families.some((result) => result.skipped) ? 2 : 0;
+}
+
 export function tally(results, familyCount, seconds) {
   const families = results.filter((result) => result.id !== 'baseline-green-copy');
   const proven = families.filter((result) => result.ok && !result.skipped).length;
@@ -629,7 +636,7 @@ async function main() {
   const failed = results.filter((result) => !result.ok && !result.skipped);
   if (failed.length > 0 || process.env.MUTATION_SMOKE_KEEP) console.log(`workdir kept for inspection: ${work}`);
   else await rm(work, { recursive: true, force: true });
-  process.exitCode = failed.length > 0 ? 1 : 0;
+  process.exitCode = exitCodeFor(results);
 }
 
 if (invokedDirectly(import.meta.filename, process.argv[1])) {
