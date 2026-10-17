@@ -1,6 +1,6 @@
 # Production smoke
 
-Generated-from: 10ff0ed
+Generated-from: 2460c4e
 
 Measured against `https://meshin.co` by `npm run smoke:prod`. Every row is one request; nothing
 here is read from a config file.
@@ -27,3 +27,5 @@ failures: 0
 | route /rss.xml | pass | 200 |
 | route /feed.json | pass | 200 |
 | route /.well-known/security.txt | pass | 200 |
+| www redirect / | pass | 301 to https://meshin.co/ |
+| www redirect /about | pass | 301 to https://meshin.co/about |

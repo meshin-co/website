@@ -1,11 +1,13 @@
 ## 1. Owner access
 
-- [ ] 1.1 Point `www` at the apex with a 301. The zone holds no `www` record at all, so nothing
-      resolves there and nothing is duplicated. The deploy token now carries `Zone → DNS → Edit`,
-      which is enough to create the record but not the rule: `zones/<id>/rulesets` answers 403, and
-      a redirect rule needs `Zone → Single Redirect → Edit` (Cloudflare's API-token permission
-      reference), and a community thread reports that it also needs `Account → Rulesets → Edit`.
-      Creating the record without the rule would serve the whole site twice
+- [x] 1.1 `www` answers 301 to the apex. The owner added `Zone → Single Redirect → Edit` on
+      2026-10-17; `Account → Rulesets → Edit` turned out not to be needed. A redirect rule from a
+      Cloudflare template already existed but matched on the `https://` scheme and dropped the
+      query string, and no `www` record existed for it to fire on. The record is a proxied CNAME to
+      the apex, and the rule now matches `http.host eq "www.meshin.co"` with the query string kept.
+      Measured: `http://www.meshin.co/`, `https://www.meshin.co/`, `/about` and `/blog?utm_source=x`
+      all answer 301 to the same path on the apex, and `npm run smoke:prod https://meshin.co`
+      records 20 of 20
 - [ ] 1.2 Submit the sitemap to Google Search Console and Bing, add both verifications and the IndexNow key
 - [ ] 1.4 Point the LinkedIn person and company pages at the site. The site's half is done: the
       home page ships `https://www.linkedin.com/in/meshin/` and the company page in its JSON-LD
@@ -15,9 +17,9 @@
 
 ## 2. Verify the flip
 
-- [x] 2.1 `npm run smoke:prod https://meshin.co` records 18 of 18 against the live origin, not the
-      gate server. Measured 2026-10-17 after the owner published: 18 of 18, written to
-      `audits/phase-5/smoke-prod.md`
+- [x] 2.1 `npm run smoke:prod https://meshin.co` passes against the live origin, not the gate
+      server. Measured 2026-10-17 after the owner published: 18 of 18, then 20 of 20 once the two
+      `www` rows were added. Written to `audits/phase-5/smoke-prod.md`
 
 ## 3. Calibration Gate
 

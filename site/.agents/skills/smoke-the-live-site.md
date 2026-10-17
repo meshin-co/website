@@ -27,12 +27,19 @@ form.
 - Ten canonical routes and six machine surfaces answer 200. A 301 or 308 fails: after the flip a
   canonical route lands directly, and a redirect means the apex or the trailing-slash rule is
   wrong.
+- `www` answers 301 to the apex, for `/` and for `/about`, with the path kept. Only when the
+  origin is the real host: a rehearsal against `127.0.0.1` has no `www` to ask, so it reports 18
+  of 18 while production reports 20 of 20.
 
 ## Proven able to fail
 
 Serve `dist/` with a plain server that sends no headers and the gate reports 8 of 18, naming every
 missing header, every 301 and every 404, because the plain server knows nothing of `<route>.html`.
 Run it that way after changing the checks; a smoke test that cannot fail is decoration.
+
+The two `www` rows cannot be reached that way, because the plain server is not the apex. They are
+proven in `scripts/smoke-prod.test.mjs`, where `canonicalHostVerdict` fails a 200, a 302 and a 301
+to the wrong path.
 
     cd dist && python3 -m http.server 4344 --bind 127.0.0.1 &
     node scripts/run-smoke-prod.mjs http://127.0.0.1:4344 /tmp/planted.md

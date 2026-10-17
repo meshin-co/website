@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { checkHeaders, checkNoindex, renderSmoke, verdictFor } from './smoke-prod.mjs';
+import { canonicalHostVerdict, checkHeaders, checkNoindex, renderSmoke, verdictFor } from './smoke-prod.mjs';
 
 test('a response missing a required security header is a failure, naming the header', () => {
   const finding = checkHeaders({ 'content-security-policy': "default-src 'self'" });
@@ -65,4 +65,27 @@ test('the report prints the origin it measured and every failing row', () => {
 
 test('the smoke report names the revision it was run from', () => {
   assert.match(renderSmoke('https://meshin.co', [], 'abc1234'), /^Generated-from: abc1234$/m);
+});
+
+test('the www host must answer a 301 to the apex, keeping the path, or the site has two addresses', () => {
+  assert.deepEqual(
+    canonicalHostVerdict({ status: 301, location: 'https://meshin.co/about' }, 'https://meshin.co', '/about'),
+    {
+      check: 'www redirect /about',
+      status: 'pass',
+      detail: '301 to https://meshin.co/about',
+    }
+  );
+  assert.equal(
+    canonicalHostVerdict({ status: 200, location: undefined }, 'https://meshin.co', '/about').status,
+    'fail'
+  );
+  assert.equal(
+    canonicalHostVerdict({ status: 301, location: 'https://meshin.co/' }, 'https://meshin.co', '/about').status,
+    'fail'
+  );
+  assert.equal(
+    canonicalHostVerdict({ status: 302, location: 'https://meshin.co/about' }, 'https://meshin.co', '/about').status,
+    'fail'
+  );
 });
