@@ -240,3 +240,18 @@ test('a report whose revision git cannot name is refused, naming the file it was
   assert.match(refusal.message, /inside a git checkout/);
   await assert.rejects(() => readFile(join(auditDir, 'REPORT.md')), { code: 'ENOENT' });
 });
+
+test('the report names the pages whose exemption the build itself justifies, not a list that can go stale', async () => {
+  const root = await fixtureRoot(['/', '/search']);
+  const auditDir = join(root, 'audits');
+  await writeRuns(join(auditDir, 'lh-mobile'), '/');
+  await writeRuns(join(auditDir, 'lh-mobile'), '/search', [{ crawlable: 0 }, { crawlable: 0 }, { crawlable: 0 }]);
+  await writeRuns(join(auditDir, 'lh-desktop'), '/');
+  await writeRuns(join(auditDir, 'lh-desktop'), '/search', [{ crawlable: 0 }, { crawlable: 0 }, { crawlable: 0 }]);
+
+  const { failed, report } = await runMain(root, auditDir);
+
+  assert.equal(failed, false);
+  assert.match(report, /SEO on `\/search` is scored without/);
+  assert.ok(!report.includes('`/` is scored without'));
+});

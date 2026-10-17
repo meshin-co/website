@@ -130,10 +130,12 @@ export function renderReport({
   budgets = {},
   byteBudgets: byteBudgetLimits = {},
   generator = 'unknown',
+  distDir,
 }) {
   if (!Array.isArray(expectedRoutes)) {
     throw new Error('renderReport: expectedRoutes is required, derived independently of gate-routes.json');
   }
+  const exempted = expectedRoutes.filter((route) => isNoindexByDesign(route, distDir));
   const failures = [];
   if (expectedRoutes.length === 0) failures.push('no routes to audit: the built html yielded an empty Lighthouse set');
   for (const [form, rows] of [
@@ -169,7 +171,7 @@ export function renderReport({
     '',
     `Asserted: ${assertedFamilies(gate).join(', ')}`,
     '',
-    `SEO on ${NOINDEX_BY_DESIGN.map((route) => `\`${route}\``).join(', ')} is scored without \`is-crawlable\`: noindex by design, named in \`scripts/lh-routes.cjs\`.`,
+    `SEO on ${exempted.map((route) => `\`${route}\``).join(', ')} is scored without \`is-crawlable\`: the built page carries \`noindex\`, so the exemption ends the day the page becomes indexable.`,
     '',
     `Lighthouse scope: ${expectedRoutes.length} route(s) expected`,
     '',
@@ -227,6 +229,7 @@ export async function phaseVerdict(phase, auditDir, distDir = process.env.LH_DIS
     budgets: await metricBudgets(),
     byteBudgets: byteBudgets(),
     generator: generatorRevision(join(auditDir, 'REPORT.md')),
+    distDir,
   });
 }
 
