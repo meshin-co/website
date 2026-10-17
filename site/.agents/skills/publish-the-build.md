@@ -60,7 +60,7 @@ flowchart LR
     A["merge to main"] --> B["ci builds once<br/>and gates that build"]
     B --> C["dist kept until it expires<br/>(retention-days in ci.yml)"]
     C -.-> D{"Publish Live:<br/>empty ci_run = newest green run"}
-    D --> G["refuse if main moved on<br/>and a build file changed"]
+    D --> G["refuse if main moved on<br/>in anything but prose"]
     G --> H["Pages, smoke, IndexNow"]
 ```
 

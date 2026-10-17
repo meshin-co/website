@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       ci_run:
-        description: Leave empty to put the newest fully tested build of main live. A CI run number serves that run's stored files instead - refused if main has changed any build file since, so it cannot undo a release that followed a source change.
+        description: Leave empty to put the newest fully tested build of main live. A CI run number serves that run's stored files instead - refused once main has changed any file that is not prose, workflows and tests included, so it cannot undo a release.
         required: false
 
 defaults:
