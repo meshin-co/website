@@ -14,6 +14,15 @@ export const evidenceSpecimens = ({ addUntrackedFile }) => ({
         `# Specimen\n\nGenerated-from: ${headTree(copySite)}\n`
       ),
   },
+  evidenceFailingReport: {
+    gate: 'gate:evidence',
+    token: 'failing-report audits/phase-zz/REPORT.md',
+    plant: (copySite) =>
+      addUntrackedFile(
+        join(copySite, '../audits/phase-zz/REPORT.md'),
+        `# Report\n\nGenerated-from: ${headTree(copySite)}\n\nResult: FAIL\n`
+      ),
+  },
   evidenceProseOffAllowList: {
     gate: 'gate:evidence',
     token: 'provenance-not-a-hash audits/phase-zz/REPORT.md',

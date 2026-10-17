@@ -64,9 +64,9 @@ need it.
 3. Add a `FAMILIES` entry with the right `kind` and the exact failure-message token(s) the guard
    prints — `expectedFailure()` fails the family if the guard's output does not contain every
    token, or if the guard exited zero.
-4. Run `npm run test:smoke` (or `--fast` to skip the slow families that need a full build or a
-   browser). Confirm the new family is the only one that changes when you delete the guard: that is
-   proof it is load-bearing, not a decoration.
+4. Run `npm run test:smoke` (`--fast` skips the slow families and exits 2, never 0, so a partial
+   proof cannot read as a full one). Confirm the new family is the only one that changes when you
+   delete the guard: that is proof it is load-bearing, not a decoration.
 
 ## Trap
 
