@@ -2,11 +2,11 @@
 
 Generated from raw check output by `scripts/report.mjs`. Do not hand-edit.
 
-Generated-from: e80ab0a
+Generated-from: a372093
 
 Asserted: lighthouse scores, lighthouse metric budgets, byte budgets
 
-SEO on `/404`, `/search`, `/blog/category/executive`, `/case-studies`, `/blog/page/*`, `/blog/category/*/page/*`, `/blog/tag/*/page/*` is scored without `is-crawlable`: noindex by design, named in `scripts/lh-routes.cjs`.
+SEO on `/404`, `/case-studies`, `/search` is scored without `is-crawlable`: the built page carries `noindex`, so the exemption ends the day the page becomes indexable.
 
 Lighthouse scope: 26 route(s) expected
 
