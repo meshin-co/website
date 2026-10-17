@@ -60,14 +60,14 @@ flowchart LR
     A["merge to main"] --> B["ci builds once<br/>and gates that build"]
     B --> C["dist kept until it expires<br/>(retention-days in ci.yml)"]
     C -.-> D{"Publish Live:<br/>empty ci_run = newest green run"}
-    D --> G["refuse if main moved on<br/>and a build file changed"]
+    D --> G["refuse if main moved on<br/>in anything but prose"]
     G --> H["Pages, smoke, IndexNow"]
 ```
 
-Prose commits never block. The refusal applies to a named run too, so `ci_run` re-publishes rather
-than undoes: an earlier build is refused once a build file changed. Reverting a release means
-reverting on `main`, gating that and publishing it, which keeps the live bytes equal to `main`;
-row G42 in `docs/plan/reference/known-gaps.md` records the cost. Run workflow is the decision.
+Only prose never blocks — a workflow or test commit does, measured on 2026-10-17 when a press
+refused on `.github/workflows/publish-live.yml` alone. The refusal applies to a named run too, so
+`ci_run` re-publishes rather than undoes. Reverting a release means reverting on `main`, gating
+that and publishing it; row G42 in `docs/plan/reference/known-gaps.md` records the cost.
 
 ## After deploying
 

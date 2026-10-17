@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import { blockingFiles, pickGatedRun } from './publish-target.mjs';
+import { PROSE_DIRS } from './build-surface.mjs';
 
 test('the newest green ci run on main that carries a dist is the publishable one', () => {
   const runs = [
@@ -46,4 +47,12 @@ test('source, config or content committed after the gated run blocks publishing'
     'site/src/data/post/a-post.md',
     '.github/workflows/ci.yml',
   ]);
+});
+
+test('a workflow-only commit blocks a publish, because it can change how the bytes are shipped', () => {
+  assert.deepEqual(blockingFiles(['.github/workflows/publish-live.yml']), ['.github/workflows/publish-live.yml']);
+});
+
+test('the prose directories are the ones the build surface names, so the two guards cannot drift apart', () => {
+  for (const dir of PROSE_DIRS) assert.deepEqual(blockingFiles([`${dir}a.txt`]), []);
 });

@@ -1,4 +1,4 @@
-const PROSE_DIRS = ['docs/', 'audits/', 'site/.agents/', 'openspec/', 'investigation/'];
+import { PROSE_DIRS } from './build-surface.mjs';
 
 const isProse = (path) =>
   !path.startsWith('site/src/') && (path.endsWith('.md') || PROSE_DIRS.some((dir) => path.startsWith(dir)));
