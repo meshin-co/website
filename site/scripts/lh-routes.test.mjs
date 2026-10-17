@@ -308,11 +308,13 @@ test('a page that stops being noindex is audited for crawlability again, with no
   const dist = mkdtempSync(join(tmpdir(), 'lh-routes-'));
   writeFileSync(
     join(dist, 'case-studies.html'),
-    '<html><head><meta name="robots" content="noindex, follow"></head></html>'
+    '<html><head><meta content="noindex, follow" name="robots"></head></html>'
   );
+  writeFileSync(join(dist, 'search.html'), '<html><head><meta name="robots" content="noindex, follow"></head></html>');
   writeFileSync(join(dist, 'about.html'), '<html><head></head></html>');
 
   assert.equal(isNoindexByDesign('/case-studies', dist), true);
+  assert.equal(isNoindexByDesign('/search', dist), true);
   assert.equal(isNoindexByDesign('/about', dist), false);
 
   writeFileSync(join(dist, 'case-studies.html'), '<html><head></head><body>a case study</body></html>');

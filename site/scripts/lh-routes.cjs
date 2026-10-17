@@ -31,7 +31,8 @@ function canonicalRoute(route) {
   return route.length > 1 && route.endsWith('/') ? route.slice(0, -1) : route;
 }
 
-const ROBOTS_NOINDEX = /<meta[^>]+name=["']robots["'][^>]+content=["'][^"']*noindex/i;
+const ROBOTS_META = /<meta\b[^>]*\bname=["']robots["'][^>]*>/gi;
+const CONTENT_NOINDEX = /\bcontent=["'][^"']*\bnoindex\b/i;
 
 function builtPage(distDir, route) {
   const base = canonicalRoute(route).slice(1);
@@ -43,7 +44,7 @@ function builtPage(distDir, route) {
 
 function isNoindexByDesign(route, distDir) {
   const html = distDir ? builtPage(distDir, route) : null;
-  if (html !== null) return ROBOTS_NOINDEX.test(html);
+  if (html !== null) return [...html.matchAll(ROBOTS_META)].some(([tag]) => CONTENT_NOINDEX.test(tag));
   return NOINDEX_ROUTE_MATCHER.test(canonicalRoute(route));
 }
 
