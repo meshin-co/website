@@ -171,8 +171,12 @@ export function renderReport({
     '',
     `Asserted: ${assertedFamilies(gate).join(', ')}`,
     '',
-    `SEO on ${exempted.map((route) => `\`${route}\``).join(', ')} is scored without \`is-crawlable\`: the built page carries \`noindex\`, so the exemption ends the day the page becomes indexable.`,
-    '',
+    ...(exempted.length === 0
+      ? []
+      : [
+          `SEO on ${exempted.map((route) => `\`${route}\``).join(', ')} is scored without \`is-crawlable\`: the built page carries \`noindex\`, so the exemption ends the day the page becomes indexable.`,
+          '',
+        ]),
     `Lighthouse scope: ${expectedRoutes.length} route(s) expected`,
     '',
     `Result: ${failures.length === 0 ? 'PASS' : 'FAIL'}`,

@@ -409,3 +409,16 @@ test('the rendered report carries the revision it was generated from', () => {
   assert.match(markdown, /Generated-from: abc1234/);
   assert.match(markdown, /Asserted: .*byte budgets/);
 });
+
+test('a build where no page is noindex says nothing about exemptions, instead of naming an empty set', async () => {
+  const { markdown } = renderReport({
+    phase: '1',
+    gate,
+    expectedRoutes: ['/'],
+    mobile: [row('/', perfect)],
+    desktop: [row('/', perfect)],
+    distDir: await mkdtemp(join(tmpdir(), 'report-no-noindex-')),
+  });
+
+  assert.ok(!markdown.includes('is scored without'));
+});
