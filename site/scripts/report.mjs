@@ -108,25 +108,22 @@ function publishableRevision({ head, mergeBase, headIsOnMain }) {
 const git = (cwd, ...args) =>
   execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
 
-const gitSucceeds = (cwd, ...args) => {
+const gitOrUndefined = (cwd, ...args) => {
   try {
-    git(cwd, ...args);
-    return true;
+    return git(cwd, ...args);
   } catch {
-    return false;
+    return undefined;
   }
 };
 
 export function generatorRevision(stampedFile, { integrationBranch = 'origin/main', cwd = process.cwd() } = {}) {
   try {
     const head = git(cwd, 'rev-parse', '--short', 'HEAD');
-    const reachesBranch = gitSucceeds(cwd, 'rev-parse', '--verify', `${integrationBranch}^{commit}`);
+    const sharedAncestor = gitOrUndefined(cwd, 'merge-base', integrationBranch, 'HEAD');
     return publishableRevision({
       head,
-      mergeBase: reachesBranch
-        ? git(cwd, 'rev-parse', '--short', git(cwd, 'merge-base', integrationBranch, 'HEAD'))
-        : undefined,
-      headIsOnMain: reachesBranch && gitSucceeds(cwd, 'merge-base', '--is-ancestor', 'HEAD', integrationBranch),
+      mergeBase: sharedAncestor === undefined ? undefined : git(cwd, 'rev-parse', '--short', sharedAncestor),
+      headIsOnMain: gitOrUndefined(cwd, 'merge-base', '--is-ancestor', 'HEAD', integrationBranch) !== undefined,
     });
   } catch (error) {
     const reason = error.code === 'ENOENT' ? 'git is not on PATH' : String(error.stderr ?? '').trim() || error.message;
