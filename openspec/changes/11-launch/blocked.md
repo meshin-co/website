@@ -1,1 +1,0 @@
-G35 — every remaining step needs owner access to Cloudflare, the search consoles and LinkedIn, plus the facts in sections 4 to 8 of docs/COPY-CHECKLIST.md. Imported verbatim from docs/plan/phases/phase-5-launch.next.md.

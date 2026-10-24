@@ -47,5 +47,5 @@ to the wrong path.
 ## When the flip happens
 
 Run it against the production URL immediately, commit the artifact, and tick the matching box in
-`openspec/changes/11-launch/tasks.md`. CG-5 is not closed until the artifact records a pass
+`openspec/changes/archive/2026-10-24-11-launch/tasks.md`. CG-5 is not closed until the artifact records a pass
 against `https://meshin.co`.

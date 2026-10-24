@@ -1,6 +1,6 @@
 # Launch Checklist (Phase 5)
 
-The plan of record is `openspec/changes/11-launch/proposal.md`. CG-5 runs against the production
+The plan of record is `openspec/changes/archive/2026-10-24-11-launch/proposal.md`. CG-5 runs against the production
 URL, not a preview. Nothing here happens before 4.5b is green.
 
 ## Before the flip
