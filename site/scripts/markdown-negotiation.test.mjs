@@ -89,9 +89,9 @@ test('a route with no sidecar falls back to the page rather than a 404', async (
   assert.equal(response.headers.get('content-type'), 'text/html');
 });
 
-test('a request that is not a GET is never rewritten', async () => {
+test('a method that is not a read is never rewritten', async () => {
   const response = await worker.fetch(
-    new Request('https://example.com/about', { method: 'HEAD', headers: { accept: 'text/markdown' } }),
+    new Request('https://example.com/about', { method: 'POST', headers: { accept: 'text/markdown' } }),
     { ASSETS: assets(SITE) }
   );
 
@@ -112,6 +112,19 @@ test('an asset binding that throws serves the site instead of an outage', async 
 
   assert.equal(response.status, 200);
   assert.equal(await response.text(), '<html>home</html>');
+});
+
+test('HEAD describes what GET would send, so the two never disagree', async () => {
+  const env = { ASSETS: assets(SITE) };
+
+  const response = await worker.fetch(
+    new Request('https://meshin.co/', { method: 'HEAD', headers: { accept: 'text/markdown' } }),
+    env
+  );
+
+  assert.equal(response.headers.get('content-type'), 'text/markdown; charset=utf-8');
+  assert.equal(response.headers.get('content-location'), '/index.md');
+  assert.equal(await response.text(), '');
 });
 
 test('the build ships the handler byte for byte, under the name Pages runs', async () => {

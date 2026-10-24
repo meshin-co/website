@@ -1,3 +1,4 @@
+const NEGOTIABLE = new Set(['GET', 'HEAD']);
 const MARKDOWN_REQUESTED = /(^|,)\s*text\/markdown\s*(;|$|,)/i;
 const HAS_EXTENSION = /\.[^/]+$/;
 
@@ -20,13 +21,13 @@ async function markdownResponse(request, env) {
   headers.set('content-type', 'text/markdown; charset=utf-8');
   headers.set('content-location', sidecar);
   headers.append('vary', 'Accept');
-  return new Response(response.body, { status: response.status, headers });
+  return new Response(request.method === 'HEAD' ? null : response.body, { status: response.status, headers });
 }
 
 export default {
   async fetch(request, env) {
     try {
-      if (request.method === 'GET' && wantsMarkdown(request.headers.get('accept'))) {
+      if (NEGOTIABLE.has(request.method) && wantsMarkdown(request.headers.get('accept'))) {
         const markdown = await markdownResponse(request, env);
         if (markdown !== undefined) return markdown;
       }
