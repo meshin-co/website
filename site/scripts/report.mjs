@@ -100,31 +100,33 @@ function scoreTable(reports, distDir) {
   }));
 }
 
-export function publishableRevision({ head, mergeBase, headIsOnMain }) {
+function publishableRevision({ head, mergeBase, headIsOnMain }) {
   if (headIsOnMain || mergeBase === undefined) return head;
   return mergeBase;
 }
 
-const git = (...args) => execFileSync('git', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+const git = (cwd, ...args) =>
+  execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
 
-const gitOrUndefined = (...args) => {
+const gitSucceeds = (cwd, ...args) => {
   try {
-    return git(...args);
+    git(cwd, ...args);
+    return true;
   } catch {
-    return undefined;
+    return false;
   }
 };
 
-export function generatorRevision(stampedFile, integrationBranch = 'origin/main') {
+export function generatorRevision(stampedFile, { integrationBranch = 'origin/main', cwd = process.cwd() } = {}) {
   try {
-    const head = git('rev-parse', '--short', 'HEAD');
-    const mergeBase =
-      gitOrUndefined('merge-base', '--fork-point', integrationBranch, 'HEAD') ??
-      gitOrUndefined('merge-base', integrationBranch, 'HEAD');
+    const head = git(cwd, 'rev-parse', '--short', 'HEAD');
+    const reachesBranch = gitSucceeds(cwd, 'rev-parse', '--verify', `${integrationBranch}^{commit}`);
     return publishableRevision({
       head,
-      mergeBase: mergeBase === undefined ? undefined : git('rev-parse', '--short', mergeBase),
-      headIsOnMain: gitOrUndefined('merge-base', '--is-ancestor', 'HEAD', integrationBranch) !== undefined,
+      mergeBase: reachesBranch
+        ? git(cwd, 'rev-parse', '--short', git(cwd, 'merge-base', integrationBranch, 'HEAD'))
+        : undefined,
+      headIsOnMain: reachesBranch && gitSucceeds(cwd, 'merge-base', '--is-ancestor', 'HEAD', integrationBranch),
     });
   } catch (error) {
     const reason = error.code === 'ENOENT' ? 'git is not on PATH' : String(error.stderr ?? '').trim() || error.message;
