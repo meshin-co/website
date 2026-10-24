@@ -1,7 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import worker, { markdownSidecar, wantsMarkdown } from '../public/_worker.js';
+import { readFile } from 'node:fs/promises';
+import { mkdtemp } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+
+import worker, { markdownSidecar, wantsMarkdown } from './markdown-negotiation.mjs';
+import { writeEdgeHandler } from './gen-edge-worker.mjs';
 
 const assets = (files) => ({
   fetch: async (request) => {
@@ -106,4 +112,16 @@ test('an asset binding that throws serves the site instead of an outage', async 
 
   assert.equal(response.status, 200);
   assert.equal(await response.text(), '<html>home</html>');
+});
+
+test('the build ships the handler byte for byte, under the name Pages runs', async () => {
+  const dist = await mkdtemp(join(tmpdir(), 'edge-worker-'));
+
+  const written = await writeEdgeHandler(dist);
+
+  assert.equal(written, join(dist, '_worker.js'));
+  assert.equal(
+    await readFile(written, 'utf8'),
+    await readFile(new URL('./markdown-negotiation.mjs', import.meta.url), 'utf8')
+  );
 });

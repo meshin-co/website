@@ -69,7 +69,8 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
   `site/scripts/third-party.mjs` does not declare free, and on a page whose analytics copy
   disagrees with the beacon the build ships, in either direction. Plausible was removed under this rule on 2026-10-14.
 - No contact form, no mail sending, no newsletter anywhere. `/contact` is an email address plus a
-  Cal.com button. Exactly one piece of edge code exists, `site/public/_worker.js` (L60): it answers
+  Cal.com button. Exactly one piece of edge code exists, `site/scripts/markdown-negotiation.mjs`, copied into the
+  build as `dist/_worker.js` (L60): it answers
   `Accept: text/markdown` with the `.md` sidecar the build already writes and passes everything
   else through. No form, no state, no third party, and a failure inside it falls through to the
   page. `npm run gate:agents` refuses a build without it; `npm run smoke:prod` proves it live.

@@ -56,6 +56,9 @@ The negotiation itself is not observable here: the gate server serves files, it 
 edge handler. `npm run smoke:prod` asks the live home page for markdown, which is the only proof
 that exists, and it is check 21 of 21.
 
+The handler itself is `scripts/markdown-negotiation.mjs`, copied verbatim by
+`scripts/gen-edge-worker.mjs` so that the code Pages runs is the code the tests drive.
+
 ## Before adding a fifth interface
 
 Read the matching file in `.agents/skills/ai-agent-readiness/`, which covers twenty protocols and

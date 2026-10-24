@@ -16,8 +16,8 @@ capability on 2026-10-24.
 
 ## What changes
 
-**One bounded piece of edge code ships in the build.** `site/public/_worker.js` becomes
-`dist/_worker.js`, which Cloudflare Pages runs in front of the static assets. When a `GET` carries
+**One bounded piece of edge code ships in the build.** `site/scripts/markdown-negotiation.mjs` is copied into
+the build as `dist/_worker.js`, which Cloudflare Pages runs in front of the static assets. When a `GET` carries
 `text/markdown` in `Accept`, it serves the sidecar the build already wrote for that route, with
 `content-type: text/markdown; charset=utf-8`, `content-location` naming the sidecar, and `Accept`
 added to `Vary`. Everything else passes through untouched.

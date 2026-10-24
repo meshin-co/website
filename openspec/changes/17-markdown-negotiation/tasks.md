@@ -2,7 +2,7 @@
 
 ## 1. Serve markdown from the same URL
 
-- [x] 1.1 Ship `site/public/_worker.js` in the build: on a `GET` whose `Accept` names
+- [x] 1.1 Ship `site/scripts/markdown-negotiation.mjs` as `dist/_worker.js`: on a `GET` whose `Accept` names
       `text/markdown`, serve the route's `.md` sidecar with `text/markdown; charset=utf-8`,
       `content-location`, and `Accept` added to `Vary`
 - [x] 1.2 Map routes to sidecars the way the build writes them, including `/` to `/index.md` and a
