@@ -75,6 +75,6 @@ that and publishing it; row G42 in `docs/plan/reference/known-gaps.md` records t
 npm run smoke:prod <url>
 ```
 
-18 live requests against any origin — status, headers, the per-route verdict — plus 2 `www` 301
+17 live requests against any origin — status, headers, the per-route verdict — plus 2 `www` 301
 checks when that origin is the apex. A green local gate says nothing about what Cloudflare serves:
 the headers come from `dist/_headers`, which only the live response can confirm.

@@ -18,6 +18,7 @@ what the family is evidence for: `build`, or the `gate:*` script that the family
 | `pure`            | `proves`, `check`                              | a named pure function (`semantic-title`) rejects a bad input and accepts a good one          |
 | `pagination`      | `proves`, `fixture`                            | pagination behavior at a real 13th live post                                                 |
 | `specimen`        | `specimen`                                     | the real `gate:*` npm script is green on the copy, red on the planted specimen, green again  |
+| `lh-record`       | `proves`                                       | `lh:record` refuses reports another tree measured, in its own repo (`lh-record-family.mjs`)  |
 
 A `pagination` family takes an optional `scope` (`category` or `tag`; none builds the blog hub), and
 `manifestFamilies()` throws on any other value. The tag family's head, control and sitemap checks are
@@ -53,8 +54,7 @@ that now has a family, or for a script that no longer exists, is stale and must 
 `finally` block whether the run passed or threw. The specimen never survives past its own
 family; the next family always starts from the pristine baseline copy. `specimen` families restore
 `dist` from a snapshot of the baseline build before they run, so an earlier family's failed build cannot
-poison them, and the copy keeps its `.git` because `gate:docs`, `gate:machine` and the plant helper
-need it.
+poison them, and the copy keeps its `.git` because `gate:docs`, `gate:machine` and the plant helper need it.
 
 ## Proving RED
 

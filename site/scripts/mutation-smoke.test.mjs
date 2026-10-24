@@ -51,6 +51,14 @@ test('the free pass is gone: a family kind that runs nothing is rejected', () =>
   assert.throws(() => manifestFamilies([{ id: 'x', kind: 'unit-covered' }]), /unknown kind unit-covered/);
 });
 
+test('a lighthouse record family must say what it proves, and the kind is known at collection', () => {
+  assert.throws(() => manifestFamilies([{ id: 'x', kind: 'lh-record' }]), /family x \(lh-record\) is missing proves/);
+  assert.deepEqual(
+    manifestFamilies([{ id: 'x', kind: 'lh-record', proves: 'lh:record' }]).map((family) => provesOf(family)),
+    ['lh:record']
+  );
+});
+
 test('a family that does not say which gate it proves is rejected, because the coverage check reads that field', () => {
   assert.throws(
     () => manifestFamilies([{ id: 'x', kind: 'gate', gate: 'budget', tokens: ['OVER BUDGET'] }]),

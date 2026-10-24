@@ -17,5 +17,6 @@ audits/phase-ci/
 audits/phase-local/
 audits/*/lh-mobile/
 audits/*/lh-desktop/
+audits/*/lh-measured.json
 audits/*/baseline/
 audits/**/*.json.gz

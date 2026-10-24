@@ -1,8 +1,8 @@
 # Smoke the Live Site
 
-`npm run smoke:prod <origin>` makes 18 real requests against a running origin and writes
-`audits/phase-5/smoke-prod.md`. It is the scripted half of the Calibration Gate's edge checks,
-which were prose until 2026-09-15.
+`npm run smoke:prod <origin>` makes 18 real requests against a running origin and writes its report
+under `audits/phase-local/`, which git ignores, so an ad-hoc run leaves the tree clean. It is the
+scripted half of the Calibration Gate's edge checks, which were prose until 2026-09-15.
 
     npm run smoke:prod https://meshin.co
 
@@ -46,7 +46,12 @@ to the wrong path.
 
 ## When the flip happens
 
-Run it against the production URL immediately and commit the artifact. That artifact is the only
-evidence this repository can produce about the live origin: Lighthouse starts the gate server
-against the build and takes no origin, so no score here describes what the edge served. Row G44 of
-`docs/plan/reference/known-gaps.md` holds that gap.
+Run it against the production URL immediately, naming the committed artifact as the second
+argument, and commit that file. The default path is ignored on purpose: a run without it never
+overwrites the phase 5 record.
+
+    npm run smoke:prod https://meshin.co ../audits/phase-5/smoke-prod.md
+
+That artifact is the only evidence this repository can produce about the live origin: Lighthouse
+starts the gate server against the build and takes no origin, so no score here describes what the
+edge served. Row G44 of `docs/plan/reference/known-gaps.md` holds that gap.
