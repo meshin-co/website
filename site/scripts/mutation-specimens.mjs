@@ -166,7 +166,7 @@ export const SPECIMENS = {
   agents: {
     gate: 'gate:agents',
     token: 'leaves ai-input unsaid',
-    plant: (copySite) => editFile(join(copySite, 'dist/robots.txt'), (text) => text.replaceAll(', ai-input=yes', '')),
+    plant: (copySite) => editFile(join(copySite, 'dist/_headers'), (text) => text.replace(' ai-input=yes,', '')),
   },
   'agents-openapi-drift': {
     gate: 'gate:agents',
@@ -194,7 +194,7 @@ export const SPECIMENS = {
   },
   'agents-head-link-drifts': {
     gate: 'gate:agents',
-    token: 'the ai-catalog link points at',
+    token: 'ai-catalog-v2.json is named but not shipped',
     plant: (copySite) =>
       editFile(join(copySite, 'dist/index.html'), (html) =>
         html.replace('href="/.well-known/ai-catalog.json"', 'href="/.well-known/ai-catalog-v2.json"')

@@ -40,8 +40,10 @@ The scanner named one requirement for level 2: Content Signals in `robots.txt`.
 
 `npm run gate:agents` reads 0 findings against the built output. Measured there:
 
-- `dist/robots.txt` carries `Content-Signal: search=yes, ai-train=yes, ai-input=yes` on all 23
-  user-agent groups, and an `Agentmap:` line naming the capability manifest.
+- `dist/_headers` carries `Content-Signal: search=yes, ai-input=yes, ai-train=yes` on every
+  response. It is not in `robots.txt`: Lighthouse's `robots-txt` audit calls that directive unknown
+  and scored SEO 0.92 on all 26 routes, measured 2026-10-24. Row G45 holds the consequence, which
+  is that the scanner parses `robots.txt` only and will keep reading this check `fail`.
 - `dist/openapi.json` describes 8 JSON routes: `/feed.json` and the seven search shards.
 - `dist/.well-known/api-catalog` is a linkset with an anchor, a `service-desc` and a `service-doc`.
 - `dist/.well-known/ai-catalog.json` lists 18 entries, each one a file the build ships.
@@ -49,7 +51,7 @@ The scanner named one requirement for level 2: Content Signals in `robots.txt`.
 
 ## After
 
-To be recorded once the owner publishes. The targets are `botAccessControl.contentSignals`,
-`discoverability.linkHeaders`, `discovery.apiCatalog` and `discovery.ard` reading `"pass"`, and
-`level` reading 2 or higher. Nine crawlers answered 403 at the edge on 2026-10-24, which no change
+To be recorded once the owner publishes. The targets are `discoverability.linkHeaders`, `discovery.apiCatalog` and `discovery.ard` reading
+`"pass"`. `botAccessControl.contentSignals` will stay `fail` by the decision in row G45, so level 2
+is not claimed until an owner resolves that row. Nine crawlers answered 403 at the edge on 2026-10-24, which no change
 in this repository can lift.

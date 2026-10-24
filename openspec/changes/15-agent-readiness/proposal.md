@@ -23,10 +23,16 @@ content of the signal: this site asks to be trained on, searched, and quoted.
 
 ## What changes
 
-**The site states its AI preferences instead of leaving them unsaid.** `robots.txt` gains
-`Content-Signal: search=yes, ai-train=yes, ai-input=yes` on the group that applies to every agent.
-Silence is not permission in the Content Signals model: an agent that reads no signal is told
-nothing, and the default it applies is its own.
+**The site states its AI preferences instead of leaving them unsaid.** Every response carries
+`Content-Signal: search=yes, ai-input=yes, ai-train=yes`. Silence is not permission in the Content
+Signals model: an agent that reads no signal is told nothing, and the default it applies is its own.
+
+The policy is a header rather than a `robots.txt` directive because the two measured requirements
+collided. Lighthouse's `robots-txt` audit calls `Content-Signal` and `Agentmap` unknown directives
+and scored SEO 0.92 on all 26 routes, against a hard rule of 100 with no waiver path. The header
+form of the same policy ranks above `robots.txt` where they disagree, so the statement survives;
+what it costs is the scanner's own checkbox, which parses `robots.txt` and nothing else. Row G45
+records that, with the three ways an owner could close it.
 
 **The machine endpoints this site already serves become discoverable as endpoints.** It publishes
 `/openapi.json` describing the JSON resources that exist today — `/feed.json`, the per-collection
@@ -39,8 +45,8 @@ served and tested.
 to find the machine layer. They are set in the headers file the build already emits, at no runtime
 cost.
 
-**A capability manifest, reachable more than one way.** `/.well-known/ai-catalog.json` plus the
-`<link rel="ai-catalog">` head link and the `Agentmap:` line in `robots.txt`.
+**A capability manifest, and a head link that finds it.** `/.well-known/ai-catalog.json` plus the
+`<link rel="ai-catalog">` head link, which is two of the five routes the scanner probes for it.
 
 **Every guard that holds this true is proven able to fail.** A gate asserts the files exist in the
 build, parse, carry the right media type, and reference only routes the build actually ships; each

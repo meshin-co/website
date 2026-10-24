@@ -2,10 +2,14 @@
 
 ## 1. Declare the AI preferences
 
-- [x] 1.1 Add `Content-Signal: search=yes, ai-train=yes, ai-input=yes` to the group that applies to
-      every agent in `site/scripts/gen-robots.mjs`, and keep the existing `Disallow` rules. Added in `site/scripts/gen-robots.mjs`: the directive sits directly under every `User-agent:` line, 23 groups, and the `Allow`/`Disallow` lines are unchanged. The built file is 140 lines
-- [x] 1.2 Guard it: the built `robots.txt` carries the signal, on a group, with all three values,
-      with a planted specimen proving the guard fails when the line is dropped. `contentSignalGaps()` in `site/scripts/agent-interfaces-gate.mjs` fails on a group with no directive, with two, or with a signal left unsaid. Specimen family `agents` strips `ai-input` from the built file
+- [x] 1.1 Serve `Content-Signal: search=yes, ai-input=yes, ai-train=yes` on every response, set in
+      `site/scripts/gen-headers.mjs` under the catch-all rule. It was first written as 23
+      `robots.txt` directives; Lighthouse's `robots-txt` audit called them unknown and scored SEO
+      0.92 on all 26 routes, so the policy moved to the header form, which outranks `robots.txt`
+      anyway. Row G45 records what that costs: the scanner parses `robots.txt` only
+- [x] 1.2 `contentSignalGaps()` in `site/scripts/agent-interfaces-gate.mjs` fails on a build whose
+      responses declare no signal, declare two, or leave one of the three unsaid. Specimen family
+      `agents` strips `ai-input` from the built headers file
 
 ## 2. Describe the endpoints that already exist
 
@@ -27,10 +31,12 @@
 ## 4. Publish the capability manifest
 
 - [x] 4.1 Serve `/.well-known/ai-catalog.json` listing the machine entry points the site offers. `dist/.well-known/ai-catalog.json` lists 18 entries, each discovered from the built output: the two llms indexes, five collection indexes, the OpenAPI document, the linkset, the sitemap index, the JSON feed and seven search shards
-- [x] 4.2 Add the `<link rel="ai-catalog">` head link and the `Agentmap:` line in `robots.txt`, so
-      the manifest is reachable three ways. `Agentmap:` in `robots.txt` and `<link rel="ai-catalog">` in `CommonMeta.astro`
-- [x] 4.3 Guard that the manifest parses, that every URL in it is a route the build ships, and that
-      the head link and the robots line agree with it. `manifestEntryGaps()` and `headLinkGaps()`. Specimens `agents-manifest-dangles` and `agents-head-link-drifts`
+- [x] 4.2 `<link rel="ai-catalog">` in `CommonMeta.astro`, on every page. The `Agentmap:` line in
+      `robots.txt` was dropped for the same Lighthouse reason as the signal; the manifest is still
+      reachable by two of the five routes the scanner probes
+- [x] 4.3 `manifestEntryGaps()` and `headLinkGaps()`. Specimens `agents-manifest-dangles` and
+      `agents-head-link-drifts`; the second points the head link at a manifest the build never
+      wrote, and the gate names it instead of crashing
 
 ## 5. Prove it against the scanner, not against an opinion
 

@@ -7,29 +7,31 @@ import { join } from 'node:path';
 import {
   agentInterfaceFindings,
   contentSignalGaps,
-  directiveTarget,
   headLinkGaps,
   linkHeaderGaps,
   linksetShapeGaps,
   linksetTargets,
   manifestEntryGaps,
+  manifestRoute,
   openApiCoverageGaps,
   shippedGaps,
 } from './agent-interfaces-gate.mjs';
 
 const ORIGIN = 'https://example.com';
-const SIGNAL = 'Content-Signal: search=yes, ai-train=yes, ai-input=yes';
+const SIGNAL = 'search=yes, ai-input=yes, ai-train=yes';
 
 const robots = (groups = ['*', 'GPTBot']) =>
   [
-    ...groups.map((agent) => `User-agent: ${agent}\n${SIGNAL}\nAllow: /\nDisallow: /search`),
+    ...groups.map((agent) => `User-agent: ${agent}\nAllow: /\nDisallow: /search`),
     `Sitemap: ${ORIGIN}/sitemap-index.xml`,
-    `Agentmap: ${ORIGIN}/.well-known/ai-catalog.json`,
   ].join('\n\n');
 
 const headers = (
   home = `/\n  Link: </.well-known/api-catalog>; rel="api-catalog"\n  Link: </openapi.json>; rel="service-desc"\n  Link: </llms.txt>; rel="describedby"`
-) => [`/*\n  X-Frame-Options: DENY`, home, `/feed.json\n  X-Robots-Tag: noindex`].join('\n\n');
+) =>
+  [`/*\n  X-Frame-Options: DENY\n  Content-Signal: ${SIGNAL}`, home, `/feed.json\n  X-Robots-Tag: noindex`].join(
+    '\n\n'
+  );
 
 const manifest = (urls = ['/llms.txt', '/feed.json']) => ({
   entries: urls.map((url, index) => ({ identifier: `urn:air:example.com:machine:${index}`, url: `${ORIGIN}${url}` })),
@@ -45,35 +47,37 @@ const catalog = {
   ],
 };
 
-test('every user-agent group states all three signals', () => {
-  assert.deepEqual(contentSignalGaps(robots()), []);
+test('every response declares all three signals', () => {
+  assert.deepEqual(contentSignalGaps(headers()), []);
 });
 
-test('a group added without the directive is named', () => {
-  const withSilentGroup = `${robots()}\n\nUser-agent: NewBot\nAllow: /`;
+test('a build that declares no signal at all is named', () => {
+  const silent = headers().replace(`\n  Content-Signal: ${SIGNAL}`, '');
 
-  assert.deepEqual(contentSignalGaps(withSilentGroup), ['robots.txt: the group for NewBot declares no Content-Signal']);
+  assert.deepEqual(contentSignalGaps(silent), ['_headers: no response declares a Content-Signal']);
 });
 
-test('a signal left out of the directive is named', () => {
-  const partial = robots().replaceAll(SIGNAL, 'Content-Signal: search=yes, ai-train=yes');
+test('a signal left out of the header is named', () => {
+  const partial = headers().replace(SIGNAL, 'search=yes, ai-input=yes');
 
-  assert.deepEqual(contentSignalGaps(partial), [
-    'robots.txt: the group for * leaves ai-input unsaid',
-    'robots.txt: the group for GPTBot leaves ai-input unsaid',
-  ]);
+  assert.deepEqual(contentSignalGaps(partial), ['_headers: the Content-Signal leaves ai-train unsaid']);
 });
 
-test('a signal declared twice for one agent is ambiguous and fails', () => {
-  const twice = robots().replaceAll(SIGNAL, `${SIGNAL}\nContent-Signal: search=no, ai-train=no, ai-input=no`);
+test('two signal headers on the same rule are ambiguous and fail', () => {
+  const twice = headers().replace(
+    `Content-Signal: ${SIGNAL}`,
+    `Content-Signal: ${SIGNAL}\n  Content-Signal: search=no, ai-input=no, ai-train=no`
+  );
 
-  assert.equal(contentSignalGaps(twice).length, 2);
+  assert.deepEqual(contentSignalGaps(twice), ['_headers: /* declares 2 Content-Signal headers']);
 });
 
-test('the directives resolve to the path a crawler would fetch', () => {
-  assert.equal(directiveTarget(robots(), 'Agentmap'), '/.well-known/ai-catalog.json');
-  assert.equal(directiveTarget(robots(), 'Sitemap'), '/sitemap-index.xml');
-  assert.equal(directiveTarget(robots(), 'Humansmap'), undefined);
+test('the manifest route is read off the head link', () => {
+  assert.equal(
+    manifestRoute('<link rel="ai-catalog" href="/.well-known/ai-catalog.json" />'),
+    '/.well-known/ai-catalog.json'
+  );
+  assert.equal(manifestRoute('<head></head>'), undefined);
 });
 
 test('a named route that the build does not ship is a finding', () => {
@@ -128,14 +132,12 @@ test('a link header pointing at an unshipped file is named', () => {
   ]);
 });
 
-test('the head link and the robots directive must name the same manifest', () => {
+test('the head link must name a manifest the build ships', () => {
   const html = '<link rel="ai-catalog" href="/.well-known/ai-catalog.json" type="application/json" />';
 
-  assert.deepEqual(headLinkGaps(html, '/.well-known/ai-catalog.json'), []);
-  assert.deepEqual(headLinkGaps(html, '/.well-known/other.json'), [
-    'index.html: the ai-catalog link points at /.well-known/ai-catalog.json, robots.txt points at /.well-known/other.json',
-  ]);
-  assert.deepEqual(headLinkGaps('<head></head>', '/x.json'), ['index.html: no <link rel="ai-catalog">']);
+  assert.deepEqual(headLinkGaps(html, ['/.well-known/ai-catalog.json']), []);
+  assert.deepEqual(headLinkGaps(html, []), ['index.html: /.well-known/ai-catalog.json is named but not shipped']);
+  assert.deepEqual(headLinkGaps('<head></head>', []), ['index.html: no <link rel="ai-catalog">']);
 });
 
 test('the manifest lists shipped files under unique identifiers', () => {
@@ -180,10 +182,14 @@ test('a built tree that satisfies every rule produces no findings', async () => 
   assert.deepEqual(await agentInterfaceFindings(await buildTree()), []);
 });
 
-test('a manifest the robots directive cannot reach is a finding about the build, not a crash', async () => {
-  const dist = await buildTree({ 'robots.txt': robots().replace('ai-catalog.json', 'ai-catalog-v2.json') });
+test('a head link naming a manifest the build never wrote is a finding, not a crash', async () => {
+  const dist = await buildTree({
+    'index.html': '<html><head><link rel="ai-catalog" href="/.well-known/ai-catalog-v2.json" /></head></html>',
+  });
 
-  assert.deepEqual(await agentInterfaceFindings(dist).catch((error) => error.code), 'ENOENT');
+  assert.deepEqual(await agentInterfaceFindings(dist), [
+    'index.html: /.well-known/ai-catalog-v2.json is named but not shipped',
+  ]);
 });
 
 test('a json route the document forgot is caught against the real tree', async () => {

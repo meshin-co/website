@@ -2,22 +2,32 @@
 
 ## ADDED Requirements
 
-### Requirement: robots.txt declares the site's AI content signals
+### Requirement: Every response declares the site's AI content signals
 
-The built `robots.txt` SHALL carry a `Content-Signal` directive inside a user-agent group,
-naming all three signals `search`, `ai-train` and `ai-input`, each with an explicit `yes` or `no`
-value. A site that publishes no signal has declared nothing, and each agent applies its own
-default instead. `npm run gate:machine` enforces this against the built file.
+The built headers file SHALL carry a `Content-Signal` response header on every route, naming all
+three signals `search`, `ai-train` and `ai-input`, each with an explicit `yes` or `no` value. The
+signal SHALL NOT be written as a `robots.txt` directive.
+
+#### Scenario: The signal is written as a robots.txt directive instead
+
+- **WHEN** `Content-Signal` lines are added to the built `robots.txt`
+- **THEN** Lighthouse's `robots-txt` audit reports an unknown directive and the SEO category falls
+  below the required 100 on every route
 
 #### Scenario: The signal is missing
 
-- **WHEN** the `Content-Signal` line is removed from the built `robots.txt`
-- **THEN** the gate fails naming the file and the missing directive
+- **WHEN** the `Content-Signal` header is removed from the catch-all rule
+- **THEN** the gate fails saying no response declares a Content-Signal
 
 #### Scenario: The signal names only two of the three
 
-- **WHEN** the directive carries `search` and `ai-train` but not `ai-input`
+- **WHEN** the header carries `search` and `ai-input` but not `ai-train`
 - **THEN** the gate fails naming the signal that is absent
+
+#### Scenario: Two rules declare conflicting signals
+
+- **WHEN** the catch-all rule carries two `Content-Signal` headers
+- **THEN** the gate fails naming how many it found, because an agent cannot resolve the conflict
 
 ### Requirement: The JSON endpoints the build ships are described by an OpenAPI document
 
@@ -65,17 +75,17 @@ route the build ships.
 - **WHEN** a `Link` header names a path absent from the build
 - **THEN** the gate fails naming the header and the path
 
-### Requirement: A capability manifest is reachable by more than one route
+### Requirement: A capability manifest is reachable from every page
 
 The build SHALL serve `/.well-known/ai-catalog.json` listing the machine entry points the site
-offers, and SHALL make it reachable two further ways: a `<link rel="ai-catalog">` in the head of
-every page and an `Agentmap:` line in `robots.txt`. All three SHALL name the same manifest URL, and
-every URL inside the manifest SHALL be a route the build ships.
+offers, and SHALL make it reachable from the head of every page through a `<link rel="ai-catalog">`.
+The head link SHALL name a manifest the build ships, and every URL inside the manifest SHALL be a
+route the build ships.
 
-#### Scenario: The head link and the manifest disagree
+#### Scenario: The head link names a manifest that was never written
 
-- **WHEN** the `<link rel="ai-catalog">` href names a different path from the `Agentmap:` line
-- **THEN** the gate fails naming both values
+- **WHEN** the `<link rel="ai-catalog">` href names a path absent from the build
+- **THEN** the gate fails naming the path, and does not crash reading it
 
 #### Scenario: The manifest lists a route that is not built
 

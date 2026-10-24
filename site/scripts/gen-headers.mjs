@@ -29,6 +29,8 @@ export function collectInlineStyleHashes(html) {
   return [...hashes];
 }
 
+export const CONTENT_SIGNAL = 'search=yes, ai-input=yes, ai-train=yes';
+
 export function renderHeaders(scriptHashes, styleHashes = [], { analyticsBeacon = false } = {}) {
   const beacon = analyticsBeacon ? ['https://static.cloudflareinsights.com'] : [];
   const scriptSrc = ["'self'", ...beacon, ...scriptHashes.map((hash) => `'${hash}'`)].join(' ');
@@ -56,6 +58,7 @@ export function renderHeaders(scriptHashes, styleHashes = [], { analyticsBeacon 
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
   Cross-Origin-Opener-Policy: same-origin
   X-Frame-Options: DENY
+  Content-Signal: ${CONTENT_SIGNAL}
 
 /
   Link: </.well-known/api-catalog>; rel="api-catalog"; type="application/linkset+json"

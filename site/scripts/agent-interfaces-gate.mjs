@@ -10,32 +10,27 @@ const LINK_VALUE = /^<([^>]+)>;\s*rel="([^"]+)"(?:;.*)?$/;
 const AI_CATALOG_LINK = /<link\b[^>]*\brel="ai-catalog"[^>]*>/i;
 const HREF = /\bhref="([^"]+)"/i;
 
-function groupsOf(robotsText) {
-  const groups = [];
-  for (const line of robotsText.split('\n')) {
-    const [name, ...rest] = line.split(':');
-    const value = rest.join(':').trim();
-    if (name === 'User-agent') groups.push({ agent: value, signals: [] });
-    if (name === 'Content-Signal') groups.at(-1)?.signals.push(value);
-  }
-  return groups;
+function sectionFor(headersText, pattern) {
+  return headersText.split('\n\n').find((block) => block.startsWith(`${pattern}\n`));
 }
 
-export function contentSignalGaps(robotsText) {
-  return groupsOf(robotsText).flatMap(({ agent, signals }) => {
-    if (signals.length === 0) return [`robots.txt: the group for ${agent} declares no Content-Signal`];
-    if (signals.length > 1)
-      return [`robots.txt: the group for ${agent} declares ${signals.length} Content-Signal lines`];
-    const declared = new Map(signals[0].split(',').map((pair) => pair.split('=').map((part) => part.trim())));
-    return REQUIRED_SIGNALS.filter((signal) => !declared.get(signal)).map(
-      (signal) => `robots.txt: the group for ${agent} leaves ${signal} unsaid`
-    );
-  });
+export function contentSignalGaps(headersText) {
+  const section = sectionFor(headersText, '/*');
+  const values = (section ?? '')
+    .split('\n')
+    .filter((line) => line.trim().startsWith('Content-Signal:'))
+    .map((line) => line.trim().slice('Content-Signal:'.length).trim());
+  if (values.length === 0) return ['_headers: no response declares a Content-Signal'];
+  if (values.length > 1) return [`_headers: /* declares ${values.length} Content-Signal headers`];
+  const declared = new Map(values[0].split(',').map((pair) => pair.split('=').map((part) => part.trim())));
+  return REQUIRED_SIGNALS.filter((signal) => !declared.get(signal)).map(
+    (signal) => `_headers: the Content-Signal leaves ${signal} unsaid`
+  );
 }
 
-export function directiveTarget(robotsText, directive) {
-  const line = robotsText.split('\n').find((candidate) => candidate.startsWith(`${directive}:`));
-  return line === undefined ? undefined : new URL(line.slice(directive.length + 1).trim()).pathname;
+export function manifestRoute(homeHtml) {
+  const tag = homeHtml.match(AI_CATALOG_LINK)?.[0];
+  return tag === undefined ? undefined : tag.match(HREF)?.[1];
 }
 
 export function shippedGaps(label, routes, shipped) {
@@ -77,7 +72,7 @@ export function linksetShapeGaps(catalog) {
 }
 
 export function linkHeaderGaps(headersText, shipped) {
-  const section = headersText.split('\n\n').find((block) => block.startsWith('/\n'));
+  const section = sectionFor(headersText, '/');
   if (section === undefined) return ['_headers: the home page carries no Link rule'];
   const values = section
     .split('\n')
@@ -99,13 +94,10 @@ export function linkHeaderGaps(headersText, shipped) {
   ];
 }
 
-export function headLinkGaps(homeHtml, manifestRoute) {
-  const tag = homeHtml.match(AI_CATALOG_LINK)?.[0];
-  if (tag === undefined) return ['index.html: no <link rel="ai-catalog">'];
-  const href = tag.match(HREF)?.[1];
-  return href === manifestRoute
-    ? []
-    : [`index.html: the ai-catalog link points at ${href}, robots.txt points at ${manifestRoute}`];
+export function headLinkGaps(homeHtml, shipped) {
+  const route = manifestRoute(homeHtml);
+  if (route === undefined) return ['index.html: no <link rel="ai-catalog">'];
+  return shippedGaps('index.html', [route], shipped);
 }
 
 export function manifestEntryGaps(manifest, shipped) {
@@ -134,12 +126,13 @@ export async function agentInterfaceFindings(distDir) {
   const read = (route) => readFile(join(distDir, route), 'utf8');
   const readJson = async (route) => JSON.parse(await read(route));
   const shipped = await shippedRoutes(distDir);
-  const robotsText = await read('robots.txt');
-  const manifestRoute = directiveTarget(robotsText, 'Agentmap');
+  const headersText = await read('_headers');
+  const homeHtml = await read('index.html');
   const catalog = await readJson('.well-known/api-catalog');
+  const route = manifestRoute(homeHtml);
+  const reachable = route !== undefined && shipped.includes(route);
   return [
-    ...contentSignalGaps(robotsText),
-    ...shippedGaps('robots.txt', [manifestRoute, directiveTarget(robotsText, 'Sitemap')], shipped),
+    ...contentSignalGaps(headersText),
     ...openApiCoverageGaps(await readJson('openapi.json'), await publicJsonRoutes(distDir)),
     ...linksetShapeGaps(catalog),
     ...shippedGaps(
@@ -147,9 +140,9 @@ export async function agentInterfaceFindings(distDir) {
       linksetTargets(catalog).map((href) => new URL(href).pathname),
       shipped
     ),
-    ...manifestEntryGaps(await readJson(manifestRoute.slice(1)), shipped),
-    ...linkHeaderGaps(await read('_headers'), shipped),
-    ...headLinkGaps(await read('index.html'), manifestRoute),
+    ...headLinkGaps(homeHtml, shipped),
+    ...(reachable ? manifestEntryGaps(await readJson(route.slice(1)), shipped) : []),
+    ...linkHeaderGaps(headersText, shipped),
   ];
 }
 

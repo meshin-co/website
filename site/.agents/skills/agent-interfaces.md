@@ -10,9 +10,15 @@ on what terms. They are build outputs: verify them in `dist/`, never in source.
 | `/.well-known/api-catalog`     | `scripts/gen-agent-catalog.mjs` | An RFC 9727 linkset: `service-desc` to the document, `service-doc` to `/llms.txt` |
 | `/.well-known/ai-catalog.json` | `scripts/gen-agent-catalog.mjs` | The ARD capability manifest, one entry per machine entry point                    |
 
-`dist/_headers` carries the three `Link` headers on `/` and the media type for the extensionless
-catalog. `CommonMeta.astro` carries `<link rel="ai-catalog">`, which must name the same manifest
-as the `Agentmap:` line.
+`dist/_headers` carries the `Content-Signal` response header on every response, the three `Link`
+headers on `/` and the media type for the extensionless catalog. `CommonMeta.astro` carries
+`<link rel="ai-catalog">`, which is how an agent finds the capability manifest.
+
+The signal is a header and not a `robots.txt` directive for a measured reason. Lighthouse's
+`robots-txt` audit rejects any directive outside the classic set, so 23 `Content-Signal` lines and
+one `Agentmap` line scored SEO 0.92 on every route on 2026-10-24, against a hard rule of 100. The
+header form carries the same policy and ranks above `robots.txt` when the two disagree. Row G45 of
+`docs/plan/reference/known-gaps.md` holds what that costs.
 
 ## Everything here is derived
 
@@ -29,15 +35,14 @@ reason visible in the constant.
 
 `npm run gate:agents` (`scripts/agent-interfaces-gate.mjs`) reads `dist/` and fails on:
 
-- a user-agent group with no `Content-Signal`, with more than one, or leaving `search`, `ai-train`
+- a build whose responses declare no `Content-Signal`, declare two, or leave `search`, `ai-train`
   or `ai-input` unsaid
-- a `Sitemap:` or `Agentmap:` URL whose path is not shipped
 - an OpenAPI path that is not shipped, or a shipped JSON route the document omits
 - a linkset with no anchor or a missing service link, or any link target not shipped
 - a manifest with no entries, a repeated identifier, or an entry URL not shipped
 - a `Link` rule that is not on `/` exactly, a malformed `Link` value, a missing relation, or a
   target not shipped
-- a head link naming a different manifest from the one `robots.txt` names
+- a head link naming a manifest the build does not ship, or no head link at all
 
 Five specimen families in `scripts/mutation-specimens.mjs` prove it can fail: `agents`,
 `agents-openapi-drift`, `agents-manifest-dangles`, `agents-link-header-leaks`,
