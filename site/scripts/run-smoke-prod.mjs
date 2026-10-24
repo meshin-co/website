@@ -2,7 +2,14 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { generatorRevision } from './report.mjs';
-import { canonicalHostVerdict, checkHeaders, checkNoindex, renderSmoke, verdictFor } from './smoke-prod.mjs';
+import {
+  canonicalHostVerdict,
+  checkHeaders,
+  checkNoindex,
+  markdownNegotiationVerdict,
+  renderSmoke,
+  verdictFor,
+} from './smoke-prod.mjs';
 import { brandFromDisk } from '../src/utils/brand.mjs';
 
 const origin = (process.argv[2] ?? `https://${brandFromDisk().name}`).replace(/\/$/, '');
@@ -36,6 +43,14 @@ const headers = Object.fromEntries([...home.headers].map(([key, value]) => [key.
 rows.push(checkHeaders(headers));
 rows.push(verdictFor({ route: '/', status: home.status }));
 rows.push(checkNoindex(home.status === 200 ? await home.text() : ''));
+
+const asMarkdown = await fetch(`${origin}/`, { headers: { accept: 'text/markdown' }, redirect: 'manual' });
+rows.push(
+  markdownNegotiationVerdict({
+    status: asMarkdown.status,
+    contentType: asMarkdown.headers.get('content-type') ?? '',
+  })
+);
 
 for (const route of CANONICAL.slice(1)) {
   const response = await fetch(`${origin}${route}`, { redirect: 'manual' });

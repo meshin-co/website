@@ -1,7 +1,14 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { canonicalHostVerdict, checkHeaders, checkNoindex, renderSmoke, verdictFor } from './smoke-prod.mjs';
+import {
+  canonicalHostVerdict,
+  checkHeaders,
+  checkNoindex,
+  markdownNegotiationVerdict,
+  renderSmoke,
+  verdictFor,
+} from './smoke-prod.mjs';
 
 test('a response missing a required security header is a failure, naming the header', () => {
   const finding = checkHeaders({ 'content-security-policy': "default-src 'self'" });
@@ -88,4 +95,34 @@ test('the www host must answer a 301 to the apex, keeping the path, or the site 
     canonicalHostVerdict({ status: 302, location: 'https://meshin.co/about' }, 'https://meshin.co', '/about').status,
     'fail'
   );
+});
+
+test('the same URL answering markdown is what an agent asking for it must see', () => {
+  assert.deepEqual(
+    markdownNegotiationVerdict({ status: 200, contentType: 'text/markdown; charset=utf-8', body: '# Home' }),
+    {
+      check: 'markdown negotiation /',
+      status: 'pass',
+      detail: 'text/markdown; charset=utf-8',
+    }
+  );
+});
+
+test('HTML returned to an agent asking for markdown is a failure, not a fallback', () => {
+  assert.deepEqual(
+    markdownNegotiationVerdict({ status: 200, contentType: 'text/html; charset=utf-8', body: '<html>' }),
+    {
+      check: 'markdown negotiation /',
+      status: 'fail',
+      detail: 'answered text/html; charset=utf-8, expected text/markdown',
+    }
+  );
+});
+
+test('markdown that is not the page is caught, not counted', () => {
+  assert.deepEqual(markdownNegotiationVerdict({ status: 404, contentType: 'text/markdown', body: 'not found' }), {
+    check: 'markdown negotiation /',
+    status: 'fail',
+    detail: 'answered 404, expected 200',
+  });
 });

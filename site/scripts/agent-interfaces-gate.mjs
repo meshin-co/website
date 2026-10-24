@@ -123,6 +123,14 @@ export function headLinkGaps(homeHtml, shipped) {
   return shippedGaps('index.html', [route], shipped);
 }
 
+export function markdownNegotiationGaps(shipped) {
+  if (!shipped.includes('/_worker.js'))
+    return ['_worker.js: the build ships no edge handler, so Accept: text/markdown answers HTML'];
+  return shipped.includes('/index.md')
+    ? []
+    : ['index.md: the home route has no markdown sidecar for the edge handler to serve'];
+}
+
 export function manifestEntryGaps(manifest, shipped) {
   const entries = manifest.entries ?? [];
   if (entries.length === 0) return ['ai-catalog.json: the manifest lists no entries'];
@@ -167,6 +175,7 @@ export async function agentInterfaceFindings(distDir) {
     ...headLinkGaps(homeHtml, shipped),
     ...(reachable ? manifestEntryGaps(await readJson(route.slice(1)), shipped) : []),
     ...linkHeaderGaps(headersText, shipped),
+    ...markdownNegotiationGaps(shipped),
   ];
 }
 

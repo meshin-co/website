@@ -45,10 +45,16 @@ reason visible in the constant.
 - a `Link` rule that is not on `/` exactly, a malformed `Link` value, a missing relation, or a
   target not shipped
 - a head link naming a manifest the build does not ship, or no head link at all
+- a build with no `_worker.js`, or one whose home sidecar is missing, which would leave the
+  markdown negotiation dead on the one route agents probe
 
-Five specimen families in `scripts/mutation-specimens.mjs` prove it can fail: `agents`,
+Six specimen families in `scripts/mutation-specimens.mjs` prove it can fail: `agents`,
 `agents-openapi-drift`, `agents-manifest-dangles`, `agents-link-header-leaks`,
-`agents-head-link-drifts`.
+`agents-head-link-drifts`, `agents-markdown-handler-gone`.
+
+The negotiation itself is not observable here: the gate server serves files, it does not run the
+edge handler. `npm run smoke:prod` asks the live home page for markdown, which is the only proof
+that exists, and it is check 21 of 21.
 
 ## Before adding a fifth interface
 

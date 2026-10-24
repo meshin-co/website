@@ -13,6 +13,7 @@ import {
   linksetTargets,
   manifestEntryGaps,
   manifestRoute,
+  markdownNegotiationGaps,
   openApiCoverageGaps,
   robotsSignalGaps,
   shippedGaps,
@@ -189,6 +190,8 @@ async function buildTree(overrides = {}) {
     'index.html': '<html><head><link rel="ai-catalog" href="/.well-known/ai-catalog.json" /></head></html>',
     'openapi.json': JSON.stringify({ paths: { '/feed.json': {} } }),
     'feed.json': '{}',
+    '_worker.js': 'export default {};',
+    'index.md': '# Home',
     'llms.txt': 'index',
     'sitemap-index.xml': '<urlset />',
     '.well-known/api-catalog': JSON.stringify(catalog),
@@ -222,4 +225,20 @@ test('a json route the document forgot is caught against the real tree', async (
   assert.deepEqual(await agentInterfaceFindings(dist), [
     'openapi.json: /search-index-post.json is shipped but undescribed',
   ]);
+});
+
+test('an edge handler that is not shipped means the markdown URL answers HTML', () => {
+  assert.deepEqual(markdownNegotiationGaps(['/index.md', '/index.html']), [
+    '_worker.js: the build ships no edge handler, so Accept: text/markdown answers HTML',
+  ]);
+});
+
+test('an edge handler with no home sidecar to serve is dead on the route agents probe', () => {
+  assert.deepEqual(markdownNegotiationGaps(['/_worker.js', '/index.html']), [
+    'index.md: the home route has no markdown sidecar for the edge handler to serve',
+  ]);
+});
+
+test('both shipped is the whole requirement', () => {
+  assert.deepEqual(markdownNegotiationGaps(['/_worker.js', '/index.md']), []);
 });
