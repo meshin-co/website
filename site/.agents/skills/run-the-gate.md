@@ -70,10 +70,9 @@ Visual snapshots follow the same families (`scripts/templates.mjs`).
 - Lighthouse measures the machine. Run shards alone, logs outside `/tmp`: on 2026-10-02 four
   desktop shards beside a baseline regeneration took 2h37m and all failed, then passed singly in
   four minutes each. Under load it reads as a regression (0.99, TBT over budget).
-- `Generated-from:` must name a commit that exists in a fresh clone. A squash merge replaces every
-  commit on the branch, so a report naming the branch commit it came from fails `gate:evidence` on
-  `main` the moment that branch is merged and deleted. This cost two red runs on 2026-10-24. Name
-  the commit the branch started from, or repoint the line in a follow-up commit.
+- `Generated-from:` must name a commit a fresh clone can resolve. A squash merge replaces every
+  branch commit, so a report naming the branch commit it came from turns `main` red the moment it
+  merges. Two red runs on 2026-10-24. Name the base commit, or repoint it after the merge.
 
 ## Manual pass (calibration gate step 10)
 
