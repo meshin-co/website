@@ -13,6 +13,7 @@ import {
   metricFailures,
   readReports,
   renderReport,
+  publishableRevision,
 } from './report.mjs';
 import { overBudget } from './gate.mjs';
 
@@ -421,4 +422,20 @@ test('a build where no page is noindex says nothing about exemptions, instead of
   });
 
   assert.ok(!markdown.includes('is scored without'));
+});
+
+test('the stamped revision is a commit that survives a squash or rebase merge', () => {
+  const branchOnly = 'aaaaaaa';
+  const onMain = 'bbbbbbb';
+
+  assert.equal(publishableRevision({ head: branchOnly, mergeBase: onMain, headIsOnMain: false }), onMain);
+  assert.equal(publishableRevision({ head: onMain, mergeBase: onMain, headIsOnMain: true }), onMain);
+});
+
+test('a head already on the integration branch is stamped as itself', () => {
+  assert.equal(publishableRevision({ head: 'ccccccc', mergeBase: 'ddddddd', headIsOnMain: true }), 'ccccccc');
+});
+
+test('with no integration branch to compare against, the head is all there is', () => {
+  assert.equal(publishableRevision({ head: 'eeeeeee', mergeBase: undefined, headIsOnMain: false }), 'eeeeeee');
 });
