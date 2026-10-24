@@ -1,5 +1,5 @@
 {
-  "fingerprint": "ff906e4724ed6dc312adecff9364b9bae368c22a01071bc144d40936b460d0fa",
-  "recordedAt": "2026-10-24T10:52:30.776Z",
-  "phase": "15-agent-readiness"
+  "fingerprint": "67757ef0e9a0e61d8bc9bdaffd485614c4fe3a744e2b86be8a867d2d913552a4",
+  "recordedAt": "2026-10-24T11:03:23.767Z",
+  "phase": "16-signal-in-both-places"
 }
