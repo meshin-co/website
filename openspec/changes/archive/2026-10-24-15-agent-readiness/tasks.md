@@ -42,11 +42,10 @@
 
 - [x] 5.1 Record the before scan as evidence: `level`, `levelName`, and every
       `checks.<group>.<item>.status`. `audits/phase-15-agent-readiness/agent-readiness-scan.md`: level 1, three pass, fourteen fail, six neutral, each key recorded
-- [ ] 5.2 After the build is live, rescan and record the after state. The targets are
-      `botAccessControl.contentSignals`, `discoverability.linkHeaders`, `discovery.apiCatalog` and
-      `discovery.ard` reading `"pass"`, and `level` reading 2 or higher
-- [ ] 5.3 Re-run the crawler matrix on the live origin and record which user agents answer 200,
-      alongside the note that a spoofed user agent is partial evidence
+      The after-scan and the crawler matrix both need the live origin to be serving this build, which
+      only the owner can publish. They left this change as row G46 of
+      `docs/plan/reference/known-gaps.md`, with the slot for them already open in
+      `audits/phase-15-agent-readiness/agent-readiness-scan.md`.
 
 ## 6. Calibration Gate
 
