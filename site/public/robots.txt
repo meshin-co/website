@@ -1,114 +1,137 @@
 User-agent: *
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: GPTBot
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: ClaudeBot
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: Google-Extended
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: CCBot
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: PerplexityBot
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: Applebot-Extended
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: meta-externalagent
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: Bytespider
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: Diffbot
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: cohere-ai
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: OAI-SearchBot
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: Claude-SearchBot
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: Claude-User
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: Perplexity-User
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: ChatGPT-User
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: Amazonbot
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: ImagesiftBot
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: Timpibot
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: YouBot
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: Googlebot
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: Bingbot
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
 
 User-agent: Applebot
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /search
 Disallow: /styleguide
