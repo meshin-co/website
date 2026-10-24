@@ -127,3 +127,71 @@ test('pages.dev hosts carry X-Robots-Tag: noindex, versioned and plain', () => {
     assert.ok(header.includes(`${rule}\n  X-Robots-Tag: noindex`), `${rule} misses X-Robots-Tag`);
   }
 });
+
+const sectionFor = (policy, route) => policy.split('\n\n').find((block) => block.split('\n')[0] === route);
+const LINK_VALUE = /^<(\/[^>\s]*)>; rel="([a-z-]+)"(?:; type="[^"\s]+")?$/;
+const linkLinesOf = (section) =>
+  section
+    .split('\n')
+    .slice(1)
+    .filter((line) => line.trimStart().startsWith('Link:'))
+    .map((line) => line.trim().slice('Link:'.length).trim());
+
+test('the home page has its own rule carrying the discovery Link headers', () => {
+  const section = sectionFor(renderHeaders([]), '/');
+
+  assert.ok(section, 'no rule for exactly /');
+  const relations = Object.fromEntries(
+    linkLinesOf(section).map((value) => {
+      const [, target, relation] = value.match(LINK_VALUE);
+      return [relation, target];
+    })
+  );
+  assert.deepEqual(relations, {
+    'api-catalog': '/.well-known/api-catalog',
+    'service-desc': '/openapi.json',
+    describedby: '/llms.txt',
+  });
+});
+
+test('every Link value is an angle-bracketed URI reference with a quoted rel', () => {
+  const section = sectionFor(renderHeaders([]), '/');
+  const values = linkLinesOf(section);
+
+  assert.equal(values.length, 3);
+  for (const value of values) {
+    assert.match(value, LINK_VALUE, `malformed Link value: ${value}`);
+  }
+});
+
+test('Link headers never leak onto every route', () => {
+  const policy = renderHeaders([]);
+  const starBlock = sectionFor(policy, '/*');
+
+  assert.ok(starBlock, 'no global block');
+  assert.ok(!starBlock.includes('Link:'));
+  for (const block of policy.split('\n\n')) {
+    if (block.includes('Link:')) {
+      assert.equal(block.split('\n')[0], '/');
+    }
+  }
+});
+
+test('the extensionless api-catalog is served as a linkset', () => {
+  const section = sectionFor(renderHeaders([]), '/.well-known/api-catalog');
+
+  assert.ok(section, 'no rule for the api catalog');
+  assert.ok(section.includes('  Content-Type: application/linkset+json'));
+});
+
+test('adding the discovery rules leaves the CSP, HSTS and caching rules intact', () => {
+  const policy = renderHeaders(['sha256-abc='], ['sha256-def=']);
+  const starBlock = sectionFor(policy, '/*');
+
+  assert.ok(starBlock.includes("script-src 'self' 'sha256-abc=';"));
+  assert.ok(starBlock.includes("style-src 'self' 'sha256-def=';"));
+  assert.ok(starBlock.includes('Strict-Transport-Security: max-age=63072000; includeSubDomains; preload'));
+  assert.ok(policy.includes('/_astro/*\n  Cache-Control: public, max-age=31536000, immutable'));
+  assert.ok(policy.includes('/og/*\n  Cache-Control: public, max-age=604800'));
+  assert.ok(policy.includes('/*.html\n  Cache-Control: public, max-age=0, must-revalidate'));
+});

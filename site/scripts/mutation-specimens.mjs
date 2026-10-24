@@ -163,6 +163,43 @@ export const SPECIMENS = {
     plant: async (copySite) =>
       addPage(copySite, 'zz-specimen', await readFile(join(copySite, 'dist/about.html'), 'utf8')),
   },
+  agents: {
+    gate: 'gate:agents',
+    token: 'leaves ai-input unsaid',
+    plant: (copySite) => editFile(join(copySite, 'dist/_headers'), (text) => text.replace(' ai-input=yes,', '')),
+  },
+  'agents-openapi-drift': {
+    gate: 'gate:agents',
+    token: 'is shipped but undescribed',
+    plant: (copySite) =>
+      editFile(join(copySite, 'dist/openapi.json'), (text) => {
+        const document = JSON.parse(text);
+        delete document.paths['/feed.json'];
+        return JSON.stringify(document);
+      }),
+  },
+  'agents-manifest-dangles': {
+    gate: 'gate:agents',
+    token: 'is named but not shipped',
+    plant: (copySite) =>
+      editFile(join(copySite, 'dist/.well-known/ai-catalog.json'), (text) =>
+        text.replace('/llms.txt', '/llms-removed.txt')
+      ),
+  },
+  'agents-link-header-leaks': {
+    gate: 'gate:agents',
+    token: 'carries no Link rule',
+    plant: (copySite) =>
+      editFile(join(copySite, 'dist/_headers'), (text) => text.replace('\n/\n  Link:', '\n/*\n  Link:')),
+  },
+  'agents-head-link-drifts': {
+    gate: 'gate:agents',
+    token: 'ai-catalog-v2.json is named but not shipped',
+    plant: (copySite) =>
+      editFile(join(copySite, 'dist/index.html'), (html) =>
+        html.replace('href="/.well-known/ai-catalog.json"', 'href="/.well-known/ai-catalog-v2.json"')
+      ),
+  },
   machine: {
     gate: 'gate:machine',
     token: 'feed.json does not mirror rss.xml item-for-item',

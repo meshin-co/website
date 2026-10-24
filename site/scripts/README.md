@@ -12,45 +12,48 @@ a build.
 
 ## Gates
 
-| Script                   | Invoked by                           | What it refuses                                                                                                                                                      |
-| ------------------------ | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `gate.mjs`               | `npm run build`                      | A byte budget exceeded: JS, CSS and page from real gzip bytes, fonts from raw woff2 bytes                                                                            |
-| `content-gate.mjs`       | `gate:content`                       | Banned phrase, missing source, prose rule violation                                                                                                                  |
-| `run-human-gate.mjs`     | `gate:human`                         | Prose above the technical-reader ceilings, an AI tell, or a controlled word                                                                                          |
-| `jsonld-gate.mjs`        | `gate:jsonld`                        | A graph node with no `@id`, or a reference that resolves nowhere                                                                                                     |
-| `machine.mjs`            | `gate:machine`                       | A machine surface missing from `dist/`, or a catalog that drifted                                                                                                    |
-| `orphan-gate.mjs`        | `gate:orphans`                       | A route no other page links to                                                                                                                                       |
-| `routes-gate.mjs`        | `gate:routes`, `assets:routes`       | A route the ledger `audits/routes.json` lists that the build no longer makes and `audits/routes-removed.json` does not name; `assets:routes` rewrites the ledger     |
-| `editorial-gate.mjs`     | `gate:editorial`, `assets:seal`      | An unreviewed string, dead copy, or untraceable rendered text                                                                                                        |
-| `generate-registers.mjs` | `gate:registers`, `assets:registers` | A hand-edited register block that drifted from the source; a dangling concept is only reported, never a failure                                                      |
-| `plan-gate.mjs`          | `gate:plan`                          | A script `ci.yml` never runs, a browser CI never installs, a malformed gap row, or a pending specimen owed to a missing or archived change                           |
-| `run-evidence-gate.mjs`  | `gate:evidence`                      | A markdown file under `audits/` with no `Generated-from:` line, or whose first word is not a hash `git cat-file -t` calls a commit (8 legacy reports may keep prose) |
-| `run-docs-gate.mjs`      | `gate:docs`                          | A document citing a dead path, a path git ignores, a dead command, or a stale locked-row range                                                                       |
-| `run-spec-gate.mjs`      | `gate:spec`                          | A spec tree the validator disagrees with, a drifted census or index, a change that owes a Calibration Gate                                                           |
-| `run-external-links.mjs` | `gate:external`                      | An outbound link missing `nofollow`, `noopener` or `noreferrer`                                                                                                      |
-| `run-links-gate.mjs`     | `gate:links`                         | A link whose target still errors after its retries; `LINKS_SKIP_EXTERNAL=1` crawls the build alone                                                                   |
-| `check-skills.mjs`       | `gate:skills`                        | A skill naming a path or command that does not exist                                                                                                                 |
-| `search-budget.mjs`      | `gate:search`                        | A search shard over its byte budget                                                                                                                                  |
-| `mutation-smoke.mjs`     | `test:smoke`                         | A guard family that can no longer be made to fail                                                                                                                    |
-| `brand-gate.mjs`         | `gate:brand`                         | A typed brand-name literal in code that should derive it from `src/config.yaml` instead                                                                              |
-| `run-paid-gate.mjs`      | `gate:paid`                          | A built route loading an undeclared third-party origin, or whose analytics copy disagrees with the shipped beacon (L58)                                              |
+| Script                      | Invoked by                           | What it refuses                                                                                                                                                      |
+| --------------------------- | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `gate.mjs`                  | `npm run build`                      | A byte budget exceeded: JS, CSS and page from real gzip bytes, fonts from raw woff2 bytes                                                                            |
+| `content-gate.mjs`          | `gate:content`                       | Banned phrase, missing source, prose rule violation                                                                                                                  |
+| `run-human-gate.mjs`        | `gate:human`                         | Prose above the technical-reader ceilings, an AI tell, or a controlled word                                                                                          |
+| `jsonld-gate.mjs`           | `gate:jsonld`                        | A graph node with no `@id`, or a reference that resolves nowhere                                                                                                     |
+| `agent-interfaces-gate.mjs` | `gate:agents`                        | A machine interface that drifted from the build: a missing content signal, an OpenAPI path no longer shipped, a catalog link or manifest entry pointing at nothing   |
+| `machine.mjs`               | `gate:machine`                       | A machine surface missing from `dist/`, or a catalog that drifted                                                                                                    |
+| `orphan-gate.mjs`           | `gate:orphans`                       | A route no other page links to                                                                                                                                       |
+| `routes-gate.mjs`           | `gate:routes`, `assets:routes`       | A route the ledger `audits/routes.json` lists that the build no longer makes and `audits/routes-removed.json` does not name; `assets:routes` rewrites the ledger     |
+| `editorial-gate.mjs`        | `gate:editorial`, `assets:seal`      | An unreviewed string, dead copy, or untraceable rendered text                                                                                                        |
+| `generate-registers.mjs`    | `gate:registers`, `assets:registers` | A hand-edited register block that drifted from the source; a dangling concept is only reported, never a failure                                                      |
+| `plan-gate.mjs`             | `gate:plan`                          | A script `ci.yml` never runs, a browser CI never installs, a malformed gap row, or a pending specimen owed to a missing or archived change                           |
+| `run-evidence-gate.mjs`     | `gate:evidence`                      | A markdown file under `audits/` with no `Generated-from:` line, or whose first word is not a hash `git cat-file -t` calls a commit (8 legacy reports may keep prose) |
+| `run-docs-gate.mjs`         | `gate:docs`                          | A document citing a dead path, a path git ignores, a dead command, or a stale locked-row range                                                                       |
+| `run-spec-gate.mjs`         | `gate:spec`                          | A spec tree the validator disagrees with, a drifted census or index, a change that owes a Calibration Gate                                                           |
+| `run-external-links.mjs`    | `gate:external`                      | An outbound link missing `nofollow`, `noopener` or `noreferrer`                                                                                                      |
+| `run-links-gate.mjs`        | `gate:links`                         | A link whose target still errors after its retries; `LINKS_SKIP_EXTERNAL=1` crawls the build alone                                                                   |
+| `check-skills.mjs`          | `gate:skills`                        | A skill naming a path or command that does not exist                                                                                                                 |
+| `search-budget.mjs`         | `gate:search`                        | A search shard over its byte budget                                                                                                                                  |
+| `mutation-smoke.mjs`        | `test:smoke`                         | A guard family that can no longer be made to fail                                                                                                                    |
+| `brand-gate.mjs`            | `gate:brand`                         | A typed brand-name literal in code that should derive it from `src/config.yaml` instead                                                                              |
+| `run-paid-gate.mjs`         | `gate:paid`                          | A built route loading an undeclared third-party origin, or whose analytics copy disagrees with the shipped beacon (L58)                                              |
 
 ## Generators
 
-| Script                         | Invoked by                                                         | What it writes                                                     |
-| ------------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------ |
-| `gen-headers.mjs`              | `npm run build`                                                    | `dist/_headers`, with the inline-script hashes the CSP needs       |
-| `gen-robots.mjs`               | `assets:robots`                                                    | `public/robots.txt`                                                |
-| `generate-static-sidecars.mjs` | `npm run build`                                                    | The `.md` sidecar beside every static page                         |
-| `search-page-text.mjs`         | `npm run build`                                                    | The page text the search index is built from                       |
-| `generate-logo.mjs`            | `assets:logo`                                                      | The brand mark: component, symbol, `public/logo.svg`, dark variant |
-| `generate-favicons.mjs`        | `assets:favicons`, `assets:logo`                                   | Favicons, apple touch icon, the square social PNGs                 |
-| `generate-og-default.mjs`      | `assets:og-default`                                                | The default Open Graph image                                       |
-| `generate-gaps.mjs`            | `assets:gaps`                                                      | `audits/phase-4.7/gaps.md` from the ledger and the registers       |
-| `semantic-core.mjs`            | `node scripts/semantic-core.mjs` (no npm script; run from `site/`) | The generated blocks inside `docs/SEMANTIC-CORE.md`                |
-| `generate-spec-census.mjs`     | `assets:spec-census`                                               | `openspec/CENSUS.json`, the requirement names of every capability  |
-| `generate-spec-index.mjs`      | `assets:spec-index`                                                | `openspec/INDEX.md`, one line per capability                       |
-| `indexnow-ping.mjs`            | CI, when a page's built HTML changed                               | The IndexNow submission of the added and edited routes             |
+| Script                         | Invoked by                                                         | What it writes                                                                                                  |
+| ------------------------------ | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| `gen-agent-catalog.mjs`        | `npm run build`                                                    | `dist/.well-known/api-catalog` and `dist/.well-known/ai-catalog.json`, from the machine files the build shipped |
+| `gen-headers.mjs`              | `npm run build`                                                    | `dist/_headers`, with the inline-script hashes the CSP needs                                                    |
+| `gen-openapi.mjs`              | `npm run build`                                                    | `dist/openapi.json`, describing the JSON resources the build ships                                              |
+| `gen-robots.mjs`               | `assets:robots`                                                    | `public/robots.txt`                                                                                             |
+| `generate-static-sidecars.mjs` | `npm run build`                                                    | The `.md` sidecar beside every static page                                                                      |
+| `search-page-text.mjs`         | `npm run build`                                                    | The page text the search index is built from                                                                    |
+| `generate-logo.mjs`            | `assets:logo`                                                      | The brand mark: component, symbol, `public/logo.svg`, dark variant                                              |
+| `generate-favicons.mjs`        | `assets:favicons`, `assets:logo`                                   | Favicons, apple touch icon, the square social PNGs                                                              |
+| `generate-og-default.mjs`      | `assets:og-default`                                                | The default Open Graph image                                                                                    |
+| `generate-gaps.mjs`            | `assets:gaps`                                                      | `audits/phase-4.7/gaps.md` from the ledger and the registers                                                    |
+| `semantic-core.mjs`            | `node scripts/semantic-core.mjs` (no npm script; run from `site/`) | The generated blocks inside `docs/SEMANTIC-CORE.md`                                                             |
+| `generate-spec-census.mjs`     | `assets:spec-census`                                               | `openspec/CENSUS.json`, the requirement names of every capability                                               |
+| `generate-spec-index.mjs`      | `assets:spec-index`                                                | `openspec/INDEX.md`, one line per capability                                                                    |
+| `indexnow-ping.mjs`            | CI, when a page's built HTML changed                               | The IndexNow submission of the added and edited routes                                                          |
 
 ## Audits and reports
 

@@ -26,12 +26,12 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
    are what the build actually locked; a `D` row marked superseded has an `L` row that answers
    instead.
 4. `site/.agents/skills/` — one procedure per file, each named for the job it does: the design
-   lane, snippet grammar, structured data, the search index, machine interfaces, running the
-   gate, the content gate, the judge panel, adding a collection entry, restoring a collection,
-   visual baselines, extending the mutation smoke, explaining a route removal, coordinating
-   parallel agents, clearing dead weight, verifying in the built output, keeping the docs honest,
-   smoking the live site, publishing the build, proving Lighthouse ran locally, running the growth
-   loop, and the launch checklist.
+   lane, snippet grammar, structured data, the search index, machine interfaces, agent interfaces,
+   running the gate, the content gate, the judge panel, adding a collection entry, restoring a
+   collection, visual baselines, extending the mutation smoke, explaining a route removal,
+   coordinating parallel agents, clearing dead weight, verifying in the built output, keeping the
+   docs honest, smoking the live site, publishing the build, proving Lighthouse ran locally,
+   running the growth loop, and the launch checklist.
    Read the matching one before doing that job by hand; `design-lane.md` comes before any markup
    or CSS. `navigate-the-plan.md` maps the reference files and where each phase went.
    `gate:skills` fails if a skill names a path or command that does not exist.
@@ -93,8 +93,13 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
 - Structured data: one JSON-LD `@graph` per page from `site/src/utils/jsonld.mjs`. Every node has
   an `@id`, every referenced `@id` resolves, and CI validates it.
 - Machine interfaces (`/llms.txt`, `/llms-full.txt`, `/llms/{collection}.txt`, `/{page}.md`,
-  `/feed.json`, `/rss.xml` plus six per-collection feeds, `/og/*.png`, search shards, sitemap)
-  are build outputs. Verify them in `dist/`, not in source.
+  `/feed.json`, `/rss.xml` plus six per-collection feeds, `/og/*.png`, search shards, sitemap,
+  `/openapi.json`, `/.well-known/api-catalog`, `/.well-known/ai-catalog.json`) are build outputs.
+  Verify them in `dist/`, not in source. The agent-facing half — the `Content-Signal` and
+  `Agentmap` directives, the OpenAPI document, the linkset and the capability manifest — is held
+  together by `npm run gate:agents`; the procedure is `site/.agents/skills/agent-interfaces.md`,
+  and `site/.agents/skills/ai-agent-readiness/` covers the twenty protocols and the rule that a
+  card is published only when the service behind it is real.
 - Verify a claim about the site in the built output — `dist/`, a response from the gate server, or
   a command's real stdout. Never in source, never in a doc. When a doc and the build disagree, the
   doc is wrong. Procedure: `site/.agents/skills/verify-in-the-built-output.md`.

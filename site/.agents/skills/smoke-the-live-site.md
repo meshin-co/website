@@ -46,6 +46,7 @@ to the wrong path.
 
 ## When the flip happens
 
-Run it against the production URL immediately, commit the artifact, and tick the matching box in
-`openspec/changes/11-launch/tasks.md`. CG-5 is not closed until the artifact records a pass
-against `https://meshin.co`.
+Run it against the production URL immediately and commit the artifact. That artifact is the only
+evidence this repository can produce about the live origin: Lighthouse starts the gate server
+against the build and takes no origin, so no score here describes what the edge served. Row G44 of
+`docs/plan/reference/known-gaps.md` holds that gap.

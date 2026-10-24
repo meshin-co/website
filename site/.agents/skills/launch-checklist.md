@@ -1,7 +1,10 @@
 # Launch Checklist (Phase 5)
 
-The plan of record is `openspec/changes/11-launch/proposal.md`. CG-5 runs against the production
-URL, not a preview. Nothing here happens before 4.5b is green.
+The plan of record is `openspec/changes/archive/2026-10-24-11-launch/proposal.md`, archived on
+2026-10-24. CG-5 was narrowed there: Lighthouse has no origin override and always measures the
+local build, so what the production URL proves is `npm run smoke:prod`, not a score. The missing
+edge measurement is row G44 of `docs/plan/reference/known-gaps.md`. Nothing here happens before
+4.5b is green.
 
 ## Before the flip
 
