@@ -499,6 +499,8 @@ test('a shallow clone, whose history is cut before the merge base, stamps its ow
   execFileSync('git', ['clone', '--depth', '1', '--no-local', dir, clone], { stdio: ['ignore', 'pipe', 'pipe'] });
   const inClone = (...args) =>
     execFileSync('git', args, { cwd: clone, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+  inClone('config', 'user.email', 't@example.com');
+  inClone('config', 'user.name', 'test');
   inClone('checkout', '-b', 'feature');
   writeFileSync(join(clone, 'd.txt'), 'four');
   inClone('add', '-A');
