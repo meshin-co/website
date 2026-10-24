@@ -480,3 +480,34 @@ test('the stamp does not depend on the reflog, so a fresh clone agrees with the 
     generatorRevision('x', { integrationBranch: 'main', cwd: dir })
   );
 });
+
+test('an integration branch that resolves but shares no history leaves the head as the stamp', () => {
+  const { dir, run } = repoWith([['checkout', '--orphan', 'unrelated']]);
+  writeFileSync(join(dir, 'c.txt'), 'three');
+  run('add', '-A');
+  run('commit', '-m', 'three');
+
+  assert.equal(generatorRevision('x', { integrationBranch: 'main', cwd: dir }), run('rev-parse', '--short', 'HEAD'));
+});
+
+test('a shallow clone, whose history is cut before the merge base, stamps its own head', () => {
+  const { dir, run } = repoWith([]);
+  writeFileSync(join(dir, 'b.txt'), 'two');
+  run('add', '-A');
+  run('commit', '-m', 'two');
+  const clone = mkdtempSync(join(tmpdir(), 'report-shallow-'));
+  execFileSync('git', ['clone', '--depth', '1', '--no-local', dir, clone], { stdio: ['ignore', 'pipe', 'pipe'] });
+  const inClone = (...args) =>
+    execFileSync('git', args, { cwd: clone, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+  inClone('config', 'user.email', 't@example.com');
+  inClone('config', 'user.name', 'test');
+  inClone('checkout', '-b', 'feature');
+  writeFileSync(join(clone, 'd.txt'), 'four');
+  inClone('add', '-A');
+  inClone('commit', '-m', 'four');
+
+  assert.equal(
+    generatorRevision('x', { integrationBranch: 'origin/nowhere', cwd: clone }),
+    inClone('rev-parse', '--short', 'HEAD')
+  );
+});
