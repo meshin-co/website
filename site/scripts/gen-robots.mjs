@@ -31,6 +31,7 @@ const RETRIEVAL_AGENTS = [
   'YouBot',
 ];
 const SEARCH_AGENTS = ['Googlebot', 'Bingbot', 'Applebot'];
+const CONTENT_SIGNAL = 'Content-Signal: search=yes, ai-train=yes, ai-input=yes';
 
 export function disallowedPaths(pagesDir) {
   return ['/search', '/styleguide', ...(existsSync(join(pagesDir, 'api')) ? ['/api'] : [])];
@@ -39,9 +40,11 @@ export function disallowedPaths(pagesDir) {
 export function renderRobots(disallowed) {
   const agents = ['*', ...TRAINING_AGENTS, ...RETRIEVAL_AGENTS, ...SEARCH_AGENTS];
   const groups = agents
-    .map((agent) => [`User-agent: ${agent}`, 'Allow: /', ...disallowed.map((path) => `Disallow: ${path}`)].join('\n'))
+    .map((agent) =>
+      [`User-agent: ${agent}`, CONTENT_SIGNAL, 'Allow: /', ...disallowed.map((path) => `Disallow: ${path}`)].join('\n')
+    )
     .join('\n\n');
-  return `${groups}\n\nSitemap: ${SITE_ORIGIN}/sitemap-index.xml\n`;
+  return `${groups}\n\nSitemap: ${SITE_ORIGIN}/sitemap-index.xml\nAgentmap: ${SITE_ORIGIN}/.well-known/ai-catalog.json\n`;
 }
 
 async function main() {

@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { OPENAPI_MEDIA_TYPE } from './gen-openapi.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 
 const INLINE_SCRIPT = /<script(?![^>]*\bsrc=)([^>]*)>([\s\S]*?)<\/script>/gi;
@@ -55,6 +56,22 @@ export function renderHeaders(scriptHashes, styleHashes = [], { analyticsBeacon 
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
   Cross-Origin-Opener-Policy: same-origin
   X-Frame-Options: DENY
+
+/
+  Link: </.well-known/api-catalog>; rel="api-catalog"; type="application/linkset+json"
+  Link: </openapi.json>; rel="service-desc"; type="${OPENAPI_MEDIA_TYPE}"
+  Link: </llms.txt>; rel="describedby"; type="text/plain"
+
+/openapi.json
+  Content-Type: ${OPENAPI_MEDIA_TYPE}
+  X-Robots-Tag: noindex
+
+/.well-known/api-catalog
+  Content-Type: application/linkset+json
+  X-Robots-Tag: noindex
+
+/.well-known/ai-catalog.json
+  X-Robots-Tag: noindex
 
 /rss.xml
   X-Robots-Tag: noindex

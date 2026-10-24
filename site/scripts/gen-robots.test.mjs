@@ -42,9 +42,14 @@ function parseRobots(text) {
       agents,
       allows: [...block.matchAll(/^Allow:\s*(.+)$/gim)].map(([, path]) => path.trim()),
       disallows: [...block.matchAll(/^Disallow:\s*(.+)$/gim)].map(([, path]) => path.trim()),
+      signals: [...block.matchAll(/^Content-Signal:\s*(.+)$/gim)].map(([, line]) => line.trim()),
     });
   }
-  return { groups, sitemap: text.match(/^Sitemap:\s*(.+)$/im)?.[1] };
+  return {
+    groups,
+    sitemap: text.match(/^Sitemap:\s*(.+)$/im)?.[1],
+    agentmap: text.match(/^Agentmap:\s*(.+)$/im)?.[1],
+  };
 }
 
 function groupFor(parsed, userAgent) {
@@ -125,6 +130,47 @@ test('blog tag routes stay crawlable for every agent (L31)', () => {
 
 test('the sitemap line points at the sitemap index', () => {
   assert.equal(parseRobots(renderRobots(['/search', '/styleguide'])).sitemap, 'https://meshin.co/sitemap-index.xml');
+});
+
+test('every group carries one Content-Signal line declaring search, ai-train and ai-input as yes', () => {
+  const { groups } = parseRobots(renderRobots(['/search', '/styleguide']));
+
+  for (const group of groups) {
+    assert.deepEqual(
+      group.signals,
+      ['search=yes, ai-train=yes, ai-input=yes'],
+      `${group.agents[0]} must carry the content signal`
+    );
+  }
+});
+
+test('the number of Content-Signal lines equals the number of User-agent lines, so a new group cannot omit it', () => {
+  const text = renderRobots(['/search', '/styleguide']);
+  const userAgents = text.match(/^User-agent:/gm) ?? [];
+  const signals = text.match(/^Content-Signal:/gm) ?? [];
+
+  assert.ok(userAgents.length > 0);
+  assert.equal(signals.length, userAgents.length);
+});
+
+test('the Content-Signal line sits inside its group, directly after the User-agent line', () => {
+  const blocks = renderRobots(['/search', '/styleguide'])
+    .split(/\n\s*\n/)
+    .filter((block) => block.startsWith('User-agent:'));
+
+  assert.ok(blocks.length > 0);
+  for (const block of blocks) {
+    assert.match(block.split('\n')[1], /^Content-Signal: /);
+  }
+});
+
+test('the Agentmap line is an absolute URL to the ai-catalog on the same origin as the sitemap', () => {
+  const { agentmap, sitemap } = parseRobots(renderRobots(['/search', '/styleguide']));
+
+  assert.ok(agentmap, 'Agentmap line missing');
+  assert.equal(new URL(agentmap).pathname, '/.well-known/ai-catalog.json');
+  assert.equal(new URL(agentmap).origin, new URL(sitemap).origin);
+  assert.match(agentmap, /^https:\/\//);
 });
 
 test('disallowedPaths picks up an api directory only when one exists', async () => {

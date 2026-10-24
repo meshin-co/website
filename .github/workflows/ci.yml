@@ -136,6 +136,7 @@ jobs:
       - run: npm run gate:human
       - run: npm run gate:orphans
       - run: npm run gate:machine
+      - run: npm run gate:agents
       - run: npm run gate:jsonld
       - run: npm run gate:external
       - run: npm run gate:search
