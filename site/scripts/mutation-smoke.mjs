@@ -101,6 +101,7 @@ export const FAMILIES = [
   { id: 'agents-manifest-dangles', kind: 'specimen', specimen: 'agents-manifest-dangles' },
   { id: 'agents-link-header-leaks', kind: 'specimen', specimen: 'agents-link-header-leaks' },
   { id: 'agents-head-link-drifts', kind: 'specimen', specimen: 'agents-head-link-drifts' },
+  { id: 'agents-markdown-handler-gone', kind: 'specimen', specimen: 'agents-markdown-handler-gone' },
   { id: 'machine-feed-coverage', kind: 'specimen', specimen: 'machine' },
   { id: 'canonical-names-a-built-file', kind: 'specimen', specimen: 'canonical' },
   { id: 'gate-wiring-removed-from-ci', kind: 'specimen', specimen: 'wiringRemoved' },

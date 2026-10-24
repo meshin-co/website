@@ -34,6 +34,14 @@ export function verdictFor({ route, status }) {
     : finding(`route ${route}`, 'fail', `answered ${status}, expected 200`);
 }
 
+export function markdownNegotiationVerdict({ status, contentType }) {
+  const check = 'markdown negotiation /';
+  if (status !== 200) return finding(check, 'fail', `answered ${status}, expected 200`);
+  return contentType.startsWith('text/markdown')
+    ? finding(check, 'pass', contentType)
+    : finding(check, 'fail', `answered ${contentType}, expected text/markdown`);
+}
+
 export function canonicalHostVerdict({ status, location }, origin, path) {
   const check = `www redirect ${path}`;
   const expected = `${origin}${path}`;

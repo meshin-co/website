@@ -23,7 +23,7 @@
     "audit:geo-probe": "node scripts/run-geo-probe.mjs",
     "audit:polish": "node scripts/run-polish-sweep.mjs",
     "audit:prelaunch": "node scripts/run-pre-launch.mjs dist",
-    "build": "astro build && node scripts/gen-openapi.mjs dist && node scripts/gen-agent-catalog.mjs dist && node scripts/gen-headers.mjs dist && node scripts/generate-static-sidecars.mjs dist && node scripts/search-page-text.mjs dist && node scripts/gate.mjs dist budgets.json",
+    "build": "astro build && node scripts/gen-edge-worker.mjs dist && node scripts/gen-openapi.mjs dist && node scripts/gen-agent-catalog.mjs dist && node scripts/gen-headers.mjs dist && node scripts/generate-static-sidecars.mjs dist && node scripts/search-page-text.mjs dist && node scripts/gate.mjs dist budgets.json",
     "check": "npm run check:astro && npm run check:eslint && npm run check:prettier",
     "check:astro": "astro check",
     "check:eslint": "eslint .",
