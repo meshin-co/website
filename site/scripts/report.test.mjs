@@ -16,7 +16,6 @@ import {
   readReports,
   renderReport,
   generatorRevision,
-  publishableRevision,
 } from './report.mjs';
 import { overBudget } from './gate.mjs';
 

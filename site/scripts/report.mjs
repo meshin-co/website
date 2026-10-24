@@ -100,7 +100,7 @@ function scoreTable(reports, distDir) {
   }));
 }
 
-export function publishableRevision({ head, mergeBase, headIsOnMain }) {
+function publishableRevision({ head, mergeBase, headIsOnMain }) {
   if (headIsOnMain || mergeBase === undefined) return head;
   return mergeBase;
 }
