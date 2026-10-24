@@ -50,6 +50,8 @@
 
 ## 6. Calibration Gate
 
-- [ ] 6.1 `npm run test:smoke` proves every new guard family can fail
-- [ ] 6.2 Run the Calibration Gate and commit the report it generates for this change: Lighthouse
-      100/100/100/100 on both form factors, and the byte budgets unchanged
+- [x] 6.1 `npm run test:smoke` proves every new guard family can fail: 80 of 80 families, the five
+      `agents-*` among them, each red on its specimen and green without it
+- [x] 6.2 Run the Calibration Gate and commit the report it generates for this change:
+      `audits/phase-15-agent-readiness/REPORT.md` reads PASS, 52 route rows at 100/100/100/100
+      across both form factors, byte budgets unchanged
