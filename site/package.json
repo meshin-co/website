@@ -1,6 +1,7 @@
 {
   "name": "meshin-co-site",
   "version": "0.1.0",
+  "packageManager": "npm@10.9.4",
   "description": "meshin.co — Astro 7 static site for a Fractional Chief AI Officer practice",
   "type": "module",
   "engines": {
