@@ -13,7 +13,7 @@ import {
 import { brandFromDisk } from '../src/utils/brand.mjs';
 
 const origin = (process.argv[2] ?? `https://${brandFromDisk().name}`).replace(/\/$/, '');
-const out = process.argv[3] ?? '../audits/phase-5/smoke-prod.md';
+const out = process.argv[3] ?? '../audits/phase-local/smoke-prod.md';
 
 const CANONICAL = [
   '/',

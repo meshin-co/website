@@ -3,6 +3,7 @@ import { mkdir, readdir, rm, symlink } from 'node:fs/promises';
 import { cpus } from 'node:os';
 import { join, resolve } from 'node:path';
 
+import { clearMeasuredStamp, describeTree, writeMeasuredStamp } from './lh-evidence.mjs';
 import { deadlineMs, shardPlan, workerCount } from './lh-parallel.mjs';
 
 const FLOOR_MS = Number(process.env.LH_SHARD_FLOOR_MS ?? 15 * 60 * 1000);
@@ -29,11 +30,19 @@ if (routes === 0) {
 const shards = workerCount({ cores: cpus().length, requested: process.env.LH_WORKERS });
 const plan = shardPlan({ factors: ['mobile', 'desktop'], shards, routes, basePort: 4330 });
 
-if (process.env.GATE_PHASE) {
-  const phase = process.env.GATE_PHASE.replace(/^phase-/, '');
+const repoRoot = process.env.AUDIT_ROOT ?? resolve('..');
+
+const phase = process.env.GATE_PHASE?.replace(/^phase-/, '');
+const auditDir = phase === undefined ? undefined : join(repoRoot, 'audits', `phase-${phase}`);
+
+const measured = auditDir === undefined ? undefined : await describeTree(repoRoot);
+
+if (auditDir !== undefined) {
   for (const factor of ['mobile', 'desktop']) {
-    await rm(join('..', 'audits', `phase-${phase}`, `lh-${factor}`), { recursive: true, force: true });
+    await rm(join(auditDir, `lh-${factor}`), { recursive: true, force: true });
   }
+  await clearMeasuredStamp(auditDir);
+  if (measured.reason) console.log(`lighthouse: this run cannot be recorded: ${measured.reason}`);
 }
 
 const live = new Set();
@@ -64,7 +73,6 @@ for (const name of ['SIGINT', 'SIGTERM']) {
 }
 
 const LINKED = ['package.json', 'node_modules', 'scripts', 'src', 'dist', 'lighthouserc.cjs', 'budgets.json'];
-const repoRoot = process.env.AUDIT_ROOT ?? resolve('..');
 
 async function shardDirectory({ factor, index }) {
   const dir = join('.lh-run', `${factor}-${index}`);
@@ -146,3 +154,12 @@ await Promise.all(
 console.log(`lighthouse: ${plan.length} shards across ${shards} workers, ${failed.length} failed`);
 for (const failure of failed) console.error(`LIGHTHOUSE ${failure}`);
 if (failed.length > 0) process.exitCode = 1;
+
+if (auditDir !== undefined && measured.fingerprint !== undefined) {
+  if (failed.length > 0) {
+    console.log('lighthouse: this run cannot be recorded: a shard failed, so the reports are not a whole measurement');
+  } else {
+    await writeMeasuredStamp({ auditDir, fingerprint: measured.fingerprint });
+    console.log(`lighthouse: measured tree ${measured.fingerprint.slice(0, 12)}`);
+  }
+}

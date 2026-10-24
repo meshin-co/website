@@ -64,7 +64,7 @@ a build.
 | `collect-reports.mjs`       | `gate:lh:one`          | The per-shard Lighthouse runs, merged                             |
 | `run-polish-sweep.mjs`      | `audit:polish`         | `audits/phase-5/polish-sweep.md`, 105 routes at six widths        |
 | `run-pre-launch.mjs`        | `audit:prelaunch`      | `audits/phase-5/pre-launch.md`, all 24 checklist sections         |
-| `run-smoke-prod.mjs`        | `smoke:prod`           | `audits/phase-5/smoke-prod.md`, 18 live requests                  |
+| `run-smoke-prod.mjs`        | `smoke:prod`           | 19 live requests, 21 checks; the report is git-ignored by default |
 | `generate-geo-baseline.mjs` | `audit:geo`            | `audits/geo-baseline.md`, buyer-prompt structural readiness       |
 | `run-geo-probe.mjs`         | `audit:geo-probe`      | `audits/geo-probe.md`, what four live answer engines actually say |
 
@@ -75,8 +75,8 @@ a build.
 | `run-deploy-check.mjs`   | `deploy:check`             | Reports whether the token authenticates, Pages is readable and the project exists      |
 | `run-deploy.mjs`         | `deploy`, `deploy:preview` | Uploads `dist/` to Pages, refusing a build the route ledger has not seen               |
 | `run-publish-target.mjs` | Publish Live workflow      | Resolves which gated build a press publishes, refusing a stale or missing one          |
-| `run-lh-parallel.mjs`    | `gate:lh`                  | Runs both form factors sharded across workers, stopping a shard that outruns its peers |
-| `run-lh-evidence.mjs`    | `lh:record`, `lh:check`    | Records a green local lighthouse run, and refuses a push of a tree none measured       |
+| `run-lh-parallel.mjs`    | `gate:lh`                  | Shards both form factors across workers, stamping the tree, stopping a shard that lags |
+| `run-lh-evidence.mjs`    | `lh:record`, `lh:check`    | Records a green run measured from this tree, and refuses a push of one none measured   |
 
 ## Modules
 
@@ -97,7 +97,7 @@ be tested without a build.
 | `lh-parallel.mjs`          | `run-lh-parallel.mjs`                                                                                             | How many workers a machine may run, which shard takes which port, and when a straggler has run long enough                    |
 | `markdown-table.mjs`       | `registers.mjs`, `semantic-core.mjs`                                                                              | One definition of a markdown table shaped the way prettier shapes it, so a generated block never reads as drift               |
 | `build-surface.mjs`        | `publish-target.mjs`, `lh-evidence.mjs`                                                                           | Whether a path can change the built output, which is not the same question as whether it is markdown                          |
-| `lh-evidence.mjs`          | `run-lh-evidence.mjs`                                                                                             | The fingerprint of everything that can change the build, and why a recorded lighthouse run no longer covers it                |
+| `lh-evidence.mjs`          | `run-lh-evidence.mjs`, `run-lh-parallel.mjs`, `lh-record-family.mjs`                                              | The fingerprint of everything that can change the build, the stamp of the tree a run measured, and when a record is stale     |
 | `publish-target.mjs`       | `run-publish-target.mjs`                                                                                          | Which gated ci run the Publish Live button may publish, and which later commits block it                                      |
 | `third-party.mjs`          | `run-paid-gate.mjs`                                                                                               | Every third-party origin the build may load, with the reason each is free (L58)                                               |
 | `smoke-prod.mjs`           | `run-smoke-prod.mjs`                                                                                              | The required header set and the per-route verdict                                                                             |
@@ -118,10 +118,11 @@ be tested without a build.
 | `templates.mjs`            | nothing in `scripts/` — only `templates.test.mjs` exercises it                                                    | Template families and their leaves                                                                                            |
 | `lh-shards.cjs`            | `lighthouserc.cjs`, `collect-reports.mjs`                                                                         | Route sharding across the Lighthouse matrix                                                                                   |
 | `lh-routes.cjs`            | `lighthouserc.cjs`, `report.mjs`, `gate:lh:one` (`--count`)                                                       | Audited routes, the noindex-by-design list, `LH_ONLY_ROUTES`                                                                  |
-| `mutation-specimens.mjs`   | `mutation-smoke.mjs`                                                                                              | Per gate: the planted defect and the output token it must name                                                                |
+| `mutation-specimens.mjs`   | `mutation-smoke.mjs`, `lh-record-family.mjs`                                                                      | Per gate: the planted defect and the output token it must name                                                                |
 | `markdown-negotiation.mjs` | `gen-edge-worker.mjs`, which copies it into the build as `dist/_worker.js`                                        | The edge handler Pages runs: `Accept: text/markdown` is answered with the route's `.md` sidecar (L60)                         |
 | `spec-specimens.mjs`       | `mutation-specimens.mjs`                                                                                          | The `gate:spec` specimens: one defect per rule, each on a fixed diff                                                          |
 | `evidence-specimens.mjs`   | `mutation-specimens.mjs`                                                                                          | A `Generated-from:` token naming a tree, prose off the allow-list, or a report that says FAIL                                 |
+| `lh-record-family.mjs`     | `mutation-smoke.mjs`                                                                                              | The `lh-record` family: a throwaway repository holding a measured phase, and the edit committed after its run                 |
 | `mutation-pending.mjs`     | `plan-gate.mjs`                                                                                                   | Gates still owed a specimen, each with the open change that owes it                                                           |
 | `pagination-markup.mjs`    | `mutation-smoke.mjs`                                                                                              | What a built tag archive must say: head, control, sitemap                                                                     |
 | `collection-gate.mjs`      | `machine.mjs`                                                                                                     | Which collections have no live entry, and whether an empty one is still indexable, mirrored, listed or fed                    |

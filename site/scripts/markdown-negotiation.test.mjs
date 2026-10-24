@@ -80,6 +80,35 @@ test('a browser asking the same URL still gets the page', async () => {
   assert.equal(await response.text(), '<html>about</html>');
 });
 
+test('the page declares that it varies by Accept, so a cache never hands it to an agent asking for markdown', async () => {
+  const response = await worker.fetch(get('/about', 'text/html,*/*;q=0.8'), { ASSETS: assets(SITE) });
+
+  assert.equal(response.headers.get('content-type'), 'text/html');
+  assert.match(response.headers.get('vary') ?? '', /(^|,)\s*Accept\s*(,|$)/i);
+  assert.equal(await response.text(), '<html>about</html>');
+});
+
+test('a page that already varies on something else keeps it and adds Accept', async () => {
+  const env = {
+    ASSETS: {
+      fetch: async () =>
+        new Response('<html>home</html>', { headers: { 'content-type': 'text/html', vary: 'Accept-Encoding' } }),
+    },
+  };
+
+  const response = await worker.fetch(get('/', 'text/html'), env);
+
+  assert.equal(response.headers.get('vary'), 'Accept-Encoding, Accept');
+});
+
+test('a static asset keeps its cache key and gains no Vary', async () => {
+  const response = await worker.fetch(get('/_astro/app.css', 'text/css'), {
+    ASSETS: assets({ '/_astro/app.css': 'body{}' }),
+  });
+
+  assert.equal(response.headers.get('vary'), null);
+});
+
 test('a route with no sidecar falls back to the page rather than a 404', async () => {
   const response = await worker.fetch(get('/styleguide', 'text/markdown'), {
     ASSETS: assets({ ...SITE, '/styleguide': '<html>styleguide</html>' }),

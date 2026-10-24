@@ -24,16 +24,25 @@ async function markdownResponse(request, env) {
   return new Response(request.method === 'HEAD' ? null : response.body, { status: response.status, headers });
 }
 
+async function pageResponse(request, env) {
+  const response = await env.ASSETS.fetch(request);
+  if (markdownSidecar(new URL(request.url).pathname) === undefined) return response;
+  const varied = new Response(response.body, response);
+  varied.headers.append('vary', 'Accept');
+  return varied;
+}
+
 export default {
   async fetch(request, env) {
+    if (!NEGOTIABLE.has(request.method)) return env.ASSETS.fetch(request);
     try {
-      if (NEGOTIABLE.has(request.method) && wantsMarkdown(request.headers.get('accept'))) {
+      if (wantsMarkdown(request.headers.get('accept'))) {
         const markdown = await markdownResponse(request, env);
         if (markdown !== undefined) return markdown;
       }
+      return await pageResponse(request, env);
     } catch {
       return env.ASSETS.fetch(request);
     }
-    return env.ASSETS.fetch(request);
   },
 };

@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+import { proveRecordRefusal } from './lh-record-family.mjs';
 import { SPECIMENS, assertStandaloneRepo, flatten, proveWithSpecimen } from './mutation-specimens.mjs';
 import { canonicalHref, robotsContent, robotsMeta, tagArchiveFindings } from './pagination-markup.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
@@ -152,6 +153,7 @@ export const FAMILIES = [
   { id: 'lighthouse-shard-unlabelled-image', kind: 'specimen', specimen: 'lighthouseShard', slow: true },
   { id: 'lighthouse-both-factors-unlabelled-image', kind: 'specimen', specimen: 'lighthouseBothFactors', slow: true },
   { id: 'noindex-page-cannot-waive-its-seo', kind: 'specimen', specimen: 'lighthouseSelfWaivingNoindex', slow: true },
+  { id: 'lighthouse-record-of-a-tree-the-run-never-measured', kind: 'lh-record', proves: 'lh:record' },
   { id: 'pagination-page-2', kind: 'pagination', proves: 'build', fixture: 'live-post.md', slow: true },
   {
     id: 'category-pagination-page-2',
@@ -180,7 +182,7 @@ export const FAMILIES = [
   { id: 'empty-collection-is-listed-in-a-machine-output', kind: 'specimen', specimen: 'emptyCollectionListed' },
 ];
 
-const KINDS = ['build', 'build-then-gate', 'gate', 'pure', 'pagination', 'specimen'];
+const KINDS = ['build', 'build-then-gate', 'gate', 'pure', 'pagination', 'specimen', 'lh-record'];
 const REQUIREMENTS = {
   build: ['proves', 'fixture', 'plant', 'tokens'],
   'build-then-gate': ['proves', 'fixture', 'plant', 'tokens', 'gate'],
@@ -188,6 +190,7 @@ const REQUIREMENTS = {
   pure: ['proves', 'check'],
   pagination: ['proves', 'fixture'],
   specimen: ['specimen'],
+  'lh-record': ['proves'],
 };
 
 export const provesOf = (entry) => (entry.kind === 'specimen' ? SPECIMENS[entry.specimen]?.gate : entry.proves);
@@ -584,6 +587,7 @@ const EXECUTORS = {
     await restoreDist(copySite, work);
     return proveWithSpecimen(SPECIMENS[entry.specimen], { copySite, run });
   },
+  'lh-record': (copySite, _entry, work) => proveRecordRefusal({ copySite, work, run }),
 };
 
 export function label(result) {

@@ -7,6 +7,8 @@ import { join } from 'node:path';
 import { test } from 'node:test';
 import { promisify } from 'node:util';
 
+import { headFingerprint } from './lh-evidence.mjs';
+
 const run = promisify(execFile);
 const repoRoot = new URL('../../', import.meta.url).pathname;
 const greenReport = (route) => ({
@@ -17,7 +19,19 @@ const greenReport = (route) => ({
   audits: { 'largest-contentful-paint': { numericValue: 900 }, 'cumulative-layout-shift': { numericValue: 0 } },
 });
 
-async function fixture({ runs = 3, score = 1 } = {}) {
+const stampTree = async (root, phase = 'test') => {
+  const auditDir = join(root, 'audits', `phase-${phase}`);
+  await mkdir(auditDir, { recursive: true });
+  const measured = { fingerprint: await headFingerprint(root), startedAt: '2026-10-24T10:00:00.000Z' };
+  await writeFile(join(auditDir, 'lh-measured.json'), JSON.stringify(measured));
+};
+
+const commitAll = async (root, message) => {
+  await run('git', ['add', '-A'], { cwd: root });
+  await run('git', ['-c', 'user.email=t@t', '-c', 'user.name=t', 'commit', '-qm', message], { cwd: root });
+};
+
+async function fixture({ runs = 3, score = 1, stamped = true } = {}) {
   const root = await mkdtemp(join(tmpdir(), 'lh-evidence-'));
   for (const dir of ['site/scripts', 'site/dist', 'docs', '.githooks'])
     await mkdir(join(root, dir), { recursive: true });
@@ -31,6 +45,8 @@ async function fixture({ runs = 3, score = 1 } = {}) {
     'lh-shards.cjs',
     'gate.mjs',
     'invoked-directly.mjs',
+    'lh-parallel.mjs',
+    'run-lh-parallel.mjs',
     'lh-port.cjs',
   ])
     await cp(join(repoRoot, 'site/scripts', name), join(root, 'site/scripts', name));
@@ -45,6 +61,7 @@ async function fixture({ runs = 3, score = 1 } = {}) {
     JSON.stringify({ routes: ['/'], measured: [{ route: '/', js: 1, css: 1, page: 1, fonts: 1 }], overBudget: [] })
   );
   await writeFile(join(root, 'docs/PRD.md'), 'prose');
+  await writeFile(join(root, '.gitignore'), 'site/.lh-run/\n');
 
   for (const factor of ['mobile', 'desktop']) {
     const dir = join(root, 'audits/phase-test', `lh-${factor}`);
@@ -59,6 +76,7 @@ async function fixture({ runs = 3, score = 1 } = {}) {
   await run('git', ['init', '-q'], { cwd: root });
   await run('git', ['add', '-A'], { cwd: root });
   await run('git', ['-c', 'user.email=t@t', '-c', 'user.name=t', 'commit', '-qm', 'one'], { cwd: root });
+  if (stamped) await stampTree(root);
   return root;
 }
 
@@ -122,6 +140,57 @@ test('recording refuses an uncommitted source edit, which the fingerprint of HEA
   assert.match(out, /not committed/);
 });
 
+test('recording refuses reports no run stamped, because they could come from any tree', async () => {
+  const root = await fixture({ stamped: false });
+
+  const { code, out } = await invoke(root, 'record');
+
+  assert.equal(code, 1);
+  assert.match(out, /audits\/phase-test has no stamp/);
+  assert.match(out, /nothing recorded/);
+  await assert.rejects(readFile(join(root, 'audits/lighthouse-green.json'), 'utf8'), { code: 'ENOENT' });
+});
+
+test('recording refuses reports measured from another tree, names both trees and says to remeasure', async () => {
+  const root = await fixture();
+  const measured = await headFingerprint(root);
+  await writeFile(join(root, 'site/scripts/gate.mjs'), 'export const x = 2;\n');
+  await commitAll(root, 'two');
+  const current = await headFingerprint(root);
+
+  const { code, out } = await invoke(root, 'record');
+
+  assert.equal(code, 1);
+  assert.match(out, new RegExp(`was measured from tree ${measured.slice(0, 12)}`));
+  assert.match(out, new RegExp(`not the tree being recorded, ${current.slice(0, 12)}`));
+  assert.match(out, /Rebuild, remeasure with GATE_PHASE=test npm run gate:lh, then record/);
+  await assert.rejects(readFile(join(root, 'audits/lighthouse-green.json'), 'utf8'), { code: 'ENOENT' });
+});
+
+test('a stamp that is not a stamp counts as none, and refuses cleanly instead of crashing', async () => {
+  const root = await fixture({ stamped: false });
+  const stampFile = join(root, 'audits/phase-test/lh-measured.json');
+
+  for (const body of ['{"fingerprint": ', 'null', '"abc"', '{}', '{"fingerprint": 5}']) {
+    await writeFile(stampFile, body);
+
+    const { code, out } = await invoke(root, 'record');
+
+    assert.equal(code, 1, body);
+    assert.match(out, /^LIGHTHOUSE audits\/phase-test has no stamp/m, body);
+  }
+});
+
+test('a prose commit after the run leaves the stamp valid, as it leaves a push valid', async () => {
+  const root = await fixture();
+  await writeFile(join(root, 'docs/PRD.md'), 'rewritten');
+  await commitAll(root, 'prose');
+
+  const { code, out } = await invoke(root, 'record');
+
+  assert.equal(code, 0, out);
+});
+
 test('a source commit after the recorded run refuses the push', async () => {
   const root = await fixture();
   await invoke(root, 'record');
@@ -170,4 +239,35 @@ test('git itself runs the hook: a real push of an unmeasured tree is refused', a
   const { stderr } = await run('git', ['push', 'origin', 'HEAD'], { cwd: root });
 
   assert.doesNotMatch(stderr, /LIGHTHOUSE/);
+});
+
+test('the stamp a real run leaves is the one record accepts, though the run starts in site/ and record in the root', async () => {
+  const root = await fixture({ stamped: false });
+  const tools = await mkdtemp(join(tmpdir(), 'lh-tools-'));
+  await mkdir(join(tools, 'bin'));
+  await writeFile(join(tools, 'green.json'), JSON.stringify(greenReport('/')));
+  await writeFile(
+    join(tools, 'bin/npm'),
+    [
+      '#!/bin/sh',
+      'target="$AUDIT_ROOT/audits/phase-$GATE_PHASE/lh-$LHCI_FORM_FACTOR"',
+      'mkdir -p "$target"',
+      'for i in 0 1 2; do cp "$GREEN_REPORT" "$target/lhr-$i.json"; done',
+      '',
+    ].join('\n')
+  );
+  await chmod(join(tools, 'bin/npm'), 0o755);
+  const env = {
+    ...process.env,
+    PATH: `${join(tools, 'bin')}:${process.env.PATH}`,
+    GATE_PHASE: 'test',
+    LH_WORKERS: '1',
+    GREEN_REPORT: join(tools, 'green.json'),
+  };
+  delete env.AUDIT_ROOT;
+
+  await run(process.execPath, ['scripts/run-lh-parallel.mjs'], { cwd: join(root, 'site'), env });
+  const recorded = await invoke(root, 'record');
+
+  assert.equal(recorded.code, 0, recorded.out);
 });
