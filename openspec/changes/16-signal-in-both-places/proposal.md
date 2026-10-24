@@ -8,8 +8,8 @@ directive, because Lighthouse 12.6.1 called `Content-Signal` an unknown directiv
 `isitagentready.com` parses `robots.txt` and nothing else, so the check stayed red and row G45
 recorded the loss.
 
-The premise is gone. Lighthouse added `content-signal` to its directive safelist in 13.1.0;
-`core/audits/seo/robots-txt.js` carries it in every release from 13.1.0 to 13.5.0. The gate ran
+The premise is gone. Lighthouse added `content-signal` to the directive safelist of its `robots-txt` SEO audit in
+13.1.0, and carries it in every release from 13.1.0 to 13.5.0. The gate ran
 12.6.1 only because `@lhci/cli@0.15.1` pins it, and 0.15.1 is still the newest release.
 
 So the trade-off was never between the two statements. It was between one statement and an old
