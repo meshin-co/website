@@ -64,6 +64,7 @@ const IGNORED = /<(\w+)\b[^>]*\bdata-gate-ignore\b[^>]*>/gi;
 const LEAD = /<p\b[^>]*\bdata-gate-lead\b[^>]*>([\s\S]*?)<\/p>/i;
 const LEADS = /<p\b[^>]*\bdata-gate-lead\b[^>]*>([\s\S]*?)<\/p>/gi;
 const NON_TEXT = /<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi;
+const COMMENT = /<!--[\s\S]*?-->/g;
 
 function newestDate(html) {
   const days = matchAll(html, /<time\b[^>]*\bdatetime="([^"]+)"/gi).map((value) => value.slice(0, 10));
@@ -74,6 +75,10 @@ export function pageBody(source) {
   const chromeFree = cutBalanced(source.replace(NON_TEXT, ' '), CHROME);
   return cutBalanced(MAIN.exec(chromeFree)?.[1] ?? chromeFree, IGNORED);
 }
+
+export const mainRegion = (source) => MAIN.exec(source.replace(NON_TEXT, ' ').replace(COMMENT, ' '))?.[1] ?? '';
+
+export const contentRegion = (source) => cutBalanced(mainRegion(source), CHROME);
 
 export function extractPage(route, source) {
   const html = source.replace(NON_TEXT, ' ');

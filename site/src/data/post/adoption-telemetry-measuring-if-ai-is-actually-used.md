@@ -1,8 +1,8 @@
 ---
 title: 'Adoption telemetry for AI tools: what a trial found'
-description: "In METR's 2025 trial, 16 developers believed AI made them 20% faster. Tasks took 19% longer with AI allowed. METR now marks that result out of date."
+description: 'Adoption telemetry for AI tools: six measures, each with a stated limit, and the 2025 METR trial that shows why self-report misleads.'
 publishDate: 2026-10-02
-updatedDate: 2026-10-07
+updatedDate: 2026-10-25
 shortAnswer: "Adoption telemetry for AI tools should show whether use lasted and whether an agreed outcome moved. In METR's 2025 trial, developers believed AI made them 20% faster, while their tasks took 19% longer. METR now marks that result out of date. Count use by team, then read one outcome per use case against a baseline or comparison group."
 fullAnswer: "Adoption telemetry for AI tools usually reports seats, logins, active users and prompts. That is an inference from the sources cited here. None of them shows any of those counts predicting a business result. Self-reports can mislead too. In METR's 2025 trial, 16 experienced developers expected a 24% speed-up. Afterwards they believed they had been 20% faster. Their tasks took 19% longer. METR now marks that result out of date. In an NBER working paper issued in February 2026, nearly 6,000 senior executives reported that 69% of firms use AI. Nine in ten reported no impact on employment or productivity over three years. That is also self-report. A smaller set is easier to defend: coverage, retention by team, one agreed outcome, delivery health, cost per outcome and a trust survey read as opinion. That set is a synthesis, not a finding any source states. Collect it by team, and screen any per-person view first."
 keyTakeaways:
@@ -128,9 +128,20 @@ relatedResources:
   - adoption-telemetry-dashboard-template
 ---
 
+In my reading of the sources cited here, adoption telemetry for AI tools needs six measures:
+
+- Coverage of approved tools.
+- Paid versus active use, with retention by team.
+- One agreed outcome per use case.
+- Delivery health, for engineering use cases.
+- Cost per outcome.
+- A short repeated survey, read as opinion.
+
+That set is a synthesis, not a finding any source states. The evidence for it starts with a randomised trial.
+
 In July 2025, METR published a randomised trial. Sixteen experienced open-source developers worked on 246 issues. Before the trial they expected AI to make them 24% faster. Afterwards they believed it had made them 20% faster. Their tasks took 19% longer with AI allowed. METR now marks that result as out of date.
 
-That gap between what the developers believed and what the trial found is the subject of this article. In my reading, a dashboard built on self-report inherits it, and no cited source shows usage counts predicting a result. Because METR marks the result as out of date, take the lesson as one about method. It is not a lesson about the size of any one effect.
+That gap between what the developers believed and what the trial found is why the list above treats a survey as opinion. In my reading, a dashboard built on self-report inherits it, and no cited source shows usage counts predicting a result. Because METR marks the result as out of date, take the lesson as one about method. It is not a lesson about the size of any one effect.
 
 Executives report little effect, and that is also self-report. An NBER working paper issued in February 2026 surveyed nearly 6,000 senior executives in the US, UK, Germany and Australia. It found that 69% of firms use AI. Nine in ten executives reported no impact on employment or productivity over three years.
 

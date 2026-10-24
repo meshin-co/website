@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
+import { collectBookingFindings } from './booking-cta.mjs';
 import { discoverRoutes } from './gate.mjs';
 import { extractPage } from './content-html.mjs';
 import { judgePage, PROFILES } from './content-rows.mjs';
@@ -94,11 +95,15 @@ async function main(distDir) {
   const findings = gateFindings(pages, facts, bannedPhrases);
   for (const finding of await (await import('./semantic-core.mjs')).checkFindings(distDir, pages))
     findings.push(finding);
+  const booking = await collectBookingFindings(distDir);
+  findings.push(...booking.findings);
 
   const byRule = new Map();
   for (const finding of findings) byRule.set(finding.rule, (byRule.get(finding.rule) ?? 0) + 1);
 
-  console.log(`content: ${pages.length} pages gated`);
+  console.log(
+    `content: ${pages.length} pages gated, ${booking.checked} indexable routes checked for a booking call to action`
+  );
   for (const [rule, count] of [...byRule].sort((a, b) => b[1] - a[1])) console.log(`  ${rule}: ${count}`);
   for (const finding of findings)
     console.log(`${finding.route} ${finding.rule} [${finding.detail}] ${finding.excerpt}`);

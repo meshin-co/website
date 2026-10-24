@@ -3,7 +3,7 @@ title: What is data classification?
 term: Data classification
 description: Data classification is labelling data by sensitivity, such as public, internal or restricted, before deciding what may reach an AI tool.
 publishDate: 2026-09-08
-updatedDate: 2026-10-02
+updatedDate: 2026-10-25
 shortDefinition: Data classification means labelling what is in a dataset, document or prompt by sensitivity. Common tiers are public, internal, confidential and restricted. A company can then decide what may reach a given AI tool. That way nobody pastes something in and finds out too late.
 definition: |
   NIST's own method for federal systems ties each category to a real question, not a subjective label. The question is what actually happens to confidentiality, integrity or availability if this breaks. That means naming who could see this data, alter it, or take it offline. A scheme built the same way works for AI. That is what makes classification useful for a real decision, not a compliance exercise nobody consults.
@@ -22,7 +22,7 @@ sources:
 
 ## Why it comes up
 
-It is the first practical question underneath any AI acceptable-use policy. Can this go into that tool? Nobody can answer that until someone has labelled what this actually is. A security reviewer asks for the classification scheme by name, not as an abstract principle. The scheme is what turns a policy from a statement of intent into something an employee can actually follow on a Tuesday afternoon.
+It is the first practical question underneath any AI acceptable use policy. Can this go into that tool? Nobody can answer that until someone has labelled what this actually is. A security reviewer asks for the classification scheme by name, not as an abstract principle. The scheme is what turns a policy from a statement of intent into something an employee can actually follow on a Tuesday afternoon.
 
 ## What to do about it
 

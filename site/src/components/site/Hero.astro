@@ -1,4 +1,6 @@
 ---
+import { externalRelAttrs } from '~/utils/pipeline.mjs';
+
 interface Props {
   title: string;
   titleAccent: string;
@@ -13,7 +15,7 @@ interface Props {
 
 const { title, titleAccent, sub, proof, ctaLabel, ctaHref, offers, secondary, headingLevel = 1 } = Astro.props;
 const Heading = headingLevel === 1 ? 'h1' : 'h3';
-const external = ctaHref.startsWith('http');
+const outbound = externalRelAttrs(ctaHref);
 ---
 
 <section class="relative overflow-hidden border-b border-line">
@@ -31,11 +33,7 @@ const external = ctaHref.startsWith('http');
     <p class="mt-8 max-w-[62ch] text-lg leading-relaxed text-muted" data-gate-lead>{sub}</p>
 
     <div class="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
-      <a
-        class="btn-primary"
-        href={ctaHref}
-        {...external ? { target: '_blank', rel: 'nofollow noopener noreferrer' } : {}}>{ctaLabel}</a
-      >
+      <a class="btn-primary" href={ctaHref} {...outbound} {...outbound.rel ? { target: '_blank' } : {}}>{ctaLabel}</a>
       {
         secondary && (
           <a class="link-signature text-base" href={secondary.href}>

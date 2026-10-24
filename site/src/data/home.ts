@@ -1,12 +1,13 @@
+import { BOOKING_URL } from '~/utils/booking.mjs';
 import { yearsShipping } from '~/utils/experience.mjs';
 
 export const hero = {
   title: 'A Fractional Chief AI Officer',
   titleAccent: 'you can name on the org chart.',
   sub: "I'm the fractional chief AI officer your org chart can point at when a customer asks who owns AI risk. I set up the governance an enterprise security review asks for, then get one process live for real users, with evals, tracing, a rollback path and a cost per outcome.",
-  proof: ['Open-source AI Governance Starter Kit', 'ISO/IEC 42001 Lead Implementer course in progress'],
+  proof: ['AI Governance Starter Kit', 'ISO/IEC 42001 Lead Implementer course in progress'],
   ctaLabel: 'Book a 30-min fit call',
-  ctaHref: 'https://cal.com/meshin',
+  ctaHref: BOOKING_URL,
 };
 
 export const signals = {
@@ -53,7 +54,7 @@ export const cta = {
   title: 'Start with a 30-minute fit call.',
   body: 'No slides. I go through where you actually stand, and I tell you whether an Assessment is worth your money. If it is not, I say so.',
   label: 'Book a 30-min fit call',
-  href: 'https://cal.com/meshin',
+  href: BOOKING_URL,
   note: 'Or email hello@meshin.co',
 };
 
@@ -89,7 +90,7 @@ export const shift = {
 export const nudge = {
   text: 'Not sure which one fits? Start with the two-week Assessment.',
   label: 'Book a 30-min fit call',
-  href: 'https://cal.com/meshin',
+  href: BOOKING_URL,
 };
 
 export const heroOffers = [

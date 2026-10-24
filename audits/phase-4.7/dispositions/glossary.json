@@ -39,7 +39,7 @@
     "target": "src/data/glossary/data-classification.md",
     "status": "rewritten",
     "reason": "The 28-word NIST sentence carried a claim and a question; it is now two sentences with the same attribution, the same contrast with a subjective label, and the same three properties. The agentless passive in the shortDefinition is gone, 'the hard way' is now 'too late', 'Every additional tool' now reads 'Every new tool', and 'Without one' now says 'Without a scheme'. The first sentence of the shortDefinition is unchanged. Over-25 sentences go from 1 to 0 and agentless passives from 1 to 0.",
-    "digest": "28f7a13e9bfd"
+    "digest": "e2927bfebd19"
   },
   {
     "target": "src/data/glossary/dpia.md",
@@ -146,7 +146,7 @@
     "target": "src/data/glossary/nist-ai-rmf.md",
     "status": "rewritten",
     "reason": "Three sentences over 25 words are split around the unchanged NIST clauses. The first sentence of the shortDefinition (voluntary, US framework, January 2023) is verbatim, and the description now carries the abbreviation 'AI RMF' for the target query. 'Not a law', the four functions GOVERN, MAP, MEASURE and MANAGE, and the ten-person-startup example are kept. The one agentless passive ('risks are actually managed') is now active ('your company actually manages an AI system's risks'). Over-25 sentences go from 4 to 1; the one left is the pinned shortDefinition.",
-    "digest": "7267bd83fb47"
+    "digest": "18265cc1a53a"
   },
   {
     "target": "src/data/glossary/observability.md",

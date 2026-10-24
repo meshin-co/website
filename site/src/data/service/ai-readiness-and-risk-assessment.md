@@ -2,10 +2,10 @@
 title: AI Readiness & Risk Assessment
 name: AI Readiness & Risk Assessment
 tagline: Two weeks to a memo your board can act on.
-description: A two-week AI readiness and risk assessment for companies of 30 to 300 people, ending in a memo your board can act on, gap list included.
+description: 'Two-week AI readiness and risk assessment for 30 to 300 person companies: a board memo and a gap list against NIST AI RMF, ISO/IEC 42001 and the EU AI Act.'
 publishDate: 2026-09-08
-updatedDate: 2026-10-02
-shortAnswer: This AI readiness assessment takes two weeks of interviews and reading your systems, ending in a memo your board can act on. You learn where you stand against the frameworks your customers ask about, what a customer audit would find today and which three processes are worth automating first. The fee is credited if a Sprint follows within three months.
+updatedDate: 2026-10-25
+shortAnswer: This AI readiness assessment takes two weeks, ending in a memo your board can act on. You learn where you stand against NIST AI RMF, ISO/IEC 42001 and the EU AI Act, what a customer audit would find today and which three processes to automate first. The fee is credited if a Sprint follows within three months.
 feeShape: Fixed fee
 duration: 2 weeks
 order: 1
@@ -49,9 +49,6 @@ faq:
     a: The memo covers your position, the audit gap and the ranked shortlist, all in one document.
   - q: 'Is the fee credited if we continue?'
     a: Yes. If you go on to a 90-Day Production Sprint within three months, the full Assessment fee comes off the Sprint price.
-cta:
-  label: Book a 30-min fit call
-  href: https://cal.com/meshin
 sources:
   - title: AI Risk Management Framework
     url: https://www.nist.gov/itl/ai-risk-management-framework
@@ -71,9 +68,13 @@ sources:
 
 Two weeks. I interview the people doing the work and read your systems and your vendor list. I write one memo you can hand to a board or a customer.
 
+I score you on five readiness drivers. The free [AI readiness scorecard](/resources/ai-readiness-scorecard) lets you score the same five yourself in an afternoon.
+
 ## What you keep
 
 You keep one document, whether or not you continue. It holds the readiness score, the gap list, and the three processes ranked by what automating them is worth this quarter.
+
+If a [90-Day Production Sprint](/services/90-day-production-sprint) follows within three months, the Assessment fee is credited against it. Terms for all three offers are on the [pricing page](/pricing).
 
 ## ISO/IEC 42001 gap assessment
 

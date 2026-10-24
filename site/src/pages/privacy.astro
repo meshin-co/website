@@ -1,14 +1,16 @@
 ---
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
+import CtaBlock from '~/components/site/CtaBlock.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { staticPageDate } from '~/utils/machine-text.mjs';
 import { SITE } from 'astrowind:config';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
-const UPDATED = '2026-09-08';
+const UPDATED = staticPageDate('/privacy');
 
 const metadata = {
   title: 'Privacy policy',
@@ -75,5 +77,9 @@ const sections = [
         ))
       }
     </div>
+  </Section>
+
+  <Section title="Next step">
+    <CtaBlock />
   </Section>
 </Layout>

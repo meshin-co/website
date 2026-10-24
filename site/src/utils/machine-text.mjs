@@ -142,104 +142,99 @@ export const STATIC_PAGE_CATALOG = [
   {
     path: '/',
     title: 'Home',
-    file: 'src/pages/index.astro',
+    updatedDate: '2026-10-25',
     description:
       'Fractional Chief AI Officer for 30–300 person companies: governance that passes enterprise procurement, and agentic systems shipped to production with evals.',
   },
   {
     path: '/blog/tags',
     title: 'Tags',
-    file: 'src/pages/blog/tags.astro',
     description: 'The tags used across the writing, with how many articles carry each one.',
   },
   {
     path: '/about',
     title: 'About Dmitri Meshin',
-    file: 'src/pages/about.astro',
+    updatedDate: '2026-10-02',
     description:
       'Dmitri Meshin is a platform engineer working as a Fractional Chief AI Officer for companies of 30 to 300 people. Remote worldwide.',
   },
   {
     path: '/approach',
     title: 'How a Fractional AI Officer works',
-    file: 'src/pages/approach.astro',
+    updatedDate: '2026-10-02',
     description:
       'How a Fractional AI Officer works: the six things that decide whether an AI initiative reaches production, and the order I work through them.',
   },
   {
     path: '/pricing',
     title: 'Pricing: what a Fractional Chief AI Officer costs',
-    file: 'src/pages/pricing.astro',
+    updatedDate: '2026-10-02',
     description:
       'Fractional Chief AI Officer cost: two-week Assessment, 90-Day Sprint or monthly Retainer. Fixed, no hourly billing, every fee in writing before work starts.',
   },
   {
     path: '/faq',
     title: 'Fractional Chief AI Officer questions',
-    file: 'src/pages/faq.astro',
     description:
       'Fractional Chief AI Officer questions answered: what the role does, what each offer produces, and how AI risk gets recorded and signed off.',
   },
   {
     path: '/contact',
     title: 'Contact: book an AI leadership call',
-    file: 'src/pages/contact.astro',
+    updatedDate: '2026-10-25',
     description: `Book an AI leadership call: a 30-minute fit call, or email ${contactEmail(BRAND)}. Remote worldwide, on site when the trip is worth it.`,
   },
   {
     path: '/ai-policy',
-    title: 'AI acceptable-use policy',
-    file: 'src/pages/ai-policy.astro',
+    title: 'AI acceptable use policy',
+    updatedDate: '2026-10-25',
     description:
-      'My own acceptable-use policy for AI systems: what data may reach a vendor, what may not, and who decides.',
+      'My own acceptable use policy for AI systems: what data may reach a vendor, what may not, and who decides.',
   },
   {
     path: '/security',
     title: 'Security practices',
-    file: 'src/pages/security.astro',
+    updatedDate: '2026-10-02',
     description: `Security practices for ${BRAND.name}: how this site is built and served, how client data is handled, and where to report a vulnerability.`,
   },
   {
     path: '/now',
     title: 'What I am working on now',
-    file: 'src/pages/now.astro',
+    updatedDate: '2026-10-03',
     description:
       'What I am working on now: a dated log of what I am building and studying, newest first. A line is added when something happens and never edited after.',
   },
   {
     path: '/imprint',
     title: 'Imprint',
-    file: 'src/pages/imprint.astro',
+    updatedDate: '2026-10-17',
     description: `Imprint for ${BRAND.name}: who is responsible for this site, how to reach them by email, where they work from, and what it is hosted on.`,
   },
   {
     path: '/privacy',
     title: 'Privacy policy',
-    file: 'src/pages/privacy.astro',
+    updatedDate: '2026-10-17',
     description: `Privacy policy for ${BRAND.name}: what this site collects, which is almost nothing, and what happens to an email you send me.`,
   },
   {
     path: '/terms',
     title: 'Terms',
-    file: 'src/pages/terms.astro',
+    updatedDate: '2026-10-25',
     description: 'What this site is, why no price appears on it, and which terms actually govern an engagement.',
   },
   {
     path: '/search',
     title: 'Search',
-    file: 'src/pages/search.astro',
     description: 'Search the writing, glossary, services and case studies on this site.',
   },
   {
     path: '/styleguide',
     title: 'Styleguide',
-    file: 'src/pages/styleguide.astro',
     description: 'Every component in every state, both themes. Internal reference page.',
   },
   {
     path: '/404',
     title: 'Page not found',
-    file: 'src/pages/404.astro',
     description: `This page does not exist on ${BRAND.name}. Start from the home page.`,
   },
 ];
@@ -248,6 +243,13 @@ export const NOINDEX_STATIC_PAGES = new Set(['/search', '/styleguide', '/404']);
 
 export function publicIndexableStaticPages() {
   return STATIC_PAGE_CATALOG.filter((page) => !NOINDEX_STATIC_PAGES.has(page.path));
+}
+
+export function staticPageDate(path) {
+  const page = STATIC_PAGE_CATALOG.find((candidate) => candidate.path === path);
+  if (!page) throw new Error(`no static page at ${path} in STATIC_PAGE_CATALOG`);
+  if (!page.updatedDate) throw new Error(`static page ${path} has no updatedDate in STATIC_PAGE_CATALOG`);
+  return page.updatedDate;
 }
 
 export function renderSidecar({ title, url, description, updated, body }) {
@@ -294,7 +296,7 @@ export const HUB_PAGES = [
     base: '/resources',
     title: 'AI governance templates and checklists',
     description:
-      'Open AI governance templates and checklists: register, acceptable-use policy, data classification, vendor questionnaire.',
+      'AI governance templates, each described on its own page: what is inside, how to use it and where its content comes from.',
   },
   {
     base: '/services',

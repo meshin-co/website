@@ -19,6 +19,7 @@ import {
   sizeGuardFailure,
   lastmodCoverageGaps,
   sitemapNoindexLeaks,
+  sitemapLastmods,
   COLLECTION_BASES,
   humansTxtFindings,
   canonicalGaps,
@@ -323,6 +324,23 @@ test('lastmodCoverageGaps reports a route missing from the sitemap entirely, not
   const sitemap = sitemapFixture([{ loc: 'https://meshin.co/blog', dated: true }]);
 
   assert.deepEqual(lastmodCoverageGaps(sitemap, ['/blog', '/about']), ['/about']);
+});
+
+test('sitemapLastmods reads each route lastmod as written and null for a route listed without one', () => {
+  const sitemap = sitemapFixture([
+    { loc: 'https://meshin.co', dated: true },
+    { loc: 'https://meshin.co/blog', dated: true },
+    { loc: 'https://meshin.co/faq', dated: false },
+  ]);
+
+  assert.deepEqual(
+    [...sitemapLastmods(sitemap)],
+    [
+      ['/', '2026-09-08T00:00:00.000Z'],
+      ['/blog', '2026-09-08T00:00:00.000Z'],
+      ['/faq', null],
+    ]
+  );
 });
 
 test('sitemapNoindexLeaks reports a route that is both noindex and still listed in the sitemap, never a live route', () => {

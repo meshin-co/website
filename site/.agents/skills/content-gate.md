@@ -19,7 +19,7 @@ Two numeric rules gate most articles: every paragraph ≤75 words with no senten
 - `site/banned-phrases.json` — AI fingerprints, filler, hedges, marketing verbs. Zero matches.
 
 The duplicate-sentence rule is cross-route: no sentence of 12 or more words may appear on two
-different routes.
+different routes. Each indexable route also needs a booking link inside `<main>` (`scripts/booking-cta.mjs`).
 
 ## Add a route row
 

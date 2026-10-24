@@ -6,8 +6,10 @@ import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { contactPageNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { staticPageDate } from '~/utils/machine-text.mjs';
 import { SITE } from 'astrowind:config';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+import { BOOKING_URL } from '~/utils/booking.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
 const CONTACT_EMAIL = `hello@${SITE.name}`;
@@ -22,13 +24,18 @@ const crumbs = [
   { name: 'Contact', path: '/contact' },
 ];
 
-const nodes = [orgNode(site, { logoPath: ogDefaultPath }), personNode(site), websiteNode(site), contactPageNode(site)];
+const nodes = [
+  orgNode(site, { logoPath: ogDefaultPath }),
+  personNode(site),
+  websiteNode(site),
+  contactPageNode(site, staticPageDate('/contact')),
+];
 
 const channels = [
   {
     label: 'Fit call',
     body: 'Thirty minutes, no slides. Bring the pilot that stalled.',
-    action: { label: 'cal.com/meshin', href: 'https://cal.com/meshin' },
+    action: { label: BOOKING_URL.replace(/^https:\/\//, ''), href: BOOKING_URL },
   },
   {
     label: 'Email',
@@ -100,8 +107,6 @@ const channels = [
     <CtaBlock
       title="Thirty minutes is enough to know."
       body="If the answer is that you do not need me yet, that is a useful answer and it is free."
-      label="Book a 30-min fit call"
-      href="https://cal.com/meshin"
     />
   </Section>
 </Layout>

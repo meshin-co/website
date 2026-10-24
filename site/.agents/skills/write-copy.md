@@ -49,6 +49,13 @@ Every claim that needs a source carries one, and zod fails the build without `sh
 `updatedDate` and at least one source on a post, term or service. Bump `updatedDate` when you
 change prose.
 
+A static page has no frontmatter, so its date is the `updatedDate` on its row in
+`STATIC_PAGE_CATALOG` (`site/src/utils/machine-text.mjs`), and the sitemap, the `.md` sidecar, the
+JSON-LD and any visible `Updated` line all read that one value. Set it to the day you change the
+page's title, description, headings, lead or body, in the same commit. Leave it alone for markup,
+classes, JSON-LD wiring, the shared header and footer, the closing booking band and a related-links
+list, and never set it to a review that changed nothing: it is a claim every machine reader checks.
+
 ## Structure
 
 A heading where the hierarchy is real. A list only when the information is list-shaped — not

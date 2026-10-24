@@ -24,6 +24,7 @@ import {
   websiteNode,
 } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+import { resourceFormat } from '~/utils/resource-card.mjs';
 import RelatedContent from '~/components/site/RelatedContent.astro';
 import { firstMention, resolveByIds } from '~/utils/related-content.mjs';
 import { isPublished } from '~/utils/feeds.mjs';
@@ -107,13 +108,7 @@ const nodes = [
   />
 
   <article>
-    <Section
-      bordered={false}
-      headingLevel={1}
-      eyebrow={`${data.type} · v${data.version} · ${data.license}`}
-      title={data.name}
-      lead={data.description}
-    >
+    <Section bordered={false} headingLevel={1} eyebrow={resourceFormat(data)} title={data.name} lead={data.description}>
       <p class="font-mono text-sm text-muted">{data.status}</p>
       <p class="mt-6 font-mono text-xs text-muted" data-gate-ignore>
         Published{' '}
@@ -178,8 +173,6 @@ const nodes = [
     <CtaBlock
       title="Filling these in is the hard part."
       body="If you want them filled in against the systems you already run, that is the two-week Assessment."
-      label="Book a 30-min fit call"
-      href="https://cal.com/meshin"
     />
   </Section>
 </Layout>

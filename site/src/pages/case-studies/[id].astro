@@ -170,13 +170,14 @@ const nodes = [
 
   <Section title="Next step">
     {
-      offer && (
+      offer ? (
         <CtaBlock
           title={`This came out of the ${offer.data.name}.`}
           body={offer.data.tagline}
-          label="See the offer"
-          href={`/services/${offer.id}`}
+          secondary={{ label: 'See the offer', href: `/services/${offer.id}` }}
         />
+      ) : (
+        <CtaBlock />
       )
     }
   </Section>

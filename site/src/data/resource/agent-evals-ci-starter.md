@@ -2,11 +2,10 @@
 title: Agent Evals CI Starter
 name: Agent Evals CI Starter
 type: kit
-description: 'A starter CI pipeline for agent evals. It runs on every pull request and blocks a bad merge before it ships, using a plain YAML case format.'
+description: 'Agent evals CI starter: a four-field eval case format and a description of the pull-request gate that blocks a merge below a pass-rate floor you set.'
 publishDate: 2026-09-08
-updatedDate: 2026-10-02
+updatedDate: 2026-10-25
 version: '0.1'
-license: MIT
 status: Available as a page on this site. A repository copy is not published yet.
 whatInside:
   - A description of the workflow that runs on every pull request touching a prompt, a tool definition or a model version

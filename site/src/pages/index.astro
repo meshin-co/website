@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { METADATA } from 'astrowind:config';
 
 import CardGrid from '~/components/site/CardGrid.astro';
 import CtaBlock from '~/components/site/CtaBlock.astro';
@@ -15,8 +16,11 @@ import { artifactIds, cta, drivers, figures, hero, heroOffers, nudge, shift, sig
 import JsonLd from '~/components/common/JsonLd.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { isPublished } from '~/utils/feeds.mjs';
-import { orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { staticPageDate } from '~/utils/machine-text.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+import { externalRelAttrs } from '~/utils/pipeline.mjs';
+import { resourceFormat } from '~/utils/resource-card.mjs';
 
 const metadata = {
   description:
@@ -24,7 +28,12 @@ const metadata = {
 };
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
-const nodes = [orgNode(site, { logoPath: ogDefaultPath }), personNode(site), websiteNode(site)];
+const nodes = [
+  orgNode(site, { logoPath: ogDefaultPath }),
+  personNode(site),
+  websiteNode(site),
+  webPageNode(site, '/', staticPageDate('/'), METADATA.title?.default),
+];
 const services = (await getCollection('service', isPublished)).sort((a, b) => a.data.order - b.data.order);
 const resourcesById = new Map(
   (await getCollection('resource', ({ data }) => !data.draft)).map((entry) => [entry.id, entry])
@@ -79,7 +88,7 @@ const resources = artifactIds.map((id) => resourcesById.get(id)).filter((entry) 
 
     <div class="mt-10 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-4 border-t border-line pt-8">
       <p class="max-w-[64ch] text-muted">{nudge.text}</p>
-      <a class="link-signature font-mono text-sm" href={nudge.href} target="_blank" rel="nofollow noopener noreferrer"
+      <a class="link-signature font-mono text-sm" href={nudge.href} target="_blank" {...externalRelAttrs(nudge.href)}
         >{nudge.label}</a
       >
     </div>
@@ -106,7 +115,7 @@ const resources = artifactIds.map((id) => resourcesById.get(id)).filter((entry) 
           <ResourceCard
             name={resource.data.name}
             summary={resource.data.description}
-            format={`${resource.data.type} · v${resource.data.version} · ${resource.data.license}`}
+            format={resourceFormat(resource.data)}
             status={resource.data.status}
             href={`/resources/${resource.id}`}
           />

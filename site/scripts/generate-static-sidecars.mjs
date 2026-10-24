@@ -43,7 +43,6 @@ export async function main(distDir) {
   const lastmods = await siteLastmods({
     dataDir: 'src/data',
     staticPages: publicIndexableStaticPages(),
-    cwd: process.cwd(),
   });
 
   const missingHtml = [];

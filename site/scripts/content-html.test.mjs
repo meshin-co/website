@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { extractPage, pageBody } from './content-html.mjs';
+import { contentRegion, extractPage, mainRegion, pageBody } from './content-html.mjs';
 
 const PAGE = `<!doctype html><html><head><title>t</title></head><body>
 <header><nav><a href="/services">Services</a></nav><p>Book a call today with the team</p></header>
@@ -165,4 +165,39 @@ test('the page body is the main markup with chrome, ignored blocks and scripts c
       '<div data-gate-ignore><p>Ignored card.</p></div></main><footer><p>Footer text.</p></footer></body></html>'
   );
   assert.equal(body.trim(), '<p>Kept prose.</p>');
+});
+
+test('the main region is everything between the main tags and nothing outside them', () => {
+  const html =
+    '<body><header><a href="/a">a</a></header><main id="main"><p>Inside.</p></main><footer><a href="/b">b</a></footer></body>';
+  assert.equal(mainRegion(html), '<p>Inside.</p>');
+});
+
+test('a page with no main region has an empty one, so a link elsewhere is never credited to it', () => {
+  assert.equal(mainRegion('<body><header><a href="/a">a</a></header></body>'), '');
+  assert.equal(contentRegion('<body><footer><a href="/b">b</a></footer></body>'), '');
+});
+
+test('the main region ignores markup written inside a script string', () => {
+  const html = '<main><script>box.innerHTML = \'<a href="/injected">x</a>\';</script><p>Real.</p></main>';
+  assert.doesNotMatch(mainRegion(html), /injected/);
+});
+
+test('the main region ignores a link commented out of the markup', () => {
+  const html = '<main><!-- <a href="/commented">x</a> --><p>Real.</p></main>';
+  assert.doesNotMatch(mainRegion(html), /commented/);
+});
+
+test('the content region is the main region with header, footer and every nav cut out, ignored blocks kept', () => {
+  const html =
+    '<body><header><a href="/h">h</a></header><main>' +
+    '<nav aria-label="Breadcrumb"><ol><li><a href="/crumb">crumb</a></li></ol></nav>' +
+    '<p>Prose <a href="/prose">link</a>.</p>' +
+    '<div data-gate-ignore><a href="/card">card</a></div>' +
+    '<nav aria-label="Tags"><a href="/tag">tag</a></nav>' +
+    '</main><footer><a href="/f">f</a></footer></body>';
+  assert.equal(
+    contentRegion(html).replace(/\s+/g, ' ').trim(),
+    '<p>Prose <a href="/prose">link</a>.</p><div data-gate-ignore><a href="/card">card</a></div>'
+  );
 });

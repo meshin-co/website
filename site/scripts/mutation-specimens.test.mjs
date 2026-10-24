@@ -6,6 +6,9 @@ import { join } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+import { BOOKING_URL } from '../src/utils/booking.mjs';
+import { brandFromDisk } from '../src/utils/brand.mjs';
+
 import {
   SPECIMENS,
   addFile,
@@ -344,5 +347,48 @@ test('the routes specimen lists a route no build makes in the ledger, and restor
     assert.equal(readFileSync(ledger, 'utf8'), '["/"]');
   } finally {
     rmSync(root, { recursive: true, force: true });
+  }
+});
+
+const ORIGIN = `https://${brandFromDisk().name}`;
+
+const BUILT = {
+  'about.html': `<header><a href="${BOOKING_URL}">Book</a></header><main><p>Text.</p><a href="${BOOKING_URL}">Book</a></main><footer></footer>`,
+  'pricing.html': '<main></main><footer></footer>',
+  'security.html': '<script type="application/ld+json">{"dateModified":"2026-10-02T00:00:00.000Z"}</script>',
+  'sitemap-0.xml': `<url><loc>${ORIGIN}/about</loc><lastmod>2026-10-02T00:00:00.000Z</lastmod></url>`,
+};
+
+async function plantThenRestore(copySite, name, file, broken) {
+  const path = join(copySite, 'dist', file);
+  const restore = await SPECIMENS[name].plant(copySite);
+  broken(readFileSync(path, 'utf8'));
+  await restore();
+  assert.equal(readFileSync(path, 'utf8'), BUILT[file]);
+}
+
+test('the booking, chrome-only and date specimens break the built output and restore it byte for byte', async () => {
+  const copySite = scratch();
+  try {
+    mkdirSync(join(copySite, 'dist'));
+    for (const [name, text] of Object.entries(BUILT)) writeFileSync(join(copySite, 'dist', name), text);
+
+    await plantThenRestore(copySite, 'bookingCta', 'about.html', (html) => {
+      assert.ok(html.includes(`<header><a href="${BOOKING_URL}">`));
+      assert.ok(!html.slice(html.indexOf('<main')).includes(BOOKING_URL));
+    });
+    await plantThenRestore(copySite, 'chromeOnly', 'pricing.html', (html) => {
+      assert.ok(html.includes('<a href="/zz-specimen">x</a></footer>'));
+      assert.ok(existsSync(join(copySite, 'dist/zz-specimen.html')));
+    });
+    assert.equal(existsSync(join(copySite, 'dist/zz-specimen.html')), false);
+    await plantThenRestore(copySite, 'dates', 'security.html', (html) =>
+      assert.match(html, /"dateModified":"2026-09-13T00:00:00\.000Z"/)
+    );
+    await plantThenRestore(copySite, 'datesCollapse', 'sitemap-0.xml', (xml) =>
+      assert.ok(xml.includes(`<loc>${ORIGIN}/about</loc><lastmod>2026-10-02T20:40:28.000Z</lastmod>`))
+    );
+  } finally {
+    rmSync(copySite, { recursive: true, force: true });
   }
 });

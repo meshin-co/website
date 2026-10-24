@@ -29,10 +29,12 @@ fall back to build time, because a build-time date is a freshness lie (L28).
 `npm run gate:machine` requires a sidecar for every route in `sidecarRoutes()` plus every
 collection leaf, and inspects the content of each one: a title, a canonical matching its own
 route, a parseable `Updated:` date, and a non-empty body. Existence alone is not a pass.
+`scripts/date-agreement.mjs` then holds a static page to one date: its sidecar `Updated:` day, its
+JSON-LD `dateModified` and its sitemap `lastmod` all name it, and the two instants are midnight UTC.
 
 ## Adding a page
 
-A new static page appears in `publicIndexableStaticPages()`, which means its sidecar, its
-`llms.txt` line, its sitemap entry with a real `lastmod`, and its search entry all follow without
-another edit. If you find yourself hand-adding the same route to a second list, that list is the
-bug.
+A new static page appears in `publicIndexableStaticPages()` once its catalog row carries an
+`updatedDate`, which means its sidecar, its `llms.txt` line, its sitemap entry with a real
+`lastmod`, and its search entry all follow without another edit. If you find yourself
+hand-adding the same route to a second list, that list is the bug.

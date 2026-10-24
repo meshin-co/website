@@ -13,10 +13,10 @@ Run at the end of every phase and before any merge to main. The procedure is
 4. `npm run gate:html`, then `npm run gate:links` — html-validate, then linkinator; third-party
    hosts are skipped by `THIRD_PARTY_HOSTS` in `scripts/links-gate.mjs`.
 5. `npm run gate:content` — content Half A plus the semantic-core drift check (content-gate.md).
-6. `npm run gate:orphans` — every route needs an inbound link; the exempt list in
-   `scripts/orphan-gate.mjs` is closed and carries a reason per entry. Generated tables come from
-   `scripts/markdown-table.mjs`, already prettier-shaped; a script that can be both imported and run
-   decides which it is through `scripts/invoked-directly.mjs`, which resolves symlinks.
+6. `npm run gate:orphans` — a route needs an inbound link, and a content route one from another
+   page's body; the exempt lists in `scripts/orphan-gate.mjs` are closed and carry a reason each.
+   Generated tables come from `scripts/markdown-table.mjs`, already prettier-shaped; a script that can
+   be both imported and run decides which through `scripts/invoked-directly.mjs`, which resolves symlinks.
 7. `npm run gate:machine`, then `npm run gate:jsonld` — machine-interface coverage (every
    indexable route must appear in `llms.txt` or a `/llms/` file) and JSON-LD graph integrity (structured-data.md).
 8. `npm run gate:skills` — skills lint: every path real, no forbidden claims, length caps.

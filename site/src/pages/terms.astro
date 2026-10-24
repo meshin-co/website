@@ -1,13 +1,15 @@
 ---
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
+import CtaBlock from '~/components/site/CtaBlock.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { staticPageDate } from '~/utils/machine-text.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
-const UPDATED = '2026-09-15';
+const UPDATED = staticPageDate('/terms');
 
 const metadata = {
   title: 'Terms',
@@ -40,8 +42,8 @@ const sections = [
     body: 'Each engagement runs under its own written agreement covering confidentiality, intellectual property, liability and termination. That agreement overrides this page wherever the two differ. You own the deliverables and the code produced for you.',
   },
   {
-    title: 'Content and licences',
-    body: 'The writing on this site is mine and you may quote it with a link. Templates in the Resources section carry their own licence, stated on each entry, and that licence governs their use.',
+    title: 'Content',
+    body: 'The writing on this site is mine and you may quote it with a link.',
   },
   {
     title: 'Availability',
@@ -74,5 +76,9 @@ const sections = [
         ))
       }
     </div>
+  </Section>
+
+  <Section title="Next step">
+    <CtaBlock />
   </Section>
 </Layout>

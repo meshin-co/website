@@ -57,9 +57,9 @@ owns the actual `<link>` tags; ask this section's owner for the exact set).
 
 `src/utils/sitemap-lastmod.mjs`'s `siteLastmods()` is the single call `astro.config.ts`'s
 sitemap `serialize` uses, layered in this order (later wins): `collectionLastmods` (per-entry
-leaf routes, from frontmatter), `staticPageLastmods` (the file named in `STATIC_PAGE_CATALOG`'s
-`file` field, dated by `git log -1 --format=%aI` — never `fs.mtime`, which is checkout wall
-time under a shallow CI clone and would violate the "never build-time" lastmod rule), `hubLastmods`
+leaf routes, from frontmatter), `staticPageLastmods` (the `updatedDate` on the page's row in
+`STATIC_PAGE_CATALOG`, which its JSON-LD, sidecar and visible `Updated` line read too; never `git log`
+or `fs.mtime` (a shallow clone corrupts both); a page no collection dates must have one), `hubLastmods`
 (a collection hub's date is its newest LIVE entry, e.g. `/faq`), and `taxonomyLastmods`
 (`/blog/category/{slug}`, `/blog/tag/{slug}` and `/blog/tags`, via `liveTopicMap` over live
 posts only — a draft's date never leaks into a hub or taxonomy date). A route with zero live

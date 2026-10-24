@@ -2,7 +2,7 @@
 title: Why your AI pilot never reached production
 description: 'Most AI pilots stall on ownership, data rules and a missing outcome metric, not the model. Here is what has to be true before one reaches production.'
 publishDate: 2026-09-08
-updatedDate: 2026-10-02
+updatedDate: 2026-10-25
 shortAnswer: 'Most AI pilots stall because no single person owns the risk, legal has never decided which data may reach a vendor and success has no number attached to it. A pilot reaches production once someone is accountable for it, the data path is classified, an outcome is measured and a regression triggers an automatic rollback.'
 fullAnswer: 'An AI pilot never reached production because of an organisational gap, not a technical one. A demo only has to impress the person running it. Production has to survive a change of prompt, a change of model and a change of the person who built it. It has to do that without anyone noticing except a number on a dashboard. Six conditions decide whether that gap closes. One named owner still answers for the system a year after launch. A data classification signed off by someone with authority says what a vendor may see. An outcome number moves when the system works, matched by an eval that runs in the build pipeline before every release. Tracing shows which step produced a bad answer, and a rollback fires on a threshold, not an argument. Most stalled pilots are missing the first two, and a team cannot build the rest until those exist.'
 keyTakeaways:
@@ -84,11 +84,13 @@ I run this as one pass, not six parallel workstreams, because the six conditions
 
 ### Pick one process
 
-Choose a single workflow with enough volume to matter and an outcome you can measure without a survey, not five pilots running at once. An AI readiness and risk assessment is the fastest way to get that choice onto paper. Two weeks of reading the existing systems and vendor list end in a memo. The memo names an owner candidate, a first data classification and the number the process should move.
+Choose a single workflow with enough volume to matter and an outcome you can measure without a survey, not five pilots running at once. An [AI readiness and risk assessment](/services/ai-readiness-and-risk-assessment) is the fastest way to get that choice onto paper. Two weeks of reading the existing systems and vendor list end in a memo. The memo names an owner candidate, a first data classification and the number the process should move.
+
+For a rougher first pass, the [AI readiness scorecard](/resources/ai-readiness-scorecard) takes an afternoon.
 
 ### Build it in ninety days
 
-A 90-Day Production Sprint turns that memo into a running system. Evals get written alongside the first working version, rather than bolted on at the end. Tracing and cost per outcome go live on a dashboard from week one. The rollback path gets rehearsed before real traffic arrives, not during the first incident.
+A [90-Day Production Sprint](/services/90-day-production-sprint) turns that memo into a running system. Evals get written alongside the first working version, rather than bolted on at the end. Tracing and cost per outcome go live on a dashboard from week one. The rollback path gets rehearsed before real traffic arrives, not during the first incident.
 
 ### Hand it to someone who was in the room
 

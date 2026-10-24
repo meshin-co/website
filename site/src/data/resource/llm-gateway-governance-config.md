@@ -2,11 +2,10 @@
 title: LLM Gateway Governance Config
 name: LLM Gateway Governance Config
 type: template
-description: 'A governance config for an LLM gateway. It decides who may call which model, what gets redacted, how long logs are kept and the rate and fallback rules.'
+description: 'LLM gateway governance config: a policy schema of five keys (allowed models, redaction, rate limit, log retention and fallback), each with an example.'
 publishDate: 2026-09-08
-updatedDate: 2026-10-02
+updatedDate: 2026-10-25
 version: '0.1'
-license: MIT
 status: Available as a page on this site. A repository copy is not published yet.
 whatInside:
   - A policy file format — one entry per team or service, with its allowed models, rate limit and redaction rule

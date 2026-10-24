@@ -4,6 +4,7 @@ import { mkdir, readdir, readFile, rename, rm, writeFile } from 'node:fs/promise
 import { dirname, join } from 'node:path';
 
 import { brandFromDisk } from '../src/utils/brand.mjs';
+import { BOOKING_URL } from '../src/utils/booking.mjs';
 import { evidenceSpecimens } from './evidence-specimens.mjs';
 import { REGISTERS_BEGIN } from './registers.mjs';
 import { SPEC_SPECIMENS } from './spec-specimens.mjs';
@@ -168,6 +169,51 @@ export const SPECIMENS = {
     token: 'zero inbound links /zz-specimen',
     plant: async (copySite) =>
       addPage(copySite, 'zz-specimen', await readFile(join(copySite, 'dist/about.html'), 'utf8')),
+  },
+  bookingCta: {
+    gate: 'gate:content',
+    token: `/about booking-cta-missing [no link to ${BOOKING_URL} inside <main>`,
+    plant: (copySite) =>
+      editFile(join(copySite, 'dist/about.html'), (html) =>
+        html.replace(/<main\b[\s\S]*<\/main>/, (main) => main.replaceAll(BOOKING_URL, '#'))
+      ),
+  },
+  chromeOnly: {
+    gate: 'gate:orphans',
+    token: '/zz-specimen is linked only from the header, footer or breadcrumb of 1 page',
+    plant: async (copySite) => {
+      const removePage = await addPage(
+        copySite,
+        'zz-specimen',
+        await readFile(join(copySite, 'dist/about.html'), 'utf8')
+      );
+      const removeLink = await editFile(join(copySite, 'dist/pricing.html'), (html) =>
+        html.replace('</footer>', '<a href="/zz-specimen">x</a></footer>')
+      );
+      return async () => {
+        await removeLink();
+        await removePage();
+      };
+    },
+  },
+  dates: {
+    gate: 'gate:machine',
+    token: '/security modified dates disagree',
+    plant: (copySite) =>
+      editFile(join(copySite, 'dist/security.html'), (html) =>
+        html.replace(/"dateModified":"[^"]+"/, '"dateModified":"2026-09-13T00:00:00.000Z"')
+      ),
+  },
+  datesCollapse: {
+    gate: 'gate:machine',
+    token: 'T20:40:28.000Z is not an editorial date (midnight UTC)',
+    plant: (copySite) =>
+      editFile(join(copySite, 'dist/sitemap-0.xml'), (xml) =>
+        xml.replace(
+          new RegExp(`(<loc>${ORIGIN}/about</loc><lastmod>\\d{4}-\\d{2}-\\d{2})T00:00:00\\.000Z`),
+          '$1T20:40:28.000Z'
+        )
+      ),
   },
   agents: {
     gate: 'gate:agents',

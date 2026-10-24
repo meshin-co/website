@@ -4,7 +4,7 @@ name: 90-Day Production Sprint
 tagline: One process live in production, with evals in CI.
 description: A 90-day sprint that puts one agentic workflow into production with evals in CI, tracing, a named owner, and a rollback path.
 publishDate: 2026-09-08
-updatedDate: 2026-10-02
+updatedDate: 2026-10-25
 shortAnswer: A 90-day production sprint exists to get one process running in production and keep it there. I build it with your engineers rather than beside them, so the team can change it after I leave. You get evals in continuous integration, tracing, a cost per outcome your finance team can read and a rollback path.
 feeShape: Fixed scope, quoted once from the statement of work
 duration: 90 days
@@ -55,9 +55,6 @@ faq:
     a: You do. It lives in your repositories from the first commit, under your licence and your review rules.
   - q: 'What if the evals say the workflow is not good enough?'
     a: Then it does not ship, and the sprint ends with a written account of why. That is a cheaper outcome than shipping it and finding out from a customer.
-cta:
-  label: Book a 30-min fit call
-  href: https://cal.com/meshin
 sources:
   - title: AI Risk Management Framework
     url: https://www.nist.gov/itl/ai-risk-management-framework
@@ -68,6 +65,8 @@ sources:
 ## What this is
 
 Ninety days, one process, in production. The measure of success is written into the statement of work before the first day.
+
+Terms for all three offers are on the [pricing page](/pricing). The [AI Readiness & Risk Assessment](/services/ai-readiness-and-risk-assessment) fee is credited against the Sprint if the Sprint follows within three months.
 
 ## What you keep
 
