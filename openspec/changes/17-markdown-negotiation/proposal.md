@@ -22,8 +22,8 @@ the build as `dist/_worker.js`, which Cloudflare Pages runs in front of the stat
 `content-type: text/markdown; charset=utf-8`, `content-location` naming the sidecar, and `Accept`
 added to `Vary`. Everything else passes through untouched.
 
-**It cannot cost a page.** A route with no sidecar falls through to HTML rather than 404. A request
-that is not a `GET` is never rewritten. Anything thrown inside the handler is caught and the
+**It cannot cost a page.** A route with no sidecar falls through to HTML rather than 404. A method that is not a read is never rewritten, and a `HEAD` answers
+with the headers its own `GET` would send. Anything thrown inside the handler is caught and the
 request is served from the assets, so an edge failure costs the markdown, never the response. Nine
 tests hold those rules, driving the handler with a fake asset binding.
 

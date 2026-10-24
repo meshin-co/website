@@ -7,7 +7,8 @@
       `content-location`, and `Accept` added to `Vary`
 - [x] 1.2 Map routes to sidecars the way the build writes them, including `/` to `/index.md` and a
       trailing slash to the same file
-- [x] 1.3 Never cost a response: a route with no sidecar, a request that is not a `GET`, and any
+- [x] 1.3 Answer `HEAD` with the headers `GET` would send and no body, so the two never disagree
+- [x] 1.4 Never cost a response: a route with no sidecar, a method that is not a read, and any
       error inside the handler all fall through to the asset the request asked for
 
 ## 2. Gate what the build can see
@@ -21,7 +22,7 @@
 
 - [x] 3.1 `markdownNegotiationVerdict()` turns the live response into a pass or a named failure
 - [x] 3.2 `npm run smoke:prod` asks the live home page for markdown, taking the run to 21 checks
-- [ ] 3.3 Publish, then record the live result and rescan: the target is
+- [x] 3.3 Publish, then record the live result and rescan: the target is
       `contentAccessibility.markdownNegotiation` reading `"pass"` and `level` reading 3
 
 ## 4. Write the rule down

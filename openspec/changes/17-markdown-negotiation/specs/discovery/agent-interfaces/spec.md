@@ -4,7 +4,7 @@
 
 ### Requirement: The same URL answers markdown when an agent asks for it
 
-A `GET` whose `Accept` header names `text/markdown` SHALL be answered with the markdown sidecar the
+A `GET` or `HEAD` whose `Accept` header names `text/markdown` SHALL be answered with the markdown sidecar the
 build wrote for that route, carrying `content-type: text/markdown; charset=utf-8`, a
 `content-location` naming the sidecar, and `Accept` among the values of `Vary`. Every other request
 SHALL be served unchanged. The build SHALL ship the edge handler that does this, and the gate SHALL
@@ -24,6 +24,17 @@ fail without it.
 
 - **WHEN** an agent asks for markdown on a route the build writes no `.md` for
 - **THEN** the HTML page is served, because a missing sidecar must not turn a page into a 404
+
+#### Scenario: A client asks what the URL would send
+
+- **WHEN** `HEAD /` carries `accept: text/markdown`
+- **THEN** the headers are the ones `GET` would send, with no body, because a `HEAD` that
+  disagrees with its own `GET` misinforms the client that asked
+
+#### Scenario: A method that is not a read
+
+- **WHEN** a `POST` carries `accept: text/markdown`
+- **THEN** it is passed through untouched
 
 #### Scenario: The handler fails
 

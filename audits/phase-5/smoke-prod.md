@@ -1,18 +1,18 @@
 # Production smoke
 
-Generated-from: 544a1c0
+Generated-from: c48941b
 
 Measured against `https://meshin.co` by `npm run smoke:prod`. Every row is one request; nothing
 here is read from a config file.
 
-failures: 1
+failures: 0
 
 | Check | Status | Detail |
 |---|---|---|
 | headers | pass | all 6 present, CSP has no unsafe directive |
 | route / | pass | 200 |
 | noindex removed | pass | no noindex robots meta ships |
-| markdown negotiation / | fail | answered text/html; charset=utf-8, expected text/markdown |
+| markdown negotiation / | pass | text/markdown; charset=utf-8 |
 | route /services | pass | 200 |
 | route /pricing | pass | 200 |
 | route /approach | pass | 200 |

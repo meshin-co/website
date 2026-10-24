@@ -56,6 +56,9 @@ The negotiation itself is not observable here: the gate server serves files, it 
 edge handler. `npm run smoke:prod` asks the live home page for markdown, which is the only proof
 that exists, and it is check 21 of 21.
 
+`HEAD` negotiates with `GET`: a `HEAD` that answers `text/html` while its own `GET` answers
+markdown misinforms the client, and the live site did exactly that until it was fixed.
+
 The handler itself is `scripts/markdown-negotiation.mjs`, copied verbatim by
 `scripts/gen-edge-worker.mjs` so that the code Pages runs is the code the tests drive.
 
