@@ -50,9 +50,30 @@ The scanner named one requirement for level 2: Content Signals in `robots.txt`.
 - `dist/.well-known/ai-catalog.json` lists 18 entries, each one a file the build ships.
 - `dist/_headers` carries three `Link` headers on `/` and the linkset media type.
 
-## After
+## After, 2026-10-24, against the live origin
 
-To be recorded once the owner publishes. The targets are `botAccessControl.contentSignals`, `discoverability.linkHeaders`,
-`discovery.apiCatalog` and `discovery.ard` reading `"pass"`, and `level` reading 2 or higher. Nine crawlers answered 403 at the edge on 2026-10-24 because `ai_bots_protection` in the zone's
-bot settings read `block`. It was set to `disabled` the same day, and the register's 22 crawlers
-then answered 200 out of 22 against the live origin.
+`level: 2`, `levelName: "Bot-Aware"`. Eight pass where three did, five neutral, ten fail.
+
+| Check                             | Before | After |
+| --------------------------------- | ------ | ----- |
+| `botAccessControl.contentSignals` | fail   | pass  |
+| `discoverability.linkHeaders`     | fail   | pass  |
+| `discovery.apiCatalog`            | fail   | pass  |
+| `discovery.ard`                   | fail   | pass  |
+
+Measured on the same request: the live `robots.txt` is byte-identical to `dist/robots.txt`, 139
+lines with 23 `Content-Signal` directives; the home page answers `content-signal: search=yes,
+ai-input=yes, ai-train=yes` and three `link` headers; `/openapi.json`,
+`/.well-known/api-catalog` and `/.well-known/ai-catalog.json` answer 200 with
+`application/vnd.oai.openapi+json;version=3.1`, `application/linkset+json` and
+`application/json`.
+
+The crawler register was re-run against the live origin on the same day: **22 of 22 answer 200**.
+The nine that answered 403 did so because `ai_bots_protection` in the zone's bot settings read
+`block`; it was set to `disabled`, and `ai_training` moved from `disallow` to `disabled` with it.
+
+The ten remaining failures are the ones this site refuses to fake: `dnsAid`, `oauthDiscovery`,
+`oauthProtectedResource`, `authMd`, `mcpServerCard`, `a2aAgentCard`, `agentSkills`, `webMcp`,
+`personalAgentProtocol` — no accounts, no agent, no MCP server — and `markdownNegotiation`, which
+the scanner names as the single requirement for level 3 and which needs edge logic this site's
+hard rules exclude.

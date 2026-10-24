@@ -41,11 +41,11 @@
 ## 5. Prove it against the scanner, not against an opinion
 
 - [x] 5.1 Record the before scan as evidence: `level`, `levelName`, and every
-      `checks.<group>.<item>.status`. `audits/phase-15-agent-readiness/agent-readiness-scan.md`: level 1, three pass, fourteen fail, six neutral, each key recorded
-      The after-scan and the crawler matrix both need the live origin to be serving this build, which
-      only the owner can publish. They left this change as row G46 of
-      `docs/plan/reference/known-gaps.md`, with the slot for them already open in
-      `audits/phase-15-agent-readiness/agent-readiness-scan.md`.
+      `checks.<group>.<item>.status`. `audits/phase-15-agent-readiness/agent-readiness-scan.md`: level 1, three pass, fourteen fail, six neutral, each key recorded - [x] 5.2 Rescanned after the publish of 2026-10-24: `level: 2, "Bot-Aware"`, with
+      `botAccessControl.contentSignals`, `discoverability.linkHeaders`, `discovery.apiCatalog` and
+      `discovery.ard` all reading `"pass"`
+- [x] 5.3 Crawler register re-run against the live origin: 22 of 22 answer 200, after
+      `ai_bots_protection` was moved from `block` to `disabled` in the zone's bot settings
 
 ## 6. Calibration Gate
 

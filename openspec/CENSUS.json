@@ -84,7 +84,7 @@
   ],
   "discovery/agent-interfaces": [
     "A capability manifest is reachable from every page",
-    "Every response declares the site's AI content signals",
+    "Both robots.txt and every response declare the site's AI content signals",
     "The API catalogue is served with the linkset media type",
     "The JSON endpoints the build ships are described by an OpenAPI document",
     "The home page points at the machine layer in its first response"
