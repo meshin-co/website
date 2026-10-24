@@ -1,6 +1,6 @@
 # Agent readiness, measured
 
-Generated-from: 9ce5c01
+Generated-from: db6bd38
 
 `POST https://isitagentready.com/api/scan` with `{"url": "https://meshin.co"}`.
 
