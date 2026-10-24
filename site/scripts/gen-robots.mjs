@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 
 import { brandFromDisk } from '../src/utils/brand.mjs';
+import { CONTENT_SIGNAL } from './gen-headers.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 
 const SITE_ORIGIN = `https://${brandFromDisk().name}`;
@@ -39,7 +40,14 @@ export function disallowedPaths(pagesDir) {
 export function renderRobots(disallowed) {
   const agents = ['*', ...TRAINING_AGENTS, ...RETRIEVAL_AGENTS, ...SEARCH_AGENTS];
   const groups = agents
-    .map((agent) => [`User-agent: ${agent}`, 'Allow: /', ...disallowed.map((path) => `Disallow: ${path}`)].join('\n'))
+    .map((agent) =>
+      [
+        `User-agent: ${agent}`,
+        `Content-Signal: ${CONTENT_SIGNAL}`,
+        'Allow: /',
+        ...disallowed.map((path) => `Disallow: ${path}`),
+      ].join('\n')
+    )
     .join('\n\n');
   return `${groups}\n\nSitemap: ${SITE_ORIGIN}/sitemap-index.xml\n`;
 }

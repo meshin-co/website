@@ -14,6 +14,7 @@ import {
   manifestEntryGaps,
   manifestRoute,
   openApiCoverageGaps,
+  robotsSignalGaps,
   shippedGaps,
 } from './agent-interfaces-gate.mjs';
 
@@ -22,7 +23,7 @@ const SIGNAL = 'search=yes, ai-input=yes, ai-train=yes';
 
 const robots = (groups = ['*', 'GPTBot']) =>
   [
-    ...groups.map((agent) => `User-agent: ${agent}\nAllow: /\nDisallow: /search`),
+    ...groups.map((agent) => `User-agent: ${agent}\nContent-Signal: ${SIGNAL}\nAllow: /\nDisallow: /search`),
     `Sitemap: ${ORIGIN}/sitemap-index.xml`,
   ].join('\n\n');
 
@@ -55,6 +56,29 @@ test('a build that declares no signal at all is named', () => {
   const silent = headers().replace(`\n  Content-Signal: ${SIGNAL}`, '');
 
   assert.deepEqual(contentSignalGaps(silent), ['_headers: no response declares a Content-Signal']);
+});
+
+test('every robots group repeats the header word for word', () => {
+  assert.deepEqual(robotsSignalGaps(robots(), headers()), []);
+});
+
+test('a robots group that says something else than the header is named', () => {
+  const drifted = robots().replace(
+    `Content-Signal: ${SIGNAL}`,
+    'Content-Signal: search=yes, ai-input=yes, ai-train=no'
+  );
+
+  assert.deepEqual(robotsSignalGaps(drifted, headers()), [
+    'robots.txt: the group for * says "search=yes, ai-input=yes, ai-train=no", the header says "search=yes, ai-input=yes, ai-train=yes"',
+  ]);
+});
+
+test('a robots group added without the directive is named', () => {
+  const silent = `${robots()}\n\nUser-agent: NewBot\nAllow: /`;
+
+  assert.deepEqual(robotsSignalGaps(silent, headers()), [
+    'robots.txt: the group for NewBot declares 0 Content-Signal lines',
+  ]);
 });
 
 test('a signal left out of the header is named', () => {

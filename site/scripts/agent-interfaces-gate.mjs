@@ -14,18 +14,41 @@ function sectionFor(headersText, pattern) {
   return headersText.split('\n\n').find((block) => block.startsWith(`${pattern}\n`));
 }
 
+function signalGaps(label, value) {
+  const declared = new Map(value.split(',').map((pair) => pair.split('=').map((part) => part.trim())));
+  return REQUIRED_SIGNALS.filter((signal) => !declared.get(signal)).map((signal) => `${label} leaves ${signal} unsaid`);
+}
+
 export function contentSignalGaps(headersText) {
-  const section = sectionFor(headersText, '/*');
-  const values = (section ?? '')
+  const values = (sectionFor(headersText, '/*') ?? '')
     .split('\n')
     .filter((line) => line.trim().startsWith('Content-Signal:'))
     .map((line) => line.trim().slice('Content-Signal:'.length).trim());
   if (values.length === 0) return ['_headers: no response declares a Content-Signal'];
   if (values.length > 1) return [`_headers: /* declares ${values.length} Content-Signal headers`];
-  const declared = new Map(values[0].split(',').map((pair) => pair.split('=').map((part) => part.trim())));
-  return REQUIRED_SIGNALS.filter((signal) => !declared.get(signal)).map(
-    (signal) => `_headers: the Content-Signal leaves ${signal} unsaid`
-  );
+  return signalGaps('_headers: the Content-Signal', values[0]);
+}
+
+export function robotsSignalGaps(robotsText, headersText) {
+  const header = (sectionFor(headersText, '/*') ?? '')
+    .split('\n')
+    .find((line) => line.trim().startsWith('Content-Signal:'))
+    ?.trim()
+    .slice('Content-Signal:'.length)
+    .trim();
+  const groups = [];
+  for (const line of robotsText.split('\n')) {
+    const [name, ...rest] = line.split(':');
+    if (name === 'User-agent') groups.push({ agent: rest.join(':').trim(), signals: [] });
+    if (name === 'Content-Signal') groups.at(-1)?.signals.push(rest.join(':').trim());
+  }
+  return groups.flatMap(({ agent, signals }) => {
+    if (signals.length !== 1)
+      return [`robots.txt: the group for ${agent} declares ${signals.length} Content-Signal lines`];
+    if (header !== undefined && signals[0] !== header)
+      return [`robots.txt: the group for ${agent} says "${signals[0]}", the header says "${header}"`];
+    return signalGaps(`robots.txt: the group for ${agent}`, signals[0]);
+  });
 }
 
 export function manifestRoute(homeHtml) {
@@ -133,6 +156,7 @@ export async function agentInterfaceFindings(distDir) {
   const reachable = route !== undefined && shipped.includes(route);
   return [
     ...contentSignalGaps(headersText),
+    ...robotsSignalGaps(await read('robots.txt'), headersText),
     ...openApiCoverageGaps(await readJson('openapi.json'), await publicJsonRoutes(distDir)),
     ...linksetShapeGaps(catalog),
     ...shippedGaps(

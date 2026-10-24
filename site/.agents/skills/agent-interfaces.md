@@ -14,11 +14,11 @@ on what terms. They are build outputs: verify them in `dist/`, never in source.
 headers on `/` and the media type for the extensionless catalog. `CommonMeta.astro` carries
 `<link rel="ai-catalog">`, which is how an agent finds the capability manifest.
 
-The signal is a header and not a `robots.txt` directive for a measured reason. Lighthouse's
-`robots-txt` audit rejects any directive outside the classic set, so 23 `Content-Signal` lines and
-one `Agentmap` line scored SEO 0.92 on every route on 2026-10-24, against a hard rule of 100. The
-header form carries the same policy and ranks above `robots.txt` when the two disagree. Row G45 of
-`docs/plan/reference/known-gaps.md` holds what that costs.
+The signal is stated twice: as a response header and as a directive in every `robots.txt` group.
+Both read `CONTENT_SIGNAL` from the headers generator, so they cannot be typed apart, and the gate
+fails when they differ. Lighthouse rejected the directive as unknown until 13.1.0 added
+`content-signal` to its safelist; the gate pins 13.5.0 through an `overrides` entry, because
+`@lhci/cli@0.15.1` is the newest release and still depends on 12.6.1.
 
 ## Everything here is derived
 
@@ -37,6 +37,8 @@ reason visible in the constant.
 
 - a build whose responses declare no `Content-Signal`, declare two, or leave `search`, `ai-train`
   or `ai-input` unsaid
+- a `robots.txt` group with no directive, with more than one, or with a value the header does not
+  repeat word for word
 - an OpenAPI path that is not shipped, or a shipped JSON route the document omits
 - a linkset with no anchor or a missing service link, or any link target not shipped
 - a manifest with no entries, a repeated identifier, or an entry URL not shipped
@@ -60,5 +62,7 @@ the proposal of the change `15-agent-readiness` records each refusal with its re
 
 A platform can rewrite `robots.txt` and can refuse a crawler before any file is read. Measured
 2026-10-24 on Cloudflare: Bot Preference Sync had been prepending 128 lines carrying `ai-train=no`
-and `Disallow: /`, and nine crawlers still answer 403 at the edge. Compare the live file against
+and `Disallow: /`, and `ai_bots_protection` in the zone's bot settings was `block`, which answered
+403 to nine crawlers before any file was read. Both are off now, and all 22 crawlers in the
+register answer 200. Compare the live file against
 `dist/robots.txt` byte for byte before concluding anything about what agents see.
