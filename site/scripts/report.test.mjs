@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
+import { mkdtempSync, writeFileSync } from 'node:fs';
 import { mkdir, mkdtemp, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -13,6 +15,7 @@ import {
   metricFailures,
   readReports,
   renderReport,
+  generatorRevision,
   publishableRevision,
 } from './report.mjs';
 import { overBudget } from './gate.mjs';
@@ -424,18 +427,57 @@ test('a build where no page is noindex says nothing about exemptions, instead of
   assert.ok(!markdown.includes('is scored without'));
 });
 
-test('the stamped revision is a commit that survives a squash or rebase merge', () => {
-  const branchOnly = 'aaaaaaa';
-  const onMain = 'bbbbbbb';
-
-  assert.equal(publishableRevision({ head: branchOnly, mergeBase: onMain, headIsOnMain: false }), onMain);
-  assert.equal(publishableRevision({ head: onMain, mergeBase: onMain, headIsOnMain: true }), onMain);
-});
+function repoWith(commands) {
+  const dir = mkdtempSync(join(tmpdir(), 'report-revision-'));
+  const run = (...args) =>
+    execFileSync('git', args, { cwd: dir, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+  run('init', '--initial-branch=main');
+  run('config', 'user.email', 't@example.com');
+  run('config', 'user.name', 'test');
+  writeFileSync(join(dir, 'a.txt'), 'one');
+  run('add', '-A');
+  run('commit', '-m', 'one');
+  for (const command of commands) run(...command);
+  return { dir, run };
+}
 
 test('a head already on the integration branch is stamped as itself', () => {
-  assert.equal(publishableRevision({ head: 'ccccccc', mergeBase: 'ddddddd', headIsOnMain: true }), 'ccccccc');
+  const { dir, run } = repoWith([]);
+
+  assert.equal(generatorRevision('x', { integrationBranch: 'main', cwd: dir }), run('rev-parse', '--short', 'HEAD'));
+});
+
+test('a branch commit is stamped as the commit it branched from, because a merge replaces it', () => {
+  const { dir, run } = repoWith([['checkout', '-b', 'feature']]);
+  const base = run('rev-parse', '--short', 'main');
+  writeFileSync(join(dir, 'b.txt'), 'two');
+  run('add', '-A');
+  run('commit', '-m', 'two');
+
+  assert.notEqual(run('rev-parse', '--short', 'HEAD'), base);
+  assert.equal(generatorRevision('x', { integrationBranch: 'main', cwd: dir }), base);
 });
 
 test('with no integration branch to compare against, the head is all there is', () => {
-  assert.equal(publishableRevision({ head: 'eeeeeee', mergeBase: undefined, headIsOnMain: false }), 'eeeeeee');
+  const { dir, run } = repoWith([['checkout', '-b', 'feature']]);
+
+  assert.equal(
+    generatorRevision('x', { integrationBranch: 'origin/nowhere', cwd: dir }),
+    run('rev-parse', '--short', 'HEAD')
+  );
+});
+
+test('the stamp does not depend on the reflog, so a fresh clone agrees with the machine that wrote it', () => {
+  const { dir, run } = repoWith([['checkout', '-b', 'feature']]);
+  writeFileSync(join(dir, 'b.txt'), 'two');
+  run('add', '-A');
+  run('commit', '-m', 'two');
+  const clone = mkdtempSync(join(tmpdir(), 'report-clone-'));
+  execFileSync('git', ['clone', '--no-local', dir, clone], { stdio: ['ignore', 'pipe', 'pipe'] });
+  execFileSync('git', ['checkout', 'feature'], { cwd: clone, stdio: ['ignore', 'pipe', 'pipe'] });
+
+  assert.equal(
+    generatorRevision('x', { integrationBranch: 'origin/main', cwd: clone }),
+    generatorRevision('x', { integrationBranch: 'main', cwd: dir })
+  );
 });
