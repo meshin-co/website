@@ -9,7 +9,7 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
    directory per change, and `openspec list --sort name` is the board. Read the one change in
    flight, its `proposal.md` and `tasks.md`, and nothing more until you need it; a change parked
    by a `blocked.md` is not in flight. Closed changes are archived under
-   `openspec/changes/archive/`. The locked decisions L1–L59 live in
+   `openspec/changes/archive/`. The locked decisions L1–L60 live in
    `docs/plan/reference/locked-decisions.md`; the gate procedure in
    `docs/plan/reference/calibration-gate.md`. `npm run gate:spec` refuses the mistakes, among them
    a spec the validator rejects, an index that differs from a regeneration and a second change in
@@ -68,8 +68,12 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
   bought (L58). `npm run gate:paid` fails on any built route that loads a third-party origin
   `site/scripts/third-party.mjs` does not declare free, and on a page whose analytics copy
   disagrees with the beacon the build ships, in either direction. Plausible was removed under this rule on 2026-10-14.
-- No contact form, no Pages Function, no Resend. `/contact` is an email address plus a Cal.com
-  button. No newsletter anywhere.
+- No contact form, no mail sending, no newsletter anywhere. `/contact` is an email address plus a
+  Cal.com button. Exactly one piece of edge code exists, `site/scripts/markdown-negotiation.mjs`, copied into the
+  build as `dist/_worker.js` (L60): it answers
+  `Accept: text/markdown` with the `.md` sidecar the build already writes and passes everything
+  else through. No form, no state, no third party, and a failure inside it falls through to the
+  page. `npm run gate:agents` refuses a build without it; `npm run smoke:prod` proves it live.
 - The route lists are derived from `dist/**/*.html`, never hand-authored. Cheap gates (content, links, budgets,
   machine interfaces, JSON-LD) run on every route. Lighthouse audits every unique page plus ONE leaf per repeated
   template family — the heaviest by built bytes — because leaves of one template differ only in content, not in

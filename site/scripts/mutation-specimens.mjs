@@ -44,6 +44,12 @@ export async function addFile(path, content) {
   };
 }
 
+export async function removeFile(path) {
+  const pristine = await readFile(path, 'utf8');
+  await rm(path);
+  return () => writeFile(path, pristine);
+}
+
 export async function editFile(path, change) {
   const pristine = await readFile(path, 'utf8');
   const edited = change(pristine);
@@ -191,6 +197,11 @@ export const SPECIMENS = {
     token: 'carries no Link rule',
     plant: (copySite) =>
       editFile(join(copySite, 'dist/_headers'), (text) => text.replace('\n/\n  Link:', '\n/*\n  Link:')),
+  },
+  'agents-markdown-handler-gone': {
+    gate: 'gate:agents',
+    token: 'ships no edge handler',
+    plant: (copySite) => removeFile(join(copySite, 'dist/_worker.js')),
   },
   'agents-head-link-drifts': {
     gate: 'gate:agents',
