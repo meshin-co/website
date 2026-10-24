@@ -100,12 +100,32 @@ function scoreTable(reports, distDir) {
   }));
 }
 
-export function generatorRevision(stampedFile) {
+export function publishableRevision({ head, mergeBase, headIsOnMain }) {
+  if (headIsOnMain || mergeBase === undefined) return head;
+  return mergeBase;
+}
+
+const git = (...args) => execFileSync('git', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+
+const gitOrUndefined = (...args) => {
   try {
-    return execFileSync('git', ['rev-parse', '--short', 'HEAD'], {
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'pipe'],
-    }).trim();
+    return git(...args);
+  } catch {
+    return undefined;
+  }
+};
+
+export function generatorRevision(stampedFile, integrationBranch = 'origin/main') {
+  try {
+    const head = git('rev-parse', '--short', 'HEAD');
+    const mergeBase =
+      gitOrUndefined('merge-base', '--fork-point', integrationBranch, 'HEAD') ??
+      gitOrUndefined('merge-base', integrationBranch, 'HEAD');
+    return publishableRevision({
+      head,
+      mergeBase: mergeBase === undefined ? undefined : git('rev-parse', '--short', mergeBase),
+      headIsOnMain: gitOrUndefined('merge-base', '--is-ancestor', 'HEAD', integrationBranch) !== undefined,
+    });
   } catch (error) {
     const reason = error.code === 'ENOENT' ? 'git is not on PATH' : String(error.stderr ?? '').trim() || error.message;
     throw new Error(
