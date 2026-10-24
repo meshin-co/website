@@ -28,7 +28,7 @@ Three protocols let an AI agent pay on behalf of its user. AP2 (Agent Payments P
 - `amount` (required). `currency`, `description` (optional).
 - Top-level `x-service-info` with categories (optional).
 
-Example `x-payment-info` value for `paths./api/feed.get`:
+Example `x-payment-info` value for the `get` operation on `/api/feed`:
 
 ```json
 { "intent": "charge", "method": "stripe", "amount": "0.01", "currency": "USD" }

@@ -40,7 +40,7 @@ AP2 payments extension: a merchant, shopper, credentials provider or payment pro
 
 ## How to serve it on a static site
 
-A static site can serve the card but cannot answer calls to it. Put the file in the public directory as `.well-known/agent-card.json`; it deploys at `/.well-known/agent-card.json`. On Cloudflare Pages, add a `_headers` rule for that path with `Content-Type: application/json` if the type is not inferred, and `Access-Control-Allow-Origin: *` so browser agents can read it. The `url` in `supportedInterfaces` must point at a live endpoint, such as a Cloudflare Worker built with the Agents SDK (A2A-compatible agents on Workers), or a route on a Node origin. Static hosting cannot be that endpoint.
+A static site can serve the card but cannot answer calls to it. Put the file under a `.well-known` directory inside the published static root; it deploys at `/.well-known/agent-card.json`. On Cloudflare Pages, add a `_headers` rule for that path with `Content-Type: application/json` if the type is not inferred, and `Access-Control-Allow-Origin: *` so browser agents can read it. The `url` in `supportedInterfaces` must point at a live endpoint, such as a Cloudflare Worker built with the Agents SDK (A2A-compatible agents on Workers), or a route on a Node origin. Static hosting cannot be that endpoint.
 
 ## When not to publish it
 

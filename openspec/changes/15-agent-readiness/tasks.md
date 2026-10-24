@@ -3,7 +3,7 @@
 ## 1. Declare the AI preferences
 
 - [ ] 1.1 Add `Content-Signal: search=yes, ai-train=yes, ai-input=yes` to the group that applies to
-      every agent in `site/src/pages/robots.txt.ts`, and keep the existing `Disallow` rules
+      every agent in `site/scripts/gen-robots.mjs`, and keep the existing `Disallow` rules
 - [ ] 1.2 Guard it: the built `robots.txt` carries the signal, on a group, with all three values,
       with a planted specimen proving the guard fails when the line is dropped
 

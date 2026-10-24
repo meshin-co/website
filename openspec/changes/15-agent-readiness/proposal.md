@@ -48,7 +48,7 @@ rule gets a planted specimen.
 
 ## Out of scope
 
-Refused on the honesty rule, which `site/.agents/skills/ai-agent-readiness.md` states: a published
+Refused on the honesty rule, which `site/.agents/skills/ai-agent-readiness/SKILL.md` states: a published
 card is a promise an agent acts on, so nothing is published without the service behind it.
 
 - `auth.md`, OAuth discovery, OAuth protected-resource metadata, Personal Agent Protocol — this site
