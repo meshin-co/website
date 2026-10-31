@@ -16,6 +16,7 @@
     "Titles and FAQ questions are 98 characters or fewer"
   ],
   "content/content-gate": [
+    "A claim about an artefact resolves",
     "A page never asks two questions in a row",
     "A page's target query appears in its h1 and in its opening hundred words",
     "Article pages ask at least three questions in their sub-headings",
@@ -26,6 +27,7 @@
     "Every gated page has exactly one h1",
     "Every gated page title ends in the brand suffix and fits its family pattern",
     "Every gated route has a target query, and no two routes share one",
+    "Every indexable route offers the next step",
     "Every number in a paragraph is on the allowlist or exempt",
     "No built page publishes a term a locked decision keeps off the site",
     "No page uses a banned phrase",
@@ -53,6 +55,7 @@
     "The human gate judges the main text of every built page except the utility and pagination routes"
   ],
   "delivery/link-integrity": [
+    "A route earns an inbound link from a page, not from the chrome",
     "Every built page is valid HTML under the recommended html-validate rules",
     "Every link reachable from the home page resolves",
     "Every outbound link carries nofollow, noopener and noreferrer",
@@ -142,6 +145,7 @@
     "Every node type has a required-property family",
     "Every page of a known family ships at least one parseable ld+json block",
     "No @id is declared twice on a page",
+    "One date per page, stated the same way everywhere",
     "Structured-data dates are full ISO instants and never invented",
     "The WebSite node exposes site search as a SearchAction",
     "The graph builder emits one schema.org document with the nodes under @graph"
