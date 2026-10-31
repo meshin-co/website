@@ -1,4 +1,5 @@
 import { SITE } from 'astrowind:config';
+import { BOOKING_URL } from './utils/booking.mjs';
 import { getPermalink } from './utils/permalinks';
 
 export const headerData = {
@@ -10,7 +11,7 @@ export const headerData = {
     { text: 'Resources', href: getPermalink('/resources') },
     { text: 'About', href: getPermalink('/about') },
   ],
-  actions: [{ text: 'Book a call', href: 'https://cal.com/meshin', target: '_blank' }],
+  actions: [{ text: 'Book a call', href: BOOKING_URL, target: '_blank' }],
 };
 
 export const footerData = {

@@ -5,12 +5,13 @@ import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { staticPageDate } from '~/utils/machine-text.mjs';
 import { SITE } from 'astrowind:config';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
 const CONTACT_EMAIL = `hello@${SITE.name}`;
-const UPDATED = '2026-09-13';
+const UPDATED = staticPageDate('/security');
 
 const metadata = {
   title: 'Security practices',
@@ -110,8 +111,6 @@ const posture = [
     <CtaBlock
       title="Need this written for your own company?"
       body="Answering a customer security questionnaire honestly is most of what the two-week Assessment produces."
-      label="Book a 30-min fit call"
-      href="https://cal.com/meshin"
     />
   </Section>
 </Layout>

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { resourceCardProps } from './resource-card.mjs';
+import { resourceCardProps, resourceFormat } from './resource-card.mjs';
 
 test('a resource entry maps to the card fields the template renders', () => {
   const entry = {
@@ -30,4 +30,9 @@ test('the href always points at the resource route, built only from the id', () 
   };
 
   assert.equal(resourceCardProps(entry).href, '/resources/agent-evals-ci-starter');
+});
+
+test('the format label joins type and version, and adds the license only when the entry declares one', () => {
+  assert.equal(resourceFormat({ type: 'kit', version: '0.1' }), 'kit · v0.1');
+  assert.equal(resourceFormat({ type: 'template', version: '0.1', license: 'MIT' }), 'template · v0.1 · MIT');
 });

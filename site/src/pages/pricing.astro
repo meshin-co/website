@@ -4,9 +4,19 @@ import { getCollection } from 'astro:content';
 import CtaBlock from '~/components/site/CtaBlock.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
+import RelatedContent from '~/components/site/RelatedContent.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { glossaryStub, orgNode, personNode, serviceEntityLinks, serviceNode } from '~/utils/jsonld.mjs';
+import {
+  glossaryStub,
+  orgNode,
+  personNode,
+  serviceEntityLinks,
+  serviceNode,
+  webPageNode,
+  websiteNode,
+} from '~/utils/jsonld.mjs';
+import { staticPageDate } from '~/utils/machine-text.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 import { isPublished } from '~/utils/feeds.mjs';
 
@@ -16,6 +26,10 @@ const terms = (await getCollection('glossary', ({ data: term }) => !term.draft))
   id: entry.id,
   term: entry.data.term,
 }));
+const costQuestions = (await getCollection('faq', isPublished))
+  .filter((entry) => entry.data.relatedPage === '/pricing')
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((entry) => ({ label: entry.data.question, href: `/faq/${entry.id}` }));
 
 const metadata = {
   title: 'Pricing: what a Fractional Chief AI Officer costs',
@@ -37,6 +51,8 @@ const citedTermIds = [...new Set(serviceLinks.flatMap(({ links }) => [...links.a
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
+  websiteNode(site),
+  webPageNode(site, '/pricing', staticPageDate('/pricing'), metadata.title),
   ...citedTermIds.map((id) =>
     glossaryStub(
       site,
@@ -107,14 +123,13 @@ const nodes = [
         ))
       }
     </ul>
+    <RelatedContent groups={[{ heading: 'Related questions', items: costQuestions }]} />
   </Section>
 
   <Section title="Next step">
     <CtaBlock
       title="Start with a 30-minute fit call."
       body="If the Assessment is not worth your money, I will tell you on the call rather than in the invoice."
-      label="Book a 30-min fit call"
-      href="https://cal.com/meshin"
     />
   </Section>
 </Layout>

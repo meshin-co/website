@@ -147,7 +147,7 @@
     "target": "site/src/components/site/CtaBlock.astro",
     "status": "verified",
     "reason": "pass-through only, no hardcoded copy Re-read 2026-09-23 after the CTA note stopped being typed at 20 call sites and started deriving from the one brand declaration; the rendered sentence is unchanged.",
-    "digest": "b0afccd9e7ac"
+    "digest": "d5dd7094bed6"
   },
   {
     "target": "site/src/components/site/FaqList.astro",
@@ -243,7 +243,7 @@
     "target": "site/src/utils/machine-text.mjs",
     "status": "rewritten",
     "reason": "Rewritten 2026-09-16: the static page catalog's /now description was updated to match the page's new meta description after /now became a dated log. gate:machine caught the drift, which is what the catalog guard exists for. Re-read 2026-09-23 after the draft and noindex flags began reaching the live filter; no user-facing sentence changed. Phase 5.2: the catalog and hub titles and descriptions were updated to match the new page heads for /, /about, /approach, /pricing, /faq, /contact, /security, /now, /imprint, /privacy and the blog, faq, glossary, resources, services and case-studies hubs. The catalog-drift check in gate:machine is the guard that compares the descriptions with the built pages; it does not compare titles. Re-read 2026-10-08 after the 2026-10-07 interview. One row changed: the case-studies hub description in HUB_PAGES, row constant.description 'I have not published a Fractional Chief AI Officer case study yet. Client case studies appear here only once a client agrees in writing.' It replaced the description that named only.help ('One Fractional Chief AI Officer case study, not a client case: only.help, my own product, built with the method I use for clients.'), which went with the case study (answers 14.4 and 15.9 in COPY-CHECKLIST: the case study was removed on the owner's instruction). Its first sentence is the consequence of that removal; its second is the older policy sentence carried over unchanged (judgement call, see src/pages/case-studies/index.astro). Checked by script on 2026-10-08: the text equals the meta description of dist/case-studies.html and the description under the heading of dist/case-studies.md, so the catalog-drift check holds. The hub title 'Fractional Chief AI Officer case study' is unchanged. The other 35 rows are unchanged since the last seal and are not touched by the interview. Judgement call: the row 'Search the writing, glossary, services and case studies on this site.' still names case studies among the searchable content; it describes the scope of /search and claims no published case, so it stays verified.",
-    "digest": "70c3ebcb69b0"
+    "digest": "03ad39eca972"
   },
   {
     "target": "site/src/utils/faq-meta.mjs",
@@ -255,7 +255,7 @@
     "target": "site/src/data/categories.mjs",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against the built category pages and the file, which is unchanged since the last seal (commit 4a759a5, 2026-10-03). This note replaces the 2026-10-02 reason, which quoted the second operating-model paragraph in an earlier wording (three decisions named choice, review and ownership) and called the definition provisional on TODO(owner) aom-definition; neither describes the current text. Current second paragraph of the operating-model entry: 'The glossary entry defines the term and names three questions: who chooses the work, who reviews it, and who runs it.' It restates the definition that answer 14.1 (COPY-CHECKLIST section 14, 2026-10-07) confirmed 'as printed: three questions', which /glossary/ai-operating-model prints in the same words; it adds no fourth question, number or practice and does not mention strategy, which 14.1 places outside the model. The description 'Articles on the operating model for AI work in companies of 30 to 300 people: who chooses, who reviews, who runs it. The glossary holds the definition.' agrees; the figures 30 and 300 are carried forward from the 2026-10-02 check against the content-facts numbers. The mismatch reported on 2026-10-02 (the glossary naming questions while this body named decisions) is closed, because both now use the same three questions. The authored argument in the other paragraphs, and in the governance, agentic-architecture and executive entries, is untouched by answers 13 to 17; re-read against 15.3, 15.5, 15.7 and 15.8, no sentence conflicts: the CI paragraph says a regression should fail the build (15.5, a red eval blocks the merge), the rollback paragraph names no time (15.7 gives a target, not a measurement), and the governance paragraph's named owner 'who has the authority to stop a launch' fits the stop button of 15.8. Longest sentence in any body or description: 27 words, counted on the built text. Terms used in the governance body: ai-register, data-classification, iso-iec-42001 and nist-ai-rmf have glossary pages; acceptable-use policy has none. Reported, not fixed (still true): the description and the second paragraph say 'the glossary', and the built /blog/category/operating-model page carries no link to /glossary/ai-operating-model.",
-    "digest": "0f81154154b6"
+    "digest": "a22f9f91c23f"
   },
   {
     "target": "site/src/data/tags.mjs",

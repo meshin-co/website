@@ -8,6 +8,8 @@ import {
   renderLlmsFull,
   renderLlmsCollection,
   publicIndexableStaticPages,
+  STATIC_PAGE_CATALOG,
+  staticPageDate,
   buildFeedItems,
   mergeWithKindFloor,
   toRssItems,
@@ -301,6 +303,38 @@ test('publicIndexableStaticPages covers every public static page of the site', (
     '/terms',
   ];
   assert.deepEqual(paths.slice().sort(), expected.slice().sort());
+});
+
+test('staticPageDate refuses a route the catalog does not hold, so a typo cannot ship an undated page', () => {
+  assert.throws(() => staticPageDate('/no-such-page'), /no static page at \/no-such-page/);
+});
+
+test('staticPageDate refuses a page whose date a collection supplies, because a second date would disagree with it', () => {
+  for (const collectionDated of ['/faq', '/blog/tags']) {
+    assert.equal(
+      STATIC_PAGE_CATALOG.find((page) => page.path === collectionDated).updatedDate,
+      undefined,
+      `${collectionDated} must take its date from its collection alone`
+    );
+    assert.throws(() => staticPageDate(collectionDated), new RegExp(`${collectionDated} has no updatedDate`));
+  }
+});
+
+test('every editorial static page date is a plain calendar day that has begun somewhere on Earth', () => {
+  const furthestAheadOffsetMs = 14 * 60 * 60 * 1000;
+  const dated = STATIC_PAGE_CATALOG.filter((page) => page.updatedDate !== undefined);
+  assert.ok(dated.length > 0, 'the catalog carries no editorial date at all');
+  for (const page of dated) {
+    assert.match(page.updatedDate, /^\d{4}-\d{2}-\d{2}$/, `${page.path} is not a plain YYYY-MM-DD day`);
+    const instant = new Date(page.updatedDate);
+    assert.equal(instant.toISOString().slice(0, 10), page.updatedDate, `${page.path} is not a real calendar day`);
+    assert.ok(instant.getTime() <= Date.now() + furthestAheadOffsetMs, `${page.path} is dated in the future`);
+  }
+});
+
+test('staticPageDate returns the day the catalog states for a public static page that no collection dates', () => {
+  const about = STATIC_PAGE_CATALOG.find((page) => page.path === '/about');
+  assert.equal(staticPageDate('/about'), about.updatedDate);
 });
 
 test('a rendered llms.txt built from publicIndexableStaticPages never links a noindex page', () => {

@@ -2,7 +2,7 @@
 title: 'Multi-agent reference architecture in production'
 description: 'What the sources say about multi-agent systems in production: where vendors agree, where they split, and what the research did not find.'
 publishDate: 2026-10-02
-updatedDate: 2026-10-07
+updatedDate: 2026-10-25
 shortAnswer: 'The sources reviewed here include no multi-agent reference architecture from a standards body. Microsoft, Google Cloud and Anthropic advise starting small. In my reading, Anthropic and Cognition mark out the two sides of one agent versus several, and the guidance says least about limits, rollback and ownership. Little of it is measured.'
 fullAnswer: 'There is no standard multi-agent reference architecture in the sources reviewed here. What exists is vendor guidance from Microsoft, Google Cloud, AWS and Anthropic. In my reading, it repeats four ideas: a coordinating agent routes work, tools sit behind one controlled boundary, state lives outside the model, and every call is logged against a named identity. On whether several agents beat one, the disagreement is between Anthropic and Cognition, not among the clouds. Anthropic reports gains from its own multi-agent research system on breadth-first queries. Cognition argued in 2025 against agents working together, and in April 2026 said its observations still hold for parallel writers. A Google Research study found results from large gains to large losses, depending on the task. Production work needs limits on every run, state that survives a crash, and a trace of every call. It needs approval for high-impact actions, versioned changes with a way back, and one accountable person. The sources back these unevenly, and the table grades the points that matter most.'
 keyTakeaways:
@@ -335,6 +335,6 @@ Retrieval and memory design were outside this research. The [retrieval-augmented
 
 ## Does this site commit to any of it?
 
-Yes, to five controls. The [approach page](/approach) names evals in CI, tracing, cost per outcome, a rollback path and a named owner. In my reading, the sources above back them unevenly. Tracing recurs across the guides, and a named owner is clearest in Microsoft's Cloud Adoption Framework.
+Yes, to five controls. The [approach page](/approach) names evals in CI, tracing, cost per outcome, a rollback path and a named owner. The [90-Day Production Sprint](/services/90-day-production-sprint) delivers all five on one workflow. In my reading, the sources above back them unevenly. Tracing recurs across the guides, and a named owner is clearest in Microsoft's Cloud Adoption Framework.
 
 Rollback appears as a practice in three of the 14 pages I searched. Evals in CI appears in the two primary sources named above. The outside sources cover spend limits and spend per reasoning cycle or per agent, which is a different measure from cost per outcome. I found no target time for rollback in the sources I read. The FAQ on [what counts as in production](/faq/what-counts-as-in-production-for-the-90-day-sprint) gives the bar this site uses.

@@ -229,7 +229,7 @@ export function resourceNode(site, resource, options = {}) {
     description: resource.description,
     ...(resource.publishDate ? { datePublished: isoInstant(resource.publishDate) } : {}),
     ...(resource.updatedDate ? { dateModified: isoInstant(resource.updatedDate) } : {}),
-    license: resource.license,
+    ...(resource.license ? { license: resource.license } : {}),
     version: resource.version,
     author: { '@id': `${site}/#person` },
     inLanguage: LANGUAGE,
@@ -343,7 +343,7 @@ export function collectionNode(site, page) {
   };
 }
 
-export function contactPageNode(site) {
+export function contactPageNode(site, dateModified) {
   return {
     '@type': 'ContactPage',
     '@id': `${site}/contact#page`,
@@ -351,6 +351,7 @@ export function contactPageNode(site) {
     name: 'Contact',
     mainEntity: { '@id': `${site}/#org` },
     isPartOf: { '@id': `${site}/#website` },
+    dateModified: isoInstant(dateModified),
   };
 }
 
@@ -385,7 +386,7 @@ export function webPageNode(
   };
 }
 
-export function profilePageNode(site) {
+export function profilePageNode(site, dateModified) {
   return {
     '@type': 'ProfilePage',
     '@id': `${site}/about#page`,
@@ -393,5 +394,6 @@ export function profilePageNode(site) {
     name: 'About',
     mainEntity: { '@id': `${site}/#person` },
     isPartOf: { '@id': `${site}/#website` },
+    dateModified: isoInstant(dateModified),
   };
 }

@@ -1,6 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components';
 import { twMerge } from 'tailwind-merge';
+import { externalRelAttrs } from '~/utils/pipeline.mjs';
 import type { CallToAction as Props } from '~/types';
 
 const {
@@ -30,7 +31,8 @@ const variants = {
   ) : (
     <a
       class={twMerge(variants[variant] || '', className)}
-      {...(target ? { target: target, rel: 'nofollow noopener noreferrer' } : {})}
+      {...(target ? { target } : {})}
+      {...externalRelAttrs(rest.href)}
       {...rest}
     >
       <Fragment set:html={text} />

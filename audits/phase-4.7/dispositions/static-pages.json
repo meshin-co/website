@@ -9,67 +9,67 @@
     "target": "site/src/data/home.ts",
     "status": "rewritten",
     "reason": "Normalized a stray U+2011 non-breaking hyphen to ASCII in cta.title (\"30-minute\"); removed the unconfirmed \"12–24 months\" retainer-handover track-record claim (COPY-CHECKLIST 3.7) from the Retainer deliverables list, replaced with a fact-preserving line with no timeframe. Hero title/sub left unchanged per L9a (conflict noted in report). Re-read 2026-10-01: the services and artifacts arrays were deleted because they duplicated src/data/service/*.md and src/data/resource/*.md; what remains is artifactIds, a list of three entry ids that carries no prose. Phase 5.2: two agentless passives (\"AI budget is being spent\" in the signs list, \"AI budget is spent\" in the before list) now name the reader as the actor (\"You are spending AI budget\", \"You have spent AI budget\"); the dropped word \"actually\" carried no claim.",
-    "digest": "7c48e22e607a"
+    "digest": "4d8f5ec17989"
   },
   {
     "target": "site/src/pages/about.astro",
     "status": "rewritten",
     "reason": "Phase 5.2 level-1 pass. The description now opens with the name (\"Dmitri Meshin is a platform engineer ...\"), which lifts description coverage of the target query \"dmitri meshin\" from 0.00 to 1.00; the claim is unchanged. The intro was one 28-word sentence with a broken parallel (\"is getting ... then hand\"); it is now two sentences with an actor (\"Then I hand it over\"). Principle 2 states its condition without a passive (\"If AI risk has no named owner\"); the conditional and its consequence are unchanged. Principle 4 (\"Handover is a deliverable, not a courtesy\") was the abstract contrast the baseline listed; it now says what the deliverable is, using only what /approach already states: the runbook and the decisions go to a named internal owner.",
-    "digest": "e60ec7139b4f"
+    "digest": "8e1ba566bc74"
   },
   {
     "target": "site/src/pages/approach.astro",
     "status": "rewritten",
     "reason": "Phase 5.2 level-1 pass. Title and description now carry the target query \"how a fractional ai officer works\" (title coverage 0.25 to 1.00, description 0.50 to 1.00). \"Chief\" stays out because the locked target query and the H1 use \"Fractional AI Officer\". The lead drops \"structurally\" and \"already\", which qualified nothing; the claim that handover is the hardest signal because nothing forces it once a system is live is intact. The sequence item \"Name the owner\" is reordered so the sentence does not end in \"say no.\": the readability splitter reads that as an abbreviation and fused two cards into one 33-word sentence. Same facts: one person, accountable for AI risk, on the org chart, with the authority to say no.",
-    "digest": "759278ca8f07"
+    "digest": "c4f0f123f9b8"
   },
   {
     "target": "site/src/pages/pricing.astro",
     "status": "rewritten",
     "reason": "Phase 5.2 level-1 pass. Title and description now carry the target query \"fractional chief ai officer cost\" (both were 0.00 coverage); the description keeps the two-week Assessment, the 90-Day Sprint, the monthly Retainer, fixed structures, no hourly billing, and every fee in writing before work starts. The two billing items read \"Sprints are quoted per engagement from the scope agreed in the statement of work, never per hour\" and \"Travel, if you want me on site, is billed at cost and agreed in advance\". Scope, the conditional and \"never per hour\" are intact. No dollar figure added, per L8.",
-    "digest": "449bed26dc43"
+    "digest": "7cc03d3ea320"
   },
   {
     "target": "site/src/pages/contact.astro",
     "status": "rewritten",
     "reason": "Phase 5.2 level-1 pass. Title and description now carry \"book an AI leadership call\" (title coverage 0.00 to 1.00, description 0.50 to 1.00); the 30-minute fit call, the email address, remote worldwide and the on-site condition are unchanged. Two agentless passives in the call-prep list now name the actor: \"Whether your company has named an owner of AI risk\" and \"What you have already tried, and where it stopped\".",
-    "digest": "e79939adaf2c"
+    "digest": "20bfe6a4f67b"
   },
   {
     "target": "site/src/pages/now.astro",
     "status": "rewritten",
     "reason": "Rewritten 2026-10-03: /now is a dated log; the August and November product entries were removed at the owner's request, so the page no longer names or links any product. The September 2026 entry stands.",
-    "digest": "1664d948a09a"
+    "digest": "07b76440ef47"
   },
   {
     "target": "site/src/pages/ai-policy.astro",
     "status": "rewritten",
     "reason": "Hyphenated \"AI acceptable-use policy\" in title/H1/lead to match the corpus-canonical spelling (confirmed with GlossaryEditor: hyphenated form is the only spelling used across the glossary/FAQ/service corpus). Bumped updatedDate-equivalent UPDATED const to 2026-09-15.",
-    "digest": "032dcb08bcdc"
+    "digest": "9865757aa445"
   },
   {
     "target": "site/src/pages/security.astro",
     "status": "rewritten",
     "reason": "Phase 5.2 head pass only; the body is frozen and untouched. Title \"Security practices\" and a description that opens \"Security practices for meshin.co\" carry the target query \"security practices\" (title 0.50 to 1.00, description 0.00 to 1.00). The four-part posture list still matches COPY-CHECKLIST §7/§9 and no claim is strengthened or weakened.",
-    "digest": "34ec6964e60e"
+    "digest": "765d72335298"
   },
   {
     "target": "site/src/pages/privacy.astro",
     "status": "rewritten",
     "reason": "Rewritten 2026-10-16 when the owner supplied the Cloudflare Web Analytics token (G41 closed). The 'What this site collects' section now names what the beacon measures: path, referrer, browser, country and load time. It states the three things that make the measurement cookieless - no cookie, no device storage read, no identifier built - so a reader can check the claim against the response themselves, and says the figures arrive as per-page totals. The host request log section below is unchanged and still describes the separate trace Cloudflare keeps. `npm run gate:paid` fails in both directions, so this wording and the shipped beacon cannot drift apart.",
-    "digest": "61478d1ed093"
+    "digest": "a37f2b82ebcd"
   },
   {
     "target": "site/src/pages/terms.astro",
     "status": "rewritten",
     "reason": "Fixed a stale factual claim: the \"Prices\" section and meta description referred to \"published prices\" that were removed sitewide by locked decision L8 (closed 2026-09-12); this page predates that change (UPDATED was 2026-09-08) and was never updated. Renamed the section \"Fees\" and rewrote it to state no price is published, only fee shapes, matching /pricing's language. Did not touch jurisdiction, liability, IP, or governing-law clauses. Bumped UPDATED to 2026-09-15.",
-    "digest": "d84fbeb6e62b"
+    "digest": "09bfe24a14c5"
   },
   {
     "target": "site/src/pages/imprint.astro",
     "status": "rewritten",
     "reason": "Rewritten 2026-10-16 when the owner supplied the Cloudflare Web Analytics token (G41 closed). The Analytics row reads 'Cloudflare Web Analytics, cookieless', which is what the build now ships, and the cookieless qualifier is the fact a reader of an imprint is looking for. `npm run gate:paid` fails on this row if the beacon is ever removed.",
-    "digest": "ad5826b41cca"
+    "digest": "91381bbf7309"
   },
   {
     "target": "site/src/pages/404.astro",
@@ -87,12 +87,12 @@
     "target": "site/src/pages/styleguide.astro",
     "status": "verified",
     "reason": "Internal noindex dev-reference page; description is accurate and not buyer-facing copy, no changes needed.",
-    "digest": "bf421d1e7f83"
+    "digest": "c867ac2d2807"
   },
   {
     "target": "site/src/pages/faq.astro",
     "status": "rewritten",
     "reason": "Phase 5.2 head pass. Title \"Fractional Chief AI Officer questions\" and a description opening \"Fractional Chief AI Officer questions answered\" carry the target query (title coverage 0.20 to 1.00, description 0.80 to 1.00); the three things the description promises are unchanged. Lead and per-group teasers untouched.",
-    "digest": "7bbcd8690a09"
+    "digest": "453b633c10d4"
   }
 ]

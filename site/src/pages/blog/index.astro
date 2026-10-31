@@ -8,6 +8,7 @@ import JsonLd from '~/components/common/JsonLd.astro';
 import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
 import PaginationLinks from '~/components/site/PaginationLinks.astro';
 import PostCard from '~/components/site/PostCard.astro';
+import CtaBlock from '~/components/site/CtaBlock.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { categoryPillars } from '~/data/categories.mjs';
@@ -106,5 +107,9 @@ const nodes = [
         href="/blog/tags">tag</a
       >.
     </p>
+  </Section>
+
+  <Section title="Next step">
+    <CtaBlock />
   </Section>
 </Layout>

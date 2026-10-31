@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
+import CtaBlock from '~/components/site/CtaBlock.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { TAGS } from '~/data/tags.mjs';
@@ -75,5 +76,9 @@ const nodes = [
         })
       }
     </ul>
+  </Section>
+
+  <Section title="Next step">
+    <CtaBlock />
   </Section>
 </Layout>

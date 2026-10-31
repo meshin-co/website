@@ -2,7 +2,7 @@
 title: How to build an AI system register in a week
 description: 'A step-by-step way to build an AI system register in a week without buying a tool, so a security reviewer gets the document they ask for first.'
 publishDate: 2026-09-08
-updatedDate: 2026-10-02
+updatedDate: 2026-10-25
 shortAnswer: 'Build a usable AI system register in a week with a spreadsheet and four interviews, no software required. The register lists every AI tool a company builds, buys or lets a team adopt. Each entry records what it does, what data it touches, who owns it, and how risky it is. A security reviewer asks for this list first.'
 fullAnswer: 'A security reviewer asks for an AI system register before model choice, prompt design or accuracy come up. It is the inventory of every AI system in use, however it got there. Each entry records what it does, what data reaches it, which vendor sits behind it, who owns it, and how risky it is. Every later question a reviewer asks only makes sense once that list exists. Most companies of thirty to three hundred people have none, because nobody was ever assigned to write it down, not because the work is hard. Building the first version does not need a tool or a budget line. It needs a spreadsheet and a short interview with each team that touches a model. It also needs one person who agrees to keep the list current once the interviews stop.'
 keyTakeaways:
@@ -37,15 +37,7 @@ relatedResources:
   - ai-governance-starter-kit
 ---
 
-A security review of an AI system usually starts with one question: what is actually running. If the honest answer takes a week of digging through chat logs and old tickets, the review stalls before it reaches architecture or data flows. An AI system register is the fix: one document listing every AI system a company runs, who owns it, and how risky it is.
-
-## What is an AI system register?
-
-An AI system register is the full inventory of every AI system a company runs, regardless of how it got there. That includes a customer-facing feature and an internal copilot. It also includes a marketing tool with a model switched on inside it that nobody called an AI project when they signed up.
-
-A working entry names what the system does, what data can reach it, and which vendor or model sits behind it. It also names who owns it and a rough risk tier. Some call this same list an [AI register](/glossary/ai-register) rather than an AI system register.
-
-Most of the systems on the list never started as a formal AI project. That is why the list has to go looking for them rather than wait to be told.
+A security review of an AI system usually starts with one question: what is actually running. If the honest answer takes a week of digging through chat logs and old tickets, the review stalls before it reaches architecture or data flows. An [AI system register](/glossary/ai-register), also called an AI register, is the fix. You can build one in a week with a spreadsheet and four interviews.
 
 ## Why does a security reviewer ask for it before anything else?
 
@@ -72,7 +64,7 @@ A register only earns its keep if a reviewer can answer their own questions from
 
 ## How do you build one in a week without buying a tool?
 
-None of this needs procurement. A spreadsheet, a shared document and four short conversations get a usable first version out the door.
+None of this needs procurement. A spreadsheet, a shared document and four short conversations get a usable first version out the door. Most systems never started as a formal AI project, so the list has to go looking for them.
 
 - **Monday.** Create the spreadsheet with those three columns. Seed it with every system already in use: the model inside the product, the support tool, the analytics dashboard that quietly added an AI summary.
 - **Tuesday and Wednesday.** Interview engineering, marketing, finance and support directly, not by survey. Ask each team what they actually use day to day, since a spreadsheet plug-in with a model behind it belongs on the list too.

@@ -389,17 +389,27 @@ test('an faq page node cites its sources only when the entry carries any, and ca
 });
 
 test('contact and profile pages reference their main entity', () => {
-  const contact = contactPageNode(SITE);
+  const contact = contactPageNode(SITE, '2026-10-02');
   assert.equal(contact['@type'], 'ContactPage');
   assert.equal(contact['@id'], `${SITE}/contact#page`);
   assert.equal(contact.url, `${SITE}/contact`);
   assert.equal(contact.name, 'Contact');
   assert.deepEqual(contact.mainEntity, { '@id': `${SITE}/#org` });
 
-  const profile = profilePageNode(SITE);
+  const profile = profilePageNode(SITE, '2026-10-02');
   assert.equal(profile['@type'], 'ProfilePage');
   assert.equal(profile.name, 'About');
   assert.deepEqual(profile.mainEntity, { '@id': `${SITE}/#person` });
+});
+
+test('contact and profile pages state the day their content last changed as a full ISO instant', () => {
+  assert.equal(contactPageNode(SITE, '2026-10-02').dateModified, '2026-10-02T00:00:00.000Z');
+  assert.equal(profilePageNode(SITE, new Date('2026-10-17T00:00:00Z')).dateModified, '2026-10-17T00:00:00.000Z');
+});
+
+test('a contact or profile page refuses to build without a date rather than ship undated', () => {
+  assert.throws(() => contactPageNode(SITE), RangeError);
+  assert.throws(() => profilePageNode(SITE), RangeError);
 });
 
 test('a resource node publishes and modifies only on dates it was given, as full ISO instants', () => {

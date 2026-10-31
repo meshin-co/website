@@ -21,128 +21,128 @@
     "target": "src/pages/blog/[id].astro",
     "status": "verified",
     "reason": "section titles, CTA copy and the RSS link title all match voice/terminology standard; composed <title> relies on the global '%s — meshin.co' template and already matches the article family pattern in SEMANTIC-CORE",
-    "digest": "2b47a453c3f1"
+    "digest": "ee51fabb7d5e"
   },
   {
     "target": "src/pages/blog/category/[category].astro",
     "status": "verified",
     "reason": "CTA and empty-state copy compliant; pillar.title/description already match the blog-category SEMANTIC-CORE row exactly",
-    "digest": "915357ec064d"
+    "digest": "f2e91a904906"
   },
   {
     "target": "src/pages/blog/category/[category]/page/[page].astro",
     "status": "verified",
     "reason": "'Articles in this category' heading is plain and consistent; page is noindex/follow pagination, not a gated SEMANTIC-CORE family, so no title pattern to check",
-    "digest": "f189d78c3f2a"
+    "digest": "3e202be6b163"
   },
   {
     "target": "src/pages/blog/index.astro",
     "status": "rewritten",
     "reason": "Phase 5.2 head pass. Title \"AI governance writing\" and a description opening \"AI governance writing:\" carry the target query (title coverage 0.33 to 1.00, description 0.33 to 1.00); the description keeps the claim that the notes are about getting AI systems past security review and into production, for founders and boards. H1 and lead untouched. The machine-text hub catalog carries the same strings.",
-    "digest": "7cbe3296f5e4"
+    "digest": "0de268e9a7d8"
   },
   {
     "target": "src/pages/blog/page/[page].astro",
     "status": "rewritten",
     "reason": "Phase 5.2: the pagination description repeats the /blog description, so it follows it (\"AI governance writing: notes on ...\"). The page stays noindex and its title keeps the \"Writing, page N\" pattern. The short pagination line 'Older articles, continuing from the first page.' is untouched.",
-    "digest": "1226d79bc087"
+    "digest": "983f9f516fbf"
   },
   {
     "target": "src/pages/blog/tag/[tag].astro",
     "status": "rewritten",
     "reason": "Hard-coded lead \"Every article tagged ...\" removed; title, H1, breadcrumb and lead now come from tagArchive in tags.mjs. Remaining copy (\"Tag\" eyebrow, \"Articles\" heading, empty state) unchanged and compliant.",
-    "digest": "896dda4acfd4"
+    "digest": "91b832f5f84a"
   },
   {
     "target": "src/pages/blog/tags.astro",
     "status": "verified",
     "reason": "'All tags' section heading and description already match the tag-index SEMANTIC-CORE row",
-    "digest": "f5948057740f"
+    "digest": "d279c1d57881"
   },
   {
     "target": "src/pages/case-studies/[id].astro",
     "status": "rewritten",
     "reason": "Rewritten 2026-10-17 under change 14-visibility-repairs, task 6.1. The section title 'In my words' became 'The detail'. 'In my words' implied the rest of the site was written by someone else; the new title names what the section holds, the long-form body of the entry, and states no fact, number, client, date or promise. Same change on src/pages/resources/[id].astro and src/pages/services/[id].astro. Re-read against the remaining rows: the page builds no route today, because src/data/case holds no entry after the removal of the only.help case study (answers 14.4 and 15.9 in COPY-CHECKLIST), so getStaticPaths returns nothing; the template stays for the anonymised client case that L11 allows. Four strings ship in no page and are declared state-conditional in audits/phase-4.7/conditional-copy.json: 'Before and after' (rendered only when outcome.metrics is non-empty; L11 forbids inventing metrics), 'Problem and approach', 'What it runs on' and 'See the offer'. The other rows are labels and titles ('Next step', 'The detail', 'Case studies', 'The problem', 'The approach'); the ledger does not list them as unshipped because the same words occur on built pages. The call-to-action headline is composed at render time from the offer name and renders only for a published case; it is not a ledger row and needs a re-read when a real client case study is added.",
-    "digest": "a380b0fb3cec"
+    "digest": "629b5564f05b"
   },
   {
     "target": "src/pages/case-studies/index.astro",
     "location": "frontmatter.cta.label",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/case-studies.html. Row frontmatter.cta.label is the button label 'Book a 30-min fit call' on the closing call to action; the button links to https://cal.com/meshin. The text is unchanged since the last seal and is not touched by the interview answers or by the removal of the only.help case study. It matches COPY-CHECKLIST 3.9 ('Fit call: free, thirty minutes, booked at cal.com/meshin', answer yes). The same label is carried by the other pages that end in this button and is dispositioned there too.",
-    "digest": "1f8d0288611f"
+    "digest": "5c2fc782143d"
   },
   {
     "target": "src/pages/case-studies/index.astro",
     "location": "attribute.title",
     "status": "rewritten",
     "reason": "Rewritten 2026-10-07 and re-read 2026-10-08 against dist/case-studies.html. Row attribute.title holds three strings of this page. (1) The call-to-action title 'Start with a 30-minute fit call.' replaced 'Want the same in your stack?', which pointed at the removed only.help case study (answers 14.4 and 15.9, recorded in COPY-CHECKLIST sections 14 and 15: 'Moot: the case study was removed on the owner's instruction (never implemented)'). The new title is the one the about, approach and pricing pages already carry; it matches 3.9 (a free thirty-minute fit call booked at cal.com/meshin) and adds no count, price, period or promise. (2) The H1 'Fractional chief AI officer case study' is unchanged: it is the page name and holds the target query in docs/SEMANTIC-CORE.md; it names the topic and does not claim that a case exists, and the lead directly under it says none is published. (3) The section title 'Next step' is unchanged.",
-    "digest": "1f8d0288611f"
+    "digest": "5c2fc782143d"
   },
   {
     "target": "src/pages/case-studies/index.astro",
     "location": "text",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/case-studies.html. Row text is the empty-state line 'Nothing published yet.' under the section title 'Engagements'. The string is unchanged, but it was state-conditional copy while the only.help case study was listed. With that case study removed (answers 14.4 and 15.9 in COPY-CHECKLIST: 'Moot: the case study was removed on the owner's instruction (never implemented)') the list is empty and the line now renders on /case-studies. It states only that nothing is published, which is what the removal produced; it adds no count, date or promise. audits/phase-4.7/conditional-copy.json no longer declares it conditional, and the same words still serve the empty states of the blog and glossary indexes.",
-    "digest": "1f8d0288611f"
+    "digest": "5c2fc782143d"
   },
   {
     "target": "src/pages/case-studies/index.astro",
     "location": "attribute.lead",
     "status": "rewritten",
     "reason": "Rewritten 2026-10-07 and re-read 2026-10-08 against dist/case-studies.html. Current lead: 'I have not published a fractional chief AI officer case study yet. Client case studies appear here only once a client agrees in writing.' The old lead (which opened 'Here is one fractional chief AI officer case study: only.help, my own product.' and went on 'I ran the method I sell on myself first.') went with the case study: the owner instructed its removal, and answers 14.4 and 15.9 in COPY-CHECKLIST record 'Moot: the case study was removed on the owner's instruction (never implemented)'. Clause map: sentence one states the consequence of that removal, that no case study is published; it adds no count, date, client or plan, and 'yet' reports the present state without promising a later case. Sentence two is the older policy sentence carried over unchanged from the old lead (on the page since the hub was written on 2026-09-12 and covered by the earlier entries for this file); only its tail ', which is why this page stays short' was dropped. No answer in sections 13 to 17 covers that written-agreement policy, so it rests on being an older sentence and not on a new answer (judgement call, reported). The lead matches the meta description, the HUB_PAGES entry in src/utils/machine-text.mjs and the docs/SEMANTIC-CORE.md row for /case-studies; src/pages/llms.txt.ts says the same two facts in other words and is not a ledger row.",
-    "digest": "1f8d0288611f"
+    "digest": "5c2fc782143d"
   },
   {
     "target": "src/pages/case-studies/index.astro",
     "location": "attribute.body",
     "status": "rewritten",
     "reason": "Rewritten 2026-10-07 and re-read 2026-10-08 against dist/case-studies.html. Row attribute.body is the body of the closing call to action: 'The 90-Day Production Sprint starts with the two-week Assessment.' The old body read 'The 90-Day Production Sprint is the offer these came out of. It starts with the two-week Assessment.' The first sentence pointed at the removed only.help case study (answers 14.4 and 15.9) and was deleted, and 'It' was replaced by its antecedent, so the remaining clause is the older clause carried over with no new fact, number or period. No answer in sections 13 to 17 covers it; it was already on the page at the last seal, and it agrees with how the offer pages stage the work: the FAQ on the three offers calls them three stages and advises starting with the Assessment when unsure, and the Assessment page credits the fee if a Sprint follows within three months. Judgement call, reported: the clause rests on being an older reviewed sentence, not on a new answer.",
-    "digest": "1f8d0288611f"
+    "digest": "5c2fc782143d"
   },
   {
     "target": "src/pages/case-studies/index.astro",
     "location": "constant.title",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/case-studies.html. Row constant.title holds two strings. 'Fractional Chief AI Officer case study' is the metadata title of this page (the built title adds the site suffix); it is unchanged since the last seal, equals the H1 apart from casing and equals the hub title in src/utils/machine-text.mjs. 'Case studies' is the breadcrumb, JSON-LD and feed name, shared with src/utils/llms-collections.mjs and unchanged. Neither string claims that a case exists.",
-    "digest": "1f8d0288611f"
+    "digest": "5c2fc782143d"
   },
   {
     "target": "src/pages/case-studies/index.astro",
     "location": "constant.description",
     "status": "rewritten",
     "reason": "Rewritten 2026-10-07 and re-read 2026-10-08 against dist/case-studies.html. Row constant.description is the metadata description 'I have not published a Fractional Chief AI Officer case study yet. Client case studies appear here only once a client agrees in writing.' It replaced the description that named only.help ('One Fractional Chief AI Officer case study, not a client case: only.help, my own product, built with the method I use for clients.'), which went with the case study (answers 14.4 and 15.9). Clause map: sentence one is the consequence of the removal; sentence two is the older policy sentence carried over unchanged (see the lead row; judgement call). Checked by script on 2026-10-08: the text equals the meta, og and twitter descriptions and the JSON-LD description of the built page, the description under the heading of dist/case-studies.md, the HUB_PAGES entry in src/utils/machine-text.mjs and the docs/SEMANTIC-CORE.md row for /case-studies, and it repeats the lead of the page.",
-    "digest": "1f8d0288611f"
+    "digest": "5c2fc782143d"
   },
   {
     "target": "src/pages/faq/[id].astro",
     "status": "verified",
     "reason": "'The answer' section, related headings and CTA copy compliant; composed title (data.question + template) matches the faq-answer family pattern",
-    "digest": "40b514cc24f3"
+    "digest": "7892d67c7c1f"
   },
   {
     "target": "src/pages/glossary/[id].astro",
     "status": "verified",
     "reason": "section titles and CTA body compliant; composed title (data.term + template) is only the raw term name, and the H2 of every term page is the term's authored title question, equal to the page title on all 30 pages (for example 'What are evals?' on /glossary/evals, where 'What is Evals?' used to be), so there is nothing here to fix",
-    "digest": "977d689393fa"
+    "digest": "e4b79f985b81"
   },
   {
     "target": "src/pages/glossary/index.astro",
     "status": "rewritten",
     "reason": "Phase 5.2 head pass. The description now contains the word \"glossary\" (\"An AI governance glossary: ...\"), which lifts description coverage of \"ai governance glossary\" from 0.67 to 1.00. \"Standards and laws\" is checked against the glossary: ISO/IEC 42001 and the NIST AI RMF are a standard and a framework, the EU AI Act is a law. Title, lead and hub definitions untouched.",
-    "digest": "7abf8f7c539c"
+    "digest": "69cb07e0c6ad"
   },
   {
     "target": "src/pages/resources/[id].astro",
     "status": "rewritten",
     "reason": "Rewritten 2026-10-17 under change 14-visibility-repairs, task 6.1. The section title 'In my words' became 'The detail'. 'In my words' implied the rest of the site was written by someone else; the new title names what the section holds, the long-form body of the resource, and states no fact. Other section titles, the 'Inside the kit' label and the CTA copy are unchanged and compliant, with no invented facts about repo state.",
-    "digest": "b22495f628bd"
+    "digest": "e7c96febcd94"
   },
   {
     "target": "src/pages/resources/index.astro",
     "status": "rewritten",
     "reason": "Phase 5.2 head pass. Title \"AI governance templates and checklists\" lifts title coverage of \"ai governance templates\" from 0.00 to 1.00. The description now leads with the target words (\"Open AI governance templates and checklists\") and still lists the same four artifacts: register, acceptable-use policy, data classification, vendor questionnaire. CTA untouched. Lead: \"each written out in full on its own page\" became \"each described on its own page\"; the rest of the lead is unchanged.",
-    "digest": "0c10e1c550f5"
+    "digest": "62bd338ce7cc"
   },
   {
     "target": "src/pages/services/[id].astro",
@@ -154,7 +154,7 @@
     "target": "src/pages/services/index.astro",
     "status": "rewritten",
     "reason": "Phase 5.2 head pass. Title \"Fractional AI leadership services\" and a description opening with the same words lift coverage of the target query from 0.25 (title) and 0.50 (description) to 1.00. The description keeps the three offers (two-week assessment, 90-day production sprint, retainer) and says who runs them, a Fractional Chief AI Officer. No price stated (L8). H1, lead and CTA untouched.",
-    "digest": "62f3167afee8"
+    "digest": "0792e7c5e34a"
   },
   {
     "target": "src/utils/llms-collections.mjs",

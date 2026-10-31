@@ -4,9 +4,8 @@ name: Adoption Telemetry Dashboard Template
 type: template
 description: 'An adoption telemetry dashboard template: eight panels, each with its question, data source and the decision it supports.'
 publishDate: 2026-10-02
-updatedDate: 2026-10-07
+updatedDate: 2026-10-25
 version: '0.1'
-license: MIT
 status: Available as a page on this site. A repository copy is not published yet.
 whatInside:
   - A table of eight panels for coding assistants and chat assistants, each with the question it answers, the data source and the decision it supports

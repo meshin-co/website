@@ -3,7 +3,7 @@
     "target": "/",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. Against a build of git HEAD, six strings changed on this page. The meta description now opens 'Fractional Chief AI Officer for 30–300 person companies' where it opened 'Fractional AI leadership for 30–300 person companies' (index.astro); it is 157 characters long and ends 'with evals'. In home.ts the fifth sign 'AI budget is being spent, but no process has actually changed.' became 'You are spending AI budget, but no process has changed.', and the Today line 'AI budget is spent and no process has changed.' became 'You have spent AI budget and no process has changed.' In index.astro the Proof lead 'Every template I use in engagements is written out in full on its own page, so you can read the method before you buy it.' became 'Every template I use in engagements is described on its own page, so you can read the method before you buy it.' The three Proof cards print their resource file's status, which now reads 'Available as a page on this site. A repository copy is not published yet.' Title 'Fractional Chief AI Officer — meshin.co' and H1 'A Fractional Chief AI Officer you can name on the org chart.' are unchanged and fit the static grammar. The target query is 'fractional chief ai officer'; the first sentence under the H1, 'I'm the fractional chief AI officer your org chart can point at when a customer asks who owns AI risk.', names the role in its first clause, so it answers. I read all 110 blocks: 'Three or more of these five signs?' sits over five items, 'Three ways in.' over three offer cards, 'Six things decide whether an AI initiative reaches production.' over six method steps, and the card taglines, fee lines and type lines such as 'kit · v0.1 · MIT' read whole and unglued. Reported, not fixed: the chip 'Open-source AI Governance Starter Kit' sits beside a status saying no repository copy is published, the first card's summary repeats its heading, and 'ISO 42001' drops 'IEC' in one figure. Status is rewritten because index.astro and home.ts, this page's own sources, changed.",
-    "digest": "205404a9049d"
+    "digest": "feeebb1a22e0"
   },
   {
     "target": "/404",
@@ -21,7 +21,7 @@
     "target": "/ai-policy",
     "status": "verified",
     "reason": "head.title 'AI acceptable-use policy — meshin.co' and its H1 both use the hyphenated 'acceptable-use policy' form, consistent with the corpus-wide convention for the compound modifier (categories.mjs, FAQ/resource/service data all hyphenate it in running prose). docs/SEMANTIC-CORE.md's cached generated table still shows the unhyphenated 'AI acceptable use policy' for this route's title/H1 — that cache predates today's edit (ai-policy.astro's own UPDATED constant is 2026-09-15) and will resolve on the next semantic-core regeneration; current source is internally consistent (title, H1, description and lead all hyphenated) so no route-level change was needed.",
-    "digest": "36ac88bdf902"
+    "digest": "76c7b3fe8713"
   },
   {
     "target": "/approach",
@@ -34,20 +34,20 @@
     "location": "head.title",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/blog.html. Row head.title is 'AI governance writing — meshin.co': the metadata title authored in src/pages/blog/index.astro plus the site suffix. It is unchanged since the last seal and is not touched by the interview answers (COPY-CHECKLIST sections 13 to 17) or by the removal of the only.help case study. It carries the whole query 'ai governance writing' and matches the docs/SEMANTIC-CORE.md row for /blog. The meta, og and twitter descriptions are the description authored beside the title in src/pages/blog/index.astro; it opens with the title words 'AI governance writing' (checked in the built head). The H1 and the lead are rows of src/pages/blog/index.astro and are dispositioned there.",
-    "digest": "f6cdd04dd3af"
+    "digest": "30ec1b12021e"
   },
   {
     "target": "/blog",
     "location": "body.p",
     "status": "rewritten",
     "reason": "Re-read 2026-10-08 against dist/blog.html. The body.p rows of this route are composed text, not authored copy: 8 date lines, 8 tag lines, the excerpt of the telemetry card (held as a row of its own because the built text writes the apostrophe in METR's as &#39;) and the closing line 'Or browse every article by tag.' (the word tag links to /blog/tags). The H1 and the lead are rows of src/pages/blog/index.astro and are dispositioned there. The 8 cards, newest first, are: Adoption telemetry for AI tools: what a trial found ('02 Oct 2026 · 14 min read · AI operating model'); How to hand over AI leadership to an internal owner ('02 Oct 2026 · 12 min read · AI for boards'); How to choose an AI operating model for a mid-size company ('02 Oct 2026 · 15 min read · AI operating model'); Multi-agent reference architecture in production ('02 Oct 2026 · 15 min read · Agentic architecture'); What actually belongs in an AI acceptable use policy ('08 Sept 2026 · 6 min read · AI governance'); Evals in CI for LLM agents, without a golden answer ('08 Sept 2026 · 8 min read · Agentic architecture'); How to build an AI system register in a week ('08 Sept 2026 · 5 min read · AI governance'); and Why your AI pilot never reached production ('08 Sept 2026 · 6 min read · AI operating model'). Changed this pass (composed date lines): the post bodies were edited after the 2026-10-07 interview (updatedDate 2026-10-07), and reading time is words divided by 220, rounded up, so these lines moved: '02 Oct 2026 · 14 min read · AI operating model' for the telemetry card (the last seal read 13 min; the post body went from 2,797 to 2,966 words); '02 Oct 2026 · 12 min read · AI for boards' for the handover card (the last seal read 11 min; the post body went from 2,248 to 2,521 words); '02 Oct 2026 · 15 min read · AI operating model' for the operating-model choice card (the last seal read 14 min; the post body went from 3,033 to 3,135 words); and '02 Oct 2026 · 15 min read · Agentic architecture' for the multi-agent card (the last seal read 14 min; the post body went from 2,974 to 3,127 words). Unchanged and re-read: the date lines of the posts that were not edited in this pass ('08 Sept 2026 · 6 min read · AI governance', '08 Sept 2026 · 5 min read · AI governance', '08 Sept 2026 · 6 min read · AI operating model'), and '08 Sept 2026 · 8 min read · Agentic architecture', which stayed at 8 min although the evals post lost the only.help paragraph (1,616 to 1,575 words); the tag lines are unchanged. Checked by script on 2026-10-08, for all 8 cards: the excerpt equals the post description, the datetime equals publishDate, the tag links equal the post's tags in order, the category label in each date line is that category's title, and the minutes equal the reading time computed from the post body. The telemetry excerpt equals that post's description, which is unchanged since the last seal. Status rewritten because composed date lines changed with the posts' word counts. The card text itself belongs to the posts and is dispositioned under each post file. Reported, not fixed (still true): the acceptable use card's title writes 'acceptable use policy' without the hyphen used elsewhere on the site (a nit).",
-    "digest": "f6cdd04dd3af"
+    "digest": "30ec1b12021e"
   },
   {
     "target": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In post/ai-acceptable-use-policy-for-a-50-person-company.md the answer paragraph now rests on 'only earns its place once it decides who approves a new AI tool and which data tier may reach which category of vendor', thirteen body paragraphs were split or reworded, one takeaway was split in two, two FAQ answers were reworded, and two table cells took actors ('the company must tell'), and the kit card status became 'Available as a page on this site. A repository copy is not published yet.' Title and H1 both read 'What actually belongs in an AI acceptable use policy', which fits the article grammar and its SEMANTIC-CORE row. The dek ('What a working AI acceptable use policy has to decide...') is a topic line; the answer block under it opens 'An AI acceptable use policy for a company of 30 to 300 people classifies which data may reach which AI vendor', answering 'ai acceptable use policy'. Composed: the meta is the frontmatter description, uncut; 'Published 8 September 2026 · Updated 2 October 2026' agrees with the dates, and the Updated date moved from 15 September 2026 to 2 October 2026 this pass; the register card excerpt equals that post's description; the four tag chips match the tags. Reported, not fixed: as nits, the card summary repeats its heading and the FAQ answer on who should own the policy sets a document against a person (\"not a committee and not an HR document nobody maintains\"). Status rewritten: the authored copy moved.",
-    "digest": "23a1b95bcb60"
+    "digest": "a85789ffe2f3"
   },
   {
     "target": "/blog/category/agentic-architecture",
@@ -81,21 +81,21 @@
     "target": "/blog/category/governance",
     "status": "rewritten",
     "reason": "Title, H1, lead and meta description rewritten to the navigational query \"ai governance articles\". The bare term \"ai governance\" now belongs only to /glossary/ai-governance. The description names the four documents the category body already covers (register, acceptable-use policy, data classification, named owner) and the 30 to 300 company range already in content-facts numbers; no owner fact added.",
-    "digest": "ec7a274517bf"
+    "digest": "44c085c83c3c"
   },
   {
     "target": "/blog/category/operating-model",
     "location": "head.title",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/blog/category/operating-model.html. Row head.title is 'AI operating model articles — meshin.co': the category archive title (archiveTitle, or title where a category has none, in src/data/categories.mjs) plus the site suffix. It is unchanged since the last seal and is not touched by the interview answers or by the removal of the only.help case study. It matches the docs/SEMANTIC-CORE.md row for this route (query 'ai operating model articles'). The bare term 'ai operating model' belongs to /glossary/ai-operating-model; the archive takes the 'articles' form. The meta, og and twitter descriptions equal the category description row of src/data/categories.mjs, checked in the built head. The H1, lead and body paragraphs are rows of src/data/categories.mjs and are dispositioned there.",
-    "digest": "8af67c6382c9"
+    "digest": "cf27503e34a9"
   },
   {
     "target": "/blog/category/operating-model",
     "location": "body.p",
     "status": "rewritten",
     "reason": "Re-read 2026-10-08 against dist/blog/category/operating-model.html. The body.p rows of this route are composed text, not authored copy: 3 date lines, 3 tag lines and the excerpt of the telemetry card (held as a row of its own because the built text writes the apostrophe in METR's as &#39;). The H1, lead and body paragraphs of this category page are rows of src/data/categories.mjs and are dispositioned there. The 3 cards, newest first, are: Adoption telemetry for AI tools: what a trial found ('02 Oct 2026 · 14 min read · AI operating model'); How to choose an AI operating model for a mid-size company ('02 Oct 2026 · 15 min read · AI operating model'); and Why your AI pilot never reached production ('08 Sept 2026 · 6 min read · AI operating model'). Changed this pass (composed date lines): the post bodies were edited after the 2026-10-07 interview (updatedDate 2026-10-07), and reading time is words divided by 220, rounded up, so these lines moved: '02 Oct 2026 · 14 min read · AI operating model' for the telemetry card (the last seal read 13 min; the post body went from 2,797 to 2,966 words); and '02 Oct 2026 · 15 min read · AI operating model' for the operating-model choice card (the last seal read 14 min; the post body went from 3,033 to 3,135 words). Unchanged and re-read: the date lines of the posts that were not edited in this pass ('08 Sept 2026 · 6 min read · AI operating model'); the tag lines are unchanged. Checked by script on 2026-10-08, for all 3 cards: the excerpt equals the post description, the datetime equals publishDate, the tag links equal the post's tags in order, the category label in each date line is that category's title, and the minutes equal the reading time computed from the post body. The telemetry excerpt equals that post's description, which is unchanged since the last seal. Status rewritten because composed date lines changed with the posts' word counts. The card text itself belongs to the posts and is dispositioned under each post file.",
-    "digest": "8af67c6382c9"
+    "digest": "cf27503e34a9"
   },
   {
     "target": "/blog/evals-in-ci-for-llm-agents",
@@ -115,219 +115,219 @@
     "target": "/blog/how-to-build-an-ai-system-register-in-a-week",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In how-to-build-an-ai-system-register-in-a-week.md the shortAnswer now leads with 'Build a usable AI system register in a week', the fullAnswer moved its 'not because the work is hard' pivot to the end, five body paragraphs, the Monday and Thursday bullets and an FAQ answer were split with no dangling pronoun, three takeaways were reworded, and a table cell now says 'the company built it in-house or bought it'; the kit card line comes from the resource file and now reads 'Available as a page on this site. A repository copy is not published yet.' where it read 'A repository copy is not published yet.' Title 'How to build an AI system register in a week — meshin.co' and the identical H1 suit the article grammar and carry the query 'ai system register'. The first sentence, 'A step-by-step way to build an AI system register in a week', is the unchanged standfirst; the short answer defines the register in its second sentence. Composed strings read whole: the meta description equals its source line; 'AI governance · 08 Sept 2026 · 5 min read' fits 1,062 words; 'Published 8 September 2026 · Updated 2 October 2026' matches frontmatter, the Updated date having moved from 15 September 2026 to 2 October 2026 this pass; the Keep reading excerpt equals the other post description; tags and author box are clean. Reported, not fixed: \"Create the spreadsheet with those three columns.\" and \"Fill in the vendor, data and risk-tier columns from what you heard.\" treat as columns what the table lists as rows (a defect); and, as nits, the short and full answers repeat the same \"Each entry records...\" sentence, \"thirty to three hundred people\" sits beside \"30 to 300 people\" in the Keep reading card, and the Sources list cites Articles 12 and 49 and ISO/IEC 42001 where the text cites Article 49 and Article 71. One template-level finding shared with the pilot post is also reported: the eyebrow \"08 Sept 2026\" against \"Published 8 September 2026\" in the date line (a nit). Status rewritten: the post source changed.",
-    "digest": "992d41c812a1"
+    "digest": "026a0e4ab315"
   },
   {
     "target": "/blog/tag/acceptable-use-policy",
     "status": "rewritten",
     "reason": "Title, H1 and lead now follow the tag template change: \"Acceptable use policy posts\" and \"All posts tagged Acceptable use policy, newest first.\"; query updated to \"acceptable use policy posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list.",
-    "digest": "2fa226b09c2e"
+    "digest": "62a4c7729028"
   },
   {
     "target": "/blog/tag/agentic-architecture",
     "location": "head.title",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/agentic-architecture.html. Row head.title is 'Agentic architecture posts — meshin.co': the tag archive title 'Agentic architecture posts' from tagArchive in src/data/tags.mjs plus the site suffix. It is unchanged since the last seal and is not touched by the interview answers or by the removal of the only.help case study. It matches the docs/SEMANTIC-CORE.md row for this route (query 'agentic architecture posts'). The meta, og and twitter descriptions are the lead sentence of the page, which names the tag and claims nothing beyond the tag list. Title, H1, lead and meta description were rewritten on 1 October from the bare tag name to the navigational form 'Agentic architecture posts', which is distinct from the category archive's articles form; no glossary page owns the bare term.",
-    "digest": "bfdb86ed0c4b"
+    "digest": "5f77992b61f3"
   },
   {
     "target": "/blog/tag/agentic-architecture",
     "location": "body.h1",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/agentic-architecture.html. Row body.h1 is 'Agentic architecture posts': the tag name plus 'posts', composed by tagArchive in src/data/tags.mjs. It is unchanged since the last seal, equals the title row without the site suffix, and matches the heading column of the docs/SEMANTIC-CORE.md row for this route.",
-    "digest": "bfdb86ed0c4b"
+    "digest": "5f77992b61f3"
   },
   {
     "target": "/blog/tag/agentic-architecture",
     "location": "body.p",
     "status": "rewritten",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/agentic-architecture.html. The body.p rows of this route are composed text, not authored copy: the lead 'All posts tagged Agentic architecture, newest first.' (tagArchive in src/data/tags.mjs; it is also the meta, og and twitter description, names the tag and claims nothing beyond the tag list), 2 date lines and 2 tag lines. The 2 cards, newest first, are: Multi-agent reference architecture in production ('02 Oct 2026 · 15 min read · Agentic architecture'); and Evals in CI for LLM agents, without a golden answer ('08 Sept 2026 · 8 min read · Agentic architecture'). Changed this pass (composed date lines): the post bodies were edited after the 2026-10-07 interview (updatedDate 2026-10-07), and reading time is words divided by 220, rounded up, so this line moved: '02 Oct 2026 · 15 min read · Agentic architecture' for the multi-agent card (the last seal read 14 min; the post body went from 2,974 to 3,127 words). Unchanged and re-read: '08 Sept 2026 · 8 min read · Agentic architecture', which stayed at 8 min although the evals post lost the only.help paragraph (1,616 to 1,575 words); the tag lines are unchanged. Checked by script on 2026-10-08, for all 2 cards: the excerpt equals the post description, the datetime equals publishDate, the tag links equal the post's tags in order, the category label in each date line is that category's title, and the minutes equal the reading time computed from the post body. Status rewritten because composed date lines changed with the posts' word counts. The card text itself belongs to the posts and is dispositioned under each post file.",
-    "digest": "bfdb86ed0c4b"
+    "digest": "5f77992b61f3"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "head.title",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/ai-governance.html. Row head.title is 'AI governance posts — meshin.co': the tag archive title 'AI governance posts' from tagArchive in src/data/tags.mjs plus the site suffix. It is unchanged since the last seal and is not touched by the interview answers or by the removal of the only.help case study. It matches the docs/SEMANTIC-CORE.md row for this route (query 'ai governance posts'). The meta, og and twitter descriptions are the lead sentence of the page, which names the tag and claims nothing beyond the tag list.",
-    "digest": "a49f36c07f28"
+    "digest": "c7a6dabd622d"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "body.h1",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/ai-governance.html. Row body.h1 is 'AI governance posts': the tag name plus 'posts', composed by tagArchive in src/data/tags.mjs. It is unchanged since the last seal, equals the title row without the site suffix, and matches the heading column of the docs/SEMANTIC-CORE.md row for this route.",
-    "digest": "a49f36c07f28"
+    "digest": "c7a6dabd622d"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "body.p",
     "status": "rewritten",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/ai-governance.html. The body.p rows of this route are composed text, not authored copy: the lead 'All posts tagged AI governance, newest first.' (tagArchive in src/data/tags.mjs; it is also the meta, og and twitter description, names the tag and claims nothing beyond the tag list), 6 date lines, 6 tag lines and the excerpt of the telemetry card (held as a row of its own because the built text writes the apostrophe in METR's as &#39;). The 6 cards, newest first, are: Adoption telemetry for AI tools: what a trial found ('02 Oct 2026 · 14 min read · AI operating model'); How to hand over AI leadership to an internal owner ('02 Oct 2026 · 12 min read · AI for boards'); How to choose an AI operating model for a mid-size company ('02 Oct 2026 · 15 min read · AI operating model'); What actually belongs in an AI acceptable use policy ('08 Sept 2026 · 6 min read · AI governance'); How to build an AI system register in a week ('08 Sept 2026 · 5 min read · AI governance'); and Why your AI pilot never reached production ('08 Sept 2026 · 6 min read · AI operating model'). Changed this pass (composed date lines): the post bodies were edited after the 2026-10-07 interview (updatedDate 2026-10-07), and reading time is words divided by 220, rounded up, so these lines moved: '02 Oct 2026 · 14 min read · AI operating model' for the telemetry card (the last seal read 13 min; the post body went from 2,797 to 2,966 words); '02 Oct 2026 · 12 min read · AI for boards' for the handover card (the last seal read 11 min; the post body went from 2,248 to 2,521 words); and '02 Oct 2026 · 15 min read · AI operating model' for the operating-model choice card (the last seal read 14 min; the post body went from 3,033 to 3,135 words). Unchanged and re-read: the date lines of the posts that were not edited in this pass ('08 Sept 2026 · 6 min read · AI governance', '08 Sept 2026 · 5 min read · AI governance', '08 Sept 2026 · 6 min read · AI operating model'); the tag lines are unchanged. Checked by script on 2026-10-08, for all 6 cards: the excerpt equals the post description, the datetime equals publishDate, the tag links equal the post's tags in order, the category label in each date line is that category's title, and the minutes equal the reading time computed from the post body. The telemetry excerpt equals that post's description, which is unchanged since the last seal. Status rewritten because composed date lines changed with the posts' word counts. The card text itself belongs to the posts and is dispositioned under each post file.",
-    "digest": "a49f36c07f28"
+    "digest": "c7a6dabd622d"
   },
   {
     "target": "/blog/tag/ai-pilots",
     "location": "head.title",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/ai-pilots.html. Row head.title is 'AI pilots posts — meshin.co': the tag archive title 'AI pilots posts' from tagArchive in src/data/tags.mjs plus the site suffix. It is unchanged since the last seal and is not touched by the interview answers or by the removal of the only.help case study. It matches the docs/SEMANTIC-CORE.md row for this route (query 'ai pilots posts'). The meta, og and twitter descriptions are the lead sentence of the page, which names the tag and claims nothing beyond the tag list.",
-    "digest": "c3957c88aa2a"
+    "digest": "d46a182a4d36"
   },
   {
     "target": "/blog/tag/ai-pilots",
     "location": "body.h1",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/ai-pilots.html. Row body.h1 is 'AI pilots posts': the tag name plus 'posts', composed by tagArchive in src/data/tags.mjs. It is unchanged since the last seal, equals the title row without the site suffix, and matches the heading column of the docs/SEMANTIC-CORE.md row for this route.",
-    "digest": "c3957c88aa2a"
+    "digest": "d46a182a4d36"
   },
   {
     "target": "/blog/tag/ai-pilots",
     "location": "body.p",
     "status": "rewritten",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/ai-pilots.html. The body.p rows of this route are composed text, not authored copy: the lead 'All posts tagged AI pilots, newest first.' (tagArchive in src/data/tags.mjs; it is also the meta, og and twitter description, names the tag and claims nothing beyond the tag list), 2 date lines, 2 tag lines and the excerpt of the telemetry card (held as a row of its own because the built text writes the apostrophe in METR's as &#39;). The 2 cards, newest first, are: Adoption telemetry for AI tools: what a trial found ('02 Oct 2026 · 14 min read · AI operating model'); and Why your AI pilot never reached production ('08 Sept 2026 · 6 min read · AI operating model'). Changed this pass (composed date lines): the post bodies were edited after the 2026-10-07 interview (updatedDate 2026-10-07), and reading time is words divided by 220, rounded up, so this line moved: '02 Oct 2026 · 14 min read · AI operating model' for the telemetry card (the last seal read 13 min; the post body went from 2,797 to 2,966 words). Unchanged and re-read: the date lines of the posts that were not edited in this pass ('08 Sept 2026 · 6 min read · AI operating model'); the tag lines are unchanged. Checked by script on 2026-10-08, for all 2 cards: the excerpt equals the post description, the datetime equals publishDate, the tag links equal the post's tags in order, the category label in each date line is that category's title, and the minutes equal the reading time computed from the post body. The telemetry excerpt equals that post's description, which is unchanged since the last seal. Status rewritten because composed date lines changed with the posts' word counts. The card text itself belongs to the posts and is dispositioned under each post file.",
-    "digest": "c3957c88aa2a"
+    "digest": "d46a182a4d36"
   },
   {
     "target": "/blog/tag/ai-register",
     "location": "head.title",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/ai-register.html. Row head.title is 'AI register posts — meshin.co': the tag archive title 'AI register posts' from tagArchive in src/data/tags.mjs plus the site suffix. It is unchanged since the last seal and is not touched by the interview answers or by the removal of the only.help case study. It matches the docs/SEMANTIC-CORE.md row for this route (query 'ai register posts'). The meta, og and twitter descriptions are the lead sentence of the page, which names the tag and claims nothing beyond the tag list. Title, H1, lead and meta description were rewritten on 1 October from the bare tag name to 'AI register posts', so the bare term 'ai register' belongs only to /glossary/ai-register.",
-    "digest": "214f8669df65"
+    "digest": "4f523ec3e7e5"
   },
   {
     "target": "/blog/tag/ai-register",
     "location": "body.h1",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/ai-register.html. Row body.h1 is 'AI register posts': the tag name plus 'posts', composed by tagArchive in src/data/tags.mjs. It is unchanged since the last seal, equals the title row without the site suffix, and matches the heading column of the docs/SEMANTIC-CORE.md row for this route.",
-    "digest": "214f8669df65"
+    "digest": "4f523ec3e7e5"
   },
   {
     "target": "/blog/tag/ai-register",
     "location": "body.p",
     "status": "rewritten",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/ai-register.html. The body.p rows of this route are composed text, not authored copy: the lead 'All posts tagged AI register, newest first.' (tagArchive in src/data/tags.mjs; it is also the meta, og and twitter description, names the tag and claims nothing beyond the tag list), 2 date lines and 2 tag lines. The 2 cards, newest first, are: How to choose an AI operating model for a mid-size company ('02 Oct 2026 · 15 min read · AI operating model'); and How to build an AI system register in a week ('08 Sept 2026 · 5 min read · AI governance'). Changed this pass (composed date lines): the post bodies were edited after the 2026-10-07 interview (updatedDate 2026-10-07), and reading time is words divided by 220, rounded up, so this line moved: '02 Oct 2026 · 15 min read · AI operating model' for the operating-model choice card (the last seal read 14 min; the post body went from 3,033 to 3,135 words). Unchanged and re-read: the date lines of the posts that were not edited in this pass ('08 Sept 2026 · 5 min read · AI governance'); the tag lines are unchanged. Checked by script on 2026-10-08, for all 2 cards: the excerpt equals the post description, the datetime equals publishDate, the tag links equal the post's tags in order, the category label in each date line is that category's title, and the minutes equal the reading time computed from the post body. Status rewritten because composed date lines changed with the posts' word counts. The card text itself belongs to the posts and is dispositioned under each post file.",
-    "digest": "214f8669df65"
+    "digest": "4f523ec3e7e5"
   },
   {
     "target": "/blog/tag/eu-ai-act",
     "location": "head.title",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/eu-ai-act.html. Row head.title is 'EU AI Act posts — meshin.co': the tag archive title 'EU AI Act posts' from tagArchive in src/data/tags.mjs plus the site suffix. It is unchanged since the last seal and is not touched by the interview answers or by the removal of the only.help case study. It matches the docs/SEMANTIC-CORE.md row for this route (query 'eu ai act posts'). The meta, og and twitter descriptions are the lead sentence of the page, which names the tag and claims nothing beyond the tag list. Title, H1, lead and meta description were rewritten on 1 October from the bare tag name to 'EU AI Act posts', so the bare term 'eu ai act' belongs only to /glossary/eu-ai-act.",
-    "digest": "4ff2d5cef2cd"
+    "digest": "b4ffc6213161"
   },
   {
     "target": "/blog/tag/eu-ai-act",
     "location": "body.h1",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/eu-ai-act.html. Row body.h1 is 'EU AI Act posts': the tag name plus 'posts', composed by tagArchive in src/data/tags.mjs. It is unchanged since the last seal, equals the title row without the site suffix, and matches the heading column of the docs/SEMANTIC-CORE.md row for this route.",
-    "digest": "4ff2d5cef2cd"
+    "digest": "b4ffc6213161"
   },
   {
     "target": "/blog/tag/eu-ai-act",
     "location": "body.p",
     "status": "rewritten",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/eu-ai-act.html. The body.p rows of this route are composed text, not authored copy: the lead 'All posts tagged EU AI Act, newest first.' (tagArchive in src/data/tags.mjs; it is also the meta, og and twitter description, names the tag and claims nothing beyond the tag list), 3 date lines and 3 tag lines. The 3 cards, newest first, are: How to hand over AI leadership to an internal owner ('02 Oct 2026 · 12 min read · AI for boards'); How to choose an AI operating model for a mid-size company ('02 Oct 2026 · 15 min read · AI operating model'); and How to build an AI system register in a week ('08 Sept 2026 · 5 min read · AI governance'). Changed this pass (composed date lines): the post bodies were edited after the 2026-10-07 interview (updatedDate 2026-10-07), and reading time is words divided by 220, rounded up, so these lines moved: '02 Oct 2026 · 12 min read · AI for boards' for the handover card (the last seal read 11 min; the post body went from 2,248 to 2,521 words); and '02 Oct 2026 · 15 min read · AI operating model' for the operating-model choice card (the last seal read 14 min; the post body went from 3,033 to 3,135 words). Unchanged and re-read: the date lines of the posts that were not edited in this pass ('08 Sept 2026 · 5 min read · AI governance'); the tag lines are unchanged. Checked by script on 2026-10-08, for all 3 cards: the excerpt equals the post description, the datetime equals publishDate, the tag links equal the post's tags in order, the category label in each date line is that category's title, and the minutes equal the reading time computed from the post body. Status rewritten because composed date lines changed with the posts' word counts. The card text itself belongs to the posts and is dispositioned under each post file.",
-    "digest": "4ff2d5cef2cd"
+    "digest": "b4ffc6213161"
   },
   {
     "target": "/blog/tag/evals-in-ci",
     "location": "head.title",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/evals-in-ci.html. Row head.title is 'Evals in CI posts — meshin.co': the tag archive title 'Evals in CI posts' from tagArchive in src/data/tags.mjs plus the site suffix. It is unchanged since the last seal and is not touched by the interview answers or by the removal of the only.help case study. It matches the docs/SEMANTIC-CORE.md row for this route (query 'evals in ci posts'). The meta, og and twitter descriptions are the lead sentence of the page, which names the tag and claims nothing beyond the tag list.",
-    "digest": "6b7a6e1922fc"
+    "digest": "8be2dd3c7b53"
   },
   {
     "target": "/blog/tag/evals-in-ci",
     "location": "body.h1",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/evals-in-ci.html. Row body.h1 is 'Evals in CI posts': the tag name plus 'posts', composed by tagArchive in src/data/tags.mjs. It is unchanged since the last seal, equals the title row without the site suffix, and matches the heading column of the docs/SEMANTIC-CORE.md row for this route.",
-    "digest": "6b7a6e1922fc"
+    "digest": "8be2dd3c7b53"
   },
   {
     "target": "/blog/tag/evals-in-ci",
     "location": "body.p",
     "status": "rewritten",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/evals-in-ci.html. The body.p rows of this route are composed text, not authored copy: the lead 'All posts tagged Evals in CI, newest first.' (tagArchive in src/data/tags.mjs; it is also the meta, og and twitter description, names the tag and claims nothing beyond the tag list), 3 date lines and 3 tag lines. The 3 cards, newest first, are: Multi-agent reference architecture in production ('02 Oct 2026 · 15 min read · Agentic architecture'); Evals in CI for LLM agents, without a golden answer ('08 Sept 2026 · 8 min read · Agentic architecture'); and Why your AI pilot never reached production ('08 Sept 2026 · 6 min read · AI operating model'). Changed this pass (composed date lines): the post bodies were edited after the 2026-10-07 interview (updatedDate 2026-10-07), and reading time is words divided by 220, rounded up, so this line moved: '02 Oct 2026 · 15 min read · Agentic architecture' for the multi-agent card (the last seal read 14 min; the post body went from 2,974 to 3,127 words). Unchanged and re-read: the date lines of the posts that were not edited in this pass ('08 Sept 2026 · 6 min read · AI operating model'), and '08 Sept 2026 · 8 min read · Agentic architecture', which stayed at 8 min although the evals post lost the only.help paragraph (1,616 to 1,575 words); the tag lines are unchanged. Checked by script on 2026-10-08, for all 3 cards: the excerpt equals the post description, the datetime equals publishDate, the tag links equal the post's tags in order, the category label in each date line is that category's title, and the minutes equal the reading time computed from the post body. Status rewritten because composed date lines changed with the posts' word counts. The card text itself belongs to the posts and is dispositioned under each post file.",
-    "digest": "6b7a6e1922fc"
+    "digest": "8be2dd3c7b53"
   },
   {
     "target": "/blog/tag/llm-as-judge",
     "status": "rewritten",
     "reason": "Title, H1 and lead now follow the tag template change: \"LLM as judge posts\" and \"All posts tagged LLM as judge, newest first.\"; query updated to \"llm as judge posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list.",
-    "digest": "20befb6aee99"
+    "digest": "32e3c1802468"
   },
   {
     "target": "/blog/tag/policy-enforcement",
     "status": "rewritten",
     "reason": "Title, H1 and lead now follow the tag template change: \"Policy enforcement posts\" and \"All posts tagged Policy enforcement, newest first.\"; query updated to \"policy enforcement posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list.",
-    "digest": "d256ca4f3ab9"
+    "digest": "f1815dd22b8f"
   },
   {
     "target": "/blog/tag/production-readiness",
     "location": "head.title",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/production-readiness.html. Row head.title is 'Production readiness posts — meshin.co': the tag archive title 'Production readiness posts' from tagArchive in src/data/tags.mjs plus the site suffix. It is unchanged since the last seal and is not touched by the interview answers or by the removal of the only.help case study. It matches the docs/SEMANTIC-CORE.md row for this route (query 'production readiness posts'). The meta, og and twitter descriptions are the lead sentence of the page, which names the tag and claims nothing beyond the tag list.",
-    "digest": "d2b18e84f805"
+    "digest": "c9f2280c5827"
   },
   {
     "target": "/blog/tag/production-readiness",
     "location": "body.h1",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/production-readiness.html. Row body.h1 is 'Production readiness posts': the tag name plus 'posts', composed by tagArchive in src/data/tags.mjs. It is unchanged since the last seal, equals the title row without the site suffix, and matches the heading column of the docs/SEMANTIC-CORE.md row for this route.",
-    "digest": "d2b18e84f805"
+    "digest": "c9f2280c5827"
   },
   {
     "target": "/blog/tag/production-readiness",
     "location": "body.p",
     "status": "rewritten",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/production-readiness.html. The body.p rows of this route are composed text, not authored copy: the lead 'All posts tagged Production readiness, newest first.' (tagArchive in src/data/tags.mjs; it is also the meta, og and twitter description, names the tag and claims nothing beyond the tag list), 4 date lines, 4 tag lines and the excerpt of the telemetry card (held as a row of its own because the built text writes the apostrophe in METR's as &#39;). The 4 cards, newest first, are: Adoption telemetry for AI tools: what a trial found ('02 Oct 2026 · 14 min read · AI operating model'); How to hand over AI leadership to an internal owner ('02 Oct 2026 · 12 min read · AI for boards'); Multi-agent reference architecture in production ('02 Oct 2026 · 15 min read · Agentic architecture'); and Why your AI pilot never reached production ('08 Sept 2026 · 6 min read · AI operating model'). Changed this pass (composed date lines): the post bodies were edited after the 2026-10-07 interview (updatedDate 2026-10-07), and reading time is words divided by 220, rounded up, so these lines moved: '02 Oct 2026 · 14 min read · AI operating model' for the telemetry card (the last seal read 13 min; the post body went from 2,797 to 2,966 words); '02 Oct 2026 · 12 min read · AI for boards' for the handover card (the last seal read 11 min; the post body went from 2,248 to 2,521 words); and '02 Oct 2026 · 15 min read · Agentic architecture' for the multi-agent card (the last seal read 14 min; the post body went from 2,974 to 3,127 words). Unchanged and re-read: the date lines of the posts that were not edited in this pass ('08 Sept 2026 · 6 min read · AI operating model'); the tag lines are unchanged. Checked by script on 2026-10-08, for all 4 cards: the excerpt equals the post description, the datetime equals publishDate, the tag links equal the post's tags in order, the category label in each date line is that category's title, and the minutes equal the reading time computed from the post body. The telemetry excerpt equals that post's description, which is unchanged since the last seal. Status rewritten because composed date lines changed with the posts' word counts. The card text itself belongs to the posts and is dispositioned under each post file.",
-    "digest": "d2b18e84f805"
+    "digest": "c9f2280c5827"
   },
   {
     "target": "/blog/tag/security-review",
     "status": "rewritten",
     "reason": "Title, H1 and lead now follow the tag template change: \"Security review posts\" and \"All posts tagged Security review, newest first.\"; query updated to \"security review posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list.",
-    "digest": "623631946d3b"
+    "digest": "4366c4684cef"
   },
   {
     "target": "/blog/tag/shadow-ai",
     "location": "head.title",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/shadow-ai.html. Row head.title is 'Shadow AI posts — meshin.co': the tag archive title 'Shadow AI posts' from tagArchive in src/data/tags.mjs plus the site suffix. It is unchanged since the last seal and is not touched by the interview answers or by the removal of the only.help case study. It matches the docs/SEMANTIC-CORE.md row for this route (query 'shadow ai posts'). The meta, og and twitter descriptions are the lead sentence of the page, which names the tag and claims nothing beyond the tag list. Title, H1, lead and meta description were rewritten on 1 October from the bare tag name to 'Shadow AI posts', so the bare term 'shadow ai' belongs only to /glossary/shadow-ai.",
-    "digest": "e46cad079dee"
+    "digest": "a800fa35e7c5"
   },
   {
     "target": "/blog/tag/shadow-ai",
     "location": "body.h1",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/shadow-ai.html. Row body.h1 is 'Shadow AI posts': the tag name plus 'posts', composed by tagArchive in src/data/tags.mjs. It is unchanged since the last seal, equals the title row without the site suffix, and matches the heading column of the docs/SEMANTIC-CORE.md row for this route.",
-    "digest": "e46cad079dee"
+    "digest": "a800fa35e7c5"
   },
   {
     "target": "/blog/tag/shadow-ai",
     "location": "body.p",
     "status": "rewritten",
     "reason": "Re-read 2026-10-08 against dist/blog/tag/shadow-ai.html. The body.p rows of this route are composed text, not authored copy: the lead 'All posts tagged Shadow AI, newest first.' (tagArchive in src/data/tags.mjs; it is also the meta, og and twitter description, names the tag and claims nothing beyond the tag list), 2 date lines, 2 tag lines and the excerpt of the telemetry card (held as a row of its own because the built text writes the apostrophe in METR's as &#39;). The 2 cards, newest first, are: Adoption telemetry for AI tools: what a trial found ('02 Oct 2026 · 14 min read · AI operating model'); and What actually belongs in an AI acceptable use policy ('08 Sept 2026 · 6 min read · AI governance'). Changed this pass (composed date lines): the post bodies were edited after the 2026-10-07 interview (updatedDate 2026-10-07), and reading time is words divided by 220, rounded up, so this line moved: '02 Oct 2026 · 14 min read · AI operating model' for the telemetry card (the last seal read 13 min; the post body went from 2,797 to 2,966 words). Unchanged and re-read: the date lines of the posts that were not edited in this pass ('08 Sept 2026 · 6 min read · AI governance'); the tag lines are unchanged. Checked by script on 2026-10-08, for all 2 cards: the excerpt equals the post description, the datetime equals publishDate, the tag links equal the post's tags in order, the category label in each date line is that category's title, and the minutes equal the reading time computed from the post body. The telemetry excerpt equals that post's description, which is unchanged since the last seal. Status rewritten because composed date lines changed with the posts' word counts. The card text itself belongs to the posts and is dispositioned under each post file.",
-    "digest": "e46cad079dee"
+    "digest": "a800fa35e7c5"
   },
   {
     "target": "/blog/tags",
     "status": "verified",
     "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "dcd0eb74d328"
+    "digest": "022ab6e12104"
   },
   {
     "target": "/blog/why-your-ai-pilot-never-reached-production",
     "location": "head.title",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/blog/why-your-ai-pilot-never-reached-production.html. Row head.title is 'Why your AI pilot never reached production — meshin.co': the post title plus the site suffix. It is unchanged since the last seal, and the post source is not one of the ten files edited after the interview. The title and the matching H1 suit the article grammar and contain the whole query 'ai pilot never reached production'; the docs/SEMANTIC-CORE.md row for this route agrees. The meta description equals the post's front matter description, unchanged since the article was added (checked in the built head). The first sentence of the page, the answer to the title, is a row of the post source and is dispositioned there.",
-    "digest": "326e6fa64d79"
+    "digest": "2e48b23cdccb"
   },
   {
     "target": "/blog/why-your-ai-pilot-never-reached-production",
     "location": "body.p",
     "status": "rewritten",
     "reason": "Re-read 2026-10-08 against dist/blog/why-your-ai-pilot-never-reached-production.html. The body.p rows of this route are the article's rendered paragraphs (the rendered text of the post body; the post source is unchanged in this pass and is dispositioned under the post file) and the composed lines around them. Changed this pass: the Keep reading block at the foot lists two related cards, How to choose an AI operating model for a mid-size company and Adoption telemetry for AI tools: what a trial found. Their date lines now read '02 Oct 2026 · 15 min read · AI operating model' (the last seal read 14 min; the post body went from 3,033 to 3,135 words) and '02 Oct 2026 · 14 min read · AI operating model' (the last seal read 13 min; 2,797 to 2,966 words), because both posts were edited on 2026-10-07 and reading time is words divided by 220, rounded up. Each card's excerpt equals that post's description (checked by script on 2026-10-08); the telemetry excerpt is held as a row of its own because the built text writes the apostrophe in METR's as &#39;, and its source description row is dispositioned under the telemetry post file. Unchanged and re-read: 'Published 8 September 2026 · Updated 2 October 2026' equals the front matter (publishDate 2026-09-08, updatedDate 2026-10-02; this post was not edited); the hostnames nist.gov, eur-lex.europa.eu and owasp.org come from the source URLs; the kit label and the status line under the AI Governance Starter Kit card come from the resource file ('Available as a page on this site. A repository copy is not published yet.'). Carried from the 2026-10-02 review, still true because the post text is unchanged: the Phase 5.2 splits keep their antecedents ('This gap is usually the reason'). Reported, not fixed (still true): the sentence 'Most proof-of-concepts skip four things production always needs.' sits against 'Six conditions turn a pilot into something a platform team will actually run.' with no sentence reconciling four and six (a nit), and the '08 Sept 2026' eyebrow sits beside the 'Published 8 September 2026' date line (a template-level finding). Status rewritten because composed date lines changed.",
-    "digest": "326e6fa64d79"
+    "digest": "2e48b23cdccb"
   },
   {
     "target": "/case-studies",
@@ -346,7 +346,7 @@
     "target": "/faq",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. faq.astro swapped \"Questions and answers\" for the title \"Fractional Chief AI Officer questions — meshin.co\" and led the description with \"Fractional Chief AI Officer questions answered:\"; six teasers moved too, from changed answer files under site/src/data/faq. H1 \"Fractional Chief AI Officer questions, answered\" meets the static pattern. The first sentence, \"These are the Fractional Chief AI Officer questions people ask me most, before they book a call.\", states what the page is, which is the query. I recomputed all 25 teasers with teaser() against each full answer: 23 are the whole first sentence, for example \"If the evals say no, the workflow does not ship.\"; two are cut at a comma yet stay complete and true, \"You get a named officer's accountability, without a full-time salary.\" and \"I cover products you sell as well as internal workflows.\" (its answer file continues \"and the obligations differ\"), the latter is reported as a risk, since the cut drops \"and the obligations differ\". No teaser is an incomplete thought. Rewritten: title and description are faq.astro's own; moved teasers inherit answer edits.",
-    "digest": "280511166a3f"
+    "digest": "46f37c97ce43"
   },
   {
     "target": "/faq/are-models-trained-on-our-customer-data",
@@ -370,7 +370,7 @@
     "target": "/faq/how-do-you-charge-for-the-work",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/faq/how-do-you-charge-for-the-work.md two passives remain in the answer: 'The Sprint is quoted once, from the scope in the statement of work' and 'it is written down before any work starts'. Title 'How do you charge for the work? — meshin.co' and H1 'How do you charge for the work?' are the full question and fit the grammar. The opening 'Three fixed structures, no hourly billing.' answers the target query directly, though it only names the Assessment, Sprint and Retainer afterwards. The composed meta description is 'How do you charge for the work? Three fixed structures, no hourly billing. The Assessment is a fixed fee for the two weeks.'; I checked it against the source and it is two whole sentences, no cut, but it promises three structures and names one. The date line 'Published 12 September 2026 · Updated 12 September 2026' is clean. The new actors are reported as a risk.",
-    "digest": "e6dbae183d63"
+    "digest": "82855aa1f091"
   },
   {
     "target": "/faq/how-does-ai-risk-get-recorded-and-who-signs-it-off",
@@ -424,7 +424,7 @@
     "target": "/faq/what-do-we-do-about-tools-staff-are-already-using-without-approval",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/faq/what-do-we-do-about-tools-staff-are-already-using-without-approval.md the first sentence was reworded from 'Put them in the AI register, not on a ban list.' to 'Add unapproved tools to the AI register, not a ban list.' so it no longer leans on the question for 'them', and the long Retainer sentence is not split: 'The Retainer's first step is exactly this: inventory the AI tools and data flows already in the building, then write a data classification and an acceptable-use policy your engineers can actually follow.' The title is the shortTitle 'What about tools staff use without approval?' and the H1 is the full question; both fit the grammar. The opening 'Add unapproved tools to the AI register, not a ban list.' answers the target query with an action. The composed meta description changed: OLD was 'What do we do about tools staff are already using without approval? Put them in the AI register, not on a ban list. That beats banning them.' and NEW is 'What do we do about tools staff are already using without approval? Add unapproved tools to the AI register, not a ban list.' It is the whole first sentence, uncut. The date line 'Published 12 September 2026 · Updated 2 October 2026' is clean. Reported risk: the new first-person actor. Status is rewritten because the answer's own words changed.",
-    "digest": "49b8b24d5023"
+    "digest": "92c655820dbb"
   },
   {
     "target": "/faq/what-does-a-fractional-chief-ai-officer-actually-do",
@@ -448,7 +448,7 @@
     "target": "/faq/what-happens-on-a-fit-call-and-does-it-cost-anything",
     "status": "verified",
     "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "679a92d2f438"
+    "digest": "c8fb6cf0c722"
   },
   {
     "target": "/faq/what-if-the-ai-we-are-building-goes-into-a-product-we-sell",
@@ -478,7 +478,7 @@
     "target": "/faq/who-answers-customer-security-questionnaires",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. src/data/faq/who-answers-customer-security-questionnaires.md kept its first sentence byte-identical (it is a locked passage) and split the 33-word second sentence at \"as they arrive\": \"That is a core part of the Retainer: procurement answers and questionnaire responses as they arrive. My answers rest on the AI register and the acceptable-use policy, so they match what is actually running.\" \"My answers\" is still the same first-person speaker as \"I do\", so no new actor. Title \"Who answers customer security questionnaires? — meshin.co\" equals the H1 and the target query. The first sentence \"I do, as the named officer on record.\" answers it directly. The composed meta ends \"That is a core part of the Retainer: procurement answers.\", cut before \"and questionnaire responses as they arrive\"; it is whole and true but drops the item the query names. Date line \"Updated 2 October 2026\" matches updatedDate. Status rewritten: this file's own answer prose was reworked.",
-    "digest": "a87687cb91f8"
+    "digest": "3064b3f764ab"
   },
   {
     "target": "/faq/who-owns-the-code-and-the-data",
@@ -496,214 +496,214 @@
     "target": "/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. src/data/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai.md changed: shortTitle gained \"of AI\", and the answer's 35-word dash sentence was split into \"You get a named officer's accountability, without a full-time salary, a hiring process, or a seat that sits empty between AI decisions. That means a named officer on your customers' security reviews and your board's roadmap.\" Title \"Why hire a fractional officer over a full-time head of AI? — meshin.co\" and the H1 \"Why hire a fractional officer instead of a full-time head of AI?\" both fit. The first sentence answers the target query \"why hire a fractional officer instead of a full-time head of ai?\" with the benefit and the three things avoided. The meta description changed: this pass added an explicit frontmatter description, replacing the composed OLD one (\"A named officer on your customers' security reviews, and your board's roadmap — that is the accountability you get, without a full-time salary.\"). The NEW one is explicit, not composed: \"Why hire a fractional officer instead of a full-time head of AI? You get a named officer's accountability without the salary, hiring process or idle seat.\" It is whole, 154 characters, and consistent with the body. Sentence two repeats \"named officer\". Date line \"Updated 2 October 2026\" intact. Status rewritten. Re-read again 2026-10-02 after Phase 6 worklist item 2: the answer gains the cost-shape sentence. The added text is the text dispositioned on its source file. Title, H1 and meta description are unchanged, and the new rendered rows read as whole sentences with no truncation or repeated copy.",
-    "digest": "864cfce84203"
+    "digest": "98c6ca6d09b8"
   },
   {
     "target": "/glossary",
     "status": "verified",
     "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "6c3a0418ad0d"
+    "digest": "4a500bd8aa4a"
   },
   {
     "target": "/glossary/agentic-workflow",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. src/data/glossary/agentic-workflow.md changed in two body paragraphs: the refund example was split so it now ends 'drafts a refund and issues it is agentic. Nobody scripted that exact sequence in advance.' (the old comma and colon are gone), and the reviewer sentence was split so 'Why it comes up' now reads '...what the agent can do without asking first. The reviewer asks because that is where the real exposure sits, not the model choice.' The date line moved to 'Updated 2 October 2026'. Title 'What is an agentic workflow? — meshin.co' and H1 'Agentic workflow' fit the term grammar. The page opens 'An agentic workflow is a task one or more AI agents complete on their own once started.', which answers the query 'agentic workflow' in its first sentence. The meta description also changed this pass, from OLD 'An agentic workflow is a task run by one or more AI agents that plan steps, call tools and decide what happens next without a person's approval.' to NEW 'An agentic workflow is a task where one or more AI agents plan steps, call tools and choose the next move without a person's approval.', a whole sentence consistent with that opening. The built H2 reads 'What is an agentic workflow?', matching the title stem. The date line and related terms read whole. Rewritten because the term's own prose changed.",
-    "digest": "91c41e71c960"
+    "digest": "e459ed9f7ad1"
   },
   {
     "target": "/glossary/ai-governance",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. src/data/glossary/ai-governance.md changed its shortDefinition, which no longer calls governance 'the accountability layer above' a system and now opens 'AI governance means deciding who may build or buy an AI system, and who answers, by name, when it fails.' followed by a sentence on policies, roles and controls. The advice paragraph also moved the NIST AI RMF / ISO/IEC 42001 clause into its own sentence: '...Do this so you have a recognised structure to point at, not to get certified immediately.' The date line moved from 'Updated 8 September 2026' to 'Updated 2 October 2026'. Title 'What is AI governance? — meshin.co' and H1 'AI governance' match the grammar, and the built H2 'What is AI governance?' matches the title stem. The opening answers the query directly. The meta description ('...manage the risk of the AI systems it builds or buys') is a whole sentence. The date line 'Updated 2 October 2026' and the three related terms read whole. Straight and curly apostrophes are mixed on this page, a nit shared with several other term pages. Rewritten because the term's own definition and advice changed.",
-    "digest": "4c7bf2547157"
+    "digest": "5858f6289a05"
   },
   {
     "target": "/glossary/ai-impact-assessment",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. src/data/glossary/ai-impact-assessment.md was edited in four rows: the definition now ends 'completed before launch' and says 'the system's decision'; 'kick in' became 'take effect if a risk appears'; the 'is offered' passive became 'changes the offer a real person gets. That includes a loan, a job interview, an insurance price or a public benefit.'; and the closing sentence now starts 'Before a customer’s legal team asks, I flag...'. The date line moved from 'Updated 8 September 2026' to 'Updated 2 October 2026'. Title 'What is an AI impact assessment? — meshin.co' and H1 'AI impact assessment' fit the grammar. The first sentence defines the term and answers the query. The meta description ('...whether they can challenge its decision') matches the definition's second sentence and is whole. The 'I flag' wording was already in the OLD text, so no new actor. The built H2 is 'What is an AI impact assessment?'. The straight and curly apostrophes sit in different blocks. Rewritten because its own copy changed.",
-    "digest": "3d3f9ebbec4a"
+    "digest": "cb623519aa69"
   },
   {
     "target": "/glossary/ai-management-system",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. src/data/glossary/ai-management-system.md had three long sentences split. The Article 17 sentence now reads 'Every provider of a high-risk AI system must run a documented quality management system. That system has to cover the risk-management process, post-market monitoring and serious-incident procedures, among other elements.' 'Why it comes up' became two paragraphs (procurement request plus 'This happens because...', then the board paragraph), and the last advice sentence became 'So the gap list is evidence rather than a guess.' The date line moved from 'Updated 8 September 2026' to 'Updated 2 October 2026'. Title 'What is an AI management system? — meshin.co' and H1 'AI management system' fit the grammar. The page opens with the plan-do-check-act definition, which answers the query. The meta description is a whole sentence with a clear contrast to a one-off risk assessment. The built H2 is 'What is an AI management system?'. The 'So the gap list' fragment is reported as a nit. Date line and six related terms read whole. Rewritten because its own copy changed.",
-    "digest": "d7bf4f52e9be"
+    "digest": "e241f6570457"
   },
   {
     "target": "/glossary/ai-register",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. src/data/glossary/ai-register.md was edited so the definition is now two sentences: 'An AI register is a company's own inventory of every AI system it builds, buys or uses. Each entry lists what the system does, what data it touches, who owns it and how risky it is.' The spreadsheet advice was split in two ('Use one row per system, with columns for...'), a separate paragraph now says 'Review the list on a fixed schedule... Quarterly is reasonable.', and 'raises the stakes' became 'For high-risk systems, the EU AI Act goes further: Article 71 requires joining a public EU database.' The date line moved from 'Updated 15 September 2026' to 'Updated 2 October 2026'. Title 'What is an AI register? — meshin.co' and H1 'AI register' fit the grammar. The first sentence answers the query. The meta description is a whole sentence and agrees with the definition. The built H2 is 'What is an AI register?'; straight and curly apostrophes are mixed on this page (reported as a nit). The date line and related terms read whole. Rewritten because its own copy changed.",
-    "digest": "6fe8ff5bce5a"
+    "digest": "eb2ddc0a72a3"
   },
   {
     "target": "/glossary/conformity-assessment",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. src/data/glossary/conformity-assessment.md was rewritten in five spots: the definition split into 'Either the provider checks the system internally, or an accredited outside body checks it.'; the filler 'the outcome is simple:' was removed from the self-check paragraph; the harmonised-standards gloss became its own closing sentence in the Article 43 paragraph; the investor sentence became two; and the advice now reads 'Work out early, before the system is built, which assessment route applies.' The advice paragraph was also split in two: it now continues 'That matters because a notified-body review takes far longer to arrange than an internal one, and you cannot rush it at launch.', and its last two sentences moved into a new paragraph. The date line moved from 'Updated 8 September 2026' to 'Updated 2 October 2026'. Title 'What is a conformity assessment? — meshin.co' and H1 'Conformity assessment' fit the grammar. The first sentence defines the process and answers the query. The meta description also changed this pass, from OLD 'A conformity assessment is the check, self-run or done by an outside body, that proves a high-risk AI system meets the EU AI Act before sale.' to NEW 'A conformity assessment proves a high-risk AI system meets the EU AI Act before sale. Either the provider or an outside body runs it.', two sentences, whole and matching the provider-or-outside-body split. Built H2 is 'What is a conformity assessment?'. Date line and related terms are whole. Rewritten because its own copy changed.",
-    "digest": "68996d07d2bc"
+    "digest": "f52280528a71"
   },
   {
     "target": "/glossary/data-classification",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. src/data/glossary/data-classification.md changed: in the shortDefinition 'allowed to reach' became 'may reach' and 'the hard way' became 'finds out too late'; the NIST sentence was split into 'ties each category to a real question, not a subjective label. The question is what actually happens to confidentiality, integrity or availability if this breaks.'; 'additional' became 'new'; and 'Without one' became 'Without a scheme'. The date line moved from 'Updated 15 September 2026' to 'Updated 2 October 2026'. Title 'What is data classification? — meshin.co' and H1 'Data classification' fit the grammar. The opening sentence defines the term and answers the query. The meta description lists 'public, internal or restricted' where the body lists four tiers; with 'such as' that is a fair short list. I judged the split NIST passage by reading the two sentences together, and they stay coherent. Built H2 is 'What is data classification?', matching the title stem. The kit is called \"The AI Governance Starter Kit\" in the text and \"The Governance Starter Kit\" in the call to action (reported as a nit). Date line and related terms are whole. Rewritten because its own copy changed.",
-    "digest": "cced4e58a531"
+    "digest": "09d483d63056"
   },
   {
     "target": "/glossary/dpia",
     "location": "head.title",
     "status": "verified",
     "reason": "Re-read as built on 2026-10-08: \"What is a DPIA? — meshin.co\", the page title plus the site suffix; the title field is unchanged, so the built title is unchanged. It asserts no fact beyond the title read on frontmatter.title.",
-    "digest": "3c74445b8e56"
+    "digest": "03f10e38868e"
   },
   {
     "target": "/glossary/dpia",
     "location": "body.h1",
     "status": "verified",
     "reason": "Re-read as built on 2026-10-08: the h1 is the term \"DPIA\", unchanged; it fits the page title, which asks what a DPIA is, and asserts no fact.",
-    "digest": "3c74445b8e56"
+    "digest": "03f10e38868e"
   },
   {
     "target": "/glossary/dpia",
     "location": "body.p",
     "status": "rewritten",
     "reason": "Read every paragraph rendered in dist/glossary/dpia.html on 2026-10-08, as built. The page changed in this pass: the section on when monitoring staff triggers a DPIA was moved in from the adoption telemetry article under answer 17.7 (COPY-CHECKLIST section 17, answered 2026-10-07: \"monitoring trigger moved to /glossary/dpia\"); the source body row records the move, the sentence map and the checks against Article 35. What each rendered row is. The short definition paragraph equals the verified shortDefinition row; it did not inherit that status only because the built HTML encodes the apostrophe in \"system's\" as an entity. The three definition paragraphs equal the verified definition row: the three Article 35(3) situations, the contents of the assessment with the data protection officer rule, and the AI Act Article 26 paragraph. The paragraphs of the three body sections equal the source body row: the opening section on why the term comes up, the moved section (the Article 35 sentence, the Article 29 Working Party paragraph and the dashboard-inference paragraph) and the closing advice section. Composed and attribution text: \"Published 8 September 2026 · Updated 7 October 2026\" agrees with publishDate 2026-09-08 and updatedDate 2026-10-07 in the front matter (the same line is shared with the evals article page, which has the same dates); \"Article 29 Working Party · retrieved 2026-10-02\" is the publisher and retrieval date of the WP 248 source that moved onto this page with the section (same title, URL, publisher and date as on the article, which still cites the same publisher for the 2017 consent opinion); \"eur-lex.europa.eu\" is the bare hostname the page shows for its three EUR-Lex sources (Article 35 GDPR, and Articles 27 and 26 of the AI Act) and carries no claim (the row is shared with other pages); \"Concerns\" is the short label above the link to the AI readiness and risk assessment service in the side block and carries no claim (it is shared with other pages). No paragraph makes a first-person claim, names an owner practice or gives a figure from the owner's or a client's telemetry.",
-    "digest": "3c74445b8e56"
+    "digest": "03f10e38868e"
   },
   {
     "target": "/glossary/eu-ai-act",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. src/data/glossary/eu-ai-act.md changed in three rows: 'Everything else is left largely unregulated' now reads 'The Act leaves everything else largely unregulated'; the 'in practice' sentence was split after 'a named point of human oversight' with a new 'The company also needs evidence of both...'; and the advice was split so 'A few categories, hiring and credit among them, almost always are high-risk' stands alone, with the paperwork advice in a second paragraph. The date line moved from 'Updated 15 September 2026' to 'Updated 2 October 2026'. Title 'What is the EU AI Act? — meshin.co' and H1 'EU AI Act' fit the grammar. The definition sentence answers the query in one pass. The meta description is a shorter whole sentence from the same definition. Built H2 is 'What is the EU AI Act?'. The entry-into-force date and the 'scale with the tier' wording are each stated twice (reported as a nit), and straight and curly apostrophes are mixed (also a nit). Date line and related terms read whole. Rewritten because its own copy changed.",
-    "digest": "7884463c05b1"
+    "digest": "323bda14b727"
   },
   {
     "target": "/glossary/evals",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/glossary/evals.md five long sentences were split at their joint: the definition now ends at \"criteria\" and a new sentence begins \"A team runs them before release\", the tracking habit became \"The team tracks the pass rate over time rather than a single pass or fail\", the quote sentence now ends at \"how do you know it still works.\" and is followed by \"Without an eval suite, that question has no answer better than trust.\", the practice sentence became two (\"A prompt or model change runs through the same suite every time. A drop in the pass rate blocks a release, the same way a failing test would.\"), and the board sentence became the question \"What stops a bad change from reaching customers?\". I read title \"What are evals? — meshin.co\" and H1 \"Evals\": both fit the term grammar; the built H2 above the definition reads \"What are evals?\", matching the title stem. Target query \"evals\"; the first sentence, \"Evals are repeatable tests that score an AI system's outputs against a fixed set of examples and criteria.\", is the definition and answers it. The meta description is a whole, shortened restatement of that definition with the same claim. The date line has only the updated date moved, and the related terms Agentic workflow, AI governance and LLM gateway are intact. Status rewritten because the page's own source copy changed.",
-    "digest": "8867c41a0d2b"
+    "digest": "d246035c0ce0"
   },
   {
     "target": "/glossary/guardrails",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/glossary/guardrails.md the shortDefinition now reads \"Guardrails are checks on what an AI model will respond to, what it can say, and what it can do. The surrounding code enforces them, not the model's training.\" (the agentless passive \"enforced\" now has an actor), the three kinds became three short sentences (\"A topic restriction limits...\", \"An output filter limits...\", \"An action gate controls...\"), the OWASP sentence was split at \"That list reads like a checklist for these three\", the NIST sentence now opens \"Guardrails are closer to what NIST's...\", and the board question reads \"What is the actual worst thing someone could trick this system into doing\". Title \"What are guardrails in an AI system? — meshin.co\" and H1 \"Guardrails\" fit the term grammar; the built H2 reads \"What are guardrails in an AI system?\". Target query \"guardrails\"; the first sentence is the definition and answers it. The meta description was changed: OLD \"Guardrails are checks enforced in code around what a model can be asked and what it can say or do, not rules typed into a prompt.\" became NEW \"Guardrails are code checks on what a model responds to, what it can say and what it can do, not rules typed into a prompt.\", a whole sentence consistent with the body. The opening paragraph's last sentence also changed from \"talk the system out of a rule\" to \"just persuade the system to drop a rule\", and the NIST paragraph's second sentence now begins \"They are how that function shows up in code\". The date line changed from Updated 15 September 2026 to Updated 2 October 2026 and is otherwise clean; related terms Observability, Prompt injection, Red teaming intact. I report a nit: \"closer to\" has no stated comparison. Status rewritten: its own source changed.",
-    "digest": "db479a59235d"
+    "digest": "dcbaa9d3a710"
   },
   {
     "target": "/glossary/hallucination-rate",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/glossary/hallucination-rate.md the 32-word definition became two sentences ending \"...in the same confident tone as a correct one. A team measures it against questions with known correct answers.\", the \"I don't know\" run became \"A model rarely answers \"I don't know\". Left to guess, it produces a fluent answer instead. That is why a team has to measure the rate rather than assume it.\", the measuring paragraph now says \"how often the model invents an answer instead of giving a true one\", and the closing advice says \"the way a team tracks an eval pass rate\". Title \"What is a hallucination rate? — meshin.co\" and H1 \"Hallucination rate\" fit the term grammar; the built H2 reads \"What is a hallucination rate?\". Target query \"hallucination rate\"; the first sentence defines the term and answers it. Meta description \"A hallucination rate is the share of a model's answers that are confidently wrong, measured against real questions with known correct answers.\" is a whole sentence matching the body. The date line changed from Updated 8 September 2026 to Updated 2 October 2026 and is otherwise clean; related terms Evals, Guardrails, Retrieval augmented generation intact. Status rewritten: its own source changed.",
-    "digest": "414aee0f44a1"
+    "digest": "daa59cf36016"
   },
   {
     "target": "/glossary/high-risk-ai-system",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/glossary/high-risk-ai-system.md the Article 6(1) sentence was reordered to \"a safety component of a product already regulated under EU product-safety law, or that product itself. Medical devices and machinery are examples.\", \"landing in one of those areas alone\" became \"just by falling into one of those areas\", the Article 6(3) examples lost \", say\" and the reformatting example now reads \"a limited procedural task, such as reformatting an application into a standard template\", and \"survives contact with profiling\" became \"applies to profiling\". All four exemptions, the eight Annex III areas and profiling are still there. Title \"What makes an AI system high-risk? — meshin.co\" and H1 \"High-risk AI system\" fit the term grammar; the built H2 reads \"What makes an AI system high-risk?\". Target query \"high-risk ai system\"; the opening \"A high-risk AI system is one the EU AI Act classifies as carrying its heaviest legal duties.\" is the definition. The meta description was changed: OLD \"A high-risk AI system is one the EU AI Act singles out, by product-safety law or by use case such as hiring or credit, for its heaviest duties.\" became NEW \"A high-risk AI system is one the EU AI Act puts under its heaviest duties, through product-safety law or use cases like hiring or credit.\", a whole sentence. The date line changed from Updated 8 September 2026 to Updated 2 October 2026 and is otherwise clean; related terms Conformity assessment, EU AI Act, Technical documentation and the Concerns link read fine. Status rewritten.",
-    "digest": "6b20fef618a4"
+    "digest": "cd895575d8b2"
   },
   {
     "target": "/glossary/human-in-the-loop",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/glossary/human-in-the-loop.md the definition ends \"rather than the system acting alone once it starts\" (was \"acting on its own\"), the spectrum sentence was split so human-on-the-loop has its own gloss (\"Human-on-the-loop sits in between: a person can intervene but does not have to act.\"), and the closing sentence now leads with its condition and says \"this decision is one of the first things a customer's security team or a regulator asks about\". Title \"What is human-in-the-loop? — meshin.co\" and H1 \"Human-in-the-loop\" fit the term grammar; the built H2 reads \"What is human-in-the-loop?\", matching the title stem. Target query \"human-in-the-loop\"; the first sentence \"Human-in-the-loop means a person reviews or can stop an AI system's output before it takes effect...\" answers it. Meta description \"Human-in-the-loop means a person reviews or can stop an AI system's output before it takes effect, not the system acting alone.\" is a whole sentence consistent with the opening. The date line changed from Updated 8 September 2026 to Updated 2 October 2026 and is otherwise clean; related terms Agentic workflow, EU AI Act, Human oversight, NIST AI RMF intact. The spectrum puts human-in-the-loop at the far end and human-on-the-loop \"in between\". Status rewritten.",
-    "digest": "fadd8088f335"
+    "digest": "7aa48f74ad42"
   },
   {
     "target": "/glossary/human-oversight",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/glossary/human-oversight.md the definition was restructured to \"...a person watching a high-risk AI system can understand what it is doing, catch a wrong output and stop the system. That takes training, time and authority, not just a name on a workflow diagram.\", the two kinds of measure are now named by who acts (\"The provider builds one kind into the system itself... The provider identifies the other kind for the deployer to carry out instead.\"), the five capacities are spread over four sentences (limits; automation bias, now glossed \"the tendency to trust the output by default\"; interpret together with disregard or reverse; halt) and I counted five capacities, the \"Why it comes up\" test now reads \"whether that person can catch a bad output and has the time, context and authority to stop it\", and \"Check that the person has time per case\" is its own sentence. Title \"What does human oversight require under the EU AI Act? — meshin.co\" and H1 \"Human oversight\" fit the term grammar; the built H2 reads \"What does human oversight require under the EU AI Act?\". Target query \"human oversight\"; the first sentence answers it. Meta description \"Human oversight is the EU AI Act duty that a person assigned to watch a high-risk system can actually understand it and stop it.\" is whole. The date line changed from Updated 8 September 2026 to Updated 2 October 2026 and is otherwise clean; related terms High-risk AI system, Human-in-the-loop, Provider vs deployer, EU AI Act intact. Reported as a nit: the Why-it-comes-up section opens \"It differs from asking whether a human is in the loop.\", which has no antecedent and does not say why the term comes up. Status rewritten.",
-    "digest": "c7396d5862d7"
+    "digest": "922c13e3a511"
   },
   {
     "target": "/glossary/iso-iec-42001",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/glossary/iso-iec-42001.md the shortDefinition replaced \"That means the policies...\" with \"An AI management system is the set of policies an organisation follows to govern its own AI\" and now ends \"ISO and IEC published the standard in December 2023.\"; the certification sentence became \"a standard that an accredited third party can audit and certify a company against\"; \"ask how your company compares with it\" replaced \"where you sit against it\"; the practice paragraph now begins \"Working towards the standard means three things\"; and the final advice paragraph was split in two, the second starting \"The structure is a documented risk-assessment method...\". Title \"What is ISO/IEC 42001? — meshin.co\", H1 \"ISO/IEC 42001\" and the built H2 \"What is ISO/IEC 42001?\" all agree. Target query \"iso/iec 42001\"; the opening \"ISO/IEC 42001 is an international standard that sets out what an AI management system must do.\" answers it. Meta description \"ISO/IEC 42001 is the first international, certifiable standard for the management system a company runs to govern its AI.\" is whole. The date line changed from Updated 8 September 2026 to Updated 2 October 2026 and is otherwise clean; related terms AI governance, AI register, NIST AI RMF, AI management system intact. I report a defect: AI management system is glossed twice. I also report a nit: the same three-item list (risk-assessment method, AI system inventory, scheduled review) appears in the body and again under What to do about it. Status rewritten. Re-read again 2026-10-02 after Phase 6 worklist item 6: the term gains the Gap assessment section. The added text is the text dispositioned on its source file. Title, H1 and meta description are unchanged, and the new rendered rows read as whole sentences with no truncation or repeated copy.",
-    "digest": "d728c9d67bfb"
+    "digest": "d65c0dcb0f7c"
   },
   {
     "target": "/glossary/llm-gateway",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/glossary/llm-gateway.md the shortDefinition was split into \"An LLM (large language model) gateway is a single service that every model call passes through. A company can then enforce authentication, logging, rate limits and content filtering in one place.\"; the first body paragraph now opens \"Every call to any model passes through one place, instead of going straight from application code to a vendor's API.\" and lists the functions with \"A company can then control who may call a model\"; three agentless passives now name \"the company\" (\"what the company sent to a vendor\", \"how the company controls model access\", \"how the company controls and logs access\"); and the leak sentence became two (\"In that leak, a prompt carrying sensitive data reached a third-party model unlogged.\"). Title \"What is an LLM gateway? — meshin.co\" and H1 \"LLM gateway\" fit the term grammar; the built H2 reads \"What is an LLM gateway?\". Target query \"llm gateway\"; the first sentence answers it. Meta description \"An LLM gateway is a single service every call to a language model passes through, for authentication, logging, rate limits and content filtering.\" is whole. The date line changed from Updated 15 September 2026 to Updated 2 October 2026 and is otherwise clean; related terms Agentic workflow, Evals, Shadow AI intact. Status rewritten. Re-read again 2026-10-02 after Phase 6 worklist item 6: the term gains the governance control section. The added text is the text dispositioned on its source file. Title, H1 and meta description are unchanged, and the new rendered rows read as whole sentences with no truncation or repeated copy.",
-    "digest": "052b499ffbd2"
+    "digest": "438a1f467faa"
   },
   {
     "target": "/glossary/model-card",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/glossary/model-card.md four agentless passives gained actors: \"It says what the maker built the model for\" (was \"It describes what the model was built for\"), \"It also names where not to use the model\", \"The paper proposed model cards as a response to models shipping with no consistent account of how their makers had actually tested them\", and \"Describe what changed and what the company tested\". The meta description was changed: OLD \"A model card is a short document a model's maker publishes on what it was built for, how it performs, and where not to use it.\" became NEW \"A model card is a short document that a model's maker publishes about the model's intended use, its performance and where not to use it.\"; this is a nominal rewording, not an actor added. Title \"What is a model card? — meshin.co\" and H1 \"Model card\" fit the term grammar; the built H2 reads \"What is a model card?\". Target query \"model card\"; the first sentence, \"A model card is a short, standard-shaped document a model's maker publishes.\", answers it. Meta description \"A model card is a short document that a model's maker publishes about the model's intended use, its performance and where not to use it.\" is a whole sentence matching the opening paragraph. The date line changed from Updated 8 September 2026 to Updated 2 October 2026 and is otherwise clean; related terms Hallucination rate, Model provenance, Technical documentation intact, and the Starter Kit link sits inside a complete sentence. Nothing reported. Status rewritten: its own source changed.",
-    "digest": "9fb98c0d9a21"
+    "digest": "ee36b8dd4e98"
   },
   {
     "target": "/glossary/model-provenance",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/glossary/model-provenance.md the description and definition now say a model's origin is \"where a model comes from\" instead of \"what a model is built from\", \"allowed to\" became \"may\", the long due-diligence sentence was split so \"The company reads the summary before it signs a contract\" names the reader, the procurement sentence now reads \"the model actually behind a feature can differ from what the vendor’s marketing page implies\" instead of \"which model is actually behind a feature can have a different answer than the vendor’s marketing page implies\", and the vendor-question paragraph now reads \"what data trained the model\" and ends \"The AI readiness and risk assessment reads the actual vendor list, not a list a company describes from memory.\" The Updated date moved from 8 September 2026 to 2 October 2026. Title \"What is model provenance? — meshin.co\" and H1 \"Model provenance\" fit the term grammar; the H2 above the definition reads \"What is model provenance?\", the same as the title stem. The page opens \"Model provenance is a traceable record of where a model comes from.\", which answers the query \"model provenance\" as a definition in its first sentence. Composed strings read whole: the meta description (\"Model provenance is a traceable record of where a model comes from - its base model, its training data, and the licence covering both.\") matches the first definition sentence plus a clean gloss; the date line \"Published 8 September 2026 · Updated 2 October 2026\" is well formed; Related terms list four entries with no gaps. No half-rewritten sentence found. Status is rewritten because this page's own source copy changed.",
-    "digest": "82a81f704969"
+    "digest": "d579e416354b"
   },
   {
     "target": "/glossary/nist-ai-rmf",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/glossary/nist-ai-rmf.md long sentences were split and reworded: the procurement sentence now reads \"US procurement teams, and increasingly non-US ones, ask about it. They ask because the framework gives a common vocabulary\", its closing question now reads \"how you know your company actually manages an AI system's risks, not just discusses them once\" instead of \"how you know an AI system's risks are actually managed, not just discussed once\", \"adopting it\" became \"adopting the framework\", the \"Why it comes up\" paragraph was cut into two paragraphs with the customer risk team sentence split into \"A customer’s risk team wants a framework they recognise, not a bespoke description of your process. They want it because it lets them compare you against every other vendor they review.\", and the advice now ends \"That document beats a claim of full compliance with nothing behind it.\" The meta description changed: OLD \"The NIST AI Risk Management Framework is a voluntary US framework for managing AI risk across a system's whole lifecycle.\" NEW adds \"(AI RMF)\" after \"The NIST AI Risk Management Framework\". The Updated date moved from 15 September 2026 to 2 October 2026. Title \"What is the NIST AI RMF? — meshin.co\" and H1 \"NIST AI RMF\" are right for a term; the H2 reads \"What is the NIST AI RMF?\", the same as the title stem. The page opens \"The NIST AI Risk Management Framework (AI RMF) is a voluntary US framework, published in January 2023, ...\", which answers the query \"nist ai rmf\" at once. Composed strings: meta \"The NIST AI Risk Management Framework (AI RMF) is a voluntary US framework for managing AI risk across a system's whole lifecycle.\" is a complete sentence and consistent with the body; date line \"Updated 2 October 2026\" is clean; three related terms. The two Why-it-comes-up paragraphs join without a dangling reference. Reported as a nit: \"Acting on what it found is MANAGE's job.\" leaves \"it\" without a clear antecedent. Status rewritten: own source copy changed.",
-    "digest": "131993241933"
+    "digest": "2915712ce3b3"
   },
   {
     "target": "/glossary/observability",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/glossary/observability.md the definition now says \"exactly what a user asked a live AI system\" instead of the agentless \"was asked\" (the meta description changed from \"Observability is the ability to see exactly what a live AI system was asked, what it did, and what it answered, for any one case.\" to \"Observability means seeing exactly what a user asked a live AI system, what it did and what it answered, for any one case.\"), and the agentic-workflow gloss became its own sentence: \"An agentic workflow is a system that also calls tools to look things up or take actions on its own. Its record has to extend further.\" The Updated date moved from 8 September 2026 to 2 October 2026. Title \"What is observability for an AI system? — meshin.co\" and H1 \"Observability\" fit the term grammar; the H2 reads \"What is observability for an AI system?\", the same as the title stem. The opening, \"Observability is the ability to see, after the fact, exactly what a user asked a live AI system.\", answers the query \"observability\" as a definition. Composed strings: meta \"Observability means seeing exactly what a user asked a live AI system, what it did and what it answered, for any one case.\" is whole and agrees with the body; date line \"Updated 2 October 2026\" clean; four related terms. I found one pronoun problem: \"Observability differs from a simple uptime dashboard. It can show a system is running\" leaves \"It\" unclear. Status rewritten: own source copy changed.",
-    "digest": "9aa53083d478"
+    "digest": "244810c201e0"
   },
   {
     "target": "/glossary/post-market-monitoring",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/glossary/post-market-monitoring.md the 32-word definition was split into three sentences (\"It lasts as long as the system is in use. Monitoring catches problems that appear after launch, instead of assuming the original testing ruled them out.\"), \"bolted on\" became \"added\", the hand-off now reads \"A pattern the monitoring finds also feeds the next duty in the chain. That duty is to decide whether what happened counts as a serious incident that requires a report.\", and the plan advice was reordered into three short sentences. Title \"What is post-market monitoring under the EU AI Act? — meshin.co\" and H1 \"Post-market monitoring\" suit the term; the H2 reads \"What is post-market monitoring under the EU AI Act?\". The opening, \"Post-market monitoring is the EU AI Act duty on a provider to keep collecting and analysing real-world performance data on a high-risk AI system.\", answers the query in sentence one. Composed strings: meta \"Post-market monitoring is the EU AI Act duty to keep collecting real-world data on a high-risk system after it ships, not just before.\" is a whole sentence consistent with the body; date line \"Updated 2 October 2026\" is clean; five related terms with working order. No defect. The Updated date moved from 8 September 2026 to 2 October 2026. Status rewritten: own source copy changed.",
-    "digest": "ac3d37cd10ac"
+    "digest": "7498532271d1"
   },
   {
     "target": "/glossary/prompt-injection",
     "status": "verified",
     "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "8105c6a57985"
+    "digest": "83223251756c"
   },
   {
     "target": "/glossary/provider-vs-deployer",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02 against dist/glossary/provider-vs-deployer.html. Title 'What is the difference between a provider and a deployer? — meshin.co' and H1 'Provider vs deployer' match the docs/SEMANTIC-CORE.md row for this route; the date line 'Published 8 September 2026 · Updated 2 October 2026' matches the frontmatter publishDate and updatedDate. The composed strings (the source line and the paragraphs rendered from the markdown) read as whole sentences with no truncation, duplication or missing space. Status moves from verified to rewritten because new copy was written: the term gains the Deployer obligations checklist section, whose ten bullets are dispositioned on the source file. Title, H1 and meta description are unchanged.",
-    "digest": "dadba6426001"
+    "digest": "7201dffa6445"
   },
   {
     "target": "/glossary/red-teaming",
     "status": "verified",
     "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "6eb4b83aa9e7"
+    "digest": "ec28a06c3e19"
   },
   {
     "target": "/glossary/retrieval-augmented-generation",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/glossary/retrieval-augmented-generation.md four agentless passives got actors: \"The system converts passages into embeddings ... and matches a query against them\", \"Embeddings carry a second risk: someone can sometimes invert them to recover the source text they came from\", and \"once someone questions accuracy\"; the \"That is what lets\" sentence became \"Matching on meaning lets the system find a relevant passage\". Title \"What is retrieval augmented generation? — meshin.co\" and H1 \"Retrieval augmented generation\" fit; the H2 is \"What is retrieval augmented generation?\". The page opens \"Retrieval augmented generation, shortened to RAG, is an architecture where a model looks up relevant passages from a document store at answer time.\", which answers the query. Composed strings: meta \"Retrieval augmented generation, or RAG, has a model look up relevant passages at answer time instead of relying only on its training.\" is a whole sentence; date line \"Updated 2 October 2026\" clean; three related terms. The OWASP paragraph's two risks both survive intact. Reported as a nit: straight and curly apostrophes are mixed on this page. The Updated date moved from 8 September 2026 to 2 October 2026. Status rewritten: own source copy changed.",
-    "digest": "038800892a4e"
+    "digest": "2b4f303eb042"
   },
   {
     "target": "/glossary/serious-incident-reporting",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/glossary/serious-incident-reporting.md the title changed from \"What counts as a serious incident ...\" to \"What is serious incident reporting under the EU AI Act? — meshin.co\", the definition's last line \"The clock is tight and legally fixed.\" became \"The default deadline is fifteen days from awareness.\", the Article 73 sentence now opens \"Article 73 sets the default deadline at fifteen days\", \"the report is filed\" became \"Once the provider files the report\", the board question was split and the advice \"Avoid leaving that call to whoever notices the problem first.\" stands alone. H1 is \"Serious incident reporting\"; H2 is \"What is serious incident reporting under the EU AI Act?\". The opening, \"Serious incident reporting is the EU AI Act duty to notify the relevant national authority after a high-risk AI system causes serious harm.\", answers the query. Composed: meta \"Serious incident reporting is the EU AI Act duty to tell a regulator, fast, when a high-risk system causes real harm or a rights breach.\" is whole; date line clean; four related terms. Deadlines fifteen, two and ten days agree. The Updated date moved from 15 September 2026 to 2 October 2026. Status rewritten.",
-    "digest": "ffc4f53647e0"
+    "digest": "ca15a6c38882"
   },
   {
     "target": "/glossary/shadow-ai",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/glossary/shadow-ai.md the idiom \"burned before\" became \"having had a bad experience before\" and the Why-it-comes-up paragraph was split in two, the second now starting \"A customer’s security team asks about it, having had a bad experience before. A board hears one checkable question: could an employee be pasting customer data into a public tool right now?\" The definition and examples are unchanged. The Updated date moved from 8 September 2026 to 2 October 2026. Title \"What is shadow AI? — meshin.co\" and H1 \"Shadow AI\" are right; the H2 reads \"What is shadow AI?\", the same as the title stem. The page opens \"Shadow AI is any AI tool an employee uses for company work without IT or security's knowledge.\", answering the query \"shadow ai\" in one sentence. Composed strings: meta \"Shadow AI is any AI tool staff use for company work without IT or security's knowledge, from an app to a browser extension.\" is whole and matches the body; date line \"Updated 2 October 2026\" clean; three related terms. The first split paragraph ends cleanly on \"instead of asking teams to self-report.\" Reported as a nit: after the paragraph split, \"it\" in \"A customer’s security team asks about it, having had a bad experience before.\" has no noun in the previous paragraph to point to. Status rewritten: own copy changed.",
-    "digest": "4c6dda1ef919"
+    "digest": "2c6fbfc05a63"
   },
   {
     "target": "/glossary/sub-processor",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/glossary/sub-processor.md the passive \"Most AI features are built on someone else’s model\" became \"Teams build most AI features on someone else’s model\", \"bring a sub-processor in\" became \"add a sub-processor\", and \"Fold the answer into\" became \"Add the answer to the AI register entry\"; both authorisation routes and the flow-down text are unchanged. The Updated date moved from 8 September 2026 to 2 October 2026. Title \"What is a sub-processor? — meshin.co\" and H1 \"Sub-processor\" fit; the H2 reads \"What is a sub-processor?\", the same as the title stem. The opening, \"A sub-processor is a vendor an AI provider hands a company's data to behind the scenes.\", answers the query \"sub-processor\" in the first sentence. Composed strings: meta \"A sub-processor is a vendor an AI provider uses behind the scenes to handle a company's data, and GDPR requires permission before it does.\" is whole and matches the Article 28 sentence in the body; date line \"Updated 2 October 2026\" clean; three related terms. The word \"add\" now appears in two adjacent roles (\"add a sub-processor\", \"add sub-processors as needed\") and reads consistently. No defect. Status rewritten.",
-    "digest": "1623b85d60a2"
+    "digest": "08df3ce1a1f7"
   },
   {
     "target": "/glossary/technical-documentation",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/glossary/technical-documentation.md the Article 18 sentence changed from \"how long it has to survive: ten years from when the system was placed on the market\" to \"Article 18 sets how long to keep it: ten years from when the provider places the system on the market or puts it into service\", and the advice now says \"recording design decisions as you make them\". Title \"What is technical documentation under the EU AI Act? — meshin.co\" and H1 \"Technical documentation\" fit the term grammar; the H2 reads \"What is technical documentation under the EU AI Act?\". The opening, \"Technical documentation is the dossier a provider of a high-risk AI system must keep.\", answers the query \"technical documentation\". Composed strings: meta \"Technical documentation is the dossier a provider keeps on a high-risk AI system - its purpose, design, data, performance and monitoring plan.\" is whole and a fair short form of the body list; date line \"Updated 2 October 2026\" clean; four related terms. The Updated date moved from 15 September 2026 to 2 October 2026. Reported: a repeated claim, since the opening paragraph and the Annex IV paragraph both say a regulator must be able to assess the system without the engineers or the provider's explanation (a nit). Status rewritten.",
-    "digest": "2a4676030664"
+    "digest": "df0ba6edffd7"
   },
   {
     "target": "/imprint",
     "status": "verified",
     "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "3f296f97c787"
+    "digest": "218589e9dccc"
   },
   {
     "target": "/now",
@@ -715,64 +715,64 @@
     "target": "/pricing",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/pages/pricing.astro the head title was rewritten from 'Pricing' to carry the target query, and the meta description was rewritten (OLD 'Three fixed structures and no hourly billing: a two-week Assessment, a 90-Day Sprint, and a monthly Retainer. Every fee reaches you in writing before work starts.', NEW as quoted below); the two billing list items read 'Sprints are quoted per engagement from the scope agreed in the statement of work, never per hour.' and 'Travel, if you want me on site, is billed at cost and agreed in advance.', and the lead and the table did not change; the build's source tracing for the title (author bio, Hero, jsonld) is only a fuzzy match, not where the title is built. Title read: 'Pricing: what a Fractional Chief AI Officer costs — meshin.co'; H1 read: 'What a Fractional Chief AI Officer costs'. Both fit the static grammar and carry every word of 'fractional chief ai officer cost'. The opening, 'The fractional chief AI officer cost depends on which engagement fits, and the fit call settles it in thirty minutes.', is a whole sentence and answers by naming the structure rather than a figure, which matches the no-price rule. Composed strings checked: the meta 'Fractional Chief AI Officer cost: two-week Assessment, 90-Day Sprint or monthly Retainer. Fixed, no hourly billing, every fee in writing before work starts.' is two whole sentences (156 characters); the four billing list items (for example 'The retainer is monthly, cancellable with thirty days of notice, and ends in a handover.') each read as whole sentences and agree with the table's fee shapes; the 'Duration' cell '1–2 days a week' is a cadence. Status rewritten because the title is the route's own authored copy.",
-    "digest": "9db07f6aca98"
+    "digest": "da5ce572135c"
   },
   {
     "target": "/privacy",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. The only changes are the head title in src/pages/privacy.astro, lengthened from 'Privacy' to 'Privacy policy', and the meta description, which went from 'What this site collects, which is almost nothing, and what happens to an email you send me.' to the same words prefixed with 'Privacy policy for meshin.co: '; the body was not touched, but I read all of it anyway. Title read: 'Privacy policy — meshin.co'; H1 read: 'Privacy policy'; both fit the static grammar and carry the whole target query 'privacy policy'. The opening, 'This privacy policy covers a static site with no accounts and no cookies.', is a complete sentence that says what the policy covers, and the next sentence ('It exists so you do not have to take that on trust.') points at the rest. Composed strings checked: the meta 'Privacy policy for meshin.co: what this site collects, which is almost nothing, and what happens to an email you send me.' is one whole sentence and matches the body headings 'What this site collects' and 'Email and calls'; the date line 'Updated 2026-09-08' reads cleanly. The five sections (collects, host, email and calls, client material, rights) are coherent, with no half-rewritten sentence, and agree with /security on notes deleted at handover and cookieless analytics. No defects. Status is rewritten because the title is the page's own authored copy and it changed.",
-    "digest": "3dfebc5ef6a5"
+    "digest": "681bdb56991b"
   },
   {
     "target": "/resources",
     "location": "head.title",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/resources.html. Row head.title is 'AI governance templates and checklists — meshin.co': the metadata title plus the site suffix, unchanged since the last seal and not touched by the interview answers. The meta description lists the governance kit's contents, not the seven cards (reported earlier, still true). The lead, the H1 and the call to action are rows of src/pages/resources/index.astro, and the card summaries and status lines are rows of the resource files; they are dispositioned there, and the lead is also re-read in the attribute.lead entry of this route.",
-    "digest": "272706c10f3b"
+    "digest": "eb626f3a7a94"
   },
   {
     "target": "/resources",
     "location": "attribute.lead",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/resources.html. Row attribute.lead is the lead 'AI governance templates, each described on its own page. Copy one into your own wiki: no tool, no subscription, no email required. Each page says where its content comes from.' It is unchanged since the last seal; it was reworded on 2026-10-03 (commit 4a759a5). The practice claim that the templates are the ones used in engagements, which the 2026-10-02 reason reported as unconfirmed, is no longer on the page: the lead asserts no practice of the owner's, only what the pages offer. Checked 2026-10-08: all seven resource pages carry a Sources section, so the last sentence holds. The H1 and the call to action are rows of src/pages/resources/index.astro.",
-    "digest": "272706c10f3b"
+    "digest": "eb626f3a7a94"
   },
   {
     "target": "/resources",
     "location": "body.p",
     "status": "owner-blocked",
     "reason": "Re-read 2026-10-08 against dist/resources.html. Row body.p holds the card type lines, built from type, version and licence. The line 'template · v0.1 · MIT' is shared by three cards: the Adoption Telemetry Dashboard Template, the Handover Playbook and the LLM Gateway Governance Config. Resolved by the 2026-10-07 interview: for the Handover Playbook, answer 16.8 ('Page-only, MIT, v0.1') settles format, licence and version and agrees with its status line (the page-only line 'Available as a page on this site. A repository copy is not published yet.'); for the telemetry template, 17.9 and 17.10 confirm version v0.1 (coding assistants and chat assistants; all eight panels confirmed as v0.1) and 17.12 ('Panel specification; a real export ships when a real dashboard exists') fits the same status line. The playbook phases (16.9) and the panels (17.10) no longer wait on the owner, and the lead no longer carries the practice claim. STILL UNANSWERED: the licence of the Adoption Telemetry Dashboard Template. The question key telemetry-template-artifact asked for its version, licence and status line; answer 17.12 gives the artifact only, and no answer in sections 6 or 17 names a licence for it. Checklist 6.3 says 'MIT assumed' with a blank Answer cell and covers the five original artifacts, so it is an assumption, not an owner answer. The line 'template · v0.1 · MIT' therefore waits on that one licence. The lines 'kit · v0.1 · MIT' and 'scorecard · v0.1 · MIT' (older artifacts, licence assumed in 6.3) are also dispositioned by the entries for / and /styleguide.",
-    "digest": "272706c10f3b"
+    "digest": "eb626f3a7a94"
   },
   {
     "target": "/resources/agent-evals-ci-starter",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/resource/agent-evals-ci-starter.md the status line became \"Available as a page on this site. A repository copy is not published yet.\" (OLD \"Written out in full on this page. A repository copy is not published yet.\"), \"show up in a support agent\" became \"appear in a support agent\", and the closing paragraph split into \"The starter takes no position on which cases you pick. Choosing the cases still maps to the MEASURE function...\"; the date line now ends Updated 2 October 2026. Title \"Agent Evals CI Starter — meshin.co\" and H1 \"Agent Evals CI Starter\" name the artifact, correct for resource. The first sentence, \"A starter CI pipeline for agent evals.\", answers the query \"agent evals ci starter\" and equals the meta description's opening, which continues \"It runs on every pull request and blocks a bad merge before it ships, using a plain YAML case format.\" and is whole. I also read the badge \"kit · v0.1 · MIT\", the date line, the OWASP and NIST source lines, and three related terms. The repository button, its GitHub link and the JSON-LD codeRepository are gone (the node is now CreativeWork). \"Copy the job outline on this page\" now reads \"Add a job to your own CI workflow that runs the eval cases, and point it at an eval file you write yourself in the case format on this page.\", and the contents list now reads \"A description of the workflow...\" and \"A description of the pass-rate gate...\" with no failure log item. Reported, not fixed: the closing heading has no antecedent. Rewritten: own copy changed.",
-    "digest": "f6566866395b"
+    "digest": "5368925e0532"
   },
   {
     "target": "/resources/ai-governance-starter-kit",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/resource/ai-governance-starter-kit.md the status line became \"Available as a page on this site. A repository copy is not published yet.\", the table cells now read \"Which vendors may see which tier of data.\" and \"Procurement, before anyone signs a vendor contract.\", and the closing sentence was split so \"It does not require either.\" stands alone after the ISO/IEC 42001 and NIST clause; the date line now ends Updated 2 October 2026. Title \"AI Governance Starter Kit — meshin.co\" and H1 \"AI Governance Starter Kit\" are the artifact name, right for resource. Opening line, \"AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire.\", answers the query \"ai governance starter kit\" and is identical to the meta description, a whole sentence. The 'Who signs what' table (4 rows, 3 columns) reads as phrases; the five contents items cover the four documents named in \"The four documents\" (the first three items) and the two sections added on 2 October (\"The topics a vendor questionnaire covers, set out as its own section.\" and \"An incident response plan: who to tell when an AI system fails, in what order, tied to the duty to report serious incidents.\"). The cell \"The named AI risk owner keeps it current.\" under 'Who signs it' names a keeper, not a signer, unchanged. Of the three template-level findings reported once under /resources/agent-evals-ci-starter, the repository button and the status \"Written out in full on this page.\" are gone from all seven resource pages (checked in dist on 2026-10-02, including the Adoption Telemetry Dashboard Template and the Handover Playbook); the closing pair \"Filling these in is the hard part.\" and \"If you want them filled in against the systems you already run, that is the two-week Assessment.\" is still on all seven and applies here too. Reported as a nit: the pair \"It maps loosely to what ISO/IEC 42001 and the NIST AI Risk Management Framework (AI RMF) both expect a company to have on file. It does not require either.\" leaves the second \"It\" ambiguous. Re-read again 2026-10-02 after Phase 6 worklist items 4 and 6: the page gains the Vendor questionnaire and Incident response plan sections. The added text is the text dispositioned on its source file. Title, H1 and meta description are unchanged, and the new rendered rows read as whole sentences with no truncation or repeated copy.",
-    "digest": "488340a6daf2"
+    "digest": "cb2641e82ffe"
   },
   {
     "target": "/resources/ai-readiness-scorecard",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/resource/ai-readiness-scorecard.md the status line became \"Available as a page on this site. A repository copy is not published yet.\" and the caveat now ends \"checks what you have actually written down\" (OLD \"checks what is actually written down\"), which fits a self-scored sheet; the date line now ends Updated 2 October 2026. Title \"AI Readiness Scorecard — meshin.co\" and H1 \"AI Readiness Scorecard\" name the artifact, correct for resource. The line under the H1, \"A five-axis AI readiness scorecard you score yourself in an afternoon: strategy, data, delivery, people, and governance.\", answers the query \"ai readiness scorecard\" and is the meta description, whole and matching the five table rows (Strategy, Data, Delivery, People, Governance, each with four levels 0 to 3). The caveat \"A self-given three is a claim until someone outside your team checks what you have actually written down.\" reads whole after the split-free edit. I also read the badge \"scorecard · v0.1 · MIT\", the date line, and the NIST and ISO/IEC source lines. Of the three template-level findings reported once under /resources/agent-evals-ci-starter, the repository button and the status \"Written out in full on this page.\" are gone from all five resource pages; the closing pair \"Filling these in is the hard part.\" and \"If you want them filled in against the systems you already run, that is the two-week Assessment.\" is still on all five and applies here too. Its contents list no longer carries \"A worked example score for a small support-automation pilot\"; the three items left (five scored axes, \"A scoring table with a row for each axis, from nothing written down to reviewed on a fixed schedule\", and a note on reading a low score) each have a counterpart on the page. No route-specific defect. Rewritten: own copy changed.",
-    "digest": "77b70aa9fb21"
+    "digest": "01ea89f764b2"
   },
   {
     "target": "/resources/build-vs-buy-ai-kit",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/resource/build-vs-buy-ai-kit.md the status line became \"Available as a page on this site. A repository copy is not published yet.\" and the MAP sentence was split after \"the same as one you trained\": \"NIST’s AI Risk Management Framework (AI RMF) treats a vendor’s model the same as one you trained. That sits under its MAP function (one of the framework’s four functions). The risk to your customer does not care who wrote the code.\" \"That\" now refers cleanly to the treatment of a vendor's model. The date line now ends Updated 2 October 2026. Title \"Build vs Buy AI Kit — meshin.co\" and H1 \"Build vs Buy AI Kit\" are the artifact name, right for resource. The opening, \"The build vs buy AI kit: a one-page worksheet of the six criteria I work through before recommending either path, and how to score them.\", answers the query \"build vs buy ai kit\" and is the whole meta sentence; the six table rows match \"six criteria\". Of the three template-level findings reported once under /resources/agent-evals-ci-starter, the repository button and the status \"Written out in full on this page.\" are gone from all seven resource pages (checked in dist on 2026-10-02, including the Adoption Telemetry Dashboard Template and the Handover Playbook); the closing pair \"Filling these in is the hard part.\" and \"If you want them filled in against the systems you already run, that is the two-week Assessment.\" is still on all seven and applies here too. Reported as a nit: \"It will not choose for you.\" sits against \"It decides one thing: whether the job belongs inside your codebase or inside someone else’s product.\" Rewritten: own copy changed. Re-read again 2026-10-02 after Phase 6 worklist item 3: the page gains the Total cost of ownership section. The added text is the text dispositioned on its source file. Title, H1 and meta description are unchanged, and the new rendered rows read as whole sentences with no truncation or repeated copy.",
-    "digest": "12544fa071d5"
+    "digest": "63987ca895aa"
   },
   {
     "target": "/resources/llm-gateway-governance-config",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/resource/llm-gateway-governance-config.md the status line became \"Available as a page on this site. A repository copy is not published yet.\", the how-to paragraph went from one comma chain to four sentences (\"...with one row per team or workflow that calls a model. Start with whatever is already in production. Route every model call through the gateway before a second application starts talking to a model directly. Review your file on the same schedule as your AI register.\"), and the NIST SP 800-53 note now ends \"Procurement questionnaires often draw on this catalogue, even when nobody names it.\" (OLD \"A procurement questionnaire is often built from this catalogue\"). The date line now ends Updated 2 October 2026. Title \"LLM Gateway Governance Config — meshin.co\" and H1 \"LLM Gateway Governance Config\" fit the resource grammar. The opening, \"A governance config for an LLM gateway.\", answers the query \"llm gateway governance config\"; the meta continues \"It decides who may call which model, what gets redacted, how long logs are kept and the rate and fallback rules.\", whole. The four how-to sentences each stand alone and the schema table (5 keys) reads as phrases. Of the three template-level findings reported once under /resources/agent-evals-ci-starter, the repository button and the status \"Written out in full on this page.\" are gone from all five resource pages; the closing pair \"Filling these in is the hard part.\" and \"If you want them filled in against the systems you already run, that is the two-week Assessment.\" is still on all five and applies here too. No route-specific defect; the contents list no longer carries an escalation rule, a redaction rule set or a logging schema, and each of its three items has a counterpart on the page (the policy schema table, the example redact fields email, national_id and card_number, and the log_retention key). Rewritten: own copy changed.",
-    "digest": "bbd2d05375f9"
+    "digest": "443ee6f24f95"
   },
   {
     "target": "/search",
@@ -796,30 +796,30 @@
     "target": "/services/90-day-production-sprint",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/service/90-day-production-sprint.md the opening changed from \"is built to get one process running\" to \"exists to get one process running\", the process detail went from \"can be measured without a survey\" to \"is measurable without a survey\", and the NIST paragraph was split so \"The scope is one production workflow, not a whole AI programme.\" stands alone; the date line now ends Updated 2 October 2026. I read the title \"90-Day Production Sprint — meshin.co\" and H1 \"90-Day Production Sprint\": both are the offer name, as the service grammar wants. The first sentence under the tagline, \"A 90-day production sprint exists to get one process running in production and keep it there\", answers the target query \"90-day production sprint\" directly. Composed strings: the meta description \"A 90-day sprint that puts one agentic workflow into production with evals in CI, tracing, a named owner, and a rollback path.\" is one whole outcome sentence and agrees with the deliverables list; the date line is coherent; the NIST source line \"NIST · retrieved 2026-09-08\" and seven related-question links are whole questions; table cells read as phrases. Rewritten because the route's own authored copy changed.",
-    "digest": "118ff87880a2"
+    "digest": "35fdf3cc49e2"
   },
   {
     "target": "/services/ai-readiness-and-risk-assessment",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. In src/data/service/ai-readiness-and-risk-assessment.md the three-part opening sentence reads \"...what a customer audit would find today and which three processes are worth automating first.\", \"The fee is credited if you continue\" became \"The fee is credited if a Sprint follows within three months\", the \"What this is\" line was split into \"I interview the people doing the work and read your systems and your vendor list. I write one memo...\", \"What you keep\" became \"You keep one document... It holds the readiness score, the gap list...\", and the two-weeks-not-two-days paragraph now ends \"Two weeks is the shortest span in which I can do all three.\" Title \"AI Readiness & Risk Assessment — meshin.co\" and H1 \"AI Readiness & Risk Assessment\" are the offer name, correct for service. First sentence, \"This AI readiness assessment takes two weeks of interviews and reading your systems, ending in a memo your board can act on\", answers the query \"ai readiness assessment\". Composed: meta \"A two-week AI readiness and risk assessment for companies of 30 to 300 people, ending in a memo your board can act on, gap list included.\" is whole; the date line, three source lines and five related questions are whole. No amount or currency appears. Rewritten: own copy changed. Re-read again 2026-10-02 after Phase 6 worklist item 6: the page gains the ISO/IEC 42001 gap assessment section. The added text is the text dispositioned on its source file. Title, H1 and meta description are unchanged, and the new rendered rows read as whole sentences with no truncation or repeated copy.",
-    "digest": "c25ec85dbf02"
+    "digest": "5b966fe81744"
   },
   {
     "target": "/services/fractional-caio-retainer",
     "status": "rewritten",
     "reason": "Re-read 2026-10-02. src/data/service/fractional-caio-retainer.md changed in the meta description and in three body places. The meta description (frontmatter) went from \"One or two days a week as your named AI officer: procurement answers, design reviews, board updates and a handover plan.\" to \"Fractional CAIO retainer: one or two days a week as your named AI officer, with procurement answers, design reviews, board updates and a handover plan.\" The body places are: the Board rhythm step ends \"the decisions you need to make\" (OLD \"you are being asked to make\"), the FAQ on length opens \"The engagement is built to end, not to continue indefinitely\" and closes \"If you still need me once that handover is done, I did it wrong\", and the GOVERN paragraph gained \"The scope is one company, not a whole sector.\" as its own sentence. The date line now ends Updated 2 October 2026. Title \"Fractional CAIO Retainer — meshin.co\" and H1 \"Fractional CAIO Retainer\" fit the service grammar. The opening sentence, \"This fractional CAIO retainer buys one or two days a week as the AI officer your customers can ask for by name\", answers the query \"fractional caio retainer\". Composed: meta \"Fractional CAIO retainer: one or two days a week as your named AI officer, with procurement answers, design reviews, board updates and a handover plan.\" is whole and matches the deliverables; date line, two source lines, eight related questions read whole. Rewritten: own copy changed.",
-    "digest": "3af6a0ab7994"
+    "digest": "081780cb6616"
   },
   {
     "target": "/styleguide",
     "status": "verified",
     "reason": "Re-read 2026-10-02. This internal, noindex page authors nothing that changed; against a build of git HEAD, three specimen strings changed and each comes from another file. The before/after specimen 'AI budget is spent and no process has changed.' became 'You have spent AI budget and no process has changed.' (site/src/data/home.ts), and the status line on the two resource-card specimens went from 'A repository copy is not published yet.' to 'Available as a page on this site. A repository copy is not published yet.' (site/src/data/resource/ai-governance-starter-kit.md and ai-readiness-scorecard.md). Title 'Styleguide — meshin.co', the meta 'Every component in every state, both themes. Internal reference page.' and H1 'Styleguide' are unchanged, and the route has no target query. I read all 175 blocks of specimens: they read as whole sentences, the page opens 'Internal reference. Not indexed, not in the sitemap.', and the hero lead 'I'm the fractional chief AI officer your org chart can point at when a customer asks who owns AI risk.' opens cleanly. Two notes for anyone who copies a specimen onto a live page, reported not fixed: the signal-list caption 'Three or more of these five signs? You're exactly who this is for.' sits under three items, and the hero chip 'Open-source AI Governance Starter Kit' sits beside the status 'Available as a page on this site. A repository copy is not published yet.' on the resource card. Status is verified because only text inherited from other files changed.",
-    "digest": "a6b628b48628"
+    "digest": "6c1bd56b8491"
   },
   {
     "target": "/terms",
     "status": "verified",
     "reason": "head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "9e4c8fbd0c65"
+    "digest": "5a958810dd5a"
   }
 ]

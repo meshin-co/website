@@ -171,20 +171,19 @@ matches these referrer sources:
 
 ---
 
-## 10. JSON-LD `dateModified` — pages with no visible date
+## 10. JSON-LD `dateModified` — closed 2026-10-25, nothing for you to confirm
 
-Widening the JSON-LD property floor (audit item 26) caught 7 pages whose `WebPage` node carried
-no `dateModified`. Four were wired to the date they already display (`/ai-policy`, `/now`,
-`/privacy`, `/terms`). Three display no date anywhere on the page:
+Three pages (`/security`, `/approach`, `/imprint`) carried a `dateModified` of `2026-09-13` that you
+were asked to confirm as "last reviewed", and none of them displays a date. The site no longer
+states a review date. Each static page now carries one date, the day its words last changed, in
+`STATIC_PAGE_CATALOG` (`site/src/utils/machine-text.mjs`), and the sitemap, the `.md` sidecar and
+the JSON-LD all read that value.
 
-| #    | Fact                       | Currently on the site                                                                                             | Answer      |
-| ---- | -------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------- |
-| 10.1 | `/security` `dateModified` | Set to `2026-09-13`, `git log -1 --format=%cs` for `site/src/pages/security.astro` — a history fact, not invented | TODO(owner) |
-| 10.2 | `/approach` `dateModified` | Set to `2026-09-13`, `git log -1 --format=%cs` for `site/src/pages/approach.astro`                                | TODO(owner) |
-| 10.3 | `/imprint` `dateModified`  | Set to `2026-09-13`, `git log -1 --format=%cs` for `site/src/pages/imprint.astro`                                 | TODO(owner) |
-
-Confirm `2026-09-13` is the date a reader should understand as "last reviewed" for these three
-pages, or supply the real review date for each.
+| #    | Fact                       | Currently on the site                                | Answer |
+| ---- | -------------------------- | ---------------------------------------------------- | ------ |
+| 10.1 | `/security` `dateModified` | `2026-10-02`, the day its prose was last rewritten   | closed |
+| 10.2 | `/approach` `dateModified` | `2026-10-02`, the day its prose was last rewritten   | closed |
+| 10.3 | `/imprint` `dateModified`  | `2026-10-17`, the day its Analytics row last changed | closed |
 
 ---
 

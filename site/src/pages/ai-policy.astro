@@ -5,15 +5,16 @@ import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { staticPageDate } from '~/utils/machine-text.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
-const UPDATED = '2026-09-15';
+const UPDATED = staticPageDate('/ai-policy');
 
 const metadata = {
-  title: 'AI acceptable-use policy',
+  title: 'AI acceptable use policy',
   description:
-    'My own acceptable-use policy for AI systems: what data may reach a vendor, what may not, and who decides.',
+    'My own acceptable use policy for AI systems: what data may reach a vendor, what may not, and who decides.',
 };
 
 const crumbs = [
@@ -70,8 +71,8 @@ const rules = [
     bordered={false}
     headingLevel={1}
     eyebrow={`Updated ${UPDATED}`}
-    title="My AI acceptable-use policy"
-    lead="I sell AI governance for a living. This AI acceptable-use policy is mine, published in public rather than filed away. It is also a worked example of the one-page policy I ask clients to write."
+    title="My AI acceptable use policy"
+    lead="I sell AI governance for a living. This AI acceptable use policy is mine, published in public rather than filed away. It is also a worked example of the one-page policy I ask clients to write."
   />
 
   <Section eyebrow="Rules" title="What I hold myself to" tone="surface">
@@ -118,8 +119,7 @@ const rules = [
     <CtaBlock
       title="This page is four documents in one."
       body="The register, the policy, the classification table and the named owner. The Starter Kit describes them, and the Assessment fills them in against your systems."
-      label="Open the Starter Kit"
-      href="/resources/ai-governance-starter-kit"
+      secondary={{ label: 'Open the Starter Kit', href: '/resources/ai-governance-starter-kit' }}
     />
   </Section>
 </Layout>

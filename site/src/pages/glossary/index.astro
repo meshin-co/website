@@ -5,6 +5,7 @@ import { SITE } from 'astrowind:config';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
+import CtaBlock from '~/components/site/CtaBlock.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { collectionNode, orgNode, personNode, termNode, termSetNode, websiteNode } from '~/utils/jsonld.mjs';
@@ -117,5 +118,9 @@ const cards = terms.map((term) => {
         </dl>
       )
     }
+  </Section>
+
+  <Section title="Next step">
+    <CtaBlock />
   </Section>
 </Layout>

@@ -5,6 +5,6 @@ answer: 'One client at a time. That is what keeps me reachable: one or two days 
 publishDate: 2026-09-12
 updatedDate: 2026-09-15
 category: general
-relatedPage: /about
+relatedPage: /now
 order: 11
 ---

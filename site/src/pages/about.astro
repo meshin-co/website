@@ -9,6 +9,7 @@ import Section from '~/components/site/Section.astro';
 import SignalList from '~/components/site/SignalList.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { orgNode, personNode, profilePageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { staticPageDate } from '~/utils/machine-text.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 import { figures } from '~/data/home';
 
@@ -26,7 +27,12 @@ const crumbs = [
   { name: 'About', path: '/about' },
 ];
 
-const nodes = [orgNode(site, { logoPath: ogDefaultPath }), personNode(site), websiteNode(site), profilePageNode(site)];
+const nodes = [
+  orgNode(site, { logoPath: ogDefaultPath }),
+  personNode(site),
+  websiteNode(site),
+  profilePageNode(site, staticPageDate('/about')),
+];
 
 const principles = {
   items: [
@@ -90,8 +96,6 @@ const principles = {
     <CtaBlock
       title="Start with a 30-minute fit call."
       body="Tell me where the pilots stalled. If I am not the right person, I will say who is."
-      label="Book a 30-min fit call"
-      href="https://cal.com/meshin"
     />
   </Section>
 </Layout>

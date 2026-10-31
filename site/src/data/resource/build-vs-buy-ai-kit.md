@@ -2,11 +2,10 @@
 title: Build vs Buy AI Kit
 name: Build vs Buy AI Kit
 type: kit
-description: 'The build vs buy AI kit: a one-page worksheet of the six criteria I work through before recommending either path, and how to score them.'
+description: 'The build vs buy AI kit: six criteria I work through before recommending either path, scored against a three-year total cost of ownership for both sides.'
 publishDate: 2026-09-08
-updatedDate: 2026-10-02
+updatedDate: 2026-10-25
 version: '0.1'
-license: MIT
 status: Available as a page on this site. A repository copy is not published yet.
 whatInside:
   - Six criteria that decide more of the answer than most teams expect, from data residency to who owns it when it breaks

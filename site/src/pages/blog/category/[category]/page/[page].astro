@@ -8,6 +8,7 @@ import CardGrid from '~/components/site/CardGrid.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import PaginationLinks from '~/components/site/PaginationLinks.astro';
 import PostCard from '~/components/site/PostCard.astro';
+import CtaBlock from '~/components/site/CtaBlock.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { categoryPillars } from '~/data/categories.mjs';
@@ -103,4 +104,8 @@ const nodes = [
   </Section>
 
   <PaginationLinks links={paginationLinks(`/blog/category/${category}`, all)} currentPage={pageNumber} />
+
+  <Section title="Next step">
+    <CtaBlock />
+  </Section>
 </Layout>

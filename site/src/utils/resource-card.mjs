@@ -7,3 +7,5 @@ export function resourceCardProps(entry) {
     href: `/resources/${entry.id}`,
   };
 }
+
+export const resourceFormat = (data) => [data.type, `v${data.version}`, data.license].filter(Boolean).join(' · ');

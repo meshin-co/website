@@ -31,7 +31,6 @@ const DATA_DIR = path.resolve(__dirname, 'src/data');
 const LASTMODS = (await siteLastmods({
   dataDir: DATA_DIR,
   staticPages: publicIndexableStaticPages(),
-  cwd: __dirname,
 })) as Record<string, string>;
 
 const NOINDEX_ROUTES = new Set([

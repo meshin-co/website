@@ -4,7 +4,7 @@ name: Fractional CAIO Retainer
 tagline: The AI officer your customers can ask for by name.
 description: 'Fractional CAIO retainer: one or two days a week as your named AI officer, with procurement answers, design reviews, board updates and a handover plan.'
 publishDate: 2026-09-08
-updatedDate: 2026-10-02
+updatedDate: 2026-10-25
 shortAnswer: 'This fractional CAIO retainer buys one or two days a week as the AI officer your customers can ask for by name. The week is procurement answers, design reviews and a board update, in that order of urgency. The engagement is built to end: there is a handover plan from the first month.'
 feeShape: Monthly fee
 duration: 1–2 days a week
@@ -25,7 +25,7 @@ deliverables:
 process:
   - step: 1
     title: Register and policy
-    detail: An AI register, an acceptable-use policy and a data classification your engineers can actually follow.
+    detail: An AI register, an acceptable use policy and a data classification your engineers can actually follow.
   - step: 2
     title: Weekly cadence
     detail: Procurement answers and design reviews as they arrive, plus one written update a month.
@@ -55,9 +55,6 @@ faq:
     a: An advisor gives an opinion. I sign the answers, review the initiatives, and carry the AI risk register.
   - q: 'How long does the retainer run?'
     a: The engagement is built to end, not to continue indefinitely. A named internal owner takes over, with written decisions handed off. If you still need me once that handover is done, I did it wrong.
-cta:
-  label: Book a 30-min fit call
-  href: https://cal.com/meshin
 sources:
   - title: AI Risk Management Framework
     url: https://www.nist.gov/itl/ai-risk-management-framework
@@ -72,6 +69,10 @@ sources:
 ## What this is
 
 One or two days a week, on the record, as your AI officer. Every week follows the same order: procurement, design, the board.
+
+Read [how quickly I can start](/faq/how-quickly-can-you-start-and-how-does-availability-work-for-a-remote-officer) and [what happens if you already have a data science team or an internal AI lead](/faq/what-if-we-already-have-a-data-science-team-or-an-internal-ai-lead) in the FAQ.
+
+Terms for all three offers are on the [pricing page](/pricing).
 
 ## How it ends
 

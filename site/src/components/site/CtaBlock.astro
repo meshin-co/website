@@ -1,16 +1,26 @@
 ---
 import { SITE } from 'astrowind:config';
+import { BOOKING_LABEL, BOOKING_URL } from '~/utils/booking.mjs';
+import { externalRelAttrs } from '~/utils/pipeline.mjs';
 
 interface Props {
-  title: string;
-  body: string;
-  label: string;
-  href: string;
+  title?: string;
+  body?: string;
+  label?: string;
+  href?: string;
   note?: string;
+  secondary?: { label: string; href: string };
 }
 
-const { title, body, label, href, note = `Or email hello@${SITE.name}` } = Astro.props;
-const external = href.startsWith('http');
+const {
+  title = 'Start with a 30-minute fit call.',
+  body = 'Bring the process you want in production and who owns it today. You leave knowing whether an Assessment, a Sprint or neither is the next step.',
+  label = BOOKING_LABEL,
+  href = BOOKING_URL,
+  note = `Or email hello@${SITE.name}`,
+  secondary,
+} = Astro.props;
+const outbound = externalRelAttrs(href);
 ---
 
 <div class="bg-accent-tint border border-line" data-gate-ignore>
@@ -25,9 +35,14 @@ const external = href.startsWith('http');
     </div>
 
     <div class="flex flex-col items-start gap-5 lg:items-center lg:justify-self-end lg:text-center">
-      <a class="btn-primary" href={href} {...external ? { target: '_blank', rel: 'nofollow noopener noreferrer' } : {}}
-        >{label}</a
-      >
+      <a class="btn-primary" href={href} {...outbound} {...outbound.rel ? { target: '_blank' } : {}}>{label}</a>
+      {
+        secondary && (
+          <a class="link-signature text-sm" href={secondary.href} {...externalRelAttrs(secondary.href)}>
+            {secondary.label}
+          </a>
+        )
+      }
       {note && <p class="font-mono text-xs text-muted">{note}</p>}
     </div>
   </div>

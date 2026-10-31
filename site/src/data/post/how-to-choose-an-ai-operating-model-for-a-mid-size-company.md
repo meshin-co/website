@@ -2,7 +2,7 @@
 title: How to choose an AI operating model for a mid-size company
 description: 'How to choose an operating model for AI work in a mid-size company, starting from what the law requires and what the evidence supports.'
 publishDate: 2026-10-02
-updatedDate: 2026-10-07
+updatedDate: 2026-10-25
 shortAnswer: 'No law or standard reviewed here requires a mid-size company to use a committee, a hub-and-spoke model or a Chief AI Officer. For high-risk systems the duties point to roles and records: overseers with competence, training and authority, an accountability framework, and logs. Choose the smallest structure that covers them, and change it on evidence from your own company.'
 fullAnswer: 'No law or standard reviewed here requires a mid-size company to use a committee, a hub-and-spoke model or a Chief AI Officer. The EU AI Act asks for trained human overseers, an accountability framework for high-risk providers, and logs, each from its own start date. AI literacy applies now. Transparency applies from 2 August 2026. An accountability framework and trained human overseers apply from 2 December 2027 or 2 August 2028. The Digital Omnibus moved those dates in July 2026, and Commission guidance on applying it is still pending. The one binding rule found for this page names a Chief AI Officer and a governance board, and covers US federal agencies only. None of the structures is proven. The surveys cover mostly large organisations, and the outcome figures are self-reported. Advisers recommend hub-and-spoke. The switch-point numbers found here come from vendors, and the one page read in full gives no data behind them. Choose the smallest structure that covers your duties, and test it against your own register.'
 keyTakeaways:
@@ -180,13 +180,15 @@ Parts of the law scale with size too. Article 17(2) ties a provider's quality ma
 
 The evidence cannot pick a structure for you. It can narrow the choice. What follows is a reading of the sources, not a finding from any of them.
 
-1. Start from the duties you have. Decide for each AI system whether your company is the provider or the deployer, and whether the system is high-risk. That decides which dates apply.
+1. Start from the duties you have. Decide for each AI system whether your company is the provider or the deployer, and whether the system is high-risk. That decides which dates apply. If the AI goes into a product you sell, the [FAQ on products you sell](/faq/what-if-the-ai-we-are-building-goes-into-a-product-we-sell) covers the provider case.
 2. Name an owner for each of the five decisions. The law and the standards reviewed ask for named people with clear roles. None requires a committee.
 3. Choose the smallest structure that covers them. The lean design above is one accountable executive and a small working group. Add a standing group only when a decision needs more than one function. Give any group a clear mandate and regular meetings, because ASIC's poorer practice was a committee that met infrequently and had a poorly defined mandate.
-4. Pick triggers from your own events, not from a vendor number. Review the structure when a duty date arrives, when you add a high-risk system, after an incident, or when use grows faster than the controls.
+4. Pick triggers from your own events, not from a vendor number. Review the structure when a duty date arrives, when you add a high-risk system, after an incident, or when use grows faster than the controls. One of those events is a decision to build a system rather than buy it; the [build vs buy AI kit](/resources/build-vs-buy-ai-kit) scores that against a three-year total cost of ownership for both sides.
 5. Test the structure on your own records at a fixed date. None of the large studies reports results for a company your size. Your register does.
 
 The [post on why pilots stall](/blog/why-your-ai-pilot-never-reached-production) shows what happens when step two is skipped. Write the five names down first. Then see whether any duty above needs more than that.
+
+The [AI readiness and risk assessment](/services/ai-readiness-and-risk-assessment) is my outside read of your own records. It inventories your AI tools and data flows and lists the gaps against the EU AI Act, NIST AI RMF and ISO/IEC 42001.
 
 ## What do these sources leave out?
 

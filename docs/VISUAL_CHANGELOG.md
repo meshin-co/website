@@ -158,3 +158,19 @@ to keep that product off this site entirely. `/now` baselines changed again at b
 Every outbound link on the site now carries `rel="nofollow noopener noreferrer"`. No visual
 change: 210 header and footer social links, the Cal.com buttons, the source lists and every
 markdown link gained attributes only.
+
+## 2026-10-25 - The booking path reaches every template, and phones get the header button
+
+The header "Book a call" button was hidden below 1024 px and appeared only after the menu toggle
+was tapped. The actions row now stays on the header at every width; only the theme toggle still
+waits for the menu. From 1024 px the header is pixel-identical (compared at 1024, 1280 and 1440 px,
+both themes), so every mobile baseline changes by that one button and no desktop baseline changes
+because of it.
+
+The closing booking band now ends 51 routes that carried none or sent the reader to the Starter Kit
+instead: the 32 glossary terms, the glossary and blog indexes, the tags index, the 12 tag pages,
+`/ai-policy`, `/imprint`, `/privacy` and `/terms`. Glossary terms lose the "Need this in your own
+paperwork?" band. `/ai-policy` keeps a Starter Kit link under the button. `/pricing` gains a list of
+the cost questions, `/contact` shows `cal.com/meshin/30min` as the fit-call channel, and the
+`/styleguide` band specimen shows the secondary link. Every booking button now opens the 30-minute
+event.

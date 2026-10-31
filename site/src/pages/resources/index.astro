@@ -12,6 +12,7 @@ import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+import { resourceFormat } from '~/utils/resource-card.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
 const resources = (await getCollection('resource', ({ data }) => !data.draft)).sort(
@@ -21,7 +22,7 @@ const resources = (await getCollection('resource', ({ data }) => !data.draft)).s
 const metadata = {
   title: 'AI governance templates and checklists',
   description:
-    'Open AI governance templates and checklists: register, acceptable-use policy, data classification, vendor questionnaire.',
+    'AI governance templates, each described on its own page: what is inside, how to use it and where its content comes from.',
 };
 
 const crumbs = [
@@ -70,7 +71,7 @@ const nodes = [
           <ResourceCard
             name={resource.data.name}
             summary={resource.data.description}
-            format={`${resource.data.type} · v${resource.data.version} · ${resource.data.license}`}
+            format={resourceFormat(resource.data)}
             status={resource.data.status}
             href={`/resources/${resource.id}`}
           />
@@ -83,8 +84,6 @@ const nodes = [
     <CtaBlock
       title="The templates are the easy part."
       body="Filling them in against systems you already run is where it gets specific. That is what the two-week Assessment is for."
-      label="Book a 30-min fit call"
-      href="https://cal.com/meshin"
     />
   </Section>
 </Layout>

@@ -1,9 +1,8 @@
 import assert from 'node:assert/strict';
 import { mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
-import { execFile } from 'node:child_process';
-import { promisify } from 'node:util';
 import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { test, before, after } from 'node:test';
 
 import {
@@ -16,8 +15,7 @@ import {
   noindexCategoryRoutes,
   noindexHubRoutes,
 } from './sitemap-lastmod.mjs';
-
-const execFileAsync = promisify(execFile);
+import { publicIndexableStaticPages } from './machine-text.mjs';
 
 let root;
 
@@ -169,98 +167,62 @@ test('noindexHubRoutes keeps a hub the moment one live entry exists, with no oth
   }
 });
 
-async function gitFixture() {
-  const repo = await mkdtemp(join(tmpdir(), 'sitemap-lastmod-git-'));
-  await execFileAsync('git', ['init', '-q'], { cwd: repo });
-  await execFileAsync('git', ['config', 'user.email', 'test@example.com'], { cwd: repo });
-  await execFileAsync('git', ['config', 'user.name', 'Test'], { cwd: repo });
-  await writeFile(join(repo, 'about.astro'), 'placeholder');
-  await execFileAsync('git', ['add', 'about.astro'], { cwd: repo });
-  await execFileAsync('git', ['commit', '-q', '-m', 'add about'], {
-    cwd: repo,
-    env: {
-      ...process.env,
-      GIT_AUTHOR_DATE: '2026-04-10T12:00:00Z',
-      GIT_COMMITTER_DATE: '2026-04-10T12:00:00Z',
-    },
+test('staticPageLastmods dates a page by its editorial day, as the instant a collection entry date becomes', () => {
+  const lastmods = staticPageLastmods([{ path: '/about', updatedDate: '2026-04-10' }]);
+
+  assert.deepEqual(lastmods, { '/about': '2026-04-10T00:00:00.000Z' });
+});
+
+test('staticPageLastmods refuses a page with no editorial date instead of omitting it or guessing one', () => {
+  assert.throws(() => staticPageLastmods([{ path: '/never-dated' }]), /\/never-dated carries no updatedDate/);
+});
+
+test('siteLastmods lets a collection hub date win over the editorial date of a page that is both', async () => {
+  const lastmods = await siteLastmods({
+    dataDir: root,
+    staticPages: [
+      { path: '/faq', updatedDate: '2026-03-01' },
+      { path: '/about', updatedDate: '2026-04-10' },
+    ],
   });
-  return repo;
-}
 
-test('staticPageLastmods reads the git commit date of the page file, not the checkout wall clock', async () => {
-  const repo = await gitFixture();
-  try {
-    const lastmods = await staticPageLastmods([{ path: '/about', file: 'about.astro' }], { cwd: repo });
-    assert.equal(lastmods['/about'], '2026-04-10T12:00:00.000Z');
-  } finally {
-    await rm(repo, { recursive: true, force: true });
-  }
+  assert.equal(lastmods['/faq'], '2026-09-12T00:00:00.000Z');
+  assert.equal(lastmods['/about'], '2026-04-10T00:00:00.000Z');
+  assert.equal(lastmods['/blog'], '2026-07-15T00:00:00.000Z');
+  assert.equal(lastmods['/blog/tags'], '2026-07-15T00:00:00.000Z');
 });
 
-test('staticPageLastmods omits a page whose file has no git history instead of guessing a date', async () => {
-  const repo = await gitFixture();
-  try {
-    const lastmods = await staticPageLastmods([{ path: '/never-committed', file: 'never-committed.astro' }], {
-      cwd: repo,
-    });
-    assert.deepEqual(lastmods, {});
-  } finally {
-    await rm(repo, { recursive: true, force: true });
-  }
+test('siteLastmods refuses a static page that neither a collection nor the catalog dates', async () => {
+  await assert.rejects(
+    siteLastmods({ dataDir: root, staticPages: [{ path: '/never-dated' }] }),
+    /\/never-dated carries no updatedDate/
+  );
 });
 
-test('siteLastmods lets a collection hub date win over a static-file date for a page that is both', async () => {
-  const repo = await gitFixture();
+test('siteLastmods gives an empty collection hub no date', async () => {
+  const lastmods = await siteLastmods({ dataDir: root, staticPages: [] });
+
+  assert.equal('/case-studies' in lastmods, false);
+  assert.equal('/services' in lastmods, false);
+});
+
+test('siteLastmods leaves a page its collection owns undated while that collection is empty, and still dates the rest', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'sitemap-lastmod-empty-owner-'));
   try {
     const lastmods = await siteLastmods({
-      dataDir: root,
-      staticPages: [
-        { path: '/faq', file: 'about.astro' },
-        { path: '/about', file: 'about.astro' },
-      ],
-      cwd: repo,
+      dataDir: dir,
+      staticPages: [{ path: '/faq' }, { path: '/blog/tags' }, { path: '/about', updatedDate: '2026-04-10' }],
     });
 
-    assert.equal(lastmods['/faq'], '2026-09-12T00:00:00.000Z');
-    assert.equal(lastmods['/about'], '2026-04-10T12:00:00.000Z');
-    assert.equal(lastmods['/blog'], '2026-07-15T00:00:00.000Z');
-    assert.equal(lastmods['/blog/tags'], '2026-07-15T00:00:00.000Z');
+    assert.deepEqual(lastmods, { '/about': '2026-04-10T00:00:00.000Z' });
   } finally {
-    await rm(repo, { recursive: true, force: true });
+    await rm(dir, { recursive: true, force: true });
   }
 });
 
-async function commitPage(repo, file, isoDate) {
-  await mkdir(dirname(join(repo, file)), { recursive: true });
-  await writeFile(join(repo, file), 'placeholder');
-  await execFileAsync('git', ['add', file], { cwd: repo });
-  await execFileAsync('git', ['commit', '-q', '-m', `add ${file}`], {
-    cwd: repo,
-    env: { ...process.env, GIT_AUTHOR_DATE: isoDate, GIT_COMMITTER_DATE: isoDate },
-  });
-}
+test('the real site dates every public static page, from a collection or from the catalog', async () => {
+  const staticPages = publicIndexableStaticPages();
+  const lastmods = await siteLastmods({ dataDir: fileURLToPath(new URL('../data', import.meta.url)), staticPages });
 
-test('siteLastmods gives an empty collection hub no date, even when its page file has git history, because the hub is withheld', async () => {
-  const repo = await gitFixture();
-  try {
-    await commitPage(repo, 'src/pages/case-studies/index.astro', '2026-10-02T09:30:00Z');
-    const lastmods = await siteLastmods({ dataDir: root, staticPages: [], cwd: repo });
-
-    assert.equal('/case-studies' in lastmods, false);
-    assert.equal('/services' in lastmods, false);
-  } finally {
-    await rm(repo, { recursive: true, force: true });
-  }
-});
-
-test('a populated hub keeps its newest entry date even when its page file is newer in git', async () => {
-  const repo = await gitFixture();
-  try {
-    await commitPage(repo, 'src/pages/blog/index.astro', '2026-12-01T00:00:00Z');
-    const lastmods = await siteLastmods({ dataDir: root, staticPages: [], cwd: repo });
-
-    assert.equal(lastmods['/blog'], '2026-07-15T00:00:00.000Z');
-  } finally {
-    await rm(repo, { recursive: true, force: true });
-  }
+  for (const { path } of staticPages) assert.ok(lastmods[path], `${path} has no lastmod`);
 });

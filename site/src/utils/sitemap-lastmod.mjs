@@ -1,14 +1,10 @@
 import { readFile, readdir } from 'node:fs/promises';
-import { execFile } from 'node:child_process';
 import { join } from 'node:path';
-import { promisify } from 'node:util';
 import yaml from 'js-yaml';
 
 import { FEED_BASES, emptyHubRoutes } from './feeds.mjs';
 import { lastmod } from './lastmod.mjs';
 import { liveTopicMap } from './machine-text.mjs';
-
-const execFileAsync = promisify(execFile);
 
 async function frontmatterEntries(dir) {
   const files = (await readdir(dir).catch(() => [])).filter((file) => /\.mdx?$/.test(file));
@@ -23,6 +19,9 @@ async function frontmatterEntries(dir) {
 }
 
 const isLiveFrontmatter = (data) => !data?.draft && !data?.noindex;
+
+const TAG_INDEX_ROUTE = '/blog/tags';
+const COLLECTION_OWNED_ROUTES = new Set([...Object.values(FEED_BASES).map((base) => `/${base}`), TAG_INDEX_ROUTE]);
 
 export async function collectionLastmods(dataDir) {
   const lastmods = {};
@@ -62,7 +61,7 @@ export async function taxonomyLastmods(dataDir) {
     if (updated) lastmods[`/blog/tag/${slug}`] = updated;
   }
   const newestTag = [...tagMap.values()].filter(Boolean).sort().at(-1);
-  if (newestTag) lastmods['/blog/tags'] = newestTag;
+  if (newestTag) lastmods[TAG_INDEX_ROUTE] = newestTag;
 
   return lastmods;
 }
@@ -88,26 +87,23 @@ export const noindexHubRoutes = (dataDir) =>
     (await frontmatterEntries(join(dataDir, kind))).filter(({ data }) => isLiveFrontmatter(data))
   );
 
-export async function staticPageLastmods(pages, { cwd } = {}) {
+export function staticPageLastmods(pages) {
   const lastmods = {};
-  for (const { path, file } of pages) {
-    const result = await execFileAsync('git', ['log', '-1', '--format=%aI', '--', file], { cwd }).catch(() => null);
-    const iso = result?.stdout.trim();
-    if (iso) lastmods[path] = new Date(iso).toISOString();
+  for (const page of pages) {
+    const modified = lastmod(page);
+    if (!modified) throw new Error(`static page ${page.path} carries no updatedDate`);
+    lastmods[page.path] = modified;
   }
   return lastmods;
 }
 
-export async function siteLastmods({ dataDir, staticPages, cwd }) {
-  const hubs = await hubLastmods(dataDir);
-  const hubBases = new Set(Object.keys(hubs));
-  const taxonomies = await taxonomyLastmods(dataDir);
-  const pagesNeedingFileDates = staticPages.filter((page) => !hubBases.has(page.path) && !(page.path in taxonomies));
+export async function siteLastmods({ dataDir, staticPages }) {
+  const pagesDatedByCatalog = staticPages.filter((page) => !COLLECTION_OWNED_ROUTES.has(page.path));
 
   return {
     ...(await collectionLastmods(dataDir)),
-    ...(await staticPageLastmods(pagesNeedingFileDates, { cwd })),
-    ...hubs,
-    ...taxonomies,
+    ...staticPageLastmods(pagesDatedByCatalog),
+    ...(await hubLastmods(dataDir)),
+    ...(await taxonomyLastmods(dataDir)),
   };
 }

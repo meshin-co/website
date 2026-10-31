@@ -15,6 +15,7 @@ import { brandFromDisk } from '../src/utils/brand.mjs';
 
 import { catalogDriftFindings } from './catalog-drift.mjs';
 import { collectionGateFailures } from './collection-gate.mjs';
+import { dateAgreementFailures } from './date-agreement.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 import { LLMS_FULL_MAX_BYTES, LLMS_COLLECTIONS } from '../src/utils/llms-collections.mjs';
 import { llmsCorpusGaps } from './llms-corpus.mjs';
@@ -194,11 +195,11 @@ function toPath(url) {
   return path === '' ? '/' : path;
 }
 
-function sitemapLastmods(xml) {
+export function sitemapLastmods(xml) {
   const lastmods = new Map();
   for (const [, block] of xml.matchAll(/<url>([\s\S]*?)<\/url>/g)) {
     const loc = /<loc>([^<]+)<\/loc>/.exec(block)?.[1];
-    if (loc) lastmods.set(toPath(loc), /<lastmod>/.test(block));
+    if (loc) lastmods.set(toPath(loc), /<lastmod>([^<]+)<\/lastmod>/.exec(block)?.[1] ?? null);
   }
   return lastmods;
 }
@@ -343,7 +344,6 @@ async function main(distDir) {
   const expectedLastmods = await siteLastmods({
     dataDir: 'src/data',
     staticPages: publicIndexableStaticPages(),
-    cwd: process.cwd(),
   });
   for (const gap of lastmodCoverageGaps(sitemap, Object.keys(expectedLastmods))) {
     failures.push(`sitemap has no lastmod for ${gap}`);
@@ -361,6 +361,17 @@ async function main(distDir) {
   const htmlByRoute = {};
   for (const route of routes) htmlByRoute[route] = await routeHtml(distDir, route);
   for (const gap of canonicalGaps(htmlByRoute, { site: SITE_ORIGIN })) failures.push(gap);
+  const datedStaticRoutes = publicIndexableStaticPages()
+    .filter((page) => page.updatedDate)
+    .map((page) => page.path);
+  failures.push(
+    ...dateAgreementFailures({
+      lastmods: sitemapLastmods(sitemap),
+      htmlByRoute,
+      sidecarTextByRoute,
+      staticRoutes: datedStaticRoutes,
+    })
+  );
   failures.push(
     ...(await collectionGateFailures(distDir, { kinds: emptyKinds, routes, htmlByRoute, site: SITE_ORIGIN }))
   );
@@ -414,7 +425,7 @@ async function main(distDir) {
   failures.push(...(await machineFileFailures(distDir, htmlByRoute, llmsTxt)));
 
   console.log(
-    `machine: ${collections.length} public collections, ${routes.length} routes, ${catalog.length} catalog entries`
+    `machine: ${collections.length} public collections, ${routes.length} routes, ${catalog.length} catalog entries, ${datedStaticRoutes.length} static routes checked for one date`
   );
   if (failures.length > 0) {
     for (const failure of failures) console.error(`MACHINE ${failure}`);

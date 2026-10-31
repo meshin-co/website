@@ -11,6 +11,7 @@ import {
   faqDescription,
   isDescriptionInRange,
 } from '~/utils/faq-meta.mjs';
+import { LICENSE_ID, licenseHasText } from '~/utils/resource-license.mjs';
 
 const CATEGORIES = ['governance', 'agentic-architecture', 'operating-model', 'executive'] as const;
 
@@ -51,6 +52,13 @@ const datesInOrder = <T extends { publishDate: Date; updatedDate: Date }>(entry:
   isNotBeforePublish(entry.publishDate, entry.updatedDate);
 
 const datesInOrderMessage = { message: 'updatedDate must not be before publishDate', path: ['updatedDate'] };
+
+const licenseTextMessage = {
+  message: 'needs its text. Add public/licenses/<license>.txt, or remove the field',
+  path: ['license'],
+};
+
+const licenseIdMessage = 'must be a licence id such as MIT or CC-BY-4.0';
 
 const postCollection = defineCollection({
   loader: glob({ pattern: ['*.md', '*.mdx'], base: 'src/data/post' }),
@@ -95,7 +103,6 @@ const serviceCollection = defineCollection({
         .array(z.object({ q: z.string(), a: z.string() }))
         .min(3)
         .max(8),
-      cta: z.object({ label: z.string(), href: z.string() }),
       sources: z.array(source).min(1),
       order: z.number().int().positive(),
     })
@@ -110,7 +117,7 @@ const resourceCollection = defineCollection({
       name: z.string(),
       type: z.enum(['template', 'kit', 'scorecard', 'repo', 'checklist']),
       version: z.string(),
-      license: z.string(),
+      license: z.string().regex(LICENSE_ID, licenseIdMessage).optional(),
       status: z.string(),
       repoUrl: z.url().optional(),
       whatInside: z.array(z.string()).min(1),
@@ -118,7 +125,8 @@ const resourceCollection = defineCollection({
       sources: z.array(source).min(1),
       relatedPosts: z.array(reference('post')).default([]),
     })
-    .refine(datesInOrder, datesInOrderMessage),
+    .refine(datesInOrder, datesInOrderMessage)
+    .refine((entry) => licenseHasText(entry), licenseTextMessage),
 });
 
 const caseCollection = defineCollection({

@@ -5,10 +5,11 @@ import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { staticPageDate } from '~/utils/machine-text.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
-const UPDATED = new Date('2026-09-16');
+const UPDATED = new Date(staticPageDate('/now'));
 
 const metadata = {
   title: 'What I am working on now',
@@ -84,8 +85,6 @@ const log: LogEntry[] = [
     <CtaBlock
       title="Ask what is free right now."
       body="Availability is a question for the call, not a line on a page that would be wrong a week later."
-      label="Book a 30-min fit call"
-      href="https://cal.com/meshin"
     />
   </Section>
 </Layout>

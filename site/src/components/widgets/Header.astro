@@ -8,6 +8,7 @@ import Button from '~/components/ui/Button.astro';
 import { getHomePermalink } from '~/utils/permalinks';
 import { trimSlash } from '~/utils/permalinks';
 import { routeOfPathname } from '~/utils/machine-links.mjs';
+import { externalRelAttrs } from '~/utils/pipeline.mjs';
 import type { CallToAction } from '~/types';
 
 interface Link {
@@ -132,7 +133,7 @@ const isActive = (href?: string) => typeof href === 'string' && `/${trimSlash(hr
                       { 'aw-link-active': isActive(href) },
                     ]}
                     href={href}
-                    {...(String(href).startsWith('http') ? { rel: 'nofollow noopener noreferrer' } : {})}
+                    {...externalRelAttrs(href)}
                   >
                     {text}
                   </a>
@@ -146,11 +147,10 @@ const isActive = (href?: string) => typeof href === 'string' && `/${trimSlash(hr
         class:list={[
           { 'ml-auto rtl:ml-0 rtl:mr-auto': position === 'left' },
           'flex items-center justify-end lg:self-center lg:justify-self-end',
-          links.length > 0 && 'hidden lg:flex',
         ]}
       >
         <div class="items-center flex justify-between w-full lg:w-auto">
-          <div class="flex">
+          <div class:list={['flex', links.length > 0 && 'hidden lg:flex']} data-aw-menu-extra>
             {showToggleTheme && <ToggleTheme iconClass="w-6 h-6 lg:w-5 lg:h-5 lg:inline-block" />}
           </div>
           {
@@ -186,7 +186,7 @@ const isActive = (href?: string) => typeof href === 'string' && `/${trimSlash(hr
       const header = this.querySelector<HTMLElement>('#header');
       const toggle = this.querySelector<HTMLElement>('[data-aw-toggle-menu]');
       const nav = this.querySelector<HTMLElement>('#header nav');
-      const lastChild = this.querySelector<HTMLElement>('#header > div > div:last-child');
+      const extras = this.querySelector<HTMLElement>('[data-aw-menu-extra]');
 
       this.updateActiveLinks();
 
@@ -197,7 +197,7 @@ const isActive = (href?: string) => typeof href === 'string' && `/${trimSlash(hr
           document.body.classList.remove('overflow-hidden');
           header?.classList.remove('h-screen', 'expanded', 'bg-page');
           nav?.classList.add('hidden');
-          lastChild?.classList.add('hidden');
+          extras?.classList.add('hidden');
         };
 
         // Mobile menu toggle.
@@ -209,7 +209,7 @@ const isActive = (href?: string) => typeof href === 'string' && `/${trimSlash(hr
           header?.classList.toggle('expanded');
           header?.classList.toggle('bg-page');
           nav?.classList.toggle('hidden');
-          lastChild?.classList.toggle('hidden');
+          extras?.classList.toggle('hidden');
         });
 
         // Close the mobile menu when a nav link is clicked.

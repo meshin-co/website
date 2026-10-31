@@ -22,6 +22,7 @@ import StepList from '~/components/site/StepList.astro';
 import { artifactIds, heroOffers, drivers, figures, hero, shift, signals } from '~/data/home';
 import Layout from '~/layouts/PageLayout.astro';
 import { isPublished } from '~/utils/feeds.mjs';
+import { resourceFormat } from '~/utils/resource-card.mjs';
 
 const metadata = {
   title: 'Styleguide',
@@ -144,7 +145,7 @@ const artifacts = artifactIds.map((id) => resourcesById.get(id)).filter((entry) 
             <ResourceCard
               name={artifact.data.name}
               summary={artifact.data.description}
-              format={`${artifact.data.type} · v${artifact.data.version} · ${artifact.data.license}`}
+              format={resourceFormat(artifact.data)}
               status={artifact.data.status}
               href={`/resources/${artifact.id}`}
             />
@@ -158,7 +159,7 @@ const artifacts = artifactIds.map((id) => resourcesById.get(id)).filter((entry) 
       title="One primary action per screen."
       body="Secondary actions stay visually subordinate."
       label="Book a call"
-      href="https://cal.com/meshin"
+      secondary={{ label: 'Open the Starter Kit', href: '/resources/ai-governance-starter-kit' }}
       note="A mono note carries the fallback contact route."
     />
   </Section>
