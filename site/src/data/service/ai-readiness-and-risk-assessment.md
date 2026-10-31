@@ -72,9 +72,9 @@ I score you on five readiness drivers. The free [AI readiness scorecard](/resour
 
 ## What you keep
 
-You keep one document, whether or not you continue. It holds the readiness score, the gap list, and the three processes ranked by what automating them is worth this quarter.
+You keep one document, whether or not you continue. It holds the readiness score, the gap list, and the three processes ranked by what automating them is worth this quarter. Where a process could be bought instead of built, the [build vs buy AI kit](/resources/build-vs-buy-ai-kit) is the worksheet behind that recommendation.
 
-If a [90-Day Production Sprint](/services/90-day-production-sprint) follows within three months, the Assessment fee is credited against it. Terms for all three offers are on the [pricing page](/pricing).
+If a [90-Day Production Sprint](/services/90-day-production-sprint) follows inside that window, the Assessment fee is credited against it. Terms for all three offers are on the [pricing page](/pricing).
 
 ## ISO/IEC 42001 gap assessment
 

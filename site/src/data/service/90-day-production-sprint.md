@@ -66,7 +66,7 @@ sources:
 
 Ninety days, one process, in production. The measure of success is written into the statement of work before the first day.
 
-Terms for all three offers are on the [pricing page](/pricing). The [AI Readiness & Risk Assessment](/services/ai-readiness-and-risk-assessment) fee is credited against the Sprint if the Sprint follows within three months.
+Terms for all three offers are on the [pricing page](/pricing). It states the window in which an [AI Readiness & Risk Assessment](/services/ai-readiness-and-risk-assessment) fee is credited against this Sprint.
 
 ## What you keep
 

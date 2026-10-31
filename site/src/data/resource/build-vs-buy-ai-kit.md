@@ -2,7 +2,7 @@
 title: Build vs Buy AI Kit
 name: Build vs Buy AI Kit
 type: kit
-description: 'The build vs buy AI kit: six criteria I work through before recommending either path, scored against a three-year total cost of ownership for both sides.'
+description: 'The build vs buy AI kit: six criteria I work through before recommending either path, and a total cost of ownership table you fill in for both sides.'
 publishDate: 2026-09-08
 updatedDate: 2026-10-25
 version: '0.1'

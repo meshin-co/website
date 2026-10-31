@@ -69,7 +69,7 @@
     "target": "src/pages/case-studies/index.astro",
     "location": "frontmatter.cta.label",
     "status": "verified",
-    "reason": "Re-read 2026-10-08 against dist/case-studies.html. Row frontmatter.cta.label is the button label 'Book a 30-min fit call' on the closing call to action; the button links to https://cal.com/meshin. The text is unchanged since the last seal and is not touched by the interview answers or by the removal of the only.help case study. It matches COPY-CHECKLIST 3.9 ('Fit call: free, thirty minutes, booked at cal.com/meshin', answer yes). The same label is carried by the other pages that end in this button and is dispositioned there too.",
+    "reason": "No row matches this entry any more, and the sentence it recorded is no longer true. Until change 18 the closing call to action of src/pages/case-studies/index.astro passed the label \"Book a 30-min fit call\" and the href https://cal.com/meshin as props, and this entry reviewed that label. Change 18 removed both props, so the page takes the shared defaults: the label \"Book a 30-min fit call\" and the href https://cal.com/meshin/30min (BOOKING_URL in src/utils/booking.mjs), which returned 200 on 2026-10-31 with the title \"30 min meeting | Dmitri Meshin | Cal.com\". The button no longer links https://cal.com/meshin. The label and the band are dispositioned at src/utils/booking.mjs and src/components/site/CtaBlock.astro. COPY-CHECKLIST 3.9 (\"Fit call: free, thirty minutes, booked at cal.com/meshin\", answer yes) still covers the claim. The entry is kept as a record that the review applied to the old props, and is reported by the gate as naming no rows.",
     "digest": "5c2fc782143d"
   },
   {
@@ -122,8 +122,8 @@
   },
   {
     "target": "src/pages/glossary/[id].astro",
-    "status": "verified",
-    "reason": "section titles and CTA body compliant; composed title (data.term + template) is only the raw term name, and the H2 of every term page is the term's authored title question, equal to the page title on all 30 pages (for example 'What are evals?' on /glossary/evals, where 'What is Evals?' used to be), so there is nothing here to fix",
+    "status": "rewritten",
+    "reason": "Re-read 2026-10-31 in dist/glossary/ai-register.html and dist/glossary/evals.html (clean build of the working tree). Change 18 removed the template's own closing block: the title \"Need this in your own paperwork?\" and the body \"The Governance Starter Kit describes the register, the policy and the classification table this term belongs in.\" Every glossary term now ends on the shared booking band (title \"Start with a 30-minute fit call.\", body \"Bring the process you want in production and who owns it today. You leave knowing whether an Assessment, a Sprint or neither is the next step.\"), where it used to send the reader to the Starter Kit, a two-hop path to a call. The earlier verdict \"section titles and CTA body compliant\" described the removed block and is replaced by this one. The composed title (the term name plus the template) and the section titles that remain in the template are unchanged since the earlier review.",
     "digest": "e4b79f985b81"
   },
   {
@@ -141,7 +141,7 @@
   {
     "target": "src/pages/resources/index.astro",
     "status": "rewritten",
-    "reason": "Phase 5.2 head pass. Title \"AI governance templates and checklists\" lifts title coverage of \"ai governance templates\" from 0.00 to 1.00. The description now leads with the target words (\"Open AI governance templates and checklists\") and still lists the same four artifacts: register, acceptable-use policy, data classification, vendor questionnaire. CTA untouched. Lead: \"each written out in full on its own page\" became \"each described on its own page\"; the rest of the lead is unchanged.",
+    "reason": "Re-read 2026-10-31 in dist/resources.html (clean build of the working tree). The earlier reason quoted the catalog description as it stood before change 18 (\"Open AI governance templates and checklists\", listing the register, policy, data classification and vendor questionnaire) and is replaced for that part. The description in src/utils/machine-text.mjs is now \"AI governance templates, each described on its own page: what is inside, how to use it and where its content comes from.\" (22 words). It still opens with the target words \"AI governance templates\" (docs/SEMANTIC-CORE.md carries the same query for /resources) and makes three claims that hold for the seven resource pages on this build: each is described on its own page, each has what is inside and how to use it, and each carries a Sources section (checked in the built pages dist/resources/*.html on 2026-10-31: all seven have the sections \"What is inside\", \"How to use it\" and \"Sources\"). The title \"AI governance templates and checklists\" and the lead \"AI governance templates, each described on its own page. Copy one into your own wiki: no tool, no subscription, no email required. Each page says where its content comes from.\" are unchanged since the earlier pass, which reworded \"each written out in full on its own page\" to \"each described on its own page\"; the closing call to action is the shared band.",
     "digest": "62bd338ce7cc"
   },
   {
