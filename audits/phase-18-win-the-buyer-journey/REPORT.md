@@ -2,7 +2,7 @@
 
 Generated from raw check output by `scripts/report.mjs`. Do not hand-edit.
 
-Generated-from: 17eca8b
+Generated-from: c9ebf52
 
 Asserted: lighthouse scores, lighthouse metric budgets, byte budgets
 
@@ -88,7 +88,7 @@ Result: PASS
 | `/blog/evals-in-ci-for-llm-agents` | 1108 | 12791 | 34623 | 64868 |
 | `/blog/handing-over-ai-leadership-to-an-internal-owner` | 1108 | 12791 | 38371 | 64868 |
 | `/blog/how-to-build-an-ai-system-register-in-a-week` | 1108 | 12791 | 33044 | 64868 |
-| `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company` | 1108 | 12791 | 41216 | 64868 |
+| `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company` | 1108 | 12791 | 41106 | 64868 |
 | `/blog/multi-agent-reference-architecture-in-production` | 1108 | 12791 | 42994 | 64868 |
 | `/blog/tag/acceptable-use-policy` | 1108 | 12791 | 26233 | 64868 |
 | `/blog/tag/agentic-architecture` | 1108 | 12791 | 26385 | 64868 |
@@ -169,19 +169,19 @@ Result: PASS
 | `/now` | 1108 | 12791 | 26054 | 64868 |
 | `/pricing` | 1108 | 12791 | 27718 | 64868 |
 | `/privacy` | 1108 | 12791 | 26652 | 64868 |
-| `/resources` | 1108 | 12791 | 27059 | 64868 |
+| `/resources` | 1108 | 12791 | 27055 | 64868 |
 | `/resources/adoption-telemetry-dashboard-template` | 1108 | 12791 | 31129 | 64868 |
 | `/resources/agent-evals-ci-starter` | 1108 | 12791 | 28271 | 64868 |
 | `/resources/ai-governance-starter-kit` | 1108 | 12791 | 29198 | 64868 |
 | `/resources/ai-readiness-scorecard` | 1108 | 12791 | 28340 | 64868 |
-| `/resources/build-vs-buy-ai-kit` | 1108 | 12791 | 28890 | 64868 |
+| `/resources/build-vs-buy-ai-kit` | 1108 | 12791 | 28877 | 64868 |
 | `/resources/handover-playbook` | 1108 | 12791 | 31566 | 64868 |
 | `/resources/llm-gateway-governance-config` | 1108 | 12791 | 28550 | 64868 |
 | `/search` | 2042 | 12791 | 26006 | 64868 |
 | `/security` | 1108 | 12791 | 26838 | 64868 |
 | `/services` | 1108 | 12791 | 26967 | 64868 |
-| `/services/90-day-production-sprint` | 1108 | 12791 | 29580 | 64868 |
-| `/services/ai-readiness-and-risk-assessment` | 1108 | 12791 | 30077 | 64868 |
+| `/services/90-day-production-sprint` | 1108 | 12791 | 29579 | 64868 |
+| `/services/ai-readiness-and-risk-assessment` | 1108 | 12791 | 30164 | 64868 |
 | `/services/fractional-caio-retainer` | 1108 | 12791 | 29876 | 64868 |
 | `/styleguide` | 1108 | 12971 | 30381 | 64868 |
 | `/terms` | 1108 | 12791 | 26411 | 64868 |
