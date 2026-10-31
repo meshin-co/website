@@ -2,7 +2,7 @@
 
 Generated from raw check output by `scripts/report.mjs`. Do not hand-edit.
 
-Generated-from: c9ebf52
+Generated-from: f743fe6
 
 Asserted: lighthouse scores, lighthouse metric budgets, byte budgets
 
@@ -181,7 +181,7 @@ Result: PASS
 | `/security` | 1108 | 12791 | 26838 | 64868 |
 | `/services` | 1108 | 12791 | 26967 | 64868 |
 | `/services/90-day-production-sprint` | 1108 | 12791 | 29579 | 64868 |
-| `/services/ai-readiness-and-risk-assessment` | 1108 | 12791 | 30164 | 64868 |
+| `/services/ai-readiness-and-risk-assessment` | 1108 | 12791 | 30195 | 64868 |
 | `/services/fractional-caio-retainer` | 1108 | 12791 | 29876 | 64868 |
 | `/styleguide` | 1108 | 12971 | 30381 | 64868 |
 | `/terms` | 1108 | 12791 | 26411 | 64868 |
