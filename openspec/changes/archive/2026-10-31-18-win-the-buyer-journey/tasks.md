@@ -36,6 +36,6 @@
 
 ## 6. Calibration Gate
 
-- [ ] 6.1 `npm run test:smoke` proves every guard family can still fail
-- [ ] 6.2 Visual baselines regenerated for the templates whose markup changed
-- [ ] 6.3 Run the Calibration Gate and commit the report it generates for this change
+- [x] 6.1 `npm run test:smoke` proves every guard family can still fail
+- [x] 6.2 Visual baselines regenerated for the templates whose markup changed
+- [x] 6.3 Run the Calibration Gate and commit the report it generates for this change
