@@ -37,7 +37,8 @@
     "Semicolons and em dashes stay at six per thousand words or fewer",
     "The content gate judges every built page except the utility and pagination routes",
     "The generated semantic-core tables match the build",
-    "The median sentence on a page is 22 words or fewer"
+    "The median sentence on a page is 22 words or fewer",
+    "The next article is chosen from a number"
   ],
   "content/human-readability": [
     "A page holds only a few sentences over 25 words",
@@ -122,6 +123,10 @@
     "llms.txt inlines what is bounded and points at what is unbounded",
     "llms.txt stays under 8192 bytes",
     "robots.txt is the generated crawler register"
+  ],
+  "discovery/search-demand": [
+    "A report that is stale or incomplete fails the gate",
+    "Measured demand is a committed artefact"
   ],
   "discovery/site-search": [
     "A failed index load says so and the next search tries again",
