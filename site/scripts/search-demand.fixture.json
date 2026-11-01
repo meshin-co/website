@@ -1,0 +1,220 @@
+{
+  "window": { "measured": "2026-11-01", "startDate": "2026-08-01", "endDate": "2026-10-30" },
+  "property": "sc-domain:meshin.co",
+  "totals": { "clicks": 0, "impressions": 77, "ctr": 0, "position": 67.67532467532467 },
+  "queries": [
+    { "keys": ["\"fractional chief ai officer\" remote"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 6 },
+    { "keys": ["ai act"], "clicks": 0, "impressions": 4, "ctr": 0, "position": 90.5 },
+    { "keys": ["ai act eu"], "clicks": 0, "impressions": 13, "ctr": 0, "position": 76.23076923076923 },
+    { "keys": ["ai act impact assessment"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 90 },
+    { "keys": ["ai governance"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 67 },
+    { "keys": ["ai management system"], "clicks": 0, "impressions": 9, "ctr": 0, "position": 91.77777777777777 },
+    { "keys": ["ai register"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 91 },
+    { "keys": ["artificial intelligence act eu"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 100 },
+    { "keys": ["artificial intelligence management system"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 89 },
+    { "keys": ["artificial intelligence management systems"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 95 },
+    { "keys": ["eu ai act"], "clicks": 0, "impressions": 28, "ctr": 0, "position": 76.21428571428571 },
+    { "keys": ["eu ai act:"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 78 },
+    { "keys": ["eu-ai-act"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 75 },
+    { "keys": ["guardrails"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 91 },
+    { "keys": ["meshin"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 7 }
+  ],
+  "pages": [
+    { "keys": ["http://meshin.co/"], "clicks": 0, "impressions": 2, "ctr": 0, "position": 1 },
+    { "keys": ["https://meshin.co/"], "clicks": 0, "impressions": 2, "ctr": 0, "position": 5 },
+    { "keys": ["https://meshin.co/about"], "clicks": 0, "impressions": 3, "ctr": 0, "position": 8.333333333333332 },
+    { "keys": ["https://meshin.co/blog"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 7 },
+    { "keys": ["https://meshin.co/contact"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 4 },
+    { "keys": ["https://meshin.co/faq"], "clicks": 0, "impressions": 2, "ctr": 0, "position": 4.5 },
+    {
+      "keys": ["https://meshin.co/faq/what-size-of-company-do-you-actually-work-with"],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 10
+    },
+    { "keys": ["https://meshin.co/glossary"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 9 },
+    { "keys": ["https://meshin.co/glossary/ai-governance"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 67 },
+    {
+      "keys": ["https://meshin.co/glossary/ai-impact-assessment"],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 90
+    },
+    {
+      "keys": ["https://meshin.co/glossary/ai-management-system"],
+      "clicks": 0,
+      "impressions": 11,
+      "ctr": 0,
+      "position": 91.81818181818181
+    },
+    { "keys": ["https://meshin.co/glossary/ai-register"], "clicks": 0, "impressions": 2, "ctr": 0, "position": 47.5 },
+    {
+      "keys": ["https://meshin.co/glossary/eu-ai-act"],
+      "clicks": 0,
+      "impressions": 48,
+      "ctr": 0,
+      "position": 77.91666666666667
+    },
+    { "keys": ["https://meshin.co/glossary/guardrails"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 91 },
+    { "keys": ["https://meshin.co/imprint"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 2 },
+    { "keys": ["https://meshin.co/now"], "clicks": 0, "impressions": 2, "ctr": 0, "position": 3.5 },
+    { "keys": ["https://meshin.co/pricing"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 6 },
+    { "keys": ["https://meshin.co/resources"], "clicks": 0, "impressions": 2, "ctr": 0, "position": 9 },
+    { "keys": ["https://meshin.co/security"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 38 },
+    { "keys": ["https://meshin.co/services"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 8 },
+    { "keys": ["https://meshin.co/terms"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 9 }
+  ],
+  "days": [
+    { "keys": ["2026-09-05"], "clicks": 0, "impressions": 0, "ctr": 0, "position": 0 },
+    { "keys": ["2026-10-17"], "clicks": 0, "impressions": 0, "ctr": 0, "position": 0 },
+    { "keys": ["2026-10-18"], "clicks": 0, "impressions": 0, "ctr": 0, "position": 0 },
+    { "keys": ["2026-10-19"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 1 },
+    { "keys": ["2026-10-20"], "clicks": 0, "impressions": 16, "ctr": 0, "position": 59.125 },
+    { "keys": ["2026-10-21"], "clicks": 0, "impressions": 14, "ctr": 0, "position": 80 },
+    { "keys": ["2026-10-22"], "clicks": 0, "impressions": 14, "ctr": 0, "position": 81.85714285714286 },
+    { "keys": ["2026-10-23"], "clicks": 0, "impressions": 7, "ctr": 0, "position": 80.28571428571429 },
+    { "keys": ["2026-10-24"], "clicks": 0, "impressions": 8, "ctr": 0, "position": 70.625 },
+    { "keys": ["2026-10-25"], "clicks": 0, "impressions": 12, "ctr": 0, "position": 62.75 },
+    { "keys": ["2026-10-26"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 93 },
+    { "keys": ["2026-10-27"], "clicks": 0, "impressions": 3, "ctr": 0, "position": 7 },
+    { "keys": ["2026-10-28"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 4 },
+    { "keys": ["2026-10-29"], "clicks": 0, "impressions": 0, "ctr": 0, "position": 0 },
+    { "keys": ["2026-10-30"], "clicks": 0, "impressions": 0, "ctr": 0, "position": 0 }
+  ],
+  "pairs": [
+    {
+      "keys": ["\"fractional chief ai officer\" remote", "https://meshin.co/faq"],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 6
+    },
+    {
+      "keys": ["ai act", "https://meshin.co/glossary/eu-ai-act"],
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0,
+      "position": 90.5
+    },
+    {
+      "keys": ["ai act eu", "https://meshin.co/glossary/eu-ai-act"],
+      "clicks": 0,
+      "impressions": 13,
+      "ctr": 0,
+      "position": 76.23076923076923
+    },
+    {
+      "keys": ["ai act impact assessment", "https://meshin.co/glossary/ai-impact-assessment"],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 90
+    },
+    {
+      "keys": ["ai governance", "https://meshin.co/glossary/ai-governance"],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 67
+    },
+    {
+      "keys": ["ai management system", "https://meshin.co/glossary/ai-management-system"],
+      "clicks": 0,
+      "impressions": 9,
+      "ctr": 0,
+      "position": 91.77777777777777
+    },
+    {
+      "keys": ["ai register", "https://meshin.co/glossary/ai-register"],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 91
+    },
+    {
+      "keys": ["artificial intelligence act eu", "https://meshin.co/glossary/eu-ai-act"],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 100
+    },
+    {
+      "keys": ["artificial intelligence management system", "https://meshin.co/glossary/ai-management-system"],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 89
+    },
+    {
+      "keys": ["artificial intelligence management systems", "https://meshin.co/glossary/ai-management-system"],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 95
+    },
+    {
+      "keys": ["eu ai act", "https://meshin.co/glossary/eu-ai-act"],
+      "clicks": 0,
+      "impressions": 28,
+      "ctr": 0,
+      "position": 76.21428571428571
+    },
+    {
+      "keys": ["eu ai act:", "https://meshin.co/glossary/eu-ai-act"],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 78
+    },
+    {
+      "keys": ["eu-ai-act", "https://meshin.co/glossary/eu-ai-act"],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 75
+    },
+    {
+      "keys": ["guardrails", "https://meshin.co/glossary/guardrails"],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 91
+    },
+    { "keys": ["meshin", "https://meshin.co/"], "clicks": 0, "impressions": 1, "ctr": 0, "position": 7 }
+  ],
+  "prompts": [
+    {
+      "number": 1,
+      "prompt": "who is a fractional chief AI officer for a 100-person SaaS company",
+      "mustWin": "/",
+      "support": ["/services/fractional-caio-retainer", "/faq/what-does-a-fractional-chief-ai-officer-actually-do"]
+    },
+    {
+      "number": 4,
+      "prompt": "AI governance consultant ISO 42001 small company",
+      "mustWin": "/services/ai-readiness-and-risk-assessment",
+      "support": ["/faq/can-you-get-us-iso-iec-42001-certified-or-just-a-working-system", "/glossary/iso-iec-42001"]
+    },
+    {
+      "number": 6,
+      "prompt": "how to build an AI system register",
+      "mustWin": "/blog/how-to-build-an-ai-system-register-in-a-week",
+      "support": ["/glossary/ai-register"]
+    },
+    {
+      "number": 8,
+      "prompt": "EU AI Act obligations for deployers small business",
+      "mustWin": "/glossary/eu-ai-act",
+      "support": ["/glossary/provider-vs-deployer", "/faq/what-do-nist-ai-rmf-iso-iec-42001-and-the-eu-ai-act-require"]
+    },
+    { "number": 17, "prompt": "fractional AI leader Europe remote", "mustWin": "", "support": [] },
+    {
+      "number": 26,
+      "prompt": "fractional CAIO pricing",
+      "mustWin": "/pricing",
+      "support": ["/faq/how-do-you-charge-for-the-work"]
+    }
+  ]
+}

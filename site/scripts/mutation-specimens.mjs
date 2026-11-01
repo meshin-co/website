@@ -108,6 +108,34 @@ const LONG_SENTENCES_OVER_CAP_PAGE = specimenPage([
 ]);
 const LIGHTHOUSE_ROUTES = 'tests/guard-mutations/fixtures/lighthouse-specimen-routes.json';
 const DEAD_PATH_SENTENCE = 'Read `docs/zz-specimen-missing.md` first.';
+const DEMAND_REPORT = '../audits/search-demand.md';
+const DEMAND_PROMPT = { text: 'zz specimen prompt about measured demand', route: '/zz-specimen-route' };
+
+const addDemandPrompt = (copySite) =>
+  editFile(join(copySite, '../docs/SEMANTIC-CORE.md'), (core) =>
+    core.replace(
+      '### GAP register',
+      `**99. ${DEMAND_PROMPT.text}**\nMust win: \`${DEMAND_PROMPT.route}\`.\n\n### GAP register`
+    )
+  );
+
+function addUnprovenRow(report) {
+  const lines = report.split('\n');
+  const header = lines.findIndex((line) => /^\|\s*#\s*\|/.test(line) && line.includes('Impressions'));
+  if (header === -1) throw new Error('specimen found no per-prompt table in the demand report');
+  const names = lines[header]
+    .split('|')
+    .slice(1, -1)
+    .map((cell) => cell.trim());
+  const cells = {
+    '#': '99',
+    Prompt: DEMAND_PROMPT.text,
+    'Must win': `\`${DEMAND_PROMPT.route}\``,
+    Impressions: 'unproven',
+  };
+  lines.splice(header + 2, 0, `| ${names.map((name) => cells[name] ?? '-').join(' | ')} |`);
+  return lines.join('\n');
+}
 
 const SERVICE_ROBOTS = [
   '<meta content="index, follow" name="robots">',
@@ -511,6 +539,36 @@ export const SPECIMENS = {
   emptyCollectionIndexable: withNoLiveServices('/services is indexable but has no live service entry'),
   emptyCollectionMirrorShips: withNoLiveServices('/services.md ships but /services has no live service entry'),
   emptyCollectionListed: withNoLiveServices('/sitemap-0.xml lists /services but /services has no live service entry'),
+  demandReportStale: {
+    gate: 'gate:demand',
+    token: 'report-stale audits/search-demand.md: measured 2020-01-01; refresh with npm run audit:demand',
+    plant: (copySite) =>
+      editFile(join(copySite, DEMAND_REPORT), (report) =>
+        report.replace(/^([*_]*Measured:[*_]*\s*)\d{4}-\d{2}-\d{2}/m, (_, label) => `${label}2020-01-01`)
+      ),
+  },
+  demandPromptWithoutRow: {
+    gate: 'gate:demand',
+    token: `prompt 99 "${DEMAND_PROMPT.text}" (must win ${DEMAND_PROMPT.route}) has no row in audits/search-demand.md`,
+    plant: addDemandPrompt,
+  },
+  demandClaimOutrunsData: {
+    gate: 'gate:demand',
+    token: `docs/zz-specimen-claim.md:3: says prompt 99 is won, but audits/search-demand.md records 0 impressions for it ("${DEMAND_PROMPT.text}", must win ${DEMAND_PROMPT.route})`,
+    plant: async (copySite) => {
+      const restorePrompt = await addDemandPrompt(copySite);
+      const restoreRow = await editFile(join(copySite, DEMAND_REPORT), addUnprovenRow);
+      const removeClaim = await addFile(
+        join(copySite, '../docs/zz-specimen-claim.md'),
+        '# Specimen\n\nPrompt 99 is won.\n'
+      );
+      return async () => {
+        await removeClaim();
+        await restoreRow();
+        await restorePrompt();
+      };
+    },
+  },
   ...evidenceSpecimens({ addUntrackedFile }),
   ...SPEC_SPECIMENS,
 };
