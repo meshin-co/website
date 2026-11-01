@@ -25,11 +25,13 @@ call away.
 
 ## What changes
 
-**The numbers enter the repository.** `npm run audit:demand` queries the property for a 90-day
-window and writes `audits/search-demand.md`: totals, the queries that produced impressions with
-their position and CTR, the pages that carried them, and a per-prompt table joining the 30 buyer
-prompts to what was measured. The report is committed; the raw API response is not, because it is
-reproducible.
+**The numbers enter the repository.** `npm run audit:demand` queries the property for a window that
+starts 90 days before its last day, so it spans 91 days with both ends counted, and whose last day
+is two days before the day the command runs, because Search Console may not have finished counting
+the newest days. It writes `audits/search-demand.md`: totals, the queries that produced impressions
+with their position and CTR, the pages that carried them, and a per-prompt table joining the 30
+buyer prompts to what was measured. The report is committed; the raw API response is not, because
+it is reproducible.
 
 **The loop gains a step that names its input.** A new skill says how the next article is chosen:
 a query with impressions and a position between 8 and 30 is a page one step away; a core prompt
