@@ -67,7 +67,7 @@ test('the files an assets script writes are generated outputs, including a path 
       }),
       'site/scripts/generate-logo.mjs': [
         "writeFileSync('public/logo.svg', a);",
-        'writeFileSync(\`public/brand/\${name}-512.png\`, b);',
+        `writeFileSync(\`public/brand/\${name}-512.png\`, b);`,
         "await writeFile(join(siteRoot, 'public', 'robots.txt'), c);",
         "writeFileSync('../docs/ledger.md', d);",
       ].join('\n'),
