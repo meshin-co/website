@@ -62,8 +62,8 @@
 
 ## 4. Keep it true
 
-- [ ] 4.1 `npm run gate:partition`, in `ci.yml` and the skill that names it, once 1.6 to 1.8 leave
-      zero findings
+- [ ] 4.1 Wire the partition as an npm gate, in `ci.yml` and in the skill that names it, once 1.6
+      to 1.9 leave zero findings
 - [ ] 4.2 A planted specimen and a `mutation-smoke.mjs` row for each finding, and for an export that
       no longer builds
 - [ ] 4.3 Decide whether the export proof runs in the gate, in the pre-push hook or on demand, and
