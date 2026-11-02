@@ -6,7 +6,13 @@ import { join } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
-import { gitObjectType, LEGACY_PROSE_PROVENANCE, provenanceFindings, withProvenance } from './evidence-gate.mjs';
+import {
+  gitObjectType,
+  LEGACY_PROSE_PROVENANCE,
+  provenanceFindings,
+  provenanceOf,
+  withProvenance,
+} from './evidence-gate.mjs';
 
 const commits = () => 'commit';
 const generated = (body) => `# Report\n\nGenerated from raw check output by \`scripts/report.mjs\`.\n\n${body}`;
@@ -204,4 +210,11 @@ test('a report that says FAIL is not evidence, however well it names the commit 
       detail: 'reads "Result: FAIL": a report committed as evidence records a run that passed',
     },
   ]);
+});
+
+test('the stamp of a file is read back as the text after "Generated-from:", and is absent when there is none', () => {
+  assert.equal(provenanceOf(withProvenance('# Report\n\nBody.\n', '3fa620f')), '3fa620f');
+  assert.equal(provenanceOf(PROSE), 'a revision before `6a0c9c2`, whose byte-budget assertion read a field');
+  assert.equal(provenanceOf('# Report\n\nNo stamp here.\n'), undefined);
+  assert.equal(provenanceOf('# Report\n\nGenerated-from:   \n'), undefined);
 });

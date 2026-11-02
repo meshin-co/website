@@ -20,10 +20,13 @@ import {
 import { bandRecordFindings, committedBand, generationReport } from './autowriter-record-rules.mjs';
 import { describeProblem } from './autowriter-records.mjs';
 import { historyReport, skippedLine } from './autowriter-refusal-rules.mjs';
+import { spendReportFindings } from './autowriter-spend-rules.mjs';
 import { REQUIRED_JOBS } from './ci-aggregate.mjs';
 import { WORKFLOW_PATH, aggregateWiringFindings } from './ci-aggregate-wiring.mjs';
 import { GENERATION_DIR } from './generation-record.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
+import { corpusFiles } from './spend-report.mjs';
+import { REPORT_PATH } from './spend-report-text.mjs';
 
 const CORE_PATH = 'docs/SEMANTIC-CORE.md';
 const CONFIG_PATH = 'site/src/config.yaml';
@@ -115,6 +118,7 @@ export function autowriterReport({
   band = null,
   bandRecord = [],
   history = { findings: [], commits: null },
+  spendReport = null,
 }) {
   const readClaims = claims.map(parsed);
   const valid = readClaims
@@ -130,6 +134,7 @@ export function autowriterReport({
     ...generationReport({ records, readEntry, band }),
     ...bandRecord,
     ...history.findings,
+    ...(spendReport === null ? [] : spendReportFindings(spendReport)),
   ];
   const counts = {
     ledgers: ledgers.length,
@@ -178,6 +183,7 @@ function main(repoArgument) {
     suffix: titleSuffix(brandFromDisk(join(repo, CONFIG_PATH))),
     now: new Date(),
     history,
+    spendReport: { ...corpusFiles(repo), committed: readIfPresent(join(repo, REPORT_PATH)) },
   });
   for (const { rule, path, detail } of report.findings) console.error(`AUTOWRITER ${rule} ${path}: ${detail}`);
   if (history.skipped !== null) console.log(skippedLine(history.skipped));

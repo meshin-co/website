@@ -178,6 +178,9 @@ export const FAMILIES = [
   { id: 'autowriter-sentence-band-record-stale', kind: 'specimen', specimen: 'autowriterBandRecordStale' },
   { id: 'autowriter-record-measurement-forged', kind: 'specimen', specimen: 'autowriterBandMeasurementForged' },
   { id: 'autowriter-sentence-band-corpus-drifted', kind: 'specimen', specimen: 'autowriterBandRecordCorpusDrifted' },
+  { id: 'autowriter-spend-report-stale', kind: 'specimen', specimen: 'autowriterSpendReportStale' },
+  { id: 'autowriter-spend-report-edited-by-hand', kind: 'specimen', specimen: 'autowriterSpendReportEdited' },
+  { id: 'autowriter-spend-report-deleted', kind: 'specimen', specimen: 'autowriterSpendReportDeleted' },
   { id: 'autowriter-commit-moves-the-sentence-band', kind: 'specimen', specimen: 'autowriterCommitMovesTheBand' },
   {
     id: 'autowriter-commit-writes-the-lighthouse-record',

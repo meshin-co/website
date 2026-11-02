@@ -13,6 +13,8 @@ import { RUN_DATE, claimFor, cleanDraft } from './fixtures/writer-drafts.mjs';
 import { ROUTES, adapterOn, completed, modelList, reply } from './fixtures/writer-vendors.mjs';
 import { makeRepo, removeRepo } from './fixtures/writer-repo.mjs';
 import { generationFile, validateRecord } from './generation-record.mjs';
+import { REPORT_PATH, usdText } from './spend-report-text.mjs';
+import { recordMicro } from './spend-sum.mjs';
 import { generateRun } from './write-run.mjs';
 import { readWriterConfig } from './writer-config.mjs';
 import { WriterError } from './writer-error.mjs';
@@ -184,6 +186,32 @@ test('each entry keeps its own record with its own calls, and the claims are wri
   assert.equal(term.demand.report.table, 'Queries');
   assert.equal(JSON.parse(texts[claimFile(POST.slug)]).status, 'written');
   assert.equal(JSON.parse(texts[claimFile(TERM.slug)]).status, 'written');
+});
+
+test('the one commit also holds the spend report, with a row for each entry at the cost its record stores', async () => {
+  const run = await drive({ steps: [answer(1, cleanDraft('article')), answer(2, cleanDraft('term'))] });
+  assert.ifError(run.error);
+  const texts = textsOf(run.commitCalls[0]);
+  assert.ok(Object.hasOwn(texts, REPORT_PATH), 'the commit holds no spend report');
+  const report = texts[REPORT_PATH];
+  assert.match(report, new RegExp(`^Generated-from: ${'b'.repeat(40)}$`, 'm'));
+  const rows = report
+    .split('\n')
+    .filter((line) => line.startsWith('| 20'))
+    .map((line) =>
+      line
+        .slice(1, -1)
+        .split('|')
+        .map((cell) => cell.trim())
+    );
+  for (const claim of [POST, TERM]) {
+    const record = JSON.parse(texts[generationFile(claim.slug)]);
+    const row = rows.find((cells) => cells[2] === claim.slug);
+    assert.ok(row, `no row for ${claim.slug}`);
+    assert.equal(row[1], record.entry.format);
+    assert.equal(row[5], usdText(recordMicro(record)));
+  }
+  assert.doesNotMatch(report, /No entry yet/);
 });
 
 test('the one ledger adds up both entries and the summary reports them apart', async () => {

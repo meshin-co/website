@@ -10,6 +10,7 @@ import { historySpecimens } from './autowriter-history-specimens.mjs';
 import { autowriterSpecimens } from './autowriter-specimens.mjs';
 import { ENTRY_PATH, FACT, RECORD_PATH, realBandFiles } from './fixtures/record-rules-scene.mjs';
 import { addUntrackedFile, editFile, flatten, SPECIMENS } from './mutation-specimens.mjs';
+import { spendReportFile } from './spend-report.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
 const REPO = resolve(SITE, '..');
@@ -32,6 +33,9 @@ async function inTempRepo(check, extra = {}) {
       mkdirSync(dirname(join(root, path)), { recursive: true });
       writeFileSync(join(root, path), body);
     }
+    const report = spendReportFile({ repoRoot: root, revision: 'abc1234' });
+    mkdirSync(dirname(join(root, report.path)), { recursive: true });
+    writeFileSync(join(root, report.path), report.text);
     return await check(root);
   } finally {
     rmSync(root, { recursive: true, force: true });
@@ -77,6 +81,9 @@ test('the specimen module names every failure mode of the gate, each against gat
     'autowriterLedgerOffSchema',
     'autowriterMeasurementDebtMissing',
     'autowriterProseOffTheBand',
+    'autowriterSpendReportDeleted',
+    'autowriterSpendReportEdited',
+    'autowriterSpendReportStale',
   ]);
   const tokens = NAMES.map((name) => SPECIMENS[name].token);
   assert.equal(new Set(tokens).size, tokens.length, 'two specimens share a token');

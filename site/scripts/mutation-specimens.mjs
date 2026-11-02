@@ -586,7 +586,7 @@ export const SPECIMENS = {
       };
     },
   },
-  ...autowriterSpecimens({ addUntrackedFile, editFile }),
+  ...autowriterSpecimens({ addUntrackedFile, editFile, removeFile }),
   ...evidenceSpecimens({ addUntrackedFile }),
   ...engineSpecimens({ editFile, removeFile }),
   ...unattendedSpecimens({ editFile, removeFile }),

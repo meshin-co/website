@@ -27,6 +27,7 @@ an unknown field is a finding.
   `band-measurement-differs`: the record's measurement is not what the entry measures. The limits a record carries are only a note of what it was judged against, so a re-measure of the band never invalidates an old record. `generation-band-unjudged`: no band for the entry's format.
 - **record-missing, record-\*-stale, band-record-unmeasurable:** `audits/sentence-band.json` is absent or differs
   from a fresh measurement; repair it with `node scripts/measure-sentence-band.mjs --write`.
+- **spend-report-missing, spend-report-differs:** `audits/spend-report.md` is absent or is not what the records give; see `report-what-the-writer-spends.md`.
 
 The numbers (12-hour quarantine, 3 attempts, $25 a month) live in `scripts/autowriter-ledger.mjs`;
 `scripts/autowriter-ledger.test.mjs` fails when locked row L62 disagrees with them. The gate itself is

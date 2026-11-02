@@ -257,3 +257,14 @@ jobs:
           node scripts/escalate-run.mjs --ledger-dir "$RUNNER_TEMP/escalations" --slug "$slug" --kind hard-stop \
             --title "Write daily wrote $slug but could not open its pull request" \
             --detail "The branch autowriter/$slug was written and money was spent; pushing it, opening the pull request or starting the Watch PR workflow failed. Read the log of this run, then open the pull request by hand or delete the branch."
+
+      - name: post what the written entries cost to Slack
+        if: ${{ !cancelled() && steps.write.outcome == 'success' }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          status=0
+          node scripts/spend-report.mjs notify --result "$WRITE_RESULT_FILE" > "$RUNNER_TEMP/spend-report-notice.txt" 2>&1 || status=$?
+          cat "$RUNNER_TEMP/spend-report-notice.txt"
+          cat "$RUNNER_TEMP/spend-report-notice.txt" >> "$GITHUB_STEP_SUMMARY"
+          exit "$status"

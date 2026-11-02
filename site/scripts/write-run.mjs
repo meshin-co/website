@@ -18,6 +18,8 @@ import {
 import { headFingerprint } from './lh-evidence.mjs';
 import { BRANCH_PREFIX } from './pr-classify.mjs';
 import { assembleRoute } from './route-assembly.mjs';
+import { spendReportFile } from './spend-report.mjs';
+import { REPORT_PATH } from './spend-report-text.mjs';
 import { CORRECTION_ROUNDS, draftEntry } from './write-draft.mjs';
 import { openRun } from './write-open.mjs';
 import { createAdapter } from './writer-adapter.mjs';
@@ -193,6 +195,7 @@ async function execute({ opened, states, stage }) {
   const ownFiles = [
     ...shipped.flatMap(({ claim }) => [generationFile(claim.slug), claimFile(claim.slug)]),
     opened.ledgerPath,
+    REPORT_PATH,
   ];
   const files = [...assembly.files.map(({ path }) => path), ...ownFiles];
   const tree = await stage.treeOf({ repoRoot: stage.repoRoot, run: stage.run });
@@ -202,14 +205,16 @@ async function execute({ opened, states, stage }) {
     ...shipped.map(({ claim }) => ({ path: claimFile(claim.slug), text: textOf(writtenClaim(claim)) })),
     { path: opened.ledgerPath, text: textOf(ledgerFor({ ledger: opened.ledger, calls })) },
   ];
+  const report = spendReportFile({ repoRoot: stage.repoRoot, written, revision: tree.parent });
+  const committed = [...assembly.files, ...written, { path: report.path, text: report.text }];
   const message = commitMessage({ shipped, assembly });
-  assertNoSecrets({ files: [...assembly.files, ...written], message }, secretsOf([stage.vendor]), 'the run output');
+  assertNoSecrets({ files: committed, message }, secretsOf([stage.vendor]), 'the run output');
   const anchor = shipped.find((state) => state.anchor);
   const branch = `${BRANCH_PREFIX}${anchor.claim.slug}`;
   const { commit } = await stage.commit({
     repoRoot: stage.repoRoot,
     branch,
-    files: [...assembly.files, ...written],
+    files: committed,
     message,
     run: stage.run,
   });

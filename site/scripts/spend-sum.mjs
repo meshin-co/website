@@ -16,7 +16,7 @@ const writingCostUsd = (record) =>
   record.calls
     .filter(({ role }) => WRITING_ROLES.includes(role))
     .reduce((total, { costUsd }) => total + microOf(costUsd), 0) / MICRO;
-const recordMicro = (record) => (record ? microOf(writingCostUsd(record)) : 0);
+export const recordMicro = (record) => (record ? microOf(writingCostUsd(record)) : 0);
 const ledgerGenerationMicro = (ledger) => microOf(ledger.generation?.costUsd ?? 0);
 
 function generationPart({ ledger, record }, month) {

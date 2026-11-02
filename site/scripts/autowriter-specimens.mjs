@@ -6,6 +6,7 @@ import { generatedTitles, normaliseTitle } from './autowriter-claims.mjs';
 import { historySpecimens } from './autowriter-history-specimens.mjs';
 import { ATTEMPT_CAP } from './autowriter-ledger.mjs';
 import { recordSpecimens } from './autowriter-record-specimens.mjs';
+import { spendSpecimens } from './autowriter-spend-specimens.mjs';
 
 const GATE = 'gate:autowriter';
 const HASH = 'c'.repeat(40);
@@ -102,7 +103,7 @@ const planLedger = (addUntrackedFile, build) => (copySite) =>
 const planWorkflowEdit = (editFile, from, to) => (copySite) =>
   editFile(join(copySite, WORKFLOW_PATH), (text) => text.replace(from, to));
 
-export const autowriterSpecimens = ({ addUntrackedFile, editFile }) => ({
+export const autowriterSpecimens = ({ addUntrackedFile, editFile, removeFile }) => ({
   autowriterLedgerOffSchema: {
     gate: GATE,
     token: 'ledger-schema audits/autowriter/zz-specimen.json',
@@ -166,5 +167,6 @@ export const autowriterSpecimens = ({ addUntrackedFile, editFile }) => ({
     plant: planWorkflowEdit(editFile, AGGREGATE_NAME, 'name: all required jobs passed'),
   },
   ...recordSpecimens({ addUntrackedFile, editFile }),
+  ...spendSpecimens({ addUntrackedFile, editFile, removeFile }),
   ...historySpecimens(),
 });

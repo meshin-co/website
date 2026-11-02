@@ -43,6 +43,8 @@ function revisionFinding(path, provenance, objectType) {
 
 const FAILING_RESULT = /^Result: FAIL$/m;
 
+export const provenanceOf = (text) => PROVENANCE.exec(text)?.[1]?.trim() || undefined;
+
 export function provenanceFindings(artefacts, objectType) {
   return artefacts.flatMap(({ path, text }) => {
     if (!ARTEFACT.test(path)) return [];
@@ -54,7 +56,7 @@ export function provenanceFindings(artefacts, objectType) {
           detail: 'reads "Result: FAIL": a report committed as evidence records a run that passed',
         },
       ];
-    const provenance = PROVENANCE.exec(text)?.[1]?.trim();
+    const provenance = provenanceOf(text);
     if (!provenance)
       return [
         {

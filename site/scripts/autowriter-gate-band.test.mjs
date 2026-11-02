@@ -15,6 +15,7 @@ import {
   realBandFiles,
   recordWith,
 } from './fixtures/record-rules-scene.mjs';
+import { plantSpendReport } from './fixtures/spend-report-plant.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
 const REPO = resolve(SITE, '..');
@@ -34,6 +35,7 @@ function inTempRepo(plant, check) {
       mkdirSync(dirname(join(root, path)), { recursive: true });
       writeFileSync(join(root, path), text);
     }
+    plantSpendReport(root);
     return check(root);
   } finally {
     rmSync(root, { recursive: true, force: true });

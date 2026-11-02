@@ -16,6 +16,8 @@ import {
   realBandFiles,
   recordWith,
 } from './fixtures/record-rules-scene.mjs';
+import { spendReportFile } from './spend-report.mjs';
+import { REPORT_PATH, reportText } from './spend-report-text.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
 const REPO = resolve(SITE, '..');
@@ -317,6 +319,10 @@ test('the summary line says how many files were read, so a gate that read nothin
 
 function inTempRepo(plant, check) {
   const root = mkdtempSync(join(tmpdir(), 'autowriter-gate-'));
+  const put = (path, text) => {
+    mkdirSync(dirname(join(root, path)), { recursive: true });
+    writeFileSync(join(root, path), text);
+  };
   try {
     for (const [path, text] of Object.entries({
       'site/src/config.yaml': 'site:\n  name: meshin.co\n',
@@ -325,8 +331,11 @@ function inTempRepo(plant, check) {
       ...realBandFiles(),
       ...plant,
     })) {
-      mkdirSync(dirname(join(root, path)), { recursive: true });
-      writeFileSync(join(root, path), text);
+      if (text !== null) put(path, text);
+    }
+    if (!Object.hasOwn(plant, REPORT_PATH)) {
+      const { path, text } = spendReportFile({ repoRoot: root, revision: 'abc1234' });
+      put(path, text);
     }
     return check(root);
   } finally {
@@ -437,3 +446,31 @@ test('the command run against the real repository finds nothing, which is what C
   assert.equal(run.status, 0, run.stderr);
   assert.match(run.stdout, /, 0 findings$/m);
 });
+
+test('the command refuses a spend report that disagrees with the records, and names the line', () =>
+  inTempRepo(
+    {
+      [RECORD_PATH]: asJson(recordWith({ band: realBand() })),
+      [ENTRY_PATH]: entryText(),
+      [REPORT_PATH]: reportText({ ledgers: [], records: [] }, 'abc1234'),
+    },
+    (root) => {
+      const run = gate(root);
+      assert.equal(run.status, 1);
+      const lines = run.stderr.trim().split('\n');
+      assert.ok(
+        lines.some((line) => line.startsWith(`AUTOWRITER spend-report-differs ${REPORT_PATH}: line `)),
+        run.stderr
+      );
+      assert.match(run.stdout, /, 1 generation records, 1 findings$/m);
+    }
+  ));
+
+test('the command refuses a missing spend report even when there is nothing to report on', () =>
+  inTempRepo({ [REPORT_PATH]: null }, (root) => {
+    const run = gate(root);
+    assert.equal(run.status, 1);
+    assert.deepEqual(run.stderr.trim().split('\n'), [
+      `AUTOWRITER spend-report-missing ${REPORT_PATH}: the file does not exist; run npm run audit:spend to write it`,
+    ]);
+  }));
