@@ -8,7 +8,7 @@ import { test } from 'node:test';
 import { ATTEMPT_CAP, ledgerFile } from './autowriter-ledger.mjs';
 import { historySpecimens } from './autowriter-history-specimens.mjs';
 import { autowriterSpecimens } from './autowriter-specimens.mjs';
-import { ENTRY_PATH, FACT, RECORD_PATH, realBandFiles } from './fixtures/record-rules-scene.mjs';
+import { ENTRY_PATH, FACT, RECORD_PATH, bandSceneFiles } from './fixtures/record-rules-scene.mjs';
 import { addUntrackedFile, editFile, flatten, SPECIMENS } from './mutation-specimens.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
@@ -17,7 +17,7 @@ const FILES = {
   'site/src/config.yaml': 'site:\n  name: meshin.co\n',
   'docs/SEMANTIC-CORE.md': readFileSync(join(REPO, 'docs/SEMANTIC-CORE.md'), 'utf8'),
   '.github/workflows/ci.yml': readFileSync(join(REPO, '.github/workflows/ci.yml'), 'utf8'),
-  ...realBandFiles(),
+  ...bandSceneFiles(),
 };
 const NAMES = Object.keys(autowriterSpecimens({})).sort();
 const PLAIN_NAMES = NAMES.filter((name) => !Object.hasOwn(historySpecimens(), name));
@@ -61,6 +61,7 @@ test('the specimen module names every failure mode of the gate, each against gat
     'autowriterAttemptsOverCap',
     'autowriterBandMeasurementForged',
     'autowriterBandRecordCorpusDrifted',
+    'autowriterBandRecordDistributionDrifted',
     'autowriterBandRecordStale',
     'autowriterClaimTitleCollides',
     'autowriterCommitMovesTheBand',
@@ -104,8 +105,8 @@ for (const name of PLAIN_NAMES) {
   });
 }
 
-const REAL = JSON.parse(FILES['audits/sentence-band.json']);
-const LIMITS = REAL.bands.article;
+const SCENE = JSON.parse(FILES['audits/sentence-band.json']);
+const LIMITS = SCENE.bands.article;
 const percent = (share) => `${Number((share * 100).toFixed(2))}%`;
 const describeCorpus = ({ article, term }) =>
   `${article.entries} article entries with ${article.sentences} sentences, ${term.entries} term entries with ${term.sentences} sentences`;
@@ -117,8 +118,8 @@ const BAND_TEXT =
 const COMMAND = '(re-measure with: node scripts/measure-sentence-band.mjs --write)';
 const ELEVEN_WORDS_BELOW = `${entryLine('below-threshold-share')}10 of 10 sentences (100%) are under 12 words; the band allows ${Math.floor(LIMITS.belowThresholdCap * 10)}; ${BAND_TEXT}`;
 const DRIFTED_CORPUS = {
-  ...REAL.corpus,
-  article: { ...REAL.corpus.article, entries: REAL.corpus.article.entries + 1 },
+  ...SCENE.corpus,
+  article: { ...SCENE.corpus.article, entries: SCENE.corpus.article.entries + 1 },
 };
 
 const MESSAGES = [
@@ -145,7 +146,11 @@ const MESSAGES = [
   ],
   [
     'autowriterBandRecordCorpusDrifted',
-    `AUTOWRITER record-corpus-stale audits/sentence-band.json: the record measured ${describeCorpus(DRIFTED_CORPUS)}; the corpus now has ${describeCorpus(REAL.corpus)} ${COMMAND}`,
+    `AUTOWRITER record-corpus-stale audits/sentence-band.json: the record measured ${describeCorpus(DRIFTED_CORPUS)}; the corpus now has ${describeCorpus(SCENE.corpus)} ${COMMAND}`,
+  ],
+  [
+    'autowriterBandRecordDistributionDrifted',
+    `AUTOWRITER record-distribution-stale audits/sentence-band.json: the recorded distribution differs from a fresh measurement of the corpus ${COMMAND}`,
   ],
   [
     'autowriterLedgerOffSchema',

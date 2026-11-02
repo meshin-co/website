@@ -13,7 +13,7 @@ import {
   RECORD_PATH,
   asJson,
   entryText,
-  realBandFiles,
+  bandSceneFiles,
   recordWith,
 } from './fixtures/record-rules-scene.mjs';
 
@@ -322,7 +322,7 @@ function inTempRepo(plant, check) {
       'site/src/config.yaml': 'site:\n  name: meshin.co\n',
       'docs/SEMANTIC-CORE.md': CORE,
       '.github/workflows/ci.yml': WORKFLOW,
-      ...realBandFiles(),
+      ...bandSceneFiles(),
       ...plant,
     })) {
       mkdirSync(dirname(join(root, path)), { recursive: true });
@@ -399,19 +399,19 @@ test('the command exits 1 and names the file and the rule for each defect plante
   ));
 
 const BAND_PATH = 'audits/sentence-band.json';
-const realBand = () => JSON.parse(realBandFiles()[BAND_PATH]);
+const sceneBand = () => JSON.parse(bandSceneFiles()[BAND_PATH]);
 
 test('a valid generation record and its entry pass, and the summary counts the record', () =>
-  inTempRepo({ [RECORD_PATH]: asJson(recordWith({ band: realBand() })), [ENTRY_PATH]: entryText() }, (root) => {
+  inTempRepo({ [RECORD_PATH]: asJson(recordWith({ band: sceneBand() })), [ENTRY_PATH]: entryText() }, (root) => {
     const run = gate(root);
     assert.equal(run.status, 0, run.stderr);
     assert.match(run.stdout, /, 1 generation records, 0 findings$/m);
   }));
 
 test('the command names the file and the rule of a corrupted record and of a stale band record', () => {
-  const band = realBand();
+  const band = sceneBand();
   band.bands.article.medianFloor += 1;
-  const corrupted = { ...recordWith({ band: realBand() }), schema: 2 };
+  const corrupted = { ...recordWith({ band: sceneBand() }), schema: 2 };
   inTempRepo(
     {
       [RECORD_PATH]: asJson(corrupted),

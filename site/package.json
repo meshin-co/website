@@ -71,7 +71,7 @@
     "preview": "astro preview",
     "smoke:prod": "node scripts/run-smoke-prod.mjs",
     "start": "astro dev",
-    "test": "node --test \"scripts/*.test.mjs\" \"src/utils/*.test.mjs\" \"src/data/*.test.mjs\"",
+    "test": "node --test \"scripts/*.test.mjs\" \"scripts/fixtures/*.test.mjs\" \"src/utils/*.test.mjs\" \"src/data/*.test.mjs\"",
     "test:smoke": "node scripts/mutation-smoke.mjs",
     "watch:pr": "node scripts/pr-watch.mjs",
     "write:entry": "node --env-file-if-exists=.env scripts/write-entry.mjs"
