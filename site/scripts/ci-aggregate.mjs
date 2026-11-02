@@ -12,7 +12,6 @@ const EXPECTATIONS = {
   changes: { reason: ALWAYS, runs: () => true },
   build: { reason: ON_CODE, runs: ({ code }) => code },
   'types-and-units': { reason: ALWAYS, runs: () => true },
-  'guard-mutations': { reason: ON_CODE, runs: ({ code }) => code },
   'cheap-gates': { reason: ON_CODE, runs: ({ code }) => code },
   'visual-and-axe': { reason: ON_CODE, runs: ({ code }) => code },
   'deploy-preview': { reason: ON_CODE_PULL_REQUEST, runs: ({ code, event }) => code && event === 'pull_request' },

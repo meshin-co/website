@@ -9,7 +9,7 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
    directory per change, and `openspec list --sort name` is the board. Read the one change in
    flight, its `proposal.md` and `tasks.md`, and nothing more until you need it; a change parked
    by a `blocked.md` is not in flight. Closed changes are archived under
-   `openspec/changes/archive/`. The locked decisions L1–L66 live in
+   `openspec/changes/archive/`. The locked decisions L1–L67 live in
    `docs/plan/reference/locked-decisions.md`; the gate procedure in
    `docs/plan/reference/calibration-gate.md`. `npm run gate:spec` refuses the mistakes, among them
    a spec the validator rejects, an index that differs from a regeneration and a second change in
@@ -175,14 +175,18 @@ npm run preview    # serve dist for local gate runs
 npm run gate:lh    # both form factors, all audited routes, ~30 min
 npm run gate:docs  # every path, command and locked-row range a document cites; a path git ignores fails; records exempt
 npm run smoke:prod # 17 live requests against any origin, plus 2 www checks on the apex, 21 checks
-npm run test:smoke # every guard family proven able to fail, ~60 s
+npm run test:smoke # every guard family proven able to fail, ~5 min, run by .githooks/pre-push
 ```
 
 CI classifies the diff first. A commit touching only `docs/`, `audits/`, `site/.agents/`, `openspec/`
 or any other Markdown (`investigation/` included) runs the `types-and-units` job and nothing else,
 because prose cannot change what a gate measures. Anything else — source, config, content
 Markdown under `site/src/data/`, the workflow itself — runs the full parallel graph: one build, then
-check+units, guard-mutations, cheap gates and Playwright (3 shards) in parallel.
-Lighthouse is not in CI (L59): it runs locally on a quiet machine, `.githooks/pre-push` refuses a
-push whose tree no recorded green run measured, and a single shard by hand is
-`LHCI_FORM_FACTOR=mobile LH_SHARD_INDEX=1 LH_SHARD_TOTAL=4 npm run gate:lh:one`.
+check+units, cheap gates and Playwright (3 shards) in parallel.
+Neither Lighthouse nor the guard proof is in CI. Lighthouse runs locally on a quiet machine (L59)
+and `.githooks/pre-push` refuses a push whose tree no recorded green run measured; a single shard
+by hand is `LHCI_FORM_FACTOR=mobile LH_SHARD_INDEX=1 LH_SHARD_TOTAL=4 npm run gate:lh:one`.
+`npm run test:smoke` needs a build and three browsers, about twelve minutes of every CI run, on
+work that cannot change between a local push and the same commit, so the same hook runs it when
+the push touches `site/scripts`, `site/tests/guard-mutations`, `site/package.json` or
+`.github/workflows` (L67). Install the hooks once: `git config core.hooksPath .githooks`.

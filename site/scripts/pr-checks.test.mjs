@@ -24,7 +24,6 @@ test('every required job succeeding beside a green aggregate is green, and names
     'changes',
     'cheap-gates',
     'deploy-preview',
-    'guard-mutations',
     'types-and-units',
     'visual-and-axe (1)',
     'visual-and-axe (2)',

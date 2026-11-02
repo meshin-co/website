@@ -86,24 +86,6 @@ jobs:
           SPEC_GATE_RANGE: ${{ github.event_name == 'pull_request' && format('{0}..{1}', github.event.pull_request.base.sha, github.event.pull_request.head.sha) || format('{0}..{1}', github.event.before, github.sha) }}
       - run: npm run gate:brand
 
-  guard-mutations:
-    if: github.event_name != 'workflow_dispatch' && needs.changes.outputs.code == 'true'
-    needs: [changes, types-and-units]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: site/.nvmrc
-          cache: npm
-          cache-dependency-path: site/package-lock.json
-      - run: npm ci
-      - run: npx playwright install --with-deps chromium webkit firefox
-      - name: every guard proven able to fail
-        run: npm run test:smoke
-
   cheap-gates:
     if: github.event_name != 'workflow_dispatch' && needs.changes.outputs.code == 'true'
     needs: [changes, build, types-and-units]
@@ -182,7 +164,7 @@ jobs:
 
   deploy-preview:
     if: github.event_name == 'pull_request' && needs.changes.outputs.code == 'true'
-    needs: [changes, build, types-and-units, guard-mutations, cheap-gates, visual-and-axe]
+    needs: [changes, build, types-and-units, cheap-gates, visual-and-axe]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -247,7 +229,7 @@ jobs:
 
   cancel-on-failure:
     if: failure()
-    needs: [build, types-and-units, guard-mutations, cheap-gates, visual-and-axe]
+    needs: [build, types-and-units, cheap-gates, visual-and-axe]
     runs-on: ubuntu-latest
     permissions:
       actions: write
@@ -258,7 +240,7 @@ jobs:
   all-required-jobs-passed:
     name: ${{ github.event_name == 'pull_request' && 'all required jobs passed' || format('all required jobs passed ({0})', github.event_name) }}
     if: always() && github.event_name != 'workflow_dispatch'
-    needs: [changes, build, types-and-units, guard-mutations, cheap-gates, visual-and-axe, deploy-preview]
+    needs: [changes, build, types-and-units, cheap-gates, visual-and-axe, deploy-preview]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

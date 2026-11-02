@@ -6,15 +6,7 @@ import { PENDING } from './mutation-pending.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 
 const ARCHIVE_DATE = /^\d{4}-\d{2}-\d{2}-/;
-const UNWAIVABLE = new Set([
-  'gate:spec',
-  'gate:docs',
-  'gate:plan',
-  'gate:skills',
-  'gate:evidence',
-  'gate:brand',
-  'test:smoke',
-]);
+const UNWAIVABLE = new Set(['gate:spec', 'gate:docs', 'gate:plan', 'gate:skills', 'gate:evidence', 'gate:brand']);
 
 const cellsOf = (line) =>
   line

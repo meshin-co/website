@@ -12,7 +12,6 @@ const needsOf = (code, overrides = {}) => {
     changes: 'success',
     'types-and-units': 'success',
     build: ran ? 'success' : 'skipped',
-    'guard-mutations': ran ? 'success' : 'skipped',
     'cheap-gates': ran ? 'success' : 'skipped',
     'visual-and-axe': ran ? 'success' : 'skipped',
     'deploy-preview': ran ? 'success' : 'skipped',
@@ -34,7 +33,6 @@ test('exports name the job, the check and the seven required jobs in workflow or
     'changes',
     'build',
     'types-and-units',
-    'guard-mutations',
     'cheap-gates',
     'visual-and-axe',
     'deploy-preview',
@@ -53,7 +51,7 @@ for (const [label, event, needs] of passing) {
   test(`passes: ${label}`, () => {
     const verdict = aggregateVerdict({ needs, event });
     assert.deepEqual(verdict.problems, []);
-    assert.equal(verdict.lines.length, 7);
+    assert.equal(verdict.lines.length, 6);
   });
 }
 
@@ -90,7 +88,7 @@ for (const job of REQUIRED_JOBS) {
   });
 }
 
-for (const job of ['build', 'guard-mutations', 'cheap-gates', 'visual-and-axe', 'deploy-preview']) {
+for (const job of ['build', 'cheap-gates', 'visual-and-axe', 'deploy-preview']) {
   test(`${job} cancelled on a prose diff is still a problem`, () => {
     const { problems } = aggregateVerdict({ needs: needsOf('false', { [job]: 'cancelled' }), event: 'pull_request' });
     assert.deepEqual(problems, [`${job} was cancelled`]);
@@ -106,7 +104,6 @@ test('changes failing fails once and does not pile skipped reports on the others
   const needs = needsOf('true', {
     changes: 'failure',
     build: 'skipped',
-    'guard-mutations': 'skipped',
     'cheap-gates': 'skipped',
     'visual-and-axe': 'skipped',
     'deploy-preview': 'skipped',
@@ -183,7 +180,6 @@ test('one line per required job, with result and expectation', () => {
     'changes  success  success',
     'build  skipped  skipped-ok',
     'types-and-units  success  success',
-    'guard-mutations  skipped  skipped-ok',
     'cheap-gates  skipped  skipped-ok',
     'visual-and-axe  skipped  skipped-ok',
     'deploy-preview  skipped  skipped-ok',
@@ -196,7 +192,7 @@ const runCli = (env) =>
 test('cli exits 0 and reports the count when everything is green', () => {
   const run = runCli({ NEEDS: JSON.stringify(needsOf('true')), EVENT_NAME: 'pull_request' });
   assert.equal(run.status, 0, run.stderr);
-  assert.match(run.stdout.trim().split('\n').at(-1), /^aggregate: 7 jobs checked, 0 problems$/);
+  assert.match(run.stdout.trim().split('\n').at(-1), /^aggregate: 6 jobs checked, 0 problems$/);
   assert.equal(run.stderr, '');
 });
 
@@ -207,7 +203,7 @@ test('cli exits 1 when a dependency was cancelled and every other job succeeded'
   });
   assert.equal(run.status, 1);
   assert.match(run.stderr, /^AGGREGATE visual-and-axe was cancelled$/m);
-  assert.match(run.stdout.trim().split('\n').at(-1), /^aggregate: 7 jobs checked, 1 problems$/);
+  assert.match(run.stdout.trim().split('\n').at(-1), /^aggregate: 6 jobs checked, 1 problems$/);
 });
 
 test('cli exits 1 and names a failed job on stderr', () => {

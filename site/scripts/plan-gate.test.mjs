@@ -76,9 +76,13 @@ test('a gate named only in a YAML comment line is not treated as wired', () => {
   assert.deepEqual(gatesMissingFromCi({ 'gate:one': 'x', 'gate:two': 'y' }, workflow), ['gate:one']);
 });
 
-test('test:smoke is checked even without the gate: prefix, because L36 names it explicitly', () => {
+test('test:smoke is still held to a localOnlyGates reason, even without the gate: prefix', () => {
   assert.deepEqual(gatesMissingFromCi({ 'test:smoke': 'node mutation-smoke.mjs' }, ''), ['test:smoke']);
   assert.deepEqual(gatesMissingFromCi({ 'test:smoke': 'node mutation-smoke.mjs' }, '- run: npm run test:smoke'), []);
+});
+
+test('test:smoke may be declared local-only, because the owner moved it to the pre-push hook (L67)', () => {
+  assert.deepEqual(unwaivableGates({ 'test:smoke': 'it runs in .githooks/pre-push' }), []);
 });
 
 test('a script whose documented output lands under audits/ is checked even without the gate: prefix', () => {
@@ -240,10 +244,7 @@ test('the change tree lists the open changes and the archived ones, never the ar
 test('a harness-integrity gate cannot be waived out of CI by a sentence', () => {
   assert.deepEqual(unwaivableGates({ 'gate:lh': 'the matrix runs it per shard' }), []);
   assert.deepEqual(unwaivableGates({ 'gate:spec': 'slow on my laptop' }), ['gate:spec']);
-  assert.deepEqual(unwaivableGates({ 'gate:docs': 'a', 'test:smoke': 'b', 'audit:polish': 'c' }).sort(), [
-    'gate:docs',
-    'test:smoke',
-  ]);
+  assert.deepEqual(unwaivableGates({ 'gate:docs': 'a', 'test:smoke': 'b', 'audit:polish': 'c' }), ['gate:docs']);
 });
 
 test('the summary names what the gate read: the scripts held to ci.yml, the gap rows and the pending specimens', () => {
