@@ -11,6 +11,7 @@ export const REPOSITORY_ROOT = resolve(import.meta.dirname, '..', '..');
 
 const CONFIG_PATH = 'site/engine.config.json';
 const USAGE = 'usage: node scripts/check-engine.mjs [--root <repository root>]';
+export const INTERVIEW_PATH = 'docs/plan/reference/new-site-interview.md';
 
 const finding = (rule, where, detail) => ({ rule, where, detail });
 
@@ -157,6 +158,9 @@ export function main(argv) {
   console.log(
     `engine: ${findings.length} ${noun} (${CONFIG_PATH} defines ${values} values, ${anchors} anchor files expected, the changes job of ${WORKFLOW_PATH} must call the classifier)`
   );
+  if (findings.length > 0) {
+    console.log(`engine: the questions that set these values and create these files are in ${INTERVIEW_PATH}`);
+  }
   process.exitCode = findings.length === 0 ? 0 : 1;
 }
 

@@ -1,7 +1,9 @@
 # Adapt the Engine to a New Site
 
 The writing engine is the set of scripts, workflows and skills that choose a topic, write an entry,
-judge it and merge it (locked row L62). A second site can run it. This skill is the order of work.
+judge it and merge it (locked row L62). A second site can run it. This skill is the order of work. The
+files to copy are in `extract-the-engine-from-a-site.md`. The questions only the owner can answer are in
+`interview-the-owner-of-a-new-site.md`.
 
 ## 1. Run the self-check
 

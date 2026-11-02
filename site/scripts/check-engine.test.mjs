@@ -164,3 +164,13 @@ test('an unknown flag or a missing directory is a usage error: exit 2 and nothin
     assert.match(found.stderr, /usage: node scripts\/check-engine\.mjs/);
   }
 });
+
+test('a run with findings points at the interview that answers them, and a clean run does not', () => {
+  const failing = run(['--root', scene({ configText: null })], tmpdir());
+  assert.match(
+    failing.stdout,
+    /^engine: the questions that set these values and create these files are in docs\/plan\/reference\/new-site-interview\.md$/m
+  );
+  const clean = run([], REPOSITORY);
+  assert.doesNotMatch(clean.stdout, /new-site-interview/);
+});
