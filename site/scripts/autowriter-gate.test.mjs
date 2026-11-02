@@ -450,7 +450,7 @@ test('the command run against the real repository finds nothing, which is what C
 test('the command refuses a spend report that disagrees with the records, and names the line', () =>
   inTempRepo(
     {
-      [RECORD_PATH]: asJson(recordWith({ band: realBand() })),
+      [RECORD_PATH]: asJson(recordWith({ band: sceneBand() })),
       [ENTRY_PATH]: entryText(),
       [REPORT_PATH]: reportText({ ledgers: [], records: [] }, 'abc1234'),
     },
