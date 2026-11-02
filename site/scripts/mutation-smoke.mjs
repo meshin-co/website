@@ -198,6 +198,24 @@ export const FAMILIES = [
   { id: 'autowriter-spend-report-edited-by-hand', kind: 'specimen', specimen: 'autowriterSpendReportEdited' },
   { id: 'autowriter-spend-report-deleted', kind: 'specimen', specimen: 'autowriterSpendReportDeleted' },
   { id: 'autowriter-commit-moves-the-sentence-band', kind: 'specimen', specimen: 'autowriterCommitMovesTheBand' },
+  { id: 'autowriter-commit-moves-the-entry-length', kind: 'specimen', specimen: 'autowriterCommitMovesTheEntryLength' },
+  {
+    id: 'autowriter-commit-removes-a-generation-record',
+    kind: 'specimen',
+    specimen: 'autowriterCommitRemovesAGenerationRecord',
+  },
+  {
+    id: 'autowriter-generated-entry-under-the-length-floor',
+    kind: 'specimen',
+    specimen: 'autowriterGeneratedEntryUnderTheFloor',
+  },
+  { id: 'autowriter-entry-length-record-stale', kind: 'specimen', specimen: 'autowriterLengthRecordStale' },
+  { id: 'autowriter-entry-length-corpus-drifted', kind: 'specimen', specimen: 'autowriterLengthRecordCorpusDrifted' },
+  {
+    id: 'autowriter-entry-length-record-fed-by-the-entry',
+    kind: 'specimen',
+    specimen: 'autowriterLengthRecordFedByTheEntry',
+  },
   {
     id: 'autowriter-commit-writes-the-lighthouse-record',
     kind: 'specimen',

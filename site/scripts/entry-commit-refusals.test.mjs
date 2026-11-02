@@ -47,6 +47,11 @@ const PLACEMENTS = [
   recordPath('disposition', 'earlier-entry', CLAIMED_AT),
   `${recordDirectory('disposition')}/2026/11/extra/generated-earlier-entry.json`,
 ];
+const RECORD_PLACEMENTS = [
+  `${recordDirectory('generation')}/another-entry.json`,
+  recordPath('generation', 'another-entry', CLAIMED_AT),
+  `${recordDirectory('generation')}/2026/11/extra/another-entry.json`,
+];
 const heldRoutes = (root) => JSON.parse(gitIn(root, 'show', `HEAD:${ROUTES}`));
 const asFile = (rows) => `${JSON.stringify(rows, null, 2)}\n`;
 const withDigest = (rows, indexes, digest) =>
@@ -74,6 +79,7 @@ const heldAt = (root, path) => {
 
 const FORBIDDEN = [
   ['audits/sentence-band.json', 'sentence-band'],
+  ['audits/entry-length.json', 'entry-length'],
   ['audits/lighthouse-green.json', 'lighthouse-record'],
   ['audits/phase-zz-specimen/lh-measured.json', 'lighthouse-stamp'],
   ['audits/phase-zz-specimen/lh-desktop/lhr-1.json', 'lighthouse-report'],
@@ -187,6 +193,29 @@ for (const [kind, write, prepare] of BOTH) {
         committed += 1;
       }
       assert.equal(committed, 3);
+    }
+  );
+
+  test(
+    kind +
+      ' cannot remove a generation record: a listed record with no text is refused before git is touched, flat, in its month and below it make three',
+    async () => {
+      let refused = 0;
+      for (const record of RECORD_PLACEMENTS) {
+        const made = open();
+        prepare(made);
+        const before = stateOf(made.root);
+        const run = gitRun();
+
+        await assert.rejects(
+          write({ ...made, files: [...made.files, { path: record }] }, run),
+          refusedWith(record, 'has no text')
+        );
+        refused += 1;
+        assert.deepEqual(stateOf(made.root), before);
+        assert.ok(!changedGit(run.calls), 'git changed something');
+      }
+      assert.equal(refused, 3);
     }
   );
 }

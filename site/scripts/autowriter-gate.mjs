@@ -4,6 +4,7 @@ import { join, resolve } from 'node:path';
 import { brandFromDisk, titleSuffix } from '../src/utils/brand.mjs';
 import { claimFileProblem, generatedTitles, isHolding, titleCollisions, validateClaim } from './autowriter-claims.mjs';
 import { attemptCapProblem, deliveryProblems, fileStemProblem, validateLedger } from './autowriter-ledger.mjs';
+import { lengthFindings } from './autowriter-length-rules.mjs';
 import { bandRecordFindings, committedBand, generationReport } from './autowriter-record-rules.mjs';
 import { describeProblem } from './autowriter-records.mjs';
 import { historyReport, skippedLine } from './autowriter-refusal-rules.mjs';
@@ -105,6 +106,7 @@ export function autowriterReport({
   readEntry = () => null,
   band = null,
   bandRecord = [],
+  lengthRecord = [],
   history = { findings: [], commits: null },
   spendReport = null,
 }) {
@@ -126,6 +128,7 @@ export function autowriterReport({
     ...workflowFindings(workflow),
     ...generationReport({ records, readEntry, band }),
     ...bandRecord,
+    ...lengthRecord,
     ...history.findings,
     ...(spendReport === null ? [] : spendReportFindings(spendReport)),
   ];
@@ -167,6 +170,7 @@ function main(repoArgument) {
     readEntry: (path) => readIfPresent(join(repo, path)),
     band: committedBand(repo),
     bandRecord: bandRecordFindings(repo),
+    lengthRecord: lengthFindings(repo),
     core: readIfPresent(join(repo, CORE_PATH)),
     workflow: readIfPresent(join(repo, WORKFLOW_PATH)),
     suffix: titleSuffix(brandFromDisk(join(repo, CONFIG_PATH))),

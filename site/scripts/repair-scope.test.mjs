@@ -138,9 +138,10 @@ test('a path that climbs out, starts at the root or uses a backslash is refused 
   assert.deepEqual(named(problemsFor(ARTICLE, [...pathsOf(ARTICLE), ...sneaky])), sneaky);
 });
 
-test('the band, the Lighthouse records and the reports are refused by name, not only as outside', () => {
+test('the band, the length record, the Lighthouse records and the reports are refused by name, not only as outside', () => {
   const refused = [
     'audits/sentence-band.json',
+    'audits/entry-length.json',
     'audits/lighthouse-green.json',
     'audits/phase-19-write-to-demand/lh-measured.json',
     'audits/phase-19-write-to-demand/lh-mobile/report.json',
@@ -148,6 +149,7 @@ test('the band, the Lighthouse records and the reports are refused by name, not 
   const problems = problemsFor(ARTICLE, [...pathsOf(ARTICLE), ...refused]);
   assert.deepEqual(named(problems).sort(), [...refused].sort());
   assert.match(problems.find(({ path }) => path === 'audits/sentence-band.json').problem, /sentence-band/);
+  assert.match(problems.find(({ path }) => path === 'audits/entry-length.json').problem, /entry-length/);
   assert.match(problems.find(({ path }) => path === 'audits/lighthouse-green.json').problem, /lighthouse-record/);
 });
 

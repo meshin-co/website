@@ -1,6 +1,7 @@
 import { stringify } from 'yaml';
 
 import { DUPLICATE_MINIMUM_WORDS } from '../content-gate.mjs';
+import { LENGTH_FILE, deriveLimits, lengthRecord, measureLength } from '../entry-length.mjs';
 import { COLLECTION_OF, parseEntrySource, proseBlocks, proseSentences } from '../entry-prose.mjs';
 import { buildRecord } from '../generation-record.mjs';
 import { recordPath } from '../record-layout.mjs';
@@ -80,6 +81,9 @@ const SCENE_PROFILES = {
   'zz-band-high': runs([9, 15]),
 };
 
+const SCENE_HEADING = '## Question 1?';
+const sectioned = ([first, second, ...body]) => [first, second, SCENE_HEADING, ...body];
+
 const termText = ([shortDefinition, definition, ...body]) =>
   `---\n${stringify({ title: 'A scratch term', shortDefinition, definition })}---\n\n${body.join('\n\n')}\n`;
 
@@ -92,14 +96,13 @@ const SCENE_CORPUS = Object.entries(SCENE_TEXT).flatMap(([collection, render]) =
   Object.entries(SCENE_PROFILES).map(([slug, lengths]) => ({
     collection,
     path: `${DATA_DIRECTORY}/${collection}/${slug}.md`,
-    text: render(lengths.map(sentenceOf)),
+    text: render(sectioned(lengths.map(sentenceOf))),
   }))
 );
 
-const sceneMeasure = measureCorpus(
-  SCENE_CORPUS.map(({ collection, text: source }) => ({ collection, ...parseEntrySource(source) })),
-  { threshold: DUPLICATE_MINIMUM_WORDS }
-);
+const sceneEntries = SCENE_CORPUS.map(({ collection, text: source }) => ({ collection, ...parseEntrySource(source) }));
+const sceneMeasure = measureCorpus(sceneEntries, { threshold: DUPLICATE_MINIMUM_WORDS });
+const sceneLength = measureLength(sceneEntries);
 
 export const BAND_RECORD = bandRecord({
   measure: sceneMeasure,
@@ -107,7 +110,14 @@ export const BAND_RECORD = bandRecord({
   measuredOn: '2026-11-02',
 });
 
+export const LENGTH_RECORD = lengthRecord({
+  measure: sceneLength,
+  limits: deriveLimits(sceneLength),
+  measuredOn: '2026-11-02',
+});
+
 export const bandSceneFiles = () => ({
   [BAND_FILE]: asJson(BAND_RECORD),
+  [LENGTH_FILE]: asJson(LENGTH_RECORD),
   ...Object.fromEntries(SCENE_CORPUS.map(({ path: file, text: source }) => [file, source])),
 });

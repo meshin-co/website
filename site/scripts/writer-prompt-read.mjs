@@ -1,3 +1,4 @@
+import { LengthError, lengthFor } from './entry-length.mjs';
 import { blockBetween, bulletAt, declarationAt, promptBlockAt, sectionAt } from './prompt-extract.mjs';
 import { bandFor } from './sentence-band.mjs';
 import { WriterError } from './writer-error.mjs';
@@ -38,6 +39,14 @@ function bandOf(text, path, format) {
   }
 }
 
+function lengthOf(text, path, format) {
+  try {
+    return lengthFor(parsed(text, path), format);
+  } catch (error) {
+    throw error instanceof LengthError ? new WriterError('config', error.message) : error;
+  }
+}
+
 const DATA_TAKES = {
   json: ({ text, path, take }) =>
     present(
@@ -46,6 +55,7 @@ const DATA_TAKES = {
       take.field ?? 'the list'
     ),
   band: ({ text, path, claim }) => bandOf(text, path, claim.format),
+  length: ({ text, path, claim }) => lengthOf(text, path, claim.format),
   routes: ({ repoRoot }) => routeList(repoRoot),
   tags: ({ repoRoot }) => tagSlugs(repoRoot),
   promptBlock: ({ text, path, take, claim }) => promptBlockAt(text, path, anchorOf(take, claim)),

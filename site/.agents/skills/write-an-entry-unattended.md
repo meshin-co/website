@@ -30,14 +30,13 @@ value. An announced `shutdown_date` proceeds, and `notes` names it for the diges
 `scripts/writer-prompt.mjs` builds it at run time from `PROMPT_SOURCES`. Nothing is pasted. The files: `AGENTS.md` (four
 rules), the skills `write-copy.md`, `write-for-humans.md`, `place-a-new-text.md` and `add-collection-entry.md`,
 `site/src/content.config.ts`, `docs/CONTENT-GATE.md`, `docs/SEMANTIC-CORE.md` (the claim's buyer-prompt block),
-`site/banned-phrases.json`, `site/controlled-words.json`, `site/content-facts.json`, `audits/sentence-band.json`,
+`site/banned-phrases.json`, `site/controlled-words.json`, `site/content-facts.json`, `audits/sentence-band.json`, `audits/entry-length.json`,
 `audits/routes.json`, `site/src/data/tags.mjs`, and the slugs under `site/src/data/glossary` and `site/src/data/resource`.
 A vanished anchor fails naming the file (`scripts/writer-prompt.test.mjs` proves it). The record keeps each file's sha256.
-
 A post asks for `shortAnswer`, `fullAnswer`, takeaways, a FAQ, tags and 3 sources, on the post band. A term asks for
 `shortDefinition`, `definition` and 1 source, on the term band. Both add a body, claim rows, a `passage` of 40 words at most.
 
-## The record and the claim table
+## The record, the claim table and the limits
 
 `audits/autowriter/generations/<year>/<month>/<slug>.json` (schema `scripts/generation-record.schema.json`) holds the provider, the
 resolved model id, the response id, the prompt digest, the demand row, the tree fingerprint, tokens, computed cost and the
@@ -47,12 +46,13 @@ or "per cent", or names a standard or law (ISO, NIST, GDPR, the AI Act, an artic
 source id and the exact span. An `own-reading` row has neither and covers no fact. A standard needs a source on nist.gov,
 iso.org, eur-lex.europa.eu, europa.eu, owasp.org or iec.ch. A draft that fails gets one correction call, then fails.
 
-## The sentence band
-
-`node scripts/measure-sentence-band.mjs --write` re-measures the hand-written corpus into `audits/sentence-band.json`. Posts:
-1,557 sentences, pooled median 13 words, 42.5% under 12 words. Terms: 717 sentences, median 16, 24.7% under 12. The bands:
-article median 10 to 15 words, term 13 to 19; the cap on the share under 12 words is 57.8% (article) and 38.1% (term). The
+`node scripts/measure-sentence-band.mjs --write` re-measures the hand-written corpus into `audits/sentence-band.json`. The
 duplicate rule binds at 12 words, so an entry of eleven-word sentences must fail; the derivation refuses a band that admits one.
+`audits/entry-length.json` holds each format's body floor, section floors and target range, measured from the hand-written
+entries (an entry with a generation record is left out): a floor is the least any of them has, the range is their middle half.
+No number is typed: the prompt prints the range, `writer-preflight.mjs` judges the draft, `gate:autowriter` each committed
+generated entry. After you add or change a hand-written entry, run `cd site && node scripts/measure-entry-length.mjs --write`
+and commit the record. A pipeline commit that touches either record is refused.
 
 ## How a run lands
 
@@ -76,5 +76,5 @@ elsewhere (`guard-the-unattended-writer.md`). The site shows no machine-written 
 | Settings and vendor    | `writer-config.mjs`, `writer-error.mjs`, `writer-redact.mjs`, `writer-adapter.mjs`, `writer-openai.mjs`, `writer-models.mjs`, `writer-cost.mjs`                                         |
 | The prompt and draft   | `writer-prompt.mjs`, `writer-prompt-read.mjs`, `writer-prompt-text.mjs`, `prompt-extract.mjs`, `writer-tree.mjs`, `writer-output.mjs`, `entry-limits.mjs`, `site-brand.mjs`             |
 | The writer's own check | `writer-preflight.mjs`, `writer-preflight-fields.mjs`, `writer-preflight-page.mjs`, `writer-page.mjs`, `writer-markdown.mjs`, `claim-sources.mjs`                                       |
-| Band and record        | `entry-prose.mjs`, `sentence-band.mjs`, `measure-sentence-band.mjs`, `generation-record.mjs`                                                                                            |
+| Limits and record      | `entry-prose.mjs`, `sentence-band.mjs`, `measure-sentence-band.mjs`, `entry-length.mjs`, `measure-entry-length.mjs`, `generation-record.mjs`                                            |
 | Landing                | `entry-files.mjs`, `route-derive.mjs`, `route-assembly.mjs`, `route-transaction.mjs`, `disposition-digest.mjs`, `stale-dispositions.mjs`, `disposition-restate.mjs`, `entry-commit.mjs` |

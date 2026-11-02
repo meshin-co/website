@@ -8,13 +8,17 @@ import { test } from 'node:test';
 
 import {
   REFUSED_PATHS,
+  REMOVAL_REFUSALS,
   describeRefusal,
   isDispositionFile,
+  isGenerationRecord,
   refusalFor,
   refusalOf,
+  removalRefusalFor,
   sealSignature,
 } from './autowriter-refusals.mjs';
 import { restatedReason } from './disposition-restate.mjs';
+import { LENGTH_FILE } from './entry-length.mjs';
 import { writeMeasuredStamp } from './lh-evidence.mjs';
 import { recordDirectory, recordFiles, recordPath } from './record-layout.mjs';
 import { dispositionFor } from './route-derive.mjs';
@@ -31,7 +35,7 @@ const GENERATED = filed('disposition');
 test('the list names what automation may never write, each row with one sentence that says why', () => {
   assert.deepEqual(
     REFUSED_PATHS.map(({ id }) => id),
-    ['sentence-band', 'lighthouse-record', 'lighthouse-stamp', 'lighthouse-report']
+    ['sentence-band', 'entry-length', 'lighthouse-record', 'lighthouse-stamp', 'lighthouse-report']
   );
   for (const row of REFUSED_PATHS) {
     assert.equal(typeof row.covers, 'function', row.id);
@@ -42,6 +46,7 @@ test('the list names what automation may never write, each row with one sentence
 
 const REFUSED = [
   ['audits/sentence-band.json', 'sentence-band'],
+  ['audits/entry-length.json', 'entry-length'],
   ['audits/lighthouse-green.json', 'lighthouse-record'],
   ['audits/phase-4.7/lh-measured.json', 'lighthouse-stamp'],
   ['audits/phase-zz-specimen/lh-measured.json', 'lighthouse-stamp'],
@@ -61,6 +66,8 @@ const DISGUISED = [
   ['audits//sentence-band.json', 'audits/sentence-band.json', 'sentence-band'],
   ['audits/phase-4.7/../sentence-band.json', 'audits/sentence-band.json', 'sentence-band'],
   ['audits\\sentence-band.json', 'audits/sentence-band.json', 'sentence-band'],
+  ['audits/./entry-length.json', 'audits/entry-length.json', 'entry-length'],
+  ['Audits/Entry-Length.JSON', 'Audits/Entry-Length.JSON', 'entry-length'],
   ['.\\audits\\lighthouse-green.json', 'audits/lighthouse-green.json', 'lighthouse-record'],
   ['audits/./phase-4.7/./lh-measured.json', 'audits/phase-4.7/lh-measured.json', 'lighthouse-stamp'],
   ['Audits/Sentence-Band.JSON', 'Audits/Sentence-Band.JSON', 'sentence-band'],
@@ -80,6 +87,9 @@ const ALLOWED = [
   GENERATED,
   'audits/sentence-band.json.bak',
   'audits/sentence-band.md',
+  'audits/entry-length.json.bak',
+  'audits/entry-length.md',
+  'site/audits/entry-length.json',
   'audits/measure/sentence-band.json',
   'site/audits/sentence-band.json',
   'audits/lighthouse-green.json5',
@@ -108,6 +118,8 @@ for (const path of ALLOWED) {
 
 test('the list agrees with the tools that name these files', () => {
   assert.equal(refusalFor(BAND_FILE)?.id, 'sentence-band');
+  assert.equal(refusalFor(LENGTH_FILE)?.id, 'entry-length');
+  assert.ok(existsSync(join(REPO, LENGTH_FILE)), LENGTH_FILE + ' is not where the repository keeps the length record');
   assert.ok(existsSync(join(REPO, BAND_FILE)), BAND_FILE + ' is not where the repository keeps the band');
   assert.equal(refusalFor('audits/lighthouse-green.json')?.id, 'lighthouse-record');
   assert.ok(
@@ -384,4 +396,131 @@ test('a refusal reads as its id and its sentence, and a seal adds the entries it
   const found = compared([entry(), second()], [entry({ digest: 'bbbbbbbbbbbb' }), second({ digest: 'cccccccccccc' })]);
 
   assert.equal(describeRefusal(found), found?.id + ': ' + found?.why + '; entries: /blog head.title, /glossary');
+});
+
+test('the removal list names what automation may never remove, each row with one sentence that says why', () => {
+  assert.deepEqual(
+    REMOVAL_REFUSALS.map(({ id }) => id),
+    ['generation-record-removed']
+  );
+  for (const row of REMOVAL_REFUSALS) {
+    assert.equal(typeof row.covers, 'function', row.id);
+    assert.match(row.why, /^[A-Z][^\n]*\.$/, row.id);
+    assert.equal(row.why.split('. ').length, 1, row.id + ' says more than one sentence');
+  }
+});
+
+const GENERATIONS = recordDirectory('generation');
+const REMOVED = { id: 'generation-record-removed', why: REMOVAL_REFUSALS[0].why };
+const RECORD_SLUGS = ['first-post', 'zz-specimen', 'a'];
+const RECORD_PLACEMENTS = [
+  ['flat', (slug) => `${GENERATIONS}/${slug}.json`],
+  ['in its month', (slug) => recordPath('generation', slug, CLAIMED_AT)],
+  ['below its month', (slug) => `${GENERATIONS}/2026/11/extra/${slug}.json`],
+  [
+    'in a directory that is no month (filed too deep, and still a record)',
+    (slug) => `${GENERATIONS}/nested/${slug}.json`,
+  ],
+];
+
+for (const [where, place] of RECORD_PLACEMENTS)
+  for (const slug of RECORD_SLUGS) {
+    const path = place(slug);
+    test(`${path} is a generation record, ${where}: refused when removed, allowed when written or changed`, () => {
+      assert.equal(isGenerationRecord(path), true);
+      assert.deepEqual(removalRefusalFor(path), { ...REMOVED, path });
+      assert.equal(refusalFor(path), null);
+    });
+  }
+
+test('a record is recognised wherever it is filed: four placements of three slugs make twelve records, each refused when removed', () => {
+  const paths = RECORD_PLACEMENTS.flatMap(([, place]) => RECORD_SLUGS.map(place));
+
+  assert.equal(paths.length, 12);
+  assert.equal(new Set(paths).size, 12);
+  assert.deepEqual(paths.filter(isGenerationRecord), paths);
+  assert.deepEqual(
+    paths.filter((path) => removalRefusalFor(path)?.id === REMOVED.id),
+    paths
+  );
+});
+
+const RECORD_SPELLINGS = [
+  ['a leading ./', (path) => './' + path, (path) => path],
+  ['backslashes', (path) => path.replaceAll('/', '\\'), (path) => path],
+  ['a doubled slash', (path) => path.replace('/generations/', '//generations/'), (path) => path],
+  ['capital letters', (path) => path.toUpperCase(), (path) => path.toUpperCase()],
+];
+
+for (const [where, place] of RECORD_PLACEMENTS)
+  for (const [how, spell, shown] of RECORD_SPELLINGS) {
+    const path = place('first-post');
+    const spelled = spell(path);
+    test(`${JSON.stringify(spelled)} names the record ${where} with ${how}, so another spelling does not slip a removal through`, () => {
+      assert.equal(isGenerationRecord(spelled), true);
+      assert.deepEqual(removalRefusalFor(spelled), { ...REMOVED, path: shown(path) });
+    });
+  }
+
+test('every spelling of every placement is a record: four placements in four spellings make sixteen removals refused', () => {
+  const spelled = RECORD_PLACEMENTS.flatMap(([, place]) =>
+    RECORD_SPELLINGS.map(([, spell]) => spell(place('first-post')))
+  );
+
+  assert.equal(spelled.length, 16);
+  assert.equal(spelled.filter((path) => removalRefusalFor(path)?.id === REMOVED.id).length, 16);
+});
+
+const NOT_RECORDS = [
+  `${recordDirectory('ledger')}/first-post.json`,
+  recordPath('ledger', 'first-post', CLAIMED_AT),
+  `${recordDirectory('ledger')}/2026/11/extra/first-post.json`,
+  `${recordDirectory('claim')}/first-post.json`,
+  recordPath('claim', 'first-post', CLAIMED_AT),
+  `${recordDirectory('claim')}/2026/11/extra/first-post.json`,
+  `${DISPOSITIONS}/generated-first-post.json`,
+  recordPath('disposition', 'first-post', CLAIMED_AT),
+  `${DISPOSITIONS}/2026/11/extra/generated-first-post.json`,
+  GENERATIONS + '/first-post.md',
+  GENERATIONS + '/2026/11/first-post.md',
+  GENERATIONS + '/2026/11/extra/first-post.txt',
+  GENERATIONS + '-old/first-post.json',
+  GENERATIONS + '-old/2026/11/first-post.json',
+  GENERATIONS + '.json',
+  GENERATIONS,
+  GENERATIONS + '/',
+  GENERATIONS + '/2026/11',
+  'site/src/data/post/first-post.md',
+  'audits/sentence-band.json',
+  '',
+  undefined,
+];
+
+for (const path of NOT_RECORDS) {
+  test(JSON.stringify(path) + ' is not a generation record, so removing it is not refused as one', () => {
+    assert.equal(isGenerationRecord(path), false);
+    assert.equal(removalRefusalFor(path), null);
+  });
+}
+
+test('twenty-two paths that sit near a record or beside one are none of them a record', () => {
+  assert.equal(NOT_RECORDS.length, 22);
+  assert.deepEqual(NOT_RECORDS.filter(isGenerationRecord), []);
+  assert.deepEqual(
+    NOT_RECORDS.filter((path) => removalRefusalFor(path) !== null),
+    []
+  );
+});
+
+test('a removal reads as its id and its sentence, for a record in its month as for a flat one', () => {
+  const refusals = RECORD_PLACEMENTS.map(([, place]) => removalRefusalFor(place('first-post')));
+
+  assert.deepEqual(
+    refusals.map((refusal) => refusal?.id),
+    Array(4).fill(REMOVED.id)
+  );
+  assert.deepEqual(
+    refusals.map((refusal) => describeRefusal(refusal)),
+    Array(4).fill(`${REMOVED.id}: ${REMOVED.why}`)
+  );
 });

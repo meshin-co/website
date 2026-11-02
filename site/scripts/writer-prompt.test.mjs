@@ -7,6 +7,7 @@ import { join } from 'node:path';
 import { after, test } from 'node:test';
 
 import { PRIMARY_DOMAINS } from './claim-sources.mjs';
+import { LENGTH_FILE } from './entry-length.mjs';
 import { CATEGORIES, COUNT_LIMITS, META_DESCRIPTION_MAX_CHARS, WORD_LIMITS } from './entry-limits.mjs';
 import { claimFor } from './fixtures/writer-drafts.mjs';
 import { makeRepo, removeRepo } from './fixtures/writer-repo.mjs';
@@ -33,6 +34,7 @@ const EXPECTED_PATHS = [
   'site/controlled-words.json',
   'site/content-facts.json',
   BAND_FILE,
+  LENGTH_FILE,
   'audits/routes.json',
   'site/src/data/tags.mjs',
   'site/src/data/glossary',
@@ -43,6 +45,7 @@ const DATA_KEYS = [
   'bannedPhrases',
   'controlledWords',
   'glossary',
+  'length',
   'numbers',
   'promptBlock',
   'resource',

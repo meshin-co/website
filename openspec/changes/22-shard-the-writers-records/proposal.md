@@ -88,3 +88,11 @@ entry were already filed in `2026/11`. That branch was the one reason for the to
 tolerance stays until a person ends it with the commit described there, after `git fetch --prune` has
 dropped the remote-tracking ref of the deleted branch. Once it ends, `spend-ceiling` refuses a flat
 ledger name on every ref it reads, so a clone that still holds that ref would stop.
+
+Change 23 (`23-write-at-the-length-of-the-corpus`) was written while the generation records lay flat,
+so two of its readers named that one directory: the removal refusal, `isGenerationRecord`, and the
+list of entries the sentence band and the entry length record leave out, `generatedSlugs`. Left alone,
+a record filed in its month would be neither refused on removal nor left out of the measurements, and
+the machine's own entries would count as hand-written and move the floor and the band. Where the two
+changes meet, both read through the layout module, and the scenario of change 23 that said a path in
+a subdirectory is not a record now says a path in a sibling directory is not.

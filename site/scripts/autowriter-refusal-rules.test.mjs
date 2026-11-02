@@ -2,7 +2,7 @@ import './fixtures/no-network.mjs';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { REFUSED_PATHS, refusalFor, sealSignature } from './autowriter-refusals.mjs';
+import { REFUSED_PATHS, REMOVAL_REFUSALS, refusalFor, sealSignature } from './autowriter-refusals.mjs';
 import { judgeCommit, pipelineCommits, skippedLine } from './autowriter-refusal-rules.mjs';
 import { BOT_EMAIL } from './pr-classify.mjs';
 import { recordDirectory, recordPath } from './record-layout.mjs';
@@ -13,11 +13,13 @@ const CLAIMED_AT = '2026-11-01T07:00:00.000Z';
 const RECORD = recordPath('generation', 'first-post', CLAIMED_AT);
 const SECOND_RECORD = recordPath('generation', 'second-post', CLAIMED_AT);
 const BAND = 'audits/sentence-band.json';
+const LENGTH = 'audits/entry-length.json';
 const DISPOSITION = `${recordDirectory('disposition')}/main.json`;
 const PIPELINE_REASON = 'The text of this target changed in the run in which the unattended writer added /blog/x.';
 
 const REFUSED = [
   ['sentence-band', BAND],
+  ['entry-length', LENGTH],
   ['lighthouse-record', 'audits/lighthouse-green.json'],
   ['lighthouse-stamp', 'audits/phase-7/lh-measured.json'],
   ['lighthouse-report', 'audits/phase-7/lh-mobile/lhr-0.json'],
@@ -200,4 +202,89 @@ test('a generation record is a record at any depth: flat, in its month and below
 
 test('output that is not a whole number of commits is refused, never read as an empty history', () => {
   assert.throws(() => pipelineCommits(() => `${SHA}\0owner@example.test\0`), /git log/);
+});
+
+test('a record with a before side and no after side was removed, found once with the record, the refusal and the commit', () => {
+  const found = judged({ changes: [change(RECORD, 'blob', null)] });
+  const detail = `removed ${RECORD} (generation-record-removed: ${REMOVAL_REFUSALS[0].why}), in commit ${SHA12}`;
+  assert.deepEqual(found, [{ rule: 'generation-record-removed-committed', path: RECORD, detail }]);
+});
+
+test('a record that was added, changed or has neither side is no removal', () => {
+  for (const [before, after] of [
+    [null, 'blob'],
+    ['blob', 'other'],
+    [null, null],
+  ])
+    assert.deepEqual(judged({ records: [], changes: [change(RECORD, before, after)] }), [], String([before, after]));
+});
+
+test('a file that is no record and was removed is no removal of a record', () => {
+  assert.deepEqual(judged({ changes: [change('site/src/data/post/old.md', 'blob', null)] }), []);
+});
+
+const REMOVED = 'generation-record-removed-committed';
+const GENERATIONS = recordDirectory('generation');
+const REMOVED_PLACEMENTS = [`${GENERATIONS}/first-post.json`, RECORD, `${GENERATIONS}/2026/11/extra/first-post.json`];
+const removedDetail = (path) =>
+  `removed ${path} (generation-record-removed: ${REMOVAL_REFUSALS[0].why}), in commit ${SHA12}`;
+
+test('a record filed in its month and removed is judged as removed, naming the month path and the commit', () => {
+  const found = judged({ changes: [change(RECORD, 'blob', null)] });
+
+  assert.equal(RECORD, `${GENERATIONS}/2026/11/first-post.json`);
+  assert.deepEqual(found, [{ rule: REMOVED, path: RECORD, detail: removedDetail(RECORD) }]);
+  assert.ok(found[0].detail.startsWith(`removed ${GENERATIONS}/2026/11/first-post.json (generation-record-removed: `));
+  assert.ok(found[0].detail.endsWith(`, in commit ${SHA12}`));
+});
+
+test('a record is judged as removed wherever it was filed: flat, in its month and below it make three findings', () => {
+  const found = REMOVED_PLACEMENTS.flatMap((path) =>
+    judged({ records: [path], changes: [change(path, 'blob', null)] })
+  );
+
+  assert.equal(found.length, 3);
+  assert.deepEqual(
+    found.map(({ rule, path, detail }) => [rule, path, detail]),
+    REMOVED_PLACEMENTS.map((path) => [REMOVED, path, removedDetail(path)])
+  );
+});
+
+test('a record removed from its month is found for the record the commit is judged on, and names what it removed', () => {
+  const found = judged({ records: [SECOND_RECORD], changes: [change(RECORD, 'blob', null)] });
+
+  assert.deepEqual(found, [{ rule: REMOVED, path: SECOND_RECORD, detail: removedDetail(RECORD) }]);
+});
+
+test('two records filed in their month and removed in one commit are four findings: each removal for each record', () => {
+  const found = judged({
+    records: [RECORD, SECOND_RECORD],
+    changes: [change(RECORD, 'blob', null), change(SECOND_RECORD, 'blob', null)],
+  });
+
+  assert.equal(found.length, 4);
+  assert.deepEqual(
+    found.map(({ path, detail }) => [path, detail]),
+    [
+      [RECORD, removedDetail(RECORD)],
+      [RECORD, removedDetail(SECOND_RECORD)],
+      [SECOND_RECORD, removedDetail(RECORD)],
+      [SECOND_RECORD, removedDetail(SECOND_RECORD)],
+    ]
+  );
+});
+
+test('a record filed in its month that was added or changed, not removed, is no removal', () => {
+  for (const [before, after] of [
+    [null, 'blob'],
+    ['blob', 'other'],
+  ])
+    assert.deepEqual(judged({ changes: [change(RECORD, before, after)] }), [], String([before, after]));
+});
+
+test('a month record removed beside a refused path is found for both, in the order the commit lists them', () => {
+  const rulesOf = (changes) => judged({ changes }).map(({ rule }) => rule);
+
+  assert.deepEqual(rulesOf([change(RECORD, 'blob', null), change(BAND)]), [REMOVED, 'refused-path-committed']);
+  assert.deepEqual(rulesOf([change(BAND), change(RECORD, 'blob', null)]), ['refused-path-committed', REMOVED]);
 });

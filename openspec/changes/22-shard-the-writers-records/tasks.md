@@ -27,6 +27,11 @@
       proposal says when that tolerance ends
 - [x] 2.4 The same readers report the same counts before and after the move (real stdout recorded in
       the commit that moved the files)
+- [x] 2.5 The two readers that change 23 adds find a generation record at any depth: the removal
+      refusal (`isGenerationRecord` in `autowriter-refusals.mjs`, through `familyOf`) and the list of
+      entries the sentence band and the entry length record leave out (`generatedSlugs`, through
+      `recordFiles`); each is tested with a record flat, in its month and deeper, and a pipeline
+      commit that removes a record filed in its month is refused at the sink and found in history
 
 ## 3. A stray flat record fails
 

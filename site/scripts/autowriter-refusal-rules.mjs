@@ -2,12 +2,20 @@ import { execFileSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { describeRefusal, isDispositionFile, refusalFor, sealSignature } from './autowriter-refusals.mjs';
+import {
+  describeRefusal,
+  isDispositionFile,
+  isGenerationRecord,
+  refusalFor,
+  removalRefusalFor,
+  sealSignature,
+} from './autowriter-refusals.mjs';
 import { BOT_EMAIL } from './pr-classify.mjs';
-import { familyOf, recordDirectory } from './record-layout.mjs';
+import { recordDirectory } from './record-layout.mjs';
 
 const PATH_RULE = 'refused-path-committed';
 const SEAL_RULE = 'disposition-seal-committed';
+const REMOVAL_RULE = 'generation-record-removed-committed';
 const SHALLOW_REASON = 'the clone is shallow';
 const MAX_BUFFER = 256 * 1024 * 1024;
 const SHORT_SHA = 12;
@@ -69,8 +77,6 @@ export const repositoryGit =
 
 export const skippedLine = (reason) => `autowriter: history rules skipped: ${reason}`;
 
-const isRecord = (path) => familyOf(path) === 'generation';
-
 function fieldsOf(text, size, what) {
   const fields = text.split('\0');
   if (fields.at(-1) === '') fields.pop();
@@ -94,7 +100,7 @@ const namedRecords = (message) => [...message.matchAll(PROVENANCE)].map(([, path
 export function pipelineCommits(git) {
   return loggedCommits(git(LOG)).flatMap(({ sha, email, message }) => {
     const changes = changesOf(git(diffOf(sha)));
-    const records = changes.map(({ path }) => path).filter(isRecord);
+    const records = changes.map(({ path }) => path).filter(isGenerationRecord);
     const named = namedRecords(message);
     const isPipeline = records.length > 0 && (email === BOT_EMAIL || records.some((path) => named.includes(path)));
     return isPipeline ? [{ sha, records, changes }] : [];
@@ -112,6 +118,9 @@ function refusedThings({ changes }, read) {
   return changes.flatMap(({ path, before, after }) => {
     const refusal = refusalFor(path);
     if (refusal !== null) return [{ rule: PATH_RULE, detail: `touched ${refusal.path} (${describeRefusal(refusal)})` }];
+    const removal = before !== null && after === null ? removalRefusalFor(path) : null;
+    if (removal !== null)
+      return [{ rule: REMOVAL_RULE, detail: `removed ${removal.path} (${describeRefusal(removal)})` }];
     if (!isDispositionFile(path)) return [];
     const seal = sealSignature({ path, before: textOf(read, before), after: textOf(read, after) });
     return seal === null ? [] : [{ rule: SEAL_RULE, detail: describedSeal(seal) }];

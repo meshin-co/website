@@ -29,6 +29,12 @@ const REFUSED = [
     id: 'sentence-band',
   },
   {
+    name: 'autowriterCommitMovesTheEntryLength',
+    family: 'autowriter-commit-moves-the-entry-length',
+    path: 'audits/entry-length.json',
+    id: 'entry-length',
+  },
+  {
     name: 'autowriterCommitWritesLighthouseRecord',
     family: 'autowriter-commit-writes-the-lighthouse-record',
     path: 'audits/lighthouse-green.json',
@@ -48,16 +54,21 @@ const REFUSED = [
   },
 ];
 const SEAL = { name: 'autowriterCommitSealsDispositions', family: 'autowriter-commit-seals-dispositions' };
+const REMOVAL = {
+  name: 'autowriterCommitRemovesAGenerationRecord',
+  family: 'autowriter-commit-removes-a-generation-record',
+};
 const DEBT = {
   name: 'autowriterMeasurementDebtMissing',
   family: 'autowriter-merged-ledger-without-its-measurement-debt',
 };
-const NAMES = [...REFUSED.map(({ name }) => name), SEAL.name].sort();
+const NAMES = [...REFUSED.map(({ name }) => name), SEAL.name, REMOVAL.name].sort();
 const TOKENS = {
   ...Object.fromEntries(
     REFUSED.map(({ name, path, id }) => [name, `refused-path-committed ${RECORD}: touched ${path} (${id}:`])
   ),
   [SEAL.name]: `disposition-seal-committed ${RECORD}: sealed`,
+  [REMOVAL.name]: `generation-record-removed-committed ${RECORD}: removed ${RECORD} (generation-record-removed:`,
 };
 const entry = (target, digest) => ({
   target,
@@ -138,7 +149,7 @@ test('the history specimens are the four refusals and the seal, each against gat
 
 test('each refusal and the missing measurement debt has its own family, and each family names its specimen', () => {
   const families = manifestFamilies(FAMILIES);
-  for (const { name, family: id } of [...REFUSED, SEAL, DEBT]) {
+  for (const { name, family: id } of [...REFUSED, SEAL, REMOVAL, DEBT]) {
     const family = families.find((found) => found.id === id);
     assert.equal(family?.kind, 'specimen', id);
     assert.equal(family.specimen, name, id);
@@ -168,7 +179,9 @@ for (const name of NAMES) {
       assert.equal(gate(root).status, 0);
     });
   });
+}
 
+for (const name of NAMES.filter((found) => found !== REMOVAL.name)) {
   test(`${name} plants one commit of the bot on top of HEAD that names its record in a Provenance line`, async () => {
     await inScene(async (root) => {
       const original = gitIn(root, ['rev-parse', 'HEAD']).trim();
@@ -183,6 +196,50 @@ for (const name of NAMES) {
     });
   });
 }
+
+test('the removal plants two commits of the bot: one adds the record, the next removes it and nothing else', async () => {
+  await inScene(async (root) => {
+    const original = gitIn(root, ['rev-parse', 'HEAD']).trim();
+    const restore = await planted(REMOVAL.name, root);
+    const [removing, adding] = gitIn(root, ['rev-list', '--max-count=2', 'HEAD']).trim().split('\n');
+    assert.equal(gitIn(root, ['rev-parse', `${adding}^`]).trim(), original);
+    assert.equal(gitIn(root, ['rev-parse', `${removing}^`]).trim(), adding);
+    for (const commit of [adding, removing]) {
+      const identity = gitIn(root, ['log', '-1', '--format=%an|%ae|%cn|%ce', commit]).trim();
+      assert.equal(identity, [BOT.name, BOT.email, BOT.name, BOT.email].join('|'));
+      assert.match(gitIn(root, ['log', '-1', '--format=%B', commit]), PROVENANCE);
+    }
+    const touched = (commit, filter) =>
+      gitIn(root, [
+        'diff-tree',
+        '--no-renames',
+        '--no-commit-id',
+        '--name-only',
+        `--diff-filter=${filter}`,
+        '-r',
+        commit,
+      ])
+        .trim()
+        .split('\n');
+    assert.deepEqual(touched(adding, 'ACMRTUXB'), [RECORD]);
+    assert.deepEqual(touched(removing, 'D'), [RECORD]);
+    assert.deepEqual(touched(removing, 'ACMRTUXB'), ['']);
+    assert.equal(gitIn(root, ['ls-tree', '-r', '--name-only', 'HEAD', '--', RECORD]).trim(), '');
+    await restore();
+    assert.equal(gitIn(root, ['rev-parse', 'HEAD']).trim(), original);
+  });
+});
+
+test('the removal is found only as a removed record, never as a refused path', async () => {
+  await inScene(async (root) => {
+    const restore = await planted(REMOVAL.name, root);
+    const red = gate(root);
+    assert.equal(red.status, 1, red.stdout);
+    assert.equal(flatten(red.stderr).includes('refused-path-committed'), false, red.stderr);
+    assert.ok(flatten(red.stderr).includes(`AUTOWRITER generation-record-removed-committed ${RECORD}:`), red.stderr);
+    await restore();
+  });
+});
 
 test('the sealing commit changes the digest of one entry of a disposition file and nothing else in it', async () => {
   await inScene(async (root) => {

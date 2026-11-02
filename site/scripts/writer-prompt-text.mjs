@@ -1,6 +1,7 @@
 import { siteBrand } from './site-brand.mjs';
 import { PRIMARY_DOMAINS } from './claim-sources.mjs';
 import { entryRoute } from './entry-files.mjs';
+import { LENGTH_FILE } from './entry-length.mjs';
 import { COLLECTION_OF, RESOURCE_COLLECTION } from './entry-prose.mjs';
 import { CATEGORIES, COUNT_LIMITS, META_DESCRIPTION_MAX_CHARS, WORD_LIMITS } from './entry-limits.mjs';
 import { targetQueryFor } from './route-derive.mjs';
@@ -48,12 +49,25 @@ const rules = (texts) =>
     ...texts.map(({ path, blocks }) => `<file path="${path}">\n${blocks.join('\n\n')}\n</file>`),
   ].join('\n\n');
 
-const members = (format) =>
+const SECTION_HEADING = {
+  article: 'asks a question a buyer asks on the way to that prompt',
+  term: 'names the part of the term it covers',
+};
+
+const bodyLength = ({ format, length, claim }) =>
+  `- length of the body: ${length.targetFrom} to ${length.targetTo} words, the middle half of the hand-written ${NOUN[format]} entries recorded in ${LENGTH_FILE}, for buyer prompt ${claim.prompt.number}, "${claim.prompt.text}". A body under ${length.wordsFloor} words, under ${length.sectionsFloor} sections or with a section under ${length.sectionWordsFloor} words fails the gate: no hand-written ${NOUN[format]} does any of the three. Reach the length with more sections, each under a ## heading that ${SECTION_HEADING[format]} and rests on a route from the request, a passage of the block of that buyer prompt or a source you cite. A longer sentence leaves the sentence band, and a restated takeaway repeats a field.`;
+
+const BODY_SHAPE =
+  '- shape of the prose, which a reader sees and no gate measures: end a paragraph on its last point, not on a sentence that says again what the paragraph said. Do not open three paragraphs in a row on the same word. Do not add a section only for balance, such as a pros-and-cons block or a look ahead.';
+
+const members = ({ format, length, claim }) =>
   [
     `- format: "${format}".`,
     '- fields: an object with these members:',
     ...FIELD_NOTES[format]().map((note) => `  - ${note}`),
     '- body: the markdown that follows the lead on the page. Start at ##, because the page has its h1. Write paragraphs, lists, tables and bold only: no raw HTML, no image, no h1. Link to this site with a route from the list in the request, and to the outside with an https url. Do not repeat a field inside the body.',
+    bodyLength({ format, length, claim }),
+    BODY_SHAPE,
     `- sources: at least ${sourcesIn(SOURCE_MINIMUM[format])} that you cite. Each has id (a short label, never repeated), title (the document's title), url (https, one url per source) and publisher. Cite a document only when you are sure it exists at that url and says what you rest on it.`,
     '- claims: one row for every sentence of the entry that states a fact. A sentence states a fact when it holds a figure, a date or a month, or names a standard, a law or a regulation (ISO, IEC, NIST, OWASP, GDPR, the AI Act, an article or an annex). A row has these members:',
     '  - sentence: the sentence copied word for word from the entry.',
@@ -70,11 +84,11 @@ const claimRules = [
   'Do not write TODO(owner) or any placeholder, and do not invent a source. A fact you cannot source is left out.',
 ];
 
-const contract = (format) =>
+const contract = ({ format, length, claim }) =>
   [
     '# What you return',
     'Return one JSON object that matches the schema you are given, and nothing else. Its members:',
-    members(format),
+    members({ format, length, claim }),
     '# How the claims are checked',
     bullets(claimRules),
   ].join('\n\n');
@@ -114,7 +128,7 @@ export const systemPrompt = ({ claim, read }) =>
   [
     intro(claim.format),
     rules(read.texts),
-    contract(claim.format),
+    contract({ format: claim.format, length: read.data.length, claim }),
     numbers(read.data.numbers),
     words(read.data),
     lengths(read.data.band, claim.format),

@@ -3,6 +3,7 @@ import './fixtures/no-network.mjs';
 import assert from 'node:assert/strict';
 import { after, test } from 'node:test';
 
+import { LENGTH_FILE } from './entry-length.mjs';
 import { COLLECTION_OF, proseBlocks, proseSentences } from './entry-prose.mjs';
 import { BAND_FILE } from './sentence-band.mjs';
 import { claimFor, cleanDraft, RUN_DATE } from './fixtures/writer-drafts.mjs';
@@ -35,6 +36,7 @@ test('the context holds what the checks read, as plain data', () => {
     'bannedPhrases',
     'controlledWords',
     'facts',
+    'lengthRecord',
     'routes',
     'slugs',
     'tags',
@@ -47,6 +49,7 @@ test('the context holds what the checks read, as plain data', () => {
   );
   assert.ok(context.tags.includes('ai-governance'));
   assert.deepEqual(Object.keys(context.bandRecord.bands).sort(), ['article', 'term']);
+  assert.deepEqual(Object.keys(context.lengthRecord.limits).sort(), ['article', 'term']);
   assert.deepEqual(JSON.parse(JSON.stringify(context)), context);
 });
 
@@ -60,6 +63,28 @@ test('a tree with no sentence band record is refused, naming the file and the co
       error.kind === 'config' &&
       error.message.includes(BAND_FILE) &&
       error.message.includes('measure-sentence-band.mjs --write')
+  );
+});
+
+test('a tree with no entry length record is refused, naming the file and the command that writes it', () => {
+  const bare = makeRepo({ length: false });
+  after(() => removeRepo(bare));
+  assert.throws(
+    () => loadPreflightContext(bare),
+    (error) =>
+      error instanceof WriterError &&
+      error.kind === 'config' &&
+      error.message.includes(LENGTH_FILE) &&
+      error.message.includes('measure-entry-length.mjs --write')
+  );
+});
+
+test('a tree whose entry length record is not JSON is refused as a config error', () => {
+  const broken = makeRepo({ length: '{ nope' });
+  after(() => removeRepo(broken));
+  assert.throws(
+    () => loadPreflightContext(broken),
+    (error) => error instanceof WriterError && error.kind === 'config' && error.message.includes(LENGTH_FILE)
   );
 });
 
@@ -325,6 +350,40 @@ const PLANTED = [
     'standard-without-primary-source',
     'primary domain',
   ],
+  [
+    'an article body shorter than the shortest hand-written one',
+    'article',
+    (d) => (d.body = d.body.split('\n## ').slice(0, 2).join('\n## ')),
+    'body-too-short',
+    'no hand-written article has fewer than 160',
+  ],
+  [
+    'an article body with one section too few',
+    'article',
+    (d) => (d.body = d.body.split('\n## ').slice(0, 3).join('\n## ')),
+    'too-few-sections',
+    '3 sections',
+  ],
+  [
+    'an article section that is a stub',
+    'article',
+    (d) =>
+      (d.body = d.body.replace(
+        /## What do the standards say\?[\s\S]*?(?=\n## )/,
+        '## What do the standards say?\n\nRead them.\n'
+      )),
+    'section-too-thin',
+    '"What do the standards say?" has 2',
+  ],
+  [
+    'a term body with no section',
+    'term',
+    (d) =>
+      (d.body =
+        'A gap assessment lists the distance to a standard. It names each gap and an owner. It does not certify anything at all.'),
+    'too-few-sections',
+    '0 sections',
+  ],
 ];
 
 for (const [label, format, edit, rule, detailPart] of PLANTED) {
@@ -451,6 +510,18 @@ test('the correction message numbers the problems in order', () => {
   const first = lines.findIndex((line) => line.startsWith('1. '));
   assert.ok(first >= 0 && lines[first + 1].startsWith('2. '));
   assert.ok(lines[first].includes('word-range'));
+});
+
+test('a length problem is the one the correction message answers with more sections, never by cutting', () => {
+  const message = correctionMessage([
+    { rule: 'body-too-short', detail: 'the body has 300 words; no hand-written article has fewer than 885' },
+  ]);
+  assert.match(message, /more sections/);
+  assert.match(message, /not (add|invent)/i);
+});
+
+test('a correction message with no length problem says nothing about sections', () => {
+  assert.doesNotMatch(correctionMessage(PROBLEMS), /more sections/);
 });
 
 test('there is no correction message for no problems', () => {

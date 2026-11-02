@@ -5,16 +5,27 @@ import { dirname, join, resolve } from 'node:path';
 import { test } from 'node:test';
 
 import { claimTableProblems, factualSentences } from '../claim-sources.mjs';
-import { wordCount } from '../entry-prose.mjs';
+import {
+  LENGTH_FILE,
+  lengthProblems,
+  measureLength,
+  readLengthRecord,
+  recordProblems as lengthRecordProblems,
+} from '../entry-length.mjs';
+import { parseEntrySource, wordCount } from '../entry-prose.mjs';
 import { validateRecord } from '../generation-record.mjs';
+import { layoutProblem } from '../record-layout.mjs';
 import { bandProblems, loadCorpus, measureCorpus, readBandRecord, recordProblems } from '../sentence-band.mjs';
 import {
   ELEVEN_WORD_SENTENCE,
   ENTRY_PATH,
   FACT,
+  LENGTH_RECORD,
+  RECORD_PATH,
+  SENTENCES,
+  bandSceneFiles,
   entryText,
   proseOf,
-  bandSceneFiles,
   recordWith,
 } from './record-rules-scene.mjs';
 
@@ -67,9 +78,13 @@ const problemRules = (root) =>
     ({ rule }) => rule
   );
 
-test('the band scene holds a record and both collections of a corpus', () => {
+const lengthProblemRules = (root) =>
+  lengthRecordProblems(readLengthRecord(root), measureLength(loadCorpus(root))).map(({ rule }) => rule);
+
+test('the band scene holds both measured records and both collections of a corpus', () => {
   const paths = Object.keys(bandSceneFiles());
   assert.ok(paths.includes(BAND_PATH));
+  assert.ok(paths.includes(LENGTH_FILE));
   assert.ok(paths.some((path) => path.startsWith('site/src/data/post/')));
   assert.ok(paths.some((path) => path.startsWith('site/src/data/glossary/')));
 });
@@ -93,4 +108,47 @@ test('a corpus entry planted in the band scene after its record was written make
     assert.ok(rules.includes('record-corpus-stale'), rules.join());
     assert.ok(rules.includes('record-distribution-stale'), rules.join());
   });
+});
+
+const sectionedEntry = (sections) => {
+  const [fact, answer, ...filler] = SENTENCES;
+  const section = (number) => [`## Question ${number}?`, ...filler, ...filler, ...filler];
+  return entryText({
+    sentences: [fact, answer, ...Array.from({ length: sections }, (_, index) => index + 1).flatMap(section)],
+  });
+};
+
+const rulesFor = (entry) =>
+  lengthProblems({
+    collection: 'post',
+    body: parseEntrySource(entry).body,
+    limits: LENGTH_RECORD.limits.article,
+  }).map(({ rule }) => rule);
+
+test('the length record of the scene agrees with the corpus the scene plants, as the product measures it', () =>
+  inScene(bandSceneFiles(), (root) => assert.deepEqual(lengthProblemRules(root), [])));
+
+test('the scratch entry of the scene falls under the length floor of the scene, and an entry of four sections clears it', () => {
+  assert.deepEqual(rulesFor(entryText()), ['body-too-short', 'too-few-sections']);
+  assert.deepEqual(rulesFor(sectionedEntry(4)), []);
+});
+
+test('a corpus entry planted in the band scene after its length record was written makes that record stale', () => {
+  const [fact, answer, ...body] = SENTENCES;
+  const files = {
+    ...bandSceneFiles(),
+    'site/src/data/post/zz-late-entry.md': entryText({ sentences: [fact, answer, '## Question 1?', ...body] }),
+  };
+  inScene(files, (root) => {
+    assert.deepEqual(lengthProblemRules(root), [
+      'length-record-corpus-stale',
+      'length-record-distribution-stale',
+      'length-record-limits-stale',
+    ]);
+  });
+});
+
+test('the scene files its generation record under the month of its claim, the way the writer does', () => {
+  assert.match(RECORD_PATH, /^audits\/autowriter\/generations\/\d{4}\/(0[1-9]|1[0-2])\/zz-specimen\.json$/);
+  assert.equal(layoutProblem(RECORD_PATH), null);
 });

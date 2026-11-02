@@ -21,6 +21,11 @@ export const REFUSED_PATHS = [
     covers: exactly('audits/sentence-band.json'),
   },
   {
+    id: 'entry-length',
+    why: 'The floor every generated entry is judged against, measured from entries a person wrote, so a run that can re-measure it lowers its own floor with its own output.',
+    covers: exactly('audits/entry-length.json'),
+  },
+  {
     id: 'lighthouse-record',
     why: 'The record of a green Lighthouse run, which only a person measuring on the owner machine can vouch for (L59).',
     covers: exactly('audits/lighthouse-green.json'),
@@ -39,6 +44,21 @@ export const REFUSED_PATHS = [
 
 export function refusalFor(path) {
   const row = REFUSED_PATHS.find(({ covers }) => covers(path));
+  return row ? { id: row.id, path: normalised(path), why: row.why } : null;
+}
+
+export const isGenerationRecord = (path) => familyOf(normalised(path).toLowerCase()) === 'generation';
+
+export const REMOVAL_REFUSALS = [
+  {
+    id: 'generation-record-removed',
+    why: 'The record that marks an entry as written by the pipeline, which the sentence band and the entry length record leave out when they measure, so a run that can remove one turns its own entry into one a person wrote and moves its own goalposts.',
+    covers: isGenerationRecord,
+  },
+];
+
+export function removalRefusalFor(path) {
+  const row = REMOVAL_REFUSALS.find(({ covers }) => covers(path));
   return row ? { id: row.id, path: normalised(path), why: row.why } : null;
 }
 

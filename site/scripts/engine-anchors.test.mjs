@@ -5,6 +5,7 @@ import { join, resolve } from 'node:path';
 import { test } from 'node:test';
 
 import { FIXED_ANCHORS, anchorsFor } from './engine-anchors.mjs';
+import { LENGTH_FILE } from './entry-length.mjs';
 import { readEngineConfig } from './engine-config.mjs';
 import { BAND_FILE } from './sentence-band.mjs';
 import { PROMPT_SOURCES } from './writer-prompt.mjs';
@@ -46,6 +47,7 @@ test('every path the writer reads from the tree is an anchor', () => {
     REPO_FILES.routes,
     REPO_FILES.tags,
     BAND_FILE,
+    LENGTH_FILE,
     ...Object.values(REPO_FILES.collections),
   ];
   for (const path of read) assert.ok(covered(path), `${path} is read and is not an anchor`);

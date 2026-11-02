@@ -1,6 +1,12 @@
 import { spawnSync } from 'node:child_process';
 import { resolve } from 'node:path';
-import { describeRefusal, isDispositionFile, refusalFor, sealSignature } from './autowriter-refusals.mjs';
+import {
+  describeRefusal,
+  isDispositionFile,
+  refusalFor,
+  removalRefusalFor,
+  sealSignature,
+} from './autowriter-refusals.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 import { BOT_EMAIL, BOT_NAME } from './pr-classify.mjs';
 
@@ -131,8 +137,26 @@ async function refusalAmong({ run, cwd, names }) {
   return null;
 }
 
+async function removalAmong({ run, cwd, paths, names }) {
+  if (names.every((path) => removalRefusalFor(path) === null)) return null;
+  const removed = await gitStep(run, cwd)('diff', [
+    'diff',
+    '--cached',
+    '--name-only',
+    '--diff-filter=D',
+    '--no-renames',
+    '--',
+    ...paths,
+  ]);
+  for (const path of removed.stdout.split('\n').filter(Boolean)) {
+    const refusal = removalRefusalFor(path);
+    if (refusal !== null) return refusal;
+  }
+  return null;
+}
+
 async function refuseStaged({ run, cwd, paths, names }) {
-  const refusal = await refusalAmong({ run, cwd, names });
+  const refusal = (await refusalAmong({ run, cwd, names })) ?? (await removalAmong({ run, cwd, paths, names }));
   if (refusal === null) return;
   const unstaged = await run(['reset', '--quiet', '--', ...paths], { cwd });
   const stuck = unstaged.status === 0 ? '' : `; the paths are still staged: ${redact(unstaged.stderr).trim()}`;
