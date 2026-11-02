@@ -24,6 +24,7 @@ import {
   humansTxtFindings,
   canonicalGaps,
   machineHeaderGaps,
+  lastmodExpectationGaps,
   llmsInlinedRoutes,
   isTaxonomyRoute,
   LLMS_TXT_MAX_BYTES,
@@ -596,4 +597,11 @@ test('two machine files that name only each other are both unreferenced', () => 
     '/llms/post-2.txt': 'Entries: [https://meshin.co/llms/post-1.txt](https://meshin.co/llms/post-1.txt)',
   };
   assert.deepEqual(unreferencedMachineFiles(files, referencing), ['/llms/post-1.txt', '/llms/post-2.txt']);
+});
+
+test('a sitemap lastmod check that would walk an empty list says so instead of passing', () => {
+  assert.deepEqual(lastmodExpectationGaps(3), []);
+  assert.deepEqual(lastmodExpectationGaps(0), [
+    'the build derives no expected sitemap lastmod, so no sitemap entry was checked for one',
+  ]);
 });

@@ -21,11 +21,13 @@ import { invokedDirectly } from './invoked-directly.mjs';
 import { LLMS_FULL_MAX_BYTES, LLMS_COLLECTIONS } from '../src/utils/llms-collections.mjs';
 import { llmsCorpusGaps } from './llms-corpus.mjs';
 import { createFailureLog } from './machine-failures.mjs';
+import { collectionEmptinessFindings } from './route-kinds.mjs';
+import { EMPTY_COLLECTIONS } from '../src/utils/route-exceptions.mjs';
 
 const NON_PUBLIC = new Set(['author', 'speaking']);
 const FEED_FLOOR = 5;
 export const LLMS_TXT_MAX_BYTES = 8 * 1024;
-const BOUNDED_INLINE_COLLECTIONS = ['service'];
+export const BOUNDED_INLINE_COLLECTIONS = ['service'];
 const SITE_ORIGIN = `https://${brandFromDisk().name}`;
 const REFERENCED_MACHINE_FILE = /^\/(?:llms(?:-full)?\.txt|llms\/[^/]+\.txt|feed\.json|(?:[^/]+\/)?rss\.xml)$/;
 const HEADER_GUARDED_MACHINE_FILE = /^\/(?:search-index-[^/]+\.json|.+\.md)$/;
@@ -74,6 +76,12 @@ export function entryCoverageFailures(collections, liveRoutesByKind, generatorTe
       (missing) => `${generator} covers no ${missing} entry`
     )
   );
+}
+
+export function lastmodExpectationGaps(expectedLastmodCount) {
+  return expectedLastmodCount === 0
+    ? ['the build derives no expected sitemap lastmod, so no sitemap entry was checked for one']
+    : [];
 }
 
 export function sizeGuardFailure(label, bytes, maxBytes) {
@@ -347,9 +355,16 @@ async function main(distDir) {
     'entry-coverage',
     entryCoverageFailures(collections, liveByKind, { 'llms.txt': llmsTxt, 'feed.json': feedJson, sitemap })
   );
-  if (emptyKinds.length > 0) {
-    console.log(`machine: no live entry in ${emptyKinds.join(', ')}; entry coverage was not checked for it`);
-  }
+  const emptiness = collectionEmptinessFindings({
+    collections: collections.map((kind) => ({ kind, base: COLLECTION_BASES[kind] })),
+    declared: { emptyCollections: EMPTY_COLLECTIONS },
+    liveEntries: liveByKind,
+  });
+  for (const finding of emptiness) failures.add('empty-collection-surface', finding.text, finding.subjects);
+  const declaredEmpty = emptyKinds.filter((kind) => EMPTY_COLLECTIONS.some(({ collection }) => collection === kind));
+  console.log(
+    `machine: ${declaredEmpty.length} of ${collections.length} collections have no live entry and are declared empty with a reason${declaredEmpty.length > 0 ? ` (${declaredEmpty.join(', ')})` : ''}; entry coverage is vacuous for them by declaration`
+  );
   for (const gap of sitemapNoindexLeaks(sitemap, noindexRoutes)) {
     failures.add('sitemap-lists-noindex-route', `sitemap lists noindex route ${gap}`, ['/sitemap-0.xml', gap]);
   }
@@ -379,6 +394,7 @@ async function main(distDir) {
   const datedStaticRoutes = publicIndexableStaticPages()
     .filter((page) => page.updatedDate)
     .map((page) => page.path);
+  failures.addAll('sitemap-lastmod-missing', lastmodExpectationGaps(Object.keys(expectedLastmods).length));
   failures.addAll(
     'date-agreement',
     dateAgreementFailures({

@@ -35,7 +35,7 @@ test('the clean scene passes the machine gate, says nothing on stderr and report
   assert.equal(
     run.stdout,
     [
-      `machine: no live entry in ${scene.emptyKinds.join(', ')}; entry coverage was not checked for it`,
+      `machine: ${scene.emptyKinds.length} of ${scene.collections} collections have no live entry and are declared empty with a reason (${scene.emptyKinds.join(', ')}); entry coverage is vacuous for them by declaration`,
       `machine: ${counts.join(', ')}`,
       '',
     ].join('\n')

@@ -83,7 +83,10 @@ function buildLedger(dist) {
   ].map((file) => ({ file: relative(SITE, file), source: readFileSync(file, 'utf8') }));
   const constants = [
     ...walk(join(SITE, 'src/data'), (name) => /\.(ts|mjs)$/.test(name) && !/\.test\.mjs$/.test(name)),
-    ...walk(join(SITE, 'src/utils'), (name) => /\.(ts|mjs)$/.test(name) && !/\.test\.mjs$/.test(name)),
+    ...walk(
+      join(SITE, 'src/utils'),
+      (name) => /\.(ts|mjs)$/.test(name) && !/\.test\.mjs$/.test(name) && name !== 'route-exceptions.mjs'
+    ),
     ...walk(join(SITE, 'public/search'), (name) => name.endsWith('.mjs')),
     ...walk(join(SITE, 'src/pages'), (name) => name.endsWith('.astro')),
     ...walk(join(SITE, 'src/components'), (name) => name.endsWith('.astro')),
