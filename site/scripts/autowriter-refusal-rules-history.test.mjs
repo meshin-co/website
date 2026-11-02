@@ -7,7 +7,7 @@ import { join, resolve } from 'node:path';
 import { after, test } from 'node:test';
 import { pathToFileURL } from 'node:url';
 
-import { DISPOSITION_DIRECTORY, sealSignature } from './autowriter-refusals.mjs';
+import { DISPOSITION_DIRECTORY, describeRefusal, removalRefusalFor, sealSignature } from './autowriter-refusals.mjs';
 import { historyReport, pipelineCommits, repositoryGit } from './autowriter-refusal-rules.mjs';
 import { GENERATION_DIR, generationFile } from './generation-record.mjs';
 import {
@@ -155,13 +155,18 @@ test('a pipeline commit that changed two records is counted once and found once 
   );
 });
 
-test('a pipeline commit that deleted a record and moved the band is judged on the record it deleted', () => {
+test('a pipeline commit that deleted a record and moved the band is judged on the record it deleted, for both', () => {
   const root = repoWith({ [RECORD]: '{}\n' });
   commitAs(root, BOT, { remove: [RECORD], write: { [BAND]: '{}\n' }, message: 'feat(autowriter): drop first-post' });
+  const found = historyReport({ root }).findings;
   assert.deepEqual(
-    historyReport({ root }).findings.map(({ path }) => path),
-    [RECORD]
+    found.map(({ path }) => path),
+    [RECORD, RECORD]
   );
+  assert.deepEqual(found.map(({ rule }) => rule).sort(), [
+    'generation-record-removed-committed',
+    'refused-path-committed',
+  ]);
 });
 
 test('a pipeline commit that moved a digest while its reason and status stayed is a seal, found with the entry', () => {
@@ -283,4 +288,59 @@ test('a signature display that the configuration asks of git is not read as part
   gitIn(root, ['update-ref', 'HEAD', signed]);
   assert.equal(gitIn(root, ['-c', 'log.showSignature=true', 'log', '-1', '--format=%H']).startsWith('gpg:'), true);
   assert.deepEqual(shas(root), [signed]);
+});
+
+const REMOVED = 'generation-record-removed-committed';
+const removedDetail = (path, sha) =>
+  `removed ${path} (${describeRefusal(removalRefusalFor(path))}), in commit ${sha.slice(0, 12)}`;
+
+test('a pipeline commit that removed a record is one finding under its own rule, naming the record, the refusal, why and the commit', () => {
+  const root = repoWith({ [RECORD]: '{}\n' });
+  const sha = commitAs(root, BOT, { remove: [RECORD], message: 'feat(autowriter): drop first-post' });
+  assert.deepEqual(historyReport({ root }), {
+    findings: [{ rule: REMOVED, path: RECORD, detail: removedDetail(RECORD, sha) }],
+    commits: 1,
+    skipped: null,
+  });
+});
+
+test('a person who removed a record is not judged, so a record can still be removed by hand', () => {
+  const root = repoWith({ [RECORD]: '{}\n' });
+  commitAs(root, HUMAN, { remove: [RECORD], message: 'chore: drop first-post' });
+  assert.deepEqual(historyReport({ root }), { findings: [], commits: 0, skipped: null });
+});
+
+test('a pipeline commit that wrote or changed a record, or removed a file that is no record, removed no record', () => {
+  const root = repoWith({ [RECORD]: '{}\n', 'site/src/data/post/old.md': 'old\n' });
+  commitAs(root, BOT, {
+    write: { [RECORD]: '{"again":1}\n', [SECOND_RECORD]: '{}\n' },
+    remove: ['site/src/data/post/old.md'],
+    message: written('second-post'),
+  });
+  assert.deepEqual(historyReport({ root }), { findings: [], commits: 1, skipped: null });
+});
+
+const MOVES = [
+  ['to another name in the directory', generationFile('renamed-post')],
+  ['to a month directory below it', `${GENERATION_DIR}/2026-11/first-post.json`],
+  ['out of the directory', 'audits/autowriter/first-post.json'],
+  ['to another tree', 'audits/archive/first-post.json'],
+];
+
+for (const [how, target] of MOVES) {
+  test('a pipeline commit that moved a record ' + how + ' removed it from where it was, and is found', () => {
+    const root = repoWith({ [RECORD]: '{"slug":"first-post"}\n' });
+    const write = { [target]: '{"slug":"first-post"}\n' };
+    const sha = commitAs(root, BOT, { remove: [RECORD], write, message: 'feat(autowriter): move first-post' });
+    const found = historyReport({ root }).findings.filter(({ rule }) => rule === REMOVED);
+    assert.ok(found.length > 0, 'the move was not found');
+    for (const finding of found) assert.equal(finding.detail, removedDetail(RECORD, sha));
+  });
+}
+
+test('a pipeline commit that moved a record into the directory from elsewhere added it and is not found', () => {
+  const elsewhere = 'audits/elsewhere/first-post.json';
+  const root = repoWith({ [elsewhere]: '{}\n' });
+  commitAs(root, BOT, { remove: [elsewhere], write: { [RECORD]: '{}\n' }, message: written('first-post') });
+  assert.deepEqual(historyReport({ root }), { findings: [], commits: 1, skipped: null });
 });

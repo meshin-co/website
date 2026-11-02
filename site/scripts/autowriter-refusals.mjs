@@ -1,5 +1,7 @@
 import { posix } from 'node:path';
 
+import { GENERATION_DIR } from './generation-record.mjs';
+
 export const DISPOSITION_DIRECTORY = 'audits/phase-4.7/dispositions';
 
 const PIPELINE_REASON_OPENINGS = [
@@ -44,6 +46,24 @@ export const REFUSED_PATHS = [
 
 export function refusalFor(path) {
   const row = REFUSED_PATHS.find(({ covers }) => covers(path));
+  return row ? { id: row.id, path: normalised(path), why: row.why } : null;
+}
+
+export const isGenerationRecord = (path) => {
+  const file = normalised(path).toLowerCase();
+  return posix.dirname(file) === GENERATION_DIR.toLowerCase() && file.endsWith('.json');
+};
+
+export const REMOVAL_REFUSALS = [
+  {
+    id: 'generation-record-removed',
+    why: 'The record that marks an entry as written by the pipeline, which the sentence band and the entry length record leave out when they measure, so a run that can remove one turns its own entry into one a person wrote and moves its own goalposts.',
+    covers: isGenerationRecord,
+  },
+];
+
+export function removalRefusalFor(path) {
+  const row = REMOVAL_REFUSALS.find(({ covers }) => covers(path));
   return row ? { id: row.id, path: normalised(path), why: row.why } : null;
 }
 

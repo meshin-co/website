@@ -69,6 +69,7 @@ test('the specimen module names every failure mode of the gate, each against gat
     'autowriterClaimTitleCollides',
     'autowriterCommitMovesTheBand',
     'autowriterCommitMovesTheEntryLength',
+    'autowriterCommitRemovesAGenerationRecord',
     'autowriterCommitSealsDispositions',
     'autowriterCommitWritesLighthouseRecord',
     'autowriterCommitWritesLighthouseReport',

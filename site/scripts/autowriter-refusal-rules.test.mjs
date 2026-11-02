@@ -2,7 +2,14 @@ import './fixtures/no-network.mjs';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { DISPOSITION_DIRECTORY, REFUSED_PATHS, refusalFor, sealSignature } from './autowriter-refusals.mjs';
+import {
+  DISPOSITION_DIRECTORY,
+  REFUSED_PATHS,
+  describeRefusal,
+  refusalFor,
+  removalRefusalFor,
+  sealSignature,
+} from './autowriter-refusals.mjs';
 import { judgeCommit, pipelineCommits, skippedLine } from './autowriter-refusal-rules.mjs';
 import { generationFile } from './generation-record.mjs';
 
@@ -160,4 +167,23 @@ test('a Provenance line is found whatever line ending the message carries', () =
 
 test('output that is not a whole number of commits is refused, never read as an empty history', () => {
   assert.throws(() => pipelineCommits(() => `${SHA}\0owner@example.test\0`), /git log/);
+});
+
+test('a record with a before side and no after side was removed, found once with the record, the refusal and the commit', () => {
+  const found = judged({ changes: [change(RECORD, 'blob', null)] });
+  const detail = `removed ${RECORD} (${describeRefusal(removalRefusalFor(RECORD))}), in commit ${SHA12}`;
+  assert.deepEqual(found, [{ rule: 'generation-record-removed-committed', path: RECORD, detail }]);
+});
+
+test('a record that was added, changed or has neither side is no removal', () => {
+  for (const [before, after] of [
+    [null, 'blob'],
+    ['blob', 'other'],
+    [null, null],
+  ])
+    assert.deepEqual(judged({ records: [], changes: [change(RECORD, before, after)] }), [], String([before, after]));
+});
+
+test('a file that is no record and was removed is no removal of a record', () => {
+  assert.deepEqual(judged({ changes: [change('site/src/data/post/old.md', 'blob', null)] }), []);
 });

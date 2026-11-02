@@ -56,6 +56,23 @@
       spelling with a dot segment or other capitals
 - [x] 4.2 A record re-measured with a generated entry counted in it fails the gate, and a short
       generated entry leaves the record fresh and the floor where it was
+- [x] 4.3 `site/scripts/autowriter-refusals.mjs` lists the refusal `generation-record-removed` in
+      `REMOVAL_REFUSALS`, beside `REFUSED_PATHS`, with `removalRefusalFor(path)` and
+      `isGenerationRecord(path)`; it matches a `.json` file directly under `audits/autowriter/generations`
+      after separators are normalised and case is folded, and it is judged on the old path of a change
+- [x] 4.4 `site/scripts/commit-to-main.mjs` refuses a staged removal of a generation record before it
+      commits, and the history rule of `npm run gate:autowriter`
+      (`site/scripts/autowriter-refusal-rules.mjs`) finds a pipeline commit that removed one as
+      `generation-record-removed-committed`, naming the removed record and the first 12 hex
+      characters of the commit; both git reads use `--no-renames`, so a rename or a move is a removal
+      of the old path, and a move into the directory is an addition and is allowed
+- [x] 4.5 `site/scripts/entry-commit.mjs` and `site/scripts/repair-scope.mjs` cannot express a
+      removal, because every file they list carries text and is written, and adding or changing a
+      record and a person removing one by hand stay allowed
+- [x] 4.6 The planted specimen `autowriterCommitRemovesAGenerationRecord` in
+      `site/scripts/autowriter-history-specimens.mjs` is the mutation smoke family
+      `autowriter-commit-removes-a-generation-record`, and `npm run gate:autowriter` must print the
+      finding `generation-record-removed-committed` for it
 
 ## 5. The prompt
 
@@ -81,11 +98,12 @@
 
 ## 6. Guards
 
-- [x] 6.1 A planted specimen proves each failure mode, each `plant` returning its restore, with five
+- [x] 6.1 A planted specimen proves each failure mode, each `plant` returning its restore, with six
       rows in the mutation smoke manifest: `autowriter-commit-moves-the-entry-length`,
       `autowriter-generated-entry-under-the-length-floor`, `autowriter-entry-length-record-stale`,
-      `autowriter-entry-length-corpus-drifted` and
-      `autowriter-entry-length-record-fed-by-the-entry`
+      `autowriter-entry-length-corpus-drifted`,
+      `autowriter-entry-length-record-fed-by-the-entry` and
+      `autowriter-commit-removes-a-generation-record`
 - [x] 6.2 `site/scripts/README.md` carries a row for each new script
 - [x] 6.3 `site/scripts/engine-anchors.mjs` lists the record, so `npm run gate:engine` names it for a
       second site; the skills for the writer, its guard and the engine name the record and the
@@ -113,7 +131,7 @@ article again under the new floor is the owner's decision and not a task of this
 
 ## 8. Calibration Gate
 
-- [ ] 8.1 `npm run test:smoke` proves every guard family can still fail, the five new ones among
-      them, and its family count is recorded; the manifest holds 125 families on this branch and the
+- [ ] 8.1 `npm run test:smoke` proves every guard family can still fail, the six new ones among
+      them, and its family count is recorded; the manifest holds 126 families on this branch and the
       run itself needs a full build and three browsers, so the integrator runs it once
 - [ ] 8.2 Run the Calibration Gate and commit the report it generates for this change

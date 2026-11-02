@@ -20,6 +20,7 @@ import {
 } from './fixtures/commit-scene.mjs';
 import { gitRun } from './fixtures/git-run.mjs';
 import { FIXTURE_IDENTITY, gitIn } from './fixtures/route-repo.mjs';
+import { generationFile } from './generation-record.mjs';
 
 const cleanup = [];
 const open = () => {
@@ -130,4 +131,22 @@ for (const [kind, write, prepare] of BOTH) {
 
     assert.equal(gitIn(made.root, 'show', 'HEAD:' + ROUTES), text);
   });
+
+  test(
+    kind + ' cannot remove a generation record: a listed record with no text is refused before git is touched',
+    async () => {
+      const made = open();
+      prepare(made);
+      const record = generationFile('another-entry');
+      const before = stateOf(made.root);
+      const run = gitRun();
+
+      await assert.rejects(
+        write({ ...made, files: [...made.files, { path: record }] }, run),
+        refusedWith(record, 'has no text')
+      );
+      assert.deepEqual(stateOf(made.root), before);
+      assert.ok(!changedGit(run.calls), 'git changed something');
+    }
+  );
 }

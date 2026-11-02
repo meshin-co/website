@@ -2,12 +2,12 @@ import './fixtures/no-network.mjs';
 
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { after, test } from 'node:test';
 
-import { refusalFor } from './autowriter-refusals.mjs';
+import { refusalFor, removalRefusalFor } from './autowriter-refusals.mjs';
 import { CommitError, commitAndPush, runCli } from './commit-to-main.mjs';
 import { restatedReason } from './disposition-restate.mjs';
 
@@ -256,4 +256,136 @@ test('a new disposition file and a ledger are committed as before', async () => 
     git(world.remote, 'show', '--name-only', '--format=', result.commit).split('\n').sort().join('|'),
     [...paths].sort().join('|')
   );
+});
+
+const RECORD = 'audits/autowriter/generations/model-registry.json';
+const OTHER_RECORD = 'audits/autowriter/generations/another-entry.json';
+const RECORD_TEXT = '{"slug":"model-registry"}\n';
+
+function worldWithRecord() {
+  const world = makeWorld();
+  put(world.repo, RECORD, RECORD_TEXT);
+  put(world.repo, 'content/a.txt', 'alpha\n');
+  git(world.repo, 'add', '--all');
+  git(world.repo, ...SEED, 'commit', '--message', 'seed a record');
+  git(world.repo, 'push', 'origin', 'main');
+  return world;
+}
+
+function assertNothingMoved(world, head) {
+  assert.equal(git(world.repo, 'diff', '--cached', '--name-only'), '');
+  assert.equal(git(world.repo, 'rev-parse', 'HEAD'), head);
+  assert.equal(world.remoteHead(), head);
+}
+
+test('a listed generation record that was deleted is refused and the deletion stays in the working tree', async () => {
+  const world = worldWithRecord();
+  const head = git(world.repo, 'rev-parse', 'HEAD');
+  rmSync(join(world.repo, RECORD));
+
+  await assert.rejects(
+    commitAndPush(request(world.repo, { paths: [RECORD] })),
+    refusedWith(RECORD, 'generation-record-removed: ' + removalRefusalFor(RECORD).why)
+  );
+
+  assertNothingMoved(world, head);
+  assert.equal(existsSync(join(world.repo, RECORD)), false);
+  assert.equal(git(world.repo, 'status', '--porcelain'), 'D ' + RECORD);
+});
+
+test('a deleted record listed with an ordinary new file refuses the whole commit', async () => {
+  const world = worldWithRecord();
+  const head = git(world.repo, 'rev-parse', 'HEAD');
+  rmSync(join(world.repo, RECORD));
+  put(world.repo, 'content/b.txt', 'beta\n');
+
+  await assert.rejects(
+    commitAndPush(request(world.repo, { paths: ['content/b.txt', RECORD] })),
+    refusedWith(RECORD, 'generation-record-removed')
+  );
+
+  assertNothingMoved(world, head);
+  assert.equal(readFileSync(join(world.repo, 'content/b.txt'), 'utf8'), 'beta\n');
+  assert.equal(git(world.remote, 'ls-tree', '-r', '--name-only', 'main').includes('content/b.txt'), false);
+});
+
+test('a modified record and a newly added record are committed and pushed', async () => {
+  const world = worldWithRecord();
+  put(world.repo, RECORD, '{"slug":"model-registry","changed":true}\n');
+  put(world.repo, OTHER_RECORD, '{"slug":"another-entry"}\n');
+
+  const result = await commitAndPush(request(world.repo, { paths: [RECORD, OTHER_RECORD] }));
+
+  assert.equal(result.committed, true);
+  assert.equal(world.remoteHead(), result.commit);
+  assert.equal(
+    git(world.remote, 'show', '--name-status', '--format=', result.commit).split('\n').sort().join('|'),
+    ['A\t' + OTHER_RECORD, 'M\t' + RECORD].sort().join('|')
+  );
+});
+
+const RENAMES = [
+  ['to a name in the same directory', 'audits/autowriter/generations/renamed.json'],
+  ['out of the directory', 'audits/autowriter/moved-model-registry.json'],
+];
+
+for (const [name, target] of RENAMES) {
+  test('a record renamed ' + name + ' is refused as a removal when both paths are listed', async () => {
+    const world = worldWithRecord();
+    const head = git(world.repo, 'rev-parse', 'HEAD');
+    renameSync(join(world.repo, RECORD), join(world.repo, target));
+
+    await assert.rejects(
+      commitAndPush(request(world.repo, { paths: [RECORD, target] })),
+      refusedWith(RECORD, 'generation-record-removed')
+    );
+
+    assertNothingMoved(world, head);
+    assert.equal(readFileSync(join(world.repo, target), 'utf8'), RECORD_TEXT);
+    assert.equal(existsSync(join(world.repo, RECORD)), false);
+  });
+
+  test(
+    'a record renamed ' + name + ' with only the new path listed commits the addition and leaves the old record',
+    async () => {
+      const world = worldWithRecord();
+      renameSync(join(world.repo, RECORD), join(world.repo, target));
+
+      const result = await commitAndPush(request(world.repo, { paths: [target] }));
+
+      assert.equal(git(world.remote, 'show', '--name-status', '--format=', result.commit), 'A\t' + target);
+      assert.equal(git(world.remote, 'show', result.commit + ':' + RECORD) + '\n', RECORD_TEXT);
+      assert.equal(git(world.repo, 'status', '--porcelain'), 'D ' + RECORD);
+    }
+  );
+}
+
+test('a deleted path that is not a record is committed as a removal', async () => {
+  const world = worldWithRecord();
+  rmSync(join(world.repo, 'content/a.txt'));
+
+  const result = await commitAndPush(request(world.repo, { paths: ['content/a.txt'] }));
+
+  assert.equal(result.committed, true);
+  assert.equal(world.remoteHead(), result.commit);
+  assert.equal(git(world.remote, 'show', '--name-status', '--format=', result.commit), 'D\tcontent/a.txt');
+});
+
+test('the CLI exits 1 and prints the refusal for a deleted generation record', async () => {
+  const world = worldWithRecord();
+  const head = git(world.repo, 'rev-parse', 'HEAD');
+  rmSync(join(world.repo, RECORD));
+  const lines = [];
+
+  const code = await runCli(['--message', 'x', '--path', RECORD], {
+    repoRoot: world.repo,
+    err: (text) => lines.push(text),
+  });
+
+  assert.equal(code, 1);
+  assert.ok(
+    lines.join('\n').includes(RECORD + ': generation-record-removed: ' + removalRefusalFor(RECORD).why),
+    lines.join('\n')
+  );
+  assertNothingMoved(world, head);
 });

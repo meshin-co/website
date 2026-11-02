@@ -6,16 +6,21 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { test } from 'node:test';
 
+import { ledgerFile } from './autowriter-ledger.mjs';
 import {
   DISPOSITION_DIRECTORY,
   REFUSED_PATHS,
+  REMOVAL_REFUSALS,
   describeRefusal,
   isDispositionFile,
+  isGenerationRecord,
   refusalFor,
   refusalOf,
+  removalRefusalFor,
   sealSignature,
 } from './autowriter-refusals.mjs';
 import { restatedReason } from './disposition-restate.mjs';
+import { GENERATION_DIR, generationFile } from './generation-record.mjs';
 import { writeMeasuredStamp } from './lh-evidence.mjs';
 import { DISPOSITION_DIRECTORY as DERIVED_DIRECTORY, dispositionFor } from './route-derive.mjs';
 import { LENGTH_FILE } from './entry-length.mjs';
@@ -320,4 +325,65 @@ test('a refusal reads as its id and its sentence, and a seal adds the entries it
   const found = compared([entry(), second()], [entry({ digest: 'bbbbbbbbbbbb' }), second({ digest: 'cccccccccccc' })]);
 
   assert.equal(describeRefusal(found), found?.id + ': ' + found?.why + '; entries: /blog head.title, /glossary');
+});
+
+test('the removal list names what automation may never remove, each row with one sentence that says why', () => {
+  assert.deepEqual(
+    REMOVAL_REFUSALS.map(({ id }) => id),
+    ['generation-record-removed']
+  );
+  for (const row of REMOVAL_REFUSALS) {
+    assert.equal(typeof row.covers, 'function', row.id);
+    assert.match(row.why, /^[A-Z][^\n]*\.$/, row.id);
+    assert.equal(row.why.split('. ').length, 1, row.id + ' says more than one sentence');
+  }
+});
+
+for (const path of ['first-post', 'zz-specimen', 'a'].map(generationFile)) {
+  test(path + ' is a generation record: refused when removed, allowed when written or changed', () => {
+    assert.equal(isGenerationRecord(path), true);
+    assert.deepEqual(removalRefusalFor(path), {
+      id: 'generation-record-removed',
+      path,
+      why: REMOVAL_REFUSALS[0].why,
+    });
+    assert.equal(refusalFor(path), null);
+  });
+}
+
+const RECORD_SPELLINGS = [
+  './' + generationFile('first-post'),
+  generationFile('first-post').replaceAll('/', '\\'),
+  generationFile('first-post').replace('/generations/', '//generations/'),
+  generationFile('first-post').toUpperCase(),
+];
+
+for (const spelled of RECORD_SPELLINGS) {
+  test(JSON.stringify(spelled) + ' names the same record, so another spelling does not slip a removal through', () => {
+    assert.equal(removalRefusalFor(spelled)?.id, 'generation-record-removed');
+  });
+}
+
+const NOT_RECORDS = [
+  ledgerFile('first-post'),
+  GENERATION_DIR + '/first-post.md',
+  GENERATION_DIR + '/nested/first-post.json',
+  GENERATION_DIR + '.json',
+  GENERATION_DIR,
+  'site/src/data/post/first-post.md',
+  'audits/sentence-band.json',
+  '',
+  undefined,
+];
+
+for (const path of NOT_RECORDS) {
+  test(JSON.stringify(path) + ' is not a generation record, so removing it is not refused as one', () => {
+    assert.equal(isGenerationRecord(path), false);
+    assert.equal(removalRefusalFor(path), null);
+  });
+}
+
+test('a removal reads as its id and its sentence', () => {
+  const refusal = removalRefusalFor(generationFile('first-post'));
+  assert.equal(describeRefusal(refusal), 'generation-record-removed: ' + REMOVAL_REFUSALS[0].why);
 });

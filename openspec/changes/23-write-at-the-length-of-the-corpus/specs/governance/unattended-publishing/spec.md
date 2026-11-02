@@ -54,3 +54,52 @@ refuse a record that differs.
 - **WHEN** the measurement runs over a corpus that holds entries with generation records
 - **THEN** it prints how many entries it left out and their slugs, so a reader can see that the floor
   rests on entries a person wrote
+
+### Requirement: The pipeline cannot remove the evidence the measurements exclude by
+
+The pipeline SHALL NOT remove a generation record, because the sentence band and the entry length
+record leave out every entry that has one. `site/scripts/autowriter-refusals.mjs` SHALL refuse a
+removal as `generation-record-removed`, `site/scripts/commit-to-main.mjs` SHALL refuse it before
+anything is committed, and `npm run gate:autowriter` SHALL refuse one already in history. Adding or
+changing a record SHALL stay allowed.
+
+#### Scenario: A pipeline commit removes a record
+
+- **WHEN** a commit by the bot, or a commit that names the record in a `Provenance:` line, removes a
+  generation record
+- **THEN** `npm run gate:autowriter` fails with `generation-record-removed-committed` on the removed
+  record, with the detail `removed <record path> (generation-record-removed: <reason>)` and the first
+  12 hex characters of the commit
+
+#### Scenario: A pipeline commit renames or moves a record
+
+- **WHEN** a commit by the pipeline renames a generation record, moves it out of the directory, moves
+  it under another name in the directory or moves it to a deeper directory
+- **THEN** the commit is read with renames off, as a removal of the old path and an addition of the new
+  one, and the removal is refused as `generation-record-removed`
+
+#### Scenario: A pipeline commit changes or adds a record
+
+- **WHEN** a commit by the pipeline changes a generation record, or adds one, including by moving a
+  file into the directory from elsewhere
+- **THEN** it is not refused for the record, because the pipeline writes them
+
+#### Scenario: A person removes a record
+
+- **WHEN** a commit by a person removes a generation record
+- **THEN** the history rule does not refuse it, because a person may delete one in a diff anyone can
+  read, and the re-measure the removal forces shows in the same diff
+
+#### Scenario: The removal reaches the default branch through the commit sink
+
+- **WHEN** `site/scripts/commit-to-main.mjs` is given the path of a generation record that is gone
+  from the working tree
+- **THEN** it refuses the commit naming `generation-record-removed` and its reason, unstages the
+  listed paths, and commits and pushes nothing
+
+#### Scenario: The refusal matches a path pattern
+
+- **WHEN** a path is a `.json` file directly under `audits/autowriter/generations`, spelled with a dot
+  segment, a backslash or other capitals
+- **THEN** it is refused as a record on its old path, and a path in a subdirectory of that directory
+  or a file of another extension is not a record

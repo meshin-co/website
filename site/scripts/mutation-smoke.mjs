@@ -181,6 +181,11 @@ export const FAMILIES = [
   { id: 'autowriter-commit-moves-the-sentence-band', kind: 'specimen', specimen: 'autowriterCommitMovesTheBand' },
   { id: 'autowriter-commit-moves-the-entry-length', kind: 'specimen', specimen: 'autowriterCommitMovesTheEntryLength' },
   {
+    id: 'autowriter-commit-removes-a-generation-record',
+    kind: 'specimen',
+    specimen: 'autowriterCommitRemovesAGenerationRecord',
+  },
+  {
     id: 'autowriter-generated-entry-under-the-length-floor',
     kind: 'specimen',
     specimen: 'autowriterGeneratedEntryUnderTheFloor',

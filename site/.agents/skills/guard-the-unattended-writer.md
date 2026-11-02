@@ -22,7 +22,7 @@ an unknown field is a finding.
 - **aggregate-\*:** a `ci.yml` whose aggregate job no longer covers every required job (below).
 - **generation-\* (unreadable, schema, name, entry-missing, entry-unreadable):** a file directly in
   `audits/autowriter/generations/<slug>.json` that is off `scripts/generation-record.schema.json` (a record with no `band` too), is not
-  named by its slug, or whose entry file is missing. With no file the gate checks none and says `0 generation records`.
+  named by its slug, or whose entry file is missing. With no file the gate checks none and says `0 generation records`. A pipeline commit that removes a record is refused by `scripts/commit-to-main.mjs` and found in history as `generation-record-removed-committed`, because the band and the length record leave out every entry that has one; a person may still delete one in a visible diff.
 - **The claim table and sentence band of a record:** the rules of `scripts/claim-sources.mjs` and `scripts/sentence-band.mjs`, run on the entry re-measured from its committed file against `audits/sentence-band.json`, never on the record's word. Sources match by id, or by URL.
   `band-measurement-differs`: the record's measurement is not what the entry measures. The limits a record carries are only a note of what it was judged against, so a re-measure of the band never invalidates an old record. `generation-band-unjudged`: no band for the entry's format.
 - **record-missing, record-\*-stale, band-record-unmeasurable, length-record-\*:** `audits/sentence-band.json` or `audits/entry-length.json` is absent or

@@ -93,9 +93,15 @@ entry that has a generation record against the limits of its format. It also re-
 entries a person wrote and refuses a record that differs. An entry a person wrote never fails the
 floor, because it sets the floor.
 
-**The pipeline cannot move the record.** `site/scripts/autowriter-refusals.mjs` gains the row
-`entry-length`, so every place that already refuses a pipeline write to the sentence band refuses
-this file too.
+**The pipeline cannot move the record, and cannot remove a generation record.**
+`site/scripts/autowriter-refusals.mjs` gains the row `entry-length`, so every place that already
+refuses a pipeline write to the sentence band refuses this file too. It also gains a second list,
+`REMOVAL_REFUSALS`, with one row, `generation-record-removed`. The sentence band and the length
+record both leave out every entry that has a generation record, so a pipeline commit that removes
+one turns a machine-written entry into one a person wrote. `site/scripts/commit-to-main.mjs`
+refuses that commit before anything is committed, and the history rule of `npm run gate:autowriter`
+finds one already in history as `generation-record-removed-committed`. Adding or changing a record
+stays allowed, because the pipeline writes them, and so does a person removing one by hand.
 
 **The prompt states the length once, and the shapes of prose that no block states.** One bullet
 follows the `body` bullet of the output contract and states the length. Every number in it is read
@@ -103,10 +109,11 @@ from the record when the prompt is built, and the record joins `PROMPT_SOURCES` 
 `site/scripts/writer-prompt.mjs`, so a generation record carries its digest. A second bullet follows
 it and names three shapes of prose that no gate measures and no copied block states.
 
-**Each guard is shown failing.** Five planted specimens, each a family in
-`site/scripts/mutation-smoke.mjs`, fail on: a pipeline commit that moves the record, a generated
-entry under the floor, a record whose limits were edited, a record whose corpus count moved, and a
-record re-measured with a generated entry counted in it.
+**Each guard is shown failing.** Six planted specimens, each a family in
+`site/scripts/mutation-smoke.mjs`, fail on: a pipeline commit that moves the record, a pipeline
+commit that removes a generation record, a generated entry under the floor, a record whose limits
+were edited, a record whose corpus count moved, and a record re-measured with a generated entry
+counted in it.
 
 ## Decisions
 
@@ -133,7 +140,7 @@ owner wrote, 465 words against 885, and it does not ask for the middle. The prom
 at 1234 to 2904 words. Enforcing the target would refuse 3 of the 8 articles the owner wrote, 2
 under it and 1 over it.
 
-### The measurement counts only what a person wrote, and three layers keep it there
+### The measurement counts only what a person wrote, and four layers keep it there
 
 **Decision.** The record is measured over the entries a person wrote. Every entry that has a
 generation record, a file under `audits/autowriter/generations/`, is left out.
@@ -141,8 +148,8 @@ generation record, a file under `audits/autowriter/generations/`, is left out.
 **Defence.** If generated entries counted, one short generated article would lower the floor the
 next one is judged against, and the gate would measure the writer against its own output. The
 sentence band already leaves them out the same way (`generatedSlugs` in
-`site/scripts/measure-sentence-band.mjs`, which this change exports). Three layers keep the record
-from drifting toward the pipeline's output:
+`site/scripts/measure-sentence-band.mjs`, which this change exports). Four layers keep the record
+and the evidence it excludes by from drifting toward the pipeline's output:
 
 1. The measurement leaves out every entry that has a generation record, and prints how many it left
    out and their slugs.
@@ -158,15 +165,55 @@ from drifting toward the pipeline's output:
    `site/scripts/commit-to-main.mjs`) and again afterwards by the history rule of
    `npm run gate:autowriter` (`site/scripts/autowriter-refusal-rules.mjs`, finding
    `refused-path-committed`).
+4. `site/scripts/autowriter-refusals.mjs` also carries `REMOVAL_REFUSALS`, one row,
+   `generation-record-removed`, listed beside `REFUSED_PATHS`, with `removalRefusalFor(path)` and
+   `isGenerationRecord(path)`. A pipeline commit that removes a generation record is refused in two
+   places. `site/scripts/commit-to-main.mjs` is the only sink that can stage a removal: it commits a
+   caller-given list of paths, and `git add` of a listed path that is gone from the working tree
+   stages its removal, so the refusal runs after the paths are staged and before anything is
+   committed. The history rule of `npm run gate:autowriter`
+   (`site/scripts/autowriter-refusal-rules.mjs`) finds one afterwards, as the finding
+   `generation-record-removed-committed` with the removed record as its path and the detail
+   `removed <path> (generation-record-removed: <why>), in commit <first 12 hex of the sha>`.
+   `site/scripts/entry-commit.mjs` and `site/scripts/repair-scope.mjs` cannot express a removal:
+   every file the entry commit or the repair commit lists must carry text and is written, never
+   deleted, and the repair scope names only the entry, its ledger, its record and the files the
+   entry derives.
 
 A person who adds, removes or shortens a hand-written entry moves the floor on purpose, in a diff
 anyone can read, and the gate forces the re-measure into the same commit.
 
-**Residual risk.** The exclusion keys on the existence of a generation record. If a person deletes
-the generation record of a generated entry, that entry counts as hand-written, and a re-measure
-afterwards can lower the floor. The deletion and the re-measure both show in the diff, and
-`npm run gate:autowriter` judges every generation record against its entry, but no rule forbids the
-deletion. This change leaves that open.
+**What the removal refusal matches.** It is written against a path pattern, not against the
+existence of a record: a `.json` file directly under `audits/autowriter/generations`
+(`GENERATION_DIR`), after separators are normalised and case is folded, and it is judged on the old
+path of a change. Both git reads that feed it use `--no-renames`
+(`site/scripts/commit-to-main.mjs` and `site/scripts/autowriter-refusal-rules.mjs`), so a rename or
+a move is read as a removal of the old path plus an addition of the new one, and the removal is
+refused: a move out of the directory, a move under another name in it and a move to a deeper
+directory. A move into the directory from elsewhere is an addition and is allowed. In
+`commit-to-main.mjs` a rename shows as a removal only when the old path is among the listed paths;
+listing only the new path commits the addition and leaves the old record at HEAD.
+
+**What it does not cover.**
+
+- A commit by a person. This is by design: a person may delete a record in a diff anyone can read.
+- A history rewrite or a force push. The history rule reads the commits that remain.
+- A pipeline commit that overwrites the content of a record. The exclusion keys on the file name
+  (`generatedSlugs` lists the names ending in `.json`), so overwriting a record does not change
+  which entries are excluded.
+- Records in month directories, once the writer's records are sharded by month. A record in a
+  subdirectory is not recognised by `isGenerationRecord`, an existing test pins that for the flat
+  layout, and `generatedSlugs` reads the one directory without descending. The recognizer must be
+  changed in the same change that shards the records. One recognizer serves both this refusal and
+  the history rule's detection of pipeline commits (`pipelineCommits`), so changing it moves both.
+
+**Residual risk.** The exclusion keys on the existence of a generation record, so a removal was the
+way round the measurement, and the pipeline can no longer take it: `commit-to-main.mjs` refuses the
+commit and `npm run gate:autowriter` finds one in history. What is left is a person who deletes a
+record by hand. That entry then counts as hand-written, and a re-measure afterwards can lower the
+floor and the band. The deletion and the re-measure both show in a diff anyone can read, and the
+gate forces the re-measure into the same commit. A history rewrite that drops a record is the
+other thing left, and no rule of the gate sees it.
 
 ### The floor counts sections as well as words, and five other measures were rejected
 
@@ -342,18 +389,19 @@ That leaves length, the one failure that no rule covered, which this change adds
 
 **Files changed.** `site/scripts/writer-preflight.mjs`, `site/scripts/writer-prompt-text.mjs`,
 `site/scripts/writer-prompt.mjs`, `site/scripts/writer-prompt-read.mjs`,
-`site/scripts/autowriter-gate.mjs`, `site/scripts/autowriter-refusals.mjs` and
+`site/scripts/autowriter-gate.mjs`, `site/scripts/autowriter-refusals.mjs`,
+`site/scripts/autowriter-refusal-rules.mjs`, `site/scripts/commit-to-main.mjs` and
 `site/scripts/engine-anchors.mjs`. `site/scripts/sentence-band.mjs` and
 `site/scripts/measure-sentence-band.mjs` export what they already held (`FORMATS`, `byFormat`,
 `formatOf`, `quantile` and `generatedSlugs`) and change nothing else. The mutation smoke manifest
 (`site/scripts/mutation-smoke.mjs`), the planted specimens
 (`site/scripts/autowriter-record-specimens.mjs` and
-`site/scripts/autowriter-history-specimens.mjs`) and the tests of the refusal list carry the five
+`site/scripts/autowriter-history-specimens.mjs`) and the tests of the refusal list carry the six
 new families. The fixtures that build a test repository (`site/scripts/fixtures/writer-repo.mjs`
 and `site/scripts/fixtures/record-rules-scene.mjs`) carry the record. `site/scripts/README.md`
 carries a row for each new script. The skills for the writer, its guard and the engine name the
 record and the command that re-measures it, and the skill for the repair loop lists the record among
-the paths automation may never write.
+the paths automation may never write and the generation record among the paths it may never remove.
 
 **Records.** `audits/entry-length.json` is new. `audits/sentence-band.json` is unchanged. The
 generation record of the next run lists the length record, with its digest, among the files its
@@ -361,7 +409,7 @@ prompt was built from.
 
 **Gates.** `npm run gate:autowriter` already runs in the `types-and-units` job of
 `.github/workflows/ci.yml`, so no workflow changes, and it gains the length findings.
-`npm run test:smoke` gains five families. `npm run gate:engine` lists the record among the anchors a
+`npm run test:smoke` gains six families. `npm run gate:engine` lists the record among the anchors a
 second site must hold. The change touches `site/scripts`, which `npm run gate:spec` counts as
 built-byte surface, so it carries the Calibration Gate task group although no page changes.
 
@@ -406,8 +454,10 @@ change does neither.
 - **Padding in ordinary sentences passes.** The pairing counts sections, not substance. Filler
   written as plain sentences inside correctly sized sections clears the floor. The backstops are
   named under Decisions.
-- **A deleted generation record is not forbidden.** It shows in the diff and forces a re-measure,
-  but no rule refuses it.
+- **A person can still delete a generation record, and a history rewrite is not seen.** The
+  pipeline cannot, in `commit-to-main.mjs` or in history. A person's removal shows in the diff and
+  forces a re-measure, and no rule refuses it, by design. Records in month directories need a new
+  recognizer in the change that shards them; see Decisions.
 - **A concept defined twice is not checked before the write.** It is stated to the model and judged
   by `npm run gate:registers` on the built site. No check runs on the draft.
 - **The floor binds a repair too.** `site/scripts/repair-rewrite.mjs` runs the same preflight, so a
