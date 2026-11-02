@@ -204,7 +204,13 @@ export const PLANTS = [
   {
     name: 'a content collection has no FEED_BASES entry',
     plant: declareGhostCollection,
-    expected: () => [failure('feed-base-missing', 'ghost has no FEED_BASES entry; skipping its feed coverage check')],
+    expected: () => [
+      failure('feed-base-missing', 'ghost has no FEED_BASES entry; skipping its feed coverage check'),
+      failure(
+        'empty-collection-surface',
+        'collection ghost has no live entry in the build and is not declared empty; if that is intended, declare it in site/src/utils/route-exceptions.mjs with a reason'
+      ),
+    ],
   },
   {
     name: 'a collection feed omits a live route',

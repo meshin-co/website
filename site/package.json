@@ -55,6 +55,7 @@
     "gate:links": "node scripts/run-links-gate.mjs",
     "gate:agents": "node scripts/agent-interfaces-gate.mjs dist",
     "gate:machine": "node scripts/machine.mjs dist",
+    "gate:parity": "node scripts/route-parity-gate.mjs dist",
     "gate:orphans": "node scripts/orphan-gate.mjs dist",
     "gate:paid": "node scripts/run-paid-gate.mjs dist",
     "gate:plan": "node scripts/plan-gate.mjs",

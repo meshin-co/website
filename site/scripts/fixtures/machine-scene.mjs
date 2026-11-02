@@ -67,6 +67,8 @@ export const LIVE = {
   ],
   service: [{ slug: 'sprint', title: 'Sprint', published: '2026-09-01', updated: '2026-10-01' }],
   glossary: [{ slug: 'evals', title: 'Evals', published: '2026-09-02', updated: '2026-09-20' }],
+  resource: [{ slug: 'checklist', title: 'Checklist', published: '2026-09-03', updated: '2026-09-21' }],
+  faq: [{ slug: 'who-owns-it', title: 'Who owns it', published: '2026-09-04', updated: '2026-09-22' }],
 };
 
 const KINDS = Object.keys(FEED_BASES);

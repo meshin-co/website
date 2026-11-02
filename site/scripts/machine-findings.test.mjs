@@ -96,7 +96,7 @@ test('the planted scene fails the gate as it always did, with the same two summa
     assert.equal(
       run.stdout,
       [
-        `machine: no live entry in ${[...scene.emptyKinds, 'ghost'].join(', ')}; entry coverage was not checked for it`,
+        `machine: ${scene.emptyKinds.length} of ${scene.collections + 1} collections have no live entry and are declared empty with a reason (${scene.emptyKinds.join(', ')}); entry coverage is vacuous for them by declaration`,
         `machine: ${counts.join(', ')}`,
         '',
       ].join('\n')

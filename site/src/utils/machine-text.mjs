@@ -1,5 +1,6 @@
 import { lastmod } from './lastmod.mjs';
 import { brandFromDisk, contactEmail } from './brand.mjs';
+import { ROUTE_EXCEPTIONS } from './route-exceptions.mjs';
 
 const BRAND = brandFromDisk();
 
@@ -239,7 +240,7 @@ export const STATIC_PAGE_CATALOG = [
   },
 ];
 
-export const NOINDEX_STATIC_PAGES = new Set(['/search', '/styleguide', '/404']);
+export const NOINDEX_STATIC_PAGES = new Set(ROUTE_EXCEPTIONS.map(({ route }) => route));
 
 export function publicIndexableStaticPages() {
   return STATIC_PAGE_CATALOG.filter((page) => !NOINDEX_STATIC_PAGES.has(page.path));

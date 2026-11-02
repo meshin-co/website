@@ -7,6 +7,7 @@ import { brandFromDisk } from '../src/utils/brand.mjs';
 import { BOOKING_URL } from '../src/utils/booking.mjs';
 import { autowriterSpecimens } from './autowriter-specimens.mjs';
 import { engineSpecimens } from './engine-specimens.mjs';
+import { paritySpecimens } from './parity-specimens.mjs';
 import { evidenceSpecimens } from './evidence-specimens.mjs';
 import { jsonldSpecimens } from './jsonld-specimens.mjs';
 import { REGISTERS_BEGIN } from './registers.mjs';
@@ -592,6 +593,7 @@ export const SPECIMENS = {
   ...engineSpecimens({ editFile, removeFile }),
   ...jsonldSpecimens({ editFile, moveAside }),
   ...unattendedSpecimens({ editFile, removeFile }),
+  ...paritySpecimens({ editFile, removeFile }),
   ...SPEC_SPECIMENS,
 };
 

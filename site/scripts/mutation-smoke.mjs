@@ -287,6 +287,12 @@ export const FAMILIES = [
   { id: 'empty-collection-hub-is-indexable', kind: 'specimen', specimen: 'emptyCollectionIndexable' },
   { id: 'empty-collection-mirror-ships', kind: 'specimen', specimen: 'emptyCollectionMirrorShips' },
   { id: 'empty-collection-is-listed-in-a-machine-output', kind: 'specimen', specimen: 'emptyCollectionListed' },
+  { id: 'parity-static-page-loses-its-sidecar', kind: 'specimen', specimen: 'parityStaticPageLosesItsSidecar' },
+  { id: 'parity-static-page-leaves-the-sitemap', kind: 'specimen', specimen: 'parityStaticPageLeavesTheSitemap' },
+  { id: 'parity-entry-loses-its-social-card', kind: 'specimen', specimen: 'parityEntryLosesItsSocialCard' },
+  { id: 'parity-entry-leaves-its-collection-feed', kind: 'specimen', specimen: 'parityEntryLeavesItsCollectionFeed' },
+  { id: 'parity-entry-loses-its-search-entry', kind: 'specimen', specimen: 'parityEntryLosesItsSearchEntry' },
+  { id: 'parity-entry-loses-its-markdown-link', kind: 'specimen', specimen: 'parityEntryLosesItsMarkdownLink' },
 ];
 
 const KINDS = ['build', 'build-then-gate', 'gate', 'pure', 'pagination', 'specimen', 'lh-record'];
