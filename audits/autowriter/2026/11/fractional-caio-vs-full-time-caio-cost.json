@@ -2,19 +2,26 @@
   "schema": 1,
   "slug": "fractional-caio-vs-full-time-caio-cost",
   "runId": "41519124299-1",
-  "pullRequest": null,
+  "pullRequest": 78,
   "attempts": [],
   "spend": {
     "tokens": {
-      "input": 0,
-      "output": 0
+      "input": 10033,
+      "output": 2543
     },
-    "costUsd": 0
+    "costUsd": 0.022748
   },
   "verdict": {
-    "state": "open",
-    "reason": null,
-    "decidedAt": null
+    "state": "discarded",
+    "reason": "Pull request #78 was closed unmerged on the owner's decision: the length rule of change 23 refused the entry, 465 prose words against a measured floor of 885. Its generation record went with the deleted branch, so this ledger is the only record of the 0.022748 USD the attempt cost.",
+    "decidedAt": "2026-11-02T22:36:46.000Z"
   },
-  "escalations": []
+  "escalations": [],
+  "generation": {
+    "tokens": {
+      "input": 10033,
+      "output": 2543
+    },
+    "costUsd": 0.022748
+  }
 }
