@@ -17,9 +17,11 @@ The first query of the property also settled something the plan had assumed. Mea
 - the only page-one positions are `/faq` at 6.0 for `"fractional chief ai officer" remote` and the
   front page at 7.0 for the brand term
 
-So the unit of work is not "a blog post". It is "the format that answers the query": a definition
-becomes a glossary term, a question becomes a FAQ answer, a procedure becomes an article. A
-pipeline that only writes posts would automate the one format this site has never ranked with.
+The blog post is therefore the unit the owner has chosen, and the glossary is the unit the data
+points at. The pipeline writes both: a post every run, because publishing is the habit the owner
+wants automated, and a glossary term whenever measured demand names a concept no page defines,
+because that is the format this site has actually ranked with. A pipeline writing only posts would
+automate the one format that has never earned an impression here.
 
 ## What changes
 
@@ -29,6 +31,14 @@ line of change 19, which kept the key local; the reason it was local was that a 
 a secret, and that still holds — `npm run gate:demand` stays offline against the committed report.
 A fetch that fails escalates instead of leaving yesterday's report in place.
 
+**A run writes a post, and writes the terms the glossary is missing.** The blog post is
+unconditional: every scheduled run produces one, chosen from the strongest signal the report
+offers and recorded with the number that justified it. Beside it, when measured demand names a
+concept the glossary does not define, the same run writes that concept as a glossary term. The
+term arm is a configuration switch, because another site may have no glossary; on this site it is
+on, and a cap bounds how many terms one night may add. A concept that already owns a register row
+is never written twice: that is a strengthen report for a human, not a second page.
+
 **Selection commits before it spends.** The run writes a claim to `main` — slug, title, format,
 target query, the measured impressions and position that justified it, the prompt it serves, run
 id, status, expiry — before the model is called. The claim is the de-collision lock, the spend
@@ -36,13 +46,16 @@ receipt and the frozen passage source at once. A title that already exists anywh
 generated layer of `docs/SEMANTIC-CORE.md`, or in an unexpired claim, is refused and the next
 candidate is taken.
 
-**The writer is swappable and its model is checked.** One adapter, two vendors, chosen by
-`WRITING_PROVIDER` and the matching model variable. On its first call of a run the adapter
-validates the configured model id against the vendor's own model list and fails naming the
-variable, because a typo in an unattended daily job otherwise dies quietly at six in the morning.
-A bake-off mode writes the same brief with both vendors and records which one the judge panel
-preferred; when one vendor has won a stated number of consecutive rounds the loop collapses to it
-and the bake-off is re-enabled only by changing the configuration.
+**The writer sits behind an adapter and its model is checked.** One vendor ships, named in
+configuration together with the model id and the per-token rates that price a run. The owner chose
+GPT-6.1 Terra, which OpenAI's own catalogue describes as its model for clear, natural writing; the
+reason is recorded beside the default so the next person knows why it is there. On its first call
+of a run the adapter validates the configured model id against the vendor's own model list and
+fails naming the variable, because a typo in an unattended daily job otherwise dies quietly at six
+in the morning, and an id the vendor has scheduled for withdrawal is named in the digest while it
+still works. The adapter exists as a seam rather than as a comparison: there is no second
+implementation and no bake-off, and the reason to keep the boundary is that this engine is meant
+to be copied to another site.
 
 **One commit carries the whole route.** The entry, its `Passage:` line in the semantic core, its
 dispositions, its content-facts row and its registers land together, because a commit that splits
@@ -82,6 +95,14 @@ preserves a human's old reason while refreshing the digest, which is how unrevie
 certified green in this repository once already. CI still never writes the Lighthouse record, and
 the push hook still binds the owner, so a merged article leaves a measurement debt that the loop
 records and the owner clears.
+
+**Strengthening a page stays a report, not an act.** When the rule picks the strengthen arm, the
+run names the route, the query and the number, and stops. Adding a page risks only that the page is
+poor; rewriting a live one changes words that are already published, already carry a human's
+disposition and reason, and already hold whatever ranking the route has. Automating that would mean
+a machine writing a human's reason for text no human read, which is the one failure this project
+has already paid to undo. Automating the strengthen arm needs the editorial-ledger question
+answered first, and that is a later change.
 
 No new route family is created. Nothing about bookings, appointments or outbound links changes.
 The site ships no visible line saying a page was machine-written; the record of what the machine

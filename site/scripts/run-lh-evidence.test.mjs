@@ -44,12 +44,19 @@ async function fixture({ runs = 3, score = 1, stamped = true } = {}) {
     'lh-routes.cjs',
     'lh-shards.cjs',
     'gate.mjs',
+    'human-only.mjs',
     'invoked-directly.mjs',
     'lh-parallel.mjs',
     'run-lh-parallel.mjs',
     'lh-port.cjs',
+    'engine-config.mjs',
+    'engine-config-checks.mjs',
+    'engine-config.schema.json',
+    'autowriter-records.mjs',
+    'json-schema.mjs',
   ])
     await cp(join(repoRoot, 'site/scripts', name), join(root, 'site/scripts', name));
+  await cp(join(repoRoot, 'site/engine.config.json'), join(root, 'site/engine.config.json'));
   await cp(join(repoRoot, 'site/budgets.json'), join(root, 'site/budgets.json'));
   await cp(join(repoRoot, 'site/lighthouserc.cjs'), join(root, 'site/lighthouserc.cjs'));
   await cp(join(repoRoot, '.githooks/pre-push'), join(root, '.githooks/pre-push'));

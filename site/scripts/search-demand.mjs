@@ -1,33 +1,53 @@
 import { createSign } from 'node:crypto';
 
+import { readEngineConfig } from './engine-config.mjs';
+
 const KEY_VARIABLE = 'GSC_SERVICE_ACCOUNT_JSON';
 const PROPERTY_VARIABLE = 'GSC_PROPERTY';
 export const TOKEN_URL = 'https://oauth2.googleapis.com/token';
 const SCOPE = 'https://www.googleapis.com/auth/webmasters.readonly';
 const ROW_LIMIT = 25000;
 
-const WINDOW_DAYS = 90;
-const DATA_LAG_DAYS = 2;
+const { windowDays: WINDOW_DAYS, dataLagDays: DATA_LAG_DAYS } = readEngineConfig().demand;
 const ASSERTION_SECONDS = 3600;
 const DAY_MS = 86_400_000;
 const DETAIL_LIMIT = 300;
 
-const AGAIN = 'Then run npm run audit:demand again.';
+export const CREDENTIAL_EXIT_CODE = 3;
 
-const keyError = (problem) =>
-  new Error(
-    `${KEY_VARIABLE} ${problem}. Put the whole service-account JSON on one line in site/.env; site/.env.example says where to get it. ${AGAIN}`
+const WORDING = {
+  file: {
+    home: () => 'site/.env',
+    keyGuide: '; site/.env.example says where to get it',
+    propertyExample: `, for example ${PROPERTY_VARIABLE}=sc-domain:example.com; site/.env.example explains it`,
+    again: 'Then run npm run audit:demand again.',
+  },
+  secret: {
+    home: (name) => `the repository secret ${name}`,
+    keyGuide: '',
+    propertyExample: ', for example sc-domain:example.com',
+    again: 'Then run the Write daily workflow again.',
+  },
+};
+
+const credentialError = (message) => Object.assign(new Error(message), { credential: true });
+
+const keyError = (problem, source) => {
+  const { home, keyGuide, again } = WORDING[source];
+  return credentialError(
+    `${KEY_VARIABLE} ${problem}. Put the whole service-account JSON on one line in ${home(KEY_VARIABLE)}${keyGuide}. ${again}`
   );
+};
 
-export function credentialsFrom(env) {
+export function credentialsFrom(env, source = 'file') {
   const raw = String(env[KEY_VARIABLE] ?? '').trim();
-  if (raw === '') throw keyError('is not set');
+  if (raw === '') throw keyError('is not set', source);
 
   let account;
   try {
     account = JSON.parse(raw);
   } catch {
-    throw keyError('is not valid JSON');
+    throw keyError('is not valid JSON', source);
   }
   const { client_email: clientEmail, private_key: privateKey } = account ?? {};
   const usable =
@@ -35,12 +55,13 @@ export function credentialsFrom(env) {
     clientEmail !== '' &&
     typeof privateKey === 'string' &&
     privateKey.includes('PRIVATE KEY');
-  if (!usable) throw keyError('has no client_email and private_key');
+  if (!usable) throw keyError('has no client_email and private_key', source);
 
   const property = String(env[PROPERTY_VARIABLE] ?? '').trim();
   if (property === '') {
-    throw new Error(
-      `${PROPERTY_VARIABLE} is not set. Put the Search Console property in site/.env, for example ${PROPERTY_VARIABLE}=sc-domain:example.com; site/.env.example explains it. ${AGAIN}`
+    const { home, propertyExample, again } = WORDING[source];
+    throw credentialError(
+      `${PROPERTY_VARIABLE} is not set. Put the Search Console property in ${home(PROPERTY_VARIABLE)}${propertyExample}. ${again}`
     );
   }
   return { clientEmail, privateKey, property };
@@ -48,7 +69,7 @@ export function credentialsFrom(env) {
 
 const encode = (value) => Buffer.from(JSON.stringify(value)).toString('base64url');
 
-export function signAssertion({ clientEmail, privateKey, now }) {
+export function signAssertion({ clientEmail, privateKey, now, source = 'file' }) {
   const unsigned = [
     encode({ alg: 'RS256', typ: 'JWT' }),
     encode({ iss: clientEmail, scope: SCOPE, aud: TOKEN_URL, iat: now, exp: now + ASSERTION_SECONDS }),
@@ -56,17 +77,19 @@ export function signAssertion({ clientEmail, privateKey, now }) {
   try {
     return `${unsigned}.${createSign('RSA-SHA256').update(unsigned).sign(privateKey).toString('base64url')}`;
   } catch {
-    throw keyError('holds a private_key that cannot sign');
+    throw keyError('holds a private_key that cannot sign', source);
   }
 }
 
 export const tokenRequestBody = (assertion) =>
   new URLSearchParams({ grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer', assertion }).toString();
 
-export function tokenRejection(status, body) {
+export function tokenRejection(status, body, source = 'file') {
   const detail = [body?.error, body?.error_description].filter(Boolean).join(': ') || `HTTP ${status}`;
-  return new Error(
-    `Google refused the service account in ${KEY_VARIABLE} (${String(detail).slice(0, DETAIL_LIMIT)}). Replace that line in site/.env with a fresh key for an account that exists. ${AGAIN}`
+  const { home, again } = WORDING[source];
+  const replace = source === 'file' ? 'Replace that line in' : 'Replace';
+  return credentialError(
+    `Google refused the service account in ${KEY_VARIABLE} (${String(detail).slice(0, DETAIL_LIMIT)}). ${replace} ${home(KEY_VARIABLE)} with a fresh key for an account that exists. ${again}`
   );
 }
 
@@ -82,11 +105,13 @@ export const queryRequest = ({ startDate, endDate, dimensions, startRow = 0, row
   startRow,
 });
 
-export function queryRejection(status, body, property) {
+export function queryRejection(status, body, property, source = 'file') {
   const detail = String(body?.error?.message ?? `HTTP ${status}`).slice(0, DETAIL_LIMIT);
   if (status === 401 || status === 403) {
-    return new Error(
-      `Search Console refused ${PROPERTY_VARIABLE}=${property} for the service account in ${KEY_VARIABLE} (${detail}). Add that account's client_email to the property in Search Console, Settings, Users and permissions, with Restricted permission, or correct ${PROPERTY_VARIABLE} in site/.env. If the message says the API is disabled, enable the Search Console API in the Google Cloud project that owns the key. ${AGAIN}`
+    const { home, again } = WORDING[source];
+    const correct = source === 'file' ? `${PROPERTY_VARIABLE} in ${home()}` : home(PROPERTY_VARIABLE);
+    return credentialError(
+      `Search Console refused ${PROPERTY_VARIABLE}=${property} for the service account in ${KEY_VARIABLE} (${detail}). Add that account's client_email to the property in Search Console, Settings, Users and permissions, with Restricted permission, or correct ${correct}. If the message says the API is disabled, enable the Search Console API in the Google Cloud project that owns the key. ${again}`
     );
   }
   return new Error(`Search Console answered HTTP ${status} (${detail}); no report was written`);

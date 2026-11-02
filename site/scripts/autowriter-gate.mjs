@@ -17,9 +17,12 @@ import {
   fileStemProblem,
   validateLedger,
 } from './autowriter-ledger.mjs';
+import { bandRecordFindings, committedBand, generationReport } from './autowriter-record-rules.mjs';
 import { describeProblem } from './autowriter-records.mjs';
+import { historyReport, skippedLine } from './autowriter-refusal-rules.mjs';
 import { REQUIRED_JOBS } from './ci-aggregate.mjs';
 import { WORKFLOW_PATH, aggregateWiringFindings } from './ci-aggregate-wiring.mjs';
+import { GENERATION_DIR } from './generation-record.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 
 const CORE_PATH = 'docs/SEMANTIC-CORE.md';
@@ -100,7 +103,19 @@ function workflowFindings(workflow) {
   }
 }
 
-export function autowriterReport({ ledgers, claims, core, workflow, suffix, now }) {
+export function autowriterReport({
+  ledgers,
+  claims,
+  core,
+  workflow,
+  suffix,
+  now,
+  records = [],
+  readEntry = () => null,
+  band = null,
+  bandRecord = [],
+  history = { findings: [], commits: null },
+}) {
   const readClaims = claims.map(parsed);
   const valid = readClaims
     .filter(({ value }) => value !== undefined && validateClaim(value).length === 0)
@@ -112,6 +127,9 @@ export function autowriterReport({ ledgers, claims, core, workflow, suffix, now 
     ...readClaims.flatMap(claimFindings),
     ...found,
     ...workflowFindings(workflow),
+    ...generationReport({ records, readEntry, band }),
+    ...bandRecord,
+    ...history.findings,
   ];
   const counts = {
     ledgers: ledgers.length,
@@ -119,13 +137,19 @@ export function autowriterReport({ ledgers, claims, core, workflow, suffix, now 
     lapsed: valid.filter(({ claim }) => !isHolding(claim, now)).length,
     titles: titles.length,
     jobs: REQUIRED_JOBS.length,
+    commits: history.commits,
+    records: records.length,
   };
   return { findings, counts };
 }
 
+const commitsPhrase = (commits) =>
+  typeof commits === 'number' ? `${commits} pipeline commits judged` : 'pipeline commits not judged';
+
 export const summaryLine = ({ findings, counts }) =>
   `autowriter: ${counts.ledgers} ledgers, ${counts.claims} claims (${counts.lapsed} lapsed), ` +
-  `${counts.titles} generated titles, ${counts.jobs} CI jobs under the aggregate check, ${findings.length} findings`;
+  `${counts.titles} generated titles, ${counts.jobs} CI jobs under the aggregate check, ` +
+  `${commitsPhrase(counts.commits)}, ${counts.records} generation records, ${findings.length} findings`;
 
 const readIfPresent = (path) => (existsSync(path) ? readFileSync(path, 'utf8') : null);
 
@@ -141,15 +165,22 @@ function readJsonFiles(repo, directory) {
 
 function main(repoArgument) {
   const repo = resolve(repoArgument ?? '..');
+  const history = historyReport({ root: repo });
   const report = autowriterReport({
     ledgers: readJsonFiles(repo, LEDGER_DIR),
     claims: readJsonFiles(repo, CLAIM_DIR),
+    records: readJsonFiles(repo, GENERATION_DIR),
+    readEntry: (path) => readIfPresent(join(repo, path)),
+    band: committedBand(repo),
+    bandRecord: bandRecordFindings(repo),
     core: readIfPresent(join(repo, CORE_PATH)),
     workflow: readIfPresent(join(repo, WORKFLOW_PATH)),
     suffix: titleSuffix(brandFromDisk(join(repo, CONFIG_PATH))),
     now: new Date(),
+    history,
   });
   for (const { rule, path, detail } of report.findings) console.error(`AUTOWRITER ${rule} ${path}: ${detail}`);
+  if (history.skipped !== null) console.log(skippedLine(history.skipped));
   console.log(summaryLine(report));
   process.exitCode = report.findings.length === 0 ? 0 : 1;
 }

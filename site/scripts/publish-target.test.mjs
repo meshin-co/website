@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
+import { readEngineConfig } from './engine-config.mjs';
 import { blockingFiles, pickGatedRun } from './publish-target.mjs';
-import { PROSE_DIRS } from './build-surface.mjs';
 
 test('the newest green ci run on main that carries a dist is the publishable one', () => {
   const runs = [
@@ -53,6 +53,18 @@ test('a workflow-only commit blocks a publish, because it can change how the byt
   assert.deepEqual(blockingFiles(['.github/workflows/publish-live.yml']), ['.github/workflows/publish-live.yml']);
 });
 
-test('the prose directories are the ones the build surface names, so the two guards cannot drift apart', () => {
-  for (const dir of PROSE_DIRS) assert.deepEqual(blockingFiles([`${dir}a.txt`]), []);
+test('the prose directories are the ones the configuration names, so the two guards cannot drift apart', () => {
+  for (const dir of readEngineConfig().diff.proseDirectories) assert.deepEqual(blockingFiles([`${dir}a.txt`]), []);
+});
+
+test('markdown a site serves from its public directory blocks a publish, because it is not prose to a reader', () => {
+  assert.deepEqual(blockingFiles(['site/public/llms-extra.md', 'README.md']), ['site/public/llms-extra.md']);
+});
+
+test('a path the rules cannot place blocks a publish rather than passing as prose', () => {
+  assert.deepEqual(blockingFiles(['docs/../site/src/pages/index.astro', '', '/etc/hosts']), [
+    'docs/../site/src/pages/index.astro',
+    '',
+    '/etc/hosts',
+  ]);
 });

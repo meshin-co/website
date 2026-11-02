@@ -3,6 +3,7 @@ import { join } from 'node:path';
 
 import { extractPage } from './content-html.mjs';
 import { judgePage, PROFILES } from './content-rows.mjs';
+import { matchRoute, readEngineConfig } from './engine-config.mjs';
 import { table } from './markdown-table.mjs';
 import { discoverRoutes } from './gate.mjs';
 
@@ -15,24 +16,9 @@ const TITLE_SUFFIX = titleSuffix(brandFromDisk());
 export const GENERATED_BEGIN = '<!-- semantic-core:begin generated -->';
 export const GENERATED_END = '<!-- semantic-core:end generated -->';
 
-const FAMILY_BY_PREFIX = [
-  ['/blog/category/', 'blog-category'],
-  ['/blog/tags', 'tag-index'],
-  ['/blog/tag/', 'tag'],
-  ['/blog/', 'article'],
-  ['/services/', 'service'],
-  ['/resources/', 'resource'],
-  ['/case-studies/', 'case-study'],
-  ['/glossary/', 'term'],
-  ['/faq/', 'faq-answer'],
-];
+const { routeFamilies } = readEngineConfig();
 
-export function familyFor(route) {
-  for (const [prefix, family] of FAMILY_BY_PREFIX) {
-    if (route.startsWith(prefix)) return family;
-  }
-  return 'static';
-}
+export const familyFor = (route) => matchRoute(routeFamilies, route).family;
 
 export const FAMILY_GRAMMAR = {
   static: {

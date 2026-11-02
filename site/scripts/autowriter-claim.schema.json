@@ -28,7 +28,7 @@
       "$ref": "#/$defs/text"
     },
     "format": {
-      "enum": ["term", "faq-answer", "article"]
+      "enum": ["term", "article"]
     },
     "query": {
       "$ref": "#/$defs/text"

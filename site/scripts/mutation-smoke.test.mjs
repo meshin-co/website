@@ -143,3 +143,17 @@ test('a partial run exits with its own code, so a skipped family cannot read as 
   assert.equal(exitCodeFor(failedOne), 1);
   assert.equal(exitCodeFor([...skippedOne, ...failedOne]), 1);
 });
+
+test('each refusal of an unattended process has its own family, and each family names a specimen that exists', () => {
+  const rows = {
+    'unattended-process-cannot-seal-dispositions': 'unattendedSealsDispositions',
+    'unattended-process-cannot-write-the-lighthouse-record': 'unattendedWritesLighthouseRecord',
+    'unattended-process-cannot-run-the-lighthouse-gate': 'unattendedRunsTheLighthouseGate',
+  };
+  const families = manifestFamilies(FAMILIES);
+  for (const [id, specimen] of Object.entries(rows)) {
+    const family = families.find((entry) => entry.id === id);
+    assert.equal(family?.kind, 'specimen', id);
+    assert.equal(family.specimen, specimen, id);
+  }
+});

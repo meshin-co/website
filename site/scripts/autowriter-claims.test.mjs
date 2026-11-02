@@ -63,10 +63,10 @@ const CORE = [
   'outro',
 ].join('\n');
 
-test('claims live beside the ledgers, one file per slug, in the three formats the core already names', () => {
+test('claims live beside the ledgers, one file per slug, in the two formats the writer writes', () => {
   assert.equal(CLAIM_DIR, 'audits/autowriter/claims');
   assert.equal(claimFile('what-is-a-model-card'), 'audits/autowriter/claims/what-is-a-model-card.json');
-  assert.deepEqual(CLAIM_FORMATS, ['term', 'faq-answer', 'article']);
+  assert.deepEqual(CLAIM_FORMATS, ['term', 'article']);
   assert.deepEqual(CLAIM_STATUSES, ['claimed', 'written']);
 });
 
@@ -81,7 +81,7 @@ const withoutQuery = Object.fromEntries(Object.entries(claim()).filter(([key]) =
 const DEFECTS = [
   ['an unknown field', { ...claim(), score: 3 }, 'score has an unexpected key'],
   ['a missing field', withoutQuery, 'query is required'],
-  ['an unknown format', claim({ format: 'video' }), 'format must be one of "term", "faq-answer", "article"'],
+  ['an unknown format', claim({ format: 'video' }), 'format must be one of "term", "article"'],
   ['an unknown status', claim({ status: 'done' }), 'status must be one of "claimed", "written"'],
   ['a blank title', claim({ title: ' ' }), 'title must match pattern \\S'],
   ['an upper-case slug', claim({ slug: 'What-Is' }), 'slug must match pattern ^[a-z0-9]+(-[a-z0-9]+)*$'],
@@ -190,7 +190,7 @@ test('an open claim whose title is already a title in the generated layer is ref
 });
 
 test('a title is checked in every family of the layer, not only the one the claim names', () => {
-  const found = collide([filed('about', { title: 'About Dmitri Meshin', format: 'faq-answer' })]);
+  const found = collide([filed('about', { title: 'About Dmitri Meshin', format: 'term' })]);
   assert.equal(found.length, 1);
   assert.match(found[0].detail, /already the title of \/about in the generated layer/);
 });

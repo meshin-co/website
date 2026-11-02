@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { promisify } from 'node:util';
 
 import { affectsBuild } from './build-surface.mjs';
+import { refuseWhenUnattended } from './human-only.mjs';
 
 const git = promisify(execFile);
 
@@ -92,10 +93,12 @@ export async function stampMeasuredTree({ repo, auditDir }) {
 }
 
 export async function clearMeasuredStamp(auditDir) {
+  refuseWhenUnattended('clear the Lighthouse measured stamp');
   await rm(join(auditDir, MEASURED_FILE), { force: true });
 }
 
 export async function writeMeasuredStamp({ auditDir, fingerprint, startedAt = new Date().toISOString() }) {
+  refuseWhenUnattended('write the Lighthouse measured stamp');
   await mkdir(auditDir, { recursive: true });
   await writeFile(join(auditDir, MEASURED_FILE), `${JSON.stringify({ fingerprint, startedAt }, null, 2)}\n`);
 }

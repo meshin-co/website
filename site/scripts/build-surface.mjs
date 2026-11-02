@@ -1,14 +1,48 @@
-export const PROSE_DIRS = ['docs/', 'audits/', 'site/.agents/', 'openspec/', 'investigation/'];
-const AUTOMATION_DIRS = ['.github/', '.githooks/'];
-const TEST_TOOLING = ['site/playwright.config.ts'];
-const SHIPPED_DIRS = ['site/src/', 'site/public/'];
-const TEST_SUFFIX = /\.(?:test|spec)\.[cm]?[jt]s$/;
-const TEST_DIR = /(?:^|\/)(?:tests|fixtures)\//;
+import { readEngineConfig } from './engine-config.mjs';
 
-export function affectsBuild(path) {
-  if (TEST_SUFFIX.test(path) || TEST_TOOLING.includes(path)) return false;
-  if (AUTOMATION_DIRS.some((dir) => path.startsWith(dir))) return false;
-  const shipped = SHIPPED_DIRS.some((dir) => path.startsWith(dir));
-  if (!shipped && TEST_DIR.test(path)) return false;
-  return shipped || !(path.endsWith('.md') || PROSE_DIRS.some((dir) => path.startsWith(dir)));
+const PROSE = 'prose';
+const TOOLING = 'tooling';
+const BUILD = 'build';
+
+export function compileRules(diff) {
+  return Object.freeze({
+    proseDirectories: diff.proseDirectories,
+    proseExtensions: diff.proseExtensions,
+    shippedDirectories: diff.shippedDirectories,
+    automationDirectories: diff.automationDirectories,
+    testTooling: new Set(diff.testTooling),
+    testFile: new RegExp(diff.testFilePattern),
+    testDirectory: new RegExp(diff.testDirectoryPattern),
+  });
 }
+
+export const DEFAULT_RULES = compileRules(readEngineConfig().diff);
+
+const isPlainPath = (path) =>
+  typeof path === 'string' &&
+  path !== '' &&
+  !path.startsWith('/') &&
+  !path.startsWith('"') &&
+  !path.endsWith('/') &&
+  !path.includes('\\') &&
+  !path.includes('\0') &&
+  path.split('/').every((segment) => segment !== '' && segment !== '.' && segment !== '..');
+
+const within = (path, directories) => directories.some((directory) => path.startsWith(directory));
+
+export function classifyPath(path, rules = DEFAULT_RULES) {
+  if (!isPlainPath(path)) return BUILD;
+  if (within(path, rules.proseDirectories)) return PROSE;
+  if (rules.testFile.test(path) || rules.testTooling.has(path)) return TOOLING;
+  if (within(path, rules.shippedDirectories)) return BUILD;
+  if (rules.proseExtensions.some((extension) => path.endsWith(extension))) return PROSE;
+  if (within(path, rules.automationDirectories) || rules.testDirectory.test(path)) return TOOLING;
+  return BUILD;
+}
+
+export const affectsBuild = (path, rules) => classifyPath(path, rules) === BUILD;
+
+export const drawsFullGraph = (path, rules) => classifyPath(path, rules) !== PROSE;
+
+export const needsFullGraph = (paths, rules) =>
+  !Array.isArray(paths) || paths.length === 0 || paths.some((path) => drawsFullGraph(path, rules));

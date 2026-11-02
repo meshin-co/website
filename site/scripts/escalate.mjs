@@ -166,7 +166,7 @@ function parseArguments(argv) {
   return { command, options };
 }
 
-function describeReceipt(escalation, receipt) {
+export function describeReceipt(escalation, receipt) {
   const prefix = `escalate: ${escalation.id} ${receipt.channel}`;
   if (!receipt.delivered) return `${prefix} NOT delivered: ${receipt.error}`;
   const issue = receipt.issue === null ? '' : `, issue #${receipt.issue}`;

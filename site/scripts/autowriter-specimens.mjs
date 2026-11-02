@@ -3,7 +3,9 @@ import { join } from 'node:path';
 
 import { brandFromDisk, titleSuffix } from '../src/utils/brand.mjs';
 import { generatedTitles, normaliseTitle } from './autowriter-claims.mjs';
+import { historySpecimens } from './autowriter-history-specimens.mjs';
 import { ATTEMPT_CAP } from './autowriter-ledger.mjs';
+import { recordSpecimens } from './autowriter-record-specimens.mjs';
 
 const GATE = 'gate:autowriter';
 const HASH = 'c'.repeat(40);
@@ -141,6 +143,14 @@ export const autowriterSpecimens = ({ addUntrackedFile, editFile }) => ({
       'escalation-undelivered audits/autowriter/zz-specimen.json: escalations[0] esc-1 (no-convergence) has no delivery receipt for issue',
     plant: planLedger(addUntrackedFile, () => escalated([])),
   },
+  autowriterMeasurementDebtMissing: {
+    gate: GATE,
+    token:
+      'ledger-schema audits/autowriter/zz-specimen.json: measurementDebt is required once the verdict is merged, so the tree no Lighthouse run measured is on record',
+    plant: planLedger(addUntrackedFile, () =>
+      ledger({ attempts: [attempt(1)], verdict: { state: 'merged', reason: null, decidedAt: INSTANT } })
+    ),
+  },
   autowriterJobOutsideAggregate: {
     gate: GATE,
     token: 'aggregate-uncovered .github/workflows/ci.yml',
@@ -156,4 +166,6 @@ export const autowriterSpecimens = ({ addUntrackedFile, editFile }) => ({
     token: 'aggregate-name .github/workflows/ci.yml',
     plant: planWorkflowEdit(editFile, AGGREGATE_NAME, 'name: all required jobs passed'),
   },
+  ...recordSpecimens({ addUntrackedFile, editFile }),
+  ...historySpecimens(),
 });

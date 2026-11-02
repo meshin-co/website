@@ -20,30 +20,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: site/.nvmrc
+
       - name: classify the diff, so prose cannot spend a Lighthouse matrix
         id: classify
-        working-directory: .
-        run: |
-          before="${{ github.event.before }}"
-          if [ -z "$before" ] || [ "$before" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$before" 2>/dev/null; then
-            before="$(git rev-parse HEAD~1 2>/dev/null || git rev-parse HEAD)"
-          fi
-          changed="$(git diff --name-only "$before" "${{ github.sha }}" || true)"
-          echo "changed files:"
-          echo "$changed"
-          code=false
-          while IFS= read -r file; do
-            [ -z "$file" ] && continue
-            case "$file" in
-              docs/*|audits/*|site/.agents/*|openspec/*) ;;
-              site/src/data/*) code=true ;;
-              *.md) ;;
-              */*) code=true ;;
-              *) code=true ;;
-            esac
-          done <<< "$changed"
-          echo "code=$code" >> "$GITHUB_OUTPUT"
-          echo "build surface changed: $code"
+        env:
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+        run: node scripts/run-classify-diff.mjs --before "$BEFORE" --after "$AFTER" >> "$GITHUB_OUTPUT"
 
   build:
     if: github.event_name != 'workflow_dispatch' && needs.changes.outputs.code == 'true'
@@ -94,6 +80,7 @@ jobs:
       - run: npm run gate:evidence
       - run: npm run gate:demand
       - run: npm run gate:autowriter
+      - run: npm run gate:engine
       - run: npm run gate:spec
         env:
           SPEC_GATE_RANGE: ${{ github.event_name == 'pull_request' && format('{0}..{1}', github.event.pull_request.base.sha, github.event.pull_request.head.sha) || format('{0}..{1}', github.event.before, github.sha) }}
@@ -121,6 +108,8 @@ jobs:
     if: github.event_name != 'workflow_dispatch' && needs.changes.outputs.code == 'true'
     needs: [changes, build, types-and-units]
     runs-on: ubuntu-latest
+    env:
+      GATE_FINDINGS_DIR: ${{ github.workspace }}/gate-findings
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -152,6 +141,15 @@ jobs:
 
       - name: nothing the site loads is a paid service
         run: npm run gate:paid
+
+      - name: Upload gate findings
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gate-findings-${{ github.run_attempt }}
+          path: ${{ github.workspace }}/gate-findings/
+          if-no-files-found: ignore
+          retention-days: 14
 
   visual-and-axe:
     if: github.event_name != 'workflow_dispatch' && needs.changes.outputs.code == 'true'

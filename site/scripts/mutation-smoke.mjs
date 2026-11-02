@@ -5,6 +5,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { proveRecordRefusal } from './lh-record-family.mjs';
+import { REPAIR_CHECKS, runRepairCheck } from './repair-guard-checks.mjs';
 import { SPECIMENS, assertStandaloneRepo, flatten, proveWithSpecimen } from './mutation-specimens.mjs';
 import { canonicalHref, robotsContent, robotsMeta, tagArchiveFindings } from './pagination-markup.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
@@ -15,7 +16,7 @@ const REPO = resolve(SITE, '..');
 const FIXTURES = join(SITE, 'tests', 'guard-mutations', 'fixtures');
 const LIVE_POST_TARGET = 13;
 const GATES = ['budget', 'jsonld', 'jsonld-properties', 'content-gate', 'docs', 'external'];
-const CHECKS = ['semantic-title'];
+const CHECKS = ['semantic-title', ...Object.keys(REPAIR_CHECKS)];
 const SCOPES = ['category', 'tag'];
 
 export const FAMILIES = [
@@ -105,6 +106,9 @@ export const FAMILIES = [
     tokens: ['license: needs its text'],
   },
   { id: 'semantic-title-pattern', kind: 'pure', proves: 'gate:content', check: 'semantic-title' },
+  { id: 'repair-removal-guard-drops-a-takeaway', kind: 'pure', proves: 'repair:entry', check: 'repair-removal' },
+  { id: 'repair-scope-check-leaves-the-entry', kind: 'pure', proves: 'repair:entry', check: 'repair-scope' },
+  { id: 'repair-attempt-past-the-cap', kind: 'pure', proves: 'repair:entry', check: 'repair-attempt-cap' },
   { id: 'agents-content-signal', kind: 'specimen', specimen: 'agents' },
   { id: 'agents-openapi-drift', kind: 'specimen', specimen: 'agents-openapi-drift' },
   { id: 'agents-manifest-dangles', kind: 'specimen', specimen: 'agents-manifest-dangles' },
@@ -167,6 +171,35 @@ export const FAMILIES = [
   { id: 'autowriter-job-outside-the-aggregate', kind: 'specimen', specimen: 'autowriterJobOutsideAggregate' },
   { id: 'autowriter-aggregate-that-skips-on-failure', kind: 'specimen', specimen: 'autowriterAggregateSkippable' },
   { id: 'autowriter-aggregate-name-shared-with-push', kind: 'specimen', specimen: 'autowriterAggregateNameShadowed' },
+  { id: 'autowriter-generation-record-off-its-schema', kind: 'specimen', specimen: 'autowriterGenerationOffSchema' },
+  { id: 'autowriter-generation-record-without-a-band', kind: 'specimen', specimen: 'autowriterGenerationWithoutBand' },
+  { id: 'autowriter-fact-without-a-claim-row', kind: 'specimen', specimen: 'autowriterFactWithoutClaimRow' },
+  { id: 'autowriter-prose-off-the-sentence-band', kind: 'specimen', specimen: 'autowriterProseOffTheBand' },
+  { id: 'autowriter-sentence-band-record-stale', kind: 'specimen', specimen: 'autowriterBandRecordStale' },
+  { id: 'autowriter-record-measurement-forged', kind: 'specimen', specimen: 'autowriterBandMeasurementForged' },
+  { id: 'autowriter-sentence-band-corpus-drifted', kind: 'specimen', specimen: 'autowriterBandRecordCorpusDrifted' },
+  { id: 'autowriter-commit-moves-the-sentence-band', kind: 'specimen', specimen: 'autowriterCommitMovesTheBand' },
+  {
+    id: 'autowriter-commit-writes-the-lighthouse-record',
+    kind: 'specimen',
+    specimen: 'autowriterCommitWritesLighthouseRecord',
+  },
+  {
+    id: 'autowriter-commit-writes-a-lighthouse-stamp',
+    kind: 'specimen',
+    specimen: 'autowriterCommitWritesLighthouseStamp',
+  },
+  {
+    id: 'autowriter-commit-writes-a-lighthouse-report',
+    kind: 'specimen',
+    specimen: 'autowriterCommitWritesLighthouseReport',
+  },
+  { id: 'autowriter-commit-seals-dispositions', kind: 'specimen', specimen: 'autowriterCommitSealsDispositions' },
+  {
+    id: 'autowriter-merged-ledger-without-its-measurement-debt',
+    kind: 'specimen',
+    specimen: 'autowriterMeasurementDebtMissing',
+  },
   { id: 'registers-block-drifted', kind: 'specimen', specimen: 'registers' },
   { id: 'axe-violation-in-a-real-browser', kind: 'specimen', specimen: 'visualAxe', slow: true },
   { id: 'controlled-word-on-a-page', kind: 'specimen', specimen: 'humanControlledWord' },
@@ -177,6 +210,20 @@ export const FAMILIES = [
   { id: 'lighthouse-both-factors-unlabelled-image', kind: 'specimen', specimen: 'lighthouseBothFactors', slow: true },
   { id: 'noindex-page-cannot-waive-its-seo', kind: 'specimen', specimen: 'lighthouseSelfWaivingNoindex', slow: true },
   { id: 'lighthouse-record-of-a-tree-the-run-never-measured', kind: 'lh-record', proves: 'lh:record' },
+  { id: 'unattended-process-cannot-seal-dispositions', kind: 'specimen', specimen: 'unattendedSealsDispositions' },
+  {
+    id: 'unattended-process-cannot-write-the-lighthouse-record',
+    kind: 'specimen',
+    specimen: 'unattendedWritesLighthouseRecord',
+  },
+  {
+    id: 'unattended-process-cannot-run-the-lighthouse-gate',
+    kind: 'specimen',
+    specimen: 'unattendedRunsTheLighthouseGate',
+  },
+  { id: 'engine-config-loses-a-required-value', kind: 'specimen', specimen: 'engineConfigValueRemoved' },
+  { id: 'engine-loses-an-anchor-file-it-reads', kind: 'specimen', specimen: 'engineAnchorFileRemoved' },
+  { id: 'ci-classifier-reexpressed-as-a-shell-case', kind: 'specimen', specimen: 'engineClassifierReexpressed' },
   { id: 'pagination-page-2', kind: 'pagination', proves: 'build', fixture: 'live-post.md', slow: true },
   {
     id: 'category-pagination-page-2',
@@ -604,11 +651,14 @@ const EXECUTORS = {
   build: (copySite, entry) => runPlantedFamily(copySite, entry, false),
   'build-then-gate': (copySite, entry) => runPlantedFamily(copySite, entry, true),
   gate: (copySite, entry, work) => runGateFamily(copySite, entry, work),
-  pure: (copySite) => runPureFamily(copySite),
+  pure: (copySite, entry) =>
+    entry.check === 'semantic-title' ? runPureFamily(copySite) : runRepairCheck(entry.check, copySite),
   pagination: (copySite, entry) => runPaginationFamily(copySite, entry),
   specimen: async (copySite, entry, work) => {
     await restoreDist(copySite, work);
-    return proveWithSpecimen(SPECIMENS[entry.specimen], { copySite, run });
+    const specimen = SPECIMENS[entry.specimen];
+    const site = specimen.scene ? await specimen.scene({ copySite, work }) : copySite;
+    return proveWithSpecimen(specimen, { copySite: site, run });
   },
   'lh-record': (copySite, _entry, work) => proveRecordRefusal({ copySite, work, run }),
 };

@@ -24,7 +24,7 @@ const MONTHS =
 const DATE_DAY = new RegExp(`^\\s?(?:${MONTHS})\\b`, 'i');
 const DATE_MONTH_FIRST = new RegExp(`\\b(?:${MONTHS})\\s$`, 'i');
 
-const numberClaims = (paragraphs, allowed) => {
+export const numberClaims = (paragraphs, allowed) => {
   const claims = [];
 
   for (const paragraph of paragraphs) {

@@ -6,8 +6,10 @@ import { dirname, join, relative, resolve } from 'node:path';
 import { test } from 'node:test';
 
 import { ATTEMPT_CAP, ledgerFile } from './autowriter-ledger.mjs';
+import { historySpecimens } from './autowriter-history-specimens.mjs';
 import { autowriterSpecimens } from './autowriter-specimens.mjs';
-import { flatten, SPECIMENS } from './mutation-specimens.mjs';
+import { ENTRY_PATH, FACT, RECORD_PATH, realBandFiles } from './fixtures/record-rules-scene.mjs';
+import { addUntrackedFile, editFile, flatten, SPECIMENS } from './mutation-specimens.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
 const REPO = resolve(SITE, '..');
@@ -15,8 +17,10 @@ const FILES = {
   'site/src/config.yaml': 'site:\n  name: meshin.co\n',
   'docs/SEMANTIC-CORE.md': readFileSync(join(REPO, 'docs/SEMANTIC-CORE.md'), 'utf8'),
   '.github/workflows/ci.yml': readFileSync(join(REPO, '.github/workflows/ci.yml'), 'utf8'),
+  ...realBandFiles(),
 };
 const NAMES = Object.keys(autowriterSpecimens({})).sort();
+const PLAIN_NAMES = NAMES.filter((name) => !Object.hasOwn(historySpecimens(), name));
 const LEDGER = 'audits/autowriter/zz-specimen.json';
 const CLAIM = 'audits/autowriter/claims/zz-specimen.json';
 const WORKFLOW = '.github/workflows/ci.yml';
@@ -55,11 +59,24 @@ test('the specimen module names every failure mode of the gate, each against gat
     'autowriterAggregateNameShadowed',
     'autowriterAggregateSkippable',
     'autowriterAttemptsOverCap',
+    'autowriterBandMeasurementForged',
+    'autowriterBandRecordCorpusDrifted',
+    'autowriterBandRecordStale',
     'autowriterClaimTitleCollides',
+    'autowriterCommitMovesTheBand',
+    'autowriterCommitSealsDispositions',
+    'autowriterCommitWritesLighthouseRecord',
+    'autowriterCommitWritesLighthouseReport',
+    'autowriterCommitWritesLighthouseStamp',
     'autowriterEscalationFailed',
     'autowriterEscalationUnreceipted',
+    'autowriterFactWithoutClaimRow',
+    'autowriterGenerationOffSchema',
+    'autowriterGenerationWithoutBand',
     'autowriterJobOutsideAggregate',
     'autowriterLedgerOffSchema',
+    'autowriterMeasurementDebtMissing',
+    'autowriterProseOffTheBand',
   ]);
   const tokens = NAMES.map((name) => SPECIMENS[name].token);
   assert.equal(new Set(tokens).size, tokens.length, 'two specimens share a token');
@@ -69,7 +86,7 @@ test('the specimen module names every failure mode of the gate, each against gat
   }
 });
 
-for (const name of NAMES) {
+for (const name of PLAIN_NAMES) {
   test(name + ' is green before, red with its own token when planted, and byte for byte undone after', async () => {
     await inTempRepo(async (root) => {
       const before = snapshot(root);
@@ -87,7 +104,49 @@ for (const name of NAMES) {
   });
 }
 
+const REAL = JSON.parse(FILES['audits/sentence-band.json']);
+const LIMITS = REAL.bands.article;
+const percent = (share) => `${Number((share * 100).toFixed(2))}%`;
+const describeCorpus = ({ article, term }) =>
+  `${article.entries} article entries with ${article.sentences} sentences, ${term.entries} term entries with ${term.sentences} sentences`;
+const entryLine = (rule) => `AUTOWRITER ${rule} ${RECORD_PATH}: ${ENTRY_PATH}: `;
+const BAND_TEXT =
+  `article band: median ${LIMITS.medianFloor} to ${LIMITS.medianCeiling} words, ` +
+  `at most ${percent(LIMITS.belowThresholdCap)} of sentences under 12 words, ` +
+  `at most ${percent(LIMITS.justBelowCap)} of sentences of 8 to 11 words`;
+const COMMAND = '(re-measure with: node scripts/measure-sentence-band.mjs --write)';
+const ELEVEN_WORDS_BELOW = `${entryLine('below-threshold-share')}10 of 10 sentences (100%) are under 12 words; the band allows ${Math.floor(LIMITS.belowThresholdCap * 10)}; ${BAND_TEXT}`;
+const DRIFTED_CORPUS = {
+  ...REAL.corpus,
+  article: { ...REAL.corpus.article, entries: REAL.corpus.article.entries + 1 },
+};
+
 const MESSAGES = [
+  ['autowriterGenerationOffSchema', 'AUTOWRITER generation-schema ' + RECORD_PATH + ': schema must equal 1'],
+  ['autowriterGenerationWithoutBand', 'AUTOWRITER generation-schema ' + RECORD_PATH + ': band is required'],
+  [
+    'autowriterFactWithoutClaimRow',
+    'AUTOWRITER fact-unbound ' +
+      RECORD_PATH +
+      ': ' +
+      ENTRY_PATH +
+      ', sentence "' +
+      FACT +
+      '": the sentence asserts a fact and the table binds it to nothing',
+  ],
+  ['autowriterProseOffTheBand', ELEVEN_WORDS_BELOW],
+  [
+    'autowriterBandMeasurementForged',
+    `${entryLine('band-measurement-differs')}sentences 0 in the record against 9 in a measurement of the entry, median 0 in the record against 14 in a measurement of the entry`,
+  ],
+  [
+    'autowriterBandRecordStale',
+    `AUTOWRITER record-bands-stale audits/sentence-band.json: the recorded bands differs from a fresh measurement of the corpus ${COMMAND}`,
+  ],
+  [
+    'autowriterBandRecordCorpusDrifted',
+    `AUTOWRITER record-corpus-stale audits/sentence-band.json: the record measured ${describeCorpus(DRIFTED_CORPUS)}; the corpus now has ${describeCorpus(REAL.corpus)} ${COMMAND}`,
+  ],
   [
     'autowriterLedgerOffSchema',
     'AUTOWRITER ledger-schema ' + LEDGER + ': attempts[0].judgedCommit must match pattern ^[0-9a-f]{40}$',
@@ -95,6 +154,12 @@ const MESSAGES = [
   [
     'autowriterAttemptsOverCap',
     'AUTOWRITER attempt-cap ' + LEDGER + ': ' + (ATTEMPT_CAP + 1) + ' attempts recorded, the cap is ' + ATTEMPT_CAP,
+  ],
+  [
+    'autowriterMeasurementDebtMissing',
+    'AUTOWRITER ledger-schema ' +
+      LEDGER +
+      ': measurementDebt is required once the verdict is merged, so the tree no Lighthouse run measured is on record',
   ],
   [
     'autowriterEscalationFailed',
@@ -194,4 +259,20 @@ test('planting beside a ledger that is already there leaves that ledger and its 
     },
     { [ledgerFile('kept')]: kept }
   );
+});
+
+test('a scratch record whose entry cannot be written is removed again before the failure surfaces', async () => {
+  await inTempRepo(async (root) => {
+    const before = snapshot(root);
+    let calls = 0;
+    const failingSecond = (path, content) => {
+      calls += 1;
+      if (calls === 2) throw new Error('disk full');
+      return addUntrackedFile(path, content);
+    };
+    const { autowriterFactWithoutClaimRow } = autowriterSpecimens({ addUntrackedFile: failingSecond, editFile });
+    await assert.rejects(autowriterFactWithoutClaimRow.plant(join(root, 'site')), /disk full/);
+    assert.deepEqual(snapshot(root), before);
+    assert.equal(existsSync(join(root, RECORD_PATH)), false);
+  });
 });

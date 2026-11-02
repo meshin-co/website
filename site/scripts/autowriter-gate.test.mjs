@@ -8,6 +8,14 @@ import { test } from 'node:test';
 import { claimFile } from './autowriter-claims.mjs';
 import { ledgerFile, newLedger } from './autowriter-ledger.mjs';
 import { autowriterReport, summaryLine } from './autowriter-gate.mjs';
+import {
+  ENTRY_PATH,
+  RECORD_PATH,
+  asJson,
+  entryText,
+  realBandFiles,
+  recordWith,
+} from './fixtures/record-rules-scene.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
 const REPO = resolve(SITE, '..');
@@ -186,7 +194,7 @@ test('a claim that is not JSON, off its schema or filed under another slug is na
   assert.deepEqual(schema, {
     rule: 'claim-schema',
     path: 'audits/autowriter/claims/what-is-a-model-card.json',
-    detail: 'format must be one of "term", "faq-answer", "article"',
+    detail: 'format must be one of "term", "article"',
   });
   assert.deepEqual(one({ claims: [claimAt('other', claim())] }), {
     rule: 'claim-name',
@@ -290,13 +298,19 @@ test('the workflow findings carry the workflow path, and an unparsable or missin
 });
 
 test('the summary line says how many files were read, so a gate that read nothing cannot read as a pass', () => {
-  const line = summaryLine({ findings: [], counts: { ledgers: 2, claims: 3, lapsed: 1, titles: 117, jobs: 7 } });
+  const line = summaryLine({
+    findings: [],
+    counts: { ledgers: 2, claims: 3, lapsed: 1, titles: 117, jobs: 7, commits: 12, records: 4 },
+  });
   assert.equal(
     line,
-    'autowriter: 2 ledgers, 3 claims (1 lapsed), 117 generated titles, 7 CI jobs under the aggregate check, 0 findings'
+    'autowriter: 2 ledgers, 3 claims (1 lapsed), 117 generated titles, 7 CI jobs under the aggregate check, 12 pipeline commits judged, 4 generation records, 0 findings'
   );
   assert.match(
-    summaryLine({ findings: [{}, {}], counts: { ledgers: 0, claims: 0, lapsed: 0, titles: 0, jobs: 0 } }),
+    summaryLine({
+      findings: [{}, {}],
+      counts: { ledgers: 0, claims: 0, lapsed: 0, titles: 0, jobs: 0, records: 0 },
+    }),
     /, 2 findings$/
   );
 });
@@ -308,6 +322,7 @@ function inTempRepo(plant, check) {
       'site/src/config.yaml': 'site:\n  name: meshin.co\n',
       'docs/SEMANTIC-CORE.md': CORE,
       '.github/workflows/ci.yml': WORKFLOW,
+      ...realBandFiles(),
       ...plant,
     })) {
       mkdirSync(dirname(join(root, path)), { recursive: true });
@@ -328,7 +343,7 @@ test('the command exits 0 and prints the summary on a repository with nothing pl
     assert.equal(run.status, 0, run.stderr);
     assert.match(
       run.stdout,
-      /^autowriter: 0 ledgers, 0 claims \(0 lapsed\), \d+ generated titles, 7 CI jobs under the aggregate check, 0 findings$/m
+      /^autowriter: 0 ledgers, 0 claims \(0 lapsed\), \d+ generated titles, 7 CI jobs under the aggregate check, pipeline commits not judged, 0 generation records, 0 findings$/m
     );
     assert.equal(run.stderr, '');
   }));
@@ -378,10 +393,44 @@ test('the command exits 1 and names the file and the rule for each defect plante
       );
       assert.match(
         run.stdout,
-        /2 ledgers, 1 claims \(0 lapsed\), \d+ generated titles, 7 CI jobs under the aggregate check, 4 findings$/m
+        /2 ledgers, 1 claims \(0 lapsed\), \d+ generated titles, 7 CI jobs under the aggregate check, pipeline commits not judged, 0 generation records, 4 findings$/m
       );
     }
   ));
+
+const BAND_PATH = 'audits/sentence-band.json';
+const realBand = () => JSON.parse(realBandFiles()[BAND_PATH]);
+
+test('a valid generation record and its entry pass, and the summary counts the record', () =>
+  inTempRepo({ [RECORD_PATH]: asJson(recordWith({ band: realBand() })), [ENTRY_PATH]: entryText() }, (root) => {
+    const run = gate(root);
+    assert.equal(run.status, 0, run.stderr);
+    assert.match(run.stdout, /, 1 generation records, 0 findings$/m);
+  }));
+
+test('the command names the file and the rule of a corrupted record and of a stale band record', () => {
+  const band = realBand();
+  band.bands.article.medianFloor += 1;
+  const corrupted = { ...recordWith({ band: realBand() }), schema: 2 };
+  inTempRepo(
+    {
+      [RECORD_PATH]: asJson(corrupted),
+      [ENTRY_PATH]: entryText(),
+      [BAND_PATH]: asJson(band),
+    },
+    (root) => {
+      const run = gate(root);
+      assert.equal(run.status, 1);
+      const lines = run.stderr.trim().split('\n');
+      assert.ok(lines.includes(`AUTOWRITER generation-schema ${RECORD_PATH}: schema must equal 1`), run.stderr);
+      assert.ok(
+        lines.some((line) => line.startsWith(`AUTOWRITER record-bands-stale ${BAND_PATH}: `)),
+        run.stderr
+      );
+      assert.match(run.stdout, /, 1 generation records, 2 findings$/m);
+    }
+  );
+});
 
 test('the command run against the real repository finds nothing, which is what CI runs', () => {
   const run = gate(REPO);

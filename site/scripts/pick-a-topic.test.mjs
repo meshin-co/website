@@ -1,0 +1,298 @@
+import './fixtures/no-network.mjs';
+
+import assert from 'node:assert/strict';
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { dirname, join } from 'node:path';
+import { test } from 'node:test';
+import { fileURLToPath } from 'node:url';
+
+import { newClaim, readClaim, writeClaim } from './autowriter-claim-store.mjs';
+import { CLAIM_DIR, claimFile } from './autowriter-claims.mjs';
+import { LEDGER_DIR, ledgerFile, newLedger, readLedger } from './autowriter-ledger.mjs';
+import { printedLines, runCli, runIdFor, summaryMarkdown } from './pick-a-topic.mjs';
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const REPORT = 'audits/search-demand.md';
+const INPUT_KEYS = 'claims concepts forms generated ledgerSlugs now promptSources report settings suffix'.split(' ');
+const NOW = new Date('2026-11-02T04:00:00.000Z');
+const POST = 'fractional-caio-vs-full-time-caio-cost';
+const TERM = 'what-is-a-model-card';
+const CHOICE = 'Choice: signal 2, prompt 2, unproven, 0 impressions in the window to 2026-10-30';
+const ADVISORY = { source: 'measured', route: '/services/fractional-caio', query: 'fractional caio', number: null };
+const MEASURED = { ...ADVISORY, impressions: 12, position: 14.5, reason: 'it ranks at position 14.5' };
+const STRENGTHEN_LINE =
+  'Strengthen: /services/fractional-caio, "fractional caio", 12 impressions at position 14.5: it ranks at position 14.5';
+
+function inRepo(check) {
+  const root = mkdtempSync(join(tmpdir(), 'pick-a-topic-'));
+  try {
+    for (const directory of ['audits', 'docs', 'site/src']) mkdirSync(join(root, directory), { recursive: true });
+    cpSync(join(HERE, 'fixtures', 'search-demand-2026-11-01.md'), join(root, REPORT));
+    cpSync(join(HERE, '..', '..', 'docs', 'SEMANTIC-CORE.md'), join(root, 'docs', 'SEMANTIC-CORE.md'));
+    writeFileSync(join(root, 'site', 'src', 'config.yaml'), 'site:\n  name: meshin.co\n');
+    return check(root);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
+function snapshot(root) {
+  const files = readdirSync(root, { recursive: true, withFileTypes: true }).filter((entry) => entry.isFile());
+  return Object.fromEntries(
+    files.map(({ parentPath, name }) => [join(parentPath, name), readFileSync(join(parentPath, name), 'utf8')])
+  );
+}
+
+const decisionOf = (overrides) => ({
+  ...{ decision: 'none', choice: null, reason: null, entries: [], strengthen: null, advisories: [] },
+  ...{ refusals: [], concepts: { named: [] }, proposals: [], trail: [] },
+  ...overrides,
+});
+const entryOf = (format, title, slug) => ({ format, topic: { title, slug }, prompt: { number: 2, text: 'p' } });
+
+const WRITE = decisionOf({
+  decision: 'write',
+  choice: CHOICE,
+  entries: [
+    entryOf('article', 'Fractional CAIO vs full-time CAIO cost?', POST),
+    entryOf('term', 'What is a model card?', TERM),
+  ],
+  advisories: [MEASURED],
+  refusals: [{ title: 'Fractional CAIO?', reason: 'slug-held', against: 'claims/x.json', detail: 'held' }],
+  concepts: { named: [{ query: 'what is a data contract', title: 'What is a data contract?', why: 'cap' }] },
+  proposals: [{ query: 'how to audit an ai vendor', impressions: 4, position: 20, page: '/' }],
+  trail: [{ outcome: 'title-too-long' }, { outcome: 'chosen' }, { outcome: 'cap' }],
+});
+const STRENGTHEN = decisionOf({
+  decision: 'strengthen',
+  choice: 'Choice: strengthen /services/fractional-caio',
+  strengthen: MEASURED,
+  advisories: [{ ...MEASURED, query: 'ai governance', impressions: 3, position: null }],
+  trail: [{ outcome: 'register-owner' }],
+});
+const NONE = decisionOf({ decision: 'none', reason: 'No candidate: 45 examined', trail: [{ outcome: 'retired' }] });
+
+function fakeRun({ runId, now }) {
+  const claim = (slug, format, demand) =>
+    newClaim({ slug, title: slug, format, query: 'q', demand, prompt: { number: 2, text: 'p' }, runId, now });
+  const entries = [
+    { claimPath: claimFile(POST), claim: claim(POST, 'article', { impressions: 0, position: null }) },
+    { claimPath: claimFile(TERM), claim: claim(TERM, 'term', { impressions: 14, position: 11.2 }) },
+  ].map((entry) => ({ ...entry, row: {}, table: 'Queries', choice: CHOICE }));
+  const ledgerPath = ledgerFile(POST);
+  return {
+    ledgerPath,
+    ledger: newLedger({ slug: POST, runId, pullRequest: null }),
+    claims: entries.map(({ claimPath, claim: entryClaim }) => ({ claimPath, claim: entryClaim })),
+    file: { schema: 1, decision: 'write', ledgerPath, entries, report: { path: REPORT }, refusals: [] },
+  };
+}
+
+function scenario(decision, options, body) {
+  inRepo((root) => {
+    const seen = { inputs: null, builds: [], out: [], err: [] };
+    const run = (argv) =>
+      runCli(argv, {
+        repoRoot: root,
+        env: options.env ?? {},
+        now: options.now ?? (() => NOW),
+        out: (line) => seen.out.push(line),
+        err: (line) => seen.err.push(line),
+        select: (inputs) => Object.assign(seen, { inputs }) && decision,
+        build: (args) => seen.builds.push(args) && fakeRun(args),
+      });
+    body({ root, run, seen, output: join(root, 'out', 'decision.json'), message: () => seen.err.join('\n') });
+  });
+}
+
+test('previewing prints the decision and writes nothing anywhere, not even the decision file', () => {
+  for (const decision of [WRITE, STRENGTHEN, NONE]) {
+    scenario(decision, {}, ({ root, run, seen, output }) => {
+      const before = snapshot(root);
+      assert.equal(run(['--output', output]), 0);
+      assert.deepEqual(seen.out, printedLines(decision));
+      assert.equal(seen.builds.length, 0);
+      assert.deepEqual(snapshot(root), before);
+    });
+  }
+});
+
+test('--write of a write decision writes the claims, the ledger and the decision file at the paths of the run', () => {
+  scenario(WRITE, {}, ({ root, run, seen, output, message }) => {
+    assert.equal(run(['--write', '--output', output, '--run-id', 'r-1']), 0, message());
+    assert.equal(seen.builds[0].runId, 'r-1');
+    const built = fakeRun({ runId: 'r-1', now: NOW });
+    assert.deepEqual(JSON.parse(readFileSync(output, 'utf8')), JSON.parse(JSON.stringify(built.file)));
+    for (const { claimPath, claim } of built.claims) assert.deepEqual(readClaim(join(root, claimPath)), claim);
+    assert.deepEqual(readLedger(join(root, built.ledgerPath)), built.ledger);
+    assert.deepEqual(readdirSync(join(root, CLAIM_DIR)).sort(), [POST + '.json', TERM + '.json']);
+    assert.deepEqual(readdirSync(join(root, LEDGER_DIR)).sort(), ['claims', POST + '.json']);
+  });
+});
+
+test('--write of a strengthen or none decision writes the small decision file and no claim or ledger', () => {
+  const small = [
+    [STRENGTHEN, { choice: STRENGTHEN.choice, advisories: [STRENGTHEN.strengthen, ...STRENGTHEN.advisories] }],
+    [NONE, { reason: NONE.reason, advisories: [] }],
+  ];
+  for (const [decision, expected] of small) {
+    scenario(decision, {}, ({ root, run, seen, output, message }) => {
+      assert.equal(run(['--write', '--output', output]), 0, message());
+      const file = JSON.parse(readFileSync(output, 'utf8'));
+      assert.deepEqual(file, { schema: 1, decision: decision.decision, ...expected });
+      assert.equal(existsSync(join(root, LEDGER_DIR)), false);
+      assert.equal(seen.builds.length, 0);
+    });
+  }
+});
+
+test('--write without --output exits 2 naming --output and writes nothing', () => {
+  scenario(WRITE, {}, ({ root, run, message }) => {
+    const before = snapshot(root);
+    assert.equal(run(['--write']), 2);
+    assert.match(message(), /--output/);
+    assert.deepEqual(snapshot(root), before);
+  });
+});
+
+test('an unknown flag, a flag without its value and a bad --now exit 2 and name the flag', () => {
+  const cases = [['--force'], ['--run-id'], ['--summary', '--write'], ['--output'], ['--now'], ['--now', 'yesterday']];
+  for (const argv of cases) {
+    scenario(NONE, {}, ({ run, seen, message }) => {
+      assert.equal(run(argv), 2, argv.join(' '));
+      assert.ok(message().includes(argv[0]), argv.join(' '));
+      assert.deepEqual(seen.out, [], argv.join(' '));
+    });
+  }
+});
+
+test('an unreadable report, semantic core or config exits 1 naming the file', () => {
+  for (const path of ['audits/search-demand.md', 'docs/SEMANTIC-CORE.md', 'site/src/config.yaml']) {
+    scenario(NONE, {}, ({ root, run, message }) => {
+      rmSync(join(root, path));
+      assert.equal(run([]), 1, path);
+      assert.ok(message().includes(path), path);
+    });
+  }
+});
+
+test('a decision file that cannot be written exits 1 naming it', () => {
+  scenario(STRENGTHEN, {}, ({ root, run, message }) => {
+    writeFileSync(join(root, 'in-the-way'), 'a file, not a directory');
+    const output = join(root, 'in-the-way', 'decision.json');
+    assert.equal(run(['--write', '--output', output]), 1);
+    assert.ok(message().includes(output));
+  });
+});
+
+test('invalid settings exit 2 naming each variable before any input is read', () => {
+  const env = { WRITING_TERM_CAP: 'many', WRITING_TERM_ARM: 'maybe' };
+  scenario(NONE, { env }, ({ root, run, message }) => {
+    rmSync(join(root, 'audits', 'search-demand.md'));
+    assert.equal(run([]), 2);
+    assert.match(message(), /WRITING_TERM_CAP/);
+    assert.match(message(), /WRITING_TERM_ARM/);
+  });
+});
+
+test('the selection receives every input, the settings and the instant', () => {
+  const env = { WRITING_TERM_ARM: 'off', WRITING_TERM_CAP: '3' };
+  scenario(NONE, { env }, ({ root, run, seen, message }) => {
+    const held = fakeRun({ runId: 'r-0', now: NOW }).claims[1];
+    writeClaim(join(root, held.claimPath), held.claim);
+    for (const name of ['older-post.json', 'sentence-band.json', 'notes.txt'])
+      writeFileSync(join(root, LEDGER_DIR, name), '{}');
+    assert.equal(run([]), 0, message());
+    const { inputs } = seen;
+    assert.deepEqual(Object.keys(inputs).sort(), INPUT_KEYS);
+    assert.deepEqual(inputs.ledgerSlugs, ['older-post']);
+    assert.deepEqual(inputs.claims, [{ path: held.claimPath, claim: held.claim }]);
+    assert.equal(inputs.suffix, ' — meshin.co');
+    assert.deepEqual(inputs.settings, { termArm: false, termCap: 3 });
+    assert.equal(inputs.now.toISOString(), NOW.toISOString());
+    assert.equal(inputs.report.measured, '2026-11-01');
+    assert.ok(inputs.concepts.length > 0 && inputs.generated.length > 0 && inputs.promptSources.size > 0);
+  });
+});
+
+test('--now sets the instant the selection and the run use', () => {
+  scenario(WRITE, { now: () => new Date('2030-01-01T00:00:00Z') }, ({ run, seen, output, message }) => {
+    assert.equal(run(['--write', '--output', output, '--now', '2026-11-02T04:00:00Z']), 0, message());
+    assert.equal(seen.inputs.now.toISOString(), NOW.toISOString());
+    const [request] = seen.builds;
+    assert.equal(request.now.toISOString(), NOW.toISOString());
+    assert.equal(request.reportPath, REPORT);
+    assert.equal(request.decision, WRITE);
+    assert.equal(request.report.measured, '2026-11-01');
+  });
+});
+
+test('the run id is --run-id, else the GitHub run and attempt, else local- plus the compact UTC time', () => {
+  const github = { GITHUB_RUN_ID: '9', GITHUB_RUN_ATTEMPT: '2' };
+  assert.equal(runIdFor({ runId: 'mine', env: github, now: NOW }), 'mine');
+  assert.equal(runIdFor({ runId: null, env: github, now: NOW }), '9-2');
+  for (const env of [{ GITHUB_RUN_ID: '9' }, { GITHUB_RUN_ATTEMPT: '2' }, {}]) {
+    assert.equal(runIdFor({ runId: null, env, now: new Date('2026-11-02T04:00:00.987Z') }), 'local-20261102T040000Z');
+  }
+});
+
+test('the printed lines are the primary line, then entries, advisories, named concepts, proposals and the tally', () => {
+  assert.deepEqual(printedLines(WRITE), [
+    CHOICE,
+    'article: Fractional CAIO vs full-time CAIO cost?, /blog/fractional-caio-vs-full-time-caio-cost, prompt 2',
+    'term: What is a model card?, /glossary/what-is-a-model-card, prompt 2',
+    STRENGTHEN_LINE,
+    'Missing concept left unwritten (cap): What is a data contract?',
+    'Proposal for the owner to adopt as a buyer prompt: "how to audit an ai vendor"',
+    'Examined 3 candidates, set aside 2.',
+  ]);
+  assert.deepEqual(printedLines(STRENGTHEN), [
+    STRENGTHEN.choice,
+    STRENGTHEN_LINE,
+    'Strengthen: /services/fractional-caio, "ai governance", 3 impressions at position n/a: it ranks at position 14.5',
+    'Examined 1 candidate, set aside 1.',
+  ]);
+  assert.deepEqual(printedLines(NONE), [NONE.reason, 'Examined 1 candidate, set aside 1.']);
+});
+
+test('the summary is Markdown with a heading, the primary line and one list per kind', () => {
+  const markdown = summaryMarkdown(WRITE);
+  assert.match(markdown, /^## Topic selection\n\n/);
+  assert.ok(markdown.includes('\n\n' + CHOICE + '\n\n'));
+  assert.ok(markdown.includes('- article: Fractional CAIO vs full-time CAIO cost?'));
+  assert.ok(markdown.includes('- ' + STRENGTHEN_LINE));
+  assert.ok(markdown.includes('- Missing concept left unwritten (cap): What is a data contract?'));
+  assert.ok(markdown.includes('- Proposal for the owner to adopt as a buyer prompt: "how to audit an ai vendor"'));
+  assert.ok(markdown.endsWith('Examined 3 candidates, set aside 2.\n'));
+  assert.equal(summaryMarkdown(NONE).includes('###'), false);
+});
+
+test('--summary appends to the file and never overwrites what is there', () => {
+  for (const decision of [NONE, STRENGTHEN]) {
+    scenario(decision, {}, ({ root, run, message }) => {
+      const path = join(root, 'step-summary.md');
+      writeFileSync(path, '# Earlier step\n');
+      assert.equal(run(['--summary', path]), 0, message());
+      assert.equal(run(['--summary', path]), 0, message());
+      const text = readFileSync(path, 'utf8');
+      assert.ok(text.startsWith('# Earlier step\n## Topic selection'));
+      assert.equal(text.split('## Topic selection').length - 1, 2);
+      assert.ok(text.includes(decision.reason ?? decision.choice));
+    });
+  }
+});
+
+test('end to end, the frozen report and the live semantic core give a decision that obeys the invariants', () => {
+  inRepo((root) => {
+    const before = snapshot(root);
+    const out = [];
+    const err = [];
+    const io = { repoRoot: root, env: {}, out: (line) => out.push(line), err: (line) => err.push(line) };
+    assert.equal(runCli(['--now', '2026-11-02T04:00:00Z'], io), 0, err.join('\n'));
+    assert.deepEqual(err, []);
+    assert.match(out[0], /^(Choice:|No candidate|Strengthen:)/);
+    assert.match(out.at(-1), /^Examined \d+ candidates?, set aside \d+\.$/);
+    assert.deepEqual(snapshot(root), before);
+  });
+});

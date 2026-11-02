@@ -1,11 +1,14 @@
-import { brandFromDisk } from '../src/utils/brand.mjs';
+import { siteBrand } from './site-brand.mjs';
 import { ATTEMPT_CAP, QUARANTINE_HOURS } from './autowriter-ledger.mjs';
+import { readEngineConfig } from './engine-config.mjs';
 import { judgeChecks } from './pr-checks.mjs';
+import { ESCALATION_KIND, isOutcome } from './repair-outcome.mjs';
 
 export const BOT_NAME = 'autowriter-bot';
-export const BOT_EMAIL = `${BOT_NAME}@${brandFromDisk().name}`;
+export const BOT_EMAIL = `${BOT_NAME}@${siteBrand().name}`;
+export const BOT_IDENTITY = { name: BOT_NAME, email: BOT_EMAIL };
 export const BRANCH_PREFIX = 'autowriter/';
-export const HOLD_LABEL = 'autowriter-hold';
+export const HOLD_LABEL = readEngineConfig().loop.holdLabel;
 export const CHAIN_LIMIT_HOURS = QUARANTINE_HOURS + 24;
 export const VERDICTS = ['unsettled', 'merge', 'repairable', 'escalate', 'blocked-by-human', 'done'];
 
@@ -20,16 +23,18 @@ export function slugOfBranch(ref) {
 
 const verdict = (name, reason, evidence) => ({ verdict: name, reason, kind: null, evidence, observe: '' });
 
+const baseOf = (pullRequest) => ({ head: pullRequest.head.sha, pullRequest: pullRequest.number });
+
 const isOwnBranch = ({ head, base }) => slugOfBranch(head.ref) !== null && head.repo?.full_name === base.repo.full_name;
 
-const handledByHuman = (pullRequest, commits, base) => {
+const handledByHuman = (pullRequest, commits, base, ignoreLag) => {
   if (pullRequest.merged === true) return verdict('done', 'merged', base);
   if (pullRequest.state !== 'open') return verdict('blocked-by-human', 'closed', base);
   if (!isOwnBranch(pullRequest)) return verdict('blocked-by-human', 'foreign-branch', base);
   if (pullRequest.labels.some(({ name }) => name === HOLD_LABEL))
     return verdict('blocked-by-human', 'hold-label', base);
   if (pullRequest.draft === true) return verdict('blocked-by-human', 'draft', base);
-  if (commits.at(-1)?.sha !== pullRequest.head.sha) return verdict('unsettled', 'stale-head', base);
+  if (!ignoreLag && commits.at(-1)?.sha !== pullRequest.head.sha) return verdict('unsettled', 'stale-head', base);
   const foreign = commits.find(
     ({ commit }) => commit.author.email !== BOT_EMAIL || commit.committer.email !== BOT_EMAIL
   );
@@ -63,10 +68,15 @@ function settle({ checks, pullRequest, now, base }) {
   return { ...checks, evidence };
 }
 
+export function classifyHandling({ pullRequest, commits, ledger }, { ignoreLag = false } = {}) {
+  const base = baseOf(pullRequest);
+  return handledByHuman(pullRequest, commits, base, ignoreLag) ?? decidedBefore(ledger, base);
+}
+
 export function classifyPullRequest({ pullRequest, commits, checkRuns, runs, jobs, ledger, previous, now }) {
-  const base = { head: pullRequest.head.sha, pullRequest: pullRequest.number };
-  const early = handledByHuman(pullRequest, commits, base) ?? decidedBefore(ledger, base);
+  const early = classifyHandling({ pullRequest, commits, ledger });
   if (early) return early;
+  const base = baseOf(pullRequest);
   const checks = judgeChecks({
     head: base.head,
     checkRuns,
@@ -77,4 +87,13 @@ export function classifyPullRequest({ pullRequest, commits, checkRuns, runs, job
     attemptCap: ATTEMPT_CAP,
   });
   return settle({ checks, pullRequest, now, base });
+}
+
+export function classifyAfterRepair({ pullRequest, commits, ledger, outcome }) {
+  if (!isOutcome(outcome)) throw new Error(`${outcome} is not a repair outcome`);
+  const handling = classifyHandling({ pullRequest, commits, ledger }, { ignoreLag: true });
+  if (handling) return handling;
+  const base = baseOf(pullRequest);
+  if (outcome === 'repaired' || outcome === 'stale') return verdict('unsettled', outcome, base);
+  return { ...verdict('escalate', outcome, base), kind: ESCALATION_KIND[outcome] };
 }

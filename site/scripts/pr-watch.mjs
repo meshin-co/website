@@ -5,29 +5,43 @@ import { ledgerFile, newLedger, readLedger, writeLedger } from './autowriter-led
 import { variable } from './escalate-channels.mjs';
 import { EscalationError, escalate } from './escalate.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
-import { BOT_EMAIL, BOT_NAME, classifyPullRequest, slugOfBranch } from './pr-classify.mjs';
+import { BOT_IDENTITY, classifyAfterRepair, classifyPullRequest, slugOfBranch } from './pr-classify.mjs';
 import {
   GitHubError,
   createApi,
   dispatchSuccessor,
   mergePullRequest,
   putLedger,
+  readLedgerAt,
   readSnapshot,
+  readTree,
   tickProblem,
 } from './pr-github.mjs';
+import { recordDebt } from './pr-watch-debt.mjs';
+import { repairFinding, repairOutputs, writeOutputs } from './pr-watch-repair.mjs';
+import { OUTCOMES, isOutcome } from './repair-outcome.mjs';
 
 export const SECRET = 'AUTOWRITER_PAT';
 export const TICK_ENVIRONMENT = 'autowriter-tick';
 export const TICK_MINUTES = 10;
 export const WORKFLOW = 'watch-pr.yml';
 
-const USAGE = 'Usage: node scripts/pr-watch.mjs --pr <number> [--observed <token>]';
+const USAGE = 'Usage: node scripts/pr-watch.mjs --pr <number> [--observed <token>] [--after-repair <outcome>]';
 const REPOSITORY_ROOT = resolve(import.meta.dirname, '..', '..');
-const BOT_IDENTITY = { name: BOT_NAME, email: BOT_EMAIL };
-const GITHUB = { createApi, readSnapshot, mergePullRequest, dispatchSuccessor, putLedger, tickProblem };
+const GITHUB = {
+  createApi,
+  readSnapshot,
+  mergePullRequest,
+  dispatchSuccessor,
+  putLedger,
+  tickProblem,
+  readLedgerAt,
+  readTree,
+};
 const FLAGS = new Map([
   ['--pr', 'number'],
   ['--observed', 'observed'],
+  ['--after-repair', 'afterRepair'],
 ]);
 const PULL_REQUEST_NUMBER = /^[1-9][0-9]{0,8}$/;
 const OBSERVATION = /^[A-Za-z0-9:._-]{0,200}$/;
@@ -43,7 +57,6 @@ const REQUIRED_VARIABLES = [
 
 const STATEMENTS = {
   'not-a-content-gate': 'a job that is not a content gate failed, so the loop may not repair it',
-  'content-gate': 'a content gate failed, and this phase repairs nothing yet',
   'attempt-cap': 'the attempt cap is spent and the checks are still red',
   'inconclusive-cancel': 'the CI run was cancelled twice with no failed job to explain it',
   'skipped-gate': 'a required job was skipped, and GitHub counts a skipped job as passed',
@@ -70,7 +83,10 @@ export function parseArguments(argv) {
   if (!PULL_REQUEST_NUMBER.test(found.number ?? '')) throw new UsageError(`${USAGE}\n--pr needs a whole number`);
   const observed = found.observed ?? '';
   if (!OBSERVATION.test(observed)) throw new UsageError(`${USAGE}\n--observed holds only letters, digits and : . _ -`);
-  return { number: Number(found.number), observed };
+  const { afterRepair } = found;
+  if (afterRepair !== undefined && !isOutcome(afterRepair))
+    throw new UsageError(`${USAGE}\n--after-repair is one of ${OUTCOMES.join(', ')}`);
+  return { number: Number(found.number), observed, ...(afterRepair === undefined ? {} : { afterRepair }) };
 }
 
 function connect({ env, fetch, io }) {
@@ -83,8 +99,10 @@ function connect({ env, fetch, io }) {
   };
 }
 
-const pullRequestUrl = ({ env, number }) =>
-  `${variable(env, 'GITHUB_SERVER_URL') || 'https://github.com'}/${variable(env, 'GITHUB_REPOSITORY')}/pull/${number}`;
+const repositoryUrl = (env) =>
+  `${variable(env, 'GITHUB_SERVER_URL') || 'https://github.com'}/${variable(env, 'GITHUB_REPOSITORY')}`;
+const pullRequestUrl = ({ env, number }) => `${repositoryUrl(env)}/pull/${number}`;
+const runUrl = ({ env }) => `${repositoryUrl(env)}/actions/runs/${variable(env, 'GITHUB_RUN_ID') || 'local'}`;
 
 function findingFor({ result, number, env }, kind) {
   const { head, failing = [], jobs = [] } = result.evidence;
@@ -186,7 +204,10 @@ async function continueChain(step) {
 async function merge(step) {
   const { number, result, writer, io } = step;
   const outcome = await asBot(step, () => io.mergePullRequest(writer, { number, head: result.evidence.head }));
-  if (outcome.merged) return 'merged';
+  if (outcome.merged) {
+    await recordDebt(step, outcome.sha, (finding) => raise(step, finding, { publish: false }));
+    return 'merged';
+  }
   if (outcome.reason === 'head-moved') return continueChain(step);
   return raise(step, {
     kind: 'hard-stop',
@@ -198,10 +219,15 @@ async function merge(step) {
 const ACTIONS = {
   merge,
   unsettled: continueChain,
-  repairable: (step) => raise(step, findingFor(step, 'unrepairable')),
+  repairable: async () => 'repair',
   escalate: (step) => raise(step, findingFor(step, step.result.kind)),
   'blocked-by-human': async () => 'stopped',
   done: async () => 'stopped',
+};
+
+const AFTER_REPAIR_ACTIONS = {
+  ...ACTIONS,
+  escalate: (step) => raise(step, repairFinding(step, { pullRequest: pullRequestUrl(step), run: runUrl(step) })),
 };
 
 function writeSummary({ env, number, result, action }) {
@@ -220,6 +246,7 @@ function writeSummary({ env, number, result, action }) {
 export async function watch({
   number,
   observed = '',
+  afterRepair = null,
   env = process.env,
   fetch = globalThis.fetch,
   io = GITHUB,
@@ -229,20 +256,25 @@ export async function watch({
   const step = { number, env, fetch, io, workdir, now, ...connect({ env, fetch, io }) };
   const snapshot = await io.readSnapshot(step.reader, number);
   const ledger = snapshot.ledger?.value ?? null;
-  const result = classifyPullRequest({ ...snapshot, ledger, previous: observed, now: now() });
+  const result =
+    afterRepair === null
+      ? classifyPullRequest({ ...snapshot, ledger, previous: observed, now: now() })
+      : classifyAfterRepair({ ...snapshot, ledger, outcome: afterRepair });
+  const actions = afterRepair === null ? ACTIONS : AFTER_REPAIR_ACTIONS;
   let action = 'failed';
   try {
-    action = await ACTIONS[result.verdict]({ ...step, snapshot, result });
+    action = await actions[result.verdict]({ ...step, snapshot, result });
     return { result, action };
   } finally {
     writeSummary({ env, number, result, action });
+    writeOutputs(env, repairOutputs({ action, result, snapshot }));
   }
 }
 
 export async function runCli(argv, { stdout = console.log, stderr = console.error, ...options } = {}) {
   try {
-    const { number, observed } = parseArguments(argv);
-    const { result, action } = await watch({ number, observed, ...options });
+    const { number, observed, afterRepair } = parseArguments(argv);
+    const { result, action } = await watch({ number, observed, afterRepair, ...options });
     stdout(`pr-watch: pull request #${number} ${result.verdict} (${result.reason}), ${action}`);
     return 0;
   } catch (error) {

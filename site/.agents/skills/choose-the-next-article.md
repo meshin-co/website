@@ -35,8 +35,13 @@ searched for.
    enough, because it also marks a query a glossary page answers that no prompt names. When no route
    is about the query, a new route is justified, and `place-a-new-text.md` decides where it goes.
 
-Signals 1 and 3 rest on someone having searched; signal 2 rests on no one having. Take a measured
-row first. With none, an unproven prompt may still be chosen, knowingly, and the record says so.
+By hand, take a measured row first, signals 1 and 3 resting on someone having searched and signal 2 on
+no one having. With none, an unproven prompt may still be chosen, knowingly, and the record says so.
+
+The unattended loop (`pick-the-next-topic.md`) writes one post a day, always from signal 2. Signal 1 is
+never a page: it becomes a strengthen report for a human. Signal 3 never gives a post, because a claim
+needs a prompt: a definitional query becomes a glossary term, any other a proposal for a prompt that
+the owner adopts. It writes the record lines below.
 
 ## Record the choice
 
@@ -60,19 +65,15 @@ The next report is the only evidence the choice worked. Compare the same query o
 
 A claim is the closed sentence `Prompt 7 is won`, also `Prompts 3 to 5 are won`, `Prompt 7 was won`
 and `Prompt 7: won`, starting a sentence. `scripts/search-demand-claims.mjs` skips negation,
-conditions, futures, questions, code spans and fences. The gate reads the Markdown `gate:docs` reads:
-every tracked file except `audits/` and `site/src/data/`, less archived changes and `investigation/`
-records marked `record: true`. A paraphrase is not read, so the gate is a net for this sentence and
-no judge of prose.
+conditions, futures, questions, code spans and fences. The gate reads the Markdown `gate:docs` reads,
+less archived changes and `investigation/` records; a paraphrase is not read, so it judges no prose.
 
 The word won is tied to this report: say it only when the report records impressions for the prompt.
-An answer-engine result is cited or mentioned, as the probe says. Impressions are necessary and
-never sufficient, so the gate never calls a prompt won; it only refuses a win the report contradicts.
+An answer-engine result is cited or mentioned. Impressions are necessary, never sufficient.
 
 ## Limits
 
-The spec sets 35 days; it is not a measurement. The gate has no impression floor and no position
-bound: one chosen on a few dozen impressions would be a guess that refuses every honest sentence or
-never fires. Search Console withholds rare queries, and the Pages table adds up to more than the
-total because one results page can show more than one page of the site, so choose from the Queries
-and Buyer prompts tables only.
+The spec sets 35 days; it is not a measurement. The gate has no impression floor and no position bound:
+one chosen on a few dozen impressions would be a guess that refuses every honest sentence or never
+fires. Search Console withholds rare queries, and the Pages table adds up to more than the total
+because one results page can show more than one page of the site: choose from Queries and Buyer prompts.

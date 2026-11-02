@@ -2,17 +2,37 @@
 
 ## ADDED Requirements
 
-### Requirement: The format follows the query
+### Requirement: A run writes one post, and the terms the glossary is missing
 
-A generated entry SHALL take the format that answers its target query: a definitional query becomes
-a glossary term, an interrogative query becomes a FAQ answer, and a procedural query becomes a blog
-article. The format decision and the query that drove it SHALL be recorded in the run's claim.
+Every scheduled run SHALL produce exactly one blog post, chosen from the committed demand report
+and recorded in a claim with the measurement that justified it. The same run SHALL also write a
+glossary term for each concept that measured demand names and the glossary does not define, up to
+a configured cap, when the term arm is enabled in configuration. Each entry SHALL carry its own
+claim and its own generation record.
 
-#### Scenario: The concept already has a page
+#### Scenario: Demand names no concept the glossary lacks
+
+- **WHEN** every concept in the report already owns a row in the concept register
+- **THEN** the run writes its post and no term, because one concept is defined on exactly one page
+  and a second page for it would compete with the first
+
+#### Scenario: The term arm is switched off
+
+- **WHEN** configuration disables the term arm, as a site with no glossary would
+- **THEN** the run writes its post alone, and the missing concepts are named in the digest rather
+  than written
+
+#### Scenario: Demand names more missing concepts than the cap allows
+
+- **WHEN** the number of missing concepts exceeds the configured cap for one run
+- **THEN** the run writes up to the cap, chosen by measured impressions, and names the remainder in
+  the digest, so an unattended night cannot add an unbounded number of pages
+
+#### Scenario: A concept already has a page
 
 - **WHEN** the selected query names a concept that already owns a row in the concept register
-- **THEN** no new entry is created and the run strengthens the existing route instead, because one
-  concept is defined on exactly one page
+- **THEN** no entry is created for it and the run reports a strengthen decision for a human,
+  because rewriting published copy is not an unattended act
 
 ### Requirement: A generated entry carries its provenance
 

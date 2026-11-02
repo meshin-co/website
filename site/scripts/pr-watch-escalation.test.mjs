@@ -18,12 +18,13 @@ import {
 const refusal = (status, message, method = 'PUT', path = 'pulls/72/merge') =>
   new GitHubError({ method, path, status, body: { message } });
 
-test('a failure the loop could repair is, for now, escalated as unrepairable and recorded on the branch', async () => {
-  const { run, calls, ledgerPath, requests } = await harness({ bundle: scenario('content-gate-failure') });
+test('a failure no rewrite can repair is escalated as unrepairable and recorded on the branch', async () => {
+  const { run, calls, ledgerPath, requests } = await harness({ bundle: scenario('dependency-failure') });
   const { action, result } = await run();
   const ledger = readJson(ledgerPath);
 
-  assert.equal(result.verdict, 'repairable');
+  assert.equal(result.verdict, 'escalate');
+  assert.equal(result.reason, 'not-a-content-gate');
   assert.equal(action, 'escalated');
   assert.equal(ledger.escalations[0].kind, 'unrepairable');
   assert.equal(ledger.verdict.state, 'escalated');
@@ -32,12 +33,12 @@ test('a failure the loop could repair is, for now, escalated as unrepairable and
 });
 
 test('the escalation names the failing job and gate and links the pull request', async () => {
-  const { run, requests } = await harness({ bundle: scenario('content-gate-failure') });
+  const { run, requests } = await harness({ bundle: scenario('cancel-storm') });
   await run();
   const { title, body } = requests[0].body;
 
   assert.match(title, /#72/);
-  assert.match(body, /cheap-gates \(gate:content\)/);
+  assert.match(body, /visual-and-axe \(1\) \(gate:visual\)/);
   assert.match(body, /https:\/\/github\.com\/meshin-co\/website\/pull\/72/);
 });
 

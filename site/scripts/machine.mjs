@@ -16,9 +16,11 @@ import { brandFromDisk } from '../src/utils/brand.mjs';
 import { catalogDriftFindings } from './catalog-drift.mjs';
 import { collectionGateFailures } from './collection-gate.mjs';
 import { dateAgreementFailures } from './date-agreement.mjs';
+import { recordGateFindings } from './gate-findings.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 import { LLMS_FULL_MAX_BYTES, LLMS_COLLECTIONS } from '../src/utils/llms-collections.mjs';
 import { llmsCorpusGaps } from './llms-corpus.mjs';
+import { createFailureLog } from './machine-failures.mjs';
 
 const NON_PUBLIC = new Set(['author', 'speaking']);
 const FEED_FLOOR = 5;
@@ -138,21 +140,21 @@ function parseSidecar(text) {
 }
 
 export function sidecarContentGaps(routes, sidecarTextByRoute, { site }) {
-  const failures = [];
+  const gaps = [];
   for (const route of sidecarCandidateRoutes(routes)) {
     const text = sidecarTextByRoute[route];
     if (!text) continue;
 
     const { title, source, updated, body } = parseSidecar(text);
     const expectedSource = absoluteUrl(site, route);
-    if (!title) failures.push(`sidecar for ${route} carries no title`);
+    if (!title) gaps.push(`sidecar for ${route} carries no title`);
     if (source !== expectedSource) {
-      failures.push(`sidecar for ${route} canonical is ${source || '(missing)'}, expected ${expectedSource}`);
+      gaps.push(`sidecar for ${route} canonical is ${source || '(missing)'}, expected ${expectedSource}`);
     }
-    if (!updated) failures.push(`sidecar for ${route} carries no updated date`);
-    if (!body) failures.push(`sidecar for ${route} body is empty`);
+    if (!updated) gaps.push(`sidecar for ${route} carries no updated date`);
+    if (!body) gaps.push(`sidecar for ${route} body is empty`);
   }
-  return failures;
+  return gaps;
 }
 
 const LINK_TAG = /<link\b[^>]*>/gi;
@@ -219,29 +221,29 @@ function itemPaths(feedXml) {
 }
 
 export function feedCoverageFailures(collections, { perCollectionFeeds, mergedFeed, jsonFeedItems, liveRoutesByKind }) {
-  const failures = [];
+  const gaps = [];
   const mergedPaths = itemPaths(mergedFeed);
 
   for (const collection of collections) {
     const base = COLLECTION_BASES[collection];
     const feedPaths = itemPaths(perCollectionFeeds[collection] ?? '');
     for (const route of liveRoutesByKind[collection] ?? []) {
-      if (!feedPaths.includes(route)) failures.push(`/${base}/rss.xml omits ${route}`);
+      if (!feedPaths.includes(route)) gaps.push(`/${base}/rss.xml omits ${route}`);
     }
 
     const floor = Math.min(FEED_FLOOR, (liveRoutesByKind[collection] ?? []).length);
     const present = mergedPaths.filter((path) => path.startsWith(`/${base}/`)).length;
     if (present < floor) {
-      failures.push(`merged rss.xml carries ${present} ${collection} entries, floor is ${floor}`);
+      gaps.push(`merged rss.xml carries ${present} ${collection} entries, floor is ${floor}`);
     }
   }
 
   const jsonPaths = jsonFeedItems.map(toPath);
   const mirrored =
     jsonPaths.length === mergedPaths.length && jsonPaths.every((path, index) => path === mergedPaths[index]);
-  if (!mirrored) failures.push('feed.json does not mirror rss.xml item-for-item');
+  if (!mirrored) gaps.push('feed.json does not mirror rss.xml item-for-item');
 
-  return failures;
+  return gaps;
 }
 
 async function routeHtml(distDir, route) {
@@ -278,14 +280,14 @@ async function liveRoutesByKind(distDir, collections, routes) {
 async function main(distDir) {
   const collections = publicCollections(await readFile('src/content.config.ts', 'utf8'));
   const routes = await discoverRoutes(distDir);
-  const failures = [];
+  const failures = createFailureLog();
 
   const manifest = JSON.parse(await readFile('package.json', 'utf8'));
   for (const finding of humansTxtFindings(await readFile(join(distDir, 'humans.txt'), 'utf8'), {
     ...(manifest.dependencies ?? {}),
     ...(manifest.devDependencies ?? {}),
   })) {
-    failures.push(`${finding.rule} ${finding.detail}`);
+    failures.add(finding.rule, `${finding.rule} ${finding.detail}`, ['/humans.txt']);
   }
 
   const liveByKind = await liveRoutesByKind(distDir, collections, routes);
@@ -293,13 +295,19 @@ async function main(distDir) {
   const withheldHubs = emptyKinds.map((kind) => `/${COLLECTION_BASES[kind]}`);
 
   const llmsTxt = await readFile(join(distDir, 'llms.txt'), 'utf8');
-  for (const path of noindexStaticListings(llmsTxt)) failures.push(`llms.txt lists noindex page ${path}`);
-  failures.push(...sizeGuardFailure('llms.txt', Buffer.byteLength(llmsTxt, 'utf8'), LLMS_TXT_MAX_BYTES));
+  for (const path of noindexStaticListings(llmsTxt)) {
+    failures.add('llms-lists-noindex-page', `llms.txt lists noindex page ${path}`, ['/llms.txt', path]);
+  }
+  const llmsBytes = Buffer.byteLength(llmsTxt, 'utf8');
+  failures.addAll('llms-size', sizeGuardFailure('llms.txt', llmsBytes, LLMS_TXT_MAX_BYTES), ['/llms.txt']);
   for (const collection of BOUNDED_INLINE_COLLECTIONS) {
-    for (const gap of llmsRouteGaps(llmsTxt, liveByKind[collection] ?? [])) failures.push(`llms.txt omits ${gap}`);
+    for (const gap of llmsRouteGaps(llmsTxt, liveByKind[collection] ?? [])) {
+      failures.add('llms-omits-route', `llms.txt omits ${gap}`, ['/llms.txt', gap]);
+    }
   }
   for (const route of llmsInlinedRoutes(llmsTxt, liveByKind, BOUNDED_INLINE_COLLECTIONS)) {
-    failures.push(`llms.txt lists ${route} inline, entries of an unbounded collection belong in /llms/`);
+    const text = `llms.txt lists ${route} inline, entries of an unbounded collection belong in /llms/`;
+    failures.add('llms-lists-inline', text, ['/llms.txt', route]);
   }
 
   const noindexRoutes = await noindexRoutesOf(distDir, routes);
@@ -309,36 +317,41 @@ async function main(distDir) {
   }
   const coverageRoutes = routes.filter((route) => !isTaxonomyRoute(route));
   for (const gap of indexableCoverageGaps({ routes: coverageRoutes, listed, noindexRoutes })) {
-    failures.push(`llms.txt and /llms/ are missing indexable route ${gap}`);
+    failures.add('llms-omits-route', `llms.txt and /llms/ are missing indexable route ${gap}`, ['/llms.txt', gap]);
   }
 
   const llmsFull = await readFile(join(distDir, 'llms-full.txt'), 'utf8');
-  failures.push(...sizeGuardFailure('llms-full.txt', Buffer.byteLength(llmsFull, 'utf8'), LLMS_FULL_MAX_BYTES));
+  const fullBytes = Buffer.byteLength(llmsFull, 'utf8');
+  failures.addAll('llms-size', sizeGuardFailure('llms-full.txt', fullBytes, LLMS_FULL_MAX_BYTES), ['/llms-full.txt']);
   for (const collection of collections) {
-    for (const gap of llmsRouteGaps(llmsFull, liveByKind[collection])) failures.push(`llms-full.txt omits ${gap}`);
+    for (const gap of llmsRouteGaps(llmsFull, liveByKind[collection])) {
+      failures.add('llms-omits-route', `llms-full.txt omits ${gap}`, ['/llms-full.txt', gap]);
+    }
   }
 
   for (const collection of populatedCollections(collections, liveByKind)) {
     const file = await readFile(join(distDir, 'llms', `${collection}.txt`), 'utf8').catch(() => null);
+    const surface = `/llms/${collection}.txt`;
     if (file === null) {
-      failures.push(`no /llms/${collection}.txt full-text file`);
+      failures.add('llms-file-missing', `no /llms/${collection}.txt full-text file`, [surface]);
       continue;
     }
     for (const gap of llmsRouteGaps(file, liveByKind[collection])) {
-      failures.push(`/llms/${collection}.txt omits ${gap}`);
+      failures.add('llms-omits-route', `/llms/${collection}.txt omits ${gap}`, [surface, gap]);
     }
   }
 
   const sitemap = await readFile(join(distDir, 'sitemap-0.xml'), 'utf8');
   const feedJson = await readFile(join(distDir, 'feed.json'), 'utf8');
-  failures.push(
-    ...entryCoverageFailures(collections, liveByKind, { 'llms.txt': llmsTxt, 'feed.json': feedJson, sitemap })
+  failures.addAll(
+    'entry-coverage',
+    entryCoverageFailures(collections, liveByKind, { 'llms.txt': llmsTxt, 'feed.json': feedJson, sitemap })
   );
   if (emptyKinds.length > 0) {
     console.log(`machine: no live entry in ${emptyKinds.join(', ')}; entry coverage was not checked for it`);
   }
   for (const gap of sitemapNoindexLeaks(sitemap, noindexRoutes)) {
-    failures.push(`sitemap lists noindex route ${gap}`);
+    failures.add('sitemap-lists-noindex-route', `sitemap lists noindex route ${gap}`, ['/sitemap-0.xml', gap]);
   }
 
   const expectedLastmods = await siteLastmods({
@@ -346,7 +359,7 @@ async function main(distDir) {
     staticPages: publicIndexableStaticPages(),
   });
   for (const gap of lastmodCoverageGaps(sitemap, Object.keys(expectedLastmods))) {
-    failures.push(`sitemap has no lastmod for ${gap}`);
+    failures.add('sitemap-lastmod-missing', `sitemap has no lastmod for ${gap}`, ['/sitemap-0.xml', gap]);
   }
 
   const offeredRoutes = routes.filter((route) => !withheldHubs.includes(route));
@@ -355,25 +368,29 @@ async function main(distDir) {
     sidecarTextByRoute[route] = await readFile(join(distDir, sidecarFileForRoute(route)), 'utf8').catch(() => null);
   }
 
-  for (const gap of sidecarGaps(offeredRoutes, sidecarTextByRoute)) failures.push(`no markdown sidecar for ${gap}`);
-  for (const gap of sidecarContentGaps(offeredRoutes, sidecarTextByRoute, { site: SITE_ORIGIN })) failures.push(gap);
+  for (const gap of sidecarGaps(offeredRoutes, sidecarTextByRoute)) {
+    failures.add('sidecar-missing', `no markdown sidecar for ${gap}`, [gap]);
+  }
+  failures.addAll('sidecar-content', sidecarContentGaps(offeredRoutes, sidecarTextByRoute, { site: SITE_ORIGIN }));
 
   const htmlByRoute = {};
   for (const route of routes) htmlByRoute[route] = await routeHtml(distDir, route);
-  for (const gap of canonicalGaps(htmlByRoute, { site: SITE_ORIGIN })) failures.push(gap);
+  failures.addAll('canonical-mismatch', canonicalGaps(htmlByRoute, { site: SITE_ORIGIN }));
   const datedStaticRoutes = publicIndexableStaticPages()
     .filter((page) => page.updatedDate)
     .map((page) => page.path);
-  failures.push(
-    ...dateAgreementFailures({
+  failures.addAll(
+    'date-agreement',
+    dateAgreementFailures({
       lastmods: sitemapLastmods(sitemap),
       htmlByRoute,
       sidecarTextByRoute,
       staticRoutes: datedStaticRoutes,
     })
   );
-  failures.push(
-    ...(await collectionGateFailures(distDir, { kinds: emptyKinds, routes, htmlByRoute, site: SITE_ORIGIN }))
+  failures.addAll(
+    'empty-collection-surface',
+    await collectionGateFailures(distDir, { kinds: emptyKinds, routes, htmlByRoute, site: SITE_ORIGIN })
   );
 
   const hubRoutes = [...new Set(Object.values(COLLECTION_BASES))]
@@ -382,11 +399,11 @@ async function main(distDir) {
   const hubHtml = {};
   for (const route of hubRoutes) hubHtml[route] = await routeHtml(distDir, route);
   for (const gap of hubFeedLinkGaps(hubRoutes, hubHtml)) {
-    failures.push(`${gap} does not advertise its own collection feed <link>`);
+    failures.add('hub-feed-link-missing', `${gap} does not advertise its own collection feed <link>`, [gap]);
   }
 
   for (const gap of feedBaseGaps(collections)) {
-    failures.push(`${gap} has no FEED_BASES entry; skipping its feed coverage check`);
+    failures.add('feed-base-missing', `${gap} has no FEED_BASES entry; skipping its feed coverage check`);
   }
   const perCollectionFeeds = {};
   for (const collection of collections) {
@@ -396,8 +413,9 @@ async function main(distDir) {
   const mergedFeed = await readFile(join(distDir, 'rss.xml'), 'utf8').catch(() => '');
   const jsonFeedItems = JSON.parse(await readFile(join(distDir, 'feed.json'), 'utf8'))?.items?.map((item) => item.url);
 
-  failures.push(
-    ...feedCoverageFailures(collections, {
+  failures.addAll(
+    'feed-coverage',
+    feedCoverageFailures(collections, {
       perCollectionFeeds,
       mergedFeed,
       jsonFeedItems,
@@ -420,17 +438,16 @@ async function main(distDir) {
     builtDescriptions[entry.path] = { description: /content="([^"]*)"/.exec(tag)?.[1] ?? '' };
   }
   for (const finding of catalogDriftFindings(catalog, builtDescriptions))
-    failures.push(`${finding.route} ${finding.rule} [${finding.detail}]`);
+    failures.add(finding.rule, `${finding.route} ${finding.rule} [${finding.detail}]`, [finding.route]);
 
-  failures.push(...(await machineFileFailures(distDir, htmlByRoute, llmsTxt)));
+  await machineFileFailures(failures, distDir, htmlByRoute, llmsTxt);
 
   console.log(
     `machine: ${collections.length} public collections, ${routes.length} routes, ${catalog.length} catalog entries, ${datedStaticRoutes.length} static routes checked for one date`
   );
-  if (failures.length > 0) {
-    for (const failure of failures) console.error(`MACHINE ${failure}`);
-    process.exitCode = 1;
-  }
+  for (const text of failures.texts()) console.error(`MACHINE ${text}`);
+  recordGateFindings({ gate: 'gate:machine', findings: failures.records() });
+  if (failures.size > 0) process.exitCode = 1;
 }
 
 if (invokedDirectly(import.meta.filename, process.argv[1])) {
@@ -523,20 +540,18 @@ async function llmsCorpusFailures(distDir, llmsTxt) {
   return llmsCorpusGaps({ llmsTxt, files, collections: LLMS_COLLECTIONS });
 }
 
-async function machineFileFailures(distDir, htmlByRoute, llmsTxt) {
+async function machineFileFailures(failures, distDir, htmlByRoute, llmsTxt) {
   const shipped = await shippedMachineFiles(distDir);
   const referenced = shipped.filter((file) => REFERENCED_MACHINE_FILE.test(file));
   const headerGuarded = [...referenced, ...shipped.filter((file) => HEADER_GUARDED_MACHINE_FILE.test(file))];
   const headersText = await readFile(join(distDir, '_headers'), 'utf8').catch(() => '');
   const machineTexts = {};
   for (const file of referenced) machineTexts[file] = await readFile(join(distDir, file.slice(1)), 'utf8');
-  return [
-    ...machineHeaderGaps(headersText, headerGuarded),
-    ...unreferencedMachineFiles(referenced, { ...htmlByRoute, ...machineTexts }).map(
-      (file) => `${file} is shipped but nothing references it`
-    ),
-    ...(await llmsCorpusFailures(distDir, llmsTxt)),
-  ];
+  failures.addAll('machine-header', machineHeaderGaps(headersText, headerGuarded));
+  for (const file of unreferencedMachineFiles(referenced, { ...htmlByRoute, ...machineTexts })) {
+    failures.add('machine-file-unreferenced', `${file} is shipped but nothing references it`, [file]);
+  }
+  failures.addAll('llms-corpus', await llmsCorpusFailures(distDir, llmsTxt));
 }
 
 export function llmsInlinedRoutes(llmsText, liveRoutesByKind, boundedCollections) {

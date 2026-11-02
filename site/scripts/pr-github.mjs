@@ -6,6 +6,7 @@ import { slugOfBranch } from './pr-classify.mjs';
 const API_ORIGIN = 'https://api.github.com';
 const API_VERSION = '2022-11-28';
 const REQUEST_TIMEOUT_MS = 20_000;
+const DOWNLOAD_TIMEOUT_MS = 60_000;
 const PAGE_SIZE = 100;
 const MERGE_HEAD_MOVED = 409;
 const MERGE_REFUSED = 405;
@@ -51,10 +52,22 @@ export function createApi({ repo, token, fetch = globalThis.fetch }) {
     return text === '' ? null : JSON.parse(text);
   }
 
+  async function bytes(path) {
+    const response = await fetch(`${API_ORIGIN}/repos/${repo}/${path}`, {
+      headers,
+      signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT_MS),
+    });
+    if (!response.ok)
+      throw new GitHubError({ method: 'GET', path, status: response.status, body: parseBody(await response.text()) });
+    return Buffer.from(await response.arrayBuffer());
+  }
+
   return {
     get: (path) => request('GET', path),
     post: (path, body) => request('POST', path, body),
     put: (path, body) => request('PUT', path, body),
+    patch: (path, body) => request('PATCH', path, body),
+    bytes,
     repo,
   };
 }
@@ -165,4 +178,12 @@ export async function tickProblem(api, { environment, minutes }) {
     return `The environment ${environment} waits ${rule.wait_timer} minutes, less than the ${minutes} the tick needs; fix it with: ${fix}`;
   }
   return null;
+}
+
+export const readLedgerAt = (api, { slug, ref }) => readLedgerFile(api, { slug, head: ref });
+
+export async function readTree(api, sha) {
+  const listing = await api.get(`git/trees/${sha}?recursive=1`);
+  if (listing.truncated) throw new Error(`the tree of ${sha} is incomplete: GitHub cut the recursive listing short`);
+  return listing.tree;
 }

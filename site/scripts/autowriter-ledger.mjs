@@ -2,12 +2,15 @@ import { mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { basename, dirname } from 'node:path';
 
 import { describeProblem, instantProblems, readSchema } from './autowriter-records.mjs';
+import { readEngineConfig } from './engine-config.mjs';
 import { validateJsonSchema } from './json-schema.mjs';
 
 export const LEDGER_DIR = 'audits/autowriter';
-export const ATTEMPT_CAP = 3;
-export const QUARANTINE_HOURS = 12;
-export const MONTHLY_SPEND_CEILING_USD = 25;
+const { loop } = readEngineConfig();
+
+export const ATTEMPT_CAP = loop.attemptCap;
+export const QUARANTINE_HOURS = loop.quarantineHours;
+export const MONTHLY_SPEND_CEILING_USD = loop.monthlySpendCeilingUsd;
 
 export const IMMEDIATE_KINDS = ['spend-ceiling', 'credential', 'no-convergence'];
 export const DIGEST_KINDS = ['hard-stop', 'unrepairable'];
@@ -15,6 +18,7 @@ export const ESCALATION_KINDS = [...IMMEDIATE_KINDS, ...DIGEST_KINDS];
 export const CHANNELS = ['issue', 'slack', 'digest'];
 
 const LEDGER_SCHEMA = readSchema('autowriter-ledger.schema.json');
+export const REFUSAL_REASONS = LEDGER_SCHEMA.$defs.refusal.properties.reason.enum;
 const DECIDED_WITH_REASON = ['escalated', 'stopped'];
 const SPEND_TOLERANCE = 1e-6;
 const MAX_SHOWN = 5;
@@ -40,9 +44,10 @@ export const newLedger = ({ slug, runId, pullRequest }) => ({
 const problem = (path, message) => ({ path, problem: message });
 const sum = (values) => values.reduce((total, value) => total + value, 0);
 
-const instantEntries = ({ attempts, verdict, escalations }) => [
+const instantEntries = ({ attempts, verdict, escalations, measurementDebt }) => [
   ...attempts.map((attempt, index) => [`$.attempts[${index}].recordedAt`, attempt.recordedAt]),
   ['$.verdict.decidedAt', verdict.decidedAt],
+  ...(measurementDebt === undefined ? [] : [['$.measurementDebt.recordedAt', measurementDebt.recordedAt]]),
   ...escalations.flatMap(({ raisedAt, receipts }, index) => [
     [`$.escalations[${index}].raisedAt`, raisedAt],
     ...receipts.map((receipt, at) => [`$.escalations[${index}].receipts[${at}].attemptedAt`, receipt.attemptedAt]),
@@ -54,15 +59,50 @@ const attemptProblems = ({ attempts }) =>
     number === index + 1 ? [] : [problem(`$.attempts[${index}].number`, `must be ${index + 1}, got ${number}`)]
   );
 
-function spendProblems({ attempts, spend }) {
+function failureProblems({ attempts }) {
+  return attempts.flatMap(({ failures, failingRule, failingPath }, index) => {
+    if (failures === undefined) return [];
+    const at = `$.attempts[${index}]`;
+    const [head] = failures;
+    return [
+      ['failingRule', failingRule, 'rule', head.rule],
+      ['failingPath', failingPath, 'path', head.path],
+    ]
+      .filter(([, recorded, , listed]) => recorded !== listed)
+      .map(([name, recorded, member, listed]) =>
+        problem(
+          `${at}.${name}`,
+          `is ${JSON.stringify(recorded)} but attempts[${index}].failures[0].${member} is ${JSON.stringify(listed)}`
+        )
+      );
+  });
+}
+
+function debtProblems({ verdict, measurementDebt }) {
+  const owed = verdict.state === 'merged';
+  if (owed && measurementDebt === undefined)
+    return [
+      problem(
+        '$.measurementDebt',
+        'is required once the verdict is merged, so the tree no Lighthouse run measured is on record'
+      ),
+    ];
+  if (!owed && measurementDebt !== undefined)
+    return [problem('$.measurementDebt', `belongs to a merged verdict only, and this verdict is ${verdict.state}`)];
+  return [];
+}
+
+function spendProblems({ attempts, generation, spend }) {
+  const parts = generation === undefined ? attempts : [generation, ...attempts];
+  const made = generation === undefined ? 'attempts' : 'generation and attempts';
   const totals = [
-    ['$.spend.tokens.input', spend.tokens.input, sum(attempts.map((entry) => entry.tokens.input))],
-    ['$.spend.tokens.output', spend.tokens.output, sum(attempts.map((entry) => entry.tokens.output))],
-    ['$.spend.costUsd', spend.costUsd, sum(attempts.map((entry) => entry.costUsd))],
+    ['$.spend.tokens.input', spend.tokens.input, sum(parts.map((entry) => entry.tokens.input))],
+    ['$.spend.tokens.output', spend.tokens.output, sum(parts.map((entry) => entry.tokens.output))],
+    ['$.spend.costUsd', spend.costUsd, sum(parts.map((entry) => entry.costUsd))],
   ];
   return totals
     .filter(([, recorded, added]) => Math.abs(recorded - added) > SPEND_TOLERANCE)
-    .map(([path, recorded, added]) => problem(path, `is ${recorded} but its attempts add up to ${added}`));
+    .map(([path, recorded, added]) => problem(path, `is ${recorded} but its ${made} add up to ${added}`));
 }
 
 function verdictProblems({ verdict, escalations }) {
@@ -115,8 +155,10 @@ export function validateLedger(ledger) {
   if (calendar.length > 0) return calendar;
   return [
     ...attemptProblems(ledger),
+    ...failureProblems(ledger),
     ...spendProblems(ledger),
     ...verdictProblems(ledger),
+    ...debtProblems(ledger),
     ...escalationProblems(ledger),
   ];
 }
@@ -176,4 +218,22 @@ export function writeLedger(path, ledger) {
   const staged = `${path}.${process.pid}.tmp`;
   writeFileSync(staged, `${JSON.stringify(ledger, null, 2)}\n`);
   renameSync(staged, path);
+}
+
+const MICRO = 1e6;
+
+const spendOf = (parts) => ({
+  tokens: {
+    input: sum(parts.map(({ tokens }) => tokens.input)),
+    output: sum(parts.map(({ tokens }) => tokens.output)),
+  },
+  costUsd: Math.round(sum(parts.map(({ costUsd }) => costUsd)) * MICRO) / MICRO,
+});
+
+export function ledgerWithAttempt(ledger, attempt) {
+  if (ledger.attempts.length >= ATTEMPT_CAP)
+    throw new Error(`${ledger.slug} already has ${ledger.attempts.length} attempts and the cap is ${ATTEMPT_CAP}`);
+  const attempts = [...ledger.attempts, { number: ledger.attempts.length + 1, ...attempt }];
+  const generation = ledger.generation === undefined ? [] : [ledger.generation];
+  return { ...ledger, attempts, spend: spendOf([...generation, ...attempts]) };
 }

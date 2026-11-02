@@ -1,0 +1,160 @@
+{
+  "schema": 1,
+  "measuredOn": "2026-11-02",
+  "threshold": 12,
+  "minimumSentences": 8,
+  "corpus": {
+    "article": {
+      "entries": 8,
+      "measured": 8,
+      "sentences": 1557
+    },
+    "term": {
+      "entries": 32,
+      "measured": 32,
+      "sentences": 717
+    }
+  },
+  "distribution": {
+    "article": {
+      "pooled": {
+        "sentenceWords": {
+          "p5": 4,
+          "p25": 8,
+          "p50": 13,
+          "p75": 17,
+          "p90": 22,
+          "p95": 24,
+          "p99": 28,
+          "max": 37
+        },
+        "shareBelowThreshold": 0.4246,
+        "shareJustBelow": 0.2203,
+        "shareOneBelow": 0.0508
+      },
+      "perEntry": {
+        "sentences": {
+          "p5": 97,
+          "p25": 117,
+          "p50": 241,
+          "p75": 283,
+          "p90": 289,
+          "p95": 289,
+          "p99": 289,
+          "max": 289
+        },
+        "median": {
+          "p5": 10,
+          "p25": 12,
+          "p50": 14,
+          "p75": 15,
+          "p90": 15,
+          "p95": 15,
+          "p99": 15,
+          "max": 15
+        },
+        "shareBelowThreshold": {
+          "p5": 0.2191,
+          "p25": 0.3007,
+          "p50": 0.417,
+          "p75": 0.4965,
+          "p90": 0.5779,
+          "p95": 0.5779,
+          "p99": 0.5779,
+          "max": 0.5779
+        },
+        "shareJustBelow": {
+          "p5": 0.1239,
+          "p25": 0.2022,
+          "p50": 0.2052,
+          "p75": 0.2474,
+          "p90": 0.2907,
+          "p95": 0.2907,
+          "p99": 0.2907,
+          "max": 0.2907
+        }
+      }
+    },
+    "term": {
+      "pooled": {
+        "sentenceWords": {
+          "p5": 7,
+          "p25": 12,
+          "p50": 16,
+          "p75": 20,
+          "p90": 23,
+          "p95": 25,
+          "p99": 28,
+          "max": 33
+        },
+        "shareBelowThreshold": 0.2469,
+        "shareJustBelow": 0.18,
+        "shareOneBelow": 0.0503
+      },
+      "perEntry": {
+        "sentences": {
+          "p5": 17,
+          "p25": 20,
+          "p50": 21,
+          "p75": 23,
+          "p90": 26,
+          "p95": 36,
+          "p99": 51,
+          "max": 51
+        },
+        "median": {
+          "p5": 13,
+          "p25": 15,
+          "p50": 16,
+          "p75": 18,
+          "p90": 19,
+          "p95": 19,
+          "p99": 19,
+          "max": 19
+        },
+        "shareBelowThreshold": {
+          "p5": 0.091,
+          "p25": 0.1579,
+          "p50": 0.25,
+          "p75": 0.2858,
+          "p90": 0.3334,
+          "p95": 0.381,
+          "p99": 0.5099,
+          "max": 0.5099
+        },
+        "shareJustBelow": {
+          "p5": 0.0455,
+          "p25": 0.1177,
+          "p50": 0.1819,
+          "p75": 0.2223,
+          "p90": 0.2858,
+          "p95": 0.2942,
+          "p99": 0.3334,
+          "max": 0.3334
+        }
+      }
+    }
+  },
+  "bands": {
+    "article": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "term": {
+      "format": "term",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 13,
+      "medianCeiling": 19,
+      "belowThresholdCap": 0.381,
+      "justBelowCap": 0.2942
+    }
+  }
+}

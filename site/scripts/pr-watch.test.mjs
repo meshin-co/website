@@ -46,13 +46,13 @@ test('reads use the default token, and the merge and the successor use the bot t
   assert.equal(callOf(waiting.calls, 'dispatch')[1], PAT);
 });
 
-test('green checks after the window merge the head that was judged, once, and dispatch nothing', async () => {
+test('green checks after the window merge the head that was judged, once, then record the debt and dispatch nothing', async () => {
   const bundle = green();
   const { run, calls } = await harness({ bundle });
   const { action } = await run();
 
   assert.equal(action, 'merged');
-  assert.deepEqual(writtenNames(calls), ['merge']);
+  assert.deepEqual(writtenNames(calls), ['merge', 'putLedger']);
   assert.deepEqual(callOf(calls, 'merge')[2], { number: 72, head: bundle.pullRequest.head.sha });
 });
 

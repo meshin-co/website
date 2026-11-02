@@ -7,7 +7,7 @@ import { addFile, proveWithSpecimen } from './mutation-specimens.mjs';
 
 const PHASE = 'zz-specimen';
 const EDITED_AFTER_THE_RUN = 'site/src/zz-specimen.astro';
-const SITE_FILES = ['package.json', 'budgets.json', 'lighthouserc.cjs'];
+const SITE_FILES = ['package.json', 'budgets.json', 'lighthouserc.cjs', 'engine.config.json'];
 const RUNS_PER_ROUTE = 3;
 
 const GATE_ROUTES = { routes: ['/'], measured: [{ route: '/', js: 1, css: 1, page: 1, fonts: 1 }], overBudget: [] };

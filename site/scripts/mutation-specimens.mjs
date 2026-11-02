@@ -6,9 +6,11 @@ import { dirname, join } from 'node:path';
 import { brandFromDisk } from '../src/utils/brand.mjs';
 import { BOOKING_URL } from '../src/utils/booking.mjs';
 import { autowriterSpecimens } from './autowriter-specimens.mjs';
+import { engineSpecimens } from './engine-specimens.mjs';
 import { evidenceSpecimens } from './evidence-specimens.mjs';
 import { REGISTERS_BEGIN } from './registers.mjs';
 import { SPEC_SPECIMENS } from './spec-specimens.mjs';
+import { unattendedSpecimens } from './unattended-specimens.mjs';
 import { LLMS_TXT_MAX_BYTES } from './machine.mjs';
 
 const ANSI_SEQUENCE = new RegExp(`${String.fromCharCode(27)}\\[[0-9;]*m`, 'g');
@@ -572,18 +574,23 @@ export const SPECIMENS = {
   },
   ...autowriterSpecimens({ addUntrackedFile, editFile }),
   ...evidenceSpecimens({ addUntrackedFile }),
+  ...engineSpecimens({ editFile, removeFile }),
+  ...unattendedSpecimens({ editFile, removeFile }),
   ...SPEC_SPECIMENS,
 };
 
-const commandFor = (specimen, copySite) => {
+const commandFor = (specimen, copySite, env = specimen.env) => {
   const npm = ['npm', 'run', specimen.gate, ...(specimen.args ? ['--', ...specimen.args] : [])];
-  if (!specimen.env) return [npm[0], npm.slice(1), copySite];
-  const assignments = Object.entries(specimen.env).map(([key, value]) => `${key}=${value}`);
+  if (!env) return [npm[0], npm.slice(1), copySite];
+  const assignments = Object.entries(env).map(([key, value]) => `${key}=${value}`);
   return ['env', [...assignments, ...npm], copySite];
 };
 
 export async function proveWithSpecimen(specimen, { copySite, run }) {
   const command = commandFor(specimen, copySite);
+  const plantedCommand = specimen.plantedEnv
+    ? commandFor(specimen, copySite, { ...specimen.env, ...specimen.plantedEnv })
+    : command;
   const pristine = await run(...command);
   if (pristine.code !== 0)
     return { ok: false, reason: `${specimen.gate} was already red on the pristine copy: ${tail(pristine.output)}` };
@@ -596,7 +603,7 @@ export async function proveWithSpecimen(specimen, { copySite, run }) {
   const restore = await specimen.plant(copySite);
   let planted;
   try {
-    planted = await run(...command);
+    planted = await run(...plantedCommand);
   } finally {
     await restore();
   }
