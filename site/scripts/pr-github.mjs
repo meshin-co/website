@@ -1,7 +1,8 @@
-import { LedgerError, fileStemProblem, ledgerFile, validateLedger } from './autowriter-ledger.mjs';
+import { LedgerError, fileStemProblem, validateLedger } from './autowriter-ledger.mjs';
 import { describeProblem } from './autowriter-records.mjs';
 import { pickPullRequestRun } from './pr-checks.mjs';
 import { slugOfBranch } from './pr-classify.mjs';
+import { findRecordPath } from './record-layout.mjs';
 
 const API_ORIGIN = 'https://api.github.com';
 const API_VERSION = '2022-11-28';
@@ -83,7 +84,13 @@ function parseLedger(path, text) {
 }
 
 async function readLedgerFile(api, { slug, head }) {
-  const path = ledgerFile(slug);
+  const tree = await readTree(api, head);
+  const path = findRecordPath(
+    tree.map((entry) => entry.path),
+    'ledger',
+    slug
+  );
+  if (path === null) return null;
   let body;
   try {
     body = await api.get(`contents/${path}?ref=${head}`);

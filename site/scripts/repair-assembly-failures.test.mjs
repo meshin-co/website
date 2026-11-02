@@ -103,3 +103,14 @@ for (const [name, overrides] of Object.entries(REFUSED))
     assert.deepEqual(run.calls, []);
     assert.deepEqual(treeOf(root), before);
   });
+
+for (const claimedAt of [undefined, '', 'yesterday', '2026-02-30T00:00:00Z'])
+  test(`a claim time of ${JSON.stringify(claimedAt)} leaves no month for the generation record the reason names and is refused before any file or command is touched`, async () => {
+    const root = await landedRepo();
+    const before = treeOf(root);
+    const run = repairRun(root);
+
+    await assert.rejects(repair(root, run, { claim: { ...claimOf('article'), claimedAt } }), /is not a UTC instant/);
+    assert.deepEqual(run.calls, []);
+    assert.deepEqual(treeOf(root), before);
+  });

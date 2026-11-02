@@ -3,9 +3,9 @@
 Change `20-write-without-a-human` lets a machine judge, repair and merge its own article under
 bounds the owner set (locked row L62). Phase one calls no model: it only watches a pull request and
 escalates. Everything the machine writes about a run lives in a ledger, one file per article at
-`audits/autowriter/<slug>.json`, and every topic it holds lives in a claim at
-`audits/autowriter/claims/<slug>.json`. Both have a JSON Schema beside the scripts, and both are strict:
-an unknown field is a finding.
+`audits/autowriter/<year>/<month>/<slug>.json`, and every topic it holds lives in a claim at
+`audits/autowriter/claims/<year>/<month>/<slug>.json`. Both have a JSON Schema beside the scripts, and both are strict:
+an unknown field is a finding. `scripts/record-layout.mjs` builds these paths from the claim's `claimedAt` and lists them at any depth.
 
 ## What `gate:autowriter` refuses
 
@@ -20,9 +20,10 @@ an unknown field is a finding.
 - **escalation-undelivered:** an escalation with no delivered receipt for a channel its kind needs, or only
   a failed one. The message quotes the reason the receipt gives.
 - **aggregate-\*:** a `ci.yml` whose aggregate job no longer covers every required job (below).
-- **generation-\* (unreadable, schema, name, entry-missing, entry-unreadable):** a file directly in
-  `audits/autowriter/generations/<slug>.json` that is off `scripts/generation-record.schema.json` (a record with no `band` too), is not
+- **generation-\* (unreadable, schema, name, entry-missing, entry-unreadable):** a file at
+  `audits/autowriter/generations/<year>/<month>/<slug>.json` that is off `scripts/generation-record.schema.json` (a record with no `band` too), is not
   named by its slug, or whose entry file is missing. With no file the gate checks none and says `0 generation records`.
+- **record-layout:** a ledger, claim, generation record or generated disposition not filed under the `<year>/<month>` of its claim; the finding names where it belongs.
 - **The claim table and sentence band of a record:** the rules of `scripts/claim-sources.mjs` and `scripts/sentence-band.mjs`, run on the entry re-measured from its committed file against `audits/sentence-band.json`, never on the record's word. Sources match by id, or by URL.
   `band-measurement-differs`: the record's measurement is not what the entry measures. The limits a record carries are only a note of what it was judged against, so a re-measure of the band never invalidates an old record. `generation-band-unjudged`: no band for the entry's format.
 - **record-missing, record-\*-stale, band-record-unmeasurable:** `audits/sentence-band.json` is absent or differs

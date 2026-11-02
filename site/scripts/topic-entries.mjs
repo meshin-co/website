@@ -1,6 +1,6 @@
 import { newClaim } from './autowriter-claim-store.mjs';
-import { claimFile } from './autowriter-claims.mjs';
-import { ledgerFile, newLedger } from './autowriter-ledger.mjs';
+import { newLedger } from './autowriter-ledger.mjs';
+import { recordPath } from './record-layout.mjs';
 
 const reportBlock = (report, path) => ({
   path,
@@ -23,7 +23,7 @@ function claimOf(entry, { runId, now }) {
     runId,
     now,
   });
-  return { claimPath: claimFile(topic.slug), claim };
+  return { claimPath: recordPath('claim', topic.slug, claim.claimedAt), claim };
 }
 
 function assertWritable({ decision: kind, entries }) {
@@ -41,7 +41,7 @@ export function buildRun({ decision, report, runId, now, reportPath }) {
   const postSlug = decision.entries[0].topic.slug;
   const ledger = newLedger({ slug: postSlug, runId, pullRequest: null });
   if (refusals.length > 0) ledger.refusals = refusals;
-  const ledgerPath = ledgerFile(postSlug);
+  const ledgerPath = recordPath('ledger', postSlug, claims[0].claim.claimedAt);
   const entries = decision.entries.map(({ row, table, choice }, at) => ({ ...claims[at], row, table, choice }));
   const file = {
     schema: 1,

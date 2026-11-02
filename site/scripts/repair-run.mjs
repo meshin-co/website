@@ -20,7 +20,12 @@ function refuseWhatCannotStart({ situation, documents, failures, kinds }) {
     throw new RepairStop('no-convergence', slug + ' has used its ' + ATTEMPT_CAP + ' attempts');
   const verdict = kinds.judgeFindings({
     documents,
-    entry: { slug, format: claim.format, route, paths: ownPaths({ slug, format: claim.format }) },
+    entry: {
+      slug,
+      format: claim.format,
+      route,
+      paths: ownPaths({ slug, format: claim.format, claimedAt: claim.claimedAt }),
+    },
   });
   if (verdict.refused.length > 0)
     throw new RepairStop('unrepairable', 'a rewrite cannot answer ' + describeRefusals(verdict.refused));

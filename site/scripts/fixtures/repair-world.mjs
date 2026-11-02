@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { ledgerWithAttempt, newLedger } from '../autowriter-ledger.mjs';
 import { resolveClaimTable } from '../claim-sources.mjs';
 import { buildRecord } from '../generation-record.mjs';
+import { recordPath } from '../record-layout.mjs';
 import { draftSentences } from '../writer-preflight.mjs';
 import { recordInput } from './generation-input.mjs';
 import { claimFor, cleanDraft } from './writer-drafts.mjs';
@@ -14,8 +15,8 @@ export const NOW = new Date('2026-11-02T08:00:00.000Z');
 export const claim = claimFor('article');
 export const before = cleanDraft('article');
 export const ENTRY = 'site/src/data/post/' + claim.slug + '.md';
-export const LEDGER = 'audits/autowriter/' + claim.slug + '.json';
-export const RECORD = 'audits/autowriter/generations/' + claim.slug + '.json';
+export const LEDGER = recordPath('ledger', claim.slug, claim.claimedAt);
+export const RECORD = recordPath('generation', claim.slug, claim.claimedAt);
 export const FAILURE = { rule: 'banned-phrase', path: ENTRY };
 export const FINDING = {
   rule: FAILURE.rule,

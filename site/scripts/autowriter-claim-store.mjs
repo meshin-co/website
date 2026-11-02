@@ -1,9 +1,10 @@
-import { mkdirSync, readFileSync, readdirSync, renameSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
-import { CLAIM_DIR, claimFileProblem, validateClaim } from './autowriter-claims.mjs';
+import { claimFileProblem, validateClaim } from './autowriter-claims.mjs';
 import { describeProblem } from './autowriter-records.mjs';
 import { readEngineConfig } from './engine-config.mjs';
+import { recordFiles } from './record-layout.mjs';
 
 export const CLAIM_LIFETIME_DAYS = readEngineConfig().loop.claimLifetimeDays;
 
@@ -62,19 +63,5 @@ export function writeClaim(path, claim) {
   renameSync(staged, path);
 }
 
-function claimNames(repo) {
-  try {
-    return readdirSync(join(repo, CLAIM_DIR))
-      .filter((name) => name.endsWith('.json'))
-      .sort();
-  } catch (error) {
-    if (error.code === 'ENOENT') return [];
-    throw error;
-  }
-}
-
 export const readClaims = (repo) =>
-  claimNames(repo).map((name) => ({
-    path: `${CLAIM_DIR}/${name}`,
-    claim: readClaim(join(repo, CLAIM_DIR, name)),
-  }));
+  recordFiles(repo, 'claim').map((path) => ({ path, claim: readClaim(join(repo, path)) }));

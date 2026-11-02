@@ -4,11 +4,12 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { afterEach, test } from 'node:test';
 
 import { parse } from 'yaml';
 
+import { parseStale } from './disposition-restate.mjs';
 import { collectionRows, mergeRows } from './editorial-inventory.mjs';
 import { renderEntry } from './entry-files.mjs';
 import { claimOf, DRAFTS, RUN_DATE } from './fixtures/entry-drafts.mjs';
@@ -66,9 +67,9 @@ const listStale = (site, ...args) =>
   });
 
 const writeDispositions = (root, name, entries) => {
-  const directory = join(root, 'audits/phase-4.7/dispositions');
-  mkdirSync(directory, { recursive: true });
-  writeFileSync(join(directory, name), `${JSON.stringify(entries, null, 2)}\n`);
+  const file = join(root, 'audits/phase-4.7/dispositions', name);
+  mkdirSync(dirname(file), { recursive: true });
+  writeFileSync(file, `${JSON.stringify(entries, null, 2)}\n`);
 };
 
 const entry = (target, digest, extra = {}) => ({
@@ -114,6 +115,57 @@ test('the editorial gate calls exactly as many dispositions stale as the script 
 
   assert.equal(Number(/dispositions: \d+ declared, (\d+) stale/.exec(gate.stdout)[1]), listed.length);
   assert.equal(listed.length, 3);
+});
+
+const MONTH_FILE = '2026/11/generated-data-lineage.json';
+const DEEPER_FILE = '2026/11/extra/deeper.json';
+
+function atAnyDepth({ root, site }) {
+  for (const name of ['pages.json', MONTH_FILE, DEEPER_FILE]) writeDispositions(root, name, [entry(SECOND, WRONG)]);
+  return digestOf(site, SECOND);
+}
+
+test('it lists a stale entry of a flat file, of a file under its month and of one deeper, each file named by its path under the directory', () => {
+  const made = world();
+  const second = atAnyDepth(made);
+  const run = listStale(made.site);
+
+  assert.equal(run.status, 0, run.stderr);
+  assert.equal(JSON.parse(run.stdout).length, 3);
+  assert.deepEqual(JSON.parse(run.stdout), [
+    { file: DEEPER_FILE, index: 0, target: SECOND, digest: second },
+    { file: MONTH_FILE, index: 0, target: SECOND, digest: second },
+    { file: 'pages.json', index: 0, target: SECOND, digest: second },
+  ]);
+});
+
+test('every file name it lists is one the restating step accepts, so no month file is refused on its name', () => {
+  const made = world();
+  atAnyDepth(made);
+
+  assert.deepEqual(
+    parseStale(listStale(made.site).stdout).map(({ file }) => file),
+    [DEEPER_FILE, MONTH_FILE, 'pages.json']
+  );
+});
+
+test('the editorial gate calls three dispositions stale when the script lists three across the flat, month and deeper places', () => {
+  const made = world();
+  atAnyDepth(made);
+  const listed = JSON.parse(listStale(made.site).stdout);
+  const gate = spawnSync(process.execPath, [GATE_SCRIPT, '.', 'dist', '--check'], { cwd: made.site, encoding: 'utf8' });
+
+  assert.equal(listed.length, 3);
+  assert.match(gate.stdout, /dispositions: 3 declared, 3 stale/);
+});
+
+test('it writes nothing whichever place a disposition lies in', () => {
+  const made = world();
+  atAnyDepth(made);
+  const before = snapshotOf(made.root);
+  listStale(made.site);
+
+  assert.deepEqual(snapshotOf(made.root), before);
 });
 
 test('an entry whose target has no rows is not listed, and neither is an entry the gate would not call changed', () => {

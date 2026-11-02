@@ -7,7 +7,6 @@ import { join, resolve } from 'node:path';
 import { test } from 'node:test';
 
 import {
-  DISPOSITION_DIRECTORY,
   REFUSED_PATHS,
   describeRefusal,
   isDispositionFile,
@@ -17,11 +16,17 @@ import {
 } from './autowriter-refusals.mjs';
 import { restatedReason } from './disposition-restate.mjs';
 import { writeMeasuredStamp } from './lh-evidence.mjs';
-import { DISPOSITION_DIRECTORY as DERIVED_DIRECTORY, dispositionFor } from './route-derive.mjs';
+import { recordDirectory, recordFiles, recordPath } from './record-layout.mjs';
+import { dispositionFor } from './route-derive.mjs';
 import { BAND_FILE } from './sentence-band.mjs';
 
 const REPO = resolve(import.meta.dirname, '..', '..');
 const whyOf = (id) => REFUSED_PATHS.find((row) => row.id === id)?.why;
+const SLUG = 'model-registry';
+const CLAIMED_AT = '2026-11-01T07:00:00.000Z';
+const filed = (family) => recordPath(family, SLUG, CLAIMED_AT);
+const DISPOSITIONS = recordDirectory('disposition');
+const GENERATED = filed('disposition');
 
 test('the list names what automation may never write, each row with one sentence that says why', () => {
   assert.deepEqual(
@@ -69,10 +74,10 @@ for (const [spelled, normalised, id] of DISGUISED) {
 }
 
 const ALLOWED = [
-  'audits/autowriter/model-registry.json',
-  'audits/autowriter/generations/model-registry.json',
-  'audits/autowriter/claims/model-registry.json',
-  'audits/phase-4.7/dispositions/generated-model-registry.json',
+  filed('ledger'),
+  filed('generation'),
+  filed('claim'),
+  GENERATED,
   'audits/sentence-band.json.bak',
   'audits/sentence-band.md',
   'audits/measure/sentence-band.json',
@@ -109,8 +114,22 @@ test('the list agrees with the tools that name these files', () => {
     existsSync(join(REPO, 'audits/lighthouse-green.json')),
     'the record lh:record writes is not where the list says'
   );
-  assert.equal(DISPOSITION_DIRECTORY, DERIVED_DIRECTORY);
-  assert.ok(readdirSync(join(REPO, DISPOSITION_DIRECTORY)).length > 0, 'no dispositions where the list says');
+  assert.ok(readdirSync(join(REPO, DISPOSITIONS)).length > 0, 'no dispositions where the list says');
+  const present = recordFiles(REPO, 'disposition');
+  assert.ok(present.length > 0, 'the layout reader finds no dispositions where the list says');
+  assert.deepEqual(
+    present.filter((path) => !isDispositionFile(path)),
+    []
+  );
+});
+
+test('every month of a year files its generated dispositions under a path the list reads as a disposition file', () => {
+  const months = Array.from({ length: 12 }, (_, index) => String(index + 1).padStart(2, '0'));
+  for (const month of months) {
+    const path = recordPath('disposition', SLUG, `2027-${month}-15T12:00:00.000Z`);
+    assert.equal(path, `${DISPOSITIONS}/2027/${month}/generated-${SLUG}.json`);
+    assert.equal(isDispositionFile(path), true, path);
+  }
 });
 
 test('the stamp the measuring tool writes is a refused path', async (t) => {
@@ -129,7 +148,7 @@ test('the stamp the measuring tool writes is a refused path', async (t) => {
   assert.equal(refusalFor('audits/phase-zz/' + written[0])?.id, 'lighthouse-stamp');
 });
 
-const PATH = DISPOSITION_DIRECTORY + '/routes.json';
+const PATH = DISPOSITIONS + '/routes.json';
 const entry = (extra = {}) => ({
   target: '/blog',
   location: 'head.title',
@@ -148,25 +167,55 @@ const compared = (before, after, path = PATH) =>
     after: after === null ? null : file(...after),
   });
 
-test('a disposition file is a json file directly in the dispositions directory, however the path is spelled', () => {
-  for (const path of [
-    PATH,
-    './' + PATH,
-    DISPOSITION_DIRECTORY + '/generated-model-registry.json',
-    'Audits/Phase-4.7/Dispositions/Routes.JSON',
-  ])
-    assert.equal(isDispositionFile(path), true, path);
-  for (const path of [
-    DISPOSITION_DIRECTORY + '/deeper/routes.json',
-    DISPOSITION_DIRECTORY + '/routes.md',
-    DISPOSITION_DIRECTORY,
-    'audits/phase-4.7/inventory.json',
-    'audits/autowriter/routes.json',
-    '',
-    null,
-    7,
-  ])
-    assert.equal(isDispositionFile(path), false, String(path));
+const SPELLINGS = [
+  [true, 'a hand-written file, flat', PATH],
+  [true, 'a generated file, flat', DISPOSITIONS + '/generated-model-registry.json'],
+  [true, 'a generated file, in its month directory', GENERATED],
+  [true, 'a file below the month directory', DISPOSITIONS + '/2026/11/extra/generated-model-registry.json'],
+  [true, 'a file in a directory that is no month', DISPOSITIONS + '/deeper/routes.json'],
+  [true, 'a leading ./', './' + PATH],
+  [true, 'a doubled slash and a dot segment', 'audits//phase-4.7/./dispositions/2026/11/generated-model-registry.json'],
+  [true, 'capital letters', 'Audits/Phase-4.7/Dispositions/Routes.JSON'],
+  [true, 'capital letters in a month directory', 'AUDITS/PHASE-4.7/DISPOSITIONS/2026/11/GENERATED-MODEL-REGISTRY.JSON'],
+  [true, 'backslashes', 'audits\\phase-4.7\\dispositions\\routes.json'],
+  [
+    true,
+    'backslashes in a month directory',
+    'audits\\phase-4.7\\dispositions\\2026\\11\\generated-model-registry.json',
+  ],
+  [false, 'a markdown file beside the json files', DISPOSITIONS + '/routes.md'],
+  [false, 'a markdown file in a month directory', DISPOSITIONS + '/2026/11/generated-model-registry.md'],
+  [false, 'the directory itself', DISPOSITIONS],
+  [false, 'the directory with a trailing slash', DISPOSITIONS + '/'],
+  [false, 'a sibling directory that starts with the same name', DISPOSITIONS + '-old/routes.json'],
+  [false, 'a json file of the phase beside the directory', 'audits/phase-4.7/inventory.json'],
+  [false, 'a json file in the ledger directory', 'audits/autowriter/routes.json'],
+  [false, 'the ledger of an entry', filed('ledger')],
+  [false, 'the claim of an entry', filed('claim')],
+  [false, 'the generation record of an entry', filed('generation')],
+  [false, 'a path that leaves the repository', '../' + PATH],
+  [false, 'an absolute path', '/' + PATH],
+  [false, 'an empty path', ''],
+  [false, 'no path', null],
+  [false, 'a number', 7],
+];
+
+for (const [isFile, what, path] of SPELLINGS) {
+  test(JSON.stringify(path) + ' is ' + (isFile ? '' : 'not ') + 'a disposition file: ' + what, () => {
+    assert.equal(isDispositionFile(path), isFile);
+  });
+}
+
+test('a disposition file is found at every depth: the flat one, the one in its month and the one below it make three', () => {
+  const lying = [
+    DISPOSITIONS + '/generated-model-registry.json',
+    GENERATED,
+    DISPOSITIONS + '/2026/11/extra/generated-model-registry.json',
+  ];
+  const found = lying.filter(isDispositionFile);
+
+  assert.deepEqual(found, lying);
+  assert.equal(found.length, 3);
 });
 
 test('a digest that moves while the reason and the status stay is the seal, and names the entry it moved', () => {
@@ -234,11 +283,33 @@ test('a file the commit creates or deletes is never a seal', () => {
 test('a path outside the dispositions directory is never a seal, whatever the contents', () => {
   for (const path of [
     'audits/autowriter/routes.json',
-    DISPOSITION_DIRECTORY + '/deeper/routes.json',
-    DISPOSITION_DIRECTORY + '/notes.md',
+    filed('ledger'),
+    DISPOSITIONS + '/notes.md',
+    DISPOSITIONS + '/2026/11/generated-model-registry.md',
     'site/src/data/post/x.md',
   ])
     assert.equal(compared([entry()], [entry({ digest: 'bbbbbbbbbbbb' })], path), null, path);
+});
+
+const PLACEMENTS = [
+  DISPOSITIONS + '/generated-model-registry.json',
+  GENERATED,
+  DISPOSITIONS + '/2026/11/extra/generated-model-registry.json',
+];
+
+test('a seal and an unreadable file are found wherever a disposition file lies: flat, in its month, below it', () => {
+  const sealed = PLACEMENTS.map((path) => compared([entry()], [entry({ digest: 'bbbbbbbbbbbb' })], path));
+  const unreadable = PLACEMENTS.map((path) => sealSignature({ path, before: file(entry()), after: '{not json' }));
+
+  assert.equal(sealed.length, 3);
+  assert.deepEqual(
+    sealed.map((found) => [found?.id, found?.path, found?.targets]),
+    PLACEMENTS.map((path) => ['disposition-seal', path, ['/blog head.title']])
+  );
+  assert.deepEqual(
+    unreadable.map((found) => [found?.id, found?.path]),
+    PLACEMENTS.map((path) => ['disposition-unreadable', path])
+  );
 });
 
 test('a version that is not a list of dispositions is refused as unreadable, on either side', () => {
@@ -266,9 +337,10 @@ test('an unreadable new file is refused too, because nothing can say it is not a
 });
 
 test('a digest that moves under a reason the pipeline wrote itself is a restate it repeats, not a seal', () => {
-  const restated = restatedReason({ routes: ['/glossary/model-registry'], slugs: ['model-registry'] });
+  const restated = restatedReason({ routes: ['/glossary/model-registry'], generationPaths: [filed('generation')] });
   const generated = dispositionFor({
-    slug: 'model-registry',
+    claimPath: filed('claim'),
+    generationPath: filed('generation'),
     target: '/blog',
     digest: 'x',
     runDate: '2026-11-02',
@@ -279,7 +351,7 @@ test('a digest that moves under a reason the pipeline wrote itself is a restate 
 });
 
 test('a human reason stays sealed when it sits in a file beside a reason the pipeline wrote', () => {
-  const reason = restatedReason({ routes: ['/glossary/model-registry'], slugs: ['model-registry'] });
+  const reason = restatedReason({ routes: ['/glossary/model-registry'], generationPaths: [filed('generation')] });
   const found = compared(
     [entry(), second({ reason })],
     [entry({ digest: 'bbbbbbbbbbbb' }), second({ reason, digest: 'cccccccccccc' })]
@@ -289,7 +361,8 @@ test('a human reason stays sealed when it sits in a file beside a reason the pip
 });
 
 test('a reason that only starts like the pipeline wrote it is still a human reason once words come first', () => {
-  const reason = 'Note: ' + restatedReason({ routes: ['/glossary/model-registry'], slugs: ['model-registry'] });
+  const reason =
+    'Note: ' + restatedReason({ routes: ['/glossary/model-registry'], generationPaths: [filed('generation')] });
 
   assert.equal(compared([entry({ reason })], [entry({ reason, digest: 'bbbbbbbbbbbb' })])?.id, 'disposition-seal');
 });

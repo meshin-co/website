@@ -6,6 +6,7 @@ import { stringify } from 'yaml';
 
 import { COLLECTION_OF, parseEntrySource, proseBlocks, proseSentences } from '../entry-prose.mjs';
 import { buildRecord } from '../generation-record.mjs';
+import { recordPath } from '../record-layout.mjs';
 import { entryStats } from '../sentence-band.mjs';
 import { recordInput } from './generation-input.mjs';
 
@@ -14,7 +15,7 @@ const CORPUS_DIRECTORIES = ['site/src/data/post', 'site/src/data/glossary'];
 const BAND_PATH = 'audits/sentence-band.json';
 
 export const SLUG = 'zz-specimen';
-export const RECORD_PATH = `audits/autowriter/generations/${SLUG}.json`;
+export const RECORD_PATH = recordPath('generation', SLUG, recordInput().claim.claimedAt);
 export const ENTRY_PATH = `audits/autowriter/generations/${SLUG}.md`;
 export const NIST_URL = 'https://www.nist.gov/itl/ai-risk-management-framework';
 export const FACT =

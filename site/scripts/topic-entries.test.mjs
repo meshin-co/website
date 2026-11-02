@@ -2,8 +2,9 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import { CLAIM_LIFETIME_DAYS } from './autowriter-claim-store.mjs';
-import { CLAIM_DIR, validateClaim } from './autowriter-claims.mjs';
-import { LEDGER_DIR, validateLedger } from './autowriter-ledger.mjs';
+import { validateClaim } from './autowriter-claims.mjs';
+import { validateLedger } from './autowriter-ledger.mjs';
+import { familyOf, filingProblems, recordPath } from './record-layout.mjs';
 import { buildRun } from './topic-entries.mjs';
 
 const NOW = new Date('2026-11-02T07:00:00.000Z');
@@ -93,7 +94,8 @@ const decisionOf = (extra = {}) => ({
   ...extra,
 });
 
-const run = (decision) => buildRun({ decision, report, runId: RUN_ID, now: NOW, reportPath: REPORT_PATH });
+const runAt = (decision, now) => buildRun({ decision, report, runId: RUN_ID, now, reportPath: REPORT_PATH });
+const run = (decision) => runAt(decision, NOW);
 
 test('every claim of a run carries the one run id, is claimed, and expires after the claim lifetime', () => {
   assert.equal(CLAIM_LIFETIME_DAYS, 14);
@@ -139,21 +141,22 @@ test('a claim carries the slug, title, format, query, demand and prompt of its e
   });
 });
 
-test('a claim file is named for its slug inside the claim directory, in the order of the entries', () => {
+test('a claim file is named for its slug inside the month of its claim, in the order of the entries', () => {
   const { claims } = run(decisionOf());
   assert.deepEqual(
     claims.map(({ claimPath }) => claimPath),
     [
-      'audits/autowriter/claims/fractional-caio-vs-full-time-caio-cost.json',
-      'audits/autowriter/claims/ai-literacy.json',
+      'audits/autowriter/claims/2026/11/fractional-caio-vs-full-time-caio-cost.json',
+      'audits/autowriter/claims/2026/11/ai-literacy.json',
     ]
   );
-  assert.equal(claims[1].claimPath, CLAIM_DIR + '/ai-literacy.json');
+  for (const { claimPath, claim } of claims) assert.equal(claimPath, recordPath('claim', claim.slug, claim.claimedAt));
 });
 
 test('the ledger belongs to the post: its file is named for the post slug and it starts open with no pull request', () => {
-  const { ledgerPath, ledger } = run(decisionOf());
-  assert.equal(ledgerPath, LEDGER_DIR + '/fractional-caio-vs-full-time-caio-cost.json');
+  const { claims, ledgerPath, ledger } = run(decisionOf());
+  assert.equal(ledgerPath, 'audits/autowriter/2026/11/fractional-caio-vs-full-time-caio-cost.json');
+  assert.equal(ledgerPath, recordPath('ledger', ledger.slug, claims[0].claim.claimedAt));
   assert.deepEqual(ledger, {
     schema: 1,
     slug: 'fractional-caio-vs-full-time-caio-cost',
@@ -166,6 +169,34 @@ test('the ledger belongs to the post: its file is named for the post slug and it
   });
   assert.deepEqual(validateLedger(ledger), []);
   assert.equal(Object.hasOwn(ledger, 'refusals'), false);
+});
+
+test('the month of a claim is the UTC month of the instant it was claimed, and the ledger follows the post', () => {
+  const instants = [
+    ['2026-10-31T23:59:59.999Z', '2026/10'],
+    ['2026-11-01T00:00:00.000Z', '2026/11'],
+    ['2027-01-01T00:00:00.000Z', '2027/01'],
+  ];
+  for (const [instant, month] of instants) {
+    const { claims, ledgerPath, file } = runAt(decisionOf(), new Date(instant));
+    assert.deepEqual(
+      claims.map(({ claimPath }) => claimPath),
+      [
+        `audits/autowriter/claims/${month}/fractional-caio-vs-full-time-caio-cost.json`,
+        `audits/autowriter/claims/${month}/ai-literacy.json`,
+      ],
+      instant
+    );
+    assert.equal(ledgerPath, `audits/autowriter/${month}/fractional-caio-vs-full-time-caio-cost.json`, instant);
+    assert.equal(file.ledgerPath, ledgerPath, instant);
+  }
+});
+
+test('the paths of a run are the paths the layout files its records under, in the month of their claim', () => {
+  const { claims, ledgerPath } = run(decisionOf());
+  const paths = [ledgerPath, ...claims.map(({ claimPath }) => claimPath)];
+  assert.deepEqual(paths.map(familyOf), ['ledger', 'claim', 'claim']);
+  assert.deepEqual(filingProblems({ paths, claims: claims.map(({ claim }) => claim) }), []);
 });
 
 test('the refusals of the walk ride in the ledger and in the decision file, and the ledger still validates', () => {
@@ -184,7 +215,7 @@ test('the decision file holds exactly the keys the writer reads', () => {
   assert.deepEqual(Object.keys(file).sort(), ['decision', 'entries', 'ledgerPath', 'refusals', 'report', 'schema']);
   assert.equal(file.schema, 1);
   assert.equal(file.decision, 'write');
-  assert.equal(file.ledgerPath, 'audits/autowriter/fractional-caio-vs-full-time-caio-cost.json');
+  assert.equal(file.ledgerPath, 'audits/autowriter/2026/11/fractional-caio-vs-full-time-caio-cost.json');
 });
 
 test('each entry of the decision file names its claim file and claim, its report row, its table and its choice line', () => {

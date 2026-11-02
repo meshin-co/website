@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
@@ -7,8 +7,9 @@ import { brandFromDisk, titleSuffix } from '../src/utils/brand.mjs';
 import { TITLE_ROOM_CHARS } from '../src/utils/faq-meta.mjs';
 import { newClaim, readClaims } from './autowriter-claim-store.mjs';
 import { generatedTitles, isHolding, validateClaim } from './autowriter-claims.mjs';
-import { LEDGER_DIR, validateLedger } from './autowriter-ledger.mjs';
+import { validateLedger } from './autowriter-ledger.mjs';
 import { readDemandReport } from './demand-report.mjs';
+import { recordFiles, slugOfRecord } from './record-layout.mjs';
 import { casedForms, casingTexts } from './topic-casing.mjs';
 import { readPromptSources } from './topic-core.mjs';
 import { buildRun } from './topic-entries.mjs';
@@ -21,14 +22,6 @@ const REPORT_PATH = 'audits/search-demand.md';
 
 const read = (path) => readFileSync(new URL(path, root), 'utf8');
 
-function ledgerStems() {
-  const directory = new URL(LEDGER_DIR + '/', root);
-  if (!existsSync(directory)) return [];
-  return readdirSync(directory)
-    .filter((name) => name.endsWith('.json'))
-    .map((name) => name.slice(0, -'.json'.length));
-}
-
 function liveInputs() {
   const core = read('docs/SEMANTIC-CORE.md');
   return {
@@ -38,14 +31,14 @@ function liveInputs() {
     promptSources: readPromptSources(core),
     forms: casedForms(casingTexts(core)),
     claims: readClaims(fileURLToPath(root)),
-    ledgerSlugs: ledgerStems(),
+    ledgerPaths: recordFiles(fileURLToPath(root), 'ledger'),
     suffix: titleSuffix(brandFromDisk(fileURLToPath(new URL('site/src/config.yaml', root)))),
     now: NOW,
     settings: { termArm: true, termCap: 1 },
   };
 }
 
-function assertEntryIsUsable(entry, { claims, ledgerSlugs, generated, promptSources }) {
+function assertEntryIsUsable(entry, { claims, ledgerPaths, generated, promptSources }) {
   const { topic, prompt, format, demand } = entry;
   const claim = newClaim({ ...topic, format, demand, prompt, runId: 'live', now: NOW });
   const heldSlugs = claims.filter((filed) => isHolding(filed.claim, NOW)).map((filed) => filed.claim.slug);
@@ -54,7 +47,7 @@ function assertEntryIsUsable(entry, { claims, ledgerSlugs, generated, promptSour
   assert.ok(topic.title.length <= TITLE_ROOM_CHARS, topic.title);
   assert.notEqual(promptSources.get(prompt.number)?.retired, true, 'prompt ' + prompt.number + ' is retired');
   assert.equal(heldSlugs.includes(topic.slug), false, 'slug held by a claim: ' + topic.slug);
-  assert.equal(ledgerSlugs.includes(topic.slug), false, 'slug held by a ledger: ' + topic.slug);
+  assert.equal(ledgerPaths.map(slugOfRecord).includes(topic.slug), false, 'slug held by a ledger: ' + topic.slug);
   assert.equal(
     generated.some((row) => row.route === route),
     false,

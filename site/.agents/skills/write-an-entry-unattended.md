@@ -12,7 +12,7 @@ terms (format `term`). `pick-the-next-topic.md` chooses them; `.github/workflows
 - Exit 1 prints `{ok:false, kind, variables, message, spend}`. The kinds: config, credential, decision, claim, model,
   price, vendor, output, build, commit, unexpected. `variables` names the settings at fault. No secret is in `message`.
 - Exit 2 is a bad flag. Nothing ran.
-- A failed run leaves the tree as it found it, except the ledger `audits/autowriter/<slug>.json`: the spend so far and the
+- A failed run leaves the tree as it found it, except the ledger `audits/autowriter/<year>/<month>/<slug>.json`: the spend so far and the
   verdict `stopped`. It is written only when a model call was made. The claims stay and expire on their own.
 
 ## Configuration
@@ -39,7 +39,7 @@ A post asks for `shortAnswer`, `fullAnswer`, takeaways, a FAQ, tags and 3 source
 
 ## The record and the claim table
 
-`audits/autowriter/generations/<slug>.json` (schema `scripts/generation-record.schema.json`) holds the provider, the
+`audits/autowriter/generations/<year>/<month>/<slug>.json` (schema `scripts/generation-record.schema.json`) holds the provider, the
 resolved model id, the response id, the prompt digest, the demand row, the tree fingerprint, tokens, computed cost and the
 claim-to-source table. It copies only schema fields, every error text is redacted, and a key found in a file or a commit
 message fails the run as `config`. In `scripts/claim-sources.mjs` a sentence states a fact when it holds a digit, a month
@@ -59,7 +59,7 @@ duplicate rule binds at 12 words, so an entry of eleven-word sentences must fail
 Before it writes anything the run builds the clean tree, and `gate:editorial` must pass on it, or the run stops. All
 entries then go on one tree with one build, each with its `Passage:` line, content-facts row and disposition rows.
 `semantic-core`, `gate:registers` and `gate:editorial` must pass; `gate:content`, `gate:human` and `gate:machine` are
-recorded in `gates`. The run never runs the seal: it writes `generated-<slug>.json` and restates each existing disposition
+recorded in `gates`. The run never runs the seal: it writes `generated-<slug>.json` under `audits/phase-4.7/dispositions/<year>/<month>/` and restates each existing disposition
 the new text made stale, with a reason that says no human has read it. One bot commit goes on the local branch `autowriter/<slug>`; the workflow pushes and opens the pull request.
 
 The post is the anchor: the branch and the ledger carry its slug. A term that fails as `claim`, `output` or `vendor`, or

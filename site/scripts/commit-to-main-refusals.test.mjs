@@ -10,6 +10,7 @@ import { after, test } from 'node:test';
 import { refusalFor } from './autowriter-refusals.mjs';
 import { CommitError, commitAndPush, runCli } from './commit-to-main.mjs';
 import { restatedReason } from './disposition-restate.mjs';
+import { recordDirectory, recordPath } from './record-layout.mjs';
 
 for (const variable of ['GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE']) delete process.env[variable];
 process.env.GIT_CONFIG_GLOBAL = '/dev/null';
@@ -19,6 +20,10 @@ const IDENTITY = { name: 'Test Writer', email: 'writer@example.test' };
 const SEED = ['-c', 'user.name=Seed', '-c', 'user.email=seed@example.test', '-c', 'commit.gpgsign=false'];
 const BAND = 'audits/sentence-band.json';
 const ROUTES = 'audits/phase-4.7/dispositions/routes.json';
+const CLAIMED_AT = '2026-11-01T07:00:00.000Z';
+const LEDGER = recordPath('ledger', 'model-registry', CLAIMED_AT);
+const GENERATED = recordPath('disposition', 'model-registry', CLAIMED_AT);
+const PLACEMENTS = [ROUTES, GENERATED, `${recordDirectory('disposition')}/2026/11/extra/generated-model-registry.json`];
 const directories = [];
 
 after(() => {
@@ -50,10 +55,10 @@ const BASE = {
   'audits/lighthouse-green.json': '{"green":true}\n',
   'audits/phase-4.7/lh-measured.json': '{"tree":"a"}\n',
   [ROUTES]: asFile(ROWS),
-  'audits/autowriter/ledger.json': '{"attempts":1}\n',
+  [LEDGER]: '{"attempts":1}\n',
 };
 
-function makeWorld() {
+function makeWorld(files = {}) {
   const base = mkdtempSync(join(tmpdir(), 'commit-to-main-refusals-'));
   directories.push(base);
   const remote = join(base, 'remote.git');
@@ -61,7 +66,7 @@ function makeWorld() {
   git(base, 'init', '--bare', '--initial-branch=main', remote);
   mkdirSync(repo);
   git(repo, 'init', '--initial-branch=main');
-  for (const [path, text] of Object.entries(BASE)) put(repo, path, text);
+  for (const [path, text] of Object.entries({ ...BASE, ...files })) put(repo, path, text);
   git(repo, 'add', '--all');
   git(repo, ...SEED, 'commit', '--message', 'seed');
   git(repo, 'remote', 'add', 'origin', remote);
@@ -191,7 +196,10 @@ test('the refusal says so when the paths could not be unstaged', async () => {
 const moved = (rows, indexes, digest) => rows.map((row, index) => (indexes.includes(index) ? { ...row, digest } : row));
 const RESTATE = {
   status: 'rewritten',
-  reason: restatedReason({ routes: ['/glossary/model-registry'], slugs: ['model-registry'] }),
+  reason: restatedReason({
+    routes: ['/glossary/model-registry'],
+    generationPaths: [recordPath('generation', 'model-registry', CLAIMED_AT)],
+  }),
 };
 
 test('a digest that moves under the reason a person wrote is refused as the seal, naming the entries', async () => {
@@ -216,6 +224,25 @@ test('the seal is refused too when the whole dispositions directory is the path'
     commitAndPush(request(world.repo, { paths: ['audits/phase-4.7/dispositions'] })),
     refusedWith('disposition-seal:')
   );
+});
+
+test('a seal is refused in a disposition file wherever it lies: flat, in its month and below it make three', async () => {
+  let refused = 0;
+  for (const path of PLACEMENTS) {
+    const world = makeWorld({ [path]: asFile(ROWS) });
+    const head = git(world.repo, 'rev-parse', 'HEAD');
+    put(world.repo, path, asFile(moved(ROWS, [0, 1], 'bbbbbbbbbbbb')));
+
+    await assert.rejects(
+      commitAndPush(request(world.repo, { paths: [recordDirectory('disposition')] })),
+      refusedWith(path, 'disposition-seal:', 'entries: /, /blog head.title')
+    );
+    refused += 1;
+
+    assert.equal(git(world.repo, 'diff', '--cached', '--name-only'), '');
+    assert.equal(world.remoteHead(), head);
+  }
+  assert.equal(refused, 3);
 });
 
 test('a disposition file that cannot be read is refused, and so is a restate that is not a list', async () => {
@@ -244,10 +271,10 @@ test('a restate is committed and pushed: the digest, the status and the reason a
 
 test('a new disposition file and a ledger are committed as before', async () => {
   const world = makeWorld();
-  put(world.repo, 'audits/phase-4.7/dispositions/generated-model-registry.json', '[]\n');
-  put(world.repo, 'audits/autowriter/ledger.json', '{"attempts":2}\n');
+  put(world.repo, GENERATED, '[]\n');
+  put(world.repo, LEDGER, '{"attempts":2}\n');
 
-  const paths = ['audits/phase-4.7/dispositions/generated-model-registry.json', 'audits/autowriter/ledger.json'];
+  const paths = [GENERATED, LEDGER];
   const result = await commitAndPush(request(world.repo, { paths }));
 
   assert.equal(result.committed, true);
@@ -255,4 +282,21 @@ test('a new disposition file and a ledger are committed as before', async () => 
     git(world.remote, 'show', '--name-only', '--format=', result.commit).split('\n').sort().join('|'),
     [...paths].sort().join('|')
   );
+});
+
+test('a restate is committed wherever the disposition file lies: flat, in its month and below it make three', async () => {
+  let committed = 0;
+  for (const path of PLACEMENTS) {
+    const world = makeWorld({ [path]: asFile(ROWS) });
+    const text = asFile(moved(ROWS, [0, 1], 'bbbbbbbbbbbb').map((row) => ({ ...row, ...RESTATE })));
+    put(world.repo, path, text);
+
+    const result = await commitAndPush(request(world.repo, { paths: [path] }));
+
+    assert.equal(result.committed, true);
+    assert.equal(world.remoteHead(), result.commit);
+    assert.equal(git(world.remote, 'show', result.commit + ':' + path) + '\n', text);
+    committed += 1;
+  }
+  assert.equal(committed, 3);
 });

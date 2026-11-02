@@ -3,18 +3,19 @@ import './fixtures/no-network.mjs';
 import assert from 'node:assert/strict';
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { basename, dirname, join, relative } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 import { newClaim, readClaim, writeClaim } from './autowriter-claim-store.mjs';
-import { CLAIM_DIR, claimFile } from './autowriter-claims.mjs';
-import { LEDGER_DIR, ledgerFile, newLedger, readLedger } from './autowriter-ledger.mjs';
+import { newLedger, readLedger } from './autowriter-ledger.mjs';
 import { printedLines, runCli, runIdFor, summaryMarkdown } from './pick-a-topic.mjs';
+import { recordDirectory, recordPath } from './record-layout.mjs';
+import { BAND_FILE } from './sentence-band.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPORT = 'audits/search-demand.md';
-const INPUT_KEYS = 'claims concepts forms generated ledgerSlugs now promptSources report settings suffix'.split(' ');
+const INPUT_KEYS = 'claims concepts forms generated ledgerPaths now promptSources report settings suffix'.split(' ');
 const NOW = new Date('2026-11-02T04:00:00.000Z');
 const POST = 'fractional-caio-vs-full-time-caio-cost';
 const TERM = 'what-is-a-model-card';
@@ -43,6 +44,20 @@ function snapshot(root) {
     files.map(({ parentPath, name }) => [join(parentPath, name), readFileSync(join(parentPath, name), 'utf8')])
   );
 }
+
+const put = (root, path, text) => {
+  mkdirSync(dirname(join(root, path)), { recursive: true });
+  writeFileSync(join(root, path), text);
+};
+
+const filesIn = (root, directory) =>
+  readdirSync(join(root, directory), { recursive: true, withFileTypes: true })
+    .filter((entry) => entry.isFile())
+    .map(({ parentPath, name }) => relative(root, join(parentPath, name)))
+    .sort();
+
+const flatPath = (family, slug) => `${recordDirectory(family)}/${slug}.json`;
+const belowMonth = (path) => `${dirname(path)}/extra/${basename(path)}`;
 
 const decisionOf = (overrides) => ({
   ...{ decision: 'none', choice: null, reason: null, entries: [], strengthen: null, advisories: [] },
@@ -77,10 +92,16 @@ function fakeRun({ runId, now }) {
   const claim = (slug, format, demand) =>
     newClaim({ slug, title: slug, format, query: 'q', demand, prompt: { number: 2, text: 'p' }, runId, now });
   const entries = [
-    { claimPath: claimFile(POST), claim: claim(POST, 'article', { impressions: 0, position: null }) },
-    { claimPath: claimFile(TERM), claim: claim(TERM, 'term', { impressions: 14, position: 11.2 }) },
-  ].map((entry) => ({ ...entry, row: {}, table: 'Queries', choice: CHOICE }));
-  const ledgerPath = ledgerFile(POST);
+    claim(POST, 'article', { impressions: 0, position: null }),
+    claim(TERM, 'term', { impressions: 14, position: 11.2 }),
+  ].map((entryClaim) => ({
+    claimPath: recordPath('claim', entryClaim.slug, entryClaim.claimedAt),
+    claim: entryClaim,
+    row: {},
+    table: 'Queries',
+    choice: CHOICE,
+  }));
+  const ledgerPath = recordPath('ledger', POST, entries[0].claim.claimedAt);
   return {
     ledgerPath,
     ledger: newLedger({ slug: POST, runId, pullRequest: null }),
@@ -88,6 +109,8 @@ function fakeRun({ runId, now }) {
     file: { schema: 1, decision: 'write', ledgerPath, entries, report: { path: REPORT }, refusals: [] },
   };
 }
+
+const claimNamed = (slug) => ({ ...fakeRun({ runId: 'r-0', now: NOW }).claims[0].claim, slug, title: slug });
 
 function scenario(decision, options, body) {
   inRepo((root) => {
@@ -126,8 +149,9 @@ test('--write of a write decision writes the claims, the ledger and the decision
     assert.deepEqual(JSON.parse(readFileSync(output, 'utf8')), JSON.parse(JSON.stringify(built.file)));
     for (const { claimPath, claim } of built.claims) assert.deepEqual(readClaim(join(root, claimPath)), claim);
     assert.deepEqual(readLedger(join(root, built.ledgerPath)), built.ledger);
-    assert.deepEqual(readdirSync(join(root, CLAIM_DIR)).sort(), [POST + '.json', TERM + '.json']);
-    assert.deepEqual(readdirSync(join(root, LEDGER_DIR)).sort(), ['claims', POST + '.json']);
+    const claimPaths = [recordPath('claim', POST, NOW), recordPath('claim', TERM, NOW)];
+    assert.deepEqual(filesIn(root, recordDirectory('claim')), claimPaths);
+    assert.deepEqual(filesIn(root, recordDirectory('ledger')), [recordPath('ledger', POST, NOW), ...claimPaths]);
   });
 });
 
@@ -141,7 +165,7 @@ test('--write of a strengthen or none decision writes the small decision file an
       assert.equal(run(['--write', '--output', output]), 0, message());
       const file = JSON.parse(readFileSync(output, 'utf8'));
       assert.deepEqual(file, { schema: 1, decision: decision.decision, ...expected });
-      assert.equal(existsSync(join(root, LEDGER_DIR)), false);
+      assert.equal(existsSync(join(root, recordDirectory('ledger'))), false);
       assert.equal(seen.builds.length, 0);
     });
   }
@@ -201,18 +225,46 @@ test('the selection receives every input, the settings and the instant', () => {
   scenario(NONE, { env }, ({ root, run, seen, message }) => {
     const held = fakeRun({ runId: 'r-0', now: NOW }).claims[1];
     writeClaim(join(root, held.claimPath), held.claim);
-    for (const name of ['older-post.json', 'sentence-band.json', 'notes.txt'])
-      writeFileSync(join(root, LEDGER_DIR, name), '{}');
+    const older = recordPath('ledger', 'older-post', NOW);
+    for (const path of [older, flatPath('ledger', 'sentence-band'), `${recordDirectory('ledger')}/notes.txt`])
+      put(root, path, '{}');
     assert.equal(run([]), 0, message());
     const { inputs } = seen;
     assert.deepEqual(Object.keys(inputs).sort(), INPUT_KEYS);
-    assert.deepEqual(inputs.ledgerSlugs, ['older-post']);
+    assert.deepEqual(inputs.ledgerPaths, [older]);
     assert.deepEqual(inputs.claims, [{ path: held.claimPath, claim: held.claim }]);
     assert.equal(inputs.suffix, ' — meshin.co');
     assert.deepEqual(inputs.settings, { termArm: false, termCap: 3 });
     assert.equal(inputs.now.toISOString(), NOW.toISOString());
     assert.equal(inputs.report.measured, '2026-11-01');
     assert.ok(inputs.concepts.length > 0 && inputs.generated.length > 0 && inputs.promptSources.size > 0);
+  });
+});
+
+test('the selection receives every ledger and every claim, filed flat, in a month or below it, and no other record', () => {
+  const ledgers = [
+    flatPath('ledger', 'flat-post'),
+    recordPath('ledger', 'month-post', NOW),
+    belowMonth(recordPath('ledger', 'deeper-post', NOW)),
+  ];
+  const claims = [
+    flatPath('claim', 'flat-claim'),
+    recordPath('claim', 'month-claim', NOW),
+    belowMonth(recordPath('claim', 'deeper-claim', NOW)),
+  ];
+  const others = [BAND_FILE, flatPath('ledger', 'sentence-band'), recordPath('generation', 'month-post', NOW)];
+  scenario(NONE, {}, ({ root, run, seen, message }) => {
+    for (const path of [...ledgers, ...others]) put(root, path, '{}');
+    for (const path of claims) writeClaim(join(root, path), claimNamed(basename(path, '.json')));
+    assert.equal(run([]), 0, message());
+    const { ledgerPaths, claims: held } = seen.inputs;
+    assert.equal(ledgerPaths.length, 3);
+    assert.deepEqual(ledgerPaths, [...ledgers].sort());
+    assert.equal(held.length, 3);
+    assert.deepEqual(
+      held.map(({ path }) => path),
+      [...claims].sort()
+    );
   });
 });
 

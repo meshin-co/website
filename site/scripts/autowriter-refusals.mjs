@@ -1,6 +1,6 @@
 import { posix } from 'node:path';
 
-export const DISPOSITION_DIRECTORY = 'audits/phase-4.7/dispositions';
+import { familyOf } from './record-layout.mjs';
 
 const PIPELINE_REASON_OPENINGS = [
   'The text of this target changed in the run in which the unattended writer added ',
@@ -42,10 +42,7 @@ export function refusalFor(path) {
   return row ? { id: row.id, path: normalised(path), why: row.why } : null;
 }
 
-export const isDispositionFile = (path) => {
-  const file = normalised(path).toLowerCase();
-  return posix.dirname(file) === DISPOSITION_DIRECTORY && file.endsWith('.json');
-};
+export const isDispositionFile = (path) => familyOf(normalised(path).toLowerCase()) === 'disposition';
 
 const SEAL_REASON =
   'The digest of an entry moved while its reason and its status stayed, which is what the seal (npm run assets:seal) does, and the seal certifies text no human read.';

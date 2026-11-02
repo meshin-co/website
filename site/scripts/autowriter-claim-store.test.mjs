@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict';
-import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 
-import { CLAIM_DIR, claimFile, isHolding, validateClaim } from './autowriter-claims.mjs';
+import { isHolding, validateClaim } from './autowriter-claims.mjs';
 import { CLAIM_LIFETIME_DAYS, newClaim, readClaim, readClaims, writeClaim } from './autowriter-claim-store.mjs';
+import { recordDirectory, recordPath } from './record-layout.mjs';
 
 const NOW = new Date('2026-11-02T07:00:00.000Z');
 const CLAIMED = '2026-11-01T07:00:00.000Z';
@@ -25,6 +26,7 @@ const claim = (extra = {}) => ({
   expiresAt: LIVE,
   ...extra,
 });
+const filedAt = (slug) => recordPath('claim', slug, CLAIMED);
 
 function inTemp(check) {
   const root = mkdtempSync(join(tmpdir(), 'claims-'));
@@ -37,11 +39,11 @@ function inTemp(check) {
 
 test('a written claim reads back equal, ends in a newline and leaves no temporary file behind', () => {
   inTemp((root) => {
-    const path = join(root, CLAIM_DIR, 'what-is-a-model-card.json');
+    const path = join(root, filedAt('what-is-a-model-card'));
     writeClaim(path, claim());
     assert.deepEqual(readClaim(path), claim());
     assert.equal(readFileSync(path, 'utf8').endsWith('}\n'), true);
-    assert.deepEqual(readdirSync(join(root, CLAIM_DIR)), ['what-is-a-model-card.json']);
+    assert.deepEqual(readdirSync(dirname(path)), ['what-is-a-model-card.json']);
   });
 });
 
@@ -79,21 +81,49 @@ test('a claim that is not JSON, or does not match, is refused by name when it is
 
 test('every claim in the directory is read in file name order, and a broken one stops the read by name', () => {
   inTemp((root) => {
-    const dir = join(root, CLAIM_DIR);
-    writeClaim(join(dir, 'b-claim.json'), claim({ slug: 'b-claim' }));
-    writeClaim(join(dir, 'a-claim.json'), claim({ slug: 'a-claim' }));
+    const dir = join(root, dirname(filedAt('a-claim')));
+    writeClaim(join(root, filedAt('b-claim')), claim({ slug: 'b-claim' }));
+    writeClaim(join(root, filedAt('a-claim')), claim({ slug: 'a-claim' }));
     writeFileSync(join(dir, 'notes.txt'), 'not a claim');
     assert.deepEqual(
       readClaims(root).map(({ path, claim: read }) => [path, read.slug]),
       [
-        [claimFile('a-claim'), 'a-claim'],
-        [claimFile('b-claim'), 'b-claim'],
+        [filedAt('a-claim'), 'a-claim'],
+        [filedAt('b-claim'), 'b-claim'],
       ]
     );
     writeFileSync(join(dir, 'broken.json'), '[');
     assert.throws(() => readClaims(root), /broken\.json is not readable JSON/);
   });
   inTemp((root) => assert.deepEqual(readClaims(root), []));
+});
+
+test('readClaims finds a claim filed flat, in its month and deeper, and reads all three', () => {
+  inTemp((root) => {
+    const flat = `${recordDirectory('claim')}/flat-claim.json`;
+    const month = filedAt('month-claim');
+    const deeper = `${dirname(month)}/extra/deep-claim.json`;
+    writeClaim(join(root, flat), claim({ slug: 'flat-claim' }));
+    writeClaim(join(root, month), claim({ slug: 'month-claim' }));
+    writeClaim(join(root, deeper), claim({ slug: 'deep-claim' }));
+    const found = readClaims(root);
+    assert.equal(found.length, 3);
+    assert.deepEqual(Object.fromEntries(found.map(({ path, claim: read }) => [path, read.slug])), {
+      [flat]: 'flat-claim',
+      [month]: 'month-claim',
+      [deeper]: 'deep-claim',
+    });
+  });
+});
+
+test('a broken claim filed deeper than its month stops the read by name, never skipped', () => {
+  inTemp((root) => {
+    writeClaim(join(root, filedAt('what-is-a-model-card')), claim());
+    const deeper = join(root, dirname(filedAt('x')), 'extra');
+    mkdirSync(deeper, { recursive: true });
+    writeFileSync(join(deeper, 'broken.json'), '[');
+    assert.throws(() => readClaims(root), /claims\/2026\/11\/extra\/broken\.json is not readable JSON/);
+  });
 });
 
 const made = (now) =>

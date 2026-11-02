@@ -1,10 +1,12 @@
 import { createHash } from 'node:crypto';
 
+import { recordPath } from '../record-layout.mjs';
 import { siteBrand } from '../site-brand.mjs';
 
 export const ARTICLE_SLUG = 'how-to-build-an-ai-bill-of-materials';
 export const TERM_SLUG = 'ai-bill-of-materials';
-export const LEDGER = `audits/autowriter/${ARTICLE_SLUG}.json`;
+export const CLAIMED_AT = '2026-11-02T07:00:00.000Z';
+export const LEDGER = recordPath('ledger', ARTICLE_SLUG, CLAIMED_AT);
 export const MODEL_VARIABLE = 'OPENAI_WRITING_MODEL';
 export const MODEL = 'gpt-6.1-terra';
 export const RESOLVED_MODEL = 'gpt-6.1-terra-2026-10-01';
@@ -42,8 +44,8 @@ const COMMIT_FILES = [
   `site/src/data/glossary/${TERM_SLUG}.md`,
   'docs/SEMANTIC-CORE.md',
   'site/content-facts.json',
-  `audits/autowriter/generations/${ARTICLE_SLUG}.json`,
-  `audits/autowriter/generations/${TERM_SLUG}.json`,
+  recordPath('generation', ARTICLE_SLUG, CLAIMED_AT),
+  recordPath('generation', TERM_SLUG, CLAIMED_AT),
 ];
 
 const LIMITS = {
@@ -68,13 +70,13 @@ export const recordInput = () => ({
     prompt: { number: 6, text: 'Which artefacts should an AI register hold for each model?' },
     runId: '1234567890',
     status: 'claimed',
-    claimedAt: '2026-11-02T07:00:00.000Z',
+    claimedAt: CLAIMED_AT,
     expiresAt: '2026-11-16T07:00:00.000Z',
   },
   decision: {
     schema: 1,
     decision: 'write',
-    claimPath: `audits/autowriter/claims/${ARTICLE_SLUG}.json`,
+    claimPath: recordPath('claim', ARTICLE_SLUG, CLAIMED_AT),
     ledgerPath: LEDGER,
     row: {
       '#': '6',

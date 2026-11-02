@@ -1,13 +1,15 @@
 import './fixtures/no-network.mjs';
 
 import assert from 'node:assert/strict';
-import { existsSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, mkdirSync } from 'node:fs';
+import { basename, dirname, join } from 'node:path';
 import { test } from 'node:test';
 
 import { MONTHLY_SPEND_CEILING_USD, readLedger } from './autowriter-ledger.mjs';
 import { NOTICE, fakeApi, harness, spending, withScene } from './fixtures/spend-run.mjs';
-import { ledgerOf, recordOf } from './fixtures/spend-scene.mjs';
+import { PLACES } from './fixtures/record-depths.mjs';
+import { FILED_AT, ledgerOf, recordOf } from './fixtures/spend-scene.mjs';
+import { recordFiles, recordPath } from './record-layout.mjs';
 import { ceilingStatus } from './spend-ceiling.mjs';
 
 const CEILING = MONTHLY_SPEND_CEILING_USD;
@@ -34,7 +36,17 @@ test(
     assert.equal(await run.run(), 0);
     assert.deepEqual(
       run.out.map((line) => JSON.parse(line)),
-      [{ month: '2026-11', spentUsd: 1.25, ceilingUsd: CEILING, reached: false, notice: 'none' }]
+      [
+        {
+          month: '2026-11',
+          spentUsd: 1.25,
+          ceilingUsd: CEILING,
+          reached: false,
+          notice: 'none',
+          ledgers: 1,
+          records: 0,
+        },
+      ]
     );
     assert.deepEqual(run.err, []);
     assert.deepEqual(run.api.calls, { slack: [], issue: [] });
@@ -53,7 +65,17 @@ test(
     assert.equal(await run.run(), 0);
     assert.deepEqual(
       run.out.map((line) => JSON.parse(line)),
-      [{ month: '2026-11', spentUsd: CEILING, ceilingUsd: CEILING, reached: true, notice: 'written' }]
+      [
+        {
+          month: '2026-11',
+          spentUsd: CEILING,
+          ceilingUsd: CEILING,
+          reached: true,
+          notice: 'written',
+          ledgers: 1,
+          records: 0,
+        },
+      ]
     );
     assert.equal(run.api.calls.issue.length, 1);
     assert.equal(run.api.calls.slack.length, 1);
@@ -89,6 +111,8 @@ test(
     assert.equal(api.calls.issue.length, 1);
     assert.equal(JSON.parse(second.out[0]).notice, 'exists');
     assert.equal(JSON.parse(second.out[0]).reached, true);
+    assert.equal(JSON.parse(first.out[0]).ledgers, 1);
+    assert.equal(JSON.parse(second.out[0]).ledgers, 2);
     assert.deepEqual(second.output().trim().split('\n'), ['stopped=true', 'notice=exists', `ledger=${NOTICE}`]);
     assert.equal(readLedger(join(scene.root, NOTICE)).escalations.length, 1);
   })
@@ -111,10 +135,8 @@ test(
     assert.equal(JSON.parse(again.out[0]).notice, 'written');
     assert.equal(api.calls.slack.length, 2);
     assert.deepEqual(
-      readdirSync(join(scene.root, 'audits/autowriter'))
-        .filter((name) => name.startsWith('spend-ceiling-'))
-        .sort(),
-      ['spend-ceiling-2026-11.json', 'spend-ceiling-2026-12.json']
+      recordFiles(scene.root, 'ledger').filter((path) => basename(path).startsWith('spend-ceiling-')),
+      ['audits/autowriter/2026/11/spend-ceiling-2026-11.json', 'audits/autowriter/2026/12/spend-ceiling-2026-12.json']
     );
   })
 );
@@ -165,10 +187,10 @@ test(
 test(
   'unreadable data exits 1 with the file named and calls nothing',
   withScene(async (scene) => {
-    scene.put('audits/autowriter/bad-post.json', 'not json');
+    scene.put(recordPath('ledger', 'bad-post', IN_NOVEMBER), 'not json');
     const run = harness(scene);
     assert.equal(await run.run(), 1);
-    assert.match(run.err.join('\n'), /bad-post\.json/);
+    assert.match(run.err.join('\n'), /audits\/autowriter\/2026\/11\/bad-post\.json/);
     assert.deepEqual(run.out, []);
     assert.deepEqual(run.api.calls, { slack: [], issue: [] });
   })
@@ -196,6 +218,8 @@ test(
     assert.equal(run.err.length, 1);
     assert.match(run.err[0], /^warning: short-post/);
     assert.equal(JSON.parse(run.out[0]).spentUsd, 2);
+    assert.equal(JSON.parse(run.out[0]).ledgers, 1);
+    assert.equal(JSON.parse(run.out[0]).records, 1);
   })
 );
 
@@ -213,5 +237,96 @@ test(
       assert.match(bad.err.join('\n'), /Usage/);
       assert.deepEqual(bad.out, []);
     }
+  })
+);
+
+const READ = {
+  month: '2026-11',
+  spentUsd: 7,
+  ceilingUsd: CEILING,
+  reached: false,
+  notice: 'none',
+  ledgers: 3,
+  records: 3,
+};
+
+const ENTRIES = [
+  ['alpha-post', 1],
+  ['beta-post', 2],
+  ['gamma-post', 4],
+];
+const beside = (at) => ENTRIES.map(() => [at, at]);
+const APART = [
+  [FILED_AT.flat, FILED_AT.month],
+  [FILED_AT.month, FILED_AT.deeper],
+  [FILED_AT.deeper, FILED_AT.flat],
+];
+
+const putEntries = (scene, places, { without = [] } = {}) =>
+  ENTRIES.forEach(([slug, usd], index) => {
+    const [ledgerAt, recordAt] = places[index];
+    scene.put(ledgerAt('ledger', slug), ledgerOf({ slug, generationUsd: usd }));
+    if (!without.includes(slug))
+      scene.put(recordAt('generation', slug), recordOf({ slug, generatedAt: IN_NOVEMBER, usd }));
+  });
+
+const linesOf = (run) => run.out.map((line) => JSON.parse(line));
+
+for (const [layout, place] of Object.entries(PLACES)) {
+  test(
+    `the line counts three ledgers and three generation records, all filed ${place}`,
+    withScene(async (scene) => {
+      putEntries(scene, beside(FILED_AT[layout]));
+      const run = harness(scene);
+      assert.equal(await run.run(), 0);
+      assert.deepEqual(linesOf(run), [READ]);
+      assert.deepEqual(run.err, []);
+    })
+  );
+}
+
+test(
+  'the line counts the same when the ledgers and the records of one repository lie at all three depths',
+  withScene(async (scene) => {
+    putEntries(scene, APART);
+    const run = harness(scene);
+    assert.equal(await run.run(), 0);
+    assert.deepEqual(linesOf(run), [READ]);
+  })
+);
+
+test(
+  'a ledger without a generation record counts as a ledger and not as a record, at whatever depth it lies',
+  withScene(async (scene) => {
+    putEntries(scene, APART, { without: ['alpha-post'] });
+    const run = harness(scene);
+    assert.equal(await run.run(), 0);
+    assert.deepEqual(linesOf(run), [{ ...READ, records: 2 }]);
+  })
+);
+
+test(
+  'moving the files from the flat layout into their months changes neither a count nor the spend',
+  withScene(async (scene) => {
+    putEntries(scene, beside(FILED_AT.flat));
+    scene.commit('flat');
+    const before = harness(scene);
+    assert.equal(await before.run(), 0);
+    for (const family of ['ledger', 'generation'])
+      for (const path of recordFiles(scene.root, family)) {
+        const month = FILED_AT.month(family, basename(path, '.json'));
+        mkdirSync(dirname(join(scene.root, month)), { recursive: true });
+        scene.git('mv', path, month);
+      }
+    scene.commit('month');
+    assert.deepEqual(recordFiles(scene.root, 'ledger'), [
+      'audits/autowriter/2026/11/alpha-post.json',
+      'audits/autowriter/2026/11/beta-post.json',
+      'audits/autowriter/2026/11/gamma-post.json',
+    ]);
+    const after = harness(scene);
+    assert.equal(await after.run(), 0);
+    assert.deepEqual(linesOf(before), [READ]);
+    assert.deepEqual(linesOf(after), [READ]);
   })
 );

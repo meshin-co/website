@@ -1,10 +1,10 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { join, posix } from 'node:path';
+import { join } from 'node:path';
 
 import { describeRefusal, isDispositionFile, refusalFor, sealSignature } from './autowriter-refusals.mjs';
-import { GENERATION_DIR } from './generation-record.mjs';
 import { BOT_EMAIL } from './pr-classify.mjs';
+import { familyOf, recordDirectory } from './record-layout.mjs';
 
 const PATH_RULE = 'refused-path-committed';
 const SEAL_RULE = 'disposition-seal-committed';
@@ -38,7 +38,7 @@ const LOG = [
   '-z',
   '--format=%H%x00%ae%x00%B',
   '--',
-  GENERATION_DIR,
+  recordDirectory('generation'),
 ];
 const diffOf = (sha) => [
   ...QUOTEPATH,
@@ -69,7 +69,7 @@ export const repositoryGit =
 
 export const skippedLine = (reason) => `autowriter: history rules skipped: ${reason}`;
 
-const isRecord = (path) => posix.dirname(path) === GENERATION_DIR && path.endsWith('.json');
+const isRecord = (path) => familyOf(path) === 'generation';
 
 function fieldsOf(text, size, what) {
   const fields = text.split('\0');

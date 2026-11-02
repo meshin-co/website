@@ -7,9 +7,9 @@ import { join, resolve } from 'node:path';
 import { after, test } from 'node:test';
 import { pathToFileURL } from 'node:url';
 
-import { DISPOSITION_DIRECTORY, sealSignature } from './autowriter-refusals.mjs';
+import { sealSignature } from './autowriter-refusals.mjs';
 import { historyReport, pipelineCommits, repositoryGit } from './autowriter-refusal-rules.mjs';
-import { GENERATION_DIR, generationFile } from './generation-record.mjs';
+import { recordDirectory, recordPath } from './record-layout.mjs';
 import {
   BOT,
   HUMAN,
@@ -25,10 +25,13 @@ import {
 const SITE = resolve(import.meta.dirname, '..');
 const REPO = resolve(SITE, '..');
 const RULES_URL = pathToFileURL(join(SITE, 'scripts/autowriter-refusal-rules.mjs')).href;
-const RECORD = generationFile('first-post');
-const SECOND_RECORD = generationFile('second-post');
+const CLAIMED_AT = '2026-11-01T07:00:00.000Z';
+const GENERATIONS = recordDirectory('generation');
+const DISPOSITIONS = recordDirectory('disposition');
+const RECORD = recordPath('generation', 'first-post', CLAIMED_AT);
+const SECOND_RECORD = recordPath('generation', 'second-post', CLAIMED_AT);
 const BAND = 'audits/sentence-band.json';
-const DISPOSITION = `${DISPOSITION_DIRECTORY}/main.json`;
+const DISPOSITION = `${DISPOSITIONS}/main.json`;
 const PIPELINE_REASON = 'The text of this target changed in the run in which the unattended writer added /blog/x.';
 
 const made = [];
@@ -42,7 +45,8 @@ const repoWith = (files = {}) => {
   commitAs(root, HUMAN, { write: { 'README.md': 'start\n', ...files }, message: 'chore(fixture): start' });
   return root;
 };
-const written = (slug) => `feat(autowriter): write ${slug}\n\nProvenance: ${generationFile(slug)}`;
+const written = (slug) =>
+  `feat(autowriter): write ${slug}\n\nProvenance: ${recordPath('generation', slug, CLAIMED_AT)}`;
 const pipelineWrite = { write: { [RECORD]: '{}\n', [BAND]: '{}\n' }, message: written('first-post') };
 const judged = (root) => pipelineCommits(repositoryGit(root));
 const shas = (root) => judged(root).map(({ sha }) => sha);
@@ -89,11 +93,32 @@ test('a commit by the bot that changed no record is not judged, because the rule
   assert.deepEqual(judged(root), []);
 });
 
-test('only a .json file directly under the generations directory is a record', () => {
+test('only a .json file under the generations directory is a record, at any depth, and no sibling directory is one', () => {
   const root = repoWith();
-  const write = { [`${GENERATION_DIR}/zz.md`]: 'x\n', [`${GENERATION_DIR}/nested/zz.json`]: '{}\n', [BAND]: '{}\n' };
+  const write = {
+    [`${GENERATIONS}/zz.md`]: 'x\n',
+    [`${GENERATIONS}/2026/11/zz.md`]: 'x\n',
+    [`${GENERATIONS}-old/zz.json`]: '{}\n',
+    [recordPath('claim', 'zz', CLAIMED_AT)]: '{}\n',
+    [recordPath('ledger', 'zz', CLAIMED_AT)]: '{}\n',
+    [BAND]: '{}\n',
+  };
   commitAs(root, BOT, { write, message: 'feat(autowriter): write zz' });
   assert.deepEqual(judged(root), []);
+});
+
+test('a record is found at any depth: one flat, one in its month and one below it are three records of one commit', () => {
+  const root = repoWith();
+  const records = [`${GENERATIONS}/third-post.json`, RECORD, `${GENERATIONS}/2026/11/extra/fourth-post.json`];
+  const write = { ...Object.fromEntries(records.map((path) => [path, '{}\n'])), [BAND]: '{}\n' };
+  commitAs(root, BOT, { write, message: 'feat(autowriter): write three posts' });
+  const [found, ...later] = judged(root);
+  assert.equal(later.length, 0);
+  assert.deepEqual([...found.records].sort(), [...records].sort());
+  const { findings, commits } = historyReport({ root });
+  assert.equal(commits, 1);
+  assert.equal(findings.length, 3);
+  assert.deepEqual(findings.map(({ path }) => path).sort(), [...records].sort());
 });
 
 test('a root commit by the bot is read as everything added, so no file has a before side', () => {
@@ -176,12 +201,34 @@ test('a pipeline commit that moved a digest while its reason and status stayed i
   assert.deepEqual(historyReport({ root }).findings, [{ rule: 'disposition-seal-committed', path: RECORD, detail }]);
 });
 
+test('a seal is found in a disposition file wherever it lies: flat, in its month and below it make three findings', () => {
+  const before = listing(entry('a'.repeat(12)));
+  const after = listing(entry('b'.repeat(12)));
+  const paths = [
+    DISPOSITION,
+    recordPath('disposition', 'first-post', CLAIMED_AT),
+    `${DISPOSITIONS}/2026/11/extra/generated-first-post.json`,
+  ];
+  const root = repoWith(Object.fromEntries(paths.map((path) => [path, before])));
+  const write = { [RECORD]: '{}\n', ...Object.fromEntries(paths.map((path) => [path, after])) };
+  commitAs(root, BOT, { write, message: written('first-post') });
+  const { findings, commits } = historyReport({ root });
+  assert.equal(commits, 1);
+  assert.equal(findings.length, 3);
+  assert.deepEqual([...new Set(findings.map(({ rule }) => rule))], ['disposition-seal-committed']);
+  for (const path of paths)
+    assert.ok(
+      findings.some(({ detail }) => detail.includes(` in ${path} (`)),
+      path
+    );
+});
+
 test('a restate the pipeline wrote itself, a new disposition file and a deleted one are not seals', () => {
   const restated = listing(entry('a'.repeat(12), { reason: PIPELINE_REASON }));
-  const root = repoWith({ [DISPOSITION]: restated, [`${DISPOSITION_DIRECTORY}/gone.json`]: restated });
+  const root = repoWith({ [DISPOSITION]: restated, [`${DISPOSITIONS}/gone.json`]: restated });
   const moved = listing(entry('b'.repeat(12), { reason: PIPELINE_REASON }));
-  const write = { [RECORD]: '{}\n', [DISPOSITION]: moved, [`${DISPOSITION_DIRECTORY}/new.json`]: moved };
-  commitAs(root, BOT, { write, remove: [`${DISPOSITION_DIRECTORY}/gone.json`], message: written('first-post') });
+  const write = { [RECORD]: '{}\n', [DISPOSITION]: moved, [`${DISPOSITIONS}/new.json`]: moved };
+  commitAs(root, BOT, { write, remove: [`${DISPOSITIONS}/gone.json`], message: written('first-post') });
   assert.deepEqual(historyReport({ root }), { findings: [], commits: 1, skipped: null });
 });
 

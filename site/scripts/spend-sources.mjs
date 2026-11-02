@@ -1,10 +1,11 @@
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
-import { LEDGER_DIR, fileStemProblem, validateLedger } from './autowriter-ledger.mjs';
+import { fileStemProblem, validateLedger } from './autowriter-ledger.mjs';
 import { describeProblem } from './autowriter-records.mjs';
 import { runGit } from './commit-to-main.mjs';
-import { GENERATION_DIR, validateRecord } from './generation-record.mjs';
+import { validateRecord } from './generation-record.mjs';
+import { familyOf, recordDirectory, recordFiles } from './record-layout.mjs';
 import { chooseVersions } from './spend-sum.mjs';
 
 export const WORKING_TREE = 'working tree';
@@ -17,9 +18,8 @@ export const SOURCE_REFS = [
 
 export class SpendDataError extends Error {}
 
-const POSIX_SEPARATOR = '/';
-const isJsonIn = (path, directory) => path.endsWith('.json') && dirname(path) === directory;
-const isSpendFile = (path) => isJsonIn(path, LEDGER_DIR) || isJsonIn(path, GENERATION_DIR);
+const SPEND_FAMILIES = ['ledger', 'generation'];
+const isSpendFile = (path) => SPEND_FAMILIES.includes(familyOf(path));
 
 function git(run, repoRoot, args) {
   const result = run(args, { cwd: repoRoot });
@@ -31,21 +31,17 @@ function git(run, repoRoot, args) {
 }
 
 function workingTreeFiles(repoRoot) {
-  return [LEDGER_DIR, GENERATION_DIR].flatMap((directory) => {
-    const absolute = join(repoRoot, directory);
-    if (!existsSync(absolute)) return [];
-    return readdirSync(absolute, { withFileTypes: true })
-      .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
-      .map((entry) => ({
-        path: [directory, entry.name].join(POSIX_SEPARATOR),
-        key: null,
-        text: () => readFileSync(join(absolute, entry.name), 'utf8'),
-      }));
-  });
+  return SPEND_FAMILIES.flatMap((family) =>
+    recordFiles(repoRoot, family).map((path) => ({
+      path,
+      key: null,
+      text: () => readFileSync(join(repoRoot, path), 'utf8'),
+    }))
+  );
 }
 
 function treeFiles({ run, repoRoot, ref, blobs }) {
-  const listing = git(run, repoRoot, ['ls-tree', '-r', '-z', ref, '--', LEDGER_DIR]);
+  const listing = git(run, repoRoot, ['ls-tree', '-r', '-z', ref, '--', recordDirectory('ledger')]);
   return listing
     .split('\0')
     .filter(Boolean)
@@ -87,7 +83,7 @@ function parseFile({ label, file, check }) {
 }
 
 function load({ label, file, parsed }) {
-  const isRecord = isJsonIn(file.path, GENERATION_DIR);
+  const isRecord = familyOf(file.path) === 'generation';
   const cacheKey = file.key === null ? null : `${isRecord ? 'record' : 'ledger'}:${file.key}`;
   if (cacheKey !== null && parsed.has(cacheKey)) return { isRecord, value: parsed.get(cacheKey) };
   const value = parseFile({ label, file, check: isRecord ? validateRecord : validateLedger });

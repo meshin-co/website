@@ -7,7 +7,7 @@ const FILES = {
   scope: 'scripts/repair-scope.mjs',
   ledger: 'scripts/autowriter-ledger.mjs',
 };
-const ENTRY = { slug: 'zz-specimen', format: 'article' };
+const ENTRY = { slug: 'zz-specimen', format: 'article', claimedAt: '2026-11-02T06:00:00.000Z' };
 const OUTSIDE = 'site/src/pages/index.astro';
 const REFUSED = 'audits/lighthouse-green.json';
 const CAP = 3;

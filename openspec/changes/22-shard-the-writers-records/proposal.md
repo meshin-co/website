@@ -1,0 +1,87 @@
+# Shard the writer's records by month, so no directory outgrows what GitHub will list
+
+## Why
+
+The unattended writer leaves four files for every entry it writes:
+
+- the attempt ledger, `audits/autowriter/<slug>.json`
+- the topic claim, `audits/autowriter/claims/<slug>.json`
+- the generation record, `audits/autowriter/generations/<slug>.json`
+- the editorial disposition, `audits/phase-4.7/dispositions/generated-<slug>.json`
+
+At one entry a day each directory reaches about 1800 files within five years. GitHub stops listing a
+directory after 1000 entries, so a person could no longer browse the record of what the machine did.
+The cost is not only for people. `gate:autowriter`, the spend reader, the topic picker and the
+editorial gate each read every file of these directories on every run, so every gate would slow down
+at the same rate the directories grow.
+
+The owner asked for this directly.
+
+## What changes
+
+**The records are filed by month.** Each record moves into a directory named for the year and month
+of its entry, for example `audits/autowriter/2026/11/<slug>.json`. The claims, the generation records
+and the generated dispositions take the same shape under their own directories. The month is the UTC
+month of the claim's `claimedAt`, which every entry already records. It is never the time at which a
+file is read or written, so a file never moves after it is written, and a directory holds at most
+thirty-one entries of one family.
+
+**One function turns an entry and its date into a path.** `recordPath(family, slug, date)` in
+`site/scripts/record-layout.mjs` is the only code that spells a record directory. The writers, the
+repair, the watcher and the specimens call it. The four copies of a directory constant and of a path
+helper that existed before (`ledgerFile`, `claimFile`, `generationFile` and the disposition
+directory) are removed, and every caller is migrated in the same change.
+
+**Every reader finds a record at any depth, and says how many it read.** The readers of these
+directories now list them recursively through `recordFiles(repoRoot, family)`. The summary of each
+reader already printed how many files it read, and it still does, because a reader that silently
+finds nothing after a layout change is the failure to fear here: the spend reader that finds no
+ledger reports no spend, and the ceiling never fires. The spend reader's output gains the two counts
+it did not print before.
+
+**A stray flat record fails the gate.** `gate:autowriter` gains one finding, `record-layout`. It
+fails on a ledger, a claim, a generation record or a generated disposition that is not filed under
+`<year>/<month>`, or that lies in a month other than the month of its claim, and it names the path
+where the file belongs. It has a planted specimen and a row in the mutation smoke manifest.
+
+**What exists is moved with `git mv`.** The ledger and the claim of the entry on `main` move into
+`2026/11`, and `git log --follow` on a moved file still shows the commits from before the move.
+
+**The ledger and the generation record stay two files.** The proposal considered one file per entry
+and rejected it. The ledger records what each attempt cost, and the generation record records what
+the model calls cost. `spendWarnings` in `site/scripts/spend-sum.mjs` compares the one with the other
+and names an entry where they disagree. One file written by one code path would make that comparison
+agree by construction, and the cross-check would no longer check anything.
+
+## What this does not change
+
+- `site/src/data/post/` and `site/src/data/glossary/` are the site's content. Their file names are
+  route addresses and they are not sharded.
+- The hand-written disposition files in `audits/phase-4.7/dispositions/` (`routes.json`,
+  `glossary.json` and the others) are named for the layer of the site they cover, not for an entry.
+  They carry no date to shard by, there are 13 of them and they do not grow with the writer, so they
+  stay where they are. The gate accepts them flat and refuses a flat `generated-<slug>.json`.
+- The schema of every record is unchanged, except that the `ledger` field of a generation record
+  accepts the month path of its ledger as well as the flat path (see the next section).
+
+## Reading what was written before
+
+A record written before this change names its ledger at the flat path, and some of those records sit on
+`autowriter/*` branches that have not merged. They record real spend, and the spend reader reads every
+ref. A layout change must not turn the safety ceiling into a command that fails on its own history, so
+the generation record schema accepts both the flat and the month form of the `ledger` field. This is a
+tolerance for reading only. The writer has one path function and no flat branch, the `record-layout`
+finding judges the working tree and never a ref, and a record the schema still refuses is named with
+its path and fails the reader. It is never skipped and never counted as zero.
+
+The tolerance ends when no `autowriter/*` branch older than this change remains. The commit that ends
+it removes the optional month group from the `ledger` pattern in
+`site/scripts/generation-record.schema.json`. From then on `gate:autowriter` refuses a flat ledger name
+in any generation record in the working tree, and `spend-ceiling` refuses it on any ref.
+
+## Consequences for work in flight
+
+Pull request 78 (`autowriter/fractional-caio-vs-full-time-caio-cost`) holds its generation record
+and its disposition at the flat paths. The spend reader still counts its cost.
+After this change merges, `gate:autowriter` refuses a working tree that holds those two flat files until
+they are moved into `2026/11` with `git mv`, and the `ledger` field of the record is changed to the month path.

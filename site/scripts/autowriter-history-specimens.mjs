@@ -2,12 +2,12 @@ import { existsSync, rmSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
 import { repositoryGit } from './autowriter-refusal-rules.mjs';
-import { DISPOSITION_DIRECTORY, isDispositionFile, sealSignature } from './autowriter-refusals.mjs';
-import { generationFile } from './generation-record.mjs';
+import { isDispositionFile, sealSignature } from './autowriter-refusals.mjs';
 import { BOT_EMAIL, BOT_NAME } from './pr-classify.mjs';
+import { recordDirectory, recordPath } from './record-layout.mjs';
 
 const GATE = 'gate:autowriter';
-const RECORD = generationFile('zz-specimen');
+const RECORD = recordPath('generation', 'zz-specimen', '2026-11-02T07:00:00.000Z');
 const MESSAGE = `feat(autowriter): write zz-specimen\n\nProvenance: ${RECORD}`;
 const TEMPORARY_INDEX = 'zz-specimen-index';
 const PLAIN_COMMITS = ['-c', 'commit.gpgsign=false', '-c', 'core.hooksPath=/dev/null'];
@@ -36,14 +36,14 @@ function movedFirstDigest(text) {
 }
 
 function sealedDisposition({ git, original }) {
-  const listed = git(['ls-tree', '-r', '--name-only', '-z', original, '--', `${DISPOSITION_DIRECTORY}/`]);
+  const listed = git(['ls-tree', '-r', '--name-only', '-z', original, '--', `${recordDirectory('disposition')}/`]);
   for (const path of listed.split('\0').filter(isDispositionFile).sort()) {
     const before = git(['show', `${original}:${path}`]);
     const after = movedFirstDigest(before);
     if (after !== null && sealSignature({ path, before, after })?.id === 'disposition-seal') return { [path]: after };
   }
   throw new Error(
-    `${DISPOSITION_DIRECTORY} holds no disposition file at HEAD whose first entry can change its digest alone, ` +
+    `${recordDirectory('disposition')} holds no disposition file at HEAD whose first entry can change its digest alone, ` +
       'so there is nothing to seal'
   );
 }

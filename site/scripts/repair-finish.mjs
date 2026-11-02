@@ -1,8 +1,9 @@
-import { ATTEMPT_CAP, ledgerFile, ledgerWithAttempt, validateLedger } from './autowriter-ledger.mjs';
+import { ATTEMPT_CAP, ledgerWithAttempt, validateLedger } from './autowriter-ledger.mjs';
 import { describeProblem } from './autowriter-records.mjs';
 import { resolveClaimTable } from './claim-sources.mjs';
 import { bandOf } from './generation-facts.mjs';
-import { callTotals, generationFile, recordAfterRepair, validateRecord } from './generation-record.mjs';
+import { callTotals, recordAfterRepair, validateRecord } from './generation-record.mjs';
+import { recordPath } from './record-layout.mjs';
 import { attemptFailure } from './repair-findings.mjs';
 import { RepairStop } from './repair-outcome.mjs';
 import { scopeProblems } from './repair-scope.mjs';
@@ -31,13 +32,13 @@ function refuseInvalid(slug, problems) {
     );
 }
 
-function messageOf({ slug, number, failures, gates }) {
+function messageOf({ slug, number, failures, gates, generationPath }) {
   const listed = failures.slice(0, LISTED_FAILURES).map(({ rule, path }) => '- ' + rule + ' on ' + path);
   const more = failures.length > LISTED_FAILURES ? ['- and ' + (failures.length - LISTED_FAILURES) + ' more'] : [];
   return [
     'fix(autowriter): repair ' + slug + ', attempt ' + number + ' of ' + ATTEMPT_CAP,
     ['Answers:', ...listed, ...more].join('\n'),
-    'Provenance: ' + generationFile(slug),
+    'Provenance: ' + generationPath,
     'Gates: ' + gates.map(({ name, exit }) => name + ' ' + exit).join(', '),
   ].join('\n\n');
 }
@@ -81,20 +82,27 @@ export async function finishRepair({
     costUsd,
   });
   refuseInvalid(slug, [...validateRecord(nextRecord), ...validateLedger(nextLedger)]);
-  const own = [generationFile(slug), ledgerFile(slug)];
+  const generationPath = recordPath('generation', slug, claim.claimedAt);
+  const ledgerPath = recordPath('ledger', slug, claim.claimedAt);
+  const own = [generationPath, ledgerPath];
   const files = [
     ...assembly.files.filter(({ path }) => !own.includes(path)),
-    { path: generationFile(slug), text: textOf(nextRecord) },
-    { path: ledgerFile(slug), text: textOf(nextLedger) },
+    { path: generationPath, text: textOf(nextRecord) },
+    { path: ledgerPath, text: textOf(nextLedger) },
   ];
-  const outside = scopeProblems({ slug, format: claim.format, paths: files.map(({ path }) => path) });
+  const outside = scopeProblems({
+    slug,
+    format: claim.format,
+    claimedAt: claim.claimedAt,
+    paths: files.map(({ path }) => path),
+  });
   if (outside.length > 0)
     throw new RepairStop(
       'unrepairable',
       'the repair would touch files it may not: ' + outside.map(({ path, problem }) => path + ' ' + problem).join('; '),
       { calls }
     );
-  const message = messageOf({ slug, number, failures, gates: assembly.gates });
+  const message = messageOf({ slug, number, failures, gates: assembly.gates, generationPath });
   assertNoSecrets({ files, message }, secrets, 'the repair output');
   const { commit: sha } = await commit({ repoRoot, files, message, run });
   return { commit: sha, attempt: number, gates: assembly.gates };
