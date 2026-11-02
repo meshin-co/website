@@ -40,9 +40,8 @@
 
 - [x] 4.1 The ledger and the claim of the entry on `main` move into `2026/11` with `git mv`, and
       `git log --follow` on a moved file still shows its earlier commits
-- [ ] 4.2 The generation record and the disposition of pull request 78 move into `2026/11` with
-      `git mv`, and its `ledger` field names the month path, after that branch is rebased on this
-      change; this change cannot do it, because the branch is not part of it
+- [x] 4.2 Pull request 78 was closed unmerged and its branch deleted, so its generation record and its
+      disposition never reach `main` and need no move; its ledger and claim are already filed in `2026/11`
 
 ## 5. Two files stay two files
 

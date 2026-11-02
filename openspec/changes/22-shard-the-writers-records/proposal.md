@@ -81,7 +81,10 @@ in any generation record in the working tree, and `spend-ceiling` refuses it on 
 
 ## Consequences for work in flight
 
-Pull request 78 (`autowriter/fractional-caio-vs-full-time-caio-cost`) holds its generation record
-and its disposition at the flat paths. The spend reader still counts its cost.
-After this change merges, `gate:autowriter` refuses a working tree that holds those two flat files until
-they are moved into `2026/11` with `git mv`, and the `ledger` field of the record is changed to the month path.
+Pull request 78 (`autowriter/fractional-caio-vs-full-time-caio-cost`) held its generation record
+and its disposition at the flat paths. The owner closed it unmerged on 2026-11-02 and its branch was
+deleted, so neither file reaches `main` and there is nothing to move: the ledger and the claim of that
+entry were already filed in `2026/11`. That branch was the one reason for the tolerance above. The
+tolerance stays until a person ends it with the commit described there, after `git fetch --prune` has
+dropped the remote-tracking ref of the deleted branch. Once it ends, `spend-ceiling` refuses a flat
+ledger name on every ref it reads, so a clone that still holds that ref would stop.
