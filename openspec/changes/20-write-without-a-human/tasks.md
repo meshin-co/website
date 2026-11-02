@@ -87,4 +87,4 @@
 ## 7. Calibration Gate
 
 - [x] 7.1 `npm run test:smoke` proves every guard family can still fail
-- [ ] 7.2 Run the Calibration Gate and commit the report it generates for this change
+- [x] 7.2 Run the Calibration Gate and commit the report it generates for this change
