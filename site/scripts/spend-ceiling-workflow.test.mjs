@@ -21,10 +21,11 @@ test('the workflow marks every step as unattended, so the seal and the Lighthous
   assert.equal(WORKFLOW.env?.AUTOWRITER_UNATTENDED, '1');
 });
 
-test('the ceiling job exists, is the first job and waits for nothing', () => {
+test('the ceiling job runs before any job that spends, and waits only on the readiness check', () => {
   assert.ok(ceiling, 'no ceiling job');
-  assert.equal(Object.keys(WORKFLOW.jobs)[0], 'ceiling');
-  assert.deepEqual(needsOf(ceiling), []);
+  const order = Object.keys(WORKFLOW.jobs);
+  assert.equal(order.indexOf('ceiling'), 1, 'only the readiness check comes before the ceiling');
+  assert.deepEqual(needsOf(ceiling), ['configured']);
 });
 
 test('the write job needs the ceiling job and runs only when it did not stop the day', () => {
@@ -79,12 +80,23 @@ test('the ceiling job holds no model key and no other secret of the writer', () 
     assert.ok(!body.includes(name), name);
 });
 
-test('every job that holds the model key runs after the ceiling job', () => {
-  const holders = Object.entries(WORKFLOW.jobs).filter(([, job]) => text(job).includes(KEY));
-  assert.ok(holders.length > 0, 'no job holds the key, so this test would pass vacuously');
+const bindsKey = (job) =>
+  [job?.env ?? {}, ...stepsOf(job).map((step) => step?.env ?? {})].some((env) =>
+    Object.values(env).some((value) => String(value).includes(`secrets.${KEY} }}`))
+  );
+
+test('every job that binds the model key as a value runs after the ceiling job', () => {
+  const holders = Object.entries(WORKFLOW.jobs).filter(([, job]) => bindsKey(job));
+  assert.ok(holders.length > 0, 'no job binds the key, so this test would pass vacuously');
   for (const [name, job] of holders) {
-    assert.ok(needsOf(job).includes('ceiling'), `${name} holds ${KEY} without waiting for the ceiling job`);
+    assert.ok(needsOf(job).includes('ceiling'), `${name} binds ${KEY} without waiting for the ceiling job`);
   }
+});
+
+test('a job that only tests whether the key is set never receives its value', () => {
+  const readiness = WORKFLOW.jobs.configured;
+  assert.ok(text(readiness).includes(KEY), 'the readiness job names the key');
+  assert.equal(bindsKey(readiness), false, 'the readiness job must not put the key in any environment');
 });
 
 test('a failure of the ceiling command fails the job, so the write job is skipped and the run goes red', () => {

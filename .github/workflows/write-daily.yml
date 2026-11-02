@@ -20,8 +20,44 @@ defaults:
     working-directory: site
 
 jobs:
-  ceiling:
+  configured:
     if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      ready: ${{ steps.secrets.outputs.ready }}
+    steps:
+      - id: secrets
+        working-directory: .
+        env:
+          MISSING: >-
+            ${{ secrets.AUTOWRITER_PAT == '' && 'AUTOWRITER_PAT ' || '' }}${{
+            secrets.AUTOWRITER_OPENAI_API_KEY == '' && 'AUTOWRITER_OPENAI_API_KEY ' || '' }}${{
+            secrets.GSC_SERVICE_ACCOUNT_JSON == '' && 'GSC_SERVICE_ACCOUNT_JSON ' || '' }}${{
+            secrets.SLACK_WEBHOOK_URL == '' && 'SLACK_WEBHOOK_URL' || '' }}
+        run: |
+          missing=$(echo "$MISSING" | xargs)
+          if [ -z "$missing" ]; then
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo 'ready=false' >> "$GITHUB_OUTPUT"
+          {
+            echo '### The unattended writer is not configured yet'
+            echo
+            echo 'This run stopped before it did anything. The repository is missing:'
+            echo
+            for name in $missing; do echo "- \`$name\`"; done
+            echo
+            echo 'Add them under Settings, Secrets and variables, Actions. Until then this'
+            echo 'workflow reports green and writes nothing, rather than failing every morning.'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  ceiling:
+    needs: configured
+    if: github.ref == 'refs/heads/main' && needs.configured.outputs.ready == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -54,8 +90,8 @@ jobs:
           node scripts/commit-to-main.mjs --message "chore(autowriter): record the spend ceiling notice" --path "$NOTICE_LEDGER"
 
   write:
-    needs: ceiling
-    if: github.ref == 'refs/heads/main' && needs.ceiling.outputs.stopped != 'true'
+    needs: [configured, ceiling]
+    if: github.ref == 'refs/heads/main' && needs.configured.outputs.ready == 'true' && needs.ceiling.outputs.stopped != 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
