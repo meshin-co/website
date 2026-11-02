@@ -109,6 +109,15 @@ function ratesOf(records) {
     );
 }
 
+const missingRecordSentence = ({ slug, generation, verdict }) =>
+  `${slug}: its ledger records a generation of ${generation.costUsd} USD (verdict: ${verdict.state}) but no generation record names this ledger, so no entry is counted for it`;
+
+const discardedSentence = ({ slug, generation, verdict }) =>
+  `${slug}: a person discarded this attempt on ${verdict.decidedAt.slice(0, 10)} and its generation record went with it, so no entry is counted for it and its cost cannot be checked against a record; its ledger records ${generation.costUsd} USD for the generation, and the monthly spend ceiling counts that cost`;
+
+const unrecordedSentence = (ledger) =>
+  ledger.verdict.state === 'discarded' ? discardedSentence(ledger) : missingRecordSentence(ledger);
+
 function ledgerSentences({ ledgers, records }) {
   const ledgerBySlug = new Map(ledgers.map((ledger) => [ledger.slug, ledger]));
   const recordsByLedger = Map.groupBy(records, ({ ledger }) => stemOf(ledger));
@@ -129,10 +138,7 @@ function ledgerSentences({ ledgers, records }) {
         microOf(ledger.generation?.costUsd ?? 0) > 0 &&
         ledger.verdict.state !== 'stopped'
     )
-    .map(
-      (ledger) =>
-        `${ledger.slug}: its ledger records a generation of ${ledger.generation.costUsd} USD (verdict: ${ledger.verdict.state}) but no generation record names this ledger, so no entry is counted for it`
-    );
+    .map(unrecordedSentence);
   return [...checked, ...unrecorded].sort();
 }
 

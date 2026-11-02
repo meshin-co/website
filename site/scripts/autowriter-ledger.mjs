@@ -18,7 +18,7 @@ export const CHANNELS = ['issue', 'slack', 'digest'];
 
 const LEDGER_SCHEMA = readSchema('autowriter-ledger.schema.json');
 export const REFUSAL_REASONS = LEDGER_SCHEMA.$defs.refusal.properties.reason.enum;
-const DECIDED_WITH_REASON = ['escalated', 'stopped'];
+const DECIDED_WITH_REASON = ['escalated', 'stopped', 'discarded'];
 const SPEND_TOLERANCE = 1e-6;
 const MAX_SHOWN = 5;
 

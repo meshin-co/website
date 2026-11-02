@@ -29,8 +29,9 @@ dependency, so the job needs no `npm ci` while it holds a token that can merge.
   content gate, or a failure in setup) or `no-convergence` (3 attempts spent, or a chain older than 36
   hours). Each opens one issue; `no-convergence` also posts to Slack, the rest wait for the digest.
 - **blocked-by-human:** closed, draft, label `autowriter-hold`, a branch that is not `autowriter/<slug>`
-  from this repository, or any commit not made by the bot. The runner writes a summary and nothing else.
-- **done:** merged, or the ledger already says `escalated` or `stopped`, so nothing is raised twice.
+  from this repository, or any commit not made by the bot. The runner writes a summary and nothing else; a pull request
+  closed on purpose is recorded by hand, as `report-what-the-writer-spends.md` says.
+- **done:** merged, or the ledger already says `escalated`, `stopped` or `discarded`, so nothing is raised twice.
 
 The exact order is in `scripts/pr-classify.mjs`; each rule has a test in `scripts/pr-classify.test.mjs`.
 
