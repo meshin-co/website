@@ -110,12 +110,24 @@
     "loop": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["attemptCap", "quarantineHours", "monthlySpendCeilingUsd", "claimLifetimeDays", "holdLabel"],
+      "required": [
+        "attemptCap",
+        "tickMinutes",
+        "quarantineHours",
+        "monthlySpendCeilingUsd",
+        "claimLifetimeDays",
+        "holdLabel"
+      ],
       "properties": {
         "attemptCap": {
           "type": "integer",
           "minimum": 1,
           "description": "Most repair attempts one article gets before the loop escalates."
+        },
+        "tickMinutes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Whole minutes the watcher waits between looks at a pull request. It is the wait timer of the autowriter-tick environment, so no runner is held open while it waits."
         },
         "quarantineHours": {
           "type": "integer",
