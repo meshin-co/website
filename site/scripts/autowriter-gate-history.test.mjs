@@ -13,7 +13,7 @@ import {
   RECORD_PATH,
   asJson,
   entryText,
-  realBandFiles,
+  bandSceneFiles,
   recordWith,
 } from './fixtures/record-rules-scene.mjs';
 
@@ -65,7 +65,7 @@ function inTempRepo(check) {
       'site/src/config.yaml': 'site:\n  name: meshin.co\n',
       'docs/SEMANTIC-CORE.md': inputs().core,
       '.github/workflows/ci.yml': inputs().workflow,
-      ...realBandFiles(),
+      ...bandSceneFiles(),
     })) {
       mkdirSync(dirname(join(root, path)), { recursive: true });
       writeFileSync(join(root, path), text);
@@ -90,7 +90,7 @@ const gate = (root) => gateFrom(SITE, root);
 const skippedLines = (run) => run.stdout.split('\n').filter((line) => line.startsWith(SKIPPED));
 
 const pipelineWrites = (root, extra = {}) => {
-  const band = JSON.parse(realBandFiles()[BAND_PATH]);
+  const band = JSON.parse(bandSceneFiles()[BAND_PATH]);
   const write = { [RECORD_PATH]: asJson(recordWith({ band })), [ENTRY_PATH]: entryText(), ...extra };
   const message = `feat(autowriter): write zz-specimen\n\nProvenance: ${RECORD_PATH}`;
   return commitAs(root, BOT, { write, message });

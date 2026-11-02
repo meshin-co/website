@@ -74,6 +74,12 @@ const addCorpusEntry = (text) => {
   return asJson(record);
 };
 
+const driftDistribution = (text) => {
+  const record = JSON.parse(text);
+  record.distribution.article.pooled.shareBelowThreshold += 0.01;
+  return asJson(record);
+};
+
 export const recordSpecimens = ({ addUntrackedFile, editFile }) => ({
   autowriterGenerationOffSchema: {
     gate: GATE,
@@ -104,6 +110,11 @@ export const recordSpecimens = ({ addUntrackedFile, editFile }) => ({
     gate: GATE,
     token: 'record-bands-stale audits/sentence-band.json',
     plant: (copySite) => editFile(join(copySite, BAND_PATH), bumpBandLimit),
+  },
+  autowriterBandRecordDistributionDrifted: {
+    gate: GATE,
+    token: 'record-distribution-stale audits/sentence-band.json',
+    plant: (copySite) => editFile(join(copySite, BAND_PATH), driftDistribution),
   },
   autowriterBandRecordCorpusDrifted: {
     gate: GATE,

@@ -17,7 +17,7 @@ import {
   SLUG,
   asJson,
   entryText,
-  realBandFiles,
+  bandSceneFiles,
   recordWith,
 } from './fixtures/record-rules-scene.mjs';
 import { GENERATION_DIR } from './generation-record.mjs';
@@ -230,11 +230,11 @@ test('a band record that holds no band for the format of the entry leaves the re
 });
 
 test('the band record that matches a fresh measurement draws no finding', (t) => {
-  assert.deepEqual(bandRecordFindings(repoWith(t, realBandFiles())), []);
+  assert.deepEqual(bandRecordFindings(repoWith(t, bandSceneFiles())), []);
 });
 
 test('a bumped limit in the band record is a stale finding on that file, with the command that repairs it', (t) => {
-  const files = realBandFiles();
+  const files = bandSceneFiles();
   const record = JSON.parse(files[BAND_FILE]);
   record.bands.article.medianFloor += 1;
   const found = bandRecordFindings(repoWith(t, { ...files, [BAND_FILE]: asJson(record) }));
@@ -244,15 +244,15 @@ test('a bumped limit in the band record is a stale finding on that file, with th
 });
 
 test('a missing band record is a finding', (t) => {
-  const { [BAND_FILE]: gone, ...files } = realBandFiles();
+  const { [BAND_FILE]: gone, ...files } = bandSceneFiles();
   assert.ok(gone);
   const found = bandRecordFindings(repoWith(t, files));
   assert.deepEqual(rulesOf(found), ['record-missing']);
 });
 
 test('a band record that is not JSON, or a repository with no corpus, is a finding and not a crash', (t) => {
-  const unreadable = bandRecordFindings(repoWith(t, { ...realBandFiles(), [BAND_FILE]: '{ nope' }));
+  const unreadable = bandRecordFindings(repoWith(t, { ...bandSceneFiles(), [BAND_FILE]: '{ nope' }));
   assert.deepEqual(rulesOf(unreadable), ['band-record-unmeasurable']);
-  const empty = bandRecordFindings(repoWith(t, { [BAND_FILE]: realBandFiles()[BAND_FILE] }));
+  const empty = bandRecordFindings(repoWith(t, { [BAND_FILE]: bandSceneFiles()[BAND_FILE] }));
   assert.deepEqual(rulesOf(empty), ['band-record-unmeasurable']);
 });

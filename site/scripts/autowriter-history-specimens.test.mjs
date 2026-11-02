@@ -10,7 +10,7 @@ import { historySpecimens } from './autowriter-history-specimens.mjs';
 import { DISPOSITION_DIRECTORY, sealSignature } from './autowriter-refusals.mjs';
 import { autowriterSpecimens } from './autowriter-specimens.mjs';
 import { BOT, HUMAN, commitAs, gitIn, initRepo, removeRepos, shallowClone } from './fixtures/history-repo.mjs';
-import { realBandFiles } from './fixtures/record-rules-scene.mjs';
+import { bandSceneFiles } from './fixtures/record-rules-scene.mjs';
 import { generationFile } from './generation-record.mjs';
 import { FAMILIES, manifestFamilies } from './mutation-smoke.mjs';
 import { SPECIMENS, flatten, proveWithSpecimen } from './mutation-specimens.mjs';
@@ -70,7 +70,7 @@ const FILES = {
   'site/src/config.yaml': 'site:\n  name: meshin.co\n',
   'docs/SEMANTIC-CORE.md': readFileSync(join(REPO, 'docs/SEMANTIC-CORE.md'), 'utf8'),
   '.github/workflows/ci.yml': readFileSync(join(REPO, '.github/workflows/ci.yml'), 'utf8'),
-  ...realBandFiles(),
+  ...bandSceneFiles(),
   [DISPOSITIONS]: `${JSON.stringify(dispositions, null, 2)}\n`,
 };
 
