@@ -1,0 +1,112 @@
+{
+  "source": {
+    "note": "PR 68 head 5709cadb pushed by regen-baselines with the default token: one pull_request run, zero jobs, zero check runs",
+    "capturedAt": "2026-11-02",
+    "commands": [
+      "gh api repos/meshin-co/website/pulls/68",
+      "gh api repos/meshin-co/website/pulls/68/commits?per_page=100",
+      "gh api repos/meshin-co/website/commits/5709cadb2201f76a61ff486bba19a9c822ebb322/check-runs?per_page=100",
+      "gh api repos/meshin-co/website/actions/runs?head_sha=5709cadb2201f76a61ff486bba19a9c822ebb322&per_page=100",
+      "gh api repos/meshin-co/website/actions/runs/41194290941/jobs?per_page=100&filter=latest"
+    ]
+  },
+  "pullRequest": {
+    "number": 68,
+    "state": "closed",
+    "merged": true,
+    "draft": false,
+    "title": "Make the site do the job it was built for",
+    "created_at": "2026-10-31T10:30:59Z",
+    "updated_at": "2026-10-31T11:02:07Z",
+    "merged_at": "2026-10-31T11:02:00Z",
+    "head": {
+      "ref": "feat/18-buyer-journey",
+      "sha": "5709cadb2201f76a61ff486bba19a9c822ebb322",
+      "repo": {
+        "full_name": "meshin-co/website"
+      }
+    },
+    "base": {
+      "ref": "main",
+      "repo": {
+        "full_name": "meshin-co/website"
+      }
+    },
+    "labels": []
+  },
+  "commits": [
+    {
+      "sha": "73f5d5141337ff90d32f58cbf6b14e678176d5de",
+      "commit": {
+        "author": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-10-24T23:05:13Z"
+        },
+        "committer": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-10-24T23:05:13Z"
+        }
+      }
+    },
+    {
+      "sha": "30b1d04ca6c02e8eff431d88e2b55a3ebaa94be0",
+      "commit": {
+        "author": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-10-31T10:30:48Z"
+        },
+        "committer": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-10-31T10:30:48Z"
+        }
+      }
+    },
+    {
+      "sha": "5709cadb2201f76a61ff486bba19a9c822ebb322",
+      "commit": {
+        "author": {
+          "name": "baseline-bot",
+          "email": "baseline-bot@meshin.co",
+          "date": "2026-10-31T10:49:05Z"
+        },
+        "committer": {
+          "name": "baseline-bot",
+          "email": "baseline-bot@meshin.co",
+          "date": "2026-10-31T10:49:05Z"
+        }
+      }
+    }
+  ],
+  "checkRuns": {
+    "total_count": 0,
+    "check_runs": []
+  },
+  "runs": {
+    "total_count": 1,
+    "workflow_runs": [
+      {
+        "id": 41194290941,
+        "name": "ci",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_attempt": 1,
+        "head_sha": "5709cadb2201f76a61ff486bba19a9c822ebb322",
+        "head_branch": "feat/18-buyer-journey",
+        "path": ".github/workflows/ci.yml",
+        "check_suite_id": 111664457010,
+        "created_at": "2026-10-31T10:49:13Z",
+        "run_started_at": "2026-10-31T10:49:13Z",
+        "updated_at": "2026-10-31T10:52:37Z"
+      }
+    ]
+  },
+  "jobs": {
+    "total_count": 0,
+    "jobs": []
+  }
+}

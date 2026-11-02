@@ -1,0 +1,55 @@
+name: Watch PR
+
+run-name: Watch pull request #${{ inputs.pr }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: Number of the autowriter pull request to judge.
+        required: true
+      observed:
+        description: What the previous run of this workflow saw, passed on by that run. Leave it empty when starting a chain by hand.
+        required: false
+        default: ''
+
+concurrency:
+  group: watch-pr-${{ inputs.pr }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    working-directory: site
+
+jobs:
+  watch:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: autowriter-tick
+    timeout-minutes: 5
+    permissions:
+      # checkout of main, and the ledger file read from the pull request branch
+      contents: read
+      # the pull request, its commits, its labels and whether it is a draft
+      pull-requests: read
+      # the check runs of the head commit
+      checks: read
+      # the pull_request run of ci.yml and its jobs
+      actions: read
+      # the escalation issue; every other write is made with the AUTOWRITER_PAT secret
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: site/.nvmrc
+
+      - name: judge the pull request and act on the verdict, with no install because this job holds a merge-capable token
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          AUTOWRITER_PAT: ${{ secrets.AUTOWRITER_PAT }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          PULL_REQUEST: ${{ inputs.pr }}
+          OBSERVED: ${{ inputs.observed }}
+        run: npm run watch:pr -- --pr "$PULL_REQUEST" --observed "$OBSERVED"

@@ -1,0 +1,218 @@
+{
+  "source": {
+    "note": "PR 44 head 9fd4138c pushed by regen-baselines with the default token: attempt 1 of the pull_request run concluded action_required with zero jobs. checkRuns is emptied by hand: the 11 check runs the API lists today were created by the owner re-running the run as attempt 2, and none existed at the time of attempt 1",
+    "capturedAt": "2026-11-02",
+    "commands": [
+      "gh api repos/meshin-co/website/pulls/44",
+      "gh api repos/meshin-co/website/pulls/44/commits?per_page=100",
+      "gh api repos/meshin-co/website/commits/9fd4138c4992b7bae8ef8026ff3fb03d63076804/check-runs?per_page=100",
+      "gh api repos/meshin-co/website/actions/runs?head_sha=9fd4138c4992b7bae8ef8026ff3fb03d63076804&per_page=100",
+      "gh api repos/meshin-co/website/actions/runs/39041810354/attempts/1",
+      "gh api repos/meshin-co/website/actions/runs/39041810354/attempts/1/jobs?per_page=100"
+    ]
+  },
+  "pullRequest": {
+    "number": 44,
+    "state": "closed",
+    "merged": true,
+    "draft": false,
+    "title": "Change 14: stop publishing absence, scale the llms corpus, show the order",
+    "created_at": "2026-10-17T13:06:39Z",
+    "updated_at": "2026-10-17T15:07:47Z",
+    "merged_at": "2026-10-17T15:07:40Z",
+    "head": {
+      "ref": "feat/14-visibility-repairs",
+      "sha": "9fd4138c4992b7bae8ef8026ff3fb03d63076804",
+      "repo": {
+        "full_name": "meshin-co/website"
+      }
+    },
+    "base": {
+      "ref": "main",
+      "repo": {
+        "full_name": "meshin-co/website"
+      }
+    },
+    "labels": []
+  },
+  "commits": [
+    {
+      "sha": "1f13a2ae3ad36c52553b6f46f59faeecd9103ca7",
+      "commit": {
+        "author": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-10-17T12:33:47Z"
+        },
+        "committer": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-10-17T12:33:47Z"
+        }
+      }
+    },
+    {
+      "sha": "e7157b9faad8b85f2ffb8a84c0048374580140b0",
+      "commit": {
+        "author": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-10-17T12:55:39Z"
+        },
+        "committer": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-10-17T12:55:39Z"
+        }
+      }
+    },
+    {
+      "sha": "e0c4eefa2f9119f992b1ffcb69e16e791a42da61",
+      "commit": {
+        "author": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-10-17T13:06:08Z"
+        },
+        "committer": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-10-17T13:06:08Z"
+        }
+      }
+    },
+    {
+      "sha": "135f1f2bbde5e1c7daa22a44d5a6ce03fe6db3d1",
+      "commit": {
+        "author": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-10-17T13:33:12Z"
+        },
+        "committer": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-10-17T13:33:12Z"
+        }
+      }
+    },
+    {
+      "sha": "e80ab0a5a9bc0e5ad956d9b86aa28908fc4fb517",
+      "commit": {
+        "author": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-10-17T13:52:54Z"
+        },
+        "committer": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-10-17T13:52:54Z"
+        }
+      }
+    },
+    {
+      "sha": "05616d48451fbdf8123530f040cc9496d7726313",
+      "commit": {
+        "author": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-10-17T14:07:26Z"
+        },
+        "committer": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-10-17T14:07:26Z"
+        }
+      }
+    },
+    {
+      "sha": "a372093080a14e68e08fb67bd0d6230c51a2aa4f",
+      "commit": {
+        "author": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-10-17T14:09:28Z"
+        },
+        "committer": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-10-17T14:09:28Z"
+        }
+      }
+    },
+    {
+      "sha": "ab699cc5dd423ffd52ccf0bcb0a3625fd1978099",
+      "commit": {
+        "author": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-10-17T14:15:51Z"
+        },
+        "committer": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-10-17T14:15:51Z"
+        }
+      }
+    },
+    {
+      "sha": "1a5d5e4f7192d06d39593b075f535daa1fd0996b",
+      "commit": {
+        "author": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-10-17T14:29:14Z"
+        },
+        "committer": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-10-17T14:29:14Z"
+        }
+      }
+    },
+    {
+      "sha": "9fd4138c4992b7bae8ef8026ff3fb03d63076804",
+      "commit": {
+        "author": {
+          "name": "baseline-bot",
+          "email": "baseline-bot@meshin.co",
+          "date": "2026-10-17T14:41:07Z"
+        },
+        "committer": {
+          "name": "baseline-bot",
+          "email": "baseline-bot@meshin.co",
+          "date": "2026-10-17T14:41:07Z"
+        }
+      }
+    }
+  ],
+  "checkRuns": {
+    "total_count": 0,
+    "check_runs": []
+  },
+  "runs": {
+    "total_count": 1,
+    "workflow_runs": [
+      {
+        "id": 39041810354,
+        "name": "ci",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "action_required",
+        "run_attempt": 1,
+        "head_sha": "9fd4138c4992b7bae8ef8026ff3fb03d63076804",
+        "head_branch": "feat/14-visibility-repairs",
+        "path": ".github/workflows/ci.yml",
+        "check_suite_id": 105805577267,
+        "created_at": "2026-10-17T14:41:18Z",
+        "run_started_at": "2026-10-17T14:41:18Z",
+        "updated_at": "2026-10-17T14:41:18Z"
+      }
+    ]
+  },
+  "jobs": {
+    "total_count": 0,
+    "jobs": []
+  }
+}

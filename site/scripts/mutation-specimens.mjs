@@ -5,6 +5,7 @@ import { dirname, join } from 'node:path';
 
 import { brandFromDisk } from '../src/utils/brand.mjs';
 import { BOOKING_URL } from '../src/utils/booking.mjs';
+import { autowriterSpecimens } from './autowriter-specimens.mjs';
 import { evidenceSpecimens } from './evidence-specimens.mjs';
 import { REGISTERS_BEGIN } from './registers.mjs';
 import { SPEC_SPECIMENS } from './spec-specimens.mjs';
@@ -569,6 +570,7 @@ export const SPECIMENS = {
       };
     },
   },
+  ...autowriterSpecimens({ addUntrackedFile, editFile }),
   ...evidenceSpecimens({ addUntrackedFile }),
   ...SPEC_SPECIMENS,
 };

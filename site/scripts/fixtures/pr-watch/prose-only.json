@@ -1,0 +1,629 @@
+{
+  "source": {
+    "note": "PR 73, a prose-only pull request: only changes and types-and-units ran, every other job reports skipped",
+    "capturedAt": "2026-11-02",
+    "commands": [
+      "gh api repos/meshin-co/website/pulls/73",
+      "gh api repos/meshin-co/website/pulls/73/commits?per_page=100",
+      "gh api repos/meshin-co/website/commits/7e4bd4210e531587e97b4a10b70608bc9173fd7a/check-runs?per_page=100",
+      "gh api repos/meshin-co/website/actions/runs?head_sha=7e4bd4210e531587e97b4a10b70608bc9173fd7a&per_page=100",
+      "gh api repos/meshin-co/website/actions/runs/41362063987/jobs?per_page=100&filter=latest"
+    ]
+  },
+  "pullRequest": {
+    "number": 73,
+    "state": "closed",
+    "merged": true,
+    "draft": false,
+    "title": "Archive the search-demand change",
+    "created_at": "2026-11-01T23:25:47Z",
+    "updated_at": "2026-11-01T23:28:31Z",
+    "merged_at": "2026-11-01T23:28:31Z",
+    "head": {
+      "ref": "chore/archive-19",
+      "sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+      "repo": {
+        "full_name": "meshin-co/website"
+      }
+    },
+    "base": {
+      "ref": "main",
+      "repo": {
+        "full_name": "meshin-co/website"
+      }
+    },
+    "labels": []
+  },
+  "commits": [
+    {
+      "sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+      "commit": {
+        "author": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-11-01T23:25:38Z"
+        },
+        "committer": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-11-01T23:25:38Z"
+        }
+      }
+    }
+  ],
+  "checkRuns": {
+    "total_count": 18,
+    "check_runs": [
+      {
+        "id": 125014886534,
+        "name": "cancel-on-failure",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:28:06Z",
+        "completed_at": "2026-11-01T23:28:06Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/41362063987/job/125014886534",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 112095807780
+        }
+      },
+      {
+        "id": 125014886372,
+        "name": "deploy-preview",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:28:06Z",
+        "completed_at": "2026-11-01T23:28:06Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/41362063987/job/125014886372",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 112095807780
+        }
+      },
+      {
+        "id": 125014886235,
+        "name": "guard-mutations",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:28:06Z",
+        "completed_at": "2026-11-01T23:28:06Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/41362063987/job/125014886235",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 112095807780
+        }
+      },
+      {
+        "id": 125014886145,
+        "name": "cheap-gates",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:28:06Z",
+        "completed_at": "2026-11-01T23:28:06Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/41362063987/job/125014886145",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 112095807780
+        }
+      },
+      {
+        "id": 125014885897,
+        "name": "visual-and-axe",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:28:06Z",
+        "completed_at": "2026-11-01T23:28:06Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/41362063987/job/125014885897",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 112095807780
+        }
+      },
+      {
+        "id": 125014749923,
+        "name": "deploy-preview",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:27:32Z",
+        "completed_at": "2026-11-01T23:27:32Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/41362056107/job/125014749923",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 112095787147
+        }
+      },
+      {
+        "id": 125014749421,
+        "name": "cancel-on-failure",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:27:32Z",
+        "completed_at": "2026-11-01T23:27:32Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/41362056107/job/125014749421",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 112095787147
+        }
+      },
+      {
+        "id": 125014749364,
+        "name": "guard-mutations",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:27:32Z",
+        "completed_at": "2026-11-01T23:27:31Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/41362056107/job/125014749364",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 112095787147
+        }
+      },
+      {
+        "id": 125014749058,
+        "name": "cheap-gates",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:27:32Z",
+        "completed_at": "2026-11-01T23:27:31Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/41362056107/job/125014749058",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 112095787147
+        }
+      },
+      {
+        "id": 125014748930,
+        "name": "visual-and-axe",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:27:32Z",
+        "completed_at": "2026-11-01T23:27:31Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/41362056107/job/125014748930",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 112095787147
+        }
+      },
+      {
+        "id": 125014398211,
+        "name": "build",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:26:05Z",
+        "completed_at": "2026-11-01T23:26:04Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/41362063987/job/125014398211",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 112095807780
+        }
+      },
+      {
+        "id": 125014384362,
+        "name": "build",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:26:01Z",
+        "completed_at": "2026-11-01T23:26:01Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/41362056107/job/125014384362",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 112095787147
+        }
+      },
+      {
+        "id": 125014344257,
+        "name": "regen-baselines",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:25:51Z",
+        "completed_at": "2026-11-01T23:25:51Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/41362063987/job/125014344257",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 112095807780
+        }
+      },
+      {
+        "id": 125014343372,
+        "name": "types-and-units",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:25:54Z",
+        "completed_at": "2026-11-01T23:28:05Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/41362063987/job/125014343372",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 112095807780
+        }
+      },
+      {
+        "id": 125014343092,
+        "name": "changes",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:25:54Z",
+        "completed_at": "2026-11-01T23:26:04Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/41362063987/job/125014343092",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 112095807780
+        }
+      },
+      {
+        "id": 125014319109,
+        "name": "regen-baselines",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:25:45Z",
+        "completed_at": "2026-11-01T23:25:45Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/41362056107/job/125014319109",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 112095787147
+        }
+      },
+      {
+        "id": 125014318299,
+        "name": "types-and-units",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:25:48Z",
+        "completed_at": "2026-11-01T23:27:31Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/41362056107/job/125014318299",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 112095787147
+        }
+      },
+      {
+        "id": 125014318078,
+        "name": "changes",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:25:47Z",
+        "completed_at": "2026-11-01T23:26:01Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/41362056107/job/125014318078",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 112095787147
+        }
+      }
+    ]
+  },
+  "runs": {
+    "total_count": 2,
+    "workflow_runs": [
+      {
+        "id": 41362063987,
+        "name": "ci",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "success",
+        "run_attempt": 1,
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "head_branch": "chore/archive-19",
+        "path": ".github/workflows/ci.yml",
+        "check_suite_id": 112095807780,
+        "created_at": "2026-11-01T23:25:51Z",
+        "run_started_at": "2026-11-01T23:25:51Z",
+        "updated_at": "2026-11-01T23:28:06Z"
+      },
+      {
+        "id": 41362056107,
+        "name": "ci",
+        "event": "push",
+        "status": "completed",
+        "conclusion": "success",
+        "run_attempt": 1,
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "head_branch": "chore/archive-19",
+        "path": ".github/workflows/ci.yml",
+        "check_suite_id": 112095787147,
+        "created_at": "2026-11-01T23:25:44Z",
+        "run_started_at": "2026-11-01T23:25:44Z",
+        "updated_at": "2026-11-01T23:27:32Z"
+      }
+    ]
+  },
+  "jobs": {
+    "total_count": 9,
+    "jobs": [
+      {
+        "id": 125014343092,
+        "run_id": 41362063987,
+        "run_attempt": 1,
+        "name": "changes",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:25:54Z",
+        "completed_at": "2026-11-01T23:26:04Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "classify the diff, so prose cannot spend a Lighthouse matrix",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          }
+        ]
+      },
+      {
+        "id": 125014343372,
+        "run_id": 41362063987,
+        "run_attempt": 1,
+        "name": "types-and-units",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:25:54Z",
+        "completed_at": "2026-11-01T23:28:05Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Run npm ci",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "fetch main, the base the spec gate falls back to on a new branch",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Run npm run check",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Run npm test",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          },
+          {
+            "name": "Run npm run gate:skills",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "Run npm run gate:plan",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Run npm run gate:docs",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10
+          },
+          {
+            "name": "Run npm run gate:evidence",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11
+          },
+          {
+            "name": "Run npm run gate:demand",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12
+          },
+          {
+            "name": "Run npm run gate:spec",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13
+          },
+          {
+            "name": "Run npm run gate:brand",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 14
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 27
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 28
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 29
+          }
+        ]
+      },
+      {
+        "id": 125014344257,
+        "run_id": 41362063987,
+        "run_attempt": 1,
+        "name": "regen-baselines",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:25:51Z",
+        "completed_at": "2026-11-01T23:25:51Z",
+        "steps": []
+      },
+      {
+        "id": 125014398211,
+        "run_id": 41362063987,
+        "run_attempt": 1,
+        "name": "build",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:26:05Z",
+        "completed_at": "2026-11-01T23:26:04Z",
+        "steps": []
+      },
+      {
+        "id": 125014885897,
+        "run_id": 41362063987,
+        "run_attempt": 1,
+        "name": "visual-and-axe",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:28:06Z",
+        "completed_at": "2026-11-01T23:28:06Z",
+        "steps": []
+      },
+      {
+        "id": 125014886145,
+        "run_id": 41362063987,
+        "run_attempt": 1,
+        "name": "cheap-gates",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:28:06Z",
+        "completed_at": "2026-11-01T23:28:06Z",
+        "steps": []
+      },
+      {
+        "id": 125014886235,
+        "run_id": 41362063987,
+        "run_attempt": 1,
+        "name": "guard-mutations",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:28:06Z",
+        "completed_at": "2026-11-01T23:28:06Z",
+        "steps": []
+      },
+      {
+        "id": 125014886372,
+        "run_id": 41362063987,
+        "run_attempt": 1,
+        "name": "deploy-preview",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:28:06Z",
+        "completed_at": "2026-11-01T23:28:06Z",
+        "steps": []
+      },
+      {
+        "id": 125014886534,
+        "run_id": 41362063987,
+        "run_attempt": 1,
+        "name": "cancel-on-failure",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "7e4bd4210e531587e97b4a10b70608bc9173fd7a",
+        "started_at": "2026-11-01T23:28:06Z",
+        "completed_at": "2026-11-01T23:28:06Z",
+        "steps": []
+      }
+    ]
+  }
+}

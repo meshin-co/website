@@ -33,9 +33,11 @@
     "deploy:check": "node --env-file-if-exists=.env scripts/run-deploy-check.mjs",
     "deploy:preview": "node --env-file-if-exists=.env scripts/run-deploy.mjs --preview",
     "dev": "astro dev",
+    "escalate": "node scripts/escalate.mjs",
     "fix": "npm run fix:eslint && npm run fix:prettier",
     "fix:eslint": "eslint --fix .",
     "fix:prettier": "prettier -w .",
+    "gate:autowriter": "node scripts/autowriter-gate.mjs ..",
     "gate:brand": "node scripts/brand-gate.mjs",
     "gate:content": "node scripts/content-gate.mjs dist",
     "gate:demand": "node scripts/search-demand-gate.mjs ..",
@@ -67,7 +69,8 @@
     "smoke:prod": "node scripts/run-smoke-prod.mjs",
     "start": "astro dev",
     "test": "node --test \"scripts/*.test.mjs\" \"src/utils/*.test.mjs\" \"src/data/*.test.mjs\"",
-    "test:smoke": "node scripts/mutation-smoke.mjs"
+    "test:smoke": "node scripts/mutation-smoke.mjs",
+    "watch:pr": "node scripts/pr-watch.mjs"
   },
   "dependencies": {
     "@astro-community/astro-embed-twitter": "^0.5.11",

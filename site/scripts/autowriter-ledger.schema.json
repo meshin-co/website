@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Autowriter attempt ledger",
+  "description": "One file per generated article at audits/autowriter/<slug>.json. The shape is checked here; the rules that compare fields with each other (attempt numbers, spend totals, verdict against escalations, the attempt cap, the file name) are checked by validateLedger in autowriter-ledger.mjs.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "slug", "runId", "pullRequest", "attempts", "spend", "verdict", "escalations"],
+  "properties": {
+    "schema": { "const": 1 },
+    "slug": { "$ref": "#/$defs/slug" },
+    "runId": { "$ref": "#/$defs/text" },
+    "pullRequest": { "type": ["integer", "null"], "minimum": 1 },
+    "attempts": { "type": "array", "items": { "$ref": "#/$defs/attempt" } },
+    "spend": { "$ref": "#/$defs/spend" },
+    "verdict": { "$ref": "#/$defs/verdict" },
+    "escalations": { "type": "array", "items": { "$ref": "#/$defs/escalation" } }
+  },
+  "$defs": {
+    "text": { "type": "string", "pattern": "\\S" },
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "instant": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?Z$"
+    },
+    "count": { "type": "integer", "minimum": 0 },
+    "amount": { "type": "number", "minimum": 0 },
+    "tokens": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input", "output"],
+      "properties": {
+        "input": { "$ref": "#/$defs/count" },
+        "output": { "$ref": "#/$defs/count" }
+      }
+    },
+    "attempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["number", "judgedCommit", "recordedAt", "failingRule", "failingPath", "tokens", "costUsd"],
+      "properties": {
+        "number": { "type": "integer", "minimum": 1 },
+        "judgedCommit": { "$ref": "#/$defs/commit" },
+        "recordedAt": { "$ref": "#/$defs/instant" },
+        "failingRule": { "anyOf": [{ "$ref": "#/$defs/text" }, { "type": "null" }] },
+        "failingPath": { "anyOf": [{ "$ref": "#/$defs/text" }, { "type": "null" }] },
+        "tokens": { "$ref": "#/$defs/tokens" },
+        "costUsd": { "$ref": "#/$defs/amount" }
+      }
+    },
+    "spend": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tokens", "costUsd"],
+      "properties": {
+        "tokens": { "$ref": "#/$defs/tokens" },
+        "costUsd": { "$ref": "#/$defs/amount" }
+      }
+    },
+    "verdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "reason", "decidedAt"],
+      "properties": {
+        "state": { "enum": ["open", "merged", "escalated", "stopped"] },
+        "reason": { "anyOf": [{ "$ref": "#/$defs/text" }, { "type": "null" }] },
+        "decidedAt": { "anyOf": [{ "$ref": "#/$defs/instant" }, { "type": "null" }] }
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["channel", "attemptedAt", "delivered", "status", "issue", "error"],
+      "properties": {
+        "channel": { "enum": ["issue", "slack", "digest"] },
+        "attemptedAt": { "$ref": "#/$defs/instant" },
+        "delivered": { "type": "boolean" },
+        "status": { "type": ["integer", "null"], "minimum": 100, "maximum": 599 },
+        "issue": { "type": ["integer", "null"], "minimum": 1 },
+        "error": { "anyOf": [{ "$ref": "#/$defs/text" }, { "type": "null" }] }
+      }
+    },
+    "escalation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "title", "detail", "raisedAt", "receipts"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^esc-[1-9][0-9]*$" },
+        "kind": { "enum": ["spend-ceiling", "credential", "no-convergence", "hard-stop", "unrepairable"] },
+        "title": { "$ref": "#/$defs/text" },
+        "detail": { "$ref": "#/$defs/text" },
+        "raisedAt": { "$ref": "#/$defs/instant" },
+        "receipts": { "type": "array", "items": { "$ref": "#/$defs/receipt" } }
+      }
+    }
+  }
+}
