@@ -17,7 +17,7 @@ const SHARE_SCALE = 10000;
 const SENTENCE_END = /[.!?]["')\u2019\u201d]*$/;
 const UNIFORM_ENTRY_MARGIN = 32;
 
-const FORMATS = Object.keys(COLLECTION_OF).sort();
+export const FORMATS = Object.keys(COLLECTION_OF).sort();
 
 const STALE_RULES = {
   schema: 'record-schema-stale',
@@ -28,9 +28,9 @@ const STALE_RULES = {
   bands: 'record-bands-stale',
 };
 
-const byFormat = (build) => Object.fromEntries(FORMATS.map((format) => [format, build(format)]));
+export const byFormat = (build) => Object.fromEntries(FORMATS.map((format) => [format, build(format)]));
 
-const formatOf = (collection) => FORMATS.find((format) => COLLECTION_OF[format] === collection);
+export const formatOf = (collection) => FORMATS.find((format) => COLLECTION_OF[format] === collection);
 
 const windowOf = (threshold) => ({ threshold, justBelowFrom: threshold - WINDOW_WIDTH });
 
@@ -40,7 +40,7 @@ const percent = (share) => `${Number((share * 100).toFixed(2))}%`;
 
 const allowedCount = (cap, total) => Math.max(1, Math.floor((Math.round(cap * SHARE_SCALE) * total) / SHARE_SCALE));
 
-const quantile = (sorted, percentile) => sorted[Math.floor((percentile * sorted.length) / 100)];
+export const quantile = (sorted, percentile) => sorted[Math.floor((percentile * sorted.length) / 100)];
 
 const spread = (values) => {
   const sorted = [...values].sort((a, b) => a - b);

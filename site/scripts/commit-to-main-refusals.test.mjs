@@ -93,6 +93,7 @@ function silent() {
 
 const spelled = [
   [BAND, 'sentence-band'],
+  ['audits/entry-length.json', 'entry-length'],
   ['audits/lighthouse-green.json', 'lighthouse-record'],
   ['audits/phase-4.7/lh-measured.json', 'lighthouse-stamp'],
   ['audits/phase-4.7/lh-mobile/lhr-0.json', 'lighthouse-report'],

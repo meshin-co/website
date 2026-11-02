@@ -25,12 +25,13 @@ an unknown field is a finding.
   named by its slug, or whose entry file is missing. With no file the gate checks none and says `0 generation records`.
 - **The claim table and sentence band of a record:** the rules of `scripts/claim-sources.mjs` and `scripts/sentence-band.mjs`, run on the entry re-measured from its committed file against `audits/sentence-band.json`, never on the record's word. Sources match by id, or by URL.
   `band-measurement-differs`: the record's measurement is not what the entry measures. The limits a record carries are only a note of what it was judged against, so a re-measure of the band never invalidates an old record. `generation-band-unjudged`: no band for the entry's format.
-- **record-missing, record-\*-stale, band-record-unmeasurable:** `audits/sentence-band.json` is absent or differs
-  from a fresh measurement; repair it with `node scripts/measure-sentence-band.mjs --write`.
+- **record-missing, record-\*-stale, band-record-unmeasurable, length-record-\*:** `audits/sentence-band.json` or `audits/entry-length.json` is absent or
+  differs from a fresh measurement; repair each with `node scripts/measure-sentence-band.mjs --write` and `node scripts/measure-entry-length.mjs --write`.
+- **body-too-short, too-few-sections, section-too-thin, length-unjudged:** the rules of `scripts/entry-length.mjs`, run on each generated entry re-measured from its committed file against `audits/entry-length.json`. `length-unjudged`: no limits for the entry's format.
 
 The numbers (12-hour quarantine, 3 attempts, $25 a month) live in `scripts/autowriter-ledger.mjs`;
 `scripts/autowriter-ledger.test.mjs` fails when locked row L62 disagrees with them. The gate itself is
-`scripts/autowriter-gate.mjs`, over `scripts/autowriter-claims.mjs`, `scripts/autowriter-records.mjs` and `scripts/autowriter-record-rules.mjs`.
+`scripts/autowriter-gate.mjs`, over `scripts/autowriter-claims.mjs`, `scripts/autowriter-records.mjs`, `scripts/autowriter-record-rules.mjs` and `scripts/autowriter-length-rules.mjs`.
 
 ## Escalate, and prove it arrived
 
@@ -70,7 +71,7 @@ and escalates, never as green.
 
 ## Add a failure mode
 
-Write the failing test, then the rule, then a planted specimen in `scripts/autowriter-specimens.mjs` (generation records and the band: `scripts/autowriter-record-specimens.mjs`) and a row in
+Write the failing test, then the rule, then a planted specimen in `scripts/autowriter-specimens.mjs` (generation records, the band and the entry length: `scripts/autowriter-record-specimens.mjs`) and a row in
 `scripts/mutation-smoke.mjs` (`extend-mutation-smoke.md`). A finding that names no file, or no cause, is not finished.
 
 ## Trap

@@ -26,7 +26,7 @@ const spreadText = (spread, show = String) =>
     .map(([key, value]) => `${key} ${show(value)}`)
     .join(', ');
 
-function generatedSlugs(repoRoot) {
+export function generatedSlugs(repoRoot) {
   const directory = join(repoRoot, GENERATION_DIR);
   if (!existsSync(directory)) return [];
   return readdirSync(directory)

@@ -58,6 +58,7 @@ const landed = (root, path, text) => {
 
 const FORBIDDEN = [
   ['audits/sentence-band.json', 'sentence-band'],
+  ['audits/entry-length.json', 'entry-length'],
   ['audits/lighthouse-green.json', 'lighthouse-record'],
   ['audits/phase-zz-specimen/lh-measured.json', 'lighthouse-stamp'],
   ['audits/phase-zz-specimen/lh-desktop/lhr-1.json', 'lighthouse-report'],

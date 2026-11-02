@@ -17,6 +17,7 @@ import {
   fileStemProblem,
   validateLedger,
 } from './autowriter-ledger.mjs';
+import { lengthFindings } from './autowriter-length-rules.mjs';
 import { bandRecordFindings, committedBand, generationReport } from './autowriter-record-rules.mjs';
 import { describeProblem } from './autowriter-records.mjs';
 import { historyReport, skippedLine } from './autowriter-refusal-rules.mjs';
@@ -114,6 +115,7 @@ export function autowriterReport({
   readEntry = () => null,
   band = null,
   bandRecord = [],
+  lengthRecord = [],
   history = { findings: [], commits: null },
 }) {
   const readClaims = claims.map(parsed);
@@ -129,6 +131,7 @@ export function autowriterReport({
     ...workflowFindings(workflow),
     ...generationReport({ records, readEntry, band }),
     ...bandRecord,
+    ...lengthRecord,
     ...history.findings,
   ];
   const counts = {
@@ -173,6 +176,7 @@ function main(repoArgument) {
     readEntry: (path) => readIfPresent(join(repo, path)),
     band: committedBand(repo),
     bandRecord: bandRecordFindings(repo),
+    lengthRecord: lengthFindings(repo),
     core: readIfPresent(join(repo, CORE_PATH)),
     workflow: readIfPresent(join(repo, WORKFLOW_PATH)),
     suffix: titleSuffix(brandFromDisk(join(repo, CONFIG_PATH))),

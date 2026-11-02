@@ -90,6 +90,7 @@ const refusedFile = (path, id) => ({
 
 export const historySpecimens = () => ({
   autowriterCommitMovesTheBand: refusedFile('audits/sentence-band.json', 'sentence-band'),
+  autowriterCommitMovesTheEntryLength: refusedFile('audits/entry-length.json', 'entry-length'),
   autowriterCommitWritesLighthouseRecord: refusedFile('audits/lighthouse-green.json', 'lighthouse-record'),
   autowriterCommitWritesLighthouseStamp: refusedFile('audits/phase-zz/lh-measured.json', 'lighthouse-stamp'),
   autowriterCommitWritesLighthouseReport: refusedFile('audits/phase-zz/lh-mobile/lhr-0.json', 'lighthouse-report'),

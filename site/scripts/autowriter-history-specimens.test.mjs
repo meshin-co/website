@@ -28,6 +28,12 @@ const REFUSED = [
     id: 'sentence-band',
   },
   {
+    name: 'autowriterCommitMovesTheEntryLength',
+    family: 'autowriter-commit-moves-the-entry-length',
+    path: 'audits/entry-length.json',
+    id: 'entry-length',
+  },
+  {
     name: 'autowriterCommitWritesLighthouseRecord',
     family: 'autowriter-commit-writes-the-lighthouse-record',
     path: 'audits/lighthouse-green.json',

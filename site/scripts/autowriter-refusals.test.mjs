@@ -18,6 +18,7 @@ import {
 import { restatedReason } from './disposition-restate.mjs';
 import { writeMeasuredStamp } from './lh-evidence.mjs';
 import { DISPOSITION_DIRECTORY as DERIVED_DIRECTORY, dispositionFor } from './route-derive.mjs';
+import { LENGTH_FILE } from './entry-length.mjs';
 import { BAND_FILE } from './sentence-band.mjs';
 
 const REPO = resolve(import.meta.dirname, '..', '..');
@@ -26,7 +27,7 @@ const whyOf = (id) => REFUSED_PATHS.find((row) => row.id === id)?.why;
 test('the list names what automation may never write, each row with one sentence that says why', () => {
   assert.deepEqual(
     REFUSED_PATHS.map(({ id }) => id),
-    ['sentence-band', 'lighthouse-record', 'lighthouse-stamp', 'lighthouse-report']
+    ['sentence-band', 'entry-length', 'lighthouse-record', 'lighthouse-stamp', 'lighthouse-report']
   );
   for (const row of REFUSED_PATHS) {
     assert.equal(typeof row.covers, 'function', row.id);
@@ -37,6 +38,7 @@ test('the list names what automation may never write, each row with one sentence
 
 const REFUSED = [
   ['audits/sentence-band.json', 'sentence-band'],
+  ['audits/entry-length.json', 'entry-length'],
   ['audits/lighthouse-green.json', 'lighthouse-record'],
   ['audits/phase-4.7/lh-measured.json', 'lighthouse-stamp'],
   ['audits/phase-zz-specimen/lh-measured.json', 'lighthouse-stamp'],
@@ -56,6 +58,8 @@ const DISGUISED = [
   ['audits//sentence-band.json', 'audits/sentence-band.json', 'sentence-band'],
   ['audits/phase-4.7/../sentence-band.json', 'audits/sentence-band.json', 'sentence-band'],
   ['audits\\sentence-band.json', 'audits/sentence-band.json', 'sentence-band'],
+  ['audits/./entry-length.json', 'audits/entry-length.json', 'entry-length'],
+  ['Audits/Entry-Length.JSON', 'Audits/Entry-Length.JSON', 'entry-length'],
   ['.\\audits\\lighthouse-green.json', 'audits/lighthouse-green.json', 'lighthouse-record'],
   ['audits/./phase-4.7/./lh-measured.json', 'audits/phase-4.7/lh-measured.json', 'lighthouse-stamp'],
   ['Audits/Sentence-Band.JSON', 'Audits/Sentence-Band.JSON', 'sentence-band'],
@@ -75,6 +79,9 @@ const ALLOWED = [
   'audits/phase-4.7/dispositions/generated-model-registry.json',
   'audits/sentence-band.json.bak',
   'audits/sentence-band.md',
+  'audits/entry-length.json.bak',
+  'audits/entry-length.md',
+  'site/audits/entry-length.json',
   'audits/measure/sentence-band.json',
   'site/audits/sentence-band.json',
   'audits/lighthouse-green.json5',
@@ -103,6 +110,8 @@ for (const path of ALLOWED) {
 
 test('the list agrees with the tools that name these files', () => {
   assert.equal(refusalFor(BAND_FILE)?.id, 'sentence-band');
+  assert.equal(refusalFor(LENGTH_FILE)?.id, 'entry-length');
+  assert.ok(existsSync(join(REPO, LENGTH_FILE)), LENGTH_FILE + ' is not where the repository keeps the length record');
   assert.ok(existsSync(join(REPO, BAND_FILE)), BAND_FILE + ' is not where the repository keeps the band');
   assert.equal(refusalFor('audits/lighthouse-green.json')?.id, 'lighthouse-record');
   assert.ok(

@@ -10,6 +10,7 @@ export const FIXED_ANCHORS = [
   file('docs/CONTENT-GATE.md', 'the content-gate rows the writer prompt quotes'),
   file('audits/routes.json', 'the list of routes the site serves, read by the writer and the route gate'),
   file('audits/search-demand.md', 'the committed Search Console demand report the selector reads'),
+  file('audits/entry-length.json', 'the measured body-length floor and target range of each written format'),
   file('audits/sentence-band.json', 'the measured sentence band of each written format'),
   file('site/banned-phrases.json', 'the phrases no page may hold, read by the content gate and the writer prompt'),
   file('site/content-facts.json', 'the numbers a page may state without a source'),

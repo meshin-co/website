@@ -10,8 +10,8 @@ calls it. Each has a test beside it. Run one with `cd site && node --test script
   person at the terminal. `refuseWhenUnattended` throws for a human-only action. `scripts/editorial-gate.mjs`
   (the seal), `scripts/lh-evidence.mjs`, `scripts/run-lh-evidence.mjs`, `scripts/run-lh-parallel.mjs` and
   `scripts/write-entry.mjs` call it.
-- `scripts/autowriter-refusals.mjs` is the one list of paths automation may never write: the sentence band
-  and the three Lighthouse records, each with the reason. It also spots a disposition seal by its
+- `scripts/autowriter-refusals.mjs` is the one list of paths automation may never write: the sentence band,
+  the entry length record and the three Lighthouse records, each with the reason. It also spots a disposition seal by its
   signature, a digest that moves while its reason and status stay. `scripts/commit-to-main.mjs` and
   `scripts/entry-commit.mjs` refuse on it.
 - `scripts/autowriter-refusal-rules.mjs` is the part of `gate:autowriter` that reads git history. A commit

@@ -41,9 +41,10 @@ test('eleven-word sentences are eleven words long and fall below the scene band'
   );
 });
 
-test('the real band files hold the record and both collections of the corpus', () => {
+test('the real band files hold both measured records and both collections of the corpus', () => {
   const paths = Object.keys(realBandFiles());
   assert.ok(paths.includes('audits/sentence-band.json'));
+  assert.ok(paths.includes('audits/entry-length.json'));
   assert.ok(paths.some((path) => path.startsWith('site/src/data/post/')));
   assert.ok(paths.some((path) => path.startsWith('site/src/data/glossary/')));
 });

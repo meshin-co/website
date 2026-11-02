@@ -21,6 +21,11 @@ export const REFUSED_PATHS = [
     covers: exactly('audits/sentence-band.json'),
   },
   {
+    id: 'entry-length',
+    why: 'The floor every generated entry is judged against, measured from entries a person wrote, so a run that can re-measure it lowers its own floor with its own output.',
+    covers: exactly('audits/entry-length.json'),
+  },
+  {
     id: 'lighthouse-record',
     why: 'The record of a green Lighthouse run, which only a person measuring on the owner machine can vouch for (L59).',
     covers: exactly('audits/lighthouse-green.json'),

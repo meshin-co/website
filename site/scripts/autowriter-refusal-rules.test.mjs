@@ -11,11 +11,13 @@ const SHA12 = '0123456789ab';
 const RECORD = generationFile('first-post');
 const SECOND_RECORD = generationFile('second-post');
 const BAND = 'audits/sentence-band.json';
+const LENGTH = 'audits/entry-length.json';
 const DISPOSITION = `${DISPOSITION_DIRECTORY}/main.json`;
 const PIPELINE_REASON = 'The text of this target changed in the run in which the unattended writer added /blog/x.';
 
 const REFUSED = [
   ['sentence-band', BAND],
+  ['entry-length', LENGTH],
   ['lighthouse-record', 'audits/lighthouse-green.json'],
   ['lighthouse-stamp', 'audits/phase-7/lh-measured.json'],
   ['lighthouse-report', 'audits/phase-7/lh-mobile/lhr-0.json'],

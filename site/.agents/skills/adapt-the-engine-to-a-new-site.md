@@ -35,7 +35,10 @@ has no default. `scripts/engine-config.mjs` loads it and checks it against
 
 - **Law and copy rules:** `AGENTS.md`, `docs/SEMANTIC-CORE.md`, `docs/CONTENT-GATE.md`. The writer prompt
   quotes them; the selector reads the concept register.
-- **Audit records:** `audits/routes.json`, `audits/search-demand.md`, `audits/sentence-band.json`.
+- **Audit records:** `audits/routes.json`, `audits/search-demand.md`, `audits/sentence-band.json`,
+  `audits/entry-length.json`. The last two are measured from the new site's own hand-written entries with
+  `node scripts/measure-sentence-band.mjs --write` and `node scripts/measure-entry-length.mjs --write`; copying
+  another site's numbers would give this site a floor it never wrote to.
 - **Word lists:** `site/banned-phrases.json`, `site/content-facts.json`, `site/controlled-words.json`.
 - **Site files:** `site/package.json`, `site/.nvmrc`, `site/src/config.yaml`, `site/src/content.config.ts`
   and the directory `site/.agents/skills`.

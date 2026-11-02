@@ -11,7 +11,7 @@ import { recordInput } from './generation-input.mjs';
 
 const REPO = fileURLToPath(new URL('../../../', import.meta.url));
 const CORPUS_DIRECTORIES = ['site/src/data/post', 'site/src/data/glossary'];
-const BAND_PATH = 'audits/sentence-band.json';
+const MEASURED_RECORDS = ['audits/sentence-band.json', 'audits/entry-length.json'];
 
 export const SLUG = 'zz-specimen';
 export const RECORD_PATH = `audits/autowriter/generations/${SLUG}.json`;
@@ -97,7 +97,7 @@ export function recordWith({ path = ENTRY_PATH, claimTable = TABLE, entry = entr
 export const asJson = (value) => `${JSON.stringify(value, null, 2)}\n`;
 
 export function realBandFiles() {
-  const files = { [BAND_PATH]: readFileSync(join(REPO, BAND_PATH), 'utf8') };
+  const files = Object.fromEntries(MEASURED_RECORDS.map((path) => [path, readFileSync(join(REPO, path), 'utf8')]));
   for (const directory of CORPUS_DIRECTORIES) {
     if (!existsSync(join(REPO, directory))) continue;
     for (const name of readdirSync(join(REPO, directory)).filter((file) => file.endsWith('.md')))
