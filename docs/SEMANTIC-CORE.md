@@ -66,7 +66,7 @@ title `{artifact name} — meshin.co` · meta: one sentence naming the artifact 
 | `/resources/handover-playbook`                     | handover playbook                     | Handover Playbook — meshin.co                     | The Handover Playbook is six fill-in tables for moving AI leadership from an outside lead to a named owner, from the test to a later check.            | Handover Playbook                     | 31    | ✓       |
 | `/resources/llm-gateway-governance-config`         | llm gateway governance config         | LLM Gateway Governance Config — meshin.co         | LLM gateway governance config: a policy schema of five keys (allowed models, redaction, rate limit, log retention and fallback), each with an example. | LLM Gateway Governance Config         | 26    | ✓       |
 
-### article (8)
+### article (9)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
@@ -75,7 +75,8 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/adoption-telemetry-measuring-if-ai-is-actually-used`        | adoption telemetry for ai tools                  | Adoption telemetry for AI tools: what a trial found — meshin.co        | Adoption telemetry for AI tools: six measures, each with a stated limit, and the 2025 METR trial that shows why self-report misleads.                 | Adoption telemetry for AI tools: what a trial found        | 42    | ✓       |
 | `/blog/ai-acceptable-use-policy-for-a-50-person-company`           | ai acceptable use policy                         | What actually belongs in an AI acceptable use policy — meshin.co       | What a working AI acceptable use policy has to decide, what it must refuse to do, and how a company of 30 to 300 people gets staff to follow it.      | What actually belongs in an AI acceptable use policy       | 31    | ✓       |
 | `/blog/evals-in-ci-for-llm-agents`                                 | evals in ci without a golden answer              | Evals in CI for LLM agents, without a golden answer — meshin.co        | How to build an eval set from production traffic, score an LLM agent without a golden answer, and fail a merge in CI when it regresses.               | Evals in CI for LLM agents, without a golden answer        | 28    | ✓       |
-| `/blog/handing-over-ai-leadership-to-an-internal-owner`            | how to hand over ai leadership to internal owner | How to hand over AI leadership to an internal owner — meshin.co        | How to hand over AI leadership in steps that end in a test: what moves, who takes the role and how to tell it worked.                                 | How to hand over AI leadership to an internal owner        | 38    | ✓       |
+| `/blog/fractional-caio-vs-full-time-caio-cost`                     | fractional caio vs full-time caio cost           | Fractional CAIO vs full-time CAIO cost — meshin.co                     | Compare fractional and full-time AI leadership by cost shape, availability, decision rights and the work your team must cover.                        | Fractional CAIO vs full-time CAIO cost                     | 27    | ✓       |
+| `/blog/handing-over-ai-leadership-to-an-internal-owner`            | how to hand over ai leadership to internal owner | How to hand over AI leadership to an internal owner — meshin.co        | How to hand over AI leadership in steps that end in a test: what moves, who takes the role and how to tell it worked.                                 | How to hand over AI leadership to an internal owner        | 39    | ✓       |
 | `/blog/how-to-build-an-ai-system-register-in-a-week`               | ai system register                               | How to build an AI system register in a week — meshin.co               | A step-by-step way to build an AI system register in a week without buying a tool, so a security reviewer gets the document they ask for first.       | How to build an AI system register in a week               | 32    | ✓       |
 | `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company` | ai operating model for mid-size company          | How to choose an AI operating model for a mid-size company — meshin.co | How to choose an operating model for AI work in a mid-size company, starting from what the law requires and what the evidence supports.               | How to choose an AI operating model for a mid-size company | 39    | ✓       |
 | `/blog/multi-agent-reference-architecture-in-production`           | multi-agent reference architecture production    | Multi-agent reference architecture in production — meshin.co           | What the sources say about multi-agent systems in production: where vendors agree, where they split, and what the research did not find.              | Multi-agent reference architecture in production           | 39    | ✓       |
@@ -243,6 +244,7 @@ Why: the primary entity query — the site must _be_ the answer, because the Fou
 Must win: `/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai`, support `/pricing`.
 Passage: "A Fractional Chief AI Officer (CAIO) gives you a named officer's accountability. No full-time salary, no hiring process, no seat that sits empty between AI decisions. That means a named officer on your customers' security reviews and your board's roadmap." (`/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai`)
 Passage: "The comparison is between different kinds of cost, not price against price: a monthly retainer fee against a full-time hire's salary, equity, recruiting and ramp time." (`/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai`)
+Passage: "Fractional CAIO vs full-time CAIO cost depends on the coverage and commitment your company needs." (`/blog/fractional-caio-vs-full-time-caio-cost`)
 Why: the honest comparison is the sales objection to overcome before any call (PRD §6 CTO persona). Public prices are deliberately withheld (L8), so the answer argues cost _shape_, not figures.
 
 **3. AI readiness assessment template for SMB**
@@ -415,7 +417,7 @@ One owning route per entity. The mention count is inbound references from other 
 | AI governance                  | `/glossary/ai-governance`                  | 34           |
 | AI impact assessment           | `/glossary/ai-impact-assessment`           | 2            |
 | AI management system           | `/glossary/ai-management-system`           | 6            |
-| AI operating model             | `/glossary/ai-operating-model`             | 13           |
+| AI operating model             | `/glossary/ai-operating-model`             | 14           |
 | AI register                    | `/glossary/ai-register`                    | 34           |
 | Conformity assessment          | `/glossary/conformity-assessment`          | 5            |
 | Data classification            | `/glossary/data-classification`            | 11           |

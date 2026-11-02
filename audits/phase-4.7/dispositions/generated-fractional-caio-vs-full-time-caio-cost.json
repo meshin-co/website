@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/fractional-caio-vs-full-time-caio-cost.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/fractional-caio-vs-full-time-caio-cost.json on 2026-11-02. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/fractional-caio-vs-full-time-caio-cost.json.",
+    "digest": "3ddc97327f53"
+  },
+  {
+    "target": "/blog/fractional-caio-vs-full-time-caio-cost",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/fractional-caio-vs-full-time-caio-cost.json on 2026-11-02. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/fractional-caio-vs-full-time-caio-cost.json.",
+    "digest": "8c90e17a78ad"
+  }
+]

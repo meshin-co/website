@@ -32,16 +32,16 @@
   {
     "target": "/blog",
     "location": "head.title",
-    "status": "verified",
-    "reason": "Re-read 2026-10-08 against dist/blog.html. Row head.title is 'AI governance writing — meshin.co': the metadata title authored in src/pages/blog/index.astro plus the site suffix. It is unchanged since the last seal and is not touched by the interview answers (COPY-CHECKLIST sections 13 to 17) or by the removal of the only.help case study. It carries the whole query 'ai governance writing' and matches the docs/SEMANTIC-CORE.md row for /blog. The meta, og and twitter descriptions are the description authored beside the title in src/pages/blog/index.astro; it opens with the title words 'AI governance writing' (checked in the built head). The H1 and the lead are rows of src/pages/blog/index.astro and are dispositioned there.",
-    "digest": "30ec1b12021e"
+    "status": "rewritten",
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/fractional-caio-vs-full-time-caio-cost (generation record audits/autowriter/generations/fractional-caio-vs-full-time-caio-cost.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "f2da5b8ae125"
   },
   {
     "target": "/blog",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/blog.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [body.p] no longer rendered: \"In METR&#39;s 2025 trial, 16 developers believed AI made them 20% faster. Tasks took 19% longer with AI allowed. METR now marks that result out of date.\"; The card excerpt is the post's description. Change 18 rewrote that description, and because the new text equals the post's description row exactly, the ledger now holds it as that row (frontmatter.description, used on this route), dispositioned at articles-telemetry.json#1; that entry also records that the new description drops the \"METR now marks that result out of date\" hedge, which the body keeps. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand.",
-    "digest": "30ec1b12021e"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/fractional-caio-vs-full-time-caio-cost (generation record audits/autowriter/generations/fractional-caio-vs-full-time-caio-cost.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "f2da5b8ae125"
   },
   {
     "target": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
@@ -66,16 +66,16 @@
   {
     "target": "/blog/category/executive",
     "location": "head.title",
-    "status": "verified",
-    "reason": "Re-read 2026-10-08 against dist/blog/category/executive.html. Row head.title is 'AI for boards — meshin.co': the category archive title (archiveTitle, or title where a category has none, in src/data/categories.mjs) plus the site suffix. It is unchanged since the last seal and is not touched by the interview answers or by the removal of the only.help case study. It matches the docs/SEMANTIC-CORE.md row for this route (query 'ai for boards'). The title and the H1 are the category title, which is the query. The meta, og and twitter descriptions equal the category description row of src/data/categories.mjs, checked in the built head. The H1, lead and body paragraphs are rows of src/data/categories.mjs and are dispositioned there.",
-    "digest": "b204e22a0c90"
+    "status": "rewritten",
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/fractional-caio-vs-full-time-caio-cost (generation record audits/autowriter/generations/fractional-caio-vs-full-time-caio-cost.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "7edb68f29813"
   },
   {
     "target": "/blog/category/executive",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-08 against dist/blog/category/executive.html. The body.p rows of this route are composed text, not authored copy: one date line and one tag line. The H1, lead and body paragraphs of this category page are rows of src/data/categories.mjs and are dispositioned there. The one card is: How to hand over AI leadership to an internal owner ('02 Oct 2026 · 12 min read · AI for boards'). Changed this pass (composed date lines): the post bodies were edited after the 2026-10-07 interview (updatedDate 2026-10-07), and reading time is words divided by 220, rounded up, so this line moved: '02 Oct 2026 · 12 min read · AI for boards' for the handover card (the last seal read 11 min; the post body went from 2,248 to 2,521 words). The tag lines are unchanged. Checked by script on 2026-10-08, for the card: the excerpt equals the post description, the datetime equals publishDate, the tag links equal the post's tags in order, the category label in each date line is that category's title, and the minutes equal the reading time computed from the post body. Status rewritten because composed date lines changed with the posts' word counts. The card text itself belongs to the posts and is dispositioned under each post file.",
-    "digest": "b204e22a0c90"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/fractional-caio-vs-full-time-caio-cost (generation record audits/autowriter/generations/fractional-caio-vs-full-time-caio-cost.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "7edb68f29813"
   },
   {
     "target": "/blog/category/governance",

@@ -1,0 +1,207 @@
+{
+  "schema": 1,
+  "slug": "fractional-caio-vs-full-time-caio-cost",
+  "runId": "41519124299-1",
+  "generatedAt": "2026-11-02T20:29:31.548Z",
+  "claim": {
+    "title": "Fractional CAIO vs full-time CAIO cost",
+    "query": "fractional caio vs full-time caio cost",
+    "prompt": {
+      "number": 2,
+      "text": "fractional CAIO vs full-time CAIO cost"
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-02",
+      "windowStart": "2026-08-02",
+      "windowEnd": "2026-10-31",
+      "table": "Buyer prompts"
+    },
+    "row": {
+      "#": "2",
+      "Prompt": "fractional CAIO vs full-time CAIO cost",
+      "Must win": "`/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai`",
+      "Impressions": "unproven",
+      "Position": "-",
+      "Carried by": "-"
+    }
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/fractional-caio-vs-full-time-caio-cost",
+    "path": "site/src/data/post/fractional-caio-vs-full-time-caio-cost.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_0bc03f205a85e84c016ae8f24385f487d297d4e5c02ecad3df",
+  "published": {
+    "callIndex": 0
+  },
+  "calls": [
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0bc03f205a85e84c016ae8f24385f487d297d4e5c02ecad3df",
+      "requestDigest": "c5bb3ca72881019b175bc62a8d07f44c2777a96da9e01f10daf42d409a315c9f",
+      "tokens": {
+        "input": 10033,
+        "output": 2543
+      },
+      "costUsd": 0.022748,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 10033,
+      "output": 2543
+    },
+    "costUsd": 0.022748
+  },
+  "ledger": "audits/autowriter/fractional-caio-vs-full-time-caio-cost.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "ad7adca14ebbc4a2448d1de2a36a58e411661597487b825bb7747134d6ef2e1e",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "72bc983451eb873a07ee7b809fc5daa7f8fd1100e7f3de1b0af8cb91573d063a"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "278a5c444344dcf3fd23ad709338e4c6ac129a7b7a3f7038f7181c4af2ab4f2f"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "163efb2493ea36f55afb196dd378cb63b6283b8a046671e5e9a5cd7d17a8aec7"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "880d68340c8a5ee3a565266b9ca5c8f6384d0734074612cf64375277839ac4c5"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "55fb255974a6113f20d148cd5666fe2a3dfd397fb73b265232b177fe18baa16c"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "472c32d945917a45c293be84bff7e19b4c6271b746569b1700d718e56e6a0fcc"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "62d5ef4ea996727c5fb798afe687252aa2112c859ddf90dd0e87f21b6d48db18"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "70ec4173e205e974cbaafaf270f1a24aa674c0aeb29feb653f7953f9b9b656b8"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "8ea40566d29d270837179ceaedfc321f1dedfd385b4f53bd97ec0ca099eebdb1"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "df07e5ca1fced82881ab08e3849da19ec0de824e4be87b2719f174f0f73f33c2"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "3fa620f62fe2299171cc0370cb65635dbb46ba65",
+    "fingerprint": "6c0a970361f6de13b19c99670baebb13c5aa0a915385fb09d954261d0cd66831"
+  },
+  "claimTable": [],
+  "band": {
+    "measuredOn": "2026-11-02",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 53,
+      "median": 13,
+      "shareBelowThreshold": 0.3208,
+      "shareJustBelow": 0.2831,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/claims/fractional-caio-vs-full-time-caio-cost.json",
+    "audits/autowriter/fractional-caio-vs-full-time-caio-cost.json",
+    "audits/autowriter/generations/fractional-caio-vs-full-time-caio-cost.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/generated-fractional-caio-vs-full-time-caio-cost.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/fractional-caio-vs-full-time-caio-cost.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}
