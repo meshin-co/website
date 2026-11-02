@@ -1,24 +1,31 @@
 # Structured Data and the Entity Graph
 
 One JSON-LD `@graph` per page, built by `site/src/utils/jsonld.mjs` and enforced by
-`site/scripts/jsonld-gate.mjs` (`npm run gate:jsonld`), which checks node types AND required
-properties per family and fails closed on an unknown route.
+`site/scripts/jsonld-gate.mjs` (`npm run gate:jsonld`).
+
+## One graph, every node identified
+
+A page ships exactly one `application/ld+json` script, written only by
+`site/src/components/common/JsonLd.astro`; a component never emits its own, so a page that
+renders `Breadcrumbs` builds `breadcrumbNode` from the same `crumbs`. Every node's `@id` is
+`${site}${path}#<role>` (`#webpage`, `#post`, `#faqpage`, `#breadcrumb`), a pure function of
+origin and route. The page node reaches the rest: `breadcrumb` on every route but `/`, and
+`hasPart` to `#faqpage` when `webPageNode` gets `faq: true`. `gate:jsonld` refuses a second
+script, a node with no `@id` or a shared one, a reference that resolves nowhere, a graph-less route
+outside `GRAPH_EXEMPT` (`/404`, `/search`, `/styleguide`) and a run that read no graph;
+`site/scripts/jsonld-specimens.mjs` plants each.
 
 ## Node and property contract
 
-Every page's `@graph` is built from `site/src/utils/jsonld.mjs`; every route's graph is
-checked by `npm run gate:jsonld` (`scripts/jsonld-gate.mjs`). The gate checks two closed,
-fail-on-unknown tables, both in that script:
+Besides that, the gate checks two closed, fail-on-unknown tables, both in that script:
 
 - `ROUTE_TYPES` — which node `@type`s a route pattern must carry. An unmatched route pattern
   fails the whole route (`matches no known jsonld route family`), not a skip.
 - `REQUIRED_PROPERTIES` — for each `@type` that can appear in `ROUTE_TYPES`, the properties a
-  node of that type must carry. A `@type` reachable from `ROUTE_TYPES` but absent from this
-  table fails closed too (`matches no known jsonld property family`) — the same fail-closed
-  discipline extended from type presence to property completeness. Only require a property
-  here if every builder call that can emit that `@type` on a real page guarantees it; a field
-  that is genuinely conditional (an empty `relatedTerms`, an optional FAQ `sources`) stays out
-  of the table rather than forcing every caller to fake it.
+  node of that type must carry; a reachable `@type` absent from the table fails closed too
+  (`matches no known jsonld property family`). Only require a property every builder call that
+  can emit that `@type` on a real page guarantees; a genuinely conditional field (an empty
+  `relatedTerms`, an optional FAQ `sources`) stays out rather than forcing callers to fake it.
 
 ### Adding a family
 
@@ -28,8 +35,8 @@ fail-on-unknown tables, both in that script:
    carries.
 4. Prove the property gate can fail: plant a fixture missing one required field and confirm
    `jsonld-gate.mjs` reports it, the way `tests/guard-mutations` does for the whole family.
-5. Unit-test the builder in `jsonld.test.mjs`, including a composed-graph test that resolves
-   every `@id` reference the new node emits (`danglingOf` helper already there).
+5. Unit-test the builder in `jsonld.test.mjs` and add the page to `PAGE_FAMILIES` in
+   `site/src/utils/jsonld-graph.test.mjs`, which checks ids, references and the breadcrumb walk.
 
 ### Entity links: `about` / `mentions`
 
@@ -51,9 +58,8 @@ They are never hand-authored guesses — each is derived from something already 
   `mentions`.
 
 Pass the full published glossary list (`{ id, term }` pairs) as the builder's `terms` option;
-omitting it (as `pricing.astro`'s per-service loop did before this) simply yields no `about`/
-`mentions`, never a fabricated one. `findGlossaryMentions` is exported from `jsonld.mjs` and
-unit-tested directly — it is the one place this matching logic lives.
+omitting it yields no `about`/`mentions`, never a fabricated one. `findGlossaryMentions`, exported
+from `jsonld.mjs` and unit-tested directly, is the one place this matching logic lives.
 
 ### `citation`, images and `mainEntityOfPage`
 

@@ -23,6 +23,7 @@ import { categoryPillars } from '~/data/categories.mjs';
 import { tagBySlug } from '~/data/tags.mjs';
 import { articleMetadata } from '~/utils/machine-links.mjs';
 import {
+  breadcrumbNode,
   faqNode,
   glossaryStub,
   imageObject,
@@ -102,6 +103,15 @@ const postForLinks = {
 const { about, mentions } = postEntityLinks(postForLinks, terms);
 const citedTermIds = [...new Set([...about, ...mentions])];
 
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Writing', path: '/blog' },
+  { name: categoryTitle, path: `/blog/category/${data.category}` },
+  { name: data.title, path: `/blog/${post.id}` },
+];
+
+const hasFaq = data.faq.length > 0;
+
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
@@ -113,7 +123,7 @@ const nodes = [
     )
   ),
   postNode(site, postForLinks, { about, mentions }),
-  ...(data.faq.length > 0 ? [faqNode(data.faq)] : []),
+  ...(hasFaq ? [faqNode(site, `/blog/${post.id}`, data.faq)] : []),
   webPageNode(
     site,
     `/blog/${post.id}`,
@@ -121,9 +131,11 @@ const nodes = [
     data.title,
     {
       image: imageObject(metadata.openGraph.images[0]),
+      faq: hasFaq,
       speakableSelectors: ['h1', '[data-answer]', '[data-gate-lead]'],
     }
   ),
+  breadcrumbNode(site, crumbs),
 ];
 ---
 
@@ -132,14 +144,7 @@ const nodes = [
   <MarkdownAlternate path={`/blog/${post.id}`} slot="head" />
   <link rel="alternate" type="application/rss+xml" title={`${SITE.name} — Writing`} href="/blog/rss.xml" slot="head" />
 
-  <Breadcrumbs
-    crumbs={[
-      { name: 'Home', path: '/' },
-      { name: 'Writing', path: '/blog' },
-      { name: categoryTitle, path: `/blog/category/${data.category}` },
-      { name: data.title, path: `/blog/${post.id}` },
-    ]}
-  />
+  <Breadcrumbs crumbs={crumbs} />
 
   <article>
     <Section

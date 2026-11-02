@@ -7,7 +7,7 @@ import CtaBlock from '~/components/site/CtaBlock.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { TAGS } from '~/data/tags.mjs';
-import { collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { breadcrumbNode, collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
@@ -23,6 +23,12 @@ const metadata = {
   description: 'The tags used across the writing, with how many articles carry each one.',
 };
 
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Writing', path: '/blog' },
+  { name: 'Tags', path: '/blog/tags' },
+];
+
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
@@ -33,19 +39,14 @@ const nodes = [
     description: metadata.description,
     items: TAGS.filter((tag) => (counts.get(tag.slug) ?? 0) > 0).map((tag) => ({ url: `/blog/tag/${tag.slug}` })),
   }),
+  breadcrumbNode(site, crumbs),
 ];
 ---
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
 
-  <Breadcrumbs
-    crumbs={[
-      { name: 'Home', path: '/' },
-      { name: 'Writing', path: '/blog' },
-      { name: 'Tags', path: '/blog/tags' },
-    ]}
-  />
+  <Breadcrumbs crumbs={crumbs} />
 
   <Section
     bordered={false}

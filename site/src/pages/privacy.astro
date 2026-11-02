@@ -4,7 +4,7 @@ import JsonLd from '~/components/common/JsonLd.astro';
 import CtaBlock from '~/components/site/CtaBlock.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { breadcrumbNode, orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
 import { staticPageDate } from '~/utils/machine-text.mjs';
 import { SITE } from 'astrowind:config';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
@@ -27,6 +27,7 @@ const nodes = [
   personNode(site),
   websiteNode(site),
   webPageNode(site, '/privacy', UPDATED, metadata.title),
+  breadcrumbNode(site, crumbs),
 ];
 
 const sections = [

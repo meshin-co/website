@@ -10,7 +10,7 @@ import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
 import Section from '~/components/site/Section.astro';
 import ServiceCard from '~/components/site/ServiceCard.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { breadcrumbNode, collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 import { isPublished } from '~/utils/feeds.mjs';
 
@@ -38,6 +38,7 @@ const nodes = [
     description: metadata.description,
     items: services.map((service) => ({ url: `/services/${service.id}` })),
   }),
+  breadcrumbNode(site, crumbs),
 ];
 ---
 

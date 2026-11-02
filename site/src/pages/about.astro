@@ -8,7 +8,7 @@ import JsonLd from '~/components/common/JsonLd.astro';
 import Section from '~/components/site/Section.astro';
 import SignalList from '~/components/site/SignalList.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { orgNode, personNode, profilePageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { breadcrumbNode, orgNode, personNode, profilePageNode, websiteNode } from '~/utils/jsonld.mjs';
 import { staticPageDate } from '~/utils/machine-text.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 import { figures } from '~/data/home';
@@ -32,6 +32,7 @@ const nodes = [
   personNode(site),
   websiteNode(site),
   profilePageNode(site, staticPageDate('/about')),
+  breadcrumbNode(site, crumbs),
 ];
 
 const principles = {

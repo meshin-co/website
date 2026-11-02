@@ -10,7 +10,7 @@ import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
 import ResourceCard from '~/components/site/ResourceCard.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { breadcrumbNode, collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 import { resourceFormat } from '~/utils/resource-card.mjs';
 
@@ -40,6 +40,7 @@ const nodes = [
     description: metadata.description,
     items: resources.map((resource) => ({ url: `/resources/${resource.id}` })),
   }),
+  breadcrumbNode(site, crumbs),
 ];
 ---
 

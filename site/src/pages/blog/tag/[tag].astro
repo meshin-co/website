@@ -12,7 +12,7 @@ import CtaBlock from '~/components/site/CtaBlock.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { TAGS, tagArchive } from '~/data/tags.mjs';
-import { collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { breadcrumbNode, collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
 import { firstPage, paginationLinks } from '~/utils/paginate.mjs';
 import { readingTime } from '~/utils/reading-time.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
@@ -44,6 +44,13 @@ const metadata = {
   description: archive.description,
 };
 
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Writing', path: '/blog' },
+  { name: 'Tags', path: '/blog/tags' },
+  { name: archive.title, path: basePath },
+];
+
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
   personNode(site),
@@ -54,20 +61,14 @@ const nodes = [
     description: metadata.description,
     items: visible.map((post) => ({ url: `/blog/${post.id}` })),
   }),
+  breadcrumbNode(site, crumbs),
 ];
 ---
 
 <Layout metadata={metadata}>
   <JsonLd nodes={nodes} slot="head" />
 
-  <Breadcrumbs
-    crumbs={[
-      { name: 'Home', path: '/' },
-      { name: 'Writing', path: '/blog' },
-      { name: 'Tags', path: '/blog/tags' },
-      { name: archive.title, path: basePath },
-    ]}
-  />
+  <Breadcrumbs crumbs={crumbs} />
 
   <Section bordered={false} headingLevel={1} eyebrow="Tag" title={archive.title} lead={archive.description} />
 

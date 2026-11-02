@@ -90,6 +90,16 @@ export const FAMILIES = [
     tokens: ['is missing required property logo'],
   },
   {
+    id: 'jsonld-breadcrumbs-in-a-second-script',
+    kind: 'specimen',
+    specimen: 'jsonldBreadcrumbsInASecondScript',
+  },
+  { id: 'jsonld-node-without-an-id', kind: 'specimen', specimen: 'jsonldNodeWithoutId' },
+  { id: 'jsonld-id-declared-twice', kind: 'specimen', specimen: 'jsonldIdDeclaredTwice' },
+  { id: 'jsonld-reference-resolves-nowhere', kind: 'specimen', specimen: 'jsonldReferenceResolvesNowhere' },
+  { id: 'jsonld-route-without-a-graph', kind: 'specimen', specimen: 'jsonldRouteWithoutAGraph' },
+  { id: 'jsonld-gate-that-read-nothing', kind: 'specimen', specimen: 'jsonldGateThatReadNothing' },
+  {
     id: 'faq-description-floor',
     kind: 'build',
     proves: 'build',

@@ -8,6 +8,7 @@ import RelatedContent from '~/components/site/RelatedContent.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import {
+  breadcrumbNode,
   glossaryStub,
   orgNode,
   personNode,
@@ -60,6 +61,7 @@ const nodes = [
     )
   ),
   ...serviceLinks.map(({ service, links }) => serviceNode(site, service, links)),
+  breadcrumbNode(site, crumbs),
 ];
 ---
 
