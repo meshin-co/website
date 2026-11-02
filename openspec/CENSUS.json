@@ -40,6 +40,13 @@
     "The median sentence on a page is 22 words or fewer",
     "The next article is chosen from a number"
   ],
+  "content/generated-articles": [
+    "A generated entry carries its provenance",
+    "A run writes one post, and the terms the glossary is missing",
+    "Every load-bearing claim resolves to a source",
+    "Generated prose does not collapse into the gates",
+    "The configured model is checked before the first call"
+  ],
   "content/human-readability": [
     "A page holds only a few sentences over 25 words",
     "A page never uses a controlled word, and each finding names the shorter twin",
@@ -172,5 +179,18 @@
     "Specimens are planted only in a disposable standalone copy",
     "The docs gate fails when it finds no document to check",
     "The mutation smoke rejects a family that would prove nothing"
+  ],
+  "governance/engine-portability": [
+    "One file holds what the engine knows about its site",
+    "The diff classifier has one implementation"
+  ],
+  "governance/unattended-publishing": [
+    "A failed demand refresh stops the run",
+    "A run claims its topic before it spends",
+    "Automation cannot certify what no human read",
+    "Merge happens only after a quarantine window",
+    "Repair is bounded to the article's own text",
+    "Spend is recorded and capped",
+    "The watcher classifies by the failing job"
   ]
 }

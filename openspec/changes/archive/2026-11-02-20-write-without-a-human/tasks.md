@@ -20,8 +20,11 @@
 - [x] 1.6 `ci.yml` gains one aggregate job that depends on every job the merge decision cares about
       and fails when any of them failed or was cancelled, because GitHub counts a skipped job as a
       passing required check
-- [ ] 1.7 `main` requires that aggregate check before a merge, so a defect in the watcher cannot
-      merge a red pull request
+
+Task 1.7, the branch rule that makes `all required jobs passed` a required check on `main`, is the
+owner's repository setting and this change cannot make it. It is recorded as row G48 of
+`docs/plan/reference/known-gaps.md`, with the exact setting and what is and is not proven, not as a
+box here.
 
 ## 2. Selection, before any model is called
 
