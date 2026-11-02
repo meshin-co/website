@@ -99,6 +99,16 @@ test('a job that only tests whether the key is set never receives its value', ()
   assert.equal(bindsKey(readiness), false, 'the readiness job must not put the key in any environment');
 });
 
+test('the emptiness exemption hides no real leak: a planted job that passes the key before the ceiling is caught', () => {
+  const leak = { steps: [{ env: { OPENAI_API_KEY: `\${{ secrets.${KEY} }}` } }] };
+  const jobEnvLeak = { env: { OPENAI_API_KEY: `\${{ secrets.${KEY} }}` }, steps: [] };
+  const emptinessOnly = { steps: [{ env: { MISSING: `\${{ secrets.${KEY} == '' && '${KEY}' || '' }}` } }] };
+
+  assert.equal(bindsKey(leak), true, 'a step that binds the key must be caught');
+  assert.equal(bindsKey(jobEnvLeak), true, 'a job-level binding must be caught');
+  assert.equal(bindsKey(emptinessOnly), false, 'asking whether the key is set is not holding it');
+});
+
 test('a failure of the ceiling command fails the job, so the write job is skipped and the run goes red', () => {
   for (const step of stepsOf(ceiling)) {
     assert.notEqual(step['continue-on-error'], true);

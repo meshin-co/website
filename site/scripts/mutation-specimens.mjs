@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
 import { mkdir, readdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 
 import { brandFromDisk } from '../src/utils/brand.mjs';
 import { BOOKING_URL } from '../src/utils/booking.mjs';
@@ -33,7 +33,19 @@ export function assertStandaloneRepo(repo) {
     );
 }
 
+const WORKING_REPO = resolve(import.meta.dirname, '..', '..');
+
+const refuseWorkingRepo = (path) => {
+  const inside = relative(WORKING_REPO, resolve(path));
+  if (inside && !inside.startsWith('..')) {
+    throw new Error(
+      `a specimen addressed ${inside} of the working repository; plant into a copy, never into the tree the gates read`
+    );
+  }
+};
+
 export async function addUntrackedFile(path, content) {
+  refuseWorkingRepo(path);
   const created = await mkdir(dirname(path), { recursive: true });
   await writeFile(path, content);
   return () => rm(created ?? path, { recursive: true, force: true });
@@ -49,12 +61,14 @@ export async function addFile(path, content) {
 }
 
 export async function removeFile(path) {
+  refuseWorkingRepo(path);
   const pristine = await readFile(path, 'utf8');
   await rm(path);
   return () => writeFile(path, pristine);
 }
 
 export async function editFile(path, change) {
+  refuseWorkingRepo(path);
   const pristine = await readFile(path, 'utf8');
   const edited = change(pristine);
   if (edited === pristine) throw new Error(`specimen edit changed nothing in ${path}`);
