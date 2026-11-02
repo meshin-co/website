@@ -1,0 +1,291 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Autowriter generation record",
+  "description": "One file per generated entry at audits/autowriter/generations/<slug>.json, committed in the same commit as the entry. It names variables, model ids, digests and counts and never a secret value; buildRecord copies only the keys listed here. The shape is checked here; the rules that compare fields with each other (totals against calls, cost against tokens and price, the published call against the record, the shutdown note against its check, the entry against the files of the commit, the band against its measurement, the file name) are checked by validateRecord in generation-record.mjs.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "slug",
+    "runId",
+    "generatedAt",
+    "claim",
+    "demand",
+    "entry",
+    "provider",
+    "model",
+    "responseId",
+    "published",
+    "calls",
+    "totals",
+    "ledger",
+    "modelChecks",
+    "prompt",
+    "tree",
+    "claimTable",
+    "band",
+    "files",
+    "gates"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "slug": { "$ref": "#/$defs/slug" },
+    "runId": { "$ref": "#/$defs/text" },
+    "generatedAt": { "$ref": "#/$defs/instant" },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "query", "prompt"],
+      "properties": {
+        "title": { "$ref": "#/$defs/text" },
+        "query": { "$ref": "#/$defs/text" },
+        "prompt": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["number", "text"],
+          "properties": {
+            "number": { "type": "integer", "minimum": 1 },
+            "text": { "$ref": "#/$defs/text" }
+          }
+        }
+      }
+    },
+    "demand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["impressions", "position", "report", "row"],
+      "properties": {
+        "impressions": { "$ref": "#/$defs/count" },
+        "position": { "type": ["number", "null"], "minimum": 1 },
+        "report": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "measured", "windowStart", "windowEnd", "table"],
+          "properties": {
+            "path": { "$ref": "#/$defs/path" },
+            "measured": { "$ref": "#/$defs/date" },
+            "windowStart": { "$ref": "#/$defs/date" },
+            "windowEnd": { "$ref": "#/$defs/date" },
+            "table": { "$ref": "#/$defs/text" }
+          }
+        },
+        "row": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "route", "path"],
+      "properties": {
+        "format": { "$ref": "#/$defs/format" },
+        "route": { "type": "string", "pattern": "^/[a-z0-9]+(-[a-z0-9]+)*(/[a-z0-9]+(-[a-z0-9]+)*)*$" },
+        "path": { "$ref": "#/$defs/path" }
+      }
+    },
+    "provider": { "$ref": "#/$defs/providerId" },
+    "model": { "$ref": "#/$defs/text" },
+    "responseId": { "$ref": "#/$defs/text" },
+    "published": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["callIndex"],
+      "properties": { "callIndex": { "$ref": "#/$defs/count" } }
+    },
+    "calls": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/call" } },
+    "totals": { "$ref": "#/$defs/spend" },
+    "ledger": { "type": "string", "pattern": "^audits/autowriter/[a-z0-9]+(-[a-z0-9]+)*\\.json$" },
+    "modelChecks": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/check" } },
+    "prompt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["digest", "schemaDigest", "files"],
+      "properties": {
+        "digest": { "$ref": "#/$defs/sha256" },
+        "schemaDigest": { "$ref": "#/$defs/sha256" },
+        "files": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/promptFile" } }
+      }
+    },
+    "tree": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["parent", "fingerprint"],
+      "properties": {
+        "parent": { "$ref": "#/$defs/commit" },
+        "fingerprint": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "claimTable": { "type": "array", "items": { "$ref": "#/$defs/claimRow" } },
+    "band": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["measuredOn", "limits", "measured"],
+      "properties": {
+        "measuredOn": { "$ref": "#/$defs/date" },
+        "limits": { "$ref": "#/$defs/limits" },
+        "measured": { "$ref": "#/$defs/measured" }
+      }
+    },
+    "files": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/path" } },
+    "gates": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/gate" } }
+  },
+  "$defs": {
+    "text": { "type": "string", "pattern": "\\S" },
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "providerId": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "format": { "enum": ["article", "term"] },
+    "instant": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?Z$"
+    },
+    "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "path": { "type": "string", "pattern": "^(?!/)(?!.*(^|/)\\.\\.(/|$))[^\\s\\\\]+$" },
+    "count": { "type": "integer", "minimum": 0 },
+    "amount": { "type": "number", "minimum": 0 },
+    "fraction": { "type": "number", "minimum": 0, "maximum": 1 },
+    "tokens": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input", "output"],
+      "properties": {
+        "input": { "$ref": "#/$defs/count" },
+        "output": { "$ref": "#/$defs/count" }
+      }
+    },
+    "spend": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tokens", "costUsd"],
+      "properties": {
+        "tokens": { "$ref": "#/$defs/tokens" },
+        "costUsd": { "$ref": "#/$defs/amount" }
+      }
+    },
+    "call": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "vendor",
+        "modelVariable",
+        "configuredModel",
+        "resolvedModel",
+        "responseId",
+        "requestDigest",
+        "tokens",
+        "costUsd",
+        "price",
+        "stopReason"
+      ],
+      "properties": {
+        "role": { "enum": ["draft", "correction", "repair", "repair-correction"] },
+        "vendor": { "$ref": "#/$defs/providerId" },
+        "modelVariable": { "$ref": "#/$defs/text" },
+        "configuredModel": { "$ref": "#/$defs/text" },
+        "resolvedModel": { "$ref": "#/$defs/text" },
+        "responseId": { "$ref": "#/$defs/text" },
+        "requestDigest": { "$ref": "#/$defs/sha256" },
+        "tokens": { "$ref": "#/$defs/tokens" },
+        "costUsd": { "$ref": "#/$defs/amount" },
+        "price": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["inputPerMillion", "outputPerMillion"],
+          "properties": {
+            "inputPerMillion": { "$ref": "#/$defs/amount" },
+            "outputPerMillion": { "$ref": "#/$defs/amount" }
+          }
+        },
+        "stopReason": { "$ref": "#/$defs/text" }
+      }
+    },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["vendor", "modelVariable", "model", "shutdownDate", "note"],
+      "properties": {
+        "vendor": { "$ref": "#/$defs/providerId" },
+        "modelVariable": { "$ref": "#/$defs/text" },
+        "model": { "$ref": "#/$defs/text" },
+        "shutdownDate": { "type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+        "note": { "type": ["string", "null"], "pattern": "\\S" }
+      }
+    },
+    "promptFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "$ref": "#/$defs/path" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "claimRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sentence", "marker", "source", "span"],
+      "properties": {
+        "sentence": { "$ref": "#/$defs/text" },
+        "marker": { "enum": ["sourced", "own-reading"] },
+        "source": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["id", "title", "url"],
+          "properties": {
+            "id": { "$ref": "#/$defs/text" },
+            "title": { "$ref": "#/$defs/text" },
+            "url": { "type": "string", "pattern": "^https?://\\S+$" }
+          }
+        },
+        "span": { "type": ["string", "null"], "pattern": "\\S" }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "threshold",
+        "justBelowFrom",
+        "minimumSentences",
+        "medianFloor",
+        "medianCeiling",
+        "belowThresholdCap",
+        "justBelowCap"
+      ],
+      "properties": {
+        "format": { "$ref": "#/$defs/format" },
+        "threshold": { "type": "integer", "minimum": 1 },
+        "justBelowFrom": { "type": "integer", "minimum": 1 },
+        "minimumSentences": { "type": "integer", "minimum": 1 },
+        "medianFloor": { "$ref": "#/$defs/count" },
+        "medianCeiling": { "$ref": "#/$defs/count" },
+        "belowThresholdCap": { "$ref": "#/$defs/fraction" },
+        "justBelowCap": { "$ref": "#/$defs/fraction" }
+      }
+    },
+    "measured": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "sentences", "median", "shareBelowThreshold", "shareJustBelow", "threshold"],
+      "properties": {
+        "format": { "$ref": "#/$defs/format" },
+        "sentences": { "$ref": "#/$defs/count" },
+        "median": { "$ref": "#/$defs/count" },
+        "shareBelowThreshold": { "$ref": "#/$defs/fraction" },
+        "shareJustBelow": { "$ref": "#/$defs/fraction" },
+        "threshold": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "exit"],
+      "properties": {
+        "name": { "$ref": "#/$defs/text" },
+        "exit": { "$ref": "#/$defs/count" }
+      }
+    }
+  }
+}

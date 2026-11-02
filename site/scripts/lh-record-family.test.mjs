@@ -26,7 +26,7 @@ const scratch = () => mkdtemp(join(tmpdir(), 'lh-record-family-'));
 async function siteWith(edit) {
   const site = join(await scratch(), 'site');
   await cp(join(realSite, 'scripts'), join(site, 'scripts'), { recursive: true });
-  for (const name of ['package.json', 'budgets.json', 'lighthouserc.cjs'])
+  for (const name of ['package.json', 'budgets.json', 'lighthouserc.cjs', 'engine.config.json'])
     await cp(join(realSite, name), join(site, name));
   await edit(site);
   return site;

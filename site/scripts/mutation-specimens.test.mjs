@@ -115,6 +115,23 @@ test('the token is matched across line breaks and colour codes, because gates wr
   assert.equal(flatten(coloured), 'error no-dup-id again');
 });
 
+test('an environment only the planted run carries reaches that run alone, so the plant can be a process the gate must refuse', async () => {
+  const { run, calls } = scripted({ code: 0, output: '' }, { code: 1, output: 'no-dup-id' });
+  const marked = { ...specimen([]), plantedEnv: { AUTOWRITER_UNATTENDED: '1' } };
+  const result = await proveWithSpecimen(marked, { copySite: '/copy', run });
+  assert.equal(result.ok, true);
+  assert.deepEqual(calls[0], ['npm', ['run', 'gate:html'], '/copy']);
+  assert.deepEqual(calls[1], ['env', ['AUTOWRITER_UNATTENDED=1', 'npm', 'run', 'gate:html'], '/copy']);
+});
+
+test('the planted environment is added to the fixed one, and wins when both name a variable', async () => {
+  const { run, calls } = scripted({ code: 0, output: '' }, { code: 1, output: 'no-dup-id' });
+  const both = { ...specimen([]), env: { GATE_PHASE: 'specimen', CI: '0' }, plantedEnv: { CI: '1' } };
+  await proveWithSpecimen(both, { copySite: '/copy', run });
+  assert.deepEqual(calls[0], ['env', ['GATE_PHASE=specimen', 'CI=0', 'npm', 'run', 'gate:html'], '/copy']);
+  assert.deepEqual(calls[1], ['env', ['GATE_PHASE=specimen', 'CI=1', 'npm', 'run', 'gate:html'], '/copy']);
+});
+
 test('a specimen is restored even when the gate run throws', async () => {
   const restored = [];
   let calls = 0;
@@ -273,7 +290,7 @@ test('every specimen names a gate the package defines, a token to look for and a
   assert.ok(Object.keys(SPECIMENS).length > 0);
   for (const [name, entry] of Object.entries(SPECIMENS)) {
     assert.ok(entry.gate in scripts, `${name} names ${entry.gate}, which package.json does not define`);
-    assert.match(entry.gate, /^gate:/, `${name} proves ${entry.gate}, which is not a gate`);
+    if (!entry.plantedEnv) assert.match(entry.gate, /^gate:/, `${name} proves ${entry.gate}, which is not a gate`);
     assert.ok(typeof entry.token === 'string' && entry.token.trim().length > 0, `${name} has no token`);
     assert.equal(typeof entry.plant, 'function', `${name} has no plant`);
   }

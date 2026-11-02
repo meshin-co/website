@@ -6,6 +6,7 @@ import { parsePrompts } from './geo-baseline.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 import { generatorRevision } from './report.mjs';
 import {
+  CREDENTIAL_EXIT_CODE,
   TOKEN_URL,
   collectDemand,
   credentialsFrom,
@@ -25,8 +26,13 @@ const TIMEOUT_MS = 30_000;
 
 const answer = (response) => response.json().catch(() => ({}));
 
-async function accessToken(account) {
-  const assertion = signAssertion({ ...account, now: Math.floor(Date.now() / 1000) });
+const keySourceFrom = (argv) => {
+  const at = argv.indexOf('--key-source');
+  return at === -1 ? 'file' : argv[at + 1];
+};
+
+async function accessToken(account, source) {
+  const assertion = signAssertion({ ...account, now: Math.floor(Date.now() / 1000), source });
   const response = await fetch(TOKEN_URL, {
     method: 'POST',
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
@@ -34,11 +40,11 @@ async function accessToken(account) {
     signal: AbortSignal.timeout(TIMEOUT_MS),
   });
   const body = await answer(response);
-  if (!response.ok || !body.access_token) throw tokenRejection(response.status, body);
+  if (!response.ok || !body.access_token) throw tokenRejection(response.status, body, source);
   return body.access_token;
 }
 
-const poster = (token, property) => async (request) => {
+const poster = (token, property, source) => async (request) => {
   const response = await fetch(queryUrl(property), {
     method: 'POST',
     headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
@@ -46,18 +52,18 @@ const poster = (token, property) => async (request) => {
     signal: AbortSignal.timeout(TIMEOUT_MS),
   });
   const body = await answer(response);
-  if (!response.ok) throw queryRejection(response.status, body, property);
+  if (!response.ok) throw queryRejection(response.status, body, property, source);
   return body;
 };
 
-async function main() {
-  const { property, ...account } = credentialsFrom(process.env);
+async function main(source) {
+  const { property, ...account } = credentialsFrom(process.env, source);
   const prompts = parsePrompts(readFileSync(CORE, 'utf8'));
   if (prompts.length === 0) throw new Error('no buyer prompts parsed from docs/SEMANTIC-CORE.md');
   const revision = generatorRevision(OUT);
   const window = measuredWindow(new Date().toISOString().slice(0, 10));
 
-  const post = poster(await accessToken(account), property);
+  const post = poster(await accessToken(account, source), property, source);
   const data = await collectDemand({ post, ...window });
   const model = buildDemand({ window, property, prompts, data });
 
@@ -70,8 +76,14 @@ async function main() {
 }
 
 if (invokedDirectly(import.meta.filename, process.argv[1])) {
-  main().catch((error) => {
-    console.error(`audit:demand: ${error.message}`);
-    process.exitCode = 1;
-  });
+  const source = keySourceFrom(process.argv);
+  if (source !== 'file' && source !== 'secret') {
+    console.error('audit:demand: --key-source must be file or secret');
+    process.exitCode = 2;
+  } else {
+    main(source).catch((error) => {
+      console.error(`audit:demand: ${error.message}`);
+      process.exitCode = error.credential ? CREDENTIAL_EXIT_CODE : 1;
+    });
+  }
 }

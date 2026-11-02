@@ -1,0 +1,256 @@
+name: Write daily
+
+run-name: Write daily (${{ github.event_name }})
+
+on:
+  schedule:
+    # 03:17 UTC is 05:17 or 06:17 in Israel, and off the top of the hour where scheduled runs queue
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: write-daily
+  cancel-in-progress: false
+
+env:
+  AUTOWRITER_UNATTENDED: '1'
+
+defaults:
+  run:
+    working-directory: site
+
+jobs:
+  configured:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      ready: ${{ steps.secrets.outputs.ready }}
+    steps:
+      - id: secrets
+        working-directory: .
+        env:
+          MISSING: >-
+            ${{ secrets.AUTOWRITER_PAT == '' && 'AUTOWRITER_PAT ' || '' }}${{
+            secrets.AUTOWRITER_OPENAI_API_KEY == '' && 'AUTOWRITER_OPENAI_API_KEY ' || '' }}${{
+            secrets.GSC_SERVICE_ACCOUNT_JSON == '' && 'GSC_SERVICE_ACCOUNT_JSON ' || '' }}${{
+            secrets.SLACK_WEBHOOK_URL == '' && 'SLACK_WEBHOOK_URL' || '' }}
+        run: |
+          missing=$(echo "$MISSING" | xargs)
+          if [ -z "$missing" ]; then
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo 'ready=false' >> "$GITHUB_OUTPUT"
+          {
+            echo '### The unattended writer is not configured yet'
+            echo
+            echo 'This run stopped before it did anything. The repository is missing:'
+            echo
+            for name in $missing; do echo "- \`$name\`"; done
+            echo
+            echo 'Add them under Settings, Secrets and variables, Actions. Until then this'
+            echo 'workflow reports green and writes nothing, rather than failing every morning.'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  ceiling:
+    needs: configured
+    if: github.ref == 'refs/heads/main' && needs.configured.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      issues: write
+    outputs:
+      stopped: ${{ steps.ceiling.outputs.stopped }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.AUTOWRITER_PAT }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: site/.nvmrc
+
+      - name: stop before any model is called when the month's spend has reached the ceiling
+        id: ceiling
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: node scripts/spend-ceiling.mjs
+
+      - name: commit the spend ceiling notice to main
+        if: steps.ceiling.outputs.notice == 'written'
+        env:
+          NOTICE_LEDGER: ${{ steps.ceiling.outputs.ledger }}
+        run: |
+          node scripts/commit-to-main.mjs --message "chore(autowriter): record the spend ceiling notice" --path "$NOTICE_LEDGER"
+
+  write:
+    needs: [configured, ceiling]
+    if: github.ref == 'refs/heads/main' && needs.configured.outputs.ready == 'true' && needs.ceiling.outputs.stopped != 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      # checkout of main; every push and every pull request call is made with the AUTOWRITER_PAT secret
+      contents: read
+      # the escalation issue
+      issues: write
+    steps:
+      - name: name the files the steps hand to each other
+        run: |
+          echo "DECISION_FILE=$RUNNER_TEMP/decision.json" >> "$GITHUB_ENV"
+          echo "WRITE_RESULT_FILE=$RUNNER_TEMP/write-result.json" >> "$GITHUB_ENV"
+
+      # the bot token is what the later git pushes use; the job never installs before the claim is committed
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.AUTOWRITER_PAT }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: site/.nvmrc
+
+      - name: refresh the demand report, and stop when it cannot be refreshed
+        id: refresh
+        env:
+          GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+          GSC_PROPERTY: ${{ secrets.GSC_PROPERTY }}
+        run: |
+          status=0
+          npm run audit:demand -- --key-source secret || status=$?
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit "$status"
+
+      - name: escalate a refresh that failed, because selecting from the previous report is never allowed
+        if: failure() && steps.refresh.outcome == 'failure'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          REFRESH_STATUS: ${{ steps.refresh.outputs.status }}
+        run: |
+          kind=hard-stop
+          detail="npm run audit:demand exited $REFRESH_STATUS, so no topic was selected and nothing was written or spent. Read the log of this run for the reason."
+          if [ "$REFRESH_STATUS" = 3 ]; then
+            kind=credential
+            detail="The Search Console credential was refused (npm run audit:demand exited 3). Check the repository secrets GSC_SERVICE_ACCOUNT_JSON and GSC_PROPERTY, then run Write daily again. No topic was selected and nothing was spent."
+          fi
+          node scripts/escalate-run.mjs --ledger-dir "$RUNNER_TEMP/escalations" --slug demand-refresh --kind "$kind" \
+            --title "Write daily could not refresh the Search Console demand report" --detail "$detail"
+
+      - name: commit the refreshed report to main
+        run: |
+          node scripts/commit-to-main.mjs --message "chore(demand): refresh the Search Console demand report" --path audits/search-demand.md
+
+      - name: select what to write, before any model is called
+        id: pick
+        env:
+          WRITING_TERM_ARM: ${{ vars.WRITING_TERM_ARM || 'on' }}
+          WRITING_TERM_CAP: ${{ vars.WRITING_TERM_CAP || '1' }}
+        run: |
+          npm run pick:topic -- --write --output "$DECISION_FILE" --summary "$GITHUB_STEP_SUMMARY" --run-id "${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          echo "decision=$(jq -r .decision "$DECISION_FILE")" >> "$GITHUB_OUTPUT"
+
+      - name: commit the claims and the ledger to main, so no model runs against an unclaimed topic
+        id: claim
+        if: steps.pick.outputs.decision == 'write'
+        run: |
+          post="$(jq -r '.entries[0].claim.title' "$DECISION_FILE")"
+          terms="$(jq -r '.entries[1:][] | "term: " + .claim.title' "$DECISION_FILE")"
+          message="claim: $post"
+          if [ -n "$terms" ]; then message="$message"$'\n\n'"$terms"; fi
+          paths=()
+          while IFS= read -r path; do paths+=(--path "$path"); done < <(jq -r '.entries[].claimPath, .ledgerPath' "$DECISION_FILE")
+          outcome="$(node scripts/commit-to-main.mjs --message "$message" "${paths[@]}")"
+          echo "$outcome"
+          case "$outcome" in
+            committed\ *) ;;
+            *) echo "the claim commit reported '$outcome'; refusing to call a model without a pushed claim" >&2; exit 1 ;;
+          esac
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: install the site dependencies, which only the writer needs
+        if: steps.pick.outputs.decision == 'write'
+        run: npm ci
+
+      - name: write the entries on a local branch, with one commit
+        id: write
+        if: steps.pick.outputs.decision == 'write'
+        env:
+          WRITING_PROVIDER: ${{ vars.WRITING_PROVIDER }}
+          OPENAI_WRITING_MODEL: ${{ vars.OPENAI_WRITING_MODEL }}
+          OPENAI_WRITING_INPUT_USD_PER_MILLION: ${{ vars.OPENAI_WRITING_INPUT_USD_PER_MILLION }}
+          OPENAI_WRITING_OUTPUT_USD_PER_MILLION: ${{ vars.OPENAI_WRITING_OUTPUT_USD_PER_MILLION }}
+          AUTOWRITER_OPENAI_API_KEY: ${{ secrets.AUTOWRITER_OPENAI_API_KEY }}
+        run: |
+          status=0
+          npm run --silent write:entry -- --decision "$DECISION_FILE" > "$RUNNER_TEMP/write-output.txt" || status=$?
+          cat "$RUNNER_TEMP/write-output.txt"
+          tail -n 1 "$RUNNER_TEMP/write-output.txt" > "$WRITE_RESULT_FILE"
+          exit "$status"
+
+      - name: summarise the run's cost and notes
+        if: steps.write.outcome == 'success'
+        run: |
+          jq -r '"### Written: \(.slug)", "", "Branch `\(.branch)`, total cost \(.spend.costUsd) USD, \(.spend.tokens.input) input and \(.spend.tokens.output) output tokens.", "", (.notes[]? | "- " + .), (.skipped[]? | "- skipped \(.format) \(.slug): \(.reason)")' "$WRITE_RESULT_FILE" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: push the branch, open the pull request and start the watcher
+        id: open
+        if: steps.write.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ secrets.AUTOWRITER_PAT }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          branch="$(jq -r .branch "$WRITE_RESULT_FILE")"
+          git push origin "refs/heads/$branch:refs/heads/$branch"
+          title="$(git log -1 --format=%s "$branch")"
+          { git log -1 --format=%b "$branch"; echo; echo "Written by $RUN_URL"; } > "$RUNNER_TEMP/pull-request-body.md"
+          url="$(gh pr create --base main --head "$branch" --title "$title" --body-file "$RUNNER_TEMP/pull-request-body.md")"
+          echo "$url"
+          gh workflow run watch-pr.yml --ref main -f pr="${url##*/}"
+
+      - name: return to the claim commit after a failed write
+        if: failure() && steps.write.outcome == 'failure'
+        env:
+          CLAIM_SHA: ${{ steps.claim.outputs.sha }}
+        run: git checkout --detach "$CLAIM_SHA"
+
+      - name: escalate a failed write
+        if: failure() && steps.write.outcome == 'failure'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          result() { jq -rn "input? // {} | $1" "$WRITE_RESULT_FILE" 2>/dev/null || echo "$2"; }
+          failure="$(result '.kind // "unexpected"' unexpected)"
+          case "$failure" in
+            credential|config|model|price) kind=credential ;;
+            *) kind=hard-stop ;;
+          esac
+          message="$(result '.message // "the writer printed no result"' 'the writer printed no result')"
+          cost="$(result '.spend.costUsd // "unknown"' unknown)"
+          slug="$(basename "$(jq -r .ledgerPath "$DECISION_FILE")" .json)"
+          node scripts/escalate-run.mjs --ledger-dir "$GITHUB_WORKSPACE/audits/autowriter" --slug "$slug" --kind "$kind" \
+            --title "Write daily stopped while writing $slug ($failure)" \
+            --detail "npm run write:entry failed with kind $failure: $message. Spend recorded so far: $cost USD. The claim for $slug stays committed and expires on its own."
+
+      - name: commit the ledger, which holds the spend of the failed write
+        if: failure() && steps.write.outcome == 'failure'
+        run: |
+          slug="$(basename "$(jq -r .ledgerPath "$DECISION_FILE")" .json)"
+          node scripts/commit-to-main.mjs --message "chore(autowriter): record the stopped run of $slug" --path "audits/autowriter/$slug.json"
+
+      - name: escalate a written entry that could not reach a pull request
+        if: failure() && steps.write.outcome == 'success'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          slug="$(jq -r .slug "$WRITE_RESULT_FILE")"
+          node scripts/escalate-run.mjs --ledger-dir "$RUNNER_TEMP/escalations" --slug "$slug" --kind hard-stop \
+            --title "Write daily wrote $slug but could not open its pull request" \
+            --detail "The branch autowriter/$slug was written and money was spent; pushing it, opening the pull request or starting the Watch PR workflow failed. Read the log of this run, then open the pull request by hand or delete the branch."

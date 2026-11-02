@@ -1,0 +1,297 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "The engine configuration",
+  "description": "Everything the unattended writing engine knows about the site it runs on. Every field is required and none has a default.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "diff", "routeFamilies", "content", "loop", "demand"],
+  "properties": {
+    "schema": { "const": 1, "description": "The version of this file's shape, 1." },
+    "diff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "proseDirectories",
+        "proseExtensions",
+        "shippedDirectories",
+        "automationDirectories",
+        "testTooling",
+        "testFilePattern",
+        "testDirectoryPattern"
+      ],
+      "properties": {
+        "proseDirectories": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/directory" },
+          "description": "Directories from the repository root, each ending in a slash, whose files never change what a gate measures: documents, audit records, skills, specs."
+        },
+        "proseExtensions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^\\.[a-z0-9]+$" },
+          "description": "File extensions, each with its dot, that mark prose when the file sits outside a shipped directory."
+        },
+        "shippedDirectories": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/directory" },
+          "description": "Directories from the repository root, each ending in a slash, whose files reach the built site, markdown included."
+        },
+        "automationDirectories": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/directory" },
+          "description": "Directories from the repository root, each ending in a slash, that hold workflows and hooks: they change how gates run and never what the build emits."
+        },
+        "testTooling": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/path" },
+          "description": "Files from the repository root that configure the test runners, so they cannot change the build."
+        },
+        "testFilePattern": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A regular expression, tested against the whole path from the repository root, that marks a test file."
+        },
+        "testDirectoryPattern": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A regular expression, tested against the whole path from the repository root, that marks a directory of tests or fixtures outside a shipped directory."
+        }
+      }
+    },
+    "routeFamilies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rules", "fallback"],
+      "properties": {
+        "rules": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/routeRule" },
+          "description": "Checked in order: the first prefix a route starts with names its family (the title grammar) and its profile (the content gate), so the longer prefix goes first."
+        },
+        "fallback": {
+          "$ref": "#/$defs/routeClass",
+          "description": "The family and profile of a route that no prefix claims."
+        }
+      }
+    },
+    "content": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataDirectory", "formats"],
+      "properties": {
+        "dataDirectory": {
+          "$ref": "#/$defs/path",
+          "description": "Directory from the repository root that holds one subdirectory of markdown entries per collection."
+        },
+        "formats": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["term", "article"],
+          "properties": {
+            "term": {
+              "$ref": "#/$defs/format",
+              "description": "Where a glossary term is written and the route prefix it is served under."
+            },
+            "article": {
+              "$ref": "#/$defs/articleFormat",
+              "description": "Where a blog article is written, the route prefix it is served under, the author it names and the collection of resources it may link to."
+            }
+          },
+          "description": "The two formats the unattended writer produces."
+        }
+      }
+    },
+    "loop": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attemptCap", "quarantineHours", "monthlySpendCeilingUsd", "claimLifetimeDays", "holdLabel"],
+      "properties": {
+        "attemptCap": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Most repair attempts one article gets before the loop escalates."
+        },
+        "quarantineHours": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Hours a pull request waits after it opens before the watcher may merge it."
+        },
+        "monthlySpendCeilingUsd": {
+          "type": "number",
+          "minimum": 0.01,
+          "description": "US dollars of model spend allowed in one calendar month; reaching it stops the workflow."
+        },
+        "claimLifetimeDays": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Days a committed topic claim holds its title and slug before it lapses."
+        },
+        "holdLabel": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "pattern": "^[^,\\n]+$",
+          "description": "The pull request label that stops the watcher from merging."
+        }
+      }
+    },
+    "demand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["windowDays", "dataLagDays", "maxAgeDays", "minImpressions", "strengthenBand"],
+      "properties": {
+        "windowDays": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Days of Search Console data one demand report covers."
+        },
+        "dataLagDays": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Days before today at which the window ends, because Search Console data arrives late."
+        },
+        "maxAgeDays": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Days after which the committed demand report is too old to choose a topic from."
+        },
+        "minImpressions": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Impressions a query needs before it counts as demand."
+        },
+        "strengthenBand": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["min", "max"],
+          "properties": {
+            "min": {
+              "type": "number",
+              "minimum": 1,
+              "description": "Best average position at which a page counts as already ranking."
+            },
+            "max": {
+              "type": "number",
+              "minimum": 1,
+              "description": "Worst average position at which a page counts as already ranking."
+            }
+          },
+          "description": "Average positions between which a page already ranks, so the query strengthens that page and is not a reason for a new one."
+        }
+      }
+    }
+  },
+  "$defs": {
+    "directory": {
+      "type": "string",
+      "pattern": "^(?!(?:.*/)?\\.{1,2}/)(?:[A-Za-z0-9._@-]+/)+$",
+      "description": "A directory from the repository root, ending in a slash."
+    },
+    "path": {
+      "type": "string",
+      "pattern": "^(?!(?:.*/)?\\.{1,2}(?:/|$))(?:[A-Za-z0-9._@-]+/)*[A-Za-z0-9._@-]+$",
+      "description": "A path from the repository root, without a trailing slash."
+    },
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$", "description": "A lower-case name." },
+    "routePrefix": {
+      "type": "string",
+      "pattern": "^/[a-z0-9][a-z0-9/-]*$",
+      "description": "A route prefix, starting with a slash."
+    },
+    "routeClass": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["family", "profile"],
+      "properties": {
+        "family": {
+          "$ref": "#/$defs/name",
+          "enum": [
+            "static",
+            "service",
+            "resource",
+            "case-study",
+            "article",
+            "blog-category",
+            "tag-index",
+            "tag",
+            "term",
+            "faq-answer"
+          ],
+          "description": "The route family, which picks the title grammar."
+        },
+        "profile": {
+          "$ref": "#/$defs/name",
+          "enum": ["article", "offer", "page", "term", "faq-answer"],
+          "description": "The content-gate profile the page is judged against."
+        }
+      }
+    },
+    "routeRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["prefix", "family", "profile"],
+      "properties": {
+        "prefix": { "$ref": "#/$defs/routePrefix", "description": "The prefix a route starts with." },
+        "family": {
+          "$ref": "#/$defs/name",
+          "enum": [
+            "static",
+            "service",
+            "resource",
+            "case-study",
+            "article",
+            "blog-category",
+            "tag-index",
+            "tag",
+            "term",
+            "faq-answer"
+          ],
+          "description": "The route family, which picks the title grammar."
+        },
+        "profile": {
+          "$ref": "#/$defs/name",
+          "enum": ["article", "offer", "page", "term", "faq-answer"],
+          "description": "The content-gate profile the page is judged against."
+        }
+      }
+    },
+    "format": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["collection", "routePrefix"],
+      "properties": {
+        "collection": { "$ref": "#/$defs/name", "description": "The collection the entry is written into." },
+        "routePrefix": {
+          "$ref": "#/$defs/routePrefix",
+          "description": "The route prefix the entry's page is served under."
+        }
+      }
+    },
+    "articleFormat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["collection", "routePrefix", "author", "resourceCollection"],
+      "properties": {
+        "collection": { "$ref": "#/$defs/name", "description": "The collection the entry is written into." },
+        "routePrefix": {
+          "$ref": "#/$defs/routePrefix",
+          "description": "The route prefix the entry's page is served under."
+        },
+        "author": {
+          "$ref": "#/$defs/name",
+          "description": "The slug of the author entry that every written article names."
+        },
+        "resourceCollection": {
+          "$ref": "#/$defs/name",
+          "description": "The collection of resources an article may link to, which holds neither terms nor articles."
+        }
+      }
+    }
+  }
+}

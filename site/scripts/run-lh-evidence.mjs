@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
+import { exitWhenUnattended } from './human-only.mjs';
 import {
   headFingerprint,
   readMeasuredStamp,
@@ -17,6 +18,8 @@ const refuse = (message) => {
   console.error(`LIGHTHOUSE ${message}`);
   process.exit(1);
 };
+
+if (mode === 'record') exitWhenUnattended('record the Lighthouse run');
 
 const current = await headFingerprint();
 

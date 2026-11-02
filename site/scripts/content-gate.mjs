@@ -2,13 +2,16 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 import { collectBookingFindings } from './booking-cta.mjs';
+import { recordGateFindings } from './gate-findings.mjs';
+import { contentRecords } from './gate-records.mjs';
 import { discoverRoutes } from './gate.mjs';
 import { extractPage } from './content-html.mjs';
 import { judgePage, PROFILES } from './content-rows.mjs';
+import { matchRoute, readEngineConfig } from './engine-config.mjs';
 import { duplicateSentences, machinePatternHits, punctuationFindings, questionRunLength } from './prose-rules.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 
-const DUPLICATE_MINIMUM_WORDS = 12;
+export const DUPLICATE_MINIMUM_WORDS = 12;
 
 const UNGATED = new Set(['/404', '/search', '/styleguide']);
 
@@ -17,24 +20,9 @@ const UNGATED_PATTERNS = [
   /^\/blog\/category\/[^/]+\/page\/\d+$/,
   /^\/blog\/tag\/[^/]+\/page\/\d+$/,
 ];
-const PROFILE_BY_PREFIX = [
-  ['/blog/tags', 'page'],
-  ['/blog/tag/', 'page'],
-  ['/blog/category/', 'page'],
-  ['/blog/', 'article'],
-  ['/services/', 'offer'],
-  ['/resources/', 'offer'],
-  ['/case-studies/', 'offer'],
-  ['/glossary/', 'term'],
-  ['/faq/', 'faq-answer'],
-];
+const { routeFamilies } = readEngineConfig();
 
-export function profileFor(route) {
-  for (const [prefix, name] of PROFILE_BY_PREFIX) {
-    if (route.startsWith(prefix)) return name;
-  }
-  return 'page';
-}
+export const profileFor = (route) => matchRoute(routeFamilies, route).profile;
 
 const routeFile = (route) => (route === '/' ? 'index.html' : `${route.slice(1)}.html`);
 
@@ -108,6 +96,7 @@ async function main(distDir) {
   for (const finding of findings)
     console.log(`${finding.route} ${finding.rule} [${finding.detail}] ${finding.excerpt}`);
 
+  recordGateFindings({ gate: 'gate:content', findings: contentRecords(findings) });
   if (findings.length > 0) process.exitCode = 1;
 }
 

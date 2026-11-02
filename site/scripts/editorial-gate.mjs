@@ -4,6 +4,8 @@ import { join, relative, resolve } from 'node:path';
 import { parse } from 'yaml';
 
 import { applyConditionalCopy, applyDispositions, digestFor, inheritDerivedStatus } from './dispositions.mjs';
+import { exitWhenUnattended, refuseWhenUnattended } from './human-only.mjs';
+import { recordGateFindings } from './gate-findings.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 import {
   collectionRows,
@@ -14,6 +16,7 @@ import {
   deadCopy,
   untraceableText,
 } from './editorial-inventory.mjs';
+import { editorialRecords, isPending } from './editorial-findings.mjs';
 
 const SITE = resolve(process.argv[2] ?? '.');
 const LEDGER = resolve(SITE, '../audits/phase-4.7/inventory.json');
@@ -51,11 +54,7 @@ export function mergeLedger(fresh, recorded) {
 }
 
 export function ledgerFindings({ rows, untraceable = [], dead = [], stale = [], unmatched = [] }) {
-  const pending = rows.filter(
-    (entry) =>
-      !['rewritten', 'verified', 'owner-blocked'].includes(entry.status) ||
-      (entry.status === 'owner-blocked' && !entry.reason)
-  );
+  const pending = rows.filter(isPending);
   return [
     ...pending.map((entry) => `unreviewed: ${entry.usedIn[0]} — ${entry.text.slice(0, 60)}`),
     ...untraceable.map((entry) => `ships but traces to no source row: ${entry.route} — ${entry.text.slice(0, 60)}`),
@@ -150,6 +149,15 @@ export function buildReport(dist) {
     noRows: noRowsEntries.length,
   };
 
+  const records = editorialRecords({
+    rows,
+    untraceable: built.untraceable,
+    dead: conditional.remaining,
+    stale,
+    conditional,
+    missingTarget,
+  });
+
   return {
     built,
     dispositions,
@@ -162,6 +170,7 @@ export function buildReport(dist) {
     noRowsEntries,
     counts,
     findings,
+    records,
   };
 }
 
@@ -179,6 +188,7 @@ function report(dist, { write }) {
     noRowsEntries,
     counts,
     findings,
+    records,
   } = result;
 
   if (write) {
@@ -197,6 +207,8 @@ function report(dist, { write }) {
       )}\n`
     );
   }
+
+  recordGateFindings({ gate: 'gate:editorial', findings: records });
 
   const byStatus = rows.reduce((totals, entry) => ({ ...totals, [entry.status]: (totals[entry.status] ?? 0) + 1 }), {});
   console.log(`editorial ledger: ${rows.length} rows across ${built.pages} routes`, byStatus);
@@ -230,6 +242,7 @@ function report(dist, { write }) {
 }
 
 export function sealDispositions(dist) {
+  refuseWhenUnattended('re-seal the dispositions');
   const built = buildLedger(dist);
   let sealed = 0;
   for (const name of existsSync(DISPOSITIONS) ? readdirSync(DISPOSITIONS).filter((f) => f.endsWith('.json')) : []) {
@@ -246,6 +259,8 @@ export function sealDispositions(dist) {
 
 if (invokedDirectly(import.meta.filename, process.argv[1])) {
   const dist = resolve(SITE, process.argv[3] ?? 'dist');
-  if (process.argv.includes('--seal')) sealDispositions(dist);
-  else report(dist, { write: !process.argv.includes('--check') });
+  if (process.argv.includes('--seal')) {
+    exitWhenUnattended('re-seal the dispositions');
+    sealDispositions(dist);
+  } else report(dist, { write: !process.argv.includes('--check') });
 }

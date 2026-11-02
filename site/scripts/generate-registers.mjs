@@ -3,6 +3,8 @@ import { join } from 'node:path';
 
 import { parse } from 'yaml';
 
+import { recordGateFindings } from './gate-findings.mjs';
+import { registerRecords } from './gate-records.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 import {
   conceptRegister,
@@ -73,6 +75,7 @@ function main() {
     const findings = registerDriftFindings(readFileSync(DOC, 'utf8'), built.block);
     for (const finding of findings) console.log(`${finding.rule} [${finding.detail}]`);
     console.log(`registers: ${findings.length} findings, ${built.undefined.length} unlinked concept uses`);
+    recordGateFindings({ gate: 'gate:registers', findings: registerRecords(findings) });
     if (findings.length > 0) process.exitCode = 1;
     return;
   }

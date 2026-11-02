@@ -1,0 +1,159 @@
+name: Watch PR
+
+run-name: Watch pull request #${{ inputs.pr }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: Number of the autowriter pull request to judge.
+        required: true
+      observed:
+        description: What the previous run of this workflow saw, passed on by that run. Leave it empty when starting a chain by hand.
+        required: false
+        default: ''
+
+concurrency:
+  group: watch-pr-${{ inputs.pr }}
+  cancel-in-progress: false
+
+env:
+  AUTOWRITER_UNATTENDED: '1'
+
+defaults:
+  run:
+    working-directory: site
+
+jobs:
+  watch:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: autowriter-tick
+    timeout-minutes: 5
+    permissions:
+      # checkout of main, and the ledger file read from the pull request branch
+      contents: read
+      # the pull request, its commits, its labels and whether it is a draft
+      pull-requests: read
+      # the check runs of the head commit
+      checks: read
+      # the pull_request run of ci.yml and its jobs
+      actions: read
+      # the escalation issue; every other write is made with the AUTOWRITER_PAT secret
+      issues: write
+    outputs:
+      repair: ${{ steps.judge.outputs.repair }}
+      head: ${{ steps.judge.outputs.head }}
+      branch: ${{ steps.judge.outputs.branch }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: site/.nvmrc
+
+      - name: judge the pull request and act on the verdict, with no install because this job holds a merge-capable token
+        id: judge
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          AUTOWRITER_PAT: ${{ secrets.AUTOWRITER_PAT }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          PULL_REQUEST: ${{ inputs.pr }}
+          OBSERVED: ${{ inputs.observed }}
+        run: npm run watch:pr -- --pr "$PULL_REQUEST" --observed "$OBSERVED"
+
+  repair:
+    needs: watch
+    if: needs.watch.outputs.repair == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      pull-requests: read
+      checks: read
+      actions: read
+    outputs:
+      outcome: ${{ steps.rewrite.outputs.outcome }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.watch.outputs.head }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: site/.nvmrc
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - name: install the site dependencies, with no push credential on disk
+        run: npm ci
+
+      - name: repair the entry on a local commit, which this step never pushes
+        id: rewrite
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PULL_REQUEST: ${{ inputs.pr }}
+          HEAD_SHA: ${{ needs.watch.outputs.head }}
+          WRITING_PROVIDER: ${{ vars.WRITING_PROVIDER }}
+          OPENAI_WRITING_MODEL: ${{ vars.OPENAI_WRITING_MODEL }}
+          OPENAI_WRITING_INPUT_USD_PER_MILLION: ${{ vars.OPENAI_WRITING_INPUT_USD_PER_MILLION }}
+          OPENAI_WRITING_OUTPUT_USD_PER_MILLION: ${{ vars.OPENAI_WRITING_OUTPUT_USD_PER_MILLION }}
+          AUTOWRITER_OPENAI_API_KEY: ${{ secrets.AUTOWRITER_OPENAI_API_KEY }}
+        run: |
+          status=0
+          npm run --silent repair:entry -- --pr "$PULL_REQUEST" --head "$HEAD_SHA" > "$RUNNER_TEMP/repair-output.txt" || status=$?
+          cat "$RUNNER_TEMP/repair-output.txt"
+          echo "repair:entry exited with status $status"
+          last="$(tail -n 1 "$RUNNER_TEMP/repair-output.txt")"
+          outcome="$(printf '%s' "$last" | jq -r '.outcome | strings' 2>/dev/null || true)"
+          commit="$(printf '%s' "$last" | jq -r '.commit | strings' 2>/dev/null || true)"
+          case "$outcome" in repaired|stale|unrepairable|no-convergence|spend-ceiling|credential|failed) ;; *) outcome=failed ;; esac
+          case "$commit" in *[!0-9a-f]*) commit= ;; esac
+          [ "${#commit}" -eq 40 ] || commit=
+          echo "outcome=$outcome" >> "$GITHUB_OUTPUT"
+          echo "commit=$commit" >> "$GITHUB_OUTPUT"
+
+      - name: push the commit to the pull request branch as a fast-forward, which a branch that moved refuses
+        if: steps.rewrite.outputs.commit != ''
+        env:
+          AUTOWRITER_PAT: ${{ secrets.AUTOWRITER_PAT }}
+          BRANCH: ${{ needs.watch.outputs.branch }}
+        run: |
+          credential="$(printf 'x-access-token:%s' "$AUTOWRITER_PAT" | base64 | tr -d '\n')"
+          echo "::add-mask::$credential"
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $credential" push origin "HEAD:refs/heads/$BRANCH"
+
+  follow:
+    needs: [watch, repair]
+    if: always() && needs.watch.outputs.repair == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+      checks: read
+      actions: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: site/.nvmrc
+
+      - name: follow the repair up with no install, because this job holds a merge-capable token
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          AUTOWRITER_PAT: ${{ secrets.AUTOWRITER_PAT }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          PULL_REQUEST: ${{ inputs.pr }}
+          REPAIR_RESULT: ${{ needs.repair.result }}
+          REPAIR_OUTCOME: ${{ needs.repair.outputs.outcome }}
+        run: |
+          OUTCOME="$REPAIR_OUTCOME"
+          if [ -z "$OUTCOME" ] || { [ "$OUTCOME" = repaired ] && [ "$REPAIR_RESULT" != success ]; }; then
+            OUTCOME=failed
+          fi
+          npm run watch:pr -- --pr "$PULL_REQUEST" --after-repair "$OUTCOME"

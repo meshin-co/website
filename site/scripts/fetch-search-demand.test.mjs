@@ -80,7 +80,7 @@ after(() => {
   for (const sandbox of sandboxes) rmSync(sandbox, { recursive: true, force: true });
 });
 
-function run({ env = ENV, script = HAPPY, previous } = {}) {
+function run({ env = ENV, script = HAPPY, previous, args = [] } = {}) {
   const root = mkdtempSync(join(tmpdir(), 'demand-'));
   sandboxes.push(root);
   const site = join(root, 'site');
@@ -97,7 +97,7 @@ function run({ env = ENV, script = HAPPY, previous } = {}) {
   git(root, 'config', 'user.name', 'test');
   git(root, '-c', 'commit.gpgsign=false', 'commit', '--allow-empty', '-m', 'init');
 
-  const result = spawnSync(process.execPath, ['--import', pathToFileURL(stub).href, RUNNER], {
+  const result = spawnSync(process.execPath, ['--import', pathToFileURL(stub).href, RUNNER, ...args], {
     cwd: site,
     encoding: 'utf8',
     env: { PATH: process.env.PATH, STUB_LOG: log, STUB_SCRIPT: JSON.stringify(script), ...env },
@@ -114,7 +114,11 @@ function run({ env = ENV, script = HAPPY, previous } = {}) {
 const reportOf = ({ out }) => readFileSync(out, 'utf8');
 
 function assertRefused(outcome, ...patterns) {
-  assert.equal(outcome.result.status, 1, outcome.result.stderr);
+  assertRefusedWith(1, outcome, ...patterns);
+}
+
+function assertRefusedWith(status, outcome, ...patterns) {
+  assert.equal(outcome.result.status, status, outcome.result.stderr);
   for (const pattern of patterns) assert.match(outcome.result.stderr, pattern);
   assert.doesNotMatch(outcome.result.stderr + outcome.result.stdout, /PRIVATE KEY|reader@example-project/);
   assert.equal(existsSync(outcome.out), false, 'a refused run must write no report');
@@ -182,7 +186,7 @@ test('a window with no impressions writes a report that says so, with zero total
 test('an absent key is refused before any request, naming the variable and the file, and writes no report', () => {
   const outcome = run({ env: { ...ENV, GSC_SERVICE_ACCOUNT_JSON: '' }, previous: 'PREVIOUS REPORT' });
 
-  assert.equal(outcome.result.status, 1);
+  assert.equal(outcome.result.status, 3);
   assert.match(outcome.result.stderr, /GSC_SERVICE_ACCOUNT_JSON/);
   assert.match(outcome.result.stderr, /site\/\.env/);
   assert.match(outcome.result.stderr, /npm run audit:demand/);
@@ -193,7 +197,7 @@ test('an absent key is refused before any request, naming the variable and the f
 test('a key that is not JSON is refused before any request, and none of it is echoed', () => {
   const outcome = run({ env: { ...ENV, GSC_SERVICE_ACCOUNT_JSON: '{"private_key": "TOPSECRET-MARKER", broken' } });
 
-  assertRefused(outcome, /GSC_SERVICE_ACCOUNT_JSON/, /site\/\.env/);
+  assertRefusedWith(3, outcome, /GSC_SERVICE_ACCOUNT_JSON/, /site\/\.env/);
   assert.doesNotMatch(outcome.result.stderr, /TOPSECRET-MARKER/);
   assert.deepEqual(outcome.requests, []);
 });
@@ -201,7 +205,7 @@ test('a key that is not JSON is refused before any request, and none of it is ec
 test('an absent property is refused before any request, naming the variable and the file', () => {
   const outcome = run({ env: { GSC_SERVICE_ACCOUNT_JSON: KEY } });
 
-  assertRefused(outcome, /GSC_PROPERTY/, /site\/\.env/);
+  assertRefusedWith(3, outcome, /GSC_PROPERTY/, /site\/\.env/);
   assert.deepEqual(outcome.requests, []);
 });
 
@@ -210,7 +214,7 @@ test('a key Google rejects stops at the token request, naming the variable and t
     script: refused('token', 400, { error: 'invalid_grant', error_description: 'Invalid JWT Signature.' }),
   });
 
-  assertRefused(outcome, /GSC_SERVICE_ACCOUNT_JSON/, /site\/\.env/, /Invalid JWT Signature/);
+  assertRefusedWith(3, outcome, /GSC_SERVICE_ACCOUNT_JSON/, /site\/\.env/, /Invalid JWT Signature/);
   assert.equal(outcome.requests.length, 1);
 });
 
@@ -220,7 +224,7 @@ test('a property the account may not read is refused, naming the property, the k
   };
   const outcome = run({ script: refused('query', 403, forbidden), previous: 'PREVIOUS REPORT' });
 
-  assert.equal(outcome.result.status, 1);
+  assert.equal(outcome.result.status, 3);
   assert.match(outcome.result.stderr, /GSC_PROPERTY=sc-domain:example\.com/);
   assert.match(outcome.result.stderr, /GSC_SERVICE_ACCOUNT_JSON/);
   assert.match(outcome.result.stderr, /site\/\.env/);
@@ -231,4 +235,40 @@ test('a server error writes no report, and reports the status Search Console gav
   const outcome = run({ script: refused('query', 503, { error: { message: 'Backend Error' } }) });
 
   assertRefused(outcome, /503/, /Backend Error/);
+});
+
+test('the exit code is 3 for a missing key, 3 for a token refusal, 1 for a server error on the query and 0 on success', () => {
+  const statuses = {
+    missing: run({ env: { ...ENV, GSC_SERVICE_ACCOUNT_JSON: '' } }),
+    refusedToken: run({ script: refused('token', 401, { error: 'invalid_client' }) }),
+    serverError: run({ script: refused('query', 503, { error: { message: 'Backend Error' } }) }),
+    success: run(),
+  };
+
+  assert.deepEqual(
+    Object.values(statuses).map(({ result }) => result.status),
+    [3, 3, 1, 0]
+  );
+});
+
+test('--key-source secret names the repository secret and the workflow, never the file', () => {
+  const outcome = run({ env: { ...ENV, GSC_SERVICE_ACCOUNT_JSON: '' }, args: ['--key-source', 'secret'] });
+
+  assertRefusedWith(3, outcome, /the repository secret GSC_SERVICE_ACCOUNT_JSON/, /Write daily workflow/);
+  assert.doesNotMatch(outcome.result.stderr, /site\/\.env|npm run audit:demand/);
+});
+
+test('--key-source with any other value is a usage error: exit 2, no request, no report', () => {
+  for (const args of [['--key-source', 'bogus'], ['--key-source']]) {
+    const outcome = run({ args });
+
+    assertRefusedWith(2, outcome, /audit:demand: --key-source must be file or secret/);
+    assert.deepEqual(outcome.requests, []);
+  }
+});
+
+test('a network failure exits 1, not the credential code', () => {
+  const outcome = run({ script: { ...HAPPY, queryUrl: 'https://elsewhere.example/query' } });
+
+  assertRefusedWith(1, outcome, /unexpected request/);
 });

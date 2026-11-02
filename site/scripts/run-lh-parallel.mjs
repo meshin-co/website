@@ -3,8 +3,11 @@ import { mkdir, readdir, rm, symlink } from 'node:fs/promises';
 import { cpus } from 'node:os';
 import { join, resolve } from 'node:path';
 
+import { exitWhenUnattended } from './human-only.mjs';
 import { clearMeasuredStamp, describeTree, writeMeasuredStamp } from './lh-evidence.mjs';
 import { deadlineMs, shardPlan, workerCount } from './lh-parallel.mjs';
+
+exitWhenUnattended('run the Lighthouse gate');
 
 const FLOOR_MS = Number(process.env.LH_SHARD_FLOOR_MS ?? 15 * 60 * 1000);
 const GRACE_MS = Number(process.env.LH_SHARD_GRACE_MS ?? 15 * 1000);

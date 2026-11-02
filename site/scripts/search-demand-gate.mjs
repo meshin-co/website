@@ -4,6 +4,7 @@ import { join, resolve } from 'node:path';
 
 import { discoverDocs, isRecord, mayBeRecord } from './docs-gate.mjs';
 import { parsePrompts } from './geo-baseline.mjs';
+import { readEngineConfig } from './engine-config.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 import { wonClaims } from './search-demand-claims.mjs';
 
@@ -13,7 +14,7 @@ const REFRESH = 'npm run audit:demand';
 const ARCHIVE = 'openspec/changes/archive/';
 const DAY_MS = 86_400_000;
 const MAX_CLOCK_SKEW_DAYS = 1;
-export const MAX_AGE_DAYS = 35;
+export const MAX_AGE_DAYS = readEngineConfig().demand.maxAgeDays;
 
 const PROMPT_COLUMNS = ['#', 'Prompt', 'Impressions'];
 const listed = (names) => `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`;
@@ -43,7 +44,7 @@ const cellsOf = (line) =>
 const isDelimiterRow = (line) => cellsOf(line).every((cell) => /^:?-+:?$/.test(cell));
 const startsRow = (line) => line?.trimStart().startsWith('|');
 
-function tablesIn(markdown) {
+export function tablesIn(markdown) {
   const lines = markdown.split('\n');
   const tables = [];
   for (let at = 0; at < lines.length - 1; at += 1) {
