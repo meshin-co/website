@@ -1,7 +1,9 @@
+import { brandFromDisk } from '../src/utils/brand.mjs';
 import { ATTEMPT_CAP, QUARANTINE_HOURS } from './autowriter-ledger.mjs';
 import { judgeChecks } from './pr-checks.mjs';
 
-export const BOT_EMAIL = 'autowriter-bot@meshin.co';
+export const BOT_NAME = 'autowriter-bot';
+export const BOT_EMAIL = `${BOT_NAME}@${brandFromDisk().name}`;
 export const BRANCH_PREFIX = 'autowriter/';
 export const HOLD_LABEL = 'autowriter-hold';
 export const CHAIN_LIMIT_HOURS = QUARANTINE_HOURS + 24;

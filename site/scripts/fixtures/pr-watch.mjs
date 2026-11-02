@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 
 import { AGGREGATE_CHECK_NAME } from '../ci-aggregate.mjs';
-import { BOT_EMAIL } from '../pr-classify.mjs';
+import { BOT_EMAIL, BOT_NAME } from '../pr-classify.mjs';
 
 export const HOUR = 3_600_000;
 
@@ -74,7 +74,7 @@ export const withHead = (bundle, sha) => ({
 
 export const withPullRequest = (bundle, patch) => ({ ...bundle, pullRequest: { ...bundle.pullRequest, ...patch } });
 
-export const botIdentity = { name: 'autowriter-bot', email: BOT_EMAIL };
+export const botIdentity = { name: BOT_NAME, email: BOT_EMAIL };
 
 export const byBot = (bundle) => ({
   ...bundle,

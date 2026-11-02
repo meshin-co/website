@@ -5,7 +5,7 @@ import { ledgerFile, newLedger, readLedger, writeLedger } from './autowriter-led
 import { variable } from './escalate-channels.mjs';
 import { EscalationError, escalate } from './escalate.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
-import { BOT_EMAIL, classifyPullRequest, slugOfBranch } from './pr-classify.mjs';
+import { BOT_EMAIL, BOT_NAME, classifyPullRequest, slugOfBranch } from './pr-classify.mjs';
 import {
   GitHubError,
   createApi,
@@ -23,7 +23,7 @@ export const WORKFLOW = 'watch-pr.yml';
 
 const USAGE = 'Usage: node scripts/pr-watch.mjs --pr <number> [--observed <token>]';
 const REPOSITORY_ROOT = resolve(import.meta.dirname, '..', '..');
-const BOT_IDENTITY = { name: 'autowriter-bot', email: BOT_EMAIL };
+const BOT_IDENTITY = { name: BOT_NAME, email: BOT_EMAIL };
 const GITHUB = { createApi, readSnapshot, mergePullRequest, dispatchSuccessor, putLedger, tickProblem };
 const FLAGS = new Map([
   ['--pr', 'number'],
