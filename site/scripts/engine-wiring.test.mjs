@@ -21,6 +21,7 @@ const LOOP = {
   holdLabel: 'pause-bot',
 };
 const DEMAND = {
+  property: 'sc-domain:elsewhere.test',
   windowDays: 30,
   dataLagDays: 5,
   maxAgeDays: 50,

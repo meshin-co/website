@@ -202,11 +202,10 @@ test('a key that is not JSON is refused before any request, and none of it is ec
   assert.deepEqual(outcome.requests, []);
 });
 
-test('an absent property is refused before any request, naming the variable and the file', () => {
+test('no run stops for an absent property, because the engine configuration names it and a request is still made', () => {
   const outcome = run({ env: { GSC_SERVICE_ACCOUNT_JSON: KEY } });
 
-  assertRefusedWith(3, outcome, /GSC_PROPERTY/, /site\/\.env/);
-  assert.deepEqual(outcome.requests, []);
+  assert.ok(outcome.requests.length > 0, 'the run reached Search Console instead of refusing');
 });
 
 test('a key Google rejects stops at the token request, naming the variable and the file', () => {
@@ -225,9 +224,9 @@ test('a property the account may not read is refused, naming the property, the k
   const outcome = run({ script: refused('query', 403, forbidden), previous: 'PREVIOUS REPORT' });
 
   assert.equal(outcome.result.status, 3);
-  assert.match(outcome.result.stderr, /GSC_PROPERTY=sc-domain:example\.com/);
+  assert.match(outcome.result.stderr, /the property sc-domain:example\.com/);
   assert.match(outcome.result.stderr, /GSC_SERVICE_ACCOUNT_JSON/);
-  assert.match(outcome.result.stderr, /site\/\.env/);
+  assert.match(outcome.result.stderr, /demand\.property in site\/engine\.config\.json/);
   assert.equal(reportOf(outcome), 'PREVIOUS REPORT');
 });
 

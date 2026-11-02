@@ -38,6 +38,7 @@
     "holdLabel": "autowriter-hold"
   },
   "demand": {
+    "property": "sc-domain:meshin.co",
     "windowDays": 90,
     "dataLagDays": 2,
     "maxAgeDays": 35,
