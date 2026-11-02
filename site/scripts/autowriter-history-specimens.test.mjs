@@ -11,6 +11,7 @@ import { DISPOSITION_DIRECTORY, sealSignature } from './autowriter-refusals.mjs'
 import { autowriterSpecimens } from './autowriter-specimens.mjs';
 import { BOT, HUMAN, commitAs, gitIn, initRepo, removeRepos, shallowClone } from './fixtures/history-repo.mjs';
 import { bandSceneFiles } from './fixtures/record-rules-scene.mjs';
+import { plantSpendReport } from './fixtures/spend-report-plant.mjs';
 import { generationFile } from './generation-record.mjs';
 import { FAMILIES, manifestFamilies } from './mutation-smoke.mjs';
 import { SPECIMENS, flatten, proveWithSpecimen } from './mutation-specimens.mjs';
@@ -81,6 +82,7 @@ async function inScene(check, files = FILES) {
       mkdirSync(dirname(join(root, path)), { recursive: true });
       writeFileSync(join(root, path), body);
     }
+    plantSpendReport(root);
     initRepo(root);
     commitAs(root, HUMAN, { message: 'chore(fixture): start' });
     return await check(root);

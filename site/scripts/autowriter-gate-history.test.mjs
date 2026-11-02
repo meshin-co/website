@@ -16,6 +16,7 @@ import {
   bandSceneFiles,
   recordWith,
 } from './fixtures/record-rules-scene.mjs';
+import { plantSpendReport, spendReportFiles } from './fixtures/spend-report-plant.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
 const REPO = resolve(SITE, '..');
@@ -70,6 +71,7 @@ function inTempRepo(check) {
       mkdirSync(dirname(join(root, path)), { recursive: true });
       writeFileSync(join(root, path), text);
     }
+    plantSpendReport(root);
     return check(root);
   } finally {
     rmSync(root, { recursive: true, force: true });
@@ -91,7 +93,9 @@ const skippedLines = (run) => run.stdout.split('\n').filter((line) => line.start
 
 const pipelineWrites = (root, extra = {}) => {
   const band = JSON.parse(bandSceneFiles()[BAND_PATH]);
-  const write = { [RECORD_PATH]: asJson(recordWith({ band })), [ENTRY_PATH]: entryText(), ...extra };
+  const written = { [RECORD_PATH]: asJson(recordWith({ band })), [ENTRY_PATH]: entryText(), ...extra };
+  const report = spendReportFiles(root, [{ path: RECORD_PATH, text: written[RECORD_PATH] }]);
+  const write = { ...written, ...report };
   const message = `feat(autowriter): write zz-specimen\n\nProvenance: ${RECORD_PATH}`;
   return commitAs(root, BOT, { write, message });
 };

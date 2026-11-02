@@ -101,20 +101,21 @@ function slackText(context) {
   ].join('\n');
 }
 
-async function postToSlack(context) {
-  const { env, fetch, clean } = context;
+export async function postSlackText({ env, fetch, clean, text }) {
   if (absentVariables(env, ['SLACK_WEBHOOK_URL']).length > 0) return { error: NOT_SET.SLACK_WEBHOOK_URL };
   const result = await send({
     fetch,
     url: variable(env, 'SLACK_WEBHOOK_URL'),
     headers: { 'Content-Type': 'application/json' },
-    body: { text: slackText(context) },
+    body: { text },
   });
   if (result.failure !== undefined) return { error: `request failed: ${result.failure}` };
-  const { status, text } = result;
+  const { status, text: answer } = result;
   if (status < 200 || status > 299)
-    return { status, error: `Slack answered HTTP ${status}: ${clean(text).slice(0, MAX_EXCERPT_LENGTH)}` };
+    return { status, error: `Slack answered HTTP ${status}: ${clean(answer).slice(0, MAX_EXCERPT_LENGTH)}` };
   return { status };
 }
+
+const postToSlack = (context) => postSlackText({ ...context, text: slackText(context) });
 
 export const SENDERS = { issue: openIssue, slack: postToSlack };
