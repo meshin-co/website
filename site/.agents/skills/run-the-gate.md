@@ -37,14 +37,16 @@ Run at the end of every phase and before any merge to main. The procedure is
 
 ## Lighthouse is the local half, and a push proves it ran
 
-Steps 11–13 above run on a quiet machine, never in CI (L59). The procedure, the record it writes
-and the pre-push refusal: `prove-lighthouse-ran-locally.md`.
+Steps 11–13 run on a quiet machine, never in CI (L59); the procedure, the record and the
+pre-push refusal: `prove-lighthouse-ran-locally.md`.
 
 ## In CI the same cheap gates run in parallel
 
-`build` runs once and uploads `dist`; `types-and-units`, `guard-mutations`, `cheap-gates` and
-`visual-and-axe` (3 Playwright shards) fan out from it; a docs-only commit runs `types-and-units`
-alone. One shard by hand: `GATE_PHASE=<bucket> LHCI_FORM_FACTOR=mobile LH_SHARD_INDEX=1
+`build` runs once and uploads `dist`; `types-and-units`, `cheap-gates` and `visual-and-axe`
+(3 Playwright shards) fan out from it; a docs-only commit runs `types-and-units` alone.
+`npm run test:smoke` is not in CI: it needs a build and three browsers, twelve minutes, on work
+that cannot change between a local push and the same commit. `.githooks/pre-push` runs it when
+the push touches a guard. One shard by hand: `GATE_PHASE=<bucket> LHCI_FORM_FACTOR=mobile LH_SHARD_INDEX=1
 LH_SHARD_TOTAL=4 npm run gate:lh:one`; shards deal routes round-robin (`scripts/lh-shards.cjs`),
 bind port `4330 + index - 1`, write `shard-<index>/`.
 
@@ -52,20 +54,18 @@ bind port `4330 + index - 1`, write `shard-<index>/`.
 
 Lighthouse audits every unique page plus ONE leaf per repeated template family — the heaviest by
 built bytes, since leaves differ only in content. `auditableRoutes()` in `scripts/lh-routes.cjs`
-derives the set from `dist/**/*.html`, never from `gate-routes.json`; `/styleguide` is excluded.
-Visual snapshots follow the same families (`scripts/templates.mjs`).
+derives the set from `dist/**/*.html`, never from `gate-routes.json`; `/styleguide` is excluded,
+and visual snapshots follow the same families (`scripts/templates.mjs`).
 
 ## Known traps (docs/FRONTEND-EXCELLENCE-ISSUES.md)
 
 - lhci has no `settings.preset`; form factors come from `formFactor` plus `screenEmulation` in
-  `lighthouserc.cjs`.
-- Two Lighthouse runs must never share an output directory. `gate:lh` clears it between form
-  factors; a shard writes its own directory and binds its own port.
+  `lighthouserc.cjs`. Two runs must never share an output directory: `gate:lh` clears it between
+  form factors, and a shard writes its own directory and binds its own port.
 - Assert the North Star numbers, not 0.9x thresholds. A run at 97–99 re-runs three times, then the
   phase fails (L13).
 - A category score of 100 does not mean the metric assertions passed: `report.mjs` enforces the
-  LCP, CLS and TBT budgets from `lighthouserc.cjs` on each route's median run, and lhci asserts the
-  best run by default, so every rule in `lighthouserc.cjs` goes through `onMedian`.
+  LCP, CLS and TBT budgets on each route's median run, so every rule goes through `onMedian`.
 - A scratch route left in the build widens every downstream gate; delete throwaways first.
 - Lighthouse measures the machine. Run shards alone, logs outside `/tmp`: on 2026-10-02 four
   desktop shards beside a baseline regeneration took 2h37m and all failed, then passed singly in

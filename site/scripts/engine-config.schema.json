@@ -144,8 +144,13 @@
     "demand": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["windowDays", "dataLagDays", "maxAgeDays", "minImpressions", "strengthenBand"],
+      "required": ["property", "windowDays", "dataLagDays", "maxAgeDays", "minImpressions", "strengthenBand"],
       "properties": {
+        "property": {
+          "type": "string",
+          "pattern": "^(sc-domain:|https?://)",
+          "description": "The Search Console property the demand report reads, for example sc-domain:example.com. Not a secret: it names the site, and the service-account key is what grants access."
+        },
         "windowDays": {
           "type": "integer",
           "minimum": 1,

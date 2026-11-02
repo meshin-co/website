@@ -13,6 +13,7 @@ import {
   tokenRejection,
   tokenRequestBody,
 } from './search-demand.mjs';
+import { readEngineConfig } from './engine-config.mjs';
 
 const { privateKey, publicKey } = generateKeyPairSync('rsa', {
   modulusLength: 2048,
@@ -97,12 +98,10 @@ test('JSON that is not a service-account key is refused, whatever shape it has',
   }
 });
 
-test('an absent property is refused, naming the variable and the file it belongs in', () => {
-  const message = refusal({ ...ENV, GSC_PROPERTY: '' });
+test('an absent property variable falls back to the engine configuration, so no run stops for a value that is not a secret', () => {
+  const { property } = credentialsFrom({ ...ENV, GSC_PROPERTY: '' });
 
-  assert.match(message, /GSC_PROPERTY/);
-  assert.match(message, /site\/\.env/);
-  assert.match(message, /npm run audit:demand/);
+  assert.equal(property, readEngineConfig().demand.property);
 });
 
 test('the assertion is an RS256 token that asks for read-only Search Console access and lasts an hour', () => {
@@ -186,9 +185,9 @@ test('a refusal of the property names the property, the key, the file and the pe
     PROPERTY
   ).message;
 
-  assert.match(message, /GSC_PROPERTY=sc-domain:example\.com/);
+  assert.match(message, /the property sc-domain:example\.com/);
   assert.match(message, /GSC_SERVICE_ACCOUNT_JSON/);
-  assert.match(message, /site\/\.env/);
+  assert.match(message, /demand\.property in site\/engine\.config\.json/);
   assert.match(message, /npm run audit:demand/);
   assert.match(message, /Restricted/);
   assert.match(message, /does not have sufficient permission/);

@@ -17,6 +17,14 @@ const REQUIRED_SECRETS = [
   'SLACK_WEBHOOK_URL',
 ];
 
+const SOURCE_OF = /\$\{\{\s*(secrets|vars)\.([A-Z0-9_]+)/g;
+
+const namesRead = (workflow, source) => {
+  const found = new Set();
+  for (const [, kind, name] of JSON.stringify(workflow).matchAll(SOURCE_OF)) if (kind === source) found.add(name);
+  return found;
+};
+
 test('a run with no secrets configured stops at the first job instead of failing every morning', () => {
   const jobs = workflow().jobs;
   assert.ok(jobs.configured, 'the workflow has a configured job');
@@ -25,6 +33,18 @@ test('a run with no secrets configured stops at the first job instead of failing
     assert.ok(body.includes(name), `the configured job reads ${name}`);
   }
   assert.equal(typeof jobs.configured.outputs?.ready, 'string');
+});
+
+test('the readiness job checks every name the run reads, so no absent value is found only after money was spent', () => {
+  const loaded = workflow();
+  const checked = JSON.stringify(loaded.jobs.configured);
+  const optional = new Set(['WRITING_TERM_ARM', 'WRITING_TERM_CAP']);
+
+  const unchecked = [...namesRead(loaded, 'secrets'), ...namesRead(loaded, 'vars')]
+    .filter((name) => !optional.has(name))
+    .filter((name) => !checked.includes(name));
+
+  assert.deepEqual(unchecked, [], `the readiness job never looks at ${unchecked.join(', ')}`);
 });
 
 test('every spending job waits for the readiness verdict, so none can run unconfigured', () => {

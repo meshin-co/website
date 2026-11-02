@@ -57,13 +57,7 @@ test('a prose-only pull request ran no content gate, so it is a hard stop and ne
   assert.equal(outcome.verdict, 'escalate');
   assert.equal(outcome.reason, 'skipped-gate');
   assert.equal(outcome.kind, 'hard-stop');
-  assert.deepEqual(outcome.evidence.jobs, [
-    'build',
-    'cheap-gates',
-    'deploy-preview',
-    'guard-mutations',
-    'visual-and-axe',
-  ]);
+  assert.deepEqual(outcome.evidence.jobs, ['build', 'cheap-gates', 'deploy-preview', 'visual-and-axe']);
 });
 
 test('one required job reporting skipped in an otherwise green run is a hard stop', () => {

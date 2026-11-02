@@ -45,7 +45,6 @@ const secretRefusals = () => ({
       'secret'
     )
   ),
-  missingProperty: thrown(() => credentialsFrom({ ...ENV, GSC_PROPERTY: '' }, 'secret')),
   unsignableKey: thrown(() =>
     signAssertion({ clientEmail: 'a@b.c', privateKey: 'TOPSECRET-MARKER PRIVATE KEY', now: 1, source: 'secret' })
   ),
@@ -57,30 +56,29 @@ test('with the secret source every credential message names the secret and the w
   for (const [name, error] of Object.entries(secretRefusals())) {
     assert.doesNotMatch(error.message, FILE_ONLY, name);
     assert.match(error.message, WORKFLOW, name);
-    assert.match(error.message, /the repository secret GSC_(SERVICE_ACCOUNT_JSON|PROPERTY)/, name);
+    assert.match(error.message, /GSC_SERVICE_ACCOUNT_JSON|engine\.config\.json/, name);
     assert.doesNotMatch(error.message, /TOPSECRET-MARKER|PRIVATE KEY/, name);
   }
 });
 
 test('each secret message names the secret its sentence is about', () => {
-  const { missingKey, invalidKey, missingProperty, unsignableKey, tokenRefused, propertyForbidden } = secretRefusals();
+  const { missingKey, invalidKey, unsignableKey, tokenRefused, propertyForbidden } = secretRefusals();
 
   for (const error of [missingKey, invalidKey, unsignableKey, tokenRefused]) {
     assert.match(error.message, /the repository secret GSC_SERVICE_ACCOUNT_JSON/);
   }
-  assert.match(missingProperty.message, /in the repository secret GSC_PROPERTY, for example sc-domain:example\.com\./);
-  assert.match(propertyForbidden.message, /or correct the repository secret GSC_PROPERTY\./);
+  assert.match(propertyForbidden.message, /or correct demand\.property in site\/engine\.config\.json\./);
   assert.match(propertyForbidden.message, /service account in GSC_SERVICE_ACCOUNT_JSON/);
 });
 
 test('the file source stays the default for every message', () => {
   assert.equal(
-    thrown(() => credentialsFrom({ ...ENV, GSC_PROPERTY: '' })).message,
-    thrown(() => credentialsFrom({ ...ENV, GSC_PROPERTY: '' }, 'file')).message
+    thrown(() => credentialsFrom({ ...ENV, GSC_SERVICE_ACCOUNT_JSON: '' })).message,
+    thrown(() => credentialsFrom({ ...ENV, GSC_SERVICE_ACCOUNT_JSON: '' }, 'file')).message
   );
   assert.equal(tokenRejection(400, {}).message, tokenRejection(400, {}, 'file').message);
   assert.match(tokenRejection(400, {}).message, /Replace that line in site\/\.env with a fresh key/);
-  assert.match(queryRejection(403, {}, 'p').message, /correct GSC_PROPERTY in site\/\.env\./);
+  assert.match(queryRejection(403, {}, 'p').message, /correct demand\.property in site\/engine\.config\.json\./);
 });
 
 test('errors that mean the credential is unusable carry the credential flag', () => {

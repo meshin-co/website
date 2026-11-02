@@ -97,7 +97,7 @@ test('the repository as committed has nothing for the gate to find, and the repo
   assert.equal(counts.ledgers, 0);
   assert.equal(counts.claims, 0);
   assert.ok(counts.titles > 50, 'the generated layer gave ' + counts.titles + ' titles');
-  assert.equal(counts.jobs, 7);
+  assert.equal(counts.jobs, 6);
 });
 
 test('a well-formed open ledger, a settled one and a delivered escalation pass', () => {
@@ -279,8 +279,8 @@ test('a missing core, a core without its markers and a core with no titles are e
 
 test('the workflow findings carry the workflow path, and an unparsable or missing workflow is named', () => {
   const lost = WORKFLOW.replace(
-    'needs: [changes, build, types-and-units, guard-mutations, cheap-gates, visual-and-axe, deploy-preview]',
-    'needs: [changes, build, types-and-units, guard-mutations, cheap-gates, deploy-preview]'
+    'needs: [changes, build, types-and-units, cheap-gates, visual-and-axe, deploy-preview]',
+    'needs: [changes, build, types-and-units, cheap-gates, deploy-preview]'
   );
   assert.notEqual(lost, WORKFLOW);
   const found = findings({ workflow: lost });
@@ -343,7 +343,7 @@ test('the command exits 0 and prints the summary on a repository with nothing pl
     assert.equal(run.status, 0, run.stderr);
     assert.match(
       run.stdout,
-      /^autowriter: 0 ledgers, 0 claims \(0 lapsed\), \d+ generated titles, 7 CI jobs under the aggregate check, pipeline commits not judged, 0 generation records, 0 findings$/m
+      /^autowriter: 0 ledgers, 0 claims \(0 lapsed\), \d+ generated titles, 6 CI jobs under the aggregate check, pipeline commits not judged, 0 generation records, 0 findings$/m
     );
     assert.equal(run.stderr, '');
   }));
@@ -393,7 +393,7 @@ test('the command exits 1 and names the file and the rule for each defect plante
       );
       assert.match(
         run.stdout,
-        /2 ledgers, 1 claims \(0 lapsed\), \d+ generated titles, 7 CI jobs under the aggregate check, pipeline commits not judged, 0 generation records, 4 findings$/m
+        /2 ledgers, 1 claims \(0 lapsed\), \d+ generated titles, 6 CI jobs under the aggregate check, pipeline commits not judged, 0 generation records, 4 findings$/m
       );
     }
   ));

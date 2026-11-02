@@ -8,7 +8,11 @@ export const TOKEN_URL = 'https://oauth2.googleapis.com/token';
 const SCOPE = 'https://www.googleapis.com/auth/webmasters.readonly';
 const ROW_LIMIT = 25000;
 
-const { windowDays: WINDOW_DAYS, dataLagDays: DATA_LAG_DAYS } = readEngineConfig().demand;
+const {
+  windowDays: WINDOW_DAYS,
+  dataLagDays: DATA_LAG_DAYS,
+  property: CONFIGURED_PROPERTY,
+} = readEngineConfig().demand;
 const ASSERTION_SECONDS = 3600;
 const DAY_MS = 86_400_000;
 const DETAIL_LIMIT = 300;
@@ -19,13 +23,11 @@ const WORDING = {
   file: {
     home: () => 'site/.env',
     keyGuide: '; site/.env.example says where to get it',
-    propertyExample: `, for example ${PROPERTY_VARIABLE}=sc-domain:example.com; site/.env.example explains it`,
     again: 'Then run npm run audit:demand again.',
   },
   secret: {
     home: (name) => `the repository secret ${name}`,
     keyGuide: '',
-    propertyExample: ', for example sc-domain:example.com',
     again: 'Then run the Write daily workflow again.',
   },
 };
@@ -57,13 +59,7 @@ export function credentialsFrom(env, source = 'file') {
     privateKey.includes('PRIVATE KEY');
   if (!usable) throw keyError('has no client_email and private_key', source);
 
-  const property = String(env[PROPERTY_VARIABLE] ?? '').trim();
-  if (property === '') {
-    const { home, propertyExample, again } = WORDING[source];
-    throw credentialError(
-      `${PROPERTY_VARIABLE} is not set. Put the Search Console property in ${home(PROPERTY_VARIABLE)}${propertyExample}. ${again}`
-    );
-  }
+  const property = String(env[PROPERTY_VARIABLE] ?? '').trim() || CONFIGURED_PROPERTY;
   return { clientEmail, privateKey, property };
 }
 
@@ -108,10 +104,10 @@ export const queryRequest = ({ startDate, endDate, dimensions, startRow = 0, row
 export function queryRejection(status, body, property, source = 'file') {
   const detail = String(body?.error?.message ?? `HTTP ${status}`).slice(0, DETAIL_LIMIT);
   if (status === 401 || status === 403) {
-    const { home, again } = WORDING[source];
-    const correct = source === 'file' ? `${PROPERTY_VARIABLE} in ${home()}` : home(PROPERTY_VARIABLE);
+    const { again } = WORDING[source];
+    const correct = `demand.property in site/engine.config.json`;
     return credentialError(
-      `Search Console refused ${PROPERTY_VARIABLE}=${property} for the service account in ${KEY_VARIABLE} (${detail}). Add that account's client_email to the property in Search Console, Settings, Users and permissions, with Restricted permission, or correct ${correct}. If the message says the API is disabled, enable the Search Console API in the Google Cloud project that owns the key. ${again}`
+      `Search Console refused the property ${property} for the service account in ${KEY_VARIABLE} (${detail}). Add that account's client_email to the property in Search Console, Settings, Users and permissions, with Restricted permission, or correct ${correct}. If the message says the API is disabled, enable the Search Console API in the Google Cloud project that owns the key. ${again}`
     );
   }
   return new Error(`Search Console answered HTTP ${status} (${detail}); no report was written`);

@@ -12,8 +12,7 @@ const plant = (from, to) => {
   return planted;
 };
 
-const NEEDS_LINE =
-  '    needs: [changes, build, types-and-units, guard-mutations, cheap-gates, visual-and-axe, deploy-preview]';
+const NEEDS_LINE = '    needs: [changes, build, types-and-units, cheap-gates, visual-and-axe, deploy-preview]';
 const STEP_IF = '        if: always()\n        env:\n          NEEDS:';
 
 test('the workflow path is the one CI runs', () => {

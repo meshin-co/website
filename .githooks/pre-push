@@ -2,3 +2,13 @@
 set -e
 
 node site/scripts/run-lh-evidence.mjs check
+
+git fetch -q origin main 2>/dev/null || true
+base=$(git rev-parse --verify -q FETCH_HEAD || git rev-parse --verify -q origin/main || true)
+if [ -n "$base" ]; then
+  guards=$(git diff --name-only "$base...HEAD" -- site/scripts site/tests/guard-mutations site/package.json .github/workflows)
+  if [ -n "$guards" ]; then
+    echo "pre-push: the guards changed, proving every family can still fail"
+    (cd site && npm run --silent test:smoke)
+  fi
+fi
