@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import {
+  EARLIER_RUN_AT,
   LAPSED_AT,
   claimed,
   inputsFor,
@@ -11,6 +12,7 @@ import {
   reportOf,
   sourcesOf,
 } from './fixtures/topic-inputs.mjs';
+import { recordPath } from './record-layout.mjs';
 import { selectTopic } from './topic-selection.mjs';
 
 const PILOTS = prompt(9, 'why do AI pilots fail to reach production');
@@ -158,10 +160,36 @@ test('a claim that lapsed holds nothing, so the prompt it named is taken', () =>
   assert.deepEqual(decision.refusals, []);
 });
 
-test('a slug that already has a ledger is not claimed a second time', () => {
-  const decision = select([PILOTS, HANDOVER], [], { ledgerSlugs: ['why-do-ai-pilots-fail-to-reach-production'] });
+test('a slug that already has a ledger is not claimed a second time, and the refusal names the ledger', () => {
+  const ledgerPath = recordPath('ledger', 'why-do-ai-pilots-fail-to-reach-production', EARLIER_RUN_AT);
+  const decision = select([PILOTS, HANDOVER], [], { ledgerPaths: [ledgerPath] });
   assert.equal(decision.entries[0].prompt.number, 15);
   assert.equal(decision.refusals[0].reason, 'slug-held');
+  assert.equal(decision.refusals[0].against, ledgerPath);
+  assert.ok(decision.refusals[0].detail.includes(ledgerPath));
+});
+
+test('a ledger holds its slug wherever it is filed: flat, in its month, or in a directory under the month', () => {
+  const slug = 'why-do-ai-pilots-fail-to-reach-production';
+  const month = recordPath('ledger', slug, EARLIER_RUN_AT);
+  const filed = [`audits/autowriter/${slug}.json`, month, month.replace(`/${slug}.json`, `/extra/${slug}.json`)];
+  assert.equal(new Set(filed).size, 3);
+  for (const ledgerPath of filed) {
+    const decision = select([PILOTS, HANDOVER], [], { ledgerPaths: [ledgerPath] });
+    assert.equal(decision.entries[0].prompt.number, 15, ledgerPath);
+    assert.deepEqual(
+      decision.refusals.map(({ reason, against }) => [reason, against]),
+      [['slug-held', ledgerPath]],
+      ledgerPath
+    );
+  }
+});
+
+test('a ledger of another slug holds nothing, even when its name starts with the slug', () => {
+  const other = recordPath('ledger', 'why-do-ai-pilots-fail-to-reach-production-2', EARLIER_RUN_AT);
+  const decision = select([PILOTS, HANDOVER], [], { ledgerPaths: [other] });
+  assert.equal(decision.entries[0].prompt.number, 9);
+  assert.deepEqual(decision.refusals, []);
 });
 
 test('a title longer than the room is passed over without a refusal', () => {

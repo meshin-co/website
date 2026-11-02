@@ -1,15 +1,16 @@
 import './fixtures/no-network.mjs';
 
 import assert from 'node:assert/strict';
-import { readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { afterEach, test } from 'node:test';
 
+import { recordPath } from './record-layout.mjs';
 import { assembleRoute } from './route-assembly.mjs';
 import { dispositionFor } from './route-derive.mjs';
 import { WriterError } from './writer-error.mjs';
 import { claimOf, DRAFTS, RUN_DATE } from './fixtures/entry-drafts.mjs';
-import { DISPOSITIONS, listingDigest } from './fixtures/route-dispositions.mjs';
+import { DISPOSITIONS, listingDigest, staleEntries } from './fixtures/route-dispositions.mjs';
 import { fakeRun, gitIn, makeRepo, snapshotOf } from './fixtures/route-repo.mjs';
 
 const roots = [];
@@ -27,8 +28,10 @@ const POST = `site/src/data/post/${SLUG}.md`;
 const TERM = 'site/src/data/glossary/model-registry.md';
 const POST_ROUTE = `/blog/${SLUG}`;
 const TERM_ROUTE = '/glossary/model-registry';
-const POST_DISPOSITION = `${DISPOSITIONS}/generated-${SLUG}.json`;
-const TERM_DISPOSITION = `${DISPOSITIONS}/generated-model-registry.json`;
+const ARTICLE = claimOf('article');
+const TERM_CLAIM = claimOf('term');
+const POST_DISPOSITION = recordPath('disposition', SLUG, ARTICLE.claimedAt);
+const TERM_DISPOSITION = recordPath('disposition', TERM_CLAIM.slug, TERM_CLAIM.claimedAt);
 const ROUTES = `${DISPOSITIONS}/routes.json`;
 const POSTS = `${DISPOSITIONS}/posts.json`;
 const FACTS = 'site/content-facts.json';
@@ -153,8 +156,8 @@ test('the new reason names every route the run added and every generation record
   for (const part of [
     POST_ROUTE,
     TERM_ROUTE,
-    `audits/autowriter/generations/${SLUG}.json`,
-    'audits/autowriter/generations/model-registry.json',
+    `audits/autowriter/generations/2026/11/${SLUG}.json`,
+    'audits/autowriter/generations/2026/11/model-registry.json',
   ])
     assert.ok(reason.includes(part), part);
   assert.match(reason, /no human has read it/);
@@ -183,7 +186,13 @@ test('a generated disposition is returned once, exactly as written, and is never
   for (const row of rows)
     assert.equal(
       row.reason,
-      dispositionFor({ slug: SLUG, target: row.target, digest: row.digest, runDate: RUN_DATE }).reason
+      dispositionFor({
+        claimPath: recordPath('claim', SLUG, ARTICLE.claimedAt),
+        generationPath: recordPath('generation', SLUG, ARTICLE.claimedAt),
+        target: row.target,
+        digest: row.digest,
+        runDate: RUN_DATE,
+      }).reason
     );
 });
 
@@ -208,7 +217,7 @@ test('a term alone restates the glossary entry and leaves the blog entries byte 
   const { reason, digest } = entries[3];
 
   assert.equal(digest, listingDigest(['ai-register', 'model-registry']));
-  assert.match(reason, /generation record audits\/autowriter\/generations\/model-registry\.json/);
+  assert.match(reason, /generation record audits\/autowriter\/generations\/2026\/11\/model-registry\.json/);
   assert.ok(reason.includes(TERM_ROUTE) && !reason.includes('/blog/'));
   assert.equal(textOf(result, ROUTES), layout([...original.slice(0, 3), restated(original[3], digest, reason)]));
 });
@@ -228,13 +237,18 @@ test('a stale list that names one of the run own dispositions is refused and the
   const root = repo();
   const before = untouched(root);
   const own = [
-    { file: `generated-${SLUG}.json`, index: 0, target: `src/data/post/${SLUG}.md`, digest: 'aaaaaaaaaaaa' },
+    {
+      file: POST_DISPOSITION.slice(DISPOSITIONS.length + 1),
+      index: 0,
+      target: `src/data/post/${SLUG}.md`,
+      digest: 'aaaaaaaaaaaa',
+    },
   ];
   const run = fakeRun(root, { fail: { [STALE_COMMAND]: { status: 0, stdout: JSON.stringify(own) } } });
 
   await assert.rejects(
     assemble(root, run, ['article']),
-    (error) => error instanceof WriterError && error.message.includes(`generated-${SLUG}.json`)
+    (error) => error instanceof WriterError && error.message.includes(POST_DISPOSITION)
   );
   assert.deepEqual(untouched(root), before);
 });
@@ -243,6 +257,8 @@ for (const stdout of [
   'not json',
   '{}',
   '[{"file":"../x.json","index":0,"target":"/","digest":"aaaaaaaaaaaa"}]',
+  '[{"file":"/audits/x.json","index":0,"target":"/","digest":"aaaaaaaaaaaa"}]',
+  '[{"file":"2026//10/x.json","index":0,"target":"/","digest":"aaaaaaaaaaaa"}]',
   '[{"file":"a.json","index":0,"target":"/","digest":"zz"}]',
 ])
   test(`a stale list of ${JSON.stringify(stdout).slice(0, 30)} is refused and the tree restored`, async () => {
@@ -270,6 +286,56 @@ test('a disposition file laid out another way is refused rather than reformatted
     (error) => error instanceof WriterError && error.message.includes('routes.json') && /laid out/.test(error.message)
   );
   assert.deepEqual(untouched(root), before);
+});
+
+const EARLIER = `${DISPOSITIONS}/2026/10/generated-earlier-post.json`;
+const earlierRow = (digest) => ({
+  target: '/blog',
+  status: 'rewritten',
+  reason: 'Written by the unattended writer. No human has read this text.',
+  digest,
+});
+const filed = (root, name, rows) => {
+  mkdirSync(dirname(join(root, DISPOSITIONS, name)), { recursive: true });
+  writeFileSync(join(root, DISPOSITIONS, name), layout(rows));
+};
+
+test('a generated disposition an earlier run filed under its month is restated where it lies when the new text made it stale', async () => {
+  const root = repo();
+  const original = [earlierRow(listingDigest(['existing-post']))];
+  filed(root, EARLIER.slice(DISPOSITIONS.length + 1), original);
+  const before = untouched(root);
+  const run = fakeRun(root);
+  const result = await assemble(root, run, ['article']);
+  const [{ reason, digest }] = JSON.parse(textOf(result, EARLIER));
+
+  assert.deepEqual(pathsOf(result), [POST, FACTS, CORE, POST_DISPOSITION, EARLIER, ROUTES]);
+  assert.equal(digest, listingDigest(['existing-post', SLUG]));
+  assert.equal(textOf(result, EARLIER), layout([restated(original[0], digest, reason)]));
+  assert.equal(reason, JSON.parse(textOf(result, ROUTES))[1].reason);
+  assert.ok(keysOf(run).includes(`npx prettier --write ../${POST_DISPOSITION} ../${EARLIER} ../${ROUTES}`));
+  assert.deepEqual(untouched(root), before);
+});
+
+test('the stale list of the fake world reads a flat file, a file under its month and a deeper one, and its gate counts three', () => {
+  const root = repo();
+  const names = ['stale.json', '2026/10/generated-earlier-post.json', '2026/10/extra/deeper.json'];
+  for (const name of names) filed(root, name, [earlierRow('000000000000')]);
+  const site = join(root, 'site');
+  const run = fakeRun(root);
+  const listed = staleEntries(root);
+
+  assert.equal(listed.length, 3);
+  assert.deepEqual(
+    listed.map(({ file }) => file),
+    [...names].sort()
+  );
+  assert.ok(listed.every(({ index, target }) => index === 0 && target === '/blog'));
+  assert.deepEqual(
+    JSON.parse(run('node', ['scripts/stale-dispositions.mjs', '.', 'dist'], { cwd: site }).stdout),
+    listed
+  );
+  assert.match(run('npm', ['run', 'gate:editorial'], { cwd: site }).stdout, /findings: 3/);
 });
 
 const LATE_FAILURES = [

@@ -7,20 +7,20 @@ import { dirname, join, relative, resolve } from 'node:path';
 import { test } from 'node:test';
 
 import { historySpecimens } from './autowriter-history-specimens.mjs';
-import { DISPOSITION_DIRECTORY, sealSignature } from './autowriter-refusals.mjs';
+import { sealSignature } from './autowriter-refusals.mjs';
 import { autowriterSpecimens } from './autowriter-specimens.mjs';
 import { BOT, HUMAN, commitAs, gitIn, initRepo, removeRepos, shallowClone } from './fixtures/history-repo.mjs';
 import { bandSceneFiles } from './fixtures/record-rules-scene.mjs';
 import { plantSpendReport } from './fixtures/spend-report-plant.mjs';
-import { generationFile } from './generation-record.mjs';
 import { FAMILIES, manifestFamilies } from './mutation-smoke.mjs';
 import { SPECIMENS, flatten, proveWithSpecimen } from './mutation-specimens.mjs';
+import { recordDirectory, recordPath } from './record-layout.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
 const REPO = resolve(SITE, '..');
-const RECORD = generationFile('zz-specimen');
+const RECORD = recordPath('generation', 'zz-specimen', '2026-11-02T07:00:00.000Z');
 const PROVENANCE = new RegExp(`^Provenance: ${RECORD.replaceAll('.', '\\.')}$`, 'm');
-const DISPOSITIONS = `${DISPOSITION_DIRECTORY}/main.json`;
+const DISPOSITIONS = `${recordDirectory('disposition')}/main.json`;
 const REFUSED = [
   {
     name: 'autowriterCommitMovesTheBand',
@@ -74,6 +74,12 @@ const FILES = {
   ...bandSceneFiles(),
   [DISPOSITIONS]: `${JSON.stringify(dispositions, null, 2)}\n`,
 };
+const WITHOUT_DISPOSITIONS = Object.fromEntries(Object.entries(FILES).filter(([path]) => path !== DISPOSITIONS));
+const PLACEMENTS = [
+  DISPOSITIONS,
+  recordPath('disposition', 'zz-held', '2026-11-02T07:00:00.000Z'),
+  `${recordDirectory('disposition')}/2026/11/extra/generated-zz-held.json`,
+];
 
 async function inScene(check, files = FILES) {
   const root = mkdtempSync(join(tmpdir(), 'autowriter-history-specimens-'));
@@ -221,12 +227,39 @@ test('a plant in a shallow clone fails and leaves HEAD and the git directory as 
 });
 
 test('a seal with no disposition file at HEAD to copy fails and leaves the repository as it was', async () => {
-  const without = Object.fromEntries(Object.entries(FILES).filter(([path]) => path !== DISPOSITIONS));
   await inScene(async (root) => {
     const before = stateOf(root);
     await assert.rejects(() => planted(SEAL.name, root), /disposition/);
     assert.deepEqual(stateOf(root), before);
-  }, without);
+  }, WITHOUT_DISPOSITIONS);
+});
+
+test('the seal finds the disposition file wherever it lies at HEAD: flat, in its month and below it make three', async () => {
+  const found = [];
+  for (const path of PLACEMENTS) {
+    await inScene(
+      async (root) => {
+        const restore = await planted(SEAL.name, root);
+        found.push(changedBy(root).find((changed) => changed !== RECORD));
+        await restore();
+      },
+      { ...WITHOUT_DISPOSITIONS, [path]: FILES[DISPOSITIONS] }
+    );
+  }
+  assert.deepEqual(found, PLACEMENTS);
+  assert.equal(found.length, 3);
+});
+
+test('with a disposition file at every depth at HEAD the seal takes the first in path order, so the specimen is stable', async () => {
+  const everywhere = Object.fromEntries(PLACEMENTS.map((path) => [path, FILES[DISPOSITIONS]]));
+  await inScene(
+    async (root) => {
+      const restore = await planted(SEAL.name, root);
+      assert.deepEqual(changedBy(root).sort(), [RECORD, [...PLACEMENTS].sort()[0]].sort());
+      await restore();
+    },
+    { ...WITHOUT_DISPOSITIONS, ...everywhere }
+  );
 });
 
 test('a GIT_DIR in the environment does not send the plant to another repository', async () => {

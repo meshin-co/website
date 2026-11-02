@@ -1,22 +1,16 @@
 import { join } from 'node:path';
 
-import { claimFile, validateClaim } from './autowriter-claims.mjs';
+import { validateClaim } from './autowriter-claims.mjs';
 import { validateLedger, writeLedger } from './autowriter-ledger.mjs';
 import { describeProblem } from './autowriter-records.mjs';
 import { resolveClaimTable } from './claim-sources.mjs';
 import { commitRoute } from './entry-commit.mjs';
 import { entryPath, entryRoute } from './entry-files.mjs';
 import { bandOf, verifiedModel } from './generation-facts.mjs';
-import {
-  buildRecord,
-  callTotals,
-  entryCost,
-  generationFile,
-  ledgerWithGeneration,
-  validateRecord,
-} from './generation-record.mjs';
+import { buildRecord, callTotals, entryCost, ledgerWithGeneration, validateRecord } from './generation-record.mjs';
 import { headFingerprint } from './lh-evidence.mjs';
 import { BRANCH_PREFIX } from './pr-classify.mjs';
+import { recordPath } from './record-layout.mjs';
 import { assembleRoute } from './route-assembly.mjs';
 import { spendReportFile } from './spend-report.mjs';
 import { REPORT_PATH } from './spend-report-text.mjs';
@@ -164,7 +158,7 @@ function commitMessage({ shipped, assembly }) {
       `${claim.format} ${claim.slug}: ${claim.title}`,
       choice,
       `Serves buyer prompt ${claim.prompt.number}: ${claim.prompt.text}`,
-      `Provenance: ${generationFile(claim.slug)}`,
+      `Provenance: ${recordPath('generation', claim.slug, claim.claimedAt)}`,
     ]
       .filter(Boolean)
       .join('\n')
@@ -193,7 +187,10 @@ async function execute({ opened, states, stage }) {
   const { assembly, shipped } = await assemble({ stage, states });
   const calls = allCalls(states);
   const ownFiles = [
-    ...shipped.flatMap(({ claim }) => [generationFile(claim.slug), claimFile(claim.slug)]),
+    ...shipped.flatMap(({ claim }) => [
+      recordPath('generation', claim.slug, claim.claimedAt),
+      recordPath('claim', claim.slug, claim.claimedAt),
+    ]),
     opened.ledgerPath,
     REPORT_PATH,
   ];
@@ -201,8 +198,14 @@ async function execute({ opened, states, stage }) {
   const tree = await stage.treeOf({ repoRoot: stage.repoRoot, run: stage.run });
   const records = shipped.map((state) => recordFor({ state, stage, opened, files, assembly, tree }));
   const written = [
-    ...shipped.map(({ claim }, at) => ({ path: generationFile(claim.slug), text: textOf(records[at]) })),
-    ...shipped.map(({ claim }) => ({ path: claimFile(claim.slug), text: textOf(writtenClaim(claim)) })),
+    ...shipped.map(({ claim }, at) => ({
+      path: recordPath('generation', claim.slug, claim.claimedAt),
+      text: textOf(records[at]),
+    })),
+    ...shipped.map(({ claim }) => ({
+      path: recordPath('claim', claim.slug, claim.claimedAt),
+      text: textOf(writtenClaim(claim)),
+    })),
     { path: opened.ledgerPath, text: textOf(ledgerFor({ ledger: opened.ledger, calls })) },
   ];
   const report = spendReportFile({ repoRoot: stage.repoRoot, written, revision: tree.parent });

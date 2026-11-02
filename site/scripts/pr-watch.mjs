@@ -1,7 +1,7 @@
 import { appendFileSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
-import { ledgerFile, newLedger, readLedger, writeLedger } from './autowriter-ledger.mjs';
+import { newLedger, readLedger, writeLedger } from './autowriter-ledger.mjs';
 import { variable } from './escalate-channels.mjs';
 import { EscalationError, escalate } from './escalate.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
@@ -19,6 +19,7 @@ import {
 } from './pr-github.mjs';
 import { recordDebt } from './pr-watch-debt.mjs';
 import { repairFinding, repairOutputs, writeOutputs } from './pr-watch-repair.mjs';
+import { recordPath } from './record-layout.mjs';
 import { OUTCOMES, isOutcome } from './repair-outcome.mjs';
 
 export const SECRET = 'AUTOWRITER_PAT';
@@ -145,9 +146,9 @@ async function asBot(step, write) {
   }
 }
 
-function stageLedger({ snapshot, workdir, number, env }) {
+function stageLedger({ snapshot, workdir, number, env, now }) {
   const slug = slugOfBranch(snapshot.pullRequest.head.ref);
-  const path = ledgerFile(slug);
+  const path = snapshot.ledger?.path ?? recordPath('ledger', slug, now());
   const runId = variable(env, 'GITHUB_RUN_ID') || 'local';
   const ledgerPath = join(workdir, path);
   writeLedger(ledgerPath, snapshot.ledger?.value ?? newLedger({ slug, runId, pullRequest: number }));

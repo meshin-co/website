@@ -65,7 +65,7 @@ read. Three modules sit under it:
   from the tip of `main` and of each `autowriter` branch, through git. It refuses data it cannot read.
 - `scripts/spend-sum.mjs` holds the month rule (the UTC calendar month of an instant), the integer
   micro-dollar sum of generation and attempt costs, and the choice of one version of each slug.
-- `scripts/spend-notice.mjs` keeps the notice ledger `audits/autowriter/spend-ceiling-<month>.json`. It says
+- `scripts/spend-notice.mjs` keeps the notice ledger `audits/autowriter/<year>/<month>/spend-ceiling-<year>-<month>.json`. It says
   whether a month was announced, and raises the `spend-ceiling` escalation once for that month.
 
 ## Add one

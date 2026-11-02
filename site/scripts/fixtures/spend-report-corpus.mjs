@@ -1,17 +1,17 @@
 import { newLedger } from '../autowriter-ledger.mjs';
 import { buildRecord, callTotals, ledgerWithGeneration } from '../generation-record.mjs';
+import { recordPath as filedAt } from '../record-layout.mjs';
 import { costUsd } from '../writer-cost.mjs';
 import { callOf, recordInput, termInput } from './generation-input.mjs';
 
-export const LEDGER_DIRECTORY = 'audits/autowriter';
-export const RECORD_DIRECTORY = 'audits/autowriter/generations';
 export const REVISION = '3fa620f';
 export const DECIDED_AT = '2026-11-03T09:00:00.000Z';
 export const PRICE = { inputPerMillion: 1, outputPerMillion: 5 };
 export const MODEL = 'gpt-6.1-terra-2026-10-01';
 
-export const ledgerPath = (slug) => `${LEDGER_DIRECTORY}/${slug}.json`;
-export const recordPath = (slug) => `${RECORD_DIRECTORY}/${slug}.json`;
+export const FILED_AT = '2026-11-03T09:00:00.000Z';
+export const ledgerPath = (slug) => filedAt('ledger', slug, FILED_AT);
+export const recordPath = (slug) => filedAt('generation', slug, FILED_AT);
 export const asText = (value) => `${JSON.stringify(value, null, 2)}\n`;
 
 const FORMATS = {

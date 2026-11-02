@@ -1,12 +1,13 @@
-import { appendFileSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
 
 import { readBrand, titleSuffix } from '../src/utils/brand.mjs';
 import { readClaims, writeClaim } from './autowriter-claim-store.mjs';
 import { generatedTitles } from './autowriter-claims.mjs';
-import { LEDGER_DIR, writeLedger } from './autowriter-ledger.mjs';
+import { writeLedger } from './autowriter-ledger.mjs';
 import { readDemandReport } from './demand-report.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
+import { recordDirectory, recordFiles } from './record-layout.mjs';
 import { BAND_FILE } from './sentence-band.mjs';
 import { casedForms, casingTexts } from './topic-casing.mjs';
 import { readPromptSources } from './topic-core.mjs';
@@ -70,18 +71,12 @@ function readInput(repoRoot, path, parse) {
   }
 }
 
-function ledgerSlugs(repoRoot) {
-  let entries;
+function ledgerPaths(repoRoot) {
   try {
-    entries = readdirSync(join(repoRoot, LEDGER_DIR), { withFileTypes: true });
+    return recordFiles(repoRoot, 'ledger').filter((path) => basename(path) !== basename(BAND_FILE));
   } catch (error) {
-    if (error.code === 'ENOENT') return [];
-    throw new InputError(`${LEDGER_DIR} is not readable: ${error.message}`);
+    throw new InputError(`${recordDirectory('ledger')} is not readable: ${error.message}`);
   }
-  return entries
-    .filter((entry) => entry.isFile() && entry.name.endsWith('.json') && entry.name !== basename(BAND_FILE))
-    .map((entry) => entry.name.slice(0, -'.json'.length))
-    .sort();
 }
 
 function claimsOf(repoRoot) {
@@ -103,7 +98,7 @@ function gatherInputs({ repoRoot, settings, now }) {
     promptSources: readPromptSources(core),
     forms: casedForms(casingTexts(core)),
     claims: claimsOf(repoRoot),
-    ledgerSlugs: ledgerSlugs(repoRoot),
+    ledgerPaths: ledgerPaths(repoRoot),
     suffix,
     now,
     settings,

@@ -60,11 +60,11 @@ never does.
 
 ## The claim, before any model
 
-A `write` decision claims every entry in `audits/autowriter/claims/<slug>.json` through
+A `write` decision claims every entry in `audits/autowriter/claims/<year>/<month>/<slug>.json` through
 `scripts/autowriter-claim-store.mjs`, and `scripts/commit-to-main.mjs` commits the claims to `main`
 before the Writer runs. A claim expires after `CLAIM_LIFETIME_DAYS` (14) days, which frees the topic
 when a run dies; `scripts/escalate-run.mjs` reports a failed step. The ledger sits in
-`audits/autowriter/<slug>.json`, named for the post.
+`audits/autowriter/<year>/<month>/<slug>.json`, named for the post and filed under the month of its claim.
 
 ## The decision file
 

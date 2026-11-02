@@ -1,6 +1,7 @@
 import { createApi, readSnapshot } from '../pr-github.mjs';
 import { newLedger } from '../autowriter-ledger.mjs';
 import { autowriterBranch } from './pr-watch.mjs';
+import { filedAt } from './record-depths.mjs';
 
 export const REPO = 'meshin-co/website';
 export const ROOT = `https://api.github.com/repos/${REPO}/`;
@@ -26,7 +27,36 @@ export const ledgerBody = (ledger, sha = 'blob-1') =>
 
 export const notFound = () => json({ message: 'Not Found' }, 404);
 
-export function serving(bundle, { second = bundle.pullRequest, ledger = notFound } = {}) {
+const filed = filedAt('2026-11-01T00:00:00.000Z');
+export const LEDGER_PATH = filed.month('ledger', 'a-slug');
+export const LEDGER_FILINGS = {
+  'in its month': LEDGER_PATH,
+  flat: filed.flat('ledger', 'a-slug'),
+  'below its month': filed.deeper('ledger', 'a-slug'),
+};
+export const NOT_THE_LEDGER = [
+  filed.month('ledger', 'another-slug'),
+  filed.month('claim', 'a-slug'),
+  filed.month('generation', 'a-slug'),
+  'site/src/data/post/a-slug.md',
+];
+
+export const ledgerAt = (found, ledger, sha = 'blob-9') => {
+  const asked = `contents/${found}?`;
+  return (requested) => (requested.startsWith(asked) ? ledgerBody(ledger, sha) : notFound());
+};
+
+const blobEntry = (path) => ({ path, mode: '100644', type: 'blob', sha: 'b'.repeat(40) });
+
+export const treeListing = (paths, patch = {}) =>
+  json({ sha: 'c'.repeat(40), tree: paths.map(blobEntry), truncated: false, ...patch });
+
+export const withTree =
+  (paths, contents = notFound) =>
+  (call) =>
+    call.path.startsWith('git/trees/') ? treeListing(paths) : contents(call.path);
+
+export function serving(bundle, { second = bundle.pullRequest, ledger = notFound, tree = [] } = {}) {
   let pullReads = 0;
   return ({ path }) => {
     if (path === `pulls/${bundle.pullRequest.number}`) {
@@ -37,6 +67,7 @@ export function serving(bundle, { second = bundle.pullRequest, ledger = notFound
     if (path.includes('/check-runs?')) return json(bundle.checkRuns);
     if (path.startsWith('actions/runs?')) return json(bundle.runs);
     if (/^actions\/runs\/\d+\/jobs\?/.test(path)) return json(bundle.jobs);
+    if (path.startsWith('git/trees/')) return typeof tree === 'function' ? tree(path) : treeListing(tree);
     if (path.startsWith('contents/')) return ledger(path);
     throw new Error(`unexpected request ${path}`);
   };

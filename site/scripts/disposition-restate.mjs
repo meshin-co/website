@@ -1,9 +1,8 @@
-import { generationFile } from './generation-record.mjs';
 import { GENERATED_STATUS } from './route-derive.mjs';
 import { WriterError } from './writer-error.mjs';
 
 const SCRIPT = 'scripts/stale-dispositions.mjs';
-const FILE_NAME = /^[A-Za-z0-9][A-Za-z0-9._-]*\.json$/;
+const FILE_NAME = /^(?:[A-Za-z0-9][A-Za-z0-9._-]*\/)*[A-Za-z0-9][A-Za-z0-9._-]*\.json$/;
 const DIGEST = /^[0-9a-f]{12}$/;
 
 function fail(message) {
@@ -21,16 +20,16 @@ const EARLIER_REVIEW =
 
 const isCount = (value) => Number.isInteger(value) && value >= 1;
 
-export const restatedReason = ({ routes, slugs }) =>
+export const restatedReason = ({ routes, generationPaths }) =>
   `${OPENING}${joined(routes)} ` +
-  `(generation record${slugs.length === 1 ? '' : 's'} ${joined(slugs.map(generationFile))}). ` +
+  `(generation record${generationPaths.length === 1 ? '' : 's'} ${joined(generationPaths)}). ` +
   `The text the writer added was written by a model, and no human has read it. ${EARLIER_REVIEW}`;
 
-export function repairedReason({ route, slug, attempt }) {
+export function repairedReason({ route, generationPath, attempt }) {
   if (!isCount(attempt?.number) || !isCount(attempt?.of) || attempt.number > attempt.of)
     fail(`a repair attempt is { number, of } with 1 <= number <= of, not ${JSON.stringify(attempt)}`);
   return (
-    `${OPENING}a repair of ${route} (generation record ${generationFile(slug)}), ` +
+    `${OPENING}a repair of ${route} (generation record ${generationPath}), ` +
     `attempt ${attempt.number} of ${attempt.of}. ` +
     `The text the repair wrote was written by a model, and no human has read it. ${EARLIER_REVIEW}`
   );

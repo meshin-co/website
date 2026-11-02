@@ -1,30 +1,17 @@
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
 import { brandFromDisk, titleSuffix } from '../src/utils/brand.mjs';
-import {
-  CLAIM_DIR,
-  claimFileProblem,
-  generatedTitles,
-  isHolding,
-  titleCollisions,
-  validateClaim,
-} from './autowriter-claims.mjs';
-import {
-  LEDGER_DIR,
-  attemptCapProblem,
-  deliveryProblems,
-  fileStemProblem,
-  validateLedger,
-} from './autowriter-ledger.mjs';
+import { claimFileProblem, generatedTitles, isHolding, titleCollisions, validateClaim } from './autowriter-claims.mjs';
+import { attemptCapProblem, deliveryProblems, fileStemProblem, validateLedger } from './autowriter-ledger.mjs';
 import { bandRecordFindings, committedBand, generationReport } from './autowriter-record-rules.mjs';
 import { describeProblem } from './autowriter-records.mjs';
 import { historyReport, skippedLine } from './autowriter-refusal-rules.mjs';
 import { spendReportFindings } from './autowriter-spend-rules.mjs';
 import { REQUIRED_JOBS } from './ci-aggregate.mjs';
 import { WORKFLOW_PATH, aggregateWiringFindings } from './ci-aggregate-wiring.mjs';
-import { GENERATION_DIR } from './generation-record.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
+import { filingProblems, recordFiles } from './record-layout.mjs';
 import { corpusFiles } from './spend-report.mjs';
 import { REPORT_PATH } from './spend-report-text.mjs';
 
@@ -114,6 +101,7 @@ export function autowriterReport({
   suffix,
   now,
   records = [],
+  dispositions = [],
   readEntry = () => null,
   band = null,
   bandRecord = [],
@@ -126,9 +114,14 @@ export function autowriterReport({
     .filter(({ path, value }) => claimFileProblem(path, value) === null)
     .map(({ path, value }) => ({ path, claim: value }));
   const { titles, found } = titleFindings({ core, claims: valid, suffix, now });
+  const filed = filingProblems({
+    paths: [...ledgers, ...claims, ...records].map(({ path }) => path).concat(dispositions),
+    claims: valid.map(({ claim }) => claim),
+  });
   const findings = [
     ...ledgers.map(parsed).flatMap(ledgerFindings),
     ...readClaims.flatMap(claimFindings),
+    ...filed.map(({ path, detail }) => finding('record-layout', path, detail)),
     ...found,
     ...workflowFindings(workflow),
     ...generationReport({ records, readEntry, band }),
@@ -144,6 +137,7 @@ export function autowriterReport({
     jobs: REQUIRED_JOBS.length,
     commits: history.commits,
     records: records.length,
+    dispositions: dispositions.length,
   };
   return { findings, counts };
 }
@@ -154,27 +148,22 @@ const commitsPhrase = (commits) =>
 export const summaryLine = ({ findings, counts }) =>
   `autowriter: ${counts.ledgers} ledgers, ${counts.claims} claims (${counts.lapsed} lapsed), ` +
   `${counts.titles} generated titles, ${counts.jobs} CI jobs under the aggregate check, ` +
-  `${commitsPhrase(counts.commits)}, ${counts.records} generation records, ${findings.length} findings`;
+  `${commitsPhrase(counts.commits)}, ${counts.records} generation records, ` +
+  `${counts.dispositions} dispositions, ${findings.length} findings`;
 
 const readIfPresent = (path) => (existsSync(path) ? readFileSync(path, 'utf8') : null);
 
-function readJsonFiles(repo, directory) {
-  const absolute = join(repo, directory);
-  if (!existsSync(absolute)) return [];
-  return readdirSync(absolute, { withFileTypes: true })
-    .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
-    .map((entry) => entry.name)
-    .sort()
-    .map((name) => ({ path: `${directory}/${name}`, text: readFileSync(join(absolute, name), 'utf8') }));
-}
+const readJsonFiles = (repo, family) =>
+  recordFiles(repo, family).map((path) => ({ path, text: readFileSync(join(repo, path), 'utf8') }));
 
 function main(repoArgument) {
   const repo = resolve(repoArgument ?? '..');
   const history = historyReport({ root: repo });
   const report = autowriterReport({
-    ledgers: readJsonFiles(repo, LEDGER_DIR),
-    claims: readJsonFiles(repo, CLAIM_DIR),
-    records: readJsonFiles(repo, GENERATION_DIR),
+    ledgers: readJsonFiles(repo, 'ledger'),
+    claims: readJsonFiles(repo, 'claim'),
+    records: readJsonFiles(repo, 'generation'),
+    dispositions: recordFiles(repo, 'disposition'),
     readEntry: (path) => readIfPresent(join(repo, path)),
     band: committedBand(repo),
     bandRecord: bandRecordFindings(repo),

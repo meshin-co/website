@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { parseStale, restateFile } from './disposition-restate.mjs';
-import { DISPOSITION_DIRECTORY } from './route-derive.mjs';
+import { recordDirectory } from './record-layout.mjs';
 import { outputTail, plainOutput } from './route-transaction.mjs';
 import { WriterError } from './writer-error.mjs';
 
@@ -65,7 +65,7 @@ export async function restateStale({ repoRoot, transaction, succeed, reason, may
   const stale = parseStale((await succeed(LIST_STALE)).stdout);
   const restated = [];
   for (const [file, items] of Map.groupBy(stale, (item) => item.file)) {
-    const path = `${DISPOSITION_DIRECTORY}/${file}`;
+    const path = `${recordDirectory('disposition')}/${file}`;
     if (mayNotBeStale.includes(path))
       throw new WriterError('build', `${path} is a disposition this run wrote, and it cannot be stale`);
     const text = readFileSync(join(repoRoot, path), 'utf8');

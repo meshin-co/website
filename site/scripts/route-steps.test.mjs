@@ -3,10 +3,11 @@ import './fixtures/no-network.mjs';
 import assert from 'node:assert/strict';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { afterEach, test } from 'node:test';
 
-import { DISPOSITION_DIRECTORY, GENERATED_STATUS } from './route-derive.mjs';
+import { recordDirectory } from './record-layout.mjs';
+import { GENERATED_STATUS } from './route-derive.mjs';
 import { digestOf, LIST_STALE, restateStale } from './route-steps.mjs';
 import { fileTransaction } from './route-transaction.mjs';
 import { WriterError } from './writer-error.mjs';
@@ -17,8 +18,9 @@ afterEach(() => {
 });
 
 const REASON = 'Restated for the text the run wrote. No human has read it.';
-const A = `${DISPOSITION_DIRECTORY}/a.json`;
-const B = `${DISPOSITION_DIRECTORY}/b.json`;
+const DISPOSITIONS = recordDirectory('disposition');
+const A = `${DISPOSITIONS}/a.json`;
+const B = `${DISPOSITIONS}/b.json`;
 const row = (target, digest) => ({ target, status: 'verified', reason: 'Read by the owner.', digest });
 const FILES = {
   'a.json': [row('/blog', 'aaaaaaaaaaaa'), row('/glossary', 'bbbbbbbbbbbb')],
@@ -31,12 +33,14 @@ const STALE = [
 const layout = (entries) => `${JSON.stringify(entries, null, 2)}\n`;
 const restated = (entry, digest) => ({ ...entry, status: GENERATED_STATUS, reason: REASON, digest });
 
-function scene(list = STALE) {
+function scene(list = STALE, files = FILES) {
   const root = mkdtempSync(join(tmpdir(), 'route-steps-'));
   roots.push(root);
-  mkdirSync(join(root, DISPOSITION_DIRECTORY), { recursive: true });
-  for (const [name, entries] of Object.entries(FILES))
-    writeFileSync(join(root, DISPOSITION_DIRECTORY, name), layout(entries));
+  mkdirSync(join(root, DISPOSITIONS), { recursive: true });
+  for (const [name, entries] of Object.entries(files)) {
+    mkdirSync(dirname(join(root, DISPOSITIONS, name)), { recursive: true });
+    writeFileSync(join(root, DISPOSITIONS, name), layout(entries));
+  }
   const commands = [];
   const succeed = async (command) => {
     commands.push(command);
@@ -81,6 +85,48 @@ test('a list that names nothing restates nothing and leaves every file as it was
   assert.deepEqual(await restate(), []);
   assert.equal(read(A), layout(FILES['a.json']));
   assert.equal(read(B), layout(FILES['b.json']));
+});
+
+const MONTH = '2026/11/generated-c.json';
+const DEEPER = '2026/11/extra/d.json';
+const LAYERED = {
+  files: {
+    'a.json': FILES['a.json'],
+    [MONTH]: [row('/blog/c', 'dddddddddddd')],
+    [DEEPER]: [row('/blog/d', 'eeeeeeeeeeee')],
+  },
+  list: [
+    { file: 'a.json', index: 1, target: '/glossary', digest: '111111111111' },
+    { file: MONTH, index: 0, target: '/blog/c', digest: '222222222222' },
+    { file: DEEPER, index: 0, target: '/blog/d', digest: '333333333333' },
+  ],
+};
+
+test('a list that names a flat file, a file under its month and one deeper restates all three where they lie', async () => {
+  const { restate, transaction, read } = scene(LAYERED.list, LAYERED.files);
+  const paths = await restate();
+
+  assert.equal(paths.length, 3);
+  assert.deepEqual(paths, [A, `${DISPOSITIONS}/${MONTH}`, `${DISPOSITIONS}/${DEEPER}`]);
+  assert.equal(read(A), layout([LAYERED.files['a.json'][0], restated(LAYERED.files['a.json'][1], '111111111111')]));
+  assert.equal(read(paths[1]), layout([restated(LAYERED.files[MONTH][0], '222222222222')]));
+  assert.equal(read(paths[2]), layout([restated(LAYERED.files[DEEPER][0], '333333333333')]));
+  transaction.restore();
+  for (const [name, entries] of Object.entries(LAYERED.files))
+    assert.equal(read(`${DISPOSITIONS}/${name}`), layout(entries));
+});
+
+test('a file under a month directory that the caller says the run wrote is refused by its whole path', async () => {
+  const own = `${DISPOSITIONS}/${MONTH}`;
+  const { restate, transaction, read } = scene(LAYERED.list, LAYERED.files);
+
+  await assert.rejects(
+    restate({ mayNotBeStale: [own] }),
+    (error) => error instanceof WriterError && error.kind === 'build' && error.message.includes(own)
+  );
+  transaction.restore();
+  for (const [name, entries] of Object.entries(LAYERED.files))
+    assert.equal(read(`${DISPOSITIONS}/${name}`), layout(entries));
 });
 
 const printing =

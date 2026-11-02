@@ -8,11 +8,10 @@ import { fileURLToPath } from 'node:url';
 
 import { parse } from 'yaml';
 
-import { claimFile } from './autowriter-claims.mjs';
 import { applyDispositions, digestFor } from './dispositions.mjs';
 import { termOf } from './entry-files.mjs';
-import { generationFile } from './generation-record.mjs';
-import { dispositionFile, dispositionFor, targetQueryFor } from './route-derive.mjs';
+import { recordPath } from './record-layout.mjs';
+import { dispositionFor, targetQueryFor } from './route-derive.mjs';
 import { WriterError } from './writer-error.mjs';
 import { claimOf } from './fixtures/entry-drafts.mjs';
 
@@ -20,6 +19,16 @@ const SITE = fileURLToPath(new URL('..', import.meta.url));
 const REPO = fileURLToPath(new URL('../..', import.meta.url));
 
 const aim = (overrides) => targetQueryFor({ claim: { ...claimOf('term'), ...overrides } });
+const CLAIMED = claimOf('term').claimedAt;
+const rowFor = ({ slug = 'model-registry', ...overrides } = {}) =>
+  dispositionFor({
+    claimPath: recordPath('claim', slug, CLAIMED),
+    generationPath: recordPath('generation', slug, CLAIMED),
+    target: `src/data/glossary/${slug}.md`,
+    digest: '0123456789ab',
+    runDate: '2026-11-02',
+    ...overrides,
+  });
 
 test('a term aims at its own name in lower case, whatever the query field says', () => {
   assert.equal(aim({ title: 'What is an AI register?', query: 'something else' }), 'ai register');
@@ -72,17 +81,19 @@ test('for the live terms whose title has the term shape, the row content-facts h
     );
 });
 
-test('the disposition of an entry lives in its own file named after the slug', () => {
-  assert.equal(dispositionFile('model-registry'), 'audits/phase-4.7/dispositions/generated-model-registry.json');
+test('the reason names the claim and the generation record at the paths it is given, month directory included', () => {
+  const claimedAt = '2026-10-31T23:59:59.999Z';
+  const { reason } = rowFor({
+    claimPath: recordPath('claim', 'model-registry', claimedAt),
+    generationPath: recordPath('generation', 'model-registry', claimedAt),
+  });
+
+  assert.ok(reason.includes('from the claim in audits/autowriter/claims/2026/10/model-registry.json on 2026-11-02.'));
+  assert.ok(reason.endsWith('bound to a source in audits/autowriter/generations/2026/10/model-registry.json.'));
 });
 
 test('the disposition row names the target, the status, the digest and says plainly who wrote the text', () => {
-  const row = dispositionFor({
-    slug: 'model-registry',
-    target: 'src/data/glossary/model-registry.md',
-    digest: '0123456789ab',
-    runDate: '2026-11-02',
-  });
+  const row = rowFor();
 
   assert.deepEqual(Object.keys(row), ['target', 'status', 'reason', 'digest']);
   assert.equal(row.target, 'src/data/glossary/model-registry.md');
@@ -91,14 +102,13 @@ test('the disposition row names the target, the status, the digest and says plai
   assert.match(row.reason, /unattended writer/);
   assert.match(row.reason, /2026-11-02/);
   assert.match(row.reason, /No human has read/);
-  assert.ok(row.reason.includes(claimFile('model-registry')));
-  assert.ok(row.reason.includes(generationFile('model-registry')));
+  assert.ok(row.reason.includes('audits/autowriter/claims/2026/11/model-registry.json'));
+  assert.ok(row.reason.includes('audits/autowriter/generations/2026/11/model-registry.json'));
   assert.match(row.reason, /bound to a source/);
 });
 
 test('the reason is the same for every slug except for the slug and the date it names', () => {
-  const reason = (slug, runDate) =>
-    dispositionFor({ slug, target: `src/data/post/${slug}.md`, digest: 'a'.repeat(12), runDate }).reason;
+  const reason = (slug, runDate) => rowFor({ slug, runDate }).reason;
 
   assert.equal(
     reason('one', '2026-11-02').replaceAll('one', 'SLUG').replaceAll('2026-11-02', 'DATE'),
@@ -116,13 +126,8 @@ test('the editorial ledger accepts the row for the text it was computed from and
       status: 'unreviewed',
     },
   ];
-  const fresh = dispositionFor({
-    slug: 'model-registry',
-    target,
-    digest: digestFor(rows, target),
-    runDate: '2026-11-02',
-  });
-  const old = dispositionFor({ slug: 'model-registry', target, digest: '000000000000', runDate: '2026-11-02' });
+  const fresh = rowFor({ target, digest: digestFor(rows, target) });
+  const old = rowFor({ target, digest: '000000000000' });
 
   assert.deepEqual(applyDispositions(rows, [fresh]).stale, []);
   assert.equal(applyDispositions(rows, [fresh]).rows[0].status, 'rewritten');
@@ -140,12 +145,7 @@ test('the row has the keys and the order of the dispositions the repository alre
       'utf8'
     )
   );
-  const row = dispositionFor({
-    slug: 'x',
-    target: 'src/data/glossary/x.md',
-    digest: 'a'.repeat(12),
-    runDate: '2026-11-02',
-  });
+  const row = rowFor({ slug: 'x', digest: 'a'.repeat(12) });
 
   assert.deepEqual(Object.keys(row), Object.keys(live[0]));
 });

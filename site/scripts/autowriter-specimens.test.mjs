@@ -5,11 +5,13 @@ import { tmpdir } from 'node:os';
 import { dirname, join, relative, resolve } from 'node:path';
 import { test } from 'node:test';
 
-import { ATTEMPT_CAP, ledgerFile } from './autowriter-ledger.mjs';
+import { ATTEMPT_CAP } from './autowriter-ledger.mjs';
 import { historySpecimens } from './autowriter-history-specimens.mjs';
 import { autowriterSpecimens } from './autowriter-specimens.mjs';
 import { ENTRY_PATH, FACT, RECORD_PATH, bandSceneFiles } from './fixtures/record-rules-scene.mjs';
+import { FAMILIES, manifestFamilies } from './mutation-smoke.mjs';
 import { addUntrackedFile, editFile, flatten, SPECIMENS } from './mutation-specimens.mjs';
+import { recordPath } from './record-layout.mjs';
 import { spendReportFile } from './spend-report.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
@@ -22,8 +24,12 @@ const FILES = {
 };
 const NAMES = Object.keys(autowriterSpecimens({})).sort();
 const PLAIN_NAMES = NAMES.filter((name) => !Object.hasOwn(historySpecimens(), name));
-const LEDGER = 'audits/autowriter/zz-specimen.json';
-const CLAIM = 'audits/autowriter/claims/zz-specimen.json';
+const LEDGER_AT = '2026-11-02T07:00:00.000Z';
+const CLAIMED_AT = '2026-11-01T07:00:00.000Z';
+const LEDGER = recordPath('ledger', 'zz-specimen', LEDGER_AT);
+const CLAIM = recordPath('claim', 'zz-specimen', CLAIMED_AT);
+const STRAY_LEDGER = 'audits/autowriter/zz-specimen.json';
+const KEPT_LEDGER = recordPath('ledger', 'kept', LEDGER_AT);
 const WORKFLOW = '.github/workflows/ci.yml';
 
 async function inTempRepo(check, extra = {}) {
@@ -82,6 +88,7 @@ test('the specimen module names every failure mode of the gate, each against gat
     'autowriterLedgerOffSchema',
     'autowriterMeasurementDebtMissing',
     'autowriterProseOffTheBand',
+    'autowriterRecordMisfiled',
     'autowriterSpendReportDeleted',
     'autowriterSpendReportEdited',
     'autowriterSpendReportStale',
@@ -92,6 +99,13 @@ test('the specimen module names every failure mode of the gate, each against gat
     assert.equal(SPECIMENS[name].gate, 'gate:autowriter', name);
     assert.equal(typeof SPECIMENS[name].plant, 'function', name);
   }
+});
+
+test('the misfiled specimen names its stray file in its token, and the mutation smoke runs it as a family of its own', () => {
+  assert.equal(SPECIMENS.autowriterRecordMisfiled.token, 'record-layout ' + STRAY_LEDGER);
+  const family = manifestFamilies(FAMILIES).find(({ id }) => id === 'autowriter-record-filed-outside-its-month');
+  assert.equal(family?.kind, 'specimen');
+  assert.equal(family.specimen, 'autowriterRecordMisfiled');
 });
 
 for (const name of PLAIN_NAMES) {
@@ -174,6 +188,10 @@ const MESSAGES = [
       ': measurementDebt is required once the verdict is merged, so the tree no Lighthouse run measured is on record',
   ],
   [
+    'autowriterRecordMisfiled',
+    'AUTOWRITER record-layout ' + STRAY_LEDGER + ': is not filed as audits/autowriter/<year>/<month>/<slug>.json',
+  ],
+  [
     'autowriterEscalationFailed',
     'AUTOWRITER escalation-undelivered ' +
       LEDGER +
@@ -227,6 +245,23 @@ test('the claim specimen repeats a title the generated layer already holds, in o
   });
 });
 
+test('the misfiled specimen is a sound ledger in the wrong place: filed under its month, the same bytes leave the gate green', async () => {
+  await inTempRepo(async (root) => {
+    const restore = await planted('autowriterRecordMisfiled', root);
+    assert.equal(existsSync(join(root, LEDGER)), false);
+    const text = readFileSync(join(root, STRAY_LEDGER), 'utf8');
+    const red = gate(root);
+    await restore();
+    assert.equal(red.status, 1);
+    assert.equal(red.stderr.trim().split('\n').length, 1, red.stderr);
+    mkdirSync(dirname(join(root, LEDGER)), { recursive: true });
+    writeFileSync(join(root, LEDGER), text);
+    const filed = gate(root);
+    assert.equal(filed.status, 0, filed.stderr);
+    assert.match(filed.stdout, /autowriter: 1 ledgers, /);
+  });
+});
+
 const WORKFLOW_MESSAGES = [
   ['autowriterJobOutsideAggregate', 'AUTOWRITER aggregate-uncovered ' + WORKFLOW + ': ', 'visual-and-axe'],
   ['autowriterAggregateSkippable', 'AUTOWRITER aggregate-not-always ' + WORKFLOW + ': ', 'always()'],
@@ -262,14 +297,14 @@ test('planting beside a ledger that is already there leaves that ledger and its 
   await inTempRepo(
     async (root) => {
       const before = snapshot(root);
-      for (const name of ['autowriterLedgerOffSchema', 'autowriterClaimTitleCollides']) {
+      for (const name of ['autowriterLedgerOffSchema', 'autowriterClaimTitleCollides', 'autowriterRecordMisfiled']) {
         const restore = await planted(name, root);
         await restore();
         assert.deepEqual(snapshot(root), before);
       }
-      assert.equal(readFileSync(join(root, ledgerFile('kept')), 'utf8'), kept);
+      assert.equal(readFileSync(join(root, KEPT_LEDGER), 'utf8'), kept);
     },
-    { [ledgerFile('kept')]: kept }
+    { [KEPT_LEDGER]: kept }
   );
 });
 

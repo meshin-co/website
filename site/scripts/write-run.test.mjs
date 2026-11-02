@@ -6,13 +6,13 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { after, test } from 'node:test';
 
-import { claimFile } from './autowriter-claims.mjs';
-import { ledgerFile, newLedger, readLedger } from './autowriter-ledger.mjs';
+import { newLedger, readLedger } from './autowriter-ledger.mjs';
 import { entryPath, renderEntry } from './entry-files.mjs';
 import { RUN_DATE, claimFor, cleanDraft } from './fixtures/writer-drafts.mjs';
 import { ROUTES, adapterOn, completed, modelList, reply } from './fixtures/writer-vendors.mjs';
 import { makeRepo, removeRepo } from './fixtures/writer-repo.mjs';
-import { generationFile, validateRecord } from './generation-record.mjs';
+import { validateRecord } from './generation-record.mjs';
+import { familyOf, filingProblems, recordPath } from './record-layout.mjs';
 import { REPORT_PATH, usdText } from './spend-report-text.mjs';
 import { recordMicro } from './spend-sum.mjs';
 import { generateRun } from './write-run.mjs';
@@ -27,6 +27,9 @@ const PRICE = { inputPerMillion: 1, outputPerMillion: 5 };
 const KEY = `sk-test-${'k'.repeat(24)}`;
 const POST = claimFor('article');
 const TERM = claimFor('term');
+const claimPathOf = ({ slug, claimedAt }) => recordPath('claim', slug, claimedAt);
+const generationPathOf = ({ slug, claimedAt }) => recordPath('generation', slug, claimedAt);
+const ledgerPathOf = ({ slug, claimedAt }) => recordPath('ledger', slug, claimedAt);
 
 const put = (root, path, value) => {
   mkdirSync(dirname(join(root, path)), { recursive: true });
@@ -66,14 +69,14 @@ function adapterWith(steps, { note = null, shutdownDate = null } = {}) {
 function scene({ claims = [POST, TERM] } = {}) {
   const root = makeRepo();
   roots.push(root);
-  for (const claim of claims) put(root, claimFile(claim.slug), claim);
-  put(root, ledgerFile(claims[0].slug), newLedger({ slug: claims[0].slug, runId: claims[0].runId, pullRequest: null }));
+  for (const claim of claims) put(root, claimPathOf(claim), claim);
+  put(root, ledgerPathOf(claims[0]), newLedger({ slug: claims[0].slug, runId: claims[0].runId, pullRequest: null }));
   const decision = {
     schema: 1,
     decision: 'write',
-    ledgerPath: ledgerFile(claims[0].slug),
+    ledgerPath: ledgerPathOf(claims[0]),
     entries: claims.map((claim) => ({
-      claimPath: claimFile(claim.slug),
+      claimPath: claimPathOf(claim),
       claim,
       row: { '#': String(claim.prompt.number), Prompt: claim.prompt.text },
       table: claim.format === 'term' ? 'Queries' : 'Buyer prompts',
@@ -148,7 +151,7 @@ async function drive({ claims, steps, assemble, commit, adapterOptions, adapter:
 }
 
 const textsOf = (commitCall) => Object.fromEntries(commitCall.files.map(({ path, text }) => [path, text]));
-const storedLedger = (root, slug) => readLedger(join(root, ledgerFile(slug)));
+const storedLedger = (root, claim) => readLedger(join(root, ledgerPathOf(claim)));
 
 test('a post and a term are drafted in turn, assembled together once and committed once', async () => {
   const run = await drive({ steps: [answer(1, cleanDraft('article')), answer(2, cleanDraft('term'))] });
@@ -163,29 +166,67 @@ test('a post and a term are drafted in turn, assembled together once and committ
   assert.equal(run.commitCalls[0].branch, `autowriter/${POST.slug}`);
   const paths = run.commitCalls[0].files.map(({ path }) => path);
   for (const claim of [POST, TERM])
-    for (const path of [entryPath(claim), generationFile(claim.slug), claimFile(claim.slug)])
+    for (const path of [entryPath(claim), generationPathOf(claim), claimPathOf(claim)])
       assert.ok(paths.includes(path), `${path} is not in the commit`);
-  assert.ok(paths.includes(ledgerFile(POST.slug)));
+  assert.ok(paths.includes(ledgerPathOf(POST)));
   assert.equal(new Set(paths).size, paths.length);
 });
 
 test('each entry keeps its own record with its own calls, and the claims are written', async () => {
   const run = await drive({ steps: [answer(1, cleanDraft('article')), answer(2, cleanDraft('term'))] });
   const texts = textsOf(run.commitCalls[0]);
-  const post = JSON.parse(texts[generationFile(POST.slug)]);
-  const term = JSON.parse(texts[generationFile(TERM.slug)]);
+  const post = JSON.parse(texts[generationPathOf(POST)]);
+  const term = JSON.parse(texts[generationPathOf(TERM)]);
   assert.deepEqual(validateRecord(post), []);
   assert.deepEqual(validateRecord(term), []);
   assert.equal(post.calls.length, 1);
   assert.equal(term.calls.length, 1);
   assert.equal(post.totals.costUsd, 0.0015);
   assert.equal(term.totals.costUsd, 0.003);
-  assert.equal(post.ledger, ledgerFile(POST.slug));
-  assert.equal(term.ledger, ledgerFile(POST.slug));
+  assert.equal(post.ledger, ledgerPathOf(POST));
+  assert.equal(term.ledger, ledgerPathOf(POST));
   assert.equal(post.demand.report.table, 'Buyer prompts');
   assert.equal(term.demand.report.table, 'Queries');
-  assert.equal(JSON.parse(texts[claimFile(POST.slug)]).status, 'written');
-  assert.equal(JSON.parse(texts[claimFile(TERM.slug)]).status, 'written');
+  assert.equal(JSON.parse(texts[claimPathOf(POST)]).status, 'written');
+  assert.equal(JSON.parse(texts[claimPathOf(TERM)]).status, 'written');
+});
+
+test('every record the commit carries is filed under the month of its claim', async () => {
+  const run = await drive({ steps: [answer(1, cleanDraft('article')), answer(2, cleanDraft('term'))] });
+  assert.ifError(run.error);
+  const records = run.commitCalls[0].files.map(({ path }) => path).filter((path) => familyOf(path) !== null);
+  assert.deepEqual(records.map(familyOf).sort(), ['claim', 'claim', 'generation', 'generation', 'ledger']);
+  assert.deepEqual(filingProblems({ paths: records, claims: [POST, TERM] }), []);
+});
+
+test('each record is filed under the month of its own claim, and the ledger under the month of the post', async () => {
+  const post = claimFor('article', { claimedAt: '2026-10-31T23:59:59.999Z' });
+  const run = await drive({
+    claims: [post, TERM],
+    steps: [answer(1, cleanDraft('article')), answer(2, cleanDraft('term'))],
+  });
+  assert.ifError(run.error);
+  const ledger = `audits/autowriter/2026/10/${POST.slug}.json`;
+  const postRecord = `audits/autowriter/generations/2026/10/${POST.slug}.json`;
+  const termRecord = `audits/autowriter/generations/2026/11/${TERM.slug}.json`;
+  const paths = run.commitCalls[0].files.map(({ path }) => path);
+  for (const path of [
+    ledger,
+    postRecord,
+    termRecord,
+    `audits/autowriter/claims/2026/10/${POST.slug}.json`,
+    `audits/autowriter/claims/2026/11/${TERM.slug}.json`,
+  ])
+    assert.ok(paths.includes(path), `${path} is not in the commit`);
+  const texts = textsOf(run.commitCalls[0]);
+  assert.equal(JSON.parse(texts[postRecord]).ledger, ledger);
+  assert.equal(JSON.parse(texts[termRecord]).ledger, ledger);
+});
+
+test('the commit message names the generation record of each entry at its month path', async () => {
+  const run = await drive({ steps: [answer(1, cleanDraft('article')), answer(2, cleanDraft('term'))] });
+  for (const claim of [POST, TERM])
+    assert.ok(run.commitCalls[0].message.includes(`Provenance: ${generationPathOf(claim)}`), claim.slug);
 });
 
 test('the one commit also holds the spend report, with a row for each entry at the cost its record stores', async () => {
@@ -205,7 +246,7 @@ test('the one commit also holds the spend report, with a row for each entry at t
         .map((cell) => cell.trim())
     );
   for (const claim of [POST, TERM]) {
-    const record = JSON.parse(texts[generationFile(claim.slug)]);
+    const record = JSON.parse(texts[recordPath('generation', claim.slug, claim.claimedAt)]);
     const row = rows.find((cells) => cells[2] === claim.slug);
     assert.ok(row, `no row for ${claim.slug}`);
     assert.equal(row[1], record.entry.format);
@@ -222,7 +263,7 @@ test('the one ledger adds up both entries and the summary reports them apart', a
       shutdownDate: '2027-01-01',
     },
   });
-  const ledger = JSON.parse(textsOf(run.commitCalls[0])[ledgerFile(POST.slug)]);
+  const ledger = JSON.parse(textsOf(run.commitCalls[0])[ledgerPathOf(POST)]);
   assert.equal(ledger.generation.costUsd, 0.0045);
   assert.equal(ledger.spend.costUsd, 0.0045);
   const { summary } = run;
@@ -250,14 +291,14 @@ test('a term that cannot be drafted is left out, its billed call still lands in 
     [POST.slug]
   );
   const paths = run.commitCalls[0].files.map(({ path }) => path);
-  assert.equal(paths.includes(claimFile(TERM.slug)), false);
-  assert.equal(paths.includes(generationFile(TERM.slug)), false);
+  assert.equal(paths.includes(claimPathOf(TERM)), false);
+  assert.equal(paths.includes(generationPathOf(TERM)), false);
   assert.deepEqual(
     run.summary.skipped.map(({ slug, format, spend }) => [slug, format, spend.costUsd]),
     [[TERM.slug, 'term', 0.003]]
   );
   assert.equal(run.summary.spend.costUsd, 0.0045);
-  const ledger = JSON.parse(textsOf(run.commitCalls[0])[ledgerFile(POST.slug)]);
+  const ledger = JSON.parse(textsOf(run.commitCalls[0])[ledgerPathOf(POST)]);
   assert.equal(ledger.generation.costUsd, 0.0045);
 });
 
@@ -269,7 +310,7 @@ test('a failing post stops the run before the term costs anything and keeps the 
   assert.equal(run.assembleCalls.length, 0);
   assert.equal(run.commitCalls.length, 0);
   assert.equal(run.error.spend.costUsd, 0.0015);
-  const ledger = storedLedger(run.root, POST.slug);
+  const ledger = storedLedger(run.root, POST);
   assert.equal(ledger.verdict.state, 'stopped');
   assert.equal(ledger.generation.costUsd, 0.0015);
   assert.match(ledger.verdict.reason, /output/);
@@ -278,8 +319,8 @@ test('a failing post stops the run before the term costs anything and keeps the 
 test('a failure that costs nothing leaves the ledger as it was', async () => {
   const run = await drive({ steps: [new WriterError('vendor', 'openai answered HTTP 500', { status: 500 })] });
   assert.equal(run.error?.kind, 'vendor');
-  assert.equal(storedLedger(run.root, POST.slug).verdict.state, 'open');
-  assert.equal(storedLedger(run.root, POST.slug).generation, undefined);
+  assert.equal(storedLedger(run.root, POST).verdict.state, 'open');
+  assert.equal(storedLedger(run.root, POST).generation, undefined);
 });
 
 test('a credential failure on the term stops the whole run, it is never a skipped term', async () => {
@@ -291,7 +332,7 @@ test('a credential failure on the term stops the whole run, it is never a skippe
   });
   assert.equal(run.error?.kind, 'credential');
   assert.equal(run.commitCalls.length, 0);
-  assert.equal(storedLedger(run.root, POST.slug).generation.costUsd, 0.0015);
+  assert.equal(storedLedger(run.root, POST).generation.costUsd, 0.0015);
 });
 
 test('an assembly that fails with the term included is retried with the post alone', async () => {
@@ -314,7 +355,7 @@ test('an assembly that fails with the term included is retried with the post alo
   );
   assert.equal(run.summary.skipped[0].spend.costUsd, 0.003);
   assert.equal(
-    run.commitCalls[0].files.some(({ path }) => path === claimFile(TERM.slug)),
+    run.commitCalls[0].files.some(({ path }) => path === claimPathOf(TERM)),
     false
   );
 });
@@ -330,8 +371,8 @@ test('an assembly that fails for the post alone fails the run and keeps the spen
   assert.equal(run.error?.kind, 'build');
   assert.equal(run.assembleCalls.length, 1);
   assert.equal(run.commitCalls.length, 0);
-  assert.equal(storedLedger(run.root, POST.slug).verdict.state, 'stopped');
-  assert.equal(storedLedger(run.root, POST.slug).generation.costUsd, 0.0015);
+  assert.equal(storedLedger(run.root, POST).verdict.state, 'stopped');
+  assert.equal(storedLedger(run.root, POST).generation.costUsd, 0.0015);
 });
 
 test('a commit that fails keeps the spend in the ledger on disk and nothing else', async () => {
@@ -343,8 +384,8 @@ test('a commit that fails keeps the spend in the ledger on disk and nothing else
   });
   assert.equal(run.error?.kind, 'commit');
   assert.equal(run.error.spend.costUsd, 0.0045);
-  assert.equal(storedLedger(run.root, POST.slug).generation.costUsd, 0.0045);
-  assert.equal(JSON.parse(readFileSync(join(run.root, claimFile(POST.slug)), 'utf8')).status, 'claimed');
+  assert.equal(storedLedger(run.root, POST).generation.costUsd, 0.0045);
+  assert.equal(JSON.parse(readFileSync(join(run.root, claimPathOf(POST)), 'utf8')).status, 'claimed');
 });
 
 test('a key echoed into a draft never reaches a file: the run fails and commits nothing', async () => {
@@ -385,7 +426,7 @@ test('the real adapter on a fake vendor: one model check, one structured request
   assert.equal(calls[1].key, KEY);
   assert.match(run.summary.notes[0], /2027-01-01/);
   const texts = textsOf(run.commitCalls[0]);
-  const record = JSON.parse(texts[generationFile(POST.slug)]);
+  const record = JSON.parse(texts[generationPathOf(POST)]);
   assert.deepEqual(validateRecord(record), []);
   assert.equal(record.totals.costUsd, 0.0015);
   assert.equal(record.provider, 'openai');

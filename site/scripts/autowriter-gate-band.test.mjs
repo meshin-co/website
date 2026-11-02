@@ -57,7 +57,7 @@ test('a committed entry of eleven-word sentences fails the gate, naming the reco
       lineStarting(run, `AUTOWRITER below-threshold-share ${RECORD_PATH}: `),
       /zz-specimen\.md: 10 of 10 sentences \(100%\) are under 12 words; the band allows \d+; article band: median/
     );
-    assert.match(run.stdout, /, 1 generation records, 2 findings$/m);
+    assert.match(run.stdout, /, 1 generation records, 0 dispositions, 2 findings$/m);
   });
 });
 
@@ -69,7 +69,7 @@ test('a record that widens the band it carries still fails the gate, against the
     const run = gate(root);
     assert.equal(run.status, 1);
     assert.ok(lineStarting(run, `AUTOWRITER below-threshold-share ${RECORD_PATH}: `), run.stderr);
-    assert.match(run.stdout, /, 1 generation records, 2 findings$/m);
+    assert.match(run.stdout, /, 1 generation records, 0 dispositions, 2 findings$/m);
   });
 });
 

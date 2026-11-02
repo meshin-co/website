@@ -3,12 +3,13 @@ import { stringify } from 'yaml';
 import { DUPLICATE_MINIMUM_WORDS } from '../content-gate.mjs';
 import { COLLECTION_OF, parseEntrySource, proseBlocks, proseSentences } from '../entry-prose.mjs';
 import { buildRecord } from '../generation-record.mjs';
+import { recordPath } from '../record-layout.mjs';
 import { BAND_FILE, bandRecord, deriveBands, entryStats, measureCorpus } from '../sentence-band.mjs';
 import { DATA_DIRECTORY } from '../writer-tree.mjs';
 import { recordInput } from './generation-input.mjs';
 
 export const SLUG = 'zz-specimen';
-export const RECORD_PATH = `audits/autowriter/generations/${SLUG}.json`;
+export const RECORD_PATH = recordPath('generation', SLUG, recordInput().claim.claimedAt);
 export const ENTRY_PATH = `audits/autowriter/generations/${SLUG}.md`;
 export const NIST_URL = 'https://www.nist.gov/itl/ai-risk-management-framework';
 export const FACT =

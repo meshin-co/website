@@ -1,12 +1,11 @@
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join, posix, resolve } from 'node:path';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
 
-import { LEDGER_DIR } from './autowriter-ledger.mjs';
 import { postSlackText } from './escalate-channels.mjs';
 import { describeDelivery, receiptOf, redactorFor } from './escalate.mjs';
 import { provenanceOf } from './evidence-gate.mjs';
-import { GENERATION_DIR } from './generation-record.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
+import { familyOf, recordFiles } from './record-layout.mjs';
 import { generatorRevision } from './report.mjs';
 import { corpusOf, reportModel } from './spend-report-model.mjs';
 import { REPORT_PATH, countText, reportText, slackMessage } from './spend-report-text.mjs';
@@ -22,27 +21,20 @@ class UsageError extends Error {}
 
 const readIfPresent = (path) => (existsSync(path) ? readFileSync(path, 'utf8') : null);
 
-function jsonFiles(repoRoot, directory) {
-  const absolute = join(repoRoot, directory);
-  if (!existsSync(absolute)) return [];
-  return readdirSync(absolute, { withFileTypes: true })
-    .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
-    .map((entry) => entry.name)
-    .sort()
-    .map((name) => ({ path: `${directory}/${name}`, text: readFileSync(join(absolute, name), 'utf8') }));
-}
+const textFiles = (repoRoot, family) =>
+  recordFiles(repoRoot, family).map((path) => ({ path, text: readFileSync(join(repoRoot, path), 'utf8') }));
 
 export const corpusFiles = (repoRoot) => ({
-  ledgers: jsonFiles(repoRoot, LEDGER_DIR),
-  records: jsonFiles(repoRoot, GENERATION_DIR),
+  ledgers: textFiles(repoRoot, 'ledger'),
+  records: textFiles(repoRoot, 'generation'),
 });
 
-const FOLDERS = { [LEDGER_DIR]: 'ledgers', [GENERATION_DIR]: 'records' };
+const FOLDERS = { ledger: 'ledgers', generation: 'records' };
 
 function overlaid(corpus, written) {
   const files = { ledgers: [...corpus.ledgers], records: [...corpus.records] };
   for (const file of written) {
-    const folder = file.path.endsWith('.json') ? FOLDERS[posix.dirname(file.path)] : undefined;
+    const folder = FOLDERS[familyOf(file.path)];
     if (folder !== undefined) files[folder] = [...files[folder].filter(({ path }) => path !== file.path), file];
   }
   return files;

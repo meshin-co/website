@@ -6,7 +6,22 @@ import { test } from 'node:test';
 import { LedgerError } from './autowriter-ledger.mjs';
 import { scenario, withHead, withoutPullRequestRun } from './fixtures/pr-watch.mjs';
 import { GitHubError, createApi } from './pr-github.mjs';
-import { REPO, ROOT, HEAD, json, apiAnswering, ledgerBody, snapshotOf, own, aLedger } from './fixtures/github-fake.mjs';
+import {
+  REPO,
+  ROOT,
+  HEAD,
+  LEDGER_FILINGS,
+  LEDGER_PATH,
+  NOT_THE_LEDGER,
+  json,
+  apiAnswering,
+  ledgerAt,
+  ledgerBody,
+  snapshotOf,
+  own,
+  aLedger,
+  treeListing,
+} from './fixtures/github-fake.mjs';
 
 test('a request goes to the repository url with the github headers', async () => {
   const { api, calls } = apiAnswering(() => json({}));
@@ -144,18 +159,21 @@ test('a snapshot asks for no jobs when there is no pull request run', async () =
   assert.ok(paths.every((path) => !path.includes('/jobs')));
 });
 
-test('a snapshot of a branch the watcher does not own reads no ledger', async () => {
+test('a snapshot of a branch the watcher does not own reads no tree and no ledger', async () => {
   const { paths } = await snapshotOf(scenario('green'));
 
-  assert.ok(paths.every((path) => !path.startsWith('contents/')));
+  assert.ok(paths.every((path) => !path.startsWith('contents/') && !path.startsWith('git/trees/')));
 });
 
-test('a snapshot of an owned branch reads the ledger at the head', async () => {
+test('a snapshot of an owned branch lists the tree of the head, then reads the ledger it finds there', async () => {
   const bundle = own(scenario('green'));
+  const head = bundle.pullRequest.head.sha;
 
-  const { paths } = await snapshotOf(bundle);
+  const { paths } = await snapshotOf(bundle, { tree: [LEDGER_PATH] });
 
-  assert.ok(paths.includes(`contents/audits/autowriter/a-slug.json?ref=${bundle.pullRequest.head.sha}`));
+  const listing = paths.indexOf(`git/trees/${head}?recursive=1`);
+  const reading = paths.indexOf(`contents/${LEDGER_PATH}?ref=${head}`);
+  assert.ok(listing >= 0 && reading > listing, paths.join('\n'));
 });
 
 test('a head that moved between the two pull request reads is returned as the second payload', async () => {
@@ -167,24 +185,62 @@ test('a head that moved between the two pull request reads is returned as the se
   assert.equal(snapshot.pullRequest.head.sha, HEAD);
 });
 
-test('a missing ledger is null', async () => {
-  const { snapshot } = await snapshotOf(own(scenario('green')));
+test('a ledger that is not in the tree is null, and nothing is read for it', async () => {
+  const { snapshot, paths } = await snapshotOf(own(scenario('green')));
+
+  assert.equal(snapshot.ledger, null);
+  assert.ok(paths.every((path) => !path.startsWith('contents/')));
+});
+
+test('another slug, a claim, a generation record and a page of the same name are not the ledger', async () => {
+  const { snapshot, paths } = await snapshotOf(own(scenario('green')), { tree: NOT_THE_LEDGER });
+
+  assert.equal(snapshot.ledger, null);
+  assert.ok(paths.every((path) => !path.startsWith('contents/')));
+});
+
+test('a ledger that the tree lists but the contents no longer find is null', async () => {
+  const { snapshot } = await snapshotOf(own(scenario('green')), { tree: [LEDGER_PATH] });
 
   assert.equal(snapshot.ledger, null);
 });
 
-test('a valid ledger comes back with its blob sha and path', async () => {
-  const ledger = aLedger();
+for (const [place, path] of Object.entries(LEDGER_FILINGS)) {
+  test(`a valid ledger filed ${place} is found by its slug and comes back with its blob sha and the path found`, async () => {
+    const ledger = aLedger();
+    const bundle = own(scenario('green'));
 
-  const { snapshot } = await snapshotOf(own(scenario('green')), { ledger: () => ledgerBody(ledger, 'blob-9') });
+    const { snapshot, paths } = await snapshotOf(bundle, {
+      tree: [...NOT_THE_LEDGER, path],
+      ledger: ledgerAt(path, ledger),
+    });
 
-  assert.deepEqual(snapshot.ledger, { value: ledger, blobSha: 'blob-9', path: 'audits/autowriter/a-slug.json' });
+    assert.deepEqual(snapshot.ledger, { value: ledger, blobSha: 'blob-9', path });
+    assert.deepEqual(
+      paths.filter((asked) => asked.startsWith('contents/')),
+      [`contents/${path}?ref=${bundle.pullRequest.head.sha}`]
+    );
+  });
+}
+
+test('a ledger filed twice fails loudly, naming both files, because the tree cannot say which of them is the ledger', async () => {
+  await assert.rejects(snapshotOf(own(scenario('green')), { tree: [LEDGER_PATH, LEDGER_FILINGS.flat] }), (error) => {
+    assert.match(error.message, /ledger a-slug is filed more than once/);
+    assert.ok(error.message.includes(LEDGER_PATH) && error.message.includes(LEDGER_FILINGS.flat), error.message);
+    return true;
+  });
+});
+
+test('a tree GitHub cut short fails the snapshot, and is never read as a branch without a ledger', async () => {
+  const cut = () => treeListing([LEDGER_PATH], { truncated: true });
+
+  await assert.rejects(snapshotOf(own(scenario('green')), { tree: cut }), /incomplete/);
 });
 
 test('a ledger that is not json fails loudly', async () => {
   const text = () => json({ content: Buffer.from('{oops').toString('base64'), sha: 's', encoding: 'base64' });
 
-  await assert.rejects(snapshotOf(own(scenario('green')), { ledger: text }), (error) => {
+  await assert.rejects(snapshotOf(own(scenario('green')), { tree: [LEDGER_PATH], ledger: text }), (error) => {
     assert.ok(error instanceof LedgerError);
     assert.match(error.problems[0], /^is not JSON: /);
     return true;
@@ -194,13 +250,13 @@ test('a ledger that is not json fails loudly', async () => {
 test('a ledger that breaks the schema fails loudly', async () => {
   const broken = () => ledgerBody({ ...aLedger(), attempts: 'many' });
 
-  await assert.rejects(snapshotOf(own(scenario('green')), { ledger: broken }), LedgerError);
+  await assert.rejects(snapshotOf(own(scenario('green')), { tree: [LEDGER_PATH], ledger: broken }), LedgerError);
 });
 
 test('a ledger whose slug differs from its file name fails loudly', async () => {
   const other = () => ledgerBody(aLedger('other-slug'));
 
-  await assert.rejects(snapshotOf(own(scenario('green')), { ledger: other }), (error) => {
+  await assert.rejects(snapshotOf(own(scenario('green')), { tree: [LEDGER_PATH], ledger: other }), (error) => {
     assert.ok(error instanceof LedgerError);
     assert.match(error.message, /does not match the file name a-slug\.json/);
     return true;

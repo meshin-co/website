@@ -2,12 +2,12 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { readClaim } from './autowriter-claim-store.mjs';
-import { claimFile } from './autowriter-claims.mjs';
-import { ledgerFile, readLedger } from './autowriter-ledger.mjs';
+import { readLedger } from './autowriter-ledger.mjs';
 import { entryPath, entryRoute } from './entry-files.mjs';
-import { generationFile, readRecord } from './generation-record.mjs';
+import { readRecord } from './generation-record.mjs';
 import { classifyPullRequest, slugOfBranch } from './pr-classify.mjs';
 import { readSnapshot } from './pr-github.mjs';
+import { locateRecord, recordDirectory, recordPath } from './record-layout.mjs';
 import { draftOfEntry, publishDateOf } from './repair-draft.mjs';
 import { RepairStop } from './repair-outcome.mjs';
 import { passageOf } from './route-derive.mjs';
@@ -34,10 +34,17 @@ async function repairableSnapshot({ api, number, head, now, snapshotOf, classify
   return { slug, branch: pullRequest.head.ref, run: judged.evidence.run };
 }
 
+function claimFileOf(repoRoot, slug) {
+  const path = locateRecord(repoRoot, 'claim', slug);
+  if (path === null)
+    throw new RepairStop('failed', recordDirectory('claim') + ' holds no claim named ' + slug + '.json');
+  return join(repoRoot, path);
+}
+
 function readEntry({ repoRoot, slug }) {
-  const claim = readClaim(join(repoRoot, claimFile(slug)));
-  const record = readRecord(join(repoRoot, generationFile(slug)));
-  const ledger = readLedger(join(repoRoot, ledgerFile(slug)));
+  const claim = readClaim(claimFileOf(repoRoot, slug));
+  const record = readRecord(join(repoRoot, recordPath('generation', slug, claim.claimedAt)));
+  const ledger = readLedger(join(repoRoot, recordPath('ledger', slug, claim.claimedAt)));
   const route = entryRoute(claim);
   const passage = passageOf(readText(repoRoot, SEMANTIC_CORE), { promptNumber: claim.prompt.number, route });
   if (passage === null) throw new RepairStop('failed', SEMANTIC_CORE + ' holds no passage for ' + route);

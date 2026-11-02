@@ -2,6 +2,8 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { recordFiles } from '../record-layout.mjs';
+
 export const DISPOSITIONS = 'audits/phase-4.7/dispositions';
 const LISTED_COLLECTIONS = { '/blog': 'post', '/glossary': 'glossary' };
 
@@ -58,13 +60,10 @@ export function seedDispositions(root) {
 }
 
 export function staleEntries(root) {
-  const directory = join(root, DISPOSITIONS);
-  if (!existsSync(directory)) return [];
-  return readdirSync(directory)
-    .filter((name) => name.endsWith('.json'))
-    .sort()
+  return recordFiles(root, 'disposition')
+    .map((path) => path.slice(DISPOSITIONS.length + 1))
     .flatMap((file) =>
-      JSON.parse(readFileSync(join(directory, file), 'utf8')).flatMap((entry, index) => {
+      JSON.parse(readFileSync(join(root, DISPOSITIONS, file), 'utf8')).flatMap((entry, index) => {
         const fresh = freshDigest(root, entry.target);
         return fresh !== null && fresh !== entry.digest ? [{ file, index, target: entry.target, digest: fresh }] : [];
       })

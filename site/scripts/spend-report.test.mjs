@@ -70,23 +70,29 @@ function harness({ revision = 'abc1234', env = { SLACK_WEBHOOK_URL: WEBHOOK }, a
   };
 }
 
-test('the corpus is the json files directly inside the ledger and the record folders, sorted, with repository paths', () =>
+test('the corpus is the json files of the ledger and the record families at any depth, sorted, with repository paths', () =>
   withRepo((repo) => {
     repo.put([
       { path: 'audits/autowriter/b.json', text: '{}' },
       { path: 'audits/autowriter/a.json', text: '[]' },
       { path: 'audits/autowriter/notes.md', text: 'not json' },
+      { path: 'audits/autowriter/2026/11/m.json', text: '{"m":1}' },
       { path: 'audits/autowriter/claims/c.json', text: '{}' },
+      { path: 'audits/autowriter/claims/2026/11/d.json', text: '{}' },
       { path: 'audits/autowriter/generations/z.json', text: '1' },
       { path: 'audits/autowriter/generations/y.json', text: '2' },
-      { path: 'audits/autowriter/generations/deeper/w.json', text: '3' },
+      { path: 'audits/autowriter/generations/2026/11/w.json', text: '3' },
+      { path: 'audits/autowriter/generations/2026/11/extra/v.json', text: '4' },
     ]);
     assert.deepEqual(corpusFiles(repo.root), {
       ledgers: [
+        { path: 'audits/autowriter/2026/11/m.json', text: '{"m":1}' },
         { path: 'audits/autowriter/a.json', text: '[]' },
         { path: 'audits/autowriter/b.json', text: '{}' },
       ],
       records: [
+        { path: 'audits/autowriter/generations/2026/11/extra/v.json', text: '4' },
+        { path: 'audits/autowriter/generations/2026/11/w.json', text: '3' },
         { path: 'audits/autowriter/generations/y.json', text: '2' },
         { path: 'audits/autowriter/generations/z.json', text: '1' },
       ],

@@ -5,6 +5,7 @@ import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node
 import { dirname, join } from 'node:path';
 import { afterEach, test } from 'node:test';
 
+import { recordPath } from './record-layout.mjs';
 import { assembleRoute } from './route-assembly.mjs';
 import { parseBuyerPrompts } from './semantic-core.mjs';
 import { WriterError } from './writer-error.mjs';
@@ -23,16 +24,16 @@ afterEach(() => {
 
 const POST = 'site/src/data/post/how-to-write-an-ai-incident-runbook.md';
 const TERM = 'site/src/data/glossary/model-registry.md';
-const POST_DISPOSITION = 'audits/phase-4.7/dispositions/generated-how-to-write-an-ai-incident-runbook.json';
-const TERM_DISPOSITION = 'audits/phase-4.7/dispositions/generated-model-registry.json';
+const POST_DISPOSITION = recordPath('disposition', claimOf('article').slug, claimOf('article').claimedAt);
+const TERM_DISPOSITION = recordPath('disposition', claimOf('term').slug, claimOf('term').claimedAt);
 const FACTS = 'site/content-facts.json';
 const CORE = 'docs/SEMANTIC-CORE.md';
 const ROUTES = 'audits/phase-4.7/dispositions/routes.json';
 
-const assemble = (root, run, format) =>
+const assemble = (root, run, format, claim = claimOf(format)) =>
   assembleRoute({
     repoRoot: root,
-    entries: [{ claim: claimOf(format), draft: DRAFTS[format] }],
+    entries: [{ claim, draft: DRAFTS[format] }],
     runDate: RUN_DATE,
     run,
   });
@@ -160,4 +161,32 @@ test('a failed assembly followed by a good one returns what a good assembly alon
   assert.deepEqual(snapshotOf(root), snapshotOf(clean));
   assert.equal(gitIn(root, 'branch', '--format=%(refname:short)'), 'main\n');
   assert.equal(readFileSync(join(root, FACTS), 'utf8'), readFileSync(join(clean, FACTS), 'utf8'));
+});
+
+const DECEMBER = '2026-12-01T00:00:00.000Z';
+const DECEMBER_DISPOSITION = recordPath('disposition', claimOf('term').slug, DECEMBER);
+const laterTerm = () => ({ ...claimOf('term'), claimedAt: DECEMBER });
+
+test('a term claimed in a later month is filed under that month and leaves the month of the landed post alone', async () => {
+  const root = repo();
+  await postLanded(root);
+  const landed = snapshotOf(root);
+  const term = await assemble(root, fakeRun(root), 'term', laterTerm());
+
+  assert.equal(DECEMBER_DISPOSITION, 'audits/phase-4.7/dispositions/2026/12/generated-model-registry.json');
+  assert.deepEqual(term.files.map(({ path }) => path).sort(), [CORE, FACTS, TERM, DECEMBER_DISPOSITION, ROUTES].sort());
+  assert.deepEqual(snapshotOf(root), landed);
+  assert.ok(existsSync(join(root, POST_DISPOSITION)));
+});
+
+test('when that assembly fails the month of the landed post stays and the month it would have made is gone', async () => {
+  const root = repo();
+  await postLanded(root);
+  const landed = snapshotOf(root);
+  const fail = { 'node scripts/stale-dispositions.mjs . dist': { status: 2, stdout: 'broke' } };
+
+  await assert.rejects(assemble(root, fakeRun(root, { fail }), 'term', laterTerm()), WriterError);
+  assert.deepEqual(snapshotOf(root), landed);
+  assert.ok(existsSync(join(root, dirname(POST_DISPOSITION))));
+  assert.ok(!existsSync(join(root, dirname(DECEMBER_DISPOSITION))));
 });

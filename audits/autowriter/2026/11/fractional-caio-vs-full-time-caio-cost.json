@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "slug": "fractional-caio-vs-full-time-caio-cost",
+  "runId": "41519124299-1",
+  "pullRequest": null,
+  "attempts": [],
+  "spend": {
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "costUsd": 0
+  },
+  "verdict": {
+    "state": "open",
+    "reason": null,
+    "decidedAt": null
+  },
+  "escalations": []
+}

@@ -2,10 +2,17 @@ import './fixtures/no-network.mjs';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { ledgerFile } from './autowriter-ledger.mjs';
 import { describeProblem } from './autowriter-records.mjs';
-import { ARTICLE_SLUG, MODEL, MODEL_VARIABLE, RESOLVED_MODEL, recordInput } from './fixtures/generation-input.mjs';
+import {
+  ARTICLE_SLUG,
+  CLAIMED_AT,
+  MODEL,
+  MODEL_VARIABLE,
+  RESOLVED_MODEL,
+  recordInput,
+} from './fixtures/generation-input.mjs';
 import { buildRecord, validateRecord } from './generation-record.mjs';
+import { recordPath } from './record-layout.mjs';
 import { shutdownNote } from './writer-models.mjs';
 
 const base = buildRecord(recordInput());
@@ -17,17 +24,72 @@ const mutated = (change) => {
 const problemsText = (record) => validateRecord(record).map(describeProblem);
 const hasProblem = (record, expected) => problemsText(record).some((text) => text.startsWith(expected));
 
-test('the ledger pattern accepts the path of a ledger file and no other file of the directory tree', () => {
-  assert.deepEqual(validateRecord(mutated((r) => (r.ledger = ledgerFile('any-slug')))), []);
-  for (const other of ['audits/autowriter/claims/x.json', 'audits/autowriter/generations/x.json', 'audits/x.json']) {
-    assert.ok(
-      hasProblem(
-        mutated((r) => (r.ledger = other)),
-        'ledger must match pattern'
-      ),
-      other
-    );
+const LEDGER_PROBLEM = 'ledger must match pattern';
+const LEDGER_PATTERN = '^audits/autowriter/([0-9]{4}/(0[1-9]|1[0-2])/)?[a-z0-9]+(-[a-z0-9]+)*\\.json$';
+const MONTH_LEDGER = recordPath('ledger', ARTICLE_SLUG, CLAIMED_AT);
+const FLAT_LEDGER = `audits/autowriter/${ARTICLE_SLUG}.json`;
+const withLedger = (path) => mutated((r) => (r.ledger = path));
+
+test('the ledger field takes the month path of a ledger and the flat path of a record written before the layout changed', () => {
+  assert.equal(MONTH_LEDGER, `audits/autowriter/2026/11/${ARTICLE_SLUG}.json`);
+  assert.deepEqual(validateRecord(withLedger(MONTH_LEDGER)), []);
+  assert.deepEqual(validateRecord(withLedger(FLAT_LEDGER)), []);
+});
+
+test('the ledger field refuses a file that is not a ledger, and the message names the pattern', () => {
+  assert.ok(
+    hasProblem(withLedger('audits/x.json'), `${LEDGER_PROBLEM} ${LEDGER_PATTERN}`),
+    problemsText(withLedger('audits/x.json')).join(' | ')
+  );
+  for (const other of [
+    'audits/autowriter/claims/x.json',
+    'audits/autowriter/generations/x.json',
+    'audits/autowriter/claims/2026/11/x.json',
+    'audits/autowriter/generations/2026/11/x.json',
+    'audits/phase-4.7/dispositions/generated-x.json',
+    'audits/phase-4.7/dispositions/2026/11/generated-x.json',
+    'site/audits/autowriter/x.json',
+    'audits/x.json',
+  ])
+    assert.ok(hasProblem(withLedger(other), LEDGER_PROBLEM), other);
+});
+
+test('the ledger field refuses a name that is not a slug, filed flat or in a month', () => {
+  for (const directory of ['audits/autowriter', 'audits/autowriter/2026/11'])
+    for (const name of [
+      'X.json',
+      'x_y.json',
+      'x--y.json',
+      '-x.json',
+      'x-.json',
+      'x.txt',
+      'x.json.bak',
+      '.json',
+      'x/y.json',
+    ])
+      assert.ok(hasProblem(withLedger(`${directory}/${name}`), LEDGER_PROBLEM), `${directory}/${name}`);
+});
+
+test('the ledger field takes every month of the year and refuses the months that do not exist', () => {
+  for (let month = 1; month <= 12; month += 1) {
+    const path = `audits/autowriter/2026/${String(month).padStart(2, '0')}/x.json`;
+    assert.deepEqual(validateRecord(withLedger(path)), [], path);
   }
+  for (const bad of ['00', '13', '1', '011', 'jan', '']) {
+    const path = `audits/autowriter/2026/${bad}/x.json`;
+    assert.ok(hasProblem(withLedger(path), LEDGER_PROBLEM), path);
+  }
+});
+
+test('the ledger field wants a four digit year and no directory between the month and the file', () => {
+  for (const bad of [
+    'audits/autowriter/26/11/x.json',
+    'audits/autowriter/20261/11/x.json',
+    'audits/autowriter/2026/11/extra/x.json',
+    'audits/autowriter/2026/x.json',
+    '/audits/autowriter/2026/11/x.json',
+  ])
+    assert.ok(hasProblem(withLedger(bad), LEDGER_PROBLEM), bad);
 });
 
 const SHAPE_DEFECTS = [

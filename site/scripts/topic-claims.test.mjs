@@ -1,10 +1,12 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
+import { recordPath } from './record-layout.mjs';
 import { claimRefusal } from './topic-claims.mjs';
 
 const SUFFIX = ' — meshin.co';
 const NOW = new Date('2026-11-02T07:00:00.000Z');
+const CLAIMED = '2026-11-01T07:00:00.000Z';
 const LIVE = '2026-11-15T07:00:00.000Z';
 const LAPSED = '2026-11-01T07:00:00.000Z';
 
@@ -17,9 +19,8 @@ const generated = [
   },
 ];
 
-const filed = (slug, extra = {}) => ({
-  path: 'audits/autowriter/claims/' + slug + '.json',
-  claim: {
+const filed = (slug, extra = {}) => {
+  const claim = {
     schema: 1,
     slug,
     title: 'What is a card?',
@@ -29,17 +30,20 @@ const filed = (slug, extra = {}) => ({
     prompt: { number: 7, text: 'what is a card' },
     runId: '1',
     status: 'claimed',
-    claimedAt: '2026-11-01T07:00:00.000Z',
+    claimedAt: CLAIMED,
     expiresAt: LIVE,
     ...extra,
-  },
-});
+  };
+  return { path: recordPath('claim', slug, claim.claimedAt), claim };
+};
+
+const ledgerOf = (slug) => recordPath('ledger', slug, CLAIMED);
 
 const refuse = (topic, held = {}) =>
   claimRefusal({
     topic: { slug: 'a-new-slug', ...topic },
     claims: held.claims ?? [],
-    ledgerSlugs: held.ledgerSlugs ?? [],
+    ledgerPaths: held.ledgerPaths ?? [],
     generated,
     suffix: SUFFIX,
     now: NOW,
@@ -65,7 +69,7 @@ test('a title an unexpired claim holds is refused naming that claim', () => {
   assert.deepEqual(refuse({ title: 'what is a card' }, { claims: [open] }), {
     reason: 'title-collision',
     against: 'What is a card?',
-    detail: 'title "what is a card" is also claimed by audits/autowriter/claims/what-is-a-card.json',
+    detail: 'title "what is a card" is also claimed by ' + recordPath('claim', 'what-is-a-card', CLAIMED),
   });
 });
 
@@ -78,9 +82,8 @@ test('a slug an unexpired claim holds is refused even under a new title', () => 
   const open = filed('a-new-slug', { title: 'Another title entirely' });
   assert.deepEqual(refuse({ title: 'A different title' }, { claims: [open] }), {
     reason: 'slug-held',
-    against: 'audits/autowriter/claims/a-new-slug.json',
-    detail:
-      'slug "a-new-slug" is held by audits/autowriter/claims/a-new-slug.json (claimed until 2026-11-15T07:00:00.000Z)',
+    against: recordPath('claim', 'a-new-slug', CLAIMED),
+    detail: `slug "a-new-slug" is held by ${recordPath('claim', 'a-new-slug', CLAIMED)} (claimed until 2026-11-15T07:00:00.000Z)`,
   });
 });
 
@@ -95,28 +98,58 @@ test('a lapsed claim holds neither its title nor its slug', () => {
 });
 
 test('a slug that already has a ledger is refused, because an earlier run owns the record of it', () => {
-  assert.deepEqual(refuse({ title: 'A fresh title' }, { ledgerSlugs: ['a-new-slug'] }), {
+  const ledger = ledgerOf('a-new-slug');
+  assert.deepEqual(refuse({ title: 'A fresh title' }, { ledgerPaths: [ledger] }), {
     reason: 'slug-held',
-    against: 'audits/autowriter/a-new-slug.json',
-    detail:
-      'slug "a-new-slug" already has the ledger audits/autowriter/a-new-slug.json, so an earlier run owns it; remove the ledger to try the topic again',
+    against: ledger,
+    detail: `slug "a-new-slug" already has the ledger ${ledger}, so an earlier run owns it; remove the ledger to try the topic again`,
   });
 });
 
+test('a ledger holds its slug at whatever depth it is filed, and the refusal names that file', () => {
+  const filedAs = [
+    'audits/autowriter/a-new-slug.json',
+    ledgerOf('a-new-slug'),
+    'audits/autowriter/2026/11/extra/a-new-slug.json',
+  ];
+  for (const path of filedAs) {
+    const found = refuse({ title: 'A fresh title' }, { ledgerPaths: [ledgerOf('another-slug'), path] });
+    assert.equal(found.reason, 'slug-held', path);
+    assert.equal(found.against, path);
+    assert.ok(found.detail.includes(`already has the ledger ${path},`), found.detail);
+  }
+});
+
+test('a claim holds its slug from the month it was made in, and the refusal names that file', () => {
+  const october = filed('a-new-slug', { claimedAt: '2026-10-25T07:00:00.000Z' });
+  const found = refuse({ title: 'A different title' }, { claims: [october] });
+  assert.equal(found.reason, 'slug-held');
+  assert.equal(found.against, 'audits/autowriter/claims/2026/10/a-new-slug.json');
+});
+
 test('the generated layer is asked first, then the claims by title, then the claims by slug, then the ledgers', () => {
-  const held = { claims: [filed('a-new-slug', { title: 'What is an AI system?' })], ledgerSlugs: ['a-new-slug'] };
+  const held = {
+    claims: [filed('a-new-slug', { title: 'What is an AI system?' })],
+    ledgerPaths: [ledgerOf('a-new-slug')],
+  };
   assert.equal(refuse({ title: 'What is an AI system?' }, held).detail.includes('generated layer'), true);
   assert.match(
     refuse({ title: 'What is a card?' }, { ...held, claims: [filed('a-new-slug')] }).detail,
     /is also claimed by/
   );
   assert.match(refuse({ title: 'Another one' }, held).detail, /is held by/);
-  assert.match(refuse({ title: 'Another one' }, { ledgerSlugs: ['a-new-slug'] }).detail, /already has the ledger/);
+  assert.match(
+    refuse({ title: 'Another one' }, { ledgerPaths: [ledgerOf('a-new-slug')] }).detail,
+    /already has the ledger/
+  );
 });
 
 test('a title nothing holds on a slug nothing holds is not refused', () => {
   assert.equal(
-    refuse({ title: 'What is a data steward?' }, { claims: [filed('other-slug')], ledgerSlugs: ['x'] }),
+    refuse(
+      { title: 'What is a data steward?' },
+      { claims: [filed('other-slug')], ledgerPaths: [ledgerOf('x'), ledgerOf('not-a-new-slug')] }
+    ),
     null
   );
   assert.equal(refuse({ title: 'What is a data steward?' }), null);

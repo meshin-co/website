@@ -8,6 +8,7 @@ import { after, afterEach, test } from 'node:test';
 import { ATTEMPT_CAP } from './autowriter-ledger.mjs';
 import { isDispositionFile, refusalOf } from './autowriter-refusals.mjs';
 import { repairedReason } from './disposition-restate.mjs';
+import { recordPath } from './record-layout.mjs';
 import { claimOf, DRAFTS, RUN_DAY, splitEntry } from './fixtures/entry-drafts.mjs';
 import {
   buildFailure,
@@ -15,6 +16,7 @@ import {
   emptyRepo,
   ENTRY,
   FORMAT,
+  GENERATION,
   keysOf,
   landedRepo,
   OWN,
@@ -38,6 +40,7 @@ import {
   treeOf,
   UNTOUCHED,
 } from './fixtures/repair-repo.mjs';
+import { freshDigest } from './fixtures/route-dispositions.mjs';
 import { digestOf, fakeRun, gitIn } from './fixtures/route-repo.mjs';
 
 afterEach(removeRepos);
@@ -60,7 +63,8 @@ const COMMANDS = [
   'npm run gate:machine',
   'git status --porcelain -z --untracked-files=all',
 ];
-const reasonOf = (number) => repairedReason({ route: ROUTE, slug: SLUG, attempt: { number, of: ATTEMPT_CAP } });
+const reasonOf = (number) =>
+  repairedReason({ route: ROUTE, generationPath: GENERATION, attempt: { number, of: ATTEMPT_CAP } });
 const layout = (rows) => `${JSON.stringify(rows, null, 2)}\n`;
 
 test('it returns the entry and every file its text made stale, sorted by path, and the six gates it ran', async () => {
@@ -176,6 +180,20 @@ test('a restate under attempt two is not read as a seal by the guard that refuse
   assert.equal(JSON.parse(textOf(second, OWN))[0].reason, reasonOf(2));
 });
 
+test('a generated disposition an earlier run filed under its month, and naming the repaired page, is restated where it lies', async () => {
+  const root = await landedRepo();
+  const earlier = 'audits/phase-4.7/dispositions/2026/10/generated-earlier-entry.json';
+  const row = { target: ROUTE, status: 'rewritten', reason: OWNER_REASON, digest: freshDigest(root, ROUTE) };
+  commitFiles(root, [{ path: earlier, text: layout([row]) }], 'an earlier run');
+  const run = repairRun(root);
+  const result = await repair(root, run);
+  const page = digestOf(`page:${textOf(result, ENTRY)}`);
+
+  assert.deepEqual(pathsOf(result), [earlier, OWN, ROUTES, ENTRY]);
+  assert.equal(textOf(result, earlier), layout([{ ...row, reason: reasonOf(1), digest: page }]));
+  assert.ok(keysOf(run).includes(`npx prettier --write ../${earlier} ../${OWN} ../${ROUTES}`));
+});
+
 test('a generated file the regeneration changed comes back with the entry, and the tree gets the original back', async () => {
   const root = await landedRepo();
   const original = read(root, CORE);
@@ -259,7 +277,11 @@ test('a glossary entry is repaired the same way: its own disposition, the shared
 
   assert.deepEqual(
     files.map(({ path }) => path),
-    ['audits/phase-4.7/dispositions/generated-model-registry.json', ROUTES, 'site/src/data/glossary/model-registry.md']
+    [
+      recordPath('disposition', 'model-registry', claimOf('term').claimedAt),
+      ROUTES,
+      'site/src/data/glossary/model-registry.md',
+    ]
   );
   assert.ok(keysOf(run).includes('npx prettier --write src/data/glossary/model-registry.md'));
 });

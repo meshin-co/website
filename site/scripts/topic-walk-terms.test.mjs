@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { GENERATED, LAPSED_AT, claimed, inputsFor, query, reportOf } from './fixtures/topic-inputs.mjs';
+import { EARLIER_RUN_AT, GENERATED, LAPSED_AT, claimed, inputsFor, query, reportOf } from './fixtures/topic-inputs.mjs';
+import { recordPath } from './record-layout.mjs';
 import { walkTerms } from './topic-walk.mjs';
 
 const SHADOW = query('what is shadow ai', 12, 44, ['/glossary']);
@@ -136,9 +137,11 @@ test('a slug a claim holds, and a slug that already has a ledger, are recorded a
   const holder = claimed('shadow-ai', 'Another title entirely', { format: 'term' });
   const byClaim = walk([SHADOW], { claims: [holder] });
   assert.deepEqual(outcomes(byClaim), [['what is shadow ai', 'slug-held']]);
-  assert.equal(byClaim.refusals[0].against, 'audits/autowriter/claims/shadow-ai.json');
-  const byLedger = walk([SHADOW], { ledgerSlugs: ['shadow-ai'] });
+  assert.equal(byClaim.refusals[0].against, recordPath('claim', 'shadow-ai', holder.claim.claimedAt));
+  const ledgerPath = recordPath('ledger', 'shadow-ai', EARLIER_RUN_AT);
+  const byLedger = walk([SHADOW], { ledgerPaths: [ledgerPath] });
   assert.deepEqual(outcomes(byLedger), [['what is shadow ai', 'slug-held']]);
+  assert.equal(byLedger.refusals[0].against, ledgerPath);
 });
 
 test('what is guardrails and what are guardrails name one concept, so the second is the same concept', () => {

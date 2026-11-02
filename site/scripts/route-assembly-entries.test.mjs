@@ -5,6 +5,7 @@ import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { afterEach, test } from 'node:test';
 
+import { recordPath } from './record-layout.mjs';
 import { assembleRoute } from './route-assembly.mjs';
 import { parseBuyerPrompts } from './semantic-core.mjs';
 import { WriterError } from './writer-error.mjs';
@@ -23,8 +24,8 @@ afterEach(() => {
 
 const POST = 'site/src/data/post/how-to-write-an-ai-incident-runbook.md';
 const TERM = 'site/src/data/glossary/model-registry.md';
-const POST_DISPOSITION = 'audits/phase-4.7/dispositions/generated-how-to-write-an-ai-incident-runbook.json';
-const TERM_DISPOSITION = 'audits/phase-4.7/dispositions/generated-model-registry.json';
+const POST_DISPOSITION = recordPath('disposition', claimOf('article').slug, claimOf('article').claimedAt);
+const TERM_DISPOSITION = recordPath('disposition', claimOf('term').slug, claimOf('term').claimedAt);
 const POST_ROUTE = '/blog/how-to-write-an-ai-incident-runbook';
 const TERM_ROUTE = '/glossary/model-registry';
 const FACTS = 'site/content-facts.json';
@@ -128,6 +129,40 @@ test('the whole run leaves the tree exactly as it found it', async () => {
   assert.equal(gitIn(root, 'status', '--porcelain'), '');
 });
 
+const OCTOBER = '2026-10-31T23:59:59.999Z';
+const acrossTwoMonths = () => [
+  { claim: { ...claimOf('article'), claimedAt: OCTOBER }, draft: DRAFTS.article },
+  ...entriesOf('term'),
+];
+
+test('entries claimed in two months file their dispositions under their own months, and the restated reason names each record under its own', async () => {
+  const root = repo();
+  const result = await assemble(root, fakeRun(root), acrossTwoMonths());
+  const october = recordPath('disposition', claimOf('article').slug, OCTOBER);
+  const { reason } = JSON.parse(textOf(result, ROUTES))[1];
+
+  assert.notEqual(october, POST_DISPOSITION);
+  assert.deepEqual(
+    result.files.map(({ path }) => path),
+    [POST, TERM, FACTS, CORE, october, TERM_DISPOSITION, ROUTES]
+  );
+  assert.ok(
+    reason.includes(
+      '(generation records audits/autowriter/generations/2026/10/how-to-write-an-ai-incident-runbook.json and audits/autowriter/generations/2026/11/model-registry.json)'
+    )
+  );
+});
+
+test('a run that fails after it filed dispositions under two months takes both month directories away', async () => {
+  const root = repo();
+  const before = untouched(root);
+  const run = fakeRun(root, { fail: { 'node scripts/stale-dispositions.mjs . dist': { status: 2, stdout: 'broke' } } });
+
+  await assert.rejects(assemble(root, run, acrossTwoMonths()), WriterError);
+  assert.deepEqual(untouched(root), before);
+  assert.equal(gitIn(root, 'status', '--porcelain'), '');
+});
+
 const STEPS = [
   'npx prettier --write src/data/post/how-to-write-an-ai-incident-runbook.md',
   'npx prettier --write src/data/glossary/model-registry.md',
@@ -225,6 +260,19 @@ for (const [name, entries] of Object.entries(BAD_ENTRIES)) {
   });
 }
 
+for (const claimedAt of [undefined, '', 'yesterday', '2026-02-30T00:00:00Z']) {
+  test(`a claim time of ${JSON.stringify(claimedAt)} leaves no month to file the disposition under and is refused before any command runs`, async () => {
+    const root = repo();
+    const before = untouched(root);
+    const run = fakeRun(root);
+    const entries = [{ claim: { ...claimOf('article'), claimedAt }, draft: DRAFTS.article }];
+
+    await assert.rejects(assemble(root, run, entries), /is not a UTC instant/);
+    assert.deepEqual(run.calls, []);
+    assert.deepEqual(untouched(root), before);
+  });
+}
+
 test('the single-entry call shape is gone: a claim and a draft beside the root are not read', async () => {
   const root = repo();
   const run = fakeRun(root);
@@ -256,7 +304,7 @@ test('two entries that would write the same entry file are refused before any co
 test('an article and a term with one slug would share a disposition file and are refused', () =>
   refusedBeforeAnyCommand(
     [{ claim: { ...claimOf('article'), slug: 'model-registry' }, draft: DRAFTS.article }, ...entriesOf('term')],
-    /generated-model-registry\.json is written by two entries/
+    new RegExp(`${TERM_DISPOSITION.replaceAll('.', '\\.')} is written by two entries`)
   ));
 
 test('two entries that aim at one query are refused, naming the route that holds it', () =>

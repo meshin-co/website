@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Autowriter attempt ledger",
-  "description": "One file per generated article at audits/autowriter/<slug>.json. The shape is checked here; the rules that compare fields with each other (attempt numbers, spend totals, verdict against escalations, a failing rule against its listed failures, a measurement debt against a merged verdict, the attempt cap, the file name) are checked by validateLedger in autowriter-ledger.mjs. generation is the spend of writing the entry before any repair, and refusals are the candidates selection turned down on the way to this topic; both are absent until a run records them. measurementDebt is written when the pull request merges and names the tree that no Lighthouse run has measured.",
+  "description": "One file per generated article at audits/autowriter/<year>/<month>/<slug>.json, in the month its claim was made. The shape is checked here; the rules that compare fields with each other (attempt numbers, spend totals, verdict against escalations, a failing rule against its listed failures, a measurement debt against a merged verdict, the attempt cap, the file name) are checked by validateLedger in autowriter-ledger.mjs. generation is the spend of writing the entry before any repair, and refusals are the candidates selection turned down on the way to this topic; both are absent until a run records them. measurementDebt is written when the pull request merges and names the tree that no Lighthouse run has measured.",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema", "slug", "runId", "pullRequest", "attempts", "spend", "verdict", "escalations"],

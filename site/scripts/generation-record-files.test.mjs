@@ -5,8 +5,9 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
 
-import { ARTICLE_SLUG, recordInput } from './fixtures/generation-input.mjs';
-import { RecordError, buildRecord, generationFile, readRecord, writeRecord } from './generation-record.mjs';
+import { ARTICLE_SLUG, CLAIMED_AT, recordInput } from './fixtures/generation-input.mjs';
+import { RecordError, buildRecord, readRecord, writeRecord } from './generation-record.mjs';
+import { recordPath } from './record-layout.mjs';
 
 const base = buildRecord(recordInput());
 const withTotal = (costUsd) => ({ ...base, totals: { ...base.totals, costUsd } });
@@ -17,9 +18,11 @@ const scratch = (t) => {
   return root;
 };
 
+const filed = (slug) => recordPath('generation', slug, CLAIMED_AT);
+
 const record = (t) => {
   const root = scratch(t);
-  return { root, path: join(root, generationFile(ARTICLE_SLUG)) };
+  return { root, path: join(root, filed(ARTICLE_SLUG)) };
 };
 
 test('a record is written whole as two-space JSON with a final newline and read back unchanged', (t) => {
@@ -29,10 +32,12 @@ test('a record is written whole as two-space JSON with a final newline and read 
   assert.deepEqual(readRecord(path), base);
 });
 
-test('a write creates the directories and leaves no staging file beside the record', (t) => {
+test('a write creates the year and month directories and leaves no staging file beside the record', (t) => {
   const { root, path } = record(t);
   writeRecord(path, base);
-  assert.deepEqual(readdirSync(join(root, 'audits/autowriter/generations')), [`${ARTICLE_SLUG}.json`]);
+  assert.deepEqual(readdirSync(join(root, 'audits/autowriter/generations')), ['2026']);
+  assert.deepEqual(readdirSync(join(root, 'audits/autowriter/generations/2026')), ['11']);
+  assert.deepEqual(readdirSync(join(root, 'audits/autowriter/generations/2026/11')), [`${ARTICLE_SLUG}.json`]);
 });
 
 test('a second write replaces the first whole', (t) => {
@@ -86,7 +91,7 @@ test('the message shows five problems and counts the rest', (t) => {
 
 test('a record named for another slug is refused on write and on read', (t) => {
   const { root, path } = record(t);
-  const wrong = join(root, 'audits/autowriter/generations/another-slug.json');
+  const wrong = join(root, filed('another-slug'));
   const stem = `slug ${ARTICLE_SLUG} does not match the file name another-slug.json`;
   assert.throws(
     () => writeRecord(wrong, base),
@@ -104,7 +109,7 @@ test('a record named for another slug is refused on write and on read', (t) => {
 test('a file that is not JSON is refused with its path and the parser error as the cause', (t) => {
   const { root, path } = record(t);
   writeRecord(path, base);
-  const broken = join(root, 'audits/autowriter/generations/broken.json');
+  const broken = join(root, filed('broken'));
   writeFileSync(broken, '{ not json');
   assert.throws(
     () => readRecord(broken),

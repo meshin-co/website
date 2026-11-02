@@ -1,4 +1,5 @@
 import { titleSuffix } from '../../src/utils/brand.mjs';
+import { recordPath } from '../record-layout.mjs';
 import { siteBrand } from '../site-brand.mjs';
 import { casedForms } from '../topic-casing.mjs';
 
@@ -6,7 +7,9 @@ const BRAND = siteBrand().name;
 const NOW = new Date('2026-11-02T07:00:00.000Z');
 const SUFFIX = titleSuffix({ name: BRAND });
 const LIVE_UNTIL = '2026-11-15T07:00:00.000Z';
+const CLAIMED_AT = '2026-11-01T07:00:00.000Z';
 export const LAPSED_AT = '2026-11-02T07:00:00.000Z';
+export const EARLIER_RUN_AT = '2026-10-20T07:00:00.000Z';
 
 export const prompt = (number, text, extra = {}) => ({
   number,
@@ -75,7 +78,7 @@ export const inputsFor = (report, extra = {}) => ({
   promptSources: new Map(),
   forms: casedForms(['AI', 'EU', 'NIST', 'RMF', 'LLM']),
   claims: [],
-  ledgerSlugs: [],
+  ledgerPaths: [],
   suffix: SUFFIX,
   now: NOW,
   settings: { termArm: true, termCap: 1 },
@@ -83,7 +86,7 @@ export const inputsFor = (report, extra = {}) => ({
 });
 
 export const claimed = (slug, title, extra = {}) => ({
-  path: 'audits/autowriter/claims/' + slug + '.json',
+  path: recordPath('claim', slug, extra.claimedAt ?? CLAIMED_AT),
   claim: {
     schema: 1,
     slug,
@@ -94,7 +97,7 @@ export const claimed = (slug, title, extra = {}) => ({
     prompt: { number: 1, text: 'q' },
     runId: '1',
     status: 'claimed',
-    claimedAt: '2026-11-01T07:00:00.000Z',
+    claimedAt: CLAIMED_AT,
     expiresAt: LIVE_UNTIL,
     ...extra,
   },

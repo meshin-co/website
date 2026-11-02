@@ -237,7 +237,7 @@ jobs:
           message="$(result '.message // "the writer printed no result"' 'the writer printed no result')"
           cost="$(result '.spend.costUsd // "unknown"' unknown)"
           slug="$(basename "$(jq -r .ledgerPath "$DECISION_FILE")" .json)"
-          node scripts/escalate-run.mjs --ledger-dir "$GITHUB_WORKSPACE/audits/autowriter" --slug "$slug" --kind "$kind" \
+          node scripts/escalate-run.mjs --ledger-dir "$GITHUB_WORKSPACE/$(dirname "$(jq -r .ledgerPath "$DECISION_FILE")")" --slug "$slug" --kind "$kind" \
             --title "Write daily stopped while writing $slug ($failure)" \
             --detail "npm run write:entry failed with kind $failure: $message. Spend recorded so far: $cost USD. The claim for $slug stays committed and expires on its own."
 
@@ -245,7 +245,7 @@ jobs:
         if: failure() && steps.write.outcome == 'failure'
         run: |
           slug="$(basename "$(jq -r .ledgerPath "$DECISION_FILE")" .json)"
-          node scripts/commit-to-main.mjs --message "chore(autowriter): record the stopped run of $slug" --path "audits/autowriter/$slug.json"
+          node scripts/commit-to-main.mjs --message "chore(autowriter): record the stopped run of $slug" --path "$(jq -r .ledgerPath "$DECISION_FILE")"
 
       - name: escalate a written entry that could not reach a pull request
         if: failure() && steps.write.outcome == 'success'

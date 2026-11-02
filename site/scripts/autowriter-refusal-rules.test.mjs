@@ -2,16 +2,18 @@ import './fixtures/no-network.mjs';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { DISPOSITION_DIRECTORY, REFUSED_PATHS, refusalFor, sealSignature } from './autowriter-refusals.mjs';
+import { REFUSED_PATHS, refusalFor, sealSignature } from './autowriter-refusals.mjs';
 import { judgeCommit, pipelineCommits, skippedLine } from './autowriter-refusal-rules.mjs';
-import { generationFile } from './generation-record.mjs';
+import { BOT_EMAIL } from './pr-classify.mjs';
+import { recordDirectory, recordPath } from './record-layout.mjs';
 
 const SHA = '0123456789abcdef0123456789abcdef01234567';
 const SHA12 = '0123456789ab';
-const RECORD = generationFile('first-post');
-const SECOND_RECORD = generationFile('second-post');
+const CLAIMED_AT = '2026-11-01T07:00:00.000Z';
+const RECORD = recordPath('generation', 'first-post', CLAIMED_AT);
+const SECOND_RECORD = recordPath('generation', 'second-post', CLAIMED_AT);
 const BAND = 'audits/sentence-band.json';
-const DISPOSITION = `${DISPOSITION_DIRECTORY}/main.json`;
+const DISPOSITION = `${recordDirectory('disposition')}/main.json`;
 const PIPELINE_REASON = 'The text of this target changed in the run in which the unattended writer added /blog/x.';
 
 const REFUSED = [
@@ -104,6 +106,25 @@ test('each sealed entry is named, and a seal is found for every record the commi
   for (const { detail } of found) assert.ok(detail.startsWith(`sealed ${named} in ${DISPOSITION}`), detail);
 });
 
+test('a seal is found in a disposition file wherever it lies: flat, in its month and below it make three', () => {
+  const texts = { old: listing(entry('a'.repeat(12))), new: listing(entry('b'.repeat(12))) };
+  const placements = [
+    DISPOSITION,
+    recordPath('disposition', 'first-post', CLAIMED_AT),
+    `${recordDirectory('disposition')}/2026/11/extra/generated-first-post.json`,
+  ];
+  const found = placements.flatMap((path) => judged({ changes: [change(path, 'old', 'new')], texts }));
+
+  assert.equal(found.length, 3);
+  assert.deepEqual(
+    found.map(({ rule }) => rule),
+    Array(3).fill('disposition-seal-committed')
+  );
+  placements.forEach((path, index) =>
+    assert.ok(found[index].detail.includes(`sealed src/data/post/a.md frontmatter.title in ${path} (`), path)
+  );
+});
+
 test('a restate that the pipeline wrote itself, with a reason of its own that it leaves as it was, is not a seal', () => {
   const before = listing(entry('a'.repeat(12), { reason: PIPELINE_REASON }));
   const after = listing(entry('b'.repeat(12), { reason: PIPELINE_REASON }));
@@ -153,6 +174,27 @@ test('a Provenance line is found whatever line ending the message carries', () =
   assert.deepEqual(
     pipelineCommits(git).map(({ sha, records }) => [sha, records]),
     [[SHA, [RECORD]]]
+  );
+});
+
+test('a generation record is a record at any depth: flat, in its month and below it make three of seven changes', () => {
+  const directory = recordDirectory('generation');
+  const records = [`${directory}/third-post.json`, RECORD, `${directory}/2026/11/extra/fourth-post.json`];
+  const others = [
+    `${directory}/2026/11/notes.md`,
+    recordPath('claim', 'first-post', CLAIMED_AT),
+    recordPath('ledger', 'first-post', CLAIMED_AT),
+    BAND,
+  ];
+  const git = (args) => (args.includes('log') ? `${SHA}\0${BOT_EMAIL}\0feat(x): y\0` : raw(...records, ...others));
+  const [commit, ...later] = pipelineCommits(git);
+
+  assert.equal(later.length, 0);
+  assert.deepEqual(commit.records, records);
+  assert.equal(commit.records.length, 3);
+  assert.deepEqual(
+    judgeCommit(commit, () => '').map(({ path }) => path),
+    records
   );
 });
 

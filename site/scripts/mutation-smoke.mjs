@@ -174,6 +174,7 @@ export const FAMILIES = [
   },
   { id: 'change-owing-a-calibration-gate', kind: 'specimen', specimen: 'changeOwingCalibration' },
   { id: 'autowriter-ledger-off-its-schema', kind: 'specimen', specimen: 'autowriterLedgerOffSchema' },
+  { id: 'autowriter-record-filed-outside-its-month', kind: 'specimen', specimen: 'autowriterRecordMisfiled' },
   { id: 'autowriter-attempts-over-the-cap', kind: 'specimen', specimen: 'autowriterAttemptsOverCap' },
   { id: 'autowriter-claim-title-already-published', kind: 'specimen', specimen: 'autowriterClaimTitleCollides' },
   { id: 'autowriter-escalation-delivery-failed', kind: 'specimen', specimen: 'autowriterEscalationFailed' },

@@ -1,6 +1,6 @@
 import './fixtures/no-network.mjs';
 import assert from 'node:assert/strict';
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { test } from 'node:test';
@@ -20,7 +20,7 @@ import {
   bandSceneFiles,
   recordWith,
 } from './fixtures/record-rules-scene.mjs';
-import { GENERATION_DIR } from './generation-record.mjs';
+import { recordDirectory, recordFiles } from './record-layout.mjs';
 import { BAND_FILE, REMEASURE_COMMAND } from './sentence-band.mjs';
 
 function repoWith(t, files) {
@@ -34,20 +34,15 @@ function repoWith(t, files) {
 }
 
 const recordsIn = (root) =>
-  readdirSync(join(root, GENERATION_DIR))
-    .filter((name) => name.endsWith('.json'))
-    .map((name) => ({
-      path: GENERATION_DIR + '/' + name,
-      text: readFileSync(join(root, GENERATION_DIR, name), 'utf8'),
-    }));
+  recordFiles(root, 'generation').map((path) => ({ path, text: readFileSync(join(root, path), 'utf8') }));
 
 const entryReader = (root) => (path) => (existsSync(join(root, path)) ? readFileSync(join(root, path), 'utf8') : null);
 
 const findingsOf = (root, band = BAND_RECORD) =>
   generationReport({ records: recordsIn(root), readEntry: entryReader(root), band });
 
-const sceneIn = (t, { record = recordWith(), entry = entryText(), recordPath = RECORD_PATH } = {}) =>
-  repoWith(t, { [recordPath]: asJson(record), [ENTRY_PATH]: entry });
+const sceneIn = (t, { record = recordWith(), entry = entryText(), filedAt = RECORD_PATH } = {}) =>
+  repoWith(t, { [filedAt]: asJson(record), [ENTRY_PATH]: entry });
 
 const rulesOf = (found) => found.map(({ rule }) => rule);
 
@@ -81,13 +76,28 @@ test('every schema problem of a record is its own finding', (t) => {
   );
 });
 
+test('records are judged at any depth: one flat, one in its month and one below it draw three findings', (t) => {
+  const directory = recordDirectory('generation');
+  const paths = [`${directory}/${SLUG}.json`, RECORD_PATH, `${directory}/2026/11/extra/${SLUG}.json`];
+  const offSchema = asJson({ ...recordWith(), schema: 2 });
+  const root = repoWith(t, Object.fromEntries(paths.map((path) => [path, offSchema])));
+  const found = findingsOf(root);
+  assert.equal(recordsIn(root).length, 3);
+  assert.equal(found.length, 3);
+  assert.deepEqual(
+    found.map(({ path }) => path),
+    [...paths].sort()
+  );
+  assert.deepEqual(new Set(rulesOf(found)), new Set(['generation-schema']));
+});
+
 test('a record filed under a name that is not its slug is a finding', (t) => {
-  const recordPath = GENERATION_DIR + '/other-name.json';
-  const found = findingsOf(sceneIn(t, { recordPath }));
+  const misnamed = `${dirname(RECORD_PATH)}/other-name.json`;
+  const found = findingsOf(sceneIn(t, { filedAt: misnamed }));
   assert.deepEqual(found, [
     {
       rule: 'generation-name',
-      path: recordPath,
+      path: misnamed,
       detail: 'slug ' + SLUG + ' does not match the file name other-name.json',
     },
   ]);

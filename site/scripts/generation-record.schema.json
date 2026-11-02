@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Autowriter generation record",
-  "description": "One file per generated entry at audits/autowriter/generations/<slug>.json, committed in the same commit as the entry. It names variables, model ids, digests and counts and never a secret value; buildRecord copies only the keys listed here. The shape is checked here; the rules that compare fields with each other (totals against calls, cost against tokens and price, the published call against the record, the shutdown note against its check, the entry against the files of the commit, the band against its measurement, the file name) are checked by validateRecord in generation-record.mjs.",
+  "description": "One file per generated entry at audits/autowriter/generations/<year>/<month>/<slug>.json, in the month its claim was made, committed in the same commit as the entry. The ledger field names the month path of the ledger; the flat path is accepted only so that a record written before the layout changed can still be read, and the writer never produces it. It names variables, model ids, digests and counts and never a secret value; buildRecord copies only the keys listed here. The shape is checked here; the rules that compare fields with each other (totals against calls, cost against tokens and price, the published call against the record, the shutdown note against its check, the entry against the files of the commit, the band against its measurement, the file name) are checked by validateRecord in generation-record.mjs.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -93,7 +93,10 @@
     },
     "calls": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/call" } },
     "totals": { "$ref": "#/$defs/spend" },
-    "ledger": { "type": "string", "pattern": "^audits/autowriter/[a-z0-9]+(-[a-z0-9]+)*\\.json$" },
+    "ledger": {
+      "type": "string",
+      "pattern": "^audits/autowriter/([0-9]{4}/(0[1-9]|1[0-2])/)?[a-z0-9]+(-[a-z0-9]+)*\\.json$"
+    },
     "modelChecks": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/check" } },
     "prompt": {
       "type": "object",

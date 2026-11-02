@@ -7,7 +7,8 @@ import { test } from 'node:test';
 import { readLedger } from './autowriter-ledger.mjs';
 import { EscalationError } from './escalate.mjs';
 import { NOW, WEBHOOK, fakeApi, withScene } from './fixtures/spend-run.mjs';
-import { noticePosted, noticeSlug, raiseNotice } from './spend-notice.mjs';
+import { recordFiles } from './record-layout.mjs';
+import { noticeFile, noticePosted, noticeSlug, raiseNotice } from './spend-notice.mjs';
 
 const ENV = {
   GITHUB_TOKEN: 'ghp_SECRETtokenVALUE0123456789',
@@ -24,13 +25,29 @@ const raise = (scene, api, month = '2026-11') =>
     fetch: api.fetch,
     now: () => NOW,
   });
-const ledgerOf = (scene, month = '2026-11') =>
-  readLedger(join(scene.root, 'audits/autowriter', `${noticeSlug(month)}.json`));
+const ledgerOf = (scene, month = '2026-11') => readLedger(join(scene.root, noticeFile(month)));
 
 test('the notice of a month is a ledger named for that month', () => {
   assert.equal(noticeSlug('2026-11'), 'spend-ceiling-2026-11');
   assert.equal(noticeSlug('2027-01'), 'spend-ceiling-2027-01');
 });
+
+test('the notice of a month is filed under that month, so its path depends on the month and on nothing else', () => {
+  assert.equal(noticeFile('2026-11'), 'audits/autowriter/2026/11/spend-ceiling-2026-11.json');
+  assert.equal(noticeFile('2027-01'), 'audits/autowriter/2027/01/spend-ceiling-2027-01.json');
+});
+
+test(
+  'a raised notice is filed in the directory of the month it is about, whatever day it is raised, and nowhere else',
+  withScene(async (scene) => {
+    await raise(scene, fakeApi());
+    await raise(scene, fakeApi(), '2026-12');
+    assert.deepEqual(recordFiles(scene.root, 'ledger'), [
+      'audits/autowriter/2026/11/spend-ceiling-2026-11.json',
+      'audits/autowriter/2026/12/spend-ceiling-2026-12.json',
+    ]);
+  })
+);
 
 test(
   'no notice file means no notice was posted',
@@ -90,7 +107,7 @@ test(
 test(
   'a damaged notice file is an error, never read as no notice',
   withScene((scene) => {
-    scene.put('audits/autowriter/spend-ceiling-2026-11.json', '{ nope');
+    scene.put(noticeFile('2026-11'), '{ nope');
     assert.throws(() => noticePosted({ repoRoot: scene.root, month: '2026-11' }), /spend-ceiling-2026-11\.json/);
   })
 );

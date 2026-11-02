@@ -1,6 +1,4 @@
-import { claimFile } from './autowriter-claims.mjs';
 import { termOf, writtenFormat } from './entry-files.mjs';
-import { generationFile } from './generation-record.mjs';
 import { parseBuyerPrompts } from './semantic-core.mjs';
 import { WriterError } from './writer-error.mjs';
 
@@ -10,7 +8,6 @@ const GAP_REGISTER_HEADING = '### GAP register';
 const ENTRY_LABEL = /^(?:Must win|Passage:|Why:|\*\*|#{1,6} )/;
 const PROMPT_HEADING = /^\*\*\d+\./;
 const QUOTED_PASSAGE = /^Passage:\s*"[^"]+"/;
-export const DISPOSITION_DIRECTORY = 'audits/phase-4.7/dispositions';
 export const GENERATED_STATUS = 'rewritten';
 const TARGET_QUERY_OPENING = '  "targetQuery": {';
 const TARGET_QUERY_CLOSING = /^ {2}\},?$/;
@@ -157,11 +154,9 @@ const QUERY_OF = { term: ({ title }) => termOf(title), article: ({ query }) => q
 
 export const targetQueryFor = ({ claim }) => QUERY_OF[writtenFormat(claim.format)](claim).toLowerCase();
 
-export const dispositionFile = (slug) => `${DISPOSITION_DIRECTORY}/generated-${slug}.json`;
-
-export const dispositionFor = ({ slug, target, digest, runDate }) => ({
+export const dispositionFor = ({ claimPath, generationPath, target, digest, runDate }) => ({
   target,
   status: GENERATED_STATUS,
-  reason: `Written by the unattended writer from the claim in ${claimFile(slug)} on ${runDate}. No human has read this text. Every hard fact in it is bound to a source in ${generationFile(slug)}.`,
+  reason: `Written by the unattended writer from the claim in ${claimPath} on ${runDate}. No human has read this text. Every hard fact in it is bound to a source in ${generationPath}.`,
   digest,
 });
