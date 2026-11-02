@@ -1,0 +1,40 @@
+import { brandFromDisk } from '../utils/brand.mjs';
+
+const BRAND = brandFromDisk();
+
+export const STATIC_PAGE_CATALOG = [
+  {
+    path: '/search',
+    title: 'Search',
+    description: 'Search the writing, glossary, services and case studies on this site.',
+  },
+  {
+    path: '/styleguide',
+    title: 'Styleguide',
+    description: 'Every component in every state, both themes. Internal reference page.',
+  },
+  {
+    path: '/404',
+    title: 'Page not found',
+    description: `This page does not exist on ${BRAND.name}. Start from the home page.`,
+  },
+];
+
+export const HUB_PAGES = [
+  {
+    base: '/blog',
+    title: 'Plain writing articles',
+    description:
+      'Plain writing articles: short answers on how to write a page that a reader and a search engine can quote.',
+  },
+  {
+    base: '/glossary',
+    title: 'Plain writing glossary',
+    description: 'A plain writing glossary: short definitions of the terms the articles use, each with its source.',
+  },
+  {
+    base: '/resources',
+    title: 'Plain writing checklists',
+    description: 'Plain writing checklists, each described on its own page: what is inside and how to use it.',
+  },
+];

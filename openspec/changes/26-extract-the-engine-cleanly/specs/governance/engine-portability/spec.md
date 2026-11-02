@@ -58,3 +58,34 @@ report it.
 
 - **WHEN** an anchor is an audit record and `scripts/measure-<record>.mjs` is tracked
 - **THEN** the record counts as produced, and the run reports no finding for it
+
+### Requirement: Engine source holds no copy of a site's pages
+
+The modules the export ships SHALL NOT hold the titles, descriptions or dates of a site's static pages or
+collection hubs. They SHALL read them from `site/src/data/static-pages.mjs`, a site data file that the
+export seeds with starter values. A copy of the engine SHALL build, without an edit of any file the
+partition classes as engine, once its owner has filled the configuration and the data files.
+
+#### Scenario: The export builds as exported
+
+- **WHEN** the engine is exported into an empty directory and only the configuration and the data files are
+  filled for a second site
+- **THEN** `npm run build` succeeds there, and `git diff` shows no change to a file the partition classes as
+  engine
+
+#### Scenario: A site adds a static page
+
+- **WHEN** a site adds a static page
+- **THEN** its entry is added to `site/src/data/static-pages.mjs`, and no engine module changes
+
+### Requirement: A document an engine file names travels once it names no site
+
+A document under `docs/` that a script, a workflow, a hook or an agent rule names SHALL be classed engine
+when it names neither the site name, the host nor the author. A document that names one of them SHALL be
+classed site.
+
+#### Scenario: The calibration procedure names no site
+
+- **WHEN** `docs/plan/reference/calibration-gate.md` names no term of the site identity and
+  `.omp/rules/openspec.md` names it
+- **THEN** the partition classes it engine, and the export ships it

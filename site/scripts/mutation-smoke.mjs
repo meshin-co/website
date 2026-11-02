@@ -224,6 +224,9 @@ export const FAMILIES = [
   { id: 'engine-config-loses-a-required-value', kind: 'specimen', specimen: 'engineConfigValueRemoved' },
   { id: 'engine-loses-an-anchor-file-it-reads', kind: 'specimen', specimen: 'engineAnchorFileRemoved' },
   { id: 'ci-classifier-reexpressed-as-a-shell-case', kind: 'specimen', specimen: 'engineClassifierReexpressed' },
+  { id: 'tracked-file-fits-no-partition-rule', kind: 'specimen', specimen: 'partitionFileFitsNoRule' },
+  { id: 'anchor-file-nothing-in-the-engine-serves', kind: 'specimen', specimen: 'partitionAnchorUnserved' },
+  { id: 'export-no-longer-builds', kind: 'specimen', specimen: 'exportBuildBroken' },
   { id: 'pagination-page-2', kind: 'pagination', proves: 'build', fixture: 'live-post.md', slow: true },
   {
     id: 'category-pagination-page-2',

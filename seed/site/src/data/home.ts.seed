@@ -1,0 +1,42 @@
+export const hero = {
+  title: 'A new site',
+  titleAccent: 'on the writing engine.',
+  sub: 'TODO(owner): one sentence on what the site offers and to whom.',
+  proof: ['TODO(owner): one proof the owner can document'],
+  ctaLabel: 'TODO(owner): the one next step',
+  ctaHref: '/contact',
+};
+
+export const signals = {
+  items: [
+    'TODO(owner): a sign that the reader needs the offer.',
+    'TODO(owner): a second sign.',
+    'TODO(owner): a third sign.',
+  ],
+  verdict: 'TODO(owner): how many signs mean the offer fits.',
+};
+
+export const drivers = [
+  { name: 'TODO(owner): first step', detail: 'TODO(owner): what the step decides.' },
+  { name: 'TODO(owner): second step', detail: 'TODO(owner): what the step decides.' },
+  { name: 'TODO(owner): third step', detail: 'TODO(owner): what the step decides.' },
+];
+
+export const artifactIds = ['short-answer-checklist'];
+
+export const figures = [{ value: 'TODO(owner)', label: 'TODO(owner): a figure the owner can source.' }];
+
+export const shift = {
+  title: 'TODO(owner): where the reader is, and where they land.',
+  before: { label: 'Today', items: ['TODO(owner): the situation before the offer.'] },
+  after: { label: 'After', items: ['TODO(owner): the situation after the offer.'] },
+};
+
+export const heroOffers = [
+  {
+    label: 'Start here',
+    figure: 'TODO(owner)',
+    name: 'TODO(owner): the first offer',
+    note: 'TODO(owner): what the first offer delivers.',
+  },
+];

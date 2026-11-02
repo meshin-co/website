@@ -40,6 +40,8 @@ function serverOf(anchor, { files, classOf, facts }) {
   if (shipped !== undefined) return shipped;
   const seed = files.find((file) => isSeed(file) && inside(seedTarget(file)));
   if (seed !== undefined) return seed;
+  const seeded = [...facts.seeded].find(inside);
+  if (seeded !== undefined) return seeded;
   if (facts.generatedOutputs.has(anchor.path)) return 'the assets script that writes it';
   return recordProducer(anchor.path, files);
 }

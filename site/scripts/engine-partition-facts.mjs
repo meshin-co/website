@@ -1,6 +1,6 @@
 import { posix } from 'node:path';
 
-import { isSeed, seedTarget } from './engine-partition.mjs';
+import { EXPORT_MANIFEST, isSeed, seedTarget } from './engine-partition.mjs';
 
 export const ENGINE_CONFIG_PATH = 'site/engine.config.json';
 export const CONTENT_SCHEMA_PATH = 'site/src/content.config.ts';
@@ -28,6 +28,15 @@ function required(read, path, what) {
   const text = read(path);
   if (text === null || text === undefined) throw new PartitionFactsError(`${path} cannot be read; ${what}`);
   return text;
+}
+
+function manifestSeedsOf({ files, read }) {
+  if (!files.includes(EXPORT_MANIFEST)) return [];
+  const manifest = parseJson(read(EXPORT_MANIFEST) ?? '', EXPORT_MANIFEST);
+  if (!Array.isArray(manifest?.seeds) || manifest.seeds.some((seed) => typeof seed !== 'string')) {
+    throw new PartitionFactsError(`${EXPORT_MANIFEST} has no list of seeded files in "seeds"`);
+  }
+  return manifest.seeds;
 }
 
 function parseJson(text, path) {
@@ -202,7 +211,7 @@ function engineDocumentsOf({ files, read, seeded, scriptRoots, config, identity 
 
 export function readPartitionFacts({ files, read }) {
   const { config, ...layout } = configFacts(read);
-  const seeded = new Set(files.filter(isSeed).map(seedTarget));
+  const seeded = new Set([...files.filter(isSeed).map(seedTarget), ...manifestSeedsOf({ files, read })]);
   const scriptRoots = scriptRootsOf(read);
   const identity = identityOf(read);
   return {

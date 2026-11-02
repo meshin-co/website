@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { invokedDirectly } from './invoked-directly.mjs';
 
 export const geometry = JSON.parse(readFileSync(new URL('./logo-geometry.json', import.meta.url), 'utf8'));
@@ -118,6 +118,7 @@ const { class: className = 'h-8 w-8' } = Astro.props;
 `;
 
 function main() {
+  mkdirSync('public/brand', { recursive: true });
   writeFileSync('src/components/common/LogoMark.astro', component());
   writeFileSync('src/components/common/LogoSymbol.astro', symbolComponent());
   writeFileSync('public/logo.svg', standalone('#16181c'));

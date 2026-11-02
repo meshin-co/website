@@ -103,10 +103,10 @@ The site shell and the harness are always adopted. They are the Astro app, the g
 **Cannot be derived because:** The owner must give a quiet machine and about 30 minutes per measured change.
 **Options:**
 
-- **A. Adopt:** `npm run gate:lh` measures every audited route on mobile and desktop, `npm run lh:record` writes `audits/lighthouse-green.json`, and `.githooks/pre-push` refuses a push whose tree no record measured. Cost: no secret, no money, about 30 minutes per run on a quiet machine, and the hook installed once (`git config core.hooksPath .githooks`). Each unattended merge (S2) leaves a measurement debt that this run clears.
+- **A. Adopt:** `npm run gate:lh` measures every audited route on mobile and desktop, `npm run lh:record` writes the Lighthouse record, and `.githooks/pre-push` refuses a push whose tree no record measured. Cost: no secret, no money, about 30 minutes per run on a quiet machine, and the hook installed once (`git config core.hooksPath .githooks`). Each unattended merge (S2) leaves a measurement debt that this run clears.
 - **B. Skip:** remove the hook, the gate and the Lighthouse hard rule in `AGENTS.md`. Cost: you lose the only proof that the pages score 100 in every category.
 - **Recommended:** A, because the engine has no waiver path and CI does not run Lighthouse, unless the machine that pushes cannot sit idle for 30 minutes.
-  **Lands in:** `.githooks/pre-push`; `site/lighthouserc.cjs`; `audits/lighthouse-green.json` (written by the run).
+  **Lands in:** `.githooks/pre-push`; `site/lighthouserc.cjs`; the Lighthouse record (written by the run).
   **If wrong:** `.githooks/pre-push` runs `node site/scripts/run-lh-evidence.mjs check` and refuses the push with the reason that `staleReason` in `site/scripts/lh-evidence.mjs` returns [INFERENCE: the wording was not read]; a covered tree prints `lighthouse evidence covers this tree (<12 hex characters>)`. A prose-only commit pushes freely. `npm run lh:record` refuses with `<files> is not committed, so a fingerprint of HEAD would name a tree the run never measured. Commit, rebuild, measure, then record.` `npm run gate:lh` without `GATE_PHASE` fails at once with `gate:lh: GATE_PHASE must name the bucket these audits belong to` and an example value.
   **Needs:** none
 
@@ -134,7 +134,7 @@ The site shell and the harness are always adopted. They are the Astro app, the g
 - **A. Brand name is the apex hostname:** one value, `site.name`. The engine builds the title suffix, the contact address `hello@<name>`, the bot address `autowriter-bot@<name>`, the IndexNow host and every machine-file URL from it. Cost: the brand reads as a domain in titles and footers.
 - **B. A spaced display name:** Cost: a code change before the copy: `site/src/utils/brand.mjs` must hold a display name and a host as two values, and about ten scripts and four pages that read `site.name` as a host change with it.
 - **Recommended:** A, because the engine treats the name as a host in `brand.mjs`, `gen-robots.mjs`, `indexnow-ping.mjs`, `pr-classify.mjs` and `run-smoke-prod.mjs`, unless the display name must contain spaces.
-  **Lands in:** `site/src/config.yaml`, keys `site.name`, `site.site` and `metadata.openGraph.site_name`; typed copies in `site/public/humans.txt`, `site/public/.well-known/security.txt` and `.github/workflows/ci.yml` (a typed bot address on a foreign domain in the `regen-baselines` job).
+  **Lands in:** `site/src/config.yaml`, keys `site.name`, `site.site` and `metadata.openGraph.site_name`; typed copies in `humans.txt`, `security.txt` and `.github/workflows/ci.yml` (a typed bot address on a foreign domain in the `regen-baselines` job).
   **If wrong:** With a name that is not a host, `hello@<name>` and the bot address `autowriter-bot@<name>` are invalid, `node scripts/indexnow-ping.mjs` prints `indexnow: skipped (key-not-served)`, and `npm run smoke:prod` cannot reach its default origin `https://<name>` [INFERENCE: no run with a bad name]. `npm run gate:brand` prints `brand: <n> files scanned, <m> typed literals of the configured brand name` for code that types the name. YAML, `public/` and workflows are not scanned, so a typed copy there drifts without any message.
   **Needs:** none
 
@@ -158,7 +158,7 @@ The site shell and the harness are always adopted. They are the Astro app, the g
 **Cannot be derived because:** An existing domain may already have indexed URLs in another shape.
 **Options:**
 
-- **A. No trailing slash:** the build writes `dist/about.html`, and the site serves `/about`. Cost: none, it is the shipped shape.
+- **A. No trailing slash:** the build writes `about.html`, and the site serves `/about`. Cost: none, it is the shipped shape.
 - **B. Trailing slash:** Cost: you change `trailingSlash` and `build.format` in `site/astro.config.ts`, `site.trailingSlash` in `site/src/config.yaml` and the `EXTENSIONLESS_LOCAL` pattern in `site/scripts/links-gate.mjs`; the route derivation in `site/scripts/gate.mjs` and the route ledger may also change [INFERENCE: not tried].
 - **Recommended:** A, because the shape is set in two files and read by the link gate, the sitemap and the route ledger, unless the domain already has indexed URLs with slashes.
   **Lands in:** `site/astro.config.ts` (`trailingSlash: 'never'`, `build.format: 'file'`); `site/src/config.yaml` (`site.trailingSlash: false`).
@@ -174,7 +174,7 @@ The site shell and the harness are always adopted. They are the Astro app, the g
 - **A. English:** the shipped language. Cost: none.
 - **B. Another language, for example Russian:** Cost: `i18n.language` and `textDirection` change, and the prose rules are English: `site/banned-phrases.json`, `site/controlled-words.json`, and in `site/scripts/topic-format.mjs` the word lists and patterns `SUBJECT_STOP_TOKENS`, `SUBJECT_BAD_FIRST_WORDS`, `DEFINITION_LEAD`, `PROCEDURAL_LEAD` and `QUESTION_WORDS`. The writer prompt and the sentence band `audits/sentence-band.json` need new calibration [INFERENCE].
 - **Recommended:** A, because every prose gate and the topic picker were built and measured on English, unless the buyers do not search in English; then treat it as a separate adaptation project and do not start with copy.
-  **Lands in:** `site/src/config.yaml` key `i18n.language`; `site/src/utils/jsonld.mjs` constant `LANGUAGE`; `site/public/.well-known/security.txt` field `Preferred-Languages`.
+  **Lands in:** `site/src/config.yaml` key `i18n.language`; `site/src/utils/jsonld.mjs` constant `LANGUAGE`; `security.txt` field `Preferred-Languages`.
   **If wrong:** Under B with English rules left in place, `npm run gate:content` and `npm run gate:human` judge words they do not know, so findings are noise or silence [INFERENCE]. The topic picker's cues are English words, so it finds no definition queries and writes no glossary terms [INFERENCE].
   **Needs:** none
 
@@ -223,7 +223,7 @@ The site shell and the harness are always adopted. They are the Astro app, the g
 - **B. City or region only:** Cost: the owner's town becomes public.
 - **C. Full postal address:** Cost: the address becomes public and indexable.
 - **Recommended:** A when the law allows it, because the engine's imprint template has no address row, unless your jurisdiction requires one; then C.
-  **Lands in:** `site/src/pages/imprint.astro` (the working-from row); `site/public/humans.txt` (`Location`); the contact page text; `site/src/utils/jsonld.mjs` carries no address today.
+  **Lands in:** `site/src/pages/imprint.astro` (the working-from row); `humans.txt` (`Location`); the contact page text; `site/src/utils/jsonld.mjs` carries no address today.
   **If wrong:** No gate reads the location. A missing legal address shows only as a legal risk, not as a failing check.
   **Needs:** S11
 
@@ -309,7 +309,7 @@ The site shell and the harness are always adopted. They are the Astro app, the g
 - **B. Standard:** A plus approach, now and terms.
 - **C. Full:** all ten. Cost: ten owner-written pages to keep current, and the pricing page reads the `service`, `glossary` and `faq` collections (S21).
 - **Recommended:** A at launch, then add a page when you can supply its facts (S22 to S28), because each page is a claim by the owner and `AGENTS.md` forbids invented facts, unless buyers need a page to decide.
-  **Lands in:** `site/src/pages/<page>.astro`; the catalog `STATIC_PAGE_CATALOG` in `site/src/utils/machine-text.mjs`; `site/src/navigation.ts`; the route ledger `audits/routes.json` (rewritten with `npm run assets:routes`); the typed route list `CANONICAL` in `site/scripts/run-smoke-prod.mjs`, which names ten routes whether or not the site has them.
+  **Lands in:** `site/src/pages/<page>.astro`; the catalog `STATIC_PAGE_CATALOG` in `site/src/data/static-pages.mjs`; `site/src/navigation.ts`; the route ledger `audits/routes.json` (rewritten with `npm run assets:routes`); the typed route list `CANONICAL` in `site/scripts/run-smoke-prod.mjs`, which names ten routes whether or not the site has them.
   **If wrong:** `npm run smoke:prod` prints `FAIL route /<page>: answered 404, expected 200` for each typed route the site lacks. `npm run deploy` refuses with `DEPLOY the build adds <routes> and drops <routes> against audits/routes.json; run the gates and npm run assets:routes before publishing`. A page that calls `staticPageDate` with no catalog row fails the build with `no static page at <path> in STATIC_PAGE_CATALOG`, and a row with no date fails with `static page <path> has no updatedDate in STATIC_PAGE_CATALOG`.
   **Needs:** S11
 
@@ -358,7 +358,7 @@ The site shell and the harness are always adopted. They are the Astro app, the g
 - **A. Sole person trading under the brand:** the shipped rows (Responsible, Contact, Working from, Hosting, Analytics, Responsible for content). Cost: you may lack a legally required row.
 - **B. Company:** add rows for registered name, number, address and tax id. Cost: more public data, and you edit the template.
 - **Recommended:** whichever is legally true; ask a lawyer for the mandatory rows. The agent must not choose.
-  **Lands in:** `site/src/pages/imprint.astro` (`rows`); the `/imprint` catalog row; `site/public/humans.txt`.
+  **Lands in:** `site/src/pages/imprint.astro` (`rows`); the `/imprint` catalog row; `humans.txt`.
   **If wrong:** The Analytics row must agree with the build and with the privacy page: `npm run gate:paid` matches claims about page-view counting in built pages and prints `PAID <route> ...` [INFERENCE: the gate's test plants the mismatch on `/privacy`; I did not confirm that the imprint row is matched]. The Hosting row states Cloudflare Pages, and no gate checks it against your real host.
   **Needs:** S3, S11, S14, S15, S16
 
@@ -400,7 +400,7 @@ The site shell and the harness are always adopted. They are the Astro app, the g
 - **B. `security.txt` only.** Cost: you drop the page, its catalog row and its footer link.
 - **C. Neither.** Cost: you remove a row from `site/scripts/run-smoke-prod.mjs`.
 - **Recommended:** A with only the practices you really follow, because `smoke:prod` expects the file, unless you cannot answer a report.
-  **Lands in:** `site/src/pages/security.astro` (`posture` blocks and the disclosure paragraph); `site/public/.well-known/security.txt` (`Contact`, `Expires`, `Preferred-Languages`, `Canonical`).
+  **Lands in:** `site/src/pages/security.astro` (`posture` blocks and the disclosure paragraph); `security.txt` (`Contact`, `Expires`, `Preferred-Languages`, `Canonical`).
   **If wrong:** With the file removed, `npm run smoke:prod` prints `FAIL route /.well-known/security.txt: answered 404, expected 200`. A past `Expires:` date marks the file stale [INFERENCE: RFC 9116; no gate in `site/scripts` was found that reads `Expires`].
   **Needs:** S15, S20
 

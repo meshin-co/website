@@ -6,10 +6,9 @@ import { dirname, join } from 'node:path';
 import { brandFromDisk } from '../../src/utils/brand.mjs';
 import { FEED_BASES } from '../../src/utils/feeds.mjs';
 import { LLMS_COLLECTIONS } from '../../src/utils/llms-collections.mjs';
+import { HUB_PAGES, STATIC_PAGE_CATALOG } from '../../src/data/static-pages.mjs';
 import {
-  HUB_PAGES,
   NOINDEX_STATIC_PAGES,
-  STATIC_PAGE_CATALOG,
   absoluteUrl,
   entryCount,
   publicIndexableStaticPages,

@@ -1,0 +1,17 @@
+import { z } from 'astro/zod';
+
+export const TAGS = [
+  { slug: 'plain-writing', name: 'Plain writing' },
+  { slug: 'short-answers', name: 'Short answers' },
+];
+
+export const TAG_SLUGS = TAGS.map((tag) => tag.slug);
+
+export const tagBySlug = Object.fromEntries(TAGS.map((tag) => [tag.slug, tag]));
+
+export const postTagSchema = z.array(z.enum(TAG_SLUGS));
+
+export const tagArchive = (tag) => ({
+  title: `${tag.name} posts`,
+  description: `All posts tagged ${tag.name}, newest first.`,
+});

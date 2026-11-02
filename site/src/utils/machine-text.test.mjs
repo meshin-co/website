@@ -8,7 +8,6 @@ import {
   renderLlmsFull,
   renderLlmsCollection,
   publicIndexableStaticPages,
-  STATIC_PAGE_CATALOG,
   staticPageDate,
   buildFeedItems,
   mergeWithKindFloor,
@@ -18,8 +17,8 @@ import {
   liveTopicMap,
   sidecarFileForRoute,
   sidecarRoutes,
-  HUB_PAGES,
 } from './machine-text.mjs';
+import { HUB_PAGES, STATIC_PAGE_CATALOG } from '../data/static-pages.mjs';
 import { lastmod } from './lastmod.mjs';
 import { toLlmsEntry } from './llms-collections.mjs';
 

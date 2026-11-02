@@ -107,3 +107,18 @@ test('a content schema that exports no collections is named too', () => {
     (error) => error instanceof PartitionFactsError && /collections/.test(error.message)
   );
 });
+
+test('a copy knows its seeded files from the export manifest, because the seeds themselves stayed behind', () => {
+  const manifest = JSON.stringify({ seeds: ['docs/only-in-the-manifest.md'] });
+  const found = facts({ 'engine-export.json': manifest }, [...SCENE_FILES, 'engine-export.json']);
+  assert.equal(found.seeded.has('docs/only-in-the-manifest.md'), true);
+});
+
+test('an export manifest that is not valid, or lists no seeds, is a fact the gate could not read', () => {
+  for (const text of ['{', JSON.stringify({ counts: {} }), JSON.stringify({ seeds: [1] })]) {
+    assert.throws(
+      () => facts({ 'engine-export.json': text }, [...SCENE_FILES, 'engine-export.json']),
+      (error) => error instanceof PartitionFactsError && /engine-export\.json/.test(error.message)
+    );
+  }
+});

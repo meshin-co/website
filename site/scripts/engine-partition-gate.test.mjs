@@ -92,3 +92,24 @@ test('the summary line states the three counts and the number of findings', () =
   );
   assert.match(summaryLine(report({}, plus('mystery.bin'))), /; 1 finding$/);
 });
+
+test('a copy serves an anchor through its export manifest, because the seed files stayed behind', () => {
+  const seedFiles = SCENE_FILES.filter((file) => file.startsWith('seed/'));
+  const targets = seedFiles.map((file) => file.slice('seed/'.length, -'.seed'.length));
+  const copyFiles = [...SCENE_FILES.filter((file) => !seedFiles.includes(file)), ...targets, 'engine-export.json'];
+  const found = report({ 'engine-export.json': JSON.stringify({ seeds: targets }) }, [...new Set(copyFiles)]);
+  assert.deepEqual(found.findings, []);
+  assert.equal(found.served.get('docs/SEMANTIC-CORE.md'), 'docs/SEMANTIC-CORE.md');
+});
+
+test('a copy whose manifest omits a seeded anchor reports it unserved', () => {
+  const seedFiles = SCENE_FILES.filter((file) => file.startsWith('seed/'));
+  const targets = seedFiles.map((file) => file.slice('seed/'.length, -'.seed'.length));
+  const copyFiles = [...SCENE_FILES.filter((file) => !seedFiles.includes(file)), ...targets, 'engine-export.json'];
+  const kept = targets.filter((target) => target !== 'audits/routes.json');
+  const found = report({ 'engine-export.json': JSON.stringify({ seeds: kept }) }, [...new Set(copyFiles)]);
+  assert.deepEqual(
+    found.findings.map(({ where }) => where),
+    ['audits/routes.json']
+  );
+});

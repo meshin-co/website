@@ -1,4 +1,4 @@
-import { STATIC_PAGE_CATALOG } from '../../src/utils/machine-text.mjs';
+import { STATIC_PAGE_CATALOG } from '../../src/data/static-pages.mjs';
 import {
   ORIGIN,
   appendText,

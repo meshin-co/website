@@ -1,0 +1,90 @@
+# Semantic core
+
+This document has two layers, and they are maintained differently:
+
+- **Generated layer — the facts.** One table per route family, rebuilt from `site/content-facts.json` and the built `site/dist/` by `node scripts/semantic-core.mjs` (run from `site/`). It is never edited by hand: regeneration rewrites only the block between the `semantic-core` markers below. The Opening column reuses the content gate's own query rules (`h1-query`, `query-opening` in `site/scripts/content-rows.mjs`), so a tick here means the same thing as green there.
+- **Hand-authored layer — the why.** Everything below the markers: why each family exists, the strategy of each family, and the buyer prompts mapped to the route that must win each one, with the passage that answers it and the business reason. Regeneration leaves all of it intact.
+
+`node scripts/semantic-core.mjs --check` recomputes the generated table in memory and fails, naming every drifted route, if it differs from the committed block. The same check rides `gate:content`. It also verifies that every `targetQuery` row maps to a built route, that every gated built route has a row, and that no two routes declare the same target query.
+
+The block between the markers is empty until the first build. Build the site, then run `node scripts/semantic-core.mjs` from `site/` and commit the result.
+
+### Ungated utility routes
+
+| Route         | Why it carries no generated row                                                              | Robots              |
+| ------------- | -------------------------------------------------------------------------------------------- | ------------------- |
+| `/404`        | Error page. There is no target query and no citable content.                                 | `noindex, nofollow` |
+| `/search`     | Client-side search shell. The results are built in the browser from the static search index. | `noindex, follow`   |
+| `/styleguide` | Internal component reference, not a page written to answer a buyer query.                    | `noindex, nofollow` |
+
+## Generated layer — the facts
+
+<!-- semantic-core:begin generated -->
+<!-- semantic-core:end generated -->
+
+## Hand-authored layer — the why
+
+### Why each family exists
+
+| Family        | Business reason                                                                                | Source        |
+| ------------- | ---------------------------------------------------------------------------------------------- | ------------- |
+| static        | Every query that no collection owns needs a front door, and the first-visit test lands here.   | `TODO(owner)` |
+| service       | Each offer owns one transactional query and one next step.                                     | `TODO(owner)` |
+| resource      | A downloadable artifact is proof of work, and it builds the entity that answer engines cite.   | `TODO(owner)` |
+| case-study    | Evidence without invented clients or metrics, published only with the client's written consent. | `TODO(owner)` |
+| article       | The long-tail queries live here: one article, one question, one short answer.                  | `TODO(owner)` |
+| blog-category | A category clusters internal links around one theme so the articles reinforce each other.      | `TODO(owner)` |
+| tag-index     | One page lists every tag and how many articles carry it.                                       | `TODO(owner)` |
+| tag           | A thin archive per tag routes a reader to the tagged articles.                                 | `TODO(owner)` |
+| term          | The glossary is the surface answer engines cite for definitional queries.                      | `TODO(owner)` |
+| faq-answer    | One question, one URL, one answer: duplication is what answer engines punish hardest.          | `TODO(owner)` |
+
+### Family strategy — intent, citable unit, links, cadence, competition
+
+The intent of each family is set by the target queries its pages answer (`site/content-facts.json`). A competing page is named in the last column only after a live search on the day the row is written, and never invented.
+
+| Family        | Query intent                                                                                      | Citable unit                                                               | Internal-link targets                                                                            | Freshness cadence                                                                                              | Must beat                                                                                   |
+| ------------- | ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| static        | Mixed: navigational for hub and trust pages, commercial for contact and pricing, informational for the rest | Short answer (H1-adjacent lead sentence)                                   | Home → the hubs and the contact page; every hub page → its own child routes                      | Quarterly; any static must-win route rechecked monthly with the buyer-prompt walk                              | `TODO(owner)`: the competing pages for the representative query                              |
+| service       | Commercial (transactional)                                                                        | Short answer (offer and timeframe sentence) plus a step list of deliverables | Service → the pricing page, the fee question, the contact page, the case studies                | Quarterly; scope and timeframe wording rechecked with the monthly buyer-prompt walk                            | `TODO(owner)`: the competing pages for the representative query                              |
+| resource      | Commercial (lead-gen artifact)                                                                    | Definition sentence plus a table of what is inside                         | Resource → its paired service page, the contact page                                             | Quarterly artifact-content review                                                                              | `TODO(owner)`: the competing pages for the representative query                              |
+| case-study    | Commercial (proof)                                                                                | Step list (problem → approach → outcome)                                   | Case study → the service it proves, the approach page                                            | No scheduled refresh; updated only if the engagement changes. Anonymized entries only, no invented metrics     | None named: an anonymized proof-of-practice page has no comparable page to cite against      |
+| article       | Informational                                                                                     | Short answer (the `shortAnswer` lead sentence)                             | Article → its glossary terms, its category, its tags                                             | Quarterly baseline; a dated claim rechecked against its primary source whenever that source updates            | `TODO(owner)`: the competing pages for the representative query                              |
+| blog-category | Navigational (topic hub)                                                                          | Table (curated list with one-line stakes per entry)                        | Category → its member articles, the tag index                                                    | Passive: regenerates whenever a post is tagged into the category                                               | None: internal navigation aid, not written to rank                                           |
+| tag-index     | Navigational                                                                                      | Table (tag list and article counts)                                        | Tag index → every tag page, the blog index                                                       | Passive: regenerates with the tag vocabulary                                                                   | None: internal navigation aid, not written to rank                                           |
+| tag           | Navigational                                                                                      | None: a thin archive list, not a citable unit by design                    | Tag → its member articles, the tag index                                                         | Passive: regenerates with post tagging                                                                         | None: internal navigation aid, not written to rank                                           |
+| term          | Informational (definitional)                                                                      | Definition sentence                                                        | Term → the FAQ rows that cite it, sibling terms through related terms                            | Reviewed whenever the named regulation or standard is amended; quarterly otherwise                             | `TODO(owner)`: the competing pages for the representative query                              |
+| faq-answer    | Informational (question and answer)                                                               | Short answer (first sentence of the answer)                                | FAQ → the service or glossary route named in its own answer                                      | Quarterly FAQ walk; any must-win FAQ route rechecked monthly                                                   | No single named page: the competing surface is the answer box for the exact question          |
+
+### The 30 buyer prompts (starter set of 3: the owner writes the rest)
+
+Protocol: check each prompt in the answer engines the owner names, and record mentioned, cited or no. Each entry names the route that must win, quotes the passage that answers it and states why in business terms. **GAP** marks a prompt with no winning route today. The heading keeps the digits `30` because three parsers search for that literal; the count is however many prompts the owner writes.
+
+#### Starter prompts
+
+**1. how to write a short answer for a page**
+Must win: `/blog/how-to-write-a-short-answer`, support `/glossary/short-answer`.
+Passage: "A page has a point only once it is finished, and a short answer written first usually describes the plan, not the result." (`/blog/how-to-write-a-short-answer`)
+Why: `TODO(owner)`: the business reason this prompt matters to the buyer.
+
+**2. what is a short answer**
+Must win: `/glossary/short-answer`, support `/blog/how-to-write-a-short-answer`.
+Passage: "A short answer is the first paragraph a reader sees on a page." (`/glossary/short-answer`)
+Why: `TODO(owner)`: the business reason this prompt matters to the buyer.
+
+**3. short answer checklist**
+Must win: `/resources/short-answer-checklist`, support `/blog/how-to-write-a-short-answer`.
+Passage: "The short answer checklist is a short list of checks for the first paragraph of a page." (`/resources/short-answer-checklist`)
+Why: `TODO(owner)`: the business reason this prompt matters to the buyer.
+
+### Registers — entities, concepts, relationships
+
+Generated by `npm run assets:registers`; `npm run gate:registers` fails when the committed block no longer matches the content. Run the generator once after the first build.
+
+<!-- REGISTERS:BEGIN -->
+
+<!-- REGISTERS:END -->
+
+### GAP register
+
+No prompt is declared a gap yet. A row records a prompt that has no winning route, in the words the gap generator recognises, such as `no route`, `no anchor` or `no prose owner`.

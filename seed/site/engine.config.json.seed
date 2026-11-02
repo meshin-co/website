@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "diff": {
+    "proseDirectories": ["docs/", "audits/", "site/.agents/", "openspec/", "investigation/"],
+    "proseExtensions": [".md"],
+    "shippedDirectories": ["site/src/", "site/public/"],
+    "automationDirectories": [".github/", ".githooks/"],
+    "testTooling": ["site/playwright.config.ts"],
+    "testFilePattern": "\\.(?:test|spec)\\.[cm]?[jt]s$",
+    "testDirectoryPattern": "(?:^|/)(?:tests|fixtures)/"
+  },
+  "routeFamilies": {
+    "rules": [
+      {
+        "prefix": "/blog/category/",
+        "family": "blog-category",
+        "profile": "page"
+      },
+      {
+        "prefix": "/blog/tags",
+        "family": "tag-index",
+        "profile": "page"
+      },
+      {
+        "prefix": "/blog/tag/",
+        "family": "tag",
+        "profile": "page"
+      },
+      {
+        "prefix": "/blog/",
+        "family": "article",
+        "profile": "article"
+      },
+      {
+        "prefix": "/services/",
+        "family": "service",
+        "profile": "offer"
+      },
+      {
+        "prefix": "/resources/",
+        "family": "resource",
+        "profile": "offer"
+      },
+      {
+        "prefix": "/case-studies/",
+        "family": "case-study",
+        "profile": "offer"
+      },
+      {
+        "prefix": "/glossary/",
+        "family": "term",
+        "profile": "term"
+      },
+      {
+        "prefix": "/faq/",
+        "family": "faq-answer",
+        "profile": "faq-answer"
+      }
+    ],
+    "fallback": {
+      "family": "static",
+      "profile": "page"
+    }
+  },
+  "content": {
+    "dataDirectory": "site/src/data",
+    "formats": {
+      "term": {
+        "collection": "glossary",
+        "routePrefix": "/glossary/"
+      },
+      "article": {
+        "collection": "post",
+        "routePrefix": "/blog/",
+        "author": "example-author",
+        "resourceCollection": "resource"
+      }
+    }
+  },
+  "loop": {
+    "attemptCap": 3,
+    "quarantineHours": 12,
+    "monthlySpendCeilingUsd": 25,
+    "claimLifetimeDays": 14,
+    "holdLabel": "autowriter-hold"
+  },
+  "demand": {
+    "property": "sc-domain:new-site.example",
+    "windowDays": 90,
+    "dataLagDays": 2,
+    "maxAgeDays": 35,
+    "minImpressions": 1,
+    "strengthenBand": {
+      "min": 8,
+      "max": 30
+    }
+  }
+}

@@ -249,7 +249,7 @@ export const RULES = Object.freeze([
   },
 ]);
 
-export const IDENTITY_EXEMPT_RULES = Object.freeze(['test', 'fixture-data']);
+export const IDENTITY_EXEMPT_RULES = Object.freeze(['test', 'fixture-data', 'export-manifest']);
 
 export function classify(file, facts) {
   const rule = RULES.find((candidate) => candidate.test(file, facts));

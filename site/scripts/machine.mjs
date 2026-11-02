@@ -423,7 +423,7 @@ async function main(distDir) {
     })
   );
 
-  const { STATIC_PAGE_CATALOG, HUB_PAGES } = await import('../src/utils/machine-text.mjs');
+  const { STATIC_PAGE_CATALOG, HUB_PAGES } = await import('../src/data/static-pages.mjs');
   const catalog = [...STATIC_PAGE_CATALOG, ...HUB_PAGES.map((hub) => ({ ...hub, path: hub.base }))];
   const builtDescriptions = {};
   for (const entry of catalog) {

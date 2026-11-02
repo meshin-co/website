@@ -1,0 +1,6 @@
+# Locked decisions
+
+A locked decision is closed: no later change reopens it without a new row that replaces it. Each row has a number that never changes, a short name, the value that was decided and the row it replaces, if any. `gate:docs` reads this file to check that a document which cites a range of rows does not cite rows that do not exist.
+
+| #   | Decision | Value | Replaces |
+| --- | -------- | ----- | -------- |

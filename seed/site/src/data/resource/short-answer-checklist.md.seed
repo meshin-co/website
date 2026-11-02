@@ -1,0 +1,36 @@
+---
+title: Short answer checklist
+name: Short answer checklist
+type: checklist
+description: 'The short answer checklist has four checks: length, subject, result and pointers. Run it before a page ships and again after each edit.'
+publishDate: 2026-11-03
+updatedDate: 2026-11-03
+version: '0.1'
+status: Available as a page on this site.
+whatInside:
+  - Four checks, each with what a pass and a failure look like
+  - A rule for when to run the checks again
+howToUse: Copy the table into the notes for a page. Run it on the short answer once the page is final, and run it again after any edit that changes the point of the page.
+sources:
+  - title: Creating helpful, reliable, people-first content
+    url: https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+    publisher: Google Search Central
+    retrieved: '2026-11-03'
+---
+
+## What this is
+
+The short answer checklist is a short list of checks for the first paragraph of a page. It exists so that every short answer on the site is held to the same standard, whoever wrote it. The article on [how to write a short answer](/blog/how-to-write-a-short-answer) explains the reasons behind each check.
+
+## The checks
+
+| Check    | Pass                                  | Failure                                              |
+| -------- | ------------------------------------- | ---------------------------------------------------- |
+| Length   | Forty to sixty words.                 | One sentence, or a paragraph longer than the screen. |
+| Subject  | The subject is named in full.         | The text says it or this and the reader must guess.  |
+| Result   | The first sentence states the result. | The first sentence gives background.                 |
+| Pointers | No word points back at the page.      | The text says this page, below or above.             |
+
+## When to run it again
+
+Run the checks whenever the page changes in a way that moves its point. A new example does not need a new check. A new conclusion does. Search engines may still quote an old short answer, so an answer that no longer fits the page should be fixed before anything else. Read about the [plain language guide](https://digital.gov/guides/plain-language/) for the wider rules behind these checks.

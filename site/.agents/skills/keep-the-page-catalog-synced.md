@@ -1,6 +1,6 @@
 # Keep the Page Catalog Synced
 
-`src/utils/machine-text.mjs` carries `STATIC_PAGE_CATALOG` and `HUB_PAGES`: a hand-written copy of
+`src/data/static-pages.mjs` carries `STATIC_PAGE_CATALOG` and `HUB_PAGES`: a hand-written copy of
 each static and hub page's title and description, used to build `llms.txt` and the `.md` sidecars.
 It duplicates text that lives in the page, so it drifts silently — six entries had drifted by
 2026-09-15.
