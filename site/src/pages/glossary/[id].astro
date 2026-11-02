@@ -15,6 +15,7 @@ import SourceList from '~/components/site/SourceList.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { articleMetadata } from '~/utils/machine-links.mjs';
 import {
+  breadcrumbNode,
   findGlossaryMentions,
   imageObject,
   orgNode,
@@ -120,6 +121,7 @@ const nodes = [
       speakableSelectors: ['h1', '[data-answer]'],
     }
   ),
+  breadcrumbNode(site, crumbs),
 ];
 ---
 

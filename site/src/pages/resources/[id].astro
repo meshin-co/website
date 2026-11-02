@@ -15,6 +15,7 @@ import SourceList from '~/components/site/SourceList.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { articleMetadata } from '~/utils/machine-links.mjs';
 import {
+  breadcrumbNode,
   glossaryStub,
   imageObject,
   orgNode,
@@ -91,6 +92,7 @@ const nodes = [
   websiteNode(site),
   ...resolveByIds(citedTermIds, terms).map((term) => glossaryStub(site, term)),
   resourceNode(site, resourceForLinks, { about, mentions, image: imageObject(metadata.openGraph.images[0]) }),
+  breadcrumbNode(site, crumbs),
 ];
 ---
 

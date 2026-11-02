@@ -8,6 +8,7 @@ import { BOOKING_URL } from '../src/utils/booking.mjs';
 import { autowriterSpecimens } from './autowriter-specimens.mjs';
 import { engineSpecimens } from './engine-specimens.mjs';
 import { evidenceSpecimens } from './evidence-specimens.mjs';
+import { jsonldSpecimens } from './jsonld-specimens.mjs';
 import { REGISTERS_BEGIN } from './registers.mjs';
 import { SPEC_SPECIMENS } from './spec-specimens.mjs';
 import { unattendedSpecimens } from './unattended-specimens.mjs';
@@ -589,6 +590,7 @@ export const SPECIMENS = {
   ...autowriterSpecimens({ addUntrackedFile, editFile }),
   ...evidenceSpecimens({ addUntrackedFile }),
   ...engineSpecimens({ editFile, removeFile }),
+  ...jsonldSpecimens({ editFile, moveAside }),
   ...unattendedSpecimens({ editFile, removeFile }),
   ...SPEC_SPECIMENS,
 };

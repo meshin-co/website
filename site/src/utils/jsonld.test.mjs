@@ -168,7 +168,7 @@ test('the website node exposes site search as a potential action', () => {
 });
 
 test('faq and breadcrumb nodes keep the order they were given', () => {
-  const faq = faqNode([
+  const faq = faqNode(SITE, '/blog/why-pilots-stall', [
     { q: 'One?', a: 'First.' },
     { q: 'Two?', a: 'Second.' },
   ]);
@@ -614,7 +614,11 @@ test('a composed service page graph resolves the webpage-to-service backlink, wi
     ),
     serviceNode(SITE, service, { about, mentions }),
     webPageNode(SITE, '/services/x', null, 'X', { mainEntity: `${SITE}/services/x#service` }),
-    breadcrumbNode(SITE, [{ name: 'Home', path: '/' }]),
+    breadcrumbNode(SITE, [
+      { name: 'Home', path: '/' },
+      { name: 'Services', path: '/services' },
+      { name: 'X', path: '/services/x' },
+    ]),
   ]);
   assert.ok(citedIds.length > 0, 'the fixture actually exercises at least one glossary stub');
   assert.deepEqual(danglingOf(document), []);

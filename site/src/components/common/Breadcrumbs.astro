@@ -1,14 +1,11 @@
 ---
 import { Icon } from 'astro-icon/components';
 
-import { breadcrumbNode, graph } from '~/utils/jsonld.mjs';
-
 export interface Props {
   crumbs: Array<{ name: string; path: string }>;
 }
 
 const { crumbs } = Astro.props;
-const site = import.meta.env.SITE.replace(/\/$/, '');
 ---
 
 <nav aria-label="Breadcrumb" class="mx-auto w-full max-w-6xl px-5 pt-6 sm:px-8">
@@ -29,5 +26,3 @@ const site = import.meta.env.SITE.replace(/\/$/, '');
     }
   </ol>
 </nav>
-
-<script is:inline type="application/ld+json" set:html={JSON.stringify(graph([breadcrumbNode(site, crumbs)]))} />

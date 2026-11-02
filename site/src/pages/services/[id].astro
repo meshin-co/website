@@ -17,6 +17,7 @@ import StepList from '~/components/site/StepList.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { articleMetadata } from '~/utils/machine-links.mjs';
 import {
+  breadcrumbNode,
   faqNode,
   glossaryStub,
   imageObject,
@@ -112,9 +113,11 @@ const nodes = [
     {
       image: imageObject(metadata.openGraph.images[0]),
       mainEntity: `${site}/services/${service.id}#service`,
+      faq: true,
     }
   ),
-  faqNode(data.faq),
+  faqNode(site, `/services/${service.id}`, data.faq),
+  breadcrumbNode(site, crumbs),
 ];
 ---
 

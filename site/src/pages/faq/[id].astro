@@ -13,7 +13,15 @@ import Section from '~/components/site/Section.astro';
 import SourceList from '~/components/site/SourceList.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { faqMetadata } from '~/utils/faq-meta.mjs';
-import { faqPageNode, findGlossaryMentions, imageObject, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import {
+  breadcrumbNode,
+  faqPageNode,
+  findGlossaryMentions,
+  imageObject,
+  orgNode,
+  personNode,
+  websiteNode,
+} from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 import RelatedContent from '~/components/site/RelatedContent.astro';
 import { distinctByKeyword, firstMention, textMentionsKeyword, resolveByIds } from '~/utils/related-content.mjs';
@@ -92,6 +100,7 @@ const nodes = [
       speakableSelectors: ['h1', '[data-gate-lead]'],
     }
   ),
+  breadcrumbNode(site, crumbs),
 ];
 ---
 

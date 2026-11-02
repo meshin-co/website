@@ -9,7 +9,7 @@ import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { teaser } from '~/utils/faq-meta.mjs';
-import { collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { breadcrumbNode, collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
@@ -49,6 +49,7 @@ const nodes = [
     description: metadata.description,
     items: entries.map((entry) => ({ url: `/faq/${entry.id}` })),
   }),
+  breadcrumbNode(site, crumbs),
 ];
 ---
 

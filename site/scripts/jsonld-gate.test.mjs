@@ -11,6 +11,8 @@ import {
   missingTypes,
   missingProperties,
   requiredTypesFor,
+  unidentifiedNodes,
+  GRAPH_EXEMPT,
   REQUIRED_PROPERTIES,
   main,
 } from './jsonld-gate.mjs';
@@ -211,7 +213,10 @@ test('a page outside the exempt set carrying no graph fails the gate', async () 
 });
 
 test('an exempt utility route without a graph passes the gate', async () => {
-  const dir = await withFixture({ '/search': graphlessPage });
+  const dir = await withFixture({
+    '/search': graphlessPage,
+    '/now': page('{"@graph":[{"@type":"BreadcrumbList","@id":"https://x/now#breadcrumb","itemListElement":[]}]}'),
+  });
   try {
     process.exitCode = undefined;
     await quiet(() => main(dir));
@@ -273,4 +278,232 @@ test('a companion node no route declares still carries a floor, because WebPage 
   );
   const failures = missingProperties(graphs, '/terms');
   assert.ok(failures.some((failure) => failure.includes('dateModified')));
+});
+
+const breadcrumbNode = (id) => ({ '@type': 'BreadcrumbList', '@id': id, itemListElement: [] });
+const graphPage = (...nodes) => page(JSON.stringify({ '@context': 'https://schema.org', '@graph': nodes }));
+const validNow = graphPage(breadcrumbNode('https://x/now#breadcrumb'));
+
+const runGate = async (pages) => {
+  const dir = await withFixture(pages);
+  const log = console.log;
+  const error = console.error;
+  const out = [];
+  const err = [];
+  console.log = (line) => out.push(line);
+  console.error = (line) => err.push(line);
+  process.exitCode = undefined;
+  try {
+    await main(dir);
+    return { exitCode: process.exitCode, out, err };
+  } finally {
+    console.log = log;
+    console.error = error;
+    process.exitCode = undefined;
+    await rm(dir, { recursive: true, force: true });
+  }
+};
+
+test('script detection accepts double quotes, single quotes, no quotes, any attribute order and any case', () => {
+  const variants = [
+    '<script type="application/ld+json">{"@graph":[]}</script>',
+    '<script type=\'application/ld+json\'>{"@graph":[]}</script>',
+    '<script type=application/ld+json>{"@graph":[]}</script>',
+    '<script id="a" type="application/ld+json" data-x="1">{"@graph":[]}</script>',
+    '<script data-type="x" async type=application/ld+json defer>{"@graph":[]}</script>',
+    '<SCRIPT TYPE="Application/LD+JSON">{"@graph":[]}</SCRIPT>',
+    '<script type = "application/ld+json">{"@graph":[]}</script >',
+    '<script\n  type="application/ld+json"\n>{"@graph":[]}</script>',
+  ];
+  for (const variant of variants) {
+    assert.equal(extractGraphs(`<html>${variant}</html>`).length, 1, variant);
+  }
+});
+
+test('script detection ignores scripts of another type', () => {
+  const html =
+    '<script type="module">1</script><script>2</script><script type="application/json">{}</script><script data-type="application/ld+json">3</script>';
+  assert.equal(extractGraphs(html).length, 0);
+});
+
+test('a single-quoted or unquoted block that does not parse is still a failure', () => {
+  assert.throws(() => extractGraphs("<script type='application/ld+json'>{</script>"), /parse/);
+  assert.throws(() => extractGraphs('<script type=application/ld+json>{</script>'), /parse/);
+});
+
+test('every graph node whose id is missing, not a string or empty is reported by type', () => {
+  const graphs = [
+    {
+      '@graph': [
+        { '@type': 'BreadcrumbList' },
+        { '@type': ['Person', 'Thing'], '@id': '' },
+        { '@id': 7 },
+        { '@type': 'WebSite', '@id': 'https://x/#website' },
+      ],
+    },
+  ];
+  assert.deepEqual(unidentifiedNodes(graphs), ['BreadcrumbList', 'Person|Thing', '(untyped)']);
+});
+
+test('a graph whose every node carries an id reports no unidentified node', () => {
+  assert.deepEqual(unidentifiedNodes([{ '@graph': [{ '@type': 'WebSite', '@id': 'https://x/#website' }] }]), []);
+});
+
+test('a document without a graph array contributes no unidentified node', () => {
+  assert.deepEqual(unidentifiedNodes([{ '@type': 'WebSite' }]), []);
+});
+
+test('the graph exemptions are exactly the error page, the search results and the styleguide, each with a reason', () => {
+  assert.ok(GRAPH_EXEMPT instanceof Map);
+  assert.deepEqual([...GRAPH_EXEMPT.keys()].sort(), ['/404', '/search', '/styleguide']);
+  for (const reason of GRAPH_EXEMPT.values()) assert.ok(typeof reason === 'string' && reason.length > 0);
+});
+
+test('a page with one valid graph passes the gate', async () => {
+  const { exitCode, err } = await runGate({ '/now': validNow });
+  assert.deepEqual(err, []);
+  assert.equal(exitCode, undefined);
+});
+
+test('a page with two ld+json scripts fails the gate naming the count', async () => {
+  const second = '<script type="application/ld+json">{"@graph":[]}</script>';
+  const { exitCode, err } = await runGate({ '/now': validNow.replace('</head>', `${second}</head>`) });
+  assert.equal(exitCode, 1);
+  assert.ok(err.includes('JSONLD /now carries 2 ld+json scripts, expected one'), err.join('\n'));
+});
+
+test('a second script holding a uniquely identified node fails on the count alone', async () => {
+  const second = `<script type="application/ld+json">${JSON.stringify({
+    '@graph': [breadcrumbNode('https://x/now#second')],
+  })}</script>`;
+  const { exitCode, err } = await runGate({ '/now': validNow.replace('</head>', `${second}</head>`) });
+  assert.equal(exitCode, 1);
+  assert.deepEqual(err, ['JSONLD /now carries 2 ld+json scripts, expected one']);
+});
+
+test('a page whose only ld+json document is a bare node carries no graph', async () => {
+  const bare = page(JSON.stringify(breadcrumbNode('https://x/now#breadcrumb')));
+  const { exitCode, err } = await runGate({ '/now': bare });
+  assert.equal(exitCode, 1);
+  assert.ok(err.includes('JSONLD /now carries no ld+json graph'), err.join('\n'));
+});
+
+test('a graph node with no id fails the gate naming its type', async () => {
+  const { exitCode, err } = await runGate({
+    '/now': graphPage(breadcrumbNode('https://x/now#breadcrumb'), { '@type': 'BreadcrumbList', itemListElement: [] }),
+  });
+  assert.equal(exitCode, 1);
+  assert.deepEqual(err, ['JSONLD /now has a BreadcrumbList node with no @id']);
+});
+
+test('a graph node with an empty id fails the gate', async () => {
+  const { exitCode, err } = await runGate({ '/now': graphPage({ ...breadcrumbNode(''), '@id': '' }) });
+  assert.equal(exitCode, 1);
+  assert.ok(err.includes('JSONLD /now has a BreadcrumbList node with no @id'), err.join('\n'));
+});
+
+test('an untyped graph node with no id is labelled untyped', async () => {
+  const { exitCode, err } = await runGate({ '/now': graphPage(breadcrumbNode('https://x/now#breadcrumb'), {}) });
+  assert.equal(exitCode, 1);
+  assert.ok(err.includes('JSONLD /now has a (untyped) node with no @id'), err.join('\n'));
+});
+
+test('a duplicate id fails the gate', async () => {
+  const { exitCode, err } = await runGate({
+    '/now': graphPage(breadcrumbNode('https://x/now#breadcrumb'), breadcrumbNode('https://x/now#breadcrumb')),
+  });
+  assert.equal(exitCode, 1);
+  assert.deepEqual(err, ['JSONLD /now declares https://x/now#breadcrumb twice']);
+});
+
+test('a reference that resolves nowhere fails the gate', async () => {
+  const { exitCode, err } = await runGate({
+    '/now': graphPage(breadcrumbNode('https://x/now#breadcrumb'), {
+      '@type': 'WebSite',
+      '@id': 'https://x/#website',
+      publisher: { '@id': 'https://x/#org' },
+    }),
+  });
+  assert.equal(exitCode, 1);
+  assert.deepEqual(err, ['JSONLD /now references undeclared https://x/#org']);
+});
+
+test('a graph-less route outside the exceptions fails the gate', async () => {
+  const { exitCode, err } = await runGate({ '/now': graphlessPage, '/about': graphlessPage });
+  assert.equal(exitCode, 1);
+  assert.ok(err.includes('JSONLD /now carries no ld+json graph'), err.join('\n'));
+  assert.ok(err.includes('JSONLD /about carries no ld+json graph'), err.join('\n'));
+});
+
+test('every graph-less exempt route passes beside a valid page', async () => {
+  const { exitCode, err } = await runGate({
+    '/now': validNow,
+    '/404': graphlessPage,
+    '/search': graphlessPage,
+    '/styleguide': graphlessPage,
+  });
+  assert.deepEqual(err, []);
+  assert.equal(exitCode, undefined);
+});
+
+test('an exempt route whose graph repeats an id still fails the gate', async () => {
+  const { exitCode, err } = await runGate({
+    '/now': validNow,
+    '/search': graphPage(breadcrumbNode('https://x/search#breadcrumb'), breadcrumbNode('https://x/search#breadcrumb')),
+  });
+  assert.equal(exitCode, 1);
+  assert.ok(err.includes('JSONLD /search declares https://x/search#breadcrumb twice'), err.join('\n'));
+});
+
+test('an exempt route carrying two scripts or an unidentified node fails the gate', async () => {
+  const second = '<script type="application/ld+json">{"@graph":[]}</script>';
+  const { exitCode, err } = await runGate({
+    '/now': validNow,
+    '/404': graphPage({ '@type': 'BreadcrumbList', itemListElement: [] }).replace('</head>', `${second}</head>`),
+  });
+  assert.equal(exitCode, 1);
+  assert.ok(err.includes('JSONLD /404 carries 2 ld+json scripts, expected one'), err.join('\n'));
+  assert.ok(err.includes('JSONLD /404 has a BreadcrumbList node with no @id'), err.join('\n'));
+});
+
+test('an exempt route with a graph is not asked for a route family or required types', async () => {
+  const { exitCode, err } = await runGate({
+    '/now': validNow,
+    '/search': graphPage(breadcrumbNode('https://x/search#breadcrumb')),
+  });
+  assert.deepEqual(err, []);
+  assert.equal(exitCode, undefined);
+});
+
+test('an empty dist fails because nothing was read', async () => {
+  const { exitCode, err, out } = await runGate({});
+  assert.equal(exitCode, 1);
+  assert.deepEqual(err, ['JSONLD no route carried a graph, so nothing was checked']);
+  assert.deepEqual(out, ['jsonld: 0 of 0 routes carry a graph, 0 scripts and 0 nodes read, 0 exempt']);
+});
+
+test('a dist holding only exempt graph-less routes fails because nothing was read', async () => {
+  const { exitCode, err } = await runGate({ '/404': graphlessPage, '/search': graphlessPage });
+  assert.equal(exitCode, 1);
+  assert.deepEqual(err, ['JSONLD no route carried a graph, so nothing was checked']);
+});
+
+test('the summary line counts routes with a graph, scripts, nodes and the exempt routes present', async () => {
+  const { out } = await runGate({
+    '/now': validNow,
+    '/404': graphlessPage,
+    '/search': graphlessPage,
+  });
+  assert.deepEqual(out, ['jsonld: 1 of 3 routes carry a graph, 1 scripts and 1 nodes read, 2 exempt (/404, /search)']);
+});
+
+test('the summary line prints a bare zero when no exempt route is in the dist', async () => {
+  const { out } = await runGate({
+    '/now': validNow,
+    '/approach': graphPage(breadcrumbNode('https://x/approach#breadcrumb'), {
+      '@type': 'WebSite',
+      '@id': 'https://x/#website',
+    }),
+  });
+  assert.deepEqual(out, ['jsonld: 2 of 2 routes carry a graph, 2 scripts and 3 nodes read, 0 exempt']);
 });
