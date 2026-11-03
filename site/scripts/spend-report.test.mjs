@@ -134,7 +134,7 @@ test('an open claim ledger on disk and no record is no entry and no warning', ()
     repo.put(filesOf({ ledgers: [newLedger({ slug: 'a-post', runId: 'run-1', pullRequest: null })] }).ledgers);
     const { text } = spendReportFile({ repoRoot: repo.root, revision: 'abc1234', at: GENERATED_AT });
     assert.match(text, /No entry has been generated/);
-    assert.doesNotMatch(text, /Warnings/);
+    assert.doesNotMatch(text, /^## Warnings$/m);
   }));
 
 test('the files a run is about to commit replace the ones on disk, so the report counts the new entries', () =>
@@ -147,7 +147,7 @@ test('the files a run is about to commit replace the ones on disk, so the report
       at: GENERATED_AT,
     });
     assert.equal(text, reportText(SHIPPED, 'abc1234', GENERATED_AT));
-    assert.doesNotMatch(text, /Warnings/);
+    assert.doesNotMatch(text, /^## Warnings$/m);
   }));
 
 test('a written file outside the two folders is not part of the corpus', () =>

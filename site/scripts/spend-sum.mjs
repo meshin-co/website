@@ -1,3 +1,4 @@
+import { ENDED_VERDICTS } from './autowriter-ledger.mjs';
 import { REPAIR_ROLES, WRITING_ROLES } from './generation-record.mjs';
 
 const MICRO = 1e6;
@@ -23,7 +24,7 @@ const callsMicro = (record, roles) =>
 
 export const recordMicro = (record) => (record ? callsMicro(record, WRITING_ROLES) : 0);
 export const recordRepairMicro = (record) => (record ? callsMicro(record, REPAIR_ROLES) : 0);
-const attemptsMicro = (ledger) =>
+export const attemptsMicro = (ledger) =>
   ledger ? ledger.attempts.reduce((total, { costUsd }) => total + microOf(costUsd), 0) : 0;
 const ledgerGenerationMicro = (ledger) => microOf(ledger?.generation?.costUsd ?? 0);
 
@@ -50,15 +51,22 @@ function uncoveredRepairParts({ ledger, record }) {
 
 const partsOf = (item) => [generationPart(item), ...attemptParts(item), ...uncoveredRepairParts(item)];
 
+export const hasEnded = ({ verdict }) => ENDED_VERDICTS.includes(verdict.state);
+
+const unrecordedKind = ({ ledger, record }) => (record ? null : hasEnded(ledger) ? 'ended' : 'unmatched');
+
 function breakdownOf(items, keeps) {
-  const sums = { writing: 0, repair: 0, uncarried: 0 };
-  for (const item of items)
-    for (const part of partsOf(item)) if (keeps(part)) sums[item.record ? part.kind : 'uncarried'] += part.micro;
+  const sums = { writing: 0, repair: 0, ended: 0, unmatched: 0 };
+  for (const item of items) {
+    const unrecorded = unrecordedKind(item);
+    for (const part of partsOf(item)) if (keeps(part)) sums[unrecorded ?? part.kind] += part.micro;
+  }
   return {
     writingMicro: sums.writing,
     repairMicro: sums.repair,
-    uncarriedMicro: sums.uncarried,
-    totalMicro: sums.writing + sums.repair + sums.uncarried,
+    endedMicro: sums.ended,
+    unmatchedMicro: sums.unmatched,
+    totalMicro: sums.writing + sums.repair + sums.ended + sums.unmatched,
   };
 }
 
@@ -80,7 +88,7 @@ export function spendItemsOf({ ledgers, records }) {
   ];
 }
 
-const usdOf = (micro) => micro / MICRO;
+export const usdOf = (micro) => micro / MICRO;
 
 const writingSentence = ({ ledger, record }) =>
   `${ledger.slug}: its generation record's writing calls cost ${usdOf(recordMicro(record))} USD but its ledger records ` +

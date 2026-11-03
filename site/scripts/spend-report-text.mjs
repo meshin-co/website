@@ -29,9 +29,11 @@ const MEANING =
   'added in whole micro-dollars. Repair is the cost of the repair calls that the record of the entry holds, and is not part of Cost. ' +
   'A draft that a run wrote and then skipped, a run that stopped before any entry existed and an attempt that a person ' +
   'discarded have no entry, so no row holds them. The ledgers record that spend, and the monthly spend ceiling counts it. ' +
-  'The paid tables count every call the ledgers and the records show: the writing calls of entries, every repair call ' +
-  'including a repair that failed, and the spend that no entry carries. ' +
-  'The Notes section, when there is one, names each run that ended with no entry.';
+  'The paid tables count every call the ledgers and the records show, and each call is in exactly one row: ' +
+  'the writing calls of entries; every repair call, including a repair that failed; ' +
+  'the runs that ended with no entry, which the Notes name; ' +
+  'and the spend of a ledger that no generation record names, which the Warnings name. ' +
+  'The four rows add up to the last row.';
 
 const NOTHING_TO_SHOW =
   'so this file holds no entry row, no entry total and no rate. That is the absence of a measurement. ' +
@@ -116,10 +118,13 @@ const rateRow = ({ model, inputPerMillion, outputPerMillion, entries, first, las
 
 const section = (title, ...blocks) => [`## ${title}`, ...blocks].join('\n\n');
 
-const paidRows = ({ writingMicro, repairMicro, uncarriedMicro, totalMicro }) => [
+const ABOUT = section('About this file', INTRO, MEANING);
+
+const paidRows = ({ writingMicro, repairMicro, endedMicro, unmatchedMicro, totalMicro }) => [
   ['Writing calls of entries', usdText(writingMicro)],
   ['Repair calls', usdText(repairMicro)],
-  ['Spend that no entry carries', usdText(uncarriedMicro)],
+  ['Runs that ended with no entry', usdText(endedMicro)],
+  ['Spend with no generation record', usdText(unmatchedMicro)],
   ['Everything paid for', usdText(totalMicro)],
 ];
 
@@ -137,48 +142,40 @@ const monthSection = ({ month, at, ceilingMicro, paid }) =>
     paidTable(paid)
   );
 
-function warningsSection(warnings) {
+function warningsSection(warnings, unmatchedMicro) {
   if (warnings.length === 0) return [];
+  const unmatched =
+    unmatchedMicro > 0
+      ? ' The ledgers below that no generation record names are counted in the paid tables, ' +
+        `under Spend with no generation record: ${usdText(unmatchedMicro)} USD together.`
+      : '';
   const intro =
     'Each line below needs a person to look at it: it says what could not be counted or checked, or what does not add up. ' +
-    'Every entry that can be counted is still counted above.';
+    `Every entry that can be counted is still counted above.${unmatched}`;
   return [section('Warnings', intro, warnings.map((sentence) => `- ${sentence}`).join('\n'))];
 }
 
-function notesSection(notes, notesMicro) {
+function notesSection(notes, endedMicro) {
   if (notes.length === 0) return [];
   const intro =
-    `These runs ended with no entry and together cost ${usdText(notesMicro)} USD. ` +
-    'That spend is in no entry row; the paid tables count it as spend that no entry carries. ' +
+    `These runs ended with no entry and together cost ${usdText(endedMicro)} USD. ` +
+    'That spend is in no entry row; the paid tables count it under Runs that ended with no entry. ' +
     'A note is not a warning: nothing a person does can clear it, because a run that ended will never gain a record.';
   return [section('Notes', intro, notes.map((sentence) => `- ${sentence}`).join('\n'))];
 }
 
-function emptyReport({ warnings, notes, notesMicro, thisMonth }) {
+function emptyReport({ warnings, notes, paidAllTime }) {
   const nothingSaid = warnings.length === 0 && notes.length === 0;
   const reason = nothingSaid ? 'No entry has been generated,' : 'No generation record could be counted,';
   return [
-    monthSection(thisMonth),
     section('No entry yet', `${reason} ${NOTHING_TO_SHOW}`),
-    ...warningsSection(warnings),
-    ...notesSection(notes, notesMicro),
+    ...warningsSection(warnings, paidAllTime.unmatchedMicro),
+    ...notesSection(notes, paidAllTime.endedMicro),
   ];
 }
 
-function populatedReport({
-  rows,
-  newestRun,
-  thirtyDays,
-  allTime,
-  rates,
-  warnings,
-  notes,
-  notesMicro,
-  thisMonth,
-  paidAllTime,
-}) {
+function populatedReport({ rows, newestRun, thirtyDays, allTime, rates, warnings, notes, paidAllTime }) {
   return [
-    monthSection(thisMonth),
     section(
       'This entry',
       `The newest run: the run of the newest record, which was generated at ${thirtyDays.through}. ` +
@@ -192,7 +189,7 @@ function populatedReport({
         'The window ends at the newest record and not at the clock, so this file does not change at midnight. ' +
         'Read long after the last run, it still describes the 30 days before that run. ' +
         'These 30 days are not the UTC calendar month of the monthly spend ceiling in `site/engine.config.json`: ' +
-        'that ceiling counts calendar months and counts spend that no entry carries. ' +
+        'that ceiling counts calendar months and counts every call the machine paid for, not only the writing calls of entries. ' +
         'This table counts the writing calls of entries only.',
       table(TOTAL_HEADER, totalRows(thirtyDays.totals))
     ),
@@ -216,14 +213,14 @@ function populatedReport({
         'First and Last are the instants of the first and the last entry priced at that rate.',
       table(RATE_HEADER, rates.map(rateRow))
     ),
-    ...warningsSection(warnings),
-    ...notesSection(notes, notesMicro),
+    ...warningsSection(warnings, paidAllTime.unmatchedMicro),
+    ...notesSection(notes, paidAllTime.endedMicro),
   ];
 }
 
 export function reportMarkdown(model) {
   const body = model.empty ? emptyReport(model) : populatedReport(model);
-  return `${[TITLE, INTRO, MEANING, ...body].join('\n\n')}\n`;
+  return `${[TITLE, monthSection(model.thisMonth), ABOUT, ...body].join('\n\n')}\n`;
 }
 
 const withInstant = (text, at) => text.replace(/^Generated-from: .*$/m, (line) => `${line}\nGenerated-at: ${at}`);
@@ -248,9 +245,10 @@ const windowLines = (title, { all, formats }) => [
 const ZERO_WARNINGS =
   'every ledger agrees with its generation record; this does not say that every run produced an entry';
 
-const paidLine = ({ writingMicro, repairMicro, uncarriedMicro, totalMicro }) =>
+const paidLine = ({ writingMicro, repairMicro, endedMicro, unmatchedMicro, totalMicro }) =>
   `Everything paid for: ${usdText(totalMicro)} USD, of which writing calls ${usdText(writingMicro)} USD, ` +
-  `repair calls ${usdText(repairMicro)} USD and spend that no entry carries ${usdText(uncarriedMicro)} USD.`;
+  `repair calls ${usdText(repairMicro)} USD, runs that ended with no entry ${usdText(endedMicro)} USD ` +
+  `and spend with no generation record ${usdText(unmatchedMicro)} USD.`;
 
 function warningLines(warnings) {
   const more = warnings.length - MAX_SHOWN_WARNINGS;

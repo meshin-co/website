@@ -2,6 +2,8 @@ import { MONTHLY_SPEND_CEILING_USD, fileStemProblem, validateLedger } from './au
 import { describeProblem } from './autowriter-records.mjs';
 import { WRITING_ROLES, validateRecord, writingTotals } from './generation-record.mjs';
 import {
+  attemptsMicro,
+  hasEnded,
   instantError,
   isUtcInstant,
   microOf,
@@ -11,6 +13,7 @@ import {
   spendItemsOf,
   spendWarnings,
   totalBreakdown,
+  usdOf,
 } from './spend-sum.mjs';
 
 export const WINDOW_DAYS = 30;
@@ -121,21 +124,40 @@ function ratesOf(records) {
     );
 }
 
-const missingRecordSentence = ({ slug, generation, verdict }) =>
-  `${slug}: its ledger records a generation of ${generation.costUsd} USD (verdict: ${verdict.state}) but no generation record names this ledger, so no entry is counted for it`;
+const clauseOf = (ledger, ofGeneration, ofAttempts) =>
+  [
+    ...(ledger.generation === undefined ? [] : [ofGeneration(ledger.generation.costUsd)]),
+    ...(attemptsMicro(ledger) > 0 ? [ofAttempts(usdOf(attemptsMicro(ledger)))] : []),
+  ].join(' and ');
 
-const discardedSentence = ({ slug, generation, verdict }) =>
-  `${slug}: a person discarded this attempt on ${verdict.decidedAt.slice(0, 10)} and its generation record went with it, so no entry is counted for it and its cost cannot be checked against a record; its ledger records ${generation.costUsd} USD for the generation, and the monthly spend ceiling counts that cost`;
+const recordedClause = (ledger) =>
+  clauseOf(
+    ledger,
+    (usd) => `a generation of ${usd} USD`,
+    (usd) => `repair attempts of ${usd} USD`
+  );
 
-const endedSentence = ({ slug, generation, verdict }) =>
-  `${slug}: this run ended on ${verdict.decidedAt.slice(0, 10)} with the verdict ${verdict.state} and left no generation record, so no entry is counted for it; its ledger records ${generation.costUsd} USD for the generation, and the monthly spend ceiling counts that cost`;
+const spentClause = (ledger) =>
+  clauseOf(
+    ledger,
+    (usd) => `${usd} USD for the generation`,
+    (usd) => `${usd} USD for repair attempts`
+  );
+
+const missingRecordSentence = (ledger) =>
+  `${ledger.slug}: its ledger records ${recordedClause(ledger)} (verdict: ${ledger.verdict.state}) but no generation record names this ledger, so no entry is counted for it`;
+
+const discardedSentence = (ledger) =>
+  `${ledger.slug}: a person discarded this attempt on ${ledger.verdict.decidedAt.slice(0, 10)} and its generation record went with it, so no entry is counted for it and its cost cannot be checked against a record; its ledger records ${spentClause(ledger)}, and the monthly spend ceiling counts that cost`;
+
+const endedSentence = (ledger) =>
+  `${ledger.slug}: this run ended on ${ledger.verdict.decidedAt.slice(0, 10)} with the verdict ${ledger.verdict.state} and left no generation record, so no entry is counted for it; its ledger records ${spentClause(ledger)}, and the monthly spend ceiling counts that cost`;
 
 const NOTE_SENTENCES = { stopped: endedSentence, escalated: endedSentence, discarded: discardedSentence };
 
-const isNote = ({ verdict }) => Object.hasOwn(NOTE_SENTENCES, verdict.state);
 const noteSentence = (ledger) => NOTE_SENTENCES[ledger.verdict.state](ledger);
 
-function ledgerSentences({ ledgers, records }) {
+function ledgerSentences({ ledgers, records, items }) {
   const ledgerBySlug = new Map(ledgers.map((ledger) => [ledger.slug, ledger]));
   const recordsByLedger = Map.groupBy(records, ({ ledger }) => stemOf(ledger));
   const checked = [...recordsByLedger].flatMap(([ledgerSlug, group]) => {
@@ -148,22 +170,20 @@ function ledgerSentences({ ledgers, records }) {
     const together = { ...group[0], calls: group.flatMap(({ calls }) => calls) };
     return spendWarnings({ ledgers: [{ ledger, record: together }] });
   });
-  const unrecorded = ledgers.filter(
-    (ledger) => !recordsByLedger.has(ledger.slug) && microOf(ledger.generation?.costUsd ?? 0) > 0
-  );
-  const noted = unrecorded.filter(isNote);
+  const unrecorded = items
+    .filter(({ ledger, record }) => ledger !== null && record === null && ledgerSpendMicro(ledger) > 0)
+    .map(({ ledger }) => ledger);
   return {
-    warnings: [...checked, ...unrecorded.filter((ledger) => !isNote(ledger)).map(missingRecordSentence)].sort(),
-    notes: noted.map(noteSentence).sort(),
-    notedMicro: sum(noted.map(ledgerSpendMicro)),
+    warnings: [...checked, ...unrecorded.filter((ledger) => !hasEnded(ledger)).map(missingRecordSentence)].sort(),
+    notes: unrecorded.filter(hasEnded).map(noteSentence).sort(),
   };
 }
 
 export function reportModel({ ledgers, records, problems }, { at } = {}) {
   if (!isUtcInstant(at)) throw instantError(at);
   const month = at.slice(0, 7);
-  const found = ledgerSentences({ ledgers, records });
   const items = spendItemsOf({ ledgers, records });
+  const found = ledgerSentences({ ledgers, records, items });
   const warnings = [...problems, ...found.warnings];
   const spend = {
     thisMonth: {
@@ -173,7 +193,6 @@ export function reportModel({ ledgers, records, problems }, { at } = {}) {
       paid: monthlyBreakdown({ ledgers: items, month }),
     },
     paidAllTime: totalBreakdown({ ledgers: items }),
-    notesMicro: found.notedMicro,
   };
   const { notes } = found;
   if (records.length === 0)

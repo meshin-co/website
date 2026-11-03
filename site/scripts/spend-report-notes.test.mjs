@@ -91,7 +91,7 @@ const proseOf = (markdown, title) =>
     .filter((line) => line !== '' && !line.startsWith('- '))
     .join(' ');
 
-test('every verdict a ledger can carry is classified, so a spend that no entry carries is never silent', () => {
+test('every verdict a ledger can carry is classified, so spend with no entry is never silent', () => {
   assert.deepEqual(Object.keys(BUILDERS).sort(), [...VERDICT_STATES].sort());
   assert.deepEqual(Object.keys(KIND).sort(), [...VERDICT_STATES].sort());
   assert.deepEqual(Object.keys(SENTENCE).sort(), [...VERDICT_STATES].sort());
@@ -122,6 +122,7 @@ test('a discarded attempt beside an entry that adds up is a note: the report sta
   const markdown = reportMarkdown(model);
   assert.deepEqual(headingsOf(markdown), [
     'This month',
+    'About this file',
     'This entry',
     'Last 30 days',
     'All time',
@@ -132,7 +133,7 @@ test('a discarded attempt beside an entry that adds up is a note: the report sta
   assert.deepEqual(itemsOf(markdown, 'Notes'), [`- ${DISCARDED}`]);
   assert.match(
     proseOf(markdown, 'Notes'),
-    /^These runs ended with no entry and together cost 0\.027 USD\. That spend is in no entry row; the paid tables count it as spend that no entry carries\. A note is not a warning: nothing a person does can clear it, because a run that ended will never gain a record\.$/
+    /^These runs ended with no entry and together cost 0\.027 USD\. That spend is in no entry row; the paid tables count it under Runs that ended with no entry\. A note is not a warning: nothing a person does can clear it, because a run that ended will never gain a record\.$/
   );
   assert.equal(model.allTime.totals.all.entries, 1);
   assert.equal(model.allTime.totals.all.micro, 50000);
@@ -174,7 +175,7 @@ test('with only a discarded attempt no entry can be counted, and the file does n
   const model = modelOf({ ledgers: [discardedLedger(lostLedger())] });
   const markdown = reportMarkdown(model);
   assert.equal(model.empty, true);
-  assert.deepEqual(headingsOf(markdown), ['This month', 'No entry yet', 'Notes']);
+  assert.deepEqual(headingsOf(markdown), ['This month', 'About this file', 'No entry yet', 'Notes']);
   assert.match(
     proseOf(markdown, 'No entry yet'),
     /^No generation record could be counted, so this file holds no entry row, no entry total and no rate\./
@@ -183,13 +184,13 @@ test('with only a discarded attempt no entry can be counted, and the file does n
   assert.deepEqual(itemsOf(markdown, 'Notes'), [`- ${DISCARDED}`]);
 });
 
-test('the definitions name the attempt a person discarded among the spend no entry carries, and point to the notes', () => {
+test('the definitions name the attempt a person discarded among the runs that ended with no entry, and point to the notes', () => {
   const markdown = reportMarkdown(modelOf({}));
   assert.match(
     markdown,
     /a run that stopped before any entry existed and an attempt that a person discarded have no entry, so no row holds them/
   );
-  assert.match(markdown, /The Notes section, when there is one, names each run that ended with no entry\./);
+  assert.match(markdown, /the runs that ended with no entry, which the Notes name;/);
 });
 
 const FETCH_ANSWERS = () => {

@@ -106,7 +106,7 @@ test('the report is written to the one path the gate and the pipeline both name'
 
 test('with nothing generated the file says so in words and carries no number at all', () => {
   const markdown = reportMarkdown(empty());
-  assert.deepEqual(headingsOf(markdown), ['This month', 'No entry yet']);
+  assert.deepEqual(headingsOf(markdown), ['This month', 'About this file', 'No entry yet']);
   assert.match(
     proseOf(markdown, 'No entry yet'),
     /^No entry has been generated, so this file holds no entry row, no entry total and no rate\./
@@ -124,7 +124,7 @@ test('with only unreadable files the file does not claim that nothing was genera
       at: GENERATED_AT,
     })
   );
-  assert.deepEqual(headingsOf(unreadable), ['This month', 'No entry yet', 'Warnings']);
+  assert.deepEqual(headingsOf(unreadable), ['This month', 'About this file', 'No entry yet', 'Warnings']);
   assert.doesNotMatch(unreadable, /No entry has been generated/);
   assert.match(
     proseOf(unreadable, 'No entry yet'),
@@ -140,6 +140,7 @@ test('a populated report has the month first, then the three windows, every entr
   const markdown = reportMarkdown(populated());
   assert.deepEqual(headingsOf(markdown), [
     'This month',
+    'About this file',
     'This entry',
     'Last 30 days',
     'All time',
@@ -184,7 +185,8 @@ test('each window totals all its entries and then each format, and defines its o
   assert.deepEqual(rowsOf(markdown, 'All time').slice(totals.length + 2), [
     ['Writing calls of entries', '0.062'],
     ['Repair calls', '0.00'],
-    ['Spend that no entry carries', '0.00'],
+    ['Runs that ended with no entry', '0.00'],
+    ['Spend with no generation record', '0.00'],
     ['Everything paid for', '0.062'],
   ]);
   const thirty = proseOf(markdown, 'Last 30 days');
@@ -200,7 +202,7 @@ test('each window totals all its entries and then each format, and defines its o
 test('the thirty days say they are not the calendar month of the spend ceiling, and that they end at the newest entry and not the clock', () => {
   const thirty = proseOf(reportMarkdown(populated()), 'Last 30 days');
   assert.match(thirty, /not the UTC calendar month of the monthly spend ceiling/);
-  assert.match(thirty, /counts spend that no entry carries/);
+  assert.match(thirty, /counts every call the machine paid for, not only the writing calls of entries/);
   assert.match(thirty, /ends at the newest record and not at the clock/);
 });
 
@@ -245,6 +247,7 @@ test('a warning becomes one list item under its own heading, and the entries tha
   const markdown = reportMarkdown(model);
   assert.deepEqual(headingsOf(markdown), [
     'This month',
+    'About this file',
     'This entry',
     'Last 30 days',
     'All time',
@@ -305,7 +308,7 @@ test('the Slack message holds this entry, the 30 days and all time as plain line
       'all: 2 entries, 31,000 input tokens, 6,200 output tokens, 0.062 USD',
       'article: 1 entry, 25,000 input tokens, 5,000 output tokens, 0.05 USD',
       'term: 1 entry, 6,000 input tokens, 1,200 output tokens, 0.012 USD',
-      'Everything paid for: 0.062 USD, of which writing calls 0.062 USD, repair calls 0.00 USD and spend that no entry carries 0.00 USD.',
+      'Everything paid for: 0.062 USD, of which writing calls 0.062 USD, repair calls 0.00 USD, runs that ended with no entry 0.00 USD and spend with no generation record 0.00 USD.',
       '',
       'The 30 days end at the newest entry. They are not the calendar month of the spend ceiling.',
       '',

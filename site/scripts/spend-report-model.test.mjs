@@ -61,10 +61,9 @@ test('with no record the model is empty: no row, no window, no rate, no warning 
       month: '2026-11',
       at: GENERATED_AT,
       ceilingMicro: 25_000_000,
-      paid: { writingMicro: 0, repairMicro: 0, uncarriedMicro: 0, totalMicro: 0 },
+      paid: { writingMicro: 0, repairMicro: 0, endedMicro: 0, unmatchedMicro: 0, totalMicro: 0 },
     },
-    paidAllTime: { writingMicro: 0, repairMicro: 0, uncarriedMicro: 0, totalMicro: 0 },
-    notesMicro: 0,
+    paidAllTime: { writingMicro: 0, repairMicro: 0, endedMicro: 0, unmatchedMicro: 0, totalMicro: 0 },
   });
 });
 

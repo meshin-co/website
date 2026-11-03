@@ -87,12 +87,12 @@ test('a month that is not a UTC year and month, or an amount that is not whole m
     assert.throws(() => monthLine({ month: '2026-11', spentMicro, ceilingMicro: CEILING }), /micro-dollars/);
 });
 
-test('the model names the month from the instant it is given and splits what that month paid for three ways', () => {
+test('the model names the month from the instant it is given and splits what that month paid for four ways', () => {
   assert.deepEqual(modelAt(NOVEMBER).thisMonth, {
     month: '2026-11',
     at: GENERATED_AT,
     ceilingMicro: CEILING,
-    paid: { writingMicro: 50_000, repairMicro: 15_000, uncarriedMicro: 27_000, totalMicro: 92_000 },
+    paid: { writingMicro: 50_000, repairMicro: 15_000, endedMicro: 27_000, unmatchedMicro: 0, totalMicro: 92_000 },
   });
 });
 
@@ -124,7 +124,8 @@ test('all time splits the same way over every month', () => {
   assert.deepEqual(modelAt(BOTH_MONTHS).paidAllTime, {
     writingMicro: 77_000,
     repairMicro: 15_000,
-    uncarriedMicro: 27_000,
+    endedMicro: 27_000,
+    unmatchedMicro: 0,
     totalMicro: 119_000,
   });
 });
@@ -140,34 +141,35 @@ test('an entry row carries the cost of the repair calls its own record holds, be
   );
 });
 
-test('the noted runs are totalled, and a ledger that is a warning is not among them though its spend is real', () => {
+test('a warned ledger is counted in its own row, beside the noted runs, and both are in the month', () => {
   const orphan = mergedLedger(ledgerOf({ slug: 'orphan-post', calls: [DRAFT] }));
   const model = modelAt({ ledgers: [postLedger, lostLedger, orphan], records: [repairedPost] });
   assert.equal(model.notes.length, 1);
-  assert.equal(model.notesMicro, 27_000);
   assert.equal(model.warnings.length, 1);
-  assert.equal(model.thisMonth.paid.uncarriedMicro, 54_000);
+  assert.equal(model.thisMonth.paid.endedMicro, 27_000);
+  assert.equal(model.thisMonth.paid.unmatchedMicro, 27_000);
+  assert.equal(model.thisMonth.paid.totalMicro, 119_000);
 });
 
 test('with nothing recorded the month is still named and has paid for nothing', () => {
   const model = modelAt({});
-  const nothing = { writingMicro: 0, repairMicro: 0, uncarriedMicro: 0, totalMicro: 0 };
+  const nothing = { writingMicro: 0, repairMicro: 0, endedMicro: 0, unmatchedMicro: 0, totalMicro: 0 };
   assert.deepEqual(model.thisMonth, { month: '2026-11', at: GENERATED_AT, ceilingMicro: CEILING, paid: nothing });
   assert.deepEqual(model.paidAllTime, nothing);
-  assert.equal(model.notesMicro, 0);
 });
 
 test('with only a discarded attempt there is no entry and the month has still paid for it', () => {
   const model = modelAt({ ledgers: [discardedLedger(ledgerOf({ slug: 'lost-post', calls: [DRAFT] }))] });
   assert.equal(model.empty, true);
-  assert.equal(model.thisMonth.paid.uncarriedMicro, 27_000);
-  assert.equal(model.notesMicro, 27_000);
+  assert.equal(model.thisMonth.paid.endedMicro, 27_000);
+  assert.equal(model.thisMonth.paid.totalMicro, 27_000);
 });
 
-test('the file opens with the month, and the month line is the first thing it says', () => {
+test('the file opens with the month section, and the explanation of the file follows it under its own heading', () => {
   const markdown = reportMarkdown(modelAt(NOVEMBER));
   assert.deepEqual(headingsOf(markdown), [
     'This month',
+    'About this file',
     'This entry',
     'Last 30 days',
     'All time',
@@ -176,6 +178,29 @@ test('the file opens with the month, and the month line is the first thing it sa
     'Notes',
   ]);
   assert.ok(proseOf(markdown, 'This month').startsWith(NOVEMBER_LINE), proseOf(markdown, 'This month'));
+  assert.ok(markdown.indexOf('## This month') < markdown.indexOf('This file is written by'));
+});
+
+test('the first lines of the stamped file are the title, the two stamps, the month heading and the month sentence', () => {
+  const lines = reportText(filesOf(NOVEMBER), REVISION, GENERATED_AT).split('\n');
+  assert.deepEqual(lines.slice(0, 8), [
+    '# Spend report: what writing each entry cost',
+    '',
+    `Generated-from: ${REVISION}`,
+    `Generated-at: ${GENERATED_AT}`,
+    '',
+    '## This month',
+    '',
+    NOVEMBER_LINE,
+  ]);
+});
+
+test('the explanation keeps the definitions the tables need: what Cost and Repair mean and that each call is in one row', () => {
+  const prose = proseOf(reportMarkdown(modelAt(NOVEMBER)), 'About this file');
+  assert.match(prose, /^This file is written by `npm run audit:spend`/);
+  assert.match(prose, /Cost means the cost of the writing calls of an entry/);
+  assert.match(prose, /each call is in exactly one row/);
+  assert.match(prose, /The four rows add up to the last row\.$/);
 });
 
 test('the month section says whose month it is, what the figure counts and what the ceiling job counts besides', () => {
@@ -185,14 +210,15 @@ test('the month section says whose month it is, what the figure counts and what 
   assert.match(prose, /The ceiling job also counts the spend on branches that are not merged yet/);
 });
 
-test('the month section totals every call: writing, repair and the spend that no entry carries', () => {
+test('the month section totals every call: writing, repair, runs that ended with no entry and spend with no record', () => {
   const [paid, ...rest] = tablesOf(reportMarkdown(modelAt(NOVEMBER)), 'This month');
   assert.deepEqual(rest, []);
   assert.deepEqual(paid.header, ['What was paid for', 'Cost (USD)']);
   assert.deepEqual(paid.rows, [
     ['Writing calls of entries', '0.05'],
     ['Repair calls', '0.015'],
-    ['Spend that no entry carries', '0.027'],
+    ['Runs that ended with no entry', '0.027'],
+    ['Spend with no generation record', '0.00'],
     ['Everything paid for', '0.092'],
   ]);
 });
@@ -206,7 +232,8 @@ test('all time shows both: the entries by their writing calls, then everything p
   assert.deepEqual(paid.rows, [
     ['Writing calls of entries', '0.077'],
     ['Repair calls', '0.015'],
-    ['Spend that no entry carries', '0.027'],
+    ['Runs that ended with no entry', '0.027'],
+    ['Spend with no generation record', '0.00'],
     ['Everything paid for', '0.119'],
   ]);
   assert.match(proseOf(markdown, 'All time'), /counts the writing calls of entries only/);
@@ -230,7 +257,7 @@ test('the notes name what the noted runs cost together and where that spend is c
   const notes = proseOf(reportMarkdown(modelAt(NOVEMBER)), 'Notes');
   assert.equal(
     notes,
-    'These runs ended with no entry and together cost 0.027 USD. That spend is in no entry row; the paid tables count it as spend that no entry carries. A note is not a warning: nothing a person does can clear it, because a run that ended will never gain a record.'
+    'These runs ended with no entry and together cost 0.027 USD. That spend is in no entry row; the paid tables count it under Runs that ended with no entry. A note is not a warning: nothing a person does can clear it, because a run that ended will never gain a record.'
   );
   assert.equal(itemsOf(reportMarkdown(modelAt(NOVEMBER)), 'Notes').length, 1);
 });
@@ -239,7 +266,7 @@ test('the file with no entry still opens with the month and says it has no entry
   const markdown = reportMarkdown(
     modelAt({ ledgers: [discardedLedger(ledgerOf({ slug: 'lost-post', calls: [DRAFT] }))] })
   );
-  assert.deepEqual(headingsOf(markdown), ['This month', 'No entry yet', 'Notes']);
+  assert.deepEqual(headingsOf(markdown), ['This month', 'About this file', 'No entry yet', 'Notes']);
   assert.ok(
     proseOf(markdown, 'This month').startsWith(
       monthLine({ month: '2026-11', spentMicro: 27_000, ceilingMicro: CEILING })
@@ -296,7 +323,7 @@ test('the message names everything paid for after the all-time figures, labelled
   const blocks = messageFor(BOTH_MONTHS).split('\n\n');
   assert.equal(
     blocks[3].split('\n').at(-1),
-    'Everything paid for: 0.119 USD, of which writing calls 0.077 USD, repair calls 0.015 USD and spend that no entry carries 0.027 USD.'
+    'Everything paid for: 0.119 USD, of which writing calls 0.077 USD, repair calls 0.015 USD, runs that ended with no entry 0.027 USD and spend with no generation record 0.00 USD.'
   );
 });
 

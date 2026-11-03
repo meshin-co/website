@@ -7,12 +7,12 @@ import { monthOf, monthlySpend } from './spend-ceiling.mjs';
 import { chooseVersions, monthlyBreakdown, spendItemsOf, spendWarnings, totalBreakdown } from './spend-sum.mjs';
 
 const attempt = (recordedAt, costUsd) => ({ recordedAt, costUsd });
-const ledgerOf = ({ slug = 'a-post', generation, attempts = [], decidedAt = null, spendUsd = 0 }) => ({
+const ledgerOf = ({ slug = 'a-post', generation, attempts = [], decidedAt = null, spendUsd = 0, state = 'open' }) => ({
   slug,
   attempts,
   ...(generation === undefined ? {} : { generation: { costUsd: generation } }),
   spend: { costUsd: spendUsd },
-  verdict: { decidedAt },
+  verdict: { decidedAt, state },
 });
 const recordOf = (generatedAt, costUsd = 0) => ({
   generatedAt,
@@ -287,7 +287,7 @@ test('attempts that a ledger records and its record lacks are the spend of a rep
   assert.deepEqual(spendWarnings({ ledgers: [item] }), []);
 });
 
-test('the month splits into writing, repair and spend that no entry carries, and the parts add up to the ceiling figure', () => {
+test('the month splits into writing, repair, runs that ended with no entry and ledgers with no record, and the parts add up to the ceiling figure', () => {
   const carried = {
     ledger: ledgerOf({
       slug: 'a-post',
@@ -297,24 +297,69 @@ test('the month splits into writing, repair and spend that no entry carries, and
     }),
     record: repairedRecord('2026-11-02T00:00:00.000Z'),
   };
-  const uncarried = {
+  const ended = {
     ledger: ledgerOf({
       slug: 'lost-post',
       generation: 0.5,
       attempts: [attempt('2026-11-06T00:00:00Z', 0.25)],
       decidedAt: '2026-11-06T01:00:00Z',
       spendUsd: 0.75,
+      state: 'stopped',
     }),
     record: null,
   };
-  const parts = monthlyBreakdown({ ledgers: [carried, uncarried], month: '2026-11' });
+  const parts = monthlyBreakdown({ ledgers: [carried, ended], month: '2026-11' });
   assert.deepEqual(parts, {
     writingMicro: 1_500_000,
     repairMicro: 2_250_000,
-    uncarriedMicro: 750_000,
+    endedMicro: 750_000,
+    unmatchedMicro: 0,
     totalMicro: 4_500_000,
   });
-  assert.equal(parts.totalMicro, spent([carried, uncarried], '2026-11'));
+  assert.equal(parts.totalMicro, spent([carried, ended], '2026-11'));
+});
+
+test('a ledger with no record is a run that ended or a ledger with no record by its verdict alone, and each kind has its own figure', () => {
+  const alone = (state, slug, generation) => ({ ledger: ledgerOf({ slug, generation, state }), record: null });
+  const ledgers = [
+    alone('stopped', 'stopped-post', 0.5),
+    alone('escalated', 'escalated-post', 0.25),
+    alone('discarded', 'discarded-post', 0.125),
+    alone('open', 'open-post', 0.0625),
+    alone('merged', 'merged-post', 0.03125),
+  ];
+  assert.deepEqual(totalBreakdown({ ledgers }), {
+    writingMicro: 0,
+    repairMicro: 0,
+    endedMicro: 875_000,
+    unmatchedMicro: 93_750,
+    totalMicro: 968_750,
+  });
+  for (const [state, kind] of [
+    ['stopped', 'endedMicro'],
+    ['escalated', 'endedMicro'],
+    ['discarded', 'endedMicro'],
+    ['open', 'unmatchedMicro'],
+    ['merged', 'unmatchedMicro'],
+  ]) {
+    const parts = totalBreakdown({ ledgers: [alone(state, 'one', 1)] });
+    assert.equal(parts[kind], 1_000_000, `${state} belongs in ${kind}`);
+    assert.equal(parts.totalMicro, 1_000_000, state);
+  }
+});
+
+test('a ledger that has a record is never ended or unmatched, whatever its verdict', () => {
+  const record = recordOf('2026-11-02T00:00:00.000Z', 1);
+  for (const state of ['stopped', 'escalated', 'discarded', 'open', 'merged']) {
+    const item = { ledger: ledgerOf({ generation: 1, state }), record };
+    assert.deepEqual(totalBreakdown({ ledgers: [item] }), {
+      writingMicro: 1_000_000,
+      repairMicro: 0,
+      endedMicro: 0,
+      unmatchedMicro: 0,
+      totalMicro: 1_000_000,
+    });
+  }
 });
 
 test('a record whose ledger is gone is a carried entry in the breakdown, since the report counts it as one', () => {
@@ -322,7 +367,8 @@ test('a record whose ledger is gone is a carried entry in the breakdown, since t
   assert.deepEqual(monthlyBreakdown({ ledgers: [{ ledger: null, record }], month: '2026-11' }), {
     writingMicro: 1_000_000,
     repairMicro: 500_000,
-    uncarriedMicro: 0,
+    endedMicro: 0,
+    unmatchedMicro: 0,
     totalMicro: 1_500_000,
   });
 });
@@ -372,7 +418,8 @@ test('the whole of the spend is the same split over every month, and a spend wit
   assert.deepEqual(totalBreakdown({ ledgers: [dated, undated] }), {
     writingMicro: 1_000_000,
     repairMicro: 500_000,
-    uncarriedMicro: 250_000,
+    endedMicro: 0,
+    unmatchedMicro: 250_000,
     totalMicro: 1_750_000,
   });
   assert.equal(monthlyBreakdown({ ledgers: [dated, undated], month: '2026-10' }).totalMicro, 250_000);
