@@ -74,6 +74,7 @@ A second site changes these in code, or accepts them. Each has a reason it can w
 2. `npm run gate:plan`, `gate:docs`, `gate:skills` and `gate:spec` pass.
 3. `npm test` passes. `scripts/engine-specimens.mjs` plants a removed value, a removed anchor file and a
    re-expressed classifier, and `npm run test:smoke` proves `gate:engine` still fails on each.
+4. Three gates stay red until the owner has done the work they measure: `gate:demand` and `gate:evidence` until `npm run audit:demand` writes the first report, `gate:editorial` until the texts are reviewed (`disposition-a-text.md`).
 
 Two steps stay with the owner: branch protection on `main` (require the check
 `all required jobs passed`), and the Lighthouse measurement record from `npm run gate:lh` (L59).

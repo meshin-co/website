@@ -36,13 +36,20 @@ account and project, the domain, the Search Console property and its service acc
 priced per vendor, the budgets measured on this site's pages, every measured record, and the locked
 decisions L1 to L67.
 
-**The export (delivered).** `npm run export:engine -- <empty directory>` writes every engine file and 22
-seeds at their target paths, with `engine-export.json`. A copy of it was installed and built for an invented
-second site. `npm run gate:export` repeats that build on demand.
+**The export (delivered).** `npm run export:engine -- <empty directory>` writes every engine file and 27
+seeds at their target paths, with `engine-export.json`. A copy of it was installed, built and run through the
+gates for an invented second site, `field-notes.example`: `npm test` passes there (5167 tests, 182 failed
+before this pass) and so does every gate except the three that measure the owner's own work, `gate:demand`,
+`gate:evidence` and `gate:editorial`. `npm run gate:export` repeats the build on demand.
 
-**Still open.** 34 engine files still name this site (`gate:partition` allows up to 34 of them, prints each, and fails on a 35th), skills and
-documents cite files that do not travel, and 182 engine tests in a copy pin facts of this site. `tasks.md`
-lists each with its state.
+**The interview (delivered).** `docs/plan/reference/new-site-interview.md` holds 97 questions in the order they
+are needed, each with its options, a recommendation, where the answer lands and what breaks when it is wrong.
+`interview-the-owner-of-a-new-site.md` is the procedure. `gate:engine` fails when the bank does not name a
+config value, a workflow secret or variable, or a variable of `.env.example`.
+
+**Still open.** 27 engine files still name this site (`gate:partition` allows up to 27 of them, prints each,
+and fails on a 28th), engine markup and data carry this site's words without naming it, and the Calibration
+Gate was not run. `tasks.md` lists each with its state, and section 6 lists what adopting found and did not fix.
 
 ## Measured records never travel
 
@@ -54,8 +61,14 @@ This change keeps that behaviour and adds the rule that no record under `audits/
 ## Impact
 
 - New: the partition modules and their tests, `scripts/export-engine.mjs`, `scripts/check-export.mjs`,
-  `scripts/partition-specimens.mjs`, 22 seeds under `seed/`, `site/src/data/static-pages.mjs`, and the skills
+  `scripts/partition-specimens.mjs`, `scripts/engine-named-paths.mjs`, `scripts/interview-coverage.mjs`,
+  `src/utils/page-exists.mjs`, 27 seeds under `seed/`, `site/src/data/static-pages.mjs`, and the skills
   `extract-the-engine-from-a-site.md` and `interview-the-owner-of-a-new-site.md`.
 - New: `docs/plan/reference/new-site-interview.md`, 97 questions in the order they are needed.
 - Changed: `machine-text.mjs` no longer holds the page catalogue; the three asset generators create their own
-  output directories; `ci.yml` runs `gate:partition`; `check-engine.mjs` points at the interview.
+  output directories; `ci.yml` runs `gate:partition`; `check-engine.mjs` checks the interview;
+  `check-skills.mjs` and `run-docs-gate.mjs` accept a cited path that an engine script names; the writer prompt
+  reader accepts an empty list of numbers; `external-links`, `geo-probe`, `pr-github`, `escalate-channels` and the
+  search index page read the host, the author and the agent name from the tree; the post page, the search page
+  and the services and faq feeds no longer assume pages or collections a copy lacks; about 50 tests were split
+  or made generic, and 8 `*.site.test.mjs` files keep what pins this site.
