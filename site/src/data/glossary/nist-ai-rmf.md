@@ -3,7 +3,7 @@ title: What is the NIST AI RMF?
 term: NIST AI RMF
 description: The NIST AI Risk Management Framework (AI RMF) is a voluntary US framework for managing AI risk across a system's whole lifecycle.
 publishDate: 2026-09-08
-updatedDate: 2026-10-25
+updatedDate: 2026-11-03
 shortDefinition: The NIST AI Risk Management Framework (AI RMF) is a voluntary US framework, published in January 2023, for identifying and managing an AI system's risks across its design, development and use.
 definition: |
   The framework sets out four functions an organisation applies to an AI system. GOVERN covers policy and accountability, while MAP covers understanding context and risk. Testing and metrics fall under MEASURE. Acting on what it found is MANAGE's job.
@@ -21,9 +21,9 @@ sources:
   - title: NIST AI Risk Management Framework
     url: https://www.nist.gov/itl/ai-risk-management-framework
   - title: Artificial Intelligence Risk Management Framework (AI RMF 1.0), NIST AI 100-1
-    url: https://doi.org/10.6028/NIST.AI.100-1
+    url: https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-ai-rmf-10
     publisher: NIST
-    retrieved: '2026-10-25'
+    retrieved: '2026-11-03'
 ---
 
 ## Why it comes up
