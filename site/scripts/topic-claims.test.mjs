@@ -102,8 +102,14 @@ test('a slug that already has a ledger is refused, because an earlier run owns t
   assert.deepEqual(refuse({ title: 'A fresh title' }, { ledgerPaths: [ledger] }), {
     reason: 'slug-held',
     against: ledger,
-    detail: `slug "a-new-slug" already has the ledger ${ledger}, so an earlier run owns it; remove the ledger to try the topic again`,
+    detail: `slug "a-new-slug" already has the ledger ${ledger}, so an earlier run owns it and the topic cannot be tried again yet; no procedure frees a slug safely, and removing the ledger is not one, because it records spend that the monthly spend ceiling counts`,
   });
+});
+
+test('the refusal of a held slug never tells anyone to remove or delete the ledger', () => {
+  const { detail } = refuse({ title: 'A fresh title' }, { ledgerPaths: [ledgerOf('a-new-slug')] });
+  assert.doesNotMatch(detail, /remove the ledger to|delete the ledger to|then remove|then delete/i);
+  assert.match(detail, /removing the ledger is not one/);
 });
 
 test('a ledger holds its slug at whatever depth it is filed, and the refusal names that file', () => {

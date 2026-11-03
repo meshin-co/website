@@ -34,7 +34,7 @@ function ledgerRefusal({ topic, ledgerPaths }) {
   return refusal(
     'slug-held',
     path,
-    `slug "${topic.slug}" already has the ledger ${path}, so an earlier run owns it; remove the ledger to try the topic again`
+    `slug "${topic.slug}" already has the ledger ${path}, so an earlier run owns it and the topic cannot be tried again yet; no procedure frees a slug safely, and removing the ledger is not one, because it records spend that the monthly spend ceiling counts`
   );
 }
 
