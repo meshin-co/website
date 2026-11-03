@@ -1,27 +1,43 @@
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { asText, recordOf, recordPath } from './fixtures/spend-report-corpus.mjs';
-import { REPORT_PATH } from './spend-report-text.mjs';
+import { MONTHLY_SPEND_CEILING_USD } from './autowriter-ledger.mjs';
+import { asText, recordOf, writingCall } from './fixtures/spend-report-corpus.mjs';
+import { recordPath } from './record-layout.mjs';
+import { REPORT_PATH, stampedAt } from './spend-report-text.mjs';
 
 const GATE = 'gate:autowriter';
 const SLUG = 'zz-specimen';
-const GENERATED_AT = '2026-10-02T07:00:00.000Z';
-const ABSENCE = 'That is the absence of a measurement. It is not a cost of zero.';
-const FORGED_TOTAL = 'All time: 0.00 USD.';
+const SPENT_FIGURE = /(so far: )\d[\d.]*( USD spent)/;
+const FORGED_SPENT = '999999.999999';
+const OVER_THE_CEILING = { input: (MONTHLY_SPEND_CEILING_USD + 1) * 1_000_000, output: 0 };
 
 const inRepository = (copySite, path) => join(copySite, '..', path);
+
+function stampOfCommittedReport(copySite) {
+  const path = inRepository(copySite, REPORT_PATH);
+  const stamp = stampedAt(readFileSync(path, 'utf8'));
+  if (!stamp) throw new Error(`${path} carries no Generated-at stamp, so the specimen cannot date its record`);
+  return stamp;
+}
 
 export const spendSpecimens = ({ addUntrackedFile, editFile, removeFile }) => ({
   autowriterSpendReportStale: {
     gate: GATE,
-    token: 'the file has "## No entry yet"',
-    plant: (copySite) =>
-      addUntrackedFile(inRepository(copySite, recordPath(SLUG)), asText(recordOf({ slug: SLUG, at: GENERATED_AT }))),
+    token: 'none left: the ceiling is reached',
+    plant: async (copySite) => {
+      const stamp = stampOfCommittedReport(copySite);
+      const record = recordOf({ slug: SLUG, at: stamp, calls: [writingCall(OVER_THE_CEILING)] });
+      return addUntrackedFile(inRepository(copySite, recordPath('generation', SLUG, stamp)), asText(record));
+    },
   },
   autowriterSpendReportEdited: {
     gate: GATE,
-    token: FORGED_TOTAL,
-    plant: (copySite) => editFile(inRepository(copySite, REPORT_PATH), (text) => text.replace(ABSENCE, FORGED_TOTAL)),
+    token: `${FORGED_SPENT} USD spent`,
+    plant: (copySite) =>
+      editFile(inRepository(copySite, REPORT_PATH), (text) =>
+        text.replace(SPENT_FIGURE, (_whole, before, after) => `${before}${FORGED_SPENT}${after}`)
+      ),
   },
   autowriterSpendReportDeleted: {
     gate: GATE,
