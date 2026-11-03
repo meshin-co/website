@@ -18,11 +18,14 @@ import {
   harness,
   ledgerRecord,
   readJson,
+  slackMessageOf,
   spentAttempts,
   writtenNames,
 } from './fixtures/pr-watch-harness.mjs';
 
-const REPOSITORY_URL = 'https://github.com/meshin-co/website';
+const REPOSITORY_URL = 'https://github.test/meshin-co/website';
+const REPAIR_RUN_URL = `${REPOSITORY_URL}/actions/runs/555`;
+const PULL_REQUEST_URL = `${REPOSITORY_URL}/pull/72`;
 
 const STATEMENTS = {
   unrepairable:
@@ -43,11 +46,11 @@ const FILED_AS = {
 
 const REQUESTS = { unrepairable: 1, 'no-convergence': 2, 'spend-ceiling': 2, credential: 2, failed: 1 };
 
-const detailOf = (outcome, run = '555') =>
+const detailOf = (outcome, { run = REPAIR_RUN_URL, pullRequest = PULL_REQUEST_URL } = {}) =>
   [
     `The repair of pull request #72 ended as ${outcome}: ${STATEMENTS[outcome]}.`,
-    `Repair run: ${REPOSITORY_URL}/actions/runs/${run}`,
-    `Pull request: ${REPOSITORY_URL}/pull/72`,
+    ...(run === null ? [] : [`Repair run: ${run}`]),
+    `Pull request: ${pullRequest}`,
   ].join('\n');
 
 const afterRepair = (outcome, options = {}) => harness({ bundle: green(), afterRepair: outcome, ...options });
@@ -97,20 +100,41 @@ test('the escalation after a repair is recorded on the pull request branch by th
   assert.equal(pushed.verdict.state, 'escalated');
 });
 
-test('the repair run link follows the server and run the workflow names, and falls back as the rest of the watcher does', async () => {
-  const named = await afterRepair('failed');
-  named.env.GITHUB_SERVER_URL = 'https://git.example.test';
-  named.env.GITHUB_RUN_ID = '9001';
-  await named.run();
-  const fallen = await afterRepair('failed');
-  delete fallen.env.GITHUB_RUN_ID;
-  await fallen.run();
+test('the repair run link follows the server and run the workflow names', async () => {
+  const { run, env, ledgerPath } = await afterRepair('failed');
+  env.GITHUB_SERVER_URL = 'https://git.example.test';
+  env.GITHUB_RUN_ID = '9001';
+  await run();
 
   assert.match(
-    readJson(named.ledgerPath).escalations[0].detail,
+    readJson(ledgerPath).escalations[0].detail,
     /Repair run: https:\/\/git\.example\.test\/meshin-co\/website\/actions\/runs\/9001/
   );
-  assert.equal(readJson(fallen.ledgerPath).escalations[0].detail, detailOf('failed', 'local'));
+});
+
+test('a repair run the workflow does not name is left out of the finding, and no run id is made up', async () => {
+  const { run, env, ledgerPath } = await afterRepair('failed');
+  delete env.GITHUB_RUN_ID;
+  await run();
+
+  assert.equal(readJson(ledgerPath).escalations[0].detail, detailOf('failed', { run: null }));
+});
+
+test('with no server named the finding names the pull request by its number and leaves out the repair run', async () => {
+  const { run, env, ledgerPath } = await afterRepair('failed');
+  delete env.GITHUB_SERVER_URL;
+  await run();
+
+  assert.equal(readJson(ledgerPath).escalations[0].detail, detailOf('failed', { run: null, pullRequest: '#72' }));
+});
+
+test('the Slack message of an escalation after a repair shows the repair run and the pull request as links', async () => {
+  const { run, requests } = await afterRepair('no-convergence');
+  await run();
+  const { text } = slackMessageOf(requests);
+  const links = `\nRepair run: <${REPAIR_RUN_URL}|run 555>\nPull request: <${PULL_REQUEST_URL}|#72>\n`;
+
+  assert.ok(text.includes(links), text);
 });
 
 test('an escalation that needs Slack and has no webhook still records the ledger, then fails the job', async () => {

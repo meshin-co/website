@@ -14,6 +14,7 @@ import { asInput, hoursAfterOpening, scenario, withAggregate, withJob } from './
 export const PAT = 'pat-secret-value';
 export const DEFAULT_TOKEN = 'default-token-value';
 export const MERGED_SHA = 'f'.repeat(40);
+export const WEBHOOK = 'https://hooks.slack.test/services/T0/B0/xyz';
 
 const entry = (path, type, sha) => ({ path, mode: type === 'tree' ? '040000' : '100644', type, sha });
 
@@ -68,6 +69,13 @@ export const callOf = (calls, name) => {
   assert.ok(call, `no ${name} call was made`);
   return call;
 };
+
+export function slackMessageOf(requests) {
+  const posted = requests.filter(({ url }) => url === WEBHOOK);
+  assert.equal(posted.length, 1, 'expected exactly one Slack message');
+  assert.ok(Array.isArray(posted[0].body.blocks), 'the Slack message carries no blocks');
+  return posted[0].body;
+}
 
 function recordingIo({ snapshot, merge, tick, failWith, calls, tree, mergedLedger }) {
   const failing = (during) => {
@@ -153,13 +161,14 @@ export async function harness({
   };
   const env = {
     GITHUB_REPOSITORY: 'meshin-co/website',
+    GITHUB_SERVER_URL: 'https://github.test',
     GITHUB_TOKEN: DEFAULT_TOKEN,
     [SECRET]: PAT,
     GITHUB_RUN_ID: '555',
     GITHUB_REF_NAME: 'main',
     GITHUB_STEP_SUMMARY: summary,
     GITHUB_OUTPUT: outputs,
-    ...(slack ? { SLACK_WEBHOOK_URL: 'https://hooks.slack.test/services/T0/B0/xyz' } : {}),
+    ...(slack ? { SLACK_WEBHOOK_URL: WEBHOOK } : {}),
   };
   const io = recordingIo({ snapshot, merge, tick, failWith, calls, tree, mergedLedger });
   const fetch = recordingFetch(requests, issueStatus);

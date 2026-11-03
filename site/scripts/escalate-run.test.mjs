@@ -26,6 +26,8 @@ const TITLE = 'Search Console refresh failed';
 const DETAIL = 'The refresh answered HTTP 401.';
 const COMMIT = 'a'.repeat(40);
 const DEBT = { mergedCommit: COMMIT, fingerprint: 'd'.repeat(64), recordedAt: NOW().toISOString(), clear: 'gate:lh' };
+const RUN_FIELD = '*Workflow run*\n<https://github.test/meshin-co/website/actions/runs/777|run 777>';
+const ISSUE_FIELD = '*Issue*\n<https://github.test/meshin-co/website/issues/12|#12>';
 
 const created = (number = 12) =>
   new Response(JSON.stringify({ number, html_url: 'https://github.test/meshin-co/website/issues/' + number }), {
@@ -74,6 +76,12 @@ const ledgerIn = (dir, slug = SLUG) => readLedger(join(dir, slug + '.json'));
 const raise = (dir, { kind = 'credential', env = ENV, fetch, slug = SLUG } = {}) =>
   raiseOnRun({ ledgerDir: dir, slug, kind, title: TITLE, detail: DETAIL, env, fetch, now: NOW });
 
+const blocksOf = ({ blocks }) => {
+  assert.ok(Array.isArray(blocks), 'the Slack body carries no blocks');
+  return blocks;
+};
+const columnsOf = (body) => blocksOf(body).flatMap((block) => (block.fields ?? []).map(({ text }) => text));
+
 test('a refresh failure with no ledger creates one, delivers both channels and records the verdict', () =>
   inDirectory(async (dir) => {
     const { fetch, calls } = scripted(created(), answer(200, 'ok'));
@@ -101,12 +109,27 @@ test('a refresh failure with no ledger creates one, delivers both channels and r
     assert.deepEqual(result.err, []);
   }));
 
-test('a blank GITHUB_RUN_ID gives the run id local, and raiseOnRun returns the escalation', () =>
+test('a blank GITHUB_RUN_ID gives the ledger the run id local, and raiseOnRun returns the escalation', () =>
   inDirectory(async (dir) => {
     const { fetch } = scripted(created(), answer(200, 'ok'));
     const escalation = await raise(dir, { env: { ...ENV, GITHUB_RUN_ID: '  ' }, fetch });
     assert.equal(ledgerIn(dir).runId, 'local');
     assert.deepEqual(escalation, ledgerIn(dir).escalations[0]);
+  }));
+
+test('the Slack message of a refresh failure links the workflow run and the issue, and names no pull request', () =>
+  inDirectory(async (dir) => {
+    const { fetch, calls } = scripted(created(), answer(200, 'ok'));
+    await run(dir, { fetch });
+    assert.deepEqual(columnsOf(calls[1].body), [RUN_FIELD, ISSUE_FIELD]);
+  }));
+
+test('with no run named in the environment the Slack message links no run, whatever the ledger calls it', () =>
+  inDirectory(async (dir) => {
+    const { fetch, calls } = scripted(created(), answer(200, 'ok'));
+    await run(dir, { env: { ...ENV, GITHUB_RUN_ID: '  ' }, fetch });
+    assert.deepEqual(columnsOf(calls[1].body), [ISSUE_FIELD]);
+    assert.equal(calls[1].body.text.includes('actions/runs'), false);
   }));
 
 test('hard-stop needs only the issue', () =>
@@ -282,15 +305,21 @@ const LEAKY_ANSWERS = [
   [new Error('connect failed via ' + WEBHOOK + ' with ' + TOKEN), new Error('reset ' + TOKEN + ' ' + WEBHOOK)],
   [created(), answer(500, 'y'.repeat(190) + TOKEN + 'z'.repeat(50))],
 ];
-const SECRET_FRAGMENTS = [TOKEN, TOKEN.slice(0, 12), WEBHOOK, 'xoxSECRETpath', 'T0SECRET'];
+const SECRET_FRAGMENTS = [TOKEN, TOKEN.slice(0, 12), WEBHOOK, WEBHOOK_PATH, 'T0SECRET', 'B0SECRET', 'xoxSECRETpath'];
 
 for (const [index, answers] of LEAKY_ANSWERS.entries())
-  test('no secret reaches the ledger, stdout or stderr: scenario ' + (index + 1), () =>
+  test('no secret reaches the ledger, stdout, stderr or a posted body: scenario ' + (index + 1), () =>
     inDirectory(async (dir) => {
-      const { fetch } = scripted(...answers);
+      const { fetch, calls } = scripted(...answers);
       const result = await run(dir, { fetch });
       assert.equal(result.code, 1);
-      const everything = [readFileSync(join(dir, SLUG + '.json'), 'utf8'), ...result.out, ...result.err].join('\n');
+      const posted = calls.map(({ body }) => body);
+      assert.ok(
+        posted.some(({ blocks }) => blocks?.length > 0),
+        'no Slack message with blocks was posted'
+      );
+      const written = [readFileSync(join(dir, SLUG + '.json'), 'utf8'), ...result.out, ...result.err];
+      const everything = [...written, ...posted.map((body) => JSON.stringify(body))].join('\n');
       for (const fragment of SECRET_FRAGMENTS) assert.ok(!everything.includes(fragment), fragment);
     })
   );

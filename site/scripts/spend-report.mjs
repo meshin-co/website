@@ -1,17 +1,21 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 
-import { postSlackText } from './escalate-channels.mjs';
-import { describeDelivery, receiptOf, redactorFor } from './escalate.mjs';
+import { entryRoute } from './entry-files.mjs';
 import { provenanceOf } from './evidence-gate.mjs';
+import { pullRequestLink, runLink } from './github-links.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
+import { siteOrigin } from './links-gate.mjs';
 import { familyOf, recordFiles } from './record-layout.mjs';
 import { generatorRevision } from './report.mjs';
-import { ceilingStatus, monthLineOf } from './spend-ceiling.mjs';
+import { deliverNotice } from './slack-notice.mjs';
+import { ceilingStatus } from './spend-ceiling.mjs';
 import { corpusOf, reportModel } from './spend-report-model.mjs';
-import { REPORT_PATH, countText, reportText, slackMessage, stampedAt } from './spend-report-text.mjs';
+import { REPORT_PATH, countText, reportText, stampedAt } from './spend-report-text.mjs';
+import { spendMessage } from './spend-slack.mjs';
 
 const REPOSITORY_ROOT = resolve(import.meta.dirname, '..', '..');
+const SITE_CONFIG = join(import.meta.dirname, '..', 'src', 'config.yaml');
 const FLAGS = { write: ['repo-root'], notify: ['repo-root', 'result'] };
 const USAGE = [
   'Usage: node scripts/spend-report.mjs [write] [--repo-root <dir>]',
@@ -101,6 +105,17 @@ function slugsWritten(resultFile) {
   return slugs;
 }
 
+function entryAddresses(rows) {
+  const origin = siteOrigin(SITE_CONFIG).replace(/\/+$/, '');
+  return Object.fromEntries(rows.map(({ format, slug }) => [slug, `${origin}${entryRoute({ format, slug })}`]));
+}
+
+const linksOf = ({ rows, env }) => ({
+  run: runLink(env),
+  pullRequest: pullRequestLink(env, Number(env.PULL_REQUEST)),
+  entries: entryAddresses(rows),
+});
+
 async function notify({ repoRoot, resultFile, env, fetch, now, statusOf, stdout, stderr }) {
   const slugs = slugsWritten(resultFile);
   if (slugs.length === 0) {
@@ -115,16 +130,9 @@ async function notify({ repoRoot, resultFile, env, fetch, now, statusOf, stdout,
     stderr(`spend report: no generation record holds ${missing.join(', ')}, so no message was posted`);
     return 1;
   }
-  const text = slackMessage(model, rows, monthLineOf(statusOf({ repoRoot, now: instant })));
-  const clean = redactorFor(env);
-  const outcome = await postSlackText({ env, fetch, clean, text });
-  const receipt = receiptOf('slack', instant.toISOString(), outcome, clean);
-  const line = describeDelivery('spend report: slack', receipt);
-  if (!receipt.delivered) {
-    stderr(line);
-    return 1;
-  }
-  stdout(line);
+  const links = linksOf({ rows, env });
+  const message = spendMessage({ model, rows, status: statusOf({ repoRoot, now: instant }), links });
+  await deliverNotice({ label: 'spend report', message, env, fetch, instant, stdout, stderr });
   return 0;
 }
 

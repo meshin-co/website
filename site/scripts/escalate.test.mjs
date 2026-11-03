@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { test } from 'node:test';
 
-import { newLedger, readLedger, writeLedger } from './autowriter-ledger.mjs';
+import { IMMEDIATE_KINDS, newLedger, readLedger, writeLedger } from './autowriter-ledger.mjs';
 import {
   EscalationError,
   describeDelivery,
@@ -16,6 +16,7 @@ import {
   runCli,
 } from './escalate.mjs';
 import { autowriterAgent } from './site-brand.mjs';
+import { blockKitProblems } from './fixtures/block-kit.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
 const TOKEN = 'ghp_SECRETtokenVALUE0123456789';
@@ -33,6 +34,11 @@ const NOW = () => new Date('2026-11-02T10:00:00.000Z');
 const TITLE = 'Spend ceiling reached';
 const DETAIL = 'Monthly spend is 25.10 USD.';
 const ISSUE_URL = 'https://github.test/meshin-co/website/issues/12';
+const PULL_REQUEST_LINE = 'Pull request: <https://github.test/meshin-co/website/pull/12|#12>';
+const RUN_LINE = 'Workflow run: <https://github.test/meshin-co/website/actions/runs/777|run 777>';
+const ISSUE_LINE = `Issue: <${ISSUE_URL}|#12>`;
+const RUN_FIELD = '*Workflow run*\n<https://github.test/meshin-co/website/actions/runs/777|run 777>';
+const ISSUE_FIELD = `*Issue*\n<${ISSUE_URL}|#12>`;
 const NOT_SET = {
   token: 'GITHUB_TOKEN is not set; pass a token with Issues: write in the workflow env',
   repository: 'GITHUB_REPOSITORY is not set; pass owner/name in the workflow env',
@@ -69,14 +75,32 @@ async function withLedger(run, edit = () => {}) {
   }
 }
 
-const raise = (path, { kind = 'credential', env = ENV, fetch, title = TITLE, detail = DETAIL } = {}) =>
-  escalate({ ledgerPath: path, kind, title, detail, env, fetch, now: NOW });
+const withoutPullRequest = (ledger) => {
+  ledger.pullRequest = null;
+};
+
+const raise = (path, { kind = 'credential', env = ENV, fetch, title = TITLE, detail = DETAIL, pullRequest } = {}) =>
+  escalate({ ledgerPath: path, kind, title, detail, pullRequest, env, fetch, now: NOW });
 const failure = (promise) =>
   promise.then(
     () => assert.fail('expected EscalationError'),
     (error) => error
   );
 const stored = (path) => readLedger(path).escalations;
+
+function slackText(path, ...links) {
+  return ['Autowriter escalation (credential): ' + TITLE, DETAIL, ...links, 'Ledger: ' + path].join('\n');
+}
+
+const header = (text) => ({ type: 'header', text: { type: 'plain_text', text } });
+const prose = (text) => ({ type: 'section', text: { type: 'mrkdwn', text } });
+const small = (...texts) => ({ type: 'context', elements: texts.map((text) => ({ type: 'mrkdwn', text })) });
+
+const blocksOf = ({ blocks }) => {
+  assert.ok(Array.isArray(blocks), 'the Slack body carries no blocks');
+  return blocks;
+};
+const columnsOf = (body) => blocksOf(body).flatMap((block) => (block.fields ?? []).map(({ text }) => text));
 
 test('both channels delivered: exact requests and receipts on disk', () =>
   withLedger(async ({ path }) => {
@@ -103,10 +127,7 @@ test('both channels delivered: exact requests and receipts on disk', () =>
     assert.equal(calls[1].url, WEBHOOK);
     assert.equal(calls[1].method, 'POST');
     assert.deepEqual(calls[1].headers, { 'Content-Type': 'application/json' });
-    assert.deepEqual(calls[1].body, {
-      text:
-        'Autowriter escalation (credential): ' + TITLE + '\n' + DETAIL + '\nLedger: ' + path + '\nIssue: ' + ISSUE_URL,
-    });
+    assert.deepEqual(Object.keys(calls[1].body).toSorted(), ['blocks', 'text']);
     const receipts = [
       {
         channel: 'issue',
@@ -131,22 +152,95 @@ test('both channels delivered: exact requests and receipts on disk', () =>
     ]);
   }));
 
+test('the fallback text of the Slack message is the title, the detail, the links and the ledger, a line each', () =>
+  withLedger(async ({ path }) => {
+    const { fetch, calls } = scripted(created(), answer(200, 'ok'));
+    await raise(path, { fetch });
+    assert.equal(calls[1].body.text, slackText(path, PULL_REQUEST_LINE, RUN_LINE, ISSUE_LINE));
+  }));
+
+test('the Slack message of an escalation is a payload Slack accepts', () =>
+  withLedger(async ({ path }) => {
+    const { fetch, calls } = scripted(created(), answer(200, 'ok'));
+    await raise(path, { fetch });
+    assert.deepEqual(blockKitProblems(calls[1].body), []);
+  }));
+
+for (const kind of IMMEDIATE_KINDS) {
+  test(`the blocks of the Slack message of a ${kind} escalation open with the kind, bold the title and close with the ledger`, () =>
+    withLedger(async ({ path }) => {
+      const { fetch, calls } = scripted(created(), answer(200, 'ok'));
+      await raise(path, { kind, fetch });
+      const blocks = blocksOf(calls[1].body);
+      const footer = small(`Escalation esc-1 (${kind}), raised 2026-11-02T10:00:00.000Z`, `Ledger \`${path}\``);
+      assert.deepEqual(blocks[0], header(`Autowriter escalation: ${kind}`));
+      assert.deepEqual(blocks[1], prose(`*${TITLE}*`));
+      assert.deepEqual(blocks.at(-1), footer);
+    }));
+}
+
+test('a pull request the caller names is linked in Slack ahead of the one the ledger holds', () =>
+  withLedger(async ({ path }) => {
+    const { fetch, calls } = scripted(created(), answer(200, 'ok'));
+    await raise(path, { pullRequest: 84, fetch });
+    const [first] = columnsOf(calls[1].body);
+    assert.equal(first, '*Pull request*\n<https://github.test/meshin-co/website/pull/84|#84>');
+    assert.equal(JSON.stringify(calls[1].body).includes('pull/12'), false);
+  }));
+
+test('a pull request that neither the caller nor the ledger names is not mentioned in Slack', () =>
+  withLedger(async ({ path }) => {
+    const { fetch, calls } = scripted(created(), answer(200, 'ok'));
+    await raise(path, { fetch });
+    assert.equal(calls[1].body.text.includes('Pull request'), false);
+    assert.deepEqual(columnsOf(calls[1].body), [RUN_FIELD, ISSUE_FIELD]);
+  }, withoutPullRequest));
+
+test('a pull request the detail already names is a link there and is not repeated as a column or a line', () =>
+  withLedger(async ({ path }) => {
+    const detail = DETAIL + '\nPull request: https://github.test/meshin-co/website/pull/84';
+    const { fetch, calls } = scripted(created(), answer(200, 'ok'));
+    await raise(path, { pullRequest: 84, detail, fetch });
+    const { text } = calls[1].body;
+    assert.equal(text.match(/pull\/84/g).length, 1);
+    assert.ok(text.includes('\nPull request: <https://github.test/meshin-co/website/pull/84|#84>\n'));
+    assert.deepEqual(columnsOf(calls[1].body), [RUN_FIELD, ISSUE_FIELD]);
+  }));
+
+test('an issue GitHub answered without an address is its number alone when the environment names no server', () =>
+  withLedger(async ({ path }) => {
+    const { fetch, calls } = scripted(answer(201, { number: 12 }), answer(200, 'ok'));
+    await raise(path, { env: without('GITHUB_SERVER_URL', 'GITHUB_RUN_ID'), fetch });
+    assert.deepEqual(columnsOf(calls[1].body), ['*Issue*\n#12']);
+    assert.equal(calls[1].body.text, slackText(path, 'Issue: #12'));
+  }, withoutPullRequest));
+
+test('with another server named, no posted body mentions github.com and every link is on that server', () =>
+  withLedger(async ({ path }) => {
+    const server = 'https://git.example.org';
+    const issue = answer(201, { number: 12, html_url: server + '/meshin-co/website/issues/12' });
+    const { fetch, calls } = scripted(issue, answer(200, 'ok'));
+    await raise(path, { env: { ...ENV, GITHUB_SERVER_URL: server }, fetch });
+    for (const { body } of calls) assert.equal(JSON.stringify(body).includes('github.com'), false);
+    const columns = [
+      '*Pull request*\n<' + server + '/meshin-co/website/pull/12|#12>',
+      '*Workflow run*\n<' + server + '/meshin-co/website/actions/runs/777|run 777>',
+      '*Issue*\n<' + server + '/meshin-co/website/issues/12|#12>',
+    ];
+    assert.deepEqual(columnsOf(calls[1].body), columns);
+  }));
+
 test('GITHUB_API_URL redirects the issue request and a ledger without a pull request omits the line', () =>
-  withLedger(
-    async ({ path }) => {
-      const { fetch, calls } = scripted(created());
-      await raise(path, {
-        kind: 'hard-stop',
-        env: { ...without('GITHUB_RUN_ID'), GITHUB_API_URL: 'https://api.github.test' },
-        fetch,
-      });
-      assert.equal(calls[0].url, 'https://api.github.test/repos/meshin-co/website/issues');
-      assert.equal(calls[0].body.body, DETAIL + '\n\n---\nKind: hard-stop\nLedger: ' + path + '\nSlug: post-one');
-    },
-    (ledger) => {
-      ledger.pullRequest = null;
-    }
-  ));
+  withLedger(async ({ path }) => {
+    const { fetch, calls } = scripted(created());
+    await raise(path, {
+      kind: 'hard-stop',
+      env: { ...without('GITHUB_RUN_ID'), GITHUB_API_URL: 'https://api.github.test' },
+      fetch,
+    });
+    assert.equal(calls[0].url, 'https://api.github.test/repos/meshin-co/website/issues');
+    assert.equal(calls[0].body.body, DETAIL + '\n\n---\nKind: hard-stop\nLedger: ' + path + '\nSlug: post-one');
+  }, withoutPullRequest));
 
 test('missing webhook secret: issue delivered, failed Slack receipt recorded, EscalationError thrown', () =>
   withLedger(async ({ path }) => {
@@ -178,10 +272,7 @@ test('missing token and missing repository: no GitHub request, Slack still attem
       first.calls.map(({ url }) => url),
       [WEBHOOK]
     );
-    assert.equal(
-      first.calls[0].body.text,
-      'Autowriter escalation (credential): ' + TITLE + '\n' + DETAIL + '\nLedger: ' + path
-    );
+    assert.equal(first.calls[0].body.text, slackText(path, PULL_REQUEST_LINE, RUN_LINE));
     assert.equal(noToken.escalation.receipts[0].error, NOT_SET.token);
     const second = scripted(answer(200, 'ok'));
     const noRepository = await failure(raise(path, { env: without('GITHUB_REPOSITORY'), fetch: second.fetch }));
@@ -213,6 +304,7 @@ test('GitHub 403 with a JSON message records the message and Slack is still atte
       error: 'GitHub answered HTTP 403: Resource not accessible by integration',
     });
     assert.ok(!calls[1].body.text.includes('Issue:'));
+    assert.ok(!columnsOf(calls[1].body).some((column) => column.startsWith('*Issue*')));
   }));
 
 test('GitHub failures without a JSON message use the first 200 characters, one line', () =>
@@ -328,7 +420,7 @@ test('redeliver retries only the undelivered channel, appends receipts, and a se
       retry.calls.map(({ url }) => url),
       [WEBHOOK]
     );
-    assert.equal(retry.calls[0].body.text.split('\n').at(-1), 'Issue: ' + ISSUE_URL);
+    assert.deepEqual(retry.calls[0].body.text.split('\n').slice(-2), [ISSUE_LINE, 'Ledger: ' + path]);
     assert.deepEqual(
       escalation.receipts.map(({ channel, delivered }) => [channel, delivered]),
       [
@@ -385,20 +477,28 @@ const leakyAnswers = () => [
   [answer(500, 'y'.repeat(190) + TOKEN + 'z'.repeat(50)), answer(500, WEBHOOK)],
 ];
 const RAISE_ARGS = (path) => ['raise', '--ledger', path, '--kind', 'credential', '--title', TITLE, '--detail', DETAIL];
-const SECRET_FRAGMENTS = [TOKEN, TOKEN.slice(0, 12), WEBHOOK, 'xoxSECRETpath', 'T0SECRET'];
+const SECRET_FRAGMENTS = [TOKEN, TOKEN.slice(0, 12), WEBHOOK, WEBHOOK_PATH, 'T0SECRET', 'B0SECRET', 'xoxSECRETpath'];
 
-test('secrets never reach the ledger, a receipt, an error message or the CLI output', () =>
+test('secrets never reach the ledger, a receipt, an error message, the CLI output or a posted body', () =>
   withLedger(async ({ path }) => {
     const seen = [];
+    const posted = [];
     for (const index of [0, 1, 2]) {
-      const error = await failure(raise(path, { fetch: scripted(...leakyAnswers()[index]).fetch }));
+      const raising = scripted(...leakyAnswers()[index]);
+      const error = await failure(raise(path, { fetch: raising.fetch }));
       seen.push(error.message, JSON.stringify(error.escalation));
       const lines = [];
-      const io = { env: ENV, fetch: scripted(...leakyAnswers()[index]).fetch, now: NOW };
+      const running = scripted(...leakyAnswers()[index]);
+      const io = { env: ENV, fetch: running.fetch, now: NOW };
       await runCli(RAISE_ARGS(path), { ...io, stdout: (line) => lines.push(line), stderr: (line) => lines.push(line) });
       seen.push(...lines);
+      posted.push(...raising.calls, ...running.calls);
     }
-    seen.push(readFileSync(path, 'utf8'));
+    assert.ok(
+      posted.some(({ body }) => body.blocks?.length > 0),
+      'no Slack message with blocks was posted'
+    );
+    seen.push(readFileSync(path, 'utf8'), ...posted.map(({ body }) => JSON.stringify(body)));
     const everything = seen.join('\n');
     for (const fragment of SECRET_FRAGMENTS) assert.ok(!everything.includes(fragment), fragment + ' leaked');
     assert.ok(everything.includes('[GITHUB_TOKEN]'));

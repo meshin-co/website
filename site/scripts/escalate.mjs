@@ -84,13 +84,14 @@ function earlierIssue(escalation) {
   return receipt ? { number: receipt.issue, url: null } : null;
 }
 
-const contextFor = ({ ledger, ledgerPath, escalation, env, fetch, now }) => ({
+const contextFor = ({ ledger, ledgerPath, escalation, env, fetch, now, pullRequest = null }) => ({
   ledger,
   ledgerPath,
   escalation,
   env,
   fetch,
   now,
+  pullRequest,
   clean: redactorFor(env),
   issue: earlierIssue(escalation),
 });
@@ -104,6 +105,7 @@ export async function escalate({
   kind,
   title,
   detail,
+  pullRequest = null,
   env = process.env,
   fetch = globalThis.fetch,
   now = () => new Date(),
@@ -120,7 +122,10 @@ export async function escalate({
     raisedAt: now().toISOString(),
     receipts: [],
   };
-  escalation.receipts = await attempt(channels, contextFor({ ledger, ledgerPath, escalation, env, fetch, now }));
+  escalation.receipts = await attempt(
+    channels,
+    contextFor({ ledger, ledgerPath, escalation, env, fetch, now, pullRequest })
+  );
   ledger.escalations.push(escalation);
   writeLedger(ledgerPath, ledger);
   return conclude(escalation);

@@ -5,6 +5,8 @@ import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 
 import { newLedger } from './autowriter-ledger.mjs';
+import { entryRoute } from './entry-files.mjs';
+import { blockKitProblems } from './fixtures/block-kit.mjs';
 import {
   GENERATED_AT,
   filesOf,
@@ -13,12 +15,15 @@ import {
   recordOf,
   writingCall,
 } from './fixtures/spend-report-corpus.mjs';
+import { siteOrigin } from './links-gate.mjs';
+import { SITE_CONFIG } from './site-brand.mjs';
 import { corpusFiles, runCli, spendReportFile } from './spend-report.mjs';
-import { corpusOf, reportModel } from './spend-report-model.mjs';
-import { REPORT_PATH, monthLine, reportText, slackMessage } from './spend-report-text.mjs';
+import { REPORT_PATH, monthLine, reportText } from './spend-report-text.mjs';
 
 const WEBHOOK_PATH = '/services/T0SECRET/B0SECRET/xoxSECRETpath';
 const WEBHOOK = `https://hooks.slack.test${WEBHOOK_PATH}`;
+const TOKEN = 'ghp_SECRETtokenVALUE0123456789';
+const SECRETS = /xoxSECRET|T0SECRET|hooks\.slack|ghp_SECRET/;
 const NEWEST = '2026-11-02T07:00:00.000Z';
 const TERM_AT = '2026-11-02T07:00:01.000Z';
 const SHIPPED_STATUS = { month: '2026-11', spentMicro: 62_000, ceilingUsd: 25 };
@@ -250,38 +255,110 @@ const notify = (repo, result, options) => {
   }));
 };
 
-test('notify posts one message built from the records of the entries just written, and says it was delivered', () =>
+const ORIGIN = siteOrigin(SITE_CONFIG);
+const WORKFLOW_ENV = {
+  GITHUB_SERVER_URL: 'https://github.test',
+  GITHUB_REPOSITORY: 'o/r',
+  GITHUB_RUN_ID: '777',
+  PULL_REQUEST: '84',
+  SLACK_WEBHOOK_URL: WEBHOOK,
+};
+const PULL_REQUEST_LINK = '<https://github.test/o/r/pull/84|#84>';
+const RUN_LINK = '<https://github.test/o/r/actions/runs/777|run 777>';
+const ENTRY_ADDRESSES = [
+  `${ORIGIN}${entryRoute({ format: 'article', slug: 'a-post' })}`,
+  `${ORIGIN}${entryRoute({ format: 'term', slug: 'a-term' })}`,
+];
+const ENTRY_LINKS = [`<${ENTRY_ADDRESSES[0]}|a-post>`, `<${ENTRY_ADDRESSES[1]}|a-term>`];
+const HEADER = { type: 'header', text: { type: 'plain_text', text: '2026-11 spend against the monthly ceiling' } };
+const WARNING = '::warning::spend report: slack NOT delivered:';
+
+const linksOf = (text) => [...text.matchAll(/<(https?:\/\/[^|>]+)\|/g)].map(([, address]) => address);
+const addressesIn = (text) => [...new Set(linksOf(text))];
+const labelled = (text) => text.replaceAll(/<[^|>]+\|([^>]*)>/g, '$1');
+
+test('notify posts one message of text and blocks that Slack accepts, and says it was delivered', () =>
   withRepo(async (repo) => {
     shipped(repo);
     const { code, requests, out, err } = await notify(repo, entriesOf('a-post', 'a-term'));
     assert.equal(code, 0);
     assert.equal(requests.length, 1);
     assert.equal(requests[0].url, WEBHOOK);
-    const { text } = requests[0].body;
-    assert.deepEqual(Object.keys(requests[0].body), ['text']);
-    assert.ok(
-      text.startsWith(
-        'This entry\narticle a-post: 25,000 input tokens, 5,000 output tokens, 0.05 USD\nterm a-term: 6,000 input tokens, 1,200 output tokens, 0.012 USD\n\n' +
-          SHIPPED_MONTH_LINE +
-          '\n\nLast 30 days, to 2026-11-02T07:00:01.000Z\n'
-      ),
-      text
-    );
-    const model = reportModel(corpusOf(corpusFiles(repo.root)), { at: GENERATED_AT });
-    assert.equal(text, slackMessage(model, model.newestRun, SHIPPED_MONTH_LINE));
+    assert.deepEqual(blockKitProblems(requests[0].body), []);
     assert.deepEqual(out, ['spend report: slack delivered (HTTP 200)']);
     assert.deepEqual(err, []);
+  }));
+
+test('the message of notify opens with the month against the ceiling: the header names the month and the text opens with its sentence', () =>
+  withRepo(async (repo) => {
+    shipped(repo);
+    const { requests } = await notify(repo, entriesOf('a-post', 'a-term'));
+    const { text, blocks } = requests[0].body;
+    assert.deepEqual(blocks[0], HEADER);
+    assert.equal(text.split('\n')[0], SHIPPED_MONTH_LINE);
   }));
 
 test('notify reports the entries named in the write result and no others', () =>
   withRepo(async (repo) => {
     shipped(repo);
     const { requests } = await notify(repo, entriesOf('a-post'));
-    const lines = requests[0].body.text.split('\n');
-    assert.equal(lines[1], 'article a-post: 25,000 input tokens, 5,000 output tokens, 0.05 USD');
-    assert.equal(lines[2], '');
-    assert.match(requests[0].body.text, /\nall: 2 entries, 31,000 input tokens, 6,200 output tokens, 0\.062 USD\n/);
-    assert.equal(requests[0].body.text.split('\n\n')[0].includes('a-term'), false);
+    const { text, blocks } = requests[0].body;
+    const entries = text.split('\n\n').find((chunk) => chunk.startsWith('This entry'));
+    assert.deepEqual(labelled(entries).split('\n'), [
+      'This entry',
+      'article a-post: 25,000 input tokens, 5,000 output tokens, 0.05 USD',
+    ]);
+    assert.match(text, /\nall: 2 entries, 31,000 input tokens, 6,200 output tokens, 0\.062 USD\n/);
+    assert.doesNotMatch(JSON.stringify(blocks), /a-term/);
+  }));
+
+test('with the environment of the workflow the pull request and the workflow run are links, in the text and in the blocks', () =>
+  withRepo(async (repo) => {
+    shipped(repo);
+    const { requests } = await notify(repo, entriesOf('a-post', 'a-term'), { env: WORKFLOW_ENV });
+    const { text, blocks } = requests[0].body;
+    for (const link of [PULL_REQUEST_LINK, RUN_LINK]) {
+      assert.ok(text.includes(link), `the text lacks ${link}`);
+      assert.ok(JSON.stringify(blocks).includes(link), `the blocks lack ${link}`);
+    }
+  }));
+
+test('each entry is a link to its page on the site, at the origin of the site configuration and the route of its format', () =>
+  withRepo(async (repo) => {
+    shipped(repo);
+    const { requests } = await notify(repo, entriesOf('a-post', 'a-term'), { env: WORKFLOW_ENV });
+    const { text, blocks } = requests[0].body;
+    for (const link of ENTRY_LINKS) {
+      assert.ok(text.includes(link), `the text lacks ${link}`);
+      assert.ok(JSON.stringify(blocks).includes(link), `the blocks lack ${link}`);
+    }
+  }));
+
+test('with no server, repository, run or pull request named the only links are the entries, and no column is left for the others', () =>
+  withRepo(async (repo) => {
+    shipped(repo);
+    const { requests } = await notify(repo, entriesOf('a-post', 'a-term'));
+    const { text, blocks } = requests[0].body;
+    assert.deepEqual(addressesIn(text), ENTRY_ADDRESSES);
+    assert.deepEqual(addressesIn(JSON.stringify(blocks)), ENTRY_ADDRESSES);
+    assert.doesNotMatch(text, /Pull request|Workflow run/);
+    assert.deepEqual(
+      blocks.filter((block) => block.fields !== undefined),
+      []
+    );
+  }));
+
+test('a pull request number that is not a positive integer gives no pull request link, and the run keeps its own', () =>
+  withRepo(async (repo) => {
+    shipped(repo);
+    for (const number of [undefined, 'abc', '0', '-3', '1.5', '']) {
+      const env = { ...WORKFLOW_ENV, PULL_REQUEST: number };
+      const { requests } = await notify(repo, entriesOf('a-post'), { env });
+      const { text, blocks } = requests[0].body;
+      assert.ok(text.includes(RUN_LINK), String(number));
+      assert.doesNotMatch(text, /Pull request|\/pull\//, String(number));
+      assert.doesNotMatch(JSON.stringify(blocks), /Pull request|\/pull\//, String(number));
+    }
   }));
 
 test('notify posts nothing and exits 0 when the write produced no entry', () =>
@@ -323,42 +400,38 @@ test('notify refuses a result that is not a successful write, and posts nothing'
     }
   }));
 
-test('a refused message exits 1 with one line of status and reason, and removes the webhook from it', () =>
+test('a refused message is a warning and not a failed run: exit 0, one line on stderr, nothing on stdout, no webhook in it', () =>
   withRepo(async (repo) => {
     shipped(repo);
     const answer = () => new Response(`invalid_token for ${WEBHOOK}`, { status: 404 });
     const { code, out, err, printed } = await notify(repo, entriesOf('a-post'), { answer });
-    assert.equal(code, 1);
+    assert.equal(code, 0);
     assert.deepEqual(out, []);
-    assert.deepEqual(err, [
-      'spend report: slack NOT delivered: Slack answered HTTP 404: invalid_token for [SLACK_WEBHOOK_URL]',
-    ]);
-    assert.doesNotMatch(printed(), /xoxSECRET|T0SECRET|hooks\.slack\.test/);
+    assert.deepEqual(err, [`${WARNING} Slack answered HTTP 404: invalid_token for [SLACK_WEBHOOK_URL]`]);
+    assert.doesNotMatch(printed(), SECRETS);
   }));
 
-test('a request that fails exits 1 with its reason and removes the webhook from it', () =>
+test('a request that fails is a warning and not a failed run, with its reason and without the webhook', () =>
   withRepo(async (repo) => {
     shipped(repo);
     const answer = () => {
       throw new Error(`getaddrinfo ENOTFOUND while posting to ${WEBHOOK}`);
     };
-    const { code, err, printed } = await notify(repo, entriesOf('a-post'), { answer });
-    assert.equal(code, 1);
-    assert.deepEqual(err, [
-      'spend report: slack NOT delivered: request failed: getaddrinfo ENOTFOUND while posting to [SLACK_WEBHOOK_URL]',
-    ]);
-    assert.doesNotMatch(printed(), /xoxSECRET|T0SECRET|hooks\.slack\.test/);
+    const { code, out, err, printed } = await notify(repo, entriesOf('a-post'), { answer });
+    assert.equal(code, 0);
+    assert.deepEqual(out, []);
+    assert.deepEqual(err, [`${WARNING} request failed: getaddrinfo ENOTFOUND while posting to [SLACK_WEBHOOK_URL]`]);
+    assert.doesNotMatch(printed(), SECRETS);
   }));
 
-test('with no webhook set nothing is sent and the missing secret is named, as an escalation names it', () =>
+test('with no webhook set nothing is sent and the missing secret is named in a warning, as an escalation names it', () =>
   withRepo(async (repo) => {
     shipped(repo);
-    const { code, requests, err } = await notify(repo, entriesOf('a-post'), { env: {} });
-    assert.equal(code, 1);
+    const { code, requests, out, err } = await notify(repo, entriesOf('a-post'), { env: {} });
+    assert.equal(code, 0);
     assert.deepEqual(requests, []);
-    assert.deepEqual(err, [
-      'spend report: slack NOT delivered: SLACK_WEBHOOK_URL is not set; create the repository secret of that name',
-    ]);
+    assert.deepEqual(out, []);
+    assert.deepEqual(err, [`${WARNING} SLACK_WEBHOOK_URL is not set; create the repository secret of that name`]);
   }));
 
 test('a missed message does nothing else: one request, to Slack only, and no file is written or changed', () =>
@@ -380,13 +453,20 @@ test('a missed message does nothing else: one request, to Slack only, and no fil
     );
   }));
 
-test('the posted body and every printed line are free of the webhook, on every path', () =>
+test('the posted message and every printed line are free of the webhook and the token, whether Slack takes it, refuses it or cannot be reached', () =>
   withRepo(async (repo) => {
     shipped(repo);
-    for (const answer of [undefined, () => new Response(WEBHOOK, { status: 500 })]) {
-      const { requests, printed } = await notify(repo, entriesOf('a-post', 'a-term'), { answer });
-      assert.doesNotMatch(JSON.stringify(requests.map(({ body }) => body)), /xoxSECRET|T0SECRET|hooks\.slack/);
-      assert.doesNotMatch(printed(), /xoxSECRET|T0SECRET|hooks\.slack\.test/);
+    const env = { ...WORKFLOW_ENV, GITHUB_TOKEN: TOKEN };
+    const refusing = () => new Response(`${WEBHOOK} ${TOKEN}`, { status: 500 });
+    const failing = () => {
+      throw new Error(`socket closed while posting to ${WEBHOOK} with ${TOKEN}`);
+    };
+    for (const answer of [undefined, refusing, failing]) {
+      const { requests, printed } = await notify(repo, entriesOf('a-post', 'a-term'), { env, answer });
+      assert.equal(requests.length, 1);
+      assert.ok(requests[0].body.blocks.length > 0);
+      assert.doesNotMatch(JSON.stringify(requests[0].body), SECRETS);
+      assert.doesNotMatch(printed(), SECRETS);
     }
   }));
 
@@ -449,7 +529,7 @@ test('the files being written are counted, and the model comes back with the ins
     assert.equal(made.text.split('\n')[3], `Generated-at: ${STAMPED_AT}`);
   }));
 
-test('the message of notify carries the month line of the ceiling status, between the entries and the windows', () =>
+test('the month of the message of notify is the ceiling status, asked for with the repository and the clock', () =>
   withRepo(async (repo) => {
     shipped(repo);
     const run = harness();
@@ -468,9 +548,8 @@ test('the message of notify carries the month line of the ceiling status, betwee
     );
     assert.equal(code, 0, run.printed());
     assert.deepEqual(asked, [{ repoRoot: repo.root, now: new Date(STAMPED_AT) }]);
-    const blocks = run.requests[0].body.text.split('\n\n');
-    assert.equal(blocks[1], monthLine({ month: '2026-11', spentMicro: 3_500_000, ceilingMicro: 25_000_000 }));
-    assert.match(blocks[3], /^Everything paid for: /m);
+    const { text } = run.requests[0].body;
+    assert.equal(text.split('\n')[0], monthLine({ month: '2026-11', spentMicro: 3_500_000, ceilingMicro: 25_000_000 }));
   }));
 
 test('when the ceiling status cannot be read nothing is posted, and the run fails with the reason', () =>

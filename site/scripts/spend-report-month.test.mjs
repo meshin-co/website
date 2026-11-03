@@ -22,7 +22,8 @@ import {
 import { headingsOf, itemsOf, proseOf, tablesOf } from './fixtures/markdown-sections.mjs';
 import { ledgerWithGeneration } from './generation-record.mjs';
 import { corpusOf, reportModel } from './spend-report-model.mjs';
-import { monthLine, reportMarkdown, reportText, slackMessage, stampedAt } from './spend-report-text.mjs';
+import { monthLine, reportMarkdown, reportText, stampedAt } from './spend-report-text.mjs';
+import { spendMessage } from './spend-slack.mjs';
 
 const CEILING = 25_000_000;
 const NEWEST = '2026-11-02T07:00:00.000Z';
@@ -306,53 +307,80 @@ test('the introduction says the file reads the clock once and stamps it, not tha
   );
 });
 
-const messageFor = (parts, line = NOVEMBER_LINE) => {
-  const model = modelAt(parts);
-  return slackMessage(model, model.newestRun, line);
-};
+const NOVEMBER_STATUS = { month: '2026-11', spentMicro: 92_000, ceilingUsd: CEILING / 1_000_000 };
+const NO_LINKS = { run: null, pullRequest: null, entries: {} };
+const ZERO_WARNINGS =
+  'Warnings: 0 (every ledger agrees with its generation record; this does not say that every run produced an entry)';
+const MISMATCH =
+  "a-post: its generation record's writing calls cost 0.05 USD but its ledger records 0.001 USD for the generation, so the record cost is counted";
 
-test('the message carries the month line the file carries, word for word, between this entry and the windows', () => {
-  const blocks = messageFor(NOVEMBER).split('\n\n');
-  assert.equal(blocks[1], NOVEMBER_LINE);
-  assert.ok(blocks[0].startsWith('This entry'));
-  assert.ok(blocks[2].startsWith('Last 30 days'));
+const messageOf = (model) => spendMessage({ model, rows: model.newestRun, status: NOVEMBER_STATUS, links: NO_LINKS });
+const warningBlocks = (blocks) => blocks.filter((block) => JSON.stringify(block).includes('Warnings'));
+const lastChunk = (text) => text.split('\n\n').at(-1);
+const prose = (text) => ({ type: 'section', text: { type: 'mrkdwn', text } });
+const small = (text) => ({ type: 'context', elements: [{ type: 'mrkdwn', text }] });
+
+test('the text of the message opens with the month line the file carries, word for word', () => {
+  assert.equal(messageOf(modelAt(NOVEMBER)).text.split('\n')[0], NOVEMBER_LINE);
   assert.ok(reportMarkdown(modelAt(NOVEMBER)).includes(NOVEMBER_LINE));
 });
 
-test('the message names everything paid for after the all-time figures, labelled', () => {
-  const blocks = messageFor(BOTH_MONTHS).split('\n\n');
+test('the blocks of the message open with the month: a header that names it, then its figures in a fixed-width block', () => {
+  const { blocks } = messageOf(modelAt(NOVEMBER));
+  assert.deepEqual(blocks[0], {
+    type: 'header',
+    text: { type: 'plain_text', text: '2026-11 spend against the monthly ceiling' },
+  });
+  assert.match(blocks[1].text.text, /^```\n +USD\nSpent +0\.092\nCeiling +25\.00\nLeft +24\.908\n```$/);
+});
+
+test('the text of the message names everything paid for after the all-time figures, labelled', () => {
+  const { text } = messageOf(modelAt(BOTH_MONTHS));
+  const allTime = text.split('\n\n').find((chunk) => chunk.startsWith('All time'));
   assert.equal(
-    blocks[3].split('\n').at(-1),
+    allTime.split('\n').at(-1),
     'Everything paid for: 0.119 USD, of which writing calls 0.077 USD, repair calls 0.015 USD, runs that ended with no entry 0.027 USD and spend with no generation record 0.00 USD.'
   );
 });
 
-test('the message needs the month line and refuses to go without one', () => {
+test('the blocks of the message hold everything paid for in a fixed-width block: the four kinds and their sum', () => {
+  const { blocks } = messageOf(modelAt(BOTH_MONTHS));
+  const paid = blocks.find((block) => block.text?.text.startsWith('*Everything paid for*'));
+  assert.match(
+    paid.text.text,
+    /^\*Everything paid for\*\n```\n +USD\nWriting calls +0\.077\nRepair calls +0\.015\nEnded with no entry +0\.027\nNo generation record +0\.00\nEverything paid for +0\.119\n```$/
+  );
+});
+
+test('the message needs the ceiling status and refuses to go without one', () => {
   const model = modelAt(NOVEMBER);
-  assert.throws(() => slackMessage(model, model.newestRun), /month line/);
-  assert.throws(() => slackMessage(model, model.newestRun, ''), /month line/);
+  assert.throws(() => spendMessage({ model, rows: model.newestRun, links: NO_LINKS }), /ceiling status/);
+  assert.throws(() => spendMessage({ model, rows: model.newestRun, status: {}, links: NO_LINKS }), /ceiling status/);
 });
 
-test('with no warning the message says what zero means: every ledger agrees with its record, and nothing about runs', () => {
-  const lines = messageFor(NOVEMBER).split('\n\n').at(-1).split('\n');
-  assert.deepEqual(lines, [
-    'Warnings: 0 (every ledger agrees with its generation record; this does not say that every run produced an entry)',
-  ]);
+test('with no warning the message says what zero means in a quiet line: every ledger agrees with its record, and nothing about runs', () => {
+  const { blocks, text } = messageOf(modelAt(NOVEMBER));
+  assert.deepEqual(warningBlocks(blocks), [small(ZERO_WARNINGS)]);
+  assert.equal(lastChunk(text), ZERO_WARNINGS);
 });
 
-test('with a warning the message counts it, says a person has something to do, and carries it', () => {
+test('with a warning the message counts it, says a person has something to do, and carries it in a section', () => {
   const low = ledgerWithGeneration(newLedger({ slug: 'a-post', runId: 'run-1', pullRequest: null }), {
     tokens: { input: 1, output: 1 },
     costUsd: 0.001,
   });
-  const lines = messageFor({ ledgers: [low], records: [plainPost] })
-    .split('\n\n')
-    .at(-1)
-    .split('\n');
-  assert.deepEqual(lines, [
-    'Warnings: 1 (each needs a person to look at it)',
-    "a-post: its generation record's writing calls cost 0.05 USD but its ledger records 0.001 USD for the generation, so the record cost is counted",
+  const { blocks, text } = messageOf(modelAt({ ledgers: [low], records: [plainPost] }));
+  assert.deepEqual(warningBlocks(blocks), [prose(`*Warnings: 1* (each needs a person to look at it)\n• ${MISMATCH}`)]);
+  assert.equal(lastChunk(text), `Warnings: 1 (each needs a person to look at it)\n${MISMATCH}`);
+});
+
+test('exactly three warnings are all listed, with no line counting the rest', () => {
+  const warnings = ['one', 'two', 'three'].map((name) => `lost-${name}: needs a person`);
+  const { blocks, text } = messageOf({ ...modelAt(NOVEMBER), warnings });
+  assert.deepEqual(warningBlocks(blocks), [
+    prose(`*Warnings: 3* (each needs a person to look at it)\n• ${warnings.join('\n• ')}`),
   ]);
+  assert.equal(lastChunk(text), `Warnings: 3 (each needs a person to look at it)\n${warnings.join('\n')}`);
 });
 
 const FILES = filesOf(NOVEMBER);

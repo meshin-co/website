@@ -8,12 +8,17 @@ import { recordPath } from './record-layout.mjs';
 import { LEDGER_FILINGS } from './fixtures/github-fake.mjs';
 import { siteBrand } from './site-brand.mjs';
 import { scenario } from './fixtures/pr-watch.mjs';
+import { blockKitProblems } from './fixtures/block-kit.mjs';
 import {
+  DEFAULT_TOKEN,
+  PAT,
+  WEBHOOK,
   green,
   harness,
   callOf,
   ledgerRecord,
   readJson,
+  slackMessageOf,
   spentAttempts,
   writtenNames,
 } from './fixtures/pr-watch-harness.mjs';
@@ -42,7 +47,60 @@ test('the escalation names the failing job and gate and links the pull request',
 
   assert.match(title, /#72/);
   assert.match(body, /visual-and-axe \(1\) \(gate:visual\)/);
-  assert.match(body, /https:\/\/github\.com\/meshin-co\/website\/pull\/72/);
+  assert.match(body, /https:\/\/github\.test\/meshin-co\/website\/pull\/72/);
+});
+
+test('with no server named the finding names the pull request by its number and makes up no address', async () => {
+  const { run, env, requests, ledgerPath } = await harness({ bundle: scenario('cancel-storm') });
+  delete env.GITHUB_SERVER_URL;
+  await run();
+  const { detail } = readJson(ledgerPath).escalations[0];
+
+  assert.ok(detail.endsWith('\nPull request: #72'), detail);
+  assert.doesNotMatch(requests[0].body.body, /https?:\/\//);
+});
+
+test('the Slack message of an escalation shows the pull request the finding names as a link', async () => {
+  const ledger = ledgerRecord({ attempts: spentAttempts });
+  const { run, requests } = await harness({ bundle: scenario('content-gate-failure'), ledger });
+  await run();
+  const { text, blocks } = slackMessageOf(requests);
+  const line = 'Pull request: <https://github.test/meshin-co/website/pull/72|#72>';
+
+  assert.ok(blocks[2].text.text.endsWith(`\n${line}`), blocks[2].text.text);
+  assert.ok(text.includes(`\n${line}\n`), text);
+});
+
+test('the Slack message of a watcher escalation is a payload Slack accepts', async () => {
+  const ledger = ledgerRecord({ attempts: spentAttempts });
+  const { run, requests } = await harness({ bundle: scenario('content-gate-failure'), ledger });
+  await run();
+
+  assert.deepEqual(blockKitProblems(slackMessageOf(requests)), []);
+});
+
+test('a pull request the ledger on the branch does not name is a link in the Slack message all the same', async () => {
+  const error = refusal(401, 'Bad credentials');
+  const ledger = ledgerRecord({ pullRequest: null });
+  const { run, requests } = await harness({ bundle: green(), ledger, failWith: { during: 'merge', error } });
+  await assert.rejects(run(), (thrown) => thrown === error);
+  const { blocks } = slackMessageOf(requests);
+  const columns = blocks.flatMap((block) => block.fields ?? []).map(({ text }) => text);
+
+  assert.ok(columns.includes('*Pull request*\n<https://github.test/meshin-co/website/pull/72|#72>'), columns.join('|'));
+});
+
+test('no Slack message the watcher posts holds the webhook URL, its path or a token, in any kind of escalation', async () => {
+  const error = refusal(401, 'Bad credentials');
+  const ledger = ledgerRecord({ attempts: spentAttempts });
+  const stalled = await harness({ bundle: scenario('content-gate-failure'), ledger });
+  const refused = await harness({ bundle: green(), failWith: { during: 'merge', error } });
+  await stalled.run();
+  await assert.rejects(refused.run(), (thrown) => thrown === error);
+  const messages = JSON.stringify([slackMessageOf(stalled.requests), slackMessageOf(refused.requests)]);
+
+  for (const secret of [WEBHOOK, new URL(WEBHOOK).pathname, PAT, DEFAULT_TOKEN])
+    assert.equal(messages.includes(secret), false, secret);
 });
 
 test('an escalation with no ledger on the branch creates one for the pull request and pushes it as the bot', async () => {

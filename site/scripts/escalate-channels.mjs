@@ -1,9 +1,10 @@
+import { escalationMessage } from './escalation-slack.mjs';
+import { issueUrl, pullRequestLink, runLink, runUrl } from './github-links.mjs';
 import { autowriterAgent } from './site-brand.mjs';
 
 const MAX_EXCERPT_LENGTH = 200;
 const REQUEST_TIMEOUT_MS = 20_000;
 const DEFAULT_API_URL = 'https://api.github.com';
-const DEFAULT_SERVER_URL = 'https://github.com';
 
 const NOT_SET = {
   GITHUB_TOKEN: 'GITHUB_TOKEN is not set; pass a token with Issues: write in the workflow env',
@@ -35,15 +36,8 @@ async function send({ fetch, url, headers, body }) {
   }
 }
 
-function actionsRunUrl(env) {
-  const names = ['GITHUB_SERVER_URL', 'GITHUB_REPOSITORY', 'GITHUB_RUN_ID'];
-  if (absentVariables(env, names).length > 0) return null;
-  const [server, repository, runId] = names.map((name) => variable(env, name));
-  return `${server}/${repository}/actions/runs/${runId}`;
-}
-
 function issueBody({ env, ledger, ledgerPath, escalation }) {
-  const run = actionsRunUrl(env);
+  const run = runUrl(env);
   const context = [
     `Kind: ${escalation.kind}`,
     `Ledger: ${ledgerPath}`,
@@ -84,32 +78,31 @@ async function openIssue(context) {
   return { status, issue: { number: created.number, url } };
 }
 
-function issueUrlOf({ issue, env }) {
+function issueReference({ issue, env }) {
   if (issue === null) return null;
-  if (issue.url !== null) return issue.url;
-  const repository = variable(env, 'GITHUB_REPOSITORY');
-  if (repository === '') return null;
-  return `${variable(env, 'GITHUB_SERVER_URL') || DEFAULT_SERVER_URL}/${repository}/issues/${issue.number}`;
+  return { label: `#${issue.number}`, url: issue.url ?? issueUrl(env, issue.number) };
 }
 
-function slackText(context) {
-  const { escalation, ledgerPath } = context;
-  const issueUrl = issueUrlOf(context);
-  return [
-    `Autowriter escalation (${escalation.kind}): ${escalation.title}`,
-    escalation.detail,
-    `Ledger: ${ledgerPath}`,
-    ...(issueUrl === null ? [] : [`Issue: ${issueUrl}`]),
-  ].join('\n');
+function slackMessage(context) {
+  const { escalation, ledger, ledgerPath, env, pullRequest } = context;
+  return escalationMessage({
+    escalation,
+    ledgerPath,
+    links: {
+      pullRequest: pullRequestLink(env, pullRequest ?? ledger.pullRequest),
+      run: runLink(env),
+      issue: issueReference(context),
+    },
+  });
 }
 
-export async function postSlackText({ env, fetch, clean, text }) {
+export async function postSlackMessage({ env, fetch, clean, message }) {
   if (absentVariables(env, ['SLACK_WEBHOOK_URL']).length > 0) return { error: NOT_SET.SLACK_WEBHOOK_URL };
   const result = await send({
     fetch,
     url: variable(env, 'SLACK_WEBHOOK_URL'),
     headers: { 'Content-Type': 'application/json' },
-    body: { text },
+    body: message,
   });
   if (result.failure !== undefined) return { error: `request failed: ${result.failure}` };
   const { status, text: answer } = result;
@@ -118,6 +111,6 @@ export async function postSlackText({ env, fetch, clean, text }) {
   return { status };
 }
 
-const postToSlack = (context) => postSlackText({ ...context, text: slackText(context) });
+const postToSlack = (context) => postSlackMessage({ ...context, message: slackMessage(context) });
 
 export const SENDERS = { issue: openIssue, slack: postToSlack };

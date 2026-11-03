@@ -220,6 +220,7 @@ jobs:
           { git log -1 --format=%b "$branch"; echo; echo "Written by $RUN_URL"; } > "$RUNNER_TEMP/pull-request-body.md"
           url="$(gh pr create --base main --head "$branch" --title "$title" --body-file "$RUNNER_TEMP/pull-request-body.md")"
           echo "$url"
+          echo "pull_request=${url##*/}" >> "$GITHUB_OUTPUT"
           gh workflow run watch-pr.yml --ref main -f pr="${url##*/}"
 
       - name: return to the claim commit after a failed write
@@ -269,6 +270,7 @@ jobs:
         if: ${{ !cancelled() && steps.write.outcome == 'success' }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          PULL_REQUEST: ${{ steps.open.outputs.pull_request }}
         run: |
           status=0
           node scripts/spend-report.mjs notify --result "$WRITE_RESULT_FILE" > "$RUNNER_TEMP/spend-report-notice.txt" 2>&1 || status=$?
