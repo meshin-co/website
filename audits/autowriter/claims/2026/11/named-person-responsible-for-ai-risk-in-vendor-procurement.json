@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "slug": "named-person-responsible-for-ai-risk-in-vendor-procurement",
+  "title": "Named person responsible for AI risk in vendor procurement",
+  "format": "article",
+  "query": "named person responsible for ai risk in vendor procurement",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "prompt": {
+    "number": 5,
+    "text": "named person responsible for AI risk in vendor procurement"
+  },
+  "runId": "41623251197-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-03T10:57:06.408Z",
+  "expiresAt": "2026-11-17T10:57:06.408Z"
+}
