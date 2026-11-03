@@ -30,6 +30,7 @@ const CLAIM_FILE = recordPath('claim', SLUG, ARTICLE.claimedAt);
 const GENERATION = recordPath('generation', SLUG, ARTICLE.claimedAt);
 const FORMATTED_ENTRY = `src/data/post/${SLUG}.md`;
 const ROUTES = 'audits/phase-4.7/dispositions/routes.json';
+const LEDGER = 'audits/routes.json';
 const DISPOSITION_FORMAT = `npx prettier --write ../${DISPOSITION} ../${ROUTES}`;
 const STALE_COMMAND = 'node scripts/stale-dispositions.mjs . dist';
 const ROUTE_DIGEST = `node scripts/disposition-digest.mjs . dist /blog/${SLUG}`;
@@ -47,7 +48,7 @@ test('it returns the files it assembled, entry first and restated dispositions l
 
   assert.deepEqual(
     files.map(({ path }) => path),
-    [ENTRY, 'site/content-facts.json', 'docs/SEMANTIC-CORE.md', DISPOSITION, ROUTES]
+    [ENTRY, 'site/content-facts.json', 'docs/SEMANTIC-CORE.md', DISPOSITION, LEDGER, ROUTES]
   );
   assert.ok(files.every(({ text }) => typeof text === 'string' && text.endsWith('\n')));
   assert.deepEqual(gates, [
@@ -65,7 +66,7 @@ test('it leaves the working tree exactly as it found it, so the files it returns
   const before = untouched(root);
   const { files } = await assemble(root, fakeRun(root));
 
-  assert.equal(files.length, 5);
+  assert.equal(files.length, 6);
   assert.deepEqual(untouched(root), before);
   assert.equal(gitIn(root, 'status', '--porcelain'), '');
   for (const path of [ENTRY, DISPOSITION]) assert.ok(!existsSync(join(root, path)), path);
@@ -86,6 +87,7 @@ test('it runs the commands in the order the skills give, every one with site/ as
       'npm run build',
       'node scripts/semantic-core.mjs',
       'node scripts/generate-registers.mjs',
+      'npm run assets:routes',
       `node scripts/disposition-digest.mjs . dist ${FORMATTED_ENTRY}`,
       ROUTE_DIGEST,
       STALE_COMMAND,
@@ -214,7 +216,7 @@ test('a failing information gate is recorded with its exit code and does not sto
       { name: 'gate:human', exit: 3 },
     ]
   );
-  assert.equal(files.length, 5);
+  assert.equal(files.length, 6);
 });
 
 test('a failed build names the command and carries only the last 20 lines of its output', async () => {
@@ -241,6 +243,7 @@ const STEPS = [
   'npm run build',
   'node scripts/semantic-core.mjs',
   'node scripts/generate-registers.mjs',
+  'npm run assets:routes',
   `node scripts/disposition-digest.mjs . dist ${FORMATTED_ENTRY}`,
   ROUTE_DIGEST,
   STALE_COMMAND,

@@ -68,6 +68,8 @@ test('a build the route ledger has not seen is refused, naming what differs', ()
   assert.equal(added.length, 1);
   assert.match(added[0], /zz-new/);
   assert.match(added[0], /assets:routes/);
+  assert.match(added[0], /unattended writer commits the ledger/);
+  assert.match(added[0], /came from somewhere else/);
   const removed = ledgerFindings(ledger, ['/']);
   assert.match(removed[0], /about/);
 });

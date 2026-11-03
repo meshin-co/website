@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { repairedReason } from './disposition-restate.mjs';
 import { recordPath } from './record-layout.mjs';
 import { renderEntry } from './entry-files.mjs';
+import { regenerateRouteLedger } from './route-ledger.mjs';
 import {
   BUILD,
   commandsIn,
@@ -82,6 +83,7 @@ export async function assembleRepair({ repoRoot, claim, draft, runDate, run, att
     await succeed(prettier(target));
     await succeed(BUILD);
     for (const command of REGENERATE) await succeed(command);
+    await regenerateRouteLedger({ repoRoot, transaction, succeed });
     const restated = await restateStale({ repoRoot, transaction, succeed, reason });
     if (restated.length > 0) await formatDispositions(succeed, restated);
     const blocking = await runBlockingChecks(succeed);

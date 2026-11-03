@@ -33,6 +33,7 @@ const TERM_CLAIM = claimOf('term');
 const POST_DISPOSITION = recordPath('disposition', SLUG, ARTICLE.claimedAt);
 const TERM_DISPOSITION = recordPath('disposition', TERM_CLAIM.slug, TERM_CLAIM.claimedAt);
 const ROUTES = `${DISPOSITIONS}/routes.json`;
+const LEDGER = 'audits/routes.json';
 const POSTS = `${DISPOSITIONS}/posts.json`;
 const FACTS = 'site/content-facts.json';
 const CORE = 'docs/SEMANTIC-CORE.md';
@@ -168,7 +169,7 @@ test('the files come back entries first, then the shared files, the generated di
   const root = repo();
   const result = await assemble(root, fakeRun(root));
 
-  assert.deepEqual(pathsOf(result), [POST, TERM, FACTS, CORE, POST_DISPOSITION, TERM_DISPOSITION, ROUTES]);
+  assert.deepEqual(pathsOf(result), [POST, TERM, FACTS, CORE, POST_DISPOSITION, TERM_DISPOSITION, LEDGER, ROUTES]);
   assert.ok(!pathsOf(result).includes(POSTS));
 });
 
@@ -228,7 +229,7 @@ test('a run that makes nothing stale rewrites no existing disposition file', asy
   const run = fakeRun(root);
   const result = await assemble(root, run, ['article']);
 
-  assert.deepEqual(pathsOf(result), [POST, FACTS, CORE, POST_DISPOSITION]);
+  assert.deepEqual(pathsOf(result), [POST, FACTS, CORE, POST_DISPOSITION, LEDGER]);
   assert.ok(keysOf(run).includes(STALE_COMMAND));
   assert.ok(keysOf(run).includes(`npx prettier --write ../${POST_DISPOSITION}`));
 });
@@ -309,7 +310,7 @@ test('a generated disposition an earlier run filed under its month is restated w
   const result = await assemble(root, run, ['article']);
   const [{ reason, digest }] = JSON.parse(textOf(result, EARLIER));
 
-  assert.deepEqual(pathsOf(result), [POST, FACTS, CORE, POST_DISPOSITION, EARLIER, ROUTES]);
+  assert.deepEqual(pathsOf(result), [POST, FACTS, CORE, POST_DISPOSITION, LEDGER, EARLIER, ROUTES]);
   assert.equal(digest, listingDigest(['existing-post', SLUG]));
   assert.equal(textOf(result, EARLIER), layout([restated(original[0], digest, reason)]));
   assert.equal(reason, JSON.parse(textOf(result, ROUTES))[1].reason);

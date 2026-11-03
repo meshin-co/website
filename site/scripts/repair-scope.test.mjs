@@ -29,6 +29,7 @@ test('the paths of an entry are the same ones the writer writes', () => {
     assert.ok(own.includes(ledgerOf(entry)), entry.format);
     assert.ok(own.includes(recordOf(entry)), entry.format);
     assert.ok(own.includes('docs/SEMANTIC-CORE.md'));
+    assert.ok(own.includes('audits/routes.json'));
   }
 });
 
@@ -39,6 +40,7 @@ test('the ledger, the record and the disposition of an entry sit under the month
     'audits/autowriter/generations/2026/11/an-entry.json',
     'audits/phase-4.7/dispositions/2026/11/generated-an-entry.json',
     'docs/SEMANTIC-CORE.md',
+    'audits/routes.json',
     REPORT_PATH,
   ]);
   assert.deepEqual(pathsOf({ ...ARTICLE, claimedAt: '2026-12-01T00:00:00.000Z' }).slice(1, 4), [

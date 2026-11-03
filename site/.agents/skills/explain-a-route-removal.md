@@ -5,7 +5,8 @@ rules). `audits/routes.json` is the ledger: the route set the repository current
 `npm run gate:routes` (`scripts/routes-gate.mjs`) compares the build against it, never writes it,
 and fails on any removal it cannot account for. `npm run assets:routes` writes the ledger from the
 build. Run it in the commit that changes the route set, additions included: a route the ledger
-never recorded can disappear without failing the gate.
+never recorded can disappear without failing the gate. The unattended writer runs it for the routes it adds and refuses to
+rewrite a ledger the build shrinks, so a removal is always a person's commit.
 
 ## When a removal is legitimate
 

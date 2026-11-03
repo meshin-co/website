@@ -29,6 +29,7 @@ const STEPS = [
   'npm run build',
   'node scripts/semantic-core.mjs',
   'node scripts/generate-registers.mjs',
+  'npm run assets:routes',
   STALE_COMMAND,
   FORMAT,
 ];

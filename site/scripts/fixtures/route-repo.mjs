@@ -1,8 +1,20 @@
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, relative } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { parse } from 'yaml';
 
 import { parseBuyerPrompts } from '../semantic-core.mjs';
 import { digestOf, freshDigest, seedDispositions, staleEntries } from './route-dispositions.mjs';
@@ -30,8 +42,13 @@ export const FACTS_TEXT = `{
 }
 `;
 
+export const START_ROUTES = ['/', '/blog/existing-post', '/glossary/ai-register'];
+
+const ROUTES_GATE = join(dirname(fileURLToPath(import.meta.url)), '..', 'routes-gate.mjs');
+
 const START_FILES = {
   '.gitignore': 'site/dist/\n',
+  'audits/routes.json': `${JSON.stringify(START_ROUTES, null, 2)}\n`,
   'site/content-facts.json': FACTS_TEXT,
   'site/src/data/post/existing-post.md': '---\ntitle: Existing post\n---\nBody of the existing post.\n',
   'site/src/data/glossary/ai-register.md': '---\ntitle: What is an AI register?\nterm: AI register\n---\n',
@@ -94,6 +111,16 @@ export function fakeRun(root, { fail = {}, exits = {} } = {}) {
     ...stems(join(root, 'site/src/data/glossary')).map((slug) => `/glossary/${slug}`),
     ...stems(join(root, 'site/src/data/post')).map((slug) => `/blog/${slug}`),
   ];
+  const taxonomy = () => {
+    const found = new Set();
+    for (const slug of stems(join(root, 'site/src/data/post'))) {
+      const block = /^---\n([\s\S]*?)\n---/.exec(read(`site/src/data/post/${slug}.md`));
+      const { category, tags = [] } = (block && parse(block[1])) ?? {};
+      if (category) found.add(`/blog/category/${category}`);
+      for (const tag of tags) found.add(`/blog/tag/${tag}`);
+    }
+    return [...found];
+  };
   const pageOf = (route) => {
     const file = `site/dist/${route === '/' ? 'index' : route.slice(1)}.html`;
     return existsSync(join(root, file)) ? read(file) : undefined;
@@ -113,10 +140,19 @@ export function fakeRun(root, { fail = {}, exits = {} } = {}) {
 
   const commands = {
     'npm run build': () => {
+      rmSync(join(root, 'site/dist'), { recursive: true, force: true });
       write('site/dist/gate-routes.json', JSON.stringify({ routes: routes() }));
       for (const route of routes())
         write(`site/dist/${route === '/' ? 'index' : route.slice(1)}.html`, `<main>${readIfEntry(route)}</main>`);
+      for (const route of taxonomy()) write(`site/dist/${route.slice(1)}.html`, '<main>taxonomy</main>');
       return ok;
+    },
+    'npm run assets:routes': () => {
+      const { status, stdout, stderr } = spawnSync(process.execPath, [ROUTES_GATE, 'dist', '--write'], {
+        cwd: join(root, 'site'),
+        encoding: 'utf8',
+      });
+      return { status, stdout, stderr };
     },
     'node scripts/semantic-core.mjs': () => {
       if (layer() === null) return failed('semantic-core: no built html');
