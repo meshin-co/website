@@ -1,3 +1,6 @@
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
 import { ATTEMPT_CAP, ledgerWithAttempt, validateLedger } from './autowriter-ledger.mjs';
 import { describeProblem } from './autowriter-records.mjs';
 import { resolveClaimTable } from './claim-sources.mjs';
@@ -7,6 +10,7 @@ import { recordPath } from './record-layout.mjs';
 import { attemptFailure } from './repair-findings.mjs';
 import { RepairStop } from './repair-outcome.mjs';
 import { scopeProblems } from './repair-scope.mjs';
+import { spendReportFile } from './spend-report.mjs';
 import { WriterError } from './writer-error.mjs';
 import { assertNoSecrets } from './writer-redact.mjs';
 
@@ -54,6 +58,13 @@ function ledgerAfterAttempt({ situation, failures, calls, now }) {
   });
 }
 
+function reportFiles({ repoRoot, written, situation, now }) {
+  const report = spendReportFile({ repoRoot, written, revision: situation.head, at: now.toISOString() });
+  const target = join(repoRoot, report.path);
+  const current = existsSync(target) ? readFileSync(target, 'utf8') : null;
+  return current === report.text ? [] : [{ path: report.path, text: report.text }];
+}
+
 function spendMessageOf({ slug, outcome, calls, generationPath }) {
   return [
     'fix(autowriter): record the spend of a repair of ' + slug + ' that ended as ' + outcome,
@@ -70,7 +81,8 @@ export async function recordFailedSpend({ repoRoot, situation, calls, failures, 
   const { claim, slug } = situation;
   const nextLedger = ledgerAfterAttempt({ situation, failures, calls, now });
   refuseInvalid(slug, validateLedger(nextLedger));
-  const files = [{ path: recordPath('ledger', slug, claim.claimedAt), text: textOf(nextLedger) }];
+  const written = [{ path: recordPath('ledger', slug, claim.claimedAt), text: textOf(nextLedger) }];
+  const files = [...written, ...reportFiles({ repoRoot, written, situation, now })];
   const message = spendMessageOf({
     slug,
     outcome,
@@ -117,10 +129,14 @@ export async function finishRepair({
   const generationPath = recordPath('generation', slug, claim.claimedAt);
   const ledgerPath = recordPath('ledger', slug, claim.claimedAt);
   const own = [generationPath, ledgerPath];
-  const files = [
-    ...assembly.files.filter(({ path }) => !own.includes(path)),
+  const written = [
     { path: generationPath, text: textOf(nextRecord) },
     { path: ledgerPath, text: textOf(nextLedger) },
+  ];
+  const files = [
+    ...assembly.files.filter(({ path }) => !own.includes(path)),
+    ...written,
+    ...reportFiles({ repoRoot, written, situation, now }),
   ];
   const outside = scopeProblems({
     slug,

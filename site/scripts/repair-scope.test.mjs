@@ -6,9 +6,11 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
 
+import { refusalFor } from './autowriter-refusals.mjs';
 import { entryPath } from './entry-files.mjs';
 import { recordPath } from './record-layout.mjs';
 import { ownPaths, scopeProblems } from './repair-scope.mjs';
+import { REPORT_PATH } from './spend-report-text.mjs';
 
 const CLAIMED = '2026-11-02T06:00:00.000Z';
 const ARTICLE = { slug: 'an-entry', format: 'article', claimedAt: CLAIMED };
@@ -37,6 +39,7 @@ test('the ledger, the record and the disposition of an entry sit under the month
     'audits/autowriter/generations/2026/11/an-entry.json',
     'audits/phase-4.7/dispositions/2026/11/generated-an-entry.json',
     'docs/SEMANTIC-CORE.md',
+    REPORT_PATH,
   ]);
   assert.deepEqual(pathsOf({ ...ARTICLE, claimedAt: '2026-12-01T00:00:00.000Z' }).slice(1, 4), [
     'audits/autowriter/2026/12/an-entry.json',
@@ -53,6 +56,15 @@ test('a claim time that is not a UTC instant gives the entry no month, and no pa
 test('a repair that changes the entry, its ledger, its record and the files derived from them is in scope', () => {
   assert.deepEqual(problemsFor(ARTICLE, pathsOf(ARTICLE)), []);
   assert.deepEqual(problemsFor(TERM, pathsOf(TERM)), []);
+});
+
+test('the spend report is a file a repair may touch and is never required of it', () => {
+  assert.equal(refusalFor(REPORT_PATH), null);
+  assert.ok(pathsOf(ARTICLE).includes(REPORT_PATH));
+  const withoutReport = pathsOf(ARTICLE).filter((path) => path !== REPORT_PATH);
+  assert.deepEqual(problemsFor(ARTICLE, withoutReport), []);
+  assert.deepEqual(problemsFor(ARTICLE, [...withoutReport, REPORT_PATH]), []);
+  assert.deepEqual(named(problemsFor(ARTICLE, [REPORT_PATH])), pathsOf(ARTICLE).slice(0, 3));
 });
 
 test('a hand-written disposition file the repair restated is in scope, a file of another kind is not', () => {

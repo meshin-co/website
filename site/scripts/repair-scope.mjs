@@ -1,6 +1,7 @@
 import { refusalFor } from './autowriter-refusals.mjs';
 import { readEngineConfig } from './engine-config.mjs';
 import { familyOf, layoutProblem, recordPath } from './record-layout.mjs';
+import { REPORT_PATH } from './spend-report-text.mjs';
 
 const DATA_DIRECTORY = 'site/src/data';
 const { formats } = readEngineConfig().content;
@@ -20,6 +21,7 @@ export const ownPaths = (entry) => [
   ...requiredPaths(entry),
   recordPath('disposition', entry.slug, entry.claimedAt),
   SEMANTIC_CORE,
+  REPORT_PATH,
 ];
 
 const problem = (path, message) => ({ path, problem: message });

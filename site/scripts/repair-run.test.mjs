@@ -26,6 +26,7 @@ import {
 } from './fixtures/repair-world.mjs';
 import { RepairStop } from './repair-outcome.mjs';
 import { repairRun } from './repair-run.mjs';
+import { REPORT_PATH } from './spend-report-text.mjs';
 import { WriterError } from './writer-error.mjs';
 
 const sceneRoots = [];
@@ -153,7 +154,7 @@ test('a repair that spent money and then failed commits only the ledger, with th
   assert.equal(committed.length, 1);
   assert.deepEqual(
     committed[0].files.map(({ path }) => path),
-    [LEDGER]
+    [LEDGER, REPORT_PATH]
   );
   const ledger = recordedLedger(committed);
   assert.deepEqual(validateLedger(ledger), []);
@@ -203,7 +204,7 @@ test('an unexpected error after a call is recorded the same way and is still the
   assert.equal(committed.length, 1);
   assert.deepEqual(
     committed[0].files.map(({ path }) => path),
-    [LEDGER]
+    [LEDGER, REPORT_PATH]
   );
   assert.ok(committed[0].message.split('\n')[0].endsWith('that ended as failed'));
 });
@@ -223,7 +224,7 @@ test('a failed repair leaves the generation record and the entry untouched', asy
   await assert.rejects(repairRun(io));
 
   const paths = committed.flatMap(({ files }) => files.map(({ path }) => path));
-  assert.deepEqual(paths, [LEDGER]);
+  assert.deepEqual(paths, [LEDGER, REPORT_PATH]);
   assert.equal(paths.includes(RECORD), false);
   assert.equal(paths.includes(ENTRY), false);
 });
@@ -298,7 +299,7 @@ test('a ledger-only commit by the pipeline passes the commit check and the histo
 
   assert.match(error.commit, /^[0-9a-f]{40}$/);
   assert.equal(error.message.includes('could not be recorded'), false);
-  assert.deepEqual(committedFiles(made.root), [LEDGER]);
+  assert.deepEqual(committedFiles(made.root), [LEDGER, REPORT_PATH].sort());
   assert.deepEqual(historyReport({ root: made.root }), { findings: [], commits: 0, skipped: null });
   assert.equal(refusalFor(LEDGER), null);
 });
