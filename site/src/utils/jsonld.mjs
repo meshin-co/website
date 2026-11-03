@@ -1,3 +1,4 @@
+import { standInKind } from './archive-url.mjs';
 import { ogImagePath } from './machine-links.mjs';
 import { brandFromDisk, contactEmail } from './brand.mjs';
 
@@ -34,7 +35,9 @@ const breadcrumbLink = (site, path) => (path === '/' ? {} : { breadcrumb: { '@id
 const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 const citationOf = (sources) =>
-  (sources ?? []).map((source) => ({ '@type': 'CreativeWork', name: source.title, url: source.url }));
+  (sources ?? [])
+    .filter((source) => standInKind(source) !== 'search')
+    .map((source) => ({ '@type': 'CreativeWork', name: source.title, url: source.url }));
 
 /** @typedef {{ url: string, width?: number, height?: number }} JsonLdImage */
 
@@ -269,6 +272,7 @@ export function faqPageNode(
   options = /** @type {{ image?: JsonLdImage, speakableSelectors?: string[] }} */ ({})
 ) {
   const { image, speakableSelectors = [] } = options;
+  const citation = citationOf(faq.sources);
   const path = faq.url ?? `/faq/${faq.id}`;
   return {
     '@type': 'FAQPage',
@@ -277,7 +281,7 @@ export function faqPageNode(
     isPartOf: { '@id': `${site}/#website` },
     ...breadcrumbLink(site, path),
     inLanguage: LANGUAGE,
-    ...(faq.sources?.length ? { citation: citationOf(faq.sources) } : {}),
+    ...(citation.length > 0 ? { citation } : {}),
     ...(image ? { primaryImageOfPage: image } : {}),
     ...(speakableSelectors.length
       ? { speakable: { '@type': 'SpeakableSpecification', cssSelector: speakableSelectors } }

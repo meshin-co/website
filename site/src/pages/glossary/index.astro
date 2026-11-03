@@ -8,6 +8,7 @@ import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
 import CtaBlock from '~/components/site/CtaBlock.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
+import { citedHost, standInNote } from '~/utils/archive-url.mjs';
 import {
   breadcrumbNode,
   collectionNode,
@@ -18,6 +19,7 @@ import {
   websiteNode,
 } from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+import { externalRelAttrs } from '~/utils/pipeline.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
 const terms = (await getCollection('glossary', ({ data }) => !data.draft)).sort((a, b) =>
@@ -71,7 +73,7 @@ const cards = terms.map((term) => {
   return {
     term,
     definition: HUB_DEFINITIONS[term.id] ?? term.data.term,
-    source: { url: primarySource.url, host: new URL(primarySource.url).hostname.replace(/^www\./, '') },
+    source: { url: primarySource.url, host: citedHost(primarySource), note: standInNote(primarySource) },
   };
 });
 ---
@@ -117,10 +119,11 @@ const cards = terms.map((term) => {
                   class="text-link inline-block py-1"
                   href={card.source.url}
                   target="_blank"
-                  rel="nofollow noopener noreferrer"
+                  {...externalRelAttrs(card.source.url)}
                 >
                   {card.source.host}
                 </a>
+                {card.source.note && ` · ${card.source.note}`}
               </dd>
             </div>
           ))}

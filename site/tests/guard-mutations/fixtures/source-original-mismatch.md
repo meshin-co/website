@@ -1,14 +1,14 @@
 ---
-title: 'Mutation specimen: a source whose original is not the address its url archives'
+title: 'Mutation specimen: a source whose original is not the address its url stands in for'
 term: Source original specimen
-description: 'A specimen glossary term whose only violation is a source original that its Internet Archive url is not a snapshot of.'
+description: 'A specimen glossary term whose only violation is a source original that its url is neither an Internet Archive snapshot of nor a search for.'
 publishDate: 2026-09-12
 updatedDate: 2026-09-12
-shortDefinition: 'A specimen term that proves the source original guard can fail. It is a valid glossary entry except for one source whose original address is not the address its Internet Archive url captured, so the build must name that field.'
+shortDefinition: 'A specimen term that proves the source original guard can fail. It is a valid glossary entry except for one source whose original address is not the address its url stands in for, so the build must name that field.'
 definition: |-
-  A repaired source keeps two addresses. The url is the Internet Archive snapshot that a reader follows. The original is the address that was first cited, kept so the entry still says what it rests on.
+  A repaired source keeps two addresses. The url is what a reader follows: an Internet Archive snapshot of the cited page or, when no snapshot exists, a search built from the title and publisher of the source. The original is the address that was first cited, kept so the entry still says what it rests on.
 
-  The two must agree: the snapshot has to be a capture of exactly that original address. This specimen plants one source whose original names a different page from the one its snapshot captured. The schema must refuse it and name the original field of the first source. Otherwise a reader could follow a copy of one document while the entry claims to cite another.
+  The two must agree: a snapshot has to be a capture of exactly that original address, and a search has to be the one built from this source's own title and publisher. This specimen plants one source whose original names a different page from the one its snapshot captured. The schema must refuse it and name the original field of the first source. Otherwise a reader could follow a copy of one document while the entry claims to cite another.
 
   Every other field of this entry is valid, so the build must exit non-zero for this one reason only. The copy is discarded after the check, so the live site never carries it.
 sources:

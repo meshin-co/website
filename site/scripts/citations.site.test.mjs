@@ -6,8 +6,15 @@ import { fileURLToPath } from 'node:url';
 
 import { parse } from 'yaml';
 
-import { isSnapshotOf } from '../src/utils/archive-url.mjs';
-import { archivedEntryText, citedUrls, citingEntries, RewriteError, SOURCE_COLLECTIONS } from './citations.mjs';
+import { isSnapshotOf, searchFallbackUrl, standInKind } from '../src/utils/archive-url.mjs';
+import {
+  archivedEntryText,
+  citedUrls,
+  citingEntries,
+  RewriteError,
+  searchedEntryText,
+  SOURCE_COLLECTIONS,
+} from './citations.mjs';
 
 const REPO_ROOT = fileURLToPath(new URL('../../', import.meta.url));
 const snapshotOf = (address) => `https://web.archive.org/web/20251025031200/${address}`;
@@ -57,7 +64,7 @@ test('every address a real entry cites is rewritten row by row, never twice, or 
       });
       const cited = rows.filter((source) => source.url === url).length;
       assert.equal(result.split('\n').length - text.split('\n').length, cited, path);
-      assert.throws(() => rewrite(result, url), { name: 'RewriteError', message: /already archived/ });
+      assert.throws(() => rewrite(result, url), { name: 'RewriteError', message: /already has a stand-in/ });
     }
   }
   assert.ok(rewritten > 0, 'at least one real entry was rewritten');
@@ -76,4 +83,54 @@ test('on the real tree, citedUrls and citingEntries agree about who cites an add
     );
     assert.ok(found.every(({ citedOn }) => /^\d{4}-\d{2}-\d{2}$/.test(citedOn)));
   }
+});
+
+test('the real NIST AI RMF glossary entry is rewritten to the search for its source with one changed line and one added line', () => {
+  const doi = 'https://doi.org/10.6028/NIST.AI.100-1';
+  const text = readFileSync(join(REPO_ROOT, 'site', 'src', 'data', 'glossary', 'nist-ai-rmf.md'), 'utf8');
+  const source = frontmatterOf(text).sources.find(({ url }) => url === doi);
+  const standIn = searchFallbackUrl(source);
+  const expected = text.replace(`    url: ${doi}\n`, `    url: ${standIn}\n    original: ${doi}\n`);
+
+  const result = searchedEntryText({ text, url: doi });
+  const row = frontmatterOf(result).sources.find(({ original }) => original === doi);
+
+  assert.notEqual(expected, text);
+  assert.equal(result, expected);
+  assert.deepEqual([row.url, row.original], [standIn, doi]);
+  assert.equal(standInKind(row), 'search');
+});
+
+test('every address a real entry cites is searched for row by row, never twice, or refused as a RewriteError', () => {
+  let rewritten = 0;
+  for (const { path, text } of realEntries()) {
+    const rows = frontmatterOf(text).sources ?? [];
+    for (const url of new Set(rows.map((source) => source.url))) {
+      let result;
+      try {
+        result = searchedEntryText({ text, url });
+      } catch (error) {
+        assert.ok(error instanceof RewriteError, `${path} ${url}: ${error}`);
+        continue;
+      }
+      rewritten += 1;
+      const after = frontmatterOf(result).sources;
+      rows.forEach((source, index) => {
+        if (source.url !== url) return assert.deepEqual(after[index], source, `${path} row ${index + 1}`);
+        assert.deepEqual(
+          [after[index].url, after[index].original],
+          [searchFallbackUrl(source), url],
+          `${path} row ${index + 1}`
+        );
+        assert.equal(standInKind(after[index]), 'search', `${path} row ${index + 1}`);
+      });
+      const cited = rows.filter((source) => source.url === url).length;
+      assert.equal(result.split('\n').length - text.split('\n').length, cited, path);
+      assert.throws(() => searchedEntryText({ text: result, url }), {
+        name: 'RewriteError',
+        message: /already has a stand-in/,
+      });
+    }
+  }
+  assert.ok(rewritten > 0, 'at least one real entry was rewritten');
 });

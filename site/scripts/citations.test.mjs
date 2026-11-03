@@ -202,12 +202,12 @@ test('the rewrite changes the url line, adds one line, and touches only the line
   assert.ok(changed.every(([was, now]) => now === was.replaceAll(DEAD, SNAPSHOT)));
 });
 
-test('an entry that already carries the cited address as original is refused as already archived', () => {
+test('an entry that already carries the cited address as original is refused as already holding a stand-in', () => {
   const result = rewrite(entry({ sources: row(DEAD), body: bodyForms(DEAD) }));
 
-  refused(() => rewrite(result), /already archived/);
-  refused(() => rewrite(entry({ sources: [...archivedRow(DEAD), ...row(DEAD)] })), /already archived/);
-  refused(() => rewrite(entry({ sources: row(DEAD, `    original: ${DEAD}`) })), /already archived/);
+  refused(() => rewrite(result), /already has a stand-in/);
+  refused(() => rewrite(entry({ sources: [...archivedRow(DEAD), ...row(DEAD)] })), /already has a stand-in/);
+  refused(() => rewrite(entry({ sources: row(DEAD, `    original: ${DEAD}`) })), /already has a stand-in/);
 });
 
 test('an address that is not a snapshot of the cited address is refused before any edit', () => {

@@ -4,7 +4,7 @@ import { isDeepStrictEqual } from 'node:util';
 
 import { isMap, isSeq, parseDocument } from 'yaml';
 
-import { isSnapshotOf } from '../src/utils/archive-url.mjs';
+import { isSnapshotOf, searchFallbackUrl, standInKind } from '../src/utils/archive-url.mjs';
 
 export const SOURCE_COLLECTIONS = Object.freeze(['post', 'glossary', 'faq', 'service', 'resource']);
 
@@ -199,7 +199,7 @@ function originalLine({ text, keyStart, valueEnd, spelledUrl }) {
   return { start: at, end: at, text: `${crlf ? '\r\n' : '\n'}${indent}original: ${spelledUrl}` };
 }
 
-function planRow({ text, row, url, archiveUrl }) {
+function planRow({ text, row, url, standIn }) {
   const label = `sources row ${row.index + 1}`;
   const pair = isMap(row.node) && !row.node.flow ? row.node.items.find(({ key }) => key?.value === 'url') : undefined;
   if (pair === undefined) {
@@ -218,16 +218,21 @@ function planRow({ text, row, url, archiveUrl }) {
     );
   }
   return {
-    replace: { start, end, text: `${quote}${archiveUrl}${quote}` },
+    replace: { start, end, text: `${quote}${standIn}${quote}` },
     insert: originalLine({ text, keyStart: row.offset + key.range[0], valueEnd: end, spelledUrl: spelled }),
   };
 }
 
-function addressEdits({ text, url, archiveUrl, claimed }) {
+function addressEdits({ text, url, standIns, claimed }) {
   const code = codeRanges(text);
-  return occurrences(text, url)
-    .filter((found) => !covered(claimed, found) && !covered(code, found))
-    .map(({ start, end }) => ({ start, end, text: archiveUrl }));
+  const found = occurrences(text, url).filter((span) => !covered(claimed, span) && !covered(code, span));
+  const [standIn, ...others] = new Set(standIns);
+  if (found.length > 0 && others.length > 0) {
+    throw new RewriteError(
+      `${url} is cited by rows that would each search for something different, so the prose that links to it has no one search to point at; a person decides`
+    );
+  }
+  return found.map(({ start, end }) => ({ start, end, text: standIn }));
 }
 
 const applyEdits = (text, edits) =>
@@ -235,9 +240,8 @@ const applyEdits = (text, edits) =>
     .sort((a, b) => b.start - a.start)
     .reduce((current, { start, end, text: added }) => current.slice(0, start) + added + current.slice(end), text);
 
-function assertRewritable(url, archiveUrl) {
-  if (!isSnapshotOf(archiveUrl, url)) throw new RewriteError(`${archiveUrl} is not a Wayback snapshot of ${url}`);
-  for (const address of [url, archiveUrl]) {
+function assertSpellable(addresses) {
+  for (const address of addresses) {
     if (UNSPELLABLE.test(address)) {
       throw new RewriteError(
         `${address} holds whitespace, a quote or a backslash, which YAML spells differently inside different strings`
@@ -248,7 +252,7 @@ function assertRewritable(url, archiveUrl) {
 
 function openRowsFor(rows, url) {
   if (rows.some(isArchivedFrom(url))) {
-    throw new RewriteError(`${url} is already archived in this entry: a source row carries it as original`);
+    throw new RewriteError(`${url} already has a stand-in in this entry: a source row carries it as original`);
   }
   const open = rows.filter(citesUrl(url));
   if (open.length === 0) throw new RewriteError(`no source row cites ${url}`);
@@ -262,27 +266,48 @@ function assertNoLeftover(text, url) {
   throw new RewriteError(`${url} is still cited where the rewrite does not change it (${where}); a person decides`);
 }
 
-function assertRowsArchived({ result, rows, open, url, archiveUrl }) {
+function assertRowsStandIn({ result, rows, open, standIns, url, kind }) {
   const after = parseEntry(result).rows;
   if (after.length !== rows.length) throw new RewriteError('the rewrite changed how many sources rows the entry has');
   for (const row of rows) {
     const now = after[row.index].value;
-    const sound = open.includes(row)
-      ? now?.url === archiveUrl && now.original === url && isSnapshotOf(now.url, now.original)
-      : isDeepStrictEqual(now, row.value);
+    const at = open.indexOf(row);
+    const sound =
+      at === -1
+        ? isDeepStrictEqual(now, row.value)
+        : now?.url === standIns[at] && now.original === url && standInKind(now) === kind;
     if (!sound) throw new RewriteError(`sources row ${row.index + 1} reads ${JSON.stringify(now)} after the rewrite`);
   }
 }
 
-export function archivedEntryText({ text, url, archiveUrl }) {
-  assertRewritable(url, archiveUrl);
+function standInEntryText({ text, url, kind, standInFor }) {
+  assertSpellable([url]);
   const { rows } = parseEntry(text);
   const open = openRowsFor(rows, url);
-  const plans = open.map((row) => planRow({ text, row, url, archiveUrl }));
+  const standIns = open.map((row) => standInFor(row));
+  assertSpellable(standIns);
+  const plans = open.map((row, at) => planRow({ text, row, url, standIn: standIns[at] }));
   const claimed = plans.map(({ replace }) => replace);
-  const replacements = [...claimed, ...addressEdits({ text, url, archiveUrl, claimed })];
+  const replacements = [...claimed, ...addressEdits({ text, url, standIns, claimed })];
   assertNoLeftover(applyEdits(text, replacements), url);
   const result = applyEdits(text, [...replacements, ...plans.map(({ insert }) => insert)]);
-  assertRowsArchived({ result, rows, open, url, archiveUrl });
+  assertRowsStandIn({ result, rows, open, standIns, url, kind });
   return result;
+}
+
+export function archivedEntryText({ text, url, archiveUrl }) {
+  if (!isSnapshotOf(archiveUrl, url)) throw new RewriteError(`${archiveUrl} is not a Wayback snapshot of ${url}`);
+  return standInEntryText({ text, url, kind: 'archive', standInFor: () => archiveUrl });
+}
+
+function searchFor({ index, value: { title, publisher } }) {
+  try {
+    return searchFallbackUrl({ title, publisher });
+  } catch {
+    throw new RewriteError(`sources row ${index + 1} has no title, so there is nothing to search for`);
+  }
+}
+
+export function searchedEntryText({ text, url }) {
+  return standInEntryText({ text, url, kind: 'search', standInFor: searchFor });
 }

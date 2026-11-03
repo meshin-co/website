@@ -3,7 +3,7 @@ import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 import { postTagSchema } from '~/data/tags.mjs';
-import { isSnapshotOf } from '~/utils/archive-url.mjs';
+import { standInKind } from '~/utils/archive-url.mjs';
 import { countWords, isNotBeforePublish, isWithinWordRange, ogTitleSchema } from '~/utils/content-rules.mjs';
 import {
   DESCRIPTION_MAX_CHARS,
@@ -24,8 +24,9 @@ const source = z
     publisher: z.string().optional(),
     retrieved: z.string().optional(),
   })
-  .refine((entry) => entry.original === undefined || isSnapshotOf(entry.url, entry.original), {
-    message: 'must be the address that url is an Internet Archive snapshot of',
+  .refine((entry) => entry.original === undefined || standInKind(entry) !== null, {
+    message:
+      "must be the address that url stands in for: its Internet Archive snapshot, or the search for this source's title and publisher",
     path: ['original'],
   });
 

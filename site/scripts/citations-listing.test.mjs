@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { after, test } from 'node:test';
 
+import { searchFallbackUrl } from '../src/utils/archive-url.mjs';
 import { citedUrls, citingEntries, SOURCE_COLLECTIONS } from './citations.mjs';
 
 const DEAD = 'https://example.org/report';
@@ -14,6 +15,8 @@ const entry = ({ dates = DATES, extra = [], sources, body = ['', 'Body.', ''] })
   ['---', 'title: A test entry', ...dates, ...extra, 'sources:', ...sources, '---', ...body].join('\n');
 const row = (address, ...more) => ['  - title: The report', `    url: ${address}`, ...more];
 const archivedRow = (address, ...more) => row(snapshotOf(address), `    original: ${address}`, ...more);
+const searchedRow = (address, ...more) =>
+  row(searchFallbackUrl({ title: 'The report' }), `    original: ${address}`, ...more);
 
 const made = [];
 const treeWith = (files) => {
@@ -138,4 +141,15 @@ test('citedUrls maps every cited address to the paths that cite it, once each, r
       [OTHER, [epsilonPath]],
     ]
   );
+});
+
+test('a row that rests on a search link is listed as cited by no one, like one that rests on a snapshot', () => {
+  const repoRoot = treeWith({
+    'site/src/data/faq/theta.md': entry({ sources: searchedRow(DEAD) }),
+    'site/src/data/post/iota.md': entry({ sources: [...archivedRow(OTHER), ...searchedRow(DEAD)] }),
+  });
+
+  assert.deepEqual(citingEntries({ repoRoot, url: DEAD }), []);
+  assert.deepEqual(citingEntries({ repoRoot, url: OTHER }), []);
+  assert.deepEqual(citedUrls({ repoRoot }), new Map());
 });
