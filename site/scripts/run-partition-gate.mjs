@@ -8,8 +8,10 @@ import { invokedDirectly } from './invoked-directly.mjs';
 import { PartitionFactsError } from './engine-partition-facts.mjs';
 
 const REPOSITORY_ROOT = resolve(import.meta.dirname, '..', '..');
-const USAGE = 'usage: node scripts/run-partition-gate.mjs [--root <repository>] [--list] [--allow site-bound]';
+const USAGE =
+  'usage: node scripts/run-partition-gate.mjs [--root <repository>] [--list] [--allow site-bound=<number of files>]';
 const ALLOWABLE = 'site-bound';
+const CEILING = /^site-bound=(\d+)$/;
 
 export function trackedFiles(root) {
   return execFileSync('git', ['ls-files', '-z'], { cwd: root, encoding: 'utf8', maxBuffer: 1 << 28 })
@@ -29,13 +31,39 @@ function options(argv) {
     strict: true,
     allowPositionals: false,
   });
-  const refused = (values.allow ?? []).find((rule) => rule !== ALLOWABLE);
-  if (refused !== undefined) throw new Error(`only ${ALLOWABLE} can be allowed, not ${refused}`);
+  const ceilings = (values.allow ?? []).map((entry) => CEILING.exec(entry));
+  if (ceilings.length > 1 || ceilings.includes(null)) {
+    throw new Error(`--allow takes ${ALLOWABLE}=<number of files>, one ceiling and no other rule`);
+  }
   return {
     root: values.root === undefined ? REPOSITORY_ROOT : resolve(values.root),
     list: values.list === true,
-    allowed: new Set(values.allow ?? []),
+    ceiling: ceilings.length === 0 ? null : Number(ceilings[0][1]),
   };
+}
+
+function split(findings, ceiling) {
+  const siteBound = findings.filter(({ rule }) => rule === ALLOWABLE);
+  const others = findings.filter(({ rule }) => rule !== ALLOWABLE);
+  if (ceiling === null) return { allowed: [], enforced: findings, siteBound, ceiling };
+  if (siteBound.length <= ceiling) return { allowed: siteBound, enforced: others, siteBound, ceiling };
+  return { allowed: [], enforced: findings, siteBound, ceiling };
+}
+
+function ceilingLines({ allowed, siteBound, ceiling }) {
+  if (ceiling === null) return [];
+  if (siteBound.length > ceiling) {
+    return [
+      `PARTITION site-bound-ceiling ${siteBound.length} files: ${ceiling} is allowed, so a new engine file names the site: move its fact into the config or a seeded data file`,
+    ];
+  }
+  if (allowed.length < ceiling) {
+    const noun = allowed.length === 1 ? 'file' : 'files';
+    return [
+      `NOTE site-bound: ${allowed.length} ${noun} names the site and ${ceiling} are allowed; lower --allow to site-bound=${allowed.length}`,
+    ];
+  }
+  return [];
 }
 
 export function main(argv) {
@@ -49,12 +77,12 @@ export function main(argv) {
   }
   try {
     const report = partitionReport({ files: trackedFiles(parsed.root), read: readerOf(parsed.root) });
-    const allowed = report.findings.filter(({ rule }) => parsed.allowed.has(rule));
-    const enforced = report.findings.filter(({ rule }) => !parsed.allowed.has(rule));
+    const { allowed, enforced, siteBound } = split(report.findings, parsed.ceiling);
     if (parsed.list)
       for (const { file, class: name, rule } of report.rows) console.log(`${name ?? 'none'} ${rule ?? '-'} ${file}`);
     for (const { rule, where, detail } of enforced) console.log(`PARTITION ${rule} ${where}: ${detail}`);
     for (const { rule, where, detail } of allowed) console.log(`ALLOWED ${rule} ${where}: ${detail}`);
+    for (const line of ceilingLines({ allowed, siteBound, ceiling: parsed.ceiling })) console.log(line);
     const suffix = allowed.length === 0 ? '' : `; ${allowed.length} allowed`;
     console.log(`${summaryLine({ ...report, findings: enforced })}${suffix}`);
     process.exitCode = enforced.length === 0 ? 0 : 1;

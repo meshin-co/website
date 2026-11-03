@@ -72,11 +72,11 @@
 ## 4. Keep it true
 
 - [x] 4.1 `npm run gate:partition` runs in `ci.yml` and is named by the skill. It runs with
-      `--allow site-bound`: those files print as `ALLOWED`, are counted and do not fail, because 34 engine
-      files still name this site. `unclassified` and `anchor-unserved` fail the build. Drop the flag at zero
+      `--allow site-bound=34`, a ceiling: up to 34 engine files that name this site print as `ALLOWED` and do not
+      fail, and a 35th fails with every one listed. `unclassified` and `anchor-unserved` always fail. The ceiling
+      only goes down: lower it as 1.7 fixes files
 - [x] 4.2 Planted specimens and `mutation-smoke.mjs` rows: a file that fits no rule, an anchor whose seed is
-      removed, and an export that no longer builds. `site-bound` has no row, because while it is allowed
-      nothing can fail; `run-partition-gate.test.mjs` plants it and shows it fails without the flag
+      removed, an engine file that names the site past the ceiling, and an export that no longer builds
 - [x] 4.3 The export proof runs on demand. A full export and build takes about a minute, which is too slow for
       the gate and too slow for the pre-push hook. `localOnlyGates` in `site/package.json` records it
 - [ ] 4.4 A finding for an interview that misses a config value or a workflow secret

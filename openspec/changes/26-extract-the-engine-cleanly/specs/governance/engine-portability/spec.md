@@ -43,6 +43,17 @@ count.
 - **WHEN** a test file contains the same host
 - **THEN** the run reports no finding for it, because a test pins behaviour against an invented site
 
+#### Scenario: A new engine file names the site
+
+- **WHEN** the run is given `--allow site-bound=<n>` and more than `<n>` engine files name the site
+- **THEN** every one of them prints as `PARTITION site-bound`, a `PARTITION site-bound-ceiling` line says that a new
+  engine file names the site, and the run exits 1
+
+#### Scenario: Fewer files name the site than the ceiling allows
+
+- **WHEN** fewer than `<n>` engine files name the site
+- **THEN** they print as `ALLOWED`, the run exits 0, and a `NOTE` line gives the number to lower the ceiling to
+
 ### Requirement: Every file the engine expects is served
 
 Each file or directory that `scripts/engine-anchors.mjs` expects SHALL be shipped as engine, provided

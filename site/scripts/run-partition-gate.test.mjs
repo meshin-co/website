@@ -65,6 +65,7 @@ test('an unknown option exits 2 with the usage line', () => {
 });
 
 const NAMES_THE_SITE = { 'site/.agents/skills/names-the-site.md': '# Skill\n\nAsk the owner of example.test.\n' };
+const ALSO_NAMES_THE_SITE = { 'site/.agents/skills/also-names-the-site.md': '# Skill\n\nWrite to example.test.\n' };
 
 test('a tree whose only finding is site-bound fails by default', () => {
   const result = run('--root', repository(Object.keys(NAMES_THE_SITE), NAMES_THE_SITE));
@@ -72,25 +73,49 @@ test('a tree whose only finding is site-bound fails by default', () => {
   assert.match(result.stdout, /^PARTITION site-bound site\/\.agents\/skills\/names-the-site\.md: /m);
 });
 
-test('--allow site-bound still prints the file, marks it ALLOWED, counts it and exits 0', () => {
-  const result = run('--root', repository(Object.keys(NAMES_THE_SITE), NAMES_THE_SITE), '--allow', 'site-bound');
+test('--allow site-bound=1 prints the one file, marks it ALLOWED, counts it and exits 0', () => {
+  const result = run('--root', repository(Object.keys(NAMES_THE_SITE), NAMES_THE_SITE), '--allow', 'site-bound=1');
   assert.equal(result.status, 0, result.stdout);
   assert.match(result.stdout, /^ALLOWED site-bound site\/\.agents\/skills\/names-the-site\.md: /m);
   assert.match(result.stdout, /; 0 findings; 1 allowed$/m);
 });
 
-test('--allow site-bound never hides a file that fits no rule', () => {
+test('--allow site-bound=1 never hides a file that fits no rule', () => {
   const root = repository(['mystery.bin', ...Object.keys(NAMES_THE_SITE)], NAMES_THE_SITE);
-  const result = run('--root', root, '--allow', 'site-bound');
+  const result = run('--root', root, '--allow', 'site-bound=1');
   assert.equal(result.status, 1);
   assert.match(result.stdout, /^PARTITION unclassified mystery\.bin: /m);
   assert.match(result.stdout, /; 1 finding; 1 allowed$/m);
 });
 
-test('only site-bound can be allowed: any other rule is a usage error', () => {
-  const result = run('--root', repository(), '--allow', 'unclassified');
-  assert.equal(result.status, 2);
-  assert.match(result.stderr, /only site-bound can be allowed/);
+test('a file over the ceiling fails: every file that names the site is enforced and the ceiling line says why', () => {
+  const text = { ...NAMES_THE_SITE, ...ALSO_NAMES_THE_SITE };
+  const result = run('--root', repository(Object.keys(text), text), '--allow', 'site-bound=1');
+  assert.equal(result.status, 1, result.stdout);
+  assert.match(result.stdout, /^PARTITION site-bound site\/\.agents\/skills\/names-the-site\.md: /m);
+  assert.match(result.stdout, /^PARTITION site-bound site\/\.agents\/skills\/also-names-the-site\.md: /m);
+  assert.match(
+    result.stdout,
+    /^PARTITION site-bound-ceiling 2 files: 1 is allowed, so a new engine file names the site/m
+  );
+  assert.doesNotMatch(result.stdout, /^ALLOWED /m);
+});
+
+test('fewer files than the ceiling passes and says how far the ceiling can drop', () => {
+  const result = run('--root', repository(Object.keys(NAMES_THE_SITE), NAMES_THE_SITE), '--allow', 'site-bound=3');
+  assert.equal(result.status, 0, result.stdout);
+  assert.match(
+    result.stdout,
+    /^NOTE site-bound: 1 file names the site and 3 are allowed; lower --allow to site-bound=1$/m
+  );
+});
+
+test('only site-bound can be allowed, and only with a number of files: any other form is a usage error', () => {
+  for (const flag of ['unclassified=3', 'site-bound', 'site-bound=many']) {
+    const result = run('--root', repository(), '--allow', flag);
+    assert.equal(result.status, 2, flag);
+    assert.match(result.stderr, /--allow takes site-bound=<number of files>/, flag);
+  }
 });
 
 test('a tracked file deleted from the working tree is not part of the tree: an anchor its seed served is unserved', () => {

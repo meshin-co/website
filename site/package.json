@@ -59,7 +59,7 @@
     "gate:orphans": "node scripts/orphan-gate.mjs dist",
     "gate:paid": "node scripts/run-paid-gate.mjs dist",
     "gate:plan": "node scripts/plan-gate.mjs",
-    "gate:partition": "node scripts/run-partition-gate.mjs --allow site-bound",
+    "gate:partition": "node scripts/run-partition-gate.mjs --allow site-bound=34",
     "gate:registers": "node scripts/generate-registers.mjs --check dist",
     "gate:routes": "node scripts/routes-gate.mjs dist",
     "gate:search": "node scripts/search-budget.mjs dist",

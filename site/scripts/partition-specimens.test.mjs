@@ -1,12 +1,13 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
+import { brandFromDisk } from '../src/utils/brand.mjs';
 import { partitionReport } from './engine-partition-gate.mjs';
 import { SCENE_FILES, sceneReader } from './fixtures/partition-scene.mjs';
 import { partitionSpecimens } from './partition-specimens.mjs';
 
 const COPY_SITE = '/copy/site';
-const NAMES = ['exportBuildBroken', 'partitionAnchorUnserved', 'partitionFileFitsNoRule'];
+const NAMES = ['exportBuildBroken', 'partitionAnchorUnserved', 'partitionFileFitsNoRule', 'partitionSiteBound'];
 
 function helpers() {
   const calls = [];
@@ -42,12 +43,14 @@ test('each plant changes one file at the repository root or the site, and return
       ['edit', '/copy/site/src/pages/styleguide.astro'],
       ['remove', '/copy/seed/site/src/data/tags.mjs.seed'],
       ['add', '/copy/mystery.bin'],
+      ['add', '/copy/site/.agents/skills/names-the-site.md'],
     ]
   );
   assert.deepEqual(
     restored.map((restore) => restore()),
-    ['edit', 'remove', 'add']
+    ['edit', 'remove', 'add', 'add']
   );
+  assert.ok(calls[3][2].includes(brandFromDisk().name), 'the planted skill names the site');
   assert.match(calls[0][2], /^---\nimport '~\/data\/author\/nobody-here\.md';\nbody\n$/);
 });
 

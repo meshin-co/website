@@ -40,7 +40,7 @@ decisions L1 to L67.
 seeds at their target paths, with `engine-export.json`. A copy of it was installed and built for an invented
 second site. `npm run gate:export` repeats that build on demand.
 
-**Still open.** 34 engine files still name this site (`gate:partition` allows them and prints each), skills and
+**Still open.** 34 engine files still name this site (`gate:partition` allows up to 34 of them, prints each, and fails on a 35th), skills and
 documents cite files that do not travel, and 182 engine tests in a copy pin facts of this site. `tasks.md`
 lists each with its state.
 

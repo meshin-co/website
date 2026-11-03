@@ -14,8 +14,8 @@ Every tracked file is `engine`, `site` or `evidence`. The first entry of `RULES`
 lives, whether a script reads it, whether it names a collection entry, whether a generator writes it. No
 rule reads a list of paths. `--list` prints every file with its class and rule; `--root <dir>` reads another
 tree. The last line gives the three counts and the findings; the exit code is 1 while any remain.
-`npm run gate:partition` runs it in CI with `--allow site-bound`: those files print as `ALLOWED` and are
-counted but do not fail, because about 35 engine files still name this site. Drop the flag at zero.
+`npm run gate:partition` runs in CI with `--allow site-bound=34`: up to 34 engine files that name this site print as
+`ALLOWED`; a 35th fails with all listed. Lower the number as files are fixed. `scripts/partition-specimens.mjs` plants failures.
 
 `scripts/engine-partition-facts.mjs` reads the facts from the tree: the layout from `site/engine.config.json`,
 the collections from `site/src/content.config.ts`, the script directories and `assets:` outputs from
