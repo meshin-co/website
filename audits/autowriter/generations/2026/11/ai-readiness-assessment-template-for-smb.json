@@ -1,0 +1,243 @@
+{
+  "schema": 1,
+  "slug": "ai-readiness-assessment-template-for-smb",
+  "runId": "41584477890-1",
+  "generatedAt": "2026-11-03T05:36:35.954Z",
+  "claim": {
+    "title": "AI readiness assessment template for SMB",
+    "query": "ai readiness assessment template for smb",
+    "prompt": {
+      "number": 3,
+      "text": "AI readiness assessment template for SMB"
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-03",
+      "windowStart": "2026-08-03",
+      "windowEnd": "2026-11-01",
+      "table": "Buyer prompts"
+    },
+    "row": {
+      "#": "3",
+      "Prompt": "AI readiness assessment template for SMB",
+      "Must win": "`/resources/ai-readiness-scorecard`",
+      "Impressions": "unproven",
+      "Position": "-",
+      "Carried by": "-"
+    }
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/ai-readiness-assessment-template-for-smb",
+    "path": "site/src/data/post/ai-readiness-assessment-template-for-smb.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_0b8ca0e1d6123eb1016ae9727bb28887d18d01f92ff4bb91f8",
+  "published": {
+    "callIndex": 1
+  },
+  "calls": [
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0e1bd4052fc5a659016ae97246e3d487d188833991da78c920",
+      "requestDigest": "c22e2b879fa94f55287aa68b0f283b2d986554bebebe46d68b705586f6dcd20d",
+      "tokens": {
+        "input": 10099,
+        "output": 4105
+      },
+      "costUsd": 0.030624,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0b8ca0e1d6123eb1016ae9727bb28887d18d01f92ff4bb91f8",
+      "requestDigest": "c5ba068c9191a3430e303a64752e57071312f6b539d27121f336fe0b2beb9594",
+      "tokens": {
+        "input": 13197,
+        "output": 3004
+      },
+      "costUsd": 0.028217,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 23296,
+      "output": 7109
+    },
+    "costUsd": 0.058841
+  },
+  "ledger": "audits/autowriter/2026/11/ai-readiness-assessment-template-for-smb.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "9a9322da9ae297414981cf9142b74d3825719f724def757b535f70011b339060",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "d223b510ff5c07ad0f54209c52f0caaf40638510622f479aaec31683e43ee9da"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "67c26028e794a494b127f1ecdc8f116cbec1a8b7c64f199844770a998264767d"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "163efb2493ea36f55afb196dd378cb63b6283b8a046671e5e9a5cd7d17a8aec7"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "880d68340c8a5ee3a565266b9ca5c8f6384d0734074612cf64375277839ac4c5"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "55fb255974a6113f20d148cd5666fe2a3dfd397fb73b265232b177fe18baa16c"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "472c32d945917a45c293be84bff7e19b4c6271b746569b1700d718e56e6a0fcc"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "62d5ef4ea996727c5fb798afe687252aa2112c859ddf90dd0e87f21b6d48db18"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "70ec4173e205e974cbaafaf270f1a24aa674c0aeb29feb653f7953f9b9b656b8"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "f9e37c623c6cd481fc79489dba4061b4920647cc9a7429a1d256a3eb9e5fbb97"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "8ea40566d29d270837179ceaedfc321f1dedfd385b4f53bd97ec0ca099eebdb1"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "df07e5ca1fced82881ab08e3849da19ec0de824e4be87b2719f174f0f73f33c2"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "affaa811f7a719c0576603f421ae04a2dd9143cc",
+    "fingerprint": "262ae37997f066b0db5dc6c0cbd7bdf031c1475d3a54ca69ff00e9631761aa37"
+  },
+  "claimTable": [
+    {
+      "sentence": "The NIST AI RMF is intended for voluntary use.",
+      "marker": "sourced",
+      "source": {
+        "id": "ai-rmf",
+        "title": "AI Risk Management Framework",
+        "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+      },
+      "span": "intended for voluntary use"
+    }
+  ],
+  "band": {
+    "measuredOn": "2026-11-02",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 122,
+      "median": 15,
+      "shareBelowThreshold": 0.2541,
+      "shareJustBelow": 0.2132,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/ai-readiness-assessment-template-for-smb.json",
+    "audits/autowriter/claims/2026/11/ai-readiness-assessment-template-for-smb.json",
+    "audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-ai-readiness-assessment-template-for-smb.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/articles-telemetry.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/ai-readiness-assessment-template-for-smb.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}

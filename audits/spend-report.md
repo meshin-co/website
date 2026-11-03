@@ -1,21 +1,21 @@
 # Spend report: what writing each entry cost
 
-Generated-from: 3fa620f
-Generated-at: 2026-11-03T01:59:21.912Z
+Generated-from: affaa811f7a719c0576603f421ae04a2dd9143cc
+Generated-at: 2026-11-03T05:36:35.959Z
 
 ## This month
 
-2026-11 so far: 0.022748 USD spent of the 25.00 USD monthly ceiling, 24.977252 USD left.
+2026-11 so far: 0.081589 USD spent of the 25.00 USD monthly ceiling, 24.918411 USD left.
 
-The figure is the spend of the UTC calendar month of 2026-11-03T01:59:21.912Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
+The figure is the spend of the UTC calendar month of 2026-11-03T05:36:35.959Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
 
 | What was paid for               | Cost (USD) |
 | ------------------------------- | ---------- |
-| Writing calls of entries        | 0.00       |
+| Writing calls of entries        | 0.058841   |
 | Repair calls                    | 0.00       |
 | Runs that ended with no entry   | 0.022748   |
 | Spend with no generation record | 0.00       |
-| Everything paid for             | 0.022748   |
+| Everything paid for             | 0.081589   |
 
 ## About this file
 
@@ -23,9 +23,55 @@ This file is written by `npm run audit:spend` from the generation records and th
 
 Cost means the cost of the writing calls of an entry: its draft and its correction, each as its record stored it, added in whole micro-dollars. Repair is the cost of the repair calls that the record of the entry holds, and is not part of Cost. A draft that a run wrote and then skipped, a run that stopped before any entry existed and an attempt that a person discarded have no entry, so no row holds them. The ledgers record that spend, and the monthly spend ceiling counts it. The paid tables count every call the ledgers and the records show, and each call is in exactly one row: the writing calls of entries; every repair call, including a repair that failed; the runs that ended with no entry, which the Notes name; and the spend of a ledger that no generation record names, which the Warnings name. The four rows add up to the last row.
 
-## No entry yet
+## This entry
 
-No generation record could be counted, so this file holds no entry row, no entry total and no rate. That is the absence of a measurement. It is not a cost of zero. The figures of the month above count every call the ledgers show.
+The newest run: the run of the newest record, which was generated at 2026-11-03T05:36:35.954Z. A run that wrote an article and a term lists both.
+
+| Generated (UTC)          | Format  | Slug                                     | Input tokens | Output tokens | Cost (USD) | Repair (USD) |
+| ------------------------ | ------- | ---------------------------------------- | ------------ | ------------- | ---------- | ------------ |
+| 2026-11-03T05:36:35.954Z | article | ai-readiness-assessment-template-for-smb | 23,296       | 7,109         | 0.058841   | 0.00         |
+
+## Last 30 days
+
+The 30 days of 24 hours each that end at the newest record: after 2026-10-04T05:36:35.954Z and through 2026-11-03T05:36:35.954Z. The start is excluded and the end is included, so an entry generated exactly at the start is outside the window. The window ends at the newest record and not at the clock, so this file does not change at midnight. Read long after the last run, it still describes the 30 days before that run. These 30 days are not the UTC calendar month of the monthly spend ceiling in `site/engine.config.json`: that ceiling counts calendar months and counts every call the machine paid for, not only the writing calls of entries. This table counts the writing calls of entries only.
+
+| Format  | Entries | Input tokens | Output tokens | Cost (USD) |
+| ------- | ------- | ------------ | ------------- | ---------- |
+| all     | 1       | 23,296       | 7,109         | 0.058841   |
+| article | 1       | 23,296       | 7,109         | 0.058841   |
+
+## All time
+
+Every entry recorded: from 2026-11-03T05:36:35.954Z, the oldest record, through 2026-11-03T05:36:35.954Z, the newest. The first table counts the writing calls of entries only. The second table adds every other call the machine paid for, so its last row is the whole spend the ledgers and records show.
+
+| Format  | Entries | Input tokens | Output tokens | Cost (USD) |
+| ------- | ------- | ------------ | ------------- | ---------- |
+| all     | 1       | 23,296       | 7,109         | 0.058841   |
+| article | 1       | 23,296       | 7,109         | 0.058841   |
+
+| What was paid for               | Cost (USD) |
+| ------------------------------- | ---------- |
+| Writing calls of entries        | 0.058841   |
+| Repair calls                    | 0.00       |
+| Runs that ended with no entry   | 0.022748   |
+| Spend with no generation record | 0.00       |
+| Everything paid for             | 0.081589   |
+
+## Every entry
+
+One row per generation record, newest first. The cost is the cost of its writing calls, and Repair is the cost of its repair calls.
+
+| Generated (UTC)          | Format  | Slug                                     | Input tokens | Output tokens | Cost (USD) | Repair (USD) |
+| ------------------------ | ------- | ---------------------------------------- | ------------ | ------------- | ---------- | ------------ |
+| 2026-11-03T05:36:35.954Z | article | ai-readiness-assessment-template-for-smb | 23,296       | 7,109         | 0.058841   | 0.00         |
+
+## Rates
+
+The model and the two rates, in USD per million tokens, that each cost was computed at. An earlier entry keeps the cost its record stored, so a change of rate adds a row and rewrites no history. First and Last are the instants of the first and the last entry priced at that rate.
+
+| Model         | Input USD per million tokens | Output USD per million tokens | Entries | First                    | Last                     |
+| ------------- | ---------------------------- | ----------------------------- | ------- | ------------------------ | ------------------------ |
+| gpt-6.1-terra | 1                            | 5                             | 1       | 2026-11-03T05:36:35.954Z | 2026-11-03T05:36:35.954Z |
 
 ## Notes
 

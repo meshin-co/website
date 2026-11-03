@@ -240,16 +240,16 @@
   {
     "target": "/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company",
     "location": "head.title",
-    "status": "verified",
-    "reason": "Read as built on 2026-10-08: the page title 'How to choose an AI operating model for a mid-size company — meshin.co', which is the title row plus the site suffix. It asserts no fact beyond the title read on frontmatter.title. The text is unchanged since the 2026-10-03 reading.",
-    "digest": "ffbf79a8de00"
+    "status": "rewritten",
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-readiness-assessment-template-for-smb (generation record audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "2130b5d05546"
   },
   {
     "target": "/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [body.p] now \"Published 2 October 2026 · Updated 25 October 2026\";  [body.p] now \"The AI readiness and risk assessment is my outside read of your own records. It inventories your AI tools and data flows and lists the gaps against the EU AI Act, NIST AI…\";  [body.p] no longer rendered: \"In METR&#39;s 2025 trial, 16 developers believed AI made them 20% faster. Tasks took 19% longer with AI allowed. METR now marks that result out of date.\"; The date line follows updatedDate in the source file, which change 18 set to 2026-10-25 where it changed prose or links (write-copy.md: bump updatedDate when you change prose); publishDate is unchanged. The card excerpt is the post's description. Change 18 rewrote that description, and because the new text equals the post's description row exactly, the ledger now holds it as that row (frontmatter.description, used on this route), dispositioned at articles-telemetry.json#1; that entry also records that the new description drops the \"METR now marks that result out of date\" hedge, which the body keeps. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand.",
-    "digest": "ffbf79a8de00"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-readiness-assessment-template-for-smb (generation record audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "2130b5d05546"
   },
   {
     "target": "src/data/resource/handover-playbook.md",

@@ -6,10 +6,10 @@
   "attempts": [],
   "spend": {
     "tokens": {
-      "input": 0,
-      "output": 0
+      "input": 23296,
+      "output": 7109
     },
-    "costUsd": 0
+    "costUsd": 0.058841
   },
   "verdict": {
     "state": "open",
@@ -24,5 +24,12 @@
       "against": "audits/autowriter/2026/11/fractional-caio-vs-full-time-caio-cost.json",
       "detail": "slug \"fractional-caio-vs-full-time-caio-cost\" already has the ledger audits/autowriter/2026/11/fractional-caio-vs-full-time-caio-cost.json, so an earlier run owns it and the topic cannot be tried again yet; no procedure frees a slug safely, and removing the ledger is not one, because it records spend that the monthly spend ceiling counts"
     }
-  ]
+  ],
+  "generation": {
+    "tokens": {
+      "input": 23296,
+      "output": 7109
+    },
+    "costUsd": 0.058841
+  }
 }

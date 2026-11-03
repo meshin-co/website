@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/ai-readiness-assessment-template-for-smb.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/ai-readiness-assessment-template-for-smb.json on 2026-11-03. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json.",
+    "digest": "b1306cf0a276"
+  },
+  {
+    "target": "/blog/ai-readiness-assessment-template-for-smb",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/ai-readiness-assessment-template-for-smb.json on 2026-11-03. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json.",
+    "digest": "95b40379bbc8"
+  }
+]
