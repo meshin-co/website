@@ -63,6 +63,13 @@ are.
 - **WHEN** a record is filed under a month other than the month of its claim
 - **THEN** the gate exits 1 and the finding says which month the claim puts it in
 
+#### Scenario: A slug is claimed again after its first claim lapsed
+
+- **WHEN** a claim lapsed without an entry and the same slug is claimed again in a later month, so two
+  claim files carry the slug, each filed under the month of its own claim
+- **THEN** the gate reports no `record-layout` finding for either file, and a record of that slug is
+  filed correctly under the month of either claim
+
 #### Scenario: A hand-written disposition
 
 - **WHEN** `audits/phase-4.7/dispositions/routes.json` lies flat, as it always has
@@ -91,3 +98,10 @@ nothing shows as a count of zero and not as a pass.
 
 - **WHEN** ledgers exist and the spend reader reports zero ledgers
 - **THEN** the zero is printed in its output, so the ceiling that never fires is visible
+
+#### Scenario: A claim is read for a slug that was claimed twice
+
+- **WHEN** a reader looks up the claim of a slug that has a lapsed claim in an earlier month and a live
+  claim in a later one
+- **THEN** it takes the claim of the later month, and it still refuses a claim filed outside its month
+  directory beside another, because it could not tell which file is the claim

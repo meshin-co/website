@@ -158,6 +158,18 @@ test('the dispositions the report is given are counted, and the summary line say
   assert.match(summaryLine(run), /, 0 generation records, 3 dispositions, 0 findings$/);
 });
 
+test('a slug claimed again after its first claim lapsed has two claim files and no finding, and the lapsed one is counted as lapsed', () => {
+  const RECLAIMED = '2026-12-01T07:00:00.000Z';
+  const again = claim({ claimedAt: RECLAIMED, expiresAt: '2026-12-15T07:00:00.000Z', runId: '9002' });
+  const run = report({
+    claims: [FILED_SCRATCH, { path: recordPath('claim', SLUG, RECLAIMED), text: JSON.stringify(again) }],
+    now: new Date('2026-12-02T07:00:00.000Z'),
+  });
+  assert.deepEqual(run.findings, []);
+  assert.equal(run.counts.claims, 2);
+  assert.equal(run.counts.lapsed, 1);
+});
+
 test('a hand-written disposition may stay flat, and a generated one may not', () => {
   const generated = 'audits/phase-4.7/dispositions/generated-what-is-aims.json';
   assert.deepEqual(findings({ dispositions: [HAND_WRITTEN] }), []);

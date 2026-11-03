@@ -7,7 +7,7 @@ const AUTOWRITER = 'audits/autowriter';
 
 const FAMILIES = {
   ledger: { directory: AUTOWRITER, prefix: '', noun: 'ledger' },
-  claim: { directory: `${AUTOWRITER}/claims`, prefix: '', noun: 'claim' },
+  claim: { directory: `${AUTOWRITER}/claims`, prefix: '', noun: 'claim', reclaimable: true },
   generation: { directory: `${AUTOWRITER}/generations`, prefix: '', noun: 'generation record' },
   disposition: { directory: 'audits/phase-4.7/dispositions', prefix: 'generated-', noun: 'disposition' },
 };
@@ -67,26 +67,32 @@ export function layoutProblem(path) {
 }
 
 export function findRecordPath(paths, family, slug) {
-  const { prefix, noun } = rule(family);
+  const { prefix, noun, reclaimable } = rule(family);
   const name = `${prefix}${slug}.json`;
   const found = paths.filter((path) => familyOf(path) === family && basename(path) === name);
-  if (found.length > 1) throw new Error(`${noun} ${slug} is filed more than once: ${found.join(', ')}`);
-  return found[0] ?? null;
+  const following = reclaimable && found.every((path) => layoutProblem(path) === null);
+  if (found.length > 1 && !following) throw new Error(`${noun} ${slug} is filed more than once: ${found.join(', ')}`);
+  return found.sort().at(-1) ?? null;
 }
 
-function misfiled({ path, family, slug, claimedAt }) {
+const newest = (instants) => instants.reduce((latest, at) => (Date.parse(at) > Date.parse(latest) ? at : latest));
+
+function misfiled({ path, family, slug, instants }) {
+  if (instants.some((claimedAt) => recordPath(family, slug, claimedAt) === path)) return [];
+  const claimedAt = newest(instants);
   const expected = recordPath(family, slug, claimedAt);
-  if (path === expected) return [];
   const detail = `the ${FAMILIES[family].noun} of ${slug} belongs at ${expected}, the month of its claim (${claimedAt})`;
   return [{ path, detail }];
 }
 
 export function filingProblems({ paths, claims }) {
-  const claimedAt = new Map(claims.map((claim) => [claim.slug, claim.claimedAt]));
+  const claimed = Map.groupBy(claims, ({ slug }) => slug);
   return paths.flatMap((path) => {
     const slug = slugOfRecord(path);
-    if (slug !== null && claimedAt.has(slug))
-      return misfiled({ path, family: familyOf(path), slug, claimedAt: claimedAt.get(slug) });
+    if (slug !== null && claimed.has(slug)) {
+      const instants = claimed.get(slug).map(({ claimedAt }) => claimedAt);
+      return misfiled({ path, family: familyOf(path), slug, instants });
+    }
     const detail = layoutProblem(path);
     return detail === null ? [] : [{ path, detail }];
   });

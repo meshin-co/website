@@ -281,6 +281,60 @@ test('two files for one slug leave the one in the wrong month named', () => {
   );
 });
 
+const RECLAIMED = '2026-12-01T07:00:00.000Z';
+const RECLAIMED_AT = {
+  claim: SHARDED.claim.replace('2026/11', '2026/12'),
+  ledger: SHARDED.ledger.replace('2026/11', '2026/12'),
+};
+const claimedTwice = () => [claimOf(), claimOf(SLUG, RECLAIMED)];
+
+test('a slug claimed again in a later month leaves its lapsed claim filed where it was, and neither claim is misfiled', () => {
+  assert.deepEqual(filingProblems({ paths: [SHARDED.claim, RECLAIMED_AT.claim], claims: claimedTwice() }), []);
+  assert.deepEqual(
+    filingProblems({ paths: [RECLAIMED_AT.claim, SHARDED.claim], claims: claimedTwice().toReversed() }),
+    []
+  );
+});
+
+test('a ledger filed in the month of any claim of its slug is not misfiled', () => {
+  assert.deepEqual(filingProblems({ paths: [SHARDED.ledger], claims: claimedTwice() }), []);
+  assert.deepEqual(filingProblems({ paths: [RECLAIMED_AT.ledger], claims: claimedTwice() }), []);
+});
+
+test('a record in a month that no claim of its slug names is misfiled, and the finding names the month of the newest claim', () => {
+  const october = SHARDED.ledger.replace('2026/11', '2026/10');
+  const [found, ...rest] = filingProblems({ paths: [october], claims: claimedTwice() });
+  assert.equal(rest.length, 0);
+  assert.equal(found.path, october);
+  assert.equal(
+    found.detail,
+    'the ledger of ' + SLUG + ' belongs at ' + RECLAIMED_AT.ledger + ', the month of its claim (' + RECLAIMED + ')'
+  );
+});
+
+test('a claim looked up by slug is the newest one, whatever order the files are listed in', () => {
+  assert.equal(findRecordPath([SHARDED.claim, RECLAIMED_AT.claim], 'claim', SLUG), RECLAIMED_AT.claim);
+  assert.equal(findRecordPath([RECLAIMED_AT.claim, SHARDED.claim], 'claim', SLUG), RECLAIMED_AT.claim);
+});
+
+test('a claim filed outside its month directory is still ambiguous beside a month claim, so the lookup refuses', () => {
+  assert.throws(
+    () => findRecordPath([FLAT.claim, SHARDED.claim, RECLAIMED_AT.claim], 'claim', SLUG),
+    new RegExp('claim ' + SLUG + ' is filed more than once: .*claims/' + SLUG)
+  );
+});
+
+test('locateRecord finds the live claim of a slug that was claimed in two months, and still refuses a second ledger', () => {
+  inTemp((root) => {
+    put(root, SHARDED.claim);
+    put(root, RECLAIMED_AT.claim);
+    put(root, SHARDED.ledger);
+    put(root, RECLAIMED_AT.ledger);
+    assert.equal(locateRecord(root, 'claim', SLUG), RECLAIMED_AT.claim);
+    assert.throws(() => locateRecord(root, 'ledger', SLUG), /ledger .* is filed more than once/);
+  });
+});
+
 test('recordFiles lists the json files of one family at every depth, sorted, and never those of a sibling', () => {
   inTemp((root) => {
     for (const path of [

@@ -32,6 +32,9 @@
       entries the sentence band and the entry length record leave out (`generatedSlugs`, through
       `recordFiles`); each is tested with a record flat, in its month and deeper, and a pipeline
       commit that removes a record filed in its month is refused at the sink and found in history
+- [x] 2.6 A claim looked up by slug when the slug was claimed in two months is the newest one
+      (`findRecordPath`, the claim family only), and a claim filed outside its month directory beside
+      another is still refused as ambiguous; the repair opens from the live claim
 
 ## 3. A stray flat record fails
 
@@ -40,6 +43,9 @@
       hand-written dispositions stay flat
 - [x] 3.2 A planted specimen, `autowriterRecordMisfiled`, proves the finding, its `plant` returns the
       restore, and `mutation-smoke.mjs` has a row for it
+- [x] 3.3 A slug claimed again in a later month, after its first claim lapsed, leaves two claim files
+      and no `record-layout` finding: each claim is filed under its own month, and any other record
+      of the slug is filed under the month of any of its claims
 
 ## 4. What exists is moved
 
