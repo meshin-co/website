@@ -2,10 +2,12 @@ import './fixtures/no-network.mjs';
 
 import assert from 'node:assert/strict';
 import { rmSync } from 'node:fs';
+import { join } from 'node:path';
 import { afterEach, test } from 'node:test';
 
 import { commitRoute } from './entry-commit.mjs';
 import { assembleRoute } from './route-assembly.mjs';
+import { collectRoutes } from './routes-gate.mjs';
 import { BOT_EMAIL, BOT_NAME } from './pr-classify.mjs';
 import { claimOf, DRAFTS, RUN_DATE } from './fixtures/entry-drafts.mjs';
 import { gitRun } from './fixtures/git-run.mjs';
@@ -112,4 +114,23 @@ test('a post and a term assembled together commit as one commit, every file once
   assert.equal(new Set(committed).size, committed.length);
   assert.equal(gitIn(root, 'rev-list', '--count', 'main..HEAD').trim(), '1');
   assert.equal(gitIn(root, 'status', '--porcelain'), '');
+});
+
+test('a pipeline commit that adds an entry also carries the route ledger, and the ledger is the routes the build produced', async () => {
+  const root = repo();
+  const { files } = await assemble(root, ['article']);
+
+  const { commit } = await commitRoute({
+    repoRoot: root,
+    branch: BRANCH,
+    files: [...files, ...EXTRAS],
+    message: 'content: add a post',
+    run: gitRun(),
+  });
+
+  const carried = gitIn(root, 'show', '--name-only', '--format=', commit).split('\n').filter(Boolean);
+  assert.ok(carried.includes('audits/routes.json'), `the commit carries ${carried.join(', ')}`);
+  const ledger = JSON.parse(gitIn(root, 'show', `${commit}:audits/routes.json`));
+  assert.deepEqual(ledger, collectRoutes(join(root, 'site', 'dist')));
+  assert.ok(ledger.includes('/blog/how-to-write-an-ai-incident-runbook'));
 });

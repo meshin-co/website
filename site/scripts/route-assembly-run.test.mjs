@@ -29,6 +29,7 @@ const TERM_DISPOSITION = recordPath('disposition', claimOf('term').slug, claimOf
 const FACTS = 'site/content-facts.json';
 const CORE = 'docs/SEMANTIC-CORE.md';
 const ROUTES = 'audits/phase-4.7/dispositions/routes.json';
+const LEDGER = 'audits/routes.json';
 
 const assemble = (root, run, format, claim = claimOf(format)) =>
   assembleRoute({
@@ -80,7 +81,10 @@ test('the second assembly builds a tree that holds the first entry and does not 
   const term = await assemble(root, run, 'term');
 
   assert.ok(run.calls.some(({ key }) => key === 'npm run build'));
-  assert.deepEqual(term.files.map(({ path }) => path).sort(), [CORE, FACTS, TERM, TERM_DISPOSITION, ROUTES].sort());
+  assert.deepEqual(
+    term.files.map(({ path }) => path).sort(),
+    [CORE, FACTS, TERM, TERM_DISPOSITION, LEDGER, ROUTES].sort()
+  );
   assert.deepEqual(snapshotOf(root), landed);
   assert.ok(textOf(term, CORE).includes('| `/blog/how-to-write-an-ai-incident-runbook` |'));
   assert.ok(textOf(term, CORE).includes('| `/glossary/model-registry` |'));
@@ -107,6 +111,7 @@ const STEPS = [
   'npm run build',
   'node scripts/semantic-core.mjs',
   'node scripts/generate-registers.mjs',
+  'npm run assets:routes',
   'node scripts/disposition-digest.mjs . dist src/data/glossary/model-registry.md',
   'node scripts/disposition-digest.mjs . dist /glossary/model-registry',
   'node scripts/stale-dispositions.mjs . dist',
@@ -141,7 +146,7 @@ test('after a failed assembly the same call runs again on the same tree and succ
   await assert.rejects(assemble(root, fakeRun(root, { fail }), 'term'), WriterError);
   const retry = await assemble(root, fakeRun(root), 'term');
 
-  assert.equal(retry.files.length, 5);
+  assert.equal(retry.files.length, 6);
   assert.equal(JSON.parse(textOf(retry, TERM_DISPOSITION))[0].digest, digestOf(textOf(retry, TERM)));
 });
 
@@ -174,7 +179,10 @@ test('a term claimed in a later month is filed under that month and leaves the m
   const term = await assemble(root, fakeRun(root), 'term', laterTerm());
 
   assert.equal(DECEMBER_DISPOSITION, 'audits/phase-4.7/dispositions/2026/12/generated-model-registry.json');
-  assert.deepEqual(term.files.map(({ path }) => path).sort(), [CORE, FACTS, TERM, DECEMBER_DISPOSITION, ROUTES].sort());
+  assert.deepEqual(
+    term.files.map(({ path }) => path).sort(),
+    [CORE, FACTS, TERM, DECEMBER_DISPOSITION, LEDGER, ROUTES].sort()
+  );
   assert.deepEqual(snapshotOf(root), landed);
   assert.ok(existsSync(join(root, POST_DISPOSITION)));
 });

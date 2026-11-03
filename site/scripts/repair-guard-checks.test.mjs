@@ -8,7 +8,7 @@ import { REPAIR_CHECKS, loadRepairModules, runRepairCheck } from './repair-guard
 import { FAMILIES, manifestFamilies, provesOf } from './mutation-smoke.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
-const NAMES = ['repair-removal', 'repair-scope', 'repair-attempt-cap'];
+const NAMES = ['repair-removal', 'repair-scope', 'repair-route-ledger', 'repair-attempt-cap'];
 const REAL = await loadRepairModules(SITE);
 
 const checkOf = (name) => {
@@ -17,9 +17,10 @@ const checkOf = (name) => {
 };
 const withGuard = (removalProblems) => ({ ...REAL, guard: { ...REAL.guard, removalProblems } });
 const withScope = (scopeProblems) => ({ ...REAL, scope: { ...REAL.scope, scopeProblems } });
+const withRouteLedger = (routeLedger) => ({ ...REAL, routeLedger: { ...REAL.routeLedger, ...routeLedger } });
 const withAttempt = (ledgerWithAttempt) => ({ ...REAL, ledger: { ...REAL.ledger, ledgerWithAttempt } });
 
-test('the three repair guards each have a check, and nothing else is named', () => {
+test('the four repair guards each have a check, and nothing else is named', () => {
   assert.deepEqual(Object.keys(REPAIR_CHECKS), NAMES);
 });
 
@@ -27,6 +28,7 @@ test('every check passes on the repository as it is, and says what it saw', asyn
   const expected = {
     'repair-removal': /takeaway-removed/,
     'repair-scope': /outside the entry/,
+    'repair-route-ledger': /a dropped route is refused/,
     'repair-attempt-cap': /cap is 3/,
   };
   for (const name of NAMES) {
@@ -117,8 +119,42 @@ test('the cap check fails when the refusal does not name the cap, and when an at
   assert.match(early.reason, /attempt 3 was refused below the cap: the cap is 3/);
 });
 
-test('every check passes again once the real functions are back', () => {
-  for (const name of NAMES) assert.equal(checkOf(name)(REAL).ok, true, name);
+test('the route ledger check fails when the ledger step stays green on a dropped route', async () => {
+  const result = await checkOf('repair-route-ledger')(
+    withRouteLedger({ regenerateRouteLedger: async () => ({ changed: true }) })
+  );
+  assert.equal(result.ok, false);
+  assert.match(result.reason, /stayed green when the build dropped \/blog\/b/);
+});
+
+test('the route ledger check fails when the ledger step does not carry a route the build added', async () => {
+  const real = REAL.routeLedger.regenerateRouteLedger;
+  const blind = async (input) => ({ ...(await real(input)), changed: false });
+  const result = await checkOf('repair-route-ledger')(withRouteLedger({ regenerateRouteLedger: blind }));
+  assert.equal(result.ok, false);
+  assert.match(result.reason, /did not carry a route the build added/);
+});
+
+test('the route ledger check fails when the ledger step carries a ledger the build left as it was', async () => {
+  const real = REAL.routeLedger.regenerateRouteLedger;
+  const always = async (input) => ({ ...(await real(input)), changed: true });
+  const result = await checkOf('repair-route-ledger')(withRouteLedger({ regenerateRouteLedger: always }));
+  assert.equal(result.ok, false);
+  assert.match(result.reason, /carried a ledger the build left as it was/);
+});
+
+test('the route ledger check fails when a repair may not carry the ledger', async () => {
+  const result = await checkOf('repair-route-ledger')(
+    withScope(({ paths }) =>
+      paths.includes('audits/routes.json') ? [{ path: 'audits/routes.json', problem: 'is outside the entry' }] : []
+    )
+  );
+  assert.equal(result.ok, false);
+  assert.match(result.reason, /scope check refused the route ledger: is outside the entry/);
+});
+
+test('every check passes again once the real functions are back', async () => {
+  for (const name of NAMES) assert.equal((await checkOf(name)(REAL)).ok, true, name);
 });
 
 test('each check has one smoke family that proves repair:entry, and no such family names another check', () => {

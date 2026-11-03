@@ -31,6 +31,7 @@ const TERM_ROUTE = '/glossary/model-registry';
 const FACTS = 'site/content-facts.json';
 const CORE = 'docs/SEMANTIC-CORE.md';
 const ROUTES = 'audits/phase-4.7/dispositions/routes.json';
+const LEDGER = 'audits/routes.json';
 
 const entriesOf = (...formats) => formats.map((format) => ({ claim: claimOf(format), draft: DRAFTS[format] }));
 const assemble = (root, run, entries = entriesOf('article', 'term')) =>
@@ -45,7 +46,7 @@ test('a post and a term assemble in one call: each entry file, each disposition,
   const { files } = await assemble(root, fakeRun(root));
   const paths = files.map(({ path }) => path);
 
-  assert.deepEqual(paths, [POST, TERM, FACTS, CORE, POST_DISPOSITION, TERM_DISPOSITION, ROUTES]);
+  assert.deepEqual(paths, [POST, TERM, FACTS, CORE, POST_DISPOSITION, TERM_DISPOSITION, LEDGER, ROUTES]);
   assert.equal(new Set(paths).size, paths.length);
 });
 
@@ -55,7 +56,7 @@ test('the order of the entries is the order of the entry files and of the dispos
 
   assert.deepEqual(
     files.map(({ path }) => path),
-    [TERM, POST, FACTS, CORE, TERM_DISPOSITION, POST_DISPOSITION, ROUTES]
+    [TERM, POST, FACTS, CORE, TERM_DISPOSITION, POST_DISPOSITION, LEDGER, ROUTES]
   );
 });
 
@@ -144,7 +145,7 @@ test('entries claimed in two months file their dispositions under their own mont
   assert.notEqual(october, POST_DISPOSITION);
   assert.deepEqual(
     result.files.map(({ path }) => path),
-    [POST, TERM, FACTS, CORE, october, TERM_DISPOSITION, ROUTES]
+    [POST, TERM, FACTS, CORE, october, TERM_DISPOSITION, LEDGER, ROUTES]
   );
   assert.ok(
     reason.includes(
@@ -170,6 +171,7 @@ const STEPS = [
   'npm run build',
   'node scripts/semantic-core.mjs',
   'node scripts/generate-registers.mjs',
+  'npm run assets:routes',
   'node scripts/disposition-digest.mjs . dist src/data/post/how-to-write-an-ai-incident-runbook.md',
   'node scripts/disposition-digest.mjs . dist /blog/how-to-write-an-ai-incident-runbook',
   'node scripts/disposition-digest.mjs . dist src/data/glossary/model-registry.md',

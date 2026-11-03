@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { restatedReason } from './disposition-restate.mjs';
 import { renderEntry } from './entry-files.mjs';
 import { recordPath } from './record-layout.mjs';
+import { regenerateRouteLedger } from './route-ledger.mjs';
 import { addTargetQuery, dispositionFor, insertPassage, targetQueryFor } from './route-derive.mjs';
 import {
   BUILD,
@@ -115,6 +116,7 @@ export async function assembleRoute({ repoRoot, entries, runDate, run }) {
     await writeSources({ plan, transaction, succeed });
     await succeed(BUILD);
     for (const command of REGENERATE) await succeed(command);
+    const ledger = await regenerateRouteLedger({ repoRoot, transaction, succeed });
     for (const planned of plan.plans) await writeDisposition({ planned, runDate, transaction, succeed });
     const restated = await restateStale({
       repoRoot,
@@ -126,7 +128,8 @@ export async function assembleRoute({ repoRoot, entries, runDate, run }) {
     await formatDispositions(succeed, [...plan.generated, ...restated]);
     const blocking = await runBlockingChecks(succeed);
     const information = await runInformationGates(execute);
-    return { files: filesOf(repoRoot, [...plan.paths, ...restated]), gates: [...blocking, ...information] };
+    const carried = ledger.changed ? [ledger.path] : [];
+    return { files: filesOf(repoRoot, [...plan.paths, ...carried, ...restated]), gates: [...blocking, ...information] };
   } finally {
     transaction.restore();
   }

@@ -11,7 +11,7 @@ The step that joins the parts is `npm run repair:entry`, described below. Never 
 
 A repair changes the entry's prose and frontmatter and nothing else. `repair-scope.mjs` lists the paths one repair commit
 may hold: the entry, its ledger, its generation record, the spend report, its own dispositions, `docs/SEMANTIC-CORE.md`,
-and dispositions restated by the pipeline. It refuses a path outside that list, an unsafe path, and every refused path.
+`audits/routes.json` and dispositions restated by the pipeline. It refuses a path outside that list, an unsafe path, and every refused path. The ledger is listed because a repair can change routes: the category and the tags make `/blog/category/<category>` and `/blog/tag/<tag>` pages. `repair-assembly.mjs` runs `npm run assets:routes` after the build, and a repair that would drop a route, by moving the entry out of the only category or tag it had, stops as `unrepairable`.
 
 The attempt is written into the ledger in the same commit as the repair. A ledger-only commit classifies as prose, so
 the content gates would skip it. `ledgerWithAttempt` (in `autowriter-ledger.mjs`) numbers the attempt, recomputes `spend`
