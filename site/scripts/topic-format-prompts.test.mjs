@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
+import { TITLE_ROOM_CHARS } from '../src/utils/faq-meta.mjs';
 import { readDemandReport } from './demand-report.mjs';
 import { assertTopicInvariants } from './fixtures/topic-invariants.mjs';
 import { cueOf, topicFrom } from './topic-format.mjs';
@@ -143,7 +144,7 @@ test('the table holds the 30 buyer prompts of the frozen report, in their order 
 for (const [number, text, title, slug] of PROMPTS) {
   test('buyer prompt ' + number + ': ' + text, () => {
     const topic = topicFrom(text);
-    if (title === null) {
+    if (title === null || title.length > TITLE_ROOM_CHARS) {
       assert.deepEqual(topic, { format: null, reason: 'title-too-long' });
       return;
     }

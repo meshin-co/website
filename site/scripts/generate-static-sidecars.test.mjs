@@ -2,7 +2,9 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import { buildSidecar, classifyPage } from './generate-static-sidecars.mjs';
+import { siteBrand } from './site-brand.mjs';
 
+const ORIGIN = `https://${siteBrand().name}`;
 const PAGE = { path: '/about', title: 'About Dmitri Meshin', description: 'A description.' };
 
 const HTML = `<!doctype html><html><head><title>x</title></head><body>
@@ -23,7 +25,7 @@ test('buildSidecar carries the page title, description and canonical url', () =>
 
   assert.match(sidecar, /^# About Dmitri Meshin\n/);
   assert.match(sidecar, /^> A description\.$/m);
-  assert.match(sidecar, /^Source: https:\/\/meshin\.co\/about$/m);
+  assert.ok(sidecar.split('\n').includes(`Source: ${ORIGIN}/about`));
   assert.match(sidecar, /^Updated: 2026-09-05$/m);
 });
 

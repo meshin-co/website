@@ -8,6 +8,7 @@ import { QUARANTINE_HOURS, validateLedger } from './autowriter-ledger.mjs';
 import { CLEAR_COMMAND } from './measurement-debt.mjs';
 import { recordPath } from './record-layout.mjs';
 import { LEDGER_FILINGS, LEDGER_PATH } from './fixtures/github-fake.mjs';
+import { siteBrand } from './site-brand.mjs';
 import { hoursAfterOpening } from './fixtures/pr-watch.mjs';
 import {
   DEFAULT_TOKEN,
@@ -24,7 +25,7 @@ import {
   writtenNames,
 } from './fixtures/pr-watch-harness.mjs';
 
-const DEBT_IDENTITY = { name: 'autowriter-bot', email: 'autowriter-bot@meshin.co' };
+const DEBT_IDENTITY = { name: 'autowriter-bot', email: `autowriter-bot@${siteBrand().name}` };
 
 const merged = async (options = {}) => {
   const bundle = options.bundle ?? green();

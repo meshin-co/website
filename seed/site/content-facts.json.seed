@@ -1,0 +1,19 @@
+{
+  "targetQuery": {
+    "/": "writing engine",
+    "/blog": "plain writing articles",
+    "/blog/category/agentic-architecture": "architecture articles",
+    "/blog/category/executive": "leadership",
+    "/blog/category/governance": "governance articles",
+    "/blog/category/operating-model": "operating model articles",
+    "/blog/how-to-write-a-short-answer": "how to write a short answer",
+    "/blog/tag/plain-writing": "plain writing posts",
+    "/blog/tag/short-answers": "short answers posts",
+    "/blog/tags": "tags",
+    "/glossary": "plain writing glossary",
+    "/glossary/short-answer": "short answer",
+    "/resources": "plain writing checklists",
+    "/resources/short-answer-checklist": "short answer checklist"
+  },
+  "numbers": []
+}

@@ -8,6 +8,7 @@ import { FEED_BASES, emptyHubRoutes, isLive, isPublished } from '~/utils/feeds.m
 import { LLMS_COLLECTIONS } from '~/utils/llms-collections.mjs';
 import { collectionHubs, publicIndexableStaticPages } from '~/utils/machine-text.mjs';
 import { buildShardEntry, KINDS, words } from '../../public/search/shards.mjs';
+import engineConfig from '../../engine.config.json';
 
 export const prerender = true;
 
@@ -22,6 +23,8 @@ interface ShardEntry {
   kind: string;
   text: string;
 }
+
+const ARTICLE_AUTHOR = engineConfig.content.formats.article.author;
 
 const HOME_BODY_WITHOUT_SERVICES = [
   hero.sub,
@@ -100,7 +103,7 @@ const shardBuilders: Record<string, () => Promise<ShardEntry[]>> = {
     ),
   page: async () => {
     const [author, posts, faqEntries, serviceEntries, resourceEntries] = await Promise.all([
-      getEntry('author', 'dmitri'),
+      getEntry('author', ARTICLE_AUTHOR),
       getCollection('post', isLive),
       getCollection('faq', isLive),
       getCollection('service', isPublished),

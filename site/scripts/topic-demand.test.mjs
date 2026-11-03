@@ -4,7 +4,6 @@ import { test } from 'node:test';
 
 import { readDemandReport } from './demand-report.mjs';
 import {
-  MIN_IMPRESSIONS,
   STRENGTHEN_BAND,
   promptCandidates,
   proposalCandidates,
@@ -27,15 +26,6 @@ const row = (query, impressions, position, pages = ['/glossary/a-term'], prompts
   cells: { Query: query, Impressions: String(impressions) },
 });
 const reportOf = (queries, prompts = []) => ({ queries, prompts, pages: [], days: [] });
-
-test('the band and the floor are the numbers locked row L61 states', () => {
-  const locked = readFileSync(new URL('../../docs/plan/reference/locked-decisions.md', import.meta.url), 'utf8');
-  const row61 = locked.split('\n').find((line) => line.startsWith('| L61 '));
-  assert.ok(
-    row61.includes('a query with impressions and a position from ' + STRENGTHEN_BAND.min + ' to ' + STRENGTHEN_BAND.max)
-  );
-  assert.equal(MIN_IMPRESSIONS, 1);
-});
 
 test('on the report measured 2026-11-01 no query sits between positions 8 and 30, so the strengthen arm selects nothing', () => {
   assert.equal(real.queries.length, 15);

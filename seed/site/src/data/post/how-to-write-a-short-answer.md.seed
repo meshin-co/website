@@ -1,0 +1,66 @@
+---
+title: How to write a short answer for a page
+description: 'How to write a short answer: write it last, keep it to forty to sixty words, name the subject and check it makes sense alone.'
+publishDate: 2026-11-03
+updatedDate: 2026-11-03
+shortAnswer: 'To write a short answer for a page, state the point of the page in forty to sixty words, name the subject in full and leave out any reference to the page itself. Write it last, after the rest of the page is final, then read it alone to check how it sounds when a search engine quotes it.'
+fullAnswer: 'A short answer is the first paragraph of a page, and it has to work when it is quoted alone. Writing one takes four steps. First, finish the page, because the point of a page is only clear once the page is done. Second, state that point in one paragraph of forty to sixty words, starting with the result and not with the background. Third, name the subject in full, so the paragraph still makes sense when a search result shows it without the title. Fourth, read the paragraph alone and strike any word that points back at the page, such as this page, below or above. A short answer is checked, not trusted. Keep a table of the checks, run it before each page ships, and run it again whenever the page changes. A page that fails a check is edited until it passes, and its updated date changes to show the edit.'
+keyTakeaways:
+  - 'Write the short answer last, once the rest of the page is final.'
+  - 'Use forty to sixty words, start with the result and name the subject in full.'
+  - 'Read the paragraph alone and remove any word that points back at the page.'
+  - 'Check every short answer against a fixed list before the page ships.'
+faq:
+  - q: 'How long should a short answer be?'
+    a: 'Between forty and sixty words. A shorter answer tends to leave out the subject or the result, and a longer one stops being quotable because the reader has to scroll to find its end.'
+  - q: 'Where does the short answer go on the page?'
+    a: 'At the top, directly under the heading and before any background text. Readers and search engines look there first, so a short answer placed anywhere else may be missed.'
+  - q: 'Can the short answer repeat the title?'
+    a: 'It can share words with the title, but it should not only repeat them. The title names the subject, and the short answer gives the result for that subject.'
+category: operating-model
+tags:
+  - plain-writing
+  - short-answers
+sources:
+  - title: How Users Read on the Web
+    url: https://www.nngroup.com/articles/how-users-read-on-the-web/
+    publisher: Nielsen Norman Group
+  - title: Creating helpful, reliable, people-first content
+    url: https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+    publisher: Google Search Central
+  - title: Plain language guide
+    url: https://digital.gov/guides/plain-language/
+    publisher: Digital.gov
+author: example-author
+relatedResources:
+  - short-answer-checklist
+---
+
+This page shows how to write a short answer, the first paragraph a reader sees. It answers the question the page exists for, so a person or a search engine can quote it without the rest. The [glossary entry for a short answer](/glossary/short-answer) gives the definition. This page gives the steps.
+
+## How do you write a short answer?
+
+Write it last. A page has a point only once it is finished, and a short answer written first usually describes the plan, not the result. Open the finished page, find the sentence that states the result, and build the paragraph around it.
+
+State the result in the first sentence. Then add the one condition or number a reader needs to use the result. Name the subject in full each time, so the paragraph still makes sense when a search result shows it alone.
+
+## What does a good short answer check for?
+
+Run each short answer against the same list before the page ships. The [short answer checklist](/resources/short-answer-checklist) holds the full list. The table shows the checks that catch most faults.
+
+| Check    | What a pass looks like                | What a failure looks like                                    |
+| -------- | ------------------------------------- | ------------------------------------------------------------ |
+| Length   | Forty to sixty words.                 | A single sentence, or a paragraph that runs past the screen. |
+| Subject  | The subject is named in full.         | The text says it or this, and the reader must guess.         |
+| Result   | The first sentence states the result. | The first sentence gives background.                         |
+| Pointers | No word points back at the page.      | The text says this page, below or above.                     |
+
+## Why does the short answer go first?
+
+Readers scan before they read. [Research on how people read on the web](https://www.nngroup.com/articles/how-users-read-on-the-web/) found that most visitors do not read word by word, so the opening lines decide whether a page gets used. Search engines also look for a direct answer near the top of a page, as the [guidance on helpful content from Google](https://developers.google.com/search/docs/fundamentals/creating-helpful-content) explains. The [plain language guide](https://digital.gov/guides/plain-language/) gives the same advice for any reader: put the main point first.
+
+## What goes wrong most often?
+
+The commonest fault is an answer that describes the page instead of answering the question. Another is a paragraph that is correct but too long to quote. A third is a paragraph that relies on the title for its subject. Each fault shows up when you read the paragraph alone, which is why that check comes last.
+
+When a page changes, check the short answer again and change the updated date. A short answer that no longer matches the page is worse than none, because a search engine may still quote it.

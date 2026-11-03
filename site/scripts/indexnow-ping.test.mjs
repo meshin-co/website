@@ -15,7 +15,9 @@ import {
   publishedKey,
   run,
 } from './indexnow-ping.mjs';
+import { siteBrand } from './site-brand.mjs';
 
+const ORIGIN = `https://${siteBrand().name}`;
 const runFile = promisify(execFile);
 
 async function makeDist(routes) {
@@ -264,7 +266,7 @@ test('an edited page on an unchanged route is announced, even when its date was 
   assert.deepEqual(result.added, []);
   assert.deepEqual(result.removed, []);
   assert.deepEqual(result.edited, ['/blog/post']);
-  assert.ok(announcedUrls(fetchImpl).includes('https://meshin.co/blog/post'));
+  assert.ok(announcedUrls(fetchImpl).includes(`${ORIGIN}/blog/post`));
 });
 
 test('an identical rebuild announces nothing and leaves the stored state untouched', async () => {
@@ -331,7 +333,7 @@ test('only the routes that changed are announced, because the rest are already k
   const { result, fetchImpl } = await rerun({ dist, previousPath });
 
   assert.equal(result.action, 'pinged');
-  assert.deepEqual(announcedUrls(fetchImpl), ['https://meshin.co/about']);
+  assert.deepEqual(announcedUrls(fetchImpl), [`${ORIGIN}/about`]);
 });
 
 test('a removed route is not announced, because there is no page left to fetch', async () => {
@@ -376,5 +378,5 @@ test('a part that fails leaves the state untouched, so the next run announces th
   const second = await rerun({ dist, previousPath });
 
   assert.equal(first.result.action, 'error');
-  assert.deepEqual(announcedUrls(second.fetchImpl), ['https://meshin.co/fresh']);
+  assert.deepEqual(announcedUrls(second.fetchImpl), [`${ORIGIN}/fresh`]);
 });

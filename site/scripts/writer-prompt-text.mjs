@@ -96,7 +96,7 @@ const contract = ({ format, length, claim }) =>
 const numbers = (allowed) =>
   [
     '# Numbers',
-    `Write no number except years, dates and standard or article numbers (ISO/IEC 42001, Article 6), and the allowed numbers: ${allowed.join(', ')}.`,
+    `Write no number except years, dates and standard or article numbers (ISO/IEC 42001, Article 6)${allowed.length === 0 ? '. No other number is verified, so write none' : `, and the allowed numbers: ${allowed.join(', ')}`}.`,
     'Any other figure fails the gate as unsourced-number. State the idea without the figure, and never invent one to fit.',
   ].join('\n\n');
 

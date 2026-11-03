@@ -154,13 +154,21 @@ test('on the real file one line is added in the family it belongs to and nothing
 });
 
 test('on the real file a new term lands between the terms that sort around it', () => {
-  const routes = rowsOf(addTargetQuery(REAL_FACTS, '/glossary/model-registry', 'model registry')).map(
-    ([route]) => route
-  );
-  const at = routes.indexOf('/glossary/model-registry');
+  const route = '/glossary/model-registry';
+  const termsOf = (text) => rowsOf(text).flatMap(([name]) => (name.startsWith('/glossary/') ? [name] : []));
+  const before = termsOf(REAL_FACTS);
+  const after = termsOf(addTargetQuery(REAL_FACTS, route, 'model registry'));
+  const at = after.indexOf(route);
 
-  assert.ok(routes[at - 1] < '/glossary/model-registry' && routes[at - 1].startsWith('/glossary/'));
-  assert.ok(routes[at + 1] > '/glossary/model-registry' && routes[at + 1].startsWith('/glossary/'));
+  assert.ok(at >= 0, route);
+  assert.deepEqual(
+    after.slice(0, at),
+    before.filter((name) => name < route)
+  );
+  assert.deepEqual(
+    after.slice(at + 1),
+    before.filter((name) => name > route)
+  );
 });
 
 test('a route and a query the real file already holds are both refused', () => {

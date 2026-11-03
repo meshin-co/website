@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
+import { titleSuffix } from '../src/utils/brand.mjs';
+
 import {
   CLAIM_FORMATS,
   CLAIM_STATUSES,
@@ -16,6 +18,7 @@ import {
 } from './autowriter-claims.mjs';
 import { describeProblem } from './autowriter-records.mjs';
 import { recordDirectory, recordPath } from './record-layout.mjs';
+import { siteBrand } from './site-brand.mjs';
 
 const SUFFIX = ' — meshin.co';
 const NOW = new Date('2026-11-02T07:00:00.000Z');
@@ -266,18 +269,18 @@ test('the real generated layer is read whole: one title per route row, in every 
   const doc = readFileSync(new URL('../../docs/SEMANTIC-CORE.md', import.meta.url), 'utf8');
   const block = doc.slice(doc.indexOf(GENERATED_BEGIN), doc.indexOf(GENERATED_END));
   const routeRows = block.split('\n').filter((line) => line.startsWith('| `'));
+  const named = [...block.matchAll(/^### ([a-z-]+) \((\d+)\)/gm)].map(([, family, count]) => [family, Number(count)]);
   const rows = generatedTitles(doc);
+  const suffix = titleSuffix(siteBrand());
   assert.equal(rows.length, routeRows.length);
-  assert.ok(rows.length > 50, `only ${rows.length} titles read`);
+  assert.ok(rows.length > 0, 'no title was read');
   assert.ok(
-    rows.every(({ title }) => title.endsWith(SUFFIX)),
+    rows.every(({ title }) => title.endsWith(suffix)),
     'a title lost its brand suffix'
   );
-  for (const family of ['static', 'term', 'faq-answer', 'article']) {
-    assert.ok(
-      rows.some((row) => row.family === family),
-      `no ${family} title was read`
-    );
+  assert.ok(named.length > 0, 'the core names no family');
+  for (const [family, count] of named) {
+    assert.equal(rows.filter((row) => row.family === family).length, count, `${family} titles read`);
   }
 });
 

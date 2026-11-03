@@ -1,9 +1,9 @@
 import './fixtures/no-network.mjs';
 
 import assert from 'node:assert/strict';
-import { existsSync, mkdtempSync, readdirSync, rmSync } from 'node:fs';
+import { mkdtempSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { join } from 'node:path';
 import { test } from 'node:test';
 
 import {
@@ -20,11 +20,10 @@ import {
 import { restatedReason } from './disposition-restate.mjs';
 import { LENGTH_FILE } from './entry-length.mjs';
 import { writeMeasuredStamp } from './lh-evidence.mjs';
-import { recordDirectory, recordFiles, recordPath } from './record-layout.mjs';
+import { recordDirectory, recordPath } from './record-layout.mjs';
 import { dispositionFor } from './route-derive.mjs';
 import { BAND_FILE } from './sentence-band.mjs';
 
-const REPO = resolve(import.meta.dirname, '..', '..');
 const whyOf = (id) => REFUSED_PATHS.find((row) => row.id === id)?.why;
 const SLUG = 'model-registry';
 const CLAIMED_AT = '2026-11-01T07:00:00.000Z';
@@ -119,20 +118,7 @@ for (const path of ALLOWED) {
 test('the list agrees with the tools that name these files', () => {
   assert.equal(refusalFor(BAND_FILE)?.id, 'sentence-band');
   assert.equal(refusalFor(LENGTH_FILE)?.id, 'entry-length');
-  assert.ok(existsSync(join(REPO, LENGTH_FILE)), LENGTH_FILE + ' is not where the repository keeps the length record');
-  assert.ok(existsSync(join(REPO, BAND_FILE)), BAND_FILE + ' is not where the repository keeps the band');
   assert.equal(refusalFor('audits/lighthouse-green.json')?.id, 'lighthouse-record');
-  assert.ok(
-    existsSync(join(REPO, 'audits/lighthouse-green.json')),
-    'the record lh:record writes is not where the list says'
-  );
-  assert.ok(readdirSync(join(REPO, DISPOSITIONS)).length > 0, 'no dispositions where the list says');
-  const present = recordFiles(REPO, 'disposition');
-  assert.ok(present.length > 0, 'the layout reader finds no dispositions where the list says');
-  assert.deepEqual(
-    present.filter((path) => !isDispositionFile(path)),
-    []
-  );
 });
 
 test('every month of a year files its generated dispositions under a path the list reads as a disposition file', () => {

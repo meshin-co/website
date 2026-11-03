@@ -22,6 +22,7 @@ import {
   aLedger,
   treeListing,
 } from './fixtures/github-fake.mjs';
+import { autowriterAgent } from './site-brand.mjs';
 
 test('a request goes to the repository url with the github headers', async () => {
   const { api, calls } = apiAnswering(() => json({}));
@@ -34,7 +35,7 @@ test('a request goes to the repository url with the github headers', async () =>
     Authorization: 'Bearer secret',
     Accept: 'application/vnd.github+json',
     'X-GitHub-Api-Version': '2022-11-28',
-    'User-Agent': 'meshin-autowriter',
+    'User-Agent': autowriterAgent(),
   });
   assert.equal(calls[0].body, undefined);
 });

@@ -1,0 +1,30 @@
+---
+title: What is a short answer?
+term: Short answer
+description: A short answer is a reply of forty to sixty words that opens a page and states its point, so a reader or a search engine can quote it alone.
+publishDate: 2026-11-03
+updatedDate: 2026-11-03
+shortDefinition: A short answer is a reply of forty to sixty words at the top of a page. It states the whole point of the page, names its subject and makes sense without the text that follows it.
+definition: |
+  A short answer is the first paragraph a reader sees on a page. It answers the question the page exists for, in forty to sixty words, and it can be copied out of the page without losing its meaning. Search engines and answer engines quote such a paragraph, and readers use it to decide whether to read on.
+
+  A short answer is not a summary of the page and not an introduction to it. A summary repeats the points in order, and an introduction announces what will come. A short answer gives the result first. It names the subject in full, so it stays clear when a search result shows it without the title.
+
+  Every page of this site that answers a question carries one, and the author writes it last, after the rest of the page is final.
+relatedTerms: []
+sources:
+  - title: Creating helpful, reliable, people-first content
+    url: https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+    publisher: Google Search Central
+  - title: How Users Read on the Web
+    url: https://www.nngroup.com/articles/how-users-read-on-the-web/
+    publisher: Nielsen Norman Group
+---
+
+## Why it comes up
+
+A reader who lands on a page from a search result has a question and a few seconds. A page that opens with background makes that reader hunt for the result. A page that opens with a short answer gives the result at once, and the reader can then choose to read the detail or leave with what they came for.
+
+## What to do about it
+
+Write the page first, then write the short answer from the sentence that states the result. Keep it between forty and sixty words and name the subject in full. Read it alone, away from the page, and cut any word that points back at the page. The article on [how to write a short answer](/blog/how-to-write-a-short-answer) gives the steps.

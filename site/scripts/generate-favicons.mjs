@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 
 import { Resvg } from '@resvg/resvg-js';
 
@@ -20,6 +20,8 @@ const framed = (ink, background) => {
 const render = (size, ink, background) =>
   Buffer.from(new Resvg(framed(ink, background), { fitTo: { mode: 'width', value: size } }).render().asPng());
 
+mkdirSync('src/assets/favicons', { recursive: true });
+mkdirSync('public/brand', { recursive: true });
 writeFileSync('src/assets/favicons/favicon.svg', framed('#16181c', null));
 writeFileSync('src/assets/favicons/apple-touch-icon.png', render(180, '#16181c', '#fbfaf7'));
 

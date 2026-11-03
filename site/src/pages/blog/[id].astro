@@ -41,6 +41,7 @@ import { lastmod } from '~/utils/lastmod.mjs';
 import { resourceCardProps } from '~/utils/resource-card.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 import { isPublished } from '~/utils/feeds.mjs';
+import { pageExists } from '~/utils/page-exists.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getCollection('post', isPublished);
@@ -71,6 +72,7 @@ const { post, previous, next, related } = Astro.props;
 const { data } = post;
 const { Content, headings } = await render(post);
 const author = await getEntry(data.author);
+const aboutHref = pageExists('/about') ? '/about' : undefined;
 const relatedResources = data.relatedResources.length > 0 ? await getEntries(data.relatedResources) : [];
 const terms = (await getCollection('glossary', ({ data: term }) => !term.draft)).map((entry) => ({
   id: entry.id,
@@ -212,7 +214,7 @@ const nodes = [
       {
         author && (
           <div class="mt-12">
-            <AuthorBox name={author.data.name} role={author.data.role} bio={author.data.bio} href="/about" />
+            <AuthorBox name={author.data.name} role={author.data.role} bio={author.data.bio} href={aboutHref} />
           </div>
         )
       }

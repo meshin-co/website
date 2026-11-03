@@ -25,7 +25,7 @@ machine check. It became a skill.
 
 | Skill                               | Already done by                                                                                                               |
 | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `survey-context`, `using-bigpowers` | `AGENTS.md` read order plus `openspec/INDEX.md` and `navigate-the-plan.md`                                                    |
+| `survey-context`, `using-bigpowers` | `AGENTS.md` read order plus `openspec/INDEX.md` and `navigate-the-plan.site.md`                                               |
 | `session-state`                     | Each change's `tasks.md`, whose ticked boxes `openspec list --sort name` reads as status, and the `blocked.md` that parks one |
 | `verify-work`                       | `docs/plan/reference/calibration-gate.md`, eleven steps, no waiver path                                                       |
 | `execute-plan`, `build-epic`        | The numbered tasks of the change in flight, each ticked as it lands                                                           |

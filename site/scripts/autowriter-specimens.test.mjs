@@ -5,6 +5,8 @@ import { tmpdir } from 'node:os';
 import { dirname, join, relative, resolve } from 'node:path';
 import { test } from 'node:test';
 
+import { titleSuffix } from '../src/utils/brand.mjs';
+
 import { ATTEMPT_CAP } from './autowriter-ledger.mjs';
 import { historySpecimens } from './autowriter-history-specimens.mjs';
 import { autowriterSpecimens } from './autowriter-specimens.mjs';
@@ -15,11 +17,12 @@ import { FAMILIES, manifestFamilies } from './mutation-smoke.mjs';
 import { addUntrackedFile, editFile, flatten, SPECIMENS } from './mutation-specimens.mjs';
 import { recordPath } from './record-layout.mjs';
 import { spendReportFile } from './spend-report.mjs';
+import { siteBrand } from './site-brand.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
 const REPO = resolve(SITE, '..');
 const FILES = {
-  'site/src/config.yaml': 'site:\n  name: meshin.co\n',
+  'site/src/config.yaml': `site:\n  name: ${siteBrand().name}\n`,
   'docs/SEMANTIC-CORE.md': readFileSync(join(REPO, 'docs/SEMANTIC-CORE.md'), 'utf8'),
   '.github/workflows/ci.yml': readFileSync(join(REPO, '.github/workflows/ci.yml'), 'utf8'),
   ...bandSceneFiles(),
@@ -41,6 +44,7 @@ const writeSpendReport = (root) => {
   mkdirSync(dirname(join(root, report.path)), { recursive: true });
   writeFileSync(join(root, report.path), report.text);
 };
+const SUFFIX_PATTERN = titleSuffix(siteBrand()).replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 async function inTempRepo(check, extra = {}) {
   const root = mkdtempSync(join(tmpdir(), 'autowriter-specimens-'));
@@ -338,7 +342,7 @@ test('the claim specimen repeats a title the generated layer already holds, in o
       new RegExp(
         '^AUTOWRITER title-collision ' +
           CLAIM.replaceAll('.', '\\.') +
-          ': title ".+" is already the title of /[a-z/-]+ in the generated layer of docs/SEMANTIC-CORE\\.md \\(".+ — meshin\\.co"\\)$'
+          `: title ".+" is already the title of /[a-z/-]+ in the generated layer of docs/SEMANTIC-CORE\\.md \\(".+${SUFFIX_PATTERN}"\\)$`
       )
     );
   });

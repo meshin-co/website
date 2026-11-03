@@ -18,8 +18,10 @@ import {
   resolveCandidates,
   summaryLine,
 } from './docs-gate.mjs';
+import { engineNamedPaths } from './engine-named-paths.mjs';
 
 const repo = resolve(process.argv[2] ?? '..');
+const namedByEngine = engineNamedPaths(repo);
 
 const walkMarkdown = (dir, prefix = '') => {
   const found = [];
@@ -88,7 +90,7 @@ for (const doc of docs) {
       return existsSync(absolute) && statSync(absolute).isFile();
     });
     if (present.length === 0) {
-      findings.push({ doc: relative, rule: 'dead-path', detail: cited });
+      if (!namedByEngine(cited)) findings.push({ doc: relative, rule: 'dead-path', detail: cited });
       continue;
     }
     if (!isBuildOutput(cited)) resolvedCitations.push({ doc: relative, cited, present });

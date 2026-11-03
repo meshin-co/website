@@ -50,7 +50,7 @@ rather than a silent substitution, and the index is compared byte for byte.
 
 ## Opening and closing a change
 
-Prefixes start at 10, because `audits/phase-0` through `phase-5.2` own the lower numbers, and the
+Prefixes start at 10, because the audit phases before the spec tree own the lower numbers, and the
 nine closed phases were imported under `01` to `09`. One change is in flight at a time, unless
 another carries a `blocked.md` naming a gap row that exists in
 `docs/plan/reference/known-gaps.md`, and has no ticked boxes. A sentence alone does not park a

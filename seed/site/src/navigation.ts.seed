@@ -1,0 +1,28 @@
+import { SITE } from 'astrowind:config';
+import { BOOKING_URL } from './utils/booking.mjs';
+import { getPermalink } from './utils/permalinks';
+
+export const headerData = {
+  links: [
+    { text: 'Writing', href: getPermalink('/blog') },
+    { text: 'Glossary', href: getPermalink('/glossary') },
+    { text: 'Resources', href: getPermalink('/resources') },
+  ],
+  actions: [{ text: 'Book a call', href: BOOKING_URL, target: '_blank' }],
+};
+
+export const footerData = {
+  links: [
+    {
+      title: 'Reading',
+      links: [
+        { text: 'Writing', href: getPermalink('/blog') },
+        { text: 'Glossary', href: getPermalink('/glossary') },
+        { text: 'Resources', href: getPermalink('/resources') },
+      ],
+    },
+  ],
+  secondaryLinks: [],
+  socialLinks: [],
+  footNote: `© ${new Date().getFullYear()} ${SITE.name}`,
+};

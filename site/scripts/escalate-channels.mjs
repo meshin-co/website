@@ -1,3 +1,5 @@
+import { autowriterAgent } from './site-brand.mjs';
+
 const MAX_EXCERPT_LENGTH = 200;
 const REQUEST_TIMEOUT_MS = 20_000;
 const DEFAULT_API_URL = 'https://api.github.com';
@@ -65,7 +67,7 @@ async function openIssue(context) {
       Accept: 'application/vnd.github+json',
       'X-GitHub-Api-Version': '2022-11-28',
       'Content-Type': 'application/json',
-      'User-Agent': 'meshin-autowriter',
+      'User-Agent': autowriterAgent(),
     },
     body: { title: escalation.title, body: issueBody(context) },
   });

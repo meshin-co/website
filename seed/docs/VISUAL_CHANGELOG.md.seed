@@ -1,0 +1,5 @@
+# Visual changelog
+
+A hand-written record of intent: what a visual change was meant to do and why. Newest entries come first: add each new entry directly below the format line. No check reads this file, so add an entry only when the reason for a deliberate visual change is worth keeping.
+
+Format: `YYYY-MM-DD · route or component · what changed visually · why`.

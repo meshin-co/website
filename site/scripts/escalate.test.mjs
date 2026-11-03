@@ -15,6 +15,7 @@ import {
   redeliver,
   runCli,
 } from './escalate.mjs';
+import { autowriterAgent } from './site-brand.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
 const TOKEN = 'ghp_SECRETtokenVALUE0123456789';
@@ -89,7 +90,7 @@ test('both channels delivered: exact requests and receipts on disk', () =>
       Accept: 'application/vnd.github+json',
       'X-GitHub-Api-Version': '2022-11-28',
       'Content-Type': 'application/json',
-      'User-Agent': 'meshin-autowriter',
+      'User-Agent': autowriterAgent(),
     });
     assert.deepEqual(calls[0].body, {
       title: TITLE,

@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { pathToFileURL } from 'node:url';
 
 import { BOOKING_URL } from '../src/utils/booking.mjs';
 import { brandFromDisk } from '../src/utils/brand.mjs';
@@ -296,30 +296,37 @@ test('every specimen names a gate the package defines, a token to look for and a
   }
 });
 
-test('the pending-change specimens each plant an entry that trips its own rule, and restore the module', async () => {
-  const copySite = scratch();
+test('the pending-change specimens each plant an entry that trips its own rule, and restore the module and the tree', async () => {
+  const repo = scratch();
   try {
-    mkdirSync(join(copySite, 'scripts'));
+    const copySite = join(repo, 'site');
+    mkdirSync(join(copySite, 'scripts'), { recursive: true });
     const target = join(copySite, 'scripts/mutation-pending.mjs');
     writeFileSync(target, readFileSync(new URL('./mutation-pending.mjs', import.meta.url)));
     const before = readFileSync(target, 'utf8');
-    const changes = changeDirectories(fileURLToPath(new URL('../../openspec/changes', import.meta.url)));
-    const rulesOf = (pending) => pendingChangeFindings(pending, changes).map(({ rule }) => rule);
+    const changesRoot = join(repo, 'openspec/changes');
+    const archiveRoot = join(changesRoot, 'archive');
+    mkdirSync(archiveRoot, { recursive: true });
+    const rulesOf = async (tag) => {
+      const { PENDING } = await import(`${pathToFileURL(target).href}?${tag}`);
+      return pendingChangeFindings(PENDING, changeDirectories(changesRoot)).map(({ rule }) => rule);
+    };
 
-    const restore = await SPECIMENS.pendingUnknownChange.plant(copySite);
+    const restoreUnknown = await SPECIMENS.pendingUnknownChange.plant(copySite);
     const planted = await import(`${pathToFileURL(target).href}?planted`);
     assert.ok(planted.PENDING.some((entry) => entry.change === '99-zz-specimen' && entry.gate === 'gate:zz-specimen'));
-    assert.deepEqual(rulesOf(planted.PENDING), ['pending-specimen-unknown-change']);
-
-    await restore();
+    assert.deepEqual(await rulesOf('planted'), ['pending-specimen-unknown-change']);
+    await restoreUnknown();
     assert.equal(readFileSync(target, 'utf8'), before);
 
-    await SPECIMENS.pendingChangeArchived.plant(copySite);
-    const archivedVariant = await import(`${pathToFileURL(target).href}?archived`);
-    assert.ok(archivedVariant.PENDING.some((entry) => entry.change === '01-initialization'));
-    assert.deepEqual(rulesOf(archivedVariant.PENDING), ['pending-specimen-change-archived']);
+    const restoreArchived = await SPECIMENS.pendingChangeArchived.plant(copySite);
+    assert.equal(readdirSync(archiveRoot).length, 1, 'the specimen archives a change of its own');
+    assert.deepEqual(await rulesOf('archived'), ['pending-specimen-change-archived']);
+    await restoreArchived();
+    assert.equal(readFileSync(target, 'utf8'), before);
+    assert.deepEqual(readdirSync(archiveRoot), []);
   } finally {
-    rmSync(copySite, { recursive: true, force: true });
+    rmSync(repo, { recursive: true, force: true });
   }
 });
 

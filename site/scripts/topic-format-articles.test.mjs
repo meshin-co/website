@@ -5,6 +5,18 @@ import { TITLE_ROOM_CHARS } from '../src/utils/faq-meta.mjs';
 import { assertTopicInvariants } from './fixtures/topic-invariants.mjs';
 import { cueOf, topicFrom } from './topic-format.mjs';
 
+const TOO_LONG = { format: null, reason: 'title-too-long' };
+
+function assertArticle(text, { title, slug, query }) {
+  const topic = topicFrom(text);
+  if (title.length > TITLE_ROOM_CHARS) {
+    assert.deepEqual(topic, TOO_LONG);
+    return;
+  }
+  assert.deepEqual(topic, { format: 'article', subject: null, title, slug, query });
+  assertTopicInvariants(topic);
+}
+
 const QUESTIONS = [
   [
     'why do AI pilots fail to reach production',
@@ -70,9 +82,7 @@ const QUESTIONS = [
 for (const [text, title, slug, query] of QUESTIONS) {
   test('question article, titled with a question mark: ' + text, () => {
     assert.equal(cueOf(text), 'question');
-    const topic = topicFrom(text);
-    assert.deepEqual(topic, { format: 'article', subject: null, title, slug, query });
-    assertTopicInvariants(topic);
+    assertArticle(text, { title, slug, query });
   });
 }
 
@@ -107,9 +117,7 @@ const PROCEDURES = [
 for (const [text, title, slug, query] of PROCEDURES) {
   test('procedure article, titled without a question mark: ' + text, () => {
     assert.equal(cueOf(text), 'procedure');
-    const topic = topicFrom(text);
-    assert.deepEqual(topic, { format: 'article', subject: null, title, slug, query });
-    assertTopicInvariants(topic);
+    assertArticle(text, { title, slug, query });
   });
 }
 
@@ -145,9 +153,7 @@ const NOUN_PHRASES = [
 for (const [text, title, slug, query] of NOUN_PHRASES) {
   test('a wording with no cue is still an article that keeps its words: ' + text, () => {
     assert.equal(cueOf(text), null);
-    const topic = topicFrom(text);
-    assert.deepEqual(topic, { format: 'article', subject: null, title, slug, query });
-    assertTopicInvariants(topic);
+    assertArticle(text, { title, slug, query });
   });
 }
 

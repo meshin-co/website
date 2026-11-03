@@ -1,0 +1,39 @@
+# New site
+
+TODO(owner): one sentence on what this site is and who it serves. The Astro app is in `site/`.
+
+This repository started as an export of the writing engine. `site/.agents/skills/adapt-the-engine-to-a-new-site.md` lists what to change first, and `site/.agents/skills/interview-the-owner-of-a-new-site.md` runs the interview that supplies the owner facts.
+
+## Read order
+
+1. `site/.agents/skills/` — one procedure per file, each named for the job it does. Read the matching one before doing that job by hand. `gate:skills` fails if a skill names a path or command that does not exist.
+2. `site/scripts/README.md` — the map of every script, with the npm command that invokes each. Read it instead of listing the directory; `scripts-index.test.mjs` fails when a script is added without a row.
+3. `docs/SEMANTIC-CORE.md` — which title, meta description and target query each route family carries and why, plus the buyer prompts mapped to the routes that must win them. Read it before writing or editing any page copy, title or meta description.
+4. `docs/CONTENT-GATE.md` — the rows every page must clear.
+5. `openspec/INDEX.md` — the generated map of what the harness proves, one line per capability.
+
+## Hard rules
+
+- Content rules: every post, glossary term and service carries `shortAnswer`, `updatedDate` and at least one source. Zod enforces it and the build fails otherwise.
+- Never invent an owner fact, a client name, a metric, a testimonial or a credential. Unknown facts become `TODO(owner)` and go on the copy checklist.
+- Copy tone: direct and engineering. Numbers and dates instead of adjectives. TODO(owner): list the words this site never uses.
+- No user-facing string ships unreviewed. Every one enters the editorial ledger and carries a disposition of `rewritten`, `verified`, or `owner-blocked` with a reason. Read `site/.agents/skills/write-copy.md` before writing copy and `site/.agents/skills/place-a-new-text.md` before adding any new text; one concept is defined on exactly one page.
+- Every link leaving the site carries `rel="nofollow noopener noreferrer"`. The value has one source, `EXTERNAL_REL` in `site/src/utils/pipeline.mjs`; never type the tokens into a new component. `npm run gate:external` fails on any outbound anchor missing one.
+- The route lists are derived from `dist/**/*.html`, never hand-authored.
+- Verify a claim about the site in the built output: `dist/`, a response from the gate server, or a command's real stdout. Never in source, never in a doc. Procedure: `site/.agents/skills/verify-in-the-built-output.md`.
+- Every guard has a planted violating specimen and is proven to fail before it is trusted.
+- The harness checks its own wiring, because an unrun gate reads exactly like a passing one. `npm run gate:plan` fails when a `gate:*` script never runs in `ci.yml`. A gate stays out of CI only through a `localOnlyGates` entry in `site/package.json` that carries a reason. Procedure: `site/.agents/skills/keep-the-harness-honest.md`.
+- Evidence in git is the generated report, never the raw run.
+- Work is finished when the procedure that produced it lives in a skill, a hard rule here or a machine check.
+
+## Commands
+
+```
+cd site
+npm run build      # production build
+npm run check      # astro check, eslint, prettier
+npm run gate:docs  # every path and command a document cites
+npm run gate:engine # the files the engine expects are present and the config is valid
+npm run gate:plan  # the harness checks its own wiring
+npm run gate:skills # every skill names paths and commands that exist
+```

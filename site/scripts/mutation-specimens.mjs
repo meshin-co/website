@@ -10,6 +10,7 @@ import { engineSpecimens } from './engine-specimens.mjs';
 import { paritySpecimens } from './parity-specimens.mjs';
 import { evidenceSpecimens } from './evidence-specimens.mjs';
 import { jsonldSpecimens } from './jsonld-specimens.mjs';
+import { partitionSpecimens } from './partition-specimens.mjs';
 import { REGISTERS_BEGIN } from './registers.mjs';
 import { SPEC_SPECIMENS } from './spec-specimens.mjs';
 import { unattendedSpecimens } from './unattended-specimens.mjs';
@@ -100,6 +101,20 @@ const plantPendingEntry = (copySite, change) =>
       `${PENDING_ANCHOR}\n  { gate: 'gate:zz-specimen', change: '${change}', reason: 'planted specimen' },`
     )
   );
+
+const ARCHIVED_SPECIMEN_CHANGE = 'zz-archived-specimen';
+
+async function plantArchivedPendingEntry(copySite) {
+  const restorePending = await plantPendingEntry(copySite, ARCHIVED_SPECIMEN_CHANGE);
+  const removeArchive = await addUntrackedFile(
+    join(copySite, `../openspec/changes/archive/2026-01-01-${ARCHIVED_SPECIMEN_CHANGE}/proposal.md`),
+    '# Archived specimen\n'
+  );
+  return async () => {
+    await removeArchive();
+    await restorePending();
+  };
+}
 
 const DUPLICATE_ID_PAGE =
   '<!DOCTYPE html><html lang="en"><head><title>x</title></head><body><p id="a"></p><p id="a"></p></body></html>';
@@ -440,7 +455,7 @@ export const SPECIMENS = {
   pendingChangeArchived: {
     gate: 'gate:plan',
     token: 'pending-specimen-change-archived',
-    plant: (copySite) => plantPendingEntry(copySite, '01-initialization'),
+    plant: plantArchivedPendingEntry,
   },
   wiringRemoved: {
     gate: 'gate:plan',
@@ -592,6 +607,7 @@ export const SPECIMENS = {
   ...evidenceSpecimens({ addUntrackedFile }),
   ...engineSpecimens({ editFile, removeFile }),
   ...jsonldSpecimens({ editFile, moveAside }),
+  ...partitionSpecimens({ editFile, removeFile, addFile }),
   ...unattendedSpecimens({ editFile, removeFile }),
   ...paritySpecimens({ editFile, removeFile }),
   ...SPEC_SPECIMENS,

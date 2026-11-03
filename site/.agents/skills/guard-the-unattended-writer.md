@@ -30,7 +30,7 @@ an unknown field is a finding. `scripts/record-layout.mjs` builds these paths fr
 - **spend-report-missing, spend-report-differs:** `audits/spend-report.md` is absent or is not what the records give; see `report-what-the-writer-spends.md`.
 
 The numbers (12-hour quarantine, 3 attempts, $25 a month) live in `scripts/autowriter-ledger.mjs`;
-`scripts/autowriter-ledger.test.mjs` fails when locked row L62 disagrees with them. The gate itself is
+a site that keeps a locked row for them pins it with a test of its own. The gate itself is
 `scripts/autowriter-gate.mjs`, over `scripts/autowriter-claims.mjs`, `scripts/autowriter-records.mjs`, `scripts/autowriter-record-rules.mjs` and `scripts/autowriter-length-rules.mjs`.
 
 ## Escalate, and prove it arrived

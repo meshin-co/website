@@ -1,0 +1,65 @@
+site:
+  name: new-site.example
+  site: 'https://new-site.example'
+  base: '/'
+  trailingSlash: false
+
+  googleSiteVerificationId: ''
+
+  analyticsSiteToken: ''
+
+metadata:
+  title:
+    default: 'New site'
+  description: 'A new site on the writing engine. Replace this sentence with what the site offers and to whom.'
+  robots:
+    index: true
+    follow: true
+  openGraph:
+    site_name: new-site.example
+    images:
+      - url: '~/assets/images/og-default.png'
+        width: 1200
+        height: 630
+    type: website
+  twitter:
+    cardType: summary_large_image
+
+i18n:
+  language: en
+  textDirection: ltr
+
+apps:
+  blog:
+    isEnabled: true
+    postsPerPage: 12
+
+    post:
+      isEnabled: true
+      permalink: '/blog/%slug%'
+      robots:
+        index: true
+
+    list:
+      isEnabled: true
+      pathname: 'blog'
+      robots:
+        index: true
+
+    category:
+      isEnabled: true
+      pathname: 'blog/category'
+      robots:
+        index: true
+
+    tag:
+      isEnabled: true
+      pathname: 'blog/tag'
+      robots:
+        index: true
+
+    isRelatedPostsEnabled: true
+    relatedPostsCount: 3
+
+ui:
+  theme: 'system'

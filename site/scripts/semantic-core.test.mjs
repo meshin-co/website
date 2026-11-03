@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 
+import { titleSuffix } from '../src/utils/brand.mjs';
 import {
   FAMILY_GRAMMAR,
   GENERATED_BEGIN,
@@ -21,6 +22,9 @@ import {
   spliceGenerated,
   titleFindings,
 } from './semantic-core.mjs';
+import { siteBrand } from './site-brand.mjs';
+
+const SUFFIX = titleSuffix(siteBrand());
 
 test('route shape decides which semantic family a route belongs to', () => {
   assert.equal(familyFor('/blog/category/governance'), 'blog-category');
@@ -38,19 +42,19 @@ test('route shape decides which semantic family a route belongs to', () => {
 
 test('titles that follow every family pattern produce no findings', () => {
   const rows = [
-    { route: '/', title: 'Fractional Chief AI Officer — meshin.co' },
-    { route: '/pricing', title: 'Pricing — meshin.co' },
+    { route: '/', title: `Fractional Chief AI Officer${SUFFIX}` },
+    { route: '/pricing', title: `Pricing${SUFFIX}` },
     {
       route: '/blog/evals-in-ci-for-llm-agents',
-      title: 'Evals in CI for LLM agents, without a golden answer — meshin.co',
+      title: `Evals in CI for LLM agents, without a golden answer${SUFFIX}`,
     },
-    { route: '/services/90-day-production-sprint', title: '90-Day Production Sprint — meshin.co' },
-    { route: '/glossary/ai-register', title: 'What is an AI register? — meshin.co' },
-    { route: '/glossary/evals', title: 'What are evals? — meshin.co' },
-    { route: '/faq/how-do-you-charge-for-the-work', title: 'How do you charge for the work? — meshin.co' },
+    { route: '/services/90-day-production-sprint', title: `90-Day Production Sprint${SUFFIX}` },
+    { route: '/glossary/ai-register', title: `What is an AI register?${SUFFIX}` },
+    { route: '/glossary/evals', title: `What are evals?${SUFFIX}` },
+    { route: '/faq/how-do-you-charge-for-the-work', title: `How do you charge for the work?${SUFFIX}` },
     {
       route: '/faq/what-does-the-two-week-assessment-produce',
-      title: 'What does the two-week Assessment produce, and is the fee… — meshin.co',
+      title: `What does the two-week Assessment produce, and is the fee…${SUFFIX}`,
     },
   ];
 
@@ -58,7 +62,7 @@ test('titles that follow every family pattern produce no findings', () => {
 });
 
 test('a glossary title that is not a question fails the term stem rule', () => {
-  const findings = titleFindings([{ route: '/glossary/ai-register', title: 'AI register — meshin.co' }]);
+  const findings = titleFindings([{ route: '/glossary/ai-register', title: `AI register${SUFFIX}` }]);
 
   assert.equal(findings.length, 1);
   assert.equal(findings[0].rule, 'title-stem');
@@ -78,7 +82,7 @@ test('a title with the wrong suffix or no title at all fails', () => {
 });
 
 test('a faq title that is neither question nor truncation fails the stem rule', () => {
-  const findings = titleFindings([{ route: '/faq/how-it-works', title: 'How it works — meshin.co' }]);
+  const findings = titleFindings([{ route: '/faq/how-it-works', title: `How it works${SUFFIX}` }]);
 
   assert.equal(findings[0].rule, 'title-stem');
 });

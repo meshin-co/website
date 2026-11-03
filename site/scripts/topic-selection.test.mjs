@@ -4,6 +4,7 @@ import { test } from 'node:test';
 import {
   EARLIER_RUN_AT,
   LAPSED_AT,
+  SUFFIX,
   claimed,
   inputsFor,
   prompt,
@@ -138,14 +139,13 @@ test('a prompt a route of its own format already answers is an advisory, and a p
 });
 
 test('a title the generated layer holds, or an unexpired claim holds, takes the next candidate and is recorded', () => {
-  const layer = [
-    { family: 'article', route: '/blog/older-url', title: 'Why do AI pilots fail to reach production? — meshin.co' },
-  ];
+  const title = `Why do AI pilots fail to reach production?${SUFFIX}`;
+  const layer = [{ family: 'article', route: '/blog/older-url', title }];
   const byLayer = select([PILOTS, HANDOVER], [], { generated: layer });
   assert.equal(byLayer.entries[0].prompt.number, 15);
   assert.deepEqual(
     byLayer.refusals.map(({ reason, against }) => [reason, against]),
-    [['title-collision', 'Why do AI pilots fail to reach production? — meshin.co']]
+    [['title-collision', title]]
   );
   const holder = claimed('older-slug', 'WHY DO AI PILOTS FAIL TO REACH PRODUCTION');
   const byClaim = select([PILOTS, HANDOVER], [], { claims: [holder] });
