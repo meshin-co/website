@@ -2,9 +2,9 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 
 import {
-  externalFindings,
   linkArgs,
   linkFindings,
+  malformedFindings,
   siteOrigin,
   skippedHosts,
   THIRD_PARTY_HOSTS,
@@ -75,24 +75,28 @@ test('a link inside the build that does not answer is dead, whether it said 404 
   ]);
 });
 
-test('a probed address is dead only on a dead verdict, and a verdict it could not reach is reported but not dead', () => {
-  const routes = new Map([
-    ['https://a.example/gone', ['/glossary/a', '/glossary/b']],
-    ['https://b.example/slow', ['/blog/x']],
-    ['https://c.example/fine', ['/blog/x']],
-  ]);
-  const results = new Map([
-    ['https://a.example/gone', { url: 'https://a.example/gone', verdict: 'dead', status: 404, reason: '404, 404' }],
-    [
-      'https://b.example/slow',
-      { url: 'https://b.example/slow', verdict: 'unverified', status: null, reason: 'timed out, timed out, timed out' },
-    ],
-    ['https://c.example/fine', { url: 'https://c.example/fine', verdict: 'answered', status: 200, reason: '200' }],
+test('an address is malformed when it has whitespace, does not parse, or names a host that is no domain', () => {
+  const outbound = new Map([
+    ['https://exa mple.com/x', ['/a']],
+    ['https://', ['/a', '/b']],
+    ['https://intranet/page', ['/c']],
+    ['https://localhost/page', ['/c']],
+    ['https://ok.example/fine', ['/a']],
+    ['http://[::1]:8080/fine', ['/a']],
+    ['http://127.0.0.1:8080/fine', ['/a']],
+    ['https://a.example/path with space', ['/a']],
   ]);
 
-  assert.deepEqual(externalFindings(results, routes), {
-    answered: 1,
-    dead: ['https://a.example/gone (404) on 2 pages, e.g. /glossary/a'],
-    unverified: ['https://b.example/slow (timed out, timed out, timed out) on 1 page, e.g. /blog/x'],
-  });
+  assert.deepEqual(malformedFindings(outbound), [
+    'https://exa mple.com/x (contains whitespace) on 1 page, e.g. /a',
+    'https:// (does not parse as an address) on 2 pages, e.g. /a',
+    'https://intranet/page (the host is not a domain name) on 1 page, e.g. /c',
+    'https://localhost/page (the host is not a domain name) on 1 page, e.g. /c',
+    'https://a.example/path with space (contains whitespace) on 1 page, e.g. /a',
+  ]);
+});
+
+test('no outbound address, or only well-formed ones, is no finding', () => {
+  assert.deepEqual(malformedFindings(new Map()), []);
+  assert.deepEqual(malformedFindings(new Map([['https://ok.example/', ['/a']]])), []);
 });

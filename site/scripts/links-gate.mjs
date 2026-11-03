@@ -44,12 +44,16 @@ export function linkFindings(results) {
 
 const where = (routes = []) => `on ${routes.length} page${routes.length === 1 ? '' : 's'}, e.g. ${routes[0]}`;
 
-export function externalFindings(results, routesByAddress) {
-  const found = { answered: 0, dead: [], unverified: [] };
-  for (const { url, verdict, status, reason } of results.values()) {
-    if (verdict === 'answered') found.answered += 1;
-    else if (verdict === 'dead') found.dead.push(`${url} (${status}) ${where(routesByAddress.get(url))}`);
-    else found.unverified.push(`${url} (${reason}) ${where(routesByAddress.get(url))}`);
-  }
-  return found;
+function malformation(address) {
+  if (/\s/.test(address)) return 'contains whitespace';
+  if (!URL.canParse(address)) return 'does not parse as an address';
+  const { hostname } = new URL(address);
+  return hostname.includes('.') || hostname.startsWith('[') ? null : 'the host is not a domain name';
+}
+
+export function malformedFindings(outbound) {
+  return [...outbound].flatMap(([address, routes]) => {
+    const why = malformation(address);
+    return why === null ? [] : [`${address} (${why}) ${where(routes)}`];
+  });
 }

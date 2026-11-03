@@ -9,8 +9,8 @@ const OUTBOUND = /^https?:\/\//i;
 
 const asRequested = (href) => href.replaceAll('&amp;', '&').split('#')[0];
 
-export function outboundFrom(documents, origin) {
-  const skipped = new RegExp(skippedHosts(origin).join('|'));
+export function outboundFrom(documents, origin, { includeSkipped = false } = {}) {
+  const skipped = new RegExp((includeSkipped ? [`^${origin}`] : skippedHosts(origin)).join('|'));
   const routesByAddress = new Map();
 
   for (const { route, html } of documents) {
@@ -35,10 +35,10 @@ const pagesUnder = (dir) =>
     return entry.name.endsWith('.html') ? [path] : [];
   });
 
-export function readOutbound(dist, origin) {
+export function readOutbound(dist, origin, options) {
   const documents = pagesUnder(dist).map((file) => {
     const path = relative(dist, file).split(sep).join('/');
     return { route: path === 'index.html' ? '/' : `/${path.replace(/\.html$/, '')}`, html: readFileSync(file, 'utf8') };
   });
-  return outboundFrom(documents, origin);
+  return outboundFrom(documents, origin, options);
 }

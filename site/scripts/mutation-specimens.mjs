@@ -219,11 +219,18 @@ export const SPECIMENS = {
   },
   links: {
     gate: 'gate:links',
-    env: { LINKS_SKIP_EXTERNAL: '1' },
     token: 'zz-specimen-missing',
     plant: (copySite) =>
       editFile(join(copySite, 'dist/about.html'), (html) =>
         html.replace('</body>', '<a href="/zz-specimen-missing/">x</a></body>')
+      ),
+  },
+  linksMalformed: {
+    gate: 'gate:links',
+    token: 'LINKS malformed https://zz specimen.example/malformed (contains whitespace)',
+    plant: (copySite) =>
+      editFile(join(copySite, 'dist/about.html'), (html) =>
+        html.replace('</body>', '<a href="https://zz specimen.example/malformed">x</a></body>')
       ),
   },
   orphans: {

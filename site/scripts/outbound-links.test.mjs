@@ -61,6 +61,18 @@ test('a host that bot-blocks a runner is not probed, because its answer says not
   assert.deepEqual([...found.keys()], ['https://github.com/other/repo']);
 });
 
+test('a host that is skipped for probing is still read when the caller asks for every outbound address', () => {
+  const found = outboundFrom(
+    [{ route: '/a', html: page('https://www.linkedin.com/company/meshin', `${ORIGIN}/x`, 'https://ok.example/') }],
+    ORIGIN,
+    {
+      includeSkipped: true,
+    }
+  );
+
+  assert.deepEqual([...found.keys()], ['https://ok.example/', 'https://www.linkedin.com/company/meshin']);
+});
+
 test('an entity in the markup is decoded, and a fragment is dropped, so the address is the one that is requested', () => {
   const found = outboundFrom(
     [{ route: '/a', html: page('https://a.example/p?x=1&amp;y=2#section', 'https://a.example/p?x=1&y=2') }],

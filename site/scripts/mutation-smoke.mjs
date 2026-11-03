@@ -140,6 +140,7 @@ export const FAMILIES = [
   { id: 'route-removed-without-an-explanation', kind: 'specimen', specimen: 'routesShrink' },
   { id: 'html-duplicate-id', kind: 'specimen', specimen: 'html' },
   { id: 'link-to-a-missing-route', kind: 'specimen', specimen: 'links' },
+  { id: 'malformed-outbound-address', kind: 'specimen', specimen: 'linksMalformed' },
   { id: 'route-nothing-links-to', kind: 'specimen', specimen: 'orphans' },
   { id: 'chrome-only-route', kind: 'specimen', specimen: 'chromeOnly' },
   { id: 'template-without-booking-cta', kind: 'specimen', specimen: 'bookingCta' },

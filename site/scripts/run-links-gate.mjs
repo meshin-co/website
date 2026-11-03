@@ -1,8 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { join } from 'node:path';
 
-import { probeAll } from './link-probe.mjs';
-import { externalFindings, linkArgs, linkFindings, siteOrigin } from './links-gate.mjs';
+import { linkArgs, linkFindings, malformedFindings, siteOrigin } from './links-gate.mjs';
 import { readOutbound } from './outbound-links.mjs';
 
 const binary = join('node_modules', '.bin', 'linkinator');
@@ -20,18 +19,13 @@ if (links.length === 0) {
 const insideBuild = linkFindings(links);
 for (const finding of insideBuild) console.error(`LINKS dead ${finding}`);
 
-const hermetic = process.env.LINKS_SKIP_EXTERNAL === '1';
-const backoffMs = process.env.LINKS_PROBE_BACKOFF_MS?.split(',').map(Number);
-const outbound = hermetic ? new Map() : readOutbound('dist', origin);
-const probed = await probeAll([...outbound.keys()], { backoffMs });
-const outside = externalFindings(probed, outbound);
+const outbound = readOutbound('dist', origin, { includeSkipped: true });
+const malformed = malformedFindings(outbound);
+for (const finding of malformed) console.error(`LINKS malformed ${finding}`);
 
-for (const finding of outside.dead) console.error(`LINKS dead ${finding}`);
-for (const finding of outside.unverified) console.error(`LINKS unverified, not dead: ${finding}`);
-
-if (hermetic) console.log('links: hermetic run, outbound addresses were not probed');
+const noun = outbound.size === 1 ? 'address' : 'addresses';
 console.log(
-  `links: ${links.length} checked in the build; ${probed.size} outbound addresses probed with GET: ${outside.answered} answered, ${outside.dead.length} dead, ${outside.unverified.length} unverified`
+  `links: ${links.length} checked in the build; ${outbound.size} outbound ${noun} read, not fetched (a gone one is the sweep's to repair, never this gate's to block)`
 );
 
-if (insideBuild.length + outside.dead.length > 0) process.exitCode = 1;
+if (insideBuild.length + malformed.length > 0) process.exitCode = 1;

@@ -49,14 +49,19 @@ the cache before you suspect a second renderer.
 
 ## Whether the destination is still there
 
-`gate:external` judges the markup; `gate:links` fetches. linkinator crawls the build alone, with every
-outbound host skipped. `scripts/outbound-links.mjs` reads the outbound addresses from `dist/` and
-`scripts/link-probe.mjs` judges each with a GET, never a HEAD: linkinator kept a HEAD's 404 when its one
-follow-up GET failed in transit, and NIST answers HEAD 404 and GET 200 for a live PDF (33 pages red in CI).
-An address is dead only when two GETs answer 404 or 410. A timeout, a 403, a 429 or a 5xx is `unverified`,
-reported and never dead. Identify the probe honestly: a Chrome user agent from Node is challenged with 403
-by Cloudflare on doi.org. `LINKS_SKIP_EXTERNAL=1` crawls the build alone, which is how `test:smoke` stays
-hermetic; `LINKS_PROBE_BACKOFF_MS` shortens the retry wait for a test.
+`gate:external` judges the markup; `gate:links` judges the links inside the build. It never fetches a
+host outside it, so a gone outbound address never fails it: a third party's page is not a defect in
+this change. It still fails on a link inside the build that does not answer, and on an outbound
+address that is no address (whitespace, no parse, a host that is not a domain). linkinator crawls the
+build alone, `scripts/outbound-links.mjs` reads the outbound addresses from `dist/` and
+`scripts/links-gate.mjs` judges both. Smoke families `link-to-a-missing-route` and
+`malformed-outbound-address` prove it can fail.
+
+`scripts/link-probe.mjs` tells a gone address from a live one, for the sweep that repairs it. GET only:
+linkinator kept a HEAD's 404 when its one follow-up GET failed, and NIST answers HEAD 404 and GET 200
+for a live PDF (33 pages red in CI, 2026-11-03). Dead means two GETs answered 404 or 410; a timeout,
+403, 429 or 5xx is `unverified`, never dead. The probe says who it is, because Cloudflare answers a
+Chrome user agent sent from Node with a 403 challenge.
 
 ## A cited address that has gone
 
@@ -70,8 +75,6 @@ newest capture, which can be a different document. A source row keeps both addre
 from `EXTERNAL_REL`. `original` is what was cited: `src/content.config.ts` refuses an `original`
 that `url` is not a snapshot of, and the unattended writer binds its claims to the cited address.
 
-The pieces exist as modules and no job calls them yet. `scripts/wayback.mjs` asks for the capture
-nearest the date, inside a window. `scripts/snapshot-support.mjs` checks the capture still carries
-the title and the spans a sentence rests on. `scripts/citations.mjs` rewrites the rows in place.
-`scripts/link-origin.mjs` and `scripts/diff-scope.mjs` say which addresses a change adds. With no
-snapshot, or one that no longer supports the sentence, the owner decides: never swap in a source.
+`scripts/wayback.mjs` asks for the capture nearest the date, inside a window; `scripts/snapshot-support.mjs`
+checks it still carries the title; `scripts/citations.mjs` rewrites the rows in place. No job calls them
+yet, and the search-link rung that follows a missing snapshot is not built.
