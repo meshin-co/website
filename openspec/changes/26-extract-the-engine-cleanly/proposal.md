@@ -36,11 +36,13 @@ account and project, the domain, the Search Console property and its service acc
 priced per vendor, the budgets measured on this site's pages, every measured record, and the locked
 decisions L1 to L67.
 
-**Still to do in this change.** The export command that writes the engine into an empty directory
-with its seeds. The proof of adoption: an invented second site, install, build and every gate that
-needs no secret. The starter files the engine ships so a fresh site is not dead on arrival. The
-interview and its skill. The npm gate and its mutation specimens. The decision where the expensive
-export proof runs, recorded beside `localOnlyGates`. `tasks.md` lists each with its state.
+**The export (delivered).** `npm run export:engine -- <empty directory>` writes every engine file and 22
+seeds at their target paths, with `engine-export.json`. A copy of it was installed and built for an invented
+second site. `npm run gate:export` repeats that build on demand.
+
+**Still open.** 34 engine files still name this site (`gate:partition` allows them and prints each), skills and
+documents cite files that do not travel, and 182 engine tests in a copy pin facts of this site. `tasks.md`
+lists each with its state.
 
 ## Measured records never travel
 
@@ -51,9 +53,9 @@ This change keeps that behaviour and adds the rule that no record under `audits/
 
 ## Impact
 
-- New: `scripts/engine-partition.mjs`, `scripts/engine-partition-facts.mjs`,
-  `scripts/engine-partition-gate.mjs`, `scripts/engine-records.mjs`, `scripts/run-partition-gate.mjs`,
-  their tests and two fixtures; the skill `extract-the-engine-from-a-site.md`.
-- Changed: `site/scripts/README.md`, the index of scripts.
-- No npm script, workflow or mutation specimen yet: the tree still has findings, and a gate that
-  starts red is not a gate. Wiring waits for the findings to reach zero.
+- New: the partition modules and their tests, `scripts/export-engine.mjs`, `scripts/check-export.mjs`,
+  `scripts/partition-specimens.mjs`, 22 seeds under `seed/`, `site/src/data/static-pages.mjs`, and the skills
+  `extract-the-engine-from-a-site.md` and `interview-the-owner-of-a-new-site.md`.
+- New: `docs/plan/reference/new-site-interview.md`, 97 questions in the order they are needed.
+- Changed: `machine-text.mjs` no longer holds the page catalogue; the three asset generators create their own
+  output directories; `ci.yml` runs `gate:partition`; `check-engine.mjs` points at the interview.

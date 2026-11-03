@@ -12,17 +12,20 @@
       fails when the exit code is forced to 0
 - [x] 1.5 The skill `extract-the-engine-from-a-site.md` states the rules, the findings and what does
       not transfer
-- [ ] 1.6 Resolve the 2 `unclassified` and the 9 `anchor-unserved` findings with seeds
-      (`seed/<path>.seed`): `AGENTS.md`, `site/src/config.yaml`, `docs/SEMANTIC-CORE.md`,
-      `audits/routes.json`, `audits/search-demand.md` with every prompt unproven,
-      `site/src/data/tags.mjs`, and one example entry for the term, article and resource collections
-- [ ] 1.7 Resolve the 37 `site-bound` findings: prose in skills, specs and workflows names the site;
-      five scripts hardcode it (`external-links`, `links-gate`, `geo-probe`, `escalate-channels`,
-      `pr-github`); `jsonld`, `booking`, `navigation`, `machine-text`, `styleguide` and the search
-      index hold its identity in engine code; `package.json`, `.env.example`, `README.md`,
-      `content-facts.json` and `engine.config.json` name it
-- [ ] 1.8 Decide what ships for the 57 site and evidence paths that engine skills cite, and for the
-      collection hub pages, which the rules class as site copy although their markup is engine
+- [x] 1.6 22 starters under `seed/<path>.seed` leave 0 `unclassified` and 0 `anchor-unserved`
+      findings: the agent law, the site config, the semantic core, the routes, an empty demand report with
+      every buyer prompt unproven, the content facts, the category, tag and home data, the static page
+      catalogue, three collection hubs, and one example entry for the term, article, resource and author
+      collections
+- [ ] 1.7 Resolve the 34 `site-bound` files that `gate:partition` still allows: prose in skills, specs and
+      workflows names the site; scripts hardcode it (`external-links`, `links-gate`, `geo-probe`,
+      `escalate-channels`, `pr-github`); `jsonld`, `booking`, `navigation`, `styleguide` and the search index
+      hold its identity in engine code; `package.json`, `.env.example`, `README.md`, `content-facts.json` and
+      `engine.config.json` name it. Each one moves its fact into the config or into a seeded data file
+- [ ] 1.8 `STATIC_PAGE_CATALOG` and `HUB_PAGES` moved to `site/src/data/static-pages.mjs`, which the export
+      seeds, so a copy builds with no edit of an engine file. Still open: 52 `missing-path` findings of
+      `gate:skills` and 55 `dead-path` findings of `gate:docs` in a copy, because skills and documents cite
+      site or evidence files that do not travel
 - [ ] 1.9 Move into configuration, or into a question, the facts engine code holds without the
       partition seeing the site name: the person-name pattern `OUR_NAMES` in `geo-probe.mjs`; the
       place term and the locked-decision reference in `ABSENCE_CLAIMS` and the buyer size in
@@ -36,15 +39,21 @@
 
 ## 2. Export, and prove the export by adopting it
 
-- [ ] 2.1 An export command writes every engine file, and every seed at its target path, into an
-      empty directory; it refuses a non-empty target and a tree whose partition has findings
-- [ ] 2.2 Adopt the export in a scratch directory for an invented second site: fill
-      `engine.config.json`, create the anchor files, install, build, run every gate that needs no
-      secret; quote the stdout
-- [ ] 2.3 Justify each starter file. A band or a length floor copied from this site is a measurement
-      of a corpus the new site lacks, so the export ships none; the new site measures its own with
-      `node scripts/measure-sentence-band.mjs --write` before its first automated article
-- [ ] 2.4 `npm test` in the adopted copy: list every engine test that reads data only this site has
+- [x] 2.1 `scripts/export-engine.mjs` (`npm run export:engine -- <empty directory>`) writes every engine file
+      and every seed at its target path, plus `engine-export.json` with the counts, the seeded files and the
+      carried `site-bound` files; it refuses a non-empty target, an `unclassified` file and an
+      `anchor-unserved` anchor
+- [x] 2.2 The export was adopted in a scratch directory for an invented site: `engine.config.json` filled,
+      anchor files created, `npm install`, `npm run build` and every gate that needs no secret run; the
+      stdout is quoted in the delivery report. The copy builds with no edit of an engine file
+- [x] 2.3 No measured record is exported. `audits/sentence-band.json` describes one corpus: `bandFor` throws
+      when it is absent and `gate:autowriter` reports `record-corpus-stale` for another corpus, so the
+      new site runs `node scripts/measure-sentence-band.mjs --write` before its first automated article.
+      The demand report ships empty with every prompt unproven, because a report measured on another
+      property is not evidence for this one
+- [ ] 2.4 `npm test` in the adopted copy fails 182 tests in 49 files: the seeded core has 3 prompts where tests
+      pin the original's 30, the corpus is smaller than the tests assume, and tests hold the original's host,
+      brand, author, pages and collections. A test that pins a fact of this site belongs to this site
 
 ## 3. The interview
 
@@ -62,12 +71,14 @@
 
 ## 4. Keep it true
 
-- [ ] 4.1 Wire the partition as an npm gate, in `ci.yml` and in the skill that names it, once 1.6
-      to 1.9 leave zero findings
-- [ ] 4.2 A planted specimen and a `mutation-smoke.mjs` row for each finding, and for an export that
-      no longer builds
-- [ ] 4.3 Decide whether the export proof runs in the gate, in the pre-push hook or on demand, and
-      record the decision beside `localOnlyGates` in `site/package.json`
+- [x] 4.1 `npm run gate:partition` runs in `ci.yml` and is named by the skill. It runs with
+      `--allow site-bound`: those files print as `ALLOWED`, are counted and do not fail, because 34 engine
+      files still name this site. `unclassified` and `anchor-unserved` fail the build. Drop the flag at zero
+- [x] 4.2 Planted specimens and `mutation-smoke.mjs` rows: a file that fits no rule, an anchor whose seed is
+      removed, and an export that no longer builds. `site-bound` has no row, because while it is allowed
+      nothing can fail; `run-partition-gate.test.mjs` plants it and shows it fails without the flag
+- [x] 4.3 The export proof runs on demand. A full export and build takes about a minute, which is too slow for
+      the gate and too slow for the pre-push hook. `localOnlyGates` in `site/package.json` records it
 - [ ] 4.4 A finding for an interview that misses a config value or a workflow secret
 
 ## 5. Calibration Gate
