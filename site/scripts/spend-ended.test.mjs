@@ -71,7 +71,7 @@ test('the message is two lines: what happened and what it cost, then the month l
     date: '2026-11-10',
     reason: 'the writer did not run',
     runMicro: 0,
-    month: { month: '2026-11', spentMicro: 625000, ceilingMicro: 25000000 },
+    line: MONTH_LINE_OPEN,
   });
   assert.equal(
     text,
@@ -84,7 +84,7 @@ test('a reason that ends in a full stop or spans lines still gives exactly two l
     date: '2026-11-10',
     reason: 'the picker chose nothing: nothing\nis ready.  ',
     runMicro: 1,
-    month: { month: '2026-11', spentMicro: 625000, ceilingMicro: 25000000 },
+    line: MONTH_LINE_OPEN,
   });
   const [first, second, ...rest] = text.split('\n');
   assert.equal(

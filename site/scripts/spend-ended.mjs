@@ -5,8 +5,8 @@ import { readLedger } from './autowriter-ledger.mjs';
 import { postSlackText } from './escalate-channels.mjs';
 import { describeDelivery, receiptOf, redactorFor } from './escalate.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
-import { ceilingStatus } from './spend-ceiling.mjs';
-import { monthLine, usdText } from './spend-report-text.mjs';
+import { ceilingStatus, monthLineOf } from './spend-ceiling.mjs';
+import { usdText } from './spend-report-text.mjs';
 import { ledgerStemOf, microOf } from './spend-sum.mjs';
 
 const REPOSITORY_ROOT = resolve(import.meta.dirname, '..', '..');
@@ -22,13 +22,10 @@ class UsageError extends Error {}
 const oneLine = (text) => text.replace(/\s+/g, ' ').trim();
 const withoutFinalStops = (text) => oneLine(text).replace(/\.+$/, '');
 
-export function messageOf({ date, reason, runMicro, month }) {
-  const { month: name, spentMicro, ceilingMicro } = month;
-  return [
-    `No entry was written on ${date}: ${withoutFinalStops(reason)}. The run cost ${usdText(runMicro)} USD.`,
-    monthLine({ month: name, spentMicro, ceilingMicro }),
-  ].join('\n');
-}
+export const messageOf = ({ date, reason, runMicro, line }) =>
+  [`No entry was written on ${date}: ${withoutFinalStops(reason)}. The run cost ${usdText(runMicro)} USD.`, line].join(
+    '\n'
+  );
 
 function parseArguments(argv) {
   const [command, ...pairs] = argv;
@@ -130,9 +127,8 @@ export async function runCli(argv, io = {}) {
     const repoRoot = options['repo-root'] === undefined ? REPOSITORY_ROOT : resolve(options['repo-root']);
     const instant = now();
     const { reason, runMicro } = endingOf({ command, options, repoRoot });
-    const status = ceilingStatus({ repoRoot, now: instant });
-    const month = { month: status.month, spentMicro: status.spentMicro, ceilingMicro: microOf(status.ceilingUsd) };
-    const text = messageOf({ date: instant.toISOString().slice(0, 10), reason, runMicro, month });
+    const line = monthLineOf(ceilingStatus({ repoRoot, now: instant }));
+    const text = messageOf({ date: instant.toISOString().slice(0, 10), reason, runMicro, line });
     return await post({ text, env, fetch, instant, stdout, stderr });
   } catch (error) {
     if (!(error instanceof UsageError)) {
