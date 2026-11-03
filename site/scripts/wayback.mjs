@@ -15,7 +15,7 @@ const READABLE_TYPES = new Set(['text/html', 'application/xhtml+xml']);
 const pause = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 const none = (reason) => ({ kind: 'none', reason });
 const unavailable = (reason) => ({ kind: 'unavailable', reason });
-const unreadable = (reason) => ({ kind: 'unreadable', reason });
+const unreadable = (reason, cause) => ({ kind: 'unreadable', reason, cause });
 const retryable = (status) => status === 429 || status >= 500;
 const httpsForm = (address) => (typeof address === 'string' ? address.replace(/^http:\/\//, 'https://') : address);
 const dayNumber = (day) => Date.parse(`${day}T00:00:00Z`) / MILLISECONDS_PER_DAY;
@@ -151,11 +151,12 @@ async function readText(response, maxBytes) {
 }
 
 async function readCapture(response, maxBytes) {
-  if (response.status !== 200) return unreadable(`the archive answered HTTP ${response.status} for the capture`);
+  if (response.status !== 200)
+    return unreadable(`the archive answered HTTP ${response.status} for the capture`, 'status');
   const contentType = (response.headers.get('content-type') ?? '').split(';')[0].trim().toLowerCase();
   if (!READABLE_TYPES.has(contentType)) {
     const what = contentType === '' ? 'declares no content type' : `is ${contentType}`;
-    return unreadable(`the capture ${what}, which the machine cannot read; a person must judge it`);
+    return unreadable(`the capture ${what}, which the machine cannot read; a person must judge it`, 'content-type');
   }
   return { kind: 'page', contentType, text: await readText(response, maxBytes) };
 }

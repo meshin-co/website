@@ -1,0 +1,79 @@
+name: Repair links
+
+run-name: Repair links (${{ github.event_name }})
+
+on:
+  schedule:
+    - cron: '41 4 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: repair-links
+  cancel-in-progress: false
+
+env:
+  AUTOWRITER_UNATTENDED: '1'
+
+defaults:
+  run:
+    working-directory: site
+
+jobs:
+  configured:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      ready: ${{ steps.secrets.outputs.ready }}
+    steps:
+      - id: secrets
+        working-directory: .
+        env:
+          MISSING: ${{ secrets.AUTOWRITER_PAT == '' && 'AUTOWRITER_PAT' || '' }}
+        run: |
+          if [ -z "$MISSING" ]; then
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo 'ready=false' >> "$GITHUB_OUTPUT"
+          {
+            echo '### The link repair is not configured yet'
+            echo
+            echo "This run stopped before it did anything. The repository is missing \`$MISSING\`."
+            echo
+            echo 'Add it under Settings, Secrets and variables, Actions. Until then this'
+            echo 'workflow reports green and repairs nothing, rather than failing every morning.'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  repair:
+    needs: configured
+    if: github.ref == 'refs/heads/main' && needs.configured.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.AUTOWRITER_PAT }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: site/.nvmrc
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - run: npm ci
+
+      - name: build the site, so dist holds the addresses that are really linked
+        run: npm run build
+
+      - name: find the gone citations, repair each from the archive or a search link, and open one pull request
+        env:
+          AUTOWRITER_PAT: ${{ secrets.AUTOWRITER_PAT }}
+        run: |
+          node scripts/repair-links.mjs | tee "$RUNNER_TEMP/repair-links.txt"
+          { echo '### Link repair'; echo; tail -n 1 "$RUNNER_TEMP/repair-links.txt"; } >> "$GITHUB_STEP_SUMMARY"

@@ -93,10 +93,12 @@ test('a capture of another content type is unreadable and the reason names the t
   for (const [type, reason] of types) {
     const result = await read({ fetch: scripted(ok('x', type)).fetch });
     assert.equal(result.kind, 'unreadable', type);
+    assert.equal(result.cause, 'content-type', type);
     assert.match(result.reason, reason, type);
   }
   const untyped = await read({ fetch: scripted(() => new Response(Uint8Array.of(37, 80, 68, 70))).fetch });
   assert.equal(untyped.kind, 'unreadable');
+  assert.equal(untyped.cause, 'content-type');
   assert.match(untyped.reason, /no content type/);
 });
 
@@ -108,6 +110,7 @@ test('an archive that says no for good is unreadable and is asked once', async (
     const result = await read({ fetch, sleep });
 
     assert.equal(result.kind, 'unreadable', String(status));
+    assert.equal(result.cause, 'status', String(status));
     assert.match(result.reason, new RegExp(String(status)));
     assert.equal(requests.length, 1);
     assert.deepEqual(naps, []);

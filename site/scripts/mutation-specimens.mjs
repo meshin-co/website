@@ -10,6 +10,7 @@ import { engineSpecimens } from './engine-specimens.mjs';
 import { paritySpecimens } from './parity-specimens.mjs';
 import { evidenceSpecimens } from './evidence-specimens.mjs';
 import { jsonldSpecimens } from './jsonld-specimens.mjs';
+import { linkRotSpecimens } from './link-rot-specimens.mjs';
 import { partitionSpecimens } from './partition-specimens.mjs';
 import { REGISTERS_BEGIN } from './registers.mjs';
 import { SPEC_SPECIMENS } from './spec-specimens.mjs';
@@ -617,6 +618,7 @@ export const SPECIMENS = {
   ...partitionSpecimens({ editFile, removeFile, addFile }),
   ...unattendedSpecimens({ editFile, removeFile }),
   ...paritySpecimens({ editFile, removeFile }),
+  ...linkRotSpecimens({ addUntrackedFile }),
   ...SPEC_SPECIMENS,
 };
 

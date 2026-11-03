@@ -35,6 +35,10 @@ export function repairedReason({ route, generationPath, attempt }) {
   );
 }
 
+export const linkRepairedReason = ({ entries }) =>
+  `${OPENING}a link repair of ${joined(entries)} (register audits/link-rot.json). ` +
+  `Only an address was rewritten, by the link repair job and not by a person, and no human has read the rewritten text. ${EARLIER_REVIEW}`;
+
 function problemWith(item) {
   if (item === null || typeof item !== 'object') return 'is not an object';
   if (typeof item.file !== 'string' || !FILE_NAME.test(item.file)) return 'has no plain .json file name';

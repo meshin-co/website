@@ -1,7 +1,8 @@
 import { spawnSync } from 'node:child_process';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 
 import { linkArgs, linkFindings, malformedFindings, siteOrigin } from './links-gate.mjs';
+import { readRegister, registerSummary } from './link-rot-register.mjs';
 import { readOutbound } from './outbound-links.mjs';
 
 const binary = join('node_modules', '.bin', 'linkinator');
@@ -28,4 +29,8 @@ console.log(
   `links: ${links.length} checked in the build; ${outbound.size} outbound ${noun} read, not fetched (a gone one is the sweep's to repair, never this gate's to block)`
 );
 
-if (insideBuild.length + malformed.length > 0) process.exitCode = 1;
+const { register, problems } = readRegister(resolve('..'));
+for (const problem of problems) console.error(`LINKS register ${problem}`);
+if (problems.length === 0) console.log(registerSummary(register));
+
+if (insideBuild.length + malformed.length + problems.length > 0) process.exitCode = 1;
