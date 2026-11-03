@@ -53,6 +53,34 @@ the model calls cost. `spendWarnings` in `site/scripts/spend-sum.mjs` compares t
 and names an entry where they disagree. One file written by one code path would make that comparison
 agree by construction, and the cross-check would no longer check anything.
 
+**The spend reader counts every call and every record.** The monthly spend was the cost of each ledger's
+generation and attempts, and a generation record counted only through its ledger. Three kinds of spend
+fell out of it. A generation record whose ledger is gone counted as nothing. The record of a glossary term,
+which names the ledger of the run that wrote it, was read as a ledger of its own. And a repair that spent
+and then failed recorded its cost only in the JSON that its step printed. `site/scripts/spend-sum.mjs` now
+pairs each record with the ledger it names (`spendItemsOf`), and the month's spend is the sum of three kinds
+of part, each dated by its own instant: the writing calls, which are the larger of the ledger's generation
+and the record's writing calls; the repair calls, which are the ledger's attempts plus any repair call a
+record holds that no attempt covers; and the spend of a ledger that no record names. A record whose ledger
+is gone is counted from the record alone, and `spendWarnings` says so. An attempt beyond what the repair
+calls of a record account for is the spend of a failed repair: it is counted and never a warning.
+`spend-sources.mjs` reads the records into the same items, so the ceiling job and the report add the same
+parts.
+
+**A repair that spent and failed records its spend.** `repairRun` now catches an error after any model call
+and makes one local commit that changes the ledger and the spend report that counts it, and nothing else,
+with the subject `fix(autowriter): record the spend of a repair of <slug> that ended as <outcome>` and a
+`Provenance:` trailer. The entry and the generation record do not move. The sha goes on the error,
+`repair-entry.mjs` prints it, and the `rewrite` step of
+`watch-pr.yml` pushes it, because that step keeps a `commit` only when it is 40 hex characters. When the
+commit itself cannot be made, the original error is still the one thrown, with its spend, and its message
+says the spend could not be recorded and why. A repair that made no model call makes no commit.
+
+**A held slug is refused in words that name no unsafe remedy.** A slug that already has a ledger is refused
+as before, but the message no longer tells a person to remove the ledger. Removing it would take a real
+spend out of the monthly total, and no procedure frees a slug safely yet: that needs ledgers keyed by run,
+which is its own change.
+
 ## What this does not change
 
 - `site/src/data/post/` and `site/src/data/glossary/` are the site's content. Their file names are

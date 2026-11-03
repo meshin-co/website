@@ -4,22 +4,23 @@
 
 ### Requirement: One report states what every generated entry cost
 
-The pipeline SHALL keep `audits/spend-report.md`, regenerated from the generation records by
-`site/scripts/spend-report.mjs` and never appended to. It SHALL hold one row per record with its
-instant, format, slug, tokens and cost, and SHALL state the model and the rates each cost was
-computed at.
+The pipeline SHALL keep `audits/spend-report.md`, regenerated from the generation records and the
+ledgers by `site/scripts/spend-report.mjs` and never appended to. It SHALL hold one row per record
+with its instant, format, slug, tokens, the cost of its writing calls and the cost of its repair
+calls, and SHALL state the model and the rates each cost was computed at.
 
 #### Scenario: Nothing has been generated
 
 - **WHEN** no generation record exists
-- **THEN** the report says in words that no entry has been generated, and holds no row, no total and
-  no rate
+- **THEN** the report says in words that no entry has been generated, and holds no entry row, no
+  entry total and no rate
 
 #### Scenario: The same records are rendered twice
 
-- **WHEN** the report is regenerated from an unchanged set of records, on another day or from
-  another commit
-- **THEN** the file is byte for byte the same
+- **WHEN** the report is regenerated from an unchanged set of records with the instant stamped in
+  the file
+- **THEN** the file is byte for byte the same, and `npm run audit:spend` leaves a file that is
+  already current untouched, so a later day changes nothing until a record changes
 
 #### Scenario: The rates change between two entries
 
@@ -44,6 +45,96 @@ ceiling.
 - **WHEN** an entry was generated exactly 30 × 24 hours before the newest record
 - **THEN** it is outside the 30-day window, which opens after that instant
 
+### Requirement: The report says what the month has spent against the ceiling
+
+The report SHALL read the clock once, when it is written, and print that instant as `Generated-at:`
+on the line after `Generated-from:`. Its first section, `This month`, SHALL open with one sentence
+that names the UTC month of that instant, what was spent in it, the monthly ceiling and what is
+left, or, at or over the ceiling, says that none is left and that the writer does not run for the
+rest of the month.
+
+#### Scenario: The month has room
+
+- **WHEN** the committed records show 0.022748 USD spent in a month and the ceiling is 25 USD
+- **THEN** the first section reads `2026-11 so far: 0.022748 USD spent of the 25.00 USD monthly ceiling, 24.977252 USD left.`
+
+#### Scenario: The ceiling is reached
+
+- **WHEN** the spend of the month equals or exceeds the ceiling
+- **THEN** the sentence says that none is left and that the writer does not run for the rest of the
+  month
+
+#### Scenario: Nothing was spent
+
+- **WHEN** no ledger and no record exists
+- **THEN** the sentence still names the month and says 0.00 USD spent, in numbers and not in silence
+
+#### Scenario: The month turns
+
+- **WHEN** the records do not change across the end of a month
+- **THEN** the file is not rewritten, and it still names the earlier month beside the instant it was
+  stamped at, which says when the figure was true
+
+#### Scenario: The figure says what it counts
+
+- **WHEN** the report is read
+- **THEN** `This month` says that the figure counts the ledgers and records committed in the
+  repository, and that the ceiling job also counts the spend on branches that are not merged yet, so
+  the figure it stops on can be higher
+
+#### Scenario: The file reads no network
+
+- **WHEN** the report is written
+- **THEN** it reads the ledgers and records of the working tree and the clock, and no network
+
+### Requirement: The Slack message carries the month sentence of the ceiling status
+
+The Slack message SHALL carry the same sentence as its second block, built by `monthLineOf` in
+`site/scripts/spend-ceiling.mjs` from the ceiling status of the run, so that its figure is the one
+the ceiling job stops on, including the spend on branches that are not merged yet.
+
+#### Scenario: The message carries the sentence
+
+- **WHEN** a write produced an entry and the ceiling status says 0.022748 USD spent of 25 USD
+- **THEN** the second block of the message reads `2026-11 so far: 0.022748 USD spent of the 25.00 USD monthly ceiling, 24.977252 USD left.`
+
+### Requirement: The report totals every call the machine paid for
+
+The report SHALL total, for the month and for all time, the writing calls of entries, the repair
+calls, the spend that no entry carries and the sum of the three, and SHALL label the entry totals of
+the windows as writing calls only. `site/scripts/spend-sum.mjs` SHALL be the only code that adds
+them, so that the report and the ceiling cannot disagree.
+
+#### Scenario: A repair failed
+
+- **WHEN** a ledger holds an attempt whose repair ended with no repaired entry, so no record holds
+  its calls
+- **THEN** the paid tables count its cost under Repair calls and no entry row shows it
+
+#### Scenario: A run ended with no entry
+
+- **WHEN** one entry cost 0.05 USD and a run that ended with no entry cost 0.027 USD
+- **THEN** the all-time entry total reads 0.05, the paid tables read 0.027 under spend that no entry
+  carries and 0.077 for everything paid for, and the Notes say what the noted runs cost together
+
+### Requirement: A row shows its repair cost, and the Notes and the message total the rest
+
+The row of an entry SHALL carry the cost of the repair calls its record holds in its own column,
+beside the cost of its writing calls. The Notes section SHALL state what the noted runs cost
+together, and the Slack message SHALL end its all-time lines with the four figures in one labelled
+line.
+
+#### Scenario: An entry needed repairs
+
+- **WHEN** a record holds repair calls that cost 0.015 USD and its ledger holds the matching attempt
+- **THEN** its row shows the cost of its writing calls unchanged and 0.015 under Repair, and the paid
+  tables count 0.015 once, under Repair calls
+
+#### Scenario: The message ends its all-time lines with the four figures
+
+- **WHEN** a write produced an entry and the all-time spend is 0.086 USD of writing calls, 0.045 USD of repair calls and 0.0755 USD that no entry carries
+- **THEN** the all-time lines end with `Everything paid for: 0.2065 USD, of which writing calls 0.086 USD, repair calls 0.045 USD and spend that no entry carries 0.0755 USD.`
+
 ### Requirement: An incomplete corpus is reported, not summed in silence
 
 When a ledger records a generation and no generation record carries its slug, when a record names a
@@ -66,10 +157,10 @@ the form `spendWarnings` in `site/scripts/spend-sum.mjs` already uses for writin
 ### Requirement: A line is a warning only when a person has something to do about it
 
 The report SHALL list under Warnings only a line that a person can act on, and the Slack message SHALL
-state the number of those lines, zero included. A ledger that spent and has no record, once its run
-ended with the verdict `stopped`, `escalated` or `discarded`, SHALL be listed under Notes in its own
-sentence, and no count or message SHALL include it. `site/scripts/spend-report-model.mjs` sorts each
-line.
+state the number of those lines, zero included, followed in brackets by what the number means. A
+ledger that spent and has no record, once its run ended with the verdict `stopped`, `escalated` or
+`discarded`, SHALL be listed under Notes in its own sentence, and no warning count or warning line
+SHALL include it. `site/scripts/spend-report-model.mjs` sorts each line.
 
 #### Scenario: A discarded attempt and nothing else wrong
 
@@ -90,12 +181,19 @@ line.
 - **THEN** the report lists it under Warnings, the record cost is still counted, and the Slack message
   counts it
 
-### Requirement: The report is committed with the entry it counts
+#### Scenario: A message with no warning does not say the day was healthy
 
-The unattended writer's one commit SHALL include the regenerated report, written by
-`site/scripts/write-run.mjs`. A repair adds repair calls to a record and no writing call, so it SHALL
-leave the report as it was. The commit of a failed write SHALL hold the regenerated report beside the
-ledger, in `.github/workflows/write-daily.yml`, or `main` would fail `npm run gate:autowriter`.
+- **WHEN** every ledger agrees with its generation record
+- **THEN** the Slack message says `Warnings: 0` and, in brackets, that every ledger agrees with its
+  generation record and that this does not say that every run produced an entry
+
+### Requirement: The report is committed with every change to the spend
+
+Every commit that adds a call to a ledger or a record SHALL hold the regenerated report: the
+unattended writer's one commit (`site/scripts/write-run.mjs`), a repair commit and the ledger-only
+commit of a repair that spent and failed (`site/scripts/repair-finish.mjs`), and the commit of a
+failed write (`.github/workflows/write-daily.yml`). Without it `npm run gate:autowriter` fails on
+that branch or on `main`.
 
 #### Scenario: A run writes an entry
 
@@ -104,8 +202,14 @@ ledger, in `.github/workflows/write-daily.yml`, or `main` would fail `npm run ga
 
 #### Scenario: A repair adds a call
 
-- **WHEN** a repair attempt adds a repair call to a record
-- **THEN** the report regenerated from that record is byte for byte the report before the repair
+- **WHEN** a repair attempt adds a repair call to a record and an attempt to its ledger
+- **THEN** the same commit holds the report regenerated from them, whose Repair column and paid
+  tables count the repair
+
+#### Scenario: A repair fails after it spent
+
+- **WHEN** a repair made model calls and ended in an error
+- **THEN** the commit that records its spend holds the regenerated report beside the ledger
 
 #### Scenario: A write fails after it spent money
 
@@ -116,8 +220,9 @@ ledger, in `.github/workflows/write-daily.yml`, or `main` would fail `npm run ga
 
 After a successful write the daily workflow, `.github/workflows/write-daily.yml`, SHALL post one
 message through the sender of `site/scripts/escalate-channels.mjs`: the cost of each entry just
-written, the 30-day totals and the all-time totals, as lines of numbers and units. It SHALL post
-nothing built from zero records, and no output of the step SHALL contain the webhook.
+written, the month sentence, the 30-day totals, the all-time totals with everything paid for, and
+the warnings line, as lines of numbers and units. It SHALL post nothing built from zero records, and
+no output of the step SHALL contain the webhook.
 
 #### Scenario: Slack accepts the message
 
@@ -128,6 +233,60 @@ nothing built from zero records, and no output of the step SHALL contain the web
 
 - **WHEN** the result of the write lists a slug and no generation record carries it
 - **THEN** nothing is posted and the step exits non-zero naming the slug
+
+#### Scenario: The ceiling status cannot be read
+
+- **WHEN** the ceiling status of the run cannot be read
+- **THEN** nothing is posted and the step exits non-zero with the reason
+
+### Requirement: A day that ends with no entry still posts to Slack
+
+When a daily run ends without an entry, `.github/workflows/write-daily.yml` SHALL post one message of
+two lines through `node scripts/spend-ended.mjs`: that no entry was written on that UTC date, why,
+and what the run cost, then the month sentence. The four endings are the ceiling reached, a picker
+that chose nothing or chose to strengthen a page, a write that ended with no entry, and a write that
+failed.
+
+#### Scenario: The ceiling is reached
+
+- **WHEN** the ceiling job stops the run
+- **THEN** the message says that the month's spend reached the ceiling so the writer did not run,
+  that the run cost 0.00 USD, and the month sentence says that none is left
+
+#### Scenario: The picker chooses nothing
+
+- **WHEN** the picker decides `none`, or decides `strengthen`
+- **THEN** the message names the reason or the page chosen, and the run cost 0.00 USD
+
+#### Scenario: Every draft was skipped
+
+- **WHEN** the write step succeeds and lists no entry
+- **THEN** the message names each skipped draft with its reason, and the run cost is the sum of the
+  generation and the attempts in the ledger
+
+#### Scenario: The write failed
+
+- **WHEN** the write step fails after it spent
+- **THEN** the message names the slug and the kind of failure, its cost is the ledger's, and it is
+  posted after the escalation and after the ledger and the report were committed
+
+#### Scenario: A step before the picker decided fails
+
+- **WHEN** the demand refresh or the pick step itself fails
+- **THEN** this message is not posted: the refresh has its own escalation, and a failed pick ends the
+  job red, which is the signal
+
+#### Scenario: The message carries nothing secret
+
+- **WHEN** any of the four endings posts
+- **THEN** the cost is read from the ledger of the run, and no line carries the failure text, the
+  spend the writer printed or the webhook
+
+#### Scenario: Slack refuses the message
+
+- **WHEN** the webhook answers 404, or the request fails
+- **THEN** the step ends non-zero with one receipt line, and no issue is opened and no ledger is
+  written
 
 ### Requirement: A missed message is a red step and nothing more
 
@@ -144,8 +303,10 @@ channel, write a ledger or stop the pull request. An escalation that reached no 
 
 ### Requirement: A report that disagrees with its records is refused
 
-`npm run gate:autowriter` SHALL regenerate the report from `audits/autowriter` and refuse a missing
-report and a report that differs from the regeneration, naming the first line that differs.
+`npm run gate:autowriter` SHALL regenerate the report from `audits/autowriter` with the instant
+stamped in the committed file, and SHALL refuse a missing report, a report with no readable
+`Generated-at` line and a report that differs from the regeneration, naming the first line that
+differs or the missing line.
 
 #### Scenario: A record is added and the report is not
 
@@ -156,6 +317,11 @@ report and a report that differs from the regeneration, naming the first line th
 
 - **WHEN** a figure in the committed report is changed and no record changed
 - **THEN** the gate exits non-zero with `spend-report-differs` and names the line
+
+#### Scenario: The instant is removed
+
+- **WHEN** the `Generated-at` line is deleted from the committed report
+- **THEN** the gate exits non-zero with `spend-report-differs` and names `Generated-at`
 
 #### Scenario: The report is deleted
 

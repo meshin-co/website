@@ -105,3 +105,85 @@ nothing shows as a count of zero and not as a pass.
   claim in a later one
 - **THEN** it takes the claim of the later month, and it still refuses a claim filed outside its month
   directory beside another, because it could not tell which file is the claim
+
+### Requirement: The monthly spend counts every call the machine paid for
+
+The monthly spend SHALL be the sum, in whole micro-dollars, of three parts, each dated by its own
+instant: the writing calls of each run, the repair calls, and the spend of a ledger that no record
+names. `site/scripts/spend-sum.mjs` SHALL be the only code that adds them, so that the report and the
+ceiling job count the same parts.
+
+#### Scenario: An entry needed repairs
+
+- **WHEN** a ledger holds a generation of 1.00 USD and one attempt of 0.50 USD
+- **THEN** the month that holds both counts 1.50 USD
+
+#### Scenario: A repair failed
+
+- **WHEN** a ledger holds an attempt whose repair produced no repaired entry, so no record holds its
+  calls
+- **THEN** its cost is counted and no warning is raised, because that is what a failed repair costs
+
+#### Scenario: A record shows more than its ledger
+
+- **WHEN** the writing calls of a record cost more than the generation of its ledger, or the record
+  holds repair calls that cost more than the attempts of its ledger
+- **THEN** the larger cost is counted and one sentence names the slug and both figures
+
+### Requirement: Each generation record is paired with the ledger it names
+
+`site/scripts/spend-sum.mjs` SHALL pair each generation record with the ledger it names, so that the
+record of a glossary term joins the run that wrote it and is not read as a ledger of its own. A record
+whose ledger is not in the repository SHALL be counted from the record alone, and the spend reader
+SHALL say so in one sentence naming the slug and the missing ledger.
+
+#### Scenario: A term is written in the run of an article
+
+- **WHEN** the generation record of a glossary term names the ledger of the article's run
+- **THEN** the term joins that run and adds its writing calls to it, and the spend reader does not read
+  the term as a ledger
+
+#### Scenario: A record whose ledger is gone
+
+- **WHEN** a generation record names a ledger that does not exist
+- **THEN** its calls are counted from the record, and one sentence names the slug and the missing ledger
+
+### Requirement: A repair that spent money and failed records its spend
+
+A repair that made at least one model call and ended in any error SHALL make one local commit that
+holds the ledger of the entry, with one attempt added that carries the spend, and the spend report that
+counts it, and nothing else. The sha of that commit SHALL be put on the error it throws, so that the
+workflow pushes it. A repair that made no model call SHALL make no commit.
+
+#### Scenario: The model answered and the rewrite broke the build
+
+- **WHEN** a repair made two model calls and the assembled entry fails to build
+- **THEN** the ledger gains an attempt whose cost is the cost of those two calls, in a commit that holds
+  the ledger and the report, and the monthly spend counts it
+
+#### Scenario: The repair refuses before any call
+
+- **WHEN** a repair refuses before it calls the model
+- **THEN** no commit is made and no attempt is added
+
+#### Scenario: The commit says what it is
+
+- **WHEN** a repair that spent has ended in an error
+- **THEN** the subject of its commit is `fix(autowriter): record the spend of a repair of <slug> that ended as <outcome>`, it carries a `Provenance:` trailer that names the generation record and no `Gates:` line, and the entry and the generation record do not change
+
+#### Scenario: The spend cannot be recorded
+
+- **WHEN** the commit fails, the attempt cap is reached or the ledger would be invalid
+- **THEN** the error that the repair throws is the original one, and its message ends with `; the spend of this repair could not be recorded: <reason>`
+
+### Requirement: A held slug is refused without an unsafe remedy
+
+When the slug of a topic already has a ledger, claiming the topic SHALL be refused, and the reason SHALL NOT
+tell anyone to remove the ledger, because the ledger records spend that the monthly ceiling counts. The
+reason SHALL say that an earlier run owns the slug and that no procedure frees a slug safely.
+
+#### Scenario: A slug that an earlier run owns
+
+- **WHEN** a topic names a slug that already has a ledger
+- **THEN** the refusal names the ledger, says that an earlier run owns the slug, and does not tell anyone to
+  remove it

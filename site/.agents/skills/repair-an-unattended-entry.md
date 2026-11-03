@@ -10,8 +10,8 @@ The step that joins the parts is `npm run repair:entry`, described below. Never 
 ## What a repair may touch
 
 A repair changes the entry's prose and frontmatter and nothing else. `repair-scope.mjs` lists the paths one repair commit
-may hold: the entry, its ledger, its generation record, its own dispositions, `docs/SEMANTIC-CORE.md`, and dispositions
-restated by the pipeline. It refuses a path outside that list, an unsafe path, and every path the refusal list names.
+may hold: the entry, its ledger, its generation record, the spend report, its own dispositions, `docs/SEMANTIC-CORE.md`,
+and dispositions restated by the pipeline. It refuses a path outside that list, an unsafe path, and every refused path.
 
 The attempt is written into the ledger in the same commit as the repair. A ledger-only commit classifies as prose, so
 the content gates would skip it. `ledgerWithAttempt` (in `autowriter-ledger.mjs`) numbers the attempt, recomputes `spend`
@@ -56,8 +56,11 @@ the watcher's next move. The step makes one local commit and the workflow pushes
    a reached spend ceiling.
 4. `repair-rewrite.mjs` asks the model through `writer-adapter.mjs`; the writer's checks and `repair-guard.mjs` judge it.
 5. `repair-assembly.mjs` builds it with the writer's steps (`route-steps.mjs`, `repair-draft.mjs`).
-6. `repair-finish.mjs` writes the attempt and the call, checks scope and secrets, and commits through `commitRepair`.
-   `generation-facts.mjs` and `writer-cli.mjs` are the parts the writer and the repair share.
+6. `repair-finish.mjs` writes the attempt, the call and the regenerated spend report, checks scope and secrets, and commits
+   through `commitRepair`. `generation-facts.mjs` and `writer-cli.mjs` are the parts the writer and the repair share.
+
+A repair that made a model call and ends in any other outcome makes one ledger-only commit instead (`recordFailedSpend`,
+with the report). Its sha is `commit` in the JSON line, so the spend counts and the workflow pushes it.
 
 ## Write prompt and repair prompt
 
@@ -74,5 +77,4 @@ The `concurrency` group of `watch-pr.yml` holds one run per pull request, repair
 
 A merge leaves a tree no Lighthouse run measured (L59). `pr-watch-debt.mjs` writes `measurementDebt` (built by
 `measurement-debt.mjs`) into the ledger at merge: the commit, the tree fingerprint and the command the owner runs
-(`npm run gate:lh`, then `npm run lh:record`). An attempt that ends without a commit has its cost in the JSON line only,
-so the spend ceiling can undercount it.
+(`npm run gate:lh`, then `npm run lh:record`).

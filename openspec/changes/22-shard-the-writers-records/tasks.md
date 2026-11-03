@@ -57,7 +57,17 @@
 ## 5. Two files stay two files
 
 - [x] 5.1 The ledger and the generation record are not merged: `spendWarnings` in `spend-sum.mjs` still
-      compares the cost each records, and its tests are unchanged
+      compares the cost each records and keeps its writing-spend sentence
+- [x] 5.2 `spendItemsOf` in `spend-sum.mjs` pairs each generation record with the ledger it names, so a
+      glossary term joins the run that wrote it, and the month's spend (`monthlyBreakdown`) is the
+      sum of the writing calls, the repair calls and the spend of a ledger no record names, each dated
+      by its own instant; `spend-sources.mjs` reads the records into the same items, so a record whose
+      ledger is gone is counted from the record alone, with a sentence that names the slug
+- [x] 5.3 A repair that made a model call and ended in any error makes one ledger-only commit
+      (`recordFailedSpend` in `site/scripts/repair-finish.mjs`) that the workflow pushes, and a test over
+      a real git repository shows `historyReport` accepts it
+- [x] 5.4 The refusal of a slug that already has a ledger (`site/scripts/topic-claims.mjs`) names no
+      remedy that erases the ledger, and a test says so
 
 ## 6. Documents
 

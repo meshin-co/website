@@ -62,9 +62,13 @@ The `write-daily.yml` workflow runs `node scripts/spend-ceiling.mjs` before any 
 read. Three modules sit under it:
 
 - `scripts/spend-sources.mjs` reads every attempt ledger and generation record from the working tree and
-  from the tip of `main` and of each `autowriter` branch, through git. It refuses data it cannot read.
+  from the tip of `main` and of each `autowriter` branch, through git, into one item per run: a record joins
+  the ledger it names, and a record whose ledger is gone is counted from the record alone. It refuses data it
+  cannot read.
 - `scripts/spend-sum.mjs` holds the month rule (the UTC calendar month of an instant), the integer
-  micro-dollar sum of generation and attempt costs, and the choice of one version of each slug.
+  micro-dollar sum (`monthlyBreakdown`: the writing calls, the repair calls and the spend of runs with no
+  record, each dated by its own instant), the choice of one version of each slug and `spendWarnings`. A repair
+  that failed after it spent is an attempt on the ledger, so it counts and raises no warning.
 - `scripts/spend-notice.mjs` keeps the notice ledger `audits/autowriter/<year>/<month>/spend-ceiling-<year>-<month>.json`. It says
   whether a month was announced, and raises the `spend-ceiling` escalation once for that month.
 
