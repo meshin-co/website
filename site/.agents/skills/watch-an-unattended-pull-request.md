@@ -53,8 +53,8 @@ job as passed, so a skipped one is never green.
    Contents, Pull requests and Actions write access. Without it the run fails naming the secret; a token
    GitHub refuses raises a `credential` escalation. Every write uses it; every read uses `GITHUB_TOKEN`.
 2. The secret `SLACK_WEBHOOK_URL`, described in `guard-the-unattended-writer.md`.
-3. The environment `autowriter-tick` with a 10 minute wait timer, which spaces the looks without a
-   runner waiting: `gh api -X PUT repos/<owner>/<repo>/environments/autowriter-tick -F wait_timer=10`.
+3. The environment `autowriter-tick` with a 3 minute wait timer, which spaces the looks without a
+   runner waiting: `gh api -X PUT repos/<owner>/<repo>/environments/autowriter-tick -F wait_timer=3`.
    The runner reads the environment first and refuses to start a successor without the timer.
 4. A chain starts by hand with `gh workflow run watch-pr.yml -f pr=<number>`.
 

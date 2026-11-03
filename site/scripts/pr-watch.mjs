@@ -18,13 +18,14 @@ import {
   tickProblem,
 } from './pr-github.mjs';
 import { recordDebt } from './pr-watch-debt.mjs';
+import { readEngineConfig } from './engine-config.mjs';
 import { repairFinding, repairOutputs, writeOutputs } from './pr-watch-repair.mjs';
 import { recordPath } from './record-layout.mjs';
 import { OUTCOMES, isOutcome } from './repair-outcome.mjs';
 
 export const SECRET = 'AUTOWRITER_PAT';
 export const TICK_ENVIRONMENT = 'autowriter-tick';
-export const TICK_MINUTES = 10;
+export const TICK_MINUTES = readEngineConfig().loop.tickMinutes;
 export const WORKFLOW = 'watch-pr.yml';
 
 const USAGE = 'Usage: node scripts/pr-watch.mjs --pr <number> [--observed <token>] [--after-repair <outcome>]';
