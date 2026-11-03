@@ -93,6 +93,12 @@ jobs:
         run: |
           node scripts/commit-to-main.mjs --message "chore(autowriter): record the spend ceiling notice" --path "$NOTICE_LEDGER"
 
+      - name: post to Slack that no entry will be written, with what the run cost and the month's figure
+        if: ${{ !cancelled() && steps.ceiling.outputs.stopped == 'true' }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: node scripts/spend-ended.mjs ceiling
+
   write:
     needs: [configured, ceiling]
     if: github.ref == 'refs/heads/main' && needs.configured.outputs.ready == 'true' && needs.ceiling.outputs.stopped != 'true'
@@ -269,3 +275,26 @@ jobs:
           cat "$RUNNER_TEMP/spend-report-notice.txt"
           cat "$RUNNER_TEMP/spend-report-notice.txt" >> "$GITHUB_STEP_SUMMARY"
           exit "$status"
+
+      - name: post to Slack that the picker chose nothing to write, with what the run cost and the month's figure
+        if: ${{ !cancelled() && steps.pick.outcome == 'success' && steps.pick.outputs.decision != 'write' }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: node scripts/spend-ended.mjs pick --decision "$DECISION_FILE"
+
+      - name: count the entries the write produced
+        id: produced
+        if: ${{ !cancelled() && steps.write.outcome == 'success' }}
+        run: echo "count=$(jq '.entries | length' "$WRITE_RESULT_FILE")" >> "$GITHUB_OUTPUT"
+
+      - name: post to Slack that the write ended with no entry, with what the run cost and the month's figure
+        if: ${{ !cancelled() && steps.write.outcome == 'success' && steps.produced.outputs.count == '0' }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: node scripts/spend-ended.mjs write --decision "$DECISION_FILE" --result "$WRITE_RESULT_FILE"
+
+      - name: post to Slack that the write stopped, with what the run cost and the month's figure
+        if: ${{ !cancelled() && steps.write.outcome == 'failure' }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: node scripts/spend-ended.mjs write --decision "$DECISION_FILE" --result "$WRITE_RESULT_FILE"
