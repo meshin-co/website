@@ -14,6 +14,7 @@ const EDITOR_ROOT = 'site/.vscode/';
 const AGENT_FILES = new Set(['AGENTS.md', 'CLAUDE.md']);
 const LICENCE_FILES = new Set(['LICENSE', 'LICENSE.md']);
 const FIXTURE_NAME = /\.fixture\.[a-z]+$/;
+const SITE_MARK = /\.site\.(?:test\.)?[a-z]{2,4}$/;
 
 const extensionOf = (file) => posix.extname(file);
 const under =
@@ -138,6 +139,12 @@ export const RULES = Object.freeze([
     class: 'engine',
     why: 'its name says it is test data, and test data pins behaviour against an invented site',
     test: (file) => FIXTURE_NAME.test(posix.basename(file)),
+  },
+  {
+    id: 'site-marked',
+    class: 'site',
+    why: 'its name carries the .site marker before its extension: its author declared it belongs to one site, so it stays with that site and is never exported',
+    test: (file) => SITE_MARK.test(posix.basename(file)),
   },
   {
     id: 'test',

@@ -156,3 +156,19 @@ test('the partition counts each class and lists every file that fits no rule', (
   assert.deepEqual(result.unclassified, ['stray.bin']);
   assert.equal(result.rows.length, files.length);
 });
+
+test('a file named with the .site marker belongs to one site and is never exported; the same name without it is engine', () => {
+  assert.deepEqual(classify('site/scripts/topic-core.site.test.mjs', facts), {
+    file: 'site/scripts/topic-core.site.test.mjs',
+    class: 'site',
+    rule: 'site-marked',
+  });
+  assert.deepEqual(classify('site/.agents/skills/navigate-the-plan.site.md', facts), {
+    file: 'site/.agents/skills/navigate-the-plan.site.md',
+    class: 'site',
+    rule: 'site-marked',
+  });
+  assert.equal(ruleOf('site/scripts/topic-core.test.mjs'), 'test');
+  assert.equal(ruleOf('site/.agents/skills/navigate-the-plan.md'), 'skill');
+  assert.equal(classOf('site/src/utils/pipeline.site.test.mjs'), 'site');
+});
