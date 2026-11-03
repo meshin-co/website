@@ -4,7 +4,7 @@ import { existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { test } from 'node:test';
 
-import { SITE_CONFIG, siteBrand } from './site-brand.mjs';
+import { SITE_CONFIG, autowriterAgent, siteBrand } from './site-brand.mjs';
 
 const REPO_ROOT = resolve(import.meta.dirname, '..', '..');
 
@@ -26,4 +26,14 @@ test('the brand resolves the same from any other working directory', () => {
     "').then((m) => process.stdout.write(m.siteBrand().name))";
   const elsewhere = execFileSync(process.execPath, ['-e', read], { cwd: dirname(REPO_ROOT), encoding: 'utf8' });
   assert.equal(elsewhere, siteBrand().name);
+});
+
+test('the autowriter names itself after the first label of the brand host, so a GitHub log says whose it is', () => {
+  assert.equal(autowriterAgent({ name: 'field-notes.example' }), 'field-notes-autowriter');
+  assert.equal(autowriterAgent({ name: 'acme.co.uk' }), 'acme-autowriter');
+  assert.equal(autowriterAgent({ name: 'acme' }), 'acme-autowriter');
+});
+
+test('the autowriter agent follows the brand on disk when no brand is given', () => {
+  assert.equal(autowriterAgent(), `${siteBrand().name.split('.')[0]}-autowriter`);
 });

@@ -6,9 +6,16 @@ import { join } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
+import { contactEmail } from '../src/utils/brand.mjs';
+
 import { EXTERNAL_REL, externalAnchors, internalNofollowFindings, relFindings } from './external-links.mjs';
+import { siteBrand } from './site-brand.mjs';
 
 const RUNNER = fileURLToPath(new URL('./run-external-links.mjs', import.meta.url));
+const BRAND = siteBrand();
+const HOST = BRAND.name;
+const DOTTED_LOOKALIKE = HOST.replace('.', '-');
+const SUFFIXED_LOOKALIKE = `${HOST}.evil.example`;
 
 test('the required rel is exactly nofollow, noopener and noreferrer', () => {
   assert.deepEqual([...EXTERNAL_REL].sort(), ['nofollow', 'noopener', 'noreferrer']);
@@ -22,12 +29,13 @@ test('an outbound anchor is collected with its rel, and an internal one is ignor
 });
 
 test('our own host is never outbound, with or without www', () => {
-  const anchors = externalAnchors('<a href="https://meshin.co/x">a</a><a href="https://www.meshin.co/y">b</a>');
+  const anchors = externalAnchors(`<a href="https://${HOST}/x">a</a><a href="https://www.${HOST}/y">b</a>`);
   assert.deepEqual(anchors, []);
 });
 
 test('a mailto or tel link is not an outbound web link', () => {
-  assert.deepEqual(externalAnchors('<a href="mailto:hello@meshin.co">mail</a><a href="tel:+100">call</a>'), []);
+  const html = `<a href="mailto:${contactEmail(BRAND)}">mail</a><a href="tel:+100">call</a>`;
+  assert.deepEqual(externalAnchors(html), []);
 });
 
 test('an outbound link missing any required token is a finding that names the missing tokens', () => {
@@ -42,13 +50,13 @@ test('an outbound link with all three tokens in any order is clean', () => {
 });
 
 test('an outbound link with no rel at all reports every token as missing', () => {
-  const findings = relFindings('/x', '<a href="https://linkedin.com/in/meshin">l</a>');
+  const findings = relFindings('/x', '<a href="https://linkedin.com/in/someone">l</a>');
   assert.deepEqual(findings[0].missing, ['nofollow', 'noopener', 'noreferrer']);
 });
 
 test('extra tokens such as me or sponsored are allowed alongside the required three', () => {
   assert.deepEqual(
-    relFindings('/x', '<a href="https://linkedin.com/in/meshin" rel="me nofollow noopener noreferrer">l</a>'),
+    relFindings('/x', '<a href="https://linkedin.com/in/someone" rel="me nofollow noopener noreferrer">l</a>'),
     []
   );
 });
@@ -62,7 +70,23 @@ test('an internal link carrying nofollow is a finding, because it throws away ou
 test('an internal link without nofollow is clean, and an outbound one is not this rule\u2019s business', () => {
   assert.deepEqual(internalNofollowFindings('/x', '<a href="/about">a</a>'), []);
   assert.deepEqual(internalNofollowFindings('/x', '<a href="https://iso.org" rel="nofollow">i</a>'), []);
-  assert.deepEqual(internalNofollowFindings('/x', '<a href="https://meshin.co/about">a</a>'), []);
+  assert.deepEqual(internalNofollowFindings('/x', `<a href="https://${HOST}/about">a</a>`), []);
+});
+
+test('an absolute link to our own host carrying nofollow is a finding, with or without www', () => {
+  const html = `<a href="https://${HOST}/about" rel="nofollow">a</a><a href="https://www.${HOST}/faq" rel="nofollow">b</a>`;
+  assert.deepEqual(
+    internalNofollowFindings('/x', html).map(({ href }) => href),
+    [`https://${HOST}/about`, `https://www.${HOST}/faq`]
+  );
+});
+
+test('a host that only resembles ours is outbound, so nofollow on it is not an internal finding', () => {
+  assert.notEqual(DOTTED_LOOKALIKE, HOST, 'the brand name must be a host with a dot');
+  for (const lookalike of [DOTTED_LOOKALIKE, SUFFIXED_LOOKALIKE]) {
+    const html = `<a href="https://${lookalike}/about" rel="nofollow">a</a>`;
+    assert.deepEqual(internalNofollowFindings('/x', html), [], lookalike);
+  }
 });
 
 test('a flat page whose file name ends in index is reported under its own route, not a truncated one', () => {
