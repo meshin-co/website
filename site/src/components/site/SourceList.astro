@@ -1,13 +1,21 @@
 ---
+import { capturedOn } from '~/utils/archive-url.mjs';
+import { externalRelAttrs } from '~/utils/pipeline.mjs';
+
 interface Props {
-  sources: { title: string; url: string; publisher?: string; retrieved?: string }[];
+  sources: { title: string; url: string; original?: string; publisher?: string; retrieved?: string }[];
   label?: string;
 }
 
 const { sources, label = 'Sources' } = Astro.props;
 
 const publisherOf = (source: Props['sources'][number]) =>
-  source.publisher ?? new URL(source.url).hostname.replace(/^www\./, '');
+  source.publisher ?? new URL(source.original ?? source.url).hostname.replace(/^www\./, '');
+
+const capturedClauseOf = (source: Props['sources'][number]) => {
+  const day = capturedOn(source.url);
+  return day === null ? '' : `, captured ${day}`;
+};
 ---
 
 <section class="border-t border-line pt-6" aria-label={label}>
@@ -16,12 +24,13 @@ const publisherOf = (source: Props['sources'][number]) =>
     {
       sources.map((source) => (
         <li class="grid gap-1">
-          <a class="text-link inline-block py-1" href={source.url} rel="nofollow noopener noreferrer" target="_blank">
+          <a class="text-link inline-block py-1" href={source.url} {...externalRelAttrs(source.url)} target="_blank">
             {source.title}
           </a>
           <p class="font-mono text-xs text-muted" data-gate-ignore>
             {publisherOf(source)}
             {source.retrieved && <span>{` · retrieved ${source.retrieved}`}</span>}
+            {source.original && ` · Internet Archive copy${capturedClauseOf(source)}`}
           </p>
         </li>
       ))

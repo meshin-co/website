@@ -2,7 +2,7 @@ import { isDeepStrictEqual } from 'node:util';
 
 import { fileStemProblem } from './autowriter-ledger.mjs';
 import { describeProblem } from './autowriter-records.mjs';
-import { claimTableProblems } from './claim-sources.mjs';
+import { citedAddress, claimTableProblems } from './claim-sources.mjs';
 import { COLLECTION_OF, parseEntrySource, proseBlocks, proseSentences } from './entry-prose.mjs';
 import { validateRecord } from './generation-record.mjs';
 import { run as measureBand } from './measure-sentence-band.mjs';
@@ -38,7 +38,10 @@ function readEntryText({ text, format }) {
 
 function sourcesOf({ frontmatter, claimTable }) {
   const idByUrl = new Map(claimTable.filter((row) => row.source).map(({ source }) => [source.url, source.id]));
-  return (frontmatter.sources ?? []).map((source) => ({ ...source, id: source.id ?? idByUrl.get(source.url) }));
+  return (frontmatter.sources ?? []).map((source) => ({
+    ...source,
+    id: source.id ?? idByUrl.get(citedAddress(source)),
+  }));
 }
 
 const claimsOf = (claimTable) =>

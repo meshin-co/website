@@ -3,6 +3,7 @@ import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 import { postTagSchema } from '~/data/tags.mjs';
+import { isSnapshotOf } from '~/utils/archive-url.mjs';
 import { countWords, isNotBeforePublish, isWithinWordRange, ogTitleSchema } from '~/utils/content-rules.mjs';
 import {
   DESCRIPTION_MAX_CHARS,
@@ -15,12 +16,18 @@ import { LICENSE_ID, licenseHasText } from '~/utils/resource-license.mjs';
 
 const CATEGORIES = ['governance', 'agentic-architecture', 'operating-model', 'executive'] as const;
 
-const source = z.object({
-  title: z.string(),
-  url: z.url(),
-  publisher: z.string().optional(),
-  retrieved: z.string().optional(),
-});
+const source = z
+  .object({
+    title: z.string(),
+    url: z.url(),
+    original: z.url().optional(),
+    publisher: z.string().optional(),
+    retrieved: z.string().optional(),
+  })
+  .refine((entry) => entry.original === undefined || isSnapshotOf(entry.url, entry.original), {
+    message: 'must be the address that url is an Internet Archive snapshot of',
+    path: ['original'],
+  });
 
 const wordRange = (min: number, max: number) => ({
   message: `must be ${min}–${max} words`,
