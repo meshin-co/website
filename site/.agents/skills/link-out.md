@@ -54,3 +54,21 @@ arguments, the hosts skipped by name, and the retry for a 429 or a 5xx; `scripts
 runs it. `LINKS_SKIP_EXTERNAL=1` crawls the build alone, which is how `test:smoke` stays hermetic:
 a family about a local missing route must not red because somebody else's server is down. The live
 run keeps fetching outbound hosts, so an outage blocks until a person judges it (G38).
+
+## A cited address that has gone
+
+The reader follows an Internet Archive snapshot taken near the date the source was cited, never the
+newest capture, which can be a different document. A source row keeps both addresses:
+
+    url: https://web.archive.org/web/20251025031200/https://example.com/standard
+    original: https://example.com/standard
+
+`url` is what the page links to, so every consumer keeps working and the anchor still takes its rel
+from `EXTERNAL_REL`. `original` is what was cited: `src/content.config.ts` refuses an `original`
+that `url` is not a snapshot of, and the unattended writer binds its claims to the cited address.
+
+The pieces exist as modules and no job calls them yet. `scripts/wayback.mjs` asks for the capture
+nearest the date, inside a window. `scripts/snapshot-support.mjs` checks the capture still carries
+the title and the spans a sentence rests on. `scripts/citations.mjs` rewrites the rows in place.
+`scripts/link-origin.mjs` and `scripts/diff-scope.mjs` say which addresses a change adds. With no
+snapshot, or one that no longer supports the sentence, the owner decides: never swap in a source.
