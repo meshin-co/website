@@ -1,3 +1,5 @@
+import { WriterError } from './writer-error.mjs';
+
 export const OUTCOMES = [
   'repaired',
   'stale',
@@ -29,4 +31,10 @@ export class RepairStop extends Error {
     this.outcome = outcome;
     this.details = details;
   }
+}
+
+export function outcomeOf(error) {
+  if (error instanceof RepairStop) return error.outcome;
+  if (error instanceof WriterError && error.kind === 'credential') return 'credential';
+  return 'failed';
 }
