@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
+import { TITLE_ROOM_CHARS } from '../src/utils/faq-meta.mjs';
 import { assertTopicInvariants } from './fixtures/topic-invariants.mjs';
 import { cueOf, topicFrom } from './topic-format.mjs';
 
@@ -87,6 +88,10 @@ for (const [text, title] of NOT_DEFINITIONS) {
   test('a subject the rules refuse is no definition and falls to a question article: ' + text, () => {
     assert.equal(cueOf(text), 'question');
     const topic = topicFrom(text);
+    if (title.length > TITLE_ROOM_CHARS) {
+      assert.deepEqual(topic, { format: null, reason: 'title-too-long' });
+      return;
+    }
     assert.equal(topic.format, 'article');
     assert.equal(topic.subject, null);
     assert.equal(topic.title, title);

@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
+import { siteBrand } from '../../scripts/site-brand.mjs';
 import { buildOgTree, collectText } from './og-template.mjs';
+
+const BRAND_TEXT = siteBrand().name;
 
 test('collectText returns the eyebrow, title and footer text in order', () => {
   const tree = buildOgTree({
@@ -13,7 +16,7 @@ test('collectText returns the eyebrow, title and footer text in order', () => {
     'Service',
     'A Fixed-Fee AI Readiness Assessment',
     'A short page description under 155 characters.',
-    'meshin.co',
+    BRAND_TEXT,
   ]);
 });
 
@@ -27,7 +30,7 @@ test('a long title is carried through in full, not truncated', () => {
 
 test('an omitted eyebrow produces no empty text node', () => {
   const tree = buildOgTree({ title: 'A Title With No Eyebrow', footer: 'A short page description.' });
-  assert.deepEqual(collectText(tree), ['A Title With No Eyebrow', 'A short page description.', 'meshin.co']);
+  assert.deepEqual(collectText(tree), ['A Title With No Eyebrow', 'A short page description.', BRAND_TEXT]);
   assert.ok(!collectText(tree).includes(''));
 });
 

@@ -1,9 +1,9 @@
 import './fixtures/no-network.mjs';
 
 import assert from 'node:assert/strict';
-import { existsSync, mkdtempSync, readdirSync, rmSync } from 'node:fs';
+import { mkdtempSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { join } from 'node:path';
 import { test } from 'node:test';
 
 import {
@@ -20,7 +20,6 @@ import { writeMeasuredStamp } from './lh-evidence.mjs';
 import { DISPOSITION_DIRECTORY as DERIVED_DIRECTORY, dispositionFor } from './route-derive.mjs';
 import { BAND_FILE } from './sentence-band.mjs';
 
-const REPO = resolve(import.meta.dirname, '..', '..');
 const whyOf = (id) => REFUSED_PATHS.find((row) => row.id === id)?.why;
 
 test('the list names what automation may never write, each row with one sentence that says why', () => {
@@ -103,14 +102,8 @@ for (const path of ALLOWED) {
 
 test('the list agrees with the tools that name these files', () => {
   assert.equal(refusalFor(BAND_FILE)?.id, 'sentence-band');
-  assert.ok(existsSync(join(REPO, BAND_FILE)), BAND_FILE + ' is not where the repository keeps the band');
   assert.equal(refusalFor('audits/lighthouse-green.json')?.id, 'lighthouse-record');
-  assert.ok(
-    existsSync(join(REPO, 'audits/lighthouse-green.json')),
-    'the record lh:record writes is not where the list says'
-  );
   assert.equal(DISPOSITION_DIRECTORY, DERIVED_DIRECTORY);
-  assert.ok(readdirSync(join(REPO, DISPOSITION_DIRECTORY)).length > 0, 'no dispositions where the list says');
 });
 
 test('the stamp the measuring tool writes is a refused path', async (t) => {

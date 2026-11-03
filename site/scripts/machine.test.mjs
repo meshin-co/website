@@ -29,6 +29,7 @@ import {
   LLMS_TXT_MAX_BYTES,
   unreferencedMachineFiles,
 } from './machine.mjs';
+import { PLANTED_DATED_PAGE, withCatalogPages } from './fixtures/catalog-pages.mjs';
 
 const CONFIG = `
 const postCollection = defineCollection({ loader: glob({ pattern: ['*.md'], base: 'src/data/post' }) });
@@ -136,11 +137,15 @@ test('when no collection has a live entry the gate says it checked nothing, it d
   ]);
 });
 
-test('a page whose markdown sidecar was not built is reported', () => {
-  const gaps = sidecarGaps(['/blog/a-post', '/glossary/evals', '/about'], { '/blog/a-post': '# A post\n\nbody' });
+const PAGE = PLANTED_DATED_PAGE.path;
+const onPlantedPage = (run) => withCatalogPages([PLANTED_DATED_PAGE], run);
 
-  assert.deepEqual(gaps, ['/glossary/evals.md', '/about.md']);
-});
+test('a page whose markdown sidecar was not built is reported', () =>
+  onPlantedPage(() => {
+    const gaps = sidecarGaps(['/blog/a-post', '/glossary/evals', PAGE], { '/blog/a-post': '# A post\n\nbody' });
+
+    assert.deepEqual(gaps, ['/glossary/evals.md', `${PAGE}.md`]);
+  }));
 
 test('sidecarGaps also requires a sidecar for a collection hub page, not only its leaves', () => {
   const gaps = sidecarGaps(['/blog', '/blog/a-post'], { '/blog/a-post': '# A post\n\nbody' });
@@ -153,13 +158,15 @@ test('sidecarCandidateRoutes never asks for a sidecar on a noindex-only helper r
   assert.deepEqual(candidates, ['/blog/a-post']);
 });
 
+const SITE = { site: 'https://meshin.co' };
+
 const SIDECAR = (overrides = {}) =>
   [
-    `# ${overrides.title ?? 'About Dmitri Meshin'}`,
+    `# ${overrides.title ?? PLANTED_DATED_PAGE.title}`,
     '',
     '> A description.',
     '',
-    `Source: ${overrides.source ?? 'https://meshin.co/about'}`,
+    `Source: ${overrides.source ?? `${SITE.site}${PAGE}`}`,
     `Updated: ${overrides.updated ?? '2026-09-05'}`,
     '',
     '---',
@@ -167,35 +174,28 @@ const SIDECAR = (overrides = {}) =>
     overrides.body ?? 'Real body prose about the page.',
   ].join('\n');
 
-test('sidecarContentGaps reports nothing for a sidecar carrying a title, matching canonical, a dated line and real prose', () => {
-  const gaps = sidecarContentGaps(['/about'], { '/about': SIDECAR() }, { site: 'https://meshin.co' });
-  assert.deepEqual(gaps, []);
-});
+test('sidecarContentGaps reports nothing for a sidecar carrying a title, matching canonical, a dated line and real prose', () =>
+  onPlantedPage(() => {
+    assert.deepEqual(sidecarContentGaps([PAGE], { [PAGE]: SIDECAR() }, SITE), []);
+  }));
 
-test('sidecarContentGaps reports a sidecar whose body is empty even though the file exists', () => {
-  const gaps = sidecarContentGaps(['/about'], { '/about': SIDECAR({ body: '' }) }, { site: 'https://meshin.co' });
-  assert.deepEqual(gaps, ['sidecar for /about body is empty']);
-});
+test('sidecarContentGaps reports a sidecar whose body is empty even though the file exists', () =>
+  onPlantedPage(() => {
+    const gaps = sidecarContentGaps([PAGE], { [PAGE]: SIDECAR({ body: '' }) }, SITE);
+    assert.deepEqual(gaps, [`sidecar for ${PAGE} body is empty`]);
+  }));
 
-test('sidecarContentGaps reports a sidecar whose canonical does not match its own route', () => {
-  const gaps = sidecarContentGaps(
-    ['/about'],
-    { '/about': SIDECAR({ source: 'https://meshin.co/wrong-page' }) },
-    { site: 'https://meshin.co' }
-  );
-  assert.deepEqual(gaps, [
-    'sidecar for /about canonical is https://meshin.co/wrong-page, expected https://meshin.co/about',
-  ]);
-});
+test('sidecarContentGaps reports a sidecar whose canonical does not match its own route', () =>
+  onPlantedPage(() => {
+    const gaps = sidecarContentGaps([PAGE], { [PAGE]: SIDECAR({ source: `${SITE.site}/wrong-page` }) }, SITE);
+    assert.deepEqual(gaps, [`sidecar for ${PAGE} canonical is ${SITE.site}/wrong-page, expected ${SITE.site}${PAGE}`]);
+  }));
 
-test('sidecarContentGaps reports a sidecar with no parseable Updated date', () => {
-  const gaps = sidecarContentGaps(
-    ['/about'],
-    { '/about': SIDECAR({ updated: 'not-a-date' }) },
-    { site: 'https://meshin.co' }
-  );
-  assert.deepEqual(gaps, ['sidecar for /about carries no updated date']);
-});
+test('sidecarContentGaps reports a sidecar with no parseable Updated date', () =>
+  onPlantedPage(() => {
+    const gaps = sidecarContentGaps([PAGE], { [PAGE]: SIDECAR({ updated: 'not-a-date' }) }, SITE);
+    assert.deepEqual(gaps, [`sidecar for ${PAGE} carries no updated date`]);
+  }));
 
 test('hubFeedLinkGaps reports nothing when a hub head carries its own collection feed link', () => {
   const html = '<head><link rel="alternate" type="application/rss+xml" title="x" href="/blog/rss.xml"></head>';
@@ -212,7 +212,6 @@ test('hubFeedLinkGaps ignores a plain href match that never carries rel="alterna
   assert.deepEqual(hubFeedLinkGaps(['/blog'], { '/blog': html }), ['/blog']);
 });
 
-const SITE = { site: 'https://meshin.co' };
 const head = (canonical, ogUrl) =>
   `<head><link rel="canonical" href="${canonical}"><meta property="og:url" content="${ogUrl}"></head>`;
 

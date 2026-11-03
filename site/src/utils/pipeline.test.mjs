@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
+import { siteBrand } from '../../scripts/site-brand.mjs';
 import {
   isExternalHref,
   mergeRelTokens,
@@ -10,6 +11,8 @@ import {
   rehypeScrollableTables,
 } from './pipeline.mjs';
 
+const HOST = siteBrand().name;
+
 test('a relative path is never external', () => {
   assert.equal(isExternalHref('/blog/foo'), false);
   assert.equal(isExternalHref('#section'), false);
@@ -18,25 +21,25 @@ test('a relative path is never external', () => {
 });
 
 test('an absolute link to the site itself is internal', () => {
-  assert.equal(isExternalHref('https://meshin.co/blog/foo'), false);
-  assert.equal(isExternalHref('//meshin.co/blog/foo'), false);
+  assert.equal(isExternalHref(`https://${HOST}/blog/foo`), false);
+  assert.equal(isExternalHref(`//${HOST}/blog/foo`), false);
 });
 
 test('an absolute link to another host is external, including subdomains', () => {
   assert.equal(isExternalHref('https://nist.gov/ai-rmf'), true);
   assert.equal(isExternalHref('http://example.com'), true);
   assert.equal(isExternalHref('//example.com/x'), true);
-  assert.equal(isExternalHref('https://blog.meshin.co'), true);
+  assert.equal(isExternalHref(`https://blog.${HOST}`), true);
 });
 
 test('non-http protocols are left alone regardless of host', () => {
-  assert.equal(isExternalHref('mailto:hello@meshin.co'), false);
+  assert.equal(isExternalHref(`mailto:hello@${HOST}`), false);
   assert.equal(isExternalHref('tel:+15555550100'), false);
 });
 
 test('a custom site hostname overrides the default', () => {
   assert.equal(isExternalHref('https://example.com', 'example.com'), false);
-  assert.equal(isExternalHref('https://meshin.co', 'example.com'), true);
+  assert.equal(isExternalHref(`https://${HOST}`, 'example.com'), true);
 });
 
 test('merging rel tokens adds new tokens and drops duplicates', () => {
@@ -110,13 +113,13 @@ test('non-heading elements are never given an anchor child', () => {
 
 test('internal links are left completely untouched', () => {
   const relative = element('a', { href: '/blog/foo' }, [textNode('foo')]);
-  const sameDomain = element('a', { href: 'https://meshin.co/blog/foo', target: '_blank' }, [textNode('foo')]);
+  const sameDomain = element('a', { href: `https://${HOST}/blog/foo`, target: '_blank' }, [textNode('foo')]);
   const tree = root([relative, sameDomain]);
 
   rehypeExternalLinks()(tree);
 
   assert.deepEqual(tree.children[0].properties, { href: '/blog/foo' });
-  assert.deepEqual(tree.children[1].properties, { href: 'https://meshin.co/blog/foo', target: '_blank' });
+  assert.deepEqual(tree.children[1].properties, { href: `https://${HOST}/blog/foo`, target: '_blank' });
 });
 
 test('external links get the full nofollow, noopener and noreferrer set merged in, and lose any target', () => {
@@ -185,6 +188,6 @@ test('an outbound href gets the full rel, an internal one gets no rel at all', (
     rel: 'nofollow noopener noreferrer',
   });
   assert.deepEqual(externalRelAttrs('/glossary/ai-register'), {});
-  assert.deepEqual(externalRelAttrs('https://meshin.co/services'), {});
+  assert.deepEqual(externalRelAttrs(`https://${HOST}/services`), {});
   assert.deepEqual(externalRelAttrs(undefined), {});
 });

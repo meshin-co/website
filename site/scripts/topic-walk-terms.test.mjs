@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { GENERATED, LAPSED_AT, claimed, inputsFor, query, reportOf } from './fixtures/topic-inputs.mjs';
+import { GENERATED, LAPSED_AT, SUFFIX, claimed, inputsFor, query, reportOf } from './fixtures/topic-inputs.mjs';
 import { walkTerms } from './topic-walk.mjs';
 
 const SHADOW = query('what is shadow ai', 12, 44, ['/glossary']);
@@ -117,7 +117,8 @@ test('a glossary route that already exists under the slug is recorded and offere
 });
 
 test('a title the generated layer carries under another route is recorded and offers no advisory', () => {
-  const generated = [{ family: 'article', route: '/blog/what-is-shadow-ai', title: 'WHAT IS SHADOW AI — meshin.co' }];
+  const title = `WHAT IS SHADOW AI${SUFFIX}`;
+  const generated = [{ family: 'article', route: '/blog/what-is-shadow-ai', title }];
   const result = walk([SHADOW], { generated });
   assert.deepEqual(outcomes(result), [['what is shadow ai', 'title-collision']]);
   assert.equal(result.refusals[0].reason, 'title-collision');

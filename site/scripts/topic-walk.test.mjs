@@ -1,7 +1,16 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { LAPSED_AT, claimed, inputsFor, prompt, provenPrompt, reportOf, sourcesOf } from './fixtures/topic-inputs.mjs';
+import {
+  LAPSED_AT,
+  SUFFIX,
+  claimed,
+  inputsFor,
+  prompt,
+  provenPrompt,
+  reportOf,
+  sourcesOf,
+} from './fixtures/topic-inputs.mjs';
 import { walkPosts } from './topic-walk.mjs';
 
 const PILOTS = prompt(9, 'why do AI pilots fail to reach production');
@@ -169,18 +178,16 @@ test('a slug that would publish at a route the layer already lists is recorded a
 });
 
 test('a title the generated layer already carries is recorded, and the next prompt is taken', () => {
-  const generated = [
-    { family: 'article', route: '/blog/older-url', title: 'Why do AI pilots fail to reach production? — meshin.co' },
-  ];
+  const layerTitle = `Why do AI pilots fail to reach production?${SUFFIX}`;
+  const generated = [{ family: 'article', route: '/blog/older-url', title: layerTitle }];
   const result = walk([PILOTS, HANDOVER], { generated });
   assert.equal(result.chosen.candidate.number, 15);
   assert.deepEqual(result.refusals, [
     {
       title: 'Why do AI pilots fail to reach production?',
       reason: 'title-collision',
-      against: 'Why do AI pilots fail to reach production? — meshin.co',
-      detail:
-        'title "Why do AI pilots fail to reach production?" is already the title of /blog/older-url in the generated layer of docs/SEMANTIC-CORE.md ("Why do AI pilots fail to reach production? — meshin.co")',
+      against: layerTitle,
+      detail: `title "Why do AI pilots fail to reach production?" is already the title of /blog/older-url in the generated layer of docs/SEMANTIC-CORE.md ("${layerTitle}")`,
     },
   ]);
   assert.deepEqual(result.advisories, []);

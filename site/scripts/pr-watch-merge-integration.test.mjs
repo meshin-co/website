@@ -9,6 +9,7 @@ import { test } from 'node:test';
 import { QUARANTINE_HOURS, validateLedger } from './autowriter-ledger.mjs';
 import { CLEAR_COMMAND } from './measurement-debt.mjs';
 import { watch } from './pr-watch.mjs';
+import { siteBrand } from './site-brand.mjs';
 import { REPO, ROOT, json, ledgerBody, notFound, own, serving } from './fixtures/github-fake.mjs';
 import { byBot, hoursAfterOpening } from './fixtures/pr-watch.mjs';
 import {
@@ -75,7 +76,7 @@ test('over the real adapters a merge reads the merged tree and ledger with the r
   assert.equal(commit.body.branch, 'main');
   assert.equal(commit.body.sha, STORED_BLOB);
   assert.equal(commit.body.message, 'chore(autowriter): record the measurement debt of a-slug');
-  assert.deepEqual(commit.body.committer, { name: 'autowriter-bot', email: 'autowriter-bot@meshin.co' });
+  assert.deepEqual(commit.body.committer, { name: 'autowriter-bot', email: `autowriter-bot@${siteBrand().name}` });
   const written = JSON.parse(Buffer.from(commit.body.content, 'base64').toString('utf8'));
   assert.deepEqual(validateLedger(written), []);
   assert.equal(written.verdict.state, 'merged');

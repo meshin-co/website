@@ -3,8 +3,11 @@ import './fixtures/no-network.mjs';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
+import { readEngineConfig } from './engine-config.mjs';
 import { renderEntry } from './entry-files.mjs';
 import { claimOf, DRAFTS, FORMATS, RESOLVED_SOURCES, RUN_DATE, RUN_DAY, splitEntry } from './fixtures/entry-drafts.mjs';
+
+const ARTICLE_AUTHOR = readEngineConfig().content.formats.article.author;
 
 const render = (format, draft = DRAFTS[format]) => renderEntry({ claim: claimOf(format), draft, runDate: RUN_DATE });
 
@@ -65,7 +68,7 @@ test('an article entry carries the author the site has, and its lists in the ord
     'relatedResources',
   ]);
   assert.equal(frontmatter.title, 'How to write an AI incident runbook');
-  assert.equal(frontmatter.author, 'dmitri');
+  assert.equal(frontmatter.author, ARTICLE_AUTHOR);
   assert.deepEqual(frontmatter.faq, DRAFTS.article.fields.faq);
   assert.deepEqual(frontmatter.tags, ['ai-governance', 'production-readiness']);
   assert.deepEqual(frontmatter.relatedResources, ['ai-governance-starter-kit']);

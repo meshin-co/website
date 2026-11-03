@@ -4,7 +4,7 @@ import { casedForms } from '../topic-casing.mjs';
 
 const BRAND = siteBrand().name;
 const NOW = new Date('2026-11-02T07:00:00.000Z');
-const SUFFIX = titleSuffix({ name: BRAND });
+export const SUFFIX = titleSuffix({ name: BRAND });
 const LIVE_UNTIL = '2026-11-15T07:00:00.000Z';
 export const LAPSED_AT = '2026-11-02T07:00:00.000Z';
 

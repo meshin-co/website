@@ -5,7 +5,9 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { test } from 'node:test';
 
-import { claimFile } from './autowriter-claims.mjs';
+import { titleSuffix } from '../src/utils/brand.mjs';
+
+import { GENERATED_BEGIN, GENERATED_END, claimFile, generatedTitles } from './autowriter-claims.mjs';
 import { ledgerFile, newLedger } from './autowriter-ledger.mjs';
 import { autowriterReport, summaryLine } from './autowriter-gate.mjs';
 import {
@@ -16,15 +18,20 @@ import {
   realBandFiles,
   recordWith,
 } from './fixtures/record-rules-scene.mjs';
+import { siteBrand } from './site-brand.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
 const REPO = resolve(SITE, '..');
-const SUFFIX = ' — meshin.co';
+const SUFFIX = titleSuffix(siteBrand());
 const NOW = new Date('2026-11-02T07:00:00.000Z');
 const T0 = '2026-11-02T07:00:00.000Z';
 const HASH = 'b'.repeat(40);
 const CORE = readFileSync(join(REPO, 'docs/SEMANTIC-CORE.md'), 'utf8');
 const WORKFLOW = readFileSync(join(REPO, '.github/workflows/ci.yml'), 'utf8');
+const ROUTE_ROWS = CORE.slice(CORE.indexOf(GENERATED_BEGIN), CORE.indexOf(GENERATED_END))
+  .split('\n')
+  .filter((line) => line.startsWith('| `')).length;
+const HELD_SLUG = 'a-title-the-layer-holds';
 
 const attempt = (number) => ({
   number,
@@ -91,12 +98,20 @@ const one = (extra) => {
   return found[0];
 };
 
+function heldTitle() {
+  const [row] = generatedTitles(CORE);
+  assert.ok(row, 'the generated layer of docs/SEMANTIC-CORE.md holds no title for a claim to collide with');
+  const bare = row.title.endsWith(SUFFIX) ? row.title.slice(0, -SUFFIX.length) : row.title;
+  return { bare, layerTitle: row.title, route: row.route };
+}
+
 test('the repository as committed has nothing for the gate to find, and the report says what it read', () => {
   const { findings: found, counts } = report();
   assert.deepEqual(found, []);
   assert.equal(counts.ledgers, 0);
   assert.equal(counts.claims, 0);
-  assert.ok(counts.titles > 50, 'the generated layer gave ' + counts.titles + ' titles');
+  assert.equal(counts.titles, ROUTE_ROWS, 'the generated layer gave ' + counts.titles + ' titles');
+  assert.ok(counts.titles > 0, 'the generated layer gave no titles');
   assert.equal(counts.jobs, 6);
 });
 
@@ -204,18 +219,20 @@ test('a claim that is not JSON, off its schema or filed under another slug is na
 });
 
 test('a claim whose title is already a title in the generated layer is named with the route that owns it', () => {
-  const taken = claim({ slug: 'what-is-an-ai-management-system', title: 'What is an AI management system?' });
-  const found = one({ claims: [claimAt('what-is-an-ai-management-system', taken)] });
+  const held = heldTitle();
+  const taken = claim({ slug: HELD_SLUG, title: held.bare });
+  const found = one({ claims: [claimAt(HELD_SLUG, taken)] });
   assert.equal(found.rule, 'title-collision');
-  assert.equal(found.path, 'audits/autowriter/claims/what-is-an-ai-management-system.json');
-  assert.match(
+  assert.equal(found.path, claimFile(HELD_SLUG));
+  assert.equal(
     found.detail,
-    /^title "What is an AI management system\?" is already the title of \/glossary\/ai-management-system in the generated layer of docs\/SEMANTIC-CORE\.md \("What is an AI management system\? — meshin\.co"\)$/
+    `title "${held.bare}" is already the title of ${held.route} in the generated layer of docs/SEMANTIC-CORE.md ("${held.layerTitle}")`
   );
 });
 
 test('a claim that repeats the punctuation and case of an existing title still collides', () => {
-  const shouty = claim({ slug: 'shouty', title: 'WHAT IS AN AI MANAGEMENT SYSTEM' });
+  const { bare } = heldTitle();
+  const shouty = claim({ slug: 'shouty', title: bare.toUpperCase().replace(/[?!.]*$/u, '!') });
   assert.equal(one({ claims: [claimAt('shouty', shouty)] }).rule, 'title-collision');
 });
 
@@ -319,7 +336,7 @@ function inTempRepo(plant, check) {
   const root = mkdtempSync(join(tmpdir(), 'autowriter-gate-'));
   try {
     for (const [path, text] of Object.entries({
-      'site/src/config.yaml': 'site:\n  name: meshin.co\n',
+      'site/src/config.yaml': `site:\n  name: ${siteBrand().name}\n`,
       'docs/SEMANTIC-CORE.md': CORE,
       '.github/workflows/ci.yml': WORKFLOW,
       ...realBandFiles(),
@@ -348,17 +365,14 @@ test('the command exits 0 and prints the summary on a repository with nothing pl
     assert.equal(run.stderr, '');
   }));
 
-test('the command exits 1 and names the file and the rule for each defect planted in a repository', () =>
-  inTempRepo(
+test('the command exits 1 and names the file and the rule for each defect planted in a repository', () => {
+  const held = heldTitle();
+  return inTempRepo(
     {
       [ledgerFile('what-is-aims')]: JSON.stringify(withAttempts(4)),
       [ledgerFile('second-run')]: JSON.stringify(escalated(escalation([receipt('issue')]))),
-      [claimFile('what-is-an-ai-management-system')]: JSON.stringify(
-        claim({
-          slug: 'what-is-an-ai-management-system',
-          title: 'What is an AI management system?',
-          expiresAt: '2099-01-01T00:00:00.000Z',
-        })
+      [claimFile(HELD_SLUG)]: JSON.stringify(
+        claim({ slug: HELD_SLUG, title: held.bare, expiresAt: '2099-01-01T00:00:00.000Z' })
       ),
     },
     (root) => {
@@ -386,7 +400,7 @@ test('the command exits 1 and names the file and the rule for each defect plante
       assert.ok(
         lines.some((line) =>
           line.startsWith(
-            'AUTOWRITER title-collision audits/autowriter/claims/what-is-an-ai-management-system.json: title "What is an AI management system?" is already the title of /glossary/ai-management-system'
+            `AUTOWRITER title-collision ${claimFile(HELD_SLUG)}: title "${held.bare}" is already the title of ${held.route}`
           )
         ),
         run.stderr
@@ -396,7 +410,8 @@ test('the command exits 1 and names the file and the rule for each defect plante
         /2 ledgers, 1 claims \(0 lapsed\), \d+ generated titles, 6 CI jobs under the aggregate check, pipeline commits not judged, 0 generation records, 4 findings$/m
       );
     }
-  ));
+  );
+});
 
 const BAND_PATH = 'audits/sentence-band.json';
 const realBand = () => JSON.parse(realBandFiles()[BAND_PATH]);

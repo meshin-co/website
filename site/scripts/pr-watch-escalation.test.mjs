@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import { GitHubError } from './pr-github.mjs';
+import { siteBrand } from './site-brand.mjs';
 import { scenario } from './fixtures/pr-watch.mjs';
 import {
   green,
@@ -55,7 +56,7 @@ test('an escalation with no ledger on the branch creates one for the pull reques
   assert.equal(push.path, 'audits/autowriter/a-slug.json');
   assert.equal(push.branch, 'autowriter/a-slug');
   assert.equal(push.blobSha, null);
-  assert.deepEqual(push.identity, { name: 'autowriter-bot', email: 'autowriter-bot@meshin.co' });
+  assert.deepEqual(push.identity, { name: 'autowriter-bot', email: `autowriter-bot@${siteBrand().name}` });
   assert.deepEqual(JSON.parse(push.text), ledger);
 });
 

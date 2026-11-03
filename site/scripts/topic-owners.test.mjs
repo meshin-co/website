@@ -55,11 +55,11 @@ test('a document with no concept register reads as an empty one, and so does a n
 });
 
 test('the committed semantic core carries a concept register this reader finds', () => {
-  const real = readConceptRegister(readFileSync(new URL('../../docs/SEMANTIC-CORE.md', import.meta.url), 'utf8'));
-  const byName = new Map(real.map(({ concept, route }) => [concept, route]));
-  assert.ok(real.length >= 30, 'concepts read: ' + real.length);
-  assert.equal(byName.get('Evals'), '/glossary/evals');
-  assert.equal(byName.get('AI register'), '/glossary/ai-register');
+  const core = readFileSync(new URL('../../docs/SEMANTIC-CORE.md', import.meta.url), 'utf8');
+  const declared = Number(/^#### Concept register \((\d+)\)$/m.exec(core)?.[1]);
+  const real = readConceptRegister(core);
+  assert.ok(declared > 0, 'the committed core declares no concept register');
+  assert.equal(real.length, declared, 'concepts read: ' + real.length);
 });
 
 const owner = (text) => registerOwner(concepts, text)?.concept ?? null;

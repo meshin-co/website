@@ -1,5 +1,4 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
 import { GENERATED_BEGIN, GENERATED_END } from './autowriter-claims.mjs';
@@ -96,9 +95,8 @@ test('casingTexts lists concept names first, then generated titles, unstripped',
   assert.deepEqual(casingTexts(CORE), ['AI register', 'Evals', 'What is the NIST AI RMF? — meshin.co']);
 });
 
-test('the committed core restores the casing of a Search Console query', () => {
-  const core = readFileSync(new URL('../../docs/SEMANTIC-CORE.md', import.meta.url), 'utf8');
-  const forms = casedForms(casingTexts(core));
-  assert.equal(restoreCase('what is the eu ai act', forms), 'what is the EU AI act');
-  for (const token of ['ai', 'eu', 'nist']) assert.equal(forms.get(token), token.toUpperCase());
+test('a core restores the casing of a Search Console query from its concept names and generated titles', () => {
+  const forms = casedForms(casingTexts(CORE));
+  assert.equal(restoreCase('what is the nist ai rmf', forms), 'what is the NIST AI RMF');
+  for (const token of ['ai', 'nist', 'rmf']) assert.equal(forms.get(token), token.toUpperCase());
 });

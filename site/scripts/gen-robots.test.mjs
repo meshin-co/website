@@ -6,6 +6,7 @@ import { join } from 'node:path';
 import { test } from 'node:test';
 
 import { disallowedPaths, renderRobots } from './gen-robots.mjs';
+import { siteBrand } from './site-brand.mjs';
 
 const SITE_ROOT = fileURLToPath(new URL('..', import.meta.url));
 const TRAINING_AGENTS = [
@@ -124,7 +125,10 @@ test('blog tag routes stay crawlable for every agent (L31)', () => {
 });
 
 test('the sitemap line points at the sitemap index', () => {
-  assert.equal(parseRobots(renderRobots(['/search', '/styleguide'])).sitemap, 'https://meshin.co/sitemap-index.xml');
+  assert.equal(
+    parseRobots(renderRobots(['/search', '/styleguide'])).sitemap,
+    `https://${siteBrand().name}/sitemap-index.xml`
+  );
 });
 
 test('disallowedPaths picks up an api directory only when one exists', async () => {
