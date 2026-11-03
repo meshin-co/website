@@ -36,16 +36,17 @@ both instants. _All time_ is every record. The window ends at the newest record 
 clock, because regenerating the file from an unchanged set of records must give the same bytes on
 any day, and a window that ended now would change the file at every midnight. The price is that the
 file, read a month after the last run, still describes the 30 days before that run, and it says so.
-The monthly ceiling counts UTC calendar months and counts spend that no entry carries, so the file
+The monthly ceiling counts UTC calendar months and counts every call the machine paid for, so the file
 says in its own words that its 30 days and the ceiling's month are different numbers. The windows
 total the writing calls of entries only, and the file says that too.
 
 **The month, against the ceiling.** The windows say what an entry costs. They do not answer the
 question the owner's decision hangs on: how much of this month's ceiling is spent. The file now opens
-with it, in one sentence: `2026-11 so far: 0.022748 USD spent of the 25.00 USD monthly ceiling,
-24.977252 USD left.`, or, at the ceiling, that none is left and the writer does not run for the rest
-of the month. The Slack message carries the same sentence as its second block. Answering needs a
-date, so the file reads the clock once, when it is written, and stamps the instant as `Generated-at:`
+with it, before anything that explains the file, in one sentence: `2026-11 so far: 0.022748 USD spent
+of the 25.00 USD monthly ceiling, 24.977252 USD left.`, or, at the ceiling, that none is left and the
+writer does not run for the rest of the month. The explanation of how the file is made and what its
+words mean follows it under `About this file`. The Slack message carries the same sentence as its
+second block. Answering needs a date, so the file reads the clock once, when it is written, and stamps the instant as `Generated-at:`
 beside `Generated-from:`, and the month is the month of that instant. `npm run audit:spend` leaves a
 file that is already current alone, so the stamp moves only when a record does, and the file says
 which instant its figure was true at. The Slack sentence is built from the ceiling status the ceiling
@@ -53,14 +54,19 @@ job computes (`monthLineOf` in `site/scripts/spend-ceiling.mjs`), so its figure 
 the writer, including spend on branches that are not merged yet. The file's figure counts the
 committed records only, and says so.
 
-**Every call the machine paid for.** A total of entries is true line by line and wrong as a summary
-when runs that cost money ended with no entry, or when entries needed repairs. So the report totals,
-for the month and for all time, the writing calls of entries, the repair calls, the spend that no
-entry carries and the sum of the three. `site/scripts/spend-sum.mjs` adds them by the rule the
-ceiling uses, so the two cannot disagree, and the ceiling itself now counts every call a ledger or a
-record shows (change `22-shard-the-writers-records` holds the accounting). The Notes section states
-what the noted runs cost together, and the Slack message ends its all-time lines with the four
-figures in one labelled line.
+**Every call the machine paid for, each in exactly one row.** A total of entries is true line by line
+and wrong as a summary when runs that cost money ended with no entry, or when entries needed repairs.
+So the report totals, for the month and for all time, four kinds of paid call and their sum: the
+writing calls of entries, the repair calls, the runs that ended with no entry, and the spend of a
+ledger that no generation record names. The last two were one figure, spend that no entry carries,
+and that figure held money which no list explained: a ledger that spent and was warned about was in
+the total and in no Notes figure. It is now a row of its own, the Warnings state what it costs
+together, and a ledger with only repair attempts is stated in full. Each paid call is in exactly one
+row, so the four add up to the sum, and the Notes total is the row of runs that ended with no entry.
+`site/scripts/spend-sum.mjs` adds them by the rule the ceiling uses, so the two cannot disagree, and
+the ceiling itself now counts every call a ledger or a record shows (change
+`22-shard-the-writers-records` holds the accounting). The Slack message ends its all-time lines with
+the sum and its four kinds in one labelled line.
 
 **Slack after every generation.** After a successful write, `node scripts/spend-report.mjs notify`
 posts one message: each entry just written with its tokens and cost, the month sentence, the 30-day
@@ -128,15 +134,29 @@ alone for three reasons. It is committed with the entry before the message is se
 would push to a branch the watcher is already judging. And a failed receipt there would be an
 escalation that reached no one, which the gate refuses.
 
+## Follow-ups, deliberately not built here
+
+Three gaps are real and are named so that they are not lost. Each is its own change, because each needs
+a design that this one has no room for.
+
+- **A view per day.** The report totals by entry, by 30 days and by month. It cannot say what any one
+  day cost, so a day with a spike hides inside its month.
+- **A burn rate against the ceiling.** The month sentence says what is left, not how fast it is going. A
+  month that spent half of the ceiling in its first three days reads the same as a calm one until the
+  ceiling is reached.
+- **Spend on branches that are not merged yet, in the file.** The ceiling job counts it and the Slack
+  sentence carries that figure, but the file counts the committed records only and says so, so the file
+  and the message can show different figures for the same month.
+
 ## What this does not change
 
 The monthly ceiling, its calendar month, its notice and the ledger schema stand. No escalation kind,
 channel or secret is added. The report reads the ledgers and records of the working tree, reads the
 clock once and reads no network.
 
-The windows still total the writing calls of entries only. The paid tables and the Notes total carry
-what the windows leave out: a draft the run wrote and then skipped, a run that stopped before any
-entry existed, a discarded attempt and every repair call.
+The windows still total the writing calls of entries only. The paid tables carry what the windows
+leave out: every repair call, a draft the run wrote and then skipped, a run that stopped before any
+entry existed, a discarded attempt, and the spend of a ledger that no generation record names.
 
 The report is one file every run rewrites, so two pull requests open at once would conflict on it,
 as they already would on the registers they share. `npm run audit:spend` regenerates it.

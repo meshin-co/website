@@ -45,6 +45,18 @@ ceiling.
 - **WHEN** an entry was generated exactly 30 × 24 hours before the newest record
 - **THEN** it is outside the 30-day window, which opens after that instant
 
+### Requirement: The month comes before the explanation of the file
+
+The first section after the title and the two stamps SHALL be `This month`. The explanation of how the
+file is made and what its words mean SHALL follow it, under its own heading `About this file`, and
+SHALL keep the definitions the tables need.
+
+#### Scenario: The report is opened
+
+- **WHEN** the report is opened
+- **THEN** the lines after the title and the two stamps are the heading `This month` and its
+  sentence, and `About this file` is the second section
+
 ### Requirement: The report says what the month has spent against the ceiling
 
 The report SHALL read the clock once, when it is written, and print that instant as `Generated-at:`
@@ -98,12 +110,13 @@ the ceiling job stops on, including the spend on branches that are not merged ye
 - **WHEN** a write produced an entry and the ceiling status says 0.022748 USD spent of 25 USD
 - **THEN** the second block of the message reads `2026-11 so far: 0.022748 USD spent of the 25.00 USD monthly ceiling, 24.977252 USD left.`
 
-### Requirement: The report totals every call the machine paid for
+### Requirement: The report totals every call the machine paid for, each in exactly one row
 
-The report SHALL total, for the month and for all time, the writing calls of entries, the repair
-calls, the spend that no entry carries and the sum of the three, and SHALL label the entry totals of
-the windows as writing calls only. `site/scripts/spend-sum.mjs` SHALL be the only code that adds
-them, so that the report and the ceiling cannot disagree.
+The report SHALL total, for the month and for all time, four kinds of paid call and their sum: the
+writing calls of entries, the repair calls, the runs that ended with no entry, and the spend of a
+ledger that no generation record names. A paid call SHALL be in exactly one of the four, so they add
+up to the sum, and `site/scripts/spend-sum.mjs` SHALL be the only code that adds them, so that the
+report and the ceiling cannot disagree.
 
 #### Scenario: A repair failed
 
@@ -114,15 +127,34 @@ them, so that the report and the ceiling cannot disagree.
 #### Scenario: A run ended with no entry
 
 - **WHEN** one entry cost 0.05 USD and a run that ended with no entry cost 0.027 USD
-- **THEN** the all-time entry total reads 0.05, the paid tables read 0.027 under spend that no entry
-  carries and 0.077 for everything paid for, and the Notes say what the noted runs cost together
+- **THEN** the all-time entry total reads 0.05, the paid tables read 0.027 under Runs that ended with
+  no entry and 0.077 for everything paid for, and the Notes say what the noted runs cost together
+
+#### Scenario: A warned ledger is counted
+
+- **WHEN** a ledger whose verdict is merged records a generation of 0.027 USD and no generation
+  record names it
+- **THEN** the paid tables count 0.027 USD under Spend with no generation record, the Warnings name
+  the ledger and say that its cost is counted there, and the sum includes it
+
+#### Scenario: A ledger holds only repair attempts
+
+- **WHEN** a ledger records no generation, repair attempts of 0.2 USD and no generation record
+- **THEN** the sentence that names it states the 0.2 USD, and the paid tables count it
+
+#### Scenario: Each total is the cost of the lines its section lists
+
+- **WHEN** the corpus holds runs that ended with no entry and warned ledgers
+- **THEN** the Notes total is the all-time row Runs that ended with no entry, the total the Warnings
+  state is the row Spend with no generation record, and the cost of the ledgers each section lists
+  adds up to its row
 
 ### Requirement: A row shows its repair cost, and the Notes and the message total the rest
 
 The row of an entry SHALL carry the cost of the repair calls its record holds in its own column,
 beside the cost of its writing calls. The Notes section SHALL state what the noted runs cost
-together, and the Slack message SHALL end its all-time lines with the four figures in one labelled
-line.
+together, and the Slack message SHALL end its all-time lines with the sum and its four kinds in one
+labelled line.
 
 #### Scenario: An entry needed repairs
 
@@ -130,10 +162,10 @@ line.
 - **THEN** its row shows the cost of its writing calls unchanged and 0.015 under Repair, and the paid
   tables count 0.015 once, under Repair calls
 
-#### Scenario: The message ends its all-time lines with the four figures
+#### Scenario: The message ends its all-time lines with the sum and the four kinds
 
-- **WHEN** a write produced an entry and the all-time spend is 0.086 USD of writing calls, 0.045 USD of repair calls and 0.0755 USD that no entry carries
-- **THEN** the all-time lines end with `Everything paid for: 0.2065 USD, of which writing calls 0.086 USD, repair calls 0.045 USD and spend that no entry carries 0.0755 USD.`
+- **WHEN** a write produced an entry and the all-time spend is 0.086 USD of writing calls, 0.045 USD of repair calls, 0.0485 USD of runs that ended with no entry and 0.027 USD with no generation record
+- **THEN** the all-time lines end with `Everything paid for: 0.2065 USD, of which writing calls 0.086 USD, repair calls 0.045 USD, runs that ended with no entry 0.0485 USD and spend with no generation record 0.027 USD.`
 
 ### Requirement: An incomplete corpus is reported, not summed in silence
 
@@ -145,8 +177,8 @@ the form `spendWarnings` in `site/scripts/spend-sum.mjs` already uses for writin
 #### Scenario: A record is missing
 
 - **WHEN** a ledger whose verdict is open or merged records a generation and no record carries its slug
-- **THEN** the report names the slug and says no entry is counted for it, and the entries that do
-  exist are still totalled
+- **THEN** the report names the slug and says no entry is counted for it, the entries that do exist
+  are still totalled, and the ledger's spend is counted under Spend with no generation record
 
 #### Scenario: A run stopped before it wrote anything
 
@@ -327,3 +359,21 @@ differs or the missing line.
 
 - **WHEN** `audits/spend-report.md` does not exist
 - **THEN** the gate exits non-zero with `spend-report-missing`, even when no record exists
+
+### Requirement: The proof of the report guard does not depend on what the report says today
+
+Each planted specimen of the report guard SHALL pin a token that the gate prints for every state of
+the committed report, and a specimen that adds a record SHALL date it at the stamp of the committed
+report, so that the proof holds for a report with no entry, a report with notes and a report with
+entries alike.
+
+#### Scenario: The first entry is merged
+
+- **WHEN** the committed report goes from the variant with no entry to one that lists an entry
+- **THEN** every specimen of the report guard still turns `gate:autowriter` red on the plant and
+  leaves it green without it
+
+#### Scenario: The report is stamped in another month
+
+- **WHEN** the committed report is stamped in a month other than the one the specimen was written in
+- **THEN** the specimen that adds a record files it in the month of the stamp, and the gate is red on it

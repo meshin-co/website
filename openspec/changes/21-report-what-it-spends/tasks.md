@@ -21,13 +21,21 @@
       own, and the file says that a note is not a warning; a ledger that is open or merged, a record
       whose ledger is absent, a disagreement about spend and an unreadable file stay warnings
 - [x] 1.8 The file reads the clock once, stamps `Generated-at:` on the line after `Generated-from:`,
-      and opens with `This month`: one sentence from `monthLine` and a table of what the month paid
-      for; `npm run audit:spend` leaves a current file untouched, so the same records on a later day
-      keep the same bytes, stamp included
+      and opens with `This month`, above the explanation of the file: one sentence from `monthLine`
+      and a table of what the month paid for; `npm run audit:spend` leaves a current file untouched, so
+      the same records on a later day keep the same bytes, stamp included
 - [x] 1.9 An entry row carries `Repair (USD)` beside its cost; the paid tables (writing calls of
-      entries, repair calls, spend that no entry carries, everything paid for) are printed for the
-      month and for all time; the windows say they count writing calls only; Notes state what the
-      noted runs cost together
+      entries, repair calls, runs that ended with no entry, spend with no generation record,
+      everything paid for) are printed for the month and for all time; the windows say they count
+      writing calls only; Notes state what the noted runs cost together
+- [x] 1.10 Each paid call is in exactly one row. A ledger with no record is a run that ended or spend
+      with no generation record by its verdict alone (`hasEnded` in `site/scripts/spend-sum.mjs`), the
+      Notes total is the row of runs that ended, the Warnings state the total of the other row, and a
+      ledger that holds only repair attempts is stated in full and counted; a test builds a corpus
+      with a warned ledger and shows that the rows add up to the sum and that the lines of each
+      section cost what its row says (`site/scripts/spend-report-adds-up.test.mjs`)
+- [x] 1.11 `This month` is the first section and `About this file`, which holds the explanation and
+      the definitions the tables need, is the second
 
 ## 2. The message
 
@@ -45,8 +53,8 @@
       note
 - [x] 2.6 The Slack message carries the month sentence as its second block, built from
       `monthLineOf(ceilingStatus(...))` so it is the figure the ceiling stops on, ends its all-time
-      lines with `Everything paid for`, says what `Warnings: N` means, and posts nothing when the
-      ceiling status cannot be read
+      lines with `Everything paid for` and its four kinds, says what `Warnings: N` means, and posts
+      nothing when the ceiling status cannot be read
 - [x] 2.7 `node scripts/spend-ended.mjs` posts two lines for each day the run ends without an entry:
       the ceiling reached, a picker that chose nothing, a write that ended with no entry and a write
       that failed; `.github/workflows/write-daily.yml` gains five steps and no existing step changes
@@ -71,9 +79,14 @@
       file and refuses a missing one, one with no readable `Generated-at` line and one that
       differs, naming the first line
 - [x] 4.2 A planted specimen proves each refusal, each `plant` returning its restore: a record added
-      without regenerating, a figure edited by hand, and a deleted report
-- [x] 4.3 One row per specimen in the mutation smoke manifest, and `npm run test:smoke` is green at
-      the family count it reaches: 123, three more than before
+      without regenerating, a figure edited by hand, a deleted report and a report without its instant
+- [x] 4.3 One row per specimen in the mutation smoke manifest (`site/scripts/mutation-smoke.mjs`), four
+      in all
+- [x] 4.4 The two specimens that plant a record or edit a figure work against any committed report:
+      the stale one is dated at the stamp of the committed report and takes the month past its
+      ceiling, the edited one forges the spent figure in the month sentence, and a test proves all
+      four against an empty, a noted and a populated report and against a report stamped in another
+      month (`site/scripts/autowriter-spend-specimens.test.mjs`)
 
 ## 5. The map
 

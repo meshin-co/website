@@ -111,7 +111,8 @@ nothing shows as a count of zero and not as a pass.
 The monthly spend SHALL be the sum, in whole micro-dollars, of three parts, each dated by its own
 instant: the writing calls of each run, the repair calls, and the spend of a ledger that no record
 names. `site/scripts/spend-sum.mjs` SHALL be the only code that adds them, so that the report and the
-ceiling job count the same parts.
+ceiling job count the same parts. The report states the third part as two figures by the verdict of
+the ledger, and the sum does not change.
 
 #### Scenario: An entry needed repairs
 

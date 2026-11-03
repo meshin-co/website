@@ -66,9 +66,10 @@ read. Three modules sit under it:
   the ledger it names, and a record whose ledger is gone is counted from the record alone. It refuses data it
   cannot read.
 - `scripts/spend-sum.mjs` holds the month rule (the UTC calendar month of an instant), the integer
-  micro-dollar sum (`monthlyBreakdown`: the writing calls, the repair calls and the spend of runs with no
-  record, each dated by its own instant), the choice of one version of each slug and `spendWarnings`. A repair
-  that failed after it spent is an attempt on the ledger, so it counts and raises no warning.
+  micro-dollar sum (`monthlyBreakdown`: the writing calls, the repair calls, the runs that ended with no
+  entry and the spend of ledgers no record names, told apart by their verdict through `hasEnded`, each
+  dated by its own instant), the choice of one version of each slug and `spendWarnings`. A repair that
+  failed after it spent is an attempt on the ledger, so it counts and raises no warning.
 - `scripts/spend-notice.mjs` keeps the notice ledger `audits/autowriter/<year>/<month>/spend-ceiling-<year>-<month>.json`. It says
   whether a month was announced, and raises the `spend-ceiling` escalation once for that month.
 

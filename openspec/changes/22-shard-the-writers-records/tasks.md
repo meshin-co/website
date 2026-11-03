@@ -61,7 +61,8 @@
 - [x] 5.2 `spendItemsOf` in `spend-sum.mjs` pairs each generation record with the ledger it names, so a
       glossary term joins the run that wrote it, and the month's spend (`monthlyBreakdown`) is the
       sum of the writing calls, the repair calls and the spend of a ledger no record names, each dated
-      by its own instant; `spend-sources.mjs` reads the records into the same items, so a record whose
+      by its own instant, the last returned as `endedMicro` and `unmatchedMicro` by the verdict of the
+      ledger (`hasEnded`); `spend-sources.mjs` reads the records into the same items, so a record whose
       ledger is gone is counted from the record alone, with a sentence that names the slug
 - [x] 5.3 A repair that made a model call and ended in any error makes one ledger-only commit
       (`recordFailedSpend` in `site/scripts/repair-finish.mjs`) that the workflow pushes, and a test over
