@@ -2,10 +2,11 @@ import { existsSync, mkdtempSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { runCli } from '../spend-ceiling.mjs';
+import { noticeFile } from '../spend-notice.mjs';
 import { createScene, ledgerOf } from './spend-scene.mjs';
 
 export const WEBHOOK = 'https://hooks.slack.test/services/T0SECRET/B0SECRET/xoxSECRETpath';
-export const NOTICE = 'audits/autowriter/spend-ceiling-2026-11.json';
+export const NOTICE = noticeFile('2026-11');
 export const NOW = new Date('2026-11-10T09:00:00.000Z');
 export const IN_NOVEMBER = '2026-11-03T08:00:00Z';
 

@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { repairedReason } from './disposition-restate.mjs';
+import { recordPath } from './record-layout.mjs';
 import { renderEntry } from './entry-files.mjs';
 import {
   BUILD,
@@ -36,7 +37,11 @@ function planRepair({ repoRoot, claim, draft, runDate, attempt }) {
   return {
     entry,
     target: siteRelative(entry.path),
-    reason: repairedReason({ route: entry.route, slug: claim.slug, attempt }),
+    reason: repairedReason({
+      route: entry.route,
+      generationPath: recordPath('generation', claim.slug, claim.claimedAt),
+      attempt,
+    }),
   };
 }
 

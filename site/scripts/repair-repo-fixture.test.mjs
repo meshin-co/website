@@ -10,7 +10,9 @@ import { freshDigest } from './fixtures/route-dispositions.mjs';
 import { fakeRun, gitIn } from './fixtures/route-repo.mjs';
 import {
   emptyRepo,
+  ENTRY,
   landedRepo,
+  OWN,
   OWNER_REASON,
   refusedAsDeleted,
   removeRepos,
@@ -26,6 +28,7 @@ after(removeTemplates);
 
 const SLUG = 'how-to-write-an-ai-incident-runbook';
 const ROUTES = 'audits/phase-4.7/dispositions/routes.json';
+const FLAT_DISPOSITION = `audits/phase-4.7/dispositions/generated-${SLUG}.json`;
 const inSite = (root) => ({ cwd: join(root, 'site') });
 
 test('a landed repository is clean, holds the entry with its disposition and an owner row, and passes the editorial gate', async () => {
@@ -34,12 +37,9 @@ test('a landed repository is clean, holds the entry with its disposition and an 
   const owner = rows.at(-1);
 
   assert.equal(treeOf(root).status, '');
-  for (const path of [
-    `site/src/data/post/${SLUG}.md`,
-    `audits/phase-4.7/dispositions/generated-${SLUG}.json`,
-    UNTOUCHED,
-  ])
-    assert.ok(existsSync(join(root, path)), path);
+  for (const path of [ENTRY, OWN, UNTOUCHED]) assert.ok(existsSync(join(root, path)), path);
+  assert.match(OWN, /^audits\/phase-4\.7\/dispositions\/\d{4}\/(0[1-9]|1[0-2])\/generated-/);
+  assert.ok(!existsSync(join(root, FLAT_DISPOSITION)), FLAT_DISPOSITION);
   assert.equal(owner.reason, OWNER_REASON);
   assert.equal(owner.digest, freshDigest(root, `/blog/${SLUG}`));
   assert.equal(fakeRun(root)('npm', ['run', 'gate:editorial'], inSite(root)).status, 0);

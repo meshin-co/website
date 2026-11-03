@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 
 import {
@@ -9,13 +9,11 @@ import {
   CHANNELS,
   DIGEST_KINDS,
   IMMEDIATE_KINDS,
-  LEDGER_DIR,
   MONTHLY_SPEND_CEILING_USD,
   QUARANTINE_HOURS,
   attemptCapProblem,
   deliveryProblems,
   fileStemProblem,
-  ledgerFile,
   newLedger,
   readLedger,
   requiredChannels,
@@ -23,6 +21,7 @@ import {
   writeLedger,
 } from './autowriter-ledger.mjs';
 import { describeProblem } from './autowriter-records.mjs';
+import { recordDirectory, recordPath } from './record-layout.mjs';
 
 const HASH = 'a'.repeat(40);
 const T0 = '2026-11-02T07:00:00.000Z';
@@ -75,8 +74,8 @@ test('the bounds are the ones the owner set: twelve hours, three attempts, twent
   assert.equal(QUARANTINE_HOURS, 12);
   assert.equal(ATTEMPT_CAP, 3);
   assert.equal(MONTHLY_SPEND_CEILING_USD, 25);
-  assert.equal(LEDGER_DIR, 'audits/autowriter');
-  assert.equal(ledgerFile('what-is-aims'), 'audits/autowriter/what-is-aims.json');
+  assert.equal(recordDirectory('ledger'), 'audits/autowriter');
+  assert.equal(recordPath('ledger', 'what-is-aims', T0), 'audits/autowriter/2026/11/what-is-aims.json');
 });
 
 test('Slack carries exactly three kinds at once, and every other kind waits for the morning digest', () => {
@@ -286,9 +285,9 @@ test('the attempt cap is a separate finding, so four well-formed attempts are a 
 });
 
 test('the file name must be the slug, so a ledger cannot be filed under another run', () => {
-  assert.equal(fileStemProblem('audits/autowriter/what-is-aims.json', open()), null);
+  assert.equal(fileStemProblem(recordPath('ledger', 'what-is-aims', T0), open()), null);
   assert.equal(
-    fileStemProblem('audits/autowriter/other.json', open()),
+    fileStemProblem(recordPath('ledger', 'other', T0), open()),
     'slug what-is-aims does not match the file name other.json'
   );
 });
@@ -304,11 +303,11 @@ function inTemp(check) {
 
 test('a written ledger reads back equal, ends in a newline and leaves no temporary file behind', () => {
   inTemp((root) => {
-    const path = join(root, LEDGER_DIR, 'what-is-aims.json');
+    const path = join(root, recordPath('ledger', 'what-is-aims', T0));
     writeLedger(path, settled());
     assert.deepEqual(readLedger(path), settled());
     assert.equal(readFileSync(path, 'utf8').endsWith('}\n'), true);
-    assert.deepEqual(readdirSync(join(root, LEDGER_DIR)), ['what-is-aims.json']);
+    assert.deepEqual(readdirSync(dirname(path)), ['what-is-aims.json']);
   });
 });
 
@@ -341,24 +340,4 @@ test('a ledger that is not JSON, or does not match, is refused by name when it i
       /what-is-aims\.json does not match the ledger schema: runId must match pattern \\S/
     );
   });
-});
-
-test('locked row L62 states the bounds this module enforces, so the document cannot drift from the code', () => {
-  const rows = readFileSync(new URL('../../docs/plan/reference/locked-decisions.md', import.meta.url), 'utf8');
-  const row = rows.split('\n').find((line) => line.startsWith('| L62 '));
-  assert.ok(row, 'locked-decisions.md has no row L62');
-  assert.ok(
-    row.includes(QUARANTINE_HOURS + ' hours'),
-    'L62 does not state the ' + QUARANTINE_HOURS + ' hour quarantine'
-  );
-  assert.ok(row.includes(ATTEMPT_CAP + ' attempts'), 'L62 does not state the ' + ATTEMPT_CAP + ' attempt cap');
-  assert.ok(
-    row.includes('$' + MONTHLY_SPEND_CEILING_USD),
-    'L62 does not state the $' + MONTHLY_SPEND_CEILING_USD + ' ceiling'
-  );
-  for (const kind of IMMEDIATE_KINDS)
-    assert.ok(row.includes('`' + kind + '`'), 'L62 does not name the immediate kind ' + kind);
-  for (const named of ['npm run assets:seal', 'audits/lighthouse-green.json', 'npm run gate:autowriter']) {
-    assert.ok(row.includes(named), 'L62 does not name ' + named);
-  }
 });

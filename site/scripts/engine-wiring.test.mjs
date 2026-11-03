@@ -15,6 +15,7 @@ const sceneOf = (options) => {
 
 const LOOP = {
   attemptCap: 7,
+  tickMinutes: 6,
   quarantineHours: 20,
   monthlySpendCeilingUsd: 41.5,
   claimLifetimeDays: 21,

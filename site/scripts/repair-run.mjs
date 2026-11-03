@@ -1,10 +1,10 @@
 import { ATTEMPT_CAP } from './autowriter-ledger.mjs';
 import { verifiedModel } from './generation-facts.mjs';
 import { callTotals } from './generation-record.mjs';
-import { finishRepair } from './repair-finish.mjs';
+import { finishRepair, recordFailedSpend } from './repair-finish.mjs';
 import { earlierAttemptWithSameFailure, failuresOf, readFindings } from './repair-findings.mjs';
 import { openRepair } from './repair-open.mjs';
-import { RepairStop } from './repair-outcome.mjs';
+import { RepairStop, outcomeOf } from './repair-outcome.mjs';
 import { rewriteEntry } from './repair-rewrite.mjs';
 import { ownPaths } from './repair-scope.mjs';
 
@@ -20,7 +20,12 @@ function refuseWhatCannotStart({ situation, documents, failures, kinds }) {
     throw new RepairStop('no-convergence', slug + ' has used its ' + ATTEMPT_CAP + ' attempts');
   const verdict = kinds.judgeFindings({
     documents,
-    entry: { slug, format: claim.format, route, paths: ownPaths({ slug, format: claim.format }) },
+    entry: {
+      slug,
+      format: claim.format,
+      route,
+      paths: ownPaths({ slug, format: claim.format, claimedAt: claim.claimedAt }),
+    },
   });
   if (verdict.refused.length > 0)
     throw new RepairStop('unrepairable', 'a rewrite cannot answer ' + describeRefusals(verdict.refused));
@@ -35,6 +40,14 @@ function refuseWhenCeilingReached({ ceiling, repoRoot, now }) {
       'spend-ceiling',
       'the spend of ' + status.spentUsd + ' USD has reached the ceiling of ' + status.ceilingUsd + ' USD this month'
     );
+}
+
+async function keepSpend({ error, ...request }) {
+  try {
+    error.commit = await recordFailedSpend({ ...request, outcome: outcomeOf(error) });
+  } catch (failure) {
+    error.message += '; the spend of this repair could not be recorded: ' + failure.message;
+  }
 }
 
 export async function repairRun(io) {
@@ -83,6 +96,7 @@ export async function repairRun(io) {
     if (calls.length > 0) {
       error.spend ??= callTotals(calls);
       if (error instanceof RepairStop) error.details = { ...error.details, calls };
+      await keepSpend({ error, repoRoot, situation, calls, failures, now, run, commit: io.commit, secrets });
     }
     throw error;
   }

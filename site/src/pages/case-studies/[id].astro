@@ -14,6 +14,7 @@ import ShiftPanel from '~/components/site/ShiftPanel.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { articleMetadata } from '~/utils/machine-links.mjs';
 import {
+  breadcrumbNode,
   glossaryStub,
   imageObject,
   orgNode,
@@ -97,6 +98,7 @@ const nodes = [
     data.title,
     { image: imageObject(metadata.openGraph.images[0]) }
   ),
+  breadcrumbNode(site, crumbs),
 ];
 ---
 

@@ -3,7 +3,9 @@ import { readFile } from 'node:fs/promises';
 import { discoverRoutes } from './gate.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 
-const LD_BLOCK = /<script[^>]+type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g;
+const SCRIPT_BLOCK = /<script(?=[\s/>])([^>]*)>([\s\S]*?)<\/script\s*>/gi;
+const LD_JSON_TYPE =
+  /(?:^|[\s/])type\s*=\s*(?:"application\/ld\+json"|'application\/ld\+json'|application\/ld\+json(?=[\s/]|$))/i;
 
 const ROUTE_TYPES = [
   { pattern: /^\/$/, types: ['Organization', 'Person', 'WebSite'] },
@@ -33,7 +35,11 @@ const ROUTE_TYPES = [
   { pattern: /^\/(privacy|terms|imprint|security|ai-policy)$/, types: ['BreadcrumbList'] },
 ];
 
-const GRAPH_EXEMPT = new Set(['/404', '/search', '/styleguide']);
+export const GRAPH_EXEMPT = new Map([
+  ['/404', 'the error page'],
+  ['/search', 'results the browser fills in'],
+  ['/styleguide', 'internal component reference'],
+]);
 
 export const REQUIRED_PROPERTIES = {
   WebPage: ['url', 'name', 'isPartOf', 'inLanguage', 'dateModified'],
@@ -90,7 +96,8 @@ export const REQUIRED_PROPERTIES = {
 
 export function extractGraphs(html) {
   const graphs = [];
-  for (const [, body] of html.matchAll(LD_BLOCK)) {
+  for (const [, attributes, body] of html.matchAll(SCRIPT_BLOCK)) {
+    if (!LD_JSON_TYPE.test(attributes)) continue;
     try {
       graphs.push(JSON.parse(body));
     } catch (error) {
@@ -100,7 +107,21 @@ export function extractGraphs(html) {
   return graphs;
 }
 
-const nodesOf = (graphs) => graphs.flatMap((document) => document['@graph'] ?? [document]);
+const isObject = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
+
+const graphMembers = (document) => (isObject(document) && Array.isArray(document['@graph']) ? document['@graph'] : []);
+
+const graphDocuments = (graphs) => graphs.filter((document) => isObject(document) && Array.isArray(document['@graph']));
+
+const nodesOf = (graphs) =>
+  graphs.flatMap((document) => (isObject(document) ? (document['@graph'] ?? [document]) : [])).filter(isObject);
+
+export function unidentifiedNodes(graphs) {
+  return graphs
+    .flatMap(graphMembers)
+    .filter((node) => !isObject(node) || typeof node['@id'] !== 'string' || node['@id'] === '')
+    .map((node) => (isObject(node) && node['@type'] !== undefined ? [node['@type']].flat().join('|') : '(untyped)'));
+}
 
 function references(value, found = []) {
   if (Array.isArray(value)) {
@@ -182,30 +203,46 @@ export async function main(distDir) {
   const routes = await discoverRoutes(distDir);
   const failures = [];
   let checked = 0;
+  let scripts = 0;
+  let nodes = 0;
 
   for (const route of routes) {
-    if (GRAPH_EXEMPT.has(route)) continue;
+    const exempt = GRAPH_EXEMPT.has(route);
     const required = requiredTypesFor(route);
-    if (!required) {
+    if (!exempt && !required) {
       failures.push(`${route} matches no known jsonld route family`);
       continue;
     }
     const file = route === '/' ? 'index.html' : `${route.slice(1)}.html`;
     const html = await readFile(`${distDir}/${file}`, 'utf8');
-    const graphs = extractGraphs(html);
+    const documents = extractGraphs(html);
+    scripts += documents.length;
+    if (documents.length > 1) failures.push(`${route} carries ${documents.length} ld+json scripts, expected one`);
+
+    const graphs = graphDocuments(documents);
     if (graphs.length === 0) {
-      failures.push(`${route} carries no ld+json graph`);
+      if (!exempt) failures.push(`${route} carries no ld+json graph`);
       continue;
     }
 
     checked += 1;
+    nodes += graphs.reduce((total, document) => total + document['@graph'].length, 0);
+    for (const label of unidentifiedNodes(graphs)) failures.push(`${route} has a ${label} node with no @id`);
     for (const id of danglingIds(graphs)) failures.push(`${route} references undeclared ${id}`);
     for (const id of duplicateIds(graphs)) failures.push(`${route} declares ${id} twice`);
-    for (const type of missingTypes(graphs, required)) failures.push(`${route} has no ${type} node`);
+    if (!exempt) {
+      for (const type of missingTypes(graphs, required)) failures.push(`${route} has no ${type} node`);
+    }
     for (const failure of missingProperties(graphs, route)) failures.push(`${route} ${failure}`);
   }
 
-  console.log(`jsonld: ${checked} of ${routes.length} routes carry a graph`);
+  const exemptPresent = routes.filter((route) => GRAPH_EXEMPT.has(route)).sort();
+  const exemptNote =
+    exemptPresent.length === 0 ? '0 exempt' : `${exemptPresent.length} exempt (${exemptPresent.join(', ')})`;
+  console.log(
+    `jsonld: ${checked} of ${routes.length} routes carry a graph, ${scripts} scripts and ${nodes} nodes read, ${exemptNote}`
+  );
+  if (checked === 0) failures.push('no route carried a graph, so nothing was checked');
   if (failures.length > 0) {
     for (const failure of failures) console.error(`JSONLD ${failure}`);
     process.exitCode = 1;

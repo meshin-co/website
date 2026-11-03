@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { SENDERS, variable } from './escalate-channels.mjs';
+import { SENDERS, postSlackText, variable } from './escalate-channels.mjs';
 
 const escalation = { kind: 'credential', title: 'Token expired', detail: 'The token was refused.' };
 const base = (env, issue = null) => ({
@@ -74,4 +74,34 @@ test('a request that times out is reported as a failed request naming the timeou
     const outcome = await sender({ ...base(env), fetch });
     assert.deepEqual(outcome, { error: 'request failed: The operation was aborted due to timeout' });
   }
+});
+
+test('a Slack text is posted as given to the webhook, with no escalation around it', async () => {
+  const requests = [];
+  const fetch = async (url, init) => {
+    requests.push({ url, method: init.method, body: JSON.parse(init.body) });
+    return new Response('ok', { status: 200 });
+  };
+  const env = { SLACK_WEBHOOK_URL: ' https://hooks.test/x\n' };
+  const outcome = await postSlackText({ env, fetch, clean: String, text: 'one\ntwo' });
+  assert.deepEqual(outcome, { status: 200 });
+  assert.deepEqual(requests, [{ url: 'https://hooks.test/x', method: 'POST', body: { text: 'one\ntwo' } }]);
+});
+
+test('a Slack text with no webhook set makes no request and names the missing variable', async () => {
+  const fetch = async () => assert.fail('no request expected');
+  const outcome = await postSlackText({ env: {}, fetch, clean: String, text: 'x' });
+  assert.match(outcome.error, /^SLACK_WEBHOOK_URL is not set; create the repository secret/);
+});
+
+test('a refused Slack text reports the status and a cleaned excerpt, and a failed request reports its message', async () => {
+  const env = { SLACK_WEBHOOK_URL: 'https://hooks.test/x' };
+  const refusing = async () => new Response('no_service', { status: 404 });
+  const refused = await postSlackText({ env, fetch: refusing, clean: (text) => `[${text}]`, text: 'x' });
+  assert.deepEqual(refused, { status: 404, error: 'Slack answered HTTP 404: [no_service]' });
+  const closing = async () => {
+    throw new Error('socket closed');
+  };
+  const failed = await postSlackText({ env, fetch: closing, clean: String, text: 'x' });
+  assert.deepEqual(failed, { error: 'request failed: socket closed' });
 });

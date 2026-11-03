@@ -8,7 +8,8 @@ import { dirname, join, resolve } from 'node:path';
 import { test } from 'node:test';
 
 import { MONTHLY_SPEND_CEILING_USD } from './autowriter-ledger.mjs';
-import { spending, withScene } from './fixtures/spend-run.mjs';
+import { IN_NOVEMBER, spending, withScene } from './fixtures/spend-run.mjs';
+import { FILED_AT, ledgerOf, recordOf } from './fixtures/spend-scene.mjs';
 
 const CEILING = MONTHLY_SPEND_CEILING_USD;
 const SCRIPT = resolve(import.meta.dirname, 'spend-ceiling.mjs');
@@ -41,6 +42,8 @@ test(
         ceilingUsd: CEILING,
         reached: false,
         notice: 'none',
+        ledgers: 1,
+        records: 0,
       });
     } finally {
       rmSync(elsewhere, { recursive: true, force: true });
@@ -58,7 +61,10 @@ test('without --repo-root the command reads this repository, wherever it is star
       return result.stdout;
     });
     assert.equal(new Set(answers).size, 1);
-    assert.equal(JSON.parse(answers[0]).month, '2026-11');
+    const read = JSON.parse(answers[0]);
+    assert.equal(read.month, '2026-11');
+    assert.ok(Number.isInteger(read.ledgers) && Number.isInteger(read.records), answers[0]);
+    assert.ok(read.records <= read.ledgers, answers[0]);
   } finally {
     rmSync(elsewhere, { recursive: true, force: true });
   }
@@ -76,12 +82,38 @@ test(
       const args = ['--repo-root', scene.root, '--now', '2026-11-10T09:00:00Z'];
       const result = spawned(files, args, { GITHUB_OUTPUT: output, GITHUB_STEP_SUMMARY: summary });
       assert.equal(result.status, 0, result.stderr);
-      const lines = 'earlier=1\nstopped=false\nnotice=none\nledger=audits/autowriter/spend-ceiling-2026-11.json\n';
+      const lines =
+        'earlier=1\nstopped=false\nnotice=none\nledger=audits/autowriter/2026/11/spend-ceiling-2026-11.json\n';
       assert.equal(readFileSync(output, 'utf8'), lines);
       assert.match(readFileSync(summary, 'utf8'), /No model was called by this job/);
     } finally {
       rmSync(files, { recursive: true, force: true });
     }
+  })
+);
+
+test(
+  'the command line counts three ledgers and three generation records, filed flat, in their month and below it',
+  withScene((scene) => {
+    for (const [slug, usd, filedAt] of [
+      ['alpha-post', 1, FILED_AT.flat],
+      ['beta-post', 2, FILED_AT.month],
+      ['gamma-post', 4, FILED_AT.deeper],
+    ]) {
+      scene.put(filedAt('ledger', slug), ledgerOf({ slug, generationUsd: usd }));
+      scene.put(filedAt('generation', slug), recordOf({ slug, generatedAt: IN_NOVEMBER, usd }));
+    }
+    const result = spawned(scene.root, ['--repo-root', scene.root, '--now', '2026-11-10T09:00:00Z']);
+    assert.equal(result.status, 0, result.stderr);
+    assert.deepEqual(JSON.parse(result.stdout), {
+      month: '2026-11',
+      spentUsd: 7,
+      ceilingUsd: CEILING,
+      reached: false,
+      notice: 'none',
+      ledgers: 3,
+      records: 3,
+    });
   })
 );
 

@@ -3,7 +3,8 @@ import { join } from 'node:path';
 
 import { restatedReason } from './disposition-restate.mjs';
 import { renderEntry } from './entry-files.mjs';
-import { addTargetQuery, dispositionFile, dispositionFor, insertPassage, targetQueryFor } from './route-derive.mjs';
+import { recordPath } from './record-layout.mjs';
+import { addTargetQuery, dispositionFor, insertPassage, targetQueryFor } from './route-derive.mjs';
 import {
   BUILD,
   commandsIn,
@@ -32,7 +33,7 @@ function planEntry({ claim, draft, runDate }) {
     claim,
     entry,
     route: entry.route,
-    disposition: dispositionFile(claim.slug),
+    disposition: recordPath('disposition', claim.slug, claim.claimedAt),
     target: siteRelative(entry.path),
     query: targetQueryFor({ claim }),
     passage: { promptNumber: claim.prompt.number, passage: draft.passage, route: entry.route },
@@ -61,7 +62,10 @@ function planRoute({ repoRoot, entries, runDate }) {
   return {
     plans,
     generated,
-    reason: restatedReason({ routes: plans.map(({ route }) => route), slugs: plans.map(({ claim }) => claim.slug) }),
+    reason: restatedReason({
+      routes: plans.map(({ route }) => route),
+      generationPaths: plans.map(({ claim }) => recordPath('generation', claim.slug, claim.claimedAt)),
+    }),
     paths: [...plans.map(({ entry }) => entry.path), CONTENT_FACTS, SEMANTIC_CORE, ...generated],
     facts: plans.reduce((text, { route, query }) => addTargetQuery(text, route, query), read(CONTENT_FACTS)),
     core: plans.reduce((text, { passage }) => insertPassage(text, passage), read(SEMANTIC_CORE)),
@@ -79,9 +83,12 @@ async function writeSources({ plan, transaction, succeed }) {
 }
 
 async function writeDisposition({ planned, runDate, transaction, succeed }) {
+  const { claim } = planned;
+  const claimPath = recordPath('claim', claim.slug, claim.claimedAt);
+  const generationPath = recordPath('generation', claim.slug, claim.claimedAt);
   const rows = [];
   for (const target of [planned.target, planned.route])
-    rows.push(dispositionFor({ slug: planned.claim.slug, target, digest: await digestOf(succeed, target), runDate }));
+    rows.push(dispositionFor({ claimPath, generationPath, target, digest: await digestOf(succeed, target), runDate }));
   transaction.write(planned.disposition, `${JSON.stringify(rows, null, 2)}\n`);
 }
 

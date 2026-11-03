@@ -93,6 +93,12 @@ jobs:
         run: |
           node scripts/commit-to-main.mjs --message "chore(autowriter): record the spend ceiling notice" --path "$NOTICE_LEDGER"
 
+      - name: post to Slack that no entry will be written, with what the run cost and the month's figure
+        if: ${{ !cancelled() && steps.ceiling.outputs.stopped == 'true' }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: node scripts/spend-ended.mjs ceiling
+
   write:
     needs: [configured, ceiling]
     if: github.ref == 'refs/heads/main' && needs.configured.outputs.ready == 'true' && needs.ceiling.outputs.stopped != 'true'
@@ -237,15 +243,16 @@ jobs:
           message="$(result '.message // "the writer printed no result"' 'the writer printed no result')"
           cost="$(result '.spend.costUsd // "unknown"' unknown)"
           slug="$(basename "$(jq -r .ledgerPath "$DECISION_FILE")" .json)"
-          node scripts/escalate-run.mjs --ledger-dir "$GITHUB_WORKSPACE/audits/autowriter" --slug "$slug" --kind "$kind" \
+          node scripts/escalate-run.mjs --ledger-dir "$GITHUB_WORKSPACE/$(dirname "$(jq -r .ledgerPath "$DECISION_FILE")")" --slug "$slug" --kind "$kind" \
             --title "Write daily stopped while writing $slug ($failure)" \
             --detail "npm run write:entry failed with kind $failure: $message. Spend recorded so far: $cost USD. The claim for $slug stays committed and expires on its own."
 
-      - name: commit the ledger, which holds the spend of the failed write
+      - name: commit the ledger, which holds the spend of the failed write, and the report that counts it
         if: failure() && steps.write.outcome == 'failure'
         run: |
           slug="$(basename "$(jq -r .ledgerPath "$DECISION_FILE")" .json)"
-          node scripts/commit-to-main.mjs --message "chore(autowriter): record the stopped run of $slug" --path "audits/autowriter/$slug.json"
+          node scripts/spend-report.mjs
+          node scripts/commit-to-main.mjs --message "chore(autowriter): record the stopped run of $slug" --path "$(jq -r .ledgerPath "$DECISION_FILE")" --path audits/spend-report.md
 
       - name: escalate a written entry that could not reach a pull request
         if: failure() && steps.write.outcome == 'success'
@@ -257,3 +264,37 @@ jobs:
           node scripts/escalate-run.mjs --ledger-dir "$RUNNER_TEMP/escalations" --slug "$slug" --kind hard-stop \
             --title "Write daily wrote $slug but could not open its pull request" \
             --detail "The branch autowriter/$slug was written and money was spent; pushing it, opening the pull request or starting the Watch PR workflow failed. Read the log of this run, then open the pull request by hand or delete the branch."
+
+      - name: post what the written entries cost to Slack
+        if: ${{ !cancelled() && steps.write.outcome == 'success' }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          status=0
+          node scripts/spend-report.mjs notify --result "$WRITE_RESULT_FILE" > "$RUNNER_TEMP/spend-report-notice.txt" 2>&1 || status=$?
+          cat "$RUNNER_TEMP/spend-report-notice.txt"
+          cat "$RUNNER_TEMP/spend-report-notice.txt" >> "$GITHUB_STEP_SUMMARY"
+          exit "$status"
+
+      - name: post to Slack that the picker chose nothing to write, with what the run cost and the month's figure
+        if: ${{ !cancelled() && steps.pick.outcome == 'success' && steps.pick.outputs.decision != 'write' }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: node scripts/spend-ended.mjs pick --decision "$DECISION_FILE"
+
+      - name: count the entries the write produced
+        id: produced
+        if: ${{ !cancelled() && steps.write.outcome == 'success' }}
+        run: echo "count=$(jq '.entries | length' "$WRITE_RESULT_FILE")" >> "$GITHUB_OUTPUT"
+
+      - name: post to Slack that the write ended with no entry, with what the run cost and the month's figure
+        if: ${{ !cancelled() && steps.write.outcome == 'success' && steps.produced.outputs.count == '0' }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: node scripts/spend-ended.mjs write --decision "$DECISION_FILE" --result "$WRITE_RESULT_FILE"
+
+      - name: post to Slack that the write stopped, with what the run cost and the month's figure
+        if: ${{ !cancelled() && steps.write.outcome == 'failure' }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: node scripts/spend-ended.mjs write --decision "$DECISION_FILE" --result "$WRITE_RESULT_FILE"

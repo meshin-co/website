@@ -1,10 +1,32 @@
-import { brandFromDisk } from '../src/utils/brand.mjs';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+import { brandFromDisk } from '../src/utils/brand.mjs';
+import { escapeRegExp } from './brand-gate.mjs';
+import { readEngineConfig } from './engine-config.mjs';
+import { parseEntrySource } from './entry-prose.mjs';
+
+const REPOSITORY_ROOT = resolve(import.meta.dirname, '..', '..');
+
+export function personPattern(name) {
+  const words = String(name ?? '')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  if (words.length === 0)
+    throw new Error('geo-probe: the author entry names nobody, so there is no person to look for');
+  return new RegExp(`(?<![\\p{L}\\p{N}])${words.map(escapeRegExp).join('\\s+')}(?![\\p{L}\\p{N}])`, 'iu');
+}
+
+function articleAuthorName() {
+  const { dataDirectory, formats } = readEngineConfig().content;
+  const entry = resolve(REPOSITORY_ROOT, dataDirectory, 'author', `${formats.article.author}.md`);
+  return parseEntrySource(readFileSync(entry, 'utf8')).frontmatter.name;
+}
 
 const BRAND = brandFromDisk();
 const OUR_HOSTS = [BRAND.name];
-const OUR_NAMES = [new RegExp(`\\b${escapeRegExp(BRAND.name)}\\b`, 'i'), /\bDmitri\s+Meshin\b/i];
+const OUR_NAMES = [new RegExp(`\\b${escapeRegExp(BRAND.name)}\\b`, 'i'), personPattern(articleAuthorName())];
 
 const PROVIDERS = [
   { id: 'openai', keyName: 'OPENAI_API_KEY', model: 'gpt-5', retrieval: 'web_search tool' },

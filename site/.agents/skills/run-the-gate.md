@@ -17,7 +17,7 @@ Run at the end of every phase and before any merge to main. The procedure is
    page's body; the exempt lists in `scripts/orphan-gate.mjs` are closed and carry a reason each.
    Generated tables come from `scripts/markdown-table.mjs`, already prettier-shaped; a script that can
    be both imported and run decides which through `scripts/invoked-directly.mjs`, which resolves symlinks.
-7. `npm run gate:machine`, then `npm run gate:jsonld` — machine-interface coverage (every
+7. `npm run gate:machine`, `npm run gate:parity` (`every-route-gets-every-surface.md`), then `npm run gate:jsonld` — machine-interface coverage (every
    indexable route must appear in `llms.txt` or a `/llms/` file) and JSON-LD graph integrity (structured-data.md).
 8. `npm run gate:skills` — skills lint: every path real, no forbidden claims, length caps.
 9. `npm run gate:routes` — compares the build against `audits/routes.json`, fails on an unexplained
@@ -57,7 +57,7 @@ built bytes, since leaves differ only in content. `auditableRoutes()` in `script
 derives the set from `dist/**/*.html`, never from `gate-routes.json`; `/styleguide` is excluded,
 and visual snapshots follow the same families (`scripts/templates.mjs`).
 
-## Known traps (docs/FRONTEND-EXCELLENCE-ISSUES.md)
+## Known traps
 
 - lhci has no `settings.preset`; form factors come from `formFactor` plus `screenEmulation` in
   `lighthouserc.cjs`. Two runs must never share an output directory: `gate:lh` clears it between

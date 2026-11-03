@@ -9,7 +9,19 @@ import { test } from 'node:test';
 import { QUARANTINE_HOURS, validateLedger } from './autowriter-ledger.mjs';
 import { CLEAR_COMMAND } from './measurement-debt.mjs';
 import { watch } from './pr-watch.mjs';
-import { REPO, ROOT, json, ledgerBody, notFound, own, serving } from './fixtures/github-fake.mjs';
+import { recordPath } from './record-layout.mjs';
+import {
+  LEDGER_FILINGS,
+  LEDGER_PATH,
+  REPO,
+  ROOT,
+  json,
+  ledgerBody,
+  notFound,
+  own,
+  serving,
+} from './fixtures/github-fake.mjs';
+import { siteBrand } from './site-brand.mjs';
 import { byBot, hoursAfterOpening } from './fixtures/pr-watch.mjs';
 import {
   DEFAULT_TOKEN,
@@ -19,16 +31,18 @@ import {
   TREE_FINGERPRINT,
   green,
   ledgerRecord,
+  treeFilingLedgerAt,
 } from './fixtures/pr-watch-harness.mjs';
 
 const STORED_BLOB = 'b'.repeat(40);
-const LEDGER_PATH = 'audits/autowriter/a-slug.json';
 
-function github(bundle, { writeStatus = 201, writeBody = { commit: { sha: 'e'.repeat(40) } } } = {}) {
+function github(bundle, options = {}) {
+  const { writeStatus = 201, writeBody = { commit: { sha: 'e'.repeat(40) } } } = options;
+  const { ledgerPath = LEDGER_PATH, tree = TREE } = options;
   const requests = [];
   const read = serving(bundle, {
     ledger: (path) =>
-      path.endsWith(`?ref=${MERGED_SHA}`) ? ledgerBody(ledgerRecord().value, STORED_BLOB) : notFound(),
+      path === `contents/${ledgerPath}?ref=${MERGED_SHA}` ? ledgerBody(ledgerRecord().value, STORED_BLOB) : notFound(),
   });
   const fetch = async (url, init = {}) => {
     const path = url.slice(ROOT.length);
@@ -37,10 +51,10 @@ function github(bundle, { writeStatus = 201, writeBody = { commit: { sha: 'e'.re
     requests.push({ method, path, token, body: init.body === undefined ? undefined : JSON.parse(init.body) });
     if (method === 'PUT' && path === `pulls/${bundle.pullRequest.number}/merge`)
       return json({ sha: MERGED_SHA, merged: true });
-    if (method === 'PUT' && path === `contents/${LEDGER_PATH}`) return json(writeBody, writeStatus);
+    if (method === 'PUT' && path.startsWith('contents/')) return json(writeBody, writeStatus);
     if (method === 'POST' && path === 'issues')
       return json({ number: 9, html_url: 'https://github.test/issues/9' }, 201);
-    if (path.startsWith('git/trees/')) return json({ sha: 'c'.repeat(40), tree: TREE, truncated: false });
+    if (path.startsWith('git/trees/')) return json({ sha: 'c'.repeat(40), tree, truncated: false });
     return read({ path });
   };
   return { fetch, requests };
@@ -75,7 +89,7 @@ test('over the real adapters a merge reads the merged tree and ledger with the r
   assert.equal(commit.body.branch, 'main');
   assert.equal(commit.body.sha, STORED_BLOB);
   assert.equal(commit.body.message, 'chore(autowriter): record the measurement debt of a-slug');
-  assert.deepEqual(commit.body.committer, { name: 'autowriter-bot', email: 'autowriter-bot@meshin.co' });
+  assert.deepEqual(commit.body.committer, { name: 'autowriter-bot', email: `autowriter-bot@${siteBrand().name}` });
   const written = JSON.parse(Buffer.from(commit.body.content, 'base64').toString('utf8'));
   assert.deepEqual(validateLedger(written), []);
   assert.equal(written.verdict.state, 'merged');
@@ -83,6 +97,33 @@ test('over the real adapters a merge reads the merged tree and ledger with the r
   assert.equal(written.measurementDebt.mergedCommit, MERGED_SHA);
   assert.equal(written.measurementDebt.fingerprint, TREE_FINGERPRINT);
   assert.equal(written.measurementDebt.clear, CLEAR_COMMAND);
+});
+
+for (const [place, path] of Object.entries(LEDGER_FILINGS)) {
+  test(`over the real adapters a ledger filed ${place} is found in the merged tree, and the debt goes to the path it was found at`, async () => {
+    const { run, requests } = await mergeWith({ ledgerPath: path, tree: treeFilingLedgerAt(path) });
+    const { action } = await run();
+    const [, commit] = writes(requests);
+    const reads = requests.filter(({ method }) => method === 'GET').map((request) => request.path);
+
+    assert.equal(action, 'merged');
+    assert.ok(reads.includes(`contents/${path}?ref=${MERGED_SHA}`), reads.join('\n'));
+    assert.equal(commit.path, `contents/${path}`);
+    assert.equal(commit.body.sha, STORED_BLOB);
+  });
+}
+
+test('over the real adapters a merged tree that holds no ledger of the slug starts one, filed under the month of the merge', async () => {
+  const tree = TREE.filter(({ path }) => path !== LEDGER_PATH);
+  const { run, requests, now } = await mergeWith({ tree });
+  const { action } = await run();
+  const [, commit] = writes(requests);
+  const reads = requests.filter(({ method }) => method === 'GET').map((request) => request.path);
+
+  assert.equal(action, 'merged');
+  assert.ok(!reads.some((path) => path.startsWith('contents/')), reads.join('\n'));
+  assert.equal(commit.path, `contents/${recordPath('ledger', 'a-slug', now())}`);
+  assert.equal(commit.body.sha, undefined);
 });
 
 test("over the real adapters a base branch that refuses the debt raises the hard stop issue and fails the run with GitHub's answer", async () => {

@@ -1,7 +1,9 @@
-import { LedgerError, fileStemProblem, ledgerFile, validateLedger } from './autowriter-ledger.mjs';
+import { LedgerError, fileStemProblem, validateLedger } from './autowriter-ledger.mjs';
 import { describeProblem } from './autowriter-records.mjs';
 import { pickPullRequestRun } from './pr-checks.mjs';
 import { slugOfBranch } from './pr-classify.mjs';
+import { findRecordPath } from './record-layout.mjs';
+import { autowriterAgent } from './site-brand.mjs';
 
 const API_ORIGIN = 'https://api.github.com';
 const API_VERSION = '2022-11-28';
@@ -36,7 +38,7 @@ export function createApi({ repo, token, fetch = globalThis.fetch }) {
     Authorization: `Bearer ${token}`,
     Accept: 'application/vnd.github+json',
     'X-GitHub-Api-Version': API_VERSION,
-    'User-Agent': 'meshin-autowriter',
+    'User-Agent': autowriterAgent(),
   };
 
   async function request(method, path, body) {
@@ -83,7 +85,13 @@ function parseLedger(path, text) {
 }
 
 async function readLedgerFile(api, { slug, head }) {
-  const path = ledgerFile(slug);
+  const tree = await readTree(api, head);
+  const path = findRecordPath(
+    tree.map((entry) => entry.path),
+    'ledger',
+    slug
+  );
+  if (path === null) return null;
   let body;
   try {
     body = await api.get(`contents/${path}?ref=${head}`);

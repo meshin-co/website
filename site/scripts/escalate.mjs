@@ -20,7 +20,7 @@ const webhookPathOf = (url) => {
   }
 };
 
-function redactorFor(env) {
+export function redactorFor(env) {
   const webhook = variable(env, 'SLACK_WEBHOOK_URL');
   const secrets = [
     [webhook, 'SLACK_WEBHOOK_URL'],
@@ -47,7 +47,7 @@ export class EscalationError extends Error {
   }
 }
 
-function receiptOf(channel, attemptedAt, outcome, clean) {
+export function receiptOf(channel, attemptedAt, outcome, clean) {
   if (outcome.error !== undefined) {
     const error = clean(outcome.error).slice(0, MAX_ERROR_LENGTH);
     return { channel, attemptedAt, delivered: false, status: outcome.status ?? null, issue: null, error };
@@ -166,12 +166,14 @@ function parseArguments(argv) {
   return { command, options };
 }
 
-export function describeReceipt(escalation, receipt) {
-  const prefix = `escalate: ${escalation.id} ${receipt.channel}`;
-  if (!receipt.delivered) return `${prefix} NOT delivered: ${receipt.error}`;
+export function describeDelivery(label, receipt) {
+  if (!receipt.delivered) return `${label} NOT delivered: ${receipt.error}`;
   const issue = receipt.issue === null ? '' : `, issue #${receipt.issue}`;
-  return `${prefix} delivered (HTTP ${receipt.status}${issue})`;
+  return `${label} delivered (HTTP ${receipt.status}${issue})`;
 }
+
+export const describeReceipt = (escalation, receipt) =>
+  describeDelivery(`escalate: ${escalation.id} ${receipt.channel}`, receipt);
 
 const latestReceipts = (escalation) =>
   requiredChannels(escalation.kind).map((channel) => latestReceipt(escalation, channel));

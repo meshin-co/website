@@ -17,10 +17,11 @@ import {
   untraceableText,
 } from './editorial-inventory.mjs';
 import { editorialRecords, isPending } from './editorial-findings.mjs';
+import { recordFiles } from './record-layout.mjs';
 
 const SITE = resolve(process.argv[2] ?? '.');
 const LEDGER = resolve(SITE, '../audits/phase-4.7/inventory.json');
-const DISPOSITIONS = resolve(SITE, '../audits/phase-4.7/dispositions');
+const REPOSITORY = resolve(SITE, '..');
 const FINDINGS = resolve(SITE, '../audits/phase-4.7/findings.json');
 const CONDITIONAL = resolve(SITE, '../audits/phase-4.7/conditional-copy.json');
 
@@ -64,12 +65,8 @@ export function ledgerFindings({ rows, untraceable = [], dead = [], stale = [], 
   ];
 }
 
-export function readDispositions(dir) {
-  if (!existsSync(dir)) return [];
-  return readdirSync(dir)
-    .filter((name) => name.endsWith('.json'))
-    .flatMap((name) => JSON.parse(readFileSync(join(dir, name), 'utf8')));
-}
+export const readDispositions = (repoRoot) =>
+  recordFiles(repoRoot, 'disposition').flatMap((path) => JSON.parse(readFileSync(join(repoRoot, path), 'utf8')));
 
 function buildLedger(dist) {
   const entries = walk(join(SITE, 'src/data'), (name) => name.endsWith('.md')).map((file) => {
@@ -83,7 +80,10 @@ function buildLedger(dist) {
   ].map((file) => ({ file: relative(SITE, file), source: readFileSync(file, 'utf8') }));
   const constants = [
     ...walk(join(SITE, 'src/data'), (name) => /\.(ts|mjs)$/.test(name) && !/\.test\.mjs$/.test(name)),
-    ...walk(join(SITE, 'src/utils'), (name) => /\.(ts|mjs)$/.test(name) && !/\.test\.mjs$/.test(name)),
+    ...walk(
+      join(SITE, 'src/utils'),
+      (name) => /\.(ts|mjs)$/.test(name) && !/\.test\.mjs$/.test(name) && name !== 'route-exceptions.mjs'
+    ),
     ...walk(join(SITE, 'public/search'), (name) => name.endsWith('.mjs')),
     ...walk(join(SITE, 'src/pages'), (name) => name.endsWith('.astro')),
     ...walk(join(SITE, 'src/components'), (name) => name.endsWith('.astro')),
@@ -112,7 +112,7 @@ function buildLedger(dist) {
 
 export function buildReport(dist) {
   const built = buildLedger(dist);
-  const dispositions = readDispositions(DISPOSITIONS);
+  const dispositions = readDispositions(REPOSITORY);
   const declarations = existsSync(CONDITIONAL) ? JSON.parse(readFileSync(CONDITIONAL, 'utf8')) : [];
   const conditional = applyConditionalCopy(built.dead, declarations);
   const applied = applyDispositions(built.rows, dispositions);
@@ -245,8 +245,8 @@ export function sealDispositions(dist) {
   refuseWhenUnattended('re-seal the dispositions');
   const built = buildLedger(dist);
   let sealed = 0;
-  for (const name of existsSync(DISPOSITIONS) ? readdirSync(DISPOSITIONS).filter((f) => f.endsWith('.json')) : []) {
-    const file = join(DISPOSITIONS, name);
+  for (const path of recordFiles(REPOSITORY, 'disposition')) {
+    const file = join(REPOSITORY, path);
     const entries = JSON.parse(readFileSync(file, 'utf8')).map((entry) => {
       const digest = digestFor(built.rows, entry.target);
       if (entry.digest !== digest) sealed += 1;

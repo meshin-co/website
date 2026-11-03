@@ -1,11 +1,12 @@
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
-import { LEDGER_DIR, fileStemProblem, validateLedger } from './autowriter-ledger.mjs';
+import { fileStemProblem, validateLedger } from './autowriter-ledger.mjs';
 import { describeProblem } from './autowriter-records.mjs';
 import { runGit } from './commit-to-main.mjs';
-import { GENERATION_DIR, validateRecord } from './generation-record.mjs';
-import { chooseVersions } from './spend-sum.mjs';
+import { validateRecord } from './generation-record.mjs';
+import { familyOf, recordDirectory, recordFiles } from './record-layout.mjs';
+import { chooseVersions, ledgerStemOf, recordMicro, recordRepairMicro, spendItemsOf } from './spend-sum.mjs';
 
 export const WORKING_TREE = 'working tree';
 export const SOURCE_REFS = [
@@ -17,9 +18,8 @@ export const SOURCE_REFS = [
 
 export class SpendDataError extends Error {}
 
-const POSIX_SEPARATOR = '/';
-const isJsonIn = (path, directory) => path.endsWith('.json') && dirname(path) === directory;
-const isSpendFile = (path) => isJsonIn(path, LEDGER_DIR) || isJsonIn(path, GENERATION_DIR);
+const SPEND_FAMILIES = ['ledger', 'generation'];
+const isSpendFile = (path) => SPEND_FAMILIES.includes(familyOf(path));
 
 function git(run, repoRoot, args) {
   const result = run(args, { cwd: repoRoot });
@@ -31,21 +31,17 @@ function git(run, repoRoot, args) {
 }
 
 function workingTreeFiles(repoRoot) {
-  return [LEDGER_DIR, GENERATION_DIR].flatMap((directory) => {
-    const absolute = join(repoRoot, directory);
-    if (!existsSync(absolute)) return [];
-    return readdirSync(absolute, { withFileTypes: true })
-      .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
-      .map((entry) => ({
-        path: [directory, entry.name].join(POSIX_SEPARATOR),
-        key: null,
-        text: () => readFileSync(join(absolute, entry.name), 'utf8'),
-      }));
-  });
+  return SPEND_FAMILIES.flatMap((family) =>
+    recordFiles(repoRoot, family).map((path) => ({
+      path,
+      key: null,
+      text: () => readFileSync(join(repoRoot, path), 'utf8'),
+    }))
+  );
 }
 
 function treeFiles({ run, repoRoot, ref, blobs }) {
-  const listing = git(run, repoRoot, ['ls-tree', '-r', '-z', ref, '--', LEDGER_DIR]);
+  const listing = git(run, repoRoot, ['ls-tree', '-r', '-z', ref, '--', recordDirectory('ledger')]);
   return listing
     .split('\0')
     .filter(Boolean)
@@ -87,7 +83,7 @@ function parseFile({ label, file, check }) {
 }
 
 function load({ label, file, parsed }) {
-  const isRecord = isJsonIn(file.path, GENERATION_DIR);
+  const isRecord = familyOf(file.path) === 'generation';
   const cacheKey = file.key === null ? null : `${isRecord ? 'record' : 'ledger'}:${file.key}`;
   if (cacheKey !== null && parsed.has(cacheKey)) return { isRecord, value: parsed.get(cacheKey) };
   const value = parseFile({ label, file, check: isRecord ? validateRecord : validateLedger });
@@ -95,15 +91,35 @@ function load({ label, file, parsed }) {
   return { isRecord, value };
 }
 
-function candidatesOf({ label, files, parsed }) {
+function loadFiles({ label, files, parsed }) {
   const ledgers = [];
-  const records = new Map();
+  const records = [];
   for (const file of files) {
     const { isRecord, value } = load({ label, file, parsed });
-    if (isRecord) records.set(value.slug, value);
-    else ledgers.push(value);
+    (isRecord ? records : ledgers).push(value);
   }
-  return ledgers.map((ledger) => ({ source: label, ledger, record: records.get(ledger.slug) ?? null }));
+  return { label, ledgers, records };
+}
+
+function candidatesOf({ label, ledgers, records }) {
+  return spendItemsOf({ ledgers, records })
+    .filter(({ ledger }) => ledger !== null)
+    .map((item) => ({ source: label, ...item }));
+}
+
+const recordCost = (record) => recordMicro(record) + recordRepairMicro(record);
+
+function recordOnlyItems({ chosen, loaded }) {
+  const slugs = new Set(chosen.map(({ ledger }) => ledger.slug));
+  const costliest = new Map();
+  for (const { label, records } of loaded)
+    for (const record of records) {
+      if (slugs.has(ledgerStemOf(record.ledger))) continue;
+      const held = costliest.get(record.slug);
+      if (held === undefined || recordCost(record) > recordCost(held.record))
+        costliest.set(record.slug, { source: label, ledger: null, record });
+    }
+  return [...costliest.values()].sort((left, right) => (left.record.slug < right.record.slug ? -1 : 1));
 }
 
 export function readLedgers({ repoRoot, run = runGit }) {
@@ -114,5 +130,7 @@ export function readLedgers({ repoRoot, run = runGit }) {
     { label: WORKING_TREE, files: workingTreeFiles(repoRoot) },
     ...refs.map((ref) => ({ label: ref, files: treeFiles({ run, repoRoot, ref, blobs }) })),
   ];
-  return chooseVersions(sources.flatMap(({ label, files }) => candidatesOf({ label, files, parsed })));
+  const loaded = sources.map(({ label, files }) => loadFiles({ label, files, parsed }));
+  const chosen = chooseVersions(loaded.flatMap(candidatesOf));
+  return [...chosen, ...recordOnlyItems({ chosen, loaded })];
 }

@@ -1,6 +1,6 @@
 import { posix } from 'node:path';
 
-export const DISPOSITION_DIRECTORY = 'audits/phase-4.7/dispositions';
+import { familyOf } from './record-layout.mjs';
 
 const PIPELINE_REASON_OPENINGS = [
   'The text of this target changed in the run in which the unattended writer added ',
@@ -19,6 +19,11 @@ export const REFUSED_PATHS = [
     id: 'sentence-band',
     why: 'The band every generated entry is judged against, so a run that can move it moves its own goalposts.',
     covers: exactly('audits/sentence-band.json'),
+  },
+  {
+    id: 'entry-length',
+    why: 'The floor every generated entry is judged against, measured from entries a person wrote, so a run that can re-measure it lowers its own floor with its own output.',
+    covers: exactly('audits/entry-length.json'),
   },
   {
     id: 'lighthouse-record',
@@ -42,10 +47,22 @@ export function refusalFor(path) {
   return row ? { id: row.id, path: normalised(path), why: row.why } : null;
 }
 
-export const isDispositionFile = (path) => {
-  const file = normalised(path).toLowerCase();
-  return posix.dirname(file) === DISPOSITION_DIRECTORY && file.endsWith('.json');
-};
+export const isGenerationRecord = (path) => familyOf(normalised(path).toLowerCase()) === 'generation';
+
+export const REMOVAL_REFUSALS = [
+  {
+    id: 'generation-record-removed',
+    why: 'The record that marks an entry as written by the pipeline, which the sentence band and the entry length record leave out when they measure, so a run that can remove one turns its own entry into one a person wrote and moves its own goalposts.',
+    covers: isGenerationRecord,
+  },
+];
+
+export function removalRefusalFor(path) {
+  const row = REMOVAL_REFUSALS.find(({ covers }) => covers(path));
+  return row ? { id: row.id, path: normalised(path), why: row.why } : null;
+}
+
+export const isDispositionFile = (path) => familyOf(normalised(path).toLowerCase()) === 'disposition';
 
 const SEAL_REASON =
   'The digest of an entry moved while its reason and its status stayed, which is what the seal (npm run assets:seal) does, and the seal certifies text no human read.';

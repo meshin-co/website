@@ -5,7 +5,9 @@ import { dirname, join } from 'node:path';
 
 import { newLedger } from '../autowriter-ledger.mjs';
 import { buildRecord } from '../generation-record.mjs';
+import { recordPath } from '../record-layout.mjs';
 import { callOf, recordInput } from './generation-input.mjs';
+import { filedAt } from './record-depths.mjs';
 
 export const GIT_ENVIRONMENT = {
   ...process.env,
@@ -15,6 +17,9 @@ export const GIT_ENVIRONMENT = {
 };
 const IDENTITY = ['-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.test'];
 const MICRO = 1e6;
+const SCENE_START = '2026-11-01T00:00:00.000Z';
+
+export const FILED_AT = filedAt(SCENE_START);
 
 const part = (usd) => ({ tokens: { input: Math.round(usd * MICRO), output: 0 }, costUsd: usd });
 const sum = (values) => values.reduce((total, value) => total + value, 0);
@@ -42,7 +47,7 @@ export function ledgerOf({ slug, generationUsd, attempts = [], decidedAt = null 
   };
 }
 
-export function recordOf({ slug, generatedAt, usd }) {
+export function recordOf({ slug, generatedAt, usd, ledgerSlug = slug, extraCalls = [] }) {
   const input = recordInput();
   const entryPath = `site/src/data/post/${slug}.md`;
   return buildRecord({
@@ -50,11 +55,11 @@ export function recordOf({ slug, generatedAt, usd }) {
     claim: { ...input.claim, slug },
     route: `/blog/${slug}`,
     entryPath,
-    ledger: `audits/autowriter/${slug}.json`,
+    ledger: recordPath('ledger', ledgerSlug, generatedAt),
     generatedAt,
-    calls: [callOf('draft', { input: Math.round(usd * MICRO), output: 0 }, `draft-${slug}`)],
+    calls: [callOf('draft', { input: Math.round(usd * MICRO), output: 0 }, `draft-${slug}`), ...extraCalls],
     published: { callIndex: 0 },
-    files: [entryPath, `audits/autowriter/generations/${slug}.json`, 'docs/SEMANTIC-CORE.md'],
+    files: [entryPath, recordPath('generation', slug, generatedAt), 'docs/SEMANTIC-CORE.md'],
   });
 }
 
@@ -79,8 +84,9 @@ export function createScene() {
     git,
     put,
     commit,
-    putLedger: (ledger) => put(`audits/autowriter/${ledger.slug}.json`, ledger),
-    putRecord: (record) => put(`audits/autowriter/generations/${record.slug}.json`, record),
+    putLedger: (ledger) =>
+      put(recordPath('ledger', ledger.slug, ledger.attempts[0]?.recordedAt ?? SCENE_START), ledger),
+    putRecord: (record) => put(recordPath('generation', record.slug, record.generatedAt), record),
     onBranch(name, work) {
       git('checkout', '-q', '-b', name);
       work(scene);

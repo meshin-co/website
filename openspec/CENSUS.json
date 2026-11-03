@@ -42,10 +42,14 @@
   ],
   "content/generated-articles": [
     "A generated entry carries its provenance",
+    "A generated entry clears the floor",
     "A run writes one post, and the terms the glossary is missing",
     "Every load-bearing claim resolves to a source",
     "Generated prose does not collapse into the gates",
-    "The configured model is checked before the first call"
+    "The configured model is checked before the first call",
+    "The length floor is measured from what a person wrote",
+    "The prompt names the shapes of prose that no copied block states",
+    "The prompt states the measured length once"
   ],
   "content/human-readability": [
     "A page holds only a few sentences over 25 words",
@@ -103,7 +107,9 @@
     "The same URL answers markdown when an agent asks for it"
   ],
   "discovery/machine-interfaces": [
+    "A check that examines nothing is a finding",
     "A collection file holds at most 100 entries and shards beyond that",
+    "A route's kind is derived, never listed",
     "Draft and noindex entries never reach llms-full.txt, the collection files or the feeds",
     "Each collection feed carries every live entry of its collection",
     "Each collection hub advertises its own collection feed",
@@ -113,6 +119,7 @@
     "Every live collection entry is in llms-full.txt and in its collection file",
     "Every page declares its own bare URL as canonical and og:url",
     "Every populated collection reaches feed.json and the sitemap",
+    "Every route is owed the surfaces its kind implies, and the gate names each one it lacks",
     "Every shard is a shipped machine file, noindex and referenced",
     "Machine files carry an X-Robots-Tag noindex header and HTML pages never do",
     "Social cards are addressed per entry and drawn on a 1200×630 canvas",
@@ -120,6 +127,7 @@
     "The llms files describe the build they came from",
     "The merged feed carries at least five entries of each collection, or all of a smaller one",
     "The page catalog behind the machine files matches every shipped description",
+    "The routes that carry less are declared once, with a reason, and counted",
     "The sitemap never lists a noindex route",
     "The static page list behind the machine files holds exactly the thirteen public pages",
     "feed.json mirrors rss.xml item for item",
@@ -150,17 +158,21 @@
   ],
   "discovery/structured-data": [
     "A Service node links its offer without a price specification",
+    "A run that read no graph fails",
     "Each route family carries the node types it requires",
     "Every @id reference resolves to a node on the same page",
     "Every built route outside the three utility pages belongs to a known JSON-LD route family",
     "Every node a page owns carries all required properties of its type",
+    "Every node in a page's graph carries an @id",
     "Every node type has a required-property family",
-    "Every page of a known family ships at least one parseable ld+json block",
+    "Every page of a known family ships exactly one parseable ld+json graph",
     "No @id is declared twice on a page",
     "One date per page, stated the same way everywhere",
+    "Only the three utility routes may ship no graph",
     "Structured-data dates are full ISO instants and never invented",
     "The WebSite node exposes site search as a SearchAction",
-    "The graph builder emits one schema.org document with the nodes under @graph"
+    "The graph builder emits one schema.org document with the nodes under @graph",
+    "The page node reaches its breadcrumbs and its FAQ"
   ],
   "governance/doc-honesty": [
     "A backticked repository path in a tracked document resolves to a file",
@@ -184,13 +196,42 @@
     "One file holds what the engine knows about its site",
     "The diff classifier has one implementation"
   ],
+  "governance/spend-reporting": [
+    "A day that ends with no entry still posts to Slack",
+    "A line is a warning only when a person has something to do about it",
+    "A missed message is a red step and nothing more",
+    "A report that disagrees with its records is refused",
+    "A row shows its repair cost, and the Notes and the message total the rest",
+    "An incomplete corpus is reported, not summed in silence",
+    "One report states what every generated entry cost",
+    "Slack receives the numbers after every generation",
+    "The Slack message carries the month sentence of the ceiling status",
+    "The month comes before the explanation of the file",
+    "The proof of the report guard does not depend on what the report says today",
+    "The report is committed with every change to the spend",
+    "The report says what the month has spent against the ceiling",
+    "The report totals every call the machine paid for, each in exactly one row",
+    "Three windows are totalled and each is defined in the file"
+  ],
   "governance/unattended-publishing": [
     "A failed demand refresh stops the run",
+    "A held slug is refused without an unsafe remedy",
+    "A record outside its month directory fails the gate",
+    "A repair that spent money and failed records its spend",
     "A run claims its topic before it spends",
     "Automation cannot certify what no human read",
+    "Each generation record is paired with the ledger it names",
+    "Every reader of the records finds a record at any depth and says how many it read",
     "Merge happens only after a quarantine window",
+    "One function builds the path of every record",
     "Repair is bounded to the article's own text",
     "Spend is recorded and capped",
-    "The watcher classifies by the failing job"
+    "The ledger and the generation record stay two files",
+    "The length measurement leaves out what the pipeline wrote",
+    "The monthly spend counts every call the machine paid for",
+    "The pipeline cannot move the floor it is judged by",
+    "The pipeline cannot remove the evidence the measurements exclude by",
+    "The watcher classifies by the failing job",
+    "The writer files each entry's records under the month of its claim"
   ]
 }

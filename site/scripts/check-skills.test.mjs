@@ -1,4 +1,5 @@
-import { mkdtemp, mkdir, readFile, readdir, writeFile, rm } from 'node:fs/promises';
+import { spawnSync } from 'node:child_process';
+import { copyFile, mkdtemp, mkdir, readFile, readdir, writeFile, rm } from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
@@ -240,4 +241,69 @@ test('one line over the cap still fails', () => {
     skillFindings({ file: 'x.md', content: overCap, roots: [] }).map((f) => f.rule),
     ['max-lines']
   );
+});
+
+test('a missing path that an engine source names is not a finding, because the script that writes it has not run yet', () => {
+  const findings = skillFindings({
+    file: 'growth.md',
+    content: 'The loop writes `audits/zz-record.md` on its first run.',
+    roots,
+    namedByEngine: (path) => path === 'audits/zz-record.md',
+  });
+  assert.deepEqual(findings, []);
+});
+
+test('a missing path that no engine source names is still a finding', () => {
+  const findings = skillFindings({
+    file: 'growth.md',
+    content: 'Read `audits/zz-record.md`, then `docs/MISSING.md`.',
+    roots,
+    namedByEngine: (path) => path === 'audits/zz-record.md',
+  });
+  assert.deepEqual(
+    findings.map((finding) => [finding.rule, finding.detail]),
+    [['missing-path', 'docs/MISSING.md does not resolve against the repo']]
+  );
+});
+
+test('lintSkillsDir hands the predicate to every skill it reads, and without one flags the same citation', async () => {
+  const skillsDir = await mkdtemp(join(tmpdir(), 'check-skills-named-'));
+  await writeFile(join(skillsDir, 'growth.md'), 'The loop writes `audits/zz-record.md`.\n');
+  assert.deepEqual(await lintSkillsDir(skillsDir, roots, (path) => path === 'audits/zz-record.md'), []);
+  assert.equal((await lintSkillsDir(skillsDir, roots)).length, 1);
+  await rm(skillsDir, { recursive: true, force: true });
+});
+
+test('gate:skills reads the engine sources of the repository it runs in', async () => {
+  const repo = await mkdtemp(join(tmpdir(), 'check-skills-repo-'));
+  const scripts = join(repo, 'site', 'scripts');
+  const skills = join(repo, 'site', '.agents', 'skills');
+  const workflows = join(repo, '.github', 'workflows');
+  for (const directory of [scripts, skills, workflows]) await mkdir(directory, { recursive: true });
+  const here = dirname(fileURLToPath(import.meta.url));
+  for (const name of ['check-skills.mjs', 'engine-named-paths.mjs', 'invoked-directly.mjs']) {
+    await copyFile(join(here, name), join(scripts, name));
+  }
+  await writeFile(join(scripts, 'write-record.mjs'), "export const OUT = 'audits/zz-record.md';\n");
+  await writeFile(join(scripts, 'write-record.test.mjs'), "assert.ok('audits/zz-test-only.md');\n");
+  await writeFile(join(workflows, 'ci.yml'), 'run: git add audits/zz-ci-record.md\n');
+  await writeFile(join(repo, 'site', 'package.json'), '{"scripts":{}}\n');
+  await writeFile(join(repo, 'AGENTS.md'), '# Fixture\n');
+  await writeFile(
+    join(skills, 'record.md'),
+    [
+      '# Record',
+      '',
+      'Scripts: check-skills.mjs, engine-named-paths.mjs, invoked-directly.mjs and write-record.mjs.',
+      'It writes `audits/zz-record.md` and `audits/zz-ci-record.md`.',
+      'It reads `audits/zz-unwritten.md` and `audits/zz-test-only.md`.',
+      '',
+    ].join('\n')
+  );
+  const { status, stderr } = spawnSync(process.execPath, [join(scripts, 'check-skills.mjs')], { encoding: 'utf8' });
+  await rm(repo, { recursive: true, force: true });
+  assert.equal(status, 1);
+  assert.match(stderr, /audits\/zz-unwritten\.md does not resolve/);
+  assert.match(stderr, /audits\/zz-test-only\.md does not resolve/);
+  assert.doesNotMatch(stderr, /audits\/zz-record\.md|audits\/zz-ci-record\.md/);
 });

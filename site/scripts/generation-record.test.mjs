@@ -5,9 +5,9 @@ import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
 import { validateClaim } from './autowriter-claims.mjs';
-import { ledgerFile } from './autowriter-ledger.mjs';
 import {
   ARTICLE_SLUG,
+  CLAIMED_AT,
   LEDGER,
   MODEL,
   MODEL_VARIABLE,
@@ -17,15 +17,19 @@ import {
   recordInput,
   termInput,
 } from './fixtures/generation-input.mjs';
-import { GENERATION_DIR, buildRecord, callRecord, generationFile, validateRecord } from './generation-record.mjs';
+import { buildRecord, callRecord, validateRecord } from './generation-record.mjs';
+import { recordDirectory, recordPath } from './record-layout.mjs';
 
 const base = buildRecord(recordInput());
 const schemaText = readFileSync(new URL('./generation-record.schema.json', import.meta.url), 'utf8');
 const schema = JSON.parse(schemaText);
 
-test('a record lives under audits/autowriter/generations and is named for its slug', () => {
-  assert.equal(GENERATION_DIR, 'audits/autowriter/generations');
-  assert.equal(generationFile(ARTICLE_SLUG), `audits/autowriter/generations/${ARTICLE_SLUG}.json`);
+test('a record lives under audits/autowriter/generations, in the month of its claim, and is named for its slug', () => {
+  assert.equal(recordDirectory('generation'), 'audits/autowriter/generations');
+  assert.equal(
+    recordPath('generation', ARTICLE_SLUG, CLAIMED_AT),
+    `audits/autowriter/generations/2026/11/${ARTICLE_SLUG}.json`
+  );
 });
 
 test('the claims of the fixtures are claims the claim store would accept', () => {
@@ -89,6 +93,7 @@ test('it carries the claim, the run, the entry and the ledger that holds the spe
     prompt: { number: 6, text: 'Which artefacts should an AI register hold for each model?' },
   });
   assert.deepEqual([base.slug, base.runId, base.ledger], [ARTICLE_SLUG, '1234567890', LEDGER]);
+  assert.equal(base.ledger, recordPath('ledger', base.slug, recordInput().claim.claimedAt));
   assert.equal(base.generatedAt, '2026-11-02T07:05:09.123Z');
   assert.deepEqual(base.entry, {
     format: 'article',
@@ -105,7 +110,7 @@ test('the term of a run has its own record and its own calls and names the ledge
   const term = buildRecord(termInput());
   assert.deepEqual(validateRecord(term), []);
   assert.deepEqual([term.slug, term.entry.format, term.ledger], [TERM_SLUG, 'term', LEDGER]);
-  assert.notEqual(term.ledger, ledgerFile(term.slug));
+  assert.notEqual(term.ledger, recordPath('ledger', term.slug, CLAIMED_AT));
   assert.deepEqual(
     term.calls.map((call) => call.responseId),
     ['resp-term-draft']

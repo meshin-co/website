@@ -2,12 +2,21 @@
 import SearchBox from '~/components/site/SearchBox.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
+import { pageExists } from '~/utils/page-exists.mjs';
 
 const metadata = {
   title: 'Search',
   description: 'Search the writing, glossary, services and case studies on this site.',
   robots: { index: false, follow: true },
 };
+
+const fallbackPaths = ['/blog', '/glossary', '/resources', '/faq', '/case-studies'].filter((path) => pageExists(path));
+const joiner = Object.fromEntries(
+  fallbackPaths.map((path, index) => [
+    path,
+    index === 0 ? '' : index === fallbackPaths.length - 1 ? ' and the ' : ', the ',
+  ])
+);
 ---
 
 <Layout metadata={metadata}>
@@ -23,11 +32,58 @@ const metadata = {
     <SearchBox />
     <noscript>
       <p class="mt-6 max-w-[62ch] text-muted">
-        Search needs JavaScript. Without it, the <a class="text-link underline" href="/blog">writing index</a>,{' '}
-        the <a class="text-link underline" href="/glossary">glossary</a>,{' '}
-        the <a class="text-link underline" href="/resources">resource list</a>,{' '}
-        the <a class="text-link underline" href="/faq">questions and answers</a> and{' '}
-        the <a class="text-link underline" href="/case-studies">case studies</a> name everything on the site.
+        Search needs JavaScript. Without it, the <Fragment>
+          {
+            '/blog' in joiner && (
+              <Fragment>
+                {joiner['/blog']}
+                <a class="text-link underline" href="/blog">
+                  writing index
+                </a>
+              </Fragment>
+            )
+          }
+          {
+            '/glossary' in joiner && (
+              <Fragment>
+                {joiner['/glossary']}
+                <a class="text-link underline" href="/glossary">
+                  glossary
+                </a>
+              </Fragment>
+            )
+          }
+          {
+            '/resources' in joiner && (
+              <Fragment>
+                {joiner['/resources']}
+                <a class="text-link underline" href="/resources">
+                  resource list
+                </a>
+              </Fragment>
+            )
+          }
+          {
+            '/faq' in joiner && (
+              <Fragment>
+                {joiner['/faq']}
+                <a class="text-link underline" href="/faq">
+                  questions and answers
+                </a>
+              </Fragment>
+            )
+          }
+          {
+            '/case-studies' in joiner && (
+              <Fragment>
+                {joiner['/case-studies']}
+                <a class="text-link underline" href="/case-studies">
+                  case studies
+                </a>
+              </Fragment>
+            )
+          }
+        </Fragment> name everything on the site.
       </p>
     </noscript>
   </Section>

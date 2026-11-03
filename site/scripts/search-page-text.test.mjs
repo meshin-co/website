@@ -6,7 +6,11 @@ import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 
 import { ENTRY_TEXT_CAPS } from '../public/search/shards.mjs';
+import { titleSuffix } from '../src/utils/brand.mjs';
 import { fillPageShardText } from './search-page-text.mjs';
+import { siteBrand } from './site-brand.mjs';
+
+const TITLE_SUFFIX = titleSuffix(siteBrand());
 
 const page = (title, description, main) => `<!doctype html><html><head>
 <title>${title}</title>
@@ -58,7 +62,7 @@ test('an entry with a known title and description gets only its text derived, wi
 test('an entry with no title or description gets its head derived from the built page too', async () => {
   const dist = distWith({
     '/blog': page(
-      'Writing — meshin.co',
+      `Writing${TITLE_SUFFIX}`,
       'Notes on AI governance for founders and boards.',
       '<main><h1>Writing</h1><p>Latest articles.</p></main>'
     ),

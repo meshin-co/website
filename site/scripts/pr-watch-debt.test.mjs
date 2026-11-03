@@ -6,6 +6,9 @@ import { test } from 'node:test';
 
 import { QUARANTINE_HOURS, validateLedger } from './autowriter-ledger.mjs';
 import { CLEAR_COMMAND } from './measurement-debt.mjs';
+import { recordPath } from './record-layout.mjs';
+import { LEDGER_FILINGS, LEDGER_PATH } from './fixtures/github-fake.mjs';
+import { siteBrand } from './site-brand.mjs';
 import { hoursAfterOpening } from './fixtures/pr-watch.mjs';
 import {
   DEFAULT_TOKEN,
@@ -22,7 +25,7 @@ import {
   writtenNames,
 } from './fixtures/pr-watch-harness.mjs';
 
-const DEBT_IDENTITY = { name: 'autowriter-bot', email: 'autowriter-bot@meshin.co' };
+const DEBT_IDENTITY = { name: 'autowriter-bot', email: `autowriter-bot@${siteBrand().name}` };
 
 const merged = async (options = {}) => {
   const bundle = options.bundle ?? green();
@@ -38,7 +41,7 @@ test('a merge writes exactly one ledger commit, to the base branch of the pull r
   assert.equal(action, 'merged');
   assert.deepEqual(writtenNames(calls), ['merge', 'putLedger']);
   assert.equal(token, PAT);
-  assert.equal(push.path, 'audits/autowriter/a-slug.json');
+  assert.equal(push.path, LEDGER_PATH);
   assert.equal(push.branch, bundle.pullRequest.base.ref);
   assert.equal(push.branch, 'main');
   assert.equal(push.message, 'chore(autowriter): record the measurement debt of a-slug');
@@ -99,6 +102,15 @@ test('what the ledger already recorded is kept beside the debt', async () => {
   assert.equal(ledger.runId, '41');
 });
 
+for (const [place, path] of Object.entries(LEDGER_FILINGS)) {
+  test(`a ledger filed ${place} at the merge commit is updated where it is found`, async () => {
+    const { push } = await merged({ mergedLedger: { ...ledgerRecord(), path } });
+
+    assert.equal(push.path, path);
+    assert.equal(push.blobSha, 'b'.repeat(40));
+  });
+}
+
 test('a ledger absent at the merge commit is started for the pull request and created without a blob sha', async () => {
   const { push, ledger } = await merged({ mergedLedger: null });
 
@@ -108,6 +120,13 @@ test('a ledger absent at the merge commit is started for the pull request and cr
   assert.equal(ledger.runId, '555');
   assert.deepEqual(validateLedger(ledger), []);
   assert.equal(ledger.measurementDebt.mergedCommit, MERGED_SHA);
+});
+
+test('a ledger absent at the merge commit is filed under the month of the merge, not the month the pull request opened in', async () => {
+  const { push, now, bundle } = await merged({ mergedLedger: null, hours: 24 * 30 });
+
+  assert.equal(push.path, recordPath('ledger', 'a-slug', now()));
+  assert.notEqual(push.path, recordPath('ledger', 'a-slug', hoursAfterOpening(bundle, 0)));
 });
 
 test('a merge records no escalation, opens no issue and sends nothing to Slack', async () => {

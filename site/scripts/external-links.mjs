@@ -1,8 +1,10 @@
 import { brandFromDisk } from '../src/utils/brand.mjs';
+import { escapeRegExp } from './brand-gate.mjs';
 
 export const EXTERNAL_REL = ['nofollow', 'noopener', 'noreferrer'];
 
 const OUR_HOSTS = [brandFromDisk().name];
+const OUR_ORIGIN = new RegExp(`^https?://(www\\.)?(?:${OUR_HOSTS.map(escapeRegExp).join('|')})(/|$)`, 'i');
 const ANCHOR = /<a\b[^>]*>/gi;
 const HREF = /\bhref="([^"]*)"/i;
 const REL = /\brel="([^"]*)"/i;
@@ -49,7 +51,7 @@ export function internalNofollowFindings(route, html) {
     const href = HREF.exec(tag)?.[1];
     if (!href) continue;
 
-    const isInternal = href.startsWith('/') || /^https?:\/\/(www\.)?meshin\.co(\/|$)/i.test(href);
+    const isInternal = href.startsWith('/') || OUR_ORIGIN.test(href);
     if (!isInternal) continue;
 
     const rel = (REL.exec(tag)?.[1] ?? '').toLowerCase();

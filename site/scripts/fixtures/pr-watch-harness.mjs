@@ -7,6 +7,8 @@ import { join } from 'node:path';
 import { ATTEMPT_CAP, QUARANTINE_HOURS, newLedger } from '../autowriter-ledger.mjs';
 import { fingerprint } from '../lh-evidence.mjs';
 import { SECRET, watch } from '../pr-watch.mjs';
+import { recordPath } from '../record-layout.mjs';
+import { LEDGER_PATH } from './github-fake.mjs';
 import { asInput, hoursAfterOpening, scenario, withAggregate, withJob } from './pr-watch.mjs';
 
 export const PAT = 'pat-secret-value';
@@ -21,7 +23,11 @@ export const TREE = [
   entry('site/src/data/post/a-slug.md', 'blob', '1'.repeat(40)),
   entry('site/package.json', 'blob', '2'.repeat(40)),
   entry('docs/PRD.md', 'blob', '3'.repeat(40)),
+  entry(LEDGER_PATH, 'blob', '4'.repeat(40)),
 ];
+
+export const treeFilingLedgerAt = (path) =>
+  TREE.map((listed) => (listed.path === LEDGER_PATH ? { ...listed, path } : listed));
 
 export const TREE_FINGERPRINT = fingerprint(
   TREE.filter(({ type }) => type !== 'tree').map(({ path, sha }) => [path, sha])
@@ -36,7 +42,7 @@ export const cancelled = (bundle) => withJob(bundle, 'build', { conclusion: 'can
 export const ledgerRecord = (patch = {}) => ({
   value: { ...newLedger({ slug: 'a-slug', runId: '41', pullRequest: 72 }), ...patch },
   blobSha: 'b'.repeat(40),
-  path: 'audits/autowriter/a-slug.json',
+  path: LEDGER_PATH,
 });
 
 export const spentAttempts = Array.from({ length: ATTEMPT_CAP }, (_, index) => ({
@@ -159,6 +165,6 @@ export async function harness({
   const fetch = recordingFetch(requests, issueStatus);
   const now = () => hoursAfterOpening(bundle, hours);
   const run = () => watch({ number: 72, env, fetch, io, workdir, now, afterRepair });
-  const ledgerPath = join(workdir, 'audits/autowriter/a-slug.json');
+  const ledgerPath = join(workdir, ledger?.path ?? recordPath('ledger', 'a-slug', now()));
   return { run, calls, requests, summary, outputs, env, io, fetch, now, workdir, ledgerPath };
 }

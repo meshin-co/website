@@ -1,14 +1,14 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
-import { claimFile } from '../autowriter-claims.mjs';
-import { ledgerFile } from '../autowriter-ledger.mjs';
-import { generationFile } from '../generation-record.mjs';
 import { BOT_EMAIL, BOT_NAME } from '../pr-classify.mjs';
+import { recordPath } from '../record-layout.mjs';
 import { WriterError } from '../writer-error.mjs';
 import { FIXTURE_IDENTITY, gitIn, makeRepo, snapshotOf } from './route-repo.mjs';
 
 const SLUG = 'model-registry';
+export const CLAIMED_AT = '2026-11-01T07:00:00.000Z';
+const fileOf = (family) => recordPath(family, SLUG, CLAIMED_AT);
 
 export const BRANCH = `autowriter/${SLUG}`;
 export const MESSAGE = 'content: add the model registry term\n\nWritten by the unattended writer.';
@@ -20,8 +20,8 @@ const put = (root, path, text) => {
 
 export function scene() {
   const root = makeRepo();
-  put(root, claimFile(SLUG), '{"status":"claimed"}\n');
-  gitIn(root, 'add', '--', claimFile(SLUG));
+  put(root, fileOf('claim'), '{"status":"claimed"}\n');
+  gitIn(root, 'add', '--', fileOf('claim'));
   gitIn(root, ...FIXTURE_IDENTITY, 'commit', '--quiet', '-m', 'claim');
 
   const read = (path) => readFileSync(join(root, path), 'utf8');
@@ -35,10 +35,10 @@ export function scene() {
       ),
     },
     { path: 'docs/SEMANTIC-CORE.md', text: `${read('docs/SEMANTIC-CORE.md')}\nOne more line.\n` },
-    { path: `audits/phase-4.7/dispositions/generated-${SLUG}.json`, text: '[]\n' },
-    { path: generationFile(SLUG), text: `{"slug":"${SLUG}"}\n` },
-    { path: ledgerFile(SLUG), text: '{"attempts":1}\n' },
-    { path: claimFile(SLUG), text: '{"status":"written"}\n' },
+    { path: fileOf('disposition'), text: '[]\n' },
+    { path: fileOf('generation'), text: `{"slug":"${SLUG}"}\n` },
+    { path: fileOf('ledger'), text: '{"attempts":1}\n' },
+    { path: fileOf('claim'), text: '{"status":"written"}\n' },
   ];
   put(root, 'scratch.txt', 'a file nobody listed\n');
   put(root, 'audits/phase-4.7/dispositions/existing.json', '[{"changed":"by someone else"}]\n');
@@ -82,8 +82,8 @@ export const INVALID_REQUESTS = {
   'a path with a backslash': { extra: { path: 'site\\content-facts.json', text: 'x' } },
   'a path that names a directory': { extra: { path: 'site/', text: 'x' } },
   'a path listed twice': { extra: { path: 'site/content-facts.json', text: 'x' } },
-  'a file without text': { extra: { path: 'audits/autowriter/x.json' } },
-  'a file whose text is not a string': { extra: { path: 'audits/autowriter/x.json', text: 12 } },
+  'a file without text': { extra: { path: recordPath('ledger', 'zz-extra', CLAIMED_AT) } },
+  'a file whose text is not a string': { extra: { path: recordPath('ledger', 'zz-extra', CLAIMED_AT), text: 12 } },
   'an empty message': { message: '   ' },
   'a branch that starts with a dash': { branch: '--force' },
   'a branch with a space': { branch: 'autowriter/a b' },

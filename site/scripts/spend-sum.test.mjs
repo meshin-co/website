@@ -4,15 +4,15 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import { monthOf, monthlySpend } from './spend-ceiling.mjs';
-import { chooseVersions, spendWarnings } from './spend-sum.mjs';
+import { chooseVersions, monthlyBreakdown, spendItemsOf, spendWarnings, totalBreakdown } from './spend-sum.mjs';
 
 const attempt = (recordedAt, costUsd) => ({ recordedAt, costUsd });
-const ledgerOf = ({ slug = 'a-post', generation, attempts = [], decidedAt = null, spendUsd = 0 }) => ({
+const ledgerOf = ({ slug = 'a-post', generation, attempts = [], decidedAt = null, spendUsd = 0, state = 'open' }) => ({
   slug,
   attempts,
   ...(generation === undefined ? {} : { generation: { costUsd: generation } }),
   spend: { costUsd: spendUsd },
-  verdict: { decidedAt },
+  verdict: { decidedAt, state },
 });
 const recordOf = (generatedAt, costUsd = 0) => ({
   generatedAt,
@@ -223,13 +223,205 @@ test('a repaired record is not counted twice: the writing calls match the ledger
   assert.deepEqual(spendWarnings({ ledgers: [item] }), []);
 });
 
-test('only the writing calls of a record are compared with the ledger generation, so repair calls never raise a warning', () => {
+test('only the writing calls of a record are compared with the ledger generation, and its repair calls with the attempts', () => {
   const item = {
-    ledger: ledgerOf({ slug: 'cheap-post', generation: 1 }),
+    ledger: ledgerOf({
+      slug: 'cheap-post',
+      generation: 1,
+      attempts: [attempt('2026-11-04T00:00:00Z', 2.25)],
+    }),
     record: repairedRecord('2026-11-02T00:00:00.000Z'),
   };
   const warnings = spendWarnings({ ledgers: [item] });
   assert.equal(warnings.length, 1);
   assert.match(warnings[0], /cheap-post/);
-  assert.equal(spent([item], '2026-11'), 1_500_000);
+  assert.match(warnings[0], /writing calls/);
+  assert.equal(spent([item], '2026-11'), 3_750_000);
+});
+
+const gone = (calls, generatedAt = '2026-11-02T00:00:00.000Z') => ({
+  slug: 'lost-post',
+  ledger: 'audits/autowriter/2026/11/lost-post.json',
+  generatedAt,
+  calls,
+  totals: { costUsd: 0 },
+});
+
+test('a record whose ledger is gone is counted at its own cost, writing and repair, in the month it was generated', () => {
+  const record = gone([call('draft', 1), call('repair', 0.5)]);
+  assert.equal(spent([{ ledger: null, record }], '2026-11'), 1_500_000);
+  assert.equal(spent([{ ledger: null, record }], '2026-10'), 0);
+});
+
+test('a record whose ledger is gone is named in a warning, once', () => {
+  const record = gone([call('draft', 1)]);
+  assert.deepEqual(spendWarnings({ ledgers: [{ ledger: null, record }] }), [
+    'lost-post: its generation record names the ledger audits/autowriter/2026/11/lost-post.json, which does not exist, so its cost is counted from the record alone',
+  ]);
+});
+
+test('repair calls that a record shows and its ledger attempts do not cover are counted in the month of the generation, and warned', () => {
+  const ledger = ledgerOf({
+    slug: 'short-post',
+    generation: 1.5,
+    attempts: [attempt('2026-11-04T00:00:00Z', 1)],
+    spendUsd: 2.5,
+  });
+  const item = { ledger, record: repairedRecord('2026-10-31T23:00:00.000Z') };
+  assert.equal(spent([item], '2026-10'), 2_750_000);
+  assert.equal(spent([item], '2026-11'), 1_000_000);
+  assert.deepEqual(spendWarnings({ ledgers: [item] }), [
+    "short-post: its generation record's repair calls cost 2.25 USD but its ledger records 1 USD for its attempts, so the record cost is counted",
+  ]);
+});
+
+test('attempts that a ledger records and its record lacks are the spend of a repair that failed: counted, and never a warning', () => {
+  const ledger = ledgerOf({
+    slug: 'failed-post',
+    generation: 1.5,
+    attempts: [attempt('2026-11-04T00:00:00Z', 2.25), attempt('2026-11-05T00:00:00Z', 0.75)],
+    spendUsd: 4.5,
+  });
+  const item = { ledger, record: repairedRecord('2026-11-02T00:00:00.000Z') };
+  assert.equal(spent([item], '2026-11'), 4_500_000);
+  assert.deepEqual(spendWarnings({ ledgers: [item] }), []);
+});
+
+test('the month splits into writing, repair, runs that ended with no entry and ledgers with no record, and the parts add up to the ceiling figure', () => {
+  const carried = {
+    ledger: ledgerOf({
+      slug: 'a-post',
+      generation: 1.5,
+      attempts: [attempt('2026-11-04T00:00:00Z', 2.25)],
+      spendUsd: 3.75,
+    }),
+    record: repairedRecord('2026-11-02T00:00:00.000Z'),
+  };
+  const ended = {
+    ledger: ledgerOf({
+      slug: 'lost-post',
+      generation: 0.5,
+      attempts: [attempt('2026-11-06T00:00:00Z', 0.25)],
+      decidedAt: '2026-11-06T01:00:00Z',
+      spendUsd: 0.75,
+      state: 'stopped',
+    }),
+    record: null,
+  };
+  const parts = monthlyBreakdown({ ledgers: [carried, ended], month: '2026-11' });
+  assert.deepEqual(parts, {
+    writingMicro: 1_500_000,
+    repairMicro: 2_250_000,
+    endedMicro: 750_000,
+    unmatchedMicro: 0,
+    totalMicro: 4_500_000,
+  });
+  assert.equal(parts.totalMicro, spent([carried, ended], '2026-11'));
+});
+
+test('a ledger with no record is a run that ended or a ledger with no record by its verdict alone, and each kind has its own figure', () => {
+  const alone = (state, slug, generation) => ({ ledger: ledgerOf({ slug, generation, state }), record: null });
+  const ledgers = [
+    alone('stopped', 'stopped-post', 0.5),
+    alone('escalated', 'escalated-post', 0.25),
+    alone('discarded', 'discarded-post', 0.125),
+    alone('open', 'open-post', 0.0625),
+    alone('merged', 'merged-post', 0.03125),
+  ];
+  assert.deepEqual(totalBreakdown({ ledgers }), {
+    writingMicro: 0,
+    repairMicro: 0,
+    endedMicro: 875_000,
+    unmatchedMicro: 93_750,
+    totalMicro: 968_750,
+  });
+  for (const [state, kind] of [
+    ['stopped', 'endedMicro'],
+    ['escalated', 'endedMicro'],
+    ['discarded', 'endedMicro'],
+    ['open', 'unmatchedMicro'],
+    ['merged', 'unmatchedMicro'],
+  ]) {
+    const parts = totalBreakdown({ ledgers: [alone(state, 'one', 1)] });
+    assert.equal(parts[kind], 1_000_000, `${state} belongs in ${kind}`);
+    assert.equal(parts.totalMicro, 1_000_000, state);
+  }
+});
+
+test('a ledger that has a record is never ended or unmatched, whatever its verdict', () => {
+  const record = recordOf('2026-11-02T00:00:00.000Z', 1);
+  for (const state of ['stopped', 'escalated', 'discarded', 'open', 'merged']) {
+    const item = { ledger: ledgerOf({ generation: 1, state }), record };
+    assert.deepEqual(totalBreakdown({ ledgers: [item] }), {
+      writingMicro: 1_000_000,
+      repairMicro: 0,
+      endedMicro: 0,
+      unmatchedMicro: 0,
+      totalMicro: 1_000_000,
+    });
+  }
+});
+
+test('a record whose ledger is gone is a carried entry in the breakdown, since the report counts it as one', () => {
+  const record = gone([call('draft', 1), call('repair', 0.5)]);
+  assert.deepEqual(monthlyBreakdown({ ledgers: [{ ledger: null, record }], month: '2026-11' }), {
+    writingMicro: 1_000_000,
+    repairMicro: 500_000,
+    endedMicro: 0,
+    unmatchedMicro: 0,
+    totalMicro: 1_500_000,
+  });
+});
+
+const filedAs = (slug) => `audits/autowriter/2026/11/${slug}.json`;
+const entryOf = (slug, ledgerSlug, costUsd) => ({
+  slug,
+  ledger: filedAs(ledgerSlug),
+  generatedAt: '2026-11-02T00:00:00.000Z',
+  calls: [call('draft', costUsd)],
+  totals: { costUsd },
+});
+
+test('spendItemsOf pairs a record with the ledger it names, so the term of a run joins its run, and a record whose ledger is gone stands alone', () => {
+  const run = ledgerOf({ slug: 'run-post', generation: 1.5 });
+  const article = entryOf('run-post', 'run-post', 1);
+  const term = entryOf('run-term', 'run-post', 0.5);
+  const stray = entryOf('stray-post', 'gone-post', 2);
+  const items = spendItemsOf({ ledgers: [run], records: [article, term, stray] });
+  assert.equal(items.length, 2);
+  assert.equal(items[0].ledger, run);
+  assert.deepEqual(
+    items[0].record.calls.map(({ costUsd }) => costUsd),
+    [1, 0.5]
+  );
+  assert.equal(items[1].ledger, null);
+  assert.equal(items[1].record, stray);
+});
+
+test('spendItemsOf gives a ledger with no record a null record, and nothing at all for nothing', () => {
+  const alone = ledgerOf({ slug: 'alone-post', generation: 1 });
+  assert.deepEqual(spendItemsOf({ ledgers: [alone], records: [] }), [{ ledger: alone, record: null }]);
+  assert.deepEqual(spendItemsOf({ ledgers: [], records: [] }), []);
+});
+
+test('the whole of the spend is the same split over every month, and a spend with no date counts in it and in every month', () => {
+  const dated = {
+    ledger: ledgerOf({
+      slug: 'a-post',
+      generation: 1,
+      attempts: [attempt('2026-12-04T00:00:00Z', 0.5)],
+      spendUsd: 1.5,
+    }),
+    record: recordOf('2026-11-02T00:00:00.000Z', 1),
+  };
+  const undated = { ledger: ledgerOf({ slug: 'old-post', generation: 0.25, spendUsd: 0.25 }), record: null };
+  assert.deepEqual(totalBreakdown({ ledgers: [dated, undated] }), {
+    writingMicro: 1_000_000,
+    repairMicro: 500_000,
+    endedMicro: 0,
+    unmatchedMicro: 250_000,
+    totalMicro: 1_750_000,
+  });
+  assert.equal(monthlyBreakdown({ ledgers: [dated, undated], month: '2026-10' }).totalMicro, 250_000);
+  assert.equal(monthlyBreakdown({ ledgers: [dated, undated], month: '2026-12' }).totalMicro, 750_000);
 });

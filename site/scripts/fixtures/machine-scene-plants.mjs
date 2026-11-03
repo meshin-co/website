@@ -1,4 +1,4 @@
-import { STATIC_PAGE_CATALOG } from '../../src/utils/machine-text.mjs';
+import { SCENE_PAGES } from './machine-scene-catalog.mjs';
 import {
   ORIGIN,
   appendText,
@@ -34,8 +34,8 @@ const instantOf = (day) => `${day}T00:00:00.000Z`;
 const bytesOf = (scene, file) => Buffer.byteLength(readText(scene.distFile(file)), 'utf8');
 
 function catalogPage(path) {
-  const page = STATIC_PAGE_CATALOG.find((candidate) => candidate.path === path);
-  if (page === undefined) throw new Error(`the catalog has no ${path}, which the scene plants against`);
+  const page = SCENE_PAGES.find((candidate) => candidate.path === path);
+  if (page === undefined) throw new Error(`the scene catalog has no ${path}, which the scene plants against`);
   return page;
 }
 
@@ -165,8 +165,8 @@ export const PLANTS = [
   },
   {
     name: 'a sidecar carries no title',
-    plant: editDist('approach.md', withoutTitle),
-    expected: () => [failure('sidecar-content', 'sidecar for /approach carries no title')],
+    plant: editDist('guide.md', withoutTitle),
+    expected: () => [failure('sidecar-content', 'sidecar for /guide carries no title')],
   },
   {
     name: 'a page declares another canonical',
@@ -204,7 +204,13 @@ export const PLANTS = [
   {
     name: 'a content collection has no FEED_BASES entry',
     plant: declareGhostCollection,
-    expected: () => [failure('feed-base-missing', 'ghost has no FEED_BASES entry; skipping its feed coverage check')],
+    expected: () => [
+      failure('feed-base-missing', 'ghost has no FEED_BASES entry; skipping its feed coverage check'),
+      failure(
+        'empty-collection-surface',
+        'collection ghost has no live entry in the build and is not declared empty; if that is intended, declare it in site/src/utils/route-exceptions.mjs with a reason'
+      ),
+    ],
   },
   {
     name: 'a collection feed omits a live route',

@@ -7,9 +7,9 @@ import { join, resolve } from 'node:path';
 import { after, test } from 'node:test';
 import { pathToFileURL } from 'node:url';
 
-import { DISPOSITION_DIRECTORY, sealSignature } from './autowriter-refusals.mjs';
+import { REMOVAL_REFUSALS, sealSignature } from './autowriter-refusals.mjs';
 import { historyReport, pipelineCommits, repositoryGit } from './autowriter-refusal-rules.mjs';
-import { GENERATION_DIR, generationFile } from './generation-record.mjs';
+import { recordDirectory, recordPath } from './record-layout.mjs';
 import {
   BOT,
   HUMAN,
@@ -25,10 +25,13 @@ import {
 const SITE = resolve(import.meta.dirname, '..');
 const REPO = resolve(SITE, '..');
 const RULES_URL = pathToFileURL(join(SITE, 'scripts/autowriter-refusal-rules.mjs')).href;
-const RECORD = generationFile('first-post');
-const SECOND_RECORD = generationFile('second-post');
+const CLAIMED_AT = '2026-11-01T07:00:00.000Z';
+const GENERATIONS = recordDirectory('generation');
+const DISPOSITIONS = recordDirectory('disposition');
+const RECORD = recordPath('generation', 'first-post', CLAIMED_AT);
+const SECOND_RECORD = recordPath('generation', 'second-post', CLAIMED_AT);
 const BAND = 'audits/sentence-band.json';
-const DISPOSITION = `${DISPOSITION_DIRECTORY}/main.json`;
+const DISPOSITION = `${DISPOSITIONS}/main.json`;
 const PIPELINE_REASON = 'The text of this target changed in the run in which the unattended writer added /blog/x.';
 
 const made = [];
@@ -42,7 +45,8 @@ const repoWith = (files = {}) => {
   commitAs(root, HUMAN, { write: { 'README.md': 'start\n', ...files }, message: 'chore(fixture): start' });
   return root;
 };
-const written = (slug) => `feat(autowriter): write ${slug}\n\nProvenance: ${generationFile(slug)}`;
+const written = (slug) =>
+  `feat(autowriter): write ${slug}\n\nProvenance: ${recordPath('generation', slug, CLAIMED_AT)}`;
 const pipelineWrite = { write: { [RECORD]: '{}\n', [BAND]: '{}\n' }, message: written('first-post') };
 const judged = (root) => pipelineCommits(repositoryGit(root));
 const shas = (root) => judged(root).map(({ sha }) => sha);
@@ -89,11 +93,32 @@ test('a commit by the bot that changed no record is not judged, because the rule
   assert.deepEqual(judged(root), []);
 });
 
-test('only a .json file directly under the generations directory is a record', () => {
+test('only a .json file under the generations directory is a record, at any depth, and no sibling directory is one', () => {
   const root = repoWith();
-  const write = { [`${GENERATION_DIR}/zz.md`]: 'x\n', [`${GENERATION_DIR}/nested/zz.json`]: '{}\n', [BAND]: '{}\n' };
+  const write = {
+    [`${GENERATIONS}/zz.md`]: 'x\n',
+    [`${GENERATIONS}/2026/11/zz.md`]: 'x\n',
+    [`${GENERATIONS}-old/zz.json`]: '{}\n',
+    [recordPath('claim', 'zz', CLAIMED_AT)]: '{}\n',
+    [recordPath('ledger', 'zz', CLAIMED_AT)]: '{}\n',
+    [BAND]: '{}\n',
+  };
   commitAs(root, BOT, { write, message: 'feat(autowriter): write zz' });
   assert.deepEqual(judged(root), []);
+});
+
+test('a record is found at any depth: one flat, one in its month and one below it are three records of one commit', () => {
+  const root = repoWith();
+  const records = [`${GENERATIONS}/third-post.json`, RECORD, `${GENERATIONS}/2026/11/extra/fourth-post.json`];
+  const write = { ...Object.fromEntries(records.map((path) => [path, '{}\n'])), [BAND]: '{}\n' };
+  commitAs(root, BOT, { write, message: 'feat(autowriter): write three posts' });
+  const [found, ...later] = judged(root);
+  assert.equal(later.length, 0);
+  assert.deepEqual([...found.records].sort(), [...records].sort());
+  const { findings, commits } = historyReport({ root });
+  assert.equal(commits, 1);
+  assert.equal(findings.length, 3);
+  assert.deepEqual(findings.map(({ path }) => path).sort(), [...records].sort());
 });
 
 test('a root commit by the bot is read as everything added, so no file has a before side', () => {
@@ -155,13 +180,18 @@ test('a pipeline commit that changed two records is counted once and found once 
   );
 });
 
-test('a pipeline commit that deleted a record and moved the band is judged on the record it deleted', () => {
+test('a pipeline commit that deleted a record and moved the band is judged on the record it deleted, for both', () => {
   const root = repoWith({ [RECORD]: '{}\n' });
   commitAs(root, BOT, { remove: [RECORD], write: { [BAND]: '{}\n' }, message: 'feat(autowriter): drop first-post' });
+  const found = historyReport({ root }).findings;
   assert.deepEqual(
-    historyReport({ root }).findings.map(({ path }) => path),
-    [RECORD]
+    found.map(({ path }) => path),
+    [RECORD, RECORD]
   );
+  assert.deepEqual(found.map(({ rule }) => rule).sort(), [
+    'generation-record-removed-committed',
+    'refused-path-committed',
+  ]);
 });
 
 test('a pipeline commit that moved a digest while its reason and status stayed is a seal, found with the entry', () => {
@@ -176,12 +206,34 @@ test('a pipeline commit that moved a digest while its reason and status stayed i
   assert.deepEqual(historyReport({ root }).findings, [{ rule: 'disposition-seal-committed', path: RECORD, detail }]);
 });
 
+test('a seal is found in a disposition file wherever it lies: flat, in its month and below it make three findings', () => {
+  const before = listing(entry('a'.repeat(12)));
+  const after = listing(entry('b'.repeat(12)));
+  const paths = [
+    DISPOSITION,
+    recordPath('disposition', 'first-post', CLAIMED_AT),
+    `${DISPOSITIONS}/2026/11/extra/generated-first-post.json`,
+  ];
+  const root = repoWith(Object.fromEntries(paths.map((path) => [path, before])));
+  const write = { [RECORD]: '{}\n', ...Object.fromEntries(paths.map((path) => [path, after])) };
+  commitAs(root, BOT, { write, message: written('first-post') });
+  const { findings, commits } = historyReport({ root });
+  assert.equal(commits, 1);
+  assert.equal(findings.length, 3);
+  assert.deepEqual([...new Set(findings.map(({ rule }) => rule))], ['disposition-seal-committed']);
+  for (const path of paths)
+    assert.ok(
+      findings.some(({ detail }) => detail.includes(` in ${path} (`)),
+      path
+    );
+});
+
 test('a restate the pipeline wrote itself, a new disposition file and a deleted one are not seals', () => {
   const restated = listing(entry('a'.repeat(12), { reason: PIPELINE_REASON }));
-  const root = repoWith({ [DISPOSITION]: restated, [`${DISPOSITION_DIRECTORY}/gone.json`]: restated });
+  const root = repoWith({ [DISPOSITION]: restated, [`${DISPOSITIONS}/gone.json`]: restated });
   const moved = listing(entry('b'.repeat(12), { reason: PIPELINE_REASON }));
-  const write = { [RECORD]: '{}\n', [DISPOSITION]: moved, [`${DISPOSITION_DIRECTORY}/new.json`]: moved };
-  commitAs(root, BOT, { write, remove: [`${DISPOSITION_DIRECTORY}/gone.json`], message: written('first-post') });
+  const write = { [RECORD]: '{}\n', [DISPOSITION]: moved, [`${DISPOSITIONS}/new.json`]: moved };
+  commitAs(root, BOT, { write, remove: [`${DISPOSITIONS}/gone.json`], message: written('first-post') });
   assert.deepEqual(historyReport({ root }), { findings: [], commits: 1, skipped: null });
 });
 
@@ -283,4 +335,163 @@ test('a signature display that the configuration asks of git is not read as part
   gitIn(root, ['update-ref', 'HEAD', signed]);
   assert.equal(gitIn(root, ['-c', 'log.showSignature=true', 'log', '-1', '--format=%H']).startsWith('gpg:'), true);
   assert.deepEqual(shas(root), [signed]);
+});
+
+const REMOVED = 'generation-record-removed-committed';
+const removedDetail = (path, sha) =>
+  `removed ${path} (generation-record-removed: ${REMOVAL_REFUSALS[0].why}), in commit ${sha.slice(0, 12)}`;
+const FLAT_RECORD = `${GENERATIONS}/first-post.json`;
+const DEEP_RECORD = `${GENERATIONS}/2026/11/extra/first-post.json`;
+const PLACEMENTS = [
+  ['flat', FLAT_RECORD],
+  ['in its month', RECORD],
+  ['below its month', DEEP_RECORD],
+];
+
+test('a pipeline commit that removed a record is one finding under its own rule, naming the record, the refusal, why and the commit', () => {
+  const root = repoWith({ [RECORD]: '{}\n' });
+  const sha = commitAs(root, BOT, { remove: [RECORD], message: 'feat(autowriter): drop first-post' });
+  assert.deepEqual(historyReport({ root }), {
+    findings: [{ rule: REMOVED, path: RECORD, detail: removedDetail(RECORD, sha) }],
+    commits: 1,
+    skipped: null,
+  });
+});
+
+test('a person who removed a record is not judged, so a record can still be removed by hand', () => {
+  const root = repoWith({ [RECORD]: '{}\n' });
+  commitAs(root, HUMAN, { remove: [RECORD], message: 'chore: drop first-post' });
+  assert.deepEqual(historyReport({ root }), { findings: [], commits: 0, skipped: null });
+});
+
+test('a pipeline commit that wrote or changed a record, or removed a file that is no record, removed no record', () => {
+  const root = repoWith({ [RECORD]: '{}\n', 'site/src/data/post/old.md': 'old\n' });
+  commitAs(root, BOT, {
+    write: { [RECORD]: '{"again":1}\n', [SECOND_RECORD]: '{}\n' },
+    remove: ['site/src/data/post/old.md'],
+    message: written('second-post'),
+  });
+  assert.deepEqual(historyReport({ root }), { findings: [], commits: 1, skipped: null });
+});
+
+const MOVES = [
+  ['to another name in its month', recordPath('generation', 'renamed-post', CLAIMED_AT), true],
+  ['to another month', recordPath('generation', 'first-post', '2026-12-01T00:00:00.000Z'), true],
+  ['to the flat generations directory', FLAT_RECORD, true],
+  ['out of the directory', 'audits/autowriter/first-post.json', false],
+  ['to another tree', 'audits/archive/first-post.json', false],
+];
+
+for (const [how, target, inFamily] of MOVES) {
+  test(`a pipeline commit that moved a record in its month ${how} removed it from where it was, and is found`, () => {
+    const root = repoWith({ [RECORD]: '{"slug":"first-post"}\n' });
+    const write = { [target]: '{"slug":"first-post"}\n' };
+    const sha = commitAs(root, BOT, { remove: [RECORD], write, message: 'feat(autowriter): move first-post' });
+    const { findings, commits } = historyReport({ root });
+    const judgedOn = inFamily ? [RECORD, target].sort() : [RECORD];
+
+    assert.equal(commits, 1);
+    assert.deepEqual(
+      findings.map(({ rule, path }) => [rule, path]).sort(),
+      judgedOn.map((path) => [REMOVED, path])
+    );
+    for (const finding of findings) assert.equal(finding.detail, removedDetail(RECORD, sha));
+  });
+}
+
+for (const [where, path] of PLACEMENTS) {
+  test(`a pipeline commit that moved a record into the directory from elsewhere, ${where}, added it and is not found`, () => {
+    const elsewhere = 'audits/elsewhere/first-post.json';
+    const root = repoWith({ [elsewhere]: '{}\n' });
+    const sha = commitAs(root, BOT, { remove: [elsewhere], write: { [path]: '{}\n' }, message: written('first-post') });
+
+    assert.deepEqual(
+      judged(root).map(({ sha: found, records }) => [found, records]),
+      [[sha, [path]]]
+    );
+    assert.deepEqual(historyReport({ root }), { findings: [], commits: 1, skipped: null });
+  });
+}
+
+test('a commit by the bot that only added a record filed in its month is a pipeline commit, and gives no finding', () => {
+  const root = repoWith();
+  const sha = commitAs(root, BOT, { write: { [RECORD]: '{}\n' }, message: 'feat(autowriter): write first-post' });
+  const found = judged(root);
+
+  assert.deepEqual(
+    found.map(({ sha: commit, records }) => [commit, records]),
+    [[sha, [RECORD]]]
+  );
+  assert.equal(found[0].records[0], `${GENERATIONS}/2026/11/first-post.json`);
+  assert.deepEqual(historyReport({ root }), { findings: [], commits: 1, skipped: null });
+});
+
+test('a pipeline commit that removed a record is found once wherever the record was filed: flat, in its month, below it make three', () => {
+  const root = repoWith(Object.fromEntries(PLACEMENTS.map(([, path]) => [path, '{}\n'])));
+  const removals = PLACEMENTS.map(([, path]) => [
+    path,
+    commitAs(root, BOT, { remove: [path], message: 'feat(autowriter): drop first-post' }),
+  ]);
+  const { findings, commits } = historyReport({ root });
+
+  assert.equal(commits, 3);
+  assert.equal(findings.length, 3);
+  assert.deepEqual(
+    findings.map(({ rule, path, detail }) => [rule, path, detail]).sort(),
+    removals.map(([path, sha]) => [REMOVED, path, removedDetail(path, sha)]).sort()
+  );
+});
+
+for (const [where, path] of PLACEMENTS) {
+  test(`a person who removed a record ${where} is not judged`, () => {
+    const root = repoWith({ [path]: '{}\n' });
+    commitAs(root, HUMAN, { remove: [path], message: 'chore: drop first-post' });
+
+    assert.deepEqual(historyReport({ root }), { findings: [], commits: 0, skipped: null });
+  });
+}
+
+const REHOMES = [
+  ['flat to its month', FLAT_RECORD, RECORD],
+  ['its month to flat', RECORD, FLAT_RECORD],
+  ['its month to below it', RECORD, DEEP_RECORD],
+];
+
+for (const [how, from, to] of REHOMES) {
+  test(`a pipeline commit that re-homed a record ${how} removed it from where it was, so it is found on both records`, () => {
+    const root = repoWith({ [from]: '{}\n' });
+    const sha = commitAs(root, BOT, { remove: [from], write: { [to]: '{}\n' }, message: 'feat(autowriter): re-home' });
+    const { findings, commits } = historyReport({ root });
+
+    assert.equal(commits, 1);
+    assert.deepEqual(
+      findings.map(({ rule, path }) => [rule, path]).sort(),
+      [from, to].sort().map((path) => [REMOVED, path])
+    );
+    for (const finding of findings) assert.equal(finding.detail, removedDetail(from, sha));
+  });
+
+  test(`a person who re-homed a record ${how} is not judged, because only a person re-homes a record`, () => {
+    const root = repoWith({ [from]: '{}\n' });
+    commitAs(root, HUMAN, { remove: [from], write: { [to]: '{}\n' }, message: 'chore: re-home first-post' });
+
+    assert.deepEqual(historyReport({ root }), { findings: [], commits: 0, skipped: null });
+  });
+}
+
+test('a bot commit that touches only a record filed two levels deep is seen, and one that touches nothing there is not', () => {
+  const root = repoWith();
+  commitAs(root, BOT, { write: { 'site/notes.txt': 'n\n' }, message: 'chore(autowriter): notes' });
+  commitAs(root, BOT, { write: { [`${GENERATIONS}-old/first-post.json`]: '{}\n' }, message: 'chore(autowriter): old' });
+  const deep = commitAs(root, BOT, { write: { [DEEP_RECORD]: '{}\n' }, message: 'feat(autowriter): write deep' });
+  assert.deepEqual(shas(root), [deep]);
+  const [found] = judged(root);
+
+  assert.equal(found.sha, deep);
+  assert.deepEqual(found.records, [DEEP_RECORD]);
+  assert.deepEqual(
+    found.changes.map(({ path }) => path),
+    [DEEP_RECORD]
+  );
+  assert.deepEqual(historyReport({ root }), { findings: [], commits: 1, skipped: null });
 });

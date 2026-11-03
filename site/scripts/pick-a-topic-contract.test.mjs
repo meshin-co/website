@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { test } from 'node:test';
@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 import './fixtures/no-network.mjs';
 import { runCli } from './pick-a-topic.mjs';
+import { recordPath } from './record-layout.mjs';
 import { openRun } from './write-open.mjs';
 
 const REPO = fileURLToPath(new URL('../..', import.meta.url));
@@ -41,7 +42,10 @@ test('the decision file the selection writes is one the writer opens without a r
     const run = openRun({ repoRoot: root, decision });
     assert.equal(run.entries[0].anchor, true);
     assert.equal(decision.entries[0].claim.format, 'article');
-    assert.equal(decision.ledgerPath, 'audits/autowriter/' + decision.entries[0].claim.slug + '.json');
+    const { slug, claimedAt } = decision.entries[0].claim;
+    assert.equal(decision.ledgerPath, recordPath('ledger', slug, claimedAt));
+    assert.equal(run.ledgerPath, decision.ledgerPath);
+    assert.ok(existsSync(join(root, decision.ledgerPath)), `${decision.ledgerPath} was not written`);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

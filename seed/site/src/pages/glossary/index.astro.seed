@@ -1,0 +1,125 @@
+---
+import { getCollection } from 'astro:content';
+import { SITE } from 'astrowind:config';
+
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import Section from '~/components/site/Section.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import {
+  breadcrumbNode,
+  collectionNode,
+  orgNode,
+  personNode,
+  termNode,
+  termSetNode,
+  websiteNode,
+} from '~/utils/jsonld.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+
+const site = import.meta.env.SITE.replace(/\/$/, '');
+const terms = (await getCollection('glossary', ({ data }) => !data.draft)).sort((a, b) =>
+  a.data.term.localeCompare(b.data.term)
+);
+
+const metadata = {
+  title: 'Plain writing glossary',
+  description: 'A plain writing glossary: short definitions of the terms the articles use, each with its source.',
+};
+
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Glossary', path: '/glossary' },
+];
+
+const nodes = [
+  orgNode(site, { logoPath: ogDefaultPath }),
+  personNode(site),
+  websiteNode(site),
+  collectionNode(site, {
+    path: '/glossary',
+    name: metadata.title,
+    description: metadata.description,
+    items: terms.map((term) => ({ url: `/glossary/${term.id}` })),
+  }),
+  breadcrumbNode(site, crumbs),
+  termSetNode(
+    site,
+    terms.map((term) => ({ id: term.id }))
+  ),
+  ...terms.map((term) => termNode(site, { id: term.id, ...term.data })),
+];
+
+const HUB_DEFINITIONS: Record<string, string> = {
+  'short-answer': 'This is the first paragraph of a page, written so it can be quoted alone.',
+};
+
+const cards = terms.map((term) => {
+  const [primarySource] = term.data.sources;
+  return {
+    term,
+    definition: HUB_DEFINITIONS[term.id] ?? term.data.term,
+    source: { url: primarySource.url, host: new URL(primarySource.url).hostname.replace(/^www\./, '') },
+  };
+});
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+  <MarkdownAlternate path="/glossary" slot="head" />
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title={`${SITE.name} — Glossary`}
+    href="/glossary/rss.xml"
+    slot="head"
+  />
+
+  <Breadcrumbs crumbs={crumbs} />
+
+  <Section
+    bordered={false}
+    headingLevel={1}
+    eyebrow="Glossary"
+    title="Plain writing glossary"
+    lead="The plain writing glossary: the terms the articles use, defined short, each with the primary source behind it."
+  />
+
+  <Section title="Terms">
+    {
+      terms.length === 0 ? (
+        <p class="max-w-[62ch] text-muted">Nothing published yet.</p>
+      ) : (
+        <dl class="grid gap-px bg-line sm:grid-cols-2">
+          {cards.map((card) => (
+            <div class="bg-page p-6">
+              <dt class="font-heading text-lg font-semibold text-heading">
+                <a class="text-link inline-block py-0.5" href={`/glossary/${card.term.id}`}>
+                  {card.term.data.term}
+                </a>
+              </dt>
+              <dd class="mt-3 max-w-[62ch] text-muted">{card.definition}</dd>
+              <dd class="mt-3 font-mono text-xs text-muted">
+                Source:{' '}
+                <a
+                  class="text-link inline-block py-1"
+                  href={card.source.url}
+                  target="_blank"
+                  rel="nofollow noopener noreferrer"
+                >
+                  {card.source.host}
+                </a>
+              </dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+  </Section>
+
+  <Section title="Next step">
+    <CtaBlock />
+  </Section>
+</Layout>

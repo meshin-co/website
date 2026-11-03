@@ -1,3 +1,4 @@
+import { LengthError, lengthFor } from './entry-length.mjs';
 import { blockBetween, bulletAt, declarationAt, promptBlockAt, sectionAt } from './prompt-extract.mjs';
 import { bandFor } from './sentence-band.mjs';
 import { WriterError } from './writer-error.mjs';
@@ -24,7 +25,8 @@ function parsed(text, path) {
   }
 }
 
-function present(value, path, label) {
+function present(value, path, label, allowEmpty = false) {
+  if (allowEmpty && Array.isArray(value) && value.length === 0) return value;
   const empty = value == null || value === '' || (typeof value === 'object' && Object.keys(value).length === 0);
   if (empty) throw new WriterError('config', `${path}: ${label} is gone or empty`);
   return value;
@@ -38,14 +40,24 @@ function bandOf(text, path, format) {
   }
 }
 
+function lengthOf(text, path, format) {
+  try {
+    return lengthFor(parsed(text, path), format);
+  } catch (error) {
+    throw error instanceof LengthError ? new WriterError('config', error.message) : error;
+  }
+}
+
 const DATA_TAKES = {
   json: ({ text, path, take }) =>
     present(
       take.field === undefined ? parsed(text, path) : parsed(text, path)?.[take.field],
       path,
-      take.field ?? 'the list'
+      take.field ?? 'the list',
+      take.allowEmpty
     ),
   band: ({ text, path, claim }) => bandOf(text, path, claim.format),
+  length: ({ text, path, claim }) => lengthOf(text, path, claim.format),
   routes: ({ repoRoot }) => routeList(repoRoot),
   tags: ({ repoRoot }) => tagSlugs(repoRoot),
   promptBlock: ({ text, path, take, claim }) => promptBlockAt(text, path, anchorOf(take, claim)),

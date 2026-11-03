@@ -1,0 +1,59 @@
+export const categoryPillars = {
+  governance: {
+    title: 'Governance',
+    archiveTitle: 'Governance articles',
+    description:
+      'Articles on the rules this site follows and how it records decisions. Owner to confirm the scope of the governance category.',
+    body: [
+      'This page introduces the articles filed under governance. Governance here means the rules a team agrees to follow, the person who decides when a rule applies, and the record that shows what was decided. An article in this category explains one rule, one decision or one review, and says who owns it.',
+      'Start a governance article with the decision, not the background. State what was decided, on which date, and by whom. Then give the reason in one or two sentences, so a reader who disagrees knows which part to challenge. Link the rule to the document or page where it is kept.',
+      'A rule that nobody can find does not govern anything. Each article should therefore point to the single page that holds the current version of the rule. When the rule changes, update that page first and the article second, and change the updated date of the article so readers can see which version they read.',
+      'Reviews matter as much as rules. Say how often a rule is reviewed, who does the review and what evidence they use. If a review has not happened yet, say so plainly. An honest note that a review is due is more useful to a reader than a claim that everything is current.',
+      'Keep the tone direct. Use numbers and dates where you have them, and leave a gap marked for the owner where you do not. Do not name a client, quote a figure or describe a credential unless the owner has confirmed it in writing. Each article links to the glossary for the terms it relies on.',
+      'Use the glossary for every term of art. If an article needs a word that the glossary does not define, add the term first and link to it. Readers who arrive from a search result should never meet an undefined word, and a shared definition stops two articles from using one word in two senses.',
+    ],
+  },
+  'agentic-architecture': {
+    title: 'Architecture',
+    archiveTitle: 'Architecture articles',
+    description:
+      'Articles on how the parts of a system fit together. Owner to confirm the scope of the architecture category.',
+    body: [
+      'This page introduces the articles filed under architecture. An architecture article describes how the parts of a system fit together: what each part does, what it receives, what it sends and what happens when it fails. The aim is a description that a new team member can read in one sitting and then draw from memory.',
+      'Name every part once and use the same name each time. A reader who meets two names for one part will assume there are two parts. Show the parts in a table or a diagram, then explain each connection in a sentence that names its source, its target and the data that crosses it.',
+      'Say what the design does not do. Every system has limits, and an article that lists them saves the reader a wrong guess. Record the failure modes you have seen and the ones you have only planned for, and keep those two lists apart so nobody mistakes a plan for an observation.',
+      'Measure before you praise. When an article claims that a design is faster, cheaper or safer, it should give the number, the way it was measured and the date. A claim without those three things belongs in a list of open questions, not in the main text of the article.',
+      'Link each architecture article to the operating model that runs the system and to the glossary entries for its terms. A design that no one is named to run is unfinished, however good the diagram looks, and a reader should be able to find the name of the owner in two clicks.',
+      'Keep one diagram per article and make it readable without the text. A reader should be able to follow the arrows from the first part to the last in under a minute. If a diagram needs more than ten boxes, split the article, because the attention of the reader is the scarcest part of the system.',
+    ],
+  },
+  'operating-model': {
+    title: 'Operating model',
+    archiveTitle: 'Operating model articles',
+    description:
+      'Articles on who does the work, in what order and under whose review. Owner to confirm the scope of the operating model category.',
+    body: [
+      'This page introduces the articles filed under operating model. An operating model says who does the work, in what order, with which tools and under whose review. An article in this category describes one routine of that model, such as how a request arrives, who accepts it and how it is closed.',
+      'Write each routine as a short list of steps, each with one owner. If a step has two owners, nobody owns it, so pick one and name the other as a reviewer. Give every step an input and an output, because a step with no output cannot be checked and will quietly stop happening.',
+      'Describe the handover points with the most care. Work is lost where it passes from one person to another, so say what the sender must provide, what the receiver checks and how long each side has to act. A written handover costs a few minutes and saves the argument later.',
+      'Record the time a routine takes and how often it runs. Even rough numbers help, as long as the article says they are rough and gives the date of the count. A routine that takes an hour a week is a different problem from one that takes an hour a day.',
+      'End each article with the change you would make next and the signal that would tell you it worked. Operating models are never finished, and a note about the next step shows the reader that the page describes a living practice and not a policy that was written once and forgotten.',
+      'Link each routine to the person or role that owns it, using the role name and not a personal name, so the page stays true when staff change. Add the date of the last review. A routine page whose owner has left and whose review date is old is a warning that the routine may no longer run.',
+    ],
+  },
+  executive: {
+    title: 'Leadership',
+    description:
+      'Articles for the people who sign off on decisions. Owner to confirm the scope of the leadership category.',
+    body: [
+      'This page introduces the articles written for the people who sign off on decisions. A leadership article answers the question a decision maker asks before approving anything: what is being asked, what does it cost, what could go wrong and who answers for it if it does.',
+      'Lead with the recommendation. Put the decision requested in the first two sentences, then the cost and the date by which an answer is needed. A reader with five minutes should be able to approve or decline after reading only the opening paragraph and the table of figures that follows it.',
+      'Separate what is known from what is estimated. Mark each number as measured, quoted or guessed, and give the source of the measured ones. Executives are right to distrust a figure without a source, and a page that shows its sources earns attention for the figures that are sound.',
+      'Name the risks in plain words and give each one an owner. A risk without an owner is a worry, not a plan. Say what would make you stop, so the decision maker knows the exit before agreeing to the entry, and write down the date on which the decision will be reviewed.',
+      'Keep the page short and link to detail instead of pasting it in. A decision maker can follow a link when they need the evidence, but cannot skip a wall of text. Every article in this category links to the glossary for terms of art and to the pages that hold the underlying records.',
+      'Do not promise outcomes. Describe what the work will deliver, by which date and how a reviewer can check it, and leave the result to be measured afterwards. A page that guarantees a business result invites a dispute, while a page that states a checkable deliverable invites a decision. Where the owner has not given a figure, leave it out and say so.',
+    ],
+  },
+};
+
+export const archiveTitleOf = (pillar) => pillar.archiveTitle ?? pillar.title;

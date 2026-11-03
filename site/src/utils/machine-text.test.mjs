@@ -8,7 +8,6 @@ import {
   renderLlmsFull,
   renderLlmsCollection,
   publicIndexableStaticPages,
-  STATIC_PAGE_CATALOG,
   staticPageDate,
   buildFeedItems,
   mergeWithKindFloor,
@@ -18,12 +17,16 @@ import {
   liveTopicMap,
   sidecarFileForRoute,
   sidecarRoutes,
-  HUB_PAGES,
 } from './machine-text.mjs';
+import { HUB_PAGES, STATIC_PAGE_CATALOG } from '../data/static-pages.mjs';
 import { lastmod } from './lastmod.mjs';
 import { toLlmsEntry } from './llms-collections.mjs';
+import { FEED_BASES } from './feeds.mjs';
+import { PLANTED_DATED_PAGE, PLANTED_UNDATED_PAGE, withCatalogPages } from '../../scripts/fixtures/catalog-pages.mjs';
 
 const ORIGIN = 'https://meshin.co';
+const NOINDEX_PATHS = ['/search', '/styleguide', '/404'];
+const COLLECTION_OWNED_ROUTES = new Set([...Object.values(FEED_BASES).map((base) => `/${base}`), '/blog/tags']);
 
 test('an absolute url has no trailing slash except at the root', () => {
   assert.equal(absoluteUrl(ORIGIN, '/'), 'https://meshin.co/');
@@ -285,57 +288,51 @@ test('publicIndexableStaticPages never lists the noindex static pages', () => {
   }
 });
 
-test('publicIndexableStaticPages covers every public static page of the site', () => {
-  const paths = publicIndexableStaticPages().map((page) => page.path);
-  const expected = [
-    '/',
-    '/blog/tags',
-    '/about',
-    '/approach',
-    '/pricing',
-    '/faq',
-    '/contact',
-    '/ai-policy',
-    '/security',
-    '/now',
-    '/imprint',
-    '/privacy',
-    '/terms',
-  ];
-  assert.deepEqual(paths.slice().sort(), expected.slice().sort());
-});
+test('publicIndexableStaticPages covers every public static page of the site', () =>
+  withCatalogPages([PLANTED_DATED_PAGE, PLANTED_UNDATED_PAGE], () => {
+    const catalogPaths = STATIC_PAGE_CATALOG.map((page) => page.path);
+    const expected = catalogPaths.filter((path) => !NOINDEX_PATHS.includes(path));
+    const paths = publicIndexableStaticPages().map((page) => page.path);
+
+    assert.deepEqual(paths.slice().sort(), expected.sort());
+    assert.ok(paths.includes(PLANTED_DATED_PAGE.path) && paths.includes(PLANTED_UNDATED_PAGE.path));
+  }));
 
 test('staticPageDate refuses a route the catalog does not hold, so a typo cannot ship an undated page', () => {
   assert.throws(() => staticPageDate('/no-such-page'), /no static page at \/no-such-page/);
 });
 
-test('staticPageDate refuses a page whose date a collection supplies, because a second date would disagree with it', () => {
-  for (const collectionDated of ['/faq', '/blog/tags']) {
-    assert.equal(
-      STATIC_PAGE_CATALOG.find((page) => page.path === collectionDated).updatedDate,
-      undefined,
-      `${collectionDated} must take its date from its collection alone`
-    );
-    assert.throws(() => staticPageDate(collectionDated), new RegExp(`${collectionDated} has no updatedDate`));
-  }
-});
+test('staticPageDate refuses a page whose date a collection supplies, because a second date would disagree with it', () =>
+  withCatalogPages([PLANTED_UNDATED_PAGE], () => {
+    for (const page of STATIC_PAGE_CATALOG.filter(({ path }) => COLLECTION_OWNED_ROUTES.has(path))) {
+      assert.equal(page.updatedDate, undefined, `${page.path} must take its date from its collection alone`);
+    }
+    const undated = STATIC_PAGE_CATALOG.filter((page) => page.updatedDate === undefined);
+    assert.ok(undated.includes(PLANTED_UNDATED_PAGE));
+    for (const { path } of undated) {
+      assert.throws(() => staticPageDate(path), new RegExp(`${path} has no updatedDate`));
+    }
+  }));
 
-test('every editorial static page date is a plain calendar day that has begun somewhere on Earth', () => {
-  const furthestAheadOffsetMs = 14 * 60 * 60 * 1000;
-  const dated = STATIC_PAGE_CATALOG.filter((page) => page.updatedDate !== undefined);
-  assert.ok(dated.length > 0, 'the catalog carries no editorial date at all');
-  for (const page of dated) {
-    assert.match(page.updatedDate, /^\d{4}-\d{2}-\d{2}$/, `${page.path} is not a plain YYYY-MM-DD day`);
-    const instant = new Date(page.updatedDate);
-    assert.equal(instant.toISOString().slice(0, 10), page.updatedDate, `${page.path} is not a real calendar day`);
-    assert.ok(instant.getTime() <= Date.now() + furthestAheadOffsetMs, `${page.path} is dated in the future`);
-  }
-});
+test('every editorial static page date is a plain calendar day that has begun somewhere on Earth', () =>
+  withCatalogPages([PLANTED_DATED_PAGE], () => {
+    const furthestAheadOffsetMs = 14 * 60 * 60 * 1000;
+    const dated = STATIC_PAGE_CATALOG.filter((page) => page.updatedDate !== undefined);
+    assert.ok(dated.length > 0, 'the catalog carries no editorial date at all');
+    for (const page of dated) {
+      assert.match(page.updatedDate, /^\d{4}-\d{2}-\d{2}$/, `${page.path} is not a plain YYYY-MM-DD day`);
+      const instant = new Date(page.updatedDate);
+      assert.equal(instant.toISOString().slice(0, 10), page.updatedDate, `${page.path} is not a real calendar day`);
+      assert.ok(instant.getTime() <= Date.now() + furthestAheadOffsetMs, `${page.path} is dated in the future`);
+    }
+  }));
 
-test('staticPageDate returns the day the catalog states for a public static page that no collection dates', () => {
-  const about = STATIC_PAGE_CATALOG.find((page) => page.path === '/about');
-  assert.equal(staticPageDate('/about'), about.updatedDate);
-});
+test('staticPageDate returns the day the catalog states for a public static page that no collection dates', () =>
+  withCatalogPages([PLANTED_DATED_PAGE], () => {
+    const dated = STATIC_PAGE_CATALOG.filter((page) => page.updatedDate !== undefined);
+    assert.ok(dated.includes(PLANTED_DATED_PAGE));
+    for (const { path, updatedDate } of dated) assert.equal(staticPageDate(path), updatedDate);
+  }));
 
 test('a rendered llms.txt built from publicIndexableStaticPages never links a noindex page', () => {
   const items = publicIndexableStaticPages().map(({ path, title, description }) => ({
@@ -656,19 +653,30 @@ test('sidecarFileForRoute maps the root route onto index.md, never a bare .md fi
   assert.equal(sidecarFileForRoute('/'), 'index.md');
 });
 
-test('sidecarRoutes carries every public static page plus every collection hub not already a static page', () => {
-  const paths = sidecarRoutes().map((page) => page.path);
-  for (const staticPath of publicIndexableStaticPages().map((page) => page.path)) {
-    assert.ok(paths.includes(staticPath), `${staticPath} missing from sidecarRoutes`);
-  }
-  for (const hub of ['/blog', '/glossary', '/resources', '/services', '/case-studies']) {
-    assert.ok(paths.includes(hub), `${hub} missing from sidecarRoutes`);
-  }
-});
+test('sidecarRoutes carries every public static page plus every collection hub not already a static page', () =>
+  withCatalogPages([PLANTED_DATED_PAGE], () => {
+    const paths = sidecarRoutes().map((page) => page.path);
+    const staticPaths = publicIndexableStaticPages().map((page) => page.path);
+    assert.ok(staticPaths.includes(PLANTED_DATED_PAGE.path));
+    for (const staticPath of staticPaths) {
+      assert.ok(paths.includes(staticPath), `${staticPath} missing from sidecarRoutes`);
+    }
+    for (const { base } of HUB_PAGES) {
+      assert.ok(paths.includes(base), `${base} missing from sidecarRoutes`);
+    }
+  }));
 
 test('sidecarRoutes never lists a hub twice when its base is already a static page path', () => {
-  const paths = sidecarRoutes().map((page) => page.path);
-  assert.equal(paths.filter((path) => path === '/faq').length, 1);
+  const catalogPaths = STATIC_PAGE_CATALOG.map((page) => page.path);
+  const hub = HUB_PAGES.find(({ base }) => !catalogPaths.includes(base));
+  assert.ok(hub !== undefined, 'every hub base is already a static page, so none could be planted over');
+  const coveringPage = { path: hub.base, title: 'A static page on a hub base', description: 'A static page.' };
+
+  withCatalogPages([coveringPage], () => {
+    const paths = sidecarRoutes().map((page) => page.path);
+
+    assert.equal(paths.filter((path) => path === hub.base).length, 1);
+  });
 });
 
 test('sidecarRoutes drops a caller-supplied hub whose base a static page already covers', () => {
@@ -682,9 +690,15 @@ test('sidecarRoutes drops a caller-supplied hub whose base a static page already
 });
 
 test('sidecarRoutes leaves out a withheld hub and keeps every other, so the mirror of an empty collection is not written', () => {
-  const paths = sidecarRoutes({ withheld: ['/case-studies'] }).map((page) => page.path);
-  assert.equal(paths.includes('/case-studies'), false);
-  for (const hub of ['/blog', '/glossary', '/resources', '/services']) {
+  const staticPaths = publicIndexableStaticPages().map((page) => page.path);
+  const hubs = HUB_PAGES.map((hub) => hub.base).filter((base) => !staticPaths.includes(base));
+  const withheld = hubs.at(-1);
+  assert.ok(withheld !== undefined, 'every hub is also a static page, so none could be withheld');
+
+  const paths = sidecarRoutes({ withheld: [withheld] }).map((page) => page.path);
+
+  assert.equal(paths.includes(withheld), false);
+  for (const hub of hubs.slice(0, -1)) {
     assert.ok(paths.includes(hub), `${hub} missing from sidecarRoutes`);
   }
 });

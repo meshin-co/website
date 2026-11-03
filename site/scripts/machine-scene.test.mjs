@@ -1,16 +1,40 @@
 import './fixtures/no-network.mjs';
 
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { afterEach, test } from 'node:test';
+import { pathToFileURL } from 'node:url';
 
+import { SCENE_EMPTY_COLLECTIONS } from './fixtures/machine-scene-catalog.mjs';
 import { buildMachineScene, removeScene, runMachine } from './fixtures/machine-scene.mjs';
 
 const REAL_SITE = join(import.meta.dirname, '..');
 const scenes = [];
 afterEach(() => {
   for (const scene of scenes.splice(0)) removeScene(scene);
+});
+
+const SCENE_PRELOAD = join(import.meta.dirname, 'fixtures', 'machine-scene-preload.mjs');
+const EXCEPTIONS_URL = pathToFileURL(join(REAL_SITE, 'src', 'utils', 'route-exceptions.mjs')).href;
+const REPOSITORY_DECLARES_ANOTHER = `data:text/javascript,${encodeURIComponent(
+  `import { EMPTY_COLLECTIONS } from '${EXCEPTIONS_URL}'; EMPTY_COLLECTIONS.splice(0, EMPTY_COLLECTIONS.length, { collection: 'service', reason: 'declared by the repository, not by the scene' });`
+)}`;
+const PRINT_DECLARED = `import { EMPTY_COLLECTIONS } from '${EXCEPTIONS_URL}'; console.log(JSON.stringify(EMPTY_COLLECTIONS.map(({ collection }) => collection)));`;
+
+test('the scene declares its own empty collections, so what the repository declares does not change the gate it runs', () => {
+  const run = spawnSync(
+    process.execPath,
+    ['--import', REPOSITORY_DECLARES_ANOTHER, '--import', SCENE_PRELOAD, '--input-type=module', '-e', PRINT_DECLARED],
+    { encoding: 'utf8' }
+  );
+
+  assert.equal(run.stderr, '');
+  assert.deepEqual(
+    JSON.parse(run.stdout),
+    SCENE_EMPTY_COLLECTIONS.map(({ collection }) => collection)
+  );
 });
 
 const sceneOf = async () => {
@@ -35,7 +59,7 @@ test('the clean scene passes the machine gate, says nothing on stderr and report
   assert.equal(
     run.stdout,
     [
-      `machine: no live entry in ${scene.emptyKinds.join(', ')}; entry coverage was not checked for it`,
+      `machine: ${scene.emptyKinds.length} of ${scene.collections} collections have no live entry and are declared empty with a reason (${scene.emptyKinds.join(', ')}); entry coverage is vacuous for them by declaration`,
       `machine: ${counts.join(', ')}`,
       '',
     ].join('\n')

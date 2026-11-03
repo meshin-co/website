@@ -1,5 +1,5 @@
 import { isHolding, normaliseTitle } from './autowriter-claims.mjs';
-import { ledgerFile } from './autowriter-ledger.mjs';
+import { slugOfRecord } from './record-layout.mjs';
 
 const refusal = (reason, against, detail) => ({ reason, against, detail });
 
@@ -28,13 +28,13 @@ function claimSlugRefusal({ topic, holders }) {
   return refusal('slug-held', holder.path, `slug "${topic.slug}" is held by ${holder.path} (${state})`);
 }
 
-function ledgerRefusal({ topic, ledgerSlugs }) {
-  if (!ledgerSlugs.includes(topic.slug)) return null;
-  const path = ledgerFile(topic.slug);
+function ledgerRefusal({ topic, ledgerPaths }) {
+  const path = ledgerPaths.find((candidate) => slugOfRecord(candidate) === topic.slug);
+  if (path === undefined) return null;
   return refusal(
     'slug-held',
     path,
-    `slug "${topic.slug}" already has the ledger ${path}, so an earlier run owns it; remove the ledger to try the topic again`
+    `slug "${topic.slug}" already has the ledger ${path}, so an earlier run owns it and the topic cannot be tried again yet; no procedure frees a slug safely, and removing the ledger is not one, because it records spend that the monthly spend ceiling counts`
   );
 }
 

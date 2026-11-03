@@ -4,6 +4,9 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import { GitHubError } from './pr-github.mjs';
+import { recordPath } from './record-layout.mjs';
+import { LEDGER_FILINGS } from './fixtures/github-fake.mjs';
+import { siteBrand } from './site-brand.mjs';
 import { scenario } from './fixtures/pr-watch.mjs';
 import {
   green,
@@ -43,7 +46,7 @@ test('the escalation names the failing job and gate and links the pull request',
 });
 
 test('an escalation with no ledger on the branch creates one for the pull request and pushes it as the bot', async () => {
-  const { run, calls, ledgerPath } = await harness({ bundle: scenario('cancel-storm') });
+  const { run, calls, ledgerPath, now } = await harness({ bundle: scenario('cancel-storm') });
   await run();
   const ledger = readJson(ledgerPath);
   const [, token, push] = callOf(calls, 'putLedger');
@@ -52,11 +55,21 @@ test('an escalation with no ledger on the branch creates one for the pull reques
   assert.equal(ledger.pullRequest, 72);
   assert.equal(ledger.runId, '555');
   assert.equal(token, 'pat-secret-value');
-  assert.equal(push.path, 'audits/autowriter/a-slug.json');
+  assert.equal(push.path, recordPath('ledger', 'a-slug', now()));
   assert.equal(push.branch, 'autowriter/a-slug');
   assert.equal(push.blobSha, null);
-  assert.deepEqual(push.identity, { name: 'autowriter-bot', email: 'autowriter-bot@meshin.co' });
+  assert.deepEqual(push.identity, { name: 'autowriter-bot', email: `autowriter-bot@${siteBrand().name}` });
   assert.deepEqual(JSON.parse(push.text), ledger);
+});
+
+test('a ledger the escalation starts is filed under the month of the instant it is started', async () => {
+  const before = await harness({ bundle: scenario('cancel-storm'), hours: 13 });
+  const after = await harness({ bundle: scenario('cancel-storm'), hours: 14 });
+  await before.run();
+  await after.run();
+
+  assert.equal(callOf(before.calls, 'putLedger')[2].path, 'audits/autowriter/2026/10/a-slug.json');
+  assert.equal(callOf(after.calls, 'putLedger')[2].path, 'audits/autowriter/2026/11/a-slug.json');
 });
 
 test('an escalation with a ledger on the branch keeps what it recorded and updates the file in place', async () => {
@@ -65,10 +78,22 @@ test('an escalation with a ledger on the branch keeps what it recorded and updat
   await run();
   const [, , push] = callOf(calls, 'putLedger');
 
+  assert.equal(push.path, stored.path);
   assert.equal(push.blobSha, stored.blobSha);
   assert.equal(readJson(ledgerPath).runId, '41');
   assert.equal(readJson(ledgerPath).verdict.state, 'escalated');
 });
+
+for (const [place, path] of Object.entries(LEDGER_FILINGS)) {
+  test(`an escalation pushes a ledger filed ${place} back to the path it was found at`, async () => {
+    const stored = { ...ledgerRecord(), path };
+    const { run, calls, ledgerPath } = await harness({ bundle: scenario('dependency-failure'), ledger: stored });
+    await run();
+
+    assert.equal(callOf(calls, 'putLedger')[2].path, path);
+    assert.equal(readJson(ledgerPath).verdict.state, 'escalated');
+  });
+}
 
 test('an escalation that needs Slack without a webhook still records and pushes the ledger, then fails the job', async () => {
   const ledger = ledgerRecord({ attempts: spentAttempts });

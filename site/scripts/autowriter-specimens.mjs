@@ -6,12 +6,15 @@ import { generatedTitles, normaliseTitle } from './autowriter-claims.mjs';
 import { historySpecimens } from './autowriter-history-specimens.mjs';
 import { ATTEMPT_CAP } from './autowriter-ledger.mjs';
 import { recordSpecimens } from './autowriter-record-specimens.mjs';
+import { spendSpecimens } from './autowriter-spend-specimens.mjs';
+import { recordDirectory, recordPath } from './record-layout.mjs';
 
 const GATE = 'gate:autowriter';
 const HASH = 'c'.repeat(40);
 const INSTANT = '2026-11-02T07:00:00.000Z';
-const LEDGER_PATH = '../audits/autowriter/zz-specimen.json';
-const CLAIM_PATH = '../audits/autowriter/claims/zz-specimen.json';
+const LEDGER_PATH = recordPath('ledger', 'zz-specimen', INSTANT);
+const CLAIM_PATH = recordPath('claim', 'zz-specimen', '2026-11-01T07:00:00.000Z');
+const STRAY_LEDGER_PATH = `${recordDirectory('ledger')}/zz-specimen.json`;
 const WORKFLOW_PATH = '../.github/workflows/ci.yml';
 const CORE_PATH = '../docs/SEMANTIC-CORE.md';
 
@@ -97,33 +100,33 @@ const claimOn = (title) => ({
 });
 
 const planLedger = (addUntrackedFile, build) => (copySite) =>
-  addUntrackedFile(join(copySite, LEDGER_PATH), asJson(build()));
+  addUntrackedFile(join(copySite, '..', LEDGER_PATH), asJson(build()));
 
 const planWorkflowEdit = (editFile, from, to) => (copySite) =>
   editFile(join(copySite, WORKFLOW_PATH), (text) => text.replace(from, to));
 
-export const autowriterSpecimens = ({ addUntrackedFile, editFile }) => ({
+export const autowriterSpecimens = ({ addUntrackedFile, editFile, removeFile }) => ({
   autowriterLedgerOffSchema: {
     gate: GATE,
-    token: 'ledger-schema audits/autowriter/zz-specimen.json',
+    token: `ledger-schema ${LEDGER_PATH}`,
     plant: planLedger(addUntrackedFile, () => ledger({ attempts: [attempt(1, { judgedCommit: 'abc1234' })] })),
   },
   autowriterAttemptsOverCap: {
     gate: GATE,
-    token: 'attempt-cap audits/autowriter/zz-specimen.json',
+    token: `attempt-cap ${LEDGER_PATH}`,
     plant: planLedger(addUntrackedFile, () =>
       ledger({ attempts: Array.from({ length: ATTEMPT_CAP + 1 }, (_, index) => attempt(index + 1)) })
     ),
   },
   autowriterClaimTitleCollides: {
     gate: GATE,
-    token: 'title-collision audits/autowriter/claims/zz-specimen.json',
-    plant: async (copySite) => addUntrackedFile(join(copySite, CLAIM_PATH), asJson(claimOn(await heldTitle(copySite)))),
+    token: `title-collision ${CLAIM_PATH}`,
+    plant: async (copySite) =>
+      addUntrackedFile(join(copySite, '..', CLAIM_PATH), asJson(claimOn(await heldTitle(copySite)))),
   },
   autowriterEscalationFailed: {
     gate: GATE,
-    token:
-      'escalation-undelivered audits/autowriter/zz-specimen.json: escalations[0] esc-1 (no-convergence) was not delivered to slack',
+    token: `escalation-undelivered ${LEDGER_PATH}: escalations[0] esc-1 (no-convergence) was not delivered to slack`,
     plant: planLedger(addUntrackedFile, () =>
       escalated([
         receipt('issue'),
@@ -138,17 +141,21 @@ export const autowriterSpecimens = ({ addUntrackedFile, editFile }) => ({
   },
   autowriterEscalationUnreceipted: {
     gate: GATE,
-    token:
-      'escalation-undelivered audits/autowriter/zz-specimen.json: escalations[0] esc-1 (no-convergence) has no delivery receipt for issue',
+    token: `escalation-undelivered ${LEDGER_PATH}: escalations[0] esc-1 (no-convergence) has no delivery receipt for issue`,
     plant: planLedger(addUntrackedFile, () => escalated([])),
   },
   autowriterMeasurementDebtMissing: {
     gate: GATE,
-    token:
-      'ledger-schema audits/autowriter/zz-specimen.json: measurementDebt is required once the verdict is merged, so the tree no Lighthouse run measured is on record',
+    token: `ledger-schema ${LEDGER_PATH}: measurementDebt is required once the verdict is merged, so the tree no Lighthouse run measured is on record`,
     plant: planLedger(addUntrackedFile, () =>
       ledger({ attempts: [attempt(1)], verdict: { state: 'merged', reason: null, decidedAt: INSTANT } })
     ),
+  },
+  autowriterRecordMisfiled: {
+    gate: GATE,
+    token: `record-layout ${STRAY_LEDGER_PATH}`,
+    plant: (copySite) =>
+      addUntrackedFile(join(copySite, '..', STRAY_LEDGER_PATH), asJson(ledger({ attempts: [attempt(1)] }))),
   },
   autowriterJobOutsideAggregate: {
     gate: GATE,
@@ -166,5 +173,6 @@ export const autowriterSpecimens = ({ addUntrackedFile, editFile }) => ({
     plant: planWorkflowEdit(editFile, AGGREGATE_NAME, 'name: all required jobs passed'),
   },
   ...recordSpecimens({ addUntrackedFile, editFile }),
+  ...spendSpecimens({ addUntrackedFile, editFile, removeFile }),
   ...historySpecimens(),
 });

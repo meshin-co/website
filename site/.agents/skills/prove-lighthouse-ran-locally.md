@@ -57,8 +57,8 @@ A refusal names the factor, the route and what failed, and writes nothing:
 ```
 LIGHTHOUSE mobile /pricing performance: 99
 LIGHTHOUSE desktop /blog: 2 runs, gate requires 3
-LIGHTHOUSE audits/phase-13-free-analytics is not a passing calibration run (2 failure(s))
-LIGHTHOUSE audits/phase-13-free-analytics was measured from tree 4360ea9388a1, not the tree being recorded, a32a4eba84b2; nothing recorded.
+LIGHTHOUSE audits/phase-zz is not a passing calibration run (2 failure(s))
+LIGHTHOUSE audits/phase-zz was measured from tree 4360ea9388a1, not the tree being recorded, a32a4eba84b2; nothing recorded.
 ```
 
 ## The push

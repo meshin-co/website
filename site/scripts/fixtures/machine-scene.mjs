@@ -2,21 +2,15 @@ import { spawnSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 import { brandFromDisk } from '../../src/utils/brand.mjs';
 import { FEED_BASES } from '../../src/utils/feeds.mjs';
 import { LLMS_COLLECTIONS } from '../../src/utils/llms-collections.mjs';
-import {
-  HUB_PAGES,
-  NOINDEX_STATIC_PAGES,
-  STATIC_PAGE_CATALOG,
-  absoluteUrl,
-  entryCount,
-  publicIndexableStaticPages,
-  sidecarFileForRoute,
-} from '../../src/utils/machine-text.mjs';
+import { NOINDEX_STATIC_PAGES, absoluteUrl, entryCount, sidecarFileForRoute } from '../../src/utils/machine-text.mjs';
 import { siteLastmods } from '../../src/utils/sitemap-lastmod.mjs';
 import { GATE_FINDINGS_VARIABLE } from '../gate-findings.mjs';
+import { SCENE_HUBS, SCENE_PAGES } from './machine-scene-catalog.mjs';
 
 export const readText = (file) => readFileSync(file, 'utf8');
 
@@ -44,6 +38,7 @@ export const removeFile = (file) => rmSync(file);
 
 const SITE_ROOT = join(import.meta.dirname, '..', '..');
 const MACHINE_SCRIPT = join(import.meta.dirname, '..', 'machine.mjs');
+const SCENE_PRELOAD = pathToFileURL(join(import.meta.dirname, 'machine-scene-preload.mjs')).href;
 const FALLBACK_DAY = '2026-10-01';
 const NOTE = 'a page of the synthetic site';
 const NOINDEX_HEADER_PATTERNS = [
@@ -67,6 +62,8 @@ export const LIVE = {
   ],
   service: [{ slug: 'sprint', title: 'Sprint', published: '2026-09-01', updated: '2026-10-01' }],
   glossary: [{ slug: 'evals', title: 'Evals', published: '2026-09-02', updated: '2026-09-20' }],
+  resource: [{ slug: 'checklist', title: 'Checklist', published: '2026-09-03', updated: '2026-09-21' }],
+  faq: [{ slug: 'who-owns-it', title: 'Who owns it', published: '2026-09-04', updated: '2026-09-22' }],
 };
 
 const KINDS = Object.keys(FEED_BASES);
@@ -86,8 +83,8 @@ const alternate = (type, href) => `<link rel="alternate" type="${type}" href="${
 const bullet = (title, route, text = NOTE) => `- [${title}](${absoluteUrl(ORIGIN, route)}): ${text}`;
 
 function catalogPages() {
-  const byRoute = new Map(STATIC_PAGE_CATALOG.map((page) => [page.path, { ...page, route: page.path }]));
-  for (const { base, title, description } of HUB_PAGES) {
+  const byRoute = new Map(SCENE_PAGES.map((page) => [page.path, { ...page, route: page.path }]));
+  for (const { base, title, description } of SCENE_HUBS) {
     if (!byRoute.has(base)) byRoute.set(base, { route: base, title, description });
   }
   return [...byRoute.values()];
@@ -247,7 +244,7 @@ export async function buildMachineScene() {
   const dist = join(site, 'dist');
 
   writeSite(site);
-  const staticPages = publicIndexableStaticPages();
+  const staticPages = SCENE_PAGES.filter(({ path }) => !NOINDEX_STATIC_PAGES.has(path));
   const lastmods = await siteLastmods({ dataDir: join(site, 'src', 'data'), staticPages });
   const routes = writeDist(dist, lastmods);
 
@@ -258,7 +255,7 @@ export async function buildMachineScene() {
     routes,
     emptyKinds: EMPTY_KINDS,
     collections: KINDS.length,
-    catalogEntries: STATIC_PAGE_CATALOG.length + HUB_PAGES.length,
+    catalogEntries: SCENE_PAGES.length + SCENE_HUBS.length,
     datedStaticRoutes: staticPages.filter((page) => page.updatedDate).length,
     siteFile: (file) => join(site, file),
     distFile: (file) => join(dist, file),
@@ -269,7 +266,7 @@ export function runMachine(scene, { findingsDir, env = {} } = {}) {
   const inherited = { ...process.env };
   delete inherited[GATE_FINDINGS_VARIABLE];
   const recorded = findingsDir === undefined ? {} : { [GATE_FINDINGS_VARIABLE]: findingsDir };
-  return spawnSync(process.execPath, [MACHINE_SCRIPT, scene.dist], {
+  return spawnSync(process.execPath, ['--import', SCENE_PRELOAD, MACHINE_SCRIPT, scene.dist], {
     cwd: scene.site,
     env: { ...inherited, ...recorded, ...env },
     encoding: 'utf8',

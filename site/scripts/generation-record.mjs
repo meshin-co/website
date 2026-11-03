@@ -1,12 +1,10 @@
 import { mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 
-import { LEDGER_DIR, fileStemProblem } from './autowriter-ledger.mjs';
+import { fileStemProblem } from './autowriter-ledger.mjs';
 import { describeProblem, instantProblems, isCalendarInstant, readSchema } from './autowriter-records.mjs';
 import { validateJsonSchema } from './json-schema.mjs';
 import { costUsd as costOf } from './writer-cost.mjs';
-
-export const GENERATION_DIR = `${LEDGER_DIR}/generations`;
 
 const RECORD_SCHEMA = readSchema('generation-record.schema.json');
 const CALL_SHAPE = { $ref: '#/$defs/call' };
@@ -14,8 +12,6 @@ const REF_PREFIX = '#/$defs/';
 const TOLERANCE = 1e-6;
 const MICRO = 1e6;
 const MAX_SHOWN = 5;
-
-export const generationFile = (slug) => `${GENERATION_DIR}/${slug}.json`;
 
 const problem = (path, message) => ({ path, problem: message });
 const shown = (value) => JSON.stringify(value);

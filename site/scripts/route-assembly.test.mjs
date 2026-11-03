@@ -5,6 +5,7 @@ import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node
 import { join } from 'node:path';
 import { afterEach, test } from 'node:test';
 
+import { recordPath } from './record-layout.mjs';
 import { assembleRoute } from './route-assembly.mjs';
 import { parseBuyerPrompts } from './semantic-core.mjs';
 import { WriterError } from './writer-error.mjs';
@@ -23,7 +24,10 @@ afterEach(() => {
 
 const SLUG = 'how-to-write-an-ai-incident-runbook';
 const ENTRY = `site/src/data/post/${SLUG}.md`;
-const DISPOSITION = `audits/phase-4.7/dispositions/generated-${SLUG}.json`;
+const ARTICLE = claimOf('article');
+const DISPOSITION = recordPath('disposition', SLUG, ARTICLE.claimedAt);
+const CLAIM_FILE = recordPath('claim', SLUG, ARTICLE.claimedAt);
+const GENERATION = recordPath('generation', SLUG, ARTICLE.claimedAt);
 const FORMATTED_ENTRY = `src/data/post/${SLUG}.md`;
 const ROUTES = 'audits/phase-4.7/dispositions/routes.json';
 const DISPOSITION_FORMAT = `npx prettier --write ../${DISPOSITION} ../${ROUTES}`;
@@ -131,8 +135,39 @@ test('the generated disposition holds a row for the entry file and a row for its
   assert.equal(rows[1].target, `/blog/${SLUG}`);
   assert.deepEqual(Object.keys(rows[1]), ['target', 'status', 'reason', 'digest']);
   assert.equal(rows[0].status, 'rewritten');
-  assert.match(rows[0].reason, new RegExp(`claims/${SLUG}\\.json`));
-  assert.match(rows[0].reason, new RegExp(`generations/${SLUG}\\.json`));
+  assert.ok(rows[0].reason.includes(`from the claim in ${CLAIM_FILE} on ${RUN_DATE}`));
+  assert.ok(rows[0].reason.includes(`bound to a source in ${GENERATION}.`));
+});
+
+test('the disposition of an entry lives in its own file named after the slug, in the UTC month of its claim', async () => {
+  const filedAs = async (claimedAt) => {
+    const root = repo();
+    const { files } = await assemble(root, fakeRun(root), { claim: { ...ARTICLE, claimedAt } });
+    return files.map(({ path }) => path).filter((path) => path.includes('/generated-'));
+  };
+
+  assert.deepEqual(await filedAs(ARTICLE.claimedAt), [`audits/phase-4.7/dispositions/2026/11/generated-${SLUG}.json`]);
+  assert.deepEqual(await filedAs('2026-10-31T23:59:59.999Z'), [
+    `audits/phase-4.7/dispositions/2026/10/generated-${SLUG}.json`,
+  ]);
+  assert.deepEqual(await filedAs('2026-11-01T00:00:00.000Z'), [
+    `audits/phase-4.7/dispositions/2026/11/generated-${SLUG}.json`,
+  ]);
+  assert.deepEqual(await filedAs('2027-01-05T12:00:00.000Z'), [
+    `audits/phase-4.7/dispositions/2027/01/generated-${SLUG}.json`,
+  ]);
+});
+
+test('the claim and the generation record that the disposition and the restated rows name are those of the claim month', async () => {
+  const root = repo();
+  const claim = { ...ARTICLE, claimedAt: '2026-10-31T23:59:59.999Z' };
+  const { files } = await assemble(root, fakeRun(root), { claim });
+  const [row] = JSON.parse(textOf(files, `audits/phase-4.7/dispositions/2026/10/generated-${SLUG}.json`));
+  const restated = JSON.parse(textOf(files, ROUTES))[1];
+
+  assert.ok(row.reason.includes(`from the claim in audits/autowriter/claims/2026/10/${SLUG}.json on ${RUN_DATE}`));
+  assert.ok(row.reason.includes(`bound to a source in audits/autowriter/generations/2026/10/${SLUG}.json.`));
+  assert.ok(restated.reason.includes(`(generation record audits/autowriter/generations/2026/10/${SLUG}.json)`));
 });
 
 test('the content-facts row is the claim query in lower case, and no other row moved', async () => {
@@ -165,7 +200,7 @@ test('a term entry also lands in the registers', async () => {
 
   assert.ok(textOf(files, 'docs/SEMANTIC-CORE.md').includes('| `/glossary/model-registry` |'));
   assert.ok(textOf(files, 'site/src/data/glossary/model-registry.md'));
-  assert.ok(textOf(files, 'audits/phase-4.7/dispositions/generated-model-registry.json'));
+  assert.ok(textOf(files, recordPath('disposition', 'model-registry', claimOf('term').claimedAt)));
 });
 
 test('a failing information gate is recorded with its exit code and does not stop the assembly', async () => {

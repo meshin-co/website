@@ -11,6 +11,7 @@ import { promisify } from 'node:util';
 import { anchorsFor } from './engine-anchors.mjs';
 import { readEngineConfig } from './engine-config.mjs';
 import { engineSpecimens } from './engine-specimens.mjs';
+import { INTERVIEW_PATH } from './interview-coverage.mjs';
 import { FAMILIES } from './mutation-smoke.mjs';
 import { SPECIMENS, proveWithSpecimen } from './mutation-specimens.mjs';
 
@@ -21,6 +22,8 @@ const NAMES = ['engineAnchorFileRemoved', 'engineClassifierReexpressed', 'engine
 const GATE = 'gate:engine';
 const CONFIG = 'site/engine.config.json';
 const WORKFLOW = '.github/workflows/ci.yml';
+const WORKFLOWS = '.github/workflows';
+const ENV_EXAMPLE = 'site/.env.example';
 const REMOVED_ANCHOR = 'docs/CONTENT-GATE.md';
 
 const scenes = [];
@@ -52,7 +55,9 @@ async function world(gateCommand) {
     }
   }
   await cp(join(REAL_SITE, 'engine.config.json'), join(root, CONFIG));
-  await cp(join(REAL_ROOT, WORKFLOW), join(root, WORKFLOW));
+  await cp(join(REAL_ROOT, WORKFLOWS), join(root, WORKFLOWS), { recursive: true });
+  await cp(join(REAL_ROOT, ENV_EXAMPLE), join(root, ENV_EXAMPLE));
+  await cp(join(REAL_ROOT, INTERVIEW_PATH), join(root, INTERVIEW_PATH));
   const command = gateCommand ?? `node ${join(REAL_SITE, 'scripts/check-engine.mjs')} --root ${root}`;
   await writeFile(join(site, 'package.json'), JSON.stringify({ scripts: { [GATE]: command } }));
   return { root, site };

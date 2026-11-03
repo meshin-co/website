@@ -1,6 +1,6 @@
 import './fixtures/no-network.mjs';
 import assert from 'node:assert/strict';
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { test } from 'node:test';
@@ -17,10 +17,10 @@ import {
   SLUG,
   asJson,
   entryText,
-  realBandFiles,
+  bandSceneFiles,
   recordWith,
 } from './fixtures/record-rules-scene.mjs';
-import { GENERATION_DIR } from './generation-record.mjs';
+import { recordDirectory, recordFiles } from './record-layout.mjs';
 import { BAND_FILE, REMEASURE_COMMAND } from './sentence-band.mjs';
 
 function repoWith(t, files) {
@@ -34,20 +34,15 @@ function repoWith(t, files) {
 }
 
 const recordsIn = (root) =>
-  readdirSync(join(root, GENERATION_DIR))
-    .filter((name) => name.endsWith('.json'))
-    .map((name) => ({
-      path: GENERATION_DIR + '/' + name,
-      text: readFileSync(join(root, GENERATION_DIR, name), 'utf8'),
-    }));
+  recordFiles(root, 'generation').map((path) => ({ path, text: readFileSync(join(root, path), 'utf8') }));
 
 const entryReader = (root) => (path) => (existsSync(join(root, path)) ? readFileSync(join(root, path), 'utf8') : null);
 
 const findingsOf = (root, band = BAND_RECORD) =>
   generationReport({ records: recordsIn(root), readEntry: entryReader(root), band });
 
-const sceneIn = (t, { record = recordWith(), entry = entryText(), recordPath = RECORD_PATH } = {}) =>
-  repoWith(t, { [recordPath]: asJson(record), [ENTRY_PATH]: entry });
+const sceneIn = (t, { record = recordWith(), entry = entryText(), filedAt = RECORD_PATH } = {}) =>
+  repoWith(t, { [filedAt]: asJson(record), [ENTRY_PATH]: entry });
 
 const rulesOf = (found) => found.map(({ rule }) => rule);
 
@@ -81,13 +76,28 @@ test('every schema problem of a record is its own finding', (t) => {
   );
 });
 
+test('records are judged at any depth: one flat, one in its month and one below it draw three findings', (t) => {
+  const directory = recordDirectory('generation');
+  const paths = [`${directory}/${SLUG}.json`, RECORD_PATH, `${directory}/2026/11/extra/${SLUG}.json`];
+  const offSchema = asJson({ ...recordWith(), schema: 2 });
+  const root = repoWith(t, Object.fromEntries(paths.map((path) => [path, offSchema])));
+  const found = findingsOf(root);
+  assert.equal(recordsIn(root).length, 3);
+  assert.equal(found.length, 3);
+  assert.deepEqual(
+    found.map(({ path }) => path),
+    [...paths].sort()
+  );
+  assert.deepEqual(new Set(rulesOf(found)), new Set(['generation-schema']));
+});
+
 test('a record filed under a name that is not its slug is a finding', (t) => {
-  const recordPath = GENERATION_DIR + '/other-name.json';
-  const found = findingsOf(sceneIn(t, { recordPath }));
+  const misnamed = `${dirname(RECORD_PATH)}/other-name.json`;
+  const found = findingsOf(sceneIn(t, { filedAt: misnamed }));
   assert.deepEqual(found, [
     {
       rule: 'generation-name',
-      path: recordPath,
+      path: misnamed,
       detail: 'slug ' + SLUG + ' does not match the file name other-name.json',
     },
   ]);
@@ -230,11 +240,11 @@ test('a band record that holds no band for the format of the entry leaves the re
 });
 
 test('the band record that matches a fresh measurement draws no finding', (t) => {
-  assert.deepEqual(bandRecordFindings(repoWith(t, realBandFiles())), []);
+  assert.deepEqual(bandRecordFindings(repoWith(t, bandSceneFiles())), []);
 });
 
 test('a bumped limit in the band record is a stale finding on that file, with the command that repairs it', (t) => {
-  const files = realBandFiles();
+  const files = bandSceneFiles();
   const record = JSON.parse(files[BAND_FILE]);
   record.bands.article.medianFloor += 1;
   const found = bandRecordFindings(repoWith(t, { ...files, [BAND_FILE]: asJson(record) }));
@@ -244,15 +254,15 @@ test('a bumped limit in the band record is a stale finding on that file, with th
 });
 
 test('a missing band record is a finding', (t) => {
-  const { [BAND_FILE]: gone, ...files } = realBandFiles();
+  const { [BAND_FILE]: gone, ...files } = bandSceneFiles();
   assert.ok(gone);
   const found = bandRecordFindings(repoWith(t, files));
   assert.deepEqual(rulesOf(found), ['record-missing']);
 });
 
 test('a band record that is not JSON, or a repository with no corpus, is a finding and not a crash', (t) => {
-  const unreadable = bandRecordFindings(repoWith(t, { ...realBandFiles(), [BAND_FILE]: '{ nope' }));
+  const unreadable = bandRecordFindings(repoWith(t, { ...bandSceneFiles(), [BAND_FILE]: '{ nope' }));
   assert.deepEqual(rulesOf(unreadable), ['band-record-unmeasurable']);
-  const empty = bandRecordFindings(repoWith(t, { [BAND_FILE]: realBandFiles()[BAND_FILE] }));
+  const empty = bandRecordFindings(repoWith(t, { [BAND_FILE]: bandSceneFiles()[BAND_FILE] }));
   assert.deepEqual(rulesOf(empty), ['band-record-unmeasurable']);
 });

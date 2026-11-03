@@ -23,6 +23,14 @@ const isoInstant = (value) => new Date(value).toISOString();
 
 const absolute = (site, path) => (path === '/' ? `${site}/` : `${site}${path}`);
 
+const breadcrumbId = (site, path) => `${site}${path}#breadcrumb`;
+
+const faqId = (site, path) => `${site}${path}#faqpage`;
+
+const webPageId = (site, path) => `${site}${path}#webpage`;
+
+const breadcrumbLink = (site, path) => (path === '/' ? {} : { breadcrumb: { '@id': breadcrumbId(site, path) } });
+
 const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 const citationOf = (sources) =>
@@ -234,6 +242,7 @@ export function resourceNode(site, resource, options = {}) {
     author: { '@id': `${site}/#person` },
     inLanguage: LANGUAGE,
     isPartOf: { '@id': `${site}/#website` },
+    ...breadcrumbLink(site, `/resources/${resource.id}`),
     ...(resource.repoUrl ? { codeRepository: resource.repoUrl } : {}),
     ...(image ? { primaryImageOfPage: image } : {}),
     citation: citationOf(resource.sources),
@@ -241,9 +250,11 @@ export function resourceNode(site, resource, options = {}) {
   };
 }
 
-export function faqNode(items) {
+export function faqNode(site, path, items) {
   return {
     '@type': 'FAQPage',
+    '@id': faqId(site, path),
+    isPartOf: { '@id': webPageId(site, path) },
     mainEntity: items.map((item) => ({
       '@type': 'Question',
       name: item.q,
@@ -261,9 +272,10 @@ export function faqPageNode(
   const path = faq.url ?? `/faq/${faq.id}`;
   return {
     '@type': 'FAQPage',
-    '@id': `${site}${path}#faqpage`,
+    '@id': faqId(site, path),
     url: absolute(site, path),
     isPartOf: { '@id': `${site}/#website` },
+    ...breadcrumbLink(site, path),
     inLanguage: LANGUAGE,
     ...(faq.sources?.length ? { citation: citationOf(faq.sources) } : {}),
     ...(image ? { primaryImageOfPage: image } : {}),
@@ -286,6 +298,7 @@ export function faqPageNode(
 export function breadcrumbNode(site, crumbs) {
   return {
     '@type': 'BreadcrumbList',
+    '@id': breadcrumbId(site, crumbs.at(-1).path),
     itemListElement: crumbs.map((crumb, index) => ({
       '@type': 'ListItem',
       position: index + 1,
@@ -331,6 +344,7 @@ export function collectionNode(site, page) {
     name: page.name,
     description: page.description,
     isPartOf: { '@id': `${site}/#website` },
+    ...breadcrumbLink(site, page.path),
     ...(page.items?.length
       ? {
           itemListElement: page.items.map((item, index) => ({
@@ -351,6 +365,7 @@ export function contactPageNode(site, dateModified) {
     name: 'Contact',
     mainEntity: { '@id': `${site}/#org` },
     isPartOf: { '@id': `${site}/#website` },
+    ...breadcrumbLink(site, '/contact'),
     dateModified: isoInstant(dateModified),
   };
 }
@@ -359,7 +374,8 @@ export function contactPageNode(site, dateModified) {
  * @param {{
  *   image?: { url: string, width?: number, height?: number },
  *   mainEntity?: string,
- *   speakableSelectors?: string[]
+ *   speakableSelectors?: string[],
+ *   faq?: boolean
  * }} [options]
  */
 export function webPageNode(
@@ -367,12 +383,12 @@ export function webPageNode(
   path,
   dateModified,
   name,
-  options = /** @type {{ image?: JsonLdImage, mainEntity?: string, speakableSelectors?: string[] }} */ ({})
+  options = /** @type {{ image?: JsonLdImage, mainEntity?: string, speakableSelectors?: string[], faq?: boolean }} */ ({})
 ) {
-  const { image, mainEntity, speakableSelectors = [] } = options;
+  const { image, mainEntity, speakableSelectors = [], faq = false } = options;
   return {
     '@type': 'WebPage',
-    '@id': `${site}${path}#webpage`,
+    '@id': webPageId(site, path),
     url: absolute(site, path),
     ...(name ? { name } : {}),
     isPartOf: { '@id': `${site}/#website` },
@@ -380,6 +396,8 @@ export function webPageNode(
     ...(dateModified ? { dateModified: isoInstant(dateModified) } : {}),
     ...(image ? { primaryImageOfPage: image } : {}),
     ...(mainEntity ? { mainEntity: { '@id': mainEntity } } : {}),
+    ...(faq ? { hasPart: { '@id': faqId(site, path) } } : {}),
+    ...breadcrumbLink(site, path),
     ...(speakableSelectors.length
       ? { speakable: { '@type': 'SpeakableSpecification', cssSelector: speakableSelectors } }
       : {}),
@@ -394,6 +412,7 @@ export function profilePageNode(site, dateModified) {
     name: 'About',
     mainEntity: { '@id': `${site}/#person` },
     isPartOf: { '@id': `${site}/#website` },
+    ...breadcrumbLink(site, '/about'),
     dateModified: isoInstant(dateModified),
   };
 }

@@ -1,3 +1,4 @@
+import { LENGTH_FILE } from './entry-length.mjs';
 import { writtenFormat } from './entry-files.mjs';
 import { COLLECTION_OF, RESOURCE_COLLECTION } from './entry-prose.mjs';
 import { BAND_FILE } from './sentence-band.mjs';
@@ -76,9 +77,14 @@ export const PROMPT_SOURCES = [
   {
     path: 'site/content-facts.json',
     part: 'The numbers a page may state without a source.',
-    take: [data('json', 'numbers', 'numbers')],
+    take: [{ ...data('json', 'numbers', 'numbers'), allowEmpty: true }],
   },
   { path: BAND_FILE, part: 'The sentence band of the format of the claim.', take: [data('band', 'band')] },
+  {
+    path: LENGTH_FILE,
+    part: 'The length floor and the target range of the body of the format of the claim.',
+    take: [data('length', 'length')],
+  },
   { path: 'audits/routes.json', part: 'The whole list of routes the site serves.', take: [data('routes', 'routes')] },
   { path: `${DATA_DIRECTORY}/tags.mjs`, part: 'The slugs of the tags that exist.', take: [data('tags', 'tags')] },
   {

@@ -1,0 +1,8 @@
+---
+name: Example Author
+role: 'TODO(owner): the role of the author'
+bio: 'TODO(owner): one or two sentences about the author.'
+sameAs:
+  - https://example.com/
+credentials: []
+---

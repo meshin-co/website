@@ -1,13 +1,16 @@
 import './fixtures/no-network.mjs';
 
 import assert from 'node:assert/strict';
-import { rmSync } from 'node:fs';
-import { join } from 'node:path';
+import { mkdirSync, rmSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 
-import { createScene, ledgerOf, recordOf } from './fixtures/spend-scene.mjs';
+import { PLACES } from './fixtures/record-depths.mjs';
+import { FILED_AT, createScene, ledgerOf, recordOf } from './fixtures/spend-scene.mjs';
 import { runGit } from './commit-to-main.mjs';
+import { recordPath } from './record-layout.mjs';
 import { SpendDataError, readLedgers } from './spend-sources.mjs';
+import { microOf, monthlySpend, spendWarnings } from './spend-sum.mjs';
 
 const AT = '2026-11-02T08:00:00Z';
 const withScene = (body) => async () => {
@@ -112,21 +115,27 @@ test(
 );
 
 test(
-  'a generation record with no ledger of its own, as a glossary term has, is not a ledger',
+  'a generation record whose ledger exists in no source comes back with no ledger, so its cost is still counted',
   withScene((scene) => {
-    scene.putRecord(recordOf({ slug: 'term-only', generatedAt: AT, usd: 1 }));
+    scene.putRecord(recordOf({ slug: 'record-only', generatedAt: AT, usd: 1 }));
     scene.commit();
-    assert.deepEqual(read(scene), []);
+    const [only, ...rest] = read(scene);
+    assert.deepEqual(rest, []);
+    assert.equal(only.ledger, null);
+    assert.equal(only.source, 'working tree');
+    assert.equal(only.record.slug, 'record-only');
+    assert.equal(monthlySpend({ ledgers: [only], month: MONTH }), microOf(1));
+    assert.match(spendWarnings({ ledgers: [only] })[0], /record-only: .* which does not exist/);
   })
 );
 
 test(
   'a malformed ledger in the working tree is an error that names the file',
   withScene((scene) => {
-    scene.put('audits/autowriter/bad-post.json', '{ not json');
+    scene.put(recordPath('ledger', 'bad-post', AT), '{ not json');
     assert.throws(
       () => read(scene),
-      (error) => error instanceof SpendDataError && /audits\/autowriter\/bad-post\.json/.test(error.message)
+      (error) => error instanceof SpendDataError && /audits\/autowriter\/2026\/11\/bad-post\.json/.test(error.message)
     );
   })
 );
@@ -147,7 +156,7 @@ test(
 test(
   'a ledger whose slug differs from its file name is an error',
   withScene((scene) => {
-    scene.put('audits/autowriter/other-name.json', ledger('real-name', 1));
+    scene.put(recordPath('ledger', 'other-name', AT), ledger('real-name', 1));
     assert.throws(
       () => read(scene),
       (error) => error instanceof SpendDataError && /other-name\.json/.test(error.message)
@@ -158,7 +167,7 @@ test(
 test(
   'a malformed ledger on a branch tip is an error that names the ref and the file',
   withScene((scene) => {
-    scene.onBranch('autowriter/bad-branch', () => scene.put('audits/autowriter/bad-branch.json', '[]'));
+    scene.onBranch('autowriter/bad-branch', () => scene.put(recordPath('ledger', 'bad-branch', AT), '[]'));
     assert.throws(
       () => read(scene),
       (error) =>
@@ -173,10 +182,10 @@ test(
   'a malformed generation record is an error that names the file',
   withScene((scene) => {
     scene.putLedger(ledger('rec-post', 1));
-    scene.put('audits/autowriter/generations/rec-post.json', '{"schema":1}');
+    scene.put(recordPath('generation', 'rec-post', AT), '{"schema":1}');
     assert.throws(
       () => read(scene),
-      (error) => error instanceof SpendDataError && /generations\/rec-post\.json/.test(error.message)
+      (error) => error instanceof SpendDataError && /generations\/2026\/11\/rec-post\.json/.test(error.message)
     );
   })
 );
@@ -264,5 +273,175 @@ test(
     scene.onBranch('autowriter/both-post', () => scene.putLedger(ledger('both-post', 1)));
     scene.git('checkout', '-q', '--detach', 'HEAD~1');
     assert.deepEqual(summary(read(scene)), [['refs/heads/main', 'both-post', 2]]);
+  })
+);
+
+const MONTH = '2026-11';
+const DEPTHS = [FILED_AT.flat, FILED_AT.month, FILED_AT.deeper];
+const ENTRIES = [
+  ['alpha-post', 1],
+  ['beta-post', 2],
+  ['gamma-post', 4],
+];
+const ALL_FOUND = ENTRIES.map(([slug]) => [slug, slug]);
+const PAIRINGS = {
+  'a ledger and its record at the same depth': (index) => [DEPTHS[index], DEPTHS[index]],
+  'a ledger and its record at different depths': (index) => [DEPTHS[index], DEPTHS[(index + 1) % DEPTHS.length]],
+};
+const REFS = {
+  'a local autowriter branch': {
+    source: 'refs/heads/autowriter/depth-post',
+    put: (scene, work) => scene.onBranch('autowriter/depth-post', work),
+  },
+  'a remote-tracking autowriter branch': {
+    source: 'refs/remotes/origin/autowriter/depth-post',
+    put: (scene, work) => scene.asRemote('autowriter/depth-post', work),
+  },
+};
+
+const putEntries = (scene, depthOf) =>
+  ENTRIES.forEach(([slug, usd], index) => {
+    const [ledgerAt, recordAt] = depthOf(index);
+    scene.put(ledgerAt('ledger', slug), ledgerOf({ slug, generationUsd: usd }));
+    scene.put(recordAt('generation', slug), recordOf({ slug, generatedAt: AT, usd }));
+  });
+const pairs = (items) => items.map(({ ledger: found, record }) => [found.slug, record === null ? null : record.slug]);
+const recordsIn = (items) => items.filter(({ record }) => record !== null).length;
+
+for (const [pairing, depthOf] of Object.entries(PAIRINGS)) {
+  test(
+    `the working tree is read at any depth: ${pairing}, filed flat, in the month and below it, are all found, three of each`,
+    withScene((scene) => {
+      putEntries(scene, depthOf);
+      const items = read(scene);
+      assert.equal(items.length, 3);
+      assert.equal(recordsIn(items), 3);
+      assert.deepEqual(pairs(items), ALL_FOUND);
+      assert.ok(items.every(({ source }) => source === 'working tree'));
+      assert.equal(monthlySpend({ ledgers: items, month: MONTH }), microOf(7));
+    })
+  );
+
+  for (const [kind, { source, put }] of Object.entries(REFS)) {
+    test(
+      `a ref is read at any depth: ${pairing}, filed flat, in the month and below it on ${kind}, are all found, three of each`,
+      withScene((scene) => {
+        put(scene, () => putEntries(scene, depthOf));
+        const listings = [];
+        const items = read(scene, (args, options) => {
+          if (args[0] === 'ls-tree') listings.push(args);
+          return runGit(args, options);
+        });
+        assert.equal(items.length, 3);
+        assert.equal(recordsIn(items), 3);
+        assert.deepEqual(pairs(items), ALL_FOUND);
+        assert.ok(items.every((item) => item.source === source));
+        assert.equal(monthlySpend({ ledgers: items, month: MONTH }), microOf(7));
+        assert.ok(listings.length > 0 && listings.every((args) => args.includes('-r')), JSON.stringify(listings));
+      })
+    );
+  }
+}
+
+const NAMES_OF_LEDGER = {
+  'the month path': (slug) => FILED_AT.month('ledger', slug),
+  'the flat path': (slug) => FILED_AT.flat('ledger', slug),
+};
+
+function readWhenRecordNames(path, place) {
+  const scene = createScene();
+  try {
+    const record = recordOf({ slug: 'named-post', generatedAt: AT, usd: 3 });
+    scene.put(place('ledger', 'named-post'), ledgerOf({ slug: 'named-post', generationUsd: 1 }));
+    scene.put(place('generation', 'named-post'), { ...record, ledger: path });
+    const items = read(scene);
+    return {
+      summary: summary(items),
+      records: recordsIn(items),
+      spentMicro: monthlySpend({ ledgers: items, month: MONTH }),
+      warnings: spendWarnings({ ledgers: items }),
+    };
+  } finally {
+    scene.cleanup();
+  }
+}
+
+test('a generation record that names its ledger at the flat path counts exactly like one that names the month path', () => {
+  const expected = readWhenRecordNames(NAMES_OF_LEDGER['the month path']('named-post'), FILED_AT.month);
+  assert.deepEqual(expected.summary, [['working tree', 'named-post', 1]]);
+  assert.equal(expected.records, 1);
+  assert.equal(expected.spentMicro, microOf(3));
+  assert.equal(expected.warnings.length, 1);
+  for (const place of DEPTHS)
+    for (const [naming, nameOf] of Object.entries(NAMES_OF_LEDGER))
+      assert.deepEqual(readWhenRecordNames(nameOf('named-post'), place), expected, naming);
+});
+
+const REFUSED_LEDGER_NAMES = ['audits/x.json', 'audits/autowriter/2026/13/refused-post.json'];
+
+for (const [layout, place] of Object.entries(PLACES)) {
+  test(
+    `a generation record the schema refuses fails the read of the working tree, naming its path, filed ${place}`,
+    withScene((scene) => {
+      const path = FILED_AT[layout]('generation', 'refused-post');
+      scene.putLedger(ledger('refused-post', 1));
+      for (const name of REFUSED_LEDGER_NAMES) {
+        scene.put(path, { ...recordOf({ slug: 'refused-post', generatedAt: AT, usd: 1 }), ledger: name });
+        assert.throws(
+          () => read(scene),
+          (error) =>
+            error instanceof SpendDataError &&
+            error.message.includes(path) &&
+            error.message.includes('ledger must match pattern'),
+          name
+        );
+      }
+    })
+  );
+
+  test(
+    `a generation record the schema refuses fails the read of a branch, naming the ref and its path, filed ${place}`,
+    withScene((scene) => {
+      const path = FILED_AT[layout]('generation', 'refused-post');
+      scene.onBranch('autowriter/refused-post', () => {
+        scene.putLedger(ledger('refused-post', 1));
+        scene.put(path, {
+          ...recordOf({ slug: 'refused-post', generatedAt: AT, usd: 1 }),
+          ledger: REFUSED_LEDGER_NAMES[0],
+        });
+      });
+      assert.throws(
+        () => read(scene),
+        (error) =>
+          error instanceof SpendDataError &&
+          error.message.includes('refs/heads/autowriter/refused-post') &&
+          error.message.includes(path)
+      );
+    })
+  );
+}
+
+test(
+  'claims filed beside the ledgers, flat, in their month and below it, are not spend files, in the working tree and on a ref',
+  withScene((scene) => {
+    for (const place of DEPTHS) scene.put(place('claim', 'stray-post'), '{ not a ledger');
+    scene.commit();
+    assert.deepEqual(read(scene), []);
+  })
+);
+
+test(
+  'one slug filed flat on main and moved into its month on a branch is one ledger, the larger version',
+  withScene((scene) => {
+    const flat = FILED_AT.flat('ledger', 'moved-post');
+    const month = FILED_AT.month('ledger', 'moved-post');
+    scene.put(flat, ledger('moved-post', 1));
+    scene.commit();
+    scene.onBranch('autowriter/moved-post', () => {
+      mkdirSync(dirname(join(scene.root, month)), { recursive: true });
+      scene.git('mv', flat, month);
+      scene.put(month, ledger('moved-post', 3));
+    });
+    assert.deepEqual(summary(read(scene)), [['refs/heads/autowriter/moved-post', 'moved-post', 3]]);
   })
 );

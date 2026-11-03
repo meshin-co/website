@@ -1,0 +1,93 @@
+---
+import { getCollection } from 'astro:content';
+import { METADATA } from 'astrowind:config';
+
+import JsonLd from '~/components/common/JsonLd.astro';
+import CardGrid from '~/components/site/CardGrid.astro';
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import FigureStrip from '~/components/site/FigureStrip.astro';
+import ResourceCard from '~/components/site/ResourceCard.astro';
+import Section from '~/components/site/Section.astro';
+import ShiftPanel from '~/components/site/ShiftPanel.astro';
+import SignalList from '~/components/site/SignalList.astro';
+import StepList from '~/components/site/StepList.astro';
+import { artifactIds, cta, drivers, figures, hero, shift, signals } from '~/data/home';
+import Layout from '~/layouts/PageLayout.astro';
+import { orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { staticPageDate } from '~/utils/machine-text.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+import { resourceFormat } from '~/utils/resource-card.mjs';
+
+const metadata = {
+  description: 'TODO(owner): one sentence on what the site offers and to whom.',
+};
+
+const site = import.meta.env.SITE.replace(/\/$/, '');
+const nodes = [
+  orgNode(site, { logoPath: ogDefaultPath }),
+  personNode(site),
+  websiteNode(site),
+  webPageNode(site, '/', staticPageDate('/'), METADATA.title?.default),
+];
+const resourcesById = new Map(
+  (await getCollection('resource', ({ data }) => !data.draft)).map((entry) => [entry.id, entry])
+);
+const resources = artifactIds.map((id) => resourcesById.get(id)).filter((entry) => entry !== undefined);
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+
+  <Section bordered={false} headingLevel={1} title={`${hero.title} ${hero.titleAccent}`} lead={hero.sub}>
+    <p class="max-w-[62ch] text-muted">
+      This is the starter home page of a site on the writing engine. Each TODO(owner) line on it is a fact only the site
+      owner can give.
+    </p>
+    <ul class="mt-10 flex flex-wrap gap-x-8 gap-y-3 border-t border-line pt-6">
+      {
+        hero.proof.map((item) => (
+          <li class="flex items-baseline gap-3">
+            <span class="inline-block size-1.5 shrink-0 bg-primary" aria-hidden="true" />
+            <span class="text-sm text-muted">{item}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section eyebrow="Track record" tone="surface">
+    <FigureStrip figures={figures} />
+  </Section>
+
+  <Section eyebrow="Fit" title="Is this for you?">
+    <SignalList items={signals.items} verdict={signals.verdict} />
+  </Section>
+
+  <Section eyebrow="Outcome" title={shift.title} tone="surface">
+    <ShiftPanel before={shift.before} after={shift.after} />
+  </Section>
+
+  <Section eyebrow="Method" title="How it works">
+    <StepList steps={drivers} />
+  </Section>
+
+  <Section eyebrow="Artifacts" title="Resources" tone="surface">
+    <CardGrid>
+      {
+        resources.map((resource) => (
+          <ResourceCard
+            name={resource.data.name}
+            summary={resource.data.description}
+            format={resourceFormat(resource.data)}
+            status={resource.data.status}
+            href={`/resources/${resource.id}`}
+          />
+        ))
+      }
+    </CardGrid>
+  </Section>
+
+  <Section>
+    <CtaBlock title={cta.title} body={cta.body} label={cta.label} href={cta.href} note={cta.note} />
+  </Section>
+</Layout>

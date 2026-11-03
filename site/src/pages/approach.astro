@@ -6,7 +6,7 @@ import Section from '~/components/site/Section.astro';
 import ShiftPanel from '~/components/site/ShiftPanel.astro';
 import StepList from '~/components/site/StepList.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
+import { breadcrumbNode, orgNode, personNode, webPageNode, websiteNode } from '~/utils/jsonld.mjs';
 import { staticPageDate } from '~/utils/machine-text.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
@@ -29,6 +29,7 @@ const nodes = [
   personNode(site),
   websiteNode(site),
   webPageNode(site, '/approach', UPDATED, metadata.title),
+  breadcrumbNode(site, crumbs),
 ];
 
 const measures = [

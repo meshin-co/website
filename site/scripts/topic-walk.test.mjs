@@ -1,7 +1,18 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { LAPSED_AT, claimed, inputsFor, prompt, provenPrompt, reportOf, sourcesOf } from './fixtures/topic-inputs.mjs';
+import {
+  EARLIER_RUN_AT,
+  LAPSED_AT,
+  SUFFIX,
+  claimed,
+  inputsFor,
+  prompt,
+  provenPrompt,
+  reportOf,
+  sourcesOf,
+} from './fixtures/topic-inputs.mjs';
+import { recordPath } from './record-layout.mjs';
 import { walkPosts } from './topic-walk.mjs';
 
 const PILOTS = prompt(9, 'why do AI pilots fail to reach production');
@@ -169,18 +180,16 @@ test('a slug that would publish at a route the layer already lists is recorded a
 });
 
 test('a title the generated layer already carries is recorded, and the next prompt is taken', () => {
-  const generated = [
-    { family: 'article', route: '/blog/older-url', title: 'Why do AI pilots fail to reach production? — meshin.co' },
-  ];
+  const layerTitle = `Why do AI pilots fail to reach production?${SUFFIX}`;
+  const generated = [{ family: 'article', route: '/blog/older-url', title: layerTitle }];
   const result = walk([PILOTS, HANDOVER], { generated });
   assert.equal(result.chosen.candidate.number, 15);
   assert.deepEqual(result.refusals, [
     {
       title: 'Why do AI pilots fail to reach production?',
       reason: 'title-collision',
-      against: 'Why do AI pilots fail to reach production? — meshin.co',
-      detail:
-        'title "Why do AI pilots fail to reach production?" is already the title of /blog/older-url in the generated layer of docs/SEMANTIC-CORE.md ("Why do AI pilots fail to reach production? — meshin.co")',
+      against: layerTitle,
+      detail: `title "Why do AI pilots fail to reach production?" is already the title of /blog/older-url in the generated layer of docs/SEMANTIC-CORE.md ("${layerTitle}")`,
     },
   ]);
   assert.deepEqual(result.advisories, []);
@@ -205,10 +214,16 @@ test('a slug a claim holds under another title, and a slug that already has a le
   const byClaim = walk([PILOTS, HANDOVER], { claims: [holder] });
   assert.equal(byClaim.chosen.candidate.number, 15);
   assert.equal(byClaim.refusals[0].reason, 'slug-held');
-  const byLedger = walk([PILOTS, HANDOVER], { ledgerSlugs: ['why-do-ai-pilots-fail-to-reach-production'] });
+  assert.equal(
+    byClaim.refusals[0].against,
+    recordPath('claim', 'why-do-ai-pilots-fail-to-reach-production', holder.claim.claimedAt)
+  );
+  const ledgerPath = recordPath('ledger', 'why-do-ai-pilots-fail-to-reach-production', EARLIER_RUN_AT);
+  const byLedger = walk([PILOTS, HANDOVER], { ledgerPaths: [ledgerPath] });
   assert.equal(byLedger.chosen.candidate.number, 15);
   assert.equal(byLedger.refusals[0].reason, 'slug-held');
-  assert.equal(byLedger.refusals[0].against, 'audits/autowriter/why-do-ai-pilots-fail-to-reach-production.json');
+  assert.equal(byLedger.refusals[0].against, ledgerPath);
+  assert.ok(byLedger.refusals[0].detail.includes(ledgerPath));
 });
 
 test('every prompt refused leaves one step and nothing is chosen', () => {

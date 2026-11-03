@@ -10,19 +10,19 @@ calls it. Each has a test beside it. Run one with `cd site && node --test script
   person at the terminal. `refuseWhenUnattended` throws for a human-only action. `scripts/editorial-gate.mjs`
   (the seal), `scripts/lh-evidence.mjs`, `scripts/run-lh-evidence.mjs`, `scripts/run-lh-parallel.mjs` and
   `scripts/write-entry.mjs` call it.
-- `scripts/autowriter-refusals.mjs` is the one list of paths automation may never write: the sentence band
-  and the three Lighthouse records, each with the reason. It also spots a disposition seal by its
+- `scripts/autowriter-refusals.mjs` is the one list of paths automation may never write: the sentence band,
+  the entry length record and the three Lighthouse records, each with the reason. It also spots a disposition seal by its
   signature, a digest that moves while its reason and status stay. `scripts/commit-to-main.mjs` and
-  `scripts/entry-commit.mjs` refuse on it.
+  `scripts/entry-commit.mjs` refuse on it. A second list, `REMOVAL_REFUSALS`, holds what automation may never remove: a generation record, which the sentence band and the length record leave out. It judges the old path, so a rename out of the directory is a removal, and `scripts/commit-to-main.mjs` refuses it before it commits.
 - `scripts/autowriter-refusal-rules.mjs` is the part of `gate:autowriter` that reads git history. A commit
-  of the pipeline that changed a generation record may not have touched a refused path.
+  of the pipeline that changed a generation record may not have touched a refused path, and may not have removed one.
 - `scripts/unattended-specimens.mjs` makes an unattended process try the seal, the Lighthouse record and the
   Lighthouse gate. Each must refuse. `scripts/mutation-specimens.mjs` runs them under `npm run test:smoke`.
 - `scripts/repair-guard-checks.mjs` holds three checks that `npm run test:smoke` runs: the removal guard
   must flag dropped takeaways, the scope check must flag a file outside the entry and a refused record,
   and the ledger must refuse a fourth attempt and say the cap is 3.
-- `scripts/autowriter-history-specimens.mjs` plants a pipeline commit that touches a refused path, and one
-  that seals the dispositions. `npm run gate:autowriter` must name each one.
+- `scripts/autowriter-history-specimens.mjs` plants a pipeline commit that touches a refused path, one that
+  removes a generation record and one that seals the dispositions. `npm run gate:autowriter` must name each one.
 
 ## What a repair may change
 
@@ -62,10 +62,15 @@ The `write-daily.yml` workflow runs `node scripts/spend-ceiling.mjs` before any 
 read. Three modules sit under it:
 
 - `scripts/spend-sources.mjs` reads every attempt ledger and generation record from the working tree and
-  from the tip of `main` and of each `autowriter` branch, through git. It refuses data it cannot read.
+  from the tip of `main` and of each `autowriter` branch, through git, into one item per run: a record joins
+  the ledger it names, and a record whose ledger is gone is counted from the record alone. It refuses data it
+  cannot read.
 - `scripts/spend-sum.mjs` holds the month rule (the UTC calendar month of an instant), the integer
-  micro-dollar sum of generation and attempt costs, and the choice of one version of each slug.
-- `scripts/spend-notice.mjs` keeps the notice ledger `audits/autowriter/spend-ceiling-<month>.json`. It says
+  micro-dollar sum (`monthlyBreakdown`: the writing calls, the repair calls, the runs that ended with no
+  entry and the spend of ledgers no record names, told apart by their verdict through `hasEnded`, each
+  dated by its own instant), the choice of one version of each slug and `spendWarnings`. A repair that
+  failed after it spent is an attempt on the ledger, so it counts and raises no warning.
+- `scripts/spend-notice.mjs` keeps the notice ledger `audits/autowriter/<year>/<month>/spend-ceiling-<year>-<month>.json`. It says
   whether a month was announced, and raises the `spend-ceiling` escalation once for that month.
 
 ## Add one

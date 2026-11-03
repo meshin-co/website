@@ -1,0 +1,86 @@
+---
+import { getCollection } from 'astro:content';
+import { SITE } from 'astrowind:config';
+
+import CardGrid from '~/components/site/CardGrid.astro';
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
+import ResourceCard from '~/components/site/ResourceCard.astro';
+import Section from '~/components/site/Section.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { breadcrumbNode, collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+import { resourceFormat } from '~/utils/resource-card.mjs';
+
+const site = import.meta.env.SITE.replace(/\/$/, '');
+const resources = (await getCollection('resource', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.updatedDate.getTime() - a.data.updatedDate.getTime()
+);
+
+const metadata = {
+  title: 'Plain writing checklists',
+  description: 'Plain writing checklists, each described on its own page: what is inside and how to use it.',
+};
+
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Resources', path: '/resources' },
+];
+
+const nodes = [
+  orgNode(site, { logoPath: ogDefaultPath }),
+  personNode(site),
+  websiteNode(site),
+  collectionNode(site, {
+    path: '/resources',
+    name: 'Resources',
+    description: metadata.description,
+    items: resources.map((resource) => ({ url: `/resources/${resource.id}` })),
+  }),
+  breadcrumbNode(site, crumbs),
+];
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+  <MarkdownAlternate path="/resources" slot="head" />
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title={`${SITE.name} — Resources`}
+    href="/resources/rss.xml"
+    slot="head"
+  />
+
+  <Breadcrumbs crumbs={crumbs} />
+
+  <Section
+    bordered={false}
+    headingLevel={1}
+    eyebrow="Artifacts"
+    title="Plain writing checklists"
+    lead="Plain writing checklists, each described on its own page. Copy one into your own notes: no tool, no subscription, no email required."
+  />
+
+  <Section title="Available now">
+    <CardGrid columns={resources.length > 1 ? 2 : 1}>
+      {
+        resources.map((resource) => (
+          <ResourceCard
+            name={resource.data.name}
+            summary={resource.data.description}
+            format={resourceFormat(resource.data)}
+            status={resource.data.status}
+            href={`/resources/${resource.id}`}
+          />
+        ))
+      }
+    </CardGrid>
+  </Section>
+
+  <Section title="Next step">
+    <CtaBlock />
+  </Section>
+</Layout>

@@ -1,0 +1,6 @@
+# Copy checklist: facts only the owner can supply
+
+`AGENTS.md` forbids an invented owner fact, a client name, a metric, a testimonial or a credential. A fact the owner has not given becomes `TODO(owner)` in the copy and a row here. Fill the `Answer` column. A claim ships only when its row is marked `confirmed`; a blank row stays off the site.
+
+| #   | Fact | Where it is used | Answer | Status |
+| --- | ---- | ---------------- | ------ | ------ |

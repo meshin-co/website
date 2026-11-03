@@ -176,7 +176,7 @@ test('a passage the parser could not read back is refused before any text change
 });
 
 const REAL_CORE = readFileSync(fileURLToPath(new URL('../../docs/SEMANTIC-CORE.md', import.meta.url)), 'utf8');
-const NUMBERS = Array.from({ length: 30 }, (_, index) => index + 1);
+const NUMBERS = parseBuyerPrompts(REAL_CORE).map(({ number }) => number);
 
 const numbersSharingABlockWith = (doc, number) => {
   const paragraph = doc.split('\n\n').find((chunk) => new RegExp(`^\\*\\*${number}\\.`, 'm').test(chunk));
@@ -185,7 +185,7 @@ const numbersSharingABlockWith = (doc, number) => {
 
 test('on the real document every prompt reads back the new passage, and every passage it had keeps counting', () => {
   const before = parseBuyerPrompts(REAL_CORE);
-  assert.equal(before.length, 30);
+  assert.ok(before.length > 0, 'the real document holds no buyer prompt');
 
   for (const number of NUMBERS) {
     const after = parseBuyerPrompts(insert(number, REAL_CORE));

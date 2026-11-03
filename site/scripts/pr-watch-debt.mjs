@@ -1,14 +1,15 @@
-import { LedgerError, ledgerFile, newLedger, validateLedger } from './autowriter-ledger.mjs';
+import { LedgerError, newLedger, validateLedger } from './autowriter-ledger.mjs';
 import { describeProblem } from './autowriter-records.mjs';
 import { variable } from './escalate-channels.mjs';
 import { debtFinding, ledgerWithDebt, treeFingerprint } from './measurement-debt.mjs';
 import { BOT_IDENTITY, slugOfBranch } from './pr-classify.mjs';
+import { recordPath } from './record-layout.mjs';
 
 async function commitDebt(step, { mergedCommit, fingerprint }) {
   const { io, reader, writer, env, number, snapshot, now } = step;
   const slug = slugOfBranch(snapshot.pullRequest.head.ref);
-  const path = ledgerFile(slug);
   const stored = await io.readLedgerAt(reader, { slug, ref: mergedCommit });
+  const path = stored?.path ?? recordPath('ledger', slug, now());
   const runId = variable(env, 'GITHUB_RUN_ID') || 'local';
   const started = stored?.value ?? newLedger({ slug, runId, pullRequest: number });
   const ledger = ledgerWithDebt(started, { mergedCommit, fingerprint, now: now() });

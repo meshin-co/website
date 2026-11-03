@@ -33,7 +33,7 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
    docs honest, smoking the live site, publishing the build, proving Lighthouse ran locally,
    running the growth loop, and the launch checklist.
    Read the matching one before doing that job by hand; `design-lane.md` comes before any markup
-   or CSS. `navigate-the-plan.md` maps the reference files and where each phase went.
+   or CSS. `navigate-the-plan.site.md` maps the reference files and where each phase went.
    `gate:skills` fails if a skill names a path or command that does not exist.
 
    `site/scripts/README.md` is the map of every script, grouped into gates, generators, audits,

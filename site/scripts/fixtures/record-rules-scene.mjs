@@ -1,20 +1,16 @@
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
 import { stringify } from 'yaml';
 
+import { DUPLICATE_MINIMUM_WORDS } from '../content-gate.mjs';
+import { LENGTH_FILE, deriveLimits, lengthRecord, measureLength } from '../entry-length.mjs';
 import { COLLECTION_OF, parseEntrySource, proseBlocks, proseSentences } from '../entry-prose.mjs';
 import { buildRecord } from '../generation-record.mjs';
-import { entryStats } from '../sentence-band.mjs';
+import { recordPath } from '../record-layout.mjs';
+import { BAND_FILE, bandRecord, deriveBands, entryStats, measureCorpus } from '../sentence-band.mjs';
+import { DATA_DIRECTORY } from '../writer-tree.mjs';
 import { recordInput } from './generation-input.mjs';
 
-const REPO = fileURLToPath(new URL('../../../', import.meta.url));
-const CORPUS_DIRECTORIES = ['site/src/data/post', 'site/src/data/glossary'];
-const BAND_PATH = 'audits/sentence-band.json';
-
 export const SLUG = 'zz-specimen';
-export const RECORD_PATH = `audits/autowriter/generations/${SLUG}.json`;
+export const RECORD_PATH = recordPath('generation', SLUG, recordInput().claim.claimedAt);
 export const ENTRY_PATH = `audits/autowriter/generations/${SLUG}.md`;
 export const NIST_URL = 'https://www.nist.gov/itl/ai-risk-management-framework';
 export const FACT =
@@ -33,25 +29,6 @@ const FILLER = [
 ];
 
 export const SENTENCES = [FACT, ...FILLER];
-
-const BAND = (format, medianFloor, medianCeiling, belowThresholdCap, justBelowCap) => ({
-  format,
-  threshold: 12,
-  justBelowFrom: 8,
-  minimumSentences: 8,
-  medianFloor,
-  medianCeiling,
-  belowThresholdCap,
-  justBelowCap,
-});
-
-export const BAND_RECORD = {
-  schema: 1,
-  measuredOn: '2026-11-02',
-  threshold: 12,
-  minimumSentences: 8,
-  bands: { article: BAND('article', 10, 15, 0.5779, 0.2907), term: BAND('term', 13, 19, 0.381, 0.2942) },
-};
 
 export const proseOf = (text) => {
   const { frontmatter, body } = parseEntrySource(text);
@@ -96,12 +73,51 @@ export function recordWith({ path = ENTRY_PATH, claimTable = TABLE, entry = entr
 
 export const asJson = (value) => `${JSON.stringify(value, null, 2)}\n`;
 
-export function realBandFiles() {
-  const files = { [BAND_PATH]: readFileSync(join(REPO, BAND_PATH), 'utf8') };
-  for (const directory of CORPUS_DIRECTORIES) {
-    if (!existsSync(join(REPO, directory))) continue;
-    for (const name of readdirSync(join(REPO, directory)).filter((file) => file.endsWith('.md')))
-      files[`${directory}/${name}`] = readFileSync(join(REPO, directory, name), 'utf8');
-  }
-  return files;
-}
+const sentenceOf = (words) => `${Array(words).fill('word').join(' ')}.`;
+const runs = (...spans) => spans.flatMap(([count, words]) => Array(count).fill(words));
+
+const SCENE_PROFILES = {
+  'zz-band-low': runs([6, 5], [5, 10], [9, 14]),
+  'zz-band-high': runs([9, 15]),
+};
+
+const SCENE_HEADING = '## Question 1?';
+const sectioned = ([first, second, ...body]) => [first, second, SCENE_HEADING, ...body];
+
+const termText = ([shortDefinition, definition, ...body]) =>
+  `---\n${stringify({ title: 'A scratch term', shortDefinition, definition })}---\n\n${body.join('\n\n')}\n`;
+
+const SCENE_TEXT = {
+  [COLLECTION_OF.article]: (sentences) => entryText({ sentences }),
+  [COLLECTION_OF.term]: termText,
+};
+
+const SCENE_CORPUS = Object.entries(SCENE_TEXT).flatMap(([collection, render]) =>
+  Object.entries(SCENE_PROFILES).map(([slug, lengths]) => ({
+    collection,
+    path: `${DATA_DIRECTORY}/${collection}/${slug}.md`,
+    text: render(sectioned(lengths.map(sentenceOf))),
+  }))
+);
+
+const sceneEntries = SCENE_CORPUS.map(({ collection, text: source }) => ({ collection, ...parseEntrySource(source) }));
+const sceneMeasure = measureCorpus(sceneEntries, { threshold: DUPLICATE_MINIMUM_WORDS });
+const sceneLength = measureLength(sceneEntries);
+
+export const BAND_RECORD = bandRecord({
+  measure: sceneMeasure,
+  bands: deriveBands(sceneMeasure),
+  measuredOn: '2026-11-02',
+});
+
+export const LENGTH_RECORD = lengthRecord({
+  measure: sceneLength,
+  limits: deriveLimits(sceneLength),
+  measuredOn: '2026-11-02',
+});
+
+export const bandSceneFiles = () => ({
+  [BAND_FILE]: asJson(BAND_RECORD),
+  [LENGTH_FILE]: asJson(LENGTH_RECORD),
+  ...Object.fromEntries(SCENE_CORPUS.map(({ path: file, text: source }) => [file, source])),
+});

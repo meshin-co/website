@@ -6,7 +6,16 @@ import { join, resolve } from 'node:path';
 import { test } from 'node:test';
 
 import { newLedger, readLedger, writeLedger } from './autowriter-ledger.mjs';
-import { EscalationError, escalate, redeliver, runCli } from './escalate.mjs';
+import {
+  EscalationError,
+  describeDelivery,
+  describeReceipt,
+  escalate,
+  redactorFor,
+  redeliver,
+  runCli,
+} from './escalate.mjs';
+import { autowriterAgent } from './site-brand.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
 const TOKEN = 'ghp_SECRETtokenVALUE0123456789';
@@ -81,7 +90,7 @@ test('both channels delivered: exact requests and receipts on disk', () =>
       Accept: 'application/vnd.github+json',
       'X-GitHub-Api-Version': '2022-11-28',
       'Content-Type': 'application/json',
-      'User-Agent': 'meshin-autowriter',
+      'User-Agent': autowriterAgent(),
     });
     assert.deepEqual(calls[0].body, {
       title: TITLE,
@@ -458,3 +467,33 @@ test('CLI with no variables exits 1, names the missing variables and records fai
     assert.equal(absent.status, 1);
     assert.match(absent.stderr, /esc-7/);
   }));
+
+test('a delivery is described in the words of an escalation receipt, with any label in front', () => {
+  const delivered = { delivered: true, status: 200, issue: null, error: null };
+  assert.equal(describeDelivery('spend report: slack', delivered), 'spend report: slack delivered (HTTP 200)');
+  assert.equal(
+    describeDelivery('escalate: esc-1 issue', { ...delivered, status: 201, issue: 7 }),
+    'escalate: esc-1 issue delivered (HTTP 201, issue #7)'
+  );
+  const refused = { delivered: false, status: 404, issue: null, error: 'Slack answered HTTP 404: no_service' };
+  assert.equal(
+    describeDelivery('spend report: slack', refused),
+    'spend report: slack NOT delivered: Slack answered HTTP 404: no_service'
+  );
+});
+
+test('an escalation receipt reads as it always did', () => {
+  const escalation = { id: 'esc-1' };
+  const slack = { channel: 'slack', delivered: true, status: 200, issue: null, error: null };
+  assert.equal(describeReceipt(escalation, slack), 'escalate: esc-1 slack delivered (HTTP 200)');
+  const issue = { channel: 'issue', delivered: false, status: null, issue: null, error: 'boom' };
+  assert.equal(describeReceipt(escalation, issue), 'escalate: esc-1 issue NOT delivered: boom');
+});
+
+test('the redactor replaces the webhook, its secret path and the token, and puts the text on one line', () => {
+  const clean = redactorFor(ENV);
+  assert.equal(
+    clean(`post to ${WEBHOOK} failed\n${WEBHOOK_PATH} with ${TOKEN}`),
+    'post to [SLACK_WEBHOOK_URL] failed [SLACK_WEBHOOK_URL] with [GITHUB_TOKEN]'
+  );
+});

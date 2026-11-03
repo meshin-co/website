@@ -50,7 +50,7 @@ Every claim that needs a source carries one, and zod fails the build without `sh
 change prose.
 
 A static page has no frontmatter, so its date is the `updatedDate` on its row in
-`STATIC_PAGE_CATALOG` (`site/src/utils/machine-text.mjs`), and the sitemap, the `.md` sidecar, the
+`STATIC_PAGE_CATALOG` (`site/src/data/static-pages.mjs`), and the sitemap, the `.md` sidecar, the
 JSON-LD and any visible `Updated` line all read that one value. Set it to the day you change the
 page's title, description, headings, lead or body, in the same commit. Leave it alone for markup,
 classes, JSON-LD wiring, the shared header and footer, the closing booking band and a related-links

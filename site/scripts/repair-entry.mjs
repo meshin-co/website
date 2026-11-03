@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { markUnattended } from './human-only.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 import { createApi } from './pr-github.mjs';
-import { RepairStop, exitCodeOf } from './repair-outcome.mjs';
+import { RepairStop, exitCodeOf, outcomeOf } from './repair-outcome.mjs';
 import { createAdapter } from './writer-adapter.mjs';
 import { explain, failureOf, keysInEnvironment, runProcess } from './writer-cli.mjs';
 import { readWriterConfig } from './writer-config.mjs';
@@ -51,14 +51,14 @@ const successLine = ({ commit, slug, attempt, gates, spend }) => ({
 function stopOf(error, secrets) {
   const failure = failureOf(error, secrets);
   const stopped = error instanceof RepairStop;
-  const outcome = stopped ? error.outcome : failure.kind === 'credential' ? 'credential' : 'failed';
+  const outcome = outcomeOf(error);
   const kind = stopped ? error.outcome : failure.kind;
   return {
     failure: { ...failure, kind },
     line: {
       ok: false,
       outcome,
-      commit: null,
+      commit: error.commit ?? null,
       reason: failure.message,
       kind,
       variables: failure.variables,

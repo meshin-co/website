@@ -83,20 +83,6 @@ const CORE = readFileSync(new URL('../../docs/SEMANTIC-CORE.md', import.meta.url
 
 test('the committed core is read for exactly the prompts parsePrompts finds', () => {
   const expected = parsePrompts(CORE).map((prompt) => prompt.number);
-  assert.equal(expected.length, 30);
+  assert.ok(expected.length > 0, 'the committed core holds no buyer prompt');
   assert.deepEqual([...readPromptSources(CORE).keys()], expected);
-});
-
-test('only prompts 16 and 17 of the committed core are retired', () => {
-  const retired = [...readPromptSources(CORE)].filter(([, source]) => source.retired).map(([number]) => number);
-  assert.deepEqual(retired, [16, 17]);
-});
-
-test('the committed core names the routes that close or support its prompts', () => {
-  const sources = readPromptSources(CORE);
-  assert.ok(sources.get(21)?.routes.includes('/blog/adoption-telemetry-measuring-if-ai-is-actually-used'));
-  assert.ok(sources.get(19)?.routes.includes('/glossary/mcp'));
-  assert.ok(sources.get(6)?.routes.includes('/blog/how-to-build-an-ai-system-register-in-a-week'));
-  assert.ok(sources.get(6)?.routes.includes('/glossary/ai-register'));
-  assert.deepEqual(sources.get(1)?.routes.slice(0, 1), ['/']);
 });

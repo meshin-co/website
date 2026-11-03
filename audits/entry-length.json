@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "measuredOn": "2026-11-02",
+  "corpus": {
+    "article": {
+      "entries": 8
+    },
+    "term": {
+      "entries": 32
+    }
+  },
+  "distribution": {
+    "article": {
+      "words": {
+        "min": 885,
+        "p25": 1234,
+        "p50": 2290,
+        "p75": 2904,
+        "max": 2934
+      },
+      "sections": {
+        "min": 4,
+        "p25": 6,
+        "p50": 7,
+        "p75": 8,
+        "max": 10
+      },
+      "thinnestSection": {
+        "min": 112,
+        "p25": 117,
+        "p50": 129,
+        "p75": 134,
+        "max": 207
+      }
+    },
+    "term": {
+      "words": {
+        "min": 98,
+        "p25": 137,
+        "p50": 146,
+        "p75": 151,
+        "max": 422
+      },
+      "sections": {
+        "min": 2,
+        "p25": 2,
+        "p50": 2,
+        "p75": 2,
+        "max": 6
+      },
+      "thinnestSection": {
+        "min": 21,
+        "p25": 66,
+        "p50": 68,
+        "p75": 73,
+        "max": 74
+      }
+    }
+  },
+  "limits": {
+    "article": {
+      "format": "article",
+      "wordsFloor": 885,
+      "targetFrom": 1234,
+      "targetTo": 2904,
+      "sectionsFloor": 4,
+      "sectionWordsFloor": 112
+    },
+    "term": {
+      "format": "term",
+      "wordsFloor": 98,
+      "targetFrom": 137,
+      "targetTo": 151,
+      "sectionsFloor": 2,
+      "sectionWordsFloor": 21
+    }
+  }
+}

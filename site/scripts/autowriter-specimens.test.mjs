@@ -5,25 +5,46 @@ import { tmpdir } from 'node:os';
 import { dirname, join, relative, resolve } from 'node:path';
 import { test } from 'node:test';
 
-import { ATTEMPT_CAP, ledgerFile } from './autowriter-ledger.mjs';
+import { titleSuffix } from '../src/utils/brand.mjs';
+
+import { ATTEMPT_CAP } from './autowriter-ledger.mjs';
 import { historySpecimens } from './autowriter-history-specimens.mjs';
 import { autowriterSpecimens } from './autowriter-specimens.mjs';
-import { ENTRY_PATH, FACT, RECORD_PATH, realBandFiles } from './fixtures/record-rules-scene.mjs';
+import { GENERATED_AT } from './fixtures/spend-report-corpus.mjs';
+import { ENTRY_PATH, FACT, RECORD_PATH, SENTENCES, bandSceneFiles } from './fixtures/record-rules-scene.mjs';
+import { run } from './measure-entry-length.mjs';
+import { FAMILIES, manifestFamilies } from './mutation-smoke.mjs';
 import { addUntrackedFile, editFile, flatten, SPECIMENS } from './mutation-specimens.mjs';
+import { recordPath } from './record-layout.mjs';
+import { spendReportFile } from './spend-report.mjs';
+import { siteBrand } from './site-brand.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
 const REPO = resolve(SITE, '..');
 const FILES = {
-  'site/src/config.yaml': 'site:\n  name: meshin.co\n',
+  'site/src/config.yaml': `site:\n  name: ${siteBrand().name}\n`,
   'docs/SEMANTIC-CORE.md': readFileSync(join(REPO, 'docs/SEMANTIC-CORE.md'), 'utf8'),
   '.github/workflows/ci.yml': readFileSync(join(REPO, '.github/workflows/ci.yml'), 'utf8'),
-  ...realBandFiles(),
+  ...bandSceneFiles(),
 };
 const NAMES = Object.keys(autowriterSpecimens({})).sort();
 const PLAIN_NAMES = NAMES.filter((name) => !Object.hasOwn(historySpecimens(), name));
-const LEDGER = 'audits/autowriter/zz-specimen.json';
-const CLAIM = 'audits/autowriter/claims/zz-specimen.json';
+const LEDGER_AT = '2026-11-02T07:00:00.000Z';
+const CLAIMED_AT = '2026-11-01T07:00:00.000Z';
+const LEDGER = recordPath('ledger', 'zz-specimen', LEDGER_AT);
+const CLAIM = recordPath('claim', 'zz-specimen', CLAIMED_AT);
+const STRAY_LEDGER = 'audits/autowriter/zz-specimen.json';
+const KEPT_LEDGER = recordPath('ledger', 'kept', LEDGER_AT);
 const WORKFLOW = '.github/workflows/ci.yml';
+const LENGTH_PATH = 'audits/entry-length.json';
+const CORPUS_ENTRY = 'site/src/data/post/zz-specimen.md';
+
+const writeSpendReport = (root) => {
+  const report = spendReportFile({ repoRoot: root, revision: 'abc1234', at: GENERATED_AT });
+  mkdirSync(dirname(join(root, report.path)), { recursive: true });
+  writeFileSync(join(root, report.path), report.text);
+};
+const SUFFIX_PATTERN = titleSuffix(siteBrand()).replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 async function inTempRepo(check, extra = {}) {
   const root = mkdtempSync(join(tmpdir(), 'autowriter-specimens-'));
@@ -32,6 +53,7 @@ async function inTempRepo(check, extra = {}) {
       mkdirSync(dirname(join(root, path)), { recursive: true });
       writeFileSync(join(root, path), body);
     }
+    writeSpendReport(root);
     return await check(root);
   } finally {
     rmSync(root, { recursive: true, force: true });
@@ -61,9 +83,12 @@ test('the specimen module names every failure mode of the gate, each against gat
     'autowriterAttemptsOverCap',
     'autowriterBandMeasurementForged',
     'autowriterBandRecordCorpusDrifted',
+    'autowriterBandRecordDistributionDrifted',
     'autowriterBandRecordStale',
     'autowriterClaimTitleCollides',
     'autowriterCommitMovesTheBand',
+    'autowriterCommitMovesTheEntryLength',
+    'autowriterCommitRemovesAGenerationRecord',
     'autowriterCommitSealsDispositions',
     'autowriterCommitWritesLighthouseRecord',
     'autowriterCommitWritesLighthouseReport',
@@ -71,12 +96,21 @@ test('the specimen module names every failure mode of the gate, each against gat
     'autowriterEscalationFailed',
     'autowriterEscalationUnreceipted',
     'autowriterFactWithoutClaimRow',
+    'autowriterGeneratedEntryUnderTheFloor',
     'autowriterGenerationOffSchema',
     'autowriterGenerationWithoutBand',
     'autowriterJobOutsideAggregate',
     'autowriterLedgerOffSchema',
+    'autowriterLengthRecordCorpusDrifted',
+    'autowriterLengthRecordFedByTheEntry',
+    'autowriterLengthRecordStale',
     'autowriterMeasurementDebtMissing',
     'autowriterProseOffTheBand',
+    'autowriterRecordMisfiled',
+    'autowriterSpendReportDeleted',
+    'autowriterSpendReportEdited',
+    'autowriterSpendReportStale',
+    'autowriterSpendReportUnstamped',
   ]);
   const tokens = NAMES.map((name) => SPECIMENS[name].token);
   assert.equal(new Set(tokens).size, tokens.length, 'two specimens share a token');
@@ -84,6 +118,13 @@ test('the specimen module names every failure mode of the gate, each against gat
     assert.equal(SPECIMENS[name].gate, 'gate:autowriter', name);
     assert.equal(typeof SPECIMENS[name].plant, 'function', name);
   }
+});
+
+test('the misfiled specimen names its stray file in its token, and the mutation smoke runs it as a family of its own', () => {
+  assert.equal(SPECIMENS.autowriterRecordMisfiled.token, 'record-layout ' + STRAY_LEDGER);
+  const family = manifestFamilies(FAMILIES).find(({ id }) => id === 'autowriter-record-filed-outside-its-month');
+  assert.equal(family?.kind, 'specimen');
+  assert.equal(family.specimen, 'autowriterRecordMisfiled');
 });
 
 for (const name of PLAIN_NAMES) {
@@ -104,8 +145,8 @@ for (const name of PLAIN_NAMES) {
   });
 }
 
-const REAL = JSON.parse(FILES['audits/sentence-band.json']);
-const LIMITS = REAL.bands.article;
+const SCENE = JSON.parse(FILES['audits/sentence-band.json']);
+const LIMITS = SCENE.bands.article;
 const percent = (share) => `${Number((share * 100).toFixed(2))}%`;
 const describeCorpus = ({ article, term }) =>
   `${article.entries} article entries with ${article.sentences} sentences, ${term.entries} term entries with ${term.sentences} sentences`;
@@ -117,9 +158,21 @@ const BAND_TEXT =
 const COMMAND = '(re-measure with: node scripts/measure-sentence-band.mjs --write)';
 const ELEVEN_WORDS_BELOW = `${entryLine('below-threshold-share')}10 of 10 sentences (100%) are under 12 words; the band allows ${Math.floor(LIMITS.belowThresholdCap * 10)}; ${BAND_TEXT}`;
 const DRIFTED_CORPUS = {
-  ...REAL.corpus,
-  article: { ...REAL.corpus.article, entries: REAL.corpus.article.entries + 1 },
+  ...SCENE.corpus,
+  article: { ...SCENE.corpus.article, entries: SCENE.corpus.article.entries + 1 },
 };
+
+const SCENE_LENGTH = JSON.parse(FILES[LENGTH_PATH]);
+const FLOOR = SCENE_LENGTH.limits.article;
+const SHORT_WORDS = SENTENCES.slice(2).join(' ').split(' ').length;
+const LENGTH_COMMAND = '(re-measure with: node scripts/measure-entry-length.mjs --write)';
+const describeLengthCorpus = ({ article, term }) => `${article.entries} article entries, ${term.entries} term entries`;
+const DRIFTED_LENGTH_CORPUS = { ...SCENE_LENGTH.corpus, article: { entries: SCENE_LENGTH.corpus.article.entries + 1 } };
+const UNDER_THE_FLOOR =
+  `AUTOWRITER body-too-short ${CORPUS_ENTRY}: the body has ${SHORT_WORDS} words; ` +
+  `no hand-written article has fewer than ${FLOOR.wordsFloor}, and the middle half of them run ` +
+  `${FLOOR.targetFrom} to ${FLOOR.targetTo}. Reach the length with more sections that each answer one more ` +
+  'question a buyer asks, never with longer sentences or a restated field';
 
 const MESSAGES = [
   ['autowriterGenerationOffSchema', 'AUTOWRITER generation-schema ' + RECORD_PATH + ': schema must equal 1'],
@@ -145,7 +198,20 @@ const MESSAGES = [
   ],
   [
     'autowriterBandRecordCorpusDrifted',
-    `AUTOWRITER record-corpus-stale audits/sentence-band.json: the record measured ${describeCorpus(DRIFTED_CORPUS)}; the corpus now has ${describeCorpus(REAL.corpus)} ${COMMAND}`,
+    `AUTOWRITER record-corpus-stale audits/sentence-band.json: the record measured ${describeCorpus(DRIFTED_CORPUS)}; the corpus now has ${describeCorpus(SCENE.corpus)} ${COMMAND}`,
+  ],
+  [
+    'autowriterBandRecordDistributionDrifted',
+    `AUTOWRITER record-distribution-stale audits/sentence-band.json: the recorded distribution differs from a fresh measurement of the corpus ${COMMAND}`,
+  ],
+  ['autowriterGeneratedEntryUnderTheFloor', UNDER_THE_FLOOR],
+  [
+    'autowriterLengthRecordStale',
+    `AUTOWRITER length-record-limits-stale ${LENGTH_PATH}: the recorded limits differs from a fresh measurement of the corpus ${LENGTH_COMMAND}`,
+  ],
+  [
+    'autowriterLengthRecordCorpusDrifted',
+    `AUTOWRITER length-record-corpus-stale ${LENGTH_PATH}: the record measured ${describeLengthCorpus(DRIFTED_LENGTH_CORPUS)}; the corpus now has ${describeLengthCorpus(SCENE_LENGTH.corpus)} ${LENGTH_COMMAND}`,
   ],
   [
     'autowriterLedgerOffSchema',
@@ -160,6 +226,10 @@ const MESSAGES = [
     'AUTOWRITER ledger-schema ' +
       LEDGER +
       ': measurementDebt is required once the verdict is merged, so the tree no Lighthouse run measured is on record',
+  ],
+  [
+    'autowriterRecordMisfiled',
+    'AUTOWRITER record-layout ' + STRAY_LEDGER + ': is not filed as audits/autowriter/<year>/<month>/<slug>.json',
   ],
   [
     'autowriterEscalationFailed',
@@ -192,6 +262,69 @@ for (const [name, line] of MESSAGES) {
   });
 }
 
+const countEveryEntry = (root, err = () => {}) =>
+  run({ write: true, repoRoot: root, today: SCENE_LENGTH.measuredOn, out: () => {}, err, exclude: [] });
+
+test('the fed length record is what a measurement that counted the pipeline entry writes, and only the fresh measurement refuses it', async () => {
+  await inTempRepo(async (root) => {
+    const restore = await planted('autowriterLengthRecordFedByTheEntry', root);
+    writeSpendReport(root);
+    const fed = readFileSync(join(root, LENGTH_PATH), 'utf8');
+    const rules = gate(root)
+      .stderr.trim()
+      .split('\n')
+      .map((line) => line.split(' ')[1]);
+    const status = countEveryEntry(root);
+    const counted = readFileSync(join(root, LENGTH_PATH), 'utf8');
+    await restore();
+    assert.equal(status, 0);
+    assert.equal(fed, counted);
+    assert.ok(JSON.parse(fed).limits.article.wordsFloor < FLOOR.wordsFloor);
+    assert.deepEqual(rules, [
+      'length-record-corpus-stale',
+      'length-record-distribution-stale',
+      'length-record-limits-stale',
+    ]);
+  });
+});
+
+test('a measurement that counts an entry with no section refuses to write, which is why the fed record is measured from an entry with a section', async () => {
+  await inTempRepo(async (root) => {
+    const restore = await planted('autowriterGeneratedEntryUnderTheFloor', root);
+    const refusals = [];
+    const status = countEveryEntry(root, (line) => refusals.push(line));
+    await restore();
+    assert.equal(status, 1);
+    assert.match(refusals.join('\n'), /admit a body of \d+ words with no section/);
+  });
+});
+
+test('a fed length record that cannot be written leaves neither the planted entry nor its generation record behind', async () => {
+  await inTempRepo(async (root) => {
+    const before = snapshot(root);
+    const failingEdit = () => Promise.reject(new Error('disk full'));
+    const { autowriterLengthRecordFedByTheEntry } = autowriterSpecimens({ addUntrackedFile, editFile: failingEdit });
+    await assert.rejects(autowriterLengthRecordFedByTheEntry.plant(join(root, 'site')), /disk full/);
+    assert.deepEqual(snapshot(root), before);
+  });
+});
+
+const LENGTH_FAMILIES = {
+  'autowriter-generated-entry-under-the-length-floor': 'autowriterGeneratedEntryUnderTheFloor',
+  'autowriter-entry-length-record-stale': 'autowriterLengthRecordStale',
+  'autowriter-entry-length-corpus-drifted': 'autowriterLengthRecordCorpusDrifted',
+  'autowriter-entry-length-record-fed-by-the-entry': 'autowriterLengthRecordFedByTheEntry',
+};
+
+test('each length specimen has a family of its own in the mutation smoke, and the family names its specimen', () => {
+  const families = manifestFamilies(FAMILIES);
+  for (const [id, specimen] of Object.entries(LENGTH_FAMILIES)) {
+    const family = families.find((found) => found.id === id);
+    assert.equal(family?.kind, 'specimen', id);
+    assert.equal(family.specimen, specimen, id);
+  }
+});
+
 test('the claim specimen repeats a title the generated layer already holds, in other case and without its question mark', async () => {
   await inTempRepo(async (root) => {
     const restore = await planted('autowriterClaimTitleCollides', root);
@@ -209,9 +342,27 @@ test('the claim specimen repeats a title the generated layer already holds, in o
       new RegExp(
         '^AUTOWRITER title-collision ' +
           CLAIM.replaceAll('.', '\\.') +
-          ': title ".+" is already the title of /[a-z/-]+ in the generated layer of docs/SEMANTIC-CORE\\.md \\(".+ — meshin\\.co"\\)$'
+          `: title ".+" is already the title of /[a-z/-]+ in the generated layer of docs/SEMANTIC-CORE\\.md \\(".+${SUFFIX_PATTERN}"\\)$`
       )
     );
+  });
+});
+
+test('the misfiled specimen is a sound ledger in the wrong place: filed under its month, the same bytes leave the gate green', async () => {
+  await inTempRepo(async (root) => {
+    const restore = await planted('autowriterRecordMisfiled', root);
+    writeSpendReport(root);
+    assert.equal(existsSync(join(root, LEDGER)), false);
+    const text = readFileSync(join(root, STRAY_LEDGER), 'utf8');
+    const red = gate(root);
+    await restore();
+    assert.equal(red.status, 1);
+    assert.equal(red.stderr.trim().split('\n').length, 1, red.stderr);
+    mkdirSync(dirname(join(root, LEDGER)), { recursive: true });
+    writeFileSync(join(root, LEDGER), text);
+    const filed = gate(root);
+    assert.equal(filed.status, 0, filed.stderr);
+    assert.match(filed.stdout, /autowriter: 1 ledgers, /);
   });
 });
 
@@ -250,14 +401,14 @@ test('planting beside a ledger that is already there leaves that ledger and its 
   await inTempRepo(
     async (root) => {
       const before = snapshot(root);
-      for (const name of ['autowriterLedgerOffSchema', 'autowriterClaimTitleCollides']) {
+      for (const name of ['autowriterLedgerOffSchema', 'autowriterClaimTitleCollides', 'autowriterRecordMisfiled']) {
         const restore = await planted(name, root);
         await restore();
         assert.deepEqual(snapshot(root), before);
       }
-      assert.equal(readFileSync(join(root, ledgerFile('kept')), 'utf8'), kept);
+      assert.equal(readFileSync(join(root, KEPT_LEDGER), 'utf8'), kept);
     },
-    { [ledgerFile('kept')]: kept }
+    { [KEPT_LEDGER]: kept }
   );
 });
 

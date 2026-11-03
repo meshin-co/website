@@ -1,15 +1,16 @@
 import { existsSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 
-import { LEDGER_DIR, ledgerFile, readLedger, requiredChannels } from './autowriter-ledger.mjs';
+import { readLedger, requiredChannels } from './autowriter-ledger.mjs';
 import { redeliver } from './escalate.mjs';
 import { raiseOnRun } from './escalate-run.mjs';
+import { recordPath } from './record-layout.mjs';
 
 const KIND = 'spend-ceiling';
 
 export const noticeSlug = (month) => `spend-ceiling-${month}`;
-export const noticeFile = (month) => ledgerFile(noticeSlug(month));
-const noticePath = (repoRoot, month) => join(repoRoot, LEDGER_DIR, `${noticeSlug(month)}.json`);
+export const noticeFile = (month) => recordPath('ledger', noticeSlug(month), `${month}-01T00:00:00Z`);
+const noticePath = (repoRoot, month) => join(repoRoot, noticeFile(month));
 
 const reachedEscalations = (ledger) => ledger.escalations.filter(({ kind }) => kind === KIND);
 const deliveredTo = ({ receipts }, channel) =>
@@ -27,7 +28,7 @@ export function raiseNotice({ repoRoot, month, spentUsd, ceilingUsd, env, fetch,
   const pending = escalationsOf(path).findLast((escalation) => !isDelivered(escalation));
   if (pending) return redeliver({ ledgerPath: path, id: pending.id, env, fetch, now });
   return raiseOnRun({
-    ledgerDir: join(repoRoot, LEDGER_DIR),
+    ledgerDir: dirname(path),
     slug: noticeSlug(month),
     kind: KIND,
     title: `Monthly spend ceiling reached for ${month}: ${usd(spentUsd)} of ${usd(ceilingUsd)}`,

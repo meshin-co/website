@@ -1,9 +1,9 @@
-import { existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 
 import { DUPLICATE_MINIMUM_WORDS } from './content-gate.mjs';
-import { GENERATION_DIR } from './generation-record.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
+import { recordFiles, slugOfRecord } from './record-layout.mjs';
 import {
   BAND_FILE,
   BandError,
@@ -17,7 +17,6 @@ import {
 } from './sentence-band.mjs';
 
 const USAGE = 'usage: node scripts/measure-sentence-band.mjs [--write] [repository root]';
-const RECORD_SUFFIX = '.json';
 
 const percent = (share) => `${Number((share * 100).toFixed(2))}%`;
 
@@ -26,13 +25,7 @@ const spreadText = (spread, show = String) =>
     .map(([key, value]) => `${key} ${show(value)}`)
     .join(', ');
 
-function generatedSlugs(repoRoot) {
-  const directory = join(repoRoot, GENERATION_DIR);
-  if (!existsSync(directory)) return [];
-  return readdirSync(directory)
-    .filter((name) => name.endsWith(RECORD_SUFFIX))
-    .map((name) => name.slice(0, -RECORD_SUFFIX.length));
-}
+export const generatedSlugs = (repoRoot) => recordFiles(repoRoot, 'generation').map(slugOfRecord);
 
 function describeFormat(format, { threshold, minimumSentences, corpus, distribution }, band) {
   const { entries, measured, sentences } = corpus[format];

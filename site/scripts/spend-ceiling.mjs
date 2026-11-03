@@ -6,6 +6,7 @@ import { runGit } from './commit-to-main.mjs';
 import { variable } from './escalate-channels.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 import { noticeFile, noticePosted, raiseNotice } from './spend-notice.mjs';
+import { monthLine } from './spend-report-text.mjs';
 import { readLedgers } from './spend-sources.mjs';
 import { microOf, monthOf, monthlySpend, spendWarnings } from './spend-sum.mjs';
 
@@ -38,10 +39,17 @@ export function inspect({
       noticePosted: noticePosted({ repoRoot, month }),
     },
     warnings: spendWarnings({ ledgers }),
+    read: {
+      ledgers: ledgers.filter(({ ledger }) => ledger !== null).length,
+      records: ledgers.filter(({ record }) => record !== null).length,
+    },
   };
 }
 
 export const ceilingStatus = (options) => inspect(options).status;
+
+export const monthLineOf = ({ month, spentMicro, ceilingUsd }) =>
+  monthLine({ month, spentMicro, ceilingMicro: microOf(ceilingUsd) });
 
 function parseArguments(argv) {
   const options = {};
@@ -106,14 +114,14 @@ export async function runCli(argv, io = {}) {
   const repoRoot = options['repo-root'] === undefined ? REPOSITORY_ROOT : resolve(options['repo-root']);
   const at = options.now === undefined ? now() : new Date(options.now);
   try {
-    const { status, warnings } = inspect({ repoRoot, now: at, run, ceilingUsd });
+    const { status, warnings, read } = inspect({ repoRoot, now: at, run, ceilingUsd });
     warnings.forEach((warning) => stderr(`warning: ${warning}`));
     const notice = await settleNotice({ status, repoRoot, env, fetch, now: () => at });
     const lines = [`stopped=${status.reached}`, `notice=${notice}`, `ledger=${noticeFile(status.month)}`];
     appendTo(env, 'GITHUB_OUTPUT', `${lines.join('\n')}\n`);
     appendTo(env, 'GITHUB_STEP_SUMMARY', summaryOf({ status, notice }));
     const { month, spentUsd, reached } = status;
-    stdout(JSON.stringify({ month, spentUsd, ceilingUsd, reached, notice }));
+    stdout(JSON.stringify({ month, spentUsd, ceilingUsd, reached, notice, ...read }));
     return 0;
   } catch (error) {
     stderr(`spend-ceiling: ${error.message}`);

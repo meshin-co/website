@@ -1,8 +1,6 @@
-import { LEDGER_DIR, fileStemProblem } from './autowriter-ledger.mjs';
+import { fileStemProblem } from './autowriter-ledger.mjs';
 import { instantProblems, readSchema } from './autowriter-records.mjs';
 import { validateJsonSchema } from './json-schema.mjs';
-
-export const CLAIM_DIR = `${LEDGER_DIR}/claims`;
 
 export const GENERATED_BEGIN = '<!-- semantic-core:begin generated -->';
 export const GENERATED_END = '<!-- semantic-core:end generated -->';
@@ -13,8 +11,6 @@ const SEPARATOR_CELL = /^:?-+:?$/;
 
 export const CLAIM_FORMATS = CLAIM_SCHEMA.properties.format.enum;
 export const CLAIM_STATUSES = CLAIM_SCHEMA.properties.status.enum;
-
-export const claimFile = (name) => `${CLAIM_DIR}/${name}.json`;
 
 export const claimFileProblem = fileStemProblem;
 

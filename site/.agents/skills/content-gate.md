@@ -75,5 +75,4 @@ No number, client name, metric, testimonial or credential ships without a confir
 ## Trap
 
 A throwaway preview route enters the derived route set and widens every gate — content,
-Lighthouse, budgets, sitemap. Delete scratch pages before the audited build
-(docs/FRONTEND-EXCELLENCE-ISSUES.md).
+Lighthouse, budgets, sitemap. Delete scratch pages before the audited build.

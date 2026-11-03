@@ -2,11 +2,11 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
+import { titleSuffix } from '../src/utils/brand.mjs';
+
 import {
-  CLAIM_DIR,
   CLAIM_FORMATS,
   CLAIM_STATUSES,
-  claimFile,
   claimFileProblem,
   GENERATED_BEGIN,
   GENERATED_END,
@@ -17,6 +17,8 @@ import {
   validateClaim,
 } from './autowriter-claims.mjs';
 import { describeProblem } from './autowriter-records.mjs';
+import { recordDirectory, recordPath } from './record-layout.mjs';
+import { siteBrand } from './site-brand.mjs';
 
 const SUFFIX = ' — meshin.co';
 const NOW = new Date('2026-11-02T07:00:00.000Z');
@@ -38,7 +40,10 @@ const claim = (extra = {}) => ({
   expiresAt: LIVE,
   ...extra,
 });
-const filed = (name, extra = {}) => ({ path: claimFile(name), claim: claim({ slug: name, ...extra }) });
+const filed = (name, extra = {}) => {
+  const value = claim({ slug: name, ...extra });
+  return { path: recordPath('claim', name, value.claimedAt), claim: value };
+};
 const problemsText = (value) => validateClaim(value).map(describeProblem);
 
 const CORE = [
@@ -63,9 +68,12 @@ const CORE = [
   'outro',
 ].join('\n');
 
-test('claims live beside the ledgers, one file per slug, in the two formats the writer writes', () => {
-  assert.equal(CLAIM_DIR, 'audits/autowriter/claims');
-  assert.equal(claimFile('what-is-a-model-card'), 'audits/autowriter/claims/what-is-a-model-card.json');
+test('claims live beside the ledgers, one file per slug filed by month, in the two formats the writer writes', () => {
+  assert.equal(recordDirectory('claim'), 'audits/autowriter/claims');
+  assert.equal(
+    recordPath('claim', 'what-is-a-model-card', CLAIMED),
+    'audits/autowriter/claims/2026/11/what-is-a-model-card.json'
+  );
   assert.deepEqual(CLAIM_FORMATS, ['term', 'article']);
   assert.deepEqual(CLAIM_STATUSES, ['claimed', 'written']);
 });
@@ -127,9 +135,9 @@ test('a claim that is not an object is refused as a whole', () => {
 });
 
 test('the file name must be the slug, so one slug cannot be held by two files', () => {
-  assert.equal(claimFileProblem('audits/autowriter/claims/what-is-a-model-card.json', claim()), null);
+  assert.equal(claimFileProblem(recordPath('claim', 'what-is-a-model-card', CLAIMED), claim()), null);
   assert.equal(
-    claimFileProblem('audits/autowriter/claims/other.json', claim()),
+    claimFileProblem(recordPath('claim', 'other', CLAIMED), claim()),
     'slug what-is-a-model-card does not match the file name other.json'
   );
 });
@@ -182,7 +190,7 @@ test('an open claim whose title is already a title in the generated layer is ref
   const found = collide([filed('what-is-an-ai-system', { title: 'what is an AI system' })]);
   assert.deepEqual(found, [
     {
-      path: 'audits/autowriter/claims/what-is-an-ai-system.json',
+      path: recordPath('claim', 'what-is-an-ai-system', CLAIMED),
       detail:
         'title "what is an AI system" is already the title of /glossary/ai-system in the generated layer of docs/SEMANTIC-CORE.md ("What is an AI system? — meshin.co")',
     },
@@ -202,10 +210,31 @@ test('two open claims on one title are both refused, each naming the other', () 
   ]);
   assert.deepEqual(
     found.map(({ path }) => path),
-    [claimFile('what-is-a-card'), claimFile('card-explained')]
+    [recordPath('claim', 'what-is-a-card', CLAIMED), recordPath('claim', 'card-explained', CLAIMED)]
   );
-  assert.match(found[0].detail, /also claimed by audits\/autowriter\/claims\/card-explained\.json/);
-  assert.match(found[1].detail, /also claimed by audits\/autowriter\/claims\/what-is-a-card\.json/);
+  assert.ok(
+    found[0].detail.includes('is also claimed by ' + recordPath('claim', 'card-explained', CLAIMED)),
+    found[0].detail
+  );
+  assert.ok(
+    found[1].detail.includes('is also claimed by ' + recordPath('claim', 'what-is-a-card', CLAIMED)),
+    found[1].detail
+  );
+});
+
+test('two open claims on one title are refused when they were made in different months, each naming the other', () => {
+  const found = collide([
+    filed('what-is-a-card', { title: 'What is a card?', claimedAt: '2026-10-25T07:00:00.000Z' }),
+    filed('card-explained', { title: 'what is a card' }),
+  ]);
+  const october = 'audits/autowriter/claims/2026/10/what-is-a-card.json';
+  const november = 'audits/autowriter/claims/2026/11/card-explained.json';
+  assert.deepEqual(
+    found.map(({ path }) => path),
+    [october, november]
+  );
+  assert.ok(found[0].detail.endsWith('is also claimed by ' + november), found[0].detail);
+  assert.ok(found[1].detail.endsWith('is also claimed by ' + october), found[1].detail);
 });
 
 test('an open claim that repeats a written claim is refused, and the written claim is left alone', () => {
@@ -215,7 +244,7 @@ test('an open claim that repeats a written claim is refused, and the written cla
   ]);
   assert.deepEqual(
     found.map(({ path }) => path),
-    [claimFile('card-explained')]
+    [recordPath('claim', 'card-explained', CLAIMED)]
   );
 });
 
@@ -240,18 +269,18 @@ test('the real generated layer is read whole: one title per route row, in every 
   const doc = readFileSync(new URL('../../docs/SEMANTIC-CORE.md', import.meta.url), 'utf8');
   const block = doc.slice(doc.indexOf(GENERATED_BEGIN), doc.indexOf(GENERATED_END));
   const routeRows = block.split('\n').filter((line) => line.startsWith('| `'));
+  const named = [...block.matchAll(/^### ([a-z-]+) \((\d+)\)/gm)].map(([, family, count]) => [family, Number(count)]);
   const rows = generatedTitles(doc);
+  const suffix = titleSuffix(siteBrand());
   assert.equal(rows.length, routeRows.length);
-  assert.ok(rows.length > 50, `only ${rows.length} titles read`);
+  assert.ok(rows.length > 0, 'no title was read');
   assert.ok(
-    rows.every(({ title }) => title.endsWith(SUFFIX)),
+    rows.every(({ title }) => title.endsWith(suffix)),
     'a title lost its brand suffix'
   );
-  for (const family of ['static', 'term', 'faq-answer', 'article']) {
-    assert.ok(
-      rows.some((row) => row.family === family),
-      `no ${family} title was read`
-    );
+  assert.ok(named.length > 0, 'the core names no family');
+  for (const [family, count] of named) {
+    assert.equal(rows.filter((row) => row.family === family).length, count, `${family} titles read`);
   }
 });
 

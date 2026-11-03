@@ -156,6 +156,45 @@ test('an unexpected error is a failed outcome with its spend, and the key never 
   assert.equal(run.err.join('\n').includes(key), false);
 });
 
+test('a stop that recorded its spend on a local commit carries that commit on the failure line', async () => {
+  const spend = { tokens: { input: 1000, output: 500 }, costUsd: 0.0035 };
+  const run = await invoke({
+    env: configured(secret()),
+    repair: async () => {
+      throw Object.assign(new RepairStop('unrepairable', 'the rewrite broke the build: boom'), {
+        spend,
+        commit: COMMIT,
+      });
+    },
+  });
+
+  assert.equal(run.code, 1);
+  assert.deepEqual(lastJson(run.out), {
+    ok: false,
+    outcome: 'unrepairable',
+    commit: COMMIT,
+    reason: 'the rewrite broke the build: boom',
+    kind: 'unrepairable',
+    variables: [],
+    spend,
+  });
+});
+
+test('an unexpected error that recorded its spend carries its commit on the failure line too', async () => {
+  const run = await invoke({
+    env: configured(secret()),
+    repair: async () => {
+      throw Object.assign(new Error('boom'), {
+        spend: { tokens: { input: 1, output: 2 }, costUsd: 0.5 },
+        commit: COMMIT,
+      });
+    },
+  });
+
+  assert.equal(lastJson(run.out).outcome, 'failed');
+  assert.equal(lastJson(run.out).commit, COMMIT);
+});
+
 test('a usage error exits two and names the usage, never reaching the repair', async () => {
   for (const argv of [
     [],

@@ -5,7 +5,6 @@ import { describeProblem, instantProblems, readSchema } from './autowriter-recor
 import { readEngineConfig } from './engine-config.mjs';
 import { validateJsonSchema } from './json-schema.mjs';
 
-export const LEDGER_DIR = 'audits/autowriter';
 const { loop } = readEngineConfig();
 
 export const ATTEMPT_CAP = loop.attemptCap;
@@ -19,7 +18,8 @@ export const CHANNELS = ['issue', 'slack', 'digest'];
 
 const LEDGER_SCHEMA = readSchema('autowriter-ledger.schema.json');
 export const REFUSAL_REASONS = LEDGER_SCHEMA.$defs.refusal.properties.reason.enum;
-const DECIDED_WITH_REASON = ['escalated', 'stopped'];
+const DECIDED_WITH_REASON = ['escalated', 'stopped', 'discarded'];
+export const ENDED_VERDICTS = DECIDED_WITH_REASON;
 const SPEND_TOLERANCE = 1e-6;
 const MAX_SHOWN = 5;
 
@@ -27,8 +27,6 @@ export function requiredChannels(kind) {
   if (!ESCALATION_KINDS.includes(kind)) throw new Error(`unknown escalation kind ${kind}`);
   return IMMEDIATE_KINDS.includes(kind) ? ['issue', 'slack'] : ['issue'];
 }
-
-export const ledgerFile = (name) => `${LEDGER_DIR}/${name}.json`;
 
 export const newLedger = ({ slug, runId, pullRequest }) => ({
   schema: 1,

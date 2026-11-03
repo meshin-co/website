@@ -1,0 +1,10 @@
+# Known Gaps
+
+`localOnlyGates` (`site/package.json`) excuses one script at a time from running in CI, with a reason attached, so the harness never lies about coverage it does not have. This register widens the same idea to gaps that are not one script's CI wiring: a real problem was found, it is deliberately not being closed in this pass, and the reason it is still open is written down instead of silently missing from the diff.
+
+`gate:plan` (`site/scripts/plan-gate.mjs`) reads this file and fails the build when a row has no `id`, when an `id` repeats, or when the `why it is not closed` cell is empty. A row without an honest reason is exactly the oversight this file exists to prevent.
+
+Add a row when you find something real that you are not fixing in this pass. Append at the end of the table; never renumber another row.
+
+| id  | claim | why it is not closed | owner | opened |
+| --- | ----- | -------------------- | ----- | ------ |

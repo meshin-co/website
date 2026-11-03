@@ -1,6 +1,6 @@
 # Launch Checklist (Phase 5)
 
-The plan of record is `openspec/changes/archive/2026-10-24-11-launch/proposal.md`, archived on
+The plan of record is the launch change in `openspec/changes/archive/`, archived on
 2026-10-24. CG-5 was narrowed there: Lighthouse has no origin override and always measures the
 local build, so what the production URL proves is `npm run smoke:prod`, not a score. The missing
 edge measurement is row G44 of `docs/plan/reference/known-gaps.md`. Nothing here happens before
@@ -37,7 +37,7 @@ edge measurement is row G44 of `docs/plan/reference/known-gaps.md`. Nothing here
   segment from `docs/COPY-CHECKLIST.md` §9 — referrers chatgpt.com, perplexity.ai,
   copilot.microsoft.com, gemini.google.com — so answer-engine citations get a feedback loop.
 - LinkedIn person and company pages point at the site.
-- Baseline the 30 buyer prompts (`docs/PRD.md` §17.3) into a geo report under
+- Baseline the buyer prompts of `docs/SEMANTIC-CORE.md` into a geo report under
   `audits/phase-N/` once the phase directory exists.
 
 ## Standing rules that survive launch

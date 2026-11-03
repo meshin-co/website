@@ -1,3 +1,5 @@
+import { autowriterAgent } from './site-brand.mjs';
+
 const MAX_EXCERPT_LENGTH = 200;
 const REQUEST_TIMEOUT_MS = 20_000;
 const DEFAULT_API_URL = 'https://api.github.com';
@@ -65,7 +67,7 @@ async function openIssue(context) {
       Accept: 'application/vnd.github+json',
       'X-GitHub-Api-Version': '2022-11-28',
       'Content-Type': 'application/json',
-      'User-Agent': 'meshin-autowriter',
+      'User-Agent': autowriterAgent(),
     },
     body: { title: escalation.title, body: issueBody(context) },
   });
@@ -101,20 +103,21 @@ function slackText(context) {
   ].join('\n');
 }
 
-async function postToSlack(context) {
-  const { env, fetch, clean } = context;
+export async function postSlackText({ env, fetch, clean, text }) {
   if (absentVariables(env, ['SLACK_WEBHOOK_URL']).length > 0) return { error: NOT_SET.SLACK_WEBHOOK_URL };
   const result = await send({
     fetch,
     url: variable(env, 'SLACK_WEBHOOK_URL'),
     headers: { 'Content-Type': 'application/json' },
-    body: { text: slackText(context) },
+    body: { text },
   });
   if (result.failure !== undefined) return { error: `request failed: ${result.failure}` };
-  const { status, text } = result;
+  const { status, text: answer } = result;
   if (status < 200 || status > 299)
-    return { status, error: `Slack answered HTTP ${status}: ${clean(text).slice(0, MAX_EXCERPT_LENGTH)}` };
+    return { status, error: `Slack answered HTTP ${status}: ${clean(answer).slice(0, MAX_EXCERPT_LENGTH)}` };
   return { status };
 }
+
+const postToSlack = (context) => postSlackText({ ...context, text: slackText(context) });
 
 export const SENDERS = { issue: openIssue, slack: postToSlack };

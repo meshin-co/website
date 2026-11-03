@@ -1,11 +1,16 @@
-import { ATTEMPT_CAP, ledgerFile, ledgerWithAttempt, validateLedger } from './autowriter-ledger.mjs';
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+import { ATTEMPT_CAP, ledgerWithAttempt, validateLedger } from './autowriter-ledger.mjs';
 import { describeProblem } from './autowriter-records.mjs';
 import { resolveClaimTable } from './claim-sources.mjs';
 import { bandOf } from './generation-facts.mjs';
-import { callTotals, generationFile, recordAfterRepair, validateRecord } from './generation-record.mjs';
+import { callTotals, recordAfterRepair, validateRecord } from './generation-record.mjs';
+import { recordPath } from './record-layout.mjs';
 import { attemptFailure } from './repair-findings.mjs';
 import { RepairStop } from './repair-outcome.mjs';
 import { scopeProblems } from './repair-scope.mjs';
+import { spendReportFile } from './spend-report.mjs';
 import { WriterError } from './writer-error.mjs';
 import { assertNoSecrets } from './writer-redact.mjs';
 
@@ -31,15 +36,62 @@ function refuseInvalid(slug, problems) {
     );
 }
 
-function messageOf({ slug, number, failures, gates }) {
+function messageOf({ slug, number, failures, gates, generationPath }) {
   const listed = failures.slice(0, LISTED_FAILURES).map(({ rule, path }) => '- ' + rule + ' on ' + path);
   const more = failures.length > LISTED_FAILURES ? ['- and ' + (failures.length - LISTED_FAILURES) + ' more'] : [];
   return [
     'fix(autowriter): repair ' + slug + ', attempt ' + number + ' of ' + ATTEMPT_CAP,
     ['Answers:', ...listed, ...more].join('\n'),
-    'Provenance: ' + generationFile(slug),
+    'Provenance: ' + generationPath,
     'Gates: ' + gates.map(({ name, exit }) => name + ' ' + exit).join(', '),
   ].join('\n\n');
+}
+
+function ledgerAfterAttempt({ situation, failures, calls, now }) {
+  const { tokens, costUsd } = callTotals(calls);
+  return ledgerWithAttempt(situation.ledger, {
+    judgedCommit: situation.head,
+    recordedAt: now.toISOString(),
+    ...attemptFailure(failures),
+    tokens,
+    costUsd,
+  });
+}
+
+function reportFiles({ repoRoot, written, situation, now }) {
+  const report = spendReportFile({ repoRoot, written, revision: situation.head, at: now.toISOString() });
+  const target = join(repoRoot, report.path);
+  const current = existsSync(target) ? readFileSync(target, 'utf8') : null;
+  return current === report.text ? [] : [{ path: report.path, text: report.text }];
+}
+
+function spendMessageOf({ slug, outcome, calls, generationPath }) {
+  return [
+    'fix(autowriter): record the spend of a repair of ' + slug + ' that ended as ' + outcome,
+    'The repair made ' +
+      calls.length +
+      ' model call' +
+      (calls.length === 1 ? '' : 's') +
+      ' and ended without a repaired entry, so the ledger gains an attempt that carries the spend and nothing else changes.',
+    'Provenance: ' + generationPath,
+  ].join('\n\n');
+}
+
+export async function recordFailedSpend({ repoRoot, situation, calls, failures, outcome, now, run, commit, secrets }) {
+  const { claim, slug } = situation;
+  const nextLedger = ledgerAfterAttempt({ situation, failures, calls, now });
+  refuseInvalid(slug, validateLedger(nextLedger));
+  const written = [{ path: recordPath('ledger', slug, claim.claimedAt), text: textOf(nextLedger) }];
+  const files = [...written, ...reportFiles({ repoRoot, written, situation, now })];
+  const message = spendMessageOf({
+    slug,
+    outcome,
+    calls,
+    generationPath: recordPath('generation', slug, claim.claimedAt),
+  });
+  assertNoSecrets({ files, message }, secrets, 'the record of the spend');
+  const { commit: sha } = await commit({ repoRoot, files, message, run });
+  return sha;
 }
 
 export async function finishRepair({
@@ -55,7 +107,7 @@ export async function finishRepair({
   commit,
   secrets,
 }) {
-  const { claim, slug, record, ledger, runDate, head } = situation;
+  const { claim, slug, record, ledger, runDate } = situation;
   const number = ledger.attempts.length + 1;
   const assembly = await assembled({
     assemble,
@@ -72,29 +124,33 @@ export async function finishRepair({
     measuredOn: band.measuredOn,
     gates: assembly.gates,
   });
-  const { tokens, costUsd } = callTotals(calls);
-  const nextLedger = ledgerWithAttempt(ledger, {
-    judgedCommit: head,
-    recordedAt: now.toISOString(),
-    ...attemptFailure(failures),
-    tokens,
-    costUsd,
-  });
+  const nextLedger = ledgerAfterAttempt({ situation, failures, calls, now });
   refuseInvalid(slug, [...validateRecord(nextRecord), ...validateLedger(nextLedger)]);
-  const own = [generationFile(slug), ledgerFile(slug)];
+  const generationPath = recordPath('generation', slug, claim.claimedAt);
+  const ledgerPath = recordPath('ledger', slug, claim.claimedAt);
+  const own = [generationPath, ledgerPath];
+  const written = [
+    { path: generationPath, text: textOf(nextRecord) },
+    { path: ledgerPath, text: textOf(nextLedger) },
+  ];
   const files = [
     ...assembly.files.filter(({ path }) => !own.includes(path)),
-    { path: generationFile(slug), text: textOf(nextRecord) },
-    { path: ledgerFile(slug), text: textOf(nextLedger) },
+    ...written,
+    ...reportFiles({ repoRoot, written, situation, now }),
   ];
-  const outside = scopeProblems({ slug, format: claim.format, paths: files.map(({ path }) => path) });
+  const outside = scopeProblems({
+    slug,
+    format: claim.format,
+    claimedAt: claim.claimedAt,
+    paths: files.map(({ path }) => path),
+  });
   if (outside.length > 0)
     throw new RepairStop(
       'unrepairable',
       'the repair would touch files it may not: ' + outside.map(({ path, problem }) => path + ' ' + problem).join('; '),
       { calls }
     );
-  const message = messageOf({ slug, number, failures, gates: assembly.gates });
+  const message = messageOf({ slug, number, failures, gates: assembly.gates, generationPath });
   assertNoSecrets({ files, message }, secrets, 'the repair output');
   const { commit: sha } = await commit({ repoRoot, files, message, run });
   return { commit: sha, attempt: number, gates: assembly.gates };

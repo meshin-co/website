@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { after, test } from 'node:test';
 
 import { ATTEMPT_CAP, validateLedger } from './autowriter-ledger.mjs';
+import { provenanceOf } from './evidence-gate.mjs';
 import { validateRecord } from './generation-record.mjs';
 import {
   FAILURE,
@@ -22,6 +23,7 @@ import {
 import { RepairStop } from './repair-outcome.mjs';
 import { finishRepair } from './repair-finish.mjs';
 import { rewriteEntry } from './repair-rewrite.mjs';
+import { REPORT_PATH, stampedAt } from './spend-report-text.mjs';
 import { WriterError } from './writer-error.mjs';
 
 after(cleanup);
@@ -77,10 +79,21 @@ test('the commit holds the entry files, the ledger and the record, with the prov
   assert.equal(scene.committed.length, 1);
   assert.deepEqual(
     scene.committed[0].files.map(({ path }) => path).sort(),
-    [ENTRY, LEDGER, RECORD, 'docs/SEMANTIC-CORE.md'].sort()
+    [ENTRY, LEDGER, RECORD, 'docs/SEMANTIC-CORE.md', REPORT_PATH].sort()
   );
   assert.match(scene.committed[0].message, /^fix\(autowriter\): repair /);
   assert.ok(scene.committed[0].message.includes('Provenance: ' + RECORD));
+});
+
+test('the commit regenerates the spend report from the ledger and the record it writes, stamped with the judged head and the clock', async () => {
+  const { scene, finish } = await finishing();
+
+  await finish();
+
+  const report = fileText(scene.committed[0], REPORT_PATH);
+  assert.equal(provenanceOf(report), HEAD);
+  assert.equal(stampedAt(report), NOW.toISOString());
+  assert.match(report, /Repair calls/);
 });
 
 test('the attempt ledger rides inside the repair commit, with the failure it answered and its spend', async () => {

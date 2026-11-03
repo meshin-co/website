@@ -12,7 +12,7 @@ It writes `audits/phase-4.7/inventory.json` and fails while any of them is outst
    source string means copy was authored somewhere the extractors do not look. That is the check
    that makes "nothing was skipped" mechanical rather than asserted.
 3. **Source copy reaches a page.** A string in the repo that no page renders is dead copy. The
-   first real finding was `src/data/author/dmitri.md`, whose body prose ships nowhere — only its
+   first real finding was an author entry, whose body prose ships nowhere — only its
    frontmatter `bio` is rendered.
 
 ## Where rows come from

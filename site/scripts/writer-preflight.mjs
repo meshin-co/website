@@ -1,6 +1,15 @@
 import { OG_TITLE_MAX_CHARS } from '../src/utils/content-rules.mjs';
 import { claimTableProblems } from './claim-sources.mjs';
 import { judgePage, PROFILES } from './content-rows.mjs';
+import {
+  LENGTH_FILE,
+  LENGTH_RULES,
+  LengthError,
+  REMEASURE_COMMAND as REMEASURE_LENGTH,
+  lengthFor,
+  lengthProblems,
+  readLengthRecord,
+} from './entry-length.mjs';
 import { COLLECTION_OF, proseBlocks, proseSentences } from './entry-prose.mjs';
 import { entryRoute, writtenFormat } from './entry-files.mjs';
 import { targetQueryFor } from './route-derive.mjs';
@@ -12,6 +21,8 @@ import { pageProblems } from './writer-preflight-page.mjs';
 import { listing, REPO_FILES, readText, routeList, tagSlugs } from './writer-tree.mjs';
 
 const REMEASURE = 'node scripts/measure-sentence-band.mjs --write';
+const LENGTH_ADVICE =
+  'A problem of length is the exception: answer it with more sections that rest on the sources you already cite, and never by cutting text or repeating a field.';
 const normalised = (query) => query.trim().toLowerCase().replace(/\s+/g, ' ');
 
 function readJson(repoRoot, path) {
@@ -23,6 +34,18 @@ function readJson(repoRoot, path) {
   }
 }
 
+function lengthRecordOf(repoRoot) {
+  let record;
+  try {
+    record = readLengthRecord(repoRoot);
+  } catch (error) {
+    if (error instanceof LengthError) throw new WriterError('config', error.message);
+    throw error;
+  }
+  if (!record) throw new WriterError('config', `${LENGTH_FILE} does not exist; write it with ${REMEASURE_LENGTH}`);
+  return record;
+}
+
 export function loadPreflightContext(repoRoot) {
   const bandRecord = readBandRecord(repoRoot);
   if (!bandRecord) throw new WriterError('config', `${BAND_FILE} does not exist; write it with ${REMEASURE}`);
@@ -31,6 +54,7 @@ export function loadPreflightContext(repoRoot) {
     facts: readJson(repoRoot, REPO_FILES.contentFacts),
     controlledWords: readJson(repoRoot, REPO_FILES.controlledWords),
     bandRecord,
+    lengthRecord: lengthRecordOf(repoRoot),
     routes: routeList(repoRoot),
     slugs: Object.fromEntries(
       Object.entries(REPO_FILES.collections).map(([name, path]) => [name, listing(repoRoot, path)])
@@ -124,6 +148,11 @@ export function preflight({ draft, claim, context, runDate }) {
     ...fieldProblems({ draft, claim, context, runDate }),
     ...pageProblems({ draft, claim, context, runDate }),
     ...bandProblems({ sentences, band: bandFor(context.bandRecord, claim.format) }),
+    ...lengthProblems({
+      collection: COLLECTION_OF[claim.format],
+      body: draft.body,
+      limits: lengthFor(context.lengthRecord, claim.format),
+    }),
     ...claimTableProblems({ claims: draft.claims, sources: draft.sources, sentences }).map(claimRow),
   ]);
 }
@@ -135,6 +164,7 @@ export function correctionMessage(problems) {
     'The entry you returned fails the checks that run before the build.',
     'Fix every problem below and return the complete corrected output: the same JSON shape with every field, not only the fields you changed.',
     'Do not add or invent a fact to fix a problem; reword or remove the text instead.',
+    ...(problems.some(({ rule }) => LENGTH_RULES.includes(rule)) ? [LENGTH_ADVICE] : []),
     '',
     ...lines,
   ].join('\n');

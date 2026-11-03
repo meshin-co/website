@@ -7,6 +7,7 @@ import { join } from 'node:path';
 import { after, test } from 'node:test';
 
 import { PRIMARY_DOMAINS } from './claim-sources.mjs';
+import { LENGTH_FILE } from './entry-length.mjs';
 import { CATEGORIES, COUNT_LIMITS, META_DESCRIPTION_MAX_CHARS, WORD_LIMITS } from './entry-limits.mjs';
 import { claimFor } from './fixtures/writer-drafts.mjs';
 import { makeRepo, removeRepo } from './fixtures/writer-repo.mjs';
@@ -33,6 +34,7 @@ const EXPECTED_PATHS = [
   'site/controlled-words.json',
   'site/content-facts.json',
   BAND_FILE,
+  LENGTH_FILE,
   'audits/routes.json',
   'site/src/data/tags.mjs',
   'site/src/data/glossary',
@@ -43,6 +45,7 @@ const DATA_KEYS = [
   'bannedPhrases',
   'controlledWords',
   'glossary',
+  'length',
   'numbers',
   'promptBlock',
   'resource',
@@ -66,7 +69,8 @@ const fileOf = (root, path) => readFileSync(join(root, path), 'utf8');
 const edit = (root, path, change) => writeFileSync(join(root, path), change(fileOf(root, path)));
 const everything = ({ system, user }) => system + '\n' + user;
 const isDirectory = (source) => source.take.every(({ kind }) => kind === 'slugs');
-const realRoot = process.cwd().replace(/site$/, '');
+const promptOpener = (format, offset = 0) => '**' + (claimFor(format).prompt.number + offset) + '. ';
+const AGENTS_RULE = '- ' + PROMPT_SOURCES.find(({ path }) => path === 'AGENTS.md').take[0].anchor;
 
 const real = freshRoot();
 
@@ -108,8 +112,8 @@ for (const format of FORMATS) {
     }
   });
 
-  test('the ' + format + ' walk resolves every anchor of every source against the real tree', () => {
-    const read = readSources({ repoRoot: realRoot, claim: claimFor(format), sources: PROMPT_SOURCES });
+  test('the ' + format + ' walk resolves every anchor of every source against the tree it reads', () => {
+    const read = readSources({ repoRoot: real, claim: claimFor(format), sources: PROMPT_SOURCES });
     assert.ok(read.texts.every(({ blocks }) => blocks.length > 0));
     assert.deepEqual(Object.keys(read.data).sort(), DATA_KEYS);
     for (const value of Object.values(read.data)) assert.ok(Object.keys(value).length > 0);
@@ -132,21 +136,26 @@ for (const format of FORMATS) {
 test('a rule edited in the tree is the rule the prompt carries, so nothing is pasted', () => {
   const root = freshRoot();
   const before = build(root, 'article');
-  edit(root, 'AGENTS.md', (text) => text.replace('No "leading",', 'No "SENTINEL-WORD",'));
+  const stated = fileOf(root, 'AGENTS.md')
+    .split('\n')
+    .find((line) => line.startsWith(AGENTS_RULE));
+  edit(root, 'AGENTS.md', (text) => text.replace(AGENTS_RULE, AGENTS_RULE + ' SENTINEL-WORD'));
   edit(root, 'site/.agents/skills/write-copy.md', (text) => text + '\nSENTINEL-SKILL-LINE.\n');
   edit(root, 'site/banned-phrases.json', (text) => JSON.stringify([...JSON.parse(text), 'sentinel-phrase']));
   const after = build(root, 'article');
   assert.ok(after.system.includes('SENTINEL-WORD') && after.system.includes('SENTINEL-SKILL-LINE.'));
   assert.ok(after.system.includes('sentinel-phrase'));
   assert.ok(!before.system.includes('SENTINEL-WORD'));
-  assert.ok(!after.system.includes('No "leading",'));
+  assert.ok(before.system.includes(stated) && !after.system.includes(stated));
   assert.notEqual(after.digest, before.digest);
 });
 
 test('text outside the anchors never reaches the prompt', () => {
   const root = freshRoot();
   edit(root, 'AGENTS.md', (text) => text + '\n- OUTSIDE-BULLET stays out.\n');
-  edit(root, 'docs/SEMANTIC-CORE.md', (text) => text.replace('**24. ', 'OUTSIDE-LINE\n\n**24. '));
+  edit(root, 'docs/SEMANTIC-CORE.md', (text) =>
+    text.replace(promptOpener('term'), 'OUTSIDE-LINE\n\n' + promptOpener('term'))
+  );
   const prompt = build(root, 'term');
   assert.ok(!everything(prompt).includes('OUTSIDE-BULLET') && !everything(prompt).includes('OUTSIDE-LINE'));
   assert.equal(prompt.digest, build(real, 'term').digest);
@@ -358,7 +367,7 @@ for (const format of FORMATS) {
     const { data } = readSources({ repoRoot: real, claim: claimFor(format), sources: PROMPT_SOURCES });
     for (const slug of [...data.glossary, ...data.resource, ...data.tags])
       assert.ok(text.includes(slug), slug + ' is not listed');
-    assert.ok(data.glossary.length > 10 && data.resource.length > 0 && data.tags.length > 3);
+    assert.ok(data.glossary.length > 0 && data.resource.length > 0 && data.tags.length > 0);
   });
 }
 
@@ -379,10 +388,11 @@ test('a null position is told as no position and a demand row is optional', () =
 
 test('the request holds the buyer-prompt block of the claim only, never another block or the generated layer', () => {
   const core = fileOf(real, 'docs/SEMANTIC-CORE.md');
-  const block = core.slice(core.indexOf('**24. '), core.indexOf('**25. '));
+  const block = core.slice(core.indexOf(promptOpener('term')), core.indexOf(promptOpener('term', 1)));
   assert.ok(user('term').includes(block.trimEnd()));
   assert.ok(
-    !user('term').includes('**22. ') && !everything(build(real, 'term')).includes('semantic-core:begin generated')
+    !user('term').includes(promptOpener('article')) &&
+      !everything(build(real, 'term')).includes('semantic-core:begin generated')
   );
   assert.ok(everything(build(real, 'article')).includes('Family strategy'));
 });

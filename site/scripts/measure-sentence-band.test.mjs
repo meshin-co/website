@@ -9,8 +9,9 @@ import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 import { DUPLICATE_MINIMUM_WORDS } from './content-gate.mjs';
-import { GENERATION_DIR } from './generation-record.mjs';
-import { run } from './measure-sentence-band.mjs';
+import { filedAt } from './fixtures/record-depths.mjs';
+import { generatedSlugs, run } from './measure-sentence-band.mjs';
+import { recordDirectory, recordPath } from './record-layout.mjs';
 import {
   BAND_FILE,
   bandFor,
@@ -27,8 +28,10 @@ import {
 const SCRIPT = fileURLToPath(new URL('./measure-sentence-band.mjs', import.meta.url));
 const REPO = fileURLToPath(new URL('../../', import.meta.url));
 const TODAY = '2026-11-02';
+const FILED = '2026-11-02T07:00:00.000Z';
 const DATA = 'site/src/data';
 const FORMATS = ['article', 'term'];
+const GENERATIONS = recordDirectory('generation');
 
 const sentence = (words) =>
   Array.from({ length: words }, (_, index) => (index === words - 1 ? 'end.' : `w${index}`)).join(' ');
@@ -313,11 +316,58 @@ test('entries that carry a generation record are left out of the measurement', (
   const root = repoWith(t, {
     ...STEADY,
     [`${DATA}/glossary/machine-written.md`]: entryFile('definition', repeat(11, 6)),
-    [`${GENERATION_DIR}/machine-written.json`]: '{}',
-    [`${GENERATION_DIR}/notes.txt`]: 'not a record',
+    [recordPath('generation', 'machine-written', FILED)]: '{}',
+    [`${GENERATIONS}/2026/11/notes.txt`]: 'not a record',
   });
   assert.equal(runIn(root, { write: true }).status, 0);
   assert.equal(recordOf(root).corpus.term.entries, 11);
+});
+
+const MACHINE_WRITTEN = ['flat-made', 'month-made', 'deep-made'];
+const recordsAt = filedAt(FILED);
+const GENERATION_RECORDS = {
+  [recordsAt.flat('generation', 'flat-made')]: '{}',
+  [recordsAt.month('generation', 'month-made')]: '{}',
+  [recordsAt.deeper('generation', 'deep-made')]: '{}',
+};
+const machineWrittenEntries = Object.fromEntries(
+  MACHINE_WRITTEN.map((slug) => [`${DATA}/glossary/${slug}.md`, entryFile('definition', repeat(11, 6))])
+);
+
+test('generatedSlugs finds a generation record whether it lies flat, in its month or below it, and counts all three', (t) => {
+  const slugs = generatedSlugs(repoWith(t, GENERATION_RECORDS));
+
+  assert.equal(slugs.length, 3);
+  assert.deepEqual([...slugs].sort(), ['deep-made', 'flat-made', 'month-made']);
+});
+
+test('generatedSlugs finds nothing, and does not fail, where the repository holds no generation record', (t) => {
+  assert.deepEqual(generatedSlugs(repoWith(t, STEADY)), []);
+});
+
+test('generatedSlugs reads generation records only: a ledger, a claim and a text file are not one', (t) => {
+  const root = repoWith(t, {
+    [recordPath('ledger', 'only-ledger', FILED)]: '{}',
+    [recordPath('claim', 'only-claim', FILED)]: '{}',
+    [`${GENERATIONS}/2026/11/only-text.txt`]: 'not a record',
+    [recordPath('generation', 'real-record', FILED)]: '{}',
+  });
+
+  assert.deepEqual(generatedSlugs(root), ['real-record']);
+});
+
+test('the entries of generation records that lie flat, in their month and below it are all left out of the measurement', (t) => {
+  const measured = (files) => {
+    const root = repoWith(t, { ...STEADY, ...machineWrittenEntries, ...files });
+    const { status, out } = runIn(root, { write: true });
+    assert.equal(status, 0);
+    return { entries: recordOf(root).corpus.term.entries, printed: out.join('\n') };
+  };
+
+  assert.equal(measured({}).entries, 14);
+  const { entries, printed } = measured(GENERATION_RECORDS);
+  assert.equal(entries, 11);
+  assert.ok(printed.includes('term: 11 entries, 10 of them with 8 sentences or more, 93 sentences'), printed);
 });
 
 test('the command line writes, confirms, then reports a corpus that moved on', (t) => {

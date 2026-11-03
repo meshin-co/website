@@ -1,0 +1,24 @@
+# Search demand: what Search Console measured
+
+Not measured yet. The export wrote this file as a starter. The first run of `npm run audit:demand` replaces it with a measured report, and until then every buyer prompt below is unproven. A report measured on another property is not evidence for this site, so this starter holds no date, no query and no count.
+
+## Buyer prompts
+
+Each row joins one buyer prompt from `docs/SEMANTIC-CORE.md` to what was measured.
+
+A pair of query and page counts for a prompt when both of these hold:
+
+- The page is one of the prompt's routes in the core: its must-win route, another must-win route or a support route.
+- The query says the same thing as the prompt at a different length. Lowercase both texts, read punctuation as a space and drop function words such as a, the, for, to, how and what; every word of one text must then be in the other.
+
+Impressions add up over the pairs that count, and position is their mean weighted by impressions.
+
+A prompt with no pair that counts reads `unproven`: no query measured in this window shows demand for it on one of its routes. A page that carried an impression for another query, or for a query Search Console withheld, does not prove a prompt. A prompt whose core entry names no must-win route has nothing to match and always reads `unproven`.
+
+No window has been measured: all 3 prompts are unproven.
+
+| #   | Prompt                                 | Must win                            | Impressions | Position | Carried by |
+| --- | -------------------------------------- | ----------------------------------- | ----------- | -------- | ---------- |
+| 1   | how to write a short answer for a page | `/blog/how-to-write-a-short-answer` | unproven    | -        | -          |
+| 2   | what is a short answer                 | `/glossary/short-answer`            | unproven    | -        | -          |
+| 3   | short answer checklist                 | `/resources/short-answer-checklist` | unproven    | -        | -          |

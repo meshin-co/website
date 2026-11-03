@@ -32,6 +32,7 @@
   },
   "loop": {
     "attemptCap": 3,
+    "tickMinutes": 3,
     "quarantineHours": 12,
     "monthlySpendCeilingUsd": 25,
     "claimLifetimeDays": 14,
