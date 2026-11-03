@@ -50,6 +50,17 @@ export const tokenText = (count) => String(count).replace(/\B(?=(\d{3})+(?!\d))/
 
 export const countText = (count, one, many) => `${count} ${count === 1 ? one : many}`;
 
+const MONTH = /^\d{4}-(0[1-9]|1[0-2])$/;
+
+export function monthLine({ month, spentMicro, ceilingMicro }) {
+  if (typeof month !== 'string' || !MONTH.test(month))
+    throw new Error(`${JSON.stringify(month)} is not a UTC month such as 2026-11`);
+  const head = `${month} so far: ${usdText(spentMicro)} USD spent of the ${usdText(ceilingMicro)} USD monthly ceiling,`;
+  if (spentMicro >= ceilingMicro)
+    return `${head} none left: the ceiling is reached, so the writer does not run for the rest of the month.`;
+  return `${head} ${usdText(ceilingMicro - spentMicro)} USD left.`;
+}
+
 const entryRow = ({ generatedAt, format, slug, input, output, micro }) => [
   generatedAt,
   format,
