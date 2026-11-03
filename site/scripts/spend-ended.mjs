@@ -1,12 +1,13 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
 import { readLedger } from './autowriter-ledger.mjs';
-import { postSlackText } from './escalate-channels.mjs';
-import { describeDelivery, receiptOf, redactorFor } from './escalate.mjs';
+import { issueLink, runLink } from './github-links.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
-import { ceilingStatus, monthLineOf } from './spend-ceiling.mjs';
-import { usdText } from './spend-report-text.mjs';
+import { deliverNotice } from './slack-notice.mjs';
+import { ceilingStatus } from './spend-ceiling.mjs';
+import { noticeFile } from './spend-notice.mjs';
+import { endedMessage } from './spend-slack.mjs';
 import { ledgerStemOf, microOf } from './spend-sum.mjs';
 
 const REPOSITORY_ROOT = resolve(import.meta.dirname, '..', '..');
@@ -20,12 +21,6 @@ const USAGE = [
 class UsageError extends Error {}
 
 const oneLine = (text) => text.replace(/\s+/g, ' ').trim();
-const withoutFinalStops = (text) => oneLine(text).replace(/\.+$/, '');
-
-export const messageOf = ({ date, reason, runMicro, line }) =>
-  [`No entry was written on ${date}: ${withoutFinalStops(reason)}. The run cost ${usdText(runMicro)} USD.`, line].join(
-    '\n'
-  );
 
 function parseArguments(argv) {
   const [command, ...pairs] = argv;
@@ -62,13 +57,19 @@ const readResult = (path) => {
 const ledgerMicro = ({ generation, attempts }) =>
   attempts.reduce((total, { costUsd }) => total + microOf(costUsd), microOf(generation?.costUsd ?? 0));
 
+const escalationIssue = ({ escalations }) =>
+  escalations
+    .flatMap(({ receipts }) => receipts)
+    .filter(({ channel, delivered }) => channel === 'issue' && delivered)
+    .at(-1)?.issue ?? null;
+
 function pickEnding(decisionFile) {
   const { decision, reason, choice } = readDecision(decisionFile);
   if (decision === 'write') throw new UsageError(`${decisionFile} says write, so this is not a day without an entry`);
   if (decision === 'none' && typeof reason === 'string')
-    return { reason: `the picker chose nothing to write: ${reason}`, runMicro: 0 };
+    return { reason: `the picker chose nothing to write: ${reason}`, runMicro: 0, issue: null };
   if (decision === 'strengthen' && typeof choice === 'string')
-    return { reason: `the picker chose to strengthen a page and wrote nothing: ${choice}`, runMicro: 0 };
+    return { reason: `the picker chose to strengthen a page and wrote nothing: ${choice}`, runMicro: 0, issue: null };
   throw new Error(`${decisionFile} does not say why nothing was picked: decision ${JSON.stringify(decision)}`);
 }
 
@@ -94,30 +95,30 @@ function writeEnding({ decisionFile, resultFile, repoRoot }) {
   const wrote = result?.ok === true && Array.isArray(result.entries);
   if (wrote && result.entries.length > 0)
     throw new UsageError(`${resultFile} lists entries, so this is not a day without an entry`);
-  const runMicro = ledgerMicro(readLedger(join(repoRoot, decision.ledgerPath)));
+  const ledger = readLedger(join(repoRoot, decision.ledgerPath));
   const slug = ledgerStemOf(decision.ledgerPath);
-  return { reason: wrote ? skippedReason(result.skipped) : stoppedReason({ slug, result }), runMicro };
+  return {
+    reason: wrote ? skippedReason(result.skipped) : stoppedReason({ slug, result }),
+    runMicro: ledgerMicro(ledger),
+    issue: escalationIssue(ledger),
+  };
 }
 
-const endingOf = ({ command, options, repoRoot }) => {
+const noticeIssue = ({ repoRoot, month }) => {
+  const path = join(repoRoot, noticeFile(month));
+  return existsSync(path) ? escalationIssue(readLedger(path)) : null;
+};
+
+const endingOf = ({ command, options, repoRoot, status }) => {
   if (command === 'ceiling')
-    return { reason: "the month's spend reached the ceiling, so the writer did not run", runMicro: 0 };
+    return {
+      reason: "the month's spend reached the ceiling, so the writer did not run",
+      runMicro: 0,
+      issue: noticeIssue({ repoRoot, month: status.month }),
+    };
   if (command === 'pick') return pickEnding(resolve(options.decision));
   return writeEnding({ decisionFile: resolve(options.decision), resultFile: resolve(options.result), repoRoot });
 };
-
-async function post({ text, env, fetch, instant, stdout, stderr }) {
-  const clean = redactorFor(env);
-  const outcome = await postSlackText({ env, fetch, clean, text });
-  const receipt = receiptOf('slack', instant.toISOString(), outcome, clean);
-  const line = describeDelivery('spend ended: slack', receipt);
-  if (!receipt.delivered) {
-    stderr(line);
-    return 1;
-  }
-  stdout(line);
-  return 0;
-}
 
 export async function runCli(argv, io = {}) {
   const { env = process.env, fetch = globalThis.fetch, now = () => new Date() } = io;
@@ -126,10 +127,17 @@ export async function runCli(argv, io = {}) {
     const { command, options } = parseArguments(argv);
     const repoRoot = options['repo-root'] === undefined ? REPOSITORY_ROOT : resolve(options['repo-root']);
     const instant = now();
-    const { reason, runMicro } = endingOf({ command, options, repoRoot });
-    const line = monthLineOf(ceilingStatus({ repoRoot, now: instant }));
-    const text = messageOf({ date: instant.toISOString().slice(0, 10), reason, runMicro, line });
-    return await post({ text, env, fetch, instant, stdout, stderr });
+    const status = ceilingStatus({ repoRoot, now: instant });
+    const { reason, runMicro, issue } = endingOf({ command, options, repoRoot, status });
+    const message = endedMessage({
+      date: instant.toISOString().slice(0, 10),
+      reason,
+      runMicro,
+      status,
+      links: { run: runLink(env), issue: issueLink(env, issue) },
+    });
+    await deliverNotice({ label: 'spend ended', message, env, fetch, instant, stdout, stderr });
+    return 0;
   } catch (error) {
     if (!(error instanceof UsageError)) {
       stderr(`spend ended: ${error.message}`);

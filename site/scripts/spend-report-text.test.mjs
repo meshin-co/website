@@ -11,15 +11,7 @@ import {
   writingCall,
 } from './fixtures/spend-report-corpus.mjs';
 import { corpusOf, reportModel } from './spend-report-model.mjs';
-import {
-  REPORT_PATH,
-  monthLine,
-  reportMarkdown,
-  reportText,
-  slackMessage,
-  tokenText,
-  usdText,
-} from './spend-report-text.mjs';
+import { REPORT_PATH, reportMarkdown, reportText, tokenText, usdText } from './spend-report-text.mjs';
 
 const NEWEST = '2026-11-02T07:00:00.000Z';
 const TERM_AT = '2026-11-02T07:00:01.000Z';
@@ -34,10 +26,6 @@ const ledger = ledgerOf({ slug: 'a-post', calls: [...post.calls, ...term.calls] 
 
 const corpusFor = (parts) => corpusOf(filesOf(parts));
 const modelFor = (parts) => reportModel(corpusFor(parts), { at: GENERATED_AT });
-const MONTH_LINE = monthLine({ month: '2026-11', spentMicro: 62_000, ceilingMicro: 25_000_000 });
-const ZERO_WARNINGS =
-  'Warnings: 0 (every ledger agrees with its generation record; this does not say that every run produced an entry)';
-const SOME_WARNINGS = 'each needs a person to look at it';
 
 const populated = () => modelFor({ ledgers: [ledger], records: [term, post] });
 const empty = () => modelFor({});
@@ -282,80 +270,4 @@ test('a report text is the markdown with the stamp the evidence gate requires an
     text.replace(`Generated-from: 3fa620f\nGenerated-at: ${GENERATED_AT}\n\n`, ''),
     reportMarkdown(populated())
   );
-});
-
-const ENTRIES = (...slugs) =>
-  populated()
-    .rows.filter(({ slug }) => slugs.includes(slug))
-    .sort((left, right) => left.generatedAt.localeCompare(right.generatedAt));
-
-test('the Slack message holds this entry, the 30 days and all time as plain lines of numbers and units', () => {
-  assert.equal(
-    slackMessage(populated(), ENTRIES('a-post', 'a-term'), MONTH_LINE),
-    [
-      'This entry',
-      'article a-post: 25,000 input tokens, 5,000 output tokens, 0.05 USD',
-      'term a-term: 6,000 input tokens, 1,200 output tokens, 0.012 USD',
-      '',
-      MONTH_LINE,
-      '',
-      'Last 30 days, to 2026-11-02T07:00:01.000Z',
-      'all: 2 entries, 31,000 input tokens, 6,200 output tokens, 0.062 USD',
-      'article: 1 entry, 25,000 input tokens, 5,000 output tokens, 0.05 USD',
-      'term: 1 entry, 6,000 input tokens, 1,200 output tokens, 0.012 USD',
-      '',
-      'All time, since 2026-11-02T07:00:00.000Z',
-      'all: 2 entries, 31,000 input tokens, 6,200 output tokens, 0.062 USD',
-      'article: 1 entry, 25,000 input tokens, 5,000 output tokens, 0.05 USD',
-      'term: 1 entry, 6,000 input tokens, 1,200 output tokens, 0.012 USD',
-      'Everything paid for: 0.062 USD, of which writing calls 0.062 USD, repair calls 0.00 USD, runs that ended with no entry 0.00 USD and spend with no generation record 0.00 USD.',
-      '',
-      'The 30 days end at the newest entry. They are not the calendar month of the spend ceiling.',
-      '',
-      ZERO_WARNINGS,
-    ].join('\n')
-  );
-});
-
-test('the Slack message has no table, no emphasis, no link and no currency sign', () => {
-  const message = slackMessage(populated(), ENTRIES('a-post', 'a-term'), MONTH_LINE);
-  assert.doesNotMatch(message, /[|*_`>#~$<]/);
-  assert.doesNotMatch(message, /https?:/);
-  assert.ok(message.split('\n').every((line) => line === line.trimEnd()));
-});
-
-test('the entries of the message are the ones it is given, so a post that shipped alone is reported alone', () => {
-  const message = slackMessage(populated(), ENTRIES('a-post'), MONTH_LINE);
-  const [, first, blank] = message.split('\n');
-  assert.equal(first, 'article a-post: 25,000 input tokens, 5,000 output tokens, 0.05 USD');
-  assert.equal(blank, '');
-  assert.doesNotMatch(message.split('\n\n')[0], /a-term/);
-});
-
-test('a clean corpus says zero warnings, and warnings join the message capped at three with a count of the rest', () => {
-  const clean = slackMessage(populated(), ENTRIES('a-post'), MONTH_LINE).split('\n\n');
-  assert.deepEqual(clean.at(-1).split('\n'), [ZERO_WARNINGS]);
-  const orphans = ['one', 'two', 'three', 'four', 'five'].map((name) =>
-    mergedLedger(ledgerOf({ slug: `lost-${name}`, calls: [DRAFT] }))
-  );
-  const model = modelFor({ ledgers: [ledger, ...orphans], records: [term, post] });
-  assert.equal(model.warnings.length, 5);
-  const blocks = slackMessage(model, ENTRIES('a-post'), MONTH_LINE).split('\n\n');
-  assert.deepEqual(blocks.at(-1).split('\n'), [
-    `Warnings: 5 (${SOME_WARNINGS})`,
-    ...model.warnings.slice(0, 3),
-    `and 2 more in ${REPORT_PATH}`,
-  ]);
-  const three = reportModel(
-    { ...corpusFor({ ledgers: [ledger], records: [term, post] }), problems: model.warnings.slice(0, 3) },
-    { at: GENERATED_AT }
-  );
-  assert.deepEqual(slackMessage(three, ENTRIES('a-post'), MONTH_LINE).split('\n\n').at(-1).split('\n'), [
-    `Warnings: 3 (${SOME_WARNINGS})`,
-    ...three.warnings,
-  ]);
-});
-
-test('a message is never built from an empty model: there is no window to total', () => {
-  assert.throws(() => slackMessage(empty(), [], MONTH_LINE), /no entry/);
 });

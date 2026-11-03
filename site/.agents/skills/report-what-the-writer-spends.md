@@ -53,18 +53,18 @@ forged spent figure, a deleted report and an unstamped one, and hold on any repo
 
 ## The message
 
-`write-daily.yml` runs `node scripts/spend-report.mjs notify --result "$WRITE_RESULT_FILE"` after a successful write, with
-`SLACK_WEBHOOK_URL` as its only secret. It posts this entry, the month sentence from `monthLineOf` in `scripts/spend-ceiling.mjs`
-(the ceiling status, so the figure the ceiling stops on), the 30 days, all time with `Everything paid for`, and
-`Warnings: N (what N means)`; `Warnings: 0` says every ledger agrees with its record, not that every run made an entry. It
-sends plain lines through `postSlackText` in `scripts/escalate-channels.mjs` and prints one receipt line, the webhook removed
-by `redactorFor` in `scripts/escalate.mjs`.
+Every message is Block Kit `{ text, blocks }` (`scripts/slack-blocks.mjs`); `text` is the fallback a phone shows. Kinds: the entry
+message (`node scripts/spend-report.mjs notify`, `scripts/spend-slack.mjs`), the no-entry message (`scripts/spend-ended.mjs` with
+`ceiling`, `pick` or `write`; five steps of `write-daily.yml`; a failed pick posts nothing) and the escalation message.
 
-- It posts nothing from zero records, for a slug no record holds or when the ceiling status cannot be read (exit 1). A missed
-  message is not an escalation: the step exits 1 and prints one line, writes no ledger, opens no issue and tries no second
-  channel. The next message carries the cumulative totals.
-- A day with no entry posts two lines through `node scripts/spend-ended.mjs` (`ceiling`, `pick`, `write`): why, what the run
-  cost from its ledger, then the month sentence. Five steps of `write-daily.yml` call it; a failed pick posts nothing.
+- Month first: header `<month> spend against the monthly ceiling`, the Spent, Ceiling and Left table, and `monthLineOf` as line 1 of `text`.
+- Compared numbers sit in code fences padded by `monoTable` (`scripts/slack-table.mjs`), no line over `PHONE_COLUMNS` = 34, our own limit.
+  `fields` are two proportional columns of unknown width, so they hold links only. No native `table` block: webhook support is undocumented.
+- Links are `<url|label>`: `#84`, `run 777`, the entry under `site.site`, `#41`. `scripts/github-links.mjs` builds them from
+  `GITHUB_SERVER_URL`, `GITHUB_REPOSITORY` and `GITHUB_RUN_ID`; `PULL_REQUEST` is the number, and with none there is no link.
+- `Warnings: 0 (...)` is a context line; N above 0 is a section with 3 listed, then `and K more in audits/spend-report.md`. No note appears.
+- A missed message is not an escalation: `deliverNotice` (`scripts/slack-notice.mjs`) prints `::warning::<label>: slack NOT delivered:
+<reason>`, the webhook removed by `redactorFor`, and exits 0. Exit 1 and 2 stay for causes that are not delivery.
 
 ## A discarded attempt
 

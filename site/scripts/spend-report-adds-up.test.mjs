@@ -20,10 +20,12 @@ import {
   writingCall,
 } from './fixtures/spend-report-corpus.mjs';
 import { corpusOf, reportModel } from './spend-report-model.mjs';
-import { monthLine, reportMarkdown, slackMessage } from './spend-report-text.mjs';
+import { monthLine, reportMarkdown } from './spend-report-text.mjs';
+import { spendMessage } from './spend-slack.mjs';
 import { microOf, recordMicro, recordRepairMicro, spendItemsOf, totalBreakdown } from './spend-sum.mjs';
 
 const CEILING = 25_000_000;
+const NO_LINKS = { run: null, pullRequest: null, entries: {} };
 const ROWS = [
   'Writing calls of entries',
   'Repair calls',
@@ -245,16 +247,19 @@ test('a note and a warning state the whole spend of their ledger: the generation
   );
 });
 
-test('the message ends its all-time lines with the five figures, the four kinds and their sum', () => {
+test('the message ends its all-time lines with the five figures, the four kinds and their sum, in its text and its table', () => {
   const rows = model.rows.filter(({ slug }) => slug === 'a-post');
-  const blocks = slackMessage(
-    model,
-    rows,
-    monthLine({ month: '2026-11', spentMicro: 942_500, ceilingMicro: CEILING })
-  ).split('\n\n');
+  const status = { month: '2026-11', spentMicro: 942_500, ceilingUsd: CEILING / 1_000_000 };
+  const { blocks, text } = spendMessage({ model, rows, status, links: NO_LINKS });
+  const allTime = text.split('\n\n').find((chunk) => chunk.startsWith('All time'));
   assert.equal(
-    blocks[3].split('\n').at(-1),
+    allTime.split('\n').at(-1),
     'Everything paid for: 0.9695 USD, of which writing calls 0.113 USD, repair calls 0.045 USD, runs that ended with no entry 0.5755 USD and spend with no generation record 0.236 USD.'
+  );
+  const paid = blocks.find((block) => block.text?.text.startsWith('*Everything paid for*'));
+  assert.match(
+    paid.text.text,
+    /^\*Everything paid for\*\n```\n +USD\nWriting calls +0\.113\nRepair calls +0\.045\nEnded with no entry +0\.5755\nNo generation record +0\.236\nEverything paid for +0\.9695\n```$/
   );
 });
 

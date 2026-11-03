@@ -13,7 +13,6 @@ export function stampedAt(text) {
 }
 
 const MICRO = 1e6;
-const MAX_SHOWN_WARNINGS = 3;
 
 const TITLE = '# Spend report: what writing each entry cost';
 
@@ -227,51 +226,3 @@ const withInstant = (text, at) => text.replace(/^Generated-from: .*$/m, (line) =
 
 export const reportText = (files, revision, at) =>
   withInstant(withProvenance(reportMarkdown(reportModel(corpusOf(files), { at })), revision), at);
-
-const figures = ({ input, output, micro }) =>
-  `${tokenText(input)} input tokens, ${tokenText(output)} output tokens, ${usdText(micro)} USD`;
-
-const entryLine = ({ format, slug, ...rest }) => `${format} ${slug}: ${figures(rest)}`;
-
-const totalLine = (label, { entries, ...rest }) =>
-  `${label}: ${countText(entries, 'entry', 'entries')}, ${figures(rest)}`;
-
-const windowLines = (title, { all, formats }) => [
-  title,
-  totalLine('all', all),
-  ...formats.map(({ format, ...total }) => totalLine(format, total)),
-];
-
-const ZERO_WARNINGS =
-  'every ledger agrees with its generation record; this does not say that every run produced an entry';
-
-const paidLine = ({ writingMicro, repairMicro, endedMicro, unmatchedMicro, totalMicro }) =>
-  `Everything paid for: ${usdText(totalMicro)} USD, of which writing calls ${usdText(writingMicro)} USD, ` +
-  `repair calls ${usdText(repairMicro)} USD, runs that ended with no entry ${usdText(endedMicro)} USD ` +
-  `and spend with no generation record ${usdText(unmatchedMicro)} USD.`;
-
-function warningLines(warnings) {
-  const more = warnings.length - MAX_SHOWN_WARNINGS;
-  const meaning = warnings.length === 0 ? ZERO_WARNINGS : 'each needs a person to look at it';
-  return [
-    `Warnings: ${warnings.length} (${meaning})`,
-    ...warnings.slice(0, MAX_SHOWN_WARNINGS),
-    ...(more > 0 ? [`and ${more} more in ${REPORT_PATH}`] : []),
-  ];
-}
-
-export function slackMessage(model, rows, line) {
-  if (model.empty || rows.length === 0) throw new Error('there is no entry to report, so there is nothing to total');
-  if (typeof line !== 'string' || line.trim() === '')
-    throw new Error('the message needs the month line, which says what the month has spent against the ceiling');
-  return [
-    ['This entry', ...rows.map(entryLine)],
-    [line],
-    windowLines(`Last 30 days, to ${model.thirtyDays.through}`, model.thirtyDays.totals),
-    [...windowLines(`All time, since ${model.allTime.since}`, model.allTime.totals), paidLine(model.paidAllTime)],
-    ['The 30 days end at the newest entry. They are not the calendar month of the spend ceiling.'],
-    warningLines(model.warnings),
-  ]
-    .map((lines) => lines.join('\n'))
-    .join('\n\n');
-}

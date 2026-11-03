@@ -75,3 +75,25 @@ test('the failed-write ending runs after the ledger is committed and the failure
   assert.ok(positionOf(write, step) > positionOf(write, commit));
   assert.ok(positionOf(write, step) > positionOf(write, escalate));
 });
+
+const notifyStep = () => write.steps.find(({ run = '' }) => run.includes('scripts/spend-report.mjs notify'));
+const openStep = () => write.steps.find(({ run = '' }) => run.includes('gh pr create'));
+
+test('the step that opens the pull request has an id and exposes the number it opened', () => {
+  const step = openStep();
+  assert.equal(typeof step.id, 'string');
+  assert.match(step.run, /echo "pull_request=\$\{url##\*\/\}" >> "\$GITHUB_OUTPUT"/);
+});
+
+test('the notify step gets the pull request number from the step that opened it, beside the webhook and nothing else', () => {
+  assert.deepEqual(notifyStep().env, {
+    SLACK_WEBHOOK_URL: WEBHOOK,
+    PULL_REQUEST: '${{ steps.' + openStep().id + '.outputs.pull_request }}',
+  });
+});
+
+test('the notify step runs after the pull request is opened, and no other step reads the number', () => {
+  assert.ok(positionOf(write, notifyStep()) > positionOf(write, openStep()));
+  const readers = write.steps.filter((step) => step !== notifyStep() && 'PULL_REQUEST' in (step.env ?? {}));
+  assert.deepEqual(readers, []);
+});

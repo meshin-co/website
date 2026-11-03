@@ -35,19 +35,19 @@ a site that keeps a locked row for them pins it with a test of its own. The gate
 
 ## Escalate, and prove it arrived
 
-`scripts/escalate.mjs` (requests in `scripts/escalate-channels.mjs`) opens a GitHub issue and posts to
-Slack, then writes a receipt (instant, HTTP status, issue number or error) into the ledger:
+`scripts/escalate.mjs` (requests in `scripts/escalate-channels.mjs`; `scripts/pr-watch.mjs` passes the pull request number)
+opens a GitHub issue, posts to Slack and writes a receipt (instant, HTTP status, issue number or error) into the ledger:
 
 ```
 npm run escalate -- raise --ledger <path> --kind no-convergence --title <text> --detail <text>
 npm run escalate -- redeliver --ledger <path> --id esc-1
 ```
 
-Slack carries three kinds at once: `spend-ceiling`, `credential`, `no-convergence`. `hard-stop` and
-`unrepairable` open an issue now and wait for the morning digest. It reads `GITHUB_TOKEN` (Issues:
-write), `GITHUB_REPOSITORY` and `SLACK_WEBHOOK_URL`, a repository secret the owner creates. A missing
-one is never skipped quietly: the receipt names it, the command exits 1, and the gate stays red until
-`redeliver` records a delivery. No secret value reaches a receipt, a message or the log.
+The Slack message is Block Kit `{ text, blocks }` from `scripts/escalation-slack.mjs`: a header with the kind, the title, the
+detail with addresses as links, fields Pull request, Workflow run and Issue, the ledger path; `text` repeats it for a phone.
+Slack carries `spend-ceiling`, `credential` and `no-convergence` at once; `hard-stop` and `unrepairable` open an issue and wait
+for the digest. It reads `GITHUB_TOKEN`, `GITHUB_REPOSITORY` and `SLACK_WEBHOOK_URL`. Unlike the statistics message a missed one is
+never quiet: the receipt names it, the command exits 1, the gate stays red until `redeliver`. No secret, the webhook included, is logged.
 
 ## The aggregate check
 
