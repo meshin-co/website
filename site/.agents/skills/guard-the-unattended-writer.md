@@ -29,7 +29,7 @@ an unknown field is a finding.
   from a fresh measurement; repair it with `node scripts/measure-sentence-band.mjs --write`.
 
 The numbers (12-hour quarantine, 3 attempts, $25 a month) live in `scripts/autowriter-ledger.mjs`;
-`scripts/autowriter-ledger.site.test.mjs` fails when locked row L62 disagrees with them. The gate itself is
+a site that keeps a locked row for them pins it with a test of its own. The gate itself is
 `scripts/autowriter-gate.mjs`, over `scripts/autowriter-claims.mjs`, `scripts/autowriter-records.mjs` and `scripts/autowriter-record-rules.mjs`.
 
 ## Escalate, and prove it arrived

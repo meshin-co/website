@@ -476,7 +476,7 @@ These values are the owner's risk appetite for a machine that writes and merges 
 - **C. 72 hours:** Cost: a longer chain; the chain limit is the quarantine plus 24 hours (`CHAIN_LIMIT_HOURS` in `site/scripts/pr-classify.mjs`), and the watcher looks every 10 minutes.
 - **Recommended:** B, because after the merge only a revert on `main` removes an article (`publish-the-build.md`), and a once-a-day reader sees every pull request first, unless you read GitHub twice a day; then A.
   **Lands in:** `loop.quarantineHours`; the two skills' prose; a locked row of your own if you keep one.
-  **If wrong:** Too short, an article merges before you look, with no message. In the first site `npm test` also fails with `L62 does not state the <N> hour quarantine` until row L62 is updated; that row and its test (`site/scripts/autowriter-ledger.site.test.mjs`) stay with the first site.
+  **If wrong:** Too short, an article merges before you look, with no message. In the first site `npm test` also fails with `L62 does not state the <N> hour quarantine` until row L62 is updated; that row and its test stay with the first site.
   **Needs:** S2
 
 #### S33. Monthly spend ceiling
