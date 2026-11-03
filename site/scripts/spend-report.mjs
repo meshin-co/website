@@ -7,8 +7,9 @@ import { provenanceOf } from './evidence-gate.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 import { familyOf, recordFiles } from './record-layout.mjs';
 import { generatorRevision } from './report.mjs';
+import { ceilingStatus, monthLineOf } from './spend-ceiling.mjs';
 import { corpusOf, reportModel } from './spend-report-model.mjs';
-import { REPORT_PATH, countText, reportText, slackMessage } from './spend-report-text.mjs';
+import { REPORT_PATH, countText, reportText, slackMessage, stampedAt } from './spend-report-text.mjs';
 
 const REPOSITORY_ROOT = resolve(import.meta.dirname, '..', '..');
 const FLAGS = { write: ['repo-root'], notify: ['repo-root', 'result'] };
@@ -40,15 +41,16 @@ function overlaid(corpus, written) {
   return files;
 }
 
-export function spendReportFile({ repoRoot, written = [], revision }) {
+export function spendReportFile({ repoRoot, written = [], revision, at }) {
   const files = overlaid(corpusFiles(repoRoot), written);
   const current = readIfPresent(join(repoRoot, REPORT_PATH));
   const kept = current === null ? undefined : provenanceOf(current);
-  const unchanged = kept !== undefined && reportText(files, kept) === current;
+  const keptAt = current === null ? undefined : stampedAt(current);
+  const unchanged = kept !== undefined && keptAt !== undefined && reportText(files, kept, keptAt) === current;
   return {
     path: REPORT_PATH,
-    text: unchanged ? current : reportText(files, revision),
-    model: reportModel(corpusOf(files)),
+    text: unchanged ? current : reportText(files, revision, at),
+    model: reportModel(corpusOf(files), { at: unchanged ? keptAt : at }),
   };
 }
 
@@ -61,8 +63,12 @@ function summaryOf({ empty, rows, warnings, notes }) {
     : `no entry counted, ${counted}${settled}`;
 }
 
-function writeReport({ repoRoot, revisionOf, stdout, stderr }) {
-  const { path, text, model } = spendReportFile({ repoRoot, revision: revisionOf({ repoRoot }) });
+function writeReport({ repoRoot, revisionOf, now, stdout, stderr }) {
+  const { path, text, model } = spendReportFile({
+    repoRoot,
+    revision: revisionOf({ repoRoot }),
+    at: now().toISOString(),
+  });
   const target = join(repoRoot, path);
   const unchanged = readIfPresent(target) === text;
   if (!unchanged) {
@@ -95,22 +101,24 @@ function slugsWritten(resultFile) {
   return slugs;
 }
 
-async function notify({ repoRoot, resultFile, env, fetch, now, stdout, stderr }) {
+async function notify({ repoRoot, resultFile, env, fetch, now, statusOf, stdout, stderr }) {
   const slugs = slugsWritten(resultFile);
   if (slugs.length === 0) {
     stdout('spend report: the write produced no entry, so no message was posted');
     return 0;
   }
-  const model = reportModel(corpusOf(corpusFiles(repoRoot)));
+  const instant = now();
+  const model = reportModel(corpusOf(corpusFiles(repoRoot)), { at: instant.toISOString() });
   const rows = slugs.map((slug) => model.rows.find((row) => row.slug === slug));
   const missing = slugs.filter((_, at) => rows[at] === undefined);
   if (missing.length > 0) {
     stderr(`spend report: no generation record holds ${missing.join(', ')}, so no message was posted`);
     return 1;
   }
+  const text = slackMessage(model, rows, monthLineOf(statusOf({ repoRoot, now: instant })));
   const clean = redactorFor(env);
-  const outcome = await postSlackText({ env, fetch, clean, text: slackMessage(model, rows) });
-  const receipt = receiptOf('slack', now().toISOString(), outcome, clean);
+  const outcome = await postSlackText({ env, fetch, clean, text });
+  const receipt = receiptOf('slack', instant.toISOString(), outcome, clean);
   const line = describeDelivery('spend report: slack', receipt);
   if (!receipt.delivered) {
     stderr(line);
@@ -142,12 +150,12 @@ const defaultRevision = ({ repoRoot }) => generatorRevision(REPORT_PATH, { cwd: 
 
 export async function runCli(argv, io = {}) {
   const { env = process.env, fetch = globalThis.fetch, now = () => new Date() } = io;
-  const { stdout = console.log, stderr = console.error, revisionOf = defaultRevision } = io;
+  const { stdout = console.log, stderr = console.error, revisionOf = defaultRevision, statusOf = ceilingStatus } = io;
   try {
     const { command, options } = parseArguments(argv);
     const repoRoot = options['repo-root'] === undefined ? REPOSITORY_ROOT : resolve(options['repo-root']);
-    if (command === 'write') return writeReport({ repoRoot, revisionOf, stdout, stderr });
-    return await notify({ repoRoot, resultFile: resolve(options.result), env, fetch, now, stdout, stderr });
+    if (command === 'write') return writeReport({ repoRoot, revisionOf, now, stdout, stderr });
+    return await notify({ repoRoot, resultFile: resolve(options.result), env, fetch, now, statusOf, stdout, stderr });
   } catch (error) {
     if (!(error instanceof UsageError)) {
       stderr(`spend report: ${error.message}`);

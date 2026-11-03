@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import { monthOf, monthlySpend } from './spend-ceiling.mjs';
-import { chooseVersions, monthlyBreakdown, spendItemsOf, spendWarnings } from './spend-sum.mjs';
+import { chooseVersions, monthlyBreakdown, spendItemsOf, spendWarnings, totalBreakdown } from './spend-sum.mjs';
 
 const attempt = (recordedAt, costUsd) => ({ recordedAt, costUsd });
 const ledgerOf = ({ slug = 'a-post', generation, attempts = [], decidedAt = null, spendUsd = 0 }) => ({
@@ -356,4 +356,25 @@ test('spendItemsOf gives a ledger with no record a null record, and nothing at a
   const alone = ledgerOf({ slug: 'alone-post', generation: 1 });
   assert.deepEqual(spendItemsOf({ ledgers: [alone], records: [] }), [{ ledger: alone, record: null }]);
   assert.deepEqual(spendItemsOf({ ledgers: [], records: [] }), []);
+});
+
+test('the whole of the spend is the same split over every month, and a spend with no date counts in it and in every month', () => {
+  const dated = {
+    ledger: ledgerOf({
+      slug: 'a-post',
+      generation: 1,
+      attempts: [attempt('2026-12-04T00:00:00Z', 0.5)],
+      spendUsd: 1.5,
+    }),
+    record: recordOf('2026-11-02T00:00:00.000Z', 1),
+  };
+  const undated = { ledger: ledgerOf({ slug: 'old-post', generation: 0.25, spendUsd: 0.25 }), record: null };
+  assert.deepEqual(totalBreakdown({ ledgers: [dated, undated] }), {
+    writingMicro: 1_000_000,
+    repairMicro: 500_000,
+    uncarriedMicro: 250_000,
+    totalMicro: 1_750_000,
+  });
+  assert.equal(monthlyBreakdown({ ledgers: [dated, undated], month: '2026-10' }).totalMicro, 250_000);
+  assert.equal(monthlyBreakdown({ ledgers: [dated, undated], month: '2026-12' }).totalMicro, 750_000);
 });

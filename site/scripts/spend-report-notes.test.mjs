@@ -10,6 +10,7 @@ import { newLedger, readLedger, writeLedger } from './autowriter-ledger.mjs';
 import { readSchema } from './autowriter-records.mjs';
 import { raiseOnRun } from './escalate-run.mjs';
 import {
+  GENERATED_AT,
   discardedLedger,
   escalatedLedger,
   filesOf,
@@ -22,14 +23,17 @@ import {
 import { ledgerWithGeneration } from './generation-record.mjs';
 import { runCli } from './spend-report.mjs';
 import { corpusOf, reportModel } from './spend-report-model.mjs';
-import { REPORT_PATH, reportMarkdown, slackMessage } from './spend-report-text.mjs';
+import { REPORT_PATH, monthLine, reportMarkdown, slackMessage } from './spend-report-text.mjs';
 
 const NEWEST = '2026-11-02T07:00:00.000Z';
 const DRAFT = writingCall({ input: 12000, output: 3000, tag: 'draft' });
 const CORRECTION = writingCall({ role: 'correction', input: 13000, output: 2000, tag: 'correction' });
 const VERDICT_STATES = readSchema('autowriter-ledger.schema.json').$defs.verdict.properties.state.enum;
 
-const modelOf = (parts) => reportModel(corpusOf(filesOf(parts)));
+const modelOf = (parts) => reportModel(corpusOf(filesOf(parts)), { at: GENERATED_AT });
+const MONTH_LINE = monthLine({ month: '2026-11', spentMicro: 77_000, ceilingMicro: 25_000_000 });
+const NO_WARNINGS =
+  'Warnings: 0 (every ledger agrees with its generation record; this does not say that every run produced an entry)';
 
 function soleArticle() {
   const post = recordOf({ slug: 'a-post', at: NEWEST, calls: [DRAFT, CORRECTION] });
@@ -116,11 +120,19 @@ test('a discarded attempt beside an entry that adds up is a note: the report sta
   assert.deepEqual(model.warnings, []);
   assert.deepEqual(model.notes, [DISCARDED]);
   const markdown = reportMarkdown(model);
-  assert.deepEqual(headingsOf(markdown), ['This entry', 'Last 30 days', 'All time', 'Every entry', 'Rates', 'Notes']);
+  assert.deepEqual(headingsOf(markdown), [
+    'This month',
+    'This entry',
+    'Last 30 days',
+    'All time',
+    'Every entry',
+    'Rates',
+    'Notes',
+  ]);
   assert.deepEqual(itemsOf(markdown, 'Notes'), [`- ${DISCARDED}`]);
   assert.match(
     proseOf(markdown, 'Notes'),
-    /^These runs ended with no entry\. Their spend is real and is in no row or total of this file, so each run is named here\. A note is not a warning: nothing a person does can clear it, because a run that ended will never gain a record\.$/
+    /^These runs ended with no entry and together cost 0\.027 USD\. That spend is in no entry row; the paid tables count it as spend that no entry carries\. A note is not a warning: nothing a person does can clear it, because a run that ended will never gain a record\.$/
   );
   assert.equal(model.allTime.totals.all.entries, 1);
   assert.equal(model.allTime.totals.all.micro, 50000);
@@ -129,8 +141,8 @@ test('a discarded attempt beside an entry that adds up is a note: the report sta
 test('the Slack message of that corpus says zero warnings and does not carry the note', () => {
   const { post, ledger } = soleArticle();
   const model = modelOf({ ledgers: [ledger, discardedLedger(lostLedger())], records: [post] });
-  const message = slackMessage(model, model.rows);
-  assert.deepEqual(message.split('\n\n').at(-1).split('\n'), ['Warnings: 0']);
+  const message = slackMessage(model, model.rows, MONTH_LINE);
+  assert.deepEqual(message.split('\n\n').at(-1).split('\n'), [NO_WARNINGS]);
   assert.doesNotMatch(message, /lost-post/);
   assert.doesNotMatch(message, /discarded/);
   assert.doesNotMatch(message, /Notes/);
@@ -150,8 +162,11 @@ test('a ledger that records less than its record cost still warns and still coun
   assert.deepEqual(headingsOf(markdown).slice(-2), ['Warnings', 'Notes']);
   assert.deepEqual(itemsOf(markdown, 'Warnings'), [`- ${MISMATCH}`]);
   assert.match(proseOf(markdown, 'Warnings'), /needs a person to look at it/);
-  const message = slackMessage(model, model.rows);
-  assert.deepEqual(message.split('\n\n').at(-1).split('\n'), ['Warnings: 1', MISMATCH]);
+  const message = slackMessage(model, model.rows, MONTH_LINE);
+  assert.deepEqual(message.split('\n\n').at(-1).split('\n'), [
+    'Warnings: 1 (each needs a person to look at it)',
+    MISMATCH,
+  ]);
   assert.doesNotMatch(message, /lost-post/);
 });
 
@@ -159,10 +174,10 @@ test('with only a discarded attempt no entry can be counted, and the file does n
   const model = modelOf({ ledgers: [discardedLedger(lostLedger())] });
   const markdown = reportMarkdown(model);
   assert.equal(model.empty, true);
-  assert.deepEqual(headingsOf(markdown), ['No entry yet', 'Notes']);
+  assert.deepEqual(headingsOf(markdown), ['This month', 'No entry yet', 'Notes']);
   assert.match(
     proseOf(markdown, 'No entry yet'),
-    /^No generation record could be counted, so this file holds no row, no total and no rate\./
+    /^No generation record could be counted, so this file holds no entry row, no entry total and no rate\./
   );
   assert.doesNotMatch(markdown, /No entry has been generated/);
   assert.deepEqual(itemsOf(markdown, 'Notes'), [`- ${DISCARDED}`]);
@@ -172,7 +187,7 @@ test('the definitions name the attempt a person discarded among the spend no ent
   const markdown = reportMarkdown(modelOf({}));
   assert.match(
     markdown,
-    /a run that stopped before any entry existed and an attempt that a person discarded have no entry and are not counted here either/
+    /a run that stopped before any entry existed and an attempt that a person discarded have no entry, so no row holds them/
   );
   assert.match(markdown, /The Notes section, when there is one, names each run that ended with no entry\./);
 });
@@ -213,7 +228,7 @@ test('the ledger that a failed write leaves on main once the workflow has escala
     });
     const left = readLedger(path);
     assert.equal(left.verdict.state, 'escalated');
-    const model = reportModel(corpusOf(filesOf({ ledgers: [left] })));
+    const model = reportModel(corpusOf(filesOf({ ledgers: [left] })), { at: GENERATED_AT });
     assert.deepEqual(model.warnings, []);
     assert.deepEqual(model.notes, [ENDED('escalated')]);
   } finally {
@@ -238,6 +253,7 @@ async function inRepo(files, body) {
       stdout: (line) => out.push(line),
       stderr: (line) => err.push(line),
       revisionOf: () => 'abc1234',
+      now: () => new Date(GENERATED_AT),
     };
     const code = await runCli(['--repo-root', root], io);
     return await body({ code, out, err, read: (path) => readFileSync(join(root, path), 'utf8') });

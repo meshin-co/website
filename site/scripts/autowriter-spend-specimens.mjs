@@ -5,7 +5,7 @@ import { REPORT_PATH } from './spend-report-text.mjs';
 
 const GATE = 'gate:autowriter';
 const SLUG = 'zz-specimen';
-const GENERATED_AT = '2026-11-02T07:00:00.000Z';
+const GENERATED_AT = '2026-10-02T07:00:00.000Z';
 const ABSENCE = 'That is the absence of a measurement. It is not a cost of zero.';
 const FORGED_TOTAL = 'All time: 0.00 USD.';
 
@@ -27,5 +27,11 @@ export const spendSpecimens = ({ addUntrackedFile, editFile, removeFile }) => ({
     gate: GATE,
     token: `spend-report-missing ${REPORT_PATH}`,
     plant: (copySite) => removeFile(inRepository(copySite, REPORT_PATH)),
+  },
+  autowriterSpendReportUnstamped: {
+    gate: GATE,
+    token: 'Generated-at',
+    plant: (copySite) =>
+      editFile(inRepository(copySite, REPORT_PATH), (text) => text.replace(/^Generated-at: .*\n/m, '')),
   },
 });

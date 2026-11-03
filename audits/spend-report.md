@@ -1,17 +1,31 @@
 # Spend report: what writing each entry cost
 
 Generated-from: 3fa620f
+Generated-at: 2026-11-03T01:29:37.930Z
 
-This file is written by `npm run audit:spend` from the generation records and the ledgers under `audits/autowriter`. It is rewritten from them every time and never appended to. It reads no clock and no network, so the same records give the same file on any day. `npm run gate:autowriter` regenerates it and fails when this file differs.
+This file is written by `npm run audit:spend` from the generation records and the ledgers under `audits/autowriter`. It is rewritten from them every time and never appended to. It reads no network. It reads the clock once, when it is written, and stamps that instant in Generated-at, so the same records and the same stamp give the same file. `npm run gate:autowriter` regenerates it with the stamp it finds and fails when this file differs.
 
-Cost means the cost of the writing calls of an entry: its draft and its correction, each as its record stored it, added in whole micro-dollars. A repair call is not a writing call and is not counted here. A draft that a run wrote and then skipped, a run that stopped before any entry existed and an attempt that a person discarded have no entry and are not counted here either. The ledgers record that spend, and the monthly spend ceiling counts it. The Notes section, when there is one, names each run that ended with no entry.
+Cost means the cost of the writing calls of an entry: its draft and its correction, each as its record stored it, added in whole micro-dollars. Repair is the cost of the repair calls that the record of the entry holds, and is not part of Cost. A draft that a run wrote and then skipped, a run that stopped before any entry existed and an attempt that a person discarded have no entry, so no row holds them. The ledgers record that spend, and the monthly spend ceiling counts it. The paid tables count every call the ledgers and the records show: the writing calls of entries, every repair call including a repair that failed, and the spend that no entry carries. The Notes section, when there is one, names each run that ended with no entry.
+
+## This month
+
+2026-11 so far: 0.022748 USD spent of the 25.00 USD monthly ceiling, 24.977252 USD left.
+
+The figure is the spend of the UTC calendar month of 2026-11-03T01:29:37.930Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
+
+| What was paid for           | Cost (USD) |
+| --------------------------- | ---------- |
+| Writing calls of entries    | 0.00       |
+| Repair calls                | 0.00       |
+| Spend that no entry carries | 0.022748   |
+| Everything paid for         | 0.022748   |
 
 ## No entry yet
 
-No generation record could be counted, so this file holds no row, no total and no rate. That is the absence of a measurement. It is not a cost of zero.
+No generation record could be counted, so this file holds no entry row, no entry total and no rate. That is the absence of a measurement. It is not a cost of zero. The figures of the month above count every call the ledgers show.
 
 ## Notes
 
-These runs ended with no entry. Their spend is real and is in no row or total of this file, so each run is named here. A note is not a warning: nothing a person does can clear it, because a run that ended will never gain a record.
+These runs ended with no entry and together cost 0.022748 USD. That spend is in no entry row; the paid tables count it as spend that no entry carries. A note is not a warning: nothing a person does can clear it, because a run that ended will never gain a record.
 
 - fractional-caio-vs-full-time-caio-cost: a person discarded this attempt on 2026-11-02 and its generation record went with it, so no entry is counted for it and its cost cannot be checked against a record; its ledger records 0.022748 USD for the generation, and the monthly spend ceiling counts that cost

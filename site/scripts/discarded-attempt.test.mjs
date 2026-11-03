@@ -9,7 +9,7 @@ import { autowriterReport } from './autowriter-gate.mjs';
 import { isHolding } from './autowriter-claims.mjs';
 import { validateLedger } from './autowriter-ledger.mjs';
 import { describeProblem } from './autowriter-records.mjs';
-import { filesOf } from './fixtures/spend-report-corpus.mjs';
+import { GENERATED_AT, filesOf } from './fixtures/spend-report-corpus.mjs';
 import { harness, withScene } from './fixtures/spend-run.mjs';
 import { ledgerOf } from './fixtures/spend-scene.mjs';
 import { recordPath } from './record-layout.mjs';
@@ -99,7 +99,7 @@ test(
 );
 
 test('the report names a discarded attempt in its own words as a note, counts no entry for it and says who counts the cost', () => {
-  const model = reportModel(corpusOf(filesOf({ ledgers: [discarded()] })));
+  const model = reportModel(corpusOf(filesOf({ ledgers: [discarded()] })), { at: GENERATED_AT });
   assert.equal(model.empty, true);
   assert.deepEqual(model.warnings, []);
   assert.deepEqual(model.notes, [

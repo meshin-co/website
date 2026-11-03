@@ -6,6 +6,7 @@ import { runGit } from './commit-to-main.mjs';
 import { variable } from './escalate-channels.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 import { noticeFile, noticePosted, raiseNotice } from './spend-notice.mjs';
+import { monthLine } from './spend-report-text.mjs';
 import { readLedgers } from './spend-sources.mjs';
 import { microOf, monthOf, monthlySpend, spendWarnings } from './spend-sum.mjs';
 
@@ -46,6 +47,9 @@ export function inspect({
 }
 
 export const ceilingStatus = (options) => inspect(options).status;
+
+export const monthLineOf = ({ month, spentMicro, ceilingUsd }) =>
+  monthLine({ month, spentMicro, ceilingMicro: microOf(ceilingUsd) });
 
 function parseArguments(argv) {
   const options = {};

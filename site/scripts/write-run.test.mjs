@@ -435,3 +435,10 @@ test('the real adapter on a fake vendor: one model check, one structured request
   for (const { text } of run.commitCalls[0].files) assert.equal(text.includes(KEY), false);
   assert.equal(run.commitCalls[0].message.includes(KEY), false);
 });
+
+test('the spend report in the one commit is stamped with the instant of the run clock', async () => {
+  const run = await drive({ steps: [answer(1, cleanDraft('article')), answer(2, cleanDraft('term'))] });
+  assert.ifError(run.error);
+  const report = textsOf(run.commitCalls[0])[REPORT_PATH];
+  assert.equal(report.split('\n')[3], `Generated-at: ${NOW.toISOString()}`);
+});

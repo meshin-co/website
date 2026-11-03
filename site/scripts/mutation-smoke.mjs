@@ -197,6 +197,11 @@ export const FAMILIES = [
   { id: 'autowriter-spend-report-stale', kind: 'specimen', specimen: 'autowriterSpendReportStale' },
   { id: 'autowriter-spend-report-edited-by-hand', kind: 'specimen', specimen: 'autowriterSpendReportEdited' },
   { id: 'autowriter-spend-report-deleted', kind: 'specimen', specimen: 'autowriterSpendReportDeleted' },
+  {
+    id: 'autowriter-spend-report-without-its-instant',
+    kind: 'specimen',
+    specimen: 'autowriterSpendReportUnstamped',
+  },
   { id: 'autowriter-commit-moves-the-sentence-band', kind: 'specimen', specimen: 'autowriterCommitMovesTheBand' },
   { id: 'autowriter-commit-moves-the-entry-length', kind: 'specimen', specimen: 'autowriterCommitMovesTheEntryLength' },
   {

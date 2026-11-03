@@ -1,8 +1,10 @@
 import { provenanceOf } from './evidence-gate.mjs';
-import { REPORT_PATH, reportText } from './spend-report-text.mjs';
+import { REPORT_PATH, reportText, stampedAt } from './spend-report-text.mjs';
 
 const MAX_SHOWN_LENGTH = 160;
 const UNSTAMPED = '<the commit it was generated from>';
+const NO_INSTANT =
+  'the file has no Generated-at line that reads as a UTC instant such as 2026-11-03T09:00:00.000Z, so the month figure cannot be regenerated';
 
 const finding = (rule, detail) => ({ rule, path: REPORT_PATH, detail });
 const shown = (line) => (line.length > MAX_SHOWN_LENGTH ? `${line.slice(0, MAX_SHOWN_LENGTH - 3)}...` : line);
@@ -23,7 +25,10 @@ function firstDifference(committed, expected) {
 export function spendReportFindings({ ledgers, records, committed }) {
   if (committed === null)
     return [finding('spend-report-missing', 'the file does not exist; run npm run audit:spend to write it')];
-  const expected = reportText({ ledgers, records }, provenanceOf(committed) ?? UNSTAMPED);
+  const at = stampedAt(committed);
+  if (at === undefined)
+    return [finding('spend-report-differs', `${NO_INSTANT}; run npm run audit:spend to regenerate it`)];
+  const expected = reportText({ ledgers, records }, provenanceOf(committed) ?? UNSTAMPED, at);
   if (expected === committed) return [];
   return [
     finding(

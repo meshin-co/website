@@ -10,7 +10,7 @@ import { NOTICE, fakeApi, harness, spending, withScene } from './fixtures/spend-
 import { PLACES } from './fixtures/record-depths.mjs';
 import { FILED_AT, ledgerOf, recordOf } from './fixtures/spend-scene.mjs';
 import { recordFiles, recordPath } from './record-layout.mjs';
-import { ceilingStatus, inspect } from './spend-ceiling.mjs';
+import { ceilingStatus, inspect, monthLineOf } from './spend-ceiling.mjs';
 
 const CEILING = MONTHLY_SPEND_CEILING_USD;
 const IN_NOVEMBER = '2026-11-03T08:00:00Z';
@@ -341,3 +341,14 @@ test(
     assert.match(warnings[0], /orphan-post: .* which does not exist, so its cost is counted from the record alone/);
   })
 );
+
+test('the status of a month becomes the one sentence the report and Slack carry', () => {
+  assert.equal(
+    monthLineOf({ month: '2026-11', spentMicro: 22_748, ceilingUsd: 25 }),
+    '2026-11 so far: 0.022748 USD spent of the 25.00 USD monthly ceiling, 24.977252 USD left.'
+  );
+  assert.equal(
+    monthLineOf({ month: '2026-11', spentMicro: 25_000_000, ceilingUsd: 25 }),
+    '2026-11 so far: 25.00 USD spent of the 25.00 USD monthly ceiling, none left: the ceiling is reached, so the writer does not run for the rest of the month.'
+  );
+});

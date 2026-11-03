@@ -16,6 +16,7 @@ import {
   entryText,
   recordWith,
 } from './fixtures/record-rules-scene.mjs';
+import { GENERATED_AT } from './fixtures/spend-report-corpus.mjs';
 import { spendReportFile } from './spend-report.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
@@ -47,7 +48,7 @@ function inTempRepo(plant, check) {
       mkdirSync(dirname(join(root, path)), { recursive: true });
       writeFileSync(join(root, path), text);
     }
-    const report = spendReportFile({ repoRoot: root, revision: 'abc1234' });
+    const report = spendReportFile({ repoRoot: root, revision: 'abc1234', at: GENERATED_AT });
     mkdirSync(dirname(join(root, report.path)), { recursive: true });
     writeFileSync(join(root, report.path), report.text);
     return check(root);

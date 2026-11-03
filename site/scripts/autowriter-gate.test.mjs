@@ -16,6 +16,7 @@ import {
   recordWith,
 } from './fixtures/record-rules-scene.mjs';
 import { recordPath } from './record-layout.mjs';
+import { GENERATED_AT } from './fixtures/spend-report-corpus.mjs';
 import { spendReportFile } from './spend-report.mjs';
 import { REPORT_PATH, reportText } from './spend-report-text.mjs';
 
@@ -333,7 +334,7 @@ function inTempRepo(plant, check) {
       if (text !== null) put(path, text);
     }
     if (!Object.hasOwn(plant, REPORT_PATH)) {
-      const { path, text } = spendReportFile({ repoRoot: root, revision: 'abc1234' });
+      const { path, text } = spendReportFile({ repoRoot: root, revision: 'abc1234', at: GENERATED_AT });
       put(path, text);
     }
     return check(root);
@@ -451,7 +452,7 @@ test('the command refuses a spend report that disagrees with the records, and na
     {
       [RECORD_PATH]: asJson(recordWith({ band: sceneBand() })),
       [ENTRY_PATH]: entryText(),
-      [REPORT_PATH]: reportText({ ledgers: [], records: [] }, 'abc1234'),
+      [REPORT_PATH]: reportText({ ledgers: [], records: [] }, 'abc1234', GENERATED_AT),
     },
     (root) => {
       const run = gate(root);

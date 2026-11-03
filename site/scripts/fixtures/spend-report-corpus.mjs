@@ -1,11 +1,12 @@
-import { newLedger } from '../autowriter-ledger.mjs';
-import { buildRecord, callTotals, ledgerWithGeneration } from '../generation-record.mjs';
+import { ledgerWithAttempt, newLedger } from '../autowriter-ledger.mjs';
+import { buildRecord, callTotals, ledgerWithGeneration, recordAfterRepair } from '../generation-record.mjs';
 import { recordPath as filedAt } from '../record-layout.mjs';
 import { costUsd } from '../writer-cost.mjs';
 import { callOf, recordInput, termInput } from './generation-input.mjs';
 
 export const REVISION = '3fa620f';
 export const DECIDED_AT = '2026-11-03T09:00:00.000Z';
+export const GENERATED_AT = '2026-11-03T09:00:00.000Z';
 export const PRICE = { inputPerMillion: 1, outputPerMillion: 5 };
 export const MODEL = 'gpt-6.1-terra-2026-10-01';
 
@@ -23,6 +24,34 @@ export function writingCall({ role = 'draft', input = 12000, output = 3000, pric
   const call = callOf(role, { input, output }, tag ?? `${role}-${input}-${output}`);
   return { ...call, resolvedModel: model, price: { ...price }, costUsd: costUsd(price, { input, output }) };
 }
+
+export const repairCall = ({ input = 10000, output = 1000, tag = 'repair' } = {}) =>
+  writingCall({ role: 'repair', input, output, tag });
+
+export const repairedRecord = (record, calls) =>
+  recordAfterRepair({
+    record,
+    calls,
+    modelChecks: [],
+    claimTable: record.claimTable,
+    measured: record.band.measured,
+    measuredOn: record.band.measuredOn,
+    gates: record.gates,
+  });
+
+export const attemptedLedger = (ledger, ...attempts) =>
+  attempts.reduce(
+    (current, { recordedAt, costUsd }) =>
+      ledgerWithAttempt(current, {
+        judgedCommit: 'c'.repeat(40),
+        recordedAt,
+        failingRule: 'banned-phrase',
+        failingPath: 'site/src/data/post/x.md',
+        tokens: { input: 10000, output: 1000 },
+        costUsd,
+      }),
+    ledger
+  );
 
 export function recordOf({ slug, format = 'article', at, runId = 'run-1', ledgerSlug = slug, calls }) {
   const { input, collection, prefix } = FORMATS[format];

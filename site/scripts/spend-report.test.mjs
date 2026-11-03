@@ -5,15 +5,24 @@ import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 
 import { newLedger } from './autowriter-ledger.mjs';
-import { filesOf, ledgerOf, mergedLedger, recordOf, writingCall } from './fixtures/spend-report-corpus.mjs';
+import {
+  GENERATED_AT,
+  filesOf,
+  ledgerOf,
+  mergedLedger,
+  recordOf,
+  writingCall,
+} from './fixtures/spend-report-corpus.mjs';
 import { corpusFiles, runCli, spendReportFile } from './spend-report.mjs';
 import { corpusOf, reportModel } from './spend-report-model.mjs';
-import { REPORT_PATH, reportText, slackMessage } from './spend-report-text.mjs';
+import { REPORT_PATH, monthLine, reportText, slackMessage } from './spend-report-text.mjs';
 
 const WEBHOOK_PATH = '/services/T0SECRET/B0SECRET/xoxSECRETpath';
 const WEBHOOK = `https://hooks.slack.test${WEBHOOK_PATH}`;
 const NEWEST = '2026-11-02T07:00:00.000Z';
 const TERM_AT = '2026-11-02T07:00:01.000Z';
+const SHIPPED_STATUS = { month: '2026-11', spentMicro: 62_000, ceilingUsd: 25 };
+const SHIPPED_MONTH_LINE = monthLine({ month: '2026-11', spentMicro: 62_000, ceilingMicro: 25_000_000 });
 
 const DRAFT = writingCall({ input: 12000, output: 3000, tag: 'draft' });
 const CORRECTION = writingCall({ role: 'correction', input: 13000, output: 2000, tag: 'correction' });
@@ -65,7 +74,15 @@ function harness({ revision = 'abc1234', env = { SLACK_WEBHOOK_URL: WEBHOOK }, a
     out,
     err,
     requests,
-    io: { env, fetch, stdout: (line) => out.push(line), stderr: (line) => err.push(line), revisionOf: () => revision },
+    io: {
+      env,
+      fetch,
+      stdout: (line) => out.push(line),
+      stderr: (line) => err.push(line),
+      revisionOf: () => revision,
+      now: () => new Date(GENERATED_AT),
+      statusOf: () => SHIPPED_STATUS,
+    },
     printed: () => [...out, ...err].join('\n'),
   };
 }
@@ -102,19 +119,20 @@ test('the corpus is the json files of the ledger and the record families at any 
 test('with no folder at all the corpus is empty', () =>
   withRepo((repo) => assert.deepEqual(corpusFiles(repo.root), { ledgers: [], records: [] })));
 
-test('with no record the report file says that no entry has been generated and holds no number', () =>
+test('with no record the report file says that no entry has been generated and holds no number outside the month', () =>
   withRepo((repo) => {
-    const file = spendReportFile({ repoRoot: repo.root, revision: 'abc1234' });
+    const file = spendReportFile({ repoRoot: repo.root, revision: 'abc1234', at: GENERATED_AT });
     assert.equal(file.path, REPORT_PATH);
-    assert.equal(file.text, reportText({ ledgers: [], records: [] }, 'abc1234'));
-    assert.match(file.text, /No entry has been generated, so this file holds no row, no total and no rate/);
-    assert.doesNotMatch(file.text.replace('Generated-from: abc1234', ''), /\d/);
+    assert.equal(file.text, reportText({ ledgers: [], records: [] }, 'abc1234', GENERATED_AT));
+    assert.match(file.text, /No entry has been generated, so this file holds no entry row, no entry total and no rate/);
+    const unstamped = file.text.replace(/^Generated-(from|at): .*\n/gm, '');
+    assert.doesNotMatch(unstamped.replace(/## This month[\s\S]*?(?=## No entry yet)/, ''), /\d/);
   }));
 
 test('an open claim ledger on disk and no record is no entry and no warning', () =>
   withRepo((repo) => {
     repo.put(filesOf({ ledgers: [newLedger({ slug: 'a-post', runId: 'run-1', pullRequest: null })] }).ledgers);
-    const { text } = spendReportFile({ repoRoot: repo.root, revision: 'abc1234' });
+    const { text } = spendReportFile({ repoRoot: repo.root, revision: 'abc1234', at: GENERATED_AT });
     assert.match(text, /No entry has been generated/);
     assert.doesNotMatch(text, /Warnings/);
   }));
@@ -126,8 +144,9 @@ test('the files a run is about to commit replace the ones on disk, so the report
       repoRoot: repo.root,
       written: [...SHIPPED.records, ...SHIPPED.ledgers],
       revision: 'abc1234',
+      at: GENERATED_AT,
     });
-    assert.equal(text, reportText(SHIPPED, 'abc1234'));
+    assert.equal(text, reportText(SHIPPED, 'abc1234', GENERATED_AT));
     assert.doesNotMatch(text, /Warnings/);
   }));
 
@@ -137,16 +156,16 @@ test('a written file outside the two folders is not part of the corpus', () =>
       { path: 'audits/autowriter/claims/a-post.json', text: '{}' },
       { path: 'site/src/data/post/a-post.md', text: '# x' },
     ];
-    const { text } = spendReportFile({ repoRoot: repo.root, written: stray, revision: 'abc1234' });
+    const { text } = spendReportFile({ repoRoot: repo.root, written: stray, revision: 'abc1234', at: GENERATED_AT });
     assert.match(text, /No entry has been generated/);
   }));
 
 test('the same corpus gives the same bytes at any revision, so the file moves only when a record does', () =>
   withRepo((repo) => {
     shipped(repo);
-    const first = spendReportFile({ repoRoot: repo.root, revision: 'aaaaaaa' });
+    const first = spendReportFile({ repoRoot: repo.root, revision: 'aaaaaaa', at: GENERATED_AT });
     repo.put([first]);
-    const second = spendReportFile({ repoRoot: repo.root, revision: 'bbbbbbb' });
+    const second = spendReportFile({ repoRoot: repo.root, revision: 'bbbbbbb', at: GENERATED_AT });
     assert.equal(second.text, first.text);
     assert.match(second.text, /^Generated-from: aaaaaaa$/m);
     const next = recordOf({ slug: 'newer-post', at: '2026-11-03T07:00:00.000Z', runId: 'run-2', calls: [DRAFT] });
@@ -154,6 +173,7 @@ test('the same corpus gives the same bytes at any revision, so the file moves on
       repoRoot: repo.root,
       written: filesOf({ records: [next] }).records,
       revision: 'bbbbbbb',
+      at: GENERATED_AT,
     });
     assert.notEqual(moved.text, first.text);
     assert.match(moved.text, /^Generated-from: bbbbbbb$/m);
@@ -162,9 +182,9 @@ test('the same corpus gives the same bytes at any revision, so the file moves on
 test('a file that was edited by hand is rewritten from the records, with the new stamp', () =>
   withRepo((repo) => {
     shipped(repo);
-    const first = spendReportFile({ repoRoot: repo.root, revision: 'aaaaaaa' });
+    const first = spendReportFile({ repoRoot: repo.root, revision: 'aaaaaaa', at: GENERATED_AT });
     repo.put([{ path: REPORT_PATH, text: first.text.replace('| 0.062', '| 0.001') }]);
-    const repaired = spendReportFile({ repoRoot: repo.root, revision: 'bbbbbbb' });
+    const repaired = spendReportFile({ repoRoot: repo.root, revision: 'bbbbbbb', at: GENERATED_AT });
     assert.equal(repaired.text, first.text.replace('Generated-from: aaaaaaa', 'Generated-from: bbbbbbb'));
   }));
 
@@ -173,7 +193,7 @@ test('write puts the report where the pipeline and the gate look for it, and say
     shipped(repo);
     const run = harness();
     assert.equal(await runCli(['--repo-root', repo.root], run.io), 0);
-    assert.equal(repo.read(REPORT_PATH), reportText(corpusFiles(repo.root), 'abc1234'));
+    assert.equal(repo.read(REPORT_PATH), reportText(corpusFiles(repo.root), 'abc1234', GENERATED_AT));
     assert.deepEqual(run.out, ['spend report: wrote audits/spend-report.md (2 entries, 0 warnings)']);
     assert.deepEqual(run.err, []);
     assert.deepEqual(run.requests, [], 'writing the report sent a message');
@@ -241,12 +261,14 @@ test('notify posts one message built from the records of the entries just writte
     assert.deepEqual(Object.keys(requests[0].body), ['text']);
     assert.ok(
       text.startsWith(
-        'This entry\narticle a-post: 25,000 input tokens, 5,000 output tokens, 0.05 USD\nterm a-term: 6,000 input tokens, 1,200 output tokens, 0.012 USD\n\nLast 30 days, to 2026-11-02T07:00:01.000Z\n'
+        'This entry\narticle a-post: 25,000 input tokens, 5,000 output tokens, 0.05 USD\nterm a-term: 6,000 input tokens, 1,200 output tokens, 0.012 USD\n\n' +
+          SHIPPED_MONTH_LINE +
+          '\n\nLast 30 days, to 2026-11-02T07:00:01.000Z\n'
       ),
       text
     );
-    const model = reportModel(corpusOf(corpusFiles(repo.root)));
-    assert.equal(text, slackMessage(model, model.newestRun));
+    const model = reportModel(corpusOf(corpusFiles(repo.root)), { at: GENERATED_AT });
+    assert.equal(text, slackMessage(model, model.newestRun, SHIPPED_MONTH_LINE));
     assert.deepEqual(out, ['spend report: slack delivered (HTTP 200)']);
     assert.deepEqual(err, []);
   }));
@@ -366,4 +388,104 @@ test('the posted body and every printed line are free of the webhook, on every p
       assert.doesNotMatch(JSON.stringify(requests.map(({ body }) => body)), /xoxSECRET|T0SECRET|hooks\.slack/);
       assert.doesNotMatch(printed(), /xoxSECRET|T0SECRET|hooks\.slack\.test/);
     }
+  }));
+
+const STAMPED_AT = '2026-11-03T09:00:00.000Z';
+const LATER_AT = '2026-11-05T09:00:00.000Z';
+const clockAt = (instant) => () => new Date(instant);
+const CEILING_STATUS = { month: '2026-11', spentMicro: 3_500_000, ceilingUsd: 25 };
+
+test('the written file says the instant of the clock on its fourth line, and the same records on a later day leave it alone', () =>
+  withRepo(async (repo) => {
+    shipped(repo);
+    const first = harness();
+    assert.equal(await runCli(['--repo-root', repo.root], { ...first.io, now: clockAt(STAMPED_AT) }), 0);
+    const written = repo.read(REPORT_PATH);
+    assert.equal(written.split('\n')[3], `Generated-at: ${STAMPED_AT}`);
+    const second = harness();
+    assert.equal(await runCli(['--repo-root', repo.root], { ...second.io, now: clockAt(LATER_AT) }), 0);
+    assert.match(second.out.join('\n'), /is already current/);
+    assert.equal(repo.read(REPORT_PATH), written);
+  }));
+
+test('a record that changed gets the file re-stamped with the instant of the later run', () =>
+  withRepo(async (repo) => {
+    repo.put([...SHIPPED.ledgers, ...SHIPPED.records].filter(({ path }) => !path.includes('a-term')));
+    await runCli(['--repo-root', repo.root], { ...harness().io, now: clockAt(STAMPED_AT) });
+    shipped(repo);
+    await runCli(['--repo-root', repo.root], { ...harness().io, now: clockAt(LATER_AT) });
+    assert.equal(repo.read(REPORT_PATH).split('\n')[3], `Generated-at: ${LATER_AT}`);
+  }));
+
+test('a file that carries no Generated-at line is rewritten with one, never kept', () =>
+  withRepo(async (repo) => {
+    shipped(repo);
+    repo.put([
+      { path: REPORT_PATH, text: reportText(SHIPPED, 'abc1234', STAMPED_AT).replace(/^Generated-at: .*\n/m, '') },
+    ]);
+    await runCli(['--repo-root', repo.root], { ...harness().io, now: clockAt(LATER_AT) });
+    assert.equal(repo.read(REPORT_PATH).split('\n')[3], `Generated-at: ${LATER_AT}`);
+  }));
+
+test('a file is never made without an instant, and one that needs no change is returned without one', () =>
+  withRepo((repo) => {
+    shipped(repo);
+    assert.throws(() => spendReportFile({ repoRoot: repo.root, revision: 'abc1234' }), /not a UTC instant/);
+    const made = spendReportFile({ repoRoot: repo.root, revision: 'abc1234', at: STAMPED_AT });
+    repo.put([{ path: made.path, text: made.text }]);
+    assert.equal(spendReportFile({ repoRoot: repo.root, revision: 'abc1234' }).text, made.text);
+  }));
+
+test('the files being written are counted, and the model comes back with the instant the file is stamped with', () =>
+  withRepo((repo) => {
+    const made = spendReportFile({
+      repoRoot: repo.root,
+      written: [...SHIPPED.ledgers, ...SHIPPED.records],
+      revision: 'abc1234',
+      at: STAMPED_AT,
+    });
+    assert.equal(made.model.rows.length, 2);
+    assert.equal(made.model.thisMonth.at, STAMPED_AT);
+    assert.equal(made.text.split('\n')[3], `Generated-at: ${STAMPED_AT}`);
+  }));
+
+test('the message of notify carries the month line of the ceiling status, between the entries and the windows', () =>
+  withRepo(async (repo) => {
+    shipped(repo);
+    const run = harness();
+    const asked = [];
+    const statusOf = (options) => {
+      asked.push(options);
+      return CEILING_STATUS;
+    };
+    const code = await runCli(
+      ['notify', '--repo-root', repo.root, '--result', repo.result(entriesOf('a-post', 'a-term'))],
+      {
+        ...run.io,
+        now: clockAt(STAMPED_AT),
+        statusOf,
+      }
+    );
+    assert.equal(code, 0, run.printed());
+    assert.deepEqual(asked, [{ repoRoot: repo.root, now: new Date(STAMPED_AT) }]);
+    const blocks = run.requests[0].body.text.split('\n\n');
+    assert.equal(blocks[1], monthLine({ month: '2026-11', spentMicro: 3_500_000, ceilingMicro: 25_000_000 }));
+    assert.match(blocks[3], /^Everything paid for: /m);
+  }));
+
+test('when the ceiling status cannot be read nothing is posted, and the run fails with the reason', () =>
+  withRepo(async (repo) => {
+    shipped(repo);
+    const run = harness();
+    const statusOf = () => {
+      throw new Error('git for-each-ref failed in the repository, so the spend cannot be read');
+    };
+    const code = await runCli(['notify', '--repo-root', repo.root, '--result', repo.result(entriesOf('a-post'))], {
+      ...run.io,
+      now: clockAt(STAMPED_AT),
+      statusOf,
+    });
+    assert.equal(code, 1);
+    assert.deepEqual(run.requests, []);
+    assert.match(run.err.join('\n'), /spend report: git for-each-ref failed/);
   }));

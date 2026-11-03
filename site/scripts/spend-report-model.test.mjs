@@ -5,6 +5,7 @@ import { ledgerWithAttempt, newLedger } from './autowriter-ledger.mjs';
 import { describeProblem } from './autowriter-records.mjs';
 import { callOf, modelCheck } from './fixtures/generation-input.mjs';
 import {
+  GENERATED_AT,
   MODEL,
   asText,
   filesOf,
@@ -22,7 +23,7 @@ import { monthlySpend, recordMicro, spendWarnings } from './spend-sum.mjs';
 import { costUsd } from './writer-cost.mjs';
 
 const NEWEST = '2026-11-02T07:00:00.000Z';
-const modelOf = (parts) => reportModel(corpusOf(filesOf(parts)));
+const modelOf = (parts) => reportModel(corpusOf(filesOf(parts)), { at: GENERATED_AT });
 
 const DRAFT = writingCall({ input: 12000, output: 3000, tag: 'draft' });
 const CORRECTION = writingCall({ role: 'correction', input: 13000, output: 2000, tag: 'correction' });
@@ -56,6 +57,14 @@ test('with no record the model is empty: no row, no window, no rate, no warning 
     rates: [],
     warnings: [],
     notes: [],
+    thisMonth: {
+      month: '2026-11',
+      at: GENERATED_AT,
+      ceilingMicro: 25_000_000,
+      paid: { writingMicro: 0, repairMicro: 0, uncarriedMicro: 0, totalMicro: 0 },
+    },
+    paidAllTime: { writingMicro: 0, repairMicro: 0, uncarriedMicro: 0, totalMicro: 0 },
+    notesMicro: 0,
   });
 });
 
@@ -78,6 +87,7 @@ test('one article is one row whose figures are its writing calls, and every wind
     input: 25000,
     output: 5000,
     micro: 50000,
+    repairMicro: 0,
   };
   assert.equal(model.empty, false);
   assert.deepEqual(model.rows, [row]);
@@ -205,14 +215,18 @@ const REPAIR_ATTEMPT = {
   costUsd: 0.029,
 };
 
-test('a repair adds calls to a record and its attempt to the ledger, and changes no row of the report and no warning', () => {
+test('a repair adds calls to a record and its attempt to the ledger, and changes no cost of the report and no warning, only the repair figure of its row', () => {
   const { post, ledger } = soleArticle();
   const repaired = repairedOf(post);
   assert.deepEqual(validateRecord(repaired).map(describeProblem), []);
   assert.ok(repaired.totals.costUsd > post.totals.costUsd, 'the repair call was not added');
   const before = modelOf({ ledgers: [ledger], records: [post] });
   const after = modelOf({ ledgers: [ledgerWithAttempt(ledger, REPAIR_ATTEMPT)], records: [repaired] });
-  assert.deepEqual(after.rows, before.rows);
+  assert.deepEqual(
+    after.rows.map((row) => ({ ...row, repairMicro: 0 })),
+    before.rows
+  );
+  assert.deepEqual([before.rows[0].repairMicro, after.rows[0].repairMicro], [0, 29000]);
   assert.deepEqual(after.thirtyDays, before.thirtyDays);
   assert.deepEqual(after.allTime, before.allTime);
   assert.deepEqual(after.warnings, []);
@@ -237,8 +251,12 @@ test('what happens to a ledger after the entry is written moves no figure: attem
     costUsd: 0.029,
   });
   const before = modelOf({ ledgers: [ledger], records: [post] });
-  assert.deepEqual(modelOf({ ledgers: [attempted], records: [post] }), before);
-  assert.deepEqual(modelOf({ ledgers: [mergedLedger(attempted)], records: [post] }), before);
+  const entryFigures = (model) => ({ ...model, thisMonth: null, paidAllTime: null });
+  const after = modelOf({ ledgers: [attempted], records: [post] });
+  assert.deepEqual(entryFigures(after), entryFigures(before));
+  assert.equal(before.paidAllTime.repairMicro, 0);
+  assert.equal(after.paidAllTime.repairMicro, 29000);
+  assert.deepEqual(modelOf({ ledgers: [mergedLedger(attempted)], records: [post] }), after);
 });
 
 test('the rates section names the model and both rates once, with the entries they priced and when', () => {
@@ -406,7 +424,7 @@ test('a file that cannot be read is named and left out, and every readable file 
   );
   assert.ok(corpus.problems.some((sentence) => sentence.includes('schema')));
   assert.ok(corpus.problems.some((sentence) => sentence.includes('does not match the file name')));
-  const model = reportModel(corpus);
+  const model = reportModel(corpus, { at: GENERATED_AT });
   assert.equal(model.allTime.totals.all.entries, 1);
   assert.deepEqual(model.warnings.slice(0, 4), corpus.problems);
 });

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import { spendReportFindings } from './autowriter-spend-rules.mjs';
-import { filesOf, ledgerOf, recordOf, writingCall } from './fixtures/spend-report-corpus.mjs';
+import { GENERATED_AT, filesOf, ledgerOf, recordOf, writingCall } from './fixtures/spend-report-corpus.mjs';
 import { REPORT_PATH, reportText } from './spend-report-text.mjs';
 
 const DRAFT = writingCall({ input: 12000, output: 3000, tag: 'draft' });
@@ -24,7 +24,7 @@ const POST_ONLY = filesOf({ ledgers: [ledger], records: [post] });
 const NOTHING = filesOf({});
 const STAMP = '3fa620f';
 
-const committedFor = (files, stamp = STAMP) => reportText(files, stamp);
+const committedFor = (files, stamp = STAMP) => reportText(files, stamp, GENERATED_AT);
 const check = (files, committed) => spendReportFindings({ ...files, committed });
 const only = (found) => {
   assert.equal(found.length, 1, JSON.stringify(found));
@@ -71,7 +71,10 @@ test('a record deleted with the report left as it was is named too', () => {
 });
 
 test('a figure edited by hand is named with the line it is on, both ways round', () => {
-  const edited = committedFor(SHIPPED).replace('| 0.062 ', '| 0.001 ');
+  const edited = committedFor(SHIPPED).replace(
+    /(\| all +\| 2 +\| 31,000 +\| 6,200 +\| )0\.062/,
+    (_, row) => `${row}0.001`
+  );
   const found = only(check(SHIPPED, edited));
   assert.equal(found.rule, 'spend-report-differs');
   assert.match(
@@ -91,7 +94,7 @@ test('a record whose own figure is changed is named, so editing the evidence and
 });
 
 test('a report with no stamp is named at the stamp line, because the stamp is part of the file', () => {
-  const unstamped = committedFor(SHIPPED).replace(/^Generated-from: .*\n\n/m, '');
+  const unstamped = committedFor(SHIPPED).replace(/^Generated-from: .*\n/m, '');
   const found = only(check(SHIPPED, unstamped));
   assert.equal(found.rule, 'spend-report-differs');
   assert.match(found.detail, /^line 3 differs: /);

@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { test } from 'node:test';
 
 import { REPORT_PATH, reportText } from '../spend-report-text.mjs';
-import { filesOf, ledgerOf, recordOf, writingCall } from './spend-report-corpus.mjs';
+import { GENERATED_AT, filesOf, ledgerOf, recordOf, writingCall } from './spend-report-corpus.mjs';
 import { REVISION, plantSpendReport, spendReportFiles } from './spend-report-plant.mjs';
 
 function inEmptyRepo(body) {
@@ -20,7 +20,10 @@ function inEmptyRepo(body) {
 test('planting writes the report of an empty corpus at the path the gate reads', () =>
   inEmptyRepo((root) => {
     plantSpendReport(root);
-    assert.equal(readFileSync(join(root, REPORT_PATH), 'utf8'), reportText({ ledgers: [], records: [] }, REVISION));
+    assert.equal(
+      readFileSync(join(root, REPORT_PATH), 'utf8'),
+      reportText({ ledgers: [], records: [] }, REVISION, GENERATED_AT)
+    );
   }));
 
 test('the files of a report count the records given as written, and are not written to the disk', () =>
@@ -29,6 +32,6 @@ test('the files of a report count the records given as written, and are not writ
     const parts = filesOf({ ledgers: [ledgerOf({ slug: 'a-post', calls: post.calls })], records: [post] });
     const files = spendReportFiles(root, [...parts.ledgers, ...parts.records]);
     assert.deepEqual(Object.keys(files), [REPORT_PATH]);
-    assert.equal(files[REPORT_PATH], reportText(parts, REVISION));
+    assert.equal(files[REPORT_PATH], reportText(parts, REVISION, GENERATED_AT));
     assert.throws(() => readFileSync(join(root, REPORT_PATH)), { code: 'ENOENT' });
   }));

@@ -1,9 +1,25 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { filesOf, ledgerOf, mergedLedger, recordOf, recordPath, writingCall } from './fixtures/spend-report-corpus.mjs';
+import {
+  GENERATED_AT,
+  filesOf,
+  ledgerOf,
+  mergedLedger,
+  recordOf,
+  recordPath,
+  writingCall,
+} from './fixtures/spend-report-corpus.mjs';
 import { corpusOf, reportModel } from './spend-report-model.mjs';
-import { REPORT_PATH, reportMarkdown, reportText, slackMessage, tokenText, usdText } from './spend-report-text.mjs';
+import {
+  REPORT_PATH,
+  monthLine,
+  reportMarkdown,
+  reportText,
+  slackMessage,
+  tokenText,
+  usdText,
+} from './spend-report-text.mjs';
 
 const NEWEST = '2026-11-02T07:00:00.000Z';
 const TERM_AT = '2026-11-02T07:00:01.000Z';
@@ -17,7 +33,12 @@ const term = recordOf({ slug: 'a-term', format: 'term', at: TERM_AT, ledgerSlug:
 const ledger = ledgerOf({ slug: 'a-post', calls: [...post.calls, ...term.calls] });
 
 const corpusFor = (parts) => corpusOf(filesOf(parts));
-const modelFor = (parts) => reportModel(corpusFor(parts));
+const modelFor = (parts) => reportModel(corpusFor(parts), { at: GENERATED_AT });
+const MONTH_LINE = monthLine({ month: '2026-11', spentMicro: 62_000, ceilingMicro: 25_000_000 });
+const ZERO_WARNINGS =
+  'Warnings: 0 (every ledger agrees with its generation record; this does not say that every run produced an entry)';
+const SOME_WARNINGS = 'each needs a person to look at it';
+
 const populated = () => modelFor({ ledgers: [ledger], records: [term, post] });
 const empty = () => modelFor({});
 
@@ -85,25 +106,29 @@ test('the report is written to the one path the gate and the pipeline both name'
 
 test('with nothing generated the file says so in words and carries no number at all', () => {
   const markdown = reportMarkdown(empty());
-  assert.deepEqual(headingsOf(markdown), ['No entry yet']);
+  assert.deepEqual(headingsOf(markdown), ['This month', 'No entry yet']);
   assert.match(
     proseOf(markdown, 'No entry yet'),
-    /^No entry has been generated, so this file holds no row, no total and no rate\./
+    /^No entry has been generated, so this file holds no entry row, no entry total and no rate\./
   );
   assert.match(markdown, /It is not a cost of zero\./);
-  assert.doesNotMatch(markdown, /\d/);
-  assert.equal(markdown.split('\n').filter((line) => line.startsWith('|')).length, 0, 'a table holds a row of zeros');
+  assert.doesNotMatch(sectionOf(markdown, 'No entry yet').join('\n'), /\d/);
+  const tableLines = (lines) => lines.filter((line) => line.startsWith('|'));
+  assert.deepEqual(tableLines(markdown.split('\n')), tableLines(sectionOf(markdown, 'This month')));
+  assert.equal(tableLines(sectionOf(markdown, 'No entry yet')).length, 0, 'a table holds a row of zeros');
 });
 
 test('with only unreadable files the file does not claim that nothing was generated, and lists what it could not count', () => {
   const unreadable = reportMarkdown(
-    reportModel(corpusOf({ ledgers: [], records: [{ path: recordPath('broken'), text: '{not json' }] }))
+    reportModel(corpusOf({ ledgers: [], records: [{ path: recordPath('broken'), text: '{not json' }] }), {
+      at: GENERATED_AT,
+    })
   );
-  assert.deepEqual(headingsOf(unreadable), ['No entry yet', 'Warnings']);
+  assert.deepEqual(headingsOf(unreadable), ['This month', 'No entry yet', 'Warnings']);
   assert.doesNotMatch(unreadable, /No entry has been generated/);
   assert.match(
     proseOf(unreadable, 'No entry yet'),
-    /^No generation record could be counted, so this file holds no row, no total and no rate\./
+    /^No generation record could be counted, so this file holds no entry row, no entry total and no rate\./
   );
   assert.deepEqual(
     sectionOf(unreadable, 'Warnings').filter((line) => line.startsWith('- ')),
@@ -111,9 +136,16 @@ test('with only unreadable files the file does not claim that nothing was genera
   );
 });
 
-test('a populated report has the three windows first, then every entry and the rates, and no warning section when all is well', () => {
+test('a populated report has the month first, then the three windows, every entry and the rates, and no warning section when all is well', () => {
   const markdown = reportMarkdown(populated());
-  assert.deepEqual(headingsOf(markdown), ['This entry', 'Last 30 days', 'All time', 'Every entry', 'Rates']);
+  assert.deepEqual(headingsOf(markdown), [
+    'This month',
+    'This entry',
+    'Last 30 days',
+    'All time',
+    'Every entry',
+    'Rates',
+  ]);
   assert.equal(markdown.split('\n')[0], '# Spend report: what writing each entry cost');
   assert.equal(markdown.split('\n')[1], '');
 });
@@ -127,10 +159,11 @@ test('this entry lists each entry of the newest run in the order it was written,
     'Input tokens',
     'Output tokens',
     'Cost (USD)',
+    'Repair (USD)',
   ]);
   assert.deepEqual(rowsOf(markdown, 'This entry'), [
-    [NEWEST, 'article', 'a-post', '25,000', '5,000', '0.05'],
-    [TERM_AT, 'term', 'a-term', '6,000', '1,200', '0.012'],
+    [NEWEST, 'article', 'a-post', '25,000', '5,000', '0.05', '0.00'],
+    [TERM_AT, 'term', 'a-term', '6,000', '1,200', '0.012', '0.00'],
   ]);
   assert.match(proseOf(markdown, 'This entry'), new RegExp(`generated at ${TERM_AT}`));
 });
@@ -145,8 +178,15 @@ test('each window totals all its entries and then each format, and defines its o
   ];
   for (const title of ['Last 30 days', 'All time']) {
     assert.deepEqual(headerOf(markdown, title), header, title);
-    assert.deepEqual(rowsOf(markdown, title), totals, title);
+    assert.deepEqual(rowsOf(markdown, title).slice(0, totals.length), totals, title);
   }
+  assert.equal(rowsOf(markdown, 'Last 30 days').length, totals.length);
+  assert.deepEqual(rowsOf(markdown, 'All time').slice(totals.length + 2), [
+    ['Writing calls of entries', '0.062'],
+    ['Repair calls', '0.00'],
+    ['Spend that no entry carries', '0.00'],
+    ['Everything paid for', '0.062'],
+  ]);
   const thirty = proseOf(markdown, 'Last 30 days');
   assert.match(thirty, /after 2026-10-03T07:00:01\.000Z and through 2026-11-02T07:00:01\.000Z/);
   assert.match(thirty, /The start is excluded and the end is included/);
@@ -167,8 +207,8 @@ test('the thirty days say they are not the calendar month of the spend ceiling, 
 test('every entry is one row per record, newest first, and the rates name the model and both rates once', () => {
   const markdown = reportMarkdown(populated());
   assert.deepEqual(rowsOf(markdown, 'Every entry'), [
-    [TERM_AT, 'term', 'a-term', '6,000', '1,200', '0.012'],
-    [NEWEST, 'article', 'a-post', '25,000', '5,000', '0.05'],
+    [TERM_AT, 'term', 'a-term', '6,000', '1,200', '0.012', '0.00'],
+    [NEWEST, 'article', 'a-post', '25,000', '5,000', '0.05', '0.00'],
   ]);
   assert.deepEqual(headerOf(markdown, 'Rates'), [
     'Model',
@@ -184,13 +224,19 @@ test('every entry is one row per record, newest first, and the rates name the mo
 test('the definitions state what is counted and what is not, in the file itself', () => {
   const markdown = reportMarkdown(populated());
   assert.match(markdown, /Cost means the cost of the writing calls of an entry: its draft and its correction/);
-  assert.match(markdown, /A repair call is not a writing call and is not counted here/);
   assert.match(
     markdown,
-    /A draft that a run wrote and then skipped, a run that stopped before any entry existed and an attempt that a person discarded have no entry and are not counted here either/
+    /Repair is the cost of the repair calls that the record of the entry holds, and is not part of Cost/
+  );
+  assert.match(
+    markdown,
+    /A draft that a run wrote and then skipped, a run that stopped before any entry existed and an attempt that a person discarded have no entry, so no row holds them/
   );
   assert.match(markdown, /the monthly spend ceiling counts it/);
-  assert.match(markdown, /It reads no clock and no network/);
+  assert.match(
+    markdown,
+    /It reads no network\. It reads the clock once, when it is written, and stamps that instant in Generated-at/
+  );
 });
 
 test('a warning becomes one list item under its own heading, and the entries that can be counted are still totalled', () => {
@@ -198,6 +244,7 @@ test('a warning becomes one list item under its own heading, and the entries tha
   const model = modelFor({ ledgers: [ledger, orphan], records: [term, post] });
   const markdown = reportMarkdown(model);
   assert.deepEqual(headingsOf(markdown), [
+    'This month',
     'This entry',
     'Last 30 days',
     'All time',
@@ -223,12 +270,15 @@ test('the same model renders to the same text every time, on any day, and ends i
   assert.doesNotMatch(first, /\t/);
 });
 
-test('a report text is the markdown with the stamp the evidence gate requires, on the third line', () => {
-  const text = reportText(filesOf({ ledgers: [ledger], records: [term, post] }), '3fa620f');
+test('a report text is the markdown with the stamp the evidence gate requires and the instant, on the third and fourth lines', () => {
+  const text = reportText(filesOf({ ledgers: [ledger], records: [term, post] }), '3fa620f', GENERATED_AT);
   const lines = text.split('\n');
   assert.equal(lines[0], '# Spend report: what writing each entry cost');
-  assert.deepEqual(lines.slice(1, 4), ['', 'Generated-from: 3fa620f', '']);
-  assert.equal(text.replace('Generated-from: 3fa620f\n\n', ''), reportMarkdown(populated()));
+  assert.deepEqual(lines.slice(1, 5), ['', 'Generated-from: 3fa620f', `Generated-at: ${GENERATED_AT}`, '']);
+  assert.equal(
+    text.replace(`Generated-from: 3fa620f\nGenerated-at: ${GENERATED_AT}\n\n`, ''),
+    reportMarkdown(populated())
+  );
 });
 
 const ENTRIES = (...slugs) =>
@@ -238,11 +288,13 @@ const ENTRIES = (...slugs) =>
 
 test('the Slack message holds this entry, the 30 days and all time as plain lines of numbers and units', () => {
   assert.equal(
-    slackMessage(populated(), ENTRIES('a-post', 'a-term')),
+    slackMessage(populated(), ENTRIES('a-post', 'a-term'), MONTH_LINE),
     [
       'This entry',
       'article a-post: 25,000 input tokens, 5,000 output tokens, 0.05 USD',
       'term a-term: 6,000 input tokens, 1,200 output tokens, 0.012 USD',
+      '',
+      MONTH_LINE,
       '',
       'Last 30 days, to 2026-11-02T07:00:01.000Z',
       'all: 2 entries, 31,000 input tokens, 6,200 output tokens, 0.062 USD',
@@ -253,23 +305,24 @@ test('the Slack message holds this entry, the 30 days and all time as plain line
       'all: 2 entries, 31,000 input tokens, 6,200 output tokens, 0.062 USD',
       'article: 1 entry, 25,000 input tokens, 5,000 output tokens, 0.05 USD',
       'term: 1 entry, 6,000 input tokens, 1,200 output tokens, 0.012 USD',
+      'Everything paid for: 0.062 USD, of which writing calls 0.062 USD, repair calls 0.00 USD and spend that no entry carries 0.00 USD.',
       '',
       'The 30 days end at the newest entry. They are not the calendar month of the spend ceiling.',
       '',
-      'Warnings: 0',
+      ZERO_WARNINGS,
     ].join('\n')
   );
 });
 
 test('the Slack message has no table, no emphasis, no link and no currency sign', () => {
-  const message = slackMessage(populated(), ENTRIES('a-post', 'a-term'));
+  const message = slackMessage(populated(), ENTRIES('a-post', 'a-term'), MONTH_LINE);
   assert.doesNotMatch(message, /[|*_`>#~$<]/);
   assert.doesNotMatch(message, /https?:/);
   assert.ok(message.split('\n').every((line) => line === line.trimEnd()));
 });
 
 test('the entries of the message are the ones it is given, so a post that shipped alone is reported alone', () => {
-  const message = slackMessage(populated(), ENTRIES('a-post'));
+  const message = slackMessage(populated(), ENTRIES('a-post'), MONTH_LINE);
   const [, first, blank] = message.split('\n');
   assert.equal(first, 'article a-post: 25,000 input tokens, 5,000 output tokens, 0.05 USD');
   assert.equal(blank, '');
@@ -277,29 +330,29 @@ test('the entries of the message are the ones it is given, so a post that shippe
 });
 
 test('a clean corpus says zero warnings, and warnings join the message capped at three with a count of the rest', () => {
-  const clean = slackMessage(populated(), ENTRIES('a-post')).split('\n\n');
-  assert.deepEqual(clean.at(-1).split('\n'), ['Warnings: 0']);
+  const clean = slackMessage(populated(), ENTRIES('a-post'), MONTH_LINE).split('\n\n');
+  assert.deepEqual(clean.at(-1).split('\n'), [ZERO_WARNINGS]);
   const orphans = ['one', 'two', 'three', 'four', 'five'].map((name) =>
     mergedLedger(ledgerOf({ slug: `lost-${name}`, calls: [DRAFT] }))
   );
   const model = modelFor({ ledgers: [ledger, ...orphans], records: [term, post] });
   assert.equal(model.warnings.length, 5);
-  const blocks = slackMessage(model, ENTRIES('a-post')).split('\n\n');
+  const blocks = slackMessage(model, ENTRIES('a-post'), MONTH_LINE).split('\n\n');
   assert.deepEqual(blocks.at(-1).split('\n'), [
-    'Warnings: 5',
+    `Warnings: 5 (${SOME_WARNINGS})`,
     ...model.warnings.slice(0, 3),
     `and 2 more in ${REPORT_PATH}`,
   ]);
-  const three = reportModel({
-    ...corpusFor({ ledgers: [ledger], records: [term, post] }),
-    problems: model.warnings.slice(0, 3),
-  });
-  assert.deepEqual(slackMessage(three, ENTRIES('a-post')).split('\n\n').at(-1).split('\n'), [
-    'Warnings: 3',
+  const three = reportModel(
+    { ...corpusFor({ ledgers: [ledger], records: [term, post] }), problems: model.warnings.slice(0, 3) },
+    { at: GENERATED_AT }
+  );
+  assert.deepEqual(slackMessage(three, ENTRIES('a-post'), MONTH_LINE).split('\n\n').at(-1).split('\n'), [
+    `Warnings: 3 (${SOME_WARNINGS})`,
     ...three.warnings,
   ]);
 });
 
 test('a message is never built from an empty model: there is no window to total', () => {
-  assert.throws(() => slackMessage(empty(), []), /no entry/);
+  assert.throws(() => slackMessage(empty(), [], MONTH_LINE), /no entry/);
 });

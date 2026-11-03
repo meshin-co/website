@@ -1,7 +1,17 @@
-import { fileStemProblem, validateLedger } from './autowriter-ledger.mjs';
+import { MONTHLY_SPEND_CEILING_USD, fileStemProblem, validateLedger } from './autowriter-ledger.mjs';
 import { describeProblem } from './autowriter-records.mjs';
 import { WRITING_ROLES, validateRecord, writingTotals } from './generation-record.mjs';
-import { microOf, recordMicro, spendWarnings } from './spend-sum.mjs';
+import {
+  instantError,
+  isUtcInstant,
+  microOf,
+  monthlyBreakdown,
+  recordMicro,
+  recordRepairMicro,
+  spendItemsOf,
+  spendWarnings,
+  totalBreakdown,
+} from './spend-sum.mjs';
 
 export const WINDOW_DAYS = 30;
 
@@ -10,6 +20,7 @@ const DAY_MILLISECONDS = 24 * 60 * 60 * 1000;
 const sum = (values) => values.reduce((total, value) => total + value, 0);
 const byText = (left, right) => (left < right ? -1 : left > right ? 1 : 0);
 const stemOf = (path) => path.slice(path.lastIndexOf('/') + 1).replace(/\.json$/, '');
+const ledgerSpendMicro = (ledger) => totalBreakdown({ ledgers: [{ ledger, record: null }] }).totalMicro;
 const instantOf = (value) => new Date(value).toISOString();
 const isWriting = ({ role }) => WRITING_ROLES.includes(role);
 
@@ -56,6 +67,7 @@ function entryOf(record) {
     input: tokens.input,
     output: tokens.output,
     micro: recordMicro(record),
+    repairMicro: recordRepairMicro(record),
   };
 }
 
@@ -139,18 +151,43 @@ function ledgerSentences({ ledgers, records }) {
   const unrecorded = ledgers.filter(
     (ledger) => !recordsByLedger.has(ledger.slug) && microOf(ledger.generation?.costUsd ?? 0) > 0
   );
+  const noted = unrecorded.filter(isNote);
   return {
     warnings: [...checked, ...unrecorded.filter((ledger) => !isNote(ledger)).map(missingRecordSentence)].sort(),
-    notes: unrecorded.filter(isNote).map(noteSentence).sort(),
+    notes: noted.map(noteSentence).sort(),
+    notedMicro: sum(noted.map(ledgerSpendMicro)),
   };
 }
 
-export function reportModel({ ledgers, records, problems }) {
+export function reportModel({ ledgers, records, problems }, { at } = {}) {
+  if (!isUtcInstant(at)) throw instantError(at);
+  const month = at.slice(0, 7);
   const found = ledgerSentences({ ledgers, records });
+  const items = spendItemsOf({ ledgers, records });
   const warnings = [...problems, ...found.warnings];
+  const spend = {
+    thisMonth: {
+      month,
+      at,
+      ceilingMicro: microOf(MONTHLY_SPEND_CEILING_USD),
+      paid: monthlyBreakdown({ ledgers: items, month }),
+    },
+    paidAllTime: totalBreakdown({ ledgers: items }),
+    notesMicro: found.notedMicro,
+  };
   const { notes } = found;
   if (records.length === 0)
-    return { empty: true, rows: [], newestRun: [], thirtyDays: null, allTime: null, rates: [], warnings, notes };
+    return {
+      empty: true,
+      rows: [],
+      newestRun: [],
+      thirtyDays: null,
+      allTime: null,
+      rates: [],
+      warnings,
+      notes,
+      ...spend,
+    };
   const rows = records.map(entryOf).sort(newestFirst);
   const through = rows[0].generatedAt;
   const after = instantOf(Date.parse(through) - WINDOW_DAYS * DAY_MILLISECONDS);
@@ -163,5 +200,6 @@ export function reportModel({ ledgers, records, problems }) {
     rates: ratesOf(records),
     warnings,
     notes,
+    ...spend,
   };
 }

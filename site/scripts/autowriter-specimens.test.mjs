@@ -8,6 +8,7 @@ import { test } from 'node:test';
 import { ATTEMPT_CAP } from './autowriter-ledger.mjs';
 import { historySpecimens } from './autowriter-history-specimens.mjs';
 import { autowriterSpecimens } from './autowriter-specimens.mjs';
+import { GENERATED_AT } from './fixtures/spend-report-corpus.mjs';
 import { ENTRY_PATH, FACT, RECORD_PATH, SENTENCES, bandSceneFiles } from './fixtures/record-rules-scene.mjs';
 import { run } from './measure-entry-length.mjs';
 import { FAMILIES, manifestFamilies } from './mutation-smoke.mjs';
@@ -36,7 +37,7 @@ const LENGTH_PATH = 'audits/entry-length.json';
 const CORPUS_ENTRY = 'site/src/data/post/zz-specimen.md';
 
 const writeSpendReport = (root) => {
-  const report = spendReportFile({ repoRoot: root, revision: 'abc1234' });
+  const report = spendReportFile({ repoRoot: root, revision: 'abc1234', at: GENERATED_AT });
   mkdirSync(dirname(join(root, report.path)), { recursive: true });
   writeFileSync(join(root, report.path), report.text);
 };
@@ -105,6 +106,7 @@ test('the specimen module names every failure mode of the gate, each against gat
     'autowriterSpendReportDeleted',
     'autowriterSpendReportEdited',
     'autowriterSpendReportStale',
+    'autowriterSpendReportUnstamped',
   ]);
   const tokens = NAMES.map((name) => SPECIMENS[name].token);
   assert.equal(new Set(tokens).size, tokens.length, 'two specimens share a token');
@@ -345,6 +347,7 @@ test('the claim specimen repeats a title the generated layer already holds, in o
 test('the misfiled specimen is a sound ledger in the wrong place: filed under its month, the same bytes leave the gate green', async () => {
   await inTempRepo(async (root) => {
     const restore = await planted('autowriterRecordMisfiled', root);
+    writeSpendReport(root);
     assert.equal(existsSync(join(root, LEDGER)), false);
     const text = readFileSync(join(root, STRAY_LEDGER), 'utf8');
     const red = gate(root);

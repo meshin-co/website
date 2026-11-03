@@ -5,10 +5,14 @@ const INSTANT = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3]):[0
 
 export const microOf = (usd) => Math.round(usd * MICRO);
 
+export const isUtcInstant = (value) => typeof value === 'string' && INSTANT.test(value);
+
+export const instantError = (value) =>
+  new Error(`${JSON.stringify(value)} is not a UTC instant such as 2026-11-01T00:00:00Z`);
+
 export function monthOf(instant) {
   const text = instant instanceof Date && !Number.isNaN(instant.getTime()) ? instant.toISOString() : instant;
-  if (typeof text !== 'string' || !INSTANT.test(text))
-    throw new Error(`${JSON.stringify(instant)} is not a UTC instant such as 2026-11-01T00:00:00Z`);
+  if (!isUtcInstant(text)) throw instantError(instant);
   return text.slice(0, 7);
 }
 
@@ -23,11 +27,11 @@ const attemptsMicro = (ledger) =>
   ledger ? ledger.attempts.reduce((total, { costUsd }) => total + microOf(costUsd), 0) : 0;
 const ledgerGenerationMicro = (ledger) => microOf(ledger?.generation?.costUsd ?? 0);
 
-function generationPart({ ledger, record }, month) {
+function generationPart({ ledger, record }) {
   const at = record?.generatedAt ?? ledger?.verdict.decidedAt;
   return {
     kind: 'writing',
-    month: at === null || at === undefined ? month : monthOf(at),
+    month: at === null || at === undefined ? null : monthOf(at),
     micro: Math.max(ledgerGenerationMicro(ledger), recordMicro(record)),
   };
 }
@@ -44,13 +48,12 @@ function uncoveredRepairParts({ ledger, record }) {
   return uncovered > 0 ? [{ kind: 'repair', month: monthOf(record.generatedAt), micro: uncovered }] : [];
 }
 
-const partsOf = (item, month) => [generationPart(item, month), ...attemptParts(item), ...uncoveredRepairParts(item)];
+const partsOf = (item) => [generationPart(item), ...attemptParts(item), ...uncoveredRepairParts(item)];
 
-export function monthlyBreakdown({ ledgers, month }) {
+function breakdownOf(items, keeps) {
   const sums = { writing: 0, repair: 0, uncarried: 0 };
-  for (const item of ledgers)
-    for (const part of partsOf(item, month))
-      if (part.month === month) sums[item.record ? part.kind : 'uncarried'] += part.micro;
+  for (const item of items)
+    for (const part of partsOf(item)) if (keeps(part)) sums[item.record ? part.kind : 'uncarried'] += part.micro;
   return {
     writingMicro: sums.writing,
     repairMicro: sums.repair,
@@ -58,6 +61,11 @@ export function monthlyBreakdown({ ledgers, month }) {
     totalMicro: sums.writing + sums.repair + sums.uncarried,
   };
 }
+
+export const monthlyBreakdown = ({ ledgers, month }) =>
+  breakdownOf(ledgers, (part) => part.month === null || part.month === month);
+
+export const totalBreakdown = ({ ledgers }) => breakdownOf(ledgers, () => true);
 
 export const monthlySpend = (input) => monthlyBreakdown(input).totalMicro;
 

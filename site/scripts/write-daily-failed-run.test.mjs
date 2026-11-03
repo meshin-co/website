@@ -8,7 +8,14 @@ import { test } from 'node:test';
 import { parse } from 'yaml';
 
 import { spendReportFindings } from './autowriter-spend-rules.mjs';
-import { escalatedLedger, filesOf, ledgerOf, recordOf, writingCall } from './fixtures/spend-report-corpus.mjs';
+import {
+  GENERATED_AT,
+  escalatedLedger,
+  filesOf,
+  ledgerOf,
+  recordOf,
+  writingCall,
+} from './fixtures/spend-report-corpus.mjs';
 import { REPORT_PATH, reportText } from './spend-report-text.mjs';
 
 const WORKFLOW = parse(
@@ -41,12 +48,12 @@ test('a ledger committed alone leaves the committed report stale, and the regene
   const post = recordOf({ slug: 'a-post', at: '2026-11-02T07:00:00.000Z', calls: [call] });
   const counted = ledgerOf({ slug: 'a-post', calls: post.calls });
   const failed = escalatedLedger(ledgerOf({ slug: 'lost-post', calls: [call] }));
-  const committed = reportText(filesOf({ ledgers: [counted], records: [post] }), REVISION);
+  const committed = reportText(filesOf({ ledgers: [counted], records: [post] }), REVISION, GENERATED_AT);
   const landed = filesOf({ ledgers: [counted, failed], records: [post] });
 
   assert.deepEqual(
     spendReportFindings({ ...landed, committed }).map(({ rule }) => rule),
     ['spend-report-differs']
   );
-  assert.deepEqual(spendReportFindings({ ...landed, committed: reportText(landed, REVISION) }), []);
+  assert.deepEqual(spendReportFindings({ ...landed, committed: reportText(landed, REVISION, GENERATED_AT) }), []);
 });

@@ -208,7 +208,12 @@ async function execute({ opened, states, stage }) {
     })),
     { path: opened.ledgerPath, text: textOf(ledgerFor({ ledger: opened.ledger, calls })) },
   ];
-  const report = spendReportFile({ repoRoot: stage.repoRoot, written, revision: tree.parent });
+  const report = spendReportFile({
+    repoRoot: stage.repoRoot,
+    written,
+    revision: tree.parent,
+    at: stage.now().toISOString(),
+  });
   const committed = [...assembly.files, ...written, { path: report.path, text: report.text }];
   const message = commitMessage({ shipped, assembly });
   assertNoSecrets({ files: committed, message }, secretsOf([stage.vendor]), 'the run output');
