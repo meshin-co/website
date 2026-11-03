@@ -18,8 +18,9 @@ const INTRO =
 const MEANING =
   'Cost means the cost of the writing calls of an entry: its draft and its correction, each as its record stored it, ' +
   'added in whole micro-dollars. A repair call is not a writing call and is not counted here. ' +
-  'A draft that a run wrote and then skipped, and a run that stopped before any entry existed, have no entry and are ' +
-  'not counted here either. The ledgers record that spend, and the monthly spend ceiling counts it.';
+  'A draft that a run wrote and then skipped, a run that stopped before any entry existed and an attempt that a person ' +
+  'discarded have no entry and are not counted here either. The ledgers record that spend, and the monthly spend ' +
+  'ceiling counts it. The Notes section, when there is one, names each run that ended with no entry.';
 
 const NOTHING_TO_SHOW =
   'so this file holds no row, no total and no rate. That is the absence of a measurement. It is not a cost of zero.';
@@ -85,16 +86,30 @@ const section = (title, ...blocks) => [`## ${title}`, ...blocks].join('\n\n');
 function warningsSection(warnings) {
   if (warnings.length === 0) return [];
   const intro =
-    'These lines say what could not be counted or checked. Every entry that can be counted is still counted above.';
+    'Each line below needs a person to look at it: it says what could not be counted or checked, or what does not add up. ' +
+    'Every entry that can be counted is still counted above.';
   return [section('Warnings', intro, warnings.map((sentence) => `- ${sentence}`).join('\n'))];
 }
 
-function emptyReport({ warnings }) {
-  const reason = warnings.length === 0 ? 'No entry has been generated,' : 'No generation record could be counted,';
-  return [section('No entry yet', `${reason} ${NOTHING_TO_SHOW}`), ...warningsSection(warnings)];
+function notesSection(notes) {
+  if (notes.length === 0) return [];
+  const intro =
+    'These runs ended with no entry. Their spend is real and is in no row or total of this file, so each run is named here. ' +
+    'A note is not a warning: nothing a person does can clear it, because a run that ended will never gain a record.';
+  return [section('Notes', intro, notes.map((sentence) => `- ${sentence}`).join('\n'))];
 }
 
-function populatedReport({ rows, newestRun, thirtyDays, allTime, rates, warnings }) {
+function emptyReport({ warnings, notes }) {
+  const nothingSaid = warnings.length === 0 && notes.length === 0;
+  const reason = nothingSaid ? 'No entry has been generated,' : 'No generation record could be counted,';
+  return [
+    section('No entry yet', `${reason} ${NOTHING_TO_SHOW}`),
+    ...warningsSection(warnings),
+    ...notesSection(notes),
+  ];
+}
+
+function populatedReport({ rows, newestRun, thirtyDays, allTime, rates, warnings, notes }) {
   return [
     section(
       'This entry',
@@ -130,6 +145,7 @@ function populatedReport({ rows, newestRun, thirtyDays, allTime, rates, warnings
       table(RATE_HEADER, rates.map(rateRow))
     ),
     ...warningsSection(warnings),
+    ...notesSection(notes),
   ];
 }
 
@@ -155,14 +171,11 @@ const windowLines = (title, { all, formats }) => [
 ];
 
 function warningLines(warnings) {
-  if (warnings.length === 0) return [];
   const more = warnings.length - MAX_SHOWN_WARNINGS;
   return [
-    [
-      `Warnings: ${warnings.length}`,
-      ...warnings.slice(0, MAX_SHOWN_WARNINGS),
-      ...(more > 0 ? [`and ${more} more in ${REPORT_PATH}`] : []),
-    ],
+    `Warnings: ${warnings.length}`,
+    ...warnings.slice(0, MAX_SHOWN_WARNINGS),
+    ...(more > 0 ? [`and ${more} more in ${REPORT_PATH}`] : []),
   ];
 }
 
@@ -173,7 +186,7 @@ export function slackMessage(model, rows) {
     windowLines(`Last 30 days, to ${model.thirtyDays.through}`, model.thirtyDays.totals),
     windowLines(`All time, since ${model.allTime.since}`, model.allTime.totals),
     ['The 30 days end at the newest entry. They are not the calendar month of the spend ceiling.'],
-    ...warningLines(model.warnings),
+    warningLines(model.warnings),
   ]
     .map((lines) => lines.join('\n'))
     .join('\n\n');

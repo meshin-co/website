@@ -241,11 +241,12 @@ jobs:
             --title "Write daily stopped while writing $slug ($failure)" \
             --detail "npm run write:entry failed with kind $failure: $message. Spend recorded so far: $cost USD. The claim for $slug stays committed and expires on its own."
 
-      - name: commit the ledger, which holds the spend of the failed write
+      - name: commit the ledger, which holds the spend of the failed write, and the report that counts it
         if: failure() && steps.write.outcome == 'failure'
         run: |
           slug="$(basename "$(jq -r .ledgerPath "$DECISION_FILE")" .json)"
-          node scripts/commit-to-main.mjs --message "chore(autowriter): record the stopped run of $slug" --path "$(jq -r .ledgerPath "$DECISION_FILE")"
+          node scripts/spend-report.mjs
+          node scripts/commit-to-main.mjs --message "chore(autowriter): record the stopped run of $slug" --path "$(jq -r .ledgerPath "$DECISION_FILE")" --path audits/spend-report.md
 
       - name: escalate a written entry that could not reach a pull request
         if: failure() && steps.write.outcome == 'success'

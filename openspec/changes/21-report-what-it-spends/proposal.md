@@ -58,12 +58,18 @@ regeneration, naming the first line that differs. One input is read back from th
 `audits/`, because a commit hash is not a function of the records. `gate:evidence` checks that the
 hash names a real commit.
 
-**An incomplete corpus is said, not summed.** A ledger that records a generation for which no record
-exists, a record whose ledger is not in the repository, a record and ledger that disagree about the
-writing spend, and a file that cannot be read each become a line in the report. The Slack message
-carries the first three and a count of the rest. The writing-spend case is `spendWarnings`, called
-unchanged. The other three share its form. A run that stopped before it published anything is not
-one of them, because no entry was ever meant to exist.
+**An incomplete corpus is said, not summed.** A ledger that is still open or merged and records a
+generation for which no record exists, a record whose ledger is not in the repository, a record and
+ledger that disagree about the writing spend, and a file that cannot be read each become a warning in
+the report. The Slack message states how many warnings there are, zero included, and carries the first
+three. The writing-spend case is `spendWarnings`, called unchanged. The other three share its form.
+
+**A warning is a line a person can act on.** A run that ended with no entry, because it stopped, was
+escalated or was discarded by a person, is settled: no action clears its line, and a warning that
+nothing clears would sit in every message until the real one hid behind it. The report lists such a
+run under Notes, in its own sentence, says that a note is not a warning because nothing a person does
+can clear it, and leaves it out of the warning count and out of the Slack message. The monthly ceiling
+still counts its cost.
 
 ## A missed message is not an escalation
 

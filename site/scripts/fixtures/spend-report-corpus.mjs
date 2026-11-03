@@ -62,6 +62,40 @@ export const stoppedLedger = (ledger) => ({
   verdict: { state: 'stopped', reason: 'generation failed (output): the response was cut off', decidedAt: DECIDED_AT },
 });
 
+const receipt = (channel) => ({
+  channel,
+  attemptedAt: DECIDED_AT,
+  delivered: true,
+  status: channel === 'issue' ? 201 : 200,
+  issue: channel === 'issue' ? 12 : null,
+  error: null,
+});
+
+export const escalatedLedger = (ledger) => ({
+  ...ledger,
+  verdict: {
+    state: 'escalated',
+    reason: `Write daily stopped while writing ${ledger.slug} (output)`,
+    decidedAt: DECIDED_AT,
+  },
+  escalations: [
+    {
+      id: 'esc-1',
+      kind: 'hard-stop',
+      title: `Write daily stopped while writing ${ledger.slug} (output)`,
+      detail: 'npm run write:entry failed with kind output: the response was cut off.',
+      raisedAt: DECIDED_AT,
+      receipts: [receipt('issue'), receipt('slack')],
+    },
+  ],
+});
+
+export const discardedLedger = (ledger) => ({
+  ...ledger,
+  pullRequest: 78,
+  verdict: { state: 'discarded', reason: 'the owner closed the pull request unmerged', decidedAt: DECIDED_AT },
+});
+
 export const filesOf = ({ ledgers = [], records = [] }) => ({
   ledgers: ledgers.map((ledger) => ({ path: ledgerPath(ledger.slug), text: asText(ledger) })),
   records: records.map((record) => ({ path: recordPath(record.slug), text: asText(record) })),

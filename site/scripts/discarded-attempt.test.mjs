@@ -98,10 +98,11 @@ test(
   })
 );
 
-test('the report names a discarded attempt in its own words, counts no entry for it and says who counts the cost', () => {
+test('the report names a discarded attempt in its own words as a note, counts no entry for it and says who counts the cost', () => {
   const model = reportModel(corpusOf(filesOf({ ledgers: [discarded()] })));
   assert.equal(model.empty, true);
-  assert.deepEqual(model.warnings, [
+  assert.deepEqual(model.warnings, []);
+  assert.deepEqual(model.notes, [
     `${SLUG}: a person discarded this attempt on 2026-11-02 and its generation record went with it, so no entry is counted for it and its cost cannot be checked against a record; its ledger records ${COST_USD} USD for the generation, and the monthly spend ceiling counts that cost`,
   ]);
 });

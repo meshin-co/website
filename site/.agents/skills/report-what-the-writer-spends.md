@@ -20,27 +20,31 @@ and no network, and rewrites the file from them. It is never appended to. The sa
   month of the monthly ceiling, and the file says so.
 - With no record the file says that no entry has been generated and holds no row, total or rate. That is no measurement. It
   is not a cost of zero.
-- Spend that no entry carries is not in the file: a skipped draft, a run that stopped first and a discarded attempt. The
-  ceiling counts it.
+- Spend that no entry carries is not in the totals: a skipped draft, a run that stopped first and a discarded attempt. The
+  ceiling counts it, and the file names each run that ended with no entry under Notes.
 
-`scripts/spend-report-model.mjs` reads the files and builds the figures. `scripts/spend-report-text.mjs` renders the file and
-the Slack message from them.
+`scripts/spend-report-model.mjs` builds the figures; `scripts/spend-report-text.mjs` renders the file and the message.
 
-## Warnings, not silent sums
+## Warnings and notes
 
-Each of these becomes one line under Warnings, and every entry that can be counted is still counted:
+A warning is a line a person has something to do about. Each of these becomes one line under Warnings, and every entry
+that can be counted is still counted:
 
-- a ledger that records a generation no record names, unless its verdict is `stopped`; a `discarded` ledger has its own
-  sentence, which says the record went with the attempt and the ceiling counts the cost;
+- a ledger that records a generation no record names, while its verdict is `open` or `merged`;
 - a record whose ledger is not in the repository;
 - a ledger that records less writing spend than its records cost, in the sentence `spendWarnings` in `scripts/spend-sum.mjs`
   already writes;
 - a file that cannot be read or is off its schema.
 
+A run that ended with no entry is settled, and nothing a person does clears its line. A ledger that spent and has no record,
+with the verdict `stopped`, `escalated` or `discarded`, is a line under Notes instead: not in the warning count, not on
+stderr, not in the Slack message. A failed write ends `escalated`, because `scripts/escalate-run.mjs` overwrites `stopped`.
+
 ## Where it is written and checked
 
-The writer's one commit holds the file (`scripts/write-run.mjs`). A repair adds repair calls and no writing call, so it leaves
-the file as it was. `Generated-from:` is the one line the gate reads back. Every other byte is regenerated.
+The writer's one commit holds the file (`scripts/write-run.mjs`), and so does the commit of a failed write, regenerated after
+its escalation (`write-daily.yml`). A repair adds repair calls and no writing call, so it leaves the file as it was.
+`Generated-from:` is the one line the gate reads back. Every other byte is regenerated.
 
 `npm run gate:autowriter` regenerates the file and refuses `spend-report-missing` and `spend-report-differs`, naming the first
 line that differs (`scripts/autowriter-spend-rules.mjs`). The specimens are a record added without regenerating, a figure
@@ -49,9 +53,9 @@ edited by hand and a deleted report (`scripts/autowriter-spend-specimens.mjs`). 
 ## The message
 
 `.github/workflows/write-daily.yml` runs `node scripts/spend-report.mjs notify --result "$WRITE_RESULT_FILE"` after a
-successful write, with `SLACK_WEBHOOK_URL` as its only secret. It posts this entry, the 30 days and all time as plain lines of
-numbers and units, through `postSlackText` in `scripts/escalate-channels.mjs`. It prints one receipt line, with the webhook
-removed by `redactorFor` in `scripts/escalate.mjs`.
+successful write, with `SLACK_WEBHOOK_URL` as its only secret. It posts this entry, the 30 days, all time and `Warnings: N`,
+zero included, as plain lines of numbers and units, through `postSlackText` in `scripts/escalate-channels.mjs`. It prints one
+receipt line, with the webhook removed by `redactorFor` in `scripts/escalate.mjs`.
 
 - It posts nothing from zero records. A slug that the write result names and no record holds posts nothing and exits 1,
   naming the slug.
@@ -70,7 +74,7 @@ ledger on `main` still reads `open` with no spend, and the ceiling would under-c
 2. End the claim's hold by setting its `expiresAt` to that instant. The claim store has no release: a claim stops holding
    when `expiresAt` passes (`isHolding` in `scripts/autowriter-claims.mjs`), and the gate counts it under `lapsed`.
 3. Run `npm run audit:spend`. `scripts/spend-ceiling.mjs` counts the spend in the month of the decision from the ledger
-   alone, with no branch and no record.
+   alone, with no branch and no record, and the report lists the attempt under Notes.
 
 The ledger keeps holding its slug (`scripts/topic-claims.mjs`), so the topic is not picked again. Removing the ledger to
 free it would take its spend out of the monthly total.

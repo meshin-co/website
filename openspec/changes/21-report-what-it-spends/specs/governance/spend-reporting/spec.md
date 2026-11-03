@@ -53,20 +53,49 @@ the form `spendWarnings` in `site/scripts/spend-sum.mjs` already uses for writin
 
 #### Scenario: A record is missing
 
-- **WHEN** a ledger that is not stopped records a generation and no record carries its slug
+- **WHEN** a ledger whose verdict is open or merged records a generation and no record carries its slug
 - **THEN** the report names the slug and says no entry is counted for it, and the entries that do
   exist are still totalled
 
 #### Scenario: A run stopped before it wrote anything
 
 - **WHEN** a ledger is stopped, holds a generation and has no record
-- **THEN** the report prints no warning, because no entry was ever meant to exist
+- **THEN** the report prints no warning and lists the run under Notes, because no entry was ever meant
+  to exist
+
+### Requirement: A line is a warning only when a person has something to do about it
+
+The report SHALL list under Warnings only a line that a person can act on, and the Slack message SHALL
+state the number of those lines, zero included. A ledger that spent and has no record, once its run
+ended with the verdict `stopped`, `escalated` or `discarded`, SHALL be listed under Notes in its own
+sentence, and no count or message SHALL include it. `site/scripts/spend-report-model.mjs` sorts each
+line.
+
+#### Scenario: A discarded attempt and nothing else wrong
+
+- **WHEN** a ledger is discarded, holds a generation and has no record, and every other ledger and
+  record agrees
+- **THEN** the report states the discard and its cost under Notes, the entries are still totalled, and
+  the Slack message says `Warnings: 0`
+
+#### Scenario: A failed write that the workflow escalated
+
+- **WHEN** `site/scripts/escalate-run.mjs` has turned the stopped ledger of a failed write into
+  `escalated`
+- **THEN** its sentence is a note, because the run is settled and nothing a person does clears it
+
+#### Scenario: A real mismatch
+
+- **WHEN** a ledger records less writing spend than its record costs
+- **THEN** the report lists it under Warnings, the record cost is still counted, and the Slack message
+  counts it
 
 ### Requirement: The report is committed with the entry it counts
 
 The unattended writer's one commit SHALL include the regenerated report, written by
 `site/scripts/write-run.mjs`. A repair adds repair calls to a record and no writing call, so it SHALL
-leave the report as it was.
+leave the report as it was. The commit of a failed write SHALL hold the regenerated report beside the
+ledger, in `.github/workflows/write-daily.yml`, or `main` would fail `npm run gate:autowriter`.
 
 #### Scenario: A run writes an entry
 
@@ -77,6 +106,11 @@ leave the report as it was.
 
 - **WHEN** a repair attempt adds a repair call to a record
 - **THEN** the report regenerated from that record is byte for byte the report before the repair
+
+#### Scenario: A write fails after it spent money
+
+- **WHEN** the workflow commits the ledger that holds the spend of a failed write
+- **THEN** the same commit holds the report regenerated from that ledger
 
 ### Requirement: Slack receives the numbers after every generation
 

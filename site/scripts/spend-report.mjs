@@ -52,10 +52,13 @@ export function spendReportFile({ repoRoot, written = [], revision }) {
   };
 }
 
-function summaryOf({ empty, rows, warnings }) {
+function summaryOf({ empty, rows, warnings, notes }) {
   const counted = countText(warnings.length, 'warning', 'warnings');
-  if (!empty) return `${countText(rows.length, 'entry', 'entries')}, ${counted}`;
-  return warnings.length === 0 ? 'no entry generated yet' : `no entry counted, ${counted}`;
+  const settled = notes.length === 0 ? '' : `, ${countText(notes.length, 'note', 'notes')}`;
+  if (!empty) return `${countText(rows.length, 'entry', 'entries')}, ${counted}${settled}`;
+  return warnings.length === 0 && notes.length === 0
+    ? 'no entry generated yet'
+    : `no entry counted, ${counted}${settled}`;
 }
 
 function writeReport({ repoRoot, revisionOf, stdout, stderr }) {

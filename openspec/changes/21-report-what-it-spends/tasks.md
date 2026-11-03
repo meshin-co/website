@@ -16,6 +16,10 @@
 - [x] 1.6 A ledger that records a generation no record carries, a record whose ledger is absent, a
       record and ledger that disagree about writing spend, and a file that cannot be read each print
       one sentence; the writing case calls `spendWarnings` unchanged
+- [x] 1.7 A ledger that spent and has no record, once its run ended with the verdict `stopped`,
+      `escalated` or `discarded`, is a line under Notes and not under Warnings, in a sentence of its
+      own, and the file says that a note is not a warning; a ledger that is open or merged, a record
+      whose ledger is absent, a disagreement about spend and an unreadable file stay warnings
 
 ## 2. The message
 
@@ -29,12 +33,17 @@
 - [x] 2.4 `.github/workflows/write-daily.yml` runs the step last in the write job, after a
       successful write even when the push failed, with the webhook as its only secret, and without
       `continue-on-error`
+- [x] 2.5 The Slack message states how many warnings there are, zero included, and never carries a
+      note
 
 ## 3. Staying current
 
 - [x] 3.1 `site/scripts/write-run.mjs` puts the regenerated report in the writer's one commit
 - [x] 3.2 A repair leaves the report as it was, which a test over the model shows, so
       `site/scripts/repair-finish.mjs` and `site/scripts/repair-scope.mjs` stay as they are
+- [x] 3.3 The commit of a failed write in `.github/workflows/write-daily.yml` regenerates the report
+      after the escalation and commits it beside the ledger, so `main` does not fail
+      `npm run gate:autowriter` on the spend that ledger records
 
 ## 4. The guard
 

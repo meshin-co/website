@@ -187,7 +187,7 @@ test('the definitions state what is counted and what is not, in the file itself'
   assert.match(markdown, /A repair call is not a writing call and is not counted here/);
   assert.match(
     markdown,
-    /A draft that a run wrote and then skipped, and a run that stopped before any entry existed, have no entry and are not counted here either/
+    /A draft that a run wrote and then skipped, a run that stopped before any entry existed and an attempt that a person discarded have no entry and are not counted here either/
   );
   assert.match(markdown, /the monthly spend ceiling counts it/);
   assert.match(markdown, /It reads no clock and no network/);
@@ -255,6 +255,8 @@ test('the Slack message holds this entry, the 30 days and all time as plain line
       'term: 1 entry, 6,000 input tokens, 1,200 output tokens, 0.012 USD',
       '',
       'The 30 days end at the newest entry. They are not the calendar month of the spend ceiling.',
+      '',
+      'Warnings: 0',
     ].join('\n')
   );
 });
@@ -274,8 +276,9 @@ test('the entries of the message are the ones it is given, so a post that shippe
   assert.doesNotMatch(message.split('\n\n')[0], /a-term/);
 });
 
-test('warnings join the message, capped at three with a count of the rest, and a clean corpus adds none', () => {
-  assert.doesNotMatch(slackMessage(populated(), ENTRIES('a-post')), /Warnings/);
+test('a clean corpus says zero warnings, and warnings join the message capped at three with a count of the rest', () => {
+  const clean = slackMessage(populated(), ENTRIES('a-post')).split('\n\n');
+  assert.deepEqual(clean.at(-1).split('\n'), ['Warnings: 0']);
   const orphans = ['one', 'two', 'three', 'four', 'five'].map((name) =>
     mergedLedger(ledgerOf({ slug: `lost-${name}`, calls: [DRAFT] }))
   );

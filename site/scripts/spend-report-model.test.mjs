@@ -46,7 +46,7 @@ const entryAt = (slug, at, runId = slug) => {
   return { record, ledger: ledgerOf({ slug, runId, calls: record.calls }) };
 };
 
-test('with no record the model is empty: no row, no window, no rate and no warning', () => {
+test('with no record the model is empty: no row, no window, no rate, no warning and no note', () => {
   assert.deepEqual(modelOf({}), {
     empty: true,
     rows: [],
@@ -55,6 +55,7 @@ test('with no record the model is empty: no row, no window, no rate and no warni
     allTime: null,
     rates: [],
     warnings: [],
+    notes: [],
   });
 });
 

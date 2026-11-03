@@ -115,8 +115,13 @@ const missingRecordSentence = ({ slug, generation, verdict }) =>
 const discardedSentence = ({ slug, generation, verdict }) =>
   `${slug}: a person discarded this attempt on ${verdict.decidedAt.slice(0, 10)} and its generation record went with it, so no entry is counted for it and its cost cannot be checked against a record; its ledger records ${generation.costUsd} USD for the generation, and the monthly spend ceiling counts that cost`;
 
-const unrecordedSentence = (ledger) =>
-  ledger.verdict.state === 'discarded' ? discardedSentence(ledger) : missingRecordSentence(ledger);
+const endedSentence = ({ slug, generation, verdict }) =>
+  `${slug}: this run ended on ${verdict.decidedAt.slice(0, 10)} with the verdict ${verdict.state} and left no generation record, so no entry is counted for it; its ledger records ${generation.costUsd} USD for the generation, and the monthly spend ceiling counts that cost`;
+
+const NOTE_SENTENCES = { stopped: endedSentence, escalated: endedSentence, discarded: discardedSentence };
+
+const isNote = ({ verdict }) => Object.hasOwn(NOTE_SENTENCES, verdict.state);
+const noteSentence = (ledger) => NOTE_SENTENCES[ledger.verdict.state](ledger);
 
 function ledgerSentences({ ledgers, records }) {
   const ledgerBySlug = new Map(ledgers.map((ledger) => [ledger.slug, ledger]));
@@ -131,21 +136,21 @@ function ledgerSentences({ ledgers, records }) {
     const together = { ...group[0], calls: group.flatMap(({ calls }) => calls) };
     return spendWarnings({ ledgers: [{ ledger, record: together }] });
   });
-  const unrecorded = ledgers
-    .filter(
-      (ledger) =>
-        !recordsByLedger.has(ledger.slug) &&
-        microOf(ledger.generation?.costUsd ?? 0) > 0 &&
-        ledger.verdict.state !== 'stopped'
-    )
-    .map(unrecordedSentence);
-  return [...checked, ...unrecorded].sort();
+  const unrecorded = ledgers.filter(
+    (ledger) => !recordsByLedger.has(ledger.slug) && microOf(ledger.generation?.costUsd ?? 0) > 0
+  );
+  return {
+    warnings: [...checked, ...unrecorded.filter((ledger) => !isNote(ledger)).map(missingRecordSentence)].sort(),
+    notes: unrecorded.filter(isNote).map(noteSentence).sort(),
+  };
 }
 
 export function reportModel({ ledgers, records, problems }) {
-  const warnings = [...problems, ...ledgerSentences({ ledgers, records })];
+  const found = ledgerSentences({ ledgers, records });
+  const warnings = [...problems, ...found.warnings];
+  const { notes } = found;
   if (records.length === 0)
-    return { empty: true, rows: [], newestRun: [], thirtyDays: null, allTime: null, rates: [], warnings };
+    return { empty: true, rows: [], newestRun: [], thirtyDays: null, allTime: null, rates: [], warnings, notes };
   const rows = records.map(entryOf).sort(newestFirst);
   const through = rows[0].generatedAt;
   const after = instantOf(Date.parse(through) - WINDOW_DAYS * DAY_MILLISECONDS);
@@ -157,5 +162,6 @@ export function reportModel({ ledgers, records, problems }) {
     allTime: { since: rows.at(-1).generatedAt, through, totals: totalsOf(rows) },
     rates: ratesOf(records),
     warnings,
+    notes,
   };
 }
