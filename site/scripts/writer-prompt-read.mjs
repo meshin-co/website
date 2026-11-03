@@ -24,7 +24,8 @@ function parsed(text, path) {
   }
 }
 
-function present(value, path, label) {
+function present(value, path, label, allowEmpty = false) {
+  if (allowEmpty && Array.isArray(value) && value.length === 0) return value;
   const empty = value == null || value === '' || (typeof value === 'object' && Object.keys(value).length === 0);
   if (empty) throw new WriterError('config', `${path}: ${label} is gone or empty`);
   return value;
@@ -43,7 +44,8 @@ const DATA_TAKES = {
     present(
       take.field === undefined ? parsed(text, path) : parsed(text, path)?.[take.field],
       path,
-      take.field ?? 'the list'
+      take.field ?? 'the list',
+      take.allowEmpty
     ),
   band: ({ text, path, claim }) => bandOf(text, path, claim.format),
   routes: ({ repoRoot }) => routeList(repoRoot),

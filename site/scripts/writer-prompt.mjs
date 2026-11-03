@@ -76,7 +76,7 @@ export const PROMPT_SOURCES = [
   {
     path: 'site/content-facts.json',
     part: 'The numbers a page may state without a source.',
-    take: [data('json', 'numbers', 'numbers')],
+    take: [{ ...data('json', 'numbers', 'numbers'), allowEmpty: true }],
   },
   { path: BAND_FILE, part: 'The sentence band of the format of the claim.', take: [data('band', 'band')] },
   { path: 'audits/routes.json', part: 'The whole list of routes the site serves.', take: [data('routes', 'routes')] },
