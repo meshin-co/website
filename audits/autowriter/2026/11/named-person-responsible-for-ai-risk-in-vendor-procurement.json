@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "slug": "named-person-responsible-for-ai-risk-in-vendor-procurement",
+  "runId": "41623251197-1",
+  "pullRequest": null,
+  "attempts": [],
+  "spend": {
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "costUsd": 0
+  },
+  "verdict": {
+    "state": "open",
+    "reason": null,
+    "decidedAt": null
+  },
+  "escalations": [],
+  "refusals": [
+    {
+      "title": "Fractional CAIO vs full-time CAIO cost",
+      "reason": "slug-held",
+      "against": "audits/autowriter/2026/11/fractional-caio-vs-full-time-caio-cost.json",
+      "detail": "slug \"fractional-caio-vs-full-time-caio-cost\" already has the ledger audits/autowriter/2026/11/fractional-caio-vs-full-time-caio-cost.json, so an earlier run owns it and the topic cannot be tried again yet; no procedure frees a slug safely, and removing the ledger is not one, because it records spend that the monthly spend ceiling counts"
+    },
+    {
+      "title": "AI readiness assessment template for SMB",
+      "reason": "family-served",
+      "against": "/blog/ai-readiness-assessment-template-for-smb",
+      "detail": "the prompt already lists /blog/ai-readiness-assessment-template-for-smb among its routes and that route is in the article family, so another article would answer the same prompt twice"
+    },
+    {
+      "title": "AI governance consultant ISO 42001 small company",
+      "reason": "register-owner",
+      "against": "/glossary/ai-governance",
+      "detail": "the query \"ai governance consultant iso 42001 small company\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+    },
+    {
+      "title": "What is AI governance?",
+      "reason": "register-owner",
+      "against": "/glossary/ai-governance",
+      "detail": "the query \"ai governance\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+    }
+  ]
+}
