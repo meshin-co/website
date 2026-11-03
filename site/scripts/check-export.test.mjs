@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
 
-import { checkExport, main } from './check-export.mjs';
+import { BUILD_STEPS, checkExport, main } from './check-export.mjs';
 import { gitAt } from './fixtures/diff-repo.mjs';
 import { writeScene } from './fixtures/export-scene.mjs';
 
@@ -22,6 +22,13 @@ function repository(t, options) {
 }
 
 const step = (name, source) => ({ name, command: process.execPath, args: ['-e', source] });
+
+test('the generators a copy needs run before the build, because the build hook reads the crawler register they write', () => {
+  assert.deepEqual(
+    BUILD_STEPS.map(({ name }) => name),
+    ['assets:logo', 'assets:og-default', 'assets:robots', 'astro build']
+  );
+});
 
 test('every step runs inside the exported copy, which borrows the source dependencies and is gone afterwards', (t) => {
   const { root, files } = repository(t);

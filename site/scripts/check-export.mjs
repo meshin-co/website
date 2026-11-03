@@ -15,6 +15,7 @@ const DEFAULT_IO = { out: (line) => console.log(line), err: (line) => console.er
 export const BUILD_STEPS = [
   { name: 'assets:logo', command: 'npm', args: ['run', 'assets:logo'] },
   { name: 'assets:og-default', command: 'npm', args: ['run', 'assets:og-default'] },
+  { name: 'assets:robots', command: 'npm', args: ['run', 'assets:robots'] },
   { name: 'astro build', command: 'npx', args: ['astro', 'build'] },
 ];
 

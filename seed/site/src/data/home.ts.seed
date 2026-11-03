@@ -1,3 +1,5 @@
+import { BOOKING_LABEL, BOOKING_URL } from '~/utils/booking.mjs';
+
 export const hero = {
   title: 'A new site',
   titleAccent: 'on the writing engine.',
@@ -23,6 +25,14 @@ export const drivers = [
 ];
 
 export const artifactIds = ['short-answer-checklist'];
+
+export const cta = {
+  title: 'TODO(owner): the invitation to the one next step.',
+  body: 'TODO(owner): what the reader gets from the next step.',
+  label: BOOKING_LABEL,
+  href: BOOKING_URL,
+  note: 'TODO(owner): the other way to reach the owner.',
+};
 
 export const figures = [{ value: 'TODO(owner)', label: 'TODO(owner): a figure the owner can source.' }];
 

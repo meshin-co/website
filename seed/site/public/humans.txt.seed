@@ -1,0 +1,9 @@
+/* TEAM */
+Author: TODO(owner): the name and role of the author
+Site: TODO(owner): the address of the site
+Contact: TODO(owner): the email address readers use
+Location: TODO(owner): where the author works, or leave this line out
+
+/* SITE */
+Standards: HTML5, CSS, JSON-LD
+Components: Astro, Tailwind CSS

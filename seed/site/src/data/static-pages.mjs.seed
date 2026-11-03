@@ -4,6 +4,17 @@ const BRAND = brandFromDisk();
 
 export const STATIC_PAGE_CATALOG = [
   {
+    path: '/',
+    title: 'Home',
+    updatedDate: '2026-11-03',
+    description: 'TODO(owner): one sentence on what the site offers and to whom.',
+  },
+  {
+    path: '/blog/tags',
+    title: 'Tags',
+    description: 'The tags used across the writing, with how many articles carry each one.',
+  },
+  {
     path: '/search',
     title: 'Search',
     description: 'Search the writing, glossary, services and case studies on this site.',
