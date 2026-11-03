@@ -1,3 +1,5 @@
+import { diffScope } from './diff-scope.mjs';
+
 const PURPOSE_HEADING = '## Purpose';
 const REQUIREMENTS_HEADING = '## Requirements';
 const REQUIREMENT_PREFIX = '### Requirement: ';
@@ -14,25 +16,7 @@ const BUILT_BYTE_SURFACE = [
   'site/package-lock.json',
 ];
 
-const nonBlankLines = (text) =>
-  (text ?? '')
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean);
-
-const UNBORN = /^0{7,40}\.\./;
-
-export function changedFiles({ git, range }) {
-  if (range && !UNBORN.test(range)) {
-    const ranged = git(['diff', '--name-only', range]);
-    if (ranged !== null && ranged !== undefined) return nonBlankLines(ranged);
-  }
-  const base = (git(['merge-base', 'HEAD', 'origin/main']) ?? '').trim();
-  const committed = base ? nonBlankLines(git(['diff', '--name-only', `${base}..HEAD`])) : [];
-  const working = nonBlankLines(git(['diff', '--name-only', 'HEAD']));
-  const untracked = nonBlankLines(git(['ls-files', '--others', '--exclude-standard']));
-  return [...new Set([...committed, ...working, ...untracked])];
-}
+export const changedFiles = (scope) => diffScope(scope).files;
 
 const firstSentence = (text) => {
   const match = text.match(/^.*?[.!?](?=\s|$)/s);
