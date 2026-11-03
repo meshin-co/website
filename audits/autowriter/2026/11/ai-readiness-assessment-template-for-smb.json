@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "slug": "ai-readiness-assessment-template-for-smb",
+  "runId": "41584477890-1",
+  "pullRequest": null,
+  "attempts": [],
+  "spend": {
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "costUsd": 0
+  },
+  "verdict": {
+    "state": "open",
+    "reason": null,
+    "decidedAt": null
+  },
+  "escalations": [],
+  "refusals": [
+    {
+      "title": "Fractional CAIO vs full-time CAIO cost",
+      "reason": "slug-held",
+      "against": "audits/autowriter/2026/11/fractional-caio-vs-full-time-caio-cost.json",
+      "detail": "slug \"fractional-caio-vs-full-time-caio-cost\" already has the ledger audits/autowriter/2026/11/fractional-caio-vs-full-time-caio-cost.json, so an earlier run owns it and the topic cannot be tried again yet; no procedure frees a slug safely, and removing the ledger is not one, because it records spend that the monthly spend ceiling counts"
+    }
+  ]
+}
