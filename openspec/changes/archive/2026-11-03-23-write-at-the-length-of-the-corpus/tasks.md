@@ -131,7 +131,7 @@ article again under the new floor is the owner's decision and not a task of this
 
 ## 8. Calibration Gate
 
-- [ ] 8.1 `npm run test:smoke` proves every guard family can still fail, the six new ones among
+- [x] 8.1 `npm run test:smoke` proves every guard family can still fail, the six new ones among
       them, and its family count is recorded; the manifest holds 126 families on this branch and the
       run itself needs a full build and three browsers, so the integrator runs it once
-- [ ] 8.2 Run the Calibration Gate and commit the report it generates for this change
+- [x] 8.2 Run the Calibration Gate and commit the report it generates for this change

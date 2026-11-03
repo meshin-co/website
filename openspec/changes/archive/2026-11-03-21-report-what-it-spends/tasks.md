@@ -96,5 +96,5 @@
 
 ## 6. Calibration Gate
 
-- [ ] 6.1 Run the Calibration Gate and commit the report it generates for this change; the Lighthouse
+- [x] 6.1 Run the Calibration Gate and commit the report it generates for this change; the Lighthouse
       measurement is the owner's, taken locally before the push

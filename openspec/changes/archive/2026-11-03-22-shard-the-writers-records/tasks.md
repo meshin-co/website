@@ -79,5 +79,5 @@
 ## 7. Calibration Gate
 
 - [x] 7.1 `npm run test:smoke` proves every guard family can still fail, the new one included
-- [ ] 7.2 Run the Calibration Gate and commit the report it generates for this change; it needs a fresh
+- [x] 7.2 Run the Calibration Gate and commit the report it generates for this change; it needs a fresh
       local Lighthouse measurement, which is taken when the change is pushed
