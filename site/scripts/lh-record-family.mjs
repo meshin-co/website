@@ -46,6 +46,7 @@ export async function recordScene({ copySite, work }) {
   await writeFile(join(site, 'dist', 'gate-routes.json'), JSON.stringify(GATE_ROUTES));
   await writeMeasuredReports(root);
   git(root, 'init', '-q');
+  git(root, 'config', 'maintenance.auto', 'false');
   git(root, 'add', '-A');
   git(root, 'commit', '-q', '-m', 'the tree the run measured');
 
