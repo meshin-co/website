@@ -11,7 +11,7 @@ export const headerData = {
     { text: 'Resources', href: getPermalink('/resources') },
     { text: 'About', href: getPermalink('/about') },
   ],
-  actions: [{ text: 'Book a call', href: BOOKING_URL, target: '_blank' }],
+  actions: [{ text: 'Book a call', href: BOOKING_URL, target: '_blank', icon: 'tabler:calendar' }],
 };
 
 export const footerData = {
