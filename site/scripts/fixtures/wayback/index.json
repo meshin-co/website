@@ -1,0 +1,8 @@
+{
+  "available-empty.json": { "url": "https://doi.org/10.6028/NIST.AI.100-1", "timestamp": "20251025" },
+  "available-older.json": { "url": "https://www.nist.gov/itl/ai-risk-management-framework", "timestamp": "20230301" },
+  "available-newer.json": { "url": "https://www.nist.gov/itl/ai-risk-management-framework", "timestamp": "20260101" },
+  "available-far.json": { "url": "https://www.nist.gov/itl/ai-risk-management-framework", "timestamp": "20100101" },
+  "available-latest.json": { "url": "https://www.nist.gov/itl/ai-risk-management-framework", "timestamp": null },
+  "snapshot-page.html": { "url": "https://www.nist.gov/itl/ai-risk-management-framework", "timestamp": "20230302214609" }
+}
