@@ -195,3 +195,13 @@ The 114 `darwin/*-mobile.png` baselines were regenerated because every mobile pa
 Ten blog baselines (`/blog`, the adoption-telemetry post and three tag pages, both themes, both
 viewports) were already stale on `main` for a different reason, a new article, and are regenerated
 in a separate commit. Desktop baselines are untouched by the bar.
+
+## 2026-11-03 - Blog baselines catch up with a new article
+
+`ai-readiness-assessment-template-for-smb` joined the corpus on 2026-11-03 and the runner refreshed
+the `linux/` baselines, but the `darwin/` ones were left behind. Twenty now match the build: `/blog`,
+the three tag pages `ai-governance`, `ai-pilots` and `production-readiness`, and the
+adoption-telemetry post, in both themes at both viewports. The listing and tag pages gain one article
+card and the one-row height that comes with it; the post gains a third card in its "Keep reading"
+block. Rendering the build without the article reproduces the old baselines pixel for pixel on
+desktop and differs only in the 42 header rows on mobile, so nothing else moved.
