@@ -12,14 +12,14 @@ import { UNATTENDED_VARIABLE, isUnattended } from './human-only.mjs';
 const REPOSITORY_ROOT = join(import.meta.dirname, '..', '..');
 const WORKFLOWS = join(REPOSITORY_ROOT, '.github', 'workflows');
 const SCRIPTS = JSON.parse(readFileSync(join(REPOSITORY_ROOT, 'site', 'package.json'), 'utf8')).scripts;
-const AUTOWRITER_WORKFLOWS = ['write-daily.yml', 'watch-pr.yml'];
+const AUTOWRITER_WORKFLOWS = ['write-daily.yml', 'watch-pr.yml', 'resume-pr.yml'];
 const HUMAN_ONLY_SCRIPTS = ['assets:seal', 'lh:record', 'gate:lh'];
 const HUMAN_ONLY_COMMANDS = [
   { name: 'the disposition seal', pattern: /editorial-gate\.mjs[^\n]*--seal/ },
   { name: 'the Lighthouse record', pattern: /run-lh-evidence\.mjs\s+record/ },
   { name: 'the Lighthouse driver', pattern: /run-lh-parallel\.mjs/ },
 ];
-const RUNS_THE_AUTOWRITER = /write:entry|watch:pr|pick:topic|write-entry\.mjs|pr-watch\.mjs/;
+const RUNS_THE_AUTOWRITER = /write:entry|watch:pr|resume:pr|pick:topic|write-entry\.mjs|pr-watch\.mjs|pr-resume/;
 const NPM_RUN = /\bnpm\s+(?:run|run-script)\s+(?:(?:--silent|-s|--if-present)\s+)*([A-Za-z0-9:_.-]+)/g;
 const NPM_TEST = /\bnpm\s+(?:test|t)\b/;
 
@@ -80,13 +80,28 @@ for (const name of AUTOWRITER_WORKFLOWS) {
   });
 }
 
-test('a workflow that runs the writer, the topic picker or the watcher is one of the workflows that carry the marker', () => {
+test('a workflow that runs the writer, the topic picker, the watcher or the resume sweep is one of the workflows that carry the marker', () => {
   const running = Object.entries(workflows)
     .filter(([, workflow]) => runTextsOf(workflow).some((text) => RUNS_THE_AUTOWRITER.test(text)))
     .map(([name]) => name)
     .sort();
 
   assert.deepEqual(running, [...AUTOWRITER_WORKFLOWS].sort());
+});
+
+test('the pattern that finds the autowriter workflows can fail: it reads each of their commands and passes a bystander', () => {
+  const commands = [
+    'npm run write:entry',
+    'npm run watch:pr -- --pr "$PULL_REQUEST"',
+    'npm run --silent resume:pr',
+    'node scripts/run-pr-resume.mjs',
+    'node scripts/pr-resume.mjs',
+    'npm run pick:topic',
+  ];
+  const bystanders = ['npm run build', 'npm run gate:links', 'npm ci', 'echo resume'];
+
+  for (const text of commands) assert.match(text, RUNS_THE_AUTOWRITER, text);
+  for (const text of bystanders) assert.doesNotMatch(text, RUNS_THE_AUTOWRITER, text);
 });
 
 test('the three human-only scripts exist, so the scan below is looking for something real', () => {

@@ -1,0 +1,136 @@
+{
+  "source": {
+    "note": "PR 84, open, escalated as not-a-content-gate: its head ca4cabcdfd is the watcher's escalation-record commit, its ledger names issue 85",
+    "capturedAt": "2026-11-03",
+    "commands": [
+      "gh api repos/meshin-co/website/pulls?state=open&per_page=100",
+      "gh api repos/meshin-co/website/pulls/84/commits?per_page=100",
+      "gh api repos/meshin-co/website/contents/audits/autowriter/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json?ref=ca4cabcdfd"
+    ]
+  },
+  "pullRequest": {
+    "number": 84,
+    "state": "open",
+    "draft": false,
+    "title": "feat(autowriter): write named-person-responsible-for-ai-risk-in-vendor-procurement",
+    "created_at": "2026-11-03T10:59:30Z",
+    "merged_at": null,
+    "head": {
+      "ref": "autowriter/named-person-responsible-for-ai-risk-in-vendor-procurement",
+      "sha": "ca4cabcdfd57af0de3104d447a5c85ace6484f02",
+      "repo": {
+        "full_name": "meshin-co/website"
+      }
+    },
+    "base": {
+      "ref": "main",
+      "repo": {
+        "full_name": "meshin-co/website"
+      }
+    },
+    "labels": []
+  },
+  "commits": [
+    {
+      "sha": "b84e7e8242fa2f7f2ae9dc3177cfb3c467fc7c48",
+      "commit": {
+        "author": {
+          "name": "autowriter-bot",
+          "email": "autowriter-bot@meshin.co",
+          "date": "2026-11-03T10:59:27Z"
+        },
+        "committer": {
+          "name": "autowriter-bot",
+          "email": "autowriter-bot@meshin.co",
+          "date": "2026-11-03T10:59:27Z"
+        }
+      }
+    },
+    {
+      "sha": "ca4cabcdfd57af0de3104d447a5c85ace6484f02",
+      "commit": {
+        "author": {
+          "name": "autowriter-bot",
+          "email": "autowriter-bot@meshin.co",
+          "date": "2026-11-03T11:09:44Z"
+        },
+        "committer": {
+          "name": "autowriter-bot",
+          "email": "autowriter-bot@meshin.co",
+          "date": "2026-11-03T11:09:44Z"
+        }
+      }
+    }
+  ],
+  "ledger": {
+    "schema": 1,
+    "slug": "named-person-responsible-for-ai-risk-in-vendor-procurement",
+    "runId": "41623251197-1",
+    "pullRequest": null,
+    "attempts": [],
+    "spend": {
+      "tokens": {
+        "input": 10130,
+        "output": 4190
+      },
+      "costUsd": 0.03108
+    },
+    "verdict": {
+      "state": "escalated",
+      "reason": "Autowriter pull request #84: a job that is not a content gate failed, so the loop may not repair it",
+      "decidedAt": "2026-11-03T11:09:44.265Z"
+    },
+    "escalations": [
+      {
+        "id": "esc-1",
+        "kind": "unrepairable",
+        "title": "Autowriter pull request #84: a job that is not a content gate failed, so the loop may not repair it",
+        "detail": "The watcher judged head b84e7e8242fa2f7f2ae9dc3177cfb3c467fc7c48: escalate, not-a-content-gate.\nFailing: cheap-gates (gate:links), visual-and-axe (1) (gate:visual), visual-and-axe (2) (gate:visual).\nPull request: https://github.com/meshin-co/website/pull/84",
+        "raisedAt": "2026-11-03T11:09:43.102Z",
+        "receipts": [
+          {
+            "channel": "issue",
+            "attemptedAt": "2026-11-03T11:09:43.102Z",
+            "delivered": true,
+            "status": 201,
+            "issue": 85,
+            "error": null
+          }
+        ]
+      }
+    ],
+    "refusals": [
+      {
+        "title": "Fractional CAIO vs full-time CAIO cost",
+        "reason": "slug-held",
+        "against": "audits/autowriter/2026/11/fractional-caio-vs-full-time-caio-cost.json",
+        "detail": "slug \"fractional-caio-vs-full-time-caio-cost\" already has the ledger audits/autowriter/2026/11/fractional-caio-vs-full-time-caio-cost.json, so an earlier run owns it and the topic cannot be tried again yet; no procedure frees a slug safely, and removing the ledger is not one, because it records spend that the monthly spend ceiling counts"
+      },
+      {
+        "title": "AI readiness assessment template for SMB",
+        "reason": "family-served",
+        "against": "/blog/ai-readiness-assessment-template-for-smb",
+        "detail": "the prompt already lists /blog/ai-readiness-assessment-template-for-smb among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "AI governance consultant ISO 42001 small company",
+        "reason": "register-owner",
+        "against": "/glossary/ai-governance",
+        "detail": "the query \"ai governance consultant iso 42001 small company\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+      },
+      {
+        "title": "What is AI governance?",
+        "reason": "register-owner",
+        "against": "/glossary/ai-governance",
+        "detail": "the query \"ai governance\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+      }
+    ],
+    "generation": {
+      "tokens": {
+        "input": 10130,
+        "output": 4190
+      },
+      "costUsd": 0.03108
+    }
+  }
+}

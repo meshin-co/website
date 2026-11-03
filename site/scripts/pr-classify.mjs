@@ -1,5 +1,5 @@
 import { siteBrand } from './site-brand.mjs';
-import { ATTEMPT_CAP, QUARANTINE_HOURS } from './autowriter-ledger.mjs';
+import { ATTEMPT_CAP, QUARANTINE_HOURS, verdictInForce } from './autowriter-ledger.mjs';
 import { readEngineConfig } from './engine-config.mjs';
 import { judgeChecks } from './pr-checks.mjs';
 import { ESCALATION_KIND, isOutcome } from './repair-outcome.mjs';
@@ -25,7 +25,11 @@ const verdict = (name, reason, evidence) => ({ verdict: name, reason, kind: null
 
 const baseOf = (pullRequest) => ({ head: pullRequest.head.sha, pullRequest: pullRequest.number });
 
-const isOwnBranch = ({ head, base }) => slugOfBranch(head.ref) !== null && head.repo?.full_name === base.repo.full_name;
+export const isOwnBranch = ({ head, base }) =>
+  slugOfBranch(head.ref) !== null && head.repo?.full_name === base.repo.full_name;
+
+export const foreignCommit = (commits) =>
+  commits.find(({ commit }) => commit.author.email !== BOT_EMAIL || commit.committer.email !== BOT_EMAIL);
 
 const handledByHuman = (pullRequest, commits, base, ignoreLag) => {
   if (pullRequest.merged === true) return verdict('done', 'merged', base);
@@ -35,9 +39,7 @@ const handledByHuman = (pullRequest, commits, base, ignoreLag) => {
     return verdict('blocked-by-human', 'hold-label', base);
   if (pullRequest.draft === true) return verdict('blocked-by-human', 'draft', base);
   if (!ignoreLag && commits.at(-1)?.sha !== pullRequest.head.sha) return verdict('unsettled', 'stale-head', base);
-  const foreign = commits.find(
-    ({ commit }) => commit.author.email !== BOT_EMAIL || commit.committer.email !== BOT_EMAIL
-  );
+  const foreign = foreignCommit(commits);
   if (!foreign) return null;
   const { author, committer } = foreign.commit;
   return verdict('blocked-by-human', 'human-commit', {
@@ -49,7 +51,7 @@ const handledByHuman = (pullRequest, commits, base, ignoreLag) => {
 };
 
 const decidedBefore = (ledger, base) =>
-  ledger !== null && ledger.verdict.state !== 'open' && ledger.verdict.state !== 'merged'
+  ledger !== null && ledger.verdict.state !== 'open' && ledger.verdict.state !== 'merged' && verdictInForce(ledger)
     ? verdict('done', 'ledger-decided', base)
     : null;
 

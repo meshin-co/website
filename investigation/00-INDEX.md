@@ -4,7 +4,7 @@ This directory holds dated records. A record is an account of one piece of work 
 examined, what was found, what was decided. It is evidence, not instruction. It never tells an agent
 how to work in this repository; `AGENTS.md` and the skills under `site/.agents/skills/` do that.
 
-There are six records.
+There are seven records.
 
 | #   | Date       | File                                                                                               | What it answers                                                                                                                                                                                 |
 | --- | ---------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -14,6 +14,7 @@ There are six records.
 | 04  | 2026-10-02 | [`investigation/04-multi-agent-architecture-research.md`](04-multi-agent-architecture-research.md) | What published guidance, studies and standards say a production multi-agent system needs, what `/approach` actually shows today, and which widely repeated claims no source supports            |
 | 05  | 2026-10-02 | [`investigation/05-handover-playbook-research.md`](05-handover-playbook-research.md)               | What a defensible handover of an AI system involves, what the sources support about sequence and sign-off, and what only the owner can supply about this practice's own exit                    |
 | 06  | 2026-10-02 | [`investigation/06-adoption-telemetry-research.md`](06-adoption-telemetry-research.md)             | What can honestly be measured about AI adoption, and the measured evidence that self-reported adoption and perceived speed-up both run against the trial data                                   |
+| 07  | 2026-11-03 | [`investigation/07-the-loop-without-a-human.md`](07-the-loop-without-a-human.md)                   | Why a bot push waited for a click, why an escalation was final, and what else stops the writer's loop from running without a human |
 
 If you read only one: **02**. It is the shortest, and it is the one that found a claim on the live
 site that its own cited specification may not support.

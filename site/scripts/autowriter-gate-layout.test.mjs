@@ -20,6 +20,7 @@ const CLAIMED = '2026-11-01T07:00:00.000Z';
 const BAND_PATH = 'audits/sentence-band.json';
 const CORE = readFileSync(join(REPO, 'docs/SEMANTIC-CORE.md'), 'utf8');
 const WORKFLOW = readFileSync(join(REPO, '.github/workflows/ci.yml'), 'utf8');
+const CI_FILE = { path: '.github/workflows/ci.yml', text: WORKFLOW };
 
 const FLAT_LEDGER = 'audits/autowriter/what-is-aims.json';
 const FLAT_CLAIM = `audits/autowriter/claims/${SLUG}.json`;
@@ -47,7 +48,7 @@ const FILED_SCRATCH = { path: recordPath('claim', SLUG, CLAIMED), text: JSON.str
 const generationAt = (path) => ({ path, text: asJson(recordWith({ band: realBand() })) });
 const readsEntry = () => ({ readEntry: (path) => (path === ENTRY_PATH ? entryText() : null), band: realBand() });
 const report = (extra = {}) =>
-  autowriterReport({ ledgers: [], claims: [], core: CORE, workflow: WORKFLOW, suffix: SUFFIX, now: NOW, ...extra });
+  autowriterReport({ ledgers: [], claims: [], core: CORE, workflows: [CI_FILE], suffix: SUFFIX, now: NOW, ...extra });
 const findings = (extra) => report(extra).findings;
 const one = (extra) => {
   const found = findings(extra);

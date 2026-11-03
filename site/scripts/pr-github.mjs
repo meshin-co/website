@@ -195,3 +195,43 @@ export async function readTree(api, sha) {
   if (listing.truncated) throw new Error(`the tree of ${sha} is incomplete: GitHub cut the recursive listing short`);
   return listing.tree;
 }
+
+const COMMIT_FILES_PAGE = 300;
+
+const incomplete = (what) => new Error(`the ${what} list is incomplete: reading more than one page is not supported`);
+
+export async function listOpenPullRequests(api) {
+  const pulls = await api.get(`pulls?state=open&per_page=${PAGE_SIZE}`);
+  if (pulls.length >= PAGE_SIZE) throw incomplete('open pull requests');
+  return pulls;
+}
+
+export const readPullRequest = (api, number) => api.get(`pulls/${number}`);
+
+export async function readBranchCommits(api, number) {
+  const commits = await api.get(`pulls/${number}/commits?per_page=${PAGE_SIZE}`);
+  if (commits.length >= PAGE_SIZE) throw incomplete('commits');
+  return commits;
+}
+
+export async function listOpenIssues(api) {
+  const listed = await api.get(`issues?state=open&per_page=${PAGE_SIZE}`);
+  if (listed.length >= PAGE_SIZE) throw incomplete('open issues');
+  return listed.filter((issue) => issue.pull_request === undefined);
+}
+
+export const commentOnIssue = (api, { number, body }) => api.post(`issues/${number}/comments`, { body });
+
+export const closeIssue = (api, { number, reason }) =>
+  api.patch(`issues/${number}`, { state: 'closed', state_reason: reason });
+
+export async function listRecentCommits(api, { branch, limit }) {
+  const commits = await api.get(`commits?sha=${encodeURIComponent(branch)}&per_page=${limit}`);
+  return commits.map(({ sha, commit }) => ({ sha, committedAt: commit.committer.date }));
+}
+
+export async function readCommitFiles(api, sha) {
+  const { files } = await api.get(`commits/${sha}`);
+  if (files.length >= COMMIT_FILES_PAGE) return null;
+  return files.flatMap(({ filename, previous_filename: previous }) => (previous ? [filename, previous] : [filename]));
+}

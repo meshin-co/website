@@ -1,0 +1,207 @@
+{
+  "source": {
+    "note": "commits on main since 2026-11-03T05:00:00Z, newest first; the files are those of a claim commit and a demand-report refresh, which change only audits, and of the merge of pull request 81, which adds an article",
+    "capturedAt": "2026-11-03",
+    "commands": [
+      "gh api repos/meshin-co/website/commits?sha=main&since=2026-11-03T05:00:00Z&per_page=31",
+      "gh api repos/meshin-co/website/commits/0090504ca9441d0f2375ba5d485091bbff2ce796",
+      "gh api repos/meshin-co/website/commits/7e805a5b",
+      "gh api repos/meshin-co/website/commits/e8874d4602b5944138a0017d3d5e862c9e7a728e"
+    ]
+  },
+  "listed": [
+    {
+      "sha": "0090504ca9441d0f2375ba5d485091bbff2ce796",
+      "commit": {
+        "committer": {
+          "date": "2026-11-03T10:57:06Z"
+        }
+      }
+    },
+    {
+      "sha": "7e805a5b984ec996d41fa4934a9cf4641d414aea",
+      "commit": {
+        "committer": {
+          "date": "2026-11-03T10:56:01Z"
+        }
+      }
+    },
+    {
+      "sha": "e8874d4602b5944138a0017d3d5e862c9e7a728e",
+      "commit": {
+        "committer": {
+          "date": "2026-11-03T08:09:03Z"
+        }
+      }
+    },
+    {
+      "sha": "339252020eb64b221f2fc1417a1a54f1568e4a6f",
+      "commit": {
+        "committer": {
+          "date": "2026-11-03T07:41:46Z"
+        }
+      }
+    },
+    {
+      "sha": "affaa811f7a719c0576603f421ae04a2dd9143cc",
+      "commit": {
+        "committer": {
+          "date": "2026-11-03T05:33:55Z"
+        }
+      }
+    },
+    {
+      "sha": "b118c0d0b6c04d5614e9d4a8735c41b9415f0239",
+      "commit": {
+        "committer": {
+          "date": "2026-11-03T05:32:54Z"
+        }
+      }
+    },
+    {
+      "sha": "f3dfa29ab3e84607d5699ea48e6d93b49eb60202",
+      "commit": {
+        "committer": {
+          "date": "2026-11-03T05:20:40Z"
+        }
+      }
+    }
+  ],
+  "details": {
+    "0090504ca9441d0f2375ba5d485091bbff2ce796": {
+      "sha": "0090504ca9441d0f2375ba5d485091bbff2ce796",
+      "commit": {
+        "committer": {
+          "date": "2026-11-03T10:57:06Z"
+        }
+      },
+      "files": [
+        {
+          "filename": "audits/autowriter/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json"
+        },
+        {
+          "filename": "audits/autowriter/claims/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json"
+        }
+      ]
+    },
+    "7e805a5b984ec996d41fa4934a9cf4641d414aea": {
+      "sha": "7e805a5b984ec996d41fa4934a9cf4641d414aea",
+      "commit": {
+        "committer": {
+          "date": "2026-11-03T10:56:01Z"
+        }
+      },
+      "files": [
+        {
+          "filename": "audits/search-demand.md"
+        }
+      ]
+    },
+    "e8874d4602b5944138a0017d3d5e862c9e7a728e": {
+      "sha": "e8874d4602b5944138a0017d3d5e862c9e7a728e",
+      "commit": {
+        "committer": {
+          "date": "2026-11-03T08:09:03Z"
+        }
+      },
+      "files": [
+        {
+          "filename": "audits/autowriter/2026/11/ai-readiness-assessment-template-for-smb.json"
+        },
+        {
+          "filename": "audits/autowriter/claims/2026/11/ai-readiness-assessment-template-for-smb.json"
+        },
+        {
+          "filename": "audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json"
+        },
+        {
+          "filename": "audits/phase-4.7/dispositions/2026/11/generated-ai-readiness-assessment-template-for-smb.json"
+        },
+        {
+          "filename": "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json"
+        },
+        {
+          "filename": "audits/phase-4.7/dispositions/articles-telemetry.json"
+        },
+        {
+          "filename": "audits/phase-4.7/dispositions/routes.json"
+        },
+        {
+          "filename": "audits/routes.json"
+        },
+        {
+          "filename": "audits/spend-report.md"
+        },
+        {
+          "filename": "docs/SEMANTIC-CORE.md"
+        },
+        {
+          "filename": "site/content-facts.json"
+        },
+        {
+          "filename": "site/src/data/post/ai-readiness-assessment-template-for-smb.md"
+        },
+        {
+          "filename": "site/tests/__screenshots__/linux/blog-adoption-telemetry-measuring-if-ai-is-actually-used-dark-desktop.png"
+        },
+        {
+          "filename": "site/tests/__screenshots__/linux/blog-adoption-telemetry-measuring-if-ai-is-actually-used-dark-mobile.png"
+        },
+        {
+          "filename": "site/tests/__screenshots__/linux/blog-adoption-telemetry-measuring-if-ai-is-actually-used-light-desktop.png"
+        },
+        {
+          "filename": "site/tests/__screenshots__/linux/blog-adoption-telemetry-measuring-if-ai-is-actually-used-light-mobile.png"
+        },
+        {
+          "filename": "site/tests/__screenshots__/linux/blog-dark-desktop.png"
+        },
+        {
+          "filename": "site/tests/__screenshots__/linux/blog-dark-mobile.png"
+        },
+        {
+          "filename": "site/tests/__screenshots__/linux/blog-light-desktop.png"
+        },
+        {
+          "filename": "site/tests/__screenshots__/linux/blog-light-mobile.png"
+        },
+        {
+          "filename": "site/tests/__screenshots__/linux/blog-tag-ai-governance-dark-desktop.png"
+        },
+        {
+          "filename": "site/tests/__screenshots__/linux/blog-tag-ai-governance-dark-mobile.png"
+        },
+        {
+          "filename": "site/tests/__screenshots__/linux/blog-tag-ai-governance-light-desktop.png"
+        },
+        {
+          "filename": "site/tests/__screenshots__/linux/blog-tag-ai-governance-light-mobile.png"
+        },
+        {
+          "filename": "site/tests/__screenshots__/linux/blog-tag-ai-pilots-dark-desktop.png"
+        },
+        {
+          "filename": "site/tests/__screenshots__/linux/blog-tag-ai-pilots-dark-mobile.png"
+        },
+        {
+          "filename": "site/tests/__screenshots__/linux/blog-tag-ai-pilots-light-desktop.png"
+        },
+        {
+          "filename": "site/tests/__screenshots__/linux/blog-tag-ai-pilots-light-mobile.png"
+        },
+        {
+          "filename": "site/tests/__screenshots__/linux/blog-tag-production-readiness-dark-desktop.png"
+        },
+        {
+          "filename": "site/tests/__screenshots__/linux/blog-tag-production-readiness-dark-mobile.png"
+        },
+        {
+          "filename": "site/tests/__screenshots__/linux/blog-tag-production-readiness-light-desktop.png"
+        },
+        {
+          "filename": "site/tests/__screenshots__/linux/blog-tag-production-readiness-light-mobile.png"
+        }
+      ]
+    }
+  }
+}

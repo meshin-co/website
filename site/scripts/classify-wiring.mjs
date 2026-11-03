@@ -4,6 +4,7 @@ export const WORKFLOW_PATH = '.github/workflows/ci.yml';
 
 const CHANGES_JOB = 'changes';
 const CLASSIFIER_SCRIPT = 'scripts/run-classify-diff.mjs';
+const BASE_REFERENCE = 'github.event.pull_request.base.sha';
 const PATH_LOGIC = /\||&&|;|\$\(|`|\bcase\b|\bgrep\b|\bawk\b|\bsed\b|\bgit\b|--name-only|\*\.md/;
 
 const finding = (rule, detail) => ({ rule, detail });
@@ -55,6 +56,18 @@ function callFindings(classifier) {
         `The ${CHANGES_JOB} step that runs ${CLASSIFIER_SCRIPT} passes no ${flag}, so the module cannot know which commits to compare.`
       )
     );
+}
+
+function baseFindings(classifier) {
+  if (!classifier) return [];
+  const before = String(classifier.env.BEFORE ?? '');
+  if (before.includes(BASE_REFERENCE)) return [];
+  return [
+    finding(
+      'classifier-judges-last-push',
+      `The BEFORE of the ${CHANGES_JOB} step that runs ${CLASSIFIER_SCRIPT} is ${JSON.stringify(before)}, which does not name ${BASE_REFERENCE}, so a pull request is judged by its last push alone and a push that changes only a ledger or prose reads as prose and skips every gate; BEFORE must name ${BASE_REFERENCE} and fall back to github.event.before for a push to main.`
+    ),
+  ];
 }
 
 const reexpressionFindings = (steps) =>
@@ -129,6 +142,7 @@ export function classifierWiringFindings(workflowText) {
   const classifier = classifierStep(workflowText);
   return [
     ...callFindings(classifier),
+    ...baseFindings(classifier),
     ...reexpressionFindings(steps),
     ...outputFindings(job, classifier),
     ...historyFindings(steps),

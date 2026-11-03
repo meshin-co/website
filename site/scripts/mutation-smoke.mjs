@@ -183,6 +183,12 @@ export const FAMILIES = [
   { id: 'autowriter-job-outside-the-aggregate', kind: 'specimen', specimen: 'autowriterJobOutsideAggregate' },
   { id: 'autowriter-aggregate-that-skips-on-failure', kind: 'specimen', specimen: 'autowriterAggregateSkippable' },
   { id: 'autowriter-aggregate-name-shared-with-push', kind: 'specimen', specimen: 'autowriterAggregateNameShadowed' },
+  { id: 'autowriter-push-made-with-the-default-token', kind: 'specimen', specimen: 'autowriterPushWithDefaultToken' },
+  {
+    id: 'autowriter-classifier-judges-the-last-push',
+    kind: 'specimen',
+    specimen: 'autowriterClassifierJudgesLastPush',
+  },
   { id: 'autowriter-generation-record-off-its-schema', kind: 'specimen', specimen: 'autowriterGenerationOffSchema' },
   { id: 'autowriter-generation-record-without-a-band', kind: 'specimen', specimen: 'autowriterGenerationWithoutBand' },
   { id: 'autowriter-fact-without-a-claim-row', kind: 'specimen', specimen: 'autowriterFactWithoutClaimRow' },

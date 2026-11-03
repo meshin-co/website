@@ -157,3 +157,17 @@ test('each refusal of an unattended process has its own family, and each family 
     assert.equal(family.specimen, specimen, id);
   }
 });
+
+test('each rule the autowriter gate holds on the workflows has its own family, whose specimen names the rule and ci.yml', () => {
+  const rows = {
+    'autowriter-push-made-with-the-default-token': ['autowriterPushWithDefaultToken', 'bot-push-token'],
+    'autowriter-classifier-judges-the-last-push': ['autowriterClassifierJudgesLastPush', 'classifier-judges-last-push'],
+  };
+  const families = manifestFamilies(FAMILIES);
+  for (const [id, [specimen, rule]] of Object.entries(rows)) {
+    const family = families.find((entry) => entry.id === id);
+    assert.equal(family?.kind, 'specimen', id);
+    assert.equal(family.specimen, specimen, id);
+    assert.equal(SPECIMENS[specimen].token, `${rule} .github/workflows/ci.yml`, id);
+  }
+});
