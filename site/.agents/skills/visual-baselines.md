@@ -45,7 +45,7 @@ keeping, add an entry in the format `YYYY-MM-DD · route or component · what ch
 why`, in the same commit or later. The platform-scoped snapshot path template lives in
 `site/playwright.config.ts`; the spec is `site/tests/visual.spec.ts`.
 
-## Traps (docs/FRONTEND-EXCELLENCE-ISSUES.md)
+## Traps
 
 - Sweep against the built output (`npm run preview`), never a long-running dev server: a
   stale module graph serves a newly added scoped style as absent, which reads as a design

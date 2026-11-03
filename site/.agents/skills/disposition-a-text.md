@@ -4,7 +4,7 @@ A disposition is a file under `audits/phase-4.7/dispositions/`, one JSON array p
 hand edit of `inventory.json` — the ledger is generated. `scripts/dispositions.mjs` applies them
 and `npm run assets:seal` stamps each entry with the digest of the text it reviewed.
 
-    [{ "target": "src/data/faq/are-models-trained-on-our-customer-data.md", "status": "rewritten", "reason": "answer now leads" }]
+    [{ "target": "src/data/<collection>/<slug>.md", "status": "rewritten", "reason": "answer now leads" }]
 
 `target` is a source file path or a route. `location` narrows it to one row. `status` is
 `rewritten`, `verified`, or `owner-blocked` with a `reason`. The digest covers every row of that

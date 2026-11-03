@@ -2,6 +2,7 @@ import { readdir, readFile } from 'node:fs/promises';
 import { existsSync, statSync } from 'node:fs';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { engineNamedPaths } from './engine-named-paths.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 
 const MAX_LINES = 80;
@@ -79,7 +80,7 @@ export function resolveCandidate(token, roots) {
   return null;
 }
 
-export function skillFindings({ file, content, roots }) {
+export function skillFindings({ file, content, roots, namedByEngine = () => false }) {
   const findings = [];
 
   const lineCount = content.replace(/\n$/, '').split('\n').length;
@@ -94,7 +95,7 @@ export function skillFindings({ file, content, roots }) {
   }
 
   for (const token of pathCandidates(content)) {
-    if (!resolveCandidate(token, roots)) {
+    if (!resolveCandidate(token, roots) && !namedByEngine(token)) {
       findings.push({ file, rule: 'missing-path', detail: `${token} does not resolve against the repo` });
     }
   }
@@ -102,7 +103,7 @@ export function skillFindings({ file, content, roots }) {
   return findings;
 }
 
-export async function lintSkillsDir(skillsDir, roots) {
+export async function lintSkillsDir(skillsDir, roots, namedByEngine) {
   const entries = await readdir(skillsDir, { withFileTypes: true, recursive: true });
   const files = entries
     .filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
@@ -112,7 +113,7 @@ export async function lintSkillsDir(skillsDir, roots) {
   const findings = [];
   for (const path of files) {
     const content = await readFile(path, 'utf8');
-    findings.push(...skillFindings({ file: path.slice(skillsDir.length + 1), content, roots }));
+    findings.push(...skillFindings({ file: path.slice(skillsDir.length + 1), content, roots, namedByEngine }));
   }
   return findings;
 }
@@ -211,7 +212,7 @@ async function main(skillsDirArg) {
   const repoRoot = resolve(siteRoot, '..');
   const skillsDir = isAbsolute(skillsDirArg ?? '') ? skillsDirArg : join(siteRoot, '.agents', 'skills');
 
-  const findings = await lintSkillsDir(skillsDir, [repoRoot, siteRoot]);
+  const findings = await lintSkillsDir(skillsDir, [repoRoot, siteRoot], engineNamedPaths(repoRoot));
 
   const skillFiles = (await readdir(skillsDir, { recursive: true })).filter((name) => String(name).endsWith('.md'));
   const skillsText = (await Promise.all(skillFiles.map((name) => readFile(join(skillsDir, name), 'utf8')))).join('\n');

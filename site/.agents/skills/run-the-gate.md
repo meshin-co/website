@@ -57,7 +57,7 @@ built bytes, since leaves differ only in content. `auditableRoutes()` in `script
 derives the set from `dist/**/*.html`, never from `gate-routes.json`; `/styleguide` is excluded,
 and visual snapshots follow the same families (`scripts/templates.mjs`).
 
-## Known traps (docs/FRONTEND-EXCELLENCE-ISSUES.md)
+## Known traps
 
 - lhci has no `settings.preset`; form factors come from `formFactor` plus `screenEmulation` in
   `lighthouserc.cjs`. Two runs must never share an output directory: `gate:lh` clears it between

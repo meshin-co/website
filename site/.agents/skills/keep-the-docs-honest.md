@@ -8,7 +8,9 @@ precision control and a test. The rules live in `scripts/docs-gate.mjs`, their t
 `scripts/docs-gate.test.mjs`, and `scripts/run-docs-gate.mjs` walks the tree:
 
 - **dead-path** — a backticked repo-relative path that resolves to no file. Resolution tries the
-  citing document's own directory first, so an index may link its siblings.
+  citing document's own directory first, so an index may link its siblings. A missing path that an
+  engine source names is not dead, because the script that writes it has not run yet:
+  `scripts/engine-named-paths.mjs` decides, and `gate:skills` asks the same question.
 - **ignored-path** — a citation that resolves only to a file `git check-ignore` matches. The file is
   on disk but a clean checkout does not hold it, so the finding names the path and the rule that
   ignores it. When git cannot answer, the check is skipped and the summary line says so.
@@ -18,7 +20,7 @@ precision control and a test. The rules live in `scripts/docs-gate.mjs`, their t
 
 ## Why the ranges are checked
 
-`AGENTS.md`, `docs/PRD.md`, `docs/DECISIONS.md` and the old plan index each quoted a locked-row
+`AGENTS.md`, the product requirements, the decision log and the old plan index each quoted a locked-row
 range. Three of the four had gone stale as rows were added, so a reader was told the decisions
 ended at L19 or L49 when they ran to L54. Nothing caught it, because prose is not built.
 
