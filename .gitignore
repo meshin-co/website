@@ -13,6 +13,7 @@ site/.lighthouseci/
 site/.lh-run/
 .og-cache/
 site/.indexnow-routes.json
+site/.live-entries.json
 audits/phase-ci/
 audits/phase-local/
 audits/*/lh-mobile/

@@ -42,5 +42,33 @@
 
 ## 5. Calibration Gate
 
-- [ ] 5.1 Run the Calibration Gate and commit the report it generates for this change; the Lighthouse
-      measurement is the owner's (owner)
+- [ ] 5.1 Run the Calibration Gate for the whole change, the live-entry message included, and commit
+      the report it generates for this change; the owner runs the Lighthouse measurement (owner)
+
+## 6. The live-entry message
+
+- [x] 6.1 `site/scripts/entry-surfaces.mjs` lists the page of an entry and every surface it is owed from
+      `owedFor` and `SURFACES` in `site/scripts/route-parity.mjs`, never from a second list
+- [x] 6.2 `site/scripts/live-probe.mjs` asks for an address up to 8 times after waits of 0 to 30 seconds
+      and answers whether it is live (a 2xx after redirects), with the attempts and the check time
+- [x] 6.3 `site/scripts/live-slack.mjs` builds `liveMessage` and `unreachableMessage`, the month first
+- [x] 6.4 `site/scripts/live-state.mjs` and `site/scripts/entries-in-build.mjs` read the announced entries
+      and the entries a build carries, and apply the 48-hour rule of a first run
+- [x] 6.5 `site/scripts/live-announce.mjs` and `site/scripts/live-entry.mjs` probe, post and record an
+      entry only when Slack took the message; `deliverNotice` returns whether it delivered
+- [x] 6.6 `.github/workflows/publish-live.yml` runs the step after the smoke step and before IndexNow,
+      between a cache restore and a cache save, with only the webhook in its environment
+
+## 7. The live-entry tests and documents
+
+- [x] 7.1 Each new script has a test: `site/scripts/entry-surfaces.test.mjs`,
+      `site/scripts/live-probe.test.mjs`, `site/scripts/live-slack.test.mjs`,
+      `site/scripts/live-state.test.mjs`, `site/scripts/entries-in-build.test.mjs`,
+      `site/scripts/live-announce.test.mjs` and `site/scripts/live-entry.test.mjs`
+- [x] 7.2 `site/scripts/publish-live-entry.test.mjs` pins the step, its order, its cache key and its
+      environment, and `site/scripts/slack-notice.test.mjs` pins the delivery result
+- [x] 7.3 `spend-reporting` states when an entry is live, the warning for one that is not reachable, the
+      surfaces from the parity derivation, the month first, announce once, the first run, a missed message
+      and the workflow step
+- [x] 7.4 The skills `publish-the-build.md` and `report-what-the-writer-spends.md` name the message
+- [x] 7.5 `site/scripts/README.md` carries a row for every new script

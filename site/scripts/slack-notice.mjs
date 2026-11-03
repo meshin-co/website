@@ -8,4 +8,5 @@ export async function deliverNotice({ label, message, env, fetch, instant, stdou
   const line = describeDelivery(`${label}: slack`, receipt);
   if (receipt.delivered) stdout(line);
   else stderr(`::warning::${line}`);
+  return receipt.delivered;
 }

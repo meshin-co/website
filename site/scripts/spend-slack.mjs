@@ -25,12 +25,12 @@ const ZERO_WARNINGS =
   'every ledger agrees with its generation record; this does not say that every run produced an entry';
 const NEEDS_A_PERSON = 'each needs a person to look at it';
 
-const RULE = { blocks: [divider()], text: '' };
-const column = (name, value) => `${bold(name)}\n${value}`;
-const reference = (ref) => link(ref.url, ref.label);
+export const RULE = { blocks: [divider()], text: '' };
+export const column = (name, value) => `${bold(name)}\n${value}`;
+export const reference = (ref) => link(ref.url, ref.label);
 const referencesOf = (...named) => named.filter(([, ref]) => ref !== null && ref !== undefined);
 const tabulated = (table) => preformatted(monoTable(table));
-const figures = ({ input, output, micro }) =>
+export const figures = ({ input, output, micro }) =>
   `${tokenText(input)} input tokens, ${tokenText(output)} output tokens, ${usdText(micro)} USD`;
 
 function checked(status) {
@@ -71,7 +71,7 @@ function labelsOf(rows) {
   });
 }
 
-function entryTables(rows, labels) {
+export function entryTables(rows, labels) {
   const tokens = monoTable({
     header: ['Tokens', 'input', 'output'],
     align: ['left', 'right', 'right'],

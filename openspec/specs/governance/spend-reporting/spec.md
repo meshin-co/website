@@ -468,6 +468,186 @@ message it posts.
 - **WHEN** the answer to a refused post repeats the webhook address
 - **THEN** the line the step prints holds `[SLACK_WEBHOOK_URL]` and neither the address nor its path
 
+### Requirement: An entry is announced as live only when its page answers on the live origin
+
+After the smoke step, `.github/workflows/publish-live.yml` SHALL run `node scripts/live-entry.mjs`, which
+asks `site.site`, never the `pages.dev` address, for the page of each new entry through `probeUntilLive`
+in `site/scripts/live-probe.mjs`: at most 8 attempts, after waits of 0, 5, 10, 15, 20, 30, 30 and 30
+seconds, each request time-limited. A 2xx on the final address after redirects is live; any other status
+or a network error is not. The message states the check time in UTC.
+
+#### Scenario: The page answers at once
+
+- **WHEN** the page of a new entry answers 200 to the first request
+- **THEN** one live message is posted, and it says that the page answered HTTP 200 on attempt 1 and when
+  it was checked
+
+#### Scenario: The page appears late
+
+- **WHEN** the page answers 404 twice and then 200
+- **THEN** the live message says the page answered on attempt 3, and no warning is posted
+
+#### Scenario: The page redirects
+
+- **WHEN** the page answers a redirect to an address that answers 200
+- **THEN** the page is live, and the message links the address of the entry
+
+#### Scenario: The deploy succeeded and the page does not answer
+
+- **WHEN** the deploy and smoke steps passed and the live origin answers 404 to all 8 attempts
+- **THEN** no live message is posted for that entry
+
+### Requirement: An entry that merged and is not reachable is a warning of its own
+
+When the page of a new entry does not answer 2xx after the last attempt, `unreachableMessage` in
+`site/scripts/live-slack.mjs` SHALL build a message with the month first and a warning section, `An entry
+that merged is not reachable`, naming the slug, the address, the last status or error, the attempts and
+the check time, and saying that a person has something to do. `live-entry.mjs` SHALL print a
+`::warning::` line, exit zero and leave the entry unannounced, so the next publish checks it again.
+
+#### Scenario: The page never answers 200
+
+- **WHEN** the page answers 404 to every attempt
+- **THEN** the warning message names the slug, the address, `HTTP 404`, 8 attempts and the check time,
+  one `::warning::` line is printed, the exit code is 0 and the state file does not list the entry
+
+#### Scenario: The connection is refused
+
+- **WHEN** the live origin refuses the connection on every attempt
+- **THEN** the warning names the refused connection instead of a status
+
+#### Scenario: One entry is live and one is not
+
+- **WHEN** a publish carries two new entries and only one page answers
+- **THEN** the live message names the first, the warning names the second, and only the first is recorded
+
+#### Scenario: The next publish finds the page
+
+- **WHEN** an entry that was unreachable is live at the next publish
+- **THEN** it is announced as live, once
+
+### Requirement: Every surface an entry has is a link, listed from the parity derivation
+
+`surfacesOf` in `site/scripts/entry-surfaces.mjs` SHALL list the page and every other surface the entry is
+owed (its `.md` sidecar, its social card, the feeds and the `llms` files it entered) by calling
+`owedFor` and `SURFACES` of `site/scripts/route-parity.mjs`, the derivation `npm run gate:parity`
+judges, and never from a second list. A surface that does not answer 2xx SHALL be plain text,
+`<label> (<reason>, checked <time>)`, with a warning section, and the entry is still announced.
+
+#### Scenario: The parity derivation gains a surface
+
+- **WHEN** `owedFor` is owed a new surface for entries
+- **THEN** `surfacesOf` returns it with the label and address of the derivation, and the live message
+  carries it as a link and asks the live origin for it
+
+#### Scenario: A surface does not answer
+
+- **WHEN** the page answers 200 and its social card answers 404
+- **THEN** the card is shown as plain text with its status and check time, a warning section says a
+  person has something to do, and the entry is recorded as announced
+
+### Requirement: The live message opens with the month and names the cost and the purpose
+
+Blocks 0 and 1 of the live message SHALL be `monthPart(status)` and the first line of its `text` SHALL be
+`monthLineOf(status)`, as in every other message. Each entry SHALL then carry its title, slug, the buyer
+prompt of `claim.prompt` in its generation record, its tokens and dollars in tables no wider than
+`PHONE_COLUMNS`, and its surfaces as link fields; `text` SHALL carry every one of these facts alone.
+
+#### Scenario: One article is announced
+
+- **WHEN** an article of 12,345 input and 6,789 output tokens that cost 0.123456 USD is live
+- **THEN** block 0 is the month header, block 1 the month table, and the entry follows with its title, slug,
+  the prompt its record names, the tokens and the cost, and the first line of `text` is the month sentence
+
+#### Scenario: The prompt is read from the record
+
+- **WHEN** the generation record of the entry holds prompt 7 and its passage
+- **THEN** the message quotes that number and passage, and never a prompt chosen by any other means
+
+### Requirement: An entry is announced once, and a publish with several says so in one message
+
+`site/scripts/live-state.mjs` SHALL keep `.live-entries.json`, a map of routes to the instant they were
+announced, which `publish-live.yml` restores before the live step and saves in the very next step, under
+the key `live-entries-${{ github.run_id }}`. A route SHALL be added only when Slack took its live message.
+The new entries are those in the build that the map does not list; at most 3 share a message, oldest
+first, and none posts nothing and prints one line.
+
+#### Scenario: A publish carries two new entries
+
+- **WHEN** two new entries are live
+- **THEN** one message names both, and both are recorded
+
+#### Scenario: The same build is published again
+
+- **WHEN** every entry of the build is recorded
+- **THEN** nothing is posted, the live origin is asked for nothing, and one line says that no entry is new
+
+#### Scenario: Slack refuses the message
+
+- **WHEN** the webhook answers 404 to the live message
+- **THEN** the entry is not recorded, a `::warning::` is printed, and the next publish announces it
+
+### Requirement: The first run announces only what is recent
+
+With no state file, `live-entry.mjs` SHALL record every entry of the build as announced without a
+message, except an entry whose generation record is dated within 48 hours before the publish, which is
+announced as usual, so that the whole archive is never announced at once.
+
+#### Scenario: The first run meets an archive
+
+- **WHEN** there is no state file, the build holds 30 entries, and one was generated 5 hours before the publish
+- **THEN** that entry is announced, the other 29 are recorded without a message, and the state file exists
+
+#### Scenario: The recent entry fails to post
+
+- **WHEN** the first run cannot deliver the message of the recent entry
+- **THEN** it stays unannounced, however old it grows, and the others are still recorded
+
+### Requirement: A missed live message never fails the publish
+
+`deliverNotice` in `site/scripts/slack-notice.mjs` SHALL return whether the message was delivered, and
+`live-entry.mjs` SHALL exit zero when Slack does not take it or when a page is unreachable. Exit 1 stays
+for input that cannot be read and exit 2 for a command that is not understood. The webhook SHALL appear in
+no printed line, no posted message and no state file.
+
+#### Scenario: Slack is unreachable
+
+- **WHEN** the post of a live message fails
+- **THEN** the command prints a `::warning::` line, exits 0 and the publish stays green
+
+#### Scenario: The state file is unreadable
+
+- **WHEN** `.live-entries.json` is not JSON
+- **THEN** the command exits 1, names the file, posts nothing and leaves the file as it was
+
+#### Scenario: The command is misused
+
+- **WHEN** `--dist` or `--state` is missing
+- **THEN** the command exits 2 with its usage and posts nothing
+
+#### Scenario: Slack echoes the webhook back
+
+- **WHEN** the answer to a refused post repeats the webhook address
+- **THEN** no printed line, no message and no state file holds it
+
+### Requirement: Publish Live checks the live origin after the smoke step with only the webhook
+
+The step of `.github/workflows/publish-live.yml` that runs
+`node scripts/live-entry.mjs --dist dist --state .live-entries.json` SHALL come after the smoke step and
+before the IndexNow step, SHALL set `continue-on-error`, and SHALL receive `SLACK_WEBHOOK_URL` as its
+only environment, as `site/scripts/publish-live-entry.test.mjs` pins.
+
+#### Scenario: The workflow is read
+
+- **WHEN** the test parses `publish-live.yml`
+- **THEN** exactly one step runs the command, after the smoke step and before the IndexNow step, and its
+  environment names the webhook and nothing else
+
+#### Scenario: A later step fails
+
+- **WHEN** the IndexNow step fails after the live step
+- **THEN** the state was saved by the step that follows the live step, so no entry is announced twice
+
 ### Requirement: A report that disagrees with its records is refused
 
 `npm run gate:autowriter` SHALL regenerate the report from `audits/autowriter` with the instant

@@ -15,15 +15,21 @@ and the workflow has no `continue-on-error`, so a Slack outage turned a job red 
 ledger and the report were already committed. The red step carried no information that the next
 message and the report do not carry.
 
+A fifth gap was a message that did not exist. The moment the owner can click and check an entry is
+when its page answers on the live origin. No message said so: the spend message is posted when the
+entry is written, days before `Publish Live` is pressed, and a deploy that succeeded is a different
+fact from a page that answers 200. An entry that merged and never appeared would be exactly the silent
+failure this project keeps finding.
+
 ## What changes
 
-**Every message is a Block Kit message with a fallback.** The spend message, the no-entry message and
-the escalation message are each `{ text, blocks }`, built from one set of pieces in
+**Every message is a Block Kit message with a fallback.** The spend message, the no-entry message, the
+escalation message and the live-entry message are each `{ text, blocks }`, built from one set of pieces in
 `site/scripts/slack-blocks.mjs`. `text` stays the fallback a phone notification shows, so a person who
 never opens the message still reads what happened. The builders refuse a block over a limit Slack
 documents and escape `&`, `<` and `>`.
 
-**The month comes first.** Block 0 is a header, `<month> spend against the monthly ceiling`, and
+**The month comes first.** In the spend, no-entry and live-entry messages block 0 is a header, `<month> spend against the monthly ceiling`, and
 block 1 is the table of Spent, Ceiling and Left. The first line of the fallback is the sentence
 `monthLineOf` builds from the ceiling status. The earlier spec said the month is the second block;
 that wording is replaced.
@@ -48,6 +54,27 @@ message.
 `::warning::<label>: slack NOT delivered: <reason>` and the command exits 0. Exit 1 and 2 stay for
 causes that are not delivery: an unreadable result, a slug with no generation record, a misused
 command.
+
+**A fourth message says the entry is live.** After the smoke step of `Publish Live`,
+`site/scripts/live-entry.mjs` finds the entries the build carries that nobody announced yet and asks
+the live origin, `site.site`, for each page through a bounded probe, `site/scripts/live-probe.mjs`: at
+most 8 attempts, waiting 0 to 30 seconds. A page that answers 2xx is announced by
+`site/scripts/live-slack.mjs` with the month first, the title, the slug, the buyer prompt the entry
+serves, its tokens and dollars, every surface it has as a link, and the time of the check. A page that
+does not answer is a warning message of its own and a `::warning::` annotation, and the entry stays
+unannounced so the next publish checks it again.
+
+**The surfaces come from the parity derivation.** `site/scripts/entry-surfaces.mjs` calls `owedFor` and
+`SURFACES` of `site/scripts/route-parity.mjs`, the derivation the route parity gate judges, so the
+message gains a surface the moment that derivation does. A surface that does not answer is plain text
+with its status and a warning section.
+
+**An entry is announced once.** `.live-entries.json`, written by `site/scripts/live-state.mjs` and kept
+between publishes by `actions/cache/restore@v4` and `actions/cache/save@v4`, lists the routes announced,
+and a route is added only when Slack took its message. Two new entries share one message. A publish with
+no new entry posts nothing and prints one line. On the first run, with no file, every entry older than 48 hours is recorded as
+announced without a message, so the archive is not announced; the entries of the last 48 hours are
+announced as usual.
 
 ## What this does not change
 

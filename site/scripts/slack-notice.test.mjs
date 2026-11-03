@@ -11,7 +11,7 @@ const INSTANT = new Date('2026-11-03T08:00:00.000Z');
 const run = async ({ env = ENV, fetch }) => {
   const out = [];
   const err = [];
-  await deliverNotice({
+  const delivered = await deliverNotice({
     label: 'spend report',
     message: MESSAGE,
     env,
@@ -20,7 +20,7 @@ const run = async ({ env = ENV, fetch }) => {
     stdout: (line) => out.push(line),
     stderr: (line) => err.push(line),
   });
-  return { out, err };
+  return { out, err, delivered };
 };
 
 const answering = (status, text = '') => {
@@ -89,4 +89,20 @@ test('a delivered notice never prints the webhook either', async () => {
   const { fetch } = answering(200, WEBHOOK);
   const { out, err } = await run({ fetch });
   assert.equal([...out, ...err].join('\n').includes('xoxSECRETpath'), false);
+});
+
+test('a delivered notice returns true, so a caller may record the message as sent', async () => {
+  const { delivered } = await run({ fetch: answering(200, 'ok').fetch });
+  assert.equal(delivered, true);
+});
+
+test('a notice Slack refuses, one it never receives and one with no webhook all return false', async () => {
+  const refused = await run({ fetch: answering(500, 'no_service').fetch });
+  const unreachable = await run({
+    fetch: async () => {
+      throw new Error('connect ECONNREFUSED');
+    },
+  });
+  const unset = await run({ env: {}, fetch: answering(200).fetch });
+  assert.deepEqual([refused.delivered, unreachable.delivered, unset.delivered], [false, false, false]);
 });

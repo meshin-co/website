@@ -1,8 +1,7 @@
 # Report What the Writer Spends
 
-The owner sees what the unattended writer costs in two places: `audits/spend-report.md`, one file rewritten from the
-records, and a Slack message after every generation. Both come from one model. Changes `21-report-what-it-spends` and
-`22-shard-the-writers-records` hold the reasons.
+The owner sees what the unattended writer costs in `audits/spend-report.md`, one file rewritten from the records, and in Slack
+after every generation, both from one model. Changes `21-report-what-it-spends` and `22-shard-the-writers-records` hold the reasons.
 
 ## The file
 
@@ -23,8 +22,7 @@ same bytes, and a file that is already current is left alone, so a later day cha
 - The paid table, in `This month` and in `All time`, has four kinds of call, and each call is in exactly one: writing calls of
   entries, repair calls (the ledger's attempts, so a failed repair is in), runs that ended with no entry (the Notes) and spend
   with no generation record (the Warnings), then everything paid for. Each section states the total of its row.
-- With no record the file says that no entry has been generated and holds no entry row, total or rate. That is no
-  measurement, not a cost of zero. `This month` stays.
+- With no record the file says no entry was generated and holds no entry row, total or rate: no measurement, not zero. `This month` stays.
 
 ## Warnings and notes
 
@@ -46,16 +44,15 @@ and the ledger-only commit of a repair that failed after it spent (`reportFiles`
 allowed by `scripts/repair-scope.mjs`); and the commit of a failed write, after its escalation (`write-daily.yml`). A hand
 change such as a discard needs `npm run audit:spend`. The gate reads back two lines, `Generated-from:` and `Generated-at:`.
 
-`npm run gate:autowriter` regenerates the file with the stamped instant and refuses `spend-report-missing` and
-`spend-report-differs`, naming the first line that differs or the missing `Generated-at` (`scripts/autowriter-spend-rules.mjs`).
-The specimens (`scripts/autowriter-spend-specimens.mjs`) plant a record dated at the committed stamp that passes the ceiling, a
-forged spent figure, a deleted report and an unstamped one, and hold on any report. The fix is `npm run audit:spend`.
+`npm run gate:autowriter` regenerates the file with the stamped instant and refuses `spend-report-missing` and `spend-report-differs`,
+naming the first differing line or the missing `Generated-at` (`scripts/autowriter-spend-rules.mjs`). The specimens
+(`scripts/autowriter-spend-specimens.mjs`) plant a record at the committed stamp that passes the ceiling, a forged spent figure, a deleted report and an unstamped one, and hold on any report. The fix is `npm run audit:spend`.
 
 ## The message
 
 Every message is Block Kit `{ text, blocks }` (`scripts/slack-blocks.mjs`); `text` is the fallback a phone shows. Kinds: the entry
 message (`node scripts/spend-report.mjs notify`, `scripts/spend-slack.mjs`), the no-entry message (`scripts/spend-ended.mjs` with
-`ceiling`, `pick` or `write`; five steps of `write-daily.yml`; a failed pick posts nothing) and the escalation message.
+`ceiling`, `pick` or `write`; five steps of `write-daily.yml`; a failed pick posts nothing), the escalation message and the live-entry message.
 
 - Month first: header `<month> spend against the monthly ceiling`, the Spent, Ceiling and Left table, and `monthLineOf` as line 1 of `text`.
 - Compared numbers sit in code fences padded by `monoTable` (`scripts/slack-table.mjs`), no line over `PHONE_COLUMNS` = 34, our own limit.
@@ -65,6 +62,9 @@ message (`node scripts/spend-report.mjs notify`, `scripts/spend-slack.mjs`), the
 - `Warnings: 0 (...)` is a context line; N above 0 is a section with 3 listed, then `and K more in audits/spend-report.md`. No note appears.
 - A missed message is not an escalation: `deliverNotice` (`scripts/slack-notice.mjs`) prints `::warning::<label>: slack NOT delivered:
 <reason>`, the webhook removed by `redactorFor`, and exits 0. Exit 1 and 2 stay for causes that are not delivery.
+- Live entry (`scripts/live-entry.mjs`, `scripts/live-slack.mjs`; `publish-the-build.md`): once per entry, when its page answers 2xx on
+  `site.site`. Links come from `scripts/entry-surfaces.mjs` over `owedFor` and `SURFACES` (`scripts/route-parity.mjs`), the prompt is `claim.prompt`
+  of the record (`scripts/entries-in-build.mjs`), `scripts/live-state.mjs` remembers it. An unreachable page is a warning message and stays unannounced.
 
 ## A discarded attempt
 
