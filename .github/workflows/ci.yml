@@ -28,7 +28,7 @@ jobs:
       - name: classify the diff, so prose cannot spend a Lighthouse matrix
         id: classify
         env:
-          BEFORE: ${{ github.event.before }}
+          BEFORE: ${{ github.event.pull_request.base.sha || github.event.before }}
           AFTER: ${{ github.sha }}
         run: node scripts/run-classify-diff.mjs --before "$BEFORE" --after "$AFTER" >> "$GITHUB_OUTPUT"
 
@@ -262,12 +262,14 @@ jobs:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
     defaults:
       run:
         working-directory: site
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version-file: site/.nvmrc
@@ -278,10 +280,18 @@ jobs:
       - run: npm run build
       - run: npx playwright test --update-snapshots
       - name: Commit regenerated linux baselines
+        env:
+          AUTOWRITER_PAT: ${{ secrets.AUTOWRITER_PAT }}
         run: |
+          if [ -z "$AUTOWRITER_PAT" ]; then
+            echo "::error::The secret AUTOWRITER_PAT is not set, so the regenerated baselines cannot be pushed as the bot; a push with the default token would leave the pull request's CI run held for approval."
+            exit 1
+          fi
+          credential="$(printf 'x-access-token:%s' "$AUTOWRITER_PAT" | base64 | tr -d '\n')"
+          echo "::add-mask::$credential"
           git config user.name 'baseline-bot'
           git config user.email 'baseline-bot@meshin.co'
           git add tests/__screenshots__/linux
           git commit -m 'test: regenerate linux baselines on the CI runner' || echo 'no changes'
-          git pull --rebase origin "${GITHUB_REF_NAME}"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $credential" pull --rebase origin "${GITHUB_REF_NAME}"
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $credential" push origin "HEAD:${GITHUB_REF_NAME}"

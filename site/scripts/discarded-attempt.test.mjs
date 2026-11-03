@@ -113,7 +113,7 @@ test('the gate finds nothing in a discarded attempt and the claim whose hold end
     ledgers: [filed('ledger', discarded())],
     claims: [filed('claim', lapsed)],
     core: CORE,
-    workflow: WORKFLOW,
+    workflows: [{ path: '.github/workflows/ci.yml', text: WORKFLOW }],
     suffix: SUFFIX,
     now: new Date('2026-11-03T00:00:00.000Z'),
   });

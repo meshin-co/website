@@ -1,0 +1,53 @@
+name: Resume escalated pull requests
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: Number of the escalated autowriter pull request to resume by hand. Leave it empty to sweep every open one.
+        required: false
+        type: string
+
+concurrency:
+  group: resume-pr
+  cancel-in-progress: false
+
+env:
+  AUTOWRITER_UNATTENDED: '1'
+
+defaults:
+  run:
+    working-directory: site
+
+jobs:
+  sweep:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: site/.nvmrc
+
+      - name: resume the escalated pull requests that may re-enter the loop, with no install because this job holds a token that can write to a branch
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          AUTOWRITER_PAT: ${{ secrets.AUTOWRITER_PAT }}
+          PULL_REQUEST: ${{ inputs.pr }}
+        run: |
+          if [ -n "$PULL_REQUEST" ]; then
+            npm run --silent resume:pr -- --pr "$PULL_REQUEST"
+          else
+            npm run --silent resume:pr
+          fi

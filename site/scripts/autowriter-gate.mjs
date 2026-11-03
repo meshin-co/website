@@ -1,5 +1,5 @@
-import { existsSync, readFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
 
 import { brandFromDisk, titleSuffix } from '../src/utils/brand.mjs';
 import { claimFileProblem, generatedTitles, isHolding, titleCollisions, validateClaim } from './autowriter-claims.mjs';
@@ -9,8 +9,10 @@ import { bandRecordFindings, committedBand, generationReport } from './autowrite
 import { describeProblem } from './autowriter-records.mjs';
 import { historyReport, skippedLine } from './autowriter-refusal-rules.mjs';
 import { spendReportFindings } from './autowriter-spend-rules.mjs';
+import { botPushFindings } from './bot-push-token.mjs';
 import { REQUIRED_JOBS } from './ci-aggregate.mjs';
 import { WORKFLOW_PATH, aggregateWiringFindings } from './ci-aggregate-wiring.mjs';
+import { classifierWiringFindings } from './classify-wiring.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 import { filingProblems, recordFiles } from './record-layout.mjs';
 import { corpusFiles } from './spend-report.mjs';
@@ -18,6 +20,7 @@ import { REPORT_PATH } from './spend-report-text.mjs';
 
 const CORE_PATH = 'docs/SEMANTIC-CORE.md';
 const CONFIG_PATH = 'site/src/config.yaml';
+const WORKFLOWS_DIRECTORY = dirname(WORKFLOW_PATH);
 
 const finding = (rule, path, detail) => ({ rule, path, detail });
 
@@ -78,27 +81,35 @@ function titleFindings({ core, claims, suffix, now }) {
   return { titles, found: [...empty, ...collisions] };
 }
 
-function workflowFindings(workflow) {
-  if (workflow === null)
-    return [
-      finding(
-        'workflow-unreadable',
-        WORKFLOW_PATH,
-        `${WORKFLOW_PATH} is missing, so no job carries the verdict of the required jobs`
-      ),
-    ];
+const wiringFindings = (text) => [...aggregateWiringFindings(text), ...classifierWiringFindings(text)];
+
+function judgedWorkflow({ path, text }) {
   try {
-    return aggregateWiringFindings(workflow).map(({ rule, detail }) => finding(rule, WORKFLOW_PATH, detail));
+    const wiring = path === WORKFLOW_PATH ? wiringFindings(text) : [];
+    return [...wiring.map(({ rule, detail }) => finding(rule, path, detail)), ...botPushFindings([{ path, text }])];
   } catch (error) {
-    return [finding('workflow-unreadable', WORKFLOW_PATH, `not valid YAML: ${error.message}`)];
+    return [finding('workflow-unreadable', path, `not valid YAML: ${error.message}`)];
   }
+}
+
+function workflowFindings(workflows) {
+  const missing = workflows.some(({ path }) => path === WORKFLOW_PATH)
+    ? []
+    : [
+        finding(
+          'workflow-unreadable',
+          WORKFLOW_PATH,
+          `${WORKFLOW_PATH} is missing, so no job carries the verdict of the required jobs`
+        ),
+      ];
+  return [...missing, ...workflows.flatMap(judgedWorkflow)];
 }
 
 export function autowriterReport({
   ledgers,
   claims,
   core,
-  workflow,
+  workflows,
   suffix,
   now,
   records = [],
@@ -125,7 +136,7 @@ export function autowriterReport({
     ...readClaims.flatMap(claimFindings),
     ...filed.map(({ path, detail }) => finding('record-layout', path, detail)),
     ...found,
-    ...workflowFindings(workflow),
+    ...workflowFindings(workflows),
     ...generationReport({ records, readEntry, band }),
     ...bandRecord,
     ...lengthRecord,
@@ -159,6 +170,18 @@ const readIfPresent = (path) => (existsSync(path) ? readFileSync(path, 'utf8') :
 const readJsonFiles = (repo, family) =>
   recordFiles(repo, family).map((path) => ({ path, text: readFileSync(join(repo, path), 'utf8') }));
 
+const workflowFiles = (repo) =>
+  existsSync(join(repo, WORKFLOWS_DIRECTORY))
+    ? readdirSync(join(repo, WORKFLOWS_DIRECTORY), { withFileTypes: true })
+        .filter((entry) => entry.isFile() && /\.ya?ml$/.test(entry.name))
+        .map((entry) => entry.name)
+        .sort()
+        .map((name) => ({
+          path: `${WORKFLOWS_DIRECTORY}/${name}`,
+          text: readFileSync(join(repo, WORKFLOWS_DIRECTORY, name), 'utf8'),
+        }))
+    : [];
+
 function main(repoArgument) {
   const repo = resolve(repoArgument ?? '..');
   const history = historyReport({ root: repo });
@@ -172,7 +195,7 @@ function main(repoArgument) {
     bandRecord: bandRecordFindings(repo),
     lengthRecord: lengthFindings(repo),
     core: readIfPresent(join(repo, CORE_PATH)),
-    workflow: readIfPresent(join(repo, WORKFLOW_PATH)),
+    workflows: workflowFiles(repo),
     suffix: titleSuffix(brandFromDisk(join(repo, CONFIG_PATH))),
     now: new Date(),
     history,

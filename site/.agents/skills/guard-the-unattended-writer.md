@@ -43,11 +43,11 @@ npm run escalate -- raise --ledger <path> --kind no-convergence --title <text> -
 npm run escalate -- redeliver --ledger <path> --id esc-1
 ```
 
-Slack carries three kinds at once: `spend-ceiling`, `credential`, `no-convergence`. `hard-stop` and
-`unrepairable` open an issue now and wait for the morning digest. It reads `GITHUB_TOKEN` (Issues:
-write), `GITHUB_REPOSITORY` and `SLACK_WEBHOOK_URL`, a repository secret the owner creates. A missing
-one is never skipped quietly: the receipt names it, the command exits 1, and the gate stays red until
-`redeliver` records a delivery. No secret value reaches a receipt, a message or the log.
+Slack carries three kinds at once: `spend-ceiling`, `credential`, `no-convergence`. `hard-stop` and `unrepairable`
+open an issue now and wait for the morning digest. It reads `GITHUB_TOKEN` (Issues: write), `GITHUB_REPOSITORY` and
+`SLACK_WEBHOOK_URL`, a repository secret the owner creates. A missing one is never skipped quietly: the receipt names
+it, the command exits 1, and the gate stays red until `redeliver` records a delivery. No secret value reaches a
+receipt, a message or the log. An escalated pull request can re-enter the loop: `resume-an-escalated-pull-request.md`.
 
 ## The aggregate check
 
