@@ -276,7 +276,7 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium webkit firefox
       - run: npm run build
-      - run: npx playwright test --update-snapshots
+      - run: npm run gate:visual -- --update-snapshots
       - name: Commit regenerated linux baselines
         run: |
           git config user.name 'baseline-bot'

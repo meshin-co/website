@@ -1,15 +1,17 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
-import { routes, templates } from './routes';
+import { VISUAL_ORIGIN, visualTemplates } from '../scripts/visual-site.mjs';
+import { routes } from './routes';
 
 const themes = ['light', 'dark'] as const;
+const templates = await visualTemplates();
 
 for (const route of templates) {
   for (const theme of themes) {
     test(`${route} renders as recorded in ${theme}`, async ({ page }, testInfo) => {
       await page.emulateMedia({ colorScheme: theme });
-      await page.goto(route);
+      await page.goto(`${VISUAL_ORIGIN}${route}`);
       await page.waitForLoadState('networkidle');
       await page.evaluate(() => document.fonts.ready);
       const height = await page.evaluate(() => Math.floor(document.documentElement.getBoundingClientRect().height));

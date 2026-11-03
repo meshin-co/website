@@ -72,7 +72,7 @@ const conditional = existsSync('../audits/phase-4.7/conditional-copy.json')
   : [];
 const statesDeclared = conditional.length > 0 && conditional.every((entry) => entry.reason && entry.text);
 
-const axe = runs('npx', ['playwright', 'test', 'tests/visual.spec.ts', '--reporter=dot']);
+const axe = runs('npm', ['run', 'gate:visual', '--', 'tests/visual.spec.ts', '--reporter=dot']);
 const crossBrowser = runs('npx', [
   'playwright',
   'test',
@@ -116,7 +116,7 @@ const rows = [
     section: '4. Accessibility, automated',
     item: 'axe clean in both themes on every route, and the skip link is the first focus stop',
     status: axe,
-    detail: 'npx playwright test tests/visual.spec.ts, which runs AxeBuilder per route per theme',
+    detail: 'npm run gate:visual, which builds the frozen-corpus visual build and runs AxeBuilder per route per theme',
   },
   {
     section: '4. Accessibility, automated',

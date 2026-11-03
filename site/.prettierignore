@@ -1,7 +1,7 @@
 dist
 node_modules
 .github
-.changesetdist
+dist-visual
 .lighthouseci
 test-results
 node_modules
