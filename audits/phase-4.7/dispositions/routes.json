@@ -32,16 +32,16 @@
   {
     "target": "/blog",
     "location": "head.title",
-    "status": "verified",
-    "reason": "Re-read 2026-10-08 against dist/blog.html. Row head.title is 'AI governance writing — meshin.co': the metadata title authored in src/pages/blog/index.astro plus the site suffix. It is unchanged since the last seal and is not touched by the interview answers (COPY-CHECKLIST sections 13 to 17) or by the removal of the only.help case study. It carries the whole query 'ai governance writing' and matches the docs/SEMANTIC-CORE.md row for /blog. The meta, og and twitter descriptions are the description authored beside the title in src/pages/blog/index.astro; it opens with the title words 'AI governance writing' (checked in the built head). The H1 and the lead are rows of src/pages/blog/index.astro and are dispositioned there.",
-    "digest": "30ec1b12021e"
+    "status": "rewritten",
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-readiness-assessment-template-for-smb (generation record audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "def8bfd2db54"
   },
   {
     "target": "/blog",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/blog.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [body.p] no longer rendered: \"In METR&#39;s 2025 trial, 16 developers believed AI made them 20% faster. Tasks took 19% longer with AI allowed. METR now marks that result out of date.\"; The card excerpt is the post's description. Change 18 rewrote that description, and because the new text equals the post's description row exactly, the ledger now holds it as that row (frontmatter.description, used on this route), dispositioned at articles-telemetry.json#1; that entry also records that the new description drops the \"METR now marks that result out of date\" hedge, which the body keeps. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand.",
-    "digest": "30ec1b12021e"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-readiness-assessment-template-for-smb (generation record audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "def8bfd2db54"
   },
   {
     "target": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
@@ -86,16 +86,16 @@
   {
     "target": "/blog/category/operating-model",
     "location": "head.title",
-    "status": "verified",
-    "reason": "Re-read 2026-10-08 against dist/blog/category/operating-model.html. Row head.title is 'AI operating model articles — meshin.co': the category archive title (archiveTitle, or title where a category has none, in src/data/categories.mjs) plus the site suffix. It is unchanged since the last seal and is not touched by the interview answers or by the removal of the only.help case study. It matches the docs/SEMANTIC-CORE.md row for this route (query 'ai operating model articles'). The bare term 'ai operating model' belongs to /glossary/ai-operating-model; the archive takes the 'articles' form. The meta, og and twitter descriptions equal the category description row of src/data/categories.mjs, checked in the built head. The H1, lead and body paragraphs are rows of src/data/categories.mjs and are dispositioned there.",
-    "digest": "cf27503e34a9"
+    "status": "rewritten",
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-readiness-assessment-template-for-smb (generation record audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "058652818f6a"
   },
   {
     "target": "/blog/category/operating-model",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/blog/category/operating-model.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [body.p] no longer rendered: \"In METR&#39;s 2025 trial, 16 developers believed AI made them 20% faster. Tasks took 19% longer with AI allowed. METR now marks that result out of date.\"; The card excerpt is the post's description. Change 18 rewrote that description, and because the new text equals the post's description row exactly, the ledger now holds it as that row (frontmatter.description, used on this route), dispositioned at articles-telemetry.json#1; that entry also records that the new description drops the \"METR now marks that result out of date\" hedge, which the body keeps. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand.",
-    "digest": "cf27503e34a9"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-readiness-assessment-template-for-smb (generation record audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "058652818f6a"
   },
   {
     "target": "/blog/evals-in-ci-for-llm-agents",
@@ -147,44 +147,44 @@
   {
     "target": "/blog/tag/ai-governance",
     "location": "head.title",
-    "status": "verified",
-    "reason": "Re-read 2026-10-08 against dist/blog/tag/ai-governance.html. Row head.title is 'AI governance posts — meshin.co': the tag archive title 'AI governance posts' from tagArchive in src/data/tags.mjs plus the site suffix. It is unchanged since the last seal and is not touched by the interview answers or by the removal of the only.help case study. It matches the docs/SEMANTIC-CORE.md row for this route (query 'ai governance posts'). The meta, og and twitter descriptions are the lead sentence of the page, which names the tag and claims nothing beyond the tag list.",
-    "digest": "c7a6dabd622d"
+    "status": "rewritten",
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-readiness-assessment-template-for-smb (generation record audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "559d124a101e"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "body.h1",
-    "status": "verified",
-    "reason": "Re-read 2026-10-08 against dist/blog/tag/ai-governance.html. Row body.h1 is 'AI governance posts': the tag name plus 'posts', composed by tagArchive in src/data/tags.mjs. It is unchanged since the last seal, equals the title row without the site suffix, and matches the heading column of the docs/SEMANTIC-CORE.md row for this route.",
-    "digest": "c7a6dabd622d"
+    "status": "rewritten",
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-readiness-assessment-template-for-smb (generation record audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "559d124a101e"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/blog/tag/ai-governance.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [body.p] no longer rendered: \"In METR&#39;s 2025 trial, 16 developers believed AI made them 20% faster. Tasks took 19% longer with AI allowed. METR now marks that result out of date.\"; The card excerpt is the post's description. Change 18 rewrote that description, and because the new text equals the post's description row exactly, the ledger now holds it as that row (frontmatter.description, used on this route), dispositioned at articles-telemetry.json#1; that entry also records that the new description drops the \"METR now marks that result out of date\" hedge, which the body keeps. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand.",
-    "digest": "c7a6dabd622d"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-readiness-assessment-template-for-smb (generation record audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "559d124a101e"
   },
   {
     "target": "/blog/tag/ai-pilots",
     "location": "head.title",
-    "status": "verified",
-    "reason": "Re-read 2026-10-08 against dist/blog/tag/ai-pilots.html. Row head.title is 'AI pilots posts — meshin.co': the tag archive title 'AI pilots posts' from tagArchive in src/data/tags.mjs plus the site suffix. It is unchanged since the last seal and is not touched by the interview answers or by the removal of the only.help case study. It matches the docs/SEMANTIC-CORE.md row for this route (query 'ai pilots posts'). The meta, og and twitter descriptions are the lead sentence of the page, which names the tag and claims nothing beyond the tag list.",
-    "digest": "d46a182a4d36"
+    "status": "rewritten",
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-readiness-assessment-template-for-smb (generation record audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "d0cdd7bd7d00"
   },
   {
     "target": "/blog/tag/ai-pilots",
     "location": "body.h1",
-    "status": "verified",
-    "reason": "Re-read 2026-10-08 against dist/blog/tag/ai-pilots.html. Row body.h1 is 'AI pilots posts': the tag name plus 'posts', composed by tagArchive in src/data/tags.mjs. It is unchanged since the last seal, equals the title row without the site suffix, and matches the heading column of the docs/SEMANTIC-CORE.md row for this route.",
-    "digest": "d46a182a4d36"
+    "status": "rewritten",
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-readiness-assessment-template-for-smb (generation record audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "d0cdd7bd7d00"
   },
   {
     "target": "/blog/tag/ai-pilots",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/blog/tag/ai-pilots.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [body.p] no longer rendered: \"In METR&#39;s 2025 trial, 16 developers believed AI made them 20% faster. Tasks took 19% longer with AI allowed. METR now marks that result out of date.\"; The card excerpt is the post's description. Change 18 rewrote that description, and because the new text equals the post's description row exactly, the ledger now holds it as that row (frontmatter.description, used on this route), dispositioned at articles-telemetry.json#1; that entry also records that the new description drops the \"METR now marks that result out of date\" hedge, which the body keeps. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand.",
-    "digest": "d46a182a4d36"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-readiness-assessment-template-for-smb (generation record audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "d0cdd7bd7d00"
   },
   {
     "target": "/blog/tag/ai-register",
@@ -264,23 +264,23 @@
   {
     "target": "/blog/tag/production-readiness",
     "location": "head.title",
-    "status": "verified",
-    "reason": "Re-read 2026-10-08 against dist/blog/tag/production-readiness.html. Row head.title is 'Production readiness posts — meshin.co': the tag archive title 'Production readiness posts' from tagArchive in src/data/tags.mjs plus the site suffix. It is unchanged since the last seal and is not touched by the interview answers or by the removal of the only.help case study. It matches the docs/SEMANTIC-CORE.md row for this route (query 'production readiness posts'). The meta, og and twitter descriptions are the lead sentence of the page, which names the tag and claims nothing beyond the tag list.",
-    "digest": "c9f2280c5827"
+    "status": "rewritten",
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-readiness-assessment-template-for-smb (generation record audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "f69097539de2"
   },
   {
     "target": "/blog/tag/production-readiness",
     "location": "body.h1",
-    "status": "verified",
-    "reason": "Re-read 2026-10-08 against dist/blog/tag/production-readiness.html. Row body.h1 is 'Production readiness posts': the tag name plus 'posts', composed by tagArchive in src/data/tags.mjs. It is unchanged since the last seal, equals the title row without the site suffix, and matches the heading column of the docs/SEMANTIC-CORE.md row for this route.",
-    "digest": "c9f2280c5827"
+    "status": "rewritten",
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-readiness-assessment-template-for-smb (generation record audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "f69097539de2"
   },
   {
     "target": "/blog/tag/production-readiness",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/blog/tag/production-readiness.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [body.p] no longer rendered: \"In METR&#39;s 2025 trial, 16 developers believed AI made them 20% faster. Tasks took 19% longer with AI allowed. METR now marks that result out of date.\"; The card excerpt is the post's description. Change 18 rewrote that description, and because the new text equals the post's description row exactly, the ledger now holds it as that row (frontmatter.description, used on this route), dispositioned at articles-telemetry.json#1; that entry also records that the new description drops the \"METR now marks that result out of date\" hedge, which the body keeps. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand.",
-    "digest": "c9f2280c5827"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-readiness-assessment-template-for-smb (generation record audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "f69097539de2"
   },
   {
     "target": "/blog/tag/security-review",
@@ -318,16 +318,16 @@
   {
     "target": "/blog/why-your-ai-pilot-never-reached-production",
     "location": "head.title",
-    "status": "verified",
-    "reason": "Re-read 2026-10-08 against dist/blog/why-your-ai-pilot-never-reached-production.html. Row head.title is 'Why your AI pilot never reached production — meshin.co': the post title plus the site suffix. It is unchanged since the last seal, and the post source is not one of the ten files edited after the interview. The title and the matching H1 suit the article grammar and contain the whole query 'ai pilot never reached production'; the docs/SEMANTIC-CORE.md row for this route agrees. The meta description equals the post's front matter description, unchanged since the article was added (checked in the built head). The first sentence of the page, the answer to the title, is a row of the post source and is dispositioned there.",
-    "digest": "2e48b23cdccb"
+    "status": "rewritten",
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-readiness-assessment-template-for-smb (generation record audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "bd80559437c5"
   },
   {
     "target": "/blog/why-your-ai-pilot-never-reached-production",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/blog/why-your-ai-pilot-never-reached-production.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [body.p] now \"Published 8 September 2026 · Updated 25 October 2026\";  [body.p] now \"For a rougher first pass, the AI readiness scorecard takes an afternoon.\";  [body.p] no longer rendered: \"In METR&#39;s 2025 trial, 16 developers believed AI made them 20% faster. Tasks took 19% longer with AI allowed. METR now marks that result out of date.\"; The date line follows updatedDate in the source file, which change 18 set to 2026-10-25 where it changed prose or links (write-copy.md: bump updatedDate when you change prose); publishDate is unchanged. The card excerpt is the post's description. Change 18 rewrote that description, and because the new text equals the post's description row exactly, the ledger now holds it as that row (frontmatter.description, used on this route), dispositioned at articles-telemetry.json#1; that entry also records that the new description drops the \"METR now marks that result out of date\" hedge, which the body keeps. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand.",
-    "digest": "2e48b23cdccb"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-readiness-assessment-template-for-smb (generation record audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "bd80559437c5"
   },
   {
     "target": "/case-studies",

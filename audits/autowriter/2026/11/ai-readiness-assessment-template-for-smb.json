@@ -6,17 +6,35 @@
   "attempts": [],
   "spend": {
     "tokens": {
-      "input": 0,
-      "output": 0
+      "input": 23296,
+      "output": 7109
     },
-    "costUsd": 0
+    "costUsd": 0.058841
   },
   "verdict": {
-    "state": "open",
-    "reason": null,
-    "decidedAt": null
+    "state": "escalated",
+    "reason": "Autowriter pull request #81: a job that is not a content gate failed, so the loop may not repair it",
+    "decidedAt": "2026-11-03T05:46:45.398Z"
   },
-  "escalations": [],
+  "escalations": [
+    {
+      "id": "esc-1",
+      "kind": "unrepairable",
+      "title": "Autowriter pull request #81: a job that is not a content gate failed, so the loop may not repair it",
+      "detail": "The watcher judged head aa49b4e0b491b200bca76175f59369a6cac3d22f: escalate, not-a-content-gate.\nFailing: visual-and-axe (1) (gate:visual), visual-and-axe (2) (gate:visual).\nPull request: https://github.com/meshin-co/website/pull/81",
+      "raisedAt": "2026-11-03T05:46:44.946Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-03T05:46:44.946Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 82,
+          "error": null
+        }
+      ]
+    }
+  ],
   "refusals": [
     {
       "title": "Fractional CAIO vs full-time CAIO cost",
@@ -24,5 +42,12 @@
       "against": "audits/autowriter/2026/11/fractional-caio-vs-full-time-caio-cost.json",
       "detail": "slug \"fractional-caio-vs-full-time-caio-cost\" already has the ledger audits/autowriter/2026/11/fractional-caio-vs-full-time-caio-cost.json, so an earlier run owns it and the topic cannot be tried again yet; no procedure frees a slug safely, and removing the ledger is not one, because it records spend that the monthly spend ceiling counts"
     }
-  ]
+  ],
+  "generation": {
+    "tokens": {
+      "input": 23296,
+      "output": 7109
+    },
+    "costUsd": 0.058841
+  }
 }

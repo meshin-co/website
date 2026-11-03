@@ -66,7 +66,7 @@ title `{artifact name} — meshin.co` · meta: one sentence naming the artifact 
 | `/resources/handover-playbook`                     | handover playbook                     | Handover Playbook — meshin.co                     | The Handover Playbook is six fill-in tables for moving AI leadership from an outside lead to a named owner, from the test to a later check.            | Handover Playbook                     | 31    | ✓       |
 | `/resources/llm-gateway-governance-config`         | llm gateway governance config         | LLM Gateway Governance Config — meshin.co         | LLM gateway governance config: a policy schema of five keys (allowed models, redaction, rate limit, log retention and fallback), each with an example. | LLM Gateway Governance Config         | 26    | ✓       |
 
-### article (8)
+### article (9)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
@@ -74,10 +74,11 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | ------------------------------------------------------------------ | ------------------------------------------------ | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ----- | ------- |
 | `/blog/adoption-telemetry-measuring-if-ai-is-actually-used`        | adoption telemetry for ai tools                  | Adoption telemetry for AI tools: what a trial found — meshin.co        | Adoption telemetry for AI tools: six measures, each with a stated limit, and the 2025 METR trial that shows why self-report misleads.                 | Adoption telemetry for AI tools: what a trial found        | 42    | ✓       |
 | `/blog/ai-acceptable-use-policy-for-a-50-person-company`           | ai acceptable use policy                         | What actually belongs in an AI acceptable use policy — meshin.co       | What a working AI acceptable use policy has to decide, what it must refuse to do, and how a company of 30 to 300 people gets staff to follow it.      | What actually belongs in an AI acceptable use policy       | 31    | ✓       |
+| `/blog/ai-readiness-assessment-template-for-smb`                   | ai readiness assessment template for smb         | AI readiness assessment template for SMB — meshin.co                   | Use an AI readiness scorecard to assess a proposed workflow, record evidence, and decide what needs work before a pilot.                              | AI readiness assessment template for SMB                   | 32    | ✓       |
 | `/blog/evals-in-ci-for-llm-agents`                                 | evals in ci without a golden answer              | Evals in CI for LLM agents, without a golden answer — meshin.co        | How to build an eval set from production traffic, score an LLM agent without a golden answer, and fail a merge in CI when it regresses.               | Evals in CI for LLM agents, without a golden answer        | 28    | ✓       |
 | `/blog/handing-over-ai-leadership-to-an-internal-owner`            | how to hand over ai leadership to internal owner | How to hand over AI leadership to an internal owner — meshin.co        | How to hand over AI leadership in steps that end in a test: what moves, who takes the role and how to tell it worked.                                 | How to hand over AI leadership to an internal owner        | 38    | ✓       |
 | `/blog/how-to-build-an-ai-system-register-in-a-week`               | ai system register                               | How to build an AI system register in a week — meshin.co               | A step-by-step way to build an AI system register in a week without buying a tool, so a security reviewer gets the document they ask for first.       | How to build an AI system register in a week               | 32    | ✓       |
-| `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company` | ai operating model for mid-size company          | How to choose an AI operating model for a mid-size company — meshin.co | How to choose an operating model for AI work in a mid-size company, starting from what the law requires and what the evidence supports.               | How to choose an AI operating model for a mid-size company | 39    | ✓       |
+| `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company` | ai operating model for mid-size company          | How to choose an AI operating model for a mid-size company — meshin.co | How to choose an operating model for AI work in a mid-size company, starting from what the law requires and what the evidence supports.               | How to choose an AI operating model for a mid-size company | 40    | ✓       |
 | `/blog/multi-agent-reference-architecture-in-production`           | multi-agent reference architecture production    | Multi-agent reference architecture in production — meshin.co           | What the sources say about multi-agent systems in production: where vendors agree, where they split, and what the research did not find.              | Multi-agent reference architecture in production           | 39    | ✓       |
 | `/blog/why-your-ai-pilot-never-reached-production`                 | ai pilot never reached production                | Why your AI pilot never reached production — meshin.co                 | Most AI pilots stall on ownership, data rules and a missing outcome metric, not the model. Here is what has to be true before one reaches production. | Why your AI pilot never reached production                 | 31    | ✓       |
 
@@ -248,6 +249,7 @@ Why: the honest comparison is the sales objection to overcome before any call (P
 **3. AI readiness assessment template for SMB**
 Must win: `/resources/ai-readiness-scorecard`, support `/services/ai-readiness-and-risk-assessment`.
 Passage: "A five-axis AI readiness scorecard you score yourself in an afternoon: strategy, data, delivery, people, and governance." (`/resources/ai-readiness-scorecard`)
+Passage: "An AI readiness assessment template for SMB teams should test a proposed use case across strategy, data, delivery, people, and governance." (`/blog/ai-readiness-assessment-template-for-smb`)
 Why: "template" intent wants an artifact, not a service page — the free scorecard is the entry to the paid Assessment (PRD §4, PRD §5 downloads metric).
 
 **4. AI governance consultant ISO 42001 small company**
@@ -412,16 +414,16 @@ One owning route per entity. The mention count is inbound references from other 
 | Entity                         | Owned by                                   | Mentioned by |
 | ------------------------------ | ------------------------------------------ | ------------ |
 | Agentic workflow               | `/glossary/agentic-workflow`               | 13           |
-| AI governance                  | `/glossary/ai-governance`                  | 34           |
+| AI governance                  | `/glossary/ai-governance`                  | 35           |
 | AI impact assessment           | `/glossary/ai-impact-assessment`           | 2            |
 | AI management system           | `/glossary/ai-management-system`           | 6            |
-| AI operating model             | `/glossary/ai-operating-model`             | 13           |
-| AI register                    | `/glossary/ai-register`                    | 34           |
+| AI operating model             | `/glossary/ai-operating-model`             | 14           |
+| AI register                    | `/glossary/ai-register`                    | 35           |
 | Conformity assessment          | `/glossary/conformity-assessment`          | 5            |
-| Data classification            | `/glossary/data-classification`            | 11           |
+| Data classification            | `/glossary/data-classification`            | 12           |
 | DPIA                           | `/glossary/dpia`                           | 5            |
 | EU AI Act                      | `/glossary/eu-ai-act`                      | 41           |
-| Evals                          | `/glossary/evals`                          | 33           |
+| Evals                          | `/glossary/evals`                          | 34           |
 | Guardrails                     | `/glossary/guardrails`                     | 7            |
 | Hallucination rate             | `/glossary/hallucination-rate`             | 4            |
 | High-risk AI system            | `/glossary/high-risk-ai-system`            | 10           |
@@ -432,7 +434,7 @@ One owning route per entity. The mention count is inbound references from other 
 | Model card                     | `/glossary/model-card`                     | 3            |
 | Model Context Protocol         | `/glossary/mcp`                            | 2            |
 | Model provenance               | `/glossary/model-provenance`               | 3            |
-| NIST AI RMF                    | `/glossary/nist-ai-rmf`                    | 23           |
+| NIST AI RMF                    | `/glossary/nist-ai-rmf`                    | 24           |
 | Observability                  | `/glossary/observability`                  | 5            |
 | Post-market monitoring         | `/glossary/post-market-monitoring`         | 5            |
 | Prompt injection               | `/glossary/prompt-injection`               | 7            |
