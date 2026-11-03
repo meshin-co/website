@@ -22,39 +22,34 @@ const EXTERNAL = '^https?://(?!localhost|127\\.0\\.0\\.1)';
 
 const EXTENSIONLESS_LOCAL = '^(http://(?:localhost|127\\.0\\.0\\.1):\\d+/(?:[^/?#]+/)*[^/?#.]+)([?#].*)?$';
 
-export function linkArgs({ skipExternal = false, origin, json = false } = {}) {
-  const hosts = skippedHosts(origin);
-  const skip = skipExternal ? [...hosts, EXTERNAL] : hosts;
+export function linkArgs({ origin, json = false } = {}) {
   return [
     'dist',
     '--recurse',
     ...(json ? ['--format', 'json'] : ['--silent']),
-    '--retry',
-    '--retry-errors',
-    '--retry-errors-count',
-    '3',
-    '--retry-errors-jitter',
-    '500',
     '--url-rewrite-search',
     EXTENSIONLESS_LOCAL,
     '--url-rewrite-replace',
     '$1.html$2',
     '--skip',
-    skip.join('|'),
+    [...skippedHosts(origin), EXTERNAL].join('|'),
   ];
 }
 
-const isLocal = (url) => /^https?:\/\/(?:localhost|127\.0\.0\.1)/.test(url) || url.startsWith('dist/');
-
 export function linkFindings(results) {
-  const dead = [];
-  const unreachable = [];
-  for (const { url, status, state, parent } of results) {
-    if (state !== 'BROKEN') continue;
-    const read = status > 0 ? status : 'no response';
-    const finding = `${parent} -> ${url} (${read})`;
-    if (isLocal(url) || status === 404 || status === 410) dead.push(finding);
-    else unreachable.push(finding);
+  return results
+    .filter(({ state }) => state === 'BROKEN')
+    .map(({ url, status, parent }) => `${parent} -> ${url} (${status > 0 ? status : 'no response'})`);
+}
+
+const where = (routes = []) => `on ${routes.length} page${routes.length === 1 ? '' : 's'}, e.g. ${routes[0]}`;
+
+export function externalFindings(results, routesByAddress) {
+  const found = { answered: 0, dead: [], unverified: [] };
+  for (const { url, verdict, status, reason } of results.values()) {
+    if (verdict === 'answered') found.answered += 1;
+    else if (verdict === 'dead') found.dead.push(`${url} (${status}) ${where(routesByAddress.get(url))}`);
+    else found.unverified.push(`${url} (${reason}) ${where(routesByAddress.get(url))}`);
   }
-  return { dead, unreachable };
+  return found;
 }

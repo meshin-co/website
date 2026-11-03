@@ -1,12 +1,13 @@
 import { spawnSync } from 'node:child_process';
 import { join } from 'node:path';
 
-import { linkArgs, linkFindings, siteOrigin } from './links-gate.mjs';
+import { probeAll } from './link-probe.mjs';
+import { externalFindings, linkArgs, linkFindings, siteOrigin } from './links-gate.mjs';
+import { readOutbound } from './outbound-links.mjs';
 
 const binary = join('node_modules', '.bin', 'linkinator');
-const hermetic = process.env.LINKS_SKIP_EXTERNAL === '1';
-const args = linkArgs({ skipExternal: hermetic, origin: siteOrigin(join('src', 'config.yaml')), json: true });
-const result = spawnSync(binary, args, { encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 });
+const origin = siteOrigin(join('src', 'config.yaml'));
+const result = spawnSync(binary, linkArgs({ origin, json: true }), { encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 });
 
 if (result.error) throw result.error;
 
@@ -16,15 +17,21 @@ if (links.length === 0) {
   process.exit(1);
 }
 
-const { dead, unreachable } = linkFindings(links);
+const insideBuild = linkFindings(links);
+for (const finding of insideBuild) console.error(`LINKS dead ${finding}`);
 
-for (const finding of dead) console.error(`LINKS dead ${finding}`);
-for (const finding of unreachable) console.error(`LINKS unreachable, not a dead citation: ${finding}`);
+const hermetic = process.env.LINKS_SKIP_EXTERNAL === '1';
+const backoffMs = process.env.LINKS_PROBE_BACKOFF_MS?.split(',').map(Number);
+const outbound = hermetic ? new Map() : readOutbound('dist', origin);
+const probed = await probeAll([...outbound.keys()], { backoffMs });
+const outside = externalFindings(probed, outbound);
 
-if (hermetic) console.log('links: hermetic run, every host outside the build was skipped');
-const counted = (state) => links.filter((link) => link.state === state).length;
+for (const finding of outside.dead) console.error(`LINKS dead ${finding}`);
+for (const finding of outside.unverified) console.error(`LINKS unverified, not dead: ${finding}`);
+
+if (hermetic) console.log('links: hermetic run, outbound addresses were not probed');
 console.log(
-  `links: ${links.length} found, ${counted('OK')} answered, ${counted('SKIPPED')} skipped, ${dead.length} dead, ${unreachable.length} unreachable`
+  `links: ${links.length} checked in the build; ${probed.size} outbound addresses probed with GET: ${outside.answered} answered, ${outside.dead.length} dead, ${outside.unverified.length} unverified`
 );
 
-if (dead.length > 0) process.exitCode = 1;
+if (insideBuild.length + outside.dead.length > 0) process.exitCode = 1;

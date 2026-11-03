@@ -49,11 +49,14 @@ the cache before you suspect a second renderer.
 
 ## Whether the destination is still there
 
-`gate:external` judges the markup; `gate:links` fetches. `scripts/links-gate.mjs` holds its crawl
-arguments, the hosts skipped by name, and the retry for a 429 or a 5xx; `scripts/run-links-gate.mjs`
-runs it. `LINKS_SKIP_EXTERNAL=1` crawls the build alone, which is how `test:smoke` stays hermetic:
-a family about a local missing route must not red because somebody else's server is down. The live
-run keeps fetching outbound hosts, so an outage blocks until a person judges it (G38).
+`gate:external` judges the markup; `gate:links` fetches. linkinator crawls the build alone, with every
+outbound host skipped. `scripts/outbound-links.mjs` reads the outbound addresses from `dist/` and
+`scripts/link-probe.mjs` judges each with a GET, never a HEAD: linkinator kept a HEAD's 404 when its one
+follow-up GET failed in transit, and NIST answers HEAD 404 and GET 200 for a live PDF (33 pages red in CI).
+An address is dead only when two GETs answer 404 or 410. A timeout, a 403, a 429 or a 5xx is `unverified`,
+reported and never dead. Identify the probe honestly: a Chrome user agent from Node is challenged with 403
+by Cloudflare on doi.org. `LINKS_SKIP_EXTERNAL=1` crawls the build alone, which is how `test:smoke` stays
+hermetic; `LINKS_PROBE_BACKOFF_MS` shortens the retry wait for a test.
 
 ## A cited address that has gone
 
