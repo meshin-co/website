@@ -6,7 +6,10 @@ where the answer lands, what breaks when it is wrong, and which earlier question
 choice exists, the options come with their trade-offs and a recommendation.
 
 `scripts/check-engine.mjs` points here when the engine is copied into an empty repository and its
-self-check has findings.
+self-check has findings. It also reads this file. `npm run gate:engine` fails with `ENGINE interview-gap <name>`
+when a leaf value of `site/engine.config.json`, a secret or a variable that a workflow reads, or a variable
+that `site/.env.example` names, is not written here as a whole word. Add a new one to the question that sets
+it, and to the table of config values in Part 1 or to the secret and variable tables in Part 3.
 
 ## How to use it
 
@@ -472,8 +475,8 @@ These values are the owner's risk appetite for a machine that writes and merges 
 - **B. 24 hours:** Cost: a day's delay.
 - **C. 72 hours:** Cost: a longer chain; the chain limit is the quarantine plus 24 hours (`CHAIN_LIMIT_HOURS` in `site/scripts/pr-classify.mjs`), and the watcher looks every 10 minutes.
 - **Recommended:** B, because after the merge only a revert on `main` removes an article (`publish-the-build.md`), and a once-a-day reader sees every pull request first, unless you read GitHub twice a day; then A.
-  **Lands in:** `loop.quarantineHours`; row L62; the two skills' prose.
-  **If wrong:** Too short, an article merges before you look, with no message. `npm test` fails with `L62 does not state the <N> hour quarantine` until row L62 and the pinned test are updated.
+  **Lands in:** `loop.quarantineHours`; the two skills' prose; a locked row of your own if you keep one.
+  **If wrong:** Too short, an article merges before you look, with no message. In the first site `npm test` also fails with `L62 does not state the <N> hour quarantine` until row L62 is updated; that row and its test (`site/scripts/autowriter-ledger.site.test.mjs`) stay with the first site.
   **Needs:** S2
 
 #### S33. Monthly spend ceiling
@@ -1129,6 +1132,7 @@ The core cannot be complete on day one. A `Must win` route must be built, and a 
 
 - **A. A short list:** only numbers that appear in your offers. Cost: each other figure needs a source link on its page.
 - **B. A long list:** every figure you might use. Cost: a listed figure can appear anywhere without a source, and a stale figure stays valid in every gate.
+- **C. None yet:** the starter ships an empty list and the writer is told to write no figure (`site/scripts/writer-prompt-text.mjs`). Cost: every figure, your own prices included, needs a source on its page until you fill the list.
 - **Recommended:** A, because the writer prompt carries the whole list and tells the writer to state an idea without any other figure (`site/scripts/writer-prompt-text.mjs:85`), unless your offers hold many figures.
   **Lands in:** `site/content-facts.json`, `numbers`: an array of strings, each the exact token as written on the page, such as `90`, `1,500` or `20%`. Years from 1900 to 2099, dates with a month name and numbers that follow a standard name need no entry (`site/scripts/content-rows.mjs:27`, `site/scripts/content-rows.mjs:20`).
   **If wrong:** `unsourced-number` (`site/scripts/content-rows.mjs:77`). The match is on the exact string, so `20 %` and `20%` are two entries. In an unattended entry a sentence with any digit also needs a sourced claim row, whether or not the number is listed, or it fails `fact-unbound` (`site/scripts/claim-sources.mjs:3`, `site/scripts/claim-sources.mjs:71`). First-party figures therefore belong on hand-written pages.

@@ -1,14 +1,21 @@
 import { join } from 'node:path';
 
 import { brandFromDisk } from '../src/utils/brand.mjs';
+import { INTERVIEW_PATH } from './interview-coverage.mjs';
 
 const PARTITION_GATE = 'gate:partition';
 const EXPORT_GATE = 'gate:export';
+const ENGINE_GATE = 'gate:engine';
 const STRAY_FILE = '../mystery.bin';
 const SEEDED_TAGS = '../seed/site/src/data/tags.mjs.seed';
 const NAMING_SKILL = '.agents/skills/names-the-site.md';
 const STYLEGUIDE_PAGE = 'src/pages/styleguide.astro';
 const MISSING_IMPORT = "import '~/data/author/nobody-here.md';";
+const INTERVIEW_COPY = `../${INTERVIEW_PATH}`;
+const DROPPED_CONFIG_PATH = 'loop.claimLifetimeDays';
+const DROPPED_SECRET = 'AUTOWRITER_PAT';
+
+const withoutMentions = (name) => (text) => text.replaceAll(name, '');
 
 export const partitionSpecimens = ({ editFile, removeFile, addFile }) => ({
   partitionFileFitsNoRule: {
@@ -32,5 +39,15 @@ export const partitionSpecimens = ({ editFile, removeFile, addFile }) => ({
     token: 'EXPORT step-failed astro build: exit 1',
     plant: (copySite) =>
       editFile(join(copySite, STYLEGUIDE_PAGE), (text) => text.replace('---\n', `---\n${MISSING_IMPORT}\n`)),
+  },
+  interviewConfigValueDropped: {
+    gate: ENGINE_GATE,
+    token: `ENGINE interview-gap ${DROPPED_CONFIG_PATH}: config value;`,
+    plant: (copySite) => editFile(join(copySite, INTERVIEW_COPY), withoutMentions(DROPPED_CONFIG_PATH)),
+  },
+  interviewWorkflowSecretDropped: {
+    gate: ENGINE_GATE,
+    token: `ENGINE interview-gap ${DROPPED_SECRET}: workflow secret;`,
+    plant: (copySite) => editFile(join(copySite, INTERVIEW_COPY), withoutMentions(DROPPED_SECRET)),
   },
 });

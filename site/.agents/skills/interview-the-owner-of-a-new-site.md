@@ -9,6 +9,8 @@ its options, a recommendation and what breaks when the answer is wrong. Copying 
 
 - Run `cd site && npm run gate:engine`. Each finding is a value or a file the interview must produce. A run
   with findings ends by pointing at the question bank.
+- `gate:engine` also fails with `ENGINE interview-gap <name>` (`scripts/interview-coverage.mjs`) when the bank
+  misses a config value, a secret or a variable. Add the name to the question it belongs to first.
 - Read the repository. A question the tree answers is not asked. A value the owner already gave is
   confirmed, not asked again.
 - Ask in the language the owner reads. Write each answer in English where it lands.

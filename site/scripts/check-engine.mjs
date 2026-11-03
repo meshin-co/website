@@ -5,13 +5,13 @@ import { parseArgs } from 'node:util';
 import { WORKFLOW_PATH, classifierWiringFindings } from './classify-wiring.mjs';
 import { FIXED_ANCHORS, anchorsFor } from './engine-anchors.mjs';
 import { ENGINE_SCHEMA, inspectEngineConfig } from './engine-config.mjs';
+import { INTERVIEW_PATH, interviewFindings, readInterviewInputs } from './interview-coverage.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 
 export const REPOSITORY_ROOT = resolve(import.meta.dirname, '..', '..');
 
 const CONFIG_PATH = 'site/engine.config.json';
 const USAGE = 'usage: node scripts/check-engine.mjs [--root <repository root>]';
-export const INTERVIEW_PATH = 'docs/plan/reference/new-site-interview.md';
 
 const finding = (rule, where, detail) => ({ rule, where, detail });
 
@@ -112,6 +112,9 @@ function workflowFindings(root) {
   );
 }
 
+const interviewGapFindings = (root) =>
+  interviewFindings({ configPaths: requiredValues().map(({ path }) => path), ...readInterviewInputs(root) });
+
 export function engineFindings(root = REPOSITORY_ROOT) {
   const { config, findings: configProblems } = configFindings(root);
   const anchors = config === null ? FIXED_ANCHORS : anchorsFor(config);
@@ -121,6 +124,7 @@ export function engineFindings(root = REPOSITORY_ROOT) {
       ...anchorFindings(root, anchors),
       ...layoutFindings(root, config),
       ...workflowFindings(root),
+      ...interviewGapFindings(root),
     ],
     values: requiredValues().length,
     anchors: anchors.length,
@@ -156,7 +160,7 @@ export function main(argv) {
   for (const { rule, where, detail } of findings) console.log(`ENGINE ${rule} ${where}: ${detail}`);
   const noun = findings.length === 1 ? 'finding' : 'findings';
   console.log(
-    `engine: ${findings.length} ${noun} (${CONFIG_PATH} defines ${values} values, ${anchors} anchor files expected, the changes job of ${WORKFLOW_PATH} must call the classifier)`
+    `engine: ${findings.length} ${noun} (${CONFIG_PATH} defines ${values} values, ${anchors} anchor files expected, the changes job of ${WORKFLOW_PATH} must call the classifier, and the interview must name every value, secret and variable)`
   );
   if (findings.length > 0) {
     console.log(`engine: the questions that set these values and create these files are in ${INTERVIEW_PATH}`);
