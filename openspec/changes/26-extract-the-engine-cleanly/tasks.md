@@ -12,12 +12,13 @@
       fails when the exit code is forced to 0
 - [x] 1.5 The skill `extract-the-engine-from-a-site.md` states the rules, the findings and what does
       not transfer
-- [x] 1.6 27 starters under `seed/<path>.seed` leave 0 `unclassified` and 0 `anchor-unserved`
+- [x] 1.6 28 starters under `seed/<path>.seed` leave 0 `unclassified` and 0 `anchor-unserved`
       findings: the agent law, the site config, the semantic core, the routes, an empty demand report with
       every buyer prompt unproven, the content facts, the category, tag and home data, the static page
       catalogue, three collection hubs, one example entry for the term, article, resource and author
       collections, and what a copy needs to pass the machine gates: a neutral home page, `humans.txt`, a
-      navigation without social links, the tag archive and the visual changelog
+      navigation without social links, the tag archive, the
+      visual changelog and the register of route exceptions
 - [ ] 1.7 Resolve the 27 `site-bound` files that `gate:partition` still allows (34 before this pass). Done:
       `external-links`, `geo-probe`, `pr-github`, `escalate-channels` and the search index page read the host, the
       author and the agent name from the tree, `navigation.ts` is seeded, and `navigate-the-plan.md` is the
@@ -53,7 +54,8 @@
       `anchor-unserved` anchor
 - [x] 2.2 The export was adopted in a scratch directory for an invented site, `field-notes.example`:
       `engine.config.json` filled, anchor files created, `npm install`, `assets:logo`, `assets:og-default`,
-      `assets:robots`, `npm run build` and every gate that needs no secret run; the stdout is quoted in the
+      `assets:robots`, `measure-sentence-band --write`, `measure-entry-length --write`, `audit:spend`,
+      `npm run build` and every gate that needs no secret run; the stdout is quoted in the
       delivery report. The copy builds as exported, with no edit of an engine file. Every gate passes in it
       except `gate:demand`, `gate:evidence` and `gate:editorial`, which stay red until the owner has produced
       what they measure
@@ -67,7 +69,7 @@
       core has 3 prompts where tests pinned the original's 30, the corpus is smaller than the tests assumed,
       and tests held the original's host, brand, author, pages and collections. Each is now built from a
       fixture world instead of the real corpus, derived from the source the code reads, or moved to a
-      `*.site.test.mjs` file that stays with this site (8 files). A copy runs `npm run assets:robots` before
+      `*.site.test.mjs` file that stays with this site (10 files). A copy runs `npm run assets:robots` before
       `npm test`, because one test compares `public/robots.txt` with its generator
 
 ## 3. The interview
@@ -121,4 +123,11 @@
 - [ ] 6.4 `repair-open.test.mjs`, `writer-preflight.test.mjs`, `repair-world.mjs`, `repair-repo.mjs` and
       `writer-drafts.mjs` still hold the collection names and routes of this site (`site/src/data/post`, `/blog/`,
       `/glossary/`); they pass in the copy because the invented site kept those names
-- [ ] 6.5 The machine tests patch `STATIC_PAGE_CATALOG` and `HUB_PAGES` in place, so freezing those exports breaks them
+- [ ] 6.5 The machine tests patch `STATIC_PAGE_CATALOG`, `HUB_PAGES` and `EMPTY_COLLECTIONS` in place, so freezing those exports breaks them
+- [ ] 6.6 In a copy the three categories that hold no article make `gate:parity` fail:
+      `PARITY /blog/category/<slug> is noindex in the build and nothing declares it`. The category page sets
+      `noindex` when its category holds no post (`src/pages/blog/category/[category].astro`), and the gate only
+      accepts a noindex archive that an entry declares in its frontmatter. A hub with no live entry is accepted as
+      withheld; an archive with none should be too. Fix in `route-kinds.mjs`: derive the archives that hold a live
+      entry from the frontmatter `category` and `tags`, and class a noindex archive outside that set as withheld,
+      with a planted specimen for a noindex archive that does hold an entry

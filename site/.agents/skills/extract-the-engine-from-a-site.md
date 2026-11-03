@@ -73,8 +73,8 @@ A second site inherits the method, not the verdicts.
   site's pages set them. Measure yours, then change them.
 - Every record under `audits/`. The measured ones are the sharp case: `bandFor` and `lengthFor` throw when
   `audits/sentence-band.json` or `audits/entry-length.json` is absent, and `gate:autowriter` reports
-  `record-corpus-stale` for a band measured on another corpus. Measure with
-  `node scripts/measure-sentence-band.mjs --write` and `node scripts/measure-entry-length.mjs --write`.
+  `record-corpus-stale` for a band measured on another corpus. Measure with `node scripts/measure-sentence-band.mjs --write`
+  and `node scripts/measure-entry-length.mjs --write`; `gate:autowriter` also wants `npm run audit:spend` run once.
 - The demand report is dated. One older than `demand.maxAgeDays` is too old to choose a topic from.
 - The locked decisions L1 to L67 in `docs/plan/reference/locked-decisions.md`: they record why one site is
   the way it is.

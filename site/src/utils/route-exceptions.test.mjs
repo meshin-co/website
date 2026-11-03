@@ -34,10 +34,3 @@ test('every declared empty collection is a collection the feeds know, with a rea
     assert.ok(reason.trim().split(/\s+/).length >= 8, collection + ' needs a reason of at least a sentence');
   }
 });
-
-test('the case collection is the only one declared empty, until a client agrees in writing', () => {
-  assert.deepEqual(
-    EMPTY_COLLECTIONS.map(({ collection }) => collection),
-    ['case']
-  );
-});

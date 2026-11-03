@@ -27,3 +27,10 @@ export const SCENE_HUBS = [
   { base: '/services', title: 'Services', description: 'The offers of the synthetic site.' },
   { base: '/case-studies', title: 'Case studies', description: 'The client work of the synthetic site.' },
 ];
+
+export const SCENE_EMPTY_COLLECTIONS = [
+  {
+    collection: 'case',
+    reason: 'The synthetic site has published no case study, so its hub stays withheld until the first one exists.',
+  },
+];

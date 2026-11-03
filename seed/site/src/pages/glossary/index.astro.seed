@@ -8,7 +8,15 @@ import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
 import CtaBlock from '~/components/site/CtaBlock.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { collectionNode, orgNode, personNode, termNode, termSetNode, websiteNode } from '~/utils/jsonld.mjs';
+import {
+  breadcrumbNode,
+  collectionNode,
+  orgNode,
+  personNode,
+  termNode,
+  termSetNode,
+  websiteNode,
+} from '~/utils/jsonld.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 
 const site = import.meta.env.SITE.replace(/\/$/, '');
@@ -36,6 +44,7 @@ const nodes = [
     description: metadata.description,
     items: terms.map((term) => ({ url: `/glossary/${term.id}` })),
   }),
+  breadcrumbNode(site, crumbs),
   termSetNode(
     site,
     terms.map((term) => ({ id: term.id }))

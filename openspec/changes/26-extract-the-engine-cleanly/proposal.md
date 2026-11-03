@@ -36,7 +36,7 @@ account and project, the domain, the Search Console property and its service acc
 priced per vendor, the budgets measured on this site's pages, every measured record, and the locked
 decisions L1 to L67.
 
-**The export (delivered).** `npm run export:engine -- <empty directory>` writes every engine file and 27
+**The export (delivered).** `npm run export:engine -- <empty directory>` writes every engine file and 28
 seeds at their target paths, with `engine-export.json`. A copy of it was installed, built and run through the
 gates for an invented second site, `field-notes.example`: `npm test` passes there (5167 tests, 182 failed
 before this pass) and so does every gate except the three that measure the owner's own work, `gate:demand`,
@@ -63,7 +63,7 @@ This change keeps that behaviour and adds the rule that no record under `audits/
 
 - New: the partition modules and their tests, `scripts/export-engine.mjs`, `scripts/check-export.mjs`,
   `scripts/partition-specimens.mjs`, `scripts/engine-named-paths.mjs`, `scripts/interview-coverage.mjs`,
-  `src/utils/page-exists.mjs`, 27 seeds under `seed/`, `site/src/data/static-pages.mjs`, and the skills
+  `src/utils/page-exists.mjs`, 28 seeds under `seed/`, `site/src/data/static-pages.mjs`, and the skills
   `extract-the-engine-from-a-site.md` and `interview-the-owner-of-a-new-site.md`.
 - New: `docs/plan/reference/new-site-interview.md`, 97 questions in the order they are needed.
 - Changed: `machine-text.mjs` no longer holds the page catalogue; the three asset generators create their own
@@ -72,4 +72,4 @@ This change keeps that behaviour and adds the rule that no record under `audits/
   reader accepts an empty list of numbers; `external-links`, `geo-probe`, `pr-github`, `escalate-channels` and the
   search index page read the host, the author and the agent name from the tree; the post page, the search page
   and the services and faq feeds no longer assume pages or collections a copy lacks; about 50 tests were split
-  or made generic, and 8 `*.site.test.mjs` files keep what pins this site.
+  or made generic, and 10 `*.site.test.mjs` files keep what pins this site.
