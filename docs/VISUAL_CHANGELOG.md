@@ -174,3 +174,24 @@ paperwork?" band. `/ai-policy` keeps a Starter Kit link under the button. `/pric
 the cost questions, `/contact` shows `cal.com/meshin/30min` as the fit-call channel, and the
 `/styleguide` band specimen shows the secondary link. Every booking button now opens the 30-minute
 event.
+
+## 2026-11-03 - The phone bar reads logo, booking button, menu
+
+On phones and tablets (below 1024 px) the menu toggle sat beside the logo on the left and the
+booking button floated to the right. The bar is now a three-column grid: the logo on the left edge,
+the "Book a call" button centred on the bar, the menu toggle on the right edge. The button carries a
+calendar icon before its label (`tabler:calendar`, inline SVG through the existing `Button` icon
+prop, no new request). From 1024 px the bar looks exactly as before and the icon is hidden.
+
+Two things changed that were not in the request. The theme toggle, which only shows while the menu
+is open, now sits at the bottom-left of the open menu panel instead of in the bar row, because a
+44 px target no longer fits beside a centred button at 320 px. And on desktop the keyboard Tab order
+is now logo, theme toggle, "Book a call", then the navigation links; it used to reach the
+navigation links before the button. Nothing moves on screen at desktop width, but the order a
+keyboard user hears it in does. On phones the order is logo, button, menu toggle, then the menu
+links once the menu is open.
+
+The 114 `darwin/*-mobile.png` baselines were regenerated because every mobile page carries the bar.
+Ten blog baselines (`/blog`, the adoption-telemetry post and three tag pages, both themes, both
+viewports) were already stale on `main` for a different reason, a new article, and are regenerated
+in a separate commit. Desktop baselines are untouched by the bar.
