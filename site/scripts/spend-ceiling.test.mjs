@@ -10,7 +10,7 @@ import { NOTICE, fakeApi, harness, spending, withScene } from './fixtures/spend-
 import { PLACES } from './fixtures/record-depths.mjs';
 import { FILED_AT, ledgerOf, recordOf } from './fixtures/spend-scene.mjs';
 import { recordFiles, recordPath } from './record-layout.mjs';
-import { ceilingStatus } from './spend-ceiling.mjs';
+import { ceilingStatus, inspect } from './spend-ceiling.mjs';
 
 const CEILING = MONTHLY_SPEND_CEILING_USD;
 const IN_NOVEMBER = '2026-11-03T08:00:00Z';
@@ -328,5 +328,16 @@ test(
     assert.equal(await after.run(), 0);
     assert.deepEqual(linesOf(before), [READ]);
     assert.deepEqual(linesOf(after), [READ]);
+  })
+);
+
+test(
+  'a generation record whose ledger is gone is counted by the ceiling and named in a warning, and is not counted as a ledger',
+  withScene((scene) => {
+    scene.putRecord(recordOf({ slug: 'orphan-post', generatedAt: IN_NOVEMBER, usd: 2 }));
+    const { status, warnings, read } = inspect({ repoRoot: scene.root, now: new Date('2026-11-10T09:00:00.000Z') });
+    assert.equal(status.spentUsd, 2);
+    assert.deepEqual(read, { ledgers: 0, records: 1 });
+    assert.match(warnings[0], /orphan-post: .* which does not exist, so its cost is counted from the record alone/);
   })
 );

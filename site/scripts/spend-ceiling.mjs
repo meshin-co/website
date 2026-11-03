@@ -38,7 +38,10 @@ export function inspect({
       noticePosted: noticePosted({ repoRoot, month }),
     },
     warnings: spendWarnings({ ledgers }),
-    read: { ledgers: ledgers.length, records: ledgers.filter(({ record }) => record !== null).length },
+    read: {
+      ledgers: ledgers.filter(({ ledger }) => ledger !== null).length,
+      records: ledgers.filter(({ record }) => record !== null).length,
+    },
   };
 }
 

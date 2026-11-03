@@ -185,9 +185,8 @@ test('an entry costs what the monthly ceiling counts for it, because both read t
   assert.equal(model.allTime.totals.all.micro, ceiling);
 });
 
-test('a repair adds calls to a record and changes no figure of the report', () => {
-  const { post, ledger } = soleArticle();
-  const repaired = recordAfterRepair({
+const repairedOf = (post) =>
+  recordAfterRepair({
     record: post,
     calls: [callOf('repair', { input: 9000, output: 4000 }, 'repair')],
     modelChecks: [modelCheck()],
@@ -196,12 +195,35 @@ test('a repair adds calls to a record and changes no figure of the report', () =
     measuredOn: post.band.measuredOn,
     gates: post.gates,
   });
+
+const REPAIR_ATTEMPT = {
+  judgedCommit: 'a'.repeat(40),
+  recordedAt: '2026-11-02T09:00:00.000Z',
+  failingRule: 'banned-phrase',
+  failingPath: 'site/src/data/post/a-post.md',
+  tokens: { input: 9000, output: 4000 },
+  costUsd: 0.029,
+};
+
+test('a repair adds calls to a record and its attempt to the ledger, and changes no row of the report and no warning', () => {
+  const { post, ledger } = soleArticle();
+  const repaired = repairedOf(post);
   assert.deepEqual(validateRecord(repaired).map(describeProblem), []);
   assert.ok(repaired.totals.costUsd > post.totals.costUsd, 'the repair call was not added');
-  assert.deepEqual(
-    modelOf({ ledgers: [ledger], records: [repaired] }),
-    modelOf({ ledgers: [ledger], records: [post] })
-  );
+  const before = modelOf({ ledgers: [ledger], records: [post] });
+  const after = modelOf({ ledgers: [ledgerWithAttempt(ledger, REPAIR_ATTEMPT)], records: [repaired] });
+  assert.deepEqual(after.rows, before.rows);
+  assert.deepEqual(after.thirtyDays, before.thirtyDays);
+  assert.deepEqual(after.allTime, before.allTime);
+  assert.deepEqual(after.warnings, []);
+});
+
+test('repair calls that no attempt of the ledger covers are a warning, because the record then shows spend the ledger lacks', () => {
+  const { post, ledger } = soleArticle();
+  const model = modelOf({ ledgers: [ledger], records: [repairedOf(post)] });
+  assert.deepEqual(model.warnings, [
+    "a-post: its generation record's repair calls cost 0.029 USD but its ledger records 0 USD for its attempts, so the record cost is counted",
+  ]);
 });
 
 test('what happens to a ledger after the entry is written moves no figure: attempts, a merge and its measurement debt', () => {

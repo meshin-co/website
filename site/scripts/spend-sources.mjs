@@ -6,7 +6,7 @@ import { describeProblem } from './autowriter-records.mjs';
 import { runGit } from './commit-to-main.mjs';
 import { validateRecord } from './generation-record.mjs';
 import { familyOf, recordDirectory, recordFiles } from './record-layout.mjs';
-import { chooseVersions } from './spend-sum.mjs';
+import { chooseVersions, ledgerStemOf, recordMicro, recordRepairMicro, spendItemsOf } from './spend-sum.mjs';
 
 export const WORKING_TREE = 'working tree';
 export const SOURCE_REFS = [
@@ -91,15 +91,35 @@ function load({ label, file, parsed }) {
   return { isRecord, value };
 }
 
-function candidatesOf({ label, files, parsed }) {
+function loadFiles({ label, files, parsed }) {
   const ledgers = [];
-  const records = new Map();
+  const records = [];
   for (const file of files) {
     const { isRecord, value } = load({ label, file, parsed });
-    if (isRecord) records.set(value.slug, value);
-    else ledgers.push(value);
+    (isRecord ? records : ledgers).push(value);
   }
-  return ledgers.map((ledger) => ({ source: label, ledger, record: records.get(ledger.slug) ?? null }));
+  return { label, ledgers, records };
+}
+
+function candidatesOf({ label, ledgers, records }) {
+  return spendItemsOf({ ledgers, records })
+    .filter(({ ledger }) => ledger !== null)
+    .map((item) => ({ source: label, ...item }));
+}
+
+const recordCost = (record) => recordMicro(record) + recordRepairMicro(record);
+
+function recordOnlyItems({ chosen, loaded }) {
+  const slugs = new Set(chosen.map(({ ledger }) => ledger.slug));
+  const costliest = new Map();
+  for (const { label, records } of loaded)
+    for (const record of records) {
+      if (slugs.has(ledgerStemOf(record.ledger))) continue;
+      const held = costliest.get(record.slug);
+      if (held === undefined || recordCost(record) > recordCost(held.record))
+        costliest.set(record.slug, { source: label, ledger: null, record });
+    }
+  return [...costliest.values()].sort((left, right) => (left.record.slug < right.record.slug ? -1 : 1));
 }
 
 export function readLedgers({ repoRoot, run = runGit }) {
@@ -110,5 +130,7 @@ export function readLedgers({ repoRoot, run = runGit }) {
     { label: WORKING_TREE, files: workingTreeFiles(repoRoot) },
     ...refs.map((ref) => ({ label: ref, files: treeFiles({ run, repoRoot, ref, blobs }) })),
   ];
-  return chooseVersions(sources.flatMap(({ label, files }) => candidatesOf({ label, files, parsed })));
+  const loaded = sources.map(({ label, files }) => loadFiles({ label, files, parsed }));
+  const chosen = chooseVersions(loaded.flatMap(candidatesOf));
+  return [...chosen, ...recordOnlyItems({ chosen, loaded })];
 }

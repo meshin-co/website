@@ -47,7 +47,7 @@ export function ledgerOf({ slug, generationUsd, attempts = [], decidedAt = null 
   };
 }
 
-export function recordOf({ slug, generatedAt, usd }) {
+export function recordOf({ slug, generatedAt, usd, ledgerSlug = slug, extraCalls = [] }) {
   const input = recordInput();
   const entryPath = `site/src/data/post/${slug}.md`;
   return buildRecord({
@@ -55,9 +55,9 @@ export function recordOf({ slug, generatedAt, usd }) {
     claim: { ...input.claim, slug },
     route: `/blog/${slug}`,
     entryPath,
-    ledger: recordPath('ledger', slug, generatedAt),
+    ledger: recordPath('ledger', ledgerSlug, generatedAt),
     generatedAt,
-    calls: [callOf('draft', { input: Math.round(usd * MICRO), output: 0 }, `draft-${slug}`)],
+    calls: [callOf('draft', { input: Math.round(usd * MICRO), output: 0 }, `draft-${slug}`), ...extraCalls],
     published: { callIndex: 0 },
     files: [entryPath, recordPath('generation', slug, generatedAt), 'docs/SEMANTIC-CORE.md'],
   });

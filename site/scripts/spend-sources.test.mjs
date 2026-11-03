@@ -115,11 +115,17 @@ test(
 );
 
 test(
-  'a generation record with no ledger of its own, as a glossary term has, is not a ledger',
+  'a generation record whose ledger exists in no source comes back with no ledger, so its cost is still counted',
   withScene((scene) => {
-    scene.putRecord(recordOf({ slug: 'term-only', generatedAt: AT, usd: 1 }));
+    scene.putRecord(recordOf({ slug: 'record-only', generatedAt: AT, usd: 1 }));
     scene.commit();
-    assert.deepEqual(read(scene), []);
+    const [only, ...rest] = read(scene);
+    assert.deepEqual(rest, []);
+    assert.equal(only.ledger, null);
+    assert.equal(only.source, 'working tree');
+    assert.equal(only.record.slug, 'record-only');
+    assert.equal(monthlySpend({ ledgers: [only], month: MONTH }), microOf(1));
+    assert.match(spendWarnings({ ledgers: [only] })[0], /record-only: .* which does not exist/);
   })
 );
 
