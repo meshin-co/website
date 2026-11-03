@@ -118,6 +118,7 @@ export const FAMILIES = [
   { id: 'semantic-title-pattern', kind: 'pure', proves: 'gate:content', check: 'semantic-title' },
   { id: 'repair-removal-guard-drops-a-takeaway', kind: 'pure', proves: 'repair:entry', check: 'repair-removal' },
   { id: 'repair-scope-check-leaves-the-entry', kind: 'pure', proves: 'repair:entry', check: 'repair-scope' },
+  { id: 'route-ledger-hides-a-dropped-route', kind: 'pure', proves: 'repair:entry', check: 'repair-route-ledger' },
   { id: 'repair-attempt-past-the-cap', kind: 'pure', proves: 'repair:entry', check: 'repair-attempt-cap' },
   { id: 'agents-content-signal', kind: 'specimen', specimen: 'agents' },
   { id: 'agents-openapi-drift', kind: 'specimen', specimen: 'agents-openapi-drift' },

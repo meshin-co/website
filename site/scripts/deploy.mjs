@@ -51,6 +51,6 @@ export function ledgerFindings(ledger, built) {
   if (added.length > 0) parts.push(`adds ${added.join(', ')}`);
   if (removed.length > 0) parts.push(`drops ${removed.join(', ')}`);
   return [
-    `the build ${parts.join(' and ')} against audits/routes.json; run the gates and npm run assets:routes before publishing`,
+    `the build ${parts.join(' and ')} against audits/routes.json; the unattended writer commits the ledger with every route it adds, so this change came from somewhere else: run the gates, then npm run assets:routes, and commit audits/routes.json with the change that made it`,
   ];
 }

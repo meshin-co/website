@@ -44,9 +44,9 @@ npm run deploy         # production
 ```
 
 Both refuse a `dist/` whose routes differ from `audits/routes.json`, naming what was added or
-dropped. That ledger is what `npm run gate:routes` compares against, so the refusal means the
-gates have not seen this build. Run them, then `npm run assets:routes` if the route change is
-intended.
+dropped. Run the gates, then `npm run assets:routes` if the route change is intended. The writer
+commits that ledger with every route it adds, so a refusal on its branch means a merge or a hand
+edit moved the routes.
 
 ## What CI does
 

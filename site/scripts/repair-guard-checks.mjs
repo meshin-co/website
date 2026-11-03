@@ -1,4 +1,6 @@
-import { join } from 'node:path';
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const FILES = {
@@ -6,11 +8,13 @@ const FILES = {
   drafts: 'scripts/fixtures/writer-drafts.mjs',
   scope: 'scripts/repair-scope.mjs',
   ledger: 'scripts/autowriter-ledger.mjs',
+  routeLedger: 'scripts/route-ledger.mjs',
 };
 const ENTRY = { slug: 'zz-specimen', format: 'article', claimedAt: '2026-11-02T06:00:00.000Z' };
 const OUTSIDE = 'site/src/pages/index.astro';
 const REFUSED = 'audits/lighthouse-green.json';
 const CAP = 3;
+const LEDGER_ROUTES = ['/', '/blog/a', '/blog/b'];
 const ATTEMPT = {
   judgedCommit: 'c'.repeat(40),
   recordedAt: '2026-11-02T07:00:00.000Z',
@@ -70,9 +74,44 @@ export function attemptCapCheck({ ledger }) {
   return fail(`attempt ${CAP + 1} was recorded`);
 }
 
+async function regenerated({ routeLedger, built }) {
+  const root = await mkdtemp(join(tmpdir(), 'route-ledger-check-'));
+  const path = join(root, routeLedger.ROUTE_LEDGER);
+  const text = (routes) => `${JSON.stringify(routes, null, 2)}\n`;
+  try {
+    await mkdir(dirname(path), { recursive: true });
+    await writeFile(path, text(LEDGER_ROUTES));
+    const succeed = () => writeFile(path, text(built));
+    return {
+      carried: await routeLedger.regenerateRouteLedger({ repoRoot: root, transaction: { track() {} }, succeed }),
+    };
+  } catch (error) {
+    return { refused: error.message };
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+}
+
+export async function routeLedgerCheck({ scope, routeLedger }) {
+  const paths = [...scope.ownPaths(ENTRY), routeLedger.ROUTE_LEDGER];
+  const refusedOwn = scope.scopeProblems({ ...ENTRY, paths })[0];
+  if (refusedOwn !== undefined) return fail(`the scope check refused the route ledger: ${refusedOwn.problem}`);
+  const dropped = await regenerated({ routeLedger, built: LEDGER_ROUTES.slice(0, 2) });
+  if (!dropped.refused?.includes(LEDGER_ROUTES[2]))
+    return fail(`the ledger step stayed green when the build dropped ${LEDGER_ROUTES[2]}`);
+  const added = await regenerated({ routeLedger, built: [...LEDGER_ROUTES, '/blog/c'] });
+  if (added.carried?.changed !== true) return fail('the ledger step did not carry a route the build added');
+  const same = await regenerated({ routeLedger, built: LEDGER_ROUTES });
+  if (same.carried?.changed !== false) return fail('the ledger step carried a ledger the build left as it was');
+  return pass(
+    'a dropped route is refused, an added one is carried, an unchanged ledger is not, and a repair may carry it'
+  );
+}
+
 export const REPAIR_CHECKS = {
   'repair-removal': removalCheck,
   'repair-scope': scopeCheck,
+  'repair-route-ledger': routeLedgerCheck,
   'repair-attempt-cap': attemptCapCheck,
 };
 

@@ -60,7 +60,7 @@ Before it writes anything the run builds the clean tree, and `gate:editorial` mu
 entries then go on one tree with one build, each with its `Passage:` line, content-facts row and disposition rows.
 `semantic-core`, `gate:registers` and `gate:editorial` must pass; `gate:content`, `gate:human` and `gate:machine` are
 recorded in `gates`. The run never runs the seal: it writes `generated-<slug>.json` under `audits/phase-4.7/dispositions/<year>/<month>/` and restates each existing disposition
-the new text made stale, with a reason that says no human has read it. One bot commit goes on the local branch `autowriter/<slug>`; the workflow pushes and opens the pull request.
+the new text made stale, with a reason that says no human has read it. After the build it runs `npm run assets:routes` inside the assembly (`route-ledger.mjs`; the repair shares it, and the workflow does not, because the assembly decides what the commit holds) and the commit carries `audits/routes.json` when it changed, because `npm run deploy` refuses a build whose routes differ from it. A build that drops a route fails as `build`: rewriting the ledger would hide the removal from `gate:routes`, and a person explains removals (`explain-a-route-removal.md`). One bot commit goes on the local branch `autowriter/<slug>`; the workflow pushes and opens the pull request.
 
 The post is the anchor: the branch and the ledger carry its slug. A term that fails as `claim`, `output` or `vendor`, or
 whose assembly fails, is left out and listed in `skipped[]` with its spend. A failed post fails the run. Cost is tokens
@@ -70,11 +70,11 @@ elsewhere (`guard-the-unattended-writer.md`). The site shows no machine-written 
 
 ## Module map
 
-| Job                    | Modules                                                                                                                                                                                 |
-| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Run and decision       | `write-entry.mjs`, `write-run.mjs`, `write-open.mjs`, `write-draft.mjs`                                                                                                                 |
-| Settings and vendor    | `writer-config.mjs`, `writer-error.mjs`, `writer-redact.mjs`, `writer-adapter.mjs`, `writer-openai.mjs`, `writer-models.mjs`, `writer-cost.mjs`                                         |
-| The prompt and draft   | `writer-prompt.mjs`, `writer-prompt-read.mjs`, `writer-prompt-text.mjs`, `prompt-extract.mjs`, `writer-tree.mjs`, `writer-output.mjs`, `entry-limits.mjs`, `site-brand.mjs`             |
-| The writer's own check | `writer-preflight.mjs`, `writer-preflight-fields.mjs`, `writer-preflight-page.mjs`, `writer-page.mjs`, `writer-markdown.mjs`, `claim-sources.mjs`                                       |
-| Limits and record      | `entry-prose.mjs`, `sentence-band.mjs`, `measure-sentence-band.mjs`, `entry-length.mjs`, `measure-entry-length.mjs`, `generation-record.mjs`                                            |
-| Landing                | `entry-files.mjs`, `route-derive.mjs`, `route-assembly.mjs`, `route-transaction.mjs`, `disposition-digest.mjs`, `stale-dispositions.mjs`, `disposition-restate.mjs`, `entry-commit.mjs` |
+| Job                    | Modules                                                                                                                                                                                                     |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Run and decision       | `write-entry.mjs`, `write-run.mjs`, `write-open.mjs`, `write-draft.mjs`                                                                                                                                     |
+| Settings and vendor    | `writer-config.mjs`, `writer-error.mjs`, `writer-redact.mjs`, `writer-adapter.mjs`, `writer-openai.mjs`, `writer-models.mjs`, `writer-cost.mjs`                                                             |
+| The prompt and draft   | `writer-prompt.mjs`, `writer-prompt-read.mjs`, `writer-prompt-text.mjs`, `prompt-extract.mjs`, `writer-tree.mjs`, `writer-output.mjs`, `entry-limits.mjs`, `site-brand.mjs`                                 |
+| The writer's own check | `writer-preflight.mjs`, `writer-preflight-fields.mjs`, `writer-preflight-page.mjs`, `writer-page.mjs`, `writer-markdown.mjs`, `claim-sources.mjs`                                                           |
+| Limits and record      | `entry-prose.mjs`, `sentence-band.mjs`, `measure-sentence-band.mjs`, `entry-length.mjs`, `measure-entry-length.mjs`, `generation-record.mjs`                                                                |
+| Landing                | `entry-files.mjs`, `route-derive.mjs`, `route-assembly.mjs`, `route-ledger.mjs`, `route-transaction.mjs`, `disposition-digest.mjs`, `stale-dispositions.mjs`, `disposition-restate.mjs`, `entry-commit.mjs` |

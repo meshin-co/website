@@ -162,6 +162,22 @@ test('a build that touched a file outside the entry is refused by the scope chec
   assert.equal(scene.committed.length, 0);
 });
 
+test('a build that rewrote the route ledger is in scope, because a repair can change the routes its entry feeds', async () => {
+  const { scene, finish } = await finishing({
+    assemble: async () => ({
+      files: [
+        { path: ENTRY, text: 'the entry' },
+        { path: 'audits/routes.json', text: '[]\n' },
+      ],
+      gates: GATES,
+    }),
+  });
+
+  await finish();
+
+  assert.ok(scene.committed[0].files.some(({ path }) => path === 'audits/routes.json'));
+});
+
 test('a build that deletes nothing but also writes nothing for the entry is refused, not committed empty', async () => {
   const { scene, finish } = await finishing({ assemble: async () => ({ files: [], gates: GATES }) });
 
