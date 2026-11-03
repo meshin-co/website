@@ -43,6 +43,45 @@ function messageOf({ slug, number, failures, gates, generationPath }) {
   ].join('\n\n');
 }
 
+function ledgerAfterAttempt({ situation, failures, calls, now }) {
+  const { tokens, costUsd } = callTotals(calls);
+  return ledgerWithAttempt(situation.ledger, {
+    judgedCommit: situation.head,
+    recordedAt: now.toISOString(),
+    ...attemptFailure(failures),
+    tokens,
+    costUsd,
+  });
+}
+
+function spendMessageOf({ slug, outcome, calls, generationPath }) {
+  return [
+    'fix(autowriter): record the spend of a repair of ' + slug + ' that ended as ' + outcome,
+    'The repair made ' +
+      calls.length +
+      ' model call' +
+      (calls.length === 1 ? '' : 's') +
+      ' and ended without a repaired entry, so the ledger gains an attempt that carries the spend and nothing else changes.',
+    'Provenance: ' + generationPath,
+  ].join('\n\n');
+}
+
+export async function recordFailedSpend({ repoRoot, situation, calls, failures, outcome, now, run, commit, secrets }) {
+  const { claim, slug } = situation;
+  const nextLedger = ledgerAfterAttempt({ situation, failures, calls, now });
+  refuseInvalid(slug, validateLedger(nextLedger));
+  const files = [{ path: recordPath('ledger', slug, claim.claimedAt), text: textOf(nextLedger) }];
+  const message = spendMessageOf({
+    slug,
+    outcome,
+    calls,
+    generationPath: recordPath('generation', slug, claim.claimedAt),
+  });
+  assertNoSecrets({ files, message }, secrets, 'the record of the spend');
+  const { commit: sha } = await commit({ repoRoot, files, message, run });
+  return sha;
+}
+
 export async function finishRepair({
   repoRoot,
   situation,
@@ -56,7 +95,7 @@ export async function finishRepair({
   commit,
   secrets,
 }) {
-  const { claim, slug, record, ledger, runDate, head } = situation;
+  const { claim, slug, record, ledger, runDate } = situation;
   const number = ledger.attempts.length + 1;
   const assembly = await assembled({
     assemble,
@@ -73,14 +112,7 @@ export async function finishRepair({
     measuredOn: band.measuredOn,
     gates: assembly.gates,
   });
-  const { tokens, costUsd } = callTotals(calls);
-  const nextLedger = ledgerWithAttempt(ledger, {
-    judgedCommit: head,
-    recordedAt: now.toISOString(),
-    ...attemptFailure(failures),
-    tokens,
-    costUsd,
-  });
+  const nextLedger = ledgerAfterAttempt({ situation, failures, calls, now });
   refuseInvalid(slug, [...validateRecord(nextRecord), ...validateLedger(nextLedger)]);
   const generationPath = recordPath('generation', slug, claim.claimedAt);
   const ledgerPath = recordPath('ledger', slug, claim.claimedAt);
