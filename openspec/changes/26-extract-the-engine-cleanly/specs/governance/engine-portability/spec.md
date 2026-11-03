@@ -27,6 +27,24 @@ SHALL be reported as a finding and SHALL NOT receive a default class.
 - **WHEN** the engine holds `seed/<path>.seed`
 - **THEN** `<path>` is classed as site, and the seed itself is classed as engine
 
+### Requirement: A file can declare that it belongs to one site
+
+A file whose name carries `.site` before its extension, such as `topic-core.site.test.mjs` or
+`navigate-the-plan.site.md`, SHALL be classed site, whatever else it is, and the export SHALL leave it out.
+The marker is its author's declaration that the file pins or describes one site. The same name without
+the marker keeps the class its other properties give it.
+
+#### Scenario: A test pins this site's content
+
+- **WHEN** a test that asserts a fact of one site is named `<name>.site.test.mjs`
+- **THEN** the partition classes it as site by the rule `site-marked`, and `npm run export:engine` does not
+  write it
+
+#### Scenario: The same name without the marker
+
+- **WHEN** a test is named `<name>.test.mjs`
+- **THEN** the partition classes it as engine by the rule `test`, and a copy of the engine runs it
+
 ### Requirement: An engine file names no site
 
 An engine file, except a test or a file of fixture data, SHALL NOT contain the site name, the host
@@ -100,3 +118,42 @@ classed site.
 - **WHEN** `docs/plan/reference/calibration-gate.md` names no term of the site identity and
   `.omp/rules/openspec.md` names it
 - **THEN** the partition classes it engine, and the export ships it
+
+### Requirement: The interview names everything the engine needs from its owner
+
+The interview bank SHALL name every leaf value of `site/engine.config.json` by its dotted path, every secret
+and every variable that a workflow reads except `GITHUB_TOKEN`, and every variable of `site/.env.example`.
+`npm run gate:engine` SHALL report each name the bank does not contain.
+
+#### Scenario: A config value has no question
+
+- **WHEN** a leaf value is added to `site/engine.config.json` and the bank does not name its path
+- **THEN** `gate:engine` prints `ENGINE interview-gap <path>: config value` and exits 1
+
+#### Scenario: A workflow reads a new secret
+
+- **WHEN** a workflow reads `secrets.NEW_TOKEN` and the bank does not name it
+- **THEN** `gate:engine` prints `ENGINE interview-gap NEW_TOKEN: workflow secret` and exits 1
+
+#### Scenario: A name is only a prefix of a longer one
+
+- **WHEN** the bank names `AUTOWRITER_PAT_OLD` and a workflow reads `AUTOWRITER_PAT`
+- **THEN** `AUTOWRITER_PAT` counts as missing, because a name is covered only as a whole word
+
+### Requirement: A citation of a file the engine writes does not dangle
+
+A skill or a document SHALL be allowed to cite a path that does not exist when a script in `site/scripts`,
+a workflow, `site/playwright.config.ts`, `site/lighthouserc.cjs` or `site/package.json` names that path,
+because a copy has not yet run what writes it. A test file, a specimen catalogue and a document SHALL NOT
+count as naming it. A citation of a missing path that nothing in the engine names SHALL remain a finding.
+
+#### Scenario: A record that a script writes
+
+- **WHEN** a skill cites `audits/geo-baseline.md`, which `scripts/generate-geo-baseline.mjs` writes, and the
+  file does not exist yet
+- **THEN** `gate:skills` and `gate:docs` report no finding for it
+
+#### Scenario: A path that only a document or a test names
+
+- **WHEN** a skill cites a missing path that only another document or a `*.test.mjs` file names
+- **THEN** the gates report `missing-path` or `dead-path`
