@@ -75,6 +75,6 @@ guard's failure reason changes underneath it. Token(s) should be the specific fi
 human would grep for in the real failure output.
 
 Two environment limits fail loud, never pass. A specimen that starts a server binds a fixed port
-(`gate:visual` 4322, `gate:lh:one` 4330), so a dev server already on it turns the family red. And the
+(`gate:visual` 4322 and 4323, `gate:lh:one` 4330), so a dev server already on it turns the family red. And the
 copy refuses to run from a git worktree: its `.git` is a link to the original repository, so
 `git add` in the copy would stage into the original. Run from a clone.

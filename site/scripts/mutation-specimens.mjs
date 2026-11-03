@@ -480,6 +480,16 @@ export const SPECIMENS = {
     token: 'image-alt: 1 node(s)',
     plant: (copySite) => addPage(copySite, 'zz-specimen', UNLABELLED_IMAGE_PAGE),
   },
+  visualLayoutRegression: {
+    gate: 'gate:visual',
+    env: { CI: '1' },
+    args: ['--project=desktop', '--grep', '/blog renders as recorded in light'],
+    token: 'toHaveScreenshot(expected) failed',
+    plant: (copySite) =>
+      editFile(join(copySite, 'src/components/site/PostCard.astro'), (text) =>
+        text.replace('flex h-full flex-col border border-line p-6', 'flex h-full flex-col p-6')
+      ),
+  },
   humanControlledWord: {
     gate: 'gate:human',
     token: '/zz-specimen controlled-word: commence',

@@ -8,7 +8,7 @@ This capability governs how the built pages look and behave in a real browser: r
 
 ### Requirement: Each template's representative page matches its recorded screenshot
 
-`site/tests/visual.spec.ts` SHALL take a full-page screenshot of one route per template, the first in sort order as `site/scripts/templates.mjs` picks it, in light and in dark, on the desktop (1440x900) and mobile (375x812) Chromium projects. It SHALL fail when the screenshot differs from the baseline for the running platform by more than 0.2% of its pixels, or by any width or height. Other routes of the same template get no screenshot. Guard: npm run gate:visual.
+`site/tests/visual.spec.ts` SHALL take a full-page screenshot of one route per template, the first in sort order as `site/scripts/templates.mjs` picks it from the visual build, in light and in dark, on the desktop (1440x900) and mobile (375x812) Chromium projects. It SHALL fail when the screenshot differs from the baseline for the running platform by more than 0.2% of its pixels, or by any width or height. Other routes of the same template get no screenshot. Guard: npm run gate:visual.
 
 #### Scenario: A rendering change beyond the pixel ratio fails
 
@@ -24,6 +24,11 @@ This capability governs how the built pages look and behave in a real browser: r
 
 - **WHEN** a new template, or a route that now sorts first in its template, has no baseline in the running platform's folder under `site/tests/__screenshots__/`
 - **THEN** the test fails with `A snapshot doesn't exist at <path>, writing actual.` and is not retried
+
+#### Scenario: An entry written after the freeze moves no baseline
+
+- **WHEN** a post, glossary term or other entry is added to `site/src/data` and `site/src/data/visual-corpus.json`, the manifest the visual build renders, is not regenerated
+- **THEN** `npm run build:visual` writes the same pages byte for byte, and `npm run gate:visual` finds no screenshot to differ
 
 ### Requirement: Every built route has zero axe violations in both color schemes
 

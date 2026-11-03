@@ -12,8 +12,12 @@ import {
   isDescriptionInRange,
 } from '~/utils/faq-meta.mjs';
 import { LICENSE_ID, licenseHasText } from '~/utils/resource-license.mjs';
+import { collectionPattern } from '~/utils/visual-corpus.mjs';
 
 const CATEGORIES = ['governance', 'agentic-architecture', 'operating-model', 'executive'] as const;
+
+const entries = (collection: string) =>
+  glob({ pattern: collectionPattern(collection, { mode: import.meta.env.MODE }), base: `src/data/${collection}` });
 
 const source = z.object({
   title: z.string(),
@@ -61,7 +65,7 @@ const licenseTextMessage = {
 const licenseIdMessage = 'must be a licence id such as MIT or CC-BY-4.0';
 
 const postCollection = defineCollection({
-  loader: glob({ pattern: ['*.md', '*.mdx'], base: 'src/data/post' }),
+  loader: entries('post'),
   schema: z
     .object({
       ...publishable,
@@ -82,7 +86,7 @@ const postCollection = defineCollection({
 });
 
 const serviceCollection = defineCollection({
-  loader: glob({ pattern: ['*.md', '*.mdx'], base: 'src/data/service' }),
+  loader: entries('service'),
   schema: z
     .object({
       ...publishable,
@@ -110,7 +114,7 @@ const serviceCollection = defineCollection({
 });
 
 const resourceCollection = defineCollection({
-  loader: glob({ pattern: ['*.md', '*.mdx'], base: 'src/data/resource' }),
+  loader: entries('resource'),
   schema: z
     .object({
       ...publishable,
@@ -130,7 +134,7 @@ const resourceCollection = defineCollection({
 });
 
 const caseCollection = defineCollection({
-  loader: glob({ pattern: ['*.md', '*.mdx'], base: 'src/data/case' }),
+  loader: entries('case'),
   schema: z
     .object({
       ...publishable,
@@ -152,7 +156,7 @@ const caseCollection = defineCollection({
 });
 
 const glossaryCollection = defineCollection({
-  loader: glob({ pattern: ['*.md', '*.mdx'], base: 'src/data/glossary' }),
+  loader: entries('glossary'),
   schema: z
     .object({
       ...publishable,
@@ -168,7 +172,7 @@ const glossaryCollection = defineCollection({
 });
 
 const faqCollection = defineCollection({
-  loader: glob({ pattern: ['*.md', '*.mdx'], base: 'src/data/faq' }),
+  loader: entries('faq'),
   schema: z
     .object({
       question: ogTitleSchema,
@@ -202,7 +206,7 @@ const faqCollection = defineCollection({
 });
 
 const authorCollection = defineCollection({
-  loader: glob({ pattern: ['*.md', '*.mdx'], base: 'src/data/author' }),
+  loader: entries('author'),
   schema: z.object({
     name: z.string(),
     role: z.string(),

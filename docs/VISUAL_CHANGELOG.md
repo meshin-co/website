@@ -174,3 +174,21 @@ paperwork?" band. `/ai-policy` keeps a Starter Kit link under the button. `/pric
 the cost questions, `/contact` shows `cal.com/meshin/30min` as the fit-call channel, and the
 `/styleguide` band specimen shows the secondary link. Every booking button now opens the 30-minute
 event.
+
+## 2026-11-04 - Snapshots stop reading the live corpus
+
+Every entry the unattended writer published moved a baseline. `/blog`, the tag pages and the "Keep
+reading" block on a post render the whole corpus, so one more entry meant a taller page and a pixel
+difference; the last article moved 20 linux baselines. The snapshots are now taken from a second
+build, `dist-visual`, that reads only the entries `src/data/visual-corpus.json` pins. A new entry
+changes no page in that build, so it changes no baseline, while a layout change on a pinned page
+still fails the gate. Axe, cards, search and the cross-browser checks keep reading the live
+`dist`. `npm run assets:visual-corpus` pins the current set again, and then both platforms are
+regenerated.
+
+No linux baseline is regenerated: the visual build at this commit is byte for byte the live build at
+`e8874d4`, the commit that last moved the linux set. The 20 darwin baselines that commit left behind
+(`/blog`, the post `adoption-telemetry-measuring-if-ai-is-actually-used` and three tag pages) are
+regenerated. Sixteen baselines no test read are deleted, eight per platform: they belong to
+`/blog/ai-acceptable-use-policy-for-a-50-person-company` and `/resources/agent-evals-ci-starter`,
+which no template picks any more.
