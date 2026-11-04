@@ -41,3 +41,9 @@
 - [x] 6.2 The two main specs and the deltas of this change carry the same requirements: `openspec/specs/delivery/link-integrity/spec.md` and `openspec/specs/content/collection-schemas/spec.md`, checked by `site/scripts/run-spec-gate.mjs`
 - [x] 6.3 G49 and G55 are closed with the date and the mechanism, and the limits left open are recorded as G56 to G62: `docs/plan/reference/known-gaps.md`, checked by `site/scripts/plan-gate.mjs`
 - [x] 6.4 The script index describes each link script as it is: `site/scripts/README.md`, checked by `site/scripts/scripts-index.test.mjs`
+
+## 7. Calibration Gate
+
+- [x] 7.1 `npm run test:smoke` proves every guard family can still fail, the new link families among them
+- [x] 7.2 Run the Calibration Gate and commit the report it generates for this change; the Lighthouse
+      measurement is taken locally before the push

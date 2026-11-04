@@ -42,7 +42,7 @@
 
 ## 5. Calibration Gate
 
-- [ ] 5.1 Run the Calibration Gate for the whole change, the live-entry message included, and commit
+- [x] 5.1 Run the Calibration Gate for the whole change, the live-entry message included, and commit
       the report it generates for this change; the owner runs the Lighthouse measurement (owner)
 
 ## 6. The live-entry message
