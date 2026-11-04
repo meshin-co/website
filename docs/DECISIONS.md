@@ -4,7 +4,7 @@
 replacement.
 
 Rows D1–D24 are the PRD §2 log, in English, and record what was decided before the build began.
-Rows L1–L67 in `docs/plan/reference/locked-decisions.md` are what the build actually locked, and
+Rows L1–L68 in `docs/plan/reference/locked-decisions.md` are what the build actually locked, and
 they override any D row they name. Where a D row below is marked _superseded_, the L row is the
 answer. On a conflict the order is always: locked row, then this log, then `docs/PRD.md`.
 
@@ -18,7 +18,7 @@ answer. On a conflict the order is always: locked row, then this log, then `docs
 | D6  | Analytics        | Plausible cloud, one async script under 1 KB                                                                                                                                          | No cookies, so no consent banner                                                         |
 | D7  | Fonts            | _Superseded by L39_: Fraunces (display, 600 only) + IBM Plex Sans (text, 400/500) via the Astro Fonts API; monospace from the system stack — 2 families, 3 faces, 63.4 KB gz measured | "Inter on white" is forbidden; ≤2 families, ≤4 weights                                   |
 | D8  | Color            | OKLCH tokens, paper and ink plus one deep teal accent. Dark mode is its own palette, not an inversion                                                                                 | Design lane                                                                              |
-| D9  | Search           | _Superseded by the PLAN §3 step-6 deviation and L26_: custom build-time index (`/search-index-{kind}.json` shards + `public/search/index-model.mjs`), fetched on first query          | The Pagefind runtime failed in three wirings; sharded custom index is tested and cheaper |
+| D9  | Search           | _Superseded by the PLAN §3 step-6 deviation, L26 and L68_: custom build-time index (manifest, term chunks, document pages + `public/search/index-model.mjs`), fetched on first query  | The Pagefind runtime failed in three wirings; a partitioned index is tested, and cheaper |
 | D10 | Calendar         | Cal.com as a link in a new tab, never an embed                                                                                                                                        | Zero third-party JS on the page                                                          |
 | D11 | Forms            | _Superseded by L6_: no form at all                                                                                                                                                    | Removes a vendor, a secret and the spam surface                                          |
 | D12 | Prices           | _Superseded by L8_: not published; three fee shapes only (Assessment fixed fee · Sprint fixed scope · Retainer monthly)                                                               | Numbers are given on the fit call and written into the SOW                               |

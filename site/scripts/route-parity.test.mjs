@@ -1,14 +1,24 @@
 import assert from 'node:assert/strict';
 import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { dirname, join, relative, sep } from 'node:path';
 import { test } from 'node:test';
 
 import { FEED_WINDOW } from '../src/utils/feeds.mjs';
+import { readIndexDocuments } from '../src/utils/search-index.mjs';
 import { SPECIMENS } from './mutation-specimens.mjs';
 import { readWorld } from './route-parity-gate.mjs';
 import { CONDITIONAL, OWED, SURFACE_IDS, owedFor, parityLines, routeParity } from './route-parity.mjs';
-import { SITE, allEntryRoutes, buildWorld, feedOf, pngHead, urlOf } from './fixtures/parity-world.mjs';
+import {
+  SITE,
+  allEntryRoutes,
+  buildWorld,
+  dropIndex,
+  feedOf,
+  pngHead,
+  replaceIndex,
+  urlOf,
+} from './fixtures/parity-world.mjs';
 
 const dropLine = (text, needle) =>
   text
@@ -24,7 +34,19 @@ const dropBlock = (text, route) =>
 
 const dropItem = (xml, route) => xml.replace(new RegExp('<item><link>' + urlOf(route) + '</link>.*?</item>'), '');
 
-const dropShardEntry = (text, route) => JSON.stringify(JSON.parse(text).filter(({ href }) => href !== route));
+const searchDocumentsOf = (texts) => readIndexDocuments((urlPath) => texts[urlPath.slice(1)]);
+
+const dropSearchEntry = ({ texts }, route) =>
+  replaceIndex(
+    texts,
+    searchDocumentsOf(texts).filter(({ href }) => href !== route)
+  );
+
+const relabelSearchEntry = ({ texts }, route, kind) =>
+  replaceIndex(
+    texts,
+    searchDocumentsOf(texts).map((document) => (document.href === route ? { ...document, kind } : document))
+  );
 
 const dropSitemap = (world, route) => world.sitemapLastmods.delete(route);
 
@@ -71,6 +93,23 @@ const llmsFilesOf = (world) =>
   Object.fromEntries(
     Object.entries(world.texts)
       .filter(([file]) => file.startsWith('llms/post'))
+      .map(([file, text]) => ['dist/' + file, text])
+  );
+
+const readIndexFiles = (root) =>
+  Object.fromEntries(
+    readdirSync(join(root, 'dist/search-index'), { withFileTypes: true, recursive: true })
+      .filter((entry) => entry.isFile())
+      .map(({ parentPath, name }) => [
+        relative(join(root, 'dist'), join(parentPath, name)).split(sep).join('/'),
+        readFileSync(join(parentPath, name), 'utf8'),
+      ])
+  );
+
+const searchFilesOf = ({ texts }) =>
+  Object.fromEntries(
+    Object.entries(texts)
+      .filter(([file]) => file.startsWith('search-index/'))
       .map(([file, text]) => ['dist/' + file, text])
   );
 
@@ -156,29 +195,13 @@ const MUTATIONS = [
     'a place in the merged feed',
     (world) => (world.texts['rss.xml'] = dropItem(world.texts['rss.xml'], '/blog/first')),
   ],
-  [
-    'search-shard',
-    '/blog/first',
-    'a search entry',
-    (world) =>
-      (world.texts['search-index-post.json'] = dropShardEntry(world.texts['search-index-post.json'], '/blog/first')),
-  ],
-  [
-    'search-shard',
-    '/about',
-    'a search entry',
-    (world) =>
-      (world.texts['search-index-page.json'] = dropShardEntry(world.texts['search-index-page.json'], '/about')),
-  ],
+  ['search-shard', '/blog/first', 'a search entry', (world) => dropSearchEntry(world, '/blog/first')],
+  ['search-shard', '/about', 'a search entry', (world) => dropSearchEntry(world, '/about')],
   [
     'search-shard',
     '/blog/category/governance',
     'a search entry',
-    (world) =>
-      (world.texts['search-index-page.json'] = dropShardEntry(
-        world.texts['search-index-page.json'],
-        '/blog/category/governance'
-      )),
+    (world) => dropSearchEntry(world, '/blog/category/governance'),
   ],
   [
     'og-image',
@@ -280,6 +303,55 @@ test('an entry listed in no file of its collection is a finding that names the c
   assert.deepEqual(findings[0].subjects, ['/blog/second', '/llms/post.txt']);
 });
 
+test('an entry the search index lacks is told that the manifest holds no entry for it', () => {
+  const world = buildWorld();
+  dropSearchEntry(world, '/blog/first');
+  const findings = findingsOf(world);
+
+  assert.equal(findings.length, 1, JSON.stringify(findings));
+  assert.equal(
+    findings[0].text,
+    '/blog/first is owed a search entry: /search-index/manifest.json holds no entry for it'
+  );
+  assert.deepEqual(findings[0].subjects, ['/blog/first', '/search-index/manifest.json']);
+});
+
+test('a build that ships no search index says the manifest did not ship, once for every route owed an entry', () => {
+  const world = buildWorld();
+  dropIndex(world.texts);
+  const findings = findingsOf(world);
+
+  assert.equal(findings.length, routeParity(buildWorld()).ledger.surfaces['search-shard'].owed);
+  for (const { text } of findings) {
+    assert.match(text, /^\S+ is owed a search entry: \/search-index\/manifest\.json did not ship$/);
+  }
+});
+
+test('a search index the gate cannot read stops it with the file named, instead of owing every route an entry', () => {
+  const page = Object.keys(buildWorld().texts).find((file) => /\/d\/0\.json$/.test(file));
+  const damaged = buildWorld();
+  damaged.texts[page] = '[["/",';
+  assert.throws(() => routeParity(damaged), { message: `collection-gate: ${page} is not valid JSON` });
+
+  const lacking = buildWorld();
+  delete lacking.texts[page];
+  assert.throws(() => routeParity(lacking), { message: `collection-gate: ${page} is missing` });
+});
+
+test('an entry is owed a search entry of its own kind, so a post filed as a page and a page filed as an article are missing', () => {
+  for (const [route, kind] of [
+    ['/blog/first', 'Page'],
+    ['/about', 'Writing'],
+  ]) {
+    const world = buildWorld();
+    relabelSearchEntry(world, route, kind);
+    const findings = findingsOf(world);
+
+    assert.equal(findings.length, 1, JSON.stringify(findings));
+    assert.ok(findings[0].text.startsWith(route + ' is owed a search entry'), findings[0].text);
+  }
+});
+
 test('the llms shard specimen strips the URL line of its entry from the one file that lists it, wherever that file is', async () => {
   const { plant, token } = SPECIMENS.parityEntryLeavesItsLlmsShards;
   const route = token.split(' ')[0];
@@ -331,6 +403,37 @@ test('the collection feed specimen removes an item the feed really carries, so i
   }
 });
 
+test('the search entry specimen rebuilds the index without the entry of its route and nothing else, wherever that entry sorts', async () => {
+  const { plant, token } = SPECIMENS.parityEntryLosesItsSearchEntry;
+  const route = token.split(' ')[0];
+  const slug = route.slice('/blog/'.length);
+  const layouts = [[slug], [slug, 'b', 'c'], ['a', 'b', slug, 'c'], ['a', 'b', 'c', slug]];
+
+  for (const ids of layouts) {
+    const world = buildWorld({ entries: { post: ids } });
+    await withFiles(searchFilesOf(world), async (copySite) => {
+      const pristine = readIndexFiles(copySite);
+      const documents = searchDocumentsOf(world.texts);
+      assert.deepEqual(findingsOf(world), []);
+
+      const restore = await plant(copySite);
+      const planted = readIndexFiles(copySite);
+
+      assert.deepEqual(
+        searchDocumentsOf(planted),
+        documents.filter(({ href }) => href !== route)
+      );
+      assert.deepEqual(
+        findingsOf({ ...world, texts: { ...world.texts, ...planted } }).map(({ text }) => text),
+        [token]
+      );
+
+      await restore();
+      assert.deepEqual(readIndexFiles(copySite), pristine);
+    });
+  }
+});
+
 test('the world read from a build holds the index and every numbered shard of an llms collection', async () => {
   const { texts } = await readWorldOf({
     'index.html': '<!doctype html><html><head></head></html>',
@@ -342,6 +445,30 @@ test('the world read from a build holds the index and every numbered shard of an
   const llmsFiles = Object.keys(texts).filter((file) => file.startsWith('llms/'));
 
   assert.deepEqual(llmsFiles.sort(), ['llms/post-1.txt', 'llms/post-12.txt', 'llms/post.txt']);
+});
+
+test('the world read from a build holds the manifest and the document pages of the search index, and no term chunk', async () => {
+  const index = Object.fromEntries(
+    Object.entries(buildWorld().texts).filter(([file]) => file.startsWith('search-index/'))
+  );
+  const { texts } = await readWorldOf({
+    'index.html': '<!doctype html><html><head></head></html>',
+    'sitemap-0.xml': '<urlset></urlset>',
+    ...index,
+  });
+  const documentFiles = Object.keys(index).filter((file) => !file.includes('/t/'));
+
+  assert.ok(
+    documentFiles.length < Object.keys(index).length,
+    'the index must hold term chunks for this to prove anything'
+  );
+  assert.deepEqual(
+    Object.keys(texts)
+      .filter((file) => file.startsWith('search-index/'))
+      .sort(),
+    documentFiles.sort()
+  );
+  assert.deepEqual(searchDocumentsOf(texts), searchDocumentsOf(index));
 });
 
 test('only the newest entry of a collection is owed a place in the merged feed', () => {

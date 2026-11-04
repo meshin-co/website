@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { brandFromDisk } from '../src/utils/brand.mjs';
 import { FEED_BASES } from '../src/utils/feeds.mjs';
 import { EMPTY_COLLECTIONS, ROUTE_EXCEPTIONS } from '../src/utils/route-exceptions.mjs';
+import { INDEX_DOCUMENT_FILE } from './collection-gate.mjs';
 import { discoverRoutes } from './gate.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 import { BOUNDED_INLINE_COLLECTIONS, publicCollections, sitemapLastmods } from './machine.mjs';
@@ -67,7 +68,7 @@ export async function readWorld(distDir) {
     'llms.txt',
     'rss.xml',
     ...collections.map(({ base }) => base + '/rss.xml'),
-    ...shipped.filter((file) => /^llms\/[^/]+\.txt$/.test(file) || /^search-index-[^/]+\.json$/.test(file)),
+    ...shipped.filter((file) => /^llms\/[^/]+\.txt$/.test(file) || INDEX_DOCUMENT_FILE.test(file)),
   ];
   const texts = await readFiles(distDir, [...new Set(named)]);
   const imageHeads = {};

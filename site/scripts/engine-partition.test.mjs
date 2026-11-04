@@ -73,7 +73,7 @@ test('a static page is site copy unless the engine serves its route as machinery
 test('a dynamic template and an endpoint are engine', () => {
   assert.equal(ruleOf('site/src/pages/blog/[id].astro'), 'page-machinery');
   assert.equal(ruleOf('site/src/pages/rss.xml.ts'), 'page-machinery');
-  assert.equal(ruleOf('site/src/pages/search-index-[kind].json.ts'), 'page-machinery');
+  assert.equal(ruleOf('site/src/pages/search-entries.json.ts'), 'page-machinery');
 });
 
 test('a served static asset is site, while client code under public is engine', () => {
@@ -83,6 +83,17 @@ test('a served static asset is site, while client code under public is engine', 
   assert.equal(ruleOf('site/public/.well-known/security.txt'), 'site-asset');
   assert.equal(ruleOf('site/src/assets/images/og-default.png'), 'site-asset');
   assert.equal(classOf('site/public/search/box.mjs'), 'engine');
+});
+
+test('the partitioned search index is engine, as source, as build and measuring scripts and as client runtime', () => {
+  for (const file of [
+    'site/src/utils/search-index.mjs',
+    'site/scripts/build-search-index.mjs',
+    'site/scripts/measure-search.mjs',
+    'site/public/search/index-model.mjs',
+  ]) {
+    assert.equal(classOf(file), 'engine', file);
+  }
 });
 
 test('automation, tests, scripts, skills and specs are engine', () => {

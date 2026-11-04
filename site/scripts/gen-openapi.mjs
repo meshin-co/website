@@ -1,8 +1,9 @@
 import { readdir, writeFile } from 'node:fs/promises';
 import { join, relative, sep } from 'node:path';
 
-import { KINDS, shardHref } from '../public/search/shards.mjs';
+import { INDEX_ROOT } from '../public/search/index-model.mjs';
 import { brandFromDisk } from '../src/utils/brand.mjs';
+import { chunkPath, manifestPath, pagePath } from '../src/utils/search-index.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 
 const OPENAPI_VERSION = '3.1.1';
@@ -15,6 +16,8 @@ const BUNDLER_OUTPUT_PREFIX = '/_astro/';
 const DISCOVERY_DOCUMENTS_PREFIX = '/.well-known/';
 const GATE_HARNESS_ARTIFACT = '/gate-routes.json';
 const THIS_DOCUMENT = `/${OUTPUT_FILE}`;
+const SEARCH_INDEX_VERSION_LENGTH = 10;
+const SEARCH_INDEX_IMPLEMENTATION_FILE = new RegExp(`^${INDEX_ROOT}/[0-9a-f]{${SEARCH_INDEX_VERSION_LENGTH}}/`);
 
 const FEED_ROUTE = '/feed.json';
 const JSON_MEDIA_TYPE = 'application/json';
@@ -60,17 +63,26 @@ const SCHEMAS = {
       },
     },
   },
-  SearchIndexShard: {
-    type: 'array',
-    items: {
-      type: 'object',
-      required: ['href', 'title', 'description', 'kind', 'text'],
-      properties: {
-        href: { type: 'string', description: 'Site-relative path of the page.' },
-        title: { type: 'string' },
-        description: { type: 'string' },
-        kind: { type: 'string', description: 'Display label of the entry kind.' },
-        text: { type: 'string', description: 'Plain text of the page body, cut to a limit per kind.' },
+  SearchIndexManifest: {
+    type: 'object',
+    required: ['version', 'documents', 'pageSize', 'lastKeys', 'kindRuns'],
+    properties: {
+      version: {
+        type: 'string',
+        description: `${SEARCH_INDEX_VERSION_LENGTH} hexadecimal characters naming the chunk and page directory.`,
+      },
+      documents: { type: 'integer', description: 'Number of documents in the index, numbered from 0.' },
+      pageSize: { type: 'integer', description: 'Number of documents on every document page but the last.' },
+      lastKeys: {
+        type: 'array',
+        items: { type: 'string' },
+        description: 'Last key of each term chunk, ascending. A word is in the first chunk that ends at or after it.',
+      },
+      kindRuns: {
+        type: 'array',
+        items: { type: 'array', prefixItems: [{ type: 'integer' }, { type: 'string' }], minItems: 2, maxItems: 2 },
+        description:
+          'Runs of consecutive documents of one kind, each as the number of its first document and the kind label.',
       },
     },
   },
@@ -83,17 +95,23 @@ const FEED_DESCRIPTOR = {
   schema: 'JsonFeed',
 };
 
-const SHARD_DESCRIPTORS = new Map(
-  Object.entries(KINDS).map(([kind, { plural }]) => [
-    shardHref(kind),
-    {
-      summary: `Search index shard: ${plural}`,
-      description: 'Search index entries of this kind. The array is empty when nothing of this kind is published.',
-      mediaTypes: [JSON_MEDIA_TYPE],
-      schema: 'SearchIndexShard',
-    },
-  ])
-);
+const MANIFEST_DESCRIPTION = [
+  'Entry point of the partitioned search index.',
+  `Term chunks live at ${chunkPath('{version}', '{n}')} and document pages at ${pagePath('{version}', '{n}')}.`,
+  'They are implementation files of the site search and are not listed in this document.',
+].join(' ');
+
+const MANIFEST_DESCRIPTOR = {
+  summary: 'Search index manifest',
+  description: MANIFEST_DESCRIPTION,
+  mediaTypes: [JSON_MEDIA_TYPE],
+  schema: 'SearchIndexManifest',
+};
+
+const DESCRIBED_ROUTES = new Map([
+  [FEED_ROUTE, FEED_DESCRIPTOR],
+  [manifestPath, MANIFEST_DESCRIPTOR],
+]);
 
 const plainJsonDescriptor = (route) => ({
   summary: `JSON document at ${route}`,
@@ -102,8 +120,7 @@ const plainJsonDescriptor = (route) => ({
   schema: null,
 });
 
-const descriptorFor = (route) =>
-  route === FEED_ROUTE ? FEED_DESCRIPTOR : (SHARD_DESCRIPTORS.get(route) ?? plainJsonDescriptor(route));
+const descriptorFor = (route) => DESCRIBED_ROUTES.get(route) ?? plainJsonDescriptor(route);
 
 const capitalized = (word) => word[0].toUpperCase() + word.slice(1);
 
@@ -167,7 +184,8 @@ const isPublicInterface = (route) =>
   route !== GATE_HARNESS_ARTIFACT &&
   route !== THIS_DOCUMENT &&
   !route.startsWith(BUNDLER_OUTPUT_PREFIX) &&
-  !route.startsWith(DISCOVERY_DOCUMENTS_PREFIX);
+  !route.startsWith(DISCOVERY_DOCUMENTS_PREFIX) &&
+  !SEARCH_INDEX_IMPLEMENTATION_FILE.test(route);
 
 export async function publicJsonRoutes(distDir) {
   const entries = await readdir(distDir, { withFileTypes: true, recursive: true });

@@ -56,7 +56,7 @@ test('when the shared derivation gains a surface, the message gains it and the l
 
 test('surfaces that two entries of one collection share are asked for once, not once per entry', async (t) => {
   const { w } = await announced(t, { entries: [aged('post-a', 6), aged('post-b', 3)] });
-  const shared = ['/sitemap-0.xml', '/llms/post.txt', '/blog/rss.xml', '/search-index-post.json'];
+  const shared = ['/sitemap-0.xml', '/llms/post.txt', '/blog/rss.xml', '/search-index/manifest.json'];
   assert.deepEqual(
     shared.map((path) => w.visits(path)),
     [1, 1, 1, 1]

@@ -1,24 +1,30 @@
-import { fileURLToPath } from 'node:url';
+import { gzipSync } from 'node:zlib';
 
 import { expect, test } from '@playwright/test';
-import type { Page } from '@playwright/test';
+import type { Page, Response as ServedResponse } from '@playwright/test';
 
-import { PER_SHARD_BUDGET_BYTES, SUM_BUDGET_BYTES, discoverShards, shardBudgets } from '../scripts/search-budget.mjs';
+import { FIRST_QUERY_BUDGET_BYTES } from '../scripts/search-budget.mjs';
 
-const distDir = fileURLToPath(new URL('../dist/', import.meta.url));
-const indexPath = /\/search-index(-[a-z]+)?\.json$/;
+const indexPath = /\/search-index\/.+\.json$/;
+const manifestPath = '/search-index/manifest.json';
 
-test('search returns real hits and every fetched shard stays inside the per-shard and sum budgets', async ({
-  page,
-}) => {
-  const fetched = new Set<string>();
+interface IndexManifest {
+  version: string;
+  documents: number;
+  pageSize: number;
+  lastKeys: string[];
+}
+
+const pathOf = (response: ServedResponse) => new URL(response.url()).pathname;
+
+test('search returns real hits and the first query downloads less than the first-query budget', async ({ page }) => {
+  const served: ServedResponse[] = [];
   page.on('response', (response) => {
-    const { pathname } = new URL(response.url());
-    if (indexPath.test(pathname)) fetched.add(pathname);
+    if (indexPath.test(pathOf(response))) served.push(response);
   });
 
   await page.goto('/search');
-  expect([...fetched]).toHaveLength(0);
+  expect(served).toHaveLength(0);
 
   await page.fill('#search-query', 'governance');
   await page.click('form[data-search] button[type="submit"]');
@@ -28,16 +34,23 @@ test('search returns real hits and every fetched shard stays inside the per-shar
   expect(await hits.count()).toBeGreaterThan(0);
   await expect(hits.first().locator('a')).toHaveAttribute('href', /^\//);
 
-  const budgets = shardBudgets(distDir);
-  expect(budgets.shards.length).toBeGreaterThan(0);
-  for (const shard of budgets.shards) {
-    expect(shard.bytes, `${shard.file} exceeds the per-shard budget`).toBeLessThan(PER_SHARD_BUDGET_BYTES);
-  }
-  expect(budgets.sum, 'the sum of all shards exceeds the sum-of-shards budget').toBeLessThan(SUM_BUDGET_BYTES);
-  expect(budgets.withinBudget).toBe(true);
+  const fetched = served.map(pathOf);
+  expect(fetched).toContain(manifestPath);
 
-  const expected = new Set(discoverShards(distDir).map((file) => `/${file.split('/').pop()}`));
-  expect(fetched).toEqual(expected);
+  const manifestResponse = served.find((response) => pathOf(response) === manifestPath)!;
+  const manifest: IndexManifest = JSON.parse((await manifestResponse.body()).toString('utf8'));
+  const pageCount = Math.ceil(manifest.documents / manifest.pageSize);
+  const named = new Set([
+    manifestPath,
+    ...manifest.lastKeys.map((_, chunk) => `/search-index/${manifest.version}/t/${chunk}.json`),
+    ...Array.from({ length: pageCount }, (_, index) => `/search-index/${manifest.version}/d/${index}.json`),
+  ]);
+  const unnamed = fetched.filter((path) => !named.has(path));
+  expect(unnamed, 'fetched files the manifest does not name').toEqual([]);
+
+  const bodies = await Promise.all(served.map((response) => response.body()));
+  const gzipped = bodies.reduce((sum, body) => sum + gzipSync(body).byteLength, 0);
+  expect(gzipped, 'gzip bytes the first query downloaded').toBeLessThanOrEqual(FIRST_QUERY_BUDGET_BYTES);
 });
 
 test('a query in the url is answered on load, and a nonsense query says so', async ({ page }) => {

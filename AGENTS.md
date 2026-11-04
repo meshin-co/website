@@ -9,7 +9,7 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
    directory per change, and `openspec list --sort name` is the board. Read the one change in
    flight, its `proposal.md` and `tasks.md`, and nothing more until you need it; a change parked
    by a `blocked.md` is not in flight. Closed changes are archived under
-   `openspec/changes/archive/`. The locked decisions L1–L67 live in
+   `openspec/changes/archive/`. The locked decisions L1–L68 live in
    `docs/plan/reference/locked-decisions.md`; the gate procedure in
    `docs/plan/reference/calibration-gate.md`. `npm run gate:spec` refuses the mistakes, among them
    a spec the validator rejects, an index that differs from a regeneration and a second change in
@@ -99,8 +99,9 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
 - Structured data: one JSON-LD `@graph` per page from `site/src/utils/jsonld.mjs`. Every node has
   an `@id`, every referenced `@id` resolves, and CI validates it.
 - Machine interfaces (`/llms.txt`, `/llms-full.txt`, `/llms/{collection}.txt`, `/{page}.md`,
-  `/feed.json`, `/rss.xml` plus six per-collection feeds, `/og/*.png`, search shards, sitemap,
-  `/openapi.json`, `/.well-known/api-catalog`, `/.well-known/ai-catalog.json`) are build outputs.
+  `/feed.json`, `/rss.xml` plus six per-collection feeds, `/og/*.png`, the search index in
+  `/search-index/`, sitemap, `/openapi.json`, `/.well-known/api-catalog`,
+  `/.well-known/ai-catalog.json`) are build outputs.
   Verify them in `dist/`, not in source. The agent-facing half — the `Content-Signal` and
   `Agentmap` directives, the OpenAPI document, the linkset and the capability manifest — is held
   together by `npm run gate:agents`; the procedure is `site/.agents/skills/agent-interfaces.md`,

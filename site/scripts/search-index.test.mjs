@@ -1,15 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { buildIndexEntry, scoreEntry, rankEntries } from '../public/search/index-model.mjs';
-import { ENTRY_TEXT_CAPS, KINDS, buildShardEntry, shardHref, summaryLine } from '../public/search/shards.mjs';
-
-const ENTRY = {
-  href: '/glossary/evals',
-  title: 'Evals',
-  description: 'A test suite for a model, run in CI.',
-  kind: 'Glossary',
-  text: 'An eval set measures whether a change made the answers better or only different.',
-};
+import { buildIndexEntry } from '../public/search/index-model.mjs';
+import { ENTRY_TEXT_CAPS, KINDS, buildShardEntry, summaryLine } from '../public/search/shards.mjs';
 
 test('an index entry keeps only what search needs, with collapsed whitespace', () => {
   const entry = buildIndexEntry({
@@ -29,50 +21,12 @@ test('an index entry keeps only what search needs, with collapsed whitespace', (
   });
 });
 
-test('a title hit outranks a description hit, which outranks a body hit', () => {
-  const title = scoreEntry(ENTRY, ['evals']);
-  const description = scoreEntry(ENTRY, ['suite']);
-  const body = scoreEntry(ENTRY, ['different']);
-
-  assert.ok(title > description, `${title} > ${description}`);
-  assert.ok(description > body, `${description} > ${body}`);
-});
-
-test('an entry matching none of the words scores zero', () => {
-  assert.equal(scoreEntry(ENTRY, ['kubernetes']), 0);
-});
-
-test('every word must appear somewhere for the entry to match', () => {
-  assert.ok(scoreEntry(ENTRY, ['evals', 'model']) > 0);
-  assert.equal(scoreEntry(ENTRY, ['evals', 'kubernetes']), 0);
-});
-
-test('matching is case-insensitive and matches word prefixes, not substrings mid-word', () => {
-  assert.ok(scoreEntry(ENTRY, ['EVAL']) > 0);
-  assert.equal(scoreEntry(ENTRY, ['vals']), 0);
-});
-
-test('ranking returns the best entries first and drops non-matches', () => {
-  const other = { ...ENTRY, href: '/blog/a', title: 'Why pilots stall', description: 'No evals in CI.', text: 'x' };
-
-  const ranked = rankEntries([other, ENTRY], 'evals');
-
-  assert.deepEqual(
-    ranked.map((entry) => entry.href),
-    ['/glossary/evals', '/blog/a']
-  );
-  assert.deepEqual(rankEntries([other, ENTRY], 'kubernetes'), []);
-});
-
-test('a query of only punctuation or one letter matches nothing', () => {
-  assert.deepEqual(rankEntries([ENTRY], '.'), []);
-  assert.deepEqual(rankEntries([ENTRY], 'e'), []);
-});
-
-test('there is exactly one shard per kind and shard hrefs follow the shard naming', () => {
+test('the index knows exactly seven kinds, each with a display label', () => {
   assert.deepEqual(Object.keys(KINDS), ['post', 'glossary', 'resource', 'service', 'case', 'faq', 'page']);
-  assert.equal(shardHref('faq'), '/search-index-faq.json');
-  assert.equal(shardHref('page'), '/search-index-page.json');
+  assert.deepEqual(
+    Object.values(KINDS).map(({ label }) => label),
+    ['Writing', 'Glossary', 'Resource', 'Service', 'Case study', 'Answer', 'Page']
+  );
 });
 
 test('every kind builds an entry of the shared shape with its display label', () => {
@@ -179,10 +133,10 @@ test('entry text is capped at its own kind budget, not a shared global one', () 
   assert.ok(ENTRY_TEXT_CAPS.post > ENTRY_TEXT_CAPS.faq, 'post budget must exceed the faq budget it is tested against');
 });
 
-test('the summary line groups results by kind with counts, biggest group first', () => {
-  const answers = Array.from({ length: 12 }, (_, i) => ({ href: `/faq/q${i}`, kind: 'Answer' }));
-  const terms = Array.from({ length: 8 }, (_, i) => ({ href: `/glossary/t${i}`, kind: 'Glossary' }));
-  const articles = Array.from({ length: 3 }, (_, i) => ({ href: `/blog/a${i}`, kind: 'Writing' }));
+test('the summary line groups the kind of every match with counts, biggest group first', () => {
+  const answers = Array(12).fill('Answer');
+  const terms = Array(8).fill('Glossary');
+  const articles = Array(3).fill('Writing');
 
   assert.equal(summaryLine([], 'evals'), 'No pages match “evals”.');
   assert.equal(summaryLine(answers.slice(0, 1), 'evals'), '1 answer matches “evals”.');

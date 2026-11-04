@@ -1,6 +1,8 @@
 import { readdirSync, readFileSync } from 'node:fs';
-import { readdir, readFile, rm, writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
+
+import { buildSearchIndex, manifestPath, readIndexDocuments } from '../src/utils/search-index.mjs';
 
 const GATE = 'gate:parity';
 const SITE_ROOT = join(import.meta.dirname, '..');
@@ -33,7 +35,24 @@ const withoutFeedItem = (route) => (text) =>
 
 const feedRoutes = (xml) => [...xml.matchAll(/<guid[^>]*>https?:\/\/[^/<]+([^<]+)<\/guid>/g)].map(([, route]) => route);
 
-const withoutShardEntry = (route) => (text) => JSON.stringify(JSON.parse(text).filter(({ href }) => href !== route));
+async function withoutSearchEntry(editFile, copySite, route) {
+  const dist = join(copySite, 'dist');
+  const documents = readIndexDocuments((urlPath) => readFileSync(join(dist, urlPath), 'utf8'));
+  const kept = documents.filter(({ href }) => href !== route);
+  if (kept.length === documents.length) throw new Error('the search index of ' + dist + ' holds no entry for ' + route);
+
+  const { manifest, files } = buildSearchIndex(kept.map((document) => ({ ...document, text: '' })));
+  const restoreManifest = await editFile(join(dist, manifestPath), () => files.get(manifestPath));
+  for (const [urlPath, text] of files) {
+    if (urlPath === manifestPath) continue;
+    await mkdir(dirname(join(dist, urlPath)), { recursive: true });
+    await writeFile(join(dist, urlPath), text);
+  }
+  return async () => {
+    await restoreManifest();
+    await rm(join(dist, dirname(manifestPath), manifest.version), { recursive: true, force: true });
+  };
+}
 
 const llmsEntryLine = (route) =>
   new RegExp('^\\[https?://[^\\]]+' + route + '\\]\\(https?://[^)]+' + route + '\\)\\n{1,2}', 'm');
@@ -84,8 +103,8 @@ export const paritySpecimens = ({ editFile, removeFile }) => ({
   },
   parityEntryLosesItsSearchEntry: {
     gate: GATE,
-    token: POST_ROUTE + MISSING + 'a search entry: /search-index-post.json holds no entry for it',
-    plant: (copySite) => editFile(join(copySite, 'dist/search-index-post.json'), withoutShardEntry(POST_ROUTE)),
+    token: POST_ROUTE + MISSING + 'a search entry: /search-index/manifest.json holds no entry for it',
+    plant: (copySite) => withoutSearchEntry(editFile, copySite, POST_ROUTE),
   },
   parityEntryLosesItsMarkdownLink: {
     gate: GATE,

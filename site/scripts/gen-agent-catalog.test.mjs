@@ -6,9 +6,9 @@ import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
-import { KINDS, shardHref } from '../public/search/shards.mjs';
 import { brandFromDisk } from '../src/utils/brand.mjs';
 import { LLMS_COLLECTIONS } from '../src/utils/llms-collections.mjs';
+import { buildSearchIndex, chunkPath, pagePath } from '../src/utils/search-index.mjs';
 import { discoverEntries, main, renderAiCatalog, renderApiCatalog } from './gen-agent-catalog.mjs';
 
 const SITE_ROOT = fileURLToPath(new URL('..', import.meta.url));
@@ -18,6 +18,9 @@ const ORIGIN = 'https://catalog.example';
 const OPENAPI_TYPE = 'application/vnd.oai.openapi+json;version=3.1';
 const API_CATALOG = '/.well-known/api-catalog';
 const AI_CATALOG = '/.well-known/ai-catalog.json';
+const SEARCH_MANIFEST = '/search-index/manifest.json';
+const EMPTY_INDEX = buildSearchIndex([]);
+const SEARCH_VERSION = EMPTY_INDEX.manifest.version;
 
 const ENTRY_POINTS = [
   API_CATALOG,
@@ -27,8 +30,7 @@ const ENTRY_POINTS = [
   '/llms/faq.txt',
   '/llms/post.txt',
   '/openapi.json',
-  '/search-index-faq.json',
-  '/search-index-post.json',
+  SEARCH_MANIFEST,
   '/sitemap-index.xml',
 ];
 
@@ -41,13 +43,15 @@ const NOT_ENTRY_POINTS = [
   '/llms/post-1.txt',
   '/robots.txt',
   '/rss.xml',
-  '/search-index-unlisted.json',
+  pagePath(SEARCH_VERSION, 0),
+  chunkPath(SEARCH_VERSION, 0),
   '/sitemap-0.xml',
 ];
 
 const BUILT_BEFORE_THE_SCRIPT = [...ENTRY_POINTS.filter((path) => path !== API_CATALOG), ...NOT_ENTRY_POINTS];
 
 function bodyFor(path) {
+  if (path === SEARCH_MANIFEST) return JSON.stringify(EMPTY_INDEX.manifest);
   if (path.endsWith('.json') || path === API_CATALOG) return '[]';
   if (path.endsWith('.xml')) return '<sitemapindex/>';
   return '# fixture\n';
@@ -121,8 +125,8 @@ test('removing any one shipped file removes its entry and no other', async () =>
   });
 });
 
-test('a collection file or search shard the build names but the tree lacks never reaches the manifest', async () => {
-  const named = [...LLMS_COLLECTIONS.map(({ file }) => file), ...Object.keys(KINDS).map((kind) => shardHref(kind))];
+test('a collection file the build names but the tree lacks never reaches the manifest', async () => {
+  const named = LLMS_COLLECTIONS.map(({ file }) => file);
   const absent = named.filter((path) => !ENTRY_POINTS.includes(path));
   const present = named.filter((path) => ENTRY_POINTS.includes(path));
   assert.ok(absent.length > 0 && present.length > 0, 'the tree must hold some build-named files and miss others');
@@ -135,10 +139,10 @@ test('a collection file or search shard the build names but the tree lacks never
   });
 });
 
-test('a search shard that ships empty is still listed, because the manifest follows the files and not their content', async () => {
-  await withDist(['/search-index-case.json'], async (dist) => {
-    assert.equal(await readText(dist, '/search-index-case.json'), '[]');
-    assert.deepEqual(pathsOf(await discoverEntries(dist)), ['/search-index-case.json']);
+test('a search index manifest that counts no document is still listed, because the catalog follows the files and not their content', async () => {
+  await withDist([SEARCH_MANIFEST], async (dist) => {
+    assert.equal((await readJson(dist, SEARCH_MANIFEST)).documents, 0);
+    assert.deepEqual(pathsOf(await discoverEntries(dist)), [SEARCH_MANIFEST]);
   });
 });
 
@@ -177,7 +181,7 @@ test('each entry names the media type its file is served with, and the OpenAPI e
     assert.equal(typeOf(API_CATALOG), 'application/linkset+json');
     assert.equal(typeOf('/feed.json'), 'application/feed+json');
     assert.equal(typeOf('/sitemap-index.xml'), 'application/xml');
-    assert.equal(typeOf('/search-index-faq.json'), 'application/json');
+    assert.equal(typeOf(SEARCH_MANIFEST), 'application/json');
     for (const path of ['/llms.txt', '/llms-full.txt', '/llms/faq.txt']) assert.equal(typeOf(path), 'text/plain');
   });
 });
@@ -218,6 +222,38 @@ test('the numbered shards of a collection never reach the manifest, so it does n
 
   assert.deepEqual(withShards, withoutShards);
   assert.equal(withShards.entries.length, ENTRY_POINTS.length);
+});
+
+const SEARCH_MANIFEST_ENTRY = {
+  identifier: 'urn:air:catalog.example:search:manifest',
+  displayName: 'Search index manifest',
+  type: 'application/json',
+  url: 'https://catalog.example/search-index/manifest.json',
+  description:
+    'Entry point of the partitioned search index: its version, document count, page size and the last key of each term chunk. Term chunks and document pages are implementation files fetched by version and are not listed.',
+};
+
+test('the search index is one entry, its manifest, whatever number of files stands behind it', async () => {
+  const behind = [chunkPath(SEARCH_VERSION, 0), chunkPath(SEARCH_VERSION, 1), pagePath(SEARCH_VERSION, 0)];
+
+  await withDist([...ENTRY_POINTS, ...behind], async (dist) => {
+    const { entries } = await catalogOf(dist);
+
+    assert.deepEqual(
+      entries.filter(({ identifier }) => identifier.includes(':search:')),
+      [SEARCH_MANIFEST_ENTRY]
+    );
+  });
+});
+
+test('the term chunks and document pages of the search index never reach the catalog, so it does not grow with the corpus', async () => {
+  const behind = [];
+  for (let at = 0; at < 500; at += 1) behind.push(chunkPath(SEARCH_VERSION, at), pagePath(SEARCH_VERSION, at));
+  const withoutIndexFiles = await withDist(ENTRY_POINTS, catalogOf);
+  const withIndexFiles = await withDist([...ENTRY_POINTS, ...behind], catalogOf);
+
+  assert.deepEqual(withIndexFiles, withoutIndexFiles);
+  assert.equal(withIndexFiles.entries.length, ENTRY_POINTS.length);
 });
 
 test('entries sort by identifier whatever order discovery hands them over', async () => {

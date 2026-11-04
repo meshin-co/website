@@ -20,8 +20,6 @@ export const KINDS = {
   page: { label: 'Page', singular: 'page', plural: 'pages' },
 };
 
-export const shardHref = (kind) => `/search-index-${kind}.json`;
-
 export const words = (parts) => parts.filter((part) => typeof part === 'string' && part.trim() !== '').join(' ');
 
 const faqPairs = (items = []) => words(items.map(({ q, a }) => `${q} ${a}`));
@@ -57,11 +55,11 @@ export function buildShardEntry(kind, record) {
 const KIND_ORDER = Object.keys(KINDS);
 const kindByLabel = new Map(KIND_ORDER.map((kind) => [KINDS[kind].label, kind]));
 
-export function summaryLine(entries, query) {
-  if (entries.length === 0) return `No pages match “${query}”.`;
+export function summaryLine(kinds, query) {
+  if (kinds.length === 0) return `No pages match “${query}”.`;
 
   const counts = new Map();
-  for (const { kind } of entries) counts.set(kind, (counts.get(kind) ?? 0) + 1);
+  for (const label of kinds) counts.set(label, (counts.get(label) ?? 0) + 1);
 
   const groups = [...counts]
     .map(([label, count]) => {
@@ -72,5 +70,5 @@ export function summaryLine(entries, query) {
     .sort((a, b) => b.count - a.count || a.order - b.order);
 
   const listed = groups.map(({ count, noun }) => `${count} ${noun}`).join(' · ');
-  return `${listed} ${entries.length === 1 ? 'matches' : 'match'} “${query}”.`;
+  return `${listed} ${kinds.length === 1 ? 'matches' : 'match'} “${query}”.`;
 }

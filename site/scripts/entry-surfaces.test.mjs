@@ -42,7 +42,7 @@ test('an article is the page first and then every surface the parity gate owes a
     ['sidecar', 'https://site.test/blog/a-post.md'],
     ['llms-collection', 'https://site.test/llms/post.txt'],
     ['collection-feed', 'https://site.test/blog/rss.xml'],
-    ['search-shard', 'https://site.test/search-index-post.json'],
+    ['search-shard', 'https://site.test/search-index/manifest.json'],
     ['og-image', 'https://site.test/og/post/a-post.png'],
   ]);
   assert.equal(surfaces[0].label, 'the page');
@@ -56,7 +56,7 @@ test('a glossary term is owed the same surfaces under the glossary base and the 
     ['sidecar', 'https://site.test/glossary/a-term.md'],
     ['llms-collection', 'https://site.test/llms/glossary.txt'],
     ['collection-feed', 'https://site.test/glossary/rss.xml'],
-    ['search-shard', 'https://site.test/search-index-glossary.json'],
+    ['search-shard', 'https://site.test/search-index/manifest.json'],
     ['og-image', 'https://site.test/og/glossary/a-term.png'],
   ]);
 });

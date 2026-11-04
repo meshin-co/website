@@ -93,12 +93,14 @@
     "Every audited route scores 100 in every Lighthouse category on mobile and desktop",
     "Every audited route stays inside the LCP, CLS and TBT ceilings",
     "Every built page stays inside its JavaScript, CSS and page byte budgets",
-    "Every search index shard and the shards together stay under their gzip caps",
     "No route carries a budget exception",
     "The Calibration Gate report fails when a derived route lacks three runs on either form factor",
     "The Calibration Gate report turns every byte and Lighthouse breach into a failure",
     "The audited routes are derived from the build, never listed by hand",
-    "The shipped font files stay inside one site-wide raw byte budget"
+    "The measure command prints how far each search limit is and the day it is crossed",
+    "The search index holds at most 4000 files",
+    "The shipped font files stay inside one site-wide raw byte budget",
+    "The worst first query of a search stays within 64 KiB gzipped"
   ],
   "design/rendering-and-accessibility": [
     "A card's link never covers the tag and category links inside it",
@@ -117,7 +119,8 @@
     "The JSON endpoints the build ships are described by an OpenAPI document",
     "The home page points at the machine layer in its first response",
     "The live origin proves the negotiation",
-    "The same URL answers markdown when an agent asks for it"
+    "The same URL answers markdown when an agent asks for it",
+    "The search index is one entry of the agent catalogue, its manifest"
   ],
   "discovery/machine-interfaces": [
     "A check that examines nothing is a finding",
@@ -130,6 +133,7 @@
     "Every dated live route carries a lastmod in the sitemap",
     "Every entry, public static page and hub ships a complete markdown sidecar",
     "Every feed file stays within the bytes its window allows",
+    "Every file of the search index is checked against the noindex header",
     "Every indexable route is listed in llms.txt or in a collection file",
     "Every live entry ships once in its collection's files and is reachable in two further fetches",
     "Every page declares its own bare URL as canonical and og:url",
@@ -145,6 +149,7 @@
     "The merged feed carries at least five entries of each collection, or all of a smaller one",
     "The page catalog behind the machine files matches every shipped description",
     "The routes that carry less are declared once, with a reason, and counted",
+    "The search index lists no hub or entry of a collection that has no live entry",
     "The sitemap never lists a noindex route",
     "The static page list behind the machine files holds exactly the thirteen public pages",
     "feed.json mirrors rss.xml item for item",
@@ -161,17 +166,24 @@
     "Measured demand is a committed artefact"
   ],
   "discovery/site-search": [
+    "A chunk holds at most its byte size, a page at most six documents and a row at most its field limits",
     "A failed index load says so and the next search tries again",
     "A page entry with no built page stops the build",
     "A query in the address is answered on load, and every answer is summarised by kind",
     "A query matches whole-word prefixes of every word it holds, and title hits rank first",
+    "A result shows the page description, and no body text ships in the index",
+    "A word found in more documents than the list cap keeps its best postings and never excludes a document",
     "Each kind's index entry carries the fields people search for",
     "Entry text is cut at its own kind's cap",
     "Index entries keep only what search needs",
     "Page entries are searched by the prose of their built page",
     "Real content is found by its own words",
-    "The build ships exactly one index shard per search kind",
-    "The search page loads the index only when asked, and then loads all of it"
+    "Stop words are neither indexed nor matched, and a query holds at most eight distinct words",
+    "The build ships one manifest, its term chunks and its document pages, and no per-kind shard",
+    "The index is deterministic, versioned by its content, and a stale manifest recovers",
+    "The index is written once the pages are built, and the intermediate file does not ship",
+    "The partitioned index returns what the whole-array scan returned for every word that is not a stop word",
+    "The search page loads nothing when opened, and a first query loads only what it needs"
   ],
   "discovery/structured-data": [
     "A Service node links its offer without a price specification",

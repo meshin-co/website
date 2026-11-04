@@ -28,9 +28,9 @@ the same loop that emits the groups. A hand-kept array would drift from the buil
 change, and the gate exists because that drift is invisible to a human reader. The manifest lists
 `/llms.txt`, `/llms-full.txt` (an index, no entry) and each `/llms/{collection}.txt`, never a shard.
 
-`gate-routes.json` is excluded from the OpenAPI document by name: it is a harness artifact, not an
-interface. If another internal JSON file ever lands in `dist`, exclude it the same way, with its
-reason visible in the constant.
+`gate-routes.json` and the files under `/search-index/<ten hex characters>/` are excluded from the OpenAPI document by
+`GATE_HARNESS_ARTIFACT` and `SEARCH_INDEX_IMPLEMENTATION_FILE` in `scripts/gen-openapi.mjs`: harness and implementation
+files, not interfaces, so `/search-index/manifest.json` alone is listed. Exclude another one in a constant that says why.
 
 ## The gate
 

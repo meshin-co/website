@@ -8,7 +8,7 @@ everywhere on this project.
 
 ## Where this already bit
 
-- **Machine interfaces** (`/llms.txt`, `/{page}.md`, feeds, OG images, search shards): these are
+- **Machine interfaces** (`/llms.txt`, `/{page}.md`, feeds, OG images, the search index): these are
   build outputs. A route existing in `src/pages/` proves nothing about whether it rendered,
   whether its frontmatter passed validation, or whether it is in the derived route list. Check
   `dist/`.

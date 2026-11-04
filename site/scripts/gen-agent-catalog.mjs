@@ -1,9 +1,9 @@
 import { mkdir, stat, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 
-import { KINDS, shardHref } from '../public/search/shards.mjs';
 import { brandFromDisk } from '../src/utils/brand.mjs';
 import { LLMS_COLLECTIONS } from '../src/utils/llms-collections.mjs';
+import { manifestPath } from '../src/utils/search-index.mjs';
 import { OPENAPI_MEDIA_TYPE } from './gen-openapi.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 
@@ -70,6 +70,15 @@ const SINGLE_FILE_ENTRIES = [
     type: 'application/feed+json',
     description: 'JSON Feed 1.1 of the newest entries across all collections, full text included.',
   },
+  {
+    path: manifestPath,
+    namespace: 'search',
+    name: 'manifest',
+    displayName: 'Search index manifest',
+    type: JSON_MEDIA_TYPE,
+    description:
+      'Entry point of the partitioned search index: its version, document count, page size and the last key of each term chunk. Term chunks and document pages are implementation files fetched by version and are not listed.',
+  },
 ];
 
 const COLLECTION_ENTRIES = LLMS_COLLECTIONS.map(({ name, title, file }) => ({
@@ -81,16 +90,7 @@ const COLLECTION_ENTRIES = LLMS_COLLECTIONS.map(({ name, title, file }) => ({
   description: `Full body text of every live entry in ${title.toLowerCase()}. A collection over its entry cap is an index of numbered shard files.`,
 }));
 
-const SEARCH_SHARD_ENTRIES = Object.entries(KINDS).map(([kind, { label, plural }]) => ({
-  path: shardHref(kind),
-  namespace: 'search',
-  name: kind,
-  displayName: `Search index: ${label}`,
-  type: JSON_MEDIA_TYPE,
-  description: `Search index for ${plural}: one record per page with href, title, description, kind and text.`,
-}));
-
-const MACHINE_ENTRY_POINTS = [...SINGLE_FILE_ENTRIES, ...COLLECTION_ENTRIES, ...SEARCH_SHARD_ENTRIES];
+const MACHINE_ENTRY_POINTS = [...SINGLE_FILE_ENTRIES, ...COLLECTION_ENTRIES];
 
 const compare = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
 const urlOf = (origin, path) => new URL(path, origin).href;

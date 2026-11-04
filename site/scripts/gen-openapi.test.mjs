@@ -5,18 +5,37 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { after, test } from 'node:test';
 
-import { KINDS, buildShardEntry, shardHref } from '../public/search/shards.mjs';
 import { buildFeedItems } from '../src/utils/machine-text.mjs';
+import { buildSearchIndex, chunkPath, pagePath } from '../src/utils/search-index.mjs';
 import { main, publicJsonRoutes, renderOpenApi } from './gen-openapi.mjs';
 
 const ORIGIN = 'https://example.test';
 const BRAND = { name: 'example.test' };
-const ROUTES = ['/feed.json', '/search-index-faq.json', '/search-index-post.json'];
-const SHARD_REF = { $ref: '#/components/schemas/SearchIndexShard' };
+const MANIFEST_ROUTE = '/search-index/manifest.json';
+const ROUTES = ['/feed.json', MANIFEST_ROUTE];
+const MANIFEST_REF = { $ref: '#/components/schemas/SearchIndexManifest' };
 
 const JSON_FEED = JSON.stringify({ version: 'https://jsonfeed.org/version/1.1', title: 'Example', items: [] });
 
-const SHIPPED = { 'feed.json': JSON_FEED, 'search-index-faq.json': '[]', 'search-index-post.json': '[]' };
+const BUILT_INDEX = buildSearchIndex([
+  {
+    href: '/blog/evals',
+    title: 'Evals',
+    description: 'How to measure a model.',
+    kind: 'Writing',
+    text: 'measure a model with evals',
+  },
+  {
+    href: '/faq/pricing',
+    title: 'Pricing',
+    description: 'What a sprint costs.',
+    kind: 'FAQ',
+    text: 'a sprint has a fixed price',
+  },
+]);
+const { version: VERSION } = BUILT_INDEX.manifest;
+
+const SHIPPED = { 'feed.json': JSON_FEED, 'search-index/manifest.json': JSON.stringify(BUILT_INDEX.manifest) };
 const NOT_INTERFACES = {
   'gate-routes.json': '{"routes":["/"]}',
   '_astro/manifest.json': '{}',
@@ -37,6 +56,15 @@ async function distWith(files) {
     await writeFile(join(root, name), source);
   }
   return root;
+}
+
+function indexFiles(count) {
+  const files = {};
+  for (let at = 0; at < count; at += 1) {
+    files[chunkPath(VERSION, at).slice(1)] = '[]';
+    files[pagePath(VERSION, at).slice(1)] = '[]';
+  }
+  return files;
 }
 
 const documentFor = (routes = ROUTES) => renderOpenApi({ origin: ORIGIN, routes });
@@ -75,6 +103,28 @@ test('a nested JSON file is a route at its nested path, and a directory named li
   const dist = await distWith({ 'data/extra.json': '{}', 'odd.json/index.html': '<!doctype html>' });
 
   assert.deepEqual(await publicJsonRoutes(dist), ['/data/extra.json']);
+});
+
+test('every file under a version directory of the search index is an implementation file, never an interface', async () => {
+  const dist = await distWith({ ...SHIPPED, ...indexFiles(3) });
+
+  assert.match(VERSION, /^[0-9a-f]{10}$/);
+  assert.deepEqual(await publicJsonRoutes(dist), ROUTES);
+});
+
+test('a JSON file the search index keeps outside a version directory is still a candidate, so a stray one is never hidden', async () => {
+  const dist = await distWith({
+    ...SHIPPED,
+    'search-index/stray.json': '{}',
+    'search-index/draft/t/0.json': '[]',
+  });
+
+  assert.deepEqual(await publicJsonRoutes(dist), [
+    '/feed.json',
+    '/search-index/draft/t/0.json',
+    '/search-index/manifest.json',
+    '/search-index/stray.json',
+  ]);
 });
 
 test('discovery sorts by code unit whatever order the directory listing arrives in, never by locale', async (t) => {
@@ -124,12 +174,12 @@ test('every path carries exactly a get operation with a summary, an operationId 
 });
 
 test('operation ids derive from the path', () => {
-  const { paths } = documentFor(['/feed.json', '/search-index-faq.json', '/data/extra.json']);
+  const { paths } = documentFor(['/feed.json', MANIFEST_ROUTE, '/data/extra.json']);
 
   assert.deepEqual(Object.fromEntries(Object.entries(paths).map(([path, item]) => [path, item.get.operationId])), {
     '/data/extra.json': 'getDataExtraJson',
     '/feed.json': 'getFeedJson',
-    '/search-index-faq.json': 'getSearchIndexFaqJson',
+    '/search-index/manifest.json': 'getSearchIndexManifestJson',
   });
 });
 
@@ -141,7 +191,7 @@ test('the feed is declared as JSON Feed and also as the plain JSON a static host
   const document = documentFor();
 
   assert.deepEqual(Object.keys(contentOf(document, '/feed.json')), ['application/feed+json', 'application/json']);
-  assert.deepEqual(Object.keys(contentOf(document, '/search-index-faq.json')), ['application/json']);
+  assert.deepEqual(Object.keys(contentOf(document, MANIFEST_ROUTE)), ['application/json']);
 });
 
 test('a JSON file with no description of its own is listed as plain JSON and no schema is invented for it', () => {
@@ -151,16 +201,25 @@ test('a JSON file with no description of its own is listed as plain JSON and no 
   assert.equal(document.components, undefined);
 });
 
-test('every search shard the build makes is described with the shard schema, never the plain fallback', () => {
-  const routes = Object.keys(KINDS).map(shardHref);
-  const document = documentFor(routes);
+test('the search index manifest is described with its own schema, never the plain fallback', () => {
+  const document = documentFor([MANIFEST_ROUTE]);
 
-  for (const route of routes)
-    assert.deepEqual(contentOf(document, route), { 'application/json': { schema: SHARD_REF } });
+  assert.deepEqual(contentOf(document, MANIFEST_ROUTE), { 'application/json': { schema: MANIFEST_REF } });
+});
+
+test('the manifest says it is the entry point of the partitioned search index and where chunks and pages live', () => {
+  const { summary, responses } = documentFor([MANIFEST_ROUTE]).paths[MANIFEST_ROUTE].get;
+  const { description } = responses['200'];
+
+  assert.equal(summary, 'Search index manifest');
+  assert.ok(description.startsWith('Entry point of the partitioned search index.'), description);
+  for (const where of ['/search-index/{version}/t/{n}.json', '/search-index/{version}/d/{n}.json']) {
+    assert.ok(description.includes(where), `the description never says where ${where} is`);
+  }
 });
 
 test('every $ref resolves and a schema that nothing refers to is not declared', () => {
-  for (const routes of [ROUTES, ['/feed.json'], ['/search-index-faq.json'], ['/data/extra.json']]) {
+  for (const routes of [ROUTES, ['/feed.json'], [MANIFEST_ROUTE], ['/data/extra.json']]) {
     const document = documentFor(routes);
     const referenced = [...JSON.stringify(document.paths).matchAll(/"\$ref":"#\/components\/schemas\/([^"]+)"/g)];
 
@@ -172,12 +231,26 @@ test('every $ref resolves and a schema that nothing refers to is not declared', 
   }
 });
 
-test('the shard schema names exactly the fields a built search entry carries', () => {
-  const entryFields = Object.keys(buildShardEntry('faq', { href: '/faq/x', title: 'T', description: 'D' })).sort();
-  const entry = documentFor(['/search-index-faq.json']).components.schemas.SearchIndexShard.items;
+test('the manifest schema names exactly the fields a built manifest carries, in the types it carries them', () => {
+  const { manifest } = BUILT_INDEX;
+  const schema = documentFor([MANIFEST_ROUTE]).components.schemas.SearchIndexManifest;
+  const holds = { string: (value) => typeof value === 'string', integer: Number.isInteger, array: Array.isArray };
 
-  assert.deepEqual(Object.keys(entry.properties).sort(), entryFields);
-  assert.deepEqual([...entry.required].sort(), entryFields);
+  assert.deepEqual(Object.keys(schema.properties).sort(), Object.keys(manifest).sort());
+  assert.deepEqual([...schema.required].sort(), Object.keys(manifest).sort());
+  for (const [field, { type }] of Object.entries(schema.properties)) {
+    assert.ok(holds[type](manifest[field]), `${field} is declared ${type} and is not`);
+  }
+
+  const { lastKeys, kindRuns } = schema.properties;
+  assert.deepEqual(lastKeys.items, { type: 'string' });
+  assert.ok(manifest.lastKeys.length > 0 && manifest.lastKeys.every((key) => typeof key === 'string'));
+  assert.deepEqual(kindRuns.items.prefixItems, [{ type: 'integer' }, { type: 'string' }]);
+  assert.deepEqual([kindRuns.items.minItems, kindRuns.items.maxItems], [2, 2]);
+  assert.ok(manifest.kindRuns.length > 0);
+  for (const [first, kind, ...rest] of manifest.kindRuns) {
+    assert.ok(Number.isInteger(first) && typeof kind === 'string' && rest.length === 0, `${first} ${kind}`);
+  }
 });
 
 test('the feed schema names exactly the fields a built feed item carries', () => {
@@ -213,9 +286,9 @@ test('paths sort by code unit, so the document never depends on the machine loca
 });
 
 test('the returned document shares no state with the module, so a caller can edit it freely', () => {
-  documentFor().components.schemas.SearchIndexShard.items.required.push('invented');
+  documentFor().components.schemas.SearchIndexManifest.required.push('invented');
 
-  assert.ok(!documentFor().components.schemas.SearchIndexShard.items.required.includes('invented'));
+  assert.ok(!documentFor().components.schemas.SearchIndexManifest.required.includes('invented'));
 });
 
 test('main writes dist/openapi.json, and a second run over the tree that now holds it writes the same bytes', async (t) => {
@@ -244,6 +317,19 @@ test('two identical trees built in a different file order produce identical byte
     await readFile(join(backward, 'openapi.json'), 'utf8'),
     await readFile(join(forward, 'openapi.json'), 'utf8')
   );
+});
+
+test('the document does not grow with the corpus: 500 term chunks and 500 document pages change not one byte', async (t) => {
+  t.mock.method(console, 'log', () => {});
+  const small = await distWith({ ...SHIPPED, ...indexFiles(1) });
+  const large = await distWith({ ...SHIPPED, ...indexFiles(500) });
+
+  await main(small, BRAND);
+  await main(large, BRAND);
+
+  const document = await readFile(join(small, 'openapi.json'), 'utf8');
+  assert.equal(await readFile(join(large, 'openapi.json'), 'utf8'), document);
+  assert.deepEqual(Object.keys(JSON.parse(document).paths), ROUTES);
 });
 
 test('main refuses to publish a document with no paths and writes nothing', async (t) => {

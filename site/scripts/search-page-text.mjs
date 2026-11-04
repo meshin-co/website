@@ -1,12 +1,10 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-import { buildShardEntry } from '../public/search/shards.mjs';
+import { KINDS, buildShardEntry } from '../public/search/shards.mjs';
 import { extractPage } from './content-html.mjs';
 import { brandFromDisk, titleSuffix } from '../src/utils/brand.mjs';
-import { invokedDirectly } from './invoked-directly.mjs';
 
-const PAGE_SHARD = 'search-index-page.json';
 const TITLE_SUFFIX = titleSuffix(brandFromDisk());
 
 const decode = (text) =>
@@ -48,22 +46,13 @@ export async function deriveEntry(distDir, entry) {
   });
 }
 
-export async function fillPageShardText(distDir) {
-  const shardPath = join(distDir, PAGE_SHARD);
-  const entries = JSON.parse(await readFile(shardPath, 'utf8'));
-  const derivedCount = entries.filter((entry) => entry.text === '').length;
+const needsDerivation = (entry) => entry.kind === KINDS.page.label && entry.text === '';
 
-  const filled = await Promise.all(entries.map((entry) => (entry.text === '' ? deriveEntry(distDir, entry) : entry)));
+export async function fillPageText(distDir, entries) {
+  const derivedCount = entries.filter(needsDerivation).length;
+  const filled = await Promise.all(
+    entries.map((entry) => (needsDerivation(entry) ? deriveEntry(distDir, entry) : entry))
+  );
 
-  await writeFile(shardPath, JSON.stringify(filled));
   return { entries: filled, derivedCount };
-}
-
-async function main(distDir) {
-  const { entries, derivedCount } = await fillPageShardText(distDir);
-  console.log(`search-page-text: derived ${derivedCount} of ${entries.length} page entries from dist`);
-}
-
-if (invokedDirectly(import.meta.filename, process.argv[1])) {
-  await main(process.argv[2] ?? 'dist');
 }

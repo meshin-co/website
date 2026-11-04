@@ -36,7 +36,7 @@ export const LLMS_TXT_MAX_BYTES = 8 * 1024;
 export const BOUNDED_INLINE_COLLECTIONS = ['service'];
 const SITE_ORIGIN = `https://${brandFromDisk().name}`;
 const REFERENCED_MACHINE_FILE = /^\/(?:llms(?:-full)?\.txt|llms\/[^/]+\.txt|feed\.json|(?:[^/]+\/)?rss\.xml)$/;
-const HEADER_GUARDED_MACHINE_FILE = /^\/(?:search-index-[^/]+\.json|.+\.md)$/;
+export const HEADER_GUARDED_MACHINE_FILE = /^\/(?:search-index\/.+\.json|.+\.md)$/;
 const REQUIRED_ROBOTS_VALUE = 'noindex';
 
 const patternMatcher = (pattern) =>
