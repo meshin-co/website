@@ -1,8 +1,17 @@
 import { spawnSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { credentialFindings, deployArgs, deploymentUrl, ledgerFindings, previewBranch } from './deploy.mjs';
+import {
+  credentialFindings,
+  deployArgs,
+  deploymentUrl,
+  ledgerFindings,
+  measurementFindings,
+  previewBranch,
+} from './deploy.mjs';
+import { describeTree } from './lh-evidence.mjs';
+import { recordFiles } from './record-layout.mjs';
 import { collectRoutes } from './routes-gate.mjs';
 
 const production = !process.argv.includes('--preview');
@@ -19,6 +28,24 @@ const drift = ledgerFindings(ledger, collectRoutes('dist'));
 if (drift.length > 0) {
   for (const finding of drift) console.error(`DEPLOY ${finding}`);
   process.exit(1);
+}
+
+if (production) {
+  const root = '..';
+  const tree = await describeTree(root);
+  if (tree.reason) {
+    console.error(`DEPLOY ${tree.reason}`);
+    process.exit(1);
+  }
+  const record = existsSync(join(root, 'audits', 'lighthouse-green.json'))
+    ? JSON.parse(readFileSync(join(root, 'audits', 'lighthouse-green.json'), 'utf8'))
+    : undefined;
+  const ledgers = recordFiles(root, 'ledger').map((path) => JSON.parse(readFileSync(join(root, path), 'utf8')));
+  const unmeasured = measurementFindings({ record, current: tree.fingerprint, ledgers });
+  if (unmeasured.length > 0) {
+    for (const finding of unmeasured) console.error(`DEPLOY ${finding}`);
+    process.exit(1);
+  }
 }
 
 console.log(`deploy: ${ledger.length} routes, branch ${branch}`);

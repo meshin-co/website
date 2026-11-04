@@ -290,7 +290,12 @@ test('every specimen names a gate the package defines, a token to look for and a
   assert.ok(Object.keys(SPECIMENS).length > 0);
   for (const [name, entry] of Object.entries(SPECIMENS)) {
     assert.ok(entry.gate in scripts, `${name} names ${entry.gate}, which package.json does not define`);
-    if (!entry.plantedEnv) assert.match(entry.gate, /^gate:/, `${name} proves ${entry.gate}, which is not a gate`);
+    if (!entry.plantedEnv && !entry.scene)
+      assert.match(
+        entry.gate,
+        /^gate:/,
+        `${name} proves ${entry.gate}, which is not a gate and has no scene of its own`
+      );
     assert.ok(typeof entry.token === 'string' && entry.token.trim().length > 0, `${name} has no token`);
     assert.equal(typeof entry.plant, 'function', `${name} has no plant`);
   }

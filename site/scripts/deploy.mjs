@@ -1,3 +1,5 @@
+import { CLEAR_COMMAND } from './measurement-debt.mjs';
+
 export const REQUIRED_ENV = ['CLOUDFLARE_API_TOKEN', 'CLOUDFLARE_ACCOUNT_ID', 'CLOUDFLARE_PAGES_PROJECT'];
 
 export function credentialFindings(env) {
@@ -52,5 +54,29 @@ export function ledgerFindings(ledger, built) {
   if (removed.length > 0) parts.push(`drops ${removed.join(', ')}`);
   return [
     `the build ${parts.join(' and ')} against audits/routes.json; the unattended writer commits the ledger with every route it adds, so this change came from somewhere else: run the gates, then npm run assets:routes, and commit audits/routes.json with the change that made it`,
+  ];
+}
+
+const shortCommit = (commit) => commit.slice(0, 7);
+const shortTree = (fingerprint) => fingerprint.slice(0, 12);
+
+const owesMeasurement = ({ measurementDebt: debt }, record) =>
+  debt !== undefined &&
+  (record === undefined ||
+    (debt.fingerprint !== record.fingerprint && Date.parse(debt.recordedAt) > Date.parse(record.recordedAt)));
+
+export function measurementFindings({ record, current, ledgers }) {
+  if (record?.fingerprint === current) return [];
+  const last = record
+    ? `the last recorded run (${record.recordedAt}) measured ${shortTree(record.fingerprint)}`
+    : 'no Lighthouse run is recorded for this repository';
+  const owed = ledgers.filter((ledger) => owesMeasurement(ledger, record));
+  const entries = owed.map(
+    ({ slug, measurementDebt }) =>
+      `${slug} owes the measurement (merged as ${shortCommit(measurementDebt.mergedCommit)}, debt recorded ${measurementDebt.recordedAt}). `
+  );
+  const commands = [...new Set(owed.map(({ measurementDebt }) => measurementDebt.clear))];
+  return [
+    `the tree being published, ${shortTree(current)}, was never measured by Lighthouse: ${last}. ${entries.join('')}On a quiet machine run ${(commands.length > 0 ? commands : [CLEAR_COMMAND]).join(' or ')}, commit audits/lighthouse-green.json, then publish again; nothing but a recorded measurement of this tree clears it`,
   ];
 }
