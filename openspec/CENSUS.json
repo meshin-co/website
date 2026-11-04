@@ -1,5 +1,6 @@
 {
   "content/collection-schemas": [
+    "A source's original is the address its url stands in for",
     "An entry that breaks its collection schema stops the build",
     "Answer and definition fields stay inside their word ranges",
     "Case-study entries carry the client, the work and the outcome",
@@ -68,12 +69,15 @@
   ],
   "delivery/link-integrity": [
     "A route earns an inbound link from a page, not from the chrome",
+    "A scheduled job repairs a dead outbound citation from the archive, else from a search",
     "Every built page is valid HTML under the recommended html-validate rules",
-    "Every link reachable from the home page resolves",
+    "Every link inside the build resolves and every outbound address is well formed",
     "Every outbound link carries nofollow, noopener and noreferrer",
     "Every page except home and the style guide has a followed inbound link from another page",
     "No internal link carries nofollow",
-    "The build adds the outbound rel tokens and strips target from Markdown links"
+    "The build adds the outbound rel tokens and strips target from Markdown links",
+    "The repair job never blocks and never guesses at another source",
+    "The repair register is generated, sealed and checked by the gate"
   ],
   "delivery/performance-budgets": [
     "A page is charged for every stylesheet and script its HTML names by a root-relative path",

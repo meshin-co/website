@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Governs the integrity of the built site's markup and links: valid HTML, links that resolve, no orphaned pages, and the right rel tokens on outbound and internal links. The gates read the built HTML, so a rule holds for what ships whatever template or Markdown produced it, and unit tests pin the build step that writes the rel tokens.
+Governs the integrity of the built site's markup and links: valid HTML, links inside the build that resolve, outbound addresses that are well formed, no orphaned pages, the right rel tokens on outbound and internal links, and the scheduled repair of a dead outbound citation. The gates read the built HTML, so a rule holds for what ships whatever template or Markdown produced it, and unit tests pin the build step that writes the rel tokens. A dead outbound address never fails a gate and never stops a pipeline: a daily job repairs it.
 
 ## Requirements
 
@@ -15,24 +15,86 @@ Every .html file in the build, the 404 page and /styleguide included, SHALL pass
 - **WHEN** a built page holds two elements with `id="a"`
 - **THEN** `npm run gate:html` exits 1 and prints `Duplicate ID "a"` with the rule name `no-dup-id` and the count `✖ 1 problem (1 error, 0 warnings)`
 
-### Requirement: Every link reachable from the home page resolves
+### Requirement: Every link inside the build resolves and every outbound address is well formed
 
-`npm run gate:links` SHALL start at the home page of the build, follow every same-site link recursively and fail on any link that still answers with an error status after its retries, or cannot be reached. Extensionless local URLs are rewritten to the flat .html file the build holds. Outbound links are fetched too, except those matching plausible.io, linkedin.com, cal.com, github.com/meshin-co, apps.apple.com or an absolute https://meshin.co URL, which are skipped.
-
-#### Scenario: An outbound host answers 500 once
-
-- **WHEN** an outbound link returns a 429 or a 5xx and succeeds within three retries, which carry jitter
-- **THEN** `npm run gate:links` exits 0 and counts the link as scanned, because a third party having a bad minute is not a broken link
+`npm run gate:links` SHALL start at the home page of the build, follow every same-site link recursively and fail on a link inside the build that does not answer, on an outbound address that holds whitespace, does not parse or names a host that is not a domain, and on a register whose digest does not match its rows. It SHALL NOT fetch an address outside the build: `site/scripts/outbound-links.mjs` reads them from the built HTML. Extensionless URLs map to the flat .html file.
 
 #### Scenario: A link names a page that was never built
 
 - **WHEN** a page links to /missing and the build holds no missing.html
-- **THEN** `npm run gate:links` exits 1 and prints `[404]` with the path of dist/missing.html, then `ERROR: Detected 1 broken links.`
+- **THEN** `npm run gate:links` exits 1 and prints `LINKS dead dist/about.html -> dist/missing.html (404)` for the page that carries the link
 
 #### Scenario: An internal link ends in a slash
 
 - **WHEN** a page links to /about/ while the build holds about.html
-- **THEN** `npm run gate:links` exits 1 and prints `[404]` with the path dist/about/, because the flat build holds no about/index.html
+- **THEN** `npm run gate:links` exits 1 and prints `LINKS dead dist/about.html -> dist/about/ (404)`, because the flat build holds no about/index.html
+
+#### Scenario: An outbound address is malformed
+
+- **WHEN** a page links to `https://zz specimen.example/malformed`
+- **THEN** `npm run gate:links` exits 1 and prints `LINKS malformed https://zz specimen.example/malformed (contains whitespace) on 1 page, e.g. /about`
+
+#### Scenario: An outbound address is gone
+
+- **WHEN** a page links to `https://gone.example.invalid/never-fetched`, which answers nothing
+- **THEN** `npm run gate:links` exits 0 and prints `outbound addresses read, not fetched (a gone one is the sweep's to repair, never this gate's to block)`, because a third party's page is not a defect in this change
+
+### Requirement: A scheduled job repairs a dead outbound citation from the archive, else from a search
+
+`.github/workflows/repair-links.yml` SHALL run `site/scripts/repair-links.mjs` daily. For each outbound address that answered 404 or 410 twice and never a 2xx, the job SHALL replace the address in its source row with the Internet Archive capture nearest the day it was cited, else with a search for the source's title and publisher, and keep the cited address in `original`. `site/scripts/link-repair-sweep.test.mjs` pins the chain.
+
+#### Scenario: A capture near the citation date carries the title
+
+- **WHEN** the archive holds captures of a dead address and the job takes any but the one nearest the day the source was cited
+- **THEN** `npm run test` fails the test `a dead address in a citation is replaced by the capture nearest the day it was cited, in the entry, and the register keeps the row`
+
+#### Scenario: The archive holds nothing usable
+
+- **WHEN** the archive holds no capture near the day the source was cited and the job does not rest the citation on the search for its title and publisher
+- **THEN** `npm run test` fails the test `an archive with nothing near the citation date sends the citation to the search link built from its title and publisher, and the register says why`
+
+#### Scenario: The archive does not answer
+
+- **WHEN** the archive does not answer and the job sends the citation to the search link
+- **THEN** `npm run test` fails the test `an archive that does not answer changes nothing, counts the citation as waiting and never falls to the search link`
+
+### Requirement: The repair job never blocks and never guesses at another source
+
+The job SHALL act only on an address that answered 404 or 410 twice and never a 2xx, SHALL change an address and never a word, and SHALL exit non-zero only when the job itself could not do its work: a dead link, an `unverified` host and an address no entry cites never make it fail. `site/scripts/link-repair-sweep-selection.test.mjs` and `site/scripts/repair-links.test.mjs` pin it.
+
+#### Scenario: A host cannot be verified
+
+- **WHEN** a host answers 403, a 5xx or nothing and the job repairs or counts its address
+- **THEN** `npm run test` fails the test `an address that could not be verified is not dead: nothing is repaired, nothing is counted, the archive is not asked`
+
+#### Scenario: No entry cites the dead address
+
+- **WHEN** a dead address is linked only from a template and the job writes any file but the register
+- **THEN** `npm run test` fails the test `a dead address that no collection entry cites is unplaced, with the pages that carry it, and no file but the register is written`
+
+#### Scenario: The job itself cannot do its work
+
+- **WHEN** the build the job reads is empty and the command exits 0
+- **THEN** `npm run test` fails the test `an empty build is a job failure on the command line: exit 1 and the reason on stderr, with nothing pushed`
+
+### Requirement: The repair register is generated, sealed and checked by the gate
+
+`audits/link-rot.json` SHALL hold one row per repaired or unplaced citation, sorted by original then entry, and a digest over the rows and the day the register changed. Only `site/scripts/repair-links.mjs` writes it, and `npm run gate:links` SHALL fail on a register whose digest does not match its rows or whose rows break `site/scripts/link-rot-register.mjs`, and print its counts when it is sound. The job SHALL refuse to write over a register that fails its own guard.
+
+#### Scenario: A row is edited by hand
+
+- **WHEN** a row of `audits/link-rot.json` is changed after the job sealed it
+- **THEN** `npm run gate:links` exits 1 and prints `LINKS register the digest does not match its rows: the file was edited by hand, and only the link repair job writes it; restore it from git`
+
+#### Scenario: The register is sound
+
+- **WHEN** the register holds one search row and nobody has edited it
+- **THEN** `npm run gate:links` exits 0 and prints `link rot: 0 citations repaired from the archive, 1 resting on a search link, 0 unplaced addresses (audits/link-rot.json, changed 2026-11-04)`
+
+#### Scenario: The job meets a hand-edited register
+
+- **WHEN** the register fails its own guard as the job starts and the job writes over it
+- **THEN** `npm run test` fails the test `a register edited by hand makes the job refuse to write over it`
 
 ### Requirement: Every page except home and the style guide has a followed inbound link from another page
 

@@ -174,3 +174,13 @@ paperwork?" band. `/ai-policy` keeps a Starter Kit link under the button. `/pric
 the cost questions, `/contact` shows `cal.com/meshin/30min` as the fit-call channel, and the
 `/styleguide` band specimen shows the secondary link. Every booking button now opens the 30-minute
 event.
+
+## 2026-11-04 - A repaired citation says what it rests on
+
+The source list of a post, glossary term, FAQ, service or resource prints a note after any source the
+link repair job has replaced. A source that now rests on an Internet Archive capture ends in "Internet
+Archive copy, captured 2025-10-25" (the day of the capture). A source whose original page is gone and
+whose archive holds nothing usable links to a search for its title and publisher and ends in "the
+original page has gone; this link is a search for it". The note is there so a reader is never sent to
+a copy or to a search without being told; the claim beside the source stays as written, because the
+machine changes addresses and never words. No entry carries an `original` yet, so no baseline changes today.

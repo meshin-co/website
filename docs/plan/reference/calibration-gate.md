@@ -16,7 +16,7 @@ only by the rule that names it, never by judgement.
    The gate asserts the results array really has 3 runs before trusting any score, and fails an
    audited route with no run at all. Bar per L13.
 4. `axe-core` on every derived route, light and dark → 0 violations.
-5. `html-validate` 0 errors · `linkinator` 0 broken (skip list: the hosts listed in `scripts/links-gate.mjs`) ·
+5. `html-validate` 0 errors · `gate:links` 0 dead links inside the build, 0 malformed outbound addresses and an intact repair register (no outbound host is fetched) ·
    byte budgets in range.
 6. Byte budgets are measured, not declared: real gzip of every JS/CSS asset each route can reach,
    plus a Playwright pass that toggles the theme and runs a real search so Plausible, the toggle

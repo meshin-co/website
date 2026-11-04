@@ -35,8 +35,15 @@ templates. FAQ routes use the static default OG instead of a rendered one.
 updatedDate changes only when the content changed. Feeds and indexes sort on
 max(publishDate, updatedDate) through the shared helper in `site/src/utils/lastmod.mjs`, so a
 bumped date is a visible freshness claim on every machine surface. Sources carry title and
-url; claims about standards cite primary domains (iso.org, eur-lex.europa.eu, nist.gov,
-owasp.org).
+url, and optionally publisher and retrieved; claims about standards cite primary domains
+(iso.org, eur-lex.europa.eu, nist.gov, owasp.org).
+
+Set `retrieved` to the day you read the page: it is the day the link repair job asks the Internet
+Archive about if the address dies (the entry's `updatedDate` when it is missing). A source may also
+carry `original`, only beside a stand-in `url`: an Internet Archive snapshot of it, or the search for
+the source's own title and publisher. The job writes it; the build refuses an `original` that `url`
+does not stand in for, and replacing a search link with a real source means deleting `original`
+(`repair-a-dead-citation.md`). The unattended writer binds its claims to `original ?? url`.
 
 ## After writing
 

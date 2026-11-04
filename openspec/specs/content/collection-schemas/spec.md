@@ -128,6 +128,25 @@ Post, service, resource and glossary entries SHALL each cite at least one source
 - **WHEN** a post's first source has the url "not a url"
 - **THEN** `npm run build` fails, naming `sources.0.url: Invalid URL`
 
+### Requirement: A source's original is the address its url stands in for
+
+A source MAY carry `original`, the address that was first cited, and `url` SHALL then stand in for it: an Internet Archive snapshot of exactly that address, or the search built from the source's own title and publisher. `site/src/content.config.ts` refuses any other `original` and names the field. The page prints a note beside a stand-in, and the JSON-LD citation of an entry leaves a search stand-in out.
+
+#### Scenario: An original beside an archive snapshot
+
+- **WHEN** a source has `url: https://web.archive.org/web/20251025031200/https://www.nist.gov/itl/ai-risk-management-framework` and `original: https://www.nist.gov/itl/ai-risk-management-framework`
+- **THEN** `npm run build` passes, the source list prints `Internet Archive copy, captured 2025-10-25`, and the JSON-LD citation names the snapshot
+
+#### Scenario: An original beside a search for the source
+
+- **WHEN** a source titled "AI RMF 1.0" from NIST has `original: https://example.com/standard` and `url: https://www.google.com/search?q=%22AI+RMF+1.0%22+NIST`
+- **THEN** `npm run build` passes, the source list prints `the original page has gone; this link is a search for it`, and the JSON-LD citation leaves the source out
+
+#### Scenario: An original that url does not stand in for
+
+- **WHEN** a source's `original` is a different page from the one its snapshot `url` captured
+- **THEN** `npm run build` fails, naming `sources.0.original: must be the address that url stands in for: its Internet Archive snapshot, or the search for this source's title and publisher`; `npm run test:smoke` plants this violation from `site/tests/guard-mutations/fixtures/source-original-mismatch.md`
+
 ### Requirement: Service entries carry a complete offer outline
 
 A service entry SHALL carry name, tagline, feeShape, duration and a cta with label and href; at least one item each in forWhom, notForWhom, deliverables and process; 3 to 5 schedule rows; 3 to 8 faq items; and a positive integer order. Each process step number MUST be a positive integer. `site/src/content.config.ts` enforces this at `npm run build`.
