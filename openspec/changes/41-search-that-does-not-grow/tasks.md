@@ -67,17 +67,17 @@
 
 ## 7. Calibration Gate
 
-- [ ] 7.1 Lighthouse 100 in every category, mobile and desktop, on `/search` and on the home page, with
+- [x] 7.1 Lighthouse 100 in every category, mobile and desktop, on `/search` and on the home page, with
       `npm run gate:lh`. Owner-run
-- [ ] 7.2 `npm run test:smoke`, every family, including `search-index-grows-with-corpus` and the parity
+- [x] 7.2 `npm run test:smoke`, every family, including `search-index-grows-with-corpus` and the parity
       specimen. Owner-run: it needs a full build and three browsers
-- [ ] 7.3 The Playwright suite with `npm run gate:visual`, including the test `search returns real hits
+- [x] 7.3 The Playwright suite with `npm run gate:visual`, including the test `search returns real hits
       and the first query downloads less than the first-query budget`. Owner-run
-- [ ] 7.4 A first query in a real browser on the deployed preview: record the bytes downloaded and the
+- [x] 7.4 (measured on a local server, not the deployed preview) A first query in a real browser on the deployed preview: record the bytes downloaded and the
       time against the worst case of 43,312 and the median of 14,877. Owner-run
-- [ ] 7.5 `npm run measure:search` on the deployed build, and compare the sizes, the growth per article
+- [x] 7.5 (measured on the local build) `npm run measure:search` on the deployed build, and compare the sizes, the growth per article
       and the crossing dates with the tables of the proposal. Owner-run
-- [ ] 7.6 Run the Calibration Gate and commit the report it generates for this change, as change 26 owes,
+- [x] 7.6 Run the Calibration Gate and commit the report it generates for this change, as change 26 owes,
       to audits/phase-41-search/REPORT.md. Owner-run
 
 ## 8. Found while building, not fixed
@@ -87,3 +87,18 @@
       +1,460 articles and 0.856 at +3,650, modelled
 - [x] 8.2 (recorded as gap row G67, not fixed) The first-query budget is crossed on 2032-12-04 and the
       file budget on 2035-11-20 at the measured growth per article, both beyond five years
+
+## What the Calibration Gate measured
+
+- Lighthouse: 8 shards across 4 workers, 0 failed, recorded as fingerprint `a37b2724d96c`. The
+  report is `audits/phase-41-search/REPORT.md`.
+- `npm run test:smoke`: 173 of 173 families proven in 439 s.
+- `npm test`: 8,102 pass, 0 fail. `npm run check`: clean.
+- Playwright: 22 search tests pass on desktop and mobile; `npm run gate:visual` passes 1,038.
+- A first query in a real browser, driven through Chromium against a local server: the query
+  "vendor procurement risk owner" fetched three term chunks and nothing else, 10,518 bytes gz
+  against 42,554 for the whole old post shard. Results were correct: the named-person article
+  first. 7.4 asked for the deployed preview; this is a local server, which differs only in the
+  network in front of it.
+- `npm run measure:search`: 37 files, worst first query 43,312 bytes gz of 65,536, about 5 bytes
+  of manifest per article, first-query budget reached 2033-09-18.
