@@ -19,6 +19,7 @@ const CHECKOUT =
   '      - uses: actions/checkout@v4\n        with:\n          fetch-depth: 0\n\n      - uses: actions/setup-node@v4';
 const SETUP_NODE =
   '      - uses: actions/setup-node@v4\n        with:\n          node-version-file: site/.nvmrc\n\n      - name: classify';
+const BEFORE = 'BEFORE: ${{ github.event.pull_request.base.sha || github.event.before }}';
 
 const LEGACY_SHELL = [
   'run: |',
@@ -134,6 +135,18 @@ const planted = [
     detail: /setup-node/,
   },
   {
+    label: 'the before commit read from the last push alone',
+    text: () => plant(BEFORE, 'BEFORE: ${{ github.event.before }}'),
+    rules: ['classifier-judges-last-push'],
+    detail: /github\.event\.pull_request\.base\.sha/,
+  },
+  {
+    label: 'the before commit no longer set by the step',
+    text: () => plant(`          ${BEFORE}\n`, ''),
+    rules: ['classifier-judges-last-push'],
+    detail: /BEFORE/,
+  },
+  {
     label: 'the job key renamed',
     text: () => plant('  changes:\n', '  changed:\n'),
     rules: ['changes-job-missing'],
@@ -155,6 +168,10 @@ for (const { label, text, rules, detail } of planted) {
 
 test('the missing-job finding is the only finding', () => {
   assert.equal(classifierWiringFindings(plant('  changes:\n', '  changed:\n')).length, 1);
+});
+
+test('a before that names the base commit of the pull request passes, whatever it falls back to for a push', () => {
+  assert.deepEqual(classifierWiringFindings(plant(BEFORE, 'BEFORE: ${{ github.event.pull_request.base.sha }}')), []);
 });
 
 test('a workflow that is not a mapping is reported as having no changes job and never throws', () => {

@@ -1,0 +1,55 @@
+{
+  "source": {
+    "note": "pull request 81 merged as e8874d4 and pull request 78 closed unmerged; GitHub keeps a merge_commit_sha on the closed one, so only merged tells them apart",
+    "capturedAt": "2026-11-03",
+    "commands": ["gh api repos/meshin-co/website/pulls/81", "gh api repos/meshin-co/website/pulls/78"]
+  },
+  "merged": {
+    "number": 81,
+    "state": "closed",
+    "merged": true,
+    "merged_at": "2026-11-03T08:09:03Z",
+    "closed_at": "2026-11-03T08:09:03Z",
+    "merge_commit_sha": "e8874d4602b5944138a0017d3d5e862c9e7a728e",
+    "draft": false,
+    "created_at": "2026-11-03T05:36:38Z",
+    "head": {
+      "ref": "autowriter/ai-readiness-assessment-template-for-smb",
+      "sha": "337cb6d66400cd0416066feef79624f795854dcb",
+      "repo": {
+        "full_name": "meshin-co/website"
+      }
+    },
+    "base": {
+      "ref": "main",
+      "repo": {
+        "full_name": "meshin-co/website"
+      }
+    },
+    "labels": []
+  },
+  "unmerged": {
+    "number": 78,
+    "state": "closed",
+    "merged": false,
+    "merged_at": null,
+    "closed_at": "2026-11-02T22:36:46Z",
+    "merge_commit_sha": "d52776e67bfeb11e5959b4aef6f03546c47a3821",
+    "draft": false,
+    "created_at": "2026-11-02T20:29:35Z",
+    "head": {
+      "ref": "autowriter/fractional-caio-vs-full-time-caio-cost",
+      "sha": "d5c496449a59c4147ea3f2e2cc7f2f933535c8b1",
+      "repo": {
+        "full_name": "meshin-co/website"
+      }
+    },
+    "base": {
+      "ref": "main",
+      "repo": {
+        "full_name": "meshin-co/website"
+      }
+    },
+    "labels": []
+  }
+}

@@ -86,6 +86,7 @@ test('the specimen module names every failure mode of the gate, each against gat
     'autowriterBandRecordDistributionDrifted',
     'autowriterBandRecordStale',
     'autowriterClaimTitleCollides',
+    'autowriterClassifierJudgesLastPush',
     'autowriterCommitMovesTheBand',
     'autowriterCommitMovesTheEntryLength',
     'autowriterCommitRemovesAGenerationRecord',
@@ -106,6 +107,7 @@ test('the specimen module names every failure mode of the gate, each against gat
     'autowriterLengthRecordStale',
     'autowriterMeasurementDebtMissing',
     'autowriterProseOffTheBand',
+    'autowriterPushWithDefaultToken',
     'autowriterRecordMisfiled',
     'autowriterSpendReportDeleted',
     'autowriterSpendReportEdited',
@@ -370,6 +372,12 @@ const WORKFLOW_MESSAGES = [
   ['autowriterJobOutsideAggregate', 'AUTOWRITER aggregate-uncovered ' + WORKFLOW + ': ', 'visual-and-axe'],
   ['autowriterAggregateSkippable', 'AUTOWRITER aggregate-not-always ' + WORKFLOW + ': ', 'always()'],
   ['autowriterAggregateNameShadowed', 'AUTOWRITER aggregate-name ' + WORKFLOW + ': ', 'all required jobs passed'],
+  ['autowriterPushWithDefaultToken', 'AUTOWRITER bot-push-token ' + WORKFLOW + ': ', 'AUTOWRITER_PAT'],
+  [
+    'autowriterClassifierJudgesLastPush',
+    'AUTOWRITER classifier-judges-last-push ' + WORKFLOW + ': ',
+    'github.event.pull_request.base.sha',
+  ],
 ];
 
 for (const [name, start, mention] of WORKFLOW_MESSAGES) {

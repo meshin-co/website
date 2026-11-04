@@ -1,5 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
+import { VISUAL_DIST, VISUAL_PORT } from './scripts/visual-site.mjs';
+
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
@@ -8,11 +10,18 @@ export default defineConfig({
   workers: 4,
   reporter: process.env.CI ? 'github' : 'list',
   snapshotPathTemplate: '{testDir}/__screenshots__/{platform}/{arg}{ext}',
-  webServer: {
-    command: 'GATE_SERVER_PORT=4322 node scripts/gate-server.mjs dist',
-    url: 'http://127.0.0.1:4322',
-    reuseExistingServer: !process.env.CI,
-  },
+  webServer: [
+    {
+      command: 'GATE_SERVER_PORT=4322 node scripts/gate-server.mjs dist',
+      url: 'http://127.0.0.1:4322',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: `GATE_SERVER_PORT=${VISUAL_PORT} node scripts/gate-server.mjs ${VISUAL_DIST}`,
+      port: VISUAL_PORT,
+      reuseExistingServer: !process.env.CI,
+    },
+  ],
   use: {
     baseURL: 'http://127.0.0.1:4322',
   },

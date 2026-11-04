@@ -64,7 +64,7 @@ const isActive = (href?: string) => typeof href === 'string' && `/${trimSlash(hr
     <div class="absolute inset-0"></div>
     <div
       class:list={[
-        'relative text-default py-3 px-5 sm:px-8 mx-auto w-full flex items-center justify-between',
+        'relative text-default py-3 px-5 sm:px-8 mx-auto w-full grid grid-cols-[1fr_auto_1fr] items-center',
         {
           'lg:flex lg:justify-between': position !== 'center',
         },
@@ -76,20 +76,52 @@ const isActive = (href?: string) => typeof href === 'string' && `/${trimSlash(hr
         },
       ]}
     >
-      <div class:list={[{ 'mr-auto rtl:mr-0 rtl:ml-auto': position === 'right' }, 'flex items-center justify-between']}>
+      <div class:list={[{ 'mr-auto rtl:mr-0 rtl:ml-auto': position === 'right' }, 'flex items-center']}>
         <a class="flex items-center" href={getHomePermalink()}>
           <Logo />
         </a>
-        {
-          links.length > 0 && (
-            <div class="flex items-center lg:hidden">
-              <ToggleMenu />
-            </div>
-          )
-        }
       </div>
+      <div
+        class:list={[
+          { 'ml-auto rtl:ml-0 rtl:mr-auto': position === 'left' },
+          'flex items-center justify-center lg:col-start-3 lg:row-start-1 lg:self-center lg:justify-self-end lg:justify-end',
+        ]}
+      >
+        <div class="items-center flex">
+          <div
+            class:list={[
+              'flex',
+              links.length > 0 && 'hidden max-lg:fixed max-lg:bottom-3 max-lg:left-5 max-lg:z-10 lg:flex',
+            ]}
+            data-aw-menu-extra
+          >
+            {showToggleTheme && <ToggleTheme iconClass="w-6 h-6 lg:w-5 lg:h-5 lg:inline-block" />}
+          </div>
+          {
+            actions?.length ? (
+              <span class="lg:ml-4 rtl:lg:ml-0 rtl:lg:mr-4">
+                {actions.map((btnProps) => (
+                  <Button
+                    {...btnProps}
+                    class="lg:ml-2 py-2.5 px-5.5 lg:px-6 font-semibold shadow-none text-sm w-auto [&_svg]:order-first [&_svg]:ml-0 [&_svg]:mr-1.5 lg:[&_svg]:hidden"
+                  />
+                ))}
+              </span>
+            ) : (
+              ''
+            )
+          }
+        </div>
+      </div>
+      {
+        links.length > 0 && (
+          <div class="flex items-center justify-self-end lg:hidden">
+            <ToggleMenu />
+          </div>
+        )
+      }
       <nav
-        class="items-center w-full lg:w-auto hidden lg:flex lg:mx-5 text-default overflow-y-auto overflow-x-hidden lg:overflow-visible lg:justify-self-center"
+        class="items-center w-full lg:w-auto hidden lg:flex lg:col-start-2 lg:row-start-1 lg:mx-5 text-default overflow-y-auto overflow-x-hidden lg:overflow-visible lg:justify-self-center"
         aria-label="Main navigation"
       >
         <ul
@@ -143,29 +175,6 @@ const isActive = (href?: string) => typeof href === 'string' && `/${trimSlash(hr
           }
         </ul>
       </nav>
-      <div
-        class:list={[
-          { 'ml-auto rtl:ml-0 rtl:mr-auto': position === 'left' },
-          'flex items-center justify-end lg:self-center lg:justify-self-end',
-        ]}
-      >
-        <div class="items-center flex justify-between w-full lg:w-auto">
-          <div class:list={['flex', links.length > 0 && 'hidden lg:flex']} data-aw-menu-extra>
-            {showToggleTheme && <ToggleTheme iconClass="w-6 h-6 lg:w-5 lg:h-5 lg:inline-block" />}
-          </div>
-          {
-            actions?.length ? (
-              <span class="ml-4 rtl:ml-0 rtl:mr-4">
-                {actions.map((btnProps) => (
-                  <Button {...btnProps} class="ml-2 py-2.5 px-5.5 lg:px-6 font-semibold shadow-none text-sm w-auto" />
-                ))}
-              </span>
-            ) : (
-              ''
-            )
-          }
-        </div>
-      </div>
     </div>
   </header>
 </aw-header>

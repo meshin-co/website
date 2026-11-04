@@ -33,6 +33,7 @@ const CLAIMED = '2026-11-01T07:00:00.000Z';
 const HASH = 'b'.repeat(40);
 const CORE = readFileSync(join(REPO, 'docs/SEMANTIC-CORE.md'), 'utf8');
 const WORKFLOW = readFileSync(join(REPO, '.github/workflows/ci.yml'), 'utf8');
+const CI_FILE = { path: '.github/workflows/ci.yml', text: WORKFLOW };
 const ROUTE_ROWS = CORE.slice(CORE.indexOf(GENERATED_BEGIN), CORE.indexOf(GENERATED_END))
   .split('\n')
   .filter((line) => line.startsWith('| `')).length;
@@ -97,7 +98,7 @@ const claimPath = (name) => recordPath('claim', name, CLAIMED);
 const ledgerAt = (name, value) => ({ path: ledgerPath(name), text: JSON.stringify(value) });
 const claimAt = (name, value) => ({ path: recordPath('claim', name, value.claimedAt), text: JSON.stringify(value) });
 const report = (extra = {}) =>
-  autowriterReport({ ledgers: [], claims: [], core: CORE, workflow: WORKFLOW, suffix: SUFFIX, now: NOW, ...extra });
+  autowriterReport({ ledgers: [], claims: [], core: CORE, workflows: [CI_FILE], suffix: SUFFIX, now: NOW, ...extra });
 const findings = (extra) => report(extra).findings;
 const one = (extra) => {
   const found = findings(extra);
@@ -303,14 +304,14 @@ test('the workflow findings carry the workflow path, and an unparsable or missin
     'needs: [changes, build, types-and-units, cheap-gates, deploy-preview]'
   );
   assert.notEqual(lost, WORKFLOW);
-  const found = findings({ workflow: lost });
+  const found = findings({ workflows: [{ ...CI_FILE, text: lost }] });
   assert.deepEqual([...new Set(found.map(({ path }) => path))], ['.github/workflows/ci.yml']);
   assert.ok(
     found.some(({ rule }) => rule === 'aggregate-uncovered'),
     JSON.stringify(found)
   );
-  assert.equal(one({ workflow: 'jobs: [' }).rule, 'workflow-unreadable');
-  assert.deepEqual(one({ workflow: null }), {
+  assert.equal(one({ workflows: [{ ...CI_FILE, text: 'jobs: [' }] }).rule, 'workflow-unreadable');
+  assert.deepEqual(one({ workflows: [] }), {
     rule: 'workflow-unreadable',
     path: '.github/workflows/ci.yml',
     detail: '.github/workflows/ci.yml is missing, so no job carries the verdict of the required jobs',

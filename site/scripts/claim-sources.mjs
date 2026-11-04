@@ -22,6 +22,8 @@ const present = (value) => typeof value === 'string' && value.trim() !== '';
 
 const sourceIdOf = (claim) => claim.sourceId ?? claim.source?.id;
 
+export const citedAddress = (source) => source.original ?? source.url;
+
 const hostOf = (url) => (URL.canParse(url) ? new URL(url).hostname : null);
 
 const onPrimaryDomain = (url) => {
@@ -29,7 +31,7 @@ const onPrimaryDomain = (url) => {
   return host !== null && PRIMARY_DOMAINS.some((domain) => host === domain || host.endsWith(`.${domain}`));
 };
 
-const hostsOf = (sources) => sources.map((source) => hostOf(source.url) ?? source.url).join(', ');
+const hostsOf = (sources) => sources.map((source) => hostOf(citedAddress(source)) ?? citedAddress(source)).join(', ');
 
 const sourceMap = (sources) => new Map(sources.map((source) => [source.id, source]));
 
@@ -55,7 +57,7 @@ function rowProblems(claim, { known, sentences }) {
 
 function standardProblem(sentence, resolved) {
   if (!isStandardSentence(sentence) || resolved.length === 0) return null;
-  if (resolved.some((source) => onPrimaryDomain(source.url))) return null;
+  if (resolved.some((source) => onPrimaryDomain(citedAddress(source)))) return null;
   return (
     `the sentence is about a standard or regulation and its source (${hostsOf(resolved)}) ` +
     `is not on a primary domain (${PRIMARY_DOMAINS.join(', ')})`

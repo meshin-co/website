@@ -1,8 +1,9 @@
 dist
 node_modules
 .github
-.changesetdist
+dist-visual
 .lighthouseci
 test-results
 node_modules
 tests/__screenshots__
+scripts/fixtures/wayback/

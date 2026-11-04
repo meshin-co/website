@@ -77,3 +77,9 @@ test('the scene is a repository of its own, so a copy with uncommitted edits can
   assert.equal(git(scene.root, 'rev-parse', '--show-toplevel').endsWith('lh-record-scene'), true);
   assert.equal(git(scene.root, 'status', '--porcelain', '--', 'site'), '');
 });
+
+test('the scene starts no background git maintenance, so removing it cannot race a detached process', async () => {
+  const scene = await recordScene({ copySite: realSite, work: await scratch() });
+
+  assert.equal(git(scene.root, 'config', '--get', 'maintenance.auto'), 'false');
+});

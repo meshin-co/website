@@ -1,0 +1,48 @@
+{
+  "source": {
+    "note": "the open issues on 2026-11-03: three escalation issues opened by the Actions bot for pull requests 78, 81 and 84, and pull request 84 itself, which the issues list returns too",
+    "capturedAt": "2026-11-03",
+    "commands": ["gh api repos/meshin-co/website/issues?state=open&per_page=100"]
+  },
+  "issues": [
+    {
+      "number": 85,
+      "state": "open",
+      "title": "Autowriter pull request #84: a job that is not a content gate failed, so the loop may not repair it",
+      "user": {
+        "login": "github-actions[bot]",
+        "type": "Bot"
+      }
+    },
+    {
+      "number": 84,
+      "state": "open",
+      "title": "feat(autowriter): write named-person-responsible-for-ai-risk-in-vendor-procurement",
+      "user": {
+        "login": "meshin-dev",
+        "type": "User"
+      },
+      "pull_request": {
+        "url": "https://api.github.com/repos/meshin-co/website/pulls/84"
+      }
+    },
+    {
+      "number": 82,
+      "state": "open",
+      "title": "Autowriter pull request #81: a job that is not a content gate failed, so the loop may not repair it",
+      "user": {
+        "login": "github-actions[bot]",
+        "type": "Bot"
+      }
+    },
+    {
+      "number": 79,
+      "state": "open",
+      "title": "Autowriter pull request #78: a job that is not a content gate failed, so the loop may not repair it",
+      "user": {
+        "login": "github-actions[bot]",
+        "type": "Bot"
+      }
+    }
+  ]
+}

@@ -48,7 +48,7 @@ const pathOfUrl = (url, site) => {
   return pathname.length > 1 ? pathname.replace(/\/$/, '') : pathname;
 };
 
-const guidPaths = (xml, site) =>
+export const guidPaths = (xml, site) =>
   [...xml.matchAll(/<guid[^>]*>([^<]+)<\/guid>/g)].map(([, url]) => pathOfUrl(url, site));
 
 function readSurfaces({ site, texts, shipped, sitemapLastmods, collections, inlineKinds }) {
@@ -189,7 +189,7 @@ export const SURFACES = {
 
 export const SURFACE_IDS = Object.keys(SURFACES);
 
-function owedFor(info, ctx) {
+export function owedFor(info, ctx) {
   const surfaces = [...OWED[info.kind]];
   if (info.kind !== 'entry') return surfaces;
   if (ctx.inlineKinds.has(info.collection)) surfaces.push('llms-index');

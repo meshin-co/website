@@ -18,7 +18,7 @@ export function repairFinding({ result, number }, links) {
     title: `Autowriter pull request #${number}: ${statement}`,
     detail: [
       `The repair of pull request #${number} ended as ${result.reason}: ${statement}.`,
-      `Repair run: ${links.run}`,
+      ...(links.run === null ? [] : [`Repair run: ${links.run}`]),
       `Pull request: ${links.pullRequest}`,
     ].join('\n'),
   };

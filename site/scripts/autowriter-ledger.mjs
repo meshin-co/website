@@ -18,6 +18,7 @@ export const CHANNELS = ['issue', 'slack', 'digest'];
 
 const LEDGER_SCHEMA = readSchema('autowriter-ledger.schema.json');
 export const REFUSAL_REASONS = LEDGER_SCHEMA.$defs.refusal.properties.reason.enum;
+export const RESUME_WAYS = LEDGER_SCHEMA.$defs.resume.properties.by.enum;
 const DECIDED_WITH_REASON = ['escalated', 'stopped', 'discarded'];
 export const ENDED_VERDICTS = DECIDED_WITH_REASON;
 const SPEND_TOLERANCE = 1e-6;
@@ -42,7 +43,7 @@ export const newLedger = ({ slug, runId, pullRequest }) => ({
 const problem = (path, message) => ({ path, problem: message });
 const sum = (values) => values.reduce((total, value) => total + value, 0);
 
-const instantEntries = ({ attempts, verdict, escalations, measurementDebt }) => [
+const instantEntries = ({ attempts, verdict, escalations, measurementDebt, resumes = [] }) => [
   ...attempts.map((attempt, index) => [`$.attempts[${index}].recordedAt`, attempt.recordedAt]),
   ['$.verdict.decidedAt', verdict.decidedAt],
   ...(measurementDebt === undefined ? [] : [['$.measurementDebt.recordedAt', measurementDebt.recordedAt]]),
@@ -50,6 +51,7 @@ const instantEntries = ({ attempts, verdict, escalations, measurementDebt }) => 
     [`$.escalations[${index}].raisedAt`, raisedAt],
     ...receipts.map((receipt, at) => [`$.escalations[${index}].receipts[${at}].attemptedAt`, receipt.attemptedAt]),
   ]),
+  ...resumes.map(({ at }, index) => [`$.resumes[${index}].at`, at]),
 ];
 
 const attemptProblems = ({ attempts }) =>
@@ -209,12 +211,17 @@ export function readLedger(path) {
   return ledger;
 }
 
-export function writeLedger(path, ledger) {
+export function ledgerText(path, ledger) {
   const problems = refusals(path, ledger);
   if (problems.length > 0) throw new LedgerError(path, problems);
+  return `${JSON.stringify(ledger, null, 2)}\n`;
+}
+
+export function writeLedger(path, ledger) {
+  const text = ledgerText(path, ledger);
   mkdirSync(dirname(path), { recursive: true });
   const staged = `${path}.${process.pid}.tmp`;
-  writeFileSync(staged, `${JSON.stringify(ledger, null, 2)}\n`);
+  writeFileSync(staged, text);
   renameSync(staged, path);
 }
 
@@ -235,3 +242,8 @@ export function ledgerWithAttempt(ledger, attempt) {
   const generation = ledger.generation === undefined ? [] : [ledger.generation];
   return { ...ledger, attempts, spend: spendOf([...generation, ...attempts]) };
 }
+
+export const verdictInForce = ({ verdict, resumes = [] }) =>
+  verdict.decidedAt === null || !resumes.some(({ at }) => Date.parse(at) > Date.parse(verdict.decidedAt));
+
+export const ledgerWithResume = (ledger, resume) => ({ ...ledger, resumes: [...(ledger.resumes ?? []), resume] });

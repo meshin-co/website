@@ -23,7 +23,7 @@ an unknown field is a finding. `scripts/record-layout.mjs` builds these paths fr
 - **generation-\* (unreadable, schema, name, entry-missing, entry-unreadable):** a file at
   `audits/autowriter/generations/<year>/<month>/<slug>.json` that is off `scripts/generation-record.schema.json` (a record with no `band` too), is not named by its slug, or whose entry file is missing. With no file the gate checks none and says `0 generation records`. A pipeline commit that removes a record, at any depth, is refused by `scripts/commit-to-main.mjs` and found in history as `generation-record-removed-committed`, because the band and the length record leave out every entry that has one; a person may still delete one in a visible diff.
 - **record-layout:** a ledger, claim, generation record or generated disposition not filed under the `<year>/<month>` of its claim, or of any claim of its slug once a lapsed claim was claimed again in a later month; the finding names where it belongs.
-- **The claim table and sentence band of a record:** the rules of `scripts/claim-sources.mjs` and `scripts/sentence-band.mjs`, run on the entry re-measured from its committed file against `audits/sentence-band.json`, never on the record's word. Sources match by id, or by URL.
+- **The claim table and sentence band of a record:** the rules of `scripts/claim-sources.mjs` and `scripts/sentence-band.mjs`, run on the entry re-measured from its committed file against `audits/sentence-band.json`, never on the record's word. Sources match by id, or by the address that was cited, `original ?? url`: a row the link repair job rewrote keeps that address in `original` beside a stand-in `url` (`link-out.md`), so its claim rows still bind and a standard's primary domain is read from the cited host.
   `band-measurement-differs`: the record's measurement is not what the entry measures. The limits a record carries are only a note of what it was judged against, so a re-measure of the band never invalidates an old record. `generation-band-unjudged`: no band for the entry's format.
 - **record-missing, record-\*-stale, band-record-unmeasurable, length-record-\*:** `audits/sentence-band.json` or `audits/entry-length.json` is absent or differs from a fresh measurement; repair each with `node scripts/measure-sentence-band.mjs --write` and `node scripts/measure-entry-length.mjs --write`.
 - **body-too-short, too-few-sections, section-too-thin, length-unjudged:** the rules of `scripts/entry-length.mjs`, run on each generated entry re-measured from its committed file against `audits/entry-length.json`. `length-unjudged`: no limits for the entry's format.
@@ -35,19 +35,19 @@ a site that keeps a locked row for them pins it with a test of its own. The gate
 
 ## Escalate, and prove it arrived
 
-`scripts/escalate.mjs` (requests in `scripts/escalate-channels.mjs`) opens a GitHub issue and posts to
-Slack, then writes a receipt (instant, HTTP status, issue number or error) into the ledger:
+`scripts/escalate.mjs` (requests in `scripts/escalate-channels.mjs`; `scripts/pr-watch.mjs` passes the pull request number)
+opens a GitHub issue, posts to Slack and writes a receipt (instant, HTTP status, issue number or error) into the ledger:
 
 ```
 npm run escalate -- raise --ledger <path> --kind no-convergence --title <text> --detail <text>
 npm run escalate -- redeliver --ledger <path> --id esc-1
 ```
 
-Slack carries three kinds at once: `spend-ceiling`, `credential`, `no-convergence`. `hard-stop` and
-`unrepairable` open an issue now and wait for the morning digest. It reads `GITHUB_TOKEN` (Issues:
-write), `GITHUB_REPOSITORY` and `SLACK_WEBHOOK_URL`, a repository secret the owner creates. A missing
-one is never skipped quietly: the receipt names it, the command exits 1, and the gate stays red until
-`redeliver` records a delivery. No secret value reaches a receipt, a message or the log.
+The Slack message is Block Kit `{ text, blocks }` from `scripts/escalation-slack.mjs`: a header with the kind, the title, the
+detail with addresses as links, fields Pull request, Workflow run and Issue, the ledger path; `text` repeats it for a phone.
+Slack carries `spend-ceiling`, `credential` and `no-convergence` at once; `hard-stop` and `unrepairable` open an issue and wait
+for the digest. It reads `GITHUB_TOKEN`, `GITHUB_REPOSITORY` and `SLACK_WEBHOOK_URL`. Unlike the statistics message a missed one is
+never quiet: the receipt names it, the command exits 1, the gate stays red until `redeliver`. No secret, the webhook included, is logged. An escalated pull request can re-enter the loop: `resume-an-escalated-pull-request.md`.
 
 ## The aggregate check
 

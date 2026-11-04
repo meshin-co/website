@@ -32,8 +32,16 @@ const parseBody = (text) => {
   }
 };
 
-export function createApi({ repo, token, fetch = globalThis.fetch }) {
+const originOf = (given) => {
+  if (given === undefined) return API_ORIGIN;
+  if (typeof given !== 'string' || !/^https?:\/\/\S+$/.test(given.trim()))
+    throw new Error(`github: origin must be an http or https address, got ${JSON.stringify(given)}`);
+  return given.trim().replace(/\/+$/, '');
+};
+
+export function createApi({ repo, token, fetch = globalThis.fetch, origin }) {
   if (typeof token !== 'string' || token.trim() === '') throw new Error('github: no token');
+  const root = originOf(origin);
   const headers = {
     Authorization: `Bearer ${token}`,
     Accept: 'application/vnd.github+json',
@@ -43,7 +51,7 @@ export function createApi({ repo, token, fetch = globalThis.fetch }) {
 
   async function request(method, path, body) {
     const sending = body !== undefined;
-    const response = await fetch(`${API_ORIGIN}/repos/${repo}/${path}`, {
+    const response = await fetch(`${root}/repos/${repo}/${path}`, {
       method,
       headers: sending ? { ...headers, 'Content-Type': 'application/json' } : headers,
       ...(sending ? { body: JSON.stringify(body) } : {}),
@@ -55,7 +63,7 @@ export function createApi({ repo, token, fetch = globalThis.fetch }) {
   }
 
   async function bytes(path) {
-    const response = await fetch(`${API_ORIGIN}/repos/${repo}/${path}`, {
+    const response = await fetch(`${root}/repos/${repo}/${path}`, {
       headers,
       signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT_MS),
     });
@@ -194,4 +202,44 @@ export async function readTree(api, sha) {
   const listing = await api.get(`git/trees/${sha}?recursive=1`);
   if (listing.truncated) throw new Error(`the tree of ${sha} is incomplete: GitHub cut the recursive listing short`);
   return listing.tree;
+}
+
+const COMMIT_FILES_PAGE = 300;
+
+const incomplete = (what) => new Error(`the ${what} list is incomplete: reading more than one page is not supported`);
+
+export async function listOpenPullRequests(api) {
+  const pulls = await api.get(`pulls?state=open&per_page=${PAGE_SIZE}`);
+  if (pulls.length >= PAGE_SIZE) throw incomplete('open pull requests');
+  return pulls;
+}
+
+export const readPullRequest = (api, number) => api.get(`pulls/${number}`);
+
+export async function readBranchCommits(api, number) {
+  const commits = await api.get(`pulls/${number}/commits?per_page=${PAGE_SIZE}`);
+  if (commits.length >= PAGE_SIZE) throw incomplete('commits');
+  return commits;
+}
+
+export async function listOpenIssues(api) {
+  const listed = await api.get(`issues?state=open&per_page=${PAGE_SIZE}`);
+  if (listed.length >= PAGE_SIZE) throw incomplete('open issues');
+  return listed.filter((issue) => issue.pull_request === undefined);
+}
+
+export const commentOnIssue = (api, { number, body }) => api.post(`issues/${number}/comments`, { body });
+
+export const closeIssue = (api, { number, reason }) =>
+  api.patch(`issues/${number}`, { state: 'closed', state_reason: reason });
+
+export async function listRecentCommits(api, { branch, limit }) {
+  const commits = await api.get(`commits?sha=${encodeURIComponent(branch)}&per_page=${limit}`);
+  return commits.map(({ sha, commit }) => ({ sha, committedAt: commit.committer.date }));
+}
+
+export async function readCommitFiles(api, sha) {
+  const { files } = await api.get(`commits/${sha}`);
+  if (files.length >= COMMIT_FILES_PAGE) return null;
+  return files.flatMap(({ filename, previous_filename: previous }) => (previous ? [filename, previous] : [filename]));
 }

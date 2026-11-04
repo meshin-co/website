@@ -1,4 +1,5 @@
 dist/
+dist-visual/
 node_modules/
 .vscode/
 .github/

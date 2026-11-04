@@ -10,8 +10,8 @@ Run at the end of every phase and before any merge to main. The procedure is
 2. `npm run check` — astro check, eslint, prettier. Run it before every push, including a
    Markdown-only commit: prettier checks `.md`, and `npm test` says nothing about formatting.
 3. `npm test` — unit tests for `scripts/`, `src/utils/` and `src/data/`.
-4. `npm run gate:html`, then `npm run gate:links` — html-validate, then linkinator; third-party
-   hosts are skipped by `THIRD_PARTY_HOSTS` in `scripts/links-gate.mjs`.
+4. `npm run gate:html`, then `npm run gate:links` — html-validate, then linkinator over the build alone:
+   an outbound address is read and never fetched, so a gone one never fails it (`link-out.md`).
 5. `npm run gate:content` — content Half A plus the semantic-core drift check (content-gate.md).
 6. `npm run gate:orphans` — a route needs an inbound link, and a content route one from another
    page's body; the exempt lists in `scripts/orphan-gate.mjs` are closed and carry a reason each.

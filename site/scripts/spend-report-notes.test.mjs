@@ -23,7 +23,8 @@ import {
 import { ledgerWithGeneration } from './generation-record.mjs';
 import { runCli } from './spend-report.mjs';
 import { corpusOf, reportModel } from './spend-report-model.mjs';
-import { REPORT_PATH, monthLine, reportMarkdown, slackMessage } from './spend-report-text.mjs';
+import { REPORT_PATH, reportMarkdown } from './spend-report-text.mjs';
+import { spendMessage } from './spend-slack.mjs';
 
 const NEWEST = '2026-11-02T07:00:00.000Z';
 const DRAFT = writingCall({ input: 12000, output: 3000, tag: 'draft' });
@@ -31,9 +32,14 @@ const CORRECTION = writingCall({ role: 'correction', input: 13000, output: 2000,
 const VERDICT_STATES = readSchema('autowriter-ledger.schema.json').$defs.verdict.properties.state.enum;
 
 const modelOf = (parts) => reportModel(corpusOf(filesOf(parts)), { at: GENERATED_AT });
-const MONTH_LINE = monthLine({ month: '2026-11', spentMicro: 77_000, ceilingMicro: 25_000_000 });
+const STATUS = { month: '2026-11', spentMicro: 77_000, ceilingUsd: 25 };
+const NO_LINKS = { run: null, pullRequest: null, entries: {} };
 const NO_WARNINGS =
   'Warnings: 0 (every ledger agrees with its generation record; this does not say that every run produced an entry)';
+const messageOf = (model) => spendMessage({ model, rows: model.rows, status: STATUS, links: NO_LINKS });
+const warningBlocks = (blocks) => blocks.filter((block) => JSON.stringify(block).includes('Warnings'));
+const prose = (text) => ({ type: 'section', text: { type: 'mrkdwn', text } });
+const small = (text) => ({ type: 'context', elements: [{ type: 'mrkdwn', text }] });
 
 function soleArticle() {
   const post = recordOf({ slug: 'a-post', at: NEWEST, calls: [DRAFT, CORRECTION] });
@@ -139,14 +145,14 @@ test('a discarded attempt beside an entry that adds up is a note: the report sta
   assert.equal(model.allTime.totals.all.micro, 50000);
 });
 
-test('the Slack message of that corpus says zero warnings and does not carry the note', () => {
+test('the Slack message of that corpus says zero warnings in a quiet line and carries the note neither in its text nor in any block', () => {
   const { post, ledger } = soleArticle();
   const model = modelOf({ ledgers: [ledger, discardedLedger(lostLedger())], records: [post] });
-  const message = slackMessage(model, model.rows, MONTH_LINE);
-  assert.deepEqual(message.split('\n\n').at(-1).split('\n'), [NO_WARNINGS]);
-  assert.doesNotMatch(message, /lost-post/);
-  assert.doesNotMatch(message, /discarded/);
-  assert.doesNotMatch(message, /Notes/);
+  const { blocks, text } = messageOf(model);
+  assert.deepEqual(warningBlocks(blocks), [small(NO_WARNINGS)]);
+  assert.equal(text.split('\n\n').at(-1), NO_WARNINGS);
+  assert.doesNotMatch(text, /lost-post|discarded|Notes/);
+  assert.doesNotMatch(JSON.stringify(blocks), /lost-post|discarded|Notes/);
 });
 
 test('a ledger that records less than its record cost still warns and still counts, beside a discarded attempt that is only a note', () => {
@@ -163,12 +169,11 @@ test('a ledger that records less than its record cost still warns and still coun
   assert.deepEqual(headingsOf(markdown).slice(-2), ['Warnings', 'Notes']);
   assert.deepEqual(itemsOf(markdown, 'Warnings'), [`- ${MISMATCH}`]);
   assert.match(proseOf(markdown, 'Warnings'), /needs a person to look at it/);
-  const message = slackMessage(model, model.rows, MONTH_LINE);
-  assert.deepEqual(message.split('\n\n').at(-1).split('\n'), [
-    'Warnings: 1 (each needs a person to look at it)',
-    MISMATCH,
-  ]);
-  assert.doesNotMatch(message, /lost-post/);
+  const { blocks, text } = messageOf(model);
+  assert.deepEqual(warningBlocks(blocks), [prose(`*Warnings: 1* (each needs a person to look at it)\n• ${MISMATCH}`)]);
+  assert.equal(text.split('\n\n').at(-1), `Warnings: 1 (each needs a person to look at it)\n${MISMATCH}`);
+  assert.doesNotMatch(text, /lost-post/);
+  assert.doesNotMatch(JSON.stringify(blocks), /lost-post/);
 });
 
 test('with only a discarded attempt no entry can be counted, and the file does not say that nothing was generated', () => {

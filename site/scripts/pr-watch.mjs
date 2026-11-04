@@ -4,6 +4,7 @@ import { join, resolve } from 'node:path';
 import { newLedger, readLedger, writeLedger } from './autowriter-ledger.mjs';
 import { variable } from './escalate-channels.mjs';
 import { EscalationError, escalate } from './escalate.mjs';
+import { pullRequestUrl, runUrl } from './github-links.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 import { BOT_IDENTITY, classifyAfterRepair, classifyPullRequest, slugOfBranch } from './pr-classify.mjs';
 import {
@@ -101,11 +102,6 @@ function connect({ env, fetch, io }) {
   };
 }
 
-const repositoryUrl = (env) =>
-  `${variable(env, 'GITHUB_SERVER_URL') || 'https://github.com'}/${variable(env, 'GITHUB_REPOSITORY')}`;
-const pullRequestUrl = ({ env, number }) => `${repositoryUrl(env)}/pull/${number}`;
-const runUrl = ({ env }) => `${repositoryUrl(env)}/actions/runs/${variable(env, 'GITHUB_RUN_ID') || 'local'}`;
-
 function findingFor({ result, number, env }, kind) {
   const { head, failing = [], jobs = [] } = result.evidence;
   const named = failing.map(({ job, gate }) => (gate ? `${job} (${gate})` : job));
@@ -113,7 +109,7 @@ function findingFor({ result, number, env }, kind) {
     `The watcher judged head ${head}: ${result.verdict}, ${result.reason}.`,
     ...(named.length > 0 ? [`Failing: ${named.join(', ')}.`] : []),
     ...(jobs.length > 0 ? [`Jobs: ${jobs.join(', ')}.`] : []),
-    `Pull request: ${pullRequestUrl({ env, number })}`,
+    `Pull request: ${pullRequestUrl(env, number) ?? `#${number}`}`,
   ];
   return {
     kind,
@@ -156,9 +152,9 @@ function stageLedger({ snapshot, workdir, number, env, now }) {
   return { slug, path, ledgerPath };
 }
 
-async function deliver({ env, fetch, now, ledgerPath }, { kind, title, detail }) {
+async function deliver({ env, fetch, now, ledgerPath, number }, { kind, title, detail }) {
   try {
-    await escalate({ ledgerPath, kind, title, detail, env, fetch, now });
+    await escalate({ ledgerPath, kind, title, detail, pullRequest: number, env, fetch, now });
     return null;
   } catch (error) {
     if (error instanceof EscalationError) return error;
@@ -229,7 +225,14 @@ const ACTIONS = {
 
 const AFTER_REPAIR_ACTIONS = {
   ...ACTIONS,
-  escalate: (step) => raise(step, repairFinding(step, { pullRequest: pullRequestUrl(step), run: runUrl(step) })),
+  escalate: (step) =>
+    raise(
+      step,
+      repairFinding(step, {
+        pullRequest: pullRequestUrl(step.env, step.number) ?? `#${step.number}`,
+        run: runUrl(step.env),
+      })
+    ),
 };
 
 function writeSummary({ env, number, result, action }) {

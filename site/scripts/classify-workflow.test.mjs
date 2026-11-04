@@ -104,10 +104,15 @@ afterAll(() => {
   rmSync(outputRoot, { recursive: true, force: true });
 });
 
-const expand = (text, { before, after }) =>
-  text.replaceAll('${{ github.event.before }}', before).replaceAll('${{ github.sha }}', after);
+const BASE_OR_BEFORE = '${{ github.event.pull_request.base.sha || github.event.before }}';
 
-async function workflowSays(step, { before, after }, index) {
+const expand = (text, { before, after, base }) =>
+  text
+    .replaceAll(BASE_OR_BEFORE, base ?? before)
+    .replaceAll('${{ github.event.before }}', before)
+    .replaceAll('${{ github.sha }}', after);
+
+async function workflowSays(step, { before, after, base }, index) {
   const output = join(outputRoot, `output-${index}.txt`);
   writeFileSync(output, '');
   const env = {
@@ -117,10 +122,10 @@ async function workflowSays(step, { before, after }, index) {
     GITHUB_OUTPUT: output,
     GITHUB_SHA: after,
     ...Object.fromEntries(
-      Object.entries(step.env).map(([name, value]) => [name, expand(String(value), { before, after })])
+      Object.entries(step.env).map(([name, value]) => [name, expand(String(value), { before, after, base })])
     ),
   };
-  await run('bash', ['--noprofile', '--norc', '-eo', 'pipefail', '-c', expand(step.run, { before, after })], {
+  await run('bash', ['--noprofile', '--norc', '-eo', 'pipefail', '-c', expand(step.run, { before, after, base })], {
     cwd: join(scene.root, step.workingDirectory),
     env,
   }).catch(() => null);
@@ -192,4 +197,52 @@ test('a workflow that writes no verdict at all disagrees about every path', asyn
 test('a workflow that always draws the graph disagrees only about the prose paths', async () => {
   const found = await disagreements(plant('run: echo "code=true" >> "$GITHUB_OUTPUT"'));
   assert.deepEqual(found.map(({ path }) => path).sort(), CORPUS.filter((path) => !needsFullGraph([path])).sort());
+});
+
+const PROSE_ONLY_PUSH = {
+  codePath: 'site/src/data/post/x.md',
+  prosePath: 'audits/autowriter/2026/11/x.json',
+};
+
+let memo;
+function pullRequestScene() {
+  if (memo) return memo;
+  const base = gitAt(scene.root, 'rev-parse', 'HEAD');
+  const first = commitIn(scene.root, { write: { [PROSE_ONLY_PUSH.codePath]: 'v1\n' }, message: 'draft the post' });
+  const second = commitIn(scene.root, { write: { [PROSE_ONLY_PUSH.prosePath]: '{}\n' }, message: 'record the ledger' });
+  memo = { base, first, second };
+  return memo;
+}
+
+test('the scene for a prose-only last push is a code commit, then a ledger commit on top of it', () => {
+  const { base, first, second } = pullRequestScene();
+  assert.deepEqual(gitAt(scene.root, 'diff', '--name-only', first, second).split('\n'), [PROSE_ONLY_PUSH.prosePath]);
+  assert.deepEqual(gitAt(scene.root, 'diff', '--name-only', base, second).split('\n'), [
+    PROSE_ONLY_PUSH.prosePath,
+    PROSE_ONLY_PUSH.codePath,
+  ]);
+  assert.equal(needsFullGraph([PROSE_ONLY_PUSH.prosePath]), false);
+  assert.equal(needsFullGraph([PROSE_ONLY_PUSH.codePath]), true);
+});
+
+test('a pull request whose last push is prose-only still draws the full graph, because it is judged against its base', async () => {
+  const { base, first, second } = pullRequestScene();
+  const step = verdictStep(realText);
+  assert.equal(await workflowSays(step, { base, before: first, after: second }, 'pull-request'), true);
+});
+
+test('the same two commits pushed to main are still judged against the previous head and draw nothing', async () => {
+  const { first, second } = pullRequestScene();
+  const step = verdictStep(realText);
+  assert.equal(await workflowSays(step, { before: first, after: second }, 'push-to-main'), false);
+});
+
+test('a workflow that judges a pull request by its previous head is caught by the prose-only last push', async () => {
+  const { base, first, second } = pullRequestScene();
+  const stale = realText.replace(BASE_OR_BEFORE, '${{ github.event.before }}');
+  assert.notEqual(stale, realText, 'the workflow no longer holds the base-or-before expression');
+  assert.equal(
+    await workflowSays(verdictStep(stale), { base, before: first, after: second }, 'stale-pull-request'),
+    false
+  );
 });

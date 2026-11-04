@@ -1,5 +1,6 @@
 {
   "content/collection-schemas": [
+    "A source's original is the address its url stands in for",
     "An entry that breaks its collection schema stops the build",
     "Answer and definition fields stay inside their word ranges",
     "Case-study entries carry the client, the work and the outcome",
@@ -67,13 +68,19 @@
     "The human gate judges the main text of every built page except the utility and pagination routes"
   ],
   "delivery/link-integrity": [
+    "A citation on a search link is asked about again every day",
+    "A host name that does not resolve is dead only after three scheduled days",
+    "A name counts only on a run in which another host answered",
     "A route earns an inbound link from a page, not from the chrome",
+    "A scheduled job repairs a dead outbound citation from the archive, else from a search",
     "Every built page is valid HTML under the recommended html-validate rules",
-    "Every link reachable from the home page resolves",
+    "Every link inside the build resolves and every outbound address is well formed",
     "Every outbound link carries nofollow, noopener and noreferrer",
     "Every page except home and the style guide has a followed inbound link from another page",
     "No internal link carries nofollow",
-    "The build adds the outbound rel tokens and strips target from Markdown links"
+    "The build adds the outbound rel tokens and strips target from Markdown links",
+    "The repair job never blocks and never guesses at another source",
+    "The repair register is generated, sealed and checked by the gate"
   ],
   "delivery/performance-budgets": [
     "A page is charged for every stylesheet and script its HTML names by a root-relative path",
@@ -199,18 +206,31 @@
   "governance/spend-reporting": [
     "A day that ends with no entry still posts to Slack",
     "A line is a warning only when a person has something to do about it",
-    "A missed message is a red step and nothing more",
+    "A missed live message never fails the publish",
+    "A missed statistics message is a warning, and a missed escalation is still a failure",
     "A report that disagrees with its records is refused",
     "A row shows its repair cost, and the Notes and the message total the rest",
+    "An entry is announced as live only when its page answers on the live origin",
+    "An entry is announced once, and a publish with several says so in one message",
+    "An entry that merged and is not reachable is a warning of its own",
     "An incomplete corpus is reported, not summed in silence",
+    "Every Slack message is a Block Kit message with a fallback text",
+    "Every clickable reference is a Slack link built from the environment",
+    "Every surface an entry has is a link, listed from the parity derivation",
+    "Figures that are compared sit in preformatted tables, not in fields",
     "One report states what every generated entry cost",
+    "Publish Live checks the live origin after the smoke step with only the webhook",
     "Slack receives the numbers after every generation",
-    "The Slack message carries the month sentence of the ceiling status",
+    "The Slack message carries the month first, as the sentence of the ceiling status",
+    "The escalation message says what happened and where to act",
+    "The first run announces only what is recent",
+    "The live message opens with the month and names the cost and the purpose",
     "The month comes before the explanation of the file",
     "The proof of the report guard does not depend on what the report says today",
     "The report is committed with every change to the spend",
     "The report says what the month has spent against the ceiling",
     "The report totals every call the machine paid for, each in exactly one row",
+    "The webhook appears in no output",
     "Three windows are totalled and each is defined in the file"
   ],
   "governance/unattended-publishing": [

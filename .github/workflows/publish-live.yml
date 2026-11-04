@@ -60,6 +60,25 @@ jobs:
       - name: smoke the production origin, because only a live response proves the headers
         run: npm run smoke:prod "https://${{ vars.CLOUDFLARE_PAGES_PROJECT }}.pages.dev"
 
+      - name: restore which entries were already announced as live
+        uses: actions/cache/restore@v4
+        with:
+          path: site/.live-entries.json
+          key: live-entries-${{ github.run_id }}
+          restore-keys: live-entries-
+
+      - name: say which entries are live, once the live origin answers for their pages
+        continue-on-error: true
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: node scripts/live-entry.mjs --dist dist --state .live-entries.json
+
+      - name: remember which entries were announced, before any later step can fail the job
+        uses: actions/cache/save@v4
+        with:
+          path: site/.live-entries.json
+          key: live-entries-${{ github.run_id }}
+
       - name: restore the route set last announced to indexnow
         uses: actions/cache@v4
         with:

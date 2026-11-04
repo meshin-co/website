@@ -156,6 +156,48 @@ test('a sentence about a standard that rests on a source off the primary domains
   assert.deepEqual(rulesOf(found), ['standard-without-primary-source']);
 });
 
+const archiveOf = (address) => `https://web.archive.org/web/20261102000000/${address}`;
+
+const entryWithArchivedSource = ({ entry = entryText(), cited = NIST_URL, original = cited } = {}) => {
+  const lines = [`url: ${archiveOf(cited)}`, ...(original === null ? [] : [`original: ${original}`])];
+  const archived = entry.replace(`url: ${cited}`, lines.join('\n    '));
+  assert.notEqual(archived, entry);
+  return archived;
+};
+
+test('an entry whose source was archived still binds its claim rows through the address the source was cited at', (t) => {
+  assert.deepEqual(findingsOf(sceneIn(t, { entry: entryWithArchivedSource() })), []);
+});
+
+test('an archived source that names another original than the claim table cites leaves the row unresolved', (t) => {
+  const entry = entryWithArchivedSource({ original: 'https://www.nist.gov/other' });
+  assert.deepEqual(rulesOf(findingsOf(sceneIn(t, { entry }))), ['source-unresolved']);
+});
+
+test('an archived source that names no original leaves the row unresolved, since its url is no longer the cited one', (t) => {
+  const entry = entryWithArchivedSource({ original: null });
+  assert.deepEqual(rulesOf(findingsOf(sceneIn(t, { entry }))), ['source-unresolved']);
+});
+
+const STANDARD_SENTENCE = 'The ISO standard for an AI management system asks for a documented scope and a named owner.';
+
+function findingsForArchivedStandard(t, cited) {
+  const rows = recordWith().claimTable.map((row) =>
+    row.source ? { ...row, sentence: STANDARD_SENTENCE, source: { ...row.source, url: cited } } : row
+  );
+  const plain = entryText({ sentences: [STANDARD_SENTENCE, ...SENTENCES.slice(1)] }).replace(NIST_URL, cited);
+  const entry = entryWithArchivedSource({ entry: plain, cited });
+  return findingsOf(sceneIn(t, { record: recordWith({ claimTable: rows, entry }), entry }));
+}
+
+test('a sentence about a standard is judged at the address an archived source was cited at, not at the archive', (t) => {
+  assert.deepEqual(findingsForArchivedStandard(t, 'https://www.iso.org/standard/81230.html'), []);
+  const found = findingsForArchivedStandard(t, 'https://example.com/a-summary');
+  assert.deepEqual(rulesOf(found), ['standard-without-primary-source']);
+  assert.match(found[0].detail, /example\.com/);
+  assert.doesNotMatch(found[0].detail, /web\.archive\.org/);
+});
+
 test('prose of eleven-word sentences leaves the band, and the finding carries the measured values', (t) => {
   const entry = entryText({ sentences: Array(10).fill(ELEVEN_WORD_SENTENCE) });
   const found = findingsOf(sceneIn(t, { entry, record: recordWith({ claimTable: [], entry }) }));

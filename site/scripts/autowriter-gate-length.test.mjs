@@ -68,7 +68,7 @@ test('the findings of the length record are part of the report, after the others
     ledgers: [],
     claims: [],
     core: null,
-    workflow: null,
+    workflows: [],
     suffix: ' — x',
     now: new Date('2026-11-02T07:00:00.000Z'),
     lengthRecord: [planted],

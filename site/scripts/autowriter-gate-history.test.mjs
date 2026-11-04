@@ -44,7 +44,7 @@ const inputs = () => ({
   ledgers: [],
   claims: [],
   core: readFileSync(join(REPO, 'docs/SEMANTIC-CORE.md'), 'utf8'),
-  workflow: readFileSync(join(REPO, '.github/workflows/ci.yml'), 'utf8'),
+  workflows: [{ path: '.github/workflows/ci.yml', text: readFileSync(join(REPO, '.github/workflows/ci.yml'), 'utf8') }],
   suffix: ' — meshin.co',
   now: new Date('2026-11-02T07:00:00.000Z'),
 });
@@ -65,7 +65,7 @@ function inTempRepo(check) {
     for (const [path, text] of Object.entries({
       'site/src/config.yaml': 'site:\n  name: meshin.co\n',
       'docs/SEMANTIC-CORE.md': inputs().core,
-      '.github/workflows/ci.yml': inputs().workflow,
+      '.github/workflows/ci.yml': inputs().workflows[0].text,
       ...bandSceneFiles(),
     })) {
       mkdirSync(dirname(join(root, path)), { recursive: true });

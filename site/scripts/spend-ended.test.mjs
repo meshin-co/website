@@ -6,18 +6,58 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
 
+import { blockKitProblems } from './fixtures/block-kit.mjs';
 import { WEBHOOK, withScene } from './fixtures/spend-run.mjs';
 import { createScene, ledgerOf } from './fixtures/spend-scene.mjs';
 import { recordPath } from './record-layout.mjs';
-import { messageOf, runCli } from './spend-ended.mjs';
+import { runCli } from './spend-ended.mjs';
+import { noticeFile, noticeSlug } from './spend-notice.mjs';
 
 const NOW = new Date('2026-11-10T09:00:00.000Z');
 const IN_NOVEMBER = '2026-11-03T08:00:00Z';
+const RAISED = '2026-11-10T08:30:00Z';
 const MONTH_LINE_OPEN = '2026-11 so far: 0.625 USD spent of the 25.00 USD monthly ceiling, 24.375 USD left.';
 const MONTH_LINE_REACHED =
   '2026-11 so far: 25.00 USD spent of the 25.00 USD monthly ceiling, none left: the ceiling is reached, so the writer does not run for the rest of the month.';
+const HEADER = '2026-11 spend against the monthly ceiling';
 const SLUG = 'a-post';
 const LEDGER_PATH = recordPath('ledger', SLUG, IN_NOVEMBER);
+const WORKFLOW_ENV = {
+  SLACK_WEBHOOK_URL: WEBHOOK,
+  GITHUB_SERVER_URL: 'https://github.test',
+  GITHUB_REPOSITORY: 'meshin-co/website',
+  GITHUB_RUN_ID: '777',
+};
+const RUN_COLUMN = '*Workflow run*\n<https://github.test/meshin-co/website/actions/runs/777|run 777>';
+const RUN_LINE = 'Workflow run: <https://github.test/meshin-co/website/actions/runs/777|run 777>';
+const CEILING_TOLD =
+  "No entry was written on 2026-11-10: the month's spend reached the ceiling, so the writer did not run. The run cost 0.00 USD.";
+const STOPPED_TOLD =
+  'No entry was written on 2026-11-10: the write stopped on a-post (output). The run cost 0.625 USD.';
+const SECRETS = [WEBHOOK, new URL(WEBHOOK).pathname, 'T0SECRET', 'B0SECRET', 'xoxSECRETpath'];
+const ISSUE_REFUSED = {
+  channel: 'issue',
+  delivered: false,
+  status: 403,
+  issue: null,
+  error: 'GitHub answered HTTP 403: forbidden',
+};
+const SLACK_DELIVERED = { channel: 'slack', delivered: true, status: 200, issue: null, error: null };
+
+const happened = (sentence) => `*No entry was written on 2026-11-10*\n${sentence}`;
+const cost = (usd) => `*What the run cost*\n${usd} USD`;
+const issueColumn = (number) =>
+  `*Escalation issue*\n<https://github.test/meshin-co/website/issues/${number}|#${number}>`;
+const issueLine = (number) => `Escalation issue: <https://github.test/meshin-co/website/issues/${number}|#${number}>`;
+const issueOpened = (number) => ({ channel: 'issue', delivered: true, status: 201, issue: number, error: null });
+const escalationOf = (id, kind, at, ...receipts) => ({
+  id,
+  kind,
+  title: `Escalation ${id}`,
+  detail: 'The run stopped.',
+  raisedAt: at,
+  receipts: receipts.map((receipt) => ({ ...receipt, attemptedAt: at })),
+});
 
 const withFiles = (body) =>
   withScene(async (scene) => {
@@ -56,69 +96,60 @@ function runner(
   return { run, out, err, posted, printed: () => [...out, ...err].join('\n') };
 }
 
+const viewOf = ({ text, blocks = [] }) => ({
+  header: blocks[0]?.text?.text,
+  happened: blocks.find((block) => block.text?.text.startsWith('*No entry was written on '))?.text.text,
+  columns: blocks.find((block) => block.fields)?.fields.map((field) => field.text),
+  fallback: text.split(/\n+/),
+});
+
+const views = ({ posted }) => posted.map(({ body }) => viewOf(body));
+const partsOf = (hook, part) => views(hook).map((view) => view[part]);
+const told = (hook) =>
+  partsOf(hook, 'fallback').map((lines) => lines.find((line) => line.startsWith('No entry was written on ')));
+
+const leaks = (hook) => {
+  const shown = [hook.printed(), ...hook.posted.map(({ body }) => JSON.stringify(body))].join('\n');
+  return SECRETS.filter((secret) => shown.includes(secret));
+};
+
 const stoppedRun = () => ledgerOf({ slug: SLUG, generationUsd: 0.125, attempts: [{ at: IN_NOVEMBER, usd: 0.5 }] });
 
-const putCostedLedger = (scene) => {
-  scene.put(LEDGER_PATH, stoppedRun());
+const putCostedLedger = (scene, escalations = []) => {
+  scene.put(LEDGER_PATH, { ...stoppedRun(), escalations });
   scene.commit('the run ledger');
+};
+
+const putSpentMonth = (scene) => {
+  scene.put(
+    recordPath('ledger', 'big-post', IN_NOVEMBER),
+    ledgerOf({ slug: 'big-post', attempts: [{ at: IN_NOVEMBER, usd: 25 }] })
+  );
+  scene.commit('spent');
+};
+
+const putNotice = (scene, month, escalations) => {
+  scene.put(noticeFile(month), { ...ledgerOf({ slug: noticeSlug(month) }), escalations });
+  scene.commit(`the notice of ${month}`);
 };
 
 const decisionOf = (extra = {}) => ({ schema: 1, decision: 'write', ledgerPath: LEDGER_PATH, ...extra });
 const failedResult = { ok: false, kind: 'output', message: 'no draft passed', spend: { costUsd: 0.625 } };
 
-test('the message is two lines: what happened and what it cost, then the month line', () => {
-  const text = messageOf({
-    date: '2026-11-10',
-    reason: 'the writer did not run',
-    runMicro: 0,
-    line: MONTH_LINE_OPEN,
-  });
-  assert.equal(
-    text,
-    ['No entry was written on 2026-11-10: the writer did not run. The run cost 0.00 USD.', MONTH_LINE_OPEN].join('\n')
-  );
-});
-
-test('a reason that ends in a full stop or spans lines still gives exactly two lines', () => {
-  const text = messageOf({
-    date: '2026-11-10',
-    reason: 'the picker chose nothing: nothing\nis ready.  ',
-    runMicro: 1,
-    line: MONTH_LINE_OPEN,
-  });
-  const [first, second, ...rest] = text.split('\n');
-  assert.equal(
-    first,
-    'No entry was written on 2026-11-10: the picker chose nothing: nothing is ready. The run cost 0.000001 USD.'
-  );
-  assert.equal(second, MONTH_LINE_OPEN);
-  assert.deepEqual(rest, []);
-});
-
 test(
-  'ceiling reached: posts the ceiling reason, a cost of 0.00 and the month line, and reads no ledger of the run',
+  'ceiling reached: posts the ceiling reason, a cost of 0.00 and the month against the ceiling, and reads no ledger of the run',
   withFiles(async (scene) => {
-    scene.put(
-      recordPath('ledger', 'big-post', IN_NOVEMBER),
-      ledgerOf({ slug: 'big-post', attempts: [{ at: IN_NOVEMBER, usd: 25 }] })
-    );
-    scene.commit('spent');
+    putSpentMonth(scene);
     const hook = runner(scene);
     assert.equal(await hook.run(['ceiling']), 0);
-    assert.deepEqual(
-      hook.posted.map(({ url, body }) => [url, body.text]),
-      [
-        [
-          WEBHOOK,
-          [
-            "No entry was written on 2026-11-10: the month's spend reached the ceiling, so the writer did not run. The run cost 0.00 USD.",
-            MONTH_LINE_REACHED,
-          ].join('\n'),
-        ],
-      ]
-    );
-    assert.deepEqual(hook.out, ['spend ended: slack delivered (HTTP 200)']);
-    assert.deepEqual(hook.err, []);
+    assert.deepEqual(views(hook), [
+      {
+        header: HEADER,
+        happened: happened("The month's spend reached the ceiling, so the writer did not run."),
+        columns: [cost('0.00')],
+        fallback: [MONTH_LINE_REACHED, CEILING_TOLD],
+      },
+    ]);
   })
 );
 
@@ -135,15 +166,19 @@ test(
     });
     const hook = runner(scene);
     assert.equal(await hook.run(['pick', '--decision', decision]), 0);
-    assert.deepEqual(
-      hook.posted.map(({ body }) => body.text),
-      [
-        [
-          'No entry was written on 2026-11-10: the picker chose nothing to write: every candidate was set aside: no query had enough impressions. The run cost 0.00 USD.',
+    assert.deepEqual(views(hook), [
+      {
+        header: HEADER,
+        happened: happened(
+          'The picker chose nothing to write: every candidate was set aside: no query had enough impressions.'
+        ),
+        columns: [cost('0.00')],
+        fallback: [
           MONTH_LINE_OPEN,
-        ].join('\n'),
-      ]
-    );
+          'No entry was written on 2026-11-10: the picker chose nothing to write: every candidate was set aside: no query had enough impressions. The run cost 0.00 USD.',
+        ],
+      },
+    ]);
   })
 );
 
@@ -158,11 +193,36 @@ test(
     });
     const hook = runner(scene);
     assert.equal(await hook.run(['pick', '--decision', decision]), 0);
-    const [first] = hook.posted[0].body.text.split('\n');
-    assert.equal(
-      first,
-      'No entry was written on 2026-11-10: the picker chose to strengthen a page and wrote nothing: Strengthen /blog/x for "query". The run cost 0.00 USD.'
-    );
+    assert.deepEqual(partsOf(hook, 'happened'), [
+      happened('The picker chose to strengthen a page and wrote nothing: Strengthen /blog/x for "query".'),
+    ]);
+    assert.deepEqual(told(hook), [
+      'No entry was written on 2026-11-10: the picker chose to strengthen a page and wrote nothing: Strengthen /blog/x for "query". The run cost 0.00 USD.',
+    ]);
+  })
+);
+
+test(
+  'a picker reason that spans lines and ends in several full stops is one clean sentence in the block and in the text',
+  withFiles(async (scene, put) => {
+    putCostedLedger(scene);
+    const decision = put('decision.json', {
+      schema: 1,
+      decision: 'none',
+      reason: 'no query had enough impressions\nand the rest were set aside...  ',
+      advisories: [],
+    });
+    const hook = runner(scene);
+    assert.equal(await hook.run(['pick', '--decision', decision]), 0);
+    assert.deepEqual(partsOf(hook, 'happened'), [
+      happened('The picker chose nothing to write: no query had enough impressions and the rest were set aside.'),
+    ]);
+    assert.deepEqual(partsOf(hook, 'fallback'), [
+      [
+        MONTH_LINE_OPEN,
+        'No entry was written on 2026-11-10: the picker chose nothing to write: no query had enough impressions and the rest were set aside. The run cost 0.00 USD.',
+      ],
+    ]);
   })
 );
 
@@ -178,15 +238,17 @@ test(
     });
     const hook = runner(scene);
     assert.equal(await hook.run(['write', '--decision', decision, '--result', result]), 0);
-    assert.deepEqual(
-      hook.posted.map(({ body }) => body.text),
-      [
-        [
-          'No entry was written on 2026-11-10: the write ended with no entry, because term a-term was skipped (no draft passed). The run cost 0.625 USD.',
+    assert.deepEqual(views(hook), [
+      {
+        header: HEADER,
+        happened: happened('The write ended with no entry, because term a-term was skipped (no draft passed).'),
+        columns: [cost('0.625')],
+        fallback: [
           MONTH_LINE_OPEN,
-        ].join('\n'),
-      ]
-    );
+          'No entry was written on 2026-11-10: the write ended with no entry, because term a-term was skipped (no draft passed). The run cost 0.625 USD.',
+        ],
+      },
+    ]);
   })
 );
 
@@ -198,10 +260,12 @@ test(
     const result = put('result.json', { ok: true, entries: [], skipped: [] });
     const hook = runner(scene);
     assert.equal(await hook.run(['write', '--decision', decision, '--result', result]), 0);
-    assert.equal(
-      hook.posted[0].body.text.split('\n')[0],
-      'No entry was written on 2026-11-10: the write ended with no entry and named no skipped draft. The run cost 0.625 USD.'
-    );
+    assert.deepEqual(partsOf(hook, 'happened'), [
+      happened('The write ended with no entry and named no skipped draft.'),
+    ]);
+    assert.deepEqual(told(hook), [
+      'No entry was written on 2026-11-10: the write ended with no entry and named no skipped draft. The run cost 0.625 USD.',
+    ]);
   })
 );
 
@@ -213,15 +277,14 @@ test(
     const result = put('result.json', failedResult);
     const hook = runner(scene);
     assert.equal(await hook.run(['write', '--decision', decision, '--result', result]), 0);
-    assert.deepEqual(
-      hook.posted.map(({ body }) => body.text),
-      [
-        [
-          'No entry was written on 2026-11-10: the write stopped on a-post (output). The run cost 0.625 USD.',
-          MONTH_LINE_OPEN,
-        ].join('\n'),
-      ]
-    );
+    assert.deepEqual(views(hook), [
+      {
+        header: HEADER,
+        happened: happened('The write stopped on a-post (output).'),
+        columns: [cost('0.625')],
+        fallback: [MONTH_LINE_OPEN, STOPPED_TOLD],
+      },
+    ]);
   })
 );
 
@@ -233,10 +296,12 @@ test(
     const result = put('result.json', '');
     const hook = runner(scene);
     assert.equal(await hook.run(['write', '--decision', decision, '--result', result]), 0);
-    assert.equal(
-      hook.posted[0].body.text.split('\n')[0],
-      'No entry was written on 2026-11-10: the write stopped on a-post and the writer printed no result. The run cost 0.625 USD.'
-    );
+    assert.deepEqual(partsOf(hook, 'happened'), [
+      happened('The write stopped on a-post and the writer printed no result.'),
+    ]);
+    assert.deepEqual(told(hook), [
+      'No entry was written on 2026-11-10: the write stopped on a-post and the writer printed no result. The run cost 0.625 USD.',
+    ]);
   })
 );
 
@@ -259,7 +324,10 @@ test(
     const decision = put('decision.json', decisionOf());
     const result = put('result.json', { ...failedResult, spend: { costUsd: 99 } });
     assert.equal(await hook.run(['write', '--decision', decision, '--result', result]), 0);
-    assert.match(hook.posted[0].body.text.split('\n')[0], /The run cost 1\.875 USD\.$/);
+    assert.deepEqual(partsOf(hook, 'columns'), [[cost('1.875')]]);
+    assert.deepEqual(told(hook), [
+      'No entry was written on 2026-11-10: the write stopped on a-post (output). The run cost 1.875 USD.',
+    ]);
   })
 );
 
@@ -272,30 +340,166 @@ test(
     const decision = put('decision.json', decisionOf());
     const result = put('result.json', failedResult);
     assert.equal(await hook.run(['write', '--decision', decision, '--result', result]), 0);
-    assert.match(hook.posted[0].body.text.split('\n')[0], /The run cost 0\.50 USD\.$/);
+    assert.deepEqual(partsOf(hook, 'columns'), [[cost('0.50')]]);
+    assert.deepEqual(told(hook), [
+      'No entry was written on 2026-11-10: the write stopped on a-post (output). The run cost 0.50 USD.',
+    ]);
   })
 );
 
 test(
-  'a delivery that fails exits 1, prints one receipt line on stderr and never prints the webhook',
+  'the run of the workflow is a link beside the cost, built from the server, the repository and the run the environment names',
   withFiles(async (scene) => {
-    const hook = runner(scene, { answer: () => new Response(WEBHOOK, { status: 500 }) });
-    assert.equal(await hook.run(['ceiling']), 1);
-    assert.equal(hook.out.length, 0);
-    assert.equal(hook.err.length, 1);
-    assert.match(hook.err[0], /^spend ended: slack NOT delivered: Slack answered HTTP 500/);
-    for (const secret of ['T0SECRET', 'B0SECRET', 'xoxSECRETpath', WEBHOOK])
-      assert.ok(!hook.printed().includes(secret), secret);
+    putSpentMonth(scene);
+    const hook = runner(scene, { env: WORKFLOW_ENV });
+    assert.equal(await hook.run(['ceiling']), 0);
+    assert.deepEqual(partsOf(hook, 'columns'), [[cost('0.00'), RUN_COLUMN]]);
+    assert.deepEqual(partsOf(hook, 'fallback'), [[MONTH_LINE_REACHED, CEILING_TOLD, RUN_LINE]]);
   })
 );
 
 test(
-  'a webhook that is not set exits 1 without a request',
+  'with no server, repository or run named there is no link at all and the cost stands alone',
+  withFiles(async (scene) => {
+    const hook = runner(scene);
+    assert.equal(await hook.run(['ceiling']), 0);
+    assert.deepEqual(partsOf(hook, 'columns'), [[cost('0.00')]]);
+    assert.doesNotMatch(JSON.stringify(hook.posted.map(({ body }) => body)), /https?:|Workflow run/);
+  })
+);
+
+test(
+  'the issue that a stopped write opened is a third column, beside the cost and the run',
+  withFiles(async (scene, put) => {
+    putCostedLedger(scene, [escalationOf('esc-1', 'hard-stop', RAISED, issueOpened(41), SLACK_DELIVERED)]);
+    const decision = put('decision.json', decisionOf());
+    const result = put('result.json', failedResult);
+    const hook = runner(scene, { env: WORKFLOW_ENV });
+    assert.equal(await hook.run(['write', '--decision', decision, '--result', result]), 0);
+    assert.deepEqual(partsOf(hook, 'columns'), [[cost('0.625'), RUN_COLUMN, issueColumn(41)]]);
+    assert.deepEqual(partsOf(hook, 'fallback'), [[MONTH_LINE_OPEN, STOPPED_TOLD, RUN_LINE, issueLine(41)]]);
+  })
+);
+
+test(
+  'the newest issue the ledger delivered is the one linked, and an issue that was refused is skipped',
+  withFiles(async (scene, put) => {
+    putCostedLedger(scene, [
+      escalationOf('esc-1', 'hard-stop', '2026-11-10T08:00:00Z', issueOpened(40)),
+      escalationOf('esc-2', 'hard-stop', RAISED, issueOpened(41)),
+      escalationOf('esc-3', 'hard-stop', '2026-11-10T08:50:00Z', ISSUE_REFUSED),
+    ]);
+    const decision = put('decision.json', decisionOf());
+    const result = put('result.json', failedResult);
+    const hook = runner(scene, { env: WORKFLOW_ENV });
+    assert.equal(await hook.run(['write', '--decision', decision, '--result', result]), 0);
+    assert.deepEqual(partsOf(hook, 'columns'), [[cost('0.625'), RUN_COLUMN, issueColumn(41)]]);
+    assert.deepEqual(partsOf(hook, 'fallback'), [[MONTH_LINE_OPEN, STOPPED_TOLD, RUN_LINE, issueLine(41)]]);
+  })
+);
+
+test(
+  'an escalation whose issue was refused leaves no issue column, though its Slack post was delivered',
+  withFiles(async (scene, put) => {
+    putCostedLedger(scene, [escalationOf('esc-1', 'credential', RAISED, ISSUE_REFUSED, SLACK_DELIVERED)]);
+    const decision = put('decision.json', decisionOf());
+    const result = put('result.json', failedResult);
+    const hook = runner(scene, { env: WORKFLOW_ENV });
+    assert.equal(await hook.run(['write', '--decision', decision, '--result', result]), 0);
+    assert.deepEqual(partsOf(hook, 'columns'), [[cost('0.625'), RUN_COLUMN]]);
+    assert.deepEqual(partsOf(hook, 'fallback'), [[MONTH_LINE_OPEN, STOPPED_TOLD, RUN_LINE]]);
+  })
+);
+
+test(
+  'a ceiling ending links the issue that the notice of the month opened',
+  withFiles(async (scene) => {
+    putSpentMonth(scene);
+    putNotice(scene, '2026-11', [escalationOf('esc-1', 'spend-ceiling', RAISED, issueOpened(41), SLACK_DELIVERED)]);
+    const hook = runner(scene, { env: WORKFLOW_ENV });
+    assert.equal(await hook.run(['ceiling']), 0);
+    assert.deepEqual(partsOf(hook, 'columns'), [[cost('0.00'), RUN_COLUMN, issueColumn(41)]]);
+    assert.deepEqual(partsOf(hook, 'fallback'), [[MONTH_LINE_REACHED, CEILING_TOLD, RUN_LINE, issueLine(41)]]);
+  })
+);
+
+test(
+  'the notice of another month is not the notice of this month, so a ceiling ending links no issue',
+  withFiles(async (scene) => {
+    putSpentMonth(scene);
+    putNotice(scene, '2026-10', [
+      escalationOf('esc-1', 'spend-ceiling', '2026-10-20T08:00:00Z', issueOpened(40), SLACK_DELIVERED),
+    ]);
+    const hook = runner(scene, { env: WORKFLOW_ENV });
+    assert.equal(await hook.run(['ceiling']), 0);
+    assert.deepEqual(partsOf(hook, 'columns'), [[cost('0.00'), RUN_COLUMN]]);
+    assert.deepEqual(partsOf(hook, 'fallback'), [[MONTH_LINE_REACHED, CEILING_TOLD, RUN_LINE]]);
+  })
+);
+
+test(
+  'a ceiling ending whose notice delivered no issue links no issue, and its delivered Slack receipt is not an issue',
+  withFiles(async (scene) => {
+    putSpentMonth(scene);
+    putNotice(scene, '2026-11', [escalationOf('esc-1', 'spend-ceiling', RAISED, ISSUE_REFUSED, SLACK_DELIVERED)]);
+    const hook = runner(scene, { env: WORKFLOW_ENV });
+    assert.equal(await hook.run(['ceiling']), 0);
+    assert.deepEqual(partsOf(hook, 'columns'), [[cost('0.00'), RUN_COLUMN]]);
+  })
+);
+
+test(
+  'a delivery that fails exits 0, prints one warning line on stderr and nothing on stdout, and never prints the webhook',
+  withFiles(async (scene) => {
+    const hook = runner(scene, { answer: () => new Response(`${WEBHOOK}\nfailed\non two lines`, { status: 500 }) });
+    assert.equal(await hook.run(['ceiling']), 0);
+    assert.deepEqual(hook.out, []);
+    assert.equal(hook.err.length, 1);
+    assert.match(hook.err[0], /^::warning::spend ended: slack NOT delivered: Slack answered HTTP 500/);
+    assert.doesNotMatch(hook.err[0], /\n/);
+    assert.deepEqual(leaks(hook), []);
+  })
+);
+
+test(
+  'a request that cannot be made is the same warning, and the webhook in the network error is removed from it',
+  withFiles(async (scene) => {
+    const unreachable = () => {
+      throw new Error(`getaddrinfo ENOTFOUND while posting to ${WEBHOOK}`);
+    };
+    const hook = runner(scene, { answer: unreachable });
+    assert.equal(await hook.run(['ceiling']), 0);
+    assert.deepEqual(hook.out, []);
+    assert.equal(hook.err.length, 1);
+    assert.match(hook.err[0], /^::warning::spend ended: slack NOT delivered: request failed: getaddrinfo ENOTFOUND/);
+    assert.deepEqual(leaks(hook), []);
+  })
+);
+
+test(
+  'a webhook that is not set exits 0 without a request, and the warning names the secret to create',
   withFiles(async (scene) => {
     const hook = runner(scene, { env: {} });
-    assert.equal(await hook.run(['ceiling']), 1);
+    assert.equal(await hook.run(['ceiling']), 0);
     assert.deepEqual(hook.posted, []);
-    assert.match(hook.err.join('\n'), /^spend ended: slack NOT delivered: /);
+    assert.deepEqual(hook.out, []);
+    assert.equal(hook.err.length, 1);
+    assert.match(hook.err[0], /^::warning::spend ended: slack NOT delivered: SLACK_WEBHOOK_URL is not set/);
+  })
+);
+
+test(
+  'a delivered message is a Block Kit message posted once to the webhook, reported on stdout alone and free of the webhook',
+  withFiles(async (scene) => {
+    const hook = runner(scene);
+    assert.equal(await hook.run(['ceiling']), 0);
+    assert.deepEqual(
+      hook.posted.map(({ url, body }) => [url, blockKitProblems(body)]),
+      [[WEBHOOK, []]]
+    );
+    assert.deepEqual(hook.out, ['spend ended: slack delivered (HTTP 200)']);
+    assert.deepEqual(hook.err, []);
+    assert.deepEqual(leaks(hook), []);
   })
 );
 

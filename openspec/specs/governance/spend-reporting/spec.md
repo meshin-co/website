@@ -105,16 +105,91 @@ rest of the month.
 - **WHEN** the report is written
 - **THEN** it reads the ledgers and records of the working tree and the clock, and no network
 
-### Requirement: The Slack message carries the month sentence of the ceiling status
+### Requirement: Every Slack message is a Block Kit message with a fallback text
 
-The Slack message SHALL carry the same sentence as its second block, built by `monthLineOf` in
-`site/scripts/spend-ceiling.mjs` from the ceiling status of the run, so that its figure is the one
-the ceiling job stops on, including the spend on branches that are not merged yet.
+Every message the unattended writer posts to Slack SHALL be `{ text, blocks }`, built by
+`site/scripts/slack-blocks.mjs`, with `text` the fallback a phone notification shows. A builder SHALL
+refuse a section, a field, a field list, a context line or a block list over the limit Slack documents,
+shorten only a header and the fallback, and escape `&`, `<` and `>` in every text that is not a link.
 
-#### Scenario: The message carries the sentence
+#### Scenario: A message has no fallback
+
+- **WHEN** a message is built with an empty fallback text
+- **THEN** the builder throws and nothing is posted
+
+#### Scenario: A section is over 3000 characters
+
+- **WHEN** a section text is 3001 characters long
+- **THEN** the builder throws and names the length and the limit
+
+#### Scenario: A text holds an angle bracket
+
+- **WHEN** a title or a detail contains `<` or `&`
+- **THEN** the message carries `&lt;` or `&amp;`, so Slack does not read it as a link
+
+### Requirement: The Slack message carries the month first, as the sentence of the ceiling status
+
+The spend and no-entry messages SHALL open with the month against the ceiling: block 0 is a header
+`<month> spend against the monthly ceiling`, block 1 is the table of Spent, Ceiling and Left, and the
+first line of the fallback text is the sentence `monthLineOf` in `site/scripts/spend-ceiling.mjs`
+builds from the ceiling status of the run, so that its figure is the one the ceiling job stops on,
+including the spend on branches that are not merged yet.
+
+#### Scenario: The message opens with the month
 
 - **WHEN** a write produced an entry and the ceiling status says 0.022748 USD spent of 25 USD
-- **THEN** the second block of the message reads `2026-11 so far: 0.022748 USD spent of the 25.00 USD monthly ceiling, 24.977252 USD left.`
+- **THEN** block 0 is the header `2026-11 spend against the monthly ceiling`, block 1 is a table with
+  0.022748 beside Spent, 25.00 beside Ceiling and 24.977252 beside Left, and the first line of the
+  fallback text reads `2026-11 so far: 0.022748 USD spent of the 25.00 USD monthly ceiling, 24.977252 USD left.`
+
+#### Scenario: The ceiling is reached
+
+- **WHEN** the spend of the month equals or exceeds the ceiling
+- **THEN** the table reads `none` under Left and a context line says that the writer does not run
+  for the rest of the month
+
+### Requirement: Figures that are compared sit in preformatted tables, not in fields
+
+The month against the ceiling, the token counts and the costs SHALL be in a code fence padded by
+`monoTable` in `site/scripts/slack-table.mjs`, so that the figures line up at the decimal point, and no
+line of a table SHALL be wider than `PHONE_COLUMNS`, 34 characters, a limit of this project because
+Slack documents no code block width on a phone. `fields` SHALL hold only key and value link columns:
+Slack lays them out in two proportional columns of unknown width.
+
+#### Scenario: Costs of different lengths are tabulated
+
+- **WHEN** the entries cost 0.022748, 0.1 and 12.5 USD
+- **THEN** the table pads them so that the decimal points stand in one column
+
+#### Scenario: A table is rendered for a phone
+
+- **WHEN** the spend message is built for one article and one term of 12,345 input tokens, 6,789
+  output tokens and 0.123456 USD each
+- **THEN** no line of any table in it is wider than 34 characters
+
+### Requirement: Every clickable reference is a Slack link built from the environment
+
+A pull request, a workflow run, an escalation issue and a published entry SHALL be written as a Slack
+link `<url|label>`: `#84`, `run 777`, `#41` and the slug. `site/scripts/github-links.mjs` SHALL build the
+GitHub addresses from `GITHUB_SERVER_URL`, `GITHUB_REPOSITORY` and `GITHUB_RUN_ID`, never from a host
+in the code, and an entry address is `site.site` in `site/src/config.yaml` followed by `/blog/<slug>`
+or `/glossary/<slug>`. The spend step takes the pull request number from `PULL_REQUEST`.
+
+#### Scenario: The workflow names the repository
+
+- **WHEN** the environment holds a server, a repository, a run id 777 and `PULL_REQUEST` 84
+- **THEN** the message carries `#84` and `run 777` as links under that server and repository, and a
+  published entry as a link under `site.site`
+
+#### Scenario: The pull request number is missing
+
+- **WHEN** `PULL_REQUEST` is empty or not a whole number
+- **THEN** the message carries no pull request link and is still posted
+
+#### Scenario: The environment does not name the repository
+
+- **WHEN** `GITHUB_SERVER_URL` or `GITHUB_REPOSITORY` is absent
+- **THEN** the builders return no link, and the message names nothing it cannot link
 
 ### Requirement: The report totals every call the machine paid for, each in exactly one row
 
@@ -159,8 +234,8 @@ report and the ceiling cannot disagree.
 
 The row of an entry SHALL carry the cost of the repair calls its record holds in its own column,
 beside the cost of its writing calls. The Notes section SHALL state what the noted runs cost
-together, and the Slack message SHALL end its all-time lines with the sum and its four kinds in one
-labelled line.
+together, and the Slack message SHALL show the sum and its four kinds in a table under
+`Everything paid for`, and end the all-time lines of its fallback text with them in one labelled line.
 
 #### Scenario: An entry needed repairs
 
@@ -168,10 +243,10 @@ labelled line.
 - **THEN** its row shows the cost of its writing calls unchanged and 0.015 under Repair, and the paid
   tables count 0.015 once, under Repair calls
 
-#### Scenario: The message ends its all-time lines with the sum and the four kinds
+#### Scenario: The message shows the sum and the four kinds
 
 - **WHEN** a write produced an entry and the all-time spend is 0.086 USD of writing calls, 0.045 USD of repair calls, 0.0485 USD of runs that ended with no entry and 0.027 USD with no generation record
-- **THEN** the all-time lines end with `Everything paid for: 0.2065 USD, of which writing calls 0.086 USD, repair calls 0.045 USD, runs that ended with no entry 0.0485 USD and spend with no generation record 0.027 USD.`
+- **THEN** the table under `Everything paid for` has a row for each of the four kinds and one for the sum, and the all-time lines of the fallback text end with `Everything paid for: 0.2065 USD, of which writing calls 0.086 USD, repair calls 0.045 USD, runs that ended with no entry 0.0485 USD and spend with no generation record 0.027 USD.`
 
 ### Requirement: An incomplete corpus is reported, not summed in silence
 
@@ -195,10 +270,10 @@ the form `spendWarnings` in `site/scripts/spend-sum.mjs` already uses for writin
 ### Requirement: A line is a warning only when a person has something to do about it
 
 The report SHALL list under Warnings only a line that a person can act on, and the Slack message SHALL
-state the number of those lines, zero included, followed in brackets by what the number means. A
-ledger that spent and has no record, once its run ended with the verdict `stopped`, `escalated` or
-`discarded`, SHALL be listed under Notes in its own sentence, and no warning count or warning line
-SHALL include it. `site/scripts/spend-report-model.mjs` sorts each line.
+state the number of those lines, zero included. A ledger that spent and has no record, once its run
+ended with the verdict `stopped`, `escalated` or `discarded`, SHALL be a note: it stays in
+`audits/spend-report.md`, never in the Slack message, and no warning count or warning line includes
+it. `site/scripts/spend-report-model.mjs` sorts each line.
 
 #### Scenario: A discarded attempt and nothing else wrong
 
@@ -222,8 +297,19 @@ SHALL include it. `site/scripts/spend-report-model.mjs` sorts each line.
 #### Scenario: A message with no warning does not say the day was healthy
 
 - **WHEN** every ledger agrees with its generation record
-- **THEN** the Slack message says `Warnings: 0` and, in brackets, that every ledger agrees with its
-  generation record and that this does not say that every run produced an entry
+- **THEN** the Slack message shows the context line `Warnings: 0` and, in brackets, that every ledger
+  agrees with its generation record and that this does not say that every run produced an entry
+
+#### Scenario: Several warnings
+
+- **WHEN** five lines are warnings
+- **THEN** the Slack message shows the section `Warnings: 5` with `(each needs a person to look at it)`,
+  lists three of the lines and ends with `and 2 more in audits/spend-report.md`
+
+#### Scenario: A note is not in the message
+
+- **WHEN** the report holds a note
+- **THEN** the Slack message does not carry it, and the note stays in `audits/spend-report.md`
 
 ### Requirement: The report is committed with every change to the spend
 
@@ -257,10 +343,10 @@ that branch or on `main`.
 ### Requirement: Slack receives the numbers after every generation
 
 After a successful write the daily workflow, `.github/workflows/write-daily.yml`, SHALL post one
-message through the sender of `site/scripts/escalate-channels.mjs`: the cost of each entry just
-written, the month sentence, the 30-day totals, the all-time totals with everything paid for, and
-the warnings line, as lines of numbers and units. It SHALL post nothing built from zero records, and
-no output of the step SHALL contain the webhook.
+message through `node scripts/spend-report.mjs notify`: the month against the ceiling, each entry just
+written with its cost and a link to it, the pull request and the workflow run, the 30-day totals, the
+all-time totals with everything paid for, the rates and the warnings. It SHALL post nothing built
+from zero records.
 
 #### Scenario: Slack accepts the message
 
@@ -279,17 +365,17 @@ no output of the step SHALL contain the webhook.
 
 ### Requirement: A day that ends with no entry still posts to Slack
 
-When a daily run ends without an entry, `.github/workflows/write-daily.yml` SHALL post one message of
-two lines through `node scripts/spend-ended.mjs`: that no entry was written on that UTC date, why,
-and what the run cost, then the month sentence. The four endings are the ceiling reached, a picker
-that chose nothing or chose to strengthen a page, a write that ended with no entry, and a write that
-failed.
+When a daily run ends without an entry, `.github/workflows/write-daily.yml` SHALL post one message
+through `node scripts/spend-ended.mjs`: the month against the ceiling first, then that no entry was
+written on that UTC date, why, what the run cost, and links to the workflow run and to the escalation
+issue when the run raised one. The four endings are the ceiling reached, a picker that chose nothing
+or chose to strengthen a page, a write that ended with no entry, and a write that failed.
 
 #### Scenario: The ceiling is reached
 
 - **WHEN** the ceiling job stops the run
 - **THEN** the message says that the month's spend reached the ceiling so the writer did not run,
-  that the run cost 0.00 USD, and the month sentence says that none is left
+  that the run cost 0.00 USD, and the month table reads `none` under Left
 
 #### Scenario: The picker chooses nothing
 
@@ -305,8 +391,9 @@ failed.
 #### Scenario: The write failed
 
 - **WHEN** the write step fails after it spent
-- **THEN** the message names the slug and the kind of failure, its cost is the ledger's, and it is
-  posted after the escalation and after the ledger and the report were committed
+- **THEN** the message names the slug and the kind of failure, its cost is the ledger's, it links the
+  escalation issue, and it is posted after the escalation and after the ledger and the report were
+  committed
 
 #### Scenario: A step before the picker decided fails
 
@@ -320,24 +407,246 @@ failed.
 - **THEN** the cost is read from the ledger of the run, and no line carries the failure text, the
   spend the writer printed or the webhook
 
-#### Scenario: Slack refuses the message
+### Requirement: A missed statistics message is a warning, and a missed escalation is still a failure
 
-- **WHEN** the webhook answers 404, or the request fails
-- **THEN** the step ends non-zero with one receipt line, and no issue is opened and no ledger is
-  written
+When Slack does not take the spend or no-entry message, `deliverNotice` in
+`site/scripts/slack-notice.mjs` SHALL print `::warning::<label>: slack NOT delivered: <reason>` on
+stderr and the command SHALL exit zero, with no issue, no second channel and no ledger. Exit 1 and
+2 stay for causes that are not delivery. An escalation keeps its receipt, its `EscalationError` and
+its non-zero exit, because `npm run gate:autowriter` refuses an undelivered immediate escalation.
 
-### Requirement: A missed message is a red step and nothing more
+#### Scenario: Slack refuses the statistics message
 
-A failed delivery of the statistics message SHALL end its step non-zero with one receipt line in the
-words `describeDelivery` in `site/scripts/escalate.mjs` uses, and SHALL NOT open an issue, try another
-channel, write a ledger or stop the pull request. An escalation that reached no one is a failure
-`npm run gate:autowriter` refuses, and a missed statistic is not that.
-
-#### Scenario: Slack refuses the message
-
-- **WHEN** the webhook answers 404, or the request fails
-- **THEN** the step exits non-zero and prints one line with the status and the reason, with the
+- **WHEN** the webhook answers 404, or the request fails, for the spend or the no-entry message
+- **THEN** the command exits zero and prints one `::warning::` line with the status and the reason, the
   webhook removed, and no issue is opened and no ledger is written
+
+#### Scenario: The cause is not delivery
+
+- **WHEN** the write result cannot be read, names a slug no record holds, or the command is misused
+- **THEN** the command exits 1 or 2 and posts nothing
+
+#### Scenario: Slack refuses an escalation
+
+- **WHEN** the webhook answers 404 to an escalation of an immediate kind raised by
+  `site/scripts/escalate.mjs`
+- **THEN** the receipt of the slack channel is recorded as not delivered, the command exits non-zero,
+  and `npm run gate:autowriter` refuses the ledger
+
+### Requirement: The escalation message says what happened and where to act
+
+`escalationMessage` in `site/scripts/escalation-slack.mjs` SHALL build the Slack message of an
+escalation: a header `Autowriter escalation: <kind>`, the title, the detail with each address written
+as a Slack link, fields for the pull request, the workflow run and the issue, and a context line with
+the escalation id and the ledger path. Its fallback text SHALL carry the same facts.
+
+#### Scenario: The watcher escalates a pull request
+
+- **WHEN** `site/scripts/pr-watch.mjs` raises an escalation for pull request 84 in workflow run 777
+- **THEN** the message links the pull request as `#84` and the run as `run 777`, and the fallback text
+  has a line for each
+
+#### Scenario: The environment does not name the repository
+
+- **WHEN** the environment holds no server, repository or run id
+- **THEN** the message carries no pull request or run field, and the title and the detail are still
+  there
+
+#### Scenario: The detail already holds an address
+
+- **WHEN** the detail contains the address of the pull request
+- **THEN** the detail shows it as a link and the fields do not repeat it
+
+### Requirement: The webhook appears in no output
+
+`redactorFor` in `site/scripts/escalate.mjs` SHALL replace the webhook address and its path with
+`[SLACK_WEBHOOK_URL]` in every reason line that any step posting to Slack prints, whichever kind of
+message it posts.
+
+#### Scenario: Slack answers with the webhook in its body
+
+- **WHEN** the answer to a refused post repeats the webhook address
+- **THEN** the line the step prints holds `[SLACK_WEBHOOK_URL]` and neither the address nor its path
+
+### Requirement: An entry is announced as live only when its page answers on the live origin
+
+After the smoke step, `.github/workflows/publish-live.yml` SHALL run `node scripts/live-entry.mjs`, which
+asks `site.site`, never the `pages.dev` address, for the page of each new entry through `probeUntilLive`
+in `site/scripts/live-probe.mjs`: at most 8 attempts, after waits of 0, 5, 10, 15, 20, 30, 30 and 30
+seconds, each request time-limited. A 2xx on the final address after redirects is live; any other status
+or a network error is not. The message states the check time in UTC.
+
+#### Scenario: The page answers at once
+
+- **WHEN** the page of a new entry answers 200 to the first request
+- **THEN** one live message is posted, and it says that the page answered HTTP 200 on attempt 1 and when
+  it was checked
+
+#### Scenario: The page appears late
+
+- **WHEN** the page answers 404 twice and then 200
+- **THEN** the live message says the page answered on attempt 3, and no warning is posted
+
+#### Scenario: The page redirects
+
+- **WHEN** the page answers a redirect to an address that answers 200
+- **THEN** the page is live, and the message links the address of the entry
+
+#### Scenario: The deploy succeeded and the page does not answer
+
+- **WHEN** the deploy and smoke steps passed and the live origin answers 404 to all 8 attempts
+- **THEN** no live message is posted for that entry
+
+### Requirement: An entry that merged and is not reachable is a warning of its own
+
+When the page of a new entry does not answer 2xx after the last attempt, `unreachableMessage` in
+`site/scripts/live-slack.mjs` SHALL build a message with the month first and a warning section, `An entry
+that merged is not reachable`, naming the slug, the address, the last status or error, the attempts and
+the check time, and saying that a person has something to do. `live-entry.mjs` SHALL print a
+`::warning::` line, exit zero and leave the entry unannounced, so the next publish checks it again.
+
+#### Scenario: The page never answers 200
+
+- **WHEN** the page answers 404 to every attempt
+- **THEN** the warning message names the slug, the address, `HTTP 404`, 8 attempts and the check time,
+  one `::warning::` line is printed, the exit code is 0 and the state file does not list the entry
+
+#### Scenario: The connection is refused
+
+- **WHEN** the live origin refuses the connection on every attempt
+- **THEN** the warning names the refused connection instead of a status
+
+#### Scenario: One entry is live and one is not
+
+- **WHEN** a publish carries two new entries and only one page answers
+- **THEN** the live message names the first, the warning names the second, and only the first is recorded
+
+#### Scenario: The next publish finds the page
+
+- **WHEN** an entry that was unreachable is live at the next publish
+- **THEN** it is announced as live, once
+
+### Requirement: Every surface an entry has is a link, listed from the parity derivation
+
+`surfacesOf` in `site/scripts/entry-surfaces.mjs` SHALL list the page and every other surface the entry is
+owed (its `.md` sidecar, its social card, the feeds and the `llms` files it entered) by calling
+`owedFor` and `SURFACES` of `site/scripts/route-parity.mjs`, the derivation `npm run gate:parity`
+judges, and never from a second list. A surface that does not answer 2xx SHALL be plain text,
+`<label> (<reason>, checked <time>)`, with a warning section, and the entry is still announced.
+
+#### Scenario: The parity derivation gains a surface
+
+- **WHEN** `owedFor` is owed a new surface for entries
+- **THEN** `surfacesOf` returns it with the label and address of the derivation, and the live message
+  carries it as a link and asks the live origin for it
+
+#### Scenario: A surface does not answer
+
+- **WHEN** the page answers 200 and its social card answers 404
+- **THEN** the card is shown as plain text with its status and check time, a warning section says a
+  person has something to do, and the entry is recorded as announced
+
+### Requirement: The live message opens with the month and names the cost and the purpose
+
+Blocks 0 and 1 of the live message SHALL be `monthPart(status)` and the first line of its `text` SHALL be
+`monthLineOf(status)`, as in every other message. Each entry SHALL then carry its title, slug, the buyer
+prompt of `claim.prompt` in its generation record, its tokens and dollars in tables no wider than
+`PHONE_COLUMNS`, and its surfaces as link fields; `text` SHALL carry every one of these facts alone.
+
+#### Scenario: One article is announced
+
+- **WHEN** an article of 12,345 input and 6,789 output tokens that cost 0.123456 USD is live
+- **THEN** block 0 is the month header, block 1 the month table, and the entry follows with its title, slug,
+  the prompt its record names, the tokens and the cost, and the first line of `text` is the month sentence
+
+#### Scenario: The prompt is read from the record
+
+- **WHEN** the generation record of the entry holds prompt 7 and its passage
+- **THEN** the message quotes that number and passage, and never a prompt chosen by any other means
+
+### Requirement: An entry is announced once, and a publish with several says so in one message
+
+`site/scripts/live-state.mjs` SHALL keep `.live-entries.json`, a map of routes to the instant they were
+announced, which `publish-live.yml` restores before the live step and saves in the very next step, under
+the key `live-entries-${{ github.run_id }}`. A route SHALL be added only when Slack took its live message.
+The new entries are those in the build that the map does not list; at most 3 share a message, oldest
+first, and none posts nothing and prints one line.
+
+#### Scenario: A publish carries two new entries
+
+- **WHEN** two new entries are live
+- **THEN** one message names both, and both are recorded
+
+#### Scenario: The same build is published again
+
+- **WHEN** every entry of the build is recorded
+- **THEN** nothing is posted, the live origin is asked for nothing, and one line says that no entry is new
+
+#### Scenario: Slack refuses the message
+
+- **WHEN** the webhook answers 404 to the live message
+- **THEN** the entry is not recorded, a `::warning::` is printed, and the next publish announces it
+
+### Requirement: The first run announces only what is recent
+
+With no state file, `live-entry.mjs` SHALL record every entry of the build as announced without a
+message, except an entry whose generation record is dated within 48 hours before the publish, which is
+announced as usual, so that the whole archive is never announced at once.
+
+#### Scenario: The first run meets an archive
+
+- **WHEN** there is no state file, the build holds 30 entries, and one was generated 5 hours before the publish
+- **THEN** that entry is announced, the other 29 are recorded without a message, and the state file exists
+
+#### Scenario: The recent entry fails to post
+
+- **WHEN** the first run cannot deliver the message of the recent entry
+- **THEN** it stays unannounced, however old it grows, and the others are still recorded
+
+### Requirement: A missed live message never fails the publish
+
+`deliverNotice` in `site/scripts/slack-notice.mjs` SHALL return whether the message was delivered, and
+`live-entry.mjs` SHALL exit zero when Slack does not take it or when a page is unreachable. Exit 1 stays
+for input that cannot be read and exit 2 for a command that is not understood. The webhook SHALL appear in
+no printed line, no posted message and no state file.
+
+#### Scenario: Slack is unreachable
+
+- **WHEN** the post of a live message fails
+- **THEN** the command prints a `::warning::` line, exits 0 and the publish stays green
+
+#### Scenario: The state file is unreadable
+
+- **WHEN** `.live-entries.json` is not JSON
+- **THEN** the command exits 1, names the file, posts nothing and leaves the file as it was
+
+#### Scenario: The command is misused
+
+- **WHEN** `--dist` or `--state` is missing
+- **THEN** the command exits 2 with its usage and posts nothing
+
+#### Scenario: Slack echoes the webhook back
+
+- **WHEN** the answer to a refused post repeats the webhook address
+- **THEN** no printed line, no message and no state file holds it
+
+### Requirement: Publish Live checks the live origin after the smoke step with only the webhook
+
+The step of `.github/workflows/publish-live.yml` that runs
+`node scripts/live-entry.mjs --dist dist --state .live-entries.json` SHALL come after the smoke step and
+before the IndexNow step, SHALL set `continue-on-error`, and SHALL receive `SLACK_WEBHOOK_URL` as its
+only environment, as `site/scripts/publish-live-entry.test.mjs` pins.
+
+#### Scenario: The workflow is read
+
+- **WHEN** the test parses `publish-live.yml`
+- **THEN** exactly one step runs the command, after the smoke step and before the IndexNow step, and its
+  environment names the webhook and nothing else
+
+#### Scenario: A later step fails
+
+- **WHEN** the IndexNow step fails after the live step
+- **THEN** the state was saved by the step that follows the live step, so no entry is announced twice
 
 ### Requirement: A report that disagrees with its records is refused
 

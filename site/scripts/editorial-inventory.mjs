@@ -1,3 +1,5 @@
+import { isStandInNote, isStandInPhrase } from '../src/utils/archive-url.mjs';
+
 const NON_PROSE_FIELDS = new Set([
   'slug',
   'id',
@@ -156,7 +158,9 @@ export function constantRows(files) {
         .filter(([, key, value]) => !STRUCTURAL_ATTRIBUTES.has(key) && isProseValue(value))
         .map(([, key, value]) => row(file, `constant.${key}`, value))
     );
-    return [...keyed, ...arrayRows(file, source), ...templateLiteralRows(file, source)];
+    return [...keyed, ...arrayRows(file, source), ...templateLiteralRows(file, source)].filter(
+      ({ text }) => !isStandInPhrase(text)
+    );
   });
 }
 
@@ -247,11 +251,18 @@ const SENTENCE_WORD = /^[A-Za-z][A-Za-z'’]*$/;
 
 const BARE_HOST = /^[a-z0-9-]+(\.[a-z0-9-]+)+$/i;
 const RETRIEVED_SUFFIX = /·\s*retrieved\s+\d{4}-\d{2}-\d{2}\s*$/i;
+const NOTE_SEPARATOR = ' · ';
+
+const endsInStandInNote = (text) => {
+  const at = text.lastIndexOf(NOTE_SEPARATOR);
+  return at !== -1 && isStandInNote(text.slice(at + NOTE_SEPARATOR.length));
+};
 
 const isComposedMetadata = (text) => {
   const trimmed = text.trim();
   if (BARE_HOST.test(trimmed)) return true;
   if (RETRIEVED_SUFFIX.test(trimmed)) return true;
+  if (endsInStandInNote(trimmed)) return true;
   const tokens = text.split(/\s+/).filter((token) => token !== '·' && token !== '|');
   if (tokens.length === 0) return true;
   const words = tokens.filter((token) => SENTENCE_WORD.test(token));

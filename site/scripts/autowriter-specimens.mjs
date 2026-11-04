@@ -22,6 +22,11 @@ const AGGREGATE_NEEDS = 'needs: [changes, build, types-and-units, cheap-gates, v
 const AGGREGATE_IF = "if: always() && github.event_name != 'workflow_dispatch'";
 const AGGREGATE_NAME =
   "name: ${{ github.event_name == 'pull_request' && 'all required jobs passed' || format('all required jobs passed ({0})', github.event_name) }}";
+const BASELINES_STEP = 'name: Commit regenerated linux baselines\n        env:\n          ';
+const BASELINES_PAT_ENV = BASELINES_STEP + 'AUTOWRITER_PAT: ${{ secrets.AUTOWRITER_PAT }}';
+const BASELINES_DEFAULT_ENV = BASELINES_STEP + 'GITHUB_TOKEN: ${{ github.token }}';
+const CLASSIFIER_BEFORE = 'BEFORE: ${{ github.event.pull_request.base.sha || github.event.before }}';
+const CLASSIFIER_LAST_PUSH = 'BEFORE: ${{ github.event.before }}';
 
 const attempt = (number, extra = {}) => ({
   number,
@@ -171,6 +176,16 @@ export const autowriterSpecimens = ({ addUntrackedFile, editFile, removeFile }) 
     gate: GATE,
     token: 'aggregate-name .github/workflows/ci.yml',
     plant: planWorkflowEdit(editFile, AGGREGATE_NAME, 'name: all required jobs passed'),
+  },
+  autowriterPushWithDefaultToken: {
+    gate: GATE,
+    token: 'bot-push-token .github/workflows/ci.yml',
+    plant: planWorkflowEdit(editFile, BASELINES_PAT_ENV, BASELINES_DEFAULT_ENV),
+  },
+  autowriterClassifierJudgesLastPush: {
+    gate: GATE,
+    token: 'classifier-judges-last-push .github/workflows/ci.yml',
+    plant: planWorkflowEdit(editFile, CLASSIFIER_BEFORE, CLASSIFIER_LAST_PUSH),
   },
   ...recordSpecimens({ addUntrackedFile, editFile }),
   ...spendSpecimens({ addUntrackedFile, editFile, removeFile }),
