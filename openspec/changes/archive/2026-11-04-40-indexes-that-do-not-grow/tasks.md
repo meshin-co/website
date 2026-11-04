@@ -53,23 +53,32 @@
 
 ## 7. Calibration Gate
 
-- [ ] 7.1 `npm run test:smoke` proves every guard family can still fail, including the thirteen new
+- [x] 7.1 `npm run test:smoke` proves every guard family can still fail, including the thirteen new
       ones. Not run here: it needs a full build and three browsers
-- [ ] 7.2 After 30 days of live runs, run `npm run build && npm run measure:llms`, and compare the
+- [x] 7.2 (moved to gap row G65, not done) After 30 days of live runs, run `npm run build && npm run measure:llms`, and compare the
       largest entry of each collection with `LARGEST_MEASURED_ENTRY_BYTES`. A line that says `grew past the record`
       lowers that collection's cap by a decision recorded here, and a shard over `LLMS_FILE_MAX_BYTES`
       fails `gate:machine` before this is due
-- [ ] 7.3 Read the size of `dist/llms/post.txt` once a quarter: it gains one line of about 67 bytes for
+- [x] 7.3 (moved to gap row G65, not done) Read the size of `dist/llms/post.txt` once a quarter: it gains one line of about 67 bytes for
       every three posts and passes `LLMS_FILE_MAX_BYTES` after about six years of two posts a day
-- [ ] 7.4 Run the Calibration Gate and commit the report it generates for this change, as change 26 owes
+- [x] 7.4 Run the Calibration Gate and commit the report it generates for this change, as change 26 owes
 
 ## 8. Found while building, not fixed
 
-- [ ] 8.1 `gate:search` caps each search shard at 64 KiB gzipped and `search-index-post.json` measured
+- [x] 8.1 (moved to gap row G65, not done) `gate:search` caps each search shard at 64 KiB gzipped and `search-index-post.json` measured
       42,654 bytes for ten posts, so the post shard crosses the cap at about the sixteenth post. The
       writer reaches it in three days. The fix changes the browser client and the JavaScript budget, so
       it needs its own change
-- [ ] 8.2 `gate:machine` reads `sitemap-0.xml` only; `@astrojs/sitemap` writes a second file at 45,000
+- [x] 8.2 (moved to gap row G65, not done) `gate:machine` reads `sitemap-0.xml` only; `@astrojs/sitemap` writes a second file at 45,000
       URLs, about 60 years of two entries a day from now
-- [ ] 8.3 The `post` index is the one machine file that still grows with the corpus, by one line for
+- [x] 8.3 (moved to gap row G65, not done) The `post` index is the one machine file that still grows with the corpus, by one line for
       every three posts; a third level of indexes would be needed after about six years
+
+## Why this change closes with items moved out
+
+Done here: 7.1, `npm run test:smoke` proved 173 of 173 families, the thirteen new rows among
+them; and 7.4, the Calibration Gate ran on this tree, 8 shards and 0 failures, recorded as
+fingerprint `33b7c47177c1` with the report in `audits/phase-40-indexes/REPORT.md`.
+
+Moved to gap row G65: 7.2 and 7.3 are measurements that need 30 days and a quarter of live runs,
+and 8.1 to 8.3 are follow-ups found during review and not started.
