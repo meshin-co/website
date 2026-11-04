@@ -47,11 +47,13 @@ test('the crawl never fetches a host outside the build, so linkinator cannot jud
   assert.equal(pattern.test('http://127.0.0.1:4330/blog/'), false);
 });
 
-test('a retry flag is not passed, because nothing the crawl fetches is a stranger that might be having a moment', () => {
+test('a link inside the build that got no response is retried, because a loaded runner can time out its own static server', () => {
   const args = linkArgs({ origin: 'https://example.test' });
 
-  assert.ok(!args.includes('--retry'));
-  assert.ok(!args.includes('--retry-errors'));
+  assert.ok(args.includes('--retry'));
+  assert.ok(args.includes('--retry-errors'));
+  assert.equal(args[args.indexOf('--retry-errors-count') + 1], '3');
+  assert.equal(args[args.indexOf('--retry-errors-jitter') + 1], '500');
 });
 
 test('a json run lists every link, so a count of zero can be read as a vacuous pass', () => {
