@@ -10,10 +10,10 @@ const run = promisify(execFile);
 const resolver = new URL('run-publish-target.mjs', import.meta.url).pathname;
 const stub = new URL('fixtures/github-api.mjs', import.meta.url).pathname;
 
-async function resolve(fixture, explicitRunId) {
+async function resolve(fixture, explicitRunId, flags = []) {
   const output = join(await mkdtemp(join(tmpdir(), 'publish-')), 'github-output');
   await writeFile(output, '');
-  const args = ['--import', stub, resolver, 'owner/repo', ...(explicitRunId ? [explicitRunId] : [])];
+  const args = ['--import', stub, resolver, ...flags, 'owner/repo', ...(explicitRunId ? [explicitRunId] : [])];
   const env = { ...process.env, GH_TOKEN: 'stub', GITHUB_OUTPUT: output, PUBLISH_FIXTURE: JSON.stringify(fixture) };
   try {
     const { stdout } = await run(process.execPath, args, { env });
@@ -94,4 +94,39 @@ test('an explicitly dispatched run that failed its gates is refused', async () =
 
   assert.equal(code, 1);
   assert.match(out, /run 90 is not a green ci run on main/);
+});
+
+const prose = {
+  runs: [],
+  byId: { 91: { id: 91, head_branch: 'main', conclusion: 'success', head_sha: 'a'.repeat(40) } },
+  artifacts: { 91: [] },
+  tip: 'a'.repeat(40),
+};
+
+test('an automatic run whose ci run built nothing publishes nothing and fails nothing', async () => {
+  const { code, out, output } = await resolve(prose, '91', ['--skip-without-dist']);
+
+  assert.equal(code, 0);
+  assert.match(out, /publish: run 91 carries no dist, so nothing was built to publish/);
+  assert.equal(output, '');
+});
+
+test('a dispatched run with no dist is still refused, because a person asked for a build that does not exist', async () => {
+  const { code, out } = await resolve(prose, '91');
+
+  assert.equal(code, 1);
+  assert.match(out, /run 91 is not a green ci run on main carrying an unexpired dist/);
+});
+
+test('skipping covers a run without a dist only, never a run that failed its gates', async () => {
+  const failed = {
+    ...prose,
+    byId: { 91: { ...prose.byId[91], conclusion: 'failure' } },
+    artifacts: { 91: [{ name: 'dist', expired: false }] },
+  };
+
+  const { code, out } = await resolve(failed, '91', ['--skip-without-dist']);
+
+  assert.equal(code, 1);
+  assert.match(out, /run 91 is not a green ci run on main/);
 });

@@ -2,7 +2,10 @@ import { appendFile } from 'node:fs/promises';
 
 import { blockingFiles, pickGatedRun } from './publish-target.mjs';
 
-const [repo, explicitRunId] = process.argv.slice(2);
+const SKIP_WITHOUT_DIST = '--skip-without-dist';
+const argv = process.argv.slice(2);
+const skipWithoutDist = argv.includes(SKIP_WITHOUT_DIST);
+const [repo, explicitRunId] = argv.filter((argument) => argument !== SKIP_WITHOUT_DIST);
 
 const api = async (path) => {
   const response = await fetch(`https://api.github.com/repos/${repo}/${path}`, {
@@ -29,6 +32,14 @@ const candidates = explicitRunId
 
 const withDist = [];
 for (const candidate of candidates) withDist.push({ ...candidate, hasDist: await hasDist(candidate.id) });
+
+const builtNothing = withDist.find(
+  ({ head_branch, conclusion, hasDist }) => head_branch === 'main' && conclusion === 'success' && !hasDist
+);
+if (skipWithoutDist && explicitRunId && builtNothing) {
+  console.log(`publish: run ${builtNothing.id} carries no dist, so nothing was built to publish`);
+  process.exit(0);
+}
 
 const run = pickGatedRun(withDist);
 if (!run)

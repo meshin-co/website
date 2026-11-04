@@ -299,3 +299,48 @@ test('a record that cannot be read is a warning annotation, and the other entrie
     '::warning::live entry: audits/autowriter/generations/2026/11/broken.json is not counted: it is not readable JSON',
   ]);
 });
+
+const UNMEASURED = {
+  tree: 'bbbbbbbbbbbb',
+  last: 'no Lighthouse run is recorded for this repository',
+  owed: [{ slug: 'a-post', mergedCommit: 'd716823', recordedAt: '2026-11-04T03:43:07.953Z' }],
+  clear: 'cd site && npm run lh:record',
+};
+
+test('an entry that ships on a tree no run measured is announced with that fact in the same message', async (t) => {
+  const w = await world(t, { entries: [ARTICLE] });
+  const { code, err } = await w.run({ unmeasuredOf: async () => UNMEASURED });
+  assert.deepEqual([code, err], [0, []]);
+  const [message, ...others] = w.posted();
+  assert.deepEqual(others, []);
+  assert.match(message.text, /This build shipped without a Lighthouse measurement\./);
+  assert.match(message.text, /`a-post` owes the measurement/);
+  assert.deepEqual(blockKitProblems(message), []);
+  assert.deepEqual(w.state(), { announced: { '/blog/a-post': AT } });
+});
+
+test('a tree that cannot be described still announces the entry, and the failure is a warning on the run', async (t) => {
+  const w = await world(t, { entries: [ARTICLE] });
+  const { code, err } = await w.run({
+    unmeasuredOf: async () => {
+      throw new Error('git cannot describe the tree');
+    },
+  });
+  assert.equal(code, 0);
+  assert.deepEqual(err, [
+    '::warning::live entry: whether the tree was measured is unknown: git cannot describe the tree',
+  ]);
+  const [message] = w.posted();
+  assert.doesNotMatch(message.text, /Lighthouse/);
+  assert.deepEqual(w.state(), { announced: { '/blog/a-post': AT } });
+});
+
+test('a publish with no new entry does not look at the tree', async (t) => {
+  const w = await world(t, { entries: [ARTICLE], state: ANNOUNCED });
+  const { code } = await w.run({
+    unmeasuredOf: async () => {
+      throw new Error('must not be asked');
+    },
+  });
+  assert.equal(code, 0);
+});

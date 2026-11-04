@@ -80,9 +80,9 @@ export async function liveWorld({
     };
   };
 
-  async function run({ args, statusOf = () => STATUS, ...options } = {}) {
+  async function run({ args, statusOf = () => STATUS, unmeasuredOf = async () => null, ...options } = {}) {
     const argv = args ?? ['--dist', repo.dist, '--state', statePath, '--repo-root', repo.root];
-    const code = await runCli(argv, { ...io(options), origin, statusOf });
+    const code = await runCli(argv, { ...io(options), origin, statusOf, unmeasuredOf });
     return { code, ...lines() };
   }
 

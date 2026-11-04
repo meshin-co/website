@@ -7,8 +7,9 @@ import {
   deployArgs,
   deploymentUrl,
   ledgerFindings,
-  measurementFindings,
+  measurementWarnings,
   previewBranch,
+  unmeasuredTree,
 } from './deploy.mjs';
 import { fingerprint } from './lh-evidence.mjs';
 import { CLEAR_COMMAND, ledgerWithDebt } from './measurement-debt.mjs';
@@ -123,12 +124,12 @@ const owing = (slug = SLUG, recordedAt = DEBT_RECORDED) =>
   });
 
 test('a tree the last recorded run measured is published, whatever debts the ledgers hold', () => {
-  assert.deepEqual(measurementFindings({ record: green(), current: MEASURED, ledgers: [owing()] }), []);
-  assert.deepEqual(measurementFindings({ record: green(), current: MEASURED, ledgers: [] }), []);
+  assert.deepEqual(measurementWarnings({ record: green(), current: MEASURED, ledgers: [owing()] }), []);
+  assert.deepEqual(measurementWarnings({ record: green(), current: MEASURED, ledgers: [] }), []);
 });
 
-test('a tree another run measured is refused, naming both trees, the entry that owes it and the command to run', () => {
-  const findings = measurementFindings({ record: green(), current: UNMEASURED, ledgers: [owing()] });
+test('a tree another run measured is warned about, naming both trees, the entry that owes it, the command to run and that it ships anyway', () => {
+  const findings = measurementWarnings({ record: green(), current: UNMEASURED, ledgers: [owing()] });
 
   assert.equal(findings.length, 1);
   assert.match(findings[0], /the tree being published, b{12}, was never measured by Lighthouse/);
@@ -137,10 +138,21 @@ test('a tree another run measured is refused, naming both trees, the entry that 
   assert.match(findings[0], /d716823/);
   assert.ok(findings[0].includes(CLEAR_COMMAND));
   assert.match(findings[0], /commit audits\/lighthouse-green\.json/);
+  assert.match(findings[0], /published anyway/);
 });
 
-test('a repository with no recorded run refuses every tree, and every debt is owed', () => {
-  const findings = measurementFindings({
+test('the debt of an unmeasured tree is structured data the Slack message reads, and a measured tree has none', () => {
+  assert.equal(unmeasuredTree({ record: green(), current: MEASURED, ledgers: [owing()] }), null);
+
+  const debt = unmeasuredTree({ record: green(), current: UNMEASURED, ledgers: [owing()] });
+
+  assert.equal(debt.tree, 'b'.repeat(12));
+  assert.deepEqual(debt.owed, [{ slug: SLUG, mergedCommit: 'd716823', recordedAt: DEBT_RECORDED }]);
+  assert.equal(debt.clear, CLEAR_COMMAND);
+});
+
+test('a repository with no recorded run warns about every tree, and every debt is owed', () => {
+  const findings = measurementWarnings({
     record: undefined,
     current: UNMEASURED,
     ledgers: [owing('one-entry'), owing('another-entry')],
@@ -153,7 +165,7 @@ test('a repository with no recorded run refuses every tree, and every debt is ow
 });
 
 test('a debt recorded before the last run is history, not an owed measurement', () => {
-  const findings = measurementFindings({
+  const findings = measurementWarnings({
     record: green('2026-11-05T00:00:00.000Z'),
     current: UNMEASURED,
     ledgers: [owing()],
@@ -164,8 +176,8 @@ test('a debt recorded before the last run is history, not an owed measurement', 
   assert.ok(findings[0].includes(CLEAR_COMMAND));
 });
 
-test('a ledger without a debt owes nothing, and a tree changed by hand is still refused', () => {
-  const findings = measurementFindings({
+test('a ledger without a debt owes nothing, and a tree changed by hand is still warned about', () => {
+  const findings = measurementWarnings({
     record: green(),
     current: UNMEASURED,
     ledgers: [newLedger({ slug: 'held', runId: '1', pullRequest: null })],
@@ -180,7 +192,7 @@ test('the command a person is told to run is the one the debt record carries', (
   const ledger = owing();
   ledger.measurementDebt.clear = 'cd site && GATE_PHASE=zz npm run gate:lh && GATE_PHASE=zz npm run lh:record';
 
-  const [finding] = measurementFindings({ record: green(), current: UNMEASURED, ledgers: [ledger] });
+  const [finding] = measurementWarnings({ record: green(), current: UNMEASURED, ledgers: [ledger] });
 
   assert.ok(finding.includes(ledger.measurementDebt.clear));
 });
@@ -189,13 +201,13 @@ test('deleting the debt from the ledger clears nothing, because the tree is what
   const { measurementDebt, ...withoutDebt } = owing();
 
   assert.ok(measurementDebt);
-  assert.equal(measurementFindings({ record: green(), current: UNMEASURED, ledgers: [withoutDebt] }).length, 1);
+  assert.equal(measurementWarnings({ record: green(), current: UNMEASURED, ledgers: [withoutDebt] }).length, 1);
 });
 
 test('a debt cannot be cleared by marking it, because nothing in a ledger is read as a clearance', () => {
   const marked = { ...owing(), measurementDebt: { ...owing().measurementDebt, clearedAt: DEBT_RECORDED } };
 
-  assert.equal(measurementFindings({ record: green(), current: UNMEASURED, ledgers: [marked] }).length, 1);
+  assert.equal(measurementWarnings({ record: green(), current: UNMEASURED, ledgers: [marked] }).length, 1);
 });
 
 const BLOB = hash('1');

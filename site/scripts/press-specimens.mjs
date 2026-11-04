@@ -81,8 +81,9 @@ async function mergeAnEntry(site) {
 }
 
 export const pressSpecimens = () => ({
-  pressPublishesUnmeasuredTree: {
+  pressWarnsOfUnmeasuredTree: {
     gate: 'deploy',
+    warns: true,
     env: Object.fromEntries(REQUIRED_ENV.map((name) => [name, 'specimen'])),
     token: 'was never measured by Lighthouse',
     scene: pressScene,

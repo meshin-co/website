@@ -12,6 +12,7 @@ const PERSON = 'A person has something to do';
 const SURFACE_HEADING = 'A surface of an entry that is live does not answer';
 const SURFACE_ADVICE =
   'find out why the published build lacks what is named above. A later publish does not check an announced entry again.';
+const UNMEASURED_HEADING = 'This build shipped without a Lighthouse measurement';
 const PAGE_HEADING = 'An entry that merged is not reachable';
 const PAGE_ADVICE =
   'find out why the page is not served. No entry named above is recorded as announced, so the next publish checks each one again and posts this warning again until its page answers.';
@@ -91,6 +92,17 @@ function surfaceWarning(entries) {
   return warningPart({ heading: SURFACE_HEADING, bullets, advice: SURFACE_ADVICE });
 }
 
+function unmeasuredPart(debt) {
+  if (debt === null || debt === undefined) return NOTHING;
+  const tree = `tree ${escapeText(debt.tree)}: ${escapeText(debt.last)}`;
+  const owed = debt.owed.map(
+    ({ slug, mergedCommit }) => `\`${escapeText(slug)}\` owes the measurement (merged as ${escapeText(mergedCommit)})`
+  );
+  const bullets = [tree, ...owed].map((line) => ({ block: line, line }));
+  const advice = `on a quiet machine run \`${escapeText(debt.clear)}\`, then commit audits/lighthouse-green.json. The debt stays open until a recorded run measures this tree.`;
+  return warningPart({ heading: UNMEASURED_HEADING, bullets, advice });
+}
+
 const footerPart = ({ run }) =>
   run === null || run === undefined
     ? NOTHING
@@ -101,7 +113,7 @@ function headlinePart(entries) {
   return { blocks: [section(bold(said))], text: `${said}.` };
 }
 
-export function liveMessage({ status, entries, links }) {
+export function liveMessage({ status, entries, links, unmeasured }) {
   requireEntries('a live message', entries);
   if (entries.length > ENTRIES_PER_MESSAGE)
     throw new Error(`a live message holds at most ${ENTRIES_PER_MESSAGE} entries, not ${entries.length}`);
@@ -113,6 +125,7 @@ export function liveMessage({ status, entries, links }) {
     headlinePart(entries),
     ...entries.map(entryPart),
     surfaceWarning(entries),
+    unmeasuredPart(unmeasured),
     footerPart(links)
   );
 }

@@ -77,4 +77,4 @@ The `concurrency` group of `watch-pr.yml` holds one run per pull request, repair
 
 A merge leaves a tree no Lighthouse run measured (L59). `pr-watch-debt.mjs` writes `measurementDebt` (built by
 `measurement-debt.mjs`) into the ledger at merge: the commit, the tree fingerprint and the command the owner runs
-(`npm run gate:lh`, then `npm run lh:record`). Publish Live refuses that tree until a person has run both.
+(`npm run gate:lh`, then `npm run lh:record`). Publish Live warns of that tree, and the live-entry message says so, until a person has run both.

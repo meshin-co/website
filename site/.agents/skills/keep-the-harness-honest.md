@@ -8,7 +8,7 @@ and L56 now makes the harness check its own wiring.
 
 - **gate-not-in-ci** — a `gate:*` script in `package.json` that `ci.yml` never runs. This is L36
   ("a gate not in `ci.yml` is not a gate") made mechanical instead of asserted. Only `ci.yml`
-  counts: a gate named in `publish-live.yml`, which a person presses by hand, is not run on every
+  counts: a gate named in `publish-live.yml`, which runs only after `ci` has gone green, is not run on every
   change, and reading both files would let it pass as if it were.
 - **gate-undefined** — `scripts/README.md` names a gate `package.json` does not define.
 - **browser-not-installed** — `playwright.config.ts` runs a project whose browser `ci.yml` never

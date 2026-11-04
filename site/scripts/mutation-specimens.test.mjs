@@ -107,6 +107,29 @@ test('a token the green run already prints proves nothing, so the specimen is re
   assert.deepEqual(restored, []);
 });
 
+const warning = { ...specimen([]), warns: true };
+
+test('a specimen that may only warn passes when the gate stays green and prints the token', async () => {
+  const { run } = scripted({ code: 0, output: '' }, { code: 0, output: '::warning::no-dup-id' });
+  const result = await proveWithSpecimen(warning, { copySite: '/copy', run });
+  assert.equal(result.ok, true);
+  assert.match(result.reason, /warned on the specimen \(no-dup-id\) and went through/);
+});
+
+test('a specimen that may only warn fails the family when the gate refuses it, so a warning cannot become a stop', async () => {
+  const { run } = scripted({ code: 0, output: '' }, { code: 1, output: 'no-dup-id' });
+  const result = await proveWithSpecimen(warning, { copySite: '/copy', run });
+  assert.equal(result.ok, false);
+  assert.match(result.reason, /refused the specimen, though it may only warn/);
+});
+
+test('a specimen that may only warn fails the family when the gate says nothing', async () => {
+  const { run } = scripted({ code: 0, output: '' }, { code: 0, output: '' });
+  const result = await proveWithSpecimen(warning, { copySite: '/copy', run });
+  assert.equal(result.ok, false);
+  assert.match(result.reason, /stayed silent on the specimen/);
+});
+
 test('the token is matched across line breaks and colour codes, because gates wrap and colour their output', async () => {
   const coloured = `${String.fromCharCode(27)}[31merror${String.fromCharCode(27)}[0m  no-dup-id\n   again`;
   const { run } = scripted({ code: 0, output: '' }, { code: 1, output: coloured });

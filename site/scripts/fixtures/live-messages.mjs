@@ -77,8 +77,8 @@ export const TERM_FIGURES = ['Tokens  input  output', 'term    6,000   1,200', '
 export const DOWN = withPage(A_POST, unanswered());
 export const REFUSED = withPage(A_TERM, unanswered('request failed: ECONNREFUSED', 8, '2026-11-03T09:03:00.000Z'));
 
-export const live = (entries = [A_POST], { status = STATUS, links = WITH_RUN } = {}) =>
-  liveMessage({ status, entries, links });
+export const live = (entries = [A_POST], { status = STATUS, links = WITH_RUN, unmeasured = null } = {}) =>
+  liveMessage({ status, entries, links, unmeasured });
 export const unreachable = (entries, { status = STATUS, links = WITH_RUN } = {}) =>
   unreachableMessage({ status, entries, links });
 export const fieldsOf = (message) => message.blocks.filter((block) => block.fields !== undefined);
