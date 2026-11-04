@@ -182,12 +182,92 @@ test('a Slack message with no webhook set makes no request and names the missing
 
 test('a refused Slack message reports the status and a cleaned excerpt, and a failed request reports its message', async () => {
   const env = { SLACK_WEBHOOK_URL: 'https://hooks.test/x' };
-  const refusing = async () => new Response('no_service', { status: 404 });
+  const refusing = async () => new Response('no_service', { status: 500 });
   const refused = await postSlackMessage({ env, fetch: refusing, clean: (text) => `[${text}]`, message: MESSAGE });
-  assert.deepEqual(refused, { status: 404, error: 'Slack answered HTTP 404: [no_service]' });
+  assert.deepEqual(refused, { status: 500, error: 'Slack answered HTTP 500: [no_service]' });
   const closing = async () => {
     throw new Error('socket closed');
   };
   const failed = await postSlackMessage({ env, fetch: closing, clean: String, message: MESSAGE });
   assert.deepEqual(failed, { error: 'request failed: socket closed' });
+});
+
+const HOOK = { SLACK_WEBHOOK_URL: 'https://hooks.test/x' };
+
+function scriptedHook(...answers) {
+  const bodies = [];
+  const fetch = async (url, init) => {
+    bodies.push(JSON.parse(init.body));
+    const next = answers.shift();
+    if (next instanceof Error) throw next;
+    return next;
+  };
+  return { fetch, bodies };
+}
+
+const postVia = (fetch, message = MESSAGE) => postSlackMessage({ env: HOOK, fetch, clean: String, message });
+
+test('a block payload Slack refuses with a 4xx is followed by the plain text alone, and the retry that lands is a delivery', async () => {
+  const { fetch, bodies } = scriptedHook(
+    new Response('invalid_blocks', { status: 400 }),
+    new Response('ok', { status: 200 })
+  );
+  const outcome = await postVia(fetch);
+  assert.deepEqual(outcome, { status: 200, rejected: 'Slack answered HTTP 400: invalid_blocks' });
+  assert.equal(bodies.length, 2);
+  assert.deepEqual(bodies[0], MESSAGE);
+  assert.deepEqual(Object.keys(bodies[1]), ['text']);
+  assert.ok(bodies[1].text.startsWith(`${MESSAGE.text}\n\n`), 'the facts of the message must come first, unchanged');
+});
+
+test('the plain text a person receives says that Slack refused the formatted version, so the defect is seen where the owner reads', async () => {
+  const { fetch, bodies } = scriptedHook(new Response('invalid_blocks', { status: 400 }), new Response('ok'));
+  await postVia(fetch);
+  assert.match(bodies[1].text, /Sent as plain text: Slack rejected the formatted version of this message \(HTTP 400\)/);
+});
+
+test('a plain text that Slack refuses too is a failure naming both answers, with the status of the last', async () => {
+  const { fetch, bodies } = scriptedHook(
+    new Response('invalid_blocks', { status: 400 }),
+    new Response('no_service', { status: 404 })
+  );
+  assert.deepEqual(await postVia(fetch), {
+    status: 404,
+    error: 'Slack answered HTTP 400: invalid_blocks, then HTTP 404: no_service to the plain text sent after it',
+  });
+  assert.equal(bodies.length, 2);
+});
+
+test('a plain text that never reaches Slack is a failure naming the first answer and the request error, with no status', async () => {
+  const { fetch } = scriptedHook(new Response('invalid_blocks', { status: 400 }), new Error('socket closed'));
+  assert.deepEqual(await postVia(fetch), {
+    error: 'Slack answered HTTP 400: invalid_blocks, then the plain text request failed: socket closed',
+  });
+});
+
+for (const [name, first] of [
+  ['a 5xx', new Response('no_service', { status: 503 })],
+  ['a request that fails', new Error('socket closed')],
+  ['a redirect', new Response('moved', { status: 302 })],
+]) {
+  test(`${name} is not a formatting defect, so the message is sent once and never retried`, async () => {
+    const { fetch, bodies } = scriptedHook(first);
+    const outcome = await postVia(fetch);
+    assert.equal(bodies.length, 1);
+    assert.equal(typeof outcome.error, 'string');
+    assert.equal('rejected' in outcome, false);
+  });
+}
+
+test('a message with no blocks has nothing to strip, so a 4xx on it is not retried', async () => {
+  const { fetch, bodies } = scriptedHook(new Response('no_text', { status: 400 }));
+  const outcome = await postVia(fetch, { text: 'only text' });
+  assert.equal(bodies.length, 1);
+  assert.deepEqual(outcome, { status: 400, error: 'Slack answered HTTP 400: no_text' });
+});
+
+test('an accepted block payload is sent once and carries no rejection', async () => {
+  const { fetch, bodies } = scriptedHook(new Response('ok', { status: 200 }));
+  assert.deepEqual(await postVia(fetch), { status: 200 });
+  assert.equal(bodies.length, 1);
 });

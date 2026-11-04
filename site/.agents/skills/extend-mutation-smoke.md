@@ -25,7 +25,7 @@ A `pagination` family takes an optional `scope` (`category` or `tag`; none build
 pure functions in `scripts/pagination-markup.mjs`, so its test plants each defect without a build.
 
 A `specimen` family names an entry in `SPECIMENS` (`scripts/mutation-specimens.mjs`, which spreads in the entries of
-`scripts/spec-specimens.mjs`, `scripts/evidence-specimens.mjs` and `scripts/autowriter-specimens.mjs`). Each entry holds
+`scripts/spec-specimens.mjs`, `scripts/evidence-specimens.mjs`, `scripts/press-specimens.mjs` and `scripts/autowriter-specimens.mjs`). Each entry holds
 the gate, the token that proves the right rule fired, and a `plant(copySite)` that makes the change and returns its undo.
 `proveWithSpecimen()` runs the npm command CI runs and requires four things: the gate is green on the pristine copy,
 the pristine output does not already contain the token, the planted run is red, and the planted output contains the

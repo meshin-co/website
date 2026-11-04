@@ -270,6 +270,11 @@ export const FAMILIES = [
   { id: 'lighthouse-both-factors-unlabelled-image', kind: 'specimen', specimen: 'lighthouseBothFactors', slow: true },
   { id: 'noindex-page-cannot-waive-its-seo', kind: 'specimen', specimen: 'lighthouseSelfWaivingNoindex', slow: true },
   { id: 'lighthouse-record-of-a-tree-the-run-never-measured', kind: 'lh-record', proves: 'lh:record' },
+  {
+    id: 'press-publishes-a-tree-no-lighthouse-run-measured',
+    kind: 'specimen',
+    specimen: 'pressPublishesUnmeasuredTree',
+  },
   { id: 'unattended-process-cannot-seal-dispositions', kind: 'specimen', specimen: 'unattendedSealsDispositions' },
   {
     id: 'unattended-process-cannot-write-the-lighthouse-record',

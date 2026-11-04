@@ -9,6 +9,7 @@ import { test } from 'node:test';
 import { newLedger, readLedger, validateLedger, writeLedger } from './autowriter-ledger.mjs';
 import { EscalationError } from './escalate.mjs';
 import { raiseOnRun, runCli } from './escalate-run.mjs';
+import { deliverNotice } from './slack-notice.mjs';
 
 const TOKEN = 'ghp_SECRETtokenVALUE0123456789';
 const WEBHOOK_PATH = '/services/T0SECRET/B0SECRET/xoxSECRETpath';
@@ -147,7 +148,7 @@ test('hard-stop needs only the issue', () =>
 
 test('a Slack failure leaves a failed receipt, an escalated verdict and exit 1', () =>
   inDirectory(async (dir) => {
-    const { fetch } = scripted(created(), answer(404, 'no_service'));
+    const { fetch } = scripted(created(), answer(404, 'no_service'), answer(404, 'no_service'));
     const result = await run(dir, { fetch });
     assert.equal(result.code, 1);
     const ledger = ledgerIn(dir);
@@ -162,7 +163,7 @@ test('a Slack failure leaves a failed receipt, an escalated verdict and exit 1',
 
 test('raiseOnRun rethrows the EscalationError only after the verdict is on disk', () =>
   inDirectory(async (dir) => {
-    const { fetch } = scripted(created(), answer(404, 'no_service'));
+    const { fetch } = scripted(created(), answer(404, 'no_service'), answer(404, 'no_service'));
     const error = await raise(dir, { fetch }).then(
       () => assert.fail('expected EscalationError'),
       (thrown) => thrown
@@ -301,6 +302,7 @@ const LEAKY_ANSWERS = [
   [
     answer(403, { message: 'token ' + TOKEN + ' rejected' }),
     answer(404, 'unknown ' + WEBHOOK + ' and ' + WEBHOOK_PATH),
+    answer(404, 'again ' + WEBHOOK + ' and ' + TOKEN),
   ],
   [new Error('connect failed via ' + WEBHOOK + ' with ' + TOKEN), new Error('reset ' + TOKEN + ' ' + WEBHOOK)],
   [created(), answer(500, 'y'.repeat(190) + TOKEN + 'z'.repeat(50))],
@@ -323,3 +325,43 @@ for (const [index, answers] of LEAKY_ANSWERS.entries())
       for (const fragment of SECRET_FRAGMENTS) assert.ok(!everything.includes(fragment), fragment);
     })
   );
+
+test('an escalation whose blocks Slack refuses is delivered as plain text, recorded in the receipt, and exits 0 with a warning', () =>
+  inDirectory(async (dir) => {
+    const { fetch, calls } = scripted(created(), answer(400, 'invalid_blocks'), answer(200, 'ok'));
+    const result = await run(dir, { fetch });
+    assert.equal(result.code, 0);
+    assert.equal(calls.length, 3);
+    assert.deepEqual(Object.keys(calls[2].body), ['text']);
+    const ledger = ledgerIn(dir);
+    assert.deepEqual(validateLedger(ledger), []);
+    const [, slack] = ledger.escalations[0].receipts;
+    assert.equal(slack.delivered, true);
+    assert.equal(slack.status, 200);
+    assert.equal(slack.error, 'the formatted message was refused: Slack answered HTTP 400: invalid_blocks');
+    assert.deepEqual(result.out, [result.out[0]]);
+    assert.match(result.out[0], /issue delivered/);
+    assert.deepEqual(result.err, [
+      '::warning::escalate: esc-1 slack delivered as plain text (HTTP 200): the formatted message was refused: Slack answered HTTP 400: invalid_blocks',
+    ]);
+  }));
+
+test('the same refusal that an escalation cannot survive is one a notice does', () =>
+  inDirectory(async (dir) => {
+    const refusals = () => scripted(created(), answer(400, 'invalid_blocks'), answer(400, 'invalid_payload'));
+    const escalation = await run(dir, { fetch: refusals().fetch });
+    assert.equal(escalation.code, 1);
+    assert.match(escalation.out.at(-1), /escalate: esc-1 slack NOT delivered: Slack answered HTTP 400: invalid_blocks/);
+    const notice = capture();
+    const delivered = await deliverNotice({
+      label: 'spend report',
+      message: { text: 'facts', blocks: [{ type: 'divider' }] },
+      env: ENV,
+      fetch: scripted(answer(400, 'invalid_blocks'), answer(400, 'invalid_payload')).fetch,
+      instant: NOW(),
+      ...notice,
+    });
+    assert.equal(delivered, false);
+    assert.equal(notice.err.length, 1);
+    assert.match(notice.err[0], /^::warning::spend report: slack NOT delivered/);
+  }));

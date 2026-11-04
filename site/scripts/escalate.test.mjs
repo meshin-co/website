@@ -327,13 +327,13 @@ test('a 200 or an issue-less 201 from GitHub is not a delivery', () =>
     assert.match(again.escalation.receipts[0].error, /^GitHub answered HTTP 201 without an issue number/);
   }));
 
-test('Slack 404 records the status and the first 200 characters', () =>
+test('Slack 500 records the status and the first 200 characters', () =>
   withLedger(async ({ path }) => {
-    const { fetch } = scripted(created(), answer(404, 'no_service'));
+    const { fetch } = scripted(created(), answer(500, 'no_service'));
     const error = await failure(raise(path, { fetch }));
     assert.deepEqual(error.missing, ['slack']);
-    assert.equal(stored(path)[0].receipts[1].status, 404);
-    assert.equal(stored(path)[0].receipts[1].error, 'Slack answered HTTP 404: no_service');
+    assert.equal(stored(path)[0].receipts[1].status, 500);
+    assert.equal(stored(path)[0].receipts[1].error, 'Slack answered HTTP 500: no_service');
   }));
 
 test('a thrown fetch records status null and the message', () =>
