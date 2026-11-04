@@ -49,6 +49,7 @@ const STEADY = {
   ...termFiles(10, 14),
   [`${DATA}/glossary/brief.md`]: entryFile('definition', [5, 20, 13]),
   [`${DATA}/post/guide.md`]: entryFile('fullAnswer', repeat(14, 8)),
+  [`${DATA}/post/guide-two.md`]: entryFile('fullAnswer', repeat(14, 8)),
 };
 
 const repoWith = (t, files) => {
@@ -231,7 +232,7 @@ test('--write measures each format, prints the distributions and the bands, and 
     threshold: 12,
     minimumSentences: 8,
     corpus: {
-      article: { entries: 1, measured: 1, sentences: 8 },
+      article: { entries: 2, measured: 2, sentences: 16 },
       term: { entries: 11, measured: 10, sentences: 93 },
     },
     distribution: {
@@ -302,11 +303,26 @@ test('a corpus that cannot bind eleven-word entries fails and writes nothing', (
   const root = repoWith(t, {
     ...termFiles(10, 11, 8),
     [`${DATA}/post/guide.md`]: entryFile('fullAnswer', repeat(11, 8)),
+    [`${DATA}/post/guide-two.md`]: entryFile('fullAnswer', repeat(11, 8)),
   });
   const { status, err } = runIn(root, { write: true });
   assert.equal(status, 1);
   assert.ok(
     err.some((line) => line.includes('admits an entry made only of 11-word sentences')),
+    err.join('\n')
+  );
+  assert.equal(existsSync(join(root, BAND_FILE)), false);
+});
+
+test('a corpus of one entry per format fails by name and writes nothing', (t) => {
+  const root = repoWith(t, {
+    ...termFiles(1, 14, 8),
+    [`${DATA}/post/guide.md`]: entryFile('fullAnswer', repeat(14, 8)),
+  });
+  const { status, err } = runIn(root, { write: true });
+  assert.equal(status, 1);
+  assert.ok(
+    err.some((line) => line.includes('band would have no width')),
     err.join('\n')
   );
   assert.equal(existsSync(join(root, BAND_FILE)), false);

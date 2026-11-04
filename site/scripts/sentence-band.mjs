@@ -11,6 +11,7 @@ export const REMEASURE_COMMAND = 'node scripts/measure-sentence-band.mjs --write
 export class BandError extends Error {}
 
 const MINIMUM_SENTENCES = 8;
+const MINIMUM_MEASURED_ENTRIES = 2;
 const WINDOW_WIDTH = 4;
 const PERCENTILES = [5, 25, 50, 75, 90, 95, 99];
 const SHARE_SCALE = 10000;
@@ -192,8 +193,15 @@ function admittedUniformEntry(band) {
 }
 
 export function deriveBand({ threshold, minimumSentences, corpus, distribution }, format) {
-  if (!corpus[format]?.measured)
+  const measured = corpus[format]?.measured;
+  if (!measured)
     throw new BandError(`no ${format} has ${minimumSentences} sentences, so there is nothing to derive a band from`);
+  if (measured < MINIMUM_MEASURED_ENTRIES)
+    throw new BandError(
+      `the ${format} band would have no width: ${measured} ${format} has ${minimumSentences} sentences or more, ` +
+        `and a band is the spread between entries, which one entry does not have; measure again when the site ` +
+        `holds ${MINIMUM_MEASURED_ENTRIES} or more`
+    );
 
   const { median, shareBelowThreshold, shareJustBelow } = distribution[format].perEntry;
   const band = {
