@@ -11,3 +11,8 @@
 
 - [x] 2.1 `spend-reporting` states the fallback, the trace and the asymmetry: `openspec/specs/governance/spend-reporting/spec.md`
 - [x] 2.2 The skills `report-what-the-writer-spends.md` and `guard-the-unattended-writer.md` and `site/scripts/README.md` say what a 4xx on the blocks now does
+
+## 3. Calibration Gate
+
+- [x] 3.1 `npm run test:smoke` proves every guard family can still fail
+- [x] 3.2 Run the Calibration Gate and commit the report it generates for this change
