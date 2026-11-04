@@ -6,3 +6,4 @@ dist-visual
 test-results
 node_modules
 tests/__screenshots__
+scripts/fixtures/wayback/

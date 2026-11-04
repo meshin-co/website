@@ -73,8 +73,10 @@ async function dispositionsWorld(copy = false) {
     join(site, 'package.json'),
     JSON.stringify({ scripts: { 'assets:seal': 'node scripts/editorial-gate.mjs . dist --seal' } })
   );
-  if (copy) await cp(join(REAL_SITE, 'scripts'), join(site, 'scripts'), { recursive: true });
-  else await symlink(join(REAL_SITE, 'scripts'), join(site, 'scripts'));
+  if (copy) {
+    await cp(join(REAL_SITE, 'scripts'), join(site, 'scripts'), { recursive: true });
+    await symlink(join(REAL_SITE, 'src'), join(site, 'src'));
+  } else await symlink(join(REAL_SITE, 'scripts'), join(site, 'scripts'));
   await symlink(join(REAL_SITE, 'node_modules'), join(site, 'node_modules'));
   await mkdir(join(root, 'audits/phase-4.7/dispositions'), { recursive: true });
   const sealed = [

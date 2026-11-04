@@ -3,7 +3,13 @@ import './fixtures/no-network.mjs';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { PRIMARY_DOMAINS, claimTableProblems, factualSentences, resolveClaimTable } from './claim-sources.mjs';
+import {
+  PRIMARY_DOMAINS,
+  citedAddress,
+  claimTableProblems,
+  factualSentences,
+  resolveClaimTable,
+} from './claim-sources.mjs';
 
 const SOURCES = [
   {
@@ -163,6 +169,37 @@ test('a primary domain matches the host or a subdomain of it and nothing that me
     ])
       assert.deepEqual(standardOn(url), [], url);
   for (const url of LOOKALIKES) assert.deepEqual(rules(standardOn(url)), ['standard-without-primary-source'], url);
+});
+
+const archiveOf = (address) => `https://web.archive.org/web/20251025031200/${address}`;
+const archivedCopyOf = (source) => ({ ...source, url: archiveOf(source.url), original: source.url });
+const standardRestingOn = (source) =>
+  problems(replaceRow(STANDARD, bound(STANDARD, 'S3')), SENTENCES, [...SOURCES.slice(0, 2), { ...source, id: 'S3' }]);
+
+test('the cited address of a source is its original when it has one and its url when it has not', () => {
+  const [nist] = SOURCES;
+  assert.equal(citedAddress(archivedCopyOf(nist)), nist.url);
+  assert.equal(citedAddress(nist), nist.url);
+});
+
+test('a standard sentence rests on an archived copy exactly as it rests on the primary source the copy was cited at', () => {
+  const [nist] = SOURCES;
+  const plain = standardRestingOn(nist);
+  assert.deepEqual(plain, []);
+  assert.deepEqual(standardRestingOn(archivedCopyOf(nist)), plain);
+});
+
+test('an archived copy of a source off the primary domains is still off them, and the finding names the cited host', () => {
+  const found = standardRestingOn(archivedCopyOf(SOURCES[2]));
+  assert.deepEqual(rules(found), ['standard-without-primary-source']);
+  assert.match(found[0].detail, /vendor\.example\.com/);
+  assert.doesNotMatch(found[0].detail, /web\.archive\.org/);
+});
+
+test('a snapshot address with no original is judged as the Internet Archive host, which is no primary domain', () => {
+  const found = standardRestingOn({ ...SOURCES[0], url: archiveOf(SOURCES[0].url) });
+  assert.deepEqual(rules(found), ['standard-without-primary-source']);
+  assert.match(found[0].detail, /web\.archive\.org/);
 });
 
 test('a table built from resolved rows is accepted and checked the same way', () => {

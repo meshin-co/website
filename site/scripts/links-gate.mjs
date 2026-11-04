@@ -22,39 +22,38 @@ const EXTERNAL = '^https?://(?!localhost|127\\.0\\.0\\.1)';
 
 const EXTENSIONLESS_LOCAL = '^(http://(?:localhost|127\\.0\\.0\\.1):\\d+/(?:[^/?#]+/)*[^/?#.]+)([?#].*)?$';
 
-export function linkArgs({ skipExternal = false, origin, json = false } = {}) {
-  const hosts = skippedHosts(origin);
-  const skip = skipExternal ? [...hosts, EXTERNAL] : hosts;
+export function linkArgs({ origin, json = false } = {}) {
   return [
     'dist',
     '--recurse',
     ...(json ? ['--format', 'json'] : ['--silent']),
-    '--retry',
-    '--retry-errors',
-    '--retry-errors-count',
-    '3',
-    '--retry-errors-jitter',
-    '500',
     '--url-rewrite-search',
     EXTENSIONLESS_LOCAL,
     '--url-rewrite-replace',
     '$1.html$2',
     '--skip',
-    skip.join('|'),
+    [...skippedHosts(origin), EXTERNAL].join('|'),
   ];
 }
 
-const isLocal = (url) => /^https?:\/\/(?:localhost|127\.0\.0\.1)/.test(url) || url.startsWith('dist/');
-
 export function linkFindings(results) {
-  const dead = [];
-  const unreachable = [];
-  for (const { url, status, state, parent } of results) {
-    if (state !== 'BROKEN') continue;
-    const read = status > 0 ? status : 'no response';
-    const finding = `${parent} -> ${url} (${read})`;
-    if (isLocal(url) || status === 404 || status === 410) dead.push(finding);
-    else unreachable.push(finding);
-  }
-  return { dead, unreachable };
+  return results
+    .filter(({ state }) => state === 'BROKEN')
+    .map(({ url, status, parent }) => `${parent} -> ${url} (${status > 0 ? status : 'no response'})`);
+}
+
+const where = (routes = []) => `on ${routes.length} page${routes.length === 1 ? '' : 's'}, e.g. ${routes[0]}`;
+
+function malformation(address) {
+  if (/\s/.test(address)) return 'contains whitespace';
+  if (!URL.canParse(address)) return 'does not parse as an address';
+  const { hostname } = new URL(address);
+  return hostname.includes('.') || hostname.startsWith('[') ? null : 'the host is not a domain name';
+}
+
+export function malformedFindings(outbound) {
+  return [...outbound].flatMap(([address, routes]) => {
+    const why = malformation(address);
+    return why === null ? [] : [`${address} (${why}) ${where(routes)}`];
+  });
 }

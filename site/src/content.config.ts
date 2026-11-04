@@ -3,6 +3,7 @@ import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 import { postTagSchema } from '~/data/tags.mjs';
+import { standInKind } from '~/utils/archive-url.mjs';
 import { countWords, isNotBeforePublish, isWithinWordRange, ogTitleSchema } from '~/utils/content-rules.mjs';
 import {
   DESCRIPTION_MAX_CHARS,
@@ -19,12 +20,19 @@ const CATEGORIES = ['governance', 'agentic-architecture', 'operating-model', 'ex
 const entries = (collection: string) =>
   glob({ pattern: collectionPattern(collection, { mode: import.meta.env.MODE }), base: `src/data/${collection}` });
 
-const source = z.object({
-  title: z.string(),
-  url: z.url(),
-  publisher: z.string().optional(),
-  retrieved: z.string().optional(),
-});
+const source = z
+  .object({
+    title: z.string(),
+    url: z.url(),
+    original: z.url().optional(),
+    publisher: z.string().optional(),
+    retrieved: z.string().optional(),
+  })
+  .refine((entry) => entry.original === undefined || standInKind(entry) !== null, {
+    message:
+      "must be the address that url stands in for: its Internet Archive snapshot, or the search for this source's title and publisher",
+    path: ['original'],
+  });
 
 const wordRange = (min: number, max: number) => ({
   message: `must be ${min}–${max} words`,
