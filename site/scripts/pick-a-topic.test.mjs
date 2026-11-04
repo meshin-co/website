@@ -15,7 +15,8 @@ import { BAND_FILE } from './sentence-band.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPORT = 'audits/search-demand.md';
-const INPUT_KEYS = 'claims concepts forms generated ledgerPaths now promptSources report settings suffix'.split(' ');
+const INPUT_KEYS =
+  'claims concepts forms generated ledgerPaths now posts promptSources report rotation settings suffix'.split(' ');
 const NOW = new Date('2026-11-02T04:00:00.000Z');
 const POST = 'fractional-caio-vs-full-time-caio-cost';
 const TERM = 'what-is-a-model-card';
@@ -25,14 +26,16 @@ const MEASURED = { ...ADVISORY, impressions: 12, position: 14.5, reason: 'it ran
 const STRENGTHEN_LINE =
   'Strengthen: /services/fractional-caio, "fractional caio", 12 impressions at position 14.5: it ranks at position 14.5';
 
-function inRepo(check) {
+async function inRepo(check) {
   const root = mkdtempSync(join(tmpdir(), 'pick-a-topic-'));
   try {
-    for (const directory of ['audits', 'docs', 'site/src']) mkdirSync(join(root, directory), { recursive: true });
+    for (const directory of ['audits', 'docs', 'site/src/data/post'])
+      mkdirSync(join(root, directory), { recursive: true });
     cpSync(join(HERE, 'fixtures', 'search-demand-2026-11-01.md'), join(root, REPORT));
     cpSync(join(HERE, '..', '..', 'docs', 'SEMANTIC-CORE.md'), join(root, 'docs', 'SEMANTIC-CORE.md'));
     writeFileSync(join(root, 'site', 'src', 'config.yaml'), 'site:\n  name: meshin.co\n');
-    return check(root);
+    writeFileSync(join(root, 'site', 'content-facts.json'), '{}\n');
+    return await check(root);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
@@ -60,7 +63,7 @@ const flatPath = (family, slug) => `${recordDirectory(family)}/${slug}.json`;
 const belowMonth = (path) => `${dirname(path)}/extra/${basename(path)}`;
 
 const decisionOf = (overrides) => ({
-  ...{ decision: 'none', choice: null, reason: null, entries: [], strengthen: null, advisories: [] },
+  ...{ decision: 'none', choice: null, reason: null, entries: [], strengthen: null, advisories: [], fallback: null },
   ...{ refusals: [], concepts: { named: [] }, proposals: [], trail: [] },
   ...overrides,
 });
@@ -112,28 +115,28 @@ function fakeRun({ runId, now }) {
 
 const claimNamed = (slug) => ({ ...fakeRun({ runId: 'r-0', now: NOW }).claims[0].claim, slug, title: slug });
 
-function scenario(decision, options, body) {
-  inRepo((root) => {
+async function scenario(decision, options, body) {
+  await inRepo(async (root) => {
     const seen = { inputs: null, builds: [], out: [], err: [] };
     const run = (argv) =>
       runCli(argv, {
         repoRoot: root,
         env: options.env ?? {},
         now: options.now ?? (() => NOW),
-        out: (line) => seen.out.push(line),
-        err: (line) => seen.err.push(line),
+        stdout: (line) => seen.out.push(line),
+        stderr: (line) => seen.err.push(line),
         select: (inputs) => Object.assign(seen, { inputs }) && decision,
         build: (args) => seen.builds.push(args) && fakeRun(args),
       });
-    body({ root, run, seen, output: join(root, 'out', 'decision.json'), message: () => seen.err.join('\n') });
+    await body({ root, run, seen, output: join(root, 'out', 'decision.json'), message: () => seen.err.join('\n') });
   });
 }
 
-test('previewing prints the decision and writes nothing anywhere, not even the decision file', () => {
+test('previewing prints the decision and writes nothing anywhere, not even the decision file', async () => {
   for (const decision of [WRITE, STRENGTHEN, NONE]) {
-    scenario(decision, {}, ({ root, run, seen, output }) => {
+    await scenario(decision, {}, async ({ root, run, seen, output }) => {
       const before = snapshot(root);
-      assert.equal(run(['--output', output]), 0);
+      assert.equal(await run(['--output', output]), 0);
       assert.deepEqual(seen.out, printedLines(decision));
       assert.equal(seen.builds.length, 0);
       assert.deepEqual(snapshot(root), before);
@@ -141,9 +144,9 @@ test('previewing prints the decision and writes nothing anywhere, not even the d
   }
 });
 
-test('--write of a write decision writes the claims, the ledger and the decision file at the paths of the run', () => {
-  scenario(WRITE, {}, ({ root, run, seen, output, message }) => {
-    assert.equal(run(['--write', '--output', output, '--run-id', 'r-1']), 0, message());
+test('--write of a write decision writes the claims, the ledger and the decision file at the paths of the run', async () => {
+  await scenario(WRITE, {}, async ({ root, run, seen, output, message }) => {
+    assert.equal(await run(['--write', '--output', output, '--run-id', 'r-1']), 0, message());
     assert.equal(seen.builds[0].runId, 'r-1');
     const built = fakeRun({ runId: 'r-1', now: NOW });
     assert.deepEqual(JSON.parse(readFileSync(output, 'utf8')), JSON.parse(JSON.stringify(built.file)));
@@ -155,14 +158,14 @@ test('--write of a write decision writes the claims, the ledger and the decision
   });
 });
 
-test('--write of a strengthen or none decision writes the small decision file and no claim or ledger', () => {
+test('--write of a strengthen or none decision writes the small decision file and no claim or ledger', async () => {
   const small = [
     [STRENGTHEN, { choice: STRENGTHEN.choice, advisories: [STRENGTHEN.strengthen, ...STRENGTHEN.advisories] }],
     [NONE, { reason: NONE.reason, advisories: [] }],
   ];
   for (const [decision, expected] of small) {
-    scenario(decision, {}, ({ root, run, seen, output, message }) => {
-      assert.equal(run(['--write', '--output', output]), 0, message());
+    await scenario(decision, {}, async ({ root, run, seen, output, message }) => {
+      assert.equal(await run(['--write', '--output', output]), 0, message());
       const file = JSON.parse(readFileSync(output, 'utf8'));
       assert.deepEqual(file, { schema: 1, decision: decision.decision, ...expected });
       assert.equal(existsSync(join(root, recordDirectory('ledger'))), false);
@@ -171,64 +174,64 @@ test('--write of a strengthen or none decision writes the small decision file an
   }
 });
 
-test('--write without --output exits 2 naming --output and writes nothing', () => {
-  scenario(WRITE, {}, ({ root, run, message }) => {
+test('--write without --output exits 2 naming --output and writes nothing', async () => {
+  await scenario(WRITE, {}, async ({ root, run, message }) => {
     const before = snapshot(root);
-    assert.equal(run(['--write']), 2);
+    assert.equal(await run(['--write']), 2);
     assert.match(message(), /--output/);
     assert.deepEqual(snapshot(root), before);
   });
 });
 
-test('an unknown flag, a flag without its value and a bad --now exit 2 and name the flag', () => {
+test('an unknown flag, a flag without its value and a bad --now exit 2 and name the flag', async () => {
   const cases = [['--force'], ['--run-id'], ['--summary', '--write'], ['--output'], ['--now'], ['--now', 'yesterday']];
   for (const argv of cases) {
-    scenario(NONE, {}, ({ run, seen, message }) => {
-      assert.equal(run(argv), 2, argv.join(' '));
+    await scenario(NONE, {}, async ({ run, seen, message }) => {
+      assert.equal(await run(argv), 2, argv.join(' '));
       assert.ok(message().includes(argv[0]), argv.join(' '));
       assert.deepEqual(seen.out, [], argv.join(' '));
     });
   }
 });
 
-test('an unreadable report, semantic core or config exits 1 naming the file', () => {
+test('an unreadable report, semantic core or config exits 1 naming the file', async () => {
   for (const path of ['audits/search-demand.md', 'docs/SEMANTIC-CORE.md', 'site/src/config.yaml']) {
-    scenario(NONE, {}, ({ root, run, message }) => {
+    await scenario(NONE, {}, async ({ root, run, message }) => {
       rmSync(join(root, path));
-      assert.equal(run([]), 1, path);
+      assert.equal(await run([]), 1, path);
       assert.ok(message().includes(path), path);
     });
   }
 });
 
-test('a decision file that cannot be written exits 1 naming it', () => {
-  scenario(STRENGTHEN, {}, ({ root, run, message }) => {
+test('a decision file that cannot be written exits 1 naming it', async () => {
+  await scenario(STRENGTHEN, {}, async ({ root, run, message }) => {
     writeFileSync(join(root, 'in-the-way'), 'a file, not a directory');
     const output = join(root, 'in-the-way', 'decision.json');
-    assert.equal(run(['--write', '--output', output]), 1);
+    assert.equal(await run(['--write', '--output', output]), 1);
     assert.ok(message().includes(output));
   });
 });
 
-test('invalid settings exit 2 naming each variable before any input is read', () => {
+test('invalid settings exit 2 naming each variable before any input is read', async () => {
   const env = { WRITING_TERM_CAP: 'many', WRITING_TERM_ARM: 'maybe' };
-  scenario(NONE, { env }, ({ root, run, message }) => {
+  await scenario(NONE, { env }, async ({ root, run, message }) => {
     rmSync(join(root, 'audits', 'search-demand.md'));
-    assert.equal(run([]), 2);
+    assert.equal(await run([]), 2);
     assert.match(message(), /WRITING_TERM_CAP/);
     assert.match(message(), /WRITING_TERM_ARM/);
   });
 });
 
-test('the selection receives every input, the settings and the instant', () => {
+test('the selection receives every input, the settings and the instant', async () => {
   const env = { WRITING_TERM_ARM: 'off', WRITING_TERM_CAP: '3' };
-  scenario(NONE, { env }, ({ root, run, seen, message }) => {
+  await scenario(NONE, { env }, async ({ root, run, seen, message }) => {
     const held = fakeRun({ runId: 'r-0', now: NOW }).claims[1];
     writeClaim(join(root, held.claimPath), held.claim);
     const older = recordPath('ledger', 'older-post', NOW);
     for (const path of [older, flatPath('ledger', 'sentence-band'), `${recordDirectory('ledger')}/notes.txt`])
       put(root, path, '{}');
-    assert.equal(run([]), 0, message());
+    assert.equal(await run([]), 0, message());
     const { inputs } = seen;
     assert.deepEqual(Object.keys(inputs).sort(), INPUT_KEYS);
     assert.deepEqual(inputs.ledgerPaths, [older]);
@@ -241,7 +244,7 @@ test('the selection receives every input, the settings and the instant', () => {
   });
 });
 
-test('the selection receives every ledger and every claim, filed flat, in a month or below it, and no other record', () => {
+test('the selection receives every ledger and every claim, filed flat, in a month or below it, and no other record', async () => {
   const ledgers = [
     flatPath('ledger', 'flat-post'),
     recordPath('ledger', 'month-post', NOW),
@@ -253,10 +256,10 @@ test('the selection receives every ledger and every claim, filed flat, in a mont
     belowMonth(recordPath('claim', 'deeper-claim', NOW)),
   ];
   const others = [BAND_FILE, flatPath('ledger', 'sentence-band'), recordPath('generation', 'month-post', NOW)];
-  scenario(NONE, {}, ({ root, run, seen, message }) => {
+  await scenario(NONE, {}, async ({ root, run, seen, message }) => {
     for (const path of [...ledgers, ...others]) put(root, path, '{}');
     for (const path of claims) writeClaim(join(root, path), claimNamed(basename(path, '.json')));
-    assert.equal(run([]), 0, message());
+    assert.equal(await run([]), 0, message());
     const { ledgerPaths, claims: held } = seen.inputs;
     assert.equal(ledgerPaths.length, 3);
     assert.deepEqual(ledgerPaths, [...ledgers].sort());
@@ -268,9 +271,9 @@ test('the selection receives every ledger and every claim, filed flat, in a mont
   });
 });
 
-test('--now sets the instant the selection and the run use', () => {
-  scenario(WRITE, { now: () => new Date('2030-01-01T00:00:00Z') }, ({ run, seen, output, message }) => {
-    assert.equal(run(['--write', '--output', output, '--now', '2026-11-02T04:00:00Z']), 0, message());
+test('--now sets the instant the selection and the run use', async () => {
+  await scenario(WRITE, { now: () => new Date('2030-01-01T00:00:00Z') }, async ({ run, seen, output, message }) => {
+    assert.equal(await run(['--write', '--output', output, '--now', '2026-11-02T04:00:00Z']), 0, message());
     assert.equal(seen.inputs.now.toISOString(), NOW.toISOString());
     const [request] = seen.builds;
     assert.equal(request.now.toISOString(), NOW.toISOString());
@@ -320,13 +323,13 @@ test('the summary is Markdown with a heading, the primary line and one list per 
   assert.equal(summaryMarkdown(NONE).includes('###'), false);
 });
 
-test('--summary appends to the file and never overwrites what is there', () => {
+test('--summary appends to the file and never overwrites what is there', async () => {
   for (const decision of [NONE, STRENGTHEN]) {
-    scenario(decision, {}, ({ root, run, message }) => {
+    await scenario(decision, {}, async ({ root, run, message }) => {
       const path = join(root, 'step-summary.md');
       writeFileSync(path, '# Earlier step\n');
-      assert.equal(run(['--summary', path]), 0, message());
-      assert.equal(run(['--summary', path]), 0, message());
+      assert.equal(await run(['--summary', path]), 0, message());
+      assert.equal(await run(['--summary', path]), 0, message());
       const text = readFileSync(path, 'utf8');
       assert.ok(text.startsWith('# Earlier step\n## Topic selection'));
       assert.equal(text.split('## Topic selection').length - 1, 2);
@@ -335,13 +338,13 @@ test('--summary appends to the file and never overwrites what is there', () => {
   }
 });
 
-test('end to end, the frozen report and the live semantic core give a decision that obeys the invariants', () => {
-  inRepo((root) => {
+test('end to end, the frozen report and the live semantic core give a decision that obeys the invariants', async () => {
+  await inRepo(async (root) => {
     const before = snapshot(root);
     const out = [];
     const err = [];
-    const io = { repoRoot: root, env: {}, out: (line) => out.push(line), err: (line) => err.push(line) };
-    assert.equal(runCli(['--now', '2026-11-02T04:00:00Z'], io), 0, err.join('\n'));
+    const io = { repoRoot: root, env: {}, stdout: (line) => out.push(line), stderr: (line) => err.push(line) };
+    assert.equal(await runCli(['--now', '2026-11-02T04:00:00Z'], io), 0, err.join('\n'));
     assert.deepEqual(err, []);
     assert.match(out[0], /^(Choice:|No candidate|Strengthen:)/);
     assert.match(out.at(-1), /^Examined \d+ candidates?, set aside \d+\.$/);

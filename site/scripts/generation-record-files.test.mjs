@@ -5,9 +5,11 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
 
-import { ARTICLE_SLUG, CLAIMED_AT, recordInput } from './fixtures/generation-input.mjs';
+import { ARTICLE_SLUG, CLAIMED_AT, categoryInput, recordInput, weakDemandInput } from './fixtures/generation-input.mjs';
 import { RecordError, buildRecord, readRecord, writeRecord } from './generation-record.mjs';
-import { recordPath } from './record-layout.mjs';
+import { recordFiles, recordPath } from './record-layout.mjs';
+
+const REPOSITORY_ROOT = join(import.meta.dirname, '..', '..');
 
 const base = buildRecord(recordInput());
 const withTotal = (costUsd) => ({ ...base, totals: { ...base.totals, costUsd } });
@@ -123,4 +125,28 @@ test('a file that is missing is refused with its path', (t) => {
     () => readRecord(path),
     (error) => error.message.startsWith(`${path} is not readable JSON: `)
   );
+});
+
+test('a weak-demand record and a category record are written whole and read back unchanged, with no prompt key', (t) => {
+  for (const input of [weakDemandInput(), categoryInput()]) {
+    const made = buildRecord(input);
+    const path = join(scratch(t), recordPath('generation', made.slug, CLAIMED_AT));
+    writeRecord(path, made);
+    assert.deepEqual(readRecord(path), made);
+    assert.equal(Object.hasOwn(JSON.parse(readFileSync(path, 'utf8')).claim, 'prompt'), false);
+  }
+});
+
+test('a record that breaks an origin rule is refused with the rule named, and nothing is written', (t) => {
+  const { root, path } = record(t);
+  const withPrompt = { ...buildRecord(categoryInput()), slug: ARTICLE_SLUG };
+  withPrompt.claim = { ...withPrompt.claim, prompt: { number: 6, text: 'x' } };
+  assert.throws(() => writeRecord(path, withPrompt), /claim\.prompt must be absent when origin is category/);
+  assert.equal(existsSync(join(root, 'audits')), false);
+});
+
+test('every record committed under audits stays valid, so the origin and the null row can stay optional', () => {
+  const files = recordFiles(REPOSITORY_ROOT, 'generation');
+  assert.ok(files.length >= 1, 'the scan found no generation record to read');
+  for (const file of files) assert.doesNotThrow(() => readRecord(join(REPOSITORY_ROOT, file)), file);
 });

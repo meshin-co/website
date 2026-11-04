@@ -20,6 +20,8 @@ const LOOP = {
   monthlySpendCeilingUsd: 41.5,
   claimLifetimeDays: 21,
   holdLabel: 'pause-bot',
+  writeTimesUtc: ['05:30', '17:45'],
+  categoryRotation: ['executive', 'governance'],
 };
 const DEMAND = {
   property: 'sc-domain:elsewhere.test',
@@ -98,6 +100,20 @@ const LIVE = [
     '[m.STRENGTHEN_BAND, m.MIN_IMPRESSIONS]',
     [{ min: 3, max: 12 }, 4],
   ],
+  [
+    'the times the writer runs at come from the loop section',
+    'site/scripts/schedule-workflow.mjs',
+    withLoop,
+    'm.WRITE_TIMES_UTC',
+    ['05:30', '17:45'],
+  ],
+  [
+    'the categories the writer rotates through come from the loop section',
+    'site/scripts/topic-categories.mjs',
+    withLoop,
+    'm.CATEGORY_ROTATION',
+    ['executive', 'governance'],
+  ],
 ];
 
 for (const [label, module, mutate, expression, expected] of LIVE) {
@@ -116,6 +132,8 @@ const REQUIRED = [
   ['site/scripts/search-demand.mjs', 'demand.dataLagDays'],
   ['site/scripts/search-demand-gate.mjs', 'demand.maxAgeDays'],
   ['site/scripts/topic-demand.mjs', 'demand.strengthenBand'],
+  ['site/scripts/schedule-workflow.mjs', 'loop.writeTimesUtc'],
+  ['site/scripts/topic-categories.mjs', 'loop.categoryRotation'],
 ];
 
 for (const [module, field] of REQUIRED) {

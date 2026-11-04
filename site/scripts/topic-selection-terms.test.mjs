@@ -31,6 +31,7 @@ test('a definitional query the glossary lacks is written beside the post, with i
     table: 'Queries',
     row: SHADOW.cells,
     choice: 'Choice: signal 3, "what is shadow ai", 12 impressions at position 44.0, measured 2026-11-01',
+    origin: 'demand',
   });
   assert.equal(decision.choice, decision.entries[0].choice);
   assert.deepEqual(decision.concepts, { named: [] });

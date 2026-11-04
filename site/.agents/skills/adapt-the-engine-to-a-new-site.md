@@ -26,7 +26,7 @@ has no default. `scripts/engine-config.mjs` loads it and checks it against
 - `diff`: which paths are prose, shipped build, automation or test files.
 - `routeFamilies`: route prefix to title family and content-gate profile, longest prefix first.
 - `content`: the data directory, the term, article and resource collections, their route prefixes, the author.
-- `loop`: attempt cap, quarantine hours, monthly spend ceiling, claim lifetime, hold label.
+- `loop`: attempt cap, quarantine hours, monthly spend ceiling, claim lifetime, hold label, the UTC `writeTimesUtc` the writer starts at (`npm run assets:schedule` writes them into `write-daily.yml`; `schedule-the-unattended-writer.md`) and the `categoryRotation` it writes on when demand is empty (`write-on-a-category.md`).
 - `demand`: Search Console window, data lag, maximum report age, impression floor, position band.
 
 ## 3. Create the anchor files
@@ -71,7 +71,7 @@ A second site changes these in code, or accepts them. Each has a reason it can w
 ## 6. Prove it
 
 1. `npm run gate:engine` reports `engine: 0 findings`.
-2. `npm run gate:plan`, `gate:docs`, `gate:skills` and `gate:spec` pass.
+2. `npm run gate:plan`, `gate:docs`, `gate:skills`, `gate:spec` and `gate:schedule` pass.
 3. `npm test` passes. `scripts/engine-specimens.mjs` plants a removed value, a removed anchor file and a
    re-expressed classifier, and `npm run test:smoke` proves `gate:engine` still fails on each.
 4. Three gates stay red until the owner has done the work they measure: `gate:demand` and `gate:evidence` until `npm run audit:demand` writes the first report, `gate:editorial` until the texts are reviewed (`disposition-a-text.md`).

@@ -83,6 +83,7 @@ jobs:
       - run: npm run gate:autowriter
       - run: npm run gate:engine
       - run: npm run gate:partition
+      - run: npm run gate:schedule
       - run: npm run gate:spec
         env:
           SPEC_GATE_RANGE: ${{ github.event_name == 'pull_request' && format('{0}..{1}', github.event.pull_request.base.sha, github.event.pull_request.head.sha) || format('{0}..{1}', github.event.before, github.sha) }}

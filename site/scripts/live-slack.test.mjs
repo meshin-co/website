@@ -337,3 +337,18 @@ test('a live message about a measured tree says nothing about measurement', () =
   assert.doesNotMatch(live().text, /Lighthouse/);
   assert.deepEqual(live([A_POST], { unmeasured: null }), live());
 });
+
+test('an entry with no buyer prompt has no buyer-prompt line, and every other line is the line of an entry with one', () => {
+  const unprompted = Object.fromEntries(Object.entries(A_POST).filter(([key]) => key !== 'prompt'));
+  const without = live([unprompted]);
+  const withPrompt = live([A_POST]);
+  const buyer = '_Buyer prompt 3: “How do I keep an AI system register?”_';
+  const quoted = buyer.slice(1, -1);
+
+  assert.equal(without.blocks[4].text.text, '*What an AI system register holds*\narticle `a-post`');
+  assert.deepEqual(without.blocks.slice(0, 4), withPrompt.blocks.slice(0, 4));
+  assert.deepEqual(without.blocks.slice(5), withPrompt.blocks.slice(5));
+  assert.equal(without.text, withPrompt.text.replace(`${quoted}\n`, ''));
+  assert.ok(!/undefined|null|Buyer prompt/.test(without.text + sectionsText(without)));
+  assert.deepEqual(blockKitProblems(without), []);
+});

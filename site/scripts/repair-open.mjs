@@ -43,6 +43,14 @@ function claimFileOf(repoRoot, slug) {
 
 function readEntry({ repoRoot, slug }) {
   const claim = readClaim(claimFileOf(repoRoot, slug));
+  if (!claim.prompt)
+    throw new RepairStop(
+      'failed',
+      slug +
+        ' has no buyer prompt, so ' +
+        SEMANTIC_CORE +
+        ' holds no passage for it and a repair has no passage to keep word for word; a person repairs it'
+    );
   const record = readRecord(join(repoRoot, recordPath('generation', slug, claim.claimedAt)));
   const ledger = readLedger(join(repoRoot, recordPath('ledger', slug, claim.claimedAt)));
   const route = entryRoute(claim);

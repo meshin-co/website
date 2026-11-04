@@ -55,6 +55,7 @@ const post = {
   table: 'Buyer prompts',
   row: POST_ROW,
   choice: 'Choice: signal 2, prompt 2, unproven, 0 impressions in the window to 2026-10-30',
+  origin: 'demand',
 };
 
 const term = {
@@ -71,6 +72,7 @@ const term = {
   table: 'Queries',
   row: TERM_ROW,
   choice: 'Choice: signal 3, "what is ai literacy", 5 impressions at position 42.5, measured 2026-11-01',
+  origin: 'demand',
 };
 
 const refused = {
@@ -121,6 +123,7 @@ test('a claim carries the slug, title, format, query, demand and prompt of its e
     query: 'fractional caio vs full-time caio cost',
     demand: { impressions: 0, position: null },
     prompt: { number: 2, text: 'fractional CAIO vs full-time CAIO cost' },
+    origin: 'demand',
     runId: RUN_ID,
     status: 'claimed',
     claimedAt: '2026-11-02T07:00:00.000Z',
@@ -134,6 +137,7 @@ test('a claim carries the slug, title, format, query, demand and prompt of its e
     query: 'ai literacy',
     demand: { impressions: 5, position: 42.5 },
     prompt: { number: 8, text: 'EU AI Act obligations for deployers small business' },
+    origin: 'demand',
     runId: RUN_ID,
     status: 'claimed',
     claimedAt: '2026-11-02T07:00:00.000Z',

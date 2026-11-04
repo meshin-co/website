@@ -16,7 +16,7 @@ may hold: the entry, its ledger, its generation record, the spend report, its ow
 The attempt is written into the ledger in the same commit as the repair. A ledger-only commit classifies as prose, so
 the content gates would skip it. `ledgerWithAttempt` (in `autowriter-ledger.mjs`) numbers the attempt, recomputes `spend`
 and throws at the cap of three. `recordAfterRepair` and `writingTotals` (in `generation-record.mjs`) append the call roles
-`repair` and `repair-correction` to the generation record and keep the cost of the writing calls apart.
+`repair` and `repair-correction` to the generation record and keep the cost of the entry's calls (`topic`, `draft`, `correction`) apart.
 
 ## Reading the failure
 
@@ -50,7 +50,7 @@ The last stdout line is one JSON object: `ok`, `outcome`, `commit`, `reason`, th
 other outcome, 2 is a usage error. The seven outcomes are in `repair-outcome.mjs`; `pr-watch-repair.mjs` turns each into
 the watcher's next move. The step makes one local commit and the workflow pushes it.
 
-1. `repair-open.mjs` checks the tree is at the judged head and asks `pr-classify.mjs` again: a moved head is `stale`.
+1. `repair-open.mjs` checks the tree is at the judged head and asks `pr-classify.mjs` again: a moved head is `stale`. It refuses an entry whose claim has no buyer prompt (origin `weak-demand` or `category`): no passage is registered to keep word for word, so the outcome is `failed`, escalated as `hard-stop`, and a person repairs it.
 2. `repair-findings.mjs` reads the CI findings artifact (`repair-zip.mjs`, `gate-findings.mjs`).
 3. `repair-run.mjs` refuses before any spend: a repeated failure, the attempt cap, a finding `repair-kinds.mjs` refuses,
    a reached spend ceiling.

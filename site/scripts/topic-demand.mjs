@@ -70,3 +70,25 @@ export const proposalCandidates = ({ queries }) =>
     .filter(isProposal)
     .sort(mostDemandedFirst)
     .map(({ query, impressions, position, pages }) => ({ query, impressions, position, page: pages[0] ?? null }));
+
+const WEAKNESS_CHECKS = [
+  ['no-buyer-prompt', () => true],
+  ['impressions-at-floor', ({ impressions }) => impressions === MIN_IMPRESSIONS],
+  ['position-beyond-strengthen-band', ({ position }) => position > STRENGTHEN_BAND.max],
+];
+
+const weaknessOf = (row) => WEAKNESS_CHECKS.filter(([, holds]) => holds(row)).map(([reason]) => reason);
+
+export const weakCandidates = ({ queries }) =>
+  queries
+    .filter((row) => isProposal(row) && measured(row))
+    .sort(mostDemandedFirst)
+    .map((row) => ({
+      arm: 'weak',
+      query: row.query,
+      impressions: row.impressions,
+      position: row.position,
+      page: row.pages[0] ?? null,
+      row: row.cells,
+      weakness: weaknessOf(row),
+    }));

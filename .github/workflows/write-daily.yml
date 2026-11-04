@@ -4,8 +4,9 @@ run-name: Write daily (${{ github.event_name }})
 
 on:
   schedule:
-    # 03:17 UTC is 05:17 or 06:17 in Israel, and off the top of the hour where scheduled runs queue
+    # written by npm run assets:schedule from loop.writeTimesUtc; give each time a minute off the top of the hour, where scheduled runs queue
     - cron: '17 3 * * *'
+    - cron: '17 15 * * *'
   workflow_dispatch:
 
 concurrency:
@@ -114,11 +115,13 @@ jobs:
         working-directory: .
         run: |
           echo "DECISION_FILE=$RUNNER_TEMP/decision.json" >> "$GITHUB_ENV"
+          echo "PICK_RESULT_FILE=$RUNNER_TEMP/pick-result.json" >> "$GITHUB_ENV"
           echo "WRITE_RESULT_FILE=$RUNNER_TEMP/write-result.json" >> "$GITHUB_ENV"
 
       # the bot token is what the later git pushes use; the job never installs before the claim is committed
       - uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
           token: ${{ secrets.AUTOWRITER_PAT }}
 
@@ -164,9 +167,36 @@ jobs:
         env:
           WRITING_TERM_ARM: ${{ vars.WRITING_TERM_ARM || 'on' }}
           WRITING_TERM_CAP: ${{ vars.WRITING_TERM_CAP || '1' }}
+          WRITING_PROVIDER: ${{ vars.WRITING_PROVIDER }}
+          OPENAI_WRITING_MODEL: ${{ vars.OPENAI_WRITING_MODEL }}
+          OPENAI_WRITING_INPUT_USD_PER_MILLION: ${{ vars.OPENAI_WRITING_INPUT_USD_PER_MILLION }}
+          OPENAI_WRITING_OUTPUT_USD_PER_MILLION: ${{ vars.OPENAI_WRITING_OUTPUT_USD_PER_MILLION }}
+          AUTOWRITER_OPENAI_API_KEY: ${{ secrets.AUTOWRITER_OPENAI_API_KEY }}
         run: |
-          npm run pick:topic -- --write --output "$DECISION_FILE" --summary "$GITHUB_STEP_SUMMARY" --run-id "${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          status=0
+          npm run --silent pick:topic -- --write --output "$DECISION_FILE" --summary "$GITHUB_STEP_SUMMARY" --run-id "${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" > "$RUNNER_TEMP/pick-output.txt" || status=$?
+          cat "$RUNNER_TEMP/pick-output.txt"
+          tail -n 1 "$RUNNER_TEMP/pick-output.txt" > "$PICK_RESULT_FILE"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
           echo "decision=$(jq -r .decision "$DECISION_FILE")" >> "$GITHUB_OUTPUT"
+
+      - name: escalate a pick that failed, because a run with no topic and no proposal has nothing to write
+        if: failure() && steps.pick.outcome == 'failure'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          result() { value="$(jq -rn "input? // {} | $1" "$PICK_RESULT_FILE" 2>/dev/null || true)"; printf '%s\n' "${value:-$2}"; }
+          failure="$(result '.kind // "unexpected"' unexpected)"
+          case "$failure" in
+            credential|config|model|price) kind=credential ;;
+            *) kind=hard-stop ;;
+          esac
+          message="$(result '.message // "the picker printed no result"' 'the picker printed no result')"
+          cost="$(result '.spend.costUsd // "unknown"' unknown)"
+          node scripts/escalate-run.mjs --ledger-dir "$RUNNER_TEMP/escalations" --slug topic-proposal --kind "$kind" \
+            --title "Write daily could not choose what to write ($failure)" \
+            --detail "npm run pick:topic failed with kind $failure: $message. The topic proposals made before it stopped cost $cost USD, which no ledger records. Nothing was claimed and nothing was written."
 
       - name: commit the claims and the ledger to main, so no model runs against an unclaimed topic
         id: claim

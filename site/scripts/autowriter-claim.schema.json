@@ -1,22 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Autowriter topic claim",
-  "description": "One file per claimed topic at audits/autowriter/claims/<year>/<month>/<slug>.json, in the month of claimedAt, committed to the default branch before the writing model is called. status is claimed while no entry exists for it and written once the entry does. The shape is checked here; the rules that compare fields with each other or with other files (expiry after claim, demand that makes sense, the file name, title collisions) are checked in autowriter-claims.mjs.",
+  "description": "One file per claimed topic at audits/autowriter/claims/<year>/<month>/<slug>.json, in the month of claimedAt, committed to the default branch before the writing model is called. status is claimed while no entry exists for it and written once the entry does. origin says which rung of the picker chose the topic: demand (a buyer prompt the demand report names), weak-demand (a measured query no buyer prompt names) or category (a configured category turned into one query); a claim with no origin was written before the picker had more than one rung and is a demand claim. The shape is checked here; the rules that compare fields with each other or with other files (what each origin requires and forbids, expiry after claim, demand that makes sense, the file name, title collisions) are checked in autowriter-claims.mjs.",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "schema",
-    "slug",
-    "title",
-    "format",
-    "query",
-    "demand",
-    "prompt",
-    "runId",
-    "status",
-    "claimedAt",
-    "expiresAt"
-  ],
+  "required": ["schema", "slug", "title", "format", "query", "demand", "runId", "status", "claimedAt", "expiresAt"],
   "properties": {
     "schema": {
       "const": 1
@@ -38,6 +26,20 @@
     },
     "prompt": {
       "$ref": "#/$defs/prompt"
+    },
+    "origin": {
+      "enum": ["demand", "weak-demand", "category"]
+    },
+    "category": {
+      "$ref": "#/$defs/text"
+    },
+    "weakness": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": ["no-buyer-prompt", "impressions-at-floor", "position-beyond-strengthen-band"]
+      }
     },
     "runId": {
       "$ref": "#/$defs/text"

@@ -1,7 +1,7 @@
 import './fixtures/no-network.mjs';
 
 import assert from 'node:assert/strict';
-import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { afterEach, test } from 'node:test';
 
@@ -320,3 +320,67 @@ test('a later entry whose file already exists stops the whole run before any fil
     mkdirSync(dirname(join(root, TERM)), { recursive: true });
     writeFileSync(join(root, TERM), 'written by hand\n');
   }));
+
+const withoutPrompt = (claim, overrides) => {
+  const rest = Object.fromEntries(Object.entries(claim).filter(([key]) => key !== 'prompt'));
+  return { ...rest, ...overrides };
+};
+const PROMPTLESS = {
+  'weak-demand': withoutPrompt(claimOf('article'), { origin: 'weak-demand', weakness: ['no-buyer-prompt'] }),
+  category: withoutPrompt(claimOf('article'), {
+    origin: 'category',
+    category: 'governance',
+    demand: { impressions: 0, position: null },
+  }),
+};
+const buyerPromptsOf = (doc) =>
+  doc.slice(doc.indexOf('### The 30 buyer prompts')).split(/<!-- REGISTERS:BEGIN -->|\n### Registers/)[0];
+const allPassages = (doc) => parseBuyerPrompts(doc).flatMap(({ passages }) => passages);
+
+for (const [origin, claim] of Object.entries(PROMPTLESS)) {
+  test(`${origin}: an entry with no buyer prompt leaves the buyer prompts of the core byte for byte as they were`, async () => {
+    const root = repo();
+    const before = readFileSync(join(root, CORE), 'utf8');
+    const result = await assemble(root, fakeRun(root), [{ claim, draft: DRAFTS.article }]);
+    const after = textOf(result, CORE);
+
+    assert.ok(buyerPromptsOf(before).includes('**22. '));
+    assert.equal(buyerPromptsOf(after), buyerPromptsOf(before));
+    assert.ok(!allPassages(after).some(({ route }) => route === POST_ROUTE));
+    assert.ok(!after.includes(DRAFTS.article.passage));
+  });
+
+  test(`${origin}: an entry with no buyer prompt still gets the file, the facts row, the register row, the disposition and every gate`, async () => {
+    const root = repo();
+    const run = fakeRun(root);
+    const result = await assemble(root, run, [{ claim, draft: DRAFTS.article }]);
+
+    assert.deepEqual(
+      result.files.map(({ path }) => path),
+      [POST, FACTS, CORE, POST_DISPOSITION, LEDGER, ROUTES]
+    );
+    assert.equal(JSON.parse(textOf(result, FACTS)).targetQuery[POST_ROUTE], 'ai incident runbook');
+    assert.ok(textOf(result, CORE).includes(`| \`${POST_ROUTE}\` | ai incident runbook |`));
+    assert.ok(textOf(result, POST).includes(DRAFTS.article.passage));
+    assert.equal(JSON.parse(textOf(result, POST_DISPOSITION))[0].target, POST.replace(/^site\//, ''));
+    assert.ok(result.gates.every(({ exit }) => exit === 0));
+  });
+
+  test(`${origin}: next to a term with a prompt only the term registers a passage`, async () => {
+    const root = repo();
+    const before = readFileSync(join(root, CORE), 'utf8');
+    const result = await assemble(root, fakeRun(root), [
+      { claim, draft: DRAFTS.article },
+      { claim: claimOf('term'), draft: DRAFTS.term },
+    ]);
+    const after = textOf(result, CORE);
+    const added = allPassages(after).filter(({ route }) => route === POST_ROUTE || route === TERM_ROUTE);
+
+    assert.deepEqual(
+      added.map(({ route }) => route),
+      [TERM_ROUTE]
+    );
+    assert.notEqual(buyerPromptsOf(after), buyerPromptsOf(before));
+    assert.ok(after.includes(`| \`${POST_ROUTE}\` | ai incident runbook |`));
+  });
+}

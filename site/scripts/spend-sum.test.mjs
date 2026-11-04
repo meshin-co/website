@@ -4,7 +4,14 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import { monthOf, monthlySpend } from './spend-ceiling.mjs';
-import { chooseVersions, monthlyBreakdown, spendItemsOf, spendWarnings, totalBreakdown } from './spend-sum.mjs';
+import {
+  chooseVersions,
+  monthlyBreakdown,
+  recordMicro,
+  spendItemsOf,
+  spendWarnings,
+  totalBreakdown,
+} from './spend-sum.mjs';
 
 const attempt = (recordedAt, costUsd) => ({ recordedAt, costUsd });
 const ledgerOf = ({ slug = 'a-post', generation, attempts = [], decidedAt = null, spendUsd = 0, state = 'open' }) => ({
@@ -424,4 +431,39 @@ test('the whole of the spend is the same split over every month, and a spend wit
   });
   assert.equal(monthlyBreakdown({ ledgers: [dated, undated], month: '2026-10' }).totalMicro, 250_000);
   assert.equal(monthlyBreakdown({ ledgers: [dated, undated], month: '2026-12' }).totalMicro, 750_000);
+});
+
+const categoryRecord = (generatedAt = '2026-11-02T00:00:00.000Z') => ({
+  generatedAt,
+  calls: [call('topic', 0.25), call('draft', 1), call('correction', 0.5)],
+  totals: { costUsd: 1.75 },
+});
+
+test('the proposal call of a category entry is an entry cost: a record counts it with the draft and the correction', () => {
+  assert.equal(recordMicro(categoryRecord()), 1_750_000);
+  assert.equal(recordMicro({ calls: [call('topic', 0.25)] }), 250_000);
+  assert.equal(recordMicro({ calls: [call('draft', 1), call('correction', 0.5)] }), 1_500_000);
+});
+
+test('the monthly ceiling counts the proposal call of a record whose ledger is gone, in the month of the record', () => {
+  const record = { ...categoryRecord(), slug: 'lost-post', ledger: 'audits/autowriter/2026/11/lost-post.json' };
+  assert.equal(spent([{ ledger: null, record }], '2026-11'), 1_750_000);
+  assert.equal(spent([{ ledger: null, record }], '2026-10'), 0);
+});
+
+test('a ledger that carries the proposal and the draft agrees with its record: the cost is counted once and nothing is warned', () => {
+  const item = { ledger: ledgerOf({ slug: 'cat-post', generation: 1.75, spendUsd: 1.75 }), record: categoryRecord() };
+  assert.equal(spent([item], '2026-11'), 1_750_000);
+  assert.deepEqual(spendWarnings({ ledgers: [item] }), []);
+});
+
+test('a ledger that forgot the proposal call is named in a warning, and the cost of the record is the one counted', () => {
+  const item = { ledger: ledgerOf({ slug: 'cat-post', generation: 1.5, spendUsd: 1.5 }), record: categoryRecord() };
+  const warnings = spendWarnings({ ledgers: [item] });
+  assert.equal(warnings.length, 1);
+  assert.match(
+    warnings[0],
+    /cat-post: its generation record's writing calls cost 1\.75 USD but its ledger records 1\.5 USD/
+  );
+  assert.equal(spent([item], '2026-11'), 1_750_000);
 });

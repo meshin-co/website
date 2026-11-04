@@ -8,6 +8,7 @@ import { COLLECTION_OF, proseBlocks, proseSentences } from './entry-prose.mjs';
 import { BAND_FILE } from './sentence-band.mjs';
 import { claimFor, cleanDraft, RUN_DATE } from './fixtures/writer-drafts.mjs';
 import { makeRepo, removeRepo } from './fixtures/writer-repo.mjs';
+import { draftEntry } from './write-draft.mjs';
 import { WriterError } from './writer-error.mjs';
 import {
   claimProblems,
@@ -526,4 +527,91 @@ test('a correction message with no length problem says nothing about sections', 
 
 test('there is no correction message for no problems', () => {
   assert.throws(() => correctionMessage([]), /no problem/i);
+});
+
+const PROMPTLESS_CLAIM = Object.fromEntries(Object.entries(claimFor('article')).filter(([key]) => key !== 'prompt'));
+const CATEGORY_CLAIM = {
+  ...PROMPTLESS_CLAIM,
+  origin: 'category',
+  category: 'agentic-architecture',
+  demand: { impressions: 0, position: null },
+};
+const WEAK_CLAIM = {
+  ...PROMPTLESS_CLAIM,
+  origin: 'weak-demand',
+  weakness: ['no-buyer-prompt'],
+  demand: { impressions: 37, position: 14.8 },
+};
+const draftIn = (category) => {
+  const draft = cleanDraft('article');
+  draft.fields.category = category;
+  return draft;
+};
+const mismatches = (claim, draft) =>
+  preflight({ draft, claim, context, runDate: RUN_DATE }).filter(({ rule }) => rule === 'category-mismatch');
+
+test('a category claim refuses a draft in another category, naming the claim category and the field to set', () => {
+  assert.deepEqual(mismatches(CATEGORY_CLAIM, draftIn('governance')), [
+    {
+      rule: 'category-mismatch',
+      detail:
+        'the draft sets category "governance" but this claim covers the category "agentic-architecture"; set the category field to "agentic-architecture"',
+    },
+  ]);
+});
+
+test('a category claim accepts a draft in its own category', () => {
+  assert.deepEqual(mismatches(CATEGORY_CLAIM, draftIn('agentic-architecture')), []);
+});
+
+test('a demand claim and a weak-demand claim are not tied to a category', () => {
+  for (const claim of [claimFor('article'), WEAK_CLAIM])
+    for (const category of ['governance', 'executive']) assert.deepEqual(mismatches(claim, draftIn(category)), []);
+});
+
+test('the correction round receives the category message, and a draft in the claim category then passes', async () => {
+  const answers = [draftIn('governance'), draftIn('agentic-architecture')].map((draft, index) => ({
+    json: draft,
+    text: JSON.stringify(draft),
+    responseId: `resp_${index}`,
+    resolvedModel: 'gpt-6.1-terra',
+    usage: { input: 1, output: 1 },
+    stopReason: 'completed',
+    costUsd: 0.001,
+    price: { inputPerMillion: 4, outputPerMillion: 20 },
+    requestDigest: `digest${index}`,
+  }));
+  const seen = [];
+  const adapter = {
+    id: 'openai',
+    modelVariable: 'OPENAI_WRITING_MODEL',
+    model: 'gpt-6.1-terra',
+    async complete(request) {
+      seen.push(structuredClone(request));
+      return answers[seen.length - 1];
+    },
+  };
+  const check = (draft) => ({
+    draft,
+    problems: preflight({ draft, claim: CATEGORY_CLAIM, context, runDate: RUN_DATE }),
+  });
+  const outcome = await draftEntry({
+    adapter,
+    request: {
+      system: 'rules',
+      user: 'write it',
+      schema: { type: 'object' },
+      schemaName: 'entry',
+      maxOutputTokens: 100,
+    },
+    check,
+    correct: correctionMessage,
+    calls: [],
+  });
+  assert.equal(seen.length, 2);
+  const correction = seen[1].messages.at(-1).content;
+  assert.match(correction, /\d+\. category-mismatch: the draft sets category "governance" but this claim covers/);
+  assert.ok(correction.includes('set the category field to "agentic-architecture"'));
+  assert.deepEqual(outcome.problems, []);
+  assert.equal(outcome.draft.fields.category, 'agentic-architecture');
 });

@@ -5,7 +5,7 @@ bounds the owner set (locked row L62). Phase one calls no model: it only watches
 escalates. Everything the machine writes about a run lives in a ledger, one file per article at
 `audits/autowriter/<year>/<month>/<slug>.json`, and every topic it holds lives in a claim at
 `audits/autowriter/claims/<year>/<month>/<slug>.json`. Both have a JSON Schema beside the scripts, and both are strict:
-an unknown field is a finding. `scripts/record-layout.mjs` builds these paths from the claim's `claimedAt` and lists them at any depth.
+an unknown field is a finding. `scripts/record-layout.mjs` builds these paths from the claim's `claimedAt` and lists them at any depth. A claim says where its topic came from in `origin` (`demand` when absent; `weak-demand` and `category` carry no `prompt`), and the claim block of a generation record follows the same rules (`originProblems`; findings `claim-schema` and `generation-schema`).
 
 ## What `gate:autowriter` refuses
 
@@ -31,7 +31,7 @@ an unknown field is a finding. `scripts/record-layout.mjs` builds these paths fr
 
 The numbers (12-hour quarantine, 3 attempts, $25 a month) live in `scripts/autowriter-ledger.mjs`;
 a site that keeps a locked row for them pins it with a test of its own. The gate itself is
-`scripts/autowriter-gate.mjs`, over `scripts/autowriter-claims.mjs`, `scripts/autowriter-records.mjs`, `scripts/autowriter-record-rules.mjs` and `scripts/autowriter-length-rules.mjs`.
+`scripts/autowriter-gate.mjs`, over `scripts/autowriter-claims.mjs`, `scripts/autowriter-records.mjs`, `scripts/autowriter-record-rules.mjs` and `scripts/autowriter-length-rules.mjs`. The cron block of `write-daily.yml` is guarded by `gate:schedule` instead (`schedule-the-unattended-writer.md`).
 
 ## Escalate, and prove it arrived
 

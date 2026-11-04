@@ -2,14 +2,18 @@ import './fixtures/no-network.mjs';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
+import { ORIGINS, WEAKNESS_REASONS } from './autowriter-claims.mjs';
 import { describeProblem } from './autowriter-records.mjs';
+import { CATEGORIES } from './entry-limits.mjs';
 import {
   ARTICLE_SLUG,
   CLAIMED_AT,
   MODEL,
   MODEL_VARIABLE,
   RESOLVED_MODEL,
+  categoryInput,
   recordInput,
+  weakDemandInput,
 } from './fixtures/generation-input.mjs';
 import { buildRecord, validateRecord } from './generation-record.mjs';
 import { recordPath } from './record-layout.mjs';
@@ -146,7 +150,7 @@ const SHAPE_DEFECTS = [
   [
     'a judge call, which the writer no longer makes',
     (r) => (r.calls[0].role = 'judge'),
-    'calls[0].role must be one of "draft", "correction", "repair", "repair-correction"',
+    'calls[0].role must be one of "topic", "draft", "correction", "repair", "repair-correction"',
   ],
   ['negative tokens', (r) => (r.calls[0].tokens.input = -1), 'calls[0].tokens.input must be >= 0'],
   ['fractional tokens', (r) => (r.calls[0].tokens.output = 1.5), 'calls[0].tokens.output must be of type integer'],
@@ -333,3 +337,134 @@ test('a model with a shutdown date is recorded with a note that names the variab
   );
   assert.ok(JSON.stringify(record).includes(note));
 });
+
+const weakBase = buildRecord(weakDemandInput());
+const categoryBase = buildRecord(categoryInput());
+const changed = (record, change) => {
+  const copy = structuredClone(record);
+  change(copy);
+  return copy;
+};
+const quoted = (values) => values.map((value) => JSON.stringify(value)).join(', ');
+const PROMPT = { number: 6, text: 'Which artefacts should an AI register hold for each model?' };
+
+const ORIGIN_DEFECTS = [
+  [
+    'a prompt on a category entry',
+    changed(categoryBase, (r) => (r.claim.prompt = PROMPT)),
+    ['claim.prompt must be absent when origin is category'],
+  ],
+  [
+    'a category entry that names no category',
+    changed(categoryBase, (r) => delete r.claim.category),
+    ['claim.category is required when origin is category'],
+  ],
+  [
+    'a category nobody configured',
+    changed(categoryBase, (r) => (r.claim.category = 'finance')),
+    [`claim.category must be one of ${quoted(CATEGORIES)}`],
+  ],
+  [
+    'a weakness on a category entry',
+    changed(categoryBase, (r) => (r.claim.weakness = ['no-buyer-prompt'])),
+    ['claim.weakness must be absent when origin is category'],
+  ],
+  [
+    'a category entry with measured demand',
+    changed(categoryBase, (r) => Object.assign(r.demand, { impressions: 4, position: 3 })),
+    ['demand.impressions must be 0 when origin is category', 'demand.position must be null when origin is category'],
+  ],
+  [
+    'a weak-demand entry that names no weakness',
+    changed(weakBase, (r) => delete r.claim.weakness),
+    ['claim.weakness is required when origin is weak-demand'],
+  ],
+  [
+    'a weak-demand entry that carries a prompt',
+    changed(weakBase, (r) => (r.claim.prompt = PROMPT)),
+    ['claim.prompt must be absent when origin is weak-demand'],
+  ],
+  [
+    'a weak-demand entry that was never measured',
+    changed(weakBase, (r) => Object.assign(r.demand, { impressions: 0, position: null })),
+    [
+      'demand.impressions must be at least 1 when origin is weak-demand',
+      'demand.position must be a number when origin is weak-demand',
+    ],
+  ],
+  [
+    'a weakness on a demand entry',
+    changed(base, (r) => (r.claim.weakness = ['no-buyer-prompt'])),
+    ['claim.weakness must be absent when origin is demand'],
+  ],
+  [
+    'a category on a demand entry',
+    changed(base, (r) => (r.claim.category = 'governance')),
+    ['claim.category must be absent when origin is demand'],
+  ],
+  [
+    'a demand entry that names its origin and no prompt',
+    changed(base, (r) => Object.assign(r, { claim: { title: r.claim.title, query: r.claim.query, origin: 'demand' } })),
+    ['claim.prompt is required when origin is demand'],
+  ],
+  [
+    'an entry with no origin and no prompt',
+    changed(base, (r) => delete r.claim.prompt),
+    ['claim.prompt is required when origin is demand'],
+  ],
+  [
+    'an origin nobody defined',
+    changed(base, (r) => (r.claim.origin = 'video')),
+    [`claim.origin must be one of ${quoted(ORIGINS)}`],
+  ],
+  [
+    'an empty weakness',
+    changed(weakBase, (r) => (r.claim.weakness = [])),
+    ['claim.weakness must have at least 1 items'],
+  ],
+  [
+    'a weakness that repeats a reason',
+    changed(weakBase, (r) => (r.claim.weakness = ['no-buyer-prompt', 'no-buyer-prompt'])),
+    ['claim.weakness must have unique items'],
+  ],
+  [
+    'a weakness nobody defined',
+    changed(weakBase, (r) => (r.claim.weakness = ['too-cheap'])),
+    [`claim.weakness[0] must be one of ${quoted(WEAKNESS_REASONS)}`],
+  ],
+  [
+    'a report row that is text',
+    changed(base, (r) => (r.demand.row = 'x')),
+    ['demand.row must be of type object or null'],
+  ],
+  [
+    'a report table that is blank',
+    changed(categoryBase, (r) => (r.demand.report.table = ' ')),
+    ['demand.report.table must match pattern \\S'],
+  ],
+  ['a report row left out', changed(categoryBase, (r) => delete r.demand.row), ['demand.row is required']],
+  [
+    'a category entry that is a term',
+    changed(categoryBase, (r) => {
+      r.entry.format = 'term';
+      r.band.limits.format = 'term';
+      r.band.measured.format = 'term';
+    }),
+    ['entry.format must be article when origin is category'],
+  ],
+  [
+    'a weak-demand entry that is a term',
+    changed(weakBase, (r) => {
+      r.entry.format = 'term';
+      r.band.limits.format = 'term';
+      r.band.measured.format = 'term';
+    }),
+    ['entry.format must be article when origin is weak-demand'],
+  ],
+];
+
+for (const [name, record, expected] of ORIGIN_DEFECTS) {
+  test(`validateRecord names ${name}, and nothing else`, () => {
+    assert.deepEqual(problemsText(record), expected);
+  });
+}

@@ -1,6 +1,6 @@
 import { MAY } from './repair-guard.mjs';
 import { buildPrompt } from './writer-prompt.mjs';
-import { claimFacts, contextLists } from './writer-prompt-text.mjs';
+import { claimFacts, contextLists, promptBlockPart } from './writer-prompt-text.mjs';
 
 export const ALLOWANCE_TEXT = {
   takeaways: 'The key takeaways may lose or change items, so that the list can meet the rule it fails.',
@@ -59,7 +59,7 @@ const userOfRepair =
       ...(allowances.length > 0 ? [allowanceText(allowances)] : []),
       [
         '# The entry as it stands',
-        `The block of docs/SEMANTIC-CORE.md for this buyer prompt, copied from the file:\n${read.data.promptBlock}`,
+        ...promptBlockPart(read),
         `The entry as it stands, as the output of the same shape you return now:\n\n\`\`\`json\n${JSON.stringify(before, null, 2)}\n\`\`\``,
       ].join('\n\n'),
       ...contextLists(read),

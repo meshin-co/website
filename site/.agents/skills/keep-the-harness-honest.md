@@ -64,7 +64,7 @@ report cannot claim a family it never ran. A record no script regenerates carrie
 content describes and says that nothing regenerates it. The one exemption is
 `LEGACY_PROSE_PROVENANCE`: the 8 Calibration Gate reports of phases 1 to 5, written before any
 generator stamped a revision. They may keep prose in place of a hash, but they still need the line,
-and a hash on them must still name a commit. A unit test pins the 8 keys, and the gate prints them.
+and a hash on them must still name a commit. A unit test pins the 8 keys, and the gate prints them. `npm run gate:schedule` is property 4 for the one generated part of a workflow, the cron block of `write-daily.yml`: it regenerates the block from `loop.writeTimesUtc` and fails on any difference (`schedule-the-unattended-writer.md`).
 
 ## What this cannot catch
 

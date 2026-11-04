@@ -1,6 +1,6 @@
 import { MONTHLY_SPEND_CEILING_USD, fileStemProblem, validateLedger } from './autowriter-ledger.mjs';
 import { describeProblem } from './autowriter-records.mjs';
-import { WRITING_ROLES, validateRecord, writingTotals } from './generation-record.mjs';
+import { ENTRY_COST_ROLES, validateRecord, writingTotals } from './generation-record.mjs';
 import {
   attemptsMicro,
   hasEnded,
@@ -25,7 +25,7 @@ const byText = (left, right) => (left < right ? -1 : left > right ? 1 : 0);
 const stemOf = (path) => path.slice(path.lastIndexOf('/') + 1).replace(/\.json$/, '');
 const ledgerSpendMicro = (ledger) => totalBreakdown({ ledgers: [{ ledger, record: null }] }).totalMicro;
 const instantOf = (value) => new Date(value).toISOString();
-const isWriting = ({ role }) => WRITING_ROLES.includes(role);
+const isEntryCost = ({ role }) => ENTRY_COST_ROLES.includes(role);
 
 const newestFirst = (left, right) => byText(right.generatedAt, left.generatedAt) || byText(left.slug, right.slug);
 const oldestFirst = (left, right) => byText(left.generatedAt, right.generatedAt) || byText(left.slug, right.slug);
@@ -95,7 +95,7 @@ function ratesOf(records) {
     const generatedAt = instantOf(record.generatedAt);
     const keys = new Set(
       record.calls
-        .filter(isWriting)
+        .filter(isEntryCost)
         .map(({ resolvedModel, price }) =>
           JSON.stringify([resolvedModel, price.inputPerMillion, price.outputPerMillion])
         )

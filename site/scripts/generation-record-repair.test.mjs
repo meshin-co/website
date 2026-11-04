@@ -3,8 +3,11 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
-import { ARTICLE_SLUG, callOf, modelCheck, recordInput } from './fixtures/generation-input.mjs';
+import { ARTICLE_SLUG, callOf, categoryInput, modelCheck, recordInput } from './fixtures/generation-input.mjs';
 import {
+  ENTRY_COST_ROLES,
+  REPAIR_ROLES,
+  TOPIC_ROLES,
   WRITING_ROLES,
   buildRecord,
   callTotals,
@@ -46,9 +49,34 @@ const repaired = (record = written(), calls = repairCalls()) =>
     ...refreshed(),
   });
 
-test('the roles a record may hold are the two writing roles and the two repair roles', () => {
-  assert.deepEqual(schema.$defs.call.properties.role.enum, ['draft', 'correction', 'repair', 'repair-correction']);
+test('the roles a record may hold are the proposal role, the two writing roles and the two repair roles', () => {
+  assert.deepEqual(TOPIC_ROLES, ['topic']);
   assert.deepEqual(WRITING_ROLES, ['draft', 'correction']);
+  assert.deepEqual(REPAIR_ROLES, ['repair', 'repair-correction']);
+  assert.deepEqual(ENTRY_COST_ROLES, ['topic', 'draft', 'correction']);
+  assert.deepEqual(schema.$defs.call.properties.role.enum, [...TOPIC_ROLES, ...WRITING_ROLES, ...REPAIR_ROLES]);
+});
+
+test('the cost of an entry is its proposal, its draft and its correction, and a repair call is never part of it', () => {
+  const proposal = callOf('topic', { input: 1000, output: 100 }, 'proposal');
+  assert.deepEqual(writingTotals({ calls: [proposal] }), { tokens: { input: 1000, output: 100 }, costUsd: 0.0015 });
+  const category = buildRecord(categoryInput());
+  assert.deepEqual(writingTotals(category), category.totals);
+  assert.deepEqual(writingTotals(repaired(category)), category.totals);
+});
+
+test('a repaired category record stays valid, with its proposal call, its claim and its demand as they were', () => {
+  const before = buildRecord(categoryInput());
+  const next = repaired(before);
+  assert.deepEqual(validateRecord(next), []);
+  assert.deepEqual(
+    next.calls.map(({ role }) => role),
+    ['topic', 'draft', 'correction', 'repair', 'repair-correction']
+  );
+  assert.deepEqual(next.published, { callIndex: 4 });
+  assert.deepEqual(next.claim, before.claim);
+  assert.deepEqual(next.demand, before.demand);
+  assert.deepEqual(next.totals, callTotals(next.calls));
 });
 
 test('a repaired record is a valid record whose keys keep the schema order', () => {

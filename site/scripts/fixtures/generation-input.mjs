@@ -191,3 +191,40 @@ export function termInput() {
     },
   };
 }
+
+const withoutPrompt = (claim) => Object.fromEntries(Object.entries(claim).filter(([key]) => key !== 'prompt'));
+
+export const QUERIES_ROW = {
+  Query: 'ai bill of materials',
+  Impressions: '9',
+  Clicks: '0',
+  Position: '91.8',
+  CTR: '0.0%',
+  Page: '`/glossary/ai-bill-of-materials`',
+  Prompts: '-',
+};
+
+export function weakDemandInput() {
+  const input = recordInput();
+  return {
+    ...input,
+    claim: { ...withoutPrompt(input.claim), origin: 'weak-demand', weakness: ['no-buyer-prompt'] },
+    decision: { ...input.decision, row: { ...QUERIES_ROW }, report: { ...input.decision.report, table: 'Queries' } },
+  };
+}
+
+export function categoryInput() {
+  const input = recordInput();
+  return {
+    ...input,
+    claim: {
+      ...withoutPrompt(input.claim),
+      demand: { impressions: 0, position: null },
+      origin: 'category',
+      category: 'governance',
+    },
+    decision: { ...input.decision, row: null, report: { ...input.decision.report, table: null } },
+    calls: [callOf('topic', { input: 1800, output: 60 }, 'category-topic'), ...input.calls],
+    published: { callIndex: 2 },
+  };
+}

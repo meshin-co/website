@@ -15,6 +15,7 @@ There are seven records.
 | 05  | 2026-10-02 | [`investigation/05-handover-playbook-research.md`](05-handover-playbook-research.md)               | What a defensible handover of an AI system involves, what the sources support about sequence and sign-off, and what only the owner can supply about this practice's own exit                    |
 | 06  | 2026-10-02 | [`investigation/06-adoption-telemetry-research.md`](06-adoption-telemetry-research.md)             | What can honestly be measured about AI adoption, and the measured evidence that self-reported adoption and perceived speed-up both run against the trial data                                   |
 | 07  | 2026-11-03 | [`investigation/07-the-loop-without-a-human.md`](07-the-loop-without-a-human.md)                   | Why a bot push waited for a click, why an escalation was final, and what else stops the writer's loop from running without a human |
+| 08  | 2026-11-04 | [`investigation/08-the-engine-tail.md`](08-the-engine-tail.md)                                     | Which 27 engine files still name this site, what each one needs, and why the change tracking that work was closed with the work unfinished |
 
 If you read only one: **02**. It is the shortest, and it is the one that found a claim on the live
 site that its own cited specification may not support.

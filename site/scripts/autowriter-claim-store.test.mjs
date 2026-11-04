@@ -153,3 +153,87 @@ test('a claim lapses at the instant its fourteen days end, across a month and a 
   assert.equal(isHolding(fresh, new Date('2026-11-16T07:00:00.000Z')), false);
   assert.equal(made(new Date('2026-12-25T10:00:00.000Z')).expiresAt, '2027-01-08T10:00:00.000Z');
 });
+
+const REPOSITORY_ROOT = join(import.meta.dirname, '..', '..');
+const PROMPT = { number: 7, text: 'what is a model card' };
+const BASIS = {
+  slug: 'what-is-a-model-card',
+  title: 'What is a model card?',
+  format: 'article',
+  query: 'model card',
+  runId: '9001',
+  now: NOW,
+};
+const asDemand = () =>
+  newClaim({ ...BASIS, demand: { impressions: 14, position: 11.2 }, prompt: PROMPT, origin: 'demand' });
+const asWeak = () =>
+  newClaim({
+    ...BASIS,
+    slug: 'a-weak-claim',
+    demand: { impressions: 9, position: 91.8 },
+    origin: 'weak-demand',
+    weakness: ['no-buyer-prompt', 'impressions-at-floor'],
+  });
+const asCategory = () =>
+  newClaim({
+    ...BASIS,
+    slug: 'a-category-claim',
+    demand: { impressions: 0, position: null },
+    origin: 'category',
+    category: 'governance',
+  });
+const KEYS = ['schema', 'slug', 'title', 'format', 'query', 'demand'];
+const TAIL = ['runId', 'status', 'claimedAt', 'expiresAt'];
+
+test('a new claim keeps the origin fields it is given, after the demand, and invents no other key', () => {
+  assert.deepEqual(Object.keys(asDemand()), [...KEYS, 'prompt', 'origin', ...TAIL]);
+  assert.deepEqual(Object.keys(asWeak()), [...KEYS, 'origin', 'weakness', ...TAIL]);
+  assert.deepEqual(Object.keys(asCategory()), [...KEYS, 'origin', 'category', ...TAIL]);
+  for (const made of [asDemand(), asWeak(), asCategory()]) assert.deepEqual(validateClaim(made), []);
+});
+
+test('a new claim leaves out a key that is undefined or null, so no claim file ever holds a null prompt', () => {
+  const made = newClaim({
+    ...BASIS,
+    demand: { impressions: 0, position: null },
+    prompt: undefined,
+    origin: 'category',
+    category: 'governance',
+    weakness: null,
+  });
+  assert.deepEqual(Object.keys(made), [...KEYS, 'origin', 'category', ...TAIL]);
+  assert.deepEqual(validateClaim(made), []);
+});
+
+test('a claim made with no origin has none, so it is still the demand claim it always was', () => {
+  assert.equal(Object.hasOwn(made(NOW), 'origin'), false);
+  assert.deepEqual(validateClaim(made(NOW)), []);
+});
+
+test('a claim of each origin is written and read back equal, and a claim with no prompt holds no prompt key', () => {
+  inTemp((root) => {
+    for (const claimed of [asDemand(), asWeak(), asCategory()]) {
+      const path = join(root, filedAt(claimed.slug));
+      writeClaim(path, claimed);
+      assert.deepEqual(readClaim(path), claimed);
+      assert.equal(Object.hasOwn(JSON.parse(readFileSync(path, 'utf8')), 'prompt'), claimed.origin === 'demand');
+    }
+  });
+});
+
+test('a claim that breaks an origin rule is refused before a byte is written, naming the rule', () => {
+  inTemp((root) => {
+    const path = join(root, filedAt('a-category-claim'));
+    assert.throws(
+      () => writeClaim(path, { ...asCategory(), prompt: PROMPT }),
+      /does not match the claim schema: prompt must be absent when origin is category/
+    );
+    assert.equal(existsSync(path), false);
+  });
+});
+
+test('every claim committed under audits stays valid, so the origin can stay optional', () => {
+  const found = readClaims(REPOSITORY_ROOT);
+  assert.ok(found.length >= 1, 'the scan found no claim to read');
+  for (const { path, claim: read } of found) assert.deepEqual(validateClaim(read), [], path);
+});

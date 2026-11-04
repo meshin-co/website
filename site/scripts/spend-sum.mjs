@@ -1,5 +1,5 @@
 import { ENDED_VERDICTS } from './autowriter-ledger.mjs';
-import { REPAIR_ROLES, WRITING_ROLES } from './generation-record.mjs';
+import { ENTRY_COST_ROLES, REPAIR_ROLES } from './generation-record.mjs';
 
 const MICRO = 1e6;
 const INSTANT = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3]):[0-5]\d:[0-5]\d(\.\d{1,3})?Z$/;
@@ -22,7 +22,7 @@ export const ledgerStemOf = (path) => path.slice(path.lastIndexOf('/') + 1).repl
 const callsMicro = (record, roles) =>
   record.calls.filter(({ role }) => roles.includes(role)).reduce((total, { costUsd }) => total + microOf(costUsd), 0);
 
-export const recordMicro = (record) => (record ? callsMicro(record, WRITING_ROLES) : 0);
+export const recordMicro = (record) => (record ? callsMicro(record, ENTRY_COST_ROLES) : 0);
 export const recordRepairMicro = (record) => (record ? callsMicro(record, REPAIR_ROLES) : 0);
 export const attemptsMicro = (ledger) =>
   ledger ? ledger.attempts.reduce((total, { costUsd }) => total + microOf(costUsd), 0) : 0;

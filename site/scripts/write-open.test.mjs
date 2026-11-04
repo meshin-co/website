@@ -53,13 +53,16 @@ const put = (root, path, value) => {
 const claimPathOf = (claim) => recordPath('claim', claim.slug, claim.claimedAt);
 const ledgerPathOf = (claim) => recordPath('ledger', claim.slug, claim.claimedAt);
 
-const entryFor = (claim) => ({
-  claimPath: claimPathOf(claim),
-  claim,
-  row: { '#': '9', Prompt: claim.prompt.text },
-  table: claim.format === 'term' ? 'Queries' : 'Buyer prompts',
-  choice: 'Choice: signal 2',
-});
+const entryFor = (claim) =>
+  claim.prompt
+    ? {
+        claimPath: claimPathOf(claim),
+        claim,
+        row: { '#': '9', Prompt: claim.prompt.text },
+        table: claim.format === 'term' ? 'Queries' : 'Buyer prompts',
+        choice: 'Choice: signal 2',
+      }
+    : { claimPath: claimPathOf(claim), claim, row: null, table: null, choice: 'Choice: category governance' };
 
 const decisionFor = (claims, overrides = {}) => ({
   schema: 1,
@@ -316,4 +319,54 @@ test('a claim named under the month of the run instead of the month it was claim
     error.message.includes('audits/autowriter/claims/2026/10/agent-identity-in-production.json'),
     error.message
   );
+});
+
+const categoryClaim = (overrides = {}) => ({
+  ...newClaim({
+    slug: 'how-to-size-an-ai-review-board',
+    title: 'How to size an AI review board',
+    format: 'article',
+    query: 'size ai review board',
+    demand: { impressions: 0, position: null },
+    origin: 'category',
+    category: 'governance',
+    runId: 'run-1',
+    now: NOW,
+  }),
+  ...overrides,
+});
+
+const PROPOSAL = {
+  calls: [
+    { role: 'topic', note: 'the first query was refused' },
+    { role: 'topic', note: 'the second query was kept' },
+  ],
+};
+
+test('a category entry opens with a row and a table of null, and the proposal calls of the pick come with it', () => {
+  const claims = [categoryClaim()];
+  const root = world({ claims });
+  const decision = decisionFor(claims);
+  decision.entries[0].proposal = PROPOSAL;
+  const [entry] = openRun({ repoRoot: root, decision }).entries;
+  assert.deepEqual([entry.row, entry.table], [null, null]);
+  assert.deepEqual(entry.proposal, PROPOSAL);
+  assert.equal(entry.claim.origin, 'category');
+  assert.equal(entry.anchor, true);
+});
+
+test('an entry whose decision carries no proposal opens with none', () => {
+  const root = world();
+  const run = openRun({ repoRoot: root, decision: decisionFor([postClaim(), termClaim()]) });
+  for (const entry of run.entries) assert.equal(entry.proposal, undefined);
+});
+
+test('a proposal that is not a list of calls is refused before anything is spent', () => {
+  const claims = [categoryClaim()];
+  const root = world({ claims });
+  for (const proposal of [null, {}, { calls: 'topic' }, { calls: { role: 'topic' } }]) {
+    const decision = decisionFor(claims);
+    decision.entries[0].proposal = proposal;
+    assert.match(refusal(root, decision).message, /carries a proposal that is not \{ calls: \[\.\.\.\] \}/);
+  }
 });

@@ -16,7 +16,7 @@ const entryOf = ({ row, record }) => ({
   slug: row.slug,
   format: row.format,
   title: record.claim.title,
-  prompt: record.claim.prompt,
+  ...(record.claim.prompt && { prompt: record.claim.prompt }),
   generatedAt: row.generatedAt,
   input: row.input,
   output: row.output,

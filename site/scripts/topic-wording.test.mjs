@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import {
+  categoryChoice,
   measuredChoice,
   measuredReason,
   noneReason,
@@ -10,6 +11,7 @@ import {
   strengthens,
   termChoice,
   termReason,
+  weakChoice,
 } from './topic-wording.mjs';
 
 const WINDOW = { measured: '2026-11-01', windowStart: '2026-08-01', windowEnd: '2026-10-30' };
@@ -139,5 +141,38 @@ test('the write sentence counts the steps of the post arm and no step of the ter
   assert.match(
     noneReason({ report: { queries: [query('a', 50)], prompts: [prompt(1)] }, trail }),
     /Write: 1 unproven prompt examined; a definition, left to the term arm: 1\.$/
+  );
+});
+
+test('the choice line of a weak query is the signal 3 line followed by every computed weakness in words', () => {
+  const row = { query: 'how to write an ai policy', impressions: 3, position: 40.04 };
+  assert.equal(
+    weakChoice({ ...row, weakness: ['no-buyer-prompt', 'position-beyond-strengthen-band'] }, WINDOW),
+    'Choice: signal 3, "how to write an ai policy", 3 impressions at position 40.0, measured 2026-11-01; ' +
+      'weak demand: no buyer prompt names it, position worse than 30'
+  );
+  assert.equal(
+    weakChoice(
+      { query: 'how to x', impressions: 1, position: 12, weakness: ['no-buyer-prompt', 'impressions-at-floor'] },
+      WINDOW
+    ),
+    'Choice: signal 3, "how to x", 1 impression at position 12.0, measured 2026-11-01; ' +
+      'weak demand: no buyer prompt names it, impressions at the floor of 1'
+  );
+});
+
+test('the choice line of a category names it, how many articles it has and the newest day, and why a category was chosen', () => {
+  const why = 'no unproven prompt or weak query survived, so the rotation chose it';
+  assert.equal(
+    categoryChoice({ category: 'governance', articles: 3, newest: '2026-10-12' }),
+    `Choice: category governance, 3 articles, newest 2026-10-12; ${why}`
+  );
+  assert.equal(
+    categoryChoice({ category: 'executive', articles: 1, newest: '2026-09-08' }),
+    `Choice: category executive, 1 article, newest 2026-09-08; ${why}`
+  );
+  assert.equal(
+    categoryChoice({ category: 'operating-model', articles: 0, newest: null }),
+    `Choice: category operating-model, no article yet; ${why}`
   );
 });

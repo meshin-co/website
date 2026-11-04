@@ -37,7 +37,7 @@ function planEntry({ claim, draft, runDate }) {
     disposition: recordPath('disposition', claim.slug, claim.claimedAt),
     target: siteRelative(entry.path),
     query: targetQueryFor({ claim }),
-    passage: { promptNumber: claim.prompt.number, passage: draft.passage, route: entry.route },
+    passage: claim.prompt ? { promptNumber: claim.prompt.number, passage: draft.passage, route: entry.route } : null,
   };
 }
 
@@ -69,7 +69,10 @@ function planRoute({ repoRoot, entries, runDate }) {
     }),
     paths: [...plans.map(({ entry }) => entry.path), CONTENT_FACTS, SEMANTIC_CORE, ...generated],
     facts: plans.reduce((text, { route, query }) => addTargetQuery(text, route, query), read(CONTENT_FACTS)),
-    core: plans.reduce((text, { passage }) => insertPassage(text, passage), read(SEMANTIC_CORE)),
+    core: plans.reduce(
+      (text, { passage }) => (passage === null ? text : insertPassage(text, passage)),
+      read(SEMANTIC_CORE)
+    ),
   };
 }
 

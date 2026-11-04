@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
-import { buildDemand, routeOf, sameDemand } from './search-demand-rows.mjs';
+import { FUNCTION_WORDS, buildDemand, routeOf, sameDemand } from './search-demand-rows.mjs';
 
 const {
   window: WINDOW,
@@ -31,6 +31,17 @@ test('a route is the path of the page, whatever the scheme, host or trailing sla
   assert.equal(routeOf('http://meshin.co/'), '/');
   assert.equal(routeOf('https://meshin.co/about/'), '/about');
   assert.equal(routeOf('https://www.meshin.co/faq?utm_source=x#top'), '/faq');
+});
+
+test('the function words the matcher ignores are exported, so the repeat guard ignores the same 29 words', () => {
+  assert.equal(FUNCTION_WORDS instanceof Set, true);
+  assert.deepEqual(
+    [...FUNCTION_WORDS].sort(),
+    'a an and are as at be by do does for from how in is it of on or the to vs what when where which who why with'
+      .split(' ')
+      .sort()
+  );
+  assert.equal(FUNCTION_WORDS.size, 29);
 });
 
 test('a query and a prompt are the same demand when one is inside the other, at any length', () => {

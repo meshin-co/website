@@ -114,3 +114,22 @@ test('a repository with no generation record carries no entry', async () => {
     assert.deepEqual(await found(repo), { entries: [], problems: [] });
   });
 });
+
+const WEAK = { slug: 'a-weak-post', hoursAgo: 2, promptless: { origin: 'weak-demand', weakness: ['no-buyer-prompt'] } };
+const CATEGORY = {
+  slug: 'a-category-post',
+  hoursAgo: 1,
+  promptless: { origin: 'category', category: 'governance' },
+};
+
+test('an entry whose record names no buyer prompt is carried without a prompt key, and nothing throws', async () => {
+  await inRepo({ entries: [ARTICLE, WEAK, CATEGORY] }, async (repo) => {
+    const { entries, problems } = await found(repo);
+    assert.deepEqual(problems, []);
+    const bySlug = Object.fromEntries(entries.map((entry) => [entry.slug, entry]));
+    assert.deepEqual(Object.keys(bySlug).sort(), ['a-category-post', 'a-post', 'a-weak-post']);
+    for (const slug of ['a-weak-post', 'a-category-post']) assert.ok(!('prompt' in bySlug[slug]), slug);
+    assert.deepEqual(bySlug['a-post'].prompt, ARTICLE.prompt);
+    assert.equal(bySlug['a-weak-post'].route, '/blog/a-weak-post');
+  });
+});

@@ -200,3 +200,28 @@ test('a record and a ledger filed in another month than the month of the claim a
     return true;
   });
 });
+
+const PROMPTLESS = {
+  'weak-demand': { origin: 'weak-demand', weakness: ['no-buyer-prompt'] },
+  category: { origin: 'category', category: 'governance', demand: { impressions: 0, position: null } },
+};
+
+for (const [origin, fields] of Object.entries(PROMPTLESS)) {
+  test(`${origin}: an entry with no buyer prompt is refused as failed with the reason, never a TypeError`, async () => {
+    const repoRoot = repository();
+    const rest = Object.fromEntries(Object.entries(claim).filter(([key]) => key !== 'prompt'));
+    const claimFile = join(repoRoot, FILED.month('claim', claim.slug));
+    writeFileSync(claimFile, JSON.stringify({ ...rest, ...fields }, null, 2) + '\n');
+
+    await assert.rejects(
+      open({ repoRoot }),
+      (error) =>
+        error instanceof RepairStop &&
+        error.outcome === 'failed' &&
+        error.message.includes(claim.slug) &&
+        error.message.includes('no buyer prompt') &&
+        error.message.includes('no passage') &&
+        error.message.includes('a person repairs it')
+    );
+  });
+}

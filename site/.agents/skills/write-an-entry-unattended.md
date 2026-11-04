@@ -1,7 +1,7 @@
 # Write an Entry Unattended
 
-Change `20-write-without-a-human` has a model write the day's entries with no person in the loop. A run always writes one
-post (format `article`). When measured demand names a glossary concept the glossary lacks, it also writes up to a set cap of
+Change `20-write-without-a-human` has a model write each run's entries with no person in the loop, at the times `schedule-the-unattended-writer.md` sets. A run
+writes one post (format `article`), from demand or on a category (`write-on-a-category.md`). When measured demand names a glossary concept the glossary lacks and a prompt backs it, it also writes up to a set cap of
 terms (format `term`). `pick-the-next-topic.md` chooses them; `.github/workflows/write-daily.yml` pushes the result.
 
 ## Run it
@@ -29,17 +29,17 @@ value. An announced `shutdown_date` proceeds, and `notes` names it for the diges
 
 `scripts/writer-prompt.mjs` builds it at run time from `PROMPT_SOURCES`. Nothing is pasted. The files: `AGENTS.md` (four
 rules), the skills `write-copy.md`, `write-for-humans.md`, `place-a-new-text.md` and `add-collection-entry.md`,
-`site/src/content.config.ts`, `docs/CONTENT-GATE.md`, `docs/SEMANTIC-CORE.md` (the claim's buyer-prompt block),
+`site/src/content.config.ts`, `docs/CONTENT-GATE.md`, `docs/SEMANTIC-CORE.md` (the claim's buyer-prompt block, left out for a claim with no buyer prompt),
 `site/banned-phrases.json`, `site/controlled-words.json`, `site/content-facts.json`, `audits/sentence-band.json`, `audits/entry-length.json`,
 `audits/routes.json`, `site/src/data/tags.mjs`, and the slugs under `site/src/data/glossary` and `site/src/data/resource`.
 A vanished anchor fails naming the file (`scripts/writer-prompt.test.mjs` proves it). The record keeps each file's sha256.
 A post asks for `shortAnswer`, `fullAnswer`, takeaways, a FAQ, tags and 3 sources, on the post band. A term asks for
-`shortDefinition`, `definition` and 1 source, on the term band. Both add a body, claim rows, a `passage` of 40 words at most.
+`shortDefinition`, `definition` and 1 source, on the term band. Both add a body, claim rows, a `passage` of 40 words at most. A claim with no buyer prompt gets an `Origin:` line where the `Buyer prompt` line stood, and the rules name its query.
 
 ## The record, the claim table and the limits
 
 `audits/autowriter/generations/<year>/<month>/<slug>.json` (schema `scripts/generation-record.schema.json`) holds the provider, the
-resolved model id, the response id, the prompt digest, the demand row, the tree fingerprint, tokens, computed cost and the
+resolved model id, the response id, the prompt digest, the demand row (null for a category entry), the claim with its `origin`, the tree fingerprint, tokens, computed cost and the
 claim-to-source table. It copies only schema fields, every error text is redacted, and a key found in a file or a commit
 message fails the run as `config`. In `scripts/claim-sources.mjs` a sentence states a fact when it holds a digit, a month
 or "per cent", or names a standard or law (ISO, NIST, GDPR, the AI Act, an article or annex). It needs a `sourced` row: one
@@ -57,7 +57,7 @@ and commit the record. A pipeline commit that touches either record is refused.
 ## How a run lands
 
 Before it writes anything the run builds the clean tree, and `gate:editorial` must pass on it, or the run stops. All
-entries then go on one tree with one build, each with its `Passage:` line, content-facts row and disposition rows.
+entries then go on one tree with one build, each with its `Passage:` line (an entry with no buyer prompt has none), content-facts row and disposition rows.
 `semantic-core`, `gate:registers` and `gate:editorial` must pass; `gate:content`, `gate:human` and `gate:machine` are
 recorded in `gates`. The run never runs the seal: it writes `generated-<slug>.json` under `audits/phase-4.7/dispositions/<year>/<month>/` and restates each existing disposition
 the new text made stale, with a reason that says no human has read it. After the build it runs `npm run assets:routes` inside the assembly (`route-ledger.mjs`; the repair shares it, and the workflow does not, because the assembly decides what the commit holds) and the commit carries `audits/routes.json` when it changed, because `npm run deploy` refuses a build whose routes differ from it. A build that drops a route fails as `build`: rewriting the ledger would hide the removal from `gate:routes`, and a person explains removals (`explain-a-route-removal.md`). One bot commit goes on the local branch `autowriter/<slug>`; the workflow pushes and opens the pull request.
@@ -65,7 +65,7 @@ the new text made stale, with a reason that says no human has read it. After the
 The post is the anchor: the branch and the ledger carry its slug. A term that fails as `claim`, `output` or `vendor`, or
 whose assembly fails, is left out and listed in `skipped[]` with its spend. A failed post fails the run. Cost is tokens
 times the configured rates (`scripts/writer-cost.mjs`). Each call keeps its own tokens and cost. The ledger's `generation`
-is the sum over every entry, skipped ones included, and the summary reports it per entry. The monthly ceiling is enforced
+is the sum over every entry, skipped ones included, and over a category entry's proposal calls (role `topic`), which open its `calls`; the summary reports it per entry. The monthly ceiling is enforced
 elsewhere (`guard-the-unattended-writer.md`). The site shows no machine-written line: the record is in the repo.
 
 ## Module map

@@ -49,7 +49,7 @@ async function draftOne({ state, stage }) {
   const { claim, row } = state;
   const { repoRoot, context, adapter, runDate } = stage;
   requireWritable({ claim, context });
-  const prompt = buildPrompt({ repoRoot, claim, demandRow: row, runDate });
+  const prompt = buildPrompt({ repoRoot, claim, demandRow: row ?? undefined, runDate });
   const request = {
     system: prompt.system,
     user: prompt.user,
@@ -106,7 +106,7 @@ function recordFor({ state, stage, opened, files, assembly, tree }) {
   const { format, slug } = claim;
   const record = buildRecord({
     claim,
-    decision: { row: state.row, report: { ...stage.decision.report, table: state.table } },
+    decision: { row: state.row ?? null, report: { ...stage.decision.report, table: state.table ?? null } },
     format,
     route: entryRoute({ format, slug }),
     entryPath: entryPath({ format, slug }),
@@ -150,6 +150,16 @@ function ledgerFor({ ledger, calls }) {
   return next;
 }
 
+const ORIGIN_DETAIL = {
+  category: ({ category }) => `Category: ${category}`,
+  'weak-demand': ({ weakness }) => `Weak query: ${weakness.join(', ')}`,
+};
+
+const servesLines = (claim) =>
+  claim.prompt
+    ? [`Serves buyer prompt ${claim.prompt.number}: ${claim.prompt.text}`]
+    : [`Origin: ${claim.origin}`, ORIGIN_DETAIL[claim.origin](claim)];
+
 function commitMessage({ shipped, assembly }) {
   const [first] = shipped;
   const more = shipped.length > 1 ? ` and ${shipped.length - 1} more` : '';
@@ -157,7 +167,7 @@ function commitMessage({ shipped, assembly }) {
     [
       `${claim.format} ${claim.slug}: ${claim.title}`,
       choice,
-      `Serves buyer prompt ${claim.prompt.number}: ${claim.prompt.text}`,
+      ...servesLines(claim),
       `Provenance: ${recordPath('generation', claim.slug, claim.claimedAt)}`,
     ]
       .filter(Boolean)
@@ -274,7 +284,11 @@ export async function generateRun({
   treeOf = treeOfHead,
 }) {
   const opened = openRun({ repoRoot, decision });
-  const states = opened.entries.map((entry) => ({ ...entry, calls: [], skipped: null }));
+  const states = opened.entries.map((entry) => ({
+    ...entry,
+    calls: structuredClone(entry.proposal?.calls ?? []),
+    skipped: null,
+  }));
   const stage = {
     repoRoot,
     decision,

@@ -83,7 +83,9 @@
     "quarantineHours": 12,
     "monthlySpendCeilingUsd": 25,
     "claimLifetimeDays": 14,
-    "holdLabel": "autowriter-hold"
+    "holdLabel": "autowriter-hold",
+    "writeTimesUtc": ["03:17"],
+    "categoryRotation": []
   },
   "demand": {
     "property": "sc-domain:new-site.example",

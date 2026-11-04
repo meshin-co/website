@@ -124,7 +124,9 @@
       "required": ["title", "reason", "against", "detail"],
       "properties": {
         "title": { "$ref": "#/$defs/text" },
-        "reason": { "enum": ["title-collision", "slug-held", "route-exists", "register-owner", "family-served"] },
+        "reason": {
+          "enum": ["title-collision", "slug-held", "route-exists", "register-owner", "family-served", "same-subject"]
+        },
         "against": { "$ref": "#/$defs/text" },
         "detail": { "$ref": "#/$defs/text" }
       }

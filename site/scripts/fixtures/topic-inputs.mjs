@@ -4,7 +4,7 @@ import { siteBrand } from '../site-brand.mjs';
 import { casedForms } from '../topic-casing.mjs';
 
 const BRAND = siteBrand().name;
-const NOW = new Date('2026-11-02T07:00:00.000Z');
+export const NOW = new Date('2026-11-02T07:00:00.000Z');
 export const SUFFIX = titleSuffix({ name: BRAND });
 const LIVE_UNTIL = '2026-11-15T07:00:00.000Z';
 const CLAIMED_AT = '2026-11-01T07:00:00.000Z';
@@ -79,9 +79,21 @@ export const inputsFor = (report, extra = {}) => ({
   forms: casedForms(['AI', 'EU', 'NIST', 'RMF', 'LLM']),
   claims: [],
   ledgerPaths: [],
+  posts: [],
+  rotation: [],
   suffix: SUFFIX,
   now: NOW,
   settings: { termArm: true, termCap: 1 },
+  ...extra,
+});
+
+export const published = (slug, title, extra = {}) => ({
+  slug,
+  route: `/blog/${slug}`,
+  title,
+  query: null,
+  category: 'governance',
+  publishDate: '2026-10-01',
   ...extra,
 });
 
@@ -102,3 +114,9 @@ export const claimed = (slug, title, extra = {}) => ({
     ...extra,
   },
 });
+
+export const categoryClaimed = (slug, title, category, extra = {}) => {
+  const filed = claimed(slug, title, { origin: 'category', category, ...extra });
+  delete filed.claim.prompt;
+  return filed;
+};

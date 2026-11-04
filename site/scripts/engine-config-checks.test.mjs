@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
-import { compilePattern, consistencyProblems, matchRoute } from './engine-config-checks.mjs';
+import { TIME_OF_DAY, compilePattern, consistencyProblems, matchRoute } from './engine-config-checks.mjs';
 
 const REAL = JSON.parse(readFileSync(new URL('../engine.config.json', import.meta.url), 'utf8'));
 const clone = () => structuredClone(REAL);
@@ -154,3 +154,26 @@ for (const [label, plant, path, pattern] of SEMANTIC) {
     assert.match(found.problem, pattern);
   });
 }
+
+const withTimes = (writeTimesUtc) => ({ ...clone(), loop: { ...clone().loop, writeTimesUtc } });
+
+test('an entry that is not a time of day is never also called a repeat, so each bad entry has one message', () => {
+  const found = consistencyProblems(withTimes(['noon', 'noon', '03:17']));
+  assert.deepEqual(
+    found.map(({ path }) => path),
+    ['$.loop.writeTimesUtc[0]', '$.loop.writeTimesUtc[1]']
+  );
+  for (const { problem } of found) assert.match(problem, /^"noon" is not a time of day/);
+});
+
+test('a repeat is named at its later position and points back at the first', () => {
+  const [found] = consistencyProblems(withTimes(['15:17', '03:17', '15:17']));
+  assert.equal(found.path, '$.loop.writeTimesUtc[2]');
+  assert.match(found.problem, /^"15:17" is already at loop\.writeTimesUtc\[0\]/);
+});
+
+test('the time of day pattern is the one every consumer of the schedule shares', () => {
+  for (const time of ['00:00', '09:05', '23:59']) assert.match(time, TIME_OF_DAY);
+  for (const time of ['24:00', '12:60', '9:05', '09:5', '0900', '09:05:00', ' 09:05', '09:05\n'])
+    assert.doesNotMatch(time, TIME_OF_DAY);
+});

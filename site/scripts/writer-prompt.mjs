@@ -99,6 +99,19 @@ export const PROMPT_SOURCES = [
   },
 ];
 
+const isPromptBlock = ({ kind }) => kind === 'promptBlock';
+
+const withoutPromptBlock = (source) =>
+  source.take.some(isPromptBlock)
+    ? {
+        ...source,
+        part: 'Why each family exists and the strategy of the families.',
+        take: source.take.filter((item) => !isPromptBlock(item)),
+      }
+    : source;
+
+export const promptSourcesFor = (claim) => (claim.prompt ? PROMPT_SOURCES : PROMPT_SOURCES.map(withoutPromptBlock));
+
 export function buildPrompt({
   repoRoot,
   claim,
@@ -107,7 +120,7 @@ export function buildPrompt({
   userOf = (read) => userPrompt({ claim, demandRow, runDate, read }),
 }) {
   writtenFormat(claim.format);
-  const read = readSources({ repoRoot, claim, sources: PROMPT_SOURCES });
+  const read = readSources({ repoRoot, claim, sources: promptSourcesFor(claim) });
   const system = systemPrompt({ claim, read });
   const user = userOf(read);
   return {

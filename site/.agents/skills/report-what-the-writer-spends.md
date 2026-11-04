@@ -13,15 +13,15 @@ same bytes, and a file that is already current is left alone, so a later day cha
 
 - `This month` comes first, above any explanation: one sentence from `monthLine` and the paid table from `monthlyBreakdown`
   (`scripts/spend-sum.mjs`); `About this file` is second. It counts the committed records, not the branches the ceiling job adds.
-- One row per record: instant (UTC), format (`article` or `term`), slug, tokens, `Cost` and `Repair`. Cost is the writing
-  calls, `draft` and `correction` (`recordMicro`). Repair is the record's repair calls (`recordRepairMicro`). Whole
+- One row per record: instant (UTC), format (`article` or `term`), slug, tokens, `Cost` and `Repair`. Cost is the entry's
+  calls, `topic`, `draft` and `correction` (`recordMicro`). Repair is the record's repair calls (`recordRepairMicro`). Whole
   micro-dollars, shown as dollars. A record keeps the cost it stored, so a change of rate adds a row to Rates.
 - Three windows, each defined in the file: this entry (the newest run, by run id), the last 30 days (30 x 24 hours ending at
   the newest record, start excluded) and all time. They count the writing calls of entries only and end at the newest
   record, not at the clock. They are not the ceiling's calendar month.
 - The paid table, in `This month` and in `All time`, has four kinds of call, and each call is in exactly one: writing calls of
-  entries, repair calls (the ledger's attempts, so a failed repair is in), runs that ended with no entry (the Notes) and spend
-  with no generation record (the Warnings), then everything paid for. Each section states the total of its row.
+  entries (a category entry's `topic` call included), repair calls (the ledger's attempts, so a failed repair is in), runs that ended with no entry (the Notes) and spend
+  with no generation record (the Warnings), then everything paid for. Each section states the total of its row. Proposals of a pick that wrote no entry have no ledger and so no row: only its step summary holds them (`write-on-a-category.md`).
 - With no record the file says no entry was generated and holds no entry row, total or rate: no measurement, not zero. `This month` stays.
 
 ## Warnings and notes
@@ -52,7 +52,7 @@ naming the first differing line or the missing `Generated-at` (`scripts/autowrit
 
 Every message is Block Kit `{ text, blocks }` (`scripts/slack-blocks.mjs`); `text` is the fallback a phone shows. Kinds: the entry
 message (`node scripts/spend-report.mjs notify`, `scripts/spend-slack.mjs`), the no-entry message (`scripts/spend-ended.mjs` with
-`ceiling`, `pick` or `write`; five steps of `write-daily.yml`; a failed pick posts nothing), the escalation message and the live-entry message.
+`ceiling`, `pick` or `write`; five steps of `write-daily.yml`; a failed pick posts none and escalates instead), the escalation message and the live-entry message.
 
 - Month first: header `<month> spend against the monthly ceiling`, the Spent, Ceiling and Left table, and `monthLineOf` as line 1 of `text`.
 - Compared numbers sit in code fences padded by `monoTable` (`scripts/slack-table.mjs`), no line over `PHONE_COLUMNS` = 34, our own limit.
@@ -63,7 +63,7 @@ message (`node scripts/spend-report.mjs notify`, `scripts/spend-slack.mjs`), the
 - A missed message is not an escalation: `deliverNotice` (`scripts/slack-notice.mjs`) prints `::warning::<label>: slack NOT delivered: <reason>`, the webhook removed by `redactorFor`, and exits 0. Exit 1 and 2 stay for causes that are not delivery.
   A 4xx on the blocks is a formatting defect, not a missed message: `postSlackMessage` sends the `text` alone, ending in a line that says Slack refused the formatted version, and `deliverNotice` prints `::warning::<label>: slack delivered as plain text` with Slack's reason. Read that warning and fix the builder.
 - Live entry (`scripts/live-entry.mjs`, `scripts/live-slack.mjs`; `publish-the-build.md`): once per entry, when its page answers 2xx on
-  `site.site`. Links come from `scripts/entry-surfaces.mjs` over `owedFor` and `SURFACES` (`scripts/route-parity.mjs`), the prompt is `claim.prompt`
+  `site.site`. Links come from `scripts/entry-surfaces.mjs` over `owedFor` and `SURFACES` (`scripts/route-parity.mjs`), the prompt, when the claim has one, is `claim.prompt`
   of the record (`scripts/entries-in-build.mjs`), `scripts/live-state.mjs` remembers it. An unreachable page is a warning message and stays unannounced.
 
 ## A discarded attempt

@@ -48,11 +48,11 @@ const columnBlocks = (surfaces) => chunked(surfaces.map(surfaceColumn), LIMITS.f
 function entryPart(entry) {
   const { slug, format, title, prompt, page } = entry;
   const surfaces = [page, ...entry.surfaces];
-  const quoted = `Buyer prompt ${prompt.number}: “${plain(prompt.text, PROMPT_LIMIT)}”`;
+  const quoted = prompt && `Buyer prompt ${prompt.number}: “${plain(prompt.text, PROMPT_LIMIT)}”`;
   const checked = `The page answered HTTP ${page.probe.status} on attempt ${page.probe.attempts}, checked ${utc(page.probe.checkedAt)}.`;
   return {
     blocks: [
-      section(`${bold(plain(title, TITLE_LIMIT))}\n${format} \`${escapeText(slug)}\`\n_${quoted}_`),
+      section(`${bold(plain(title, TITLE_LIMIT))}\n${format} \`${escapeText(slug)}\`${quoted ? `\n_${quoted}_` : ''}`),
       section(entryTables([entry], [format])),
       ...columnBlocks(surfaces),
       context(checked),
@@ -60,7 +60,7 @@ function entryPart(entry) {
     text: [
       plain(title, TITLE_LIMIT),
       `${format} ${escapeText(slug)}`,
-      quoted,
+      ...(quoted ? [quoted] : []),
       figures(entry),
       ...surfaces.map(surfaceLine),
       checked,
