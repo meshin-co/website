@@ -1,6 +1,7 @@
 import { listedPaths } from './collection-gate.mjs';
 import { META_TAG, declaredUrl, linkTags, attributeOf } from './head-tags.mjs';
 import { deriveRouteKinds } from './route-kinds.mjs';
+import { FEED_WINDOW } from '../src/utils/feeds.mjs';
 import { OG_HEIGHT, OG_WIDTH, markdownPath } from '../src/utils/machine-links.mjs';
 import { sidecarFileForRoute } from '../src/utils/machine-text.mjs';
 
@@ -15,7 +16,6 @@ export const OWED = {
     'sidecar',
     'sidecar-link',
     'llms-collection',
-    'llms-full',
     'collection-feed',
     'feed-link',
     'search-shard',
@@ -51,7 +51,23 @@ const pathOfUrl = (url, site) => {
 export const guidPaths = (xml, site) =>
   [...xml.matchAll(/<guid[^>]*>([^<]+)<\/guid>/g)].map(([, url]) => pathOfUrl(url, site));
 
-function readSurfaces({ site, texts, shipped, sitemapLastmods, collections, inlineKinds }) {
+const compare = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
+
+const newestFirst = (lastmods) => (a, b) => compare(lastmods.get(b) ?? '', lastmods.get(a) ?? '') || compare(a, b);
+
+function routesBeyondFeedWindow(derivedRoutes, lastmods) {
+  const entries = [...derivedRoutes.values()].filter(({ kind }) => kind === 'entry');
+  return new Set(
+    [...Map.groupBy(entries, ({ collection }) => collection).values()].flatMap((collection) =>
+      collection
+        .map(({ route }) => route)
+        .sort(newestFirst(lastmods))
+        .slice(FEED_WINDOW)
+    )
+  );
+}
+
+function readSurfaces({ site, texts, shipped, sitemapLastmods, collections, inlineKinds }, derived) {
   const listing = (file) => new Set(texts[file] === undefined ? [] : listedPaths(file, texts[file], site));
   const llmsCollections = {};
   for (const file of Object.keys(texts)) {
@@ -67,13 +83,13 @@ function readSurfaces({ site, texts, shipped, sitemapLastmods, collections, inli
     shipped: new Set(shipped),
     lastmods: sitemapLastmods,
     llmsIndex: listing('llms.txt'),
-    llmsFull: listing('llms-full.txt'),
     llmsCollections,
     feed: memo((base) => new Set(guidPaths(texts[`${base}/rss.xml`] ?? '', site))),
     merged: new Set(guidPaths(texts['rss.xml'] ?? '', site)),
     shard: memo((kind) => listing(`search-index-${kind}.json`)),
     feedHeads,
     inlineKinds: new Set(inlineKinds),
+    beyondFeedWindow: routesBeyondFeedWindow(derived.routes, sitemapLastmods),
   };
 }
 
@@ -144,11 +160,6 @@ export const SURFACES = {
         ? null
         : phrase(`/llms/${collection}.txt`, ctx, 'and its shards do not list it'),
   },
-  'llms-full': {
-    label: 'full text in llms-full.txt',
-    artifact: () => '/llms-full.txt',
-    absence: ({ route }, ctx) => (ctx.llmsFull.has(route) ? null : phrase('/llms-full.txt', ctx, 'does not list it')),
-  },
   'collection-feed': {
     label: 'an item in its collection feed',
     artifact: ({ base }) => `/${base}/rss.xml`,
@@ -194,7 +205,8 @@ export function owedFor(info, ctx) {
   if (info.kind !== 'entry') return surfaces;
   if (ctx.inlineKinds.has(info.collection)) surfaces.push('llms-index');
   if (ctx.feedHeads.get(info.collection) === info.route) surfaces.push('merged-feed');
-  return surfaces;
+  if (!ctx.beyondFeedWindow?.has(info.route)) return surfaces;
+  return surfaces.filter((surface) => surface !== 'collection-feed');
 }
 
 const emptyTally = () => Object.fromEntries(SURFACE_IDS.map((surface) => [surface, { owed: 0, present: 0 }]));
@@ -216,7 +228,7 @@ function ledgerOf(derived, tally, declared) {
 
 export function routeParity(input) {
   const derived = deriveRouteKinds(input);
-  const ctx = readSurfaces(input);
+  const ctx = readSurfaces(input, derived);
   const tally = emptyTally();
   const findings = [...derived.findings];
 

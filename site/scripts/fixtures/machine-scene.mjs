@@ -5,9 +5,20 @@ import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { brandFromDisk } from '../../src/utils/brand.mjs';
-import { FEED_BASES } from '../../src/utils/feeds.mjs';
-import { LLMS_COLLECTIONS } from '../../src/utils/llms-collections.mjs';
-import { NOINDEX_STATIC_PAGES, absoluteUrl, entryCount, sidecarFileForRoute } from '../../src/utils/machine-text.mjs';
+import { FEED_BASES, FEED_WINDOW } from '../../src/utils/feeds.mjs';
+import {
+  LLMS_COLLECTIONS,
+  LLMS_FILE_MAX_BYTES,
+  llmsCollectionFiles,
+  llmsCollectionPointers,
+} from '../../src/utils/llms-collections.mjs';
+import {
+  NOINDEX_STATIC_PAGES,
+  absoluteUrl,
+  entryCount,
+  renderLlmsFull,
+  sidecarFileForRoute,
+} from '../../src/utils/machine-text.mjs';
 import { siteLastmods } from '../../src/utils/sitemap-lastmod.mjs';
 import { GATE_FINDINGS_VARIABLE } from '../gate-findings.mjs';
 import { SCENE_HUBS, SCENE_PAGES } from './machine-scene-catalog.mjs';
@@ -55,15 +66,32 @@ const NOINDEX_HEADER_PATTERNS = [
 export const HOST = brandFromDisk(join(SITE_ROOT, 'src', 'config.yaml')).name;
 export const ORIGIN = `https://${HOST}`;
 
+const dayAfter = (start, days) => new Date(Date.parse(start) + days * 86_400_000).toISOString().slice(0, 10);
+
+const QUESTIONS = Array.from({ length: FEED_WINDOW + 1 }, (_, index) => {
+  const number = String(index + 1).padStart(2, '0');
+  return {
+    slug: `question-${number}`,
+    title: `Question ${number}`,
+    published: dayAfter('2026-09-04', index),
+    updated: dayAfter('2026-09-22', index),
+  };
+});
+
 export const LIVE = {
   post: [
     { slug: 'first-post', title: 'First post', published: '2026-09-01', updated: '2026-10-01' },
     { slug: 'second-post', title: 'Second post', published: '2026-09-10', updated: '2026-10-05' },
+    { slug: 'third-post', title: 'Third post', published: '2026-09-15', updated: '2026-10-08' },
+    { slug: 'fourth-post', title: 'Fourth post', published: '2026-09-20', updated: '2026-10-12' },
+    { slug: 'fifth-post', title: 'Fifth post', published: '2026-09-24', updated: '2026-10-14' },
+    { slug: 'sixth-post', title: 'Sixth post', published: '2026-09-27', updated: '2026-10-16' },
+    { slug: 'seventh-post', title: 'Seventh post', published: '2026-09-30', updated: '2026-10-18' },
   ],
   service: [{ slug: 'sprint', title: 'Sprint', published: '2026-09-01', updated: '2026-10-01' }],
   glossary: [{ slug: 'evals', title: 'Evals', published: '2026-09-02', updated: '2026-09-20' }],
   resource: [{ slug: 'checklist', title: 'Checklist', published: '2026-09-03', updated: '2026-09-21' }],
-  faq: [{ slug: 'who-owns-it', title: 'Who owns it', published: '2026-09-04', updated: '2026-09-22' }],
+  faq: QUESTIONS,
 };
 
 const KINDS = Object.keys(FEED_BASES);
@@ -132,15 +160,35 @@ function sidecarText({ route, title, description }, day) {
   return lines.join('\n');
 }
 
-function entryBlock(kind, entry) {
-  const url = urlOf(routeOf(kind, entry));
-  const lines = [`# ${entry.title}`, '', instantOf(entry.updated), '', `[${url}](${url})`];
-  return [...lines, '', `The text of ${entry.title}.`].join('\n');
-}
+const compareText = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
 
-function collectionSection(kind) {
-  const blocks = LIVE[kind].map((entry) => entryBlock(kind, entry));
-  return `## ${titleOfKind(kind)}\n\n${blocks.join('\n\n---\n\n')}`;
+const windowRoutes = (kind) =>
+  [...LIVE[kind]]
+    .sort((a, b) => compareText(b.updated, a.updated) || compareText(a.slug, b.slug))
+    .slice(0, FEED_WINDOW)
+    .map((entry) => routeOf(kind, entry));
+
+const llmsEntries = (kind) =>
+  LIVE[kind].map((entry) => ({
+    id: entry.slug,
+    title: entry.title,
+    url: urlOf(routeOf(kind, entry)),
+    summary: NOTE,
+    body: `The text of ${entry.title}.`,
+    updated: instantOf(entry.updated),
+    published: instantOf(entry.published),
+  }));
+
+const collectionFiles = (kind) =>
+  llmsCollectionFiles({ site: HOST, origin: ORIGIN, name: kind, title: titleOfKind(kind), entries: llmsEntries(kind) });
+
+function llmsFullText() {
+  const counts = Object.fromEntries(LIVE_KINDS.map((kind) => [kind, LIVE[kind].length]));
+  const pointers = llmsCollectionPointers(counts).map((pointer) => ({
+    ...pointer,
+    url: absoluteUrl(ORIGIN, pointer.url),
+  }));
+  return renderLlmsFull({ site: HOST, maxFileBytes: LLMS_FILE_MAX_BYTES, pointers });
 }
 
 function llmsTxt(indexable) {
@@ -227,10 +275,10 @@ function writeDist(dist, lastmods) {
   writeText(at('_headers'), headersText());
   writeText(at('sitemap-0.xml'), sitemapXml(lastmods));
   writeText(at('llms.txt'), llmsTxt(indexable));
-  writeText(at('llms-full.txt'), `# ${HOST}\n\n${LIVE_KINDS.map(collectionSection).join('\n\n')}\n`);
+  writeText(at('llms-full.txt'), llmsFullText());
   for (const kind of LIVE_KINDS) {
-    writeText(at(`llms/${kind}.txt`), `# ${HOST}\n\n${collectionSection(kind)}\n`);
-    writeText(at(`${FEED_BASES[kind]}/rss.xml`), rssFeed(liveRoutes(kind)));
+    for (const { param, text } of collectionFiles(kind)) writeText(at(`llms/${param}.txt`), text);
+    writeText(at(`${FEED_BASES[kind]}/rss.xml`), rssFeed(windowRoutes(kind)));
   }
   writeText(at('rss.xml'), rssFeed(everything));
   const items = everything.map((route) => ({ url: urlOf(route) }));

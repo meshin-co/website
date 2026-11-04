@@ -7,6 +7,7 @@ import {
   renderLlmsTxt,
   renderLlmsFull,
   renderLlmsCollection,
+  renderLlmsShard,
   publicIndexableStaticPages,
   staticPageDate,
   buildFeedItems,
@@ -215,70 +216,73 @@ test('the real /llms/{collection}.txt pipeline drops a draft or noindex content 
   assert.ok(!output.includes('# Hidden'));
 });
 
-test('renderLlmsFull carries the actual full body text of every collection, not just links to it', () => {
-  const sections = [
+test('renderLlmsCollection carries the actual full body text of every entry, not just links to it', () => {
+  const entries = [
     {
-      title: 'Offers',
-      entries: [
-        {
-          title: 'Assessment',
-          url: `${ORIGIN}/services/assessment`,
-          summary: 'Two weeks.',
-          body: 'The full write-up of the assessment offer.',
-          updated: '2026-09-01T00:00:00.000Z',
-        },
-      ],
+      title: 'Assessment',
+      url: `${ORIGIN}/services/assessment`,
+      summary: 'Two weeks.',
+      body: 'The full write-up of the assessment offer.',
+      updated: '2026-09-01T00:00:00.000Z',
     },
     {
-      title: 'Questions and answers',
-      entries: [
-        {
-          title: 'How do you charge?',
-          url: `${ORIGIN}/faq/how-do-you-charge`,
-          summary: 'Fixed structures.',
-          body: 'Three fixed structures, no hourly billing.',
-          updated: '2026-09-12T00:00:00.000Z',
-        },
-      ],
+      title: 'Sprint',
+      url: `${ORIGIN}/services/sprint`,
+      summary: 'Six weeks.',
+      body: 'The full write-up of the sprint offer.',
+      updated: '2026-09-12T00:00:00.000Z',
     },
   ];
-  const output = renderLlmsFull({ site: 'meshin.co', sections });
+  const output = renderLlmsCollection({ site: 'meshin.co', title: 'Offers', entries });
 
   assert.ok(output.startsWith('# meshin.co\n\n## Offers'));
   assert.ok(output.includes('The full write-up of the assessment offer.'));
-  assert.ok(output.includes('## Questions and answers'));
-  assert.ok(output.includes('Three fixed structures, no hourly billing.'));
+  assert.ok(output.includes('The full write-up of the sprint offer.'));
 });
 
-test('renderLlmsFull never emits a draft or noindex entry', () => {
-  const sections = [
-    {
-      title: 'Writing',
-      entries: [
-        { title: 'Live', url: `${ORIGIN}/blog/live`, summary: 's', body: 'Live body.', updated: null },
-        { title: 'Draft', url: `${ORIGIN}/blog/draft`, summary: 's', body: 'Draft body.', updated: null, draft: true },
-        {
-          title: 'Hidden',
-          url: `${ORIGIN}/blog/hidden`,
-          summary: 's',
-          body: 'Hidden body.',
-          updated: null,
-          noindex: true,
-        },
-      ],
-    },
+test('renderLlmsShard never emits a draft or noindex entry', () => {
+  const entries = [
+    { title: 'Live', url: `${ORIGIN}/blog/live`, summary: 's', body: 'Live body.' },
+    { title: 'Draft', url: `${ORIGIN}/blog/draft`, summary: 's', body: 'Draft body.', draft: true },
+    { title: 'Hidden', url: `${ORIGIN}/blog/hidden`, summary: 's', body: 'Hidden body.', noindex: true },
   ];
-  const output = renderLlmsFull({ site: 'meshin.co', sections });
+  const output = renderLlmsShard({ site: 'meshin.co', title: 'Writing', entries, from: 1, to: 3, nextUrl: null });
 
+  assert.ok(output.includes('# Live'));
   assert.ok(output.includes('Live body.'));
+  assert.ok(!output.includes('# Draft'));
   assert.ok(!output.includes('Draft body.'));
+  assert.ok(!output.includes('# Hidden'));
   assert.ok(!output.includes('Hidden body.'));
 });
 
-test('renderLlmsFull omits a section heading body when its collection has no live entries, and ends with one newline', () => {
-  const output = renderLlmsFull({ site: 'meshin.co', sections: [{ title: 'Case studies', entries: [] }] });
+test('renderLlmsFull lists the collection files and carries no entry', () => {
+  const pointers = [
+    { title: 'Offers', url: `${ORIGIN}/llms/service.txt`, description: '3 entries, full body text of each.' },
+    { title: 'Writing', url: `${ORIGIN}/llms/post.txt`, description: '10 entries, full body text of each.' },
+  ];
+  const output = renderLlmsFull({ site: 'meshin.co', maxFileBytes: 100_000, pointers });
+  const lines = output.split('\n').filter(Boolean);
 
-  assert.equal(output, '# meshin.co\n\n## Case studies\n');
+  assert.equal(lines[0], '# meshin.co');
+  assert.ok(lines[1].startsWith('> '));
+  assert.match(lines[1], /full text of every live entry is in the collection files below/);
+  assert.match(lines[1], /holds no entry/);
+  assert.match(lines[1], /index of numbered parts/);
+  assert.match(lines[1], /No file under \/llms\/ is over 100000 bytes/);
+  assert.equal(lines[2], '## Collections');
+  assert.deepEqual(lines.slice(3), [
+    '- [Offers](https://meshin.co/llms/service.txt): 3 entries, full body text of each.',
+    '- [Writing](https://meshin.co/llms/post.txt): 10 entries, full body text of each.',
+  ]);
+  assert.ok(output.endsWith('\n') && !output.endsWith('\n\n'));
+});
+
+test('renderLlmsFull leaves out the Collections heading when no collection has a live entry', () => {
+  const output = renderLlmsFull({ site: 'meshin.co', maxFileBytes: 100_000, pointers: [] });
+
+  assert.ok(output.startsWith('# meshin.co\n\n> '));
+  assert.ok(!output.includes('## Collections'));
 });
 
 test('publicIndexableStaticPages never lists the noindex static pages', () => {
@@ -403,7 +407,7 @@ test('buildFeedItems sorts by lastmod newest first, not by publishDate alone', (
   assert.equal(items[1].date_modified, '2026-06-01T00:00:00.000Z');
 });
 
-test('buildFeedItems strips markdown out of content_text, the shared helper it uses with renderLlmsFull', () => {
+test('buildFeedItems strips markdown out of content_text, the shared helper it uses with renderLlmsCollection', () => {
   const entries = [
     {
       id: 'a',
@@ -739,33 +743,4 @@ test('liveTopicMap groups posts by an array-value key, sharing one slug across p
 test('liveTopicMap never invents a slug for a post carrying no tags', () => {
   const map = liveTopicMap([{ tags: [], updated: '2026-01-01T00:00:00.000Z' }], 'tags');
   assert.equal(map.size, 0);
-});
-
-test('the full-text file degrades to an index when the corpus outgrows its budget, instead of failing the build', () => {
-  const entry = (n) => ({ title: `Entry ${n}`, url: `https://x/post/${n}`, summary: 's', body: 'b'.repeat(400) });
-  const sections = [
-    { title: 'Writing', url: 'https://x/llms/post.txt', entries: Array.from({ length: 50 }, (_, n) => entry(n)) },
-  ];
-
-  const whole = renderLlmsFull({ site: 'x', sections, maxBytes: 1_000_000 });
-  const index = renderLlmsFull({ site: 'x', sections, maxBytes: 4_096 });
-
-  assert.ok(whole.includes('b'.repeat(400)));
-  assert.ok(!index.includes('b'.repeat(400)));
-  assert.match(index, /\[Writing\]\(https:\/\/x\/llms\/post\.txt\): 50 entries/);
-  assert.ok(Buffer.byteLength(index, 'utf8') < 4_096);
-});
-
-test('a corpus inside the budget is still served whole, so one fetch keeps working while it can', () => {
-  const sections = [
-    {
-      title: 'Writing',
-      url: 'https://x/llms/post.txt',
-      entries: [{ title: 'One', url: 'https://x/a', summary: 's', body: 'short' }],
-    },
-  ];
-
-  const rendered = renderLlmsFull({ site: 'x', sections, maxBytes: 1_000_000 });
-
-  assert.ok(rendered.includes('short'));
 });

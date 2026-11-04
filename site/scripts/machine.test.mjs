@@ -3,6 +3,12 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import {
+  COLLECTION_FEED_MAX_BYTES,
+  FEED_WINDOW,
+  MERGED_FEED_MAX_BYTES,
+  MERGED_FEED_WINDOW,
+} from '../src/utils/feeds.mjs';
+import {
   llmsRouteGaps,
   publicCollections,
   missingFromGenerator,
@@ -15,6 +21,8 @@ import {
   sidecarContentGaps,
   hubFeedLinkGaps,
   feedCoverageFailures,
+  feedWindowRoutes,
+  feedSizeFindings,
   indexableCoverageGaps,
   sizeGuardFailure,
   lastmodCoverageGaps,
@@ -30,6 +38,7 @@ import {
   LLMS_TXT_MAX_BYTES,
   unreferencedMachineFiles,
 } from './machine.mjs';
+import { renderHeaders } from './gen-headers.mjs';
 import { PLANTED_DATED_PAGE, withCatalogPages } from './fixtures/catalog-pages.mjs';
 
 const CONFIG = `
@@ -299,12 +308,16 @@ test('a route already listed in llms.txt is never reported twice, even when it w
 });
 
 test('sizeGuardFailure reports nothing while a file stays under its byte guard', () => {
-  assert.deepEqual(sizeGuardFailure('llms-full.txt', 1000, 2_000_000), []);
+  assert.deepEqual(sizeGuardFailure('llms-full.txt', 1000, 4096), []);
+  assert.deepEqual(sizeGuardFailure('llms-full.txt', 4096, 4096), []);
 });
 
 test('sizeGuardFailure reports the exact byte count and guard once a file grows past it, so growth cannot go unnoticed', () => {
-  assert.deepEqual(sizeGuardFailure('llms-full.txt', 2_000_001, 2_000_000), [
-    'llms-full.txt is 2000001 bytes, over the 2000000 byte guard',
+  assert.deepEqual(sizeGuardFailure('llms-full.txt', 5000, 4096), [
+    'llms-full.txt is 5000 bytes, over the 4096 byte guard',
+  ]);
+  assert.deepEqual(sizeGuardFailure('llms/post-1.txt', 100_001, 100_000), [
+    'llms/post-1.txt is 100001 bytes, over the 100000 byte guard',
   ]);
 });
 
@@ -359,6 +372,9 @@ const feedItem = (url) => `<item><guid isPermaLink="true">${url}</guid></item>`;
 const buildFeed = (urls) => `<rss><channel>${urls.map(feedItem).join('')}</channel></rss>`;
 const ORIGIN = 'https://meshin.co';
 
+const stampOf = (daysAgo) => new Date(Date.UTC(2026, 9, 31) - daysAgo * 86_400_000).toISOString();
+const newestFirst = (routes) => new Map(routes.map((route, index) => [route, stampOf(index)]));
+
 const coverageInput = {
   perCollectionFeeds: {
     faq: buildFeed([`${ORIGIN}/faq/how-do-you-charge`, `${ORIGIN}/faq/what-is-an-assessment`]),
@@ -392,6 +408,15 @@ const coverageInput = {
     faq: ['/faq/how-do-you-charge', '/faq/what-is-an-assessment'],
     post: ['/blog/newest', '/blog/second', '/blog/third', '/blog/fourth', '/blog/fifth'],
   },
+  lastmods: newestFirst([
+    '/blog/newest',
+    '/blog/second',
+    '/blog/third',
+    '/blog/fourth',
+    '/blog/fifth',
+    '/faq/how-do-you-charge',
+    '/faq/what-is-an-assessment',
+  ]),
 };
 
 test('a per-collection feed carrying every live entry, the merged floor and the json mirror reports nothing', () => {
@@ -448,9 +473,155 @@ test('a kind with fewer live entries than the floor is held to its full live cou
     mergedFeed: buildFeed([`${ORIGIN}/case-studies/example-case`]),
     jsonFeedItems: [`${ORIGIN}/case-studies/example-case`],
     liveRoutesByKind: { case: ['/case-studies/example-case'] },
+    lastmods: newestFirst(['/case-studies/example-case']),
   };
 
   assert.deepEqual(feedCoverageFailures(['case'], single), []);
+});
+
+const urlsOf = (routes) => routes.map((route) => `${ORIGIN}${route}`);
+const postRoutes = (count) =>
+  Array.from({ length: count }, (_, index) => `/blog/post-${String(index).padStart(2, '0')}`);
+
+const windowWorld = ({ live = 17, feed = FEED_WINDOW, merged = 5 } = {}) => {
+  const routes = postRoutes(live);
+  const mergedUrls = urlsOf(routes.slice(0, merged));
+  return {
+    perCollectionFeeds: { post: buildFeed(urlsOf(routes.slice(0, feed))) },
+    mergedFeed: buildFeed(mergedUrls),
+    jsonFeedItems: mergedUrls,
+    liveRoutesByKind: { post: routes },
+    lastmods: newestFirst(routes),
+  };
+};
+
+test('a collection with more live entries than its window owes its feed the newest 15 and no older entry', () => {
+  assert.deepEqual(feedCoverageFailures(['post'], windowWorld({ live: 17, feed: 15 })), []);
+});
+
+test('a feed missing entries inside its window is reported, one line for each, and the older entries owe nothing', () => {
+  const world = { ...windowWorld({ live: 17 }), perCollectionFeeds: { post: buildFeed(urlsOf(postRoutes(13))) } };
+  assert.deepEqual(feedCoverageFailures(['post'], world), [
+    '/blog/rss.xml omits /blog/post-13',
+    '/blog/rss.xml omits /blog/post-14',
+  ]);
+});
+
+test('a feed that carries one item more than its window is reported with the count and the window', () => {
+  assert.deepEqual(feedCoverageFailures(['post'], windowWorld({ live: 17, feed: 16 })), [
+    '/blog/rss.xml carries 16 items, window is 15',
+  ]);
+});
+
+test('a feed that lacks a window entry and carries too many items reports the omission, then the count', () => {
+  const items = [...postRoutes(15).slice(1), '/blog/post-15', '/blog/post-16'];
+  const world = { ...windowWorld({ live: 17 }), perCollectionFeeds: { post: buildFeed(urlsOf(items)) } };
+  assert.deepEqual(feedCoverageFailures(['post'], world), [
+    '/blog/rss.xml omits /blog/post-00',
+    '/blog/rss.xml carries 16 items, window is 15',
+  ]);
+});
+
+test('the merged feed is held to its window of 50 items, and exactly 50 is clean', () => {
+  const merged = (count) => windowWorld({ live: count, merged: count });
+
+  assert.deepEqual(feedCoverageFailures(['post'], merged(MERGED_FEED_WINDOW)), []);
+  assert.deepEqual(feedCoverageFailures(['post'], merged(MERGED_FEED_WINDOW + 1)), [
+    'merged rss.xml carries 51 items, window is 50',
+  ]);
+});
+
+test('the window follows the lastmod the sitemap states for each route, so a re-dated entry joins it', () => {
+  const routes = postRoutes(17);
+  const stated = sitemapLastmods(
+    `<urlset>${[...newestFirst(routes)].map(([route, stamp]) => `<url><loc>${ORIGIN}${route}</loc><lastmod>${stamp}</lastmod></url>`).join('')}</urlset>`
+  );
+  const redated = new Map(stated).set('/blog/post-16', stampOf(-1));
+  const world = windowWorld({ live: 17 });
+
+  assert.deepEqual(feedCoverageFailures(['post'], { ...world, lastmods: stated }), []);
+  assert.deepEqual(feedCoverageFailures(['post'], { ...world, lastmods: redated }), [
+    '/blog/rss.xml omits /blog/post-16',
+  ]);
+});
+
+test('the window is the newest entries by lastmod then route, whatever order the routes arrive in', () => {
+  const routes = postRoutes(17);
+  const handedIn = [...routes].reverse();
+  const before = [...handedIn];
+
+  assert.deepEqual(feedWindowRoutes(handedIn, newestFirst(routes)), routes.slice(0, FEED_WINDOW));
+  assert.deepEqual(handedIn, before);
+});
+
+test('entries tied on lastmod are cut by route ascending, the way the feed generator cuts them', () => {
+  const routes = postRoutes(16);
+  const tied = new Map(routes.map((route) => [route, stampOf(0)]));
+  assert.deepEqual(feedWindowRoutes([...routes].reverse(), tied), routes.slice(0, FEED_WINDOW));
+});
+
+test('an entry with no lastmod, or a null one, sorts oldest and falls outside a full window', () => {
+  const routes = postRoutes(16);
+  const lastmods = newestFirst(routes.slice(1));
+  assert.deepEqual(feedWindowRoutes(routes, lastmods), routes.slice(1));
+  assert.deepEqual(feedWindowRoutes(routes, lastmods.set(routes[0], null)), routes.slice(1));
+});
+
+test('a collection with fewer entries than its window owes the feed all of them, and one with none owes nothing', () => {
+  const routes = postRoutes(3);
+  assert.deepEqual(feedWindowRoutes([...routes].reverse(), newestFirst(routes)), routes);
+  assert.deepEqual(feedWindowRoutes([], new Map()), []);
+  assert.deepEqual(feedCoverageFailures(['post'], { ...windowWorld({ live: 0, feed: 0, merged: 0 }) }), []);
+});
+
+const OVER_COLLECTION = COLLECTION_FEED_MAX_BYTES + 1;
+const OVER_MERGED = MERGED_FEED_MAX_BYTES + 1;
+const feedFiles = (overrides = {}) => ({
+  perCollectionFeeds: { post: 'x', faq: 'x' },
+  mergedFeed: 'x',
+  feedJson: 'x',
+  ...overrides,
+});
+
+test('a collection feed is held to 432315 bytes, the merged feed and feed.json to 1441050', () => {
+  const findings = feedSizeFindings(
+    ['post', 'faq'],
+    feedFiles({
+      perCollectionFeeds: { post: 'x'.repeat(500_000), faq: 'x'.repeat(COLLECTION_FEED_MAX_BYTES) },
+      mergedFeed: 'x'.repeat(OVER_MERGED),
+      feedJson: 'x'.repeat(OVER_MERGED),
+    })
+  );
+
+  assert.equal(COLLECTION_FEED_MAX_BYTES, 432_315);
+  assert.equal(MERGED_FEED_MAX_BYTES, 1_441_050);
+  assert.deepEqual(findings, [
+    { text: 'blog/rss.xml is 500000 bytes, over the 432315 byte guard', subjects: ['/blog/rss.xml'] },
+    { text: 'rss.xml is 1441051 bytes, over the 1441050 byte guard', subjects: ['/rss.xml'] },
+    { text: 'feed.json is 1441051 bytes, over the 1441050 byte guard', subjects: ['/feed.json'] },
+  ]);
+});
+
+test('feeds at their byte guards are clean, and the collection guard is not the merged guard', () => {
+  const atGuards = feedFiles({
+    perCollectionFeeds: { post: 'x'.repeat(COLLECTION_FEED_MAX_BYTES) },
+    mergedFeed: 'x'.repeat(OVER_COLLECTION),
+    feedJson: 'x'.repeat(MERGED_FEED_MAX_BYTES),
+  });
+  assert.deepEqual(feedSizeFindings(['post'], atGuards), []);
+});
+
+test('feed sizes are counted in bytes, so multi-byte text cannot hide under the character count', () => {
+  const wide = 'é'.repeat(OVER_COLLECTION / 2);
+  assert.ok(wide.length < COLLECTION_FEED_MAX_BYTES);
+  assert.deepEqual(feedSizeFindings(['post'], feedFiles({ perCollectionFeeds: { post: wide } })), [
+    { text: `blog/rss.xml is ${OVER_COLLECTION} bytes, over the 432315 byte guard`, subjects: ['/blog/rss.xml'] },
+  ]);
+});
+
+test('a collection with no feed base has no feed file to measure, and an unread feed measures zero', () => {
+  const ghost = feedFiles({ perCollectionFeeds: { ghost: 'x'.repeat(500_000) } });
+  assert.deepEqual(feedSizeFindings(['ghost', 'post'], ghost), []);
 });
 
 const FEED_ENDPOINTS = [
@@ -505,7 +676,10 @@ https://:project.pages.dev/*
 `;
 
 test('every machine file matched by a noindex rule is clean', () => {
-  assert.deepEqual(machineHeaderGaps(HEADERS, ['/rss.xml', '/blog/rss.xml', '/llms.txt', '/llms/post.txt']), []);
+  assert.deepEqual(
+    machineHeaderGaps(HEADERS, ['/rss.xml', '/blog/rss.xml', '/llms.txt', '/llms/post.txt', '/llms/post-3.txt']),
+    []
+  );
 });
 
 test('a machine file no header rule matches is named, because it ships without the rule its siblings carry', () => {
@@ -516,8 +690,9 @@ test('a machine file no header rule matches is named, because it ships without t
 
 test('a machine file whose rule differs from noindex is named with the value it carries', () => {
   const headers = HEADERS.replace('/llms/*\n  X-Robots-Tag: noindex', '/llms/*\n  X-Robots-Tag: all');
-  assert.deepEqual(machineHeaderGaps(headers, ['/llms.txt', '/llms/faq.txt']), [
+  assert.deepEqual(machineHeaderGaps(headers, ['/llms.txt', '/llms/faq.txt', '/llms/post-3.txt']), [
     '/llms/faq.txt carries X-Robots-Tag "all", its siblings carry noindex',
+    '/llms/post-3.txt carries X-Robots-Tag "all", its siblings carry noindex',
   ]);
 });
 
@@ -525,6 +700,11 @@ test('the catch-all block and a preview-host rule never count as a machine file 
   assert.deepEqual(machineHeaderGaps(HEADERS, ['/other.txt']), [
     '/other.txt carries no X-Robots-Tag rule, its siblings carry noindex',
   ]);
+});
+
+test('the header policy the build writes holds the llms index and every numbered shard to noindex', () => {
+  const files = ['/llms.txt', '/llms-full.txt', '/llms/post.txt', '/llms/post-1.txt', '/llms/post-12.txt'];
+  assert.deepEqual(machineHeaderGaps(renderHeaders([]), files), []);
 });
 
 test('a machine file named by a page, another machine file or nothing at all', () => {
@@ -562,6 +742,16 @@ test('a collection pointed at by its /llms file and nothing else has no inlined 
   assert.deepEqual(llmsInlinedRoutes(llms, INLINE_LIVE, ['service']), []);
 });
 
+test('llms-full.txt owes no collection an inline listing, so a bounded collection is inlined there too', () => {
+  const llms = '- [Sprint](https://meshin.co/services/sprint)\n- [A post](https://meshin.co/blog/a-post)\n';
+  assert.deepEqual(llmsInlinedRoutes(llms, INLINE_LIVE, []), ['/services/sprint', '/blog/a-post']);
+});
+
+test('a pointer to a collection file in llms-full.txt is not an inlined entry', () => {
+  const llms = '- [Writing](https://meshin.co/llms/post.txt): 10 entries, full body text of each.\n';
+  assert.deepEqual(llmsInlinedRoutes(llms, INLINE_LIVE, []), []);
+});
+
 test('every inlined entry of every unbounded collection is named, in collection order', () => {
   const llms = 'https://meshin.co/glossary/evals\nhttps://meshin.co/blog/b-post\n';
   assert.deepEqual(llmsInlinedRoutes(llms, INLINE_LIVE, ['service']), ['/blog/b-post', '/glossary/evals']);
@@ -574,7 +764,7 @@ test('taxonomy routes under a collection are not listed by design, hubs and leav
   for (const route of ['/blog', '/blog/a-post', '/about', '/']) assert.equal(isTaxonomyRoute(route), false, route);
 });
 
-test('the llms.txt byte budget is a whole-KiB figure well under the 2 MB llms-full guard', () => {
+test('the llms.txt byte budget is a whole-KiB figure of at most 32 KiB', () => {
   assert.equal(LLMS_TXT_MAX_BYTES % 1024, 0);
   assert.ok(LLMS_TXT_MAX_BYTES <= 32 * 1024);
 });
@@ -596,6 +786,16 @@ test('two machine files that name only each other are both unreferenced', () => 
     '/llms/post-2.txt': 'Entries: [https://meshin.co/llms/post-1.txt](https://meshin.co/llms/post-1.txt)',
   };
   assert.deepEqual(unreferencedMachineFiles(files, referencing), ['/llms/post-1.txt', '/llms/post-2.txt']);
+});
+
+test('a numbered shard its index does not name is unreferenced, beside shards that are named', () => {
+  const files = ['/llms.txt', '/llms/post.txt', '/llms/post-1.txt', '/llms/post-3.txt'];
+  const referencing = {
+    '/index.html': '<link href="/llms.txt" rel="alternate">',
+    '/llms.txt': '- [Writing](https://meshin.co/llms/post.txt): 4 entries',
+    '/llms/post.txt': '- [Entries 1-3](https://meshin.co/llms/post-1.txt): 3 entries',
+  };
+  assert.deepEqual(unreferencedMachineFiles(files, referencing), ['/llms/post-3.txt']);
 });
 
 test('a sitemap lastmod check that would walk an empty list says so instead of passing', () => {

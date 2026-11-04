@@ -17,11 +17,15 @@ lists disagree, and `scripts/jsonld-gate.mjs` fails closed on an unknown route p
 ## Plus
 
 - The schema and the collections export in `site/src/content.config.ts`.
-- A feed endpoint beside `src/pages/blog/rss.xml.ts`, mounted at the collection base.
+- A feed endpoint beside `src/pages/blog/rss.xml.ts`, mounted at the collection base; it carries the
+  newest `FEED_WINDOW` (15) entries through `collectionFeedItems`, so it needs no cap of its own.
 - A search shard kind in `src/pages/search-index-[kind].json.ts` with its budget in
   `scripts/search-budget.mjs`.
 - An llms section: the per-collection route `src/pages/llms/[collection].txt.ts` and the
-  section list in `site/src/utils/llms-collections.mjs`.
+  section list in `site/src/utils/llms-collections.mjs`. Until its largest entry is measured the
+  collection takes the largest measured entry of any collection, a conservative entry cap. After the
+  first build run `npm run measure:llms` and add the collection's largest entry to
+  `LARGEST_MEASURED_ENTRY_BYTES`; never type the cap.
 - JSON-LD node builders in `site/src/utils/jsonld.mjs`, with an itemListElement list on the
   hub.
 - Internal-only collections (author) go into the NON_PUBLIC set in `scripts/machine.mjs`

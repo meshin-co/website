@@ -15,8 +15,17 @@ const indexRows = (text) =>
     count: Number(count),
   }));
 
-const countInLlmsTxt = (llmsTxt, name) =>
-  new RegExp(`\\]\\(https?://[^)]*/llms/${name}\\.txt\\): (\\d+) entr`).exec(llmsTxt)?.[1];
+const statedCount = (listing, name) =>
+  new RegExp(`\\]\\(https?://[^)]*/llms/${name}\\.txt\\): (\\d+) entr`).exec(listing)?.[1];
+
+function countGaps(file, listing, name, shipped) {
+  const stated = statedCount(listing, name);
+  if (stated === undefined) return [`${file} has no count line for ${name}`];
+  return Number(stated) === shipped ? [] : [`${file} says ${stated} entries for ${name}, its files hold ${shipped}`];
+}
+
+const indexEntryGaps = (name, text) =>
+  entryUrls(text).map((url) => `/llms/${name}.txt is an index of shards but lists ${url} itself`);
 
 function rowGaps(row, position, rows, text, state) {
   const gaps = [];
@@ -31,8 +40,9 @@ function rowGaps(row, position, rows, text, state) {
   if (urls.length !== row.count || row.to - row.from + 1 !== row.count) {
     gaps.push(`${row.path} holds ${urls.length} entries, the index says ${row.count} (range ${row.from}-${row.to})`);
   }
-  if (urls.length > LLMS_SHARD_MAX_ENTRIES) {
-    gaps.push(`${row.path} holds ${urls.length} entries, over the ${LLMS_SHARD_MAX_ENTRIES} entry cap`);
+  const cap = LLMS_SHARD_MAX_ENTRIES[state.name];
+  if (urls.length > cap) {
+    gaps.push(`${row.path} holds ${urls.length} entries, over the ${cap} entry cap`);
   }
   for (const url of urls) {
     if (state.seen.has(url)) gaps.push(`${url} ships twice across the ${state.name} shards`);
@@ -61,21 +71,28 @@ function shardGaps(name, rows, files) {
   return gaps;
 }
 
-export function llmsCorpusGaps({ llmsTxt, files, collections }) {
+export function llmsCorpusGaps({ llmsTxt, llmsFullTxt, files, collections }) {
   return collections.flatMap(({ name }) => {
     const text = files[name];
     if (text === undefined) return [];
-    const stated = countInLlmsTxt(llmsTxt, name);
-    if (stated === undefined) return [`llms.txt has no count line for ${name}`];
     const rows = indexRows(text);
     const hasShards = Object.keys(files).some((param) => isShardOf(name, param));
-    const gaps = rows.length > 0 || hasShards ? shardGaps(name, rows, files) : [];
     const shipped =
       rows.length > 0
         ? rows.reduce((sum, row) => sum + entryUrls(files[paramOf(row.path)] ?? '').length, 0)
         : entryUrls(text).length;
-    if (Number(stated) !== shipped)
-      gaps.unshift(`llms.txt says ${stated} entries for ${name}, its files hold ${shipped}`);
-    return gaps;
+    return [
+      ...countGaps('llms.txt', llmsTxt, name, shipped),
+      ...countGaps('llms-full.txt', llmsFullTxt, name, shipped),
+      ...(rows.length > 0 ? indexEntryGaps(name, text) : []),
+      ...(rows.length > 0 || hasShards ? shardGaps(name, rows, files) : []),
+    ];
   });
+}
+
+export function llmsCollectionText(files, name) {
+  const index = files[name];
+  if (index === undefined) return undefined;
+  const shards = indexRows(index).map(({ path }) => files[paramOf(path)] ?? '');
+  return [index, ...shards].join('\n');
 }

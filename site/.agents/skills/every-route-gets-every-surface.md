@@ -14,6 +14,9 @@ for each miss and exits 1.
   checks look at.
 - Two surfaces are conditional: an entry's `llms.txt` line when its collection is listed inline, and
   the merged-feed item for the newest entry of a collection.
+- An entry is owed a place in `/llms/<kind>.txt` or one of its shards, and none in `/llms-full.txt`,
+  which lists collections and no entry. It is owed a collection-feed item only inside the newest
+  `FEED_WINDOW` (15) entries of its collection; an older entry is not a finding.
 
 ## What is declared, and where
 

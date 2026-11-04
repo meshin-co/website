@@ -1,5 +1,5 @@
 import { readdirSync, readFileSync } from 'node:fs';
-import { readFile, rm, writeFile } from 'node:fs/promises';
+import { readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 const GATE = 'gate:parity';
@@ -31,7 +31,23 @@ const withoutFeedItem = (route) => (text) =>
     ''
   );
 
+const feedRoutes = (xml) => [...xml.matchAll(/<guid[^>]*>https?:\/\/[^/<]+([^<]+)<\/guid>/g)].map(([, route]) => route);
+
 const withoutShardEntry = (route) => (text) => JSON.stringify(JSON.parse(text).filter(({ href }) => href !== route));
+
+const llmsEntryLine = (route) =>
+  new RegExp('^\\[https?://[^\\]]+' + route + '\\]\\(https?://[^)]+' + route + '\\)\\n{1,2}', 'm');
+
+const withoutLlmsEntryLine = (route) => (text) => text.replace(llmsEntryLine(route), '');
+
+async function llmsFileHolding(copySite, route) {
+  const directory = join(copySite, 'dist/llms');
+  const names = await readdir(directory);
+  const texts = await Promise.all(names.map((name) => readFile(join(directory, name), 'utf8')));
+  const holding = names.filter((_, at) => llmsEntryLine(route).test(texts[at]));
+  if (holding.length !== 1) throw new Error(holding.length + ' files under dist/llms list ' + route + ', expected one');
+  return join(directory, holding[0]);
+}
 
 async function removeBinaryFile(path) {
   const bytes = await readFile(path);
@@ -60,8 +76,11 @@ export const paritySpecimens = ({ editFile, removeFile }) => ({
   },
   parityEntryLeavesItsCollectionFeed: {
     gate: GATE,
-    token: POST_ROUTE + MISSING + 'an item in its collection feed: /blog/rss.xml carries no guid for it',
-    plant: (copySite) => editFile(join(copySite, 'dist/blog/rss.xml'), withoutFeedItem(POST_ROUTE)),
+    token: MISSING + 'an item in its collection feed: /blog/rss.xml carries no guid for it',
+    plant: async (copySite) => {
+      const feed = join(copySite, 'dist/blog/rss.xml');
+      return editFile(feed, withoutFeedItem(feedRoutes(await readFile(feed, 'utf8')).at(-1)));
+    },
   },
   parityEntryLosesItsSearchEntry: {
     gate: GATE,
@@ -73,5 +92,10 @@ export const paritySpecimens = ({ editFile, removeFile }) => ({
     token:
       POST_ROUTE + MISSING + 'a markdown alternate link: its head has no <link rel="alternate" type="text/markdown"',
     plant: (copySite) => editFile(join(copySite, 'dist/blog/' + POST + '.html'), withoutMarkdownLink),
+  },
+  parityEntryLeavesItsLlmsShards: {
+    gate: GATE,
+    token: POST_ROUTE + MISSING + 'a place in its llms collection file: /llms/post.txt and its shards do not list it',
+    plant: async (copySite) => editFile(await llmsFileHolding(copySite, POST_ROUTE), withoutLlmsEntryLine(POST_ROUTE)),
   },
 });

@@ -182,6 +182,44 @@ test('each entry names the media type its file is served with, and the OpenAPI e
   });
 });
 
+const FULL_TEXT_INDEX_DESCRIPTION =
+  'Index of the full-text collection files: one line per collection with its entry count, no entry text.';
+const entryAt = (catalog, path) => catalog.entries.find(({ url }) => url === `${ORIGIN}${path}`);
+
+test('the llms-full.txt entry calls the file an index of the collection files that holds no entry text', async () => {
+  await withDist(ENTRY_POINTS, async (dist) => {
+    const entry = entryAt(await catalogOf(dist), '/llms-full.txt');
+
+    assert.equal(entry.displayName, 'Full text index');
+    assert.equal(entry.description, FULL_TEXT_INDEX_DESCRIPTION);
+  });
+});
+
+test('each collection entry keeps its full body text claim and says a collection over its entry cap is an index of numbered shard files', async () => {
+  await withDist(
+    LLMS_COLLECTIONS.map(({ file }) => file),
+    async (dist) => {
+      const catalog = await catalogOf(dist);
+
+      assert.equal(catalog.entries.length, LLMS_COLLECTIONS.length);
+      for (const { file, title } of LLMS_COLLECTIONS) {
+        const { description } = entryAt(catalog, file);
+        assert.ok(description.startsWith(`Full body text of every live entry in ${title.toLowerCase()}.`), description);
+        assert.ok(description.includes('over its entry cap is an index of numbered shard files'), description);
+      }
+    }
+  );
+});
+
+test('the numbered shards of a collection never reach the manifest, so it does not grow with the corpus', async () => {
+  const shards = Array.from({ length: 40 }, (_, at) => `/llms/post-${at + 1}.txt`);
+  const withoutShards = await withDist(ENTRY_POINTS, catalogOf);
+  const withShards = await withDist([...ENTRY_POINTS, ...shards], catalogOf);
+
+  assert.deepEqual(withShards, withoutShards);
+  assert.equal(withShards.entries.length, ENTRY_POINTS.length);
+});
+
 test('entries sort by identifier whatever order discovery hands them over', async () => {
   await withDist(ENTRY_POINTS, async (dist) => {
     const entries = await discoverEntries(dist);

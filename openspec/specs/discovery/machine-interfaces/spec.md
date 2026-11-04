@@ -38,15 +38,6 @@ Every built route whose page carries no `noindex` robots meta SHALL appear in `/
 - **WHEN** `renderLlmsTxt` writes a dated entry without its `(updated …)` part
 - **THEN** `npm run test` fails the test `renderLlmsTxt appends the ISO updatedDate to a dated entry line`
 
-### Requirement: llms-full.txt and the collection files carry each entry's full text
-
-`renderLlmsCollection` and `renderLlmsFull` in `site/src/utils/machine-text.mjs` SHALL write each entry as its `# ` title, its ISO date when dated, its URL as a link, its summary and its whole body with markdown stripped, with `---` between entries, so the files hold the text and not only links to it. Guarded by `site/src/utils/machine-text.test.mjs` under `npm run test`.
-
-#### Scenario: llms-full.txt carries links without bodies
-
-- **WHEN** `renderLlmsFull` stops writing entry bodies
-- **THEN** `npm run test` fails the test `renderLlmsFull carries the actual full body text of every collection, not just links to it`
-
 ### Requirement: Draft and noindex entries never reach llms-full.txt, the collection files or the feeds
 
 `renderLlmsCollection`, `renderLlmsFull` and `buildFeedItems` in `site/src/utils/machine-text.mjs` SHALL drop every entry marked `draft` or `noindex`, and `collectionFeedItems` in `site/src/utils/feed-items.mjs` SHALL drop every `noindex` entry. Guarded by `site/src/utils/machine-text.test.mjs` and `site/src/utils/feed-items.test.mjs` under `npm run test`.
@@ -60,15 +51,6 @@ Every built route whose page carries no `noindex` robots meta SHALL appear in `/
 
 - **WHEN** `renderLlmsCollection` keeps an entry marked `noindex: true`
 - **THEN** `npm run test` fails the test `renderLlmsCollection never emits a draft or noindex entry`
-
-### Requirement: llms-full.txt stays within its two-megabyte guard
-
-`/llms-full.txt` SHALL stay at or under 2000000 bytes of UTF-8, so its growth fails the gate instead of passing unnoticed. `npm run gate:machine` enforces the limit through `LLMS_FULL_MAX_BYTES` in `site/scripts/machine.mjs`.
-
-#### Scenario: llms-full.txt grows past the guard
-
-- **WHEN** `/llms-full.txt` grows to 2225553 bytes
-- **THEN** `npm run gate:machine` prints `MACHINE llms-full.txt is 2225553 bytes, over the 2000000 byte guard` and exits 1
 
 ### Requirement: Every entry, public static page and hub ships a complete markdown sidecar
 
@@ -88,20 +70,6 @@ Every built collection leaf route, every public static page and every collection
 
 - **WHEN** the `Source:` line of `/about.md` reads `https://meshin.co/wrong-page`
 - **THEN** `npm run gate:machine` prints `MACHINE sidecar for /about canonical is https://meshin.co/wrong-page, expected https://meshin.co/about` and exits 1
-
-### Requirement: Each collection feed carries every live entry of its collection
-
-Every public collection SHALL have a feed base, and its feed `/<base>/rss.xml` SHALL carry a `<guid>` for every live entry of that collection. `npm run gate:machine` enforces both, and `site/scripts/machine.test.mjs` fails under `npm run test` when the merged feed endpoint or any collection feed endpoint is missing from the source.
-
-#### Scenario: A collection feed drops an entry
-
-- **WHEN** the item for `/glossary/dpia` is removed from `/glossary/rss.xml`
-- **THEN** `npm run gate:machine` prints `MACHINE /glossary/rss.xml omits /glossary/dpia` and exits 1
-
-#### Scenario: A new public collection has no feed base
-
-- **WHEN** a collection `talks` is added to the content config and not to `FEED_BASES`
-- **THEN** `npm run gate:machine` prints `MACHINE talks has no FEED_BASES entry; skipping its feed coverage check` and exits 1
 
 ### Requirement: The merged feed carries at least five entries of each collection, or all of a smaller one
 
@@ -256,25 +224,6 @@ The card template in `site/src/utils/og-template.mjs` SHALL draw on a fixed 1200
 - **WHEN** `articleMetadata` stops pointing a post's `og:image` at `https://meshin.co/og/post/<id>.png`
 - **THEN** `npm run test` fails the test `article metadata carries the absolute og image and the article dates`
 
-### Requirement: Every live collection entry is in llms-full.txt and in its collection file
-
-For each public collection with at least one live entry, meaning every collection in `site/src/content.config.ts` except `author` and `speaking`, every live entry SHALL appear in `/llms-full.txt` and in `/llms/<collection>.txt`, or in that collection's shards, on a line that opens with a link to it or holds only its URL. A live entry is a built `/<base>/<slug>` page with no `noindex` robots meta. `npm run gate:machine` enforces this.
-
-#### Scenario: An entry is missing from llms-full.txt
-
-- **WHEN** the URL line of `/glossary/evals` is removed from `/llms-full.txt`
-- **THEN** `npm run gate:machine` prints `MACHINE llms-full.txt omits /glossary/evals` and exits 1
-
-#### Scenario: An entry is missing from its collection file
-
-- **WHEN** the URL line of `/glossary/evals` is removed from `/llms/glossary.txt`
-- **THEN** `npm run gate:machine` prints `MACHINE /llms/glossary.txt omits /glossary/evals` and exits 1
-
-#### Scenario: A collection file was not built
-
-- **WHEN** the build holds live FAQ entries and no `/llms/faq.txt`
-- **THEN** `npm run gate:machine` prints `MACHINE no /llms/faq.txt full-text file` and exits 1
-
 ### Requirement: llms.txt inlines what is bounded and points at what is unbounded
 
 `/llms.txt` SHALL list the offers, the static pages, the hubs and the feeds inline, and SHALL carry one line for each collection that has a live entry, holding its name, its entry count and a link to `/llms/<collection>.txt`. Entries of any other collection appearing inline fail `npm run gate:machine`, which compares them with `llmsInlinedRoutes` in `site/scripts/machine.mjs`.
@@ -293,15 +242,6 @@ For each public collection with at least one live entry, meaning every collectio
 - **WHEN** `/llms.txt` grows to 9000 bytes
 - **THEN** `npm run gate:machine` prints `MACHINE llms.txt is 9000 bytes, over the 8192 byte guard` and exits 1
 
-### Requirement: A collection file holds at most 100 entries and shards beyond that
-
-`LLMS_SHARD_MAX_ENTRIES` in `site/src/utils/llms-collections.mjs` SHALL be 100. At or under it, `/llms/<collection>.txt` holds the entries. Above it, that file is an index of `/llms/<collection>-<n>.txt` shards, numbered from 1, each listed with its range and count, and each shard ends with a link to the next or says it is the last. Guarded by `site/src/utils/llms-collections.test.mjs` under `npm run test`.
-
-#### Scenario: A collection has 101 entries
-
-- **WHEN** a collection holds 101 live entries
-- **THEN** `npm run test` passes the test `one entry over the cap makes an index and two shards named post-1 and post-2`, and a collection of exactly 100 stays one file
-
 ### Requirement: Every shard is a shipped machine file, noindex and referenced
 
 Each `/llms/*.txt` file, shard or not, SHALL match a `noindex` rule in the built headers file and SHALL be reachable by links from a built page or from `/llms.txt`, directly or through another machine file. `npm run gate:machine` enforces this, so a shard no index lists fails it.
@@ -313,16 +253,35 @@ Each `/llms/*.txt` file, shard or not, SHALL match a `noindex` rule in the built
 
 ### Requirement: The llms files describe the build they came from
 
-The count on a collection's line in `/llms.txt` SHALL equal the entries its files hold, each shard SHALL hold the range the index gives it, no entry SHALL ship twice, and the last shard SHALL be the last. Every live entry is then reachable from `/llms.txt` in two further fetches. `npm run gate:machine` enforces this through `llmsCorpusGaps` in `site/scripts/llms-corpus.mjs`.
+The count on a collection's line in `/llms.txt` and in `/llms-full.txt` SHALL equal the entries its files hold, each shard SHALL hold the range the index gives it, an index SHALL hold no entry itself, no entry SHALL ship twice, and the last shard SHALL be the last. Every live entry is then reachable from `/llms.txt` in two further fetches. `npm run gate:machine` enforces this through `llmsCorpusGaps` in `site/scripts/llms-corpus.mjs`.
 
 #### Scenario: A count drifts from the shipped entries
 
 - **WHEN** the `/llms.txt` line for `/llms/post.txt` says 9 entries and the files hold 8
 - **THEN** `npm run gate:machine` prints `MACHINE llms.txt says 9 entries for post, its files hold 8` and exits 1
 
-### Requirement: The llms files are byte-identical across builds and ordered by a total key
+#### Scenario: An index carries an entry itself
 
-Entries SHALL be ordered by publish date ascending, then by id ascending, a total order, and no generator SHALL read a clock. A second `npm run build` of an unchanged tree SHALL write byte-identical `/llms.txt`, `/llms-full.txt` and `/llms/*.txt`. A newer entry lands last, so earlier shards stay unchanged and only the old last shard and the index move; a back-dated entry shifts every later shard. Guarded by `site/src/utils/llms-collections.test.mjs`.
+- **WHEN** `/llms/post.txt` indexes shards and also lists the URL of `/blog/a-post` as an entry
+- **THEN** `npm run gate:machine` prints `MACHINE /llms/post.txt is an index of shards but lists https://meshin.co/blog/a-post itself` and exits 1
+
+### Requirement: The llms files order entries by a total key and no generator reads a clock
+
+Entries SHALL be ordered by publish date ascending, then by id ascending, a total order, and no generator SHALL read a clock. A newer entry lands last, so only the old last shard and the index move; a back-dated entry shifts every later shard. Guarded by `site/src/utils/llms-collections.test.mjs`; `npm run test:smoke` drops the tie-break and appends a timestamp, and each must turn it red.
+
+#### Scenario: The id tie-break is dropped
+
+- **WHEN** `orderEntries` sorts by publish date alone
+- **THEN** `npm run test` fails the test `generating twice from one fixture is byte-identical for every file, in any input order`
+
+#### Scenario: A timestamp is appended
+
+- **WHEN** a generator appends the current time to a file
+- **THEN** `npm run test` fails the test `the generator reads no clock: a second run a day later is byte-identical`
+
+### Requirement: A second build of an unchanged tree writes byte-identical llms files
+
+A second `npm run build` of an unchanged tree SHALL write byte-identical `/llms.txt`, `/llms-full.txt` and `/llms/*.txt`. Guarded by `site/src/utils/llms-collections.test.mjs` under `npm run test`.
 
 #### Scenario: A second build
 
@@ -356,6 +315,21 @@ and how many owed cells it checked and found present.
 
 - **WHEN** two entries of the same collection are built, one hand-written and one generated
 - **THEN** each is owed the same surfaces and a surface missing from either is named
+
+#### Scenario: An entry drops out of its llms shards
+
+- **WHEN** a built entry is listed in no file of its collection under `/llms/`
+- **THEN** `npm run gate:parity` prints `PARITY <route> is owed a place in its llms collection file: /llms/<kind>.txt and its shards do not list it` and exits 1
+
+#### Scenario: An entry is outside its collection feed window
+
+- **WHEN** an entry is older than the newest 15 of its collection and is absent from the collection feed
+- **THEN** `npm run gate:parity` stays silent about it, because only the entries inside the window are owed a place in the collection feed
+
+#### Scenario: An entry is in no line of llms-full.txt
+
+- **WHEN** a built entry appears in no line of `/llms-full.txt`
+- **THEN** `npm run gate:parity` stays silent about it, because `/llms-full.txt` lists collections and no entry
 
 ### Requirement: A route's kind is derived, never listed
 
@@ -412,3 +386,115 @@ owed a surface.
 
 - **WHEN** the build holds no route that any kind owes a surface
 - **THEN** `npm run gate:parity` prints that route parity examined nothing and exits 1
+
+### Requirement: Every live entry ships once in its collection's files and is reachable in two further fetches
+
+For each public collection with a live entry, every live entry SHALL appear exactly once across `/llms/<collection>.txt` and its numbered shards, on a line that opens with a link to it or holds only its URL, so `/llms.txt` reaches it in at most two further fetches. A live entry is a built `/<base>/<slug>` page with no `noindex` robots meta. `npm run gate:machine` enforces this.
+
+#### Scenario: An entry is missing from its shards
+
+- **WHEN** the URL line of `/blog/a-post` is removed from `/llms/post-2.txt`
+- **THEN** `npm run gate:machine` prints `MACHINE /llms/post.txt omits /blog/a-post` and exits 1
+
+#### Scenario: An entry ships twice
+
+- **WHEN** `/llms/post-2.txt` repeats the URL line of an entry that `/llms/post-1.txt` holds
+- **THEN** `npm run gate:machine` prints `MACHINE https://meshin.co/blog/a-post ships twice across the post shards` and exits 1
+
+#### Scenario: A collection file was not built
+
+- **WHEN** the build holds live FAQ entries and no `/llms/faq.txt`
+- **THEN** `npm run gate:machine` prints `MACHINE no /llms/faq.txt full-text file` and exits 1
+
+### Requirement: llms-full.txt points at the collection files and lists no entry
+
+`/llms-full.txt` SHALL carry one line for each collection that has a live entry, holding its entry count and a link to `/llms/<collection>.txt`, and SHALL list no entry of any collection. A count that differs from the entries the collection's files hold, and an entry listed inline, each fail `npm run gate:machine`, which compares them with `llmsInlinedRoutes` in `site/scripts/machine.mjs`.
+
+#### Scenario: An entry is listed in llms-full.txt
+
+- **WHEN** `/llms-full.txt` gains a line linking `https://meshin.co/blog/a-post`
+- **THEN** `npm run gate:machine` prints `MACHINE llms-full.txt lists /blog/a-post inline, entries of an unbounded collection belong in /llms/` and exits 1
+
+#### Scenario: A count drifts from the shipped entries
+
+- **WHEN** the `/llms-full.txt` line for `/llms/post.txt` says 9 entries and the files hold 10
+- **THEN** `npm run gate:machine` prints `MACHINE llms-full.txt says 9 entries for post, its files hold 10` and exits 1
+
+### Requirement: No file under /llms/ is over 100000 bytes
+
+Every file under `/llms/` SHALL stay at or under `LLMS_FILE_MAX_BYTES`, 100000 bytes, in `site/src/utils/llms-collections.mjs`: what the fetch-tool documentation of Anthropic calls a large documentation page, about 25000 tokens. The entry caps keep the largest measured entry of each collection under it, and `npm run gate:machine` fails the file that is not.
+
+#### Scenario: A shard outgrows its budget
+
+- **WHEN** `/llms/post-1.txt` grows to 100001 bytes
+- **THEN** `npm run gate:machine` prints `MACHINE llms/post-1.txt is 100001 bytes, over the 100000 byte guard` and exits 1
+
+### Requirement: Each collection feed carries the newest entries of its collection and no more than its window
+
+Every public collection SHALL have a feed base, and its feed `/<base>/rss.xml` SHALL carry a `<guid>` for each of the newest `FEED_WINDOW` live entries of that collection, 15, ordered by last modification and then by URL, and for no other. `npm run gate:machine` enforces both, and `site/scripts/machine.test.mjs` fails under `npm run test` when the merged feed endpoint or any collection feed endpoint is missing from the source.
+
+#### Scenario: A collection feed drops an entry inside its window
+
+- **WHEN** the item for `/glossary/dpia`, one of the newest 15 glossary entries, is removed from `/glossary/rss.xml`
+- **THEN** `npm run gate:machine` prints `MACHINE /glossary/rss.xml omits /glossary/dpia` and exits 1
+
+#### Scenario: A collection feed carries more than its window
+
+- **WHEN** `/blog/rss.xml` holds 16 items
+- **THEN** `npm run gate:machine` prints `MACHINE /blog/rss.xml carries 16 items, window is 15` and exits 1
+
+#### Scenario: A new public collection has no feed base
+
+- **WHEN** a collection `talks` is added to the content config and not to `FEED_BASES`
+- **THEN** `npm run gate:machine` prints `MACHINE talks has no FEED_BASES entry; skipping its feed coverage check` and exits 1
+
+### Requirement: Every feed file stays within the bytes its window allows
+
+`/<base>/rss.xml` SHALL stay at or under `FEED_WINDOW` times the largest measured feed item, 28821 bytes, which is 432315, and `/rss.xml` and `/feed.json` at or under `MERGED_FEED_WINDOW`, 50, times it, 1441050; `/rss.xml` SHALL carry at most 50 items. The constants are in `site/src/utils/feeds.mjs` and `npm run gate:machine` fails a file over its budget.
+
+#### Scenario: A collection feed outgrows its budget
+
+- **WHEN** `/blog/rss.xml` grows to 500000 bytes
+- **THEN** `npm run gate:machine` prints `MACHINE blog/rss.xml is 500000 bytes, over the 432315 byte guard` and exits 1
+
+#### Scenario: The merged feed carries more than its window
+
+- **WHEN** `/rss.xml` holds 51 items
+- **THEN** `npm run gate:machine` prints `MACHINE merged rss.xml carries 51 items, window is 50` and exits 1
+
+### Requirement: The collection files carry each entry's full text and llms-full.txt carries none
+
+`renderLlmsCollection` and `renderLlmsShard` in `site/src/utils/machine-text.mjs` SHALL write each entry as its `# ` title, its ISO date when dated, its URL as a link, its summary and its whole body with markdown stripped, with `---` between entries. `renderLlmsFull` SHALL write no entry, because `/llms-full.txt` is an index of the collection files (locked row L25). Guarded by `site/src/utils/machine-text.test.mjs` under `npm run test`.
+
+#### Scenario: A collection file carries links without bodies
+
+- **WHEN** `renderLlmsCollection` stops writing entry bodies
+- **THEN** `npm run test` fails the test `renderLlmsCollection carries the actual full body text of every entry, not just links to it`
+
+#### Scenario: llms-full.txt carries an entry again
+
+- **WHEN** `renderLlmsFull` writes the body of an entry
+- **THEN** `npm run test` fails the test `renderLlmsFull lists the collection files and carries no entry`
+
+### Requirement: llms-full.txt stays within its four-kilobyte guard
+
+`/llms-full.txt` SHALL stay at or under `LLMS_FULL_MAX_BYTES`, 4096 bytes, in `site/src/utils/llms-collections.mjs`. It holds one line per collection and measured 0 bytes on 2026-11-04, so 4 KiB leaves room for about twenty collections and a change that needs more is a deliberate decision. Enforced by `npm run gate:machine`.
+
+#### Scenario: llms-full.txt outgrows its budget
+
+- **WHEN** `/llms-full.txt` grows to 5000 bytes
+- **THEN** `npm run gate:machine` prints `MACHINE llms-full.txt is 5000 bytes, over the 4096 byte guard` and exits 1
+
+### Requirement: A collection file holds at most its entry cap and shards beyond that
+
+`LLMS_SHARD_MAX_ENTRIES` in `site/src/utils/llms-collections.mjs` SHALL give each collection the entries that fit 100000 bytes beside a 1024 byte frame at its largest measured entry: service 48, post 3, resource 7, glossary 33, faq 118, case 3. At or under its cap `/llms/<collection>.txt` holds the entries; above it that file indexes `/llms/<collection>-<n>.txt` shards, each with its range and count, chained by next links. `npm run gate:machine` fails a shard over its cap.
+
+#### Scenario: A collection has one entry over its cap
+
+- **WHEN** `post` holds 4 live entries
+- **THEN** `npm run test` passes the test `one entry over the cap makes an index and two shards named post-1 and post-2`, and a collection of exactly 3 stays one file
+
+#### Scenario: A shard holds more than its cap
+
+- **WHEN** `/llms/post-1.txt` holds 4 entries
+- **THEN** `npm run gate:machine` prints `MACHINE /llms/post-1.txt holds 4 entries, over the 3 entry cap` and exits 1

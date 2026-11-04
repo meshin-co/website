@@ -182,7 +182,14 @@ test('a rule id that is not lowercase words joined by single hyphens is refused,
 });
 
 test('every rule id the machine gate emits is accepted', () => {
-  const accepted = ['humans-components-missing', 'llms-size', 'feed-coverage', 'catalog-description-drift', 'a'];
+  const accepted = [
+    'humans-components-missing',
+    'llms-size',
+    'feed-coverage',
+    'feed-size',
+    'catalog-description-drift',
+    'a',
+  ];
   const log = createFailureLog();
   for (const rule of accepted) assert.doesNotThrow(() => log.add(rule, 'text'), rule);
   assert.equal(log.size, accepted.length);

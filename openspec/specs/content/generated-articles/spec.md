@@ -12,13 +12,23 @@ unattended act.
 
 ## Requirements
 
-### Requirement: A run writes one post, and the terms the glossary is missing
+### Requirement: A run writes exactly one post
 
-Every scheduled run SHALL produce exactly one blog post, chosen from the committed demand report
-and recorded in a claim with the measurement that justified it. The same run SHALL also write a
-glossary term for each concept that measured demand names and the glossary does not define, up to
-a configured cap, when the term arm is enabled in configuration. Each entry SHALL carry its own
-claim and its own generation record.
+Every scheduled run SHALL produce exactly one blog post, taken from the ladder of rungs and
+recorded in a claim with the measurement that justified it, which is none when the category rung
+chose it.
+
+#### Scenario: A scheduled slot runs
+
+- **WHEN** a slot in the configured write times runs and the ladder yields a topic
+- **THEN** exactly one post is claimed and written, whichever rung the topic came from
+
+### Requirement: A run also writes the terms the glossary is missing
+
+The same run SHALL write a glossary term for each concept that measured demand names and the
+glossary does not define, up to a configured cap, when the term arm is enabled in configuration and
+a buyer prompt is available to carry it, the term's own or that of the post. Each entry SHALL carry
+its own claim and its own generation record.
 
 #### Scenario: Demand names no concept the glossary lacks
 
@@ -41,15 +51,23 @@ claim and its own generation record.
 #### Scenario: A concept already has a page
 
 - **WHEN** the selected query names a concept that already owns a row in the concept register
-- **THEN** no entry is created for it and the run reports a strengthen decision for a human,
-  because rewriting published copy is not an unattended act
+- **THEN** no entry is created for that query and the ladder descends to the next candidate; a measured
+  strengthen candidate stays in the digest for a human, and the decision is `strengthen` only when no
+  rung can write
+
+#### Scenario: A term has no buyer prompt to carry
+
+- **WHEN** the post of the run has no buyer prompt, because it came from a weak query or a
+  category, and a missing term does not map to a prompt of its own either
+- **THEN** the term is named in the digest with the reason that it has no prompt, and it is not
+  written
 
 ### Requirement: A generated entry carries its provenance
 
 Every generated entry SHALL be accompanied, in the same commit, by a generation record naming the
-provider, the model id as resolved at call time, the response id, a digest of the prompt, the demand
-row that selected the topic, the tree fingerprint, the token counts and the computed cost. The
-record SHALL NOT contain any secret value.
+provider, the model id as resolved at call time, the response id, a digest of the prompt, the origin
+of the topic and, when a demand row selected it, that row, the tree fingerprint, the token counts
+and the computed cost. The record SHALL NOT contain any secret value.
 
 #### Scenario: A reader disputes a sentence a month later
 
@@ -108,13 +126,16 @@ The floor and the target for the body of each written format SHALL be measured f
 entries of that format and recorded in `audits/entry-length.json`. The floor SHALL be the smallest
 value any of them holds, taken separately for prose words, for `##` sections and for the words of
 the thinnest section. The target SHALL be the middle half of their word counts.
-`npm run gate:autowriter` SHALL re-measure the corpus and refuse a record that differs.
 
 #### Scenario: The floor is the least a person wrote
 
 - **WHEN** the record is derived from the hand-written entries of a format
 - **THEN** every one of them clears the limits of its format and the word floor equals the word
   count of the shortest, because a floor that the owner's own work fails is a gate nobody trusts
+
+### Requirement: The recorded length limits are re-measured, never typed
+
+`npm run gate:autowriter` SHALL re-measure the corpus and refuse a record that differs.
 
 #### Scenario: A person adds, removes or changes an entry
 
@@ -228,3 +249,95 @@ that each shape it leaves out is still stated in the file the prompt copies it f
 - **WHEN** a phrase the test holds in `site/.agents/skills/write-copy.md` or
   `site/.agents/skills/write-for-humans.md` is removed from the file
 - **THEN** the test fails naming the shape, because the bullet must now name it
+
+### Requirement: The topic comes from a ladder of three rungs
+
+The picker SHALL try three rungs in order and stop at the first that yields an article topic: an
+unproven buyer prompt that no refusal removes, then a measured query that no buyer prompt names and
+no page answers, then a category of the configured rotation, for which one model call proposes the
+target query. The run SHALL end without an entry only when no rung yields a topic.
+
+#### Scenario: No buyer prompt survives
+
+- **WHEN** every buyer prompt is proven or refused and the report holds a measured query that reads
+  as a question or a how-to and that no buyer prompt names and no page answers
+- **THEN** the run writes on the one with the most impressions, and its claim and record are marked `weak-demand` with the
+  reasons it is weak, computed from the row: it has no buyer prompt, its impressions equal the floor,
+  or its position lies beyond the strengthen band
+
+#### Scenario: The report is empty and categories are configured
+
+- **WHEN** the demand report holds no usable row, as it does for a site with almost no traffic
+- **THEN** the run writes on a category, and its claim and record are marked `category`
+
+#### Scenario: Nothing can be written
+
+- **WHEN** no buyer prompt survives, the report holds no usable query, and the category list is
+  empty
+- **THEN** the run ends with no entry through the existing no-entry path and its Slack message,
+  because the writer would otherwise have nothing to write about
+
+#### Scenario: Every proposal is refused
+
+- **WHEN** every configured category was tried and every proposal was refused or failed
+- **THEN** the run ends with no entry through the same path, and the trail of the decision names
+  each refusal
+
+#### Scenario: A weak or category entry has no buyer prompt
+
+- **WHEN** an entry is written from the second or third rung
+- **THEN** its claim carries no prompt, the writer's prompt names the query and the origin instead
+  of a buyer prompt, and the buyer prompts section of `docs/SEMANTIC-CORE.md` is left unchanged
+
+### Requirement: The next category is derived from the corpus
+
+The next category SHALL be derived from the corpus and never stored: the configured category with
+the fewest published entries and unexpired category claims, ties broken by the oldest newest entry,
+then by the order of the configuration.
+
+#### Scenario: An entry is deleted or a branch is abandoned
+
+- **WHEN** a published entry is removed or a claim lapses
+- **THEN** the rotation changes by itself on the next run, because it counts what the corpus
+  holds and keeps no counter
+
+#### Scenario: Two runs are in flight
+
+- **WHEN** a category entry is claimed and not yet published
+- **THEN** the claim counts toward its category, so the next run takes a different category
+
+### Requirement: A category entry is a specific article and never a repeat
+
+A proposal SHALL be refused when its query names a concept the register assigns to another page,
+when its slug or title is already published or claimed, or when the stems of its title and query
+overlap an existing article's by at least half of the smaller set.
+
+#### Scenario: The same category comes up again
+
+- **WHEN** a category with a published entry comes up and the model proposes a rewording of that
+  entry's subject
+- **THEN** the proposal is refused as the same subject, the model is asked again once with the
+  refusal, and a different proposal is written or the next category is tried
+
+#### Scenario: A proposal defines a registered concept
+
+- **WHEN** the proposed query names a concept that the register assigns to another page
+- **THEN** the proposal is refused before any claim is committed, so no concept is defined twice
+
+### Requirement: Every entry records where its topic came from
+
+Every claim and every generation record SHALL carry an origin, one of `demand`, `weak-demand` or
+`category`, and a claim written before the ladder existed SHALL read as `demand`. An entry of origin
+`weak-demand` SHALL list the reasons it is weak. An entry of origin `category` SHALL name its
+category. Neither SHALL carry a buyer prompt.
+
+#### Scenario: The owner counts what was written blind
+
+- **WHEN** the owner reads the generation records
+- **THEN** the number of entries of each origin, their cost and the categories of the blind entries
+  are countable from the records alone
+
+#### Scenario: A category claim names a prompt
+
+- **WHEN** a committed claim of origin `category` carries a buyer prompt or lacks its category
+- **THEN** the autowriter gate fails and names the claim

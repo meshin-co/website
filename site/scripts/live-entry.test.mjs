@@ -243,7 +243,7 @@ test('the live origin is the site address of the configuration and nothing else'
   const argv = ['--dist', w.dist, '--state', w.statePath, '--repo-root', w.root];
   await runCli(argv, { ...w.io(), statusOf: () => STATUS, fetch });
   const origin = `${siteOrigin(SITE_CONFIG)}/`;
-  assert.ok(asked.length >= 8);
+  assert.ok(asked.length >= 7);
   assert.deepEqual(
     asked.filter((url) => !url.startsWith(origin)),
     []

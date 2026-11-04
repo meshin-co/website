@@ -18,11 +18,11 @@ test('the table covers the five gates that upload findings, and each one is an n
   for (const gate of GATES) assert.ok(SCRIPTS[gate], `package.json has no script ${gate}`);
 });
 
-test('the table holds 83 kinds: 36 rewrites, 2 restates and 45 refusals', () => {
-  assert.equal(listRows().length, 83);
+test('the table holds 84 kinds: 36 rewrites, 2 restates and 46 refusals', () => {
+  assert.equal(listRows().length, 84);
   assert.equal(countBy('rewrite'), 36);
   assert.equal(countBy('restate'), 2);
-  assert.equal(countBy(null), 45);
+  assert.equal(countBy(null), 46);
 });
 
 test('each gate holds the number of kinds its gate can emit', () => {
@@ -31,7 +31,7 @@ test('each gate holds the number of kinds its gate can emit', () => {
     'gate:content': 34,
     'gate:editorial': 7,
     'gate:human': 17,
-    'gate:machine': 23,
+    'gate:machine': 24,
     'gate:registers': 2,
   });
 });
@@ -45,7 +45,7 @@ test('every allowance a row grants is one the removal guard knows', () => {
   for (const row of listRows()) for (const name of row.may) assert.ok(MAY.includes(name), `${row.rule} grants ${name}`);
 });
 
-test('seven kinds grant an allowance, and the other 76 grant none', () => {
+test('seven kinds grant an allowance, and the other 77 grant none', () => {
   const granting = listRows()
     .filter((row) => row.may.length > 0)
     .map((row) => `${row.gate} ${row.rule}: ${row.may.join(',')}`);

@@ -10,6 +10,16 @@ export const FEED_BASES = {
   faq: 'faq',
 };
 
+export const FEED_WINDOW = 15;
+
+export const MERGED_FEED_WINDOW = 50;
+
+export const LARGEST_MEASURED_FEED_ITEM_BYTES = 28_821;
+
+export const COLLECTION_FEED_MAX_BYTES = FEED_WINDOW * LARGEST_MEASURED_FEED_ITEM_BYTES;
+
+export const MERGED_FEED_MAX_BYTES = MERGED_FEED_WINDOW * LARGEST_MEASURED_FEED_ITEM_BYTES;
+
 export const isLive = ({ data }) => !data.draft && !data.noindex;
 
 export const isPublished = ({ data }) => !data.draft;
