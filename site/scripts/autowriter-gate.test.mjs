@@ -222,6 +222,21 @@ test('a claim that is not JSON, off its schema or filed under another slug is na
   });
 });
 
+test('a category claim for a term is named under the claim-schema finding', () => {
+  const promptless = Object.fromEntries(Object.entries(claim()).filter(([key]) => key !== 'prompt'));
+  const termClaim = {
+    ...promptless,
+    origin: 'category',
+    category: 'governance',
+    demand: { impressions: 0, position: null },
+  };
+  assert.deepEqual(one({ claims: [claimAt('what-is-a-model-card', termClaim)] }), {
+    rule: 'claim-schema',
+    path: claimPath('what-is-a-model-card'),
+    detail: 'format must be article when origin is category',
+  });
+});
+
 test('a claim whose title is already a title in the generated layer is named with the route that owns it', () => {
   const held = heldTitle();
   const taken = claim({ slug: HELD_SLUG, title: held.bare });

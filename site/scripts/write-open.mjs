@@ -14,6 +14,12 @@ const WRITABLE = Object.keys(COLLECTION_OF);
 
 const refuse = (message) => new WriterError('decision', message);
 
+function proposalOf({ claim, proposal }) {
+  if (proposal !== undefined && !Array.isArray(proposal?.calls))
+    throw refuse(`the decision entry ${claim?.slug} carries a proposal that is not { calls: [...] }`);
+  return proposal;
+}
+
 function readEntryClaim({ repoRoot, entry }) {
   const { claim, claimPath } = entry;
   if (!WRITABLE.includes(claim?.format))
@@ -34,7 +40,7 @@ function readEntryClaim({ repoRoot, entry }) {
     throw refuse(`the decision names the claim path ${claimPath}, the writer reads ${expectedPath}`);
   if (stored.status !== 'claimed')
     throw new WriterError('claim', `${stored.slug} is ${stored.status}; only a claimed topic is written`);
-  return { claim: stored, row: entry.row, table: entry.table, choice: entry.choice };
+  return { claim: stored, row: entry.row, table: entry.table, choice: entry.choice, proposal: proposalOf(entry) };
 }
 
 function checkEntries(entries) {

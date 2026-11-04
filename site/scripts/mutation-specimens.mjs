@@ -14,6 +14,7 @@ import { linkRotSpecimens } from './link-rot-specimens.mjs';
 import { partitionSpecimens } from './partition-specimens.mjs';
 import { pressSpecimens } from './press-specimens.mjs';
 import { REGISTERS_BEGIN } from './registers.mjs';
+import { scheduleSpecimens } from './schedule-specimens.mjs';
 import { SPEC_SPECIMENS } from './spec-specimens.mjs';
 import { unattendedSpecimens } from './unattended-specimens.mjs';
 import { LLMS_TXT_MAX_BYTES } from './machine.mjs';
@@ -629,6 +630,7 @@ export const SPECIMENS = {
   ...partitionSpecimens({ editFile, removeFile, addFile }),
   ...unattendedSpecimens({ editFile, removeFile }),
   ...paritySpecimens({ editFile, removeFile }),
+  ...scheduleSpecimens({ editFile }),
   ...linkRotSpecimens({ addUntrackedFile }),
   ...pressSpecimens(),
   ...SPEC_SPECIMENS,

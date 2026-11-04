@@ -32,7 +32,7 @@ Follow `grill-me`.
 The bank has three parts. Each opens with its own order and dependencies; follow them.
 
 1. **The site,** S1 to S48: whether the loop runs, the layout, identity, pages and navigation, the loop's
-   limits, Search Console demand, hosting and the performance bar. The answers land in
+   limits (S30 asks the times the writer runs and the categories it writes on when demand is empty), Search Console demand, hosting and the performance bar. The answers land in
    `site/engine.config.json` and `site/src/config.yaml`.
 2. **The semantic core,** K1 to K34: section 4.
 3. **The platform,** P1 to P15: the accounts, the secrets and the settings. Section 5.
@@ -48,7 +48,9 @@ This is the heart. A weak core makes every later article off target, thin or unp
 - A buyer prompt is a question the owner's buyer types into an assistant or a search box. Ask for the
   words buyers use, from the owner's own conversations with them, not from a keyword tool.
 - Run `cd site && npm run pick:topic` to see how the selector reads each prompt. A prompt it sets aside
-  names the reason.
+  names the reason. With an empty report the preview lists the category rotation and calls no model.
+- S30 lists the categories the writer takes turns on. Each gets articles nobody searched for, a cost the first
+  owner accepted (`write-on-a-category.md`): read it out, and say that an empty list turns the fallback off.
 
 ## 5. Secrets and repository settings
 

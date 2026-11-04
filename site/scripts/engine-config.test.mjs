@@ -46,6 +46,15 @@ test('the real configuration loads, and what it returns cannot be changed by a c
   }, TypeError);
   assert.throws(() => (config.content.formats.article.author = 'x'), TypeError);
   assert.equal(config.loop.attemptCap, 3);
+  assert.deepEqual(config.loop.writeTimesUtc, ['03:17', '15:17']);
+  assert.deepEqual(config.loop.categoryRotation, [
+    'governance',
+    'agentic-architecture',
+    'operating-model',
+    'executive',
+  ]);
+  assert.throws(() => config.loop.writeTimesUtc.push('01:01'), TypeError);
+  assert.throws(() => config.loop.categoryRotation.push('legal'), TypeError);
 });
 
 test('the file is found from the module, so the working directory never decides', () => {
@@ -148,6 +157,10 @@ const MALFORMED = [
   ['demand.minImpressions', 1.5, 'must be of type integer'],
   ['content.formats.article.author', 'Dmitri', 'must match pattern'],
   ['content.formats.article.collection', '', 'must match pattern'],
+  ['loop.categoryRotation', ['governance', 'governance'], 'must have unique items'],
+  ['loop.categoryRotation', 'governance', 'must be of type array'],
+  ['loop.categoryRotation', ['Governance'], 'must match pattern'],
+  ['loop.categoryRotation', [7], 'must be of type string'],
 ];
 
 for (const [field, value, problem] of MALFORMED) {
@@ -163,6 +176,70 @@ for (const [field, value, problem] of MALFORMED) {
     );
   });
 }
+
+test('an empty category rotation is legal and turns the fallback off, so the loop keeps its older behaviour', () => {
+  const { config, problems } = inspected(mutated('loop.categoryRotation', []));
+  assert.deepEqual(problems, []);
+  assert.deepEqual(config.loop.categoryRotation, []);
+});
+
+const WRITE_TIMES = [
+  [['3:17', '15:17'], '$.loop.writeTimesUtc[0]', /^"3:17" is not a time of day/],
+  [['03:17', '24:00'], '$.loop.writeTimesUtc[1]', /^"24:00" is not a time of day/],
+  [['12:60'], '$.loop.writeTimesUtc[0]', /^"12:60" is not a time of day/],
+  [['03:17', '15:17', 'noon'], '$.loop.writeTimesUtc[2]', /^"noon" is not a time of day/],
+  [['03:17', 317], '$.loop.writeTimesUtc[1]', /^317 is not a time of day/],
+  [['03:17', null], '$.loop.writeTimesUtc[1]', /^null is not a time of day/],
+  [['03:17 '], '$.loop.writeTimesUtc[0]', /^"03:17 " is not a time of day/],
+  [['03:17', '15:17', '03:17'], '$.loop.writeTimesUtc[2]', /^"03:17" is already at loop\.writeTimesUtc\[0\]/],
+  [[], '$.loop.writeTimesUtc', /^lists no time.*pause the writer.*disable the Write daily workflow.*secret.*unset/],
+  ['03:17', '$.loop.writeTimesUtc', /^"03:17" is not a list of times/],
+  [{ first: '03:17' }, '$.loop.writeTimesUtc', /^\{"first":"03:17"\} is not a list of times/],
+  [null, '$.loop.writeTimesUtc', /^null is not a list of times/],
+];
+
+for (const [value, path, message] of WRITE_TIMES) {
+  test(`loop.writeTimesUtc set to ${JSON.stringify(value)} is refused at load with one message at ${path}`, () => {
+    const { config, problems } = inspected(mutated('loop.writeTimesUtc', value));
+    assert.equal(config, null);
+    assert.equal(problems.length, 1, JSON.stringify(problems));
+    assert.equal(problems[0].path, path);
+    assert.match(problems[0].problem, message);
+  });
+}
+
+test('a refused schedule names every bad entry at once, so one edit fixes the file', () => {
+  const { problems } = inspected(mutated('loop.writeTimesUtc', ['3:17', '15:17', '25:00', '15:17']));
+  assert.deepEqual(
+    problems.map(({ path }) => path),
+    ['$.loop.writeTimesUtc[0]', '$.loop.writeTimesUtc[2]', '$.loop.writeTimesUtc[3]']
+  );
+});
+
+test('the times the engine accepts run from 00:00 to 23:59 and a single time is a schedule', () => {
+  for (const times of [['00:00'], ['23:59'], ['00:00', '23:59'], ['09:05', '12:30', '19:45']]) {
+    assert.deepEqual(inspected(mutated('loop.writeTimesUtc', times)).problems, [], times.join(' '));
+  }
+});
+
+test('an unreadable schedule reaches the consumer as the load error, naming the file, the position and the value', () => {
+  const root = mkdtempSync(join(tmpdir(), 'engine-config-'));
+  try {
+    const file = join(root, 'engine.config.json');
+    writeFileSync(file, JSON.stringify(mutated('loop.writeTimesUtc', ['03:17', '7:5'])));
+    assert.throws(
+      () => readEngineConfig(file),
+      (error) => {
+        assert.ok(error instanceof EngineConfigError);
+        assert.deepEqual(error.fields, ['loop.writeTimesUtc[1]']);
+        assert.ok(error.message.startsWith(`${file}: loop.writeTimesUtc[1] "7:5" is not a time of day`), error.message);
+        return true;
+      }
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
 
 test('a key the schema does not know is refused by name, so a typo cannot pass for a setting', () => {
   const { problems } = inspected({

@@ -78,6 +78,7 @@ test('the refusals a run made on the way to its topic are an ordered list of rea
     'route-exists',
     'register-owner',
     'family-served',
+    'same-subject',
   ]);
   assert.deepEqual(validateLedger({ ...open(), refusals: [] }), []);
   const found = { ...open(), refusals: REFUSAL_REASONS.map((reason) => refusal({ reason })) };
@@ -88,7 +89,7 @@ const DEFECTS = [
   [
     'an unknown reason',
     refusal({ reason: 'dislike' }),
-    'refusals[0].reason must be one of "title-collision", "slug-held", "route-exists", "register-owner", "family-served"',
+    'refusals[0].reason must be one of "title-collision", "slug-held", "route-exists", "register-owner", "family-served", "same-subject"',
   ],
   ['no title', refusal({ title: ' ' }), 'refusals[0].title must match pattern \\S'],
   ['nothing it was refused against', refusal({ against: '' }), 'refusals[0].against must match pattern \\S'],

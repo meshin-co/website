@@ -9,11 +9,24 @@ export const NOW = new Date('2026-11-03T09:00:00.000Z');
 
 const HOUR = 60 * 60 * 1000;
 
-export function entryFiles({ slug, format = 'article', hoursAgo = 3, input = 12_000, output = 3_000, title, prompt }) {
+export function entryFiles({
+  slug,
+  format = 'article',
+  hoursAgo = 3,
+  input = 12_000,
+  output = 3_000,
+  title,
+  prompt,
+  promptless,
+}) {
   const calls = [writingCall({ input, output, tag: `${slug}-draft` })];
   const made = recordOf({ slug, format, at: new Date(NOW.getTime() - hoursAgo * HOUR).toISOString(), calls });
-  const claim = { ...made.claim, ...(title && { title }), ...(prompt && { prompt }) };
-  return { ledger: ledgerOf({ slug, calls }), record: { ...made, claim }, format, slug };
+  const withoutPrompt = Object.fromEntries(Object.entries(made.claim).filter(([key]) => key !== 'prompt'));
+  const claim = promptless
+    ? { ...withoutPrompt, ...(title && { title }), ...promptless }
+    : { ...made.claim, ...(title && { title }), ...(prompt && { prompt }) };
+  const demand = promptless?.origin === 'category' ? { ...made.demand, impressions: 0, position: null } : made.demand;
+  return { ledger: ledgerOf({ slug, calls }), record: { ...made, claim, demand }, format, slug };
 }
 
 export function putAll(root, files) {

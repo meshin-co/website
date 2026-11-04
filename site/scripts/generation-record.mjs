@@ -1,6 +1,7 @@
 import { mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 
+import { originProblems } from './autowriter-claims.mjs';
 import { fileStemProblem } from './autowriter-ledger.mjs';
 import { describeProblem, instantProblems, isCalendarInstant, readSchema } from './autowriter-records.mjs';
 import { validateJsonSchema } from './json-schema.mjs';
@@ -156,6 +157,9 @@ function noteProblems({ modelChecks }) {
 const listedProblems = ({ entry, files }) =>
   files.includes(entry.path) ? [] : [problem('$.files', `must list the entry ${entry.path}`)];
 
+const claimOriginProblems = ({ claim, demand, entry }) =>
+  originProblems({ ...claim, demand, format: entry.format }, '$.claim', '$.entry.format');
+
 const bandProblems = ({ entry, band: { limits, measured } }) =>
   [
     ['$.band.limits.format', limits.format, entry.format, 'the entry format'],
@@ -171,6 +175,7 @@ export function validateRecord(record) {
   const calendar = [...instantProblems([['$.generatedAt', record.generatedAt]]), ...dateProblems(dateEntries(record))];
   if (calendar.length > 0) return calendar;
   return [
+    ...claimOriginProblems(record),
     ...totalsProblems(record),
     ...costProblems(record),
     ...publishedProblems(record),
@@ -216,11 +221,15 @@ export function writeRecord(path, record) {
   renameSync(staged, path);
 }
 
+export const TOPIC_ROLES = ['topic'];
+
 export const WRITING_ROLES = ['draft', 'correction'];
+
+export const ENTRY_COST_ROLES = [...TOPIC_ROLES, ...WRITING_ROLES];
 
 export const REPAIR_ROLES = ['repair', 'repair-correction'];
 
-export const writingTotals = ({ calls }) => callTotals(calls.filter(({ role }) => WRITING_ROLES.includes(role)));
+export const writingTotals = ({ calls }) => callTotals(calls.filter(({ role }) => ENTRY_COST_ROLES.includes(role)));
 
 export function recordAfterRepair({ record, calls, modelChecks, claimTable, measured, measuredOn, gates }) {
   if (calls.length === 0) throw new Error('a repair of a record needs at least one call');

@@ -11,7 +11,8 @@ import { recordPath } from './record-layout.mjs';
 import { openRun } from './write-open.mjs';
 
 const REPO = fileURLToPath(new URL('../..', import.meta.url));
-const INPUTS = ['docs/SEMANTIC-CORE.md', 'site/src/config.yaml'];
+const INPUTS = ['docs/SEMANTIC-CORE.md', 'site/src/config.yaml', 'site/content-facts.json'];
+const POSTS = 'site/src/data/post';
 const FROZEN_REPORT = 'site/scripts/fixtures/search-demand-2026-11-01.md';
 
 function skeleton() {
@@ -21,20 +22,22 @@ function skeleton() {
     cpSync(join(REPO, file), join(root, file));
   }
   mkdirSync(join(root, 'audits'), { recursive: true });
+  cpSync(join(REPO, POSTS), join(root, POSTS), { recursive: true });
   cpSync(join(REPO, FROZEN_REPORT), join(root, 'audits/search-demand.md'));
   return root;
 }
 
-test('the decision file the selection writes is one the writer opens without a refusal', () => {
+test('the decision file the selection writes is one the writer opens without a refusal', async () => {
   const root = skeleton();
   try {
     const output = join(root, 'decision.json');
     const failures = [];
-    const exit = runCli(['--write', '--output', output, '--now', '2026-11-02T04:00:00Z', '--run-id', 'contract-1'], {
+    const argv = ['--write', '--output', output, '--now', '2026-11-02T04:00:00Z', '--run-id', 'contract-1'];
+    const exit = await runCli(argv, {
       repoRoot: root,
       env: {},
-      out: () => {},
-      err: (line) => failures.push(line),
+      stdout: () => {},
+      stderr: (line) => failures.push(line),
     });
     assert.equal(exit, 0, failures.join('\n'));
     const decision = JSON.parse(readFileSync(output, 'utf8'));

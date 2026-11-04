@@ -4,20 +4,23 @@ import { randomBytes } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
-import { validateClaim } from './autowriter-claims.mjs';
+import { ORIGINS, WEAKNESS_REASONS, validateClaim } from './autowriter-claims.mjs';
 import {
   ARTICLE_SLUG,
   CLAIMED_AT,
   LEDGER,
   MODEL,
   MODEL_VARIABLE,
+  QUERIES_ROW,
   RESOLVED_MODEL,
   TERM_SLUG,
   callOf,
+  categoryInput,
   recordInput,
   termInput,
+  weakDemandInput,
 } from './fixtures/generation-input.mjs';
-import { buildRecord, callRecord, validateRecord } from './generation-record.mjs';
+import { buildRecord, callRecord, callTotals, validateRecord } from './generation-record.mjs';
 import { recordDirectory, recordPath } from './record-layout.mjs';
 
 const base = buildRecord(recordInput());
@@ -35,6 +38,8 @@ test('a record lives under audits/autowriter/generations, in the month of its cl
 test('the claims of the fixtures are claims the claim store would accept', () => {
   assert.deepEqual(validateClaim(recordInput().claim), []);
   assert.deepEqual(validateClaim(termInput().claim), []);
+  assert.deepEqual(validateClaim(weakDemandInput().claim), []);
+  assert.deepEqual(validateClaim(categoryInput().claim), []);
 });
 
 test('a record built from a run has no problems and carries the schema keys in the schema order', () => {
@@ -47,7 +52,13 @@ test('the record knows nothing of a bake-off, a mode, an epoch or a judge', () =
     assert.ok(!Object.hasOwn(schema.properties, key), `${key} is still in the schema`);
     assert.ok(!Object.hasOwn(base, key), `${key} is still in the record`);
   }
-  assert.deepEqual(schema.$defs.call.properties.role.enum, ['draft', 'correction', 'repair', 'repair-correction']);
+  assert.deepEqual(schema.$defs.call.properties.role.enum, [
+    'topic',
+    'draft',
+    'correction',
+    'repair',
+    'repair-correction',
+  ]);
   assert.deepEqual(schema.$defs.format.enum, ['article', 'term']);
   assert.ok(!/anthropic|bake-?off|epoch|judge/i.test(schemaText));
 });
@@ -238,4 +249,72 @@ test('no secret value from a vendor entry reaches the record', () => {
   assert.ok(!text.includes(secret), 'a secret value reached the record');
   assert.ok(!text.includes('Bearer'), 'an authorization header reached the record');
   assert.ok(!text.includes('AUTOWRITER_OPENAI_API_KEY'), 'the name of the key reached the record');
+});
+
+const CLAIM_KEYS = ['title', 'query', 'prompt', 'origin', 'category', 'weakness'];
+
+test('the claim block lists the origin fields beside the prompt, with the origins and reasons of the claim itself', () => {
+  const { claim } = schema.properties;
+  assert.deepEqual(Object.keys(claim.properties), CLAIM_KEYS);
+  assert.deepEqual(claim.required, ['title', 'query']);
+  assert.deepEqual(claim.properties.origin.enum, ORIGINS);
+  assert.deepEqual(claim.properties.weakness.items.enum, WEAKNESS_REASONS);
+});
+
+test('every claim field the schema lists reaches the record, and no other claim field does', () => {
+  for (const input of [recordInput(), weakDemandInput(), categoryInput()]) {
+    const record = buildRecord({ ...input, claim: { ...input.claim, stray: 'x' } });
+    const expected = CLAIM_KEYS.filter((key) => input.claim[key] !== undefined);
+    assert.deepEqual(Object.keys(record.claim), expected, input.claim.slug);
+  }
+});
+
+test('a demand claim that names its origin keeps it, and a claim written before the origin has none to keep', () => {
+  const named = buildRecord({ ...recordInput(), claim: { ...recordInput().claim, origin: 'demand' } });
+  assert.deepEqual(validateRecord(named), []);
+  assert.equal(named.claim.origin, 'demand');
+  assert.equal(Object.hasOwn(base.claim, 'origin'), false);
+});
+
+test('a weak-demand record names the origin and the weakness, holds no prompt and keeps the row of the query', () => {
+  const input = weakDemandInput();
+  const weak = buildRecord(input);
+  assert.deepEqual(validateRecord(weak), []);
+  assert.deepEqual(weak.claim, {
+    title: input.claim.title,
+    query: input.claim.query,
+    origin: 'weak-demand',
+    weakness: ['no-buyer-prompt'],
+  });
+  assert.equal(weak.demand.report.table, 'Queries');
+  assert.deepEqual(weak.demand.row, QUERIES_ROW);
+  assert.deepEqual([weak.demand.impressions, weak.demand.position], [9, 91.8]);
+});
+
+test('a category record names the origin and the category and holds no prompt, no report row and no report table', () => {
+  const input = categoryInput();
+  const record = buildRecord(input);
+  assert.deepEqual(validateRecord(record), []);
+  assert.deepEqual(record.claim, {
+    title: input.claim.title,
+    query: input.claim.query,
+    origin: 'category',
+    category: 'governance',
+  });
+  assert.equal(record.demand.row, null);
+  assert.equal(record.demand.report.table, null);
+  assert.deepEqual([record.demand.impressions, record.demand.position], [0, null]);
+});
+
+test('the proposal call of a category entry comes first, and the published call is the last draft call, not call 0', () => {
+  const record = buildRecord(categoryInput());
+  assert.deepEqual(
+    record.calls.map(({ role }) => role),
+    ['topic', 'draft', 'correction']
+  );
+  assert.deepEqual(record.published, { callIndex: 2 });
+  assert.deepEqual([record.provider, record.model], ['openai', RESOLVED_MODEL]);
+  assert.equal(record.responseId, 'resp-article-correction');
+  assert.deepEqual(record.totals, { tokens: { input: 26800, output: 5060 }, costUsd: 0.0521 });
+  assert.deepEqual(record.totals, callTotals(record.calls));
 });

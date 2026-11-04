@@ -11,7 +11,10 @@ export const CLAIM_LIFETIME_DAYS = readEngineConfig().loop.claimLifetimeDays;
 const DAY_MS = 86_400_000;
 const MAX_SHOWN = 5;
 
-export function newClaim({ slug, title, format, query, demand, prompt, runId, now }) {
+const present = (fields) =>
+  Object.fromEntries(Object.entries(fields).filter(([, value]) => value !== undefined && value !== null));
+
+export function newClaim({ slug, title, format, query, demand, prompt, origin, category, weakness, runId, now }) {
   return {
     schema: 1,
     slug,
@@ -19,7 +22,7 @@ export function newClaim({ slug, title, format, query, demand, prompt, runId, no
     format,
     query,
     demand,
-    prompt,
+    ...present({ prompt, origin, category, weakness }),
     runId,
     status: 'claimed',
     claimedAt: now.toISOString(),

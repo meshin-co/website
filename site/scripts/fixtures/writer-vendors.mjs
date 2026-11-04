@@ -147,11 +147,24 @@ export const vendorEntry = ({ apiKey = randomSecret(), model = MODEL, rates = RA
     AUTOWRITER_OPENAI_API_KEY: apiKey,
   }).vendor;
 
+export const envOf = ({ id, keyName, apiKey, modelVariable, model, rates }) => ({
+  WRITING_PROVIDER: id,
+  [modelVariable]: model,
+  [rates.inputVariable]: String(rates.inputPerMillion),
+  [rates.outputVariable]: String(rates.outputPerMillion),
+  [keyName]: apiKey,
+});
+
 export function adapterOn({ routes = {}, ...entry } = {}) {
   const vendor = vendorEntry(entry);
   const { fetch, calls } = vendorFetch(routes);
-  return { adapter: createAdapter({ vendor, fetch }), calls, vendor, apiKey: vendor.apiKey };
+  return { adapter: createAdapter({ vendor, fetch }), calls, vendor, apiKey: vendor.apiKey, fetch, env: envOf(vendor) };
 }
+
+export const inSequence = (...answers) => {
+  let next = 0;
+  return () => answers[Math.min(next++, answers.length - 1)]();
+};
 
 export async function failureOf(promise) {
   try {

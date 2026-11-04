@@ -116,7 +116,9 @@
         "quarantineHours",
         "monthlySpendCeilingUsd",
         "claimLifetimeDays",
-        "holdLabel"
+        "holdLabel",
+        "writeTimesUtc",
+        "categoryRotation"
       ],
       "properties": {
         "attemptCap": {
@@ -150,6 +152,15 @@
           "maxLength": 50,
           "pattern": "^[^,\\n]+$",
           "description": "The pull request label that stops the watcher from merging."
+        },
+        "writeTimesUtc": {
+          "description": "UTC times of day, each HH:MM in 24 hours with two digits, at which the unattended writer runs. The list holds at least one time and none twice: pause the writer by disabling its workflow or leaving a required secret unset, never by emptying the list. npm run assets:schedule writes these times into the workflow, and GitHub starts a scheduled run late, so nothing may assume a run began at its minute."
+        },
+        "categoryRotation": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/name" },
+          "description": "Category ids the unattended writer takes turns writing in when search demand names no topic, the one with the fewest entries first, counting published entries and claims. An empty list turns that fallback off, so a run that demand has nothing for ends with no entry. Each id is checked against the categories of the site's articles when the picker loads."
         }
       }
     },

@@ -432,3 +432,59 @@ test('the sentence for an unreadable file holds nothing that depends on the JSON
   const { problems } = corpusOf({ ledgers: [], records: [{ path: recordPath('broken'), text: '{not json' }] });
   assert.deepEqual(problems, [`${recordPath('broken')} is not counted: it is not readable JSON`]);
 });
+
+const TOPIC = writingCall({ role: 'topic', input: 1800, output: 60, tag: 'topic' });
+
+function categoryEntry(slug = 'a-category-post') {
+  const record = recordOf({ slug, at: NEWEST, calls: [TOPIC, DRAFT, CORRECTION] });
+  return { record, ledger: ledgerOf({ slug, calls: record.calls }) };
+}
+
+test('the proposal call of a category entry is in its row, its window and its month, at the cost its record stores', () => {
+  const { record, ledger } = categoryEntry();
+  const model = modelOf({ ledgers: [ledger], records: [record] });
+  const cost = { entries: 1, input: 26800, output: 5060, micro: 52_100 };
+  assert.deepEqual(model.rows[0], {
+    slug: 'a-category-post',
+    runId: 'run-1',
+    format: 'article',
+    generatedAt: NEWEST,
+    input: cost.input,
+    output: cost.output,
+    micro: cost.micro,
+    repairMicro: 0,
+  });
+  assert.equal(recordMicro(record), 52_100);
+  assert.deepEqual(model.allTime.totals.all, cost);
+  assert.equal(model.thisMonth.paid.writingMicro, 52_100);
+  assert.equal(model.thisMonth.paid.totalMicro, 52_100);
+  assert.deepEqual(model.warnings, []);
+});
+
+test('a ledger that forgot the proposal call is warned about, and the month still counts the record cost', () => {
+  const { record } = categoryEntry();
+  const draftsOnly = ledgerOf({ slug: 'a-category-post', calls: [DRAFT, CORRECTION] });
+  const model = modelOf({ ledgers: [draftsOnly], records: [record] });
+  assert.equal(model.warnings.length, 1);
+  assert.match(model.warnings[0], /^a-category-post: its generation record's writing calls cost 0\.0521 USD/);
+  assert.equal(model.thisMonth.paid.totalMicro, 52_100);
+});
+
+test('the price of the proposal call is a rate of the report, like the price of a draft', () => {
+  const cheaper = writingCall({
+    role: 'topic',
+    input: 1800,
+    output: 60,
+    price: { inputPerMillion: 0.5, outputPerMillion: 2 },
+  });
+  const record = recordOf({ slug: 'a-category-post', at: NEWEST, calls: [cheaper, DRAFT, CORRECTION] });
+  const ledger = ledgerOf({ slug: 'a-category-post', calls: record.calls });
+  const { rates } = modelOf({ ledgers: [ledger], records: [record] });
+  assert.deepEqual(
+    rates.map(({ inputPerMillion, outputPerMillion }) => [inputPerMillion, outputPerMillion]),
+    [
+      [0.5, 2],
+      [1, 5],
+    ]
+  );
+});

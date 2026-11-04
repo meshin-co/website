@@ -50,12 +50,29 @@ const rules = (texts) =>
   ].join('\n\n');
 
 const SECTION_HEADING = {
-  article: 'asks a question a buyer asks on the way to that prompt',
-  term: 'names the part of the term it covers',
+  article: (target) => `asks a question a buyer asks on the way to ${target}`,
+  term: () => 'names the part of the term it covers',
 };
 
-const bodyLength = ({ format, length, claim }) =>
-  `- length of the body: ${length.targetFrom} to ${length.targetTo} words, the middle half of the hand-written ${NOUN[format]} entries recorded in ${LENGTH_FILE}, for buyer prompt ${claim.prompt.number}, "${claim.prompt.text}". A body under ${length.wordsFloor} words, under ${length.sectionsFloor} sections or with a section under ${length.sectionWordsFloor} words fails the gate: no hand-written ${NOUN[format]} does any of the three. Reach the length with more sections, each under a ## heading that ${SECTION_HEADING[format]} and rests on a route from the request, a passage of the block of that buyer prompt or a source you cite. A longer sentence leaves the sentence band, and a restated takeaway repeats a field.`;
+const lengthSubject = (claim) =>
+  claim.prompt
+    ? {
+        for: `buyer prompt ${claim.prompt.number}, "${claim.prompt.text}"`,
+        quoted: 'the buyer prompt',
+        target: 'that prompt',
+        support: 'a route from the request, a passage of the block of that buyer prompt or a source you cite',
+      }
+    : {
+        for: `the query "${claim.query}"`,
+        quoted: 'the query',
+        target: 'that query',
+        support: 'a route from the request or a source you cite',
+      };
+
+const bodyLength = ({ format, length, claim }) => {
+  const subject = lengthSubject(claim);
+  return `- length of the body: ${length.targetFrom} to ${length.targetTo} words, the middle half of the hand-written ${NOUN[format]} entries recorded in ${LENGTH_FILE}, for ${subject.for}. A body under ${length.wordsFloor} words, under ${length.sectionsFloor} sections or with a section under ${length.sectionWordsFloor} words fails the gate: no hand-written ${NOUN[format]} does any of the three. Reach the length with more sections, each under a ## heading that ${SECTION_HEADING[format](subject.target)} and rests on ${subject.support}. A longer sentence leaves the sentence band, and a restated takeaway repeats a field.`;
+};
 
 const BODY_SHAPE =
   '- shape of the prose, which a reader sees and no gate measures: end a paragraph on its last point, not on a sentence that says again what the paragraph said. Do not open three paragraphs in a row on the same word. Do not add a section only for balance, such as a pros-and-cons block or a look ahead.';
@@ -74,7 +91,7 @@ const members = ({ format, length, claim }) =>
     '  - marker: "sourced" or "own-reading".',
     '  - sourceId: the id of the one source it rests on, or null.',
     '  - span: the words of that source that support the sentence, quoted exactly, or null.',
-    `- passage: one sentence of the entry, copied word for word, at most ${PASSAGE_WORD_CAP} words, with no quotation mark and no markdown character. It is the sentence a reader or a search engine should quote for the buyer prompt.`,
+    `- passage: one sentence of the entry, copied word for word, at most ${PASSAGE_WORD_CAP} words, with no quotation mark and no markdown character. It is the sentence a reader or a search engine should quote for ${lengthSubject(claim).quoted}.`,
   ].join('\n');
 
 const claimRules = [
@@ -134,15 +151,22 @@ export const systemPrompt = ({ claim, read }) =>
     lengths(read.data.band, claim.format),
   ].join('\n\n');
 
+const positionText = (position) => (position === null ? 'no position' : `average position ${position}`);
+
 const demandText = ({ impressions, position }, row) =>
   [
-    `Demand when the topic was chosen: ${impressions} impressions, ${position === null ? 'no position' : `average position ${position}`}.`,
+    `Demand when the topic was chosen: ${impressions} impressions, ${positionText(position)}.`,
     row === undefined
       ? ''
       : `The Search Console row it was chosen from:\n${bullets(Object.entries(row).map(([key, value]) => `${key}: ${value}`))}`,
   ]
     .filter(Boolean)
     .join('\n');
+
+const originFact = (claim) =>
+  claim.origin === 'category'
+    ? `Origin: category. This entry is written to cover the category ${claim.category}, with the target query "${claim.query}", and no measured demand exists for it yet. It must still answer exactly one question and define no concept that the concept register of docs/SEMANTIC-CORE.md assigns elsewhere. Set the category field of the entry to "${claim.category}".`
+    : `Origin: weak-demand. The target query "${claim.query}" was measured in Search Console with ${claim.demand.impressions} impressions and ${positionText(claim.demand.position)}, and no buyer prompt backs it. It must still answer exactly one question.`;
 
 export const claimFacts = (claim) => [
   `Format: ${NOUN[claim.format]}`,
@@ -152,7 +176,7 @@ export const claimFacts = (claim) => [
   `Page heading (h1): ${headingOf(claim)}`,
   `Query it answers: ${claim.query}`,
   `Declared target query: ${targetQueryFor({ claim })}`,
-  `Buyer prompt ${claim.prompt.number}: ${claim.prompt.text}`,
+  claim.prompt ? `Buyer prompt ${claim.prompt.number}: ${claim.prompt.text}` : originFact(claim),
 ];
 
 const claimText = (claim, runDate) =>
@@ -162,6 +186,11 @@ const claimText = (claim, runDate) =>
   ]);
 
 const listOf = (heading, items, separator) => `${heading}\n${items.join(separator)}`;
+
+export const promptBlockPart = (read) =>
+  'promptBlock' in read.data
+    ? [`The block of docs/SEMANTIC-CORE.md for this buyer prompt, copied from the file:\n${read.data.promptBlock}`]
+    : [];
 
 export const contextLists = (read) => [
   listOf('Routes that exist (audits/routes.json). A link to this site is exactly one of them:', read.data.routes, '\n'),
@@ -175,6 +204,6 @@ export const userPrompt = ({ claim, demandRow, runDate, read }) =>
     'Write this entry.',
     claimText(claim, runDate),
     demandText(claim.demand, demandRow),
-    `The block of docs/SEMANTIC-CORE.md for this buyer prompt, copied from the file:\n${read.data.promptBlock}`,
+    ...promptBlockPart(read),
     ...contextLists(read),
   ].join('\n\n');

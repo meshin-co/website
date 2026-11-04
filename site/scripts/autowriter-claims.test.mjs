@@ -13,10 +13,15 @@ import {
   generatedTitles,
   isHolding,
   normaliseTitle,
+  ORIGINS,
+  originOf,
+  originProblems,
   titleCollisions,
   validateClaim,
+  WEAKNESS_REASONS,
 } from './autowriter-claims.mjs';
 import { describeProblem } from './autowriter-records.mjs';
+import { CATEGORIES } from './entry-limits.mjs';
 import { recordDirectory, recordPath } from './record-layout.mjs';
 import { siteBrand } from './site-brand.mjs';
 
@@ -288,4 +293,213 @@ test('the markers are the ones semantic-core.mjs writes, so the two files cannot
   const core = await import('./semantic-core.mjs');
   assert.equal(GENERATED_BEGIN, core.GENERATED_BEGIN);
   assert.equal(GENERATED_END, core.GENERATED_END);
+});
+
+const without = (value, ...keys) => Object.fromEntries(Object.entries(value).filter(([key]) => !keys.includes(key)));
+const demandClaim = (extra = {}) => claim({ origin: 'demand', ...extra });
+const weakClaim = (extra = {}) => ({
+  ...without(claim(), 'prompt'),
+  format: 'article',
+  demand: { impressions: 9, position: 91.8 },
+  origin: 'weak-demand',
+  weakness: ['no-buyer-prompt'],
+  ...extra,
+});
+const categoryClaim = (extra = {}) => ({
+  ...without(claim(), 'prompt'),
+  format: 'article',
+  demand: { impressions: 0, position: null },
+  origin: 'category',
+  category: 'governance',
+  ...extra,
+});
+const quoted = (values) => values.map((value) => JSON.stringify(value)).join(', ');
+
+test('the origins are the three rungs of the picker, and the weakness reasons are the three things a weak query lacks', () => {
+  assert.deepEqual(ORIGINS, ['demand', 'weak-demand', 'category']);
+  assert.deepEqual(WEAKNESS_REASONS, ['no-buyer-prompt', 'impressions-at-floor', 'position-beyond-strengthen-band']);
+});
+
+test('a claim with no origin is a demand claim, because the picker had one rung before the origin existed', () => {
+  assert.equal(originOf({}), 'demand');
+  assert.equal(originOf(claim()), 'demand');
+  for (const origin of ORIGINS) assert.equal(originOf({ origin }), origin);
+});
+
+test('a well-formed claim of every origin has no problems, and so has a claim written before the origin existed', () => {
+  assert.deepEqual(validateClaim(claim()), []);
+  assert.deepEqual(validateClaim(demandClaim()), []);
+  assert.deepEqual(validateClaim(demandClaim({ demand: { impressions: 0, position: null } })), []);
+  assert.deepEqual(validateClaim(weakClaim()), []);
+  assert.deepEqual(validateClaim(weakClaim({ weakness: [...WEAKNESS_REASONS] })), []);
+  for (const category of CATEGORIES) assert.deepEqual(validateClaim(categoryClaim({ category })), [], category);
+});
+
+const ORIGIN_DEFECTS = [
+  ['a demand claim with no prompt', without(demandClaim(), 'prompt'), ['prompt is required when origin is demand']],
+  ['a claim with no origin and no prompt', without(claim(), 'prompt'), ['prompt is required when origin is demand']],
+  [
+    'a demand claim that names a category',
+    demandClaim({ category: 'governance' }),
+    ['category must be absent when origin is demand'],
+  ],
+  [
+    'a demand claim that names a weakness',
+    demandClaim({ weakness: ['no-buyer-prompt'] }),
+    ['weakness must be absent when origin is demand'],
+  ],
+  [
+    'a weak-demand claim that carries a prompt',
+    weakClaim({ prompt: { number: 7, text: 'x' } }),
+    ['prompt must be absent when origin is weak-demand'],
+  ],
+  [
+    'a weak-demand claim with no weakness',
+    without(weakClaim(), 'weakness'),
+    ['weakness is required when origin is weak-demand'],
+  ],
+  [
+    'a weak-demand claim that names a category',
+    weakClaim({ category: 'governance' }),
+    ['category must be absent when origin is weak-demand'],
+  ],
+  [
+    'a weak-demand claim that was never measured',
+    weakClaim({ demand: { impressions: 0, position: null } }),
+    [
+      'demand.impressions must be at least 1 when origin is weak-demand',
+      'demand.position must be a number when origin is weak-demand',
+    ],
+  ],
+  [
+    'a weak-demand claim with impressions and no position',
+    weakClaim({ demand: { impressions: 4, position: null } }),
+    [
+      'demand.position must be a number when impressions is above 0',
+      'demand.position must be a number when origin is weak-demand',
+    ],
+  ],
+  ['a weak-demand claim with an empty weakness', weakClaim({ weakness: [] }), ['weakness must have at least 1 items']],
+  [
+    'a weak-demand claim that names one reason twice',
+    weakClaim({ weakness: ['no-buyer-prompt', 'no-buyer-prompt'] }),
+    ['weakness must have unique items'],
+  ],
+  [
+    'a weak-demand claim with a reason nobody defined',
+    weakClaim({ weakness: ['too-cheap'] }),
+    [`weakness[0] must be one of ${quoted(WEAKNESS_REASONS)}`],
+  ],
+  [
+    'a weak-demand claim whose weakness is a word and not a list',
+    weakClaim({ weakness: 'no-buyer-prompt' }),
+    ['weakness must be of type array'],
+  ],
+  [
+    'a category claim that carries a prompt',
+    categoryClaim({ prompt: { number: 7, text: 'x' } }),
+    ['prompt must be absent when origin is category'],
+  ],
+  [
+    'a category claim with no category',
+    without(categoryClaim(), 'category'),
+    ['category is required when origin is category'],
+  ],
+  [
+    'a category claim naming a category nobody configured',
+    categoryClaim({ category: 'finance' }),
+    [`category must be one of ${quoted(CATEGORIES)}`],
+  ],
+  [
+    'a category claim that names a weakness',
+    categoryClaim({ weakness: ['no-buyer-prompt'] }),
+    ['weakness must be absent when origin is category'],
+  ],
+  [
+    'a category claim with measured demand',
+    categoryClaim({ demand: { impressions: 5, position: 3 } }),
+    ['demand.impressions must be 0 when origin is category', 'demand.position must be null when origin is category'],
+  ],
+  [
+    'a category claim with a position and no impressions',
+    categoryClaim({ demand: { impressions: 0, position: 12 } }),
+    ['demand.position must be null when impressions is 0', 'demand.position must be null when origin is category'],
+  ],
+  ['an origin nobody defined', demandClaim({ origin: 'video' }), [`origin must be one of ${quoted(ORIGINS)}`]],
+  [
+    'a category claim whose prompt is null instead of absent',
+    categoryClaim({ prompt: null }),
+    ['prompt must be of type object'],
+  ],
+  ['a category claim whose category is not text', categoryClaim({ category: 5 }), ['category must be of type string']],
+  [
+    'a weak-demand claim for a term',
+    weakClaim({ format: 'term' }),
+    ['format must be article when origin is weak-demand'],
+  ],
+  [
+    'a category claim for a term',
+    categoryClaim({ format: 'term' }),
+    ['format must be article when origin is category'],
+  ],
+];
+
+for (const [name, value, expected] of ORIGIN_DEFECTS) {
+  test(`validateClaim names ${name}, and nothing else`, () => {
+    assert.deepEqual(problemsText(value), expected);
+  });
+}
+
+test('the shape is judged first: a claim of the wrong shape is not also judged for its origin', () => {
+  assert.deepEqual(problemsText(categoryClaim({ prompt: { number: 7, text: 'x' }, score: 3 })), [
+    'score has an unexpected key',
+  ]);
+});
+
+test('originProblems names the field with its path in the file and says what the origin wants of it', () => {
+  assert.deepEqual(originProblems(claim()), []);
+  assert.deepEqual(originProblems(categoryClaim()), []);
+  assert.deepEqual(originProblems(categoryClaim({ prompt: { number: 7, text: 'x' } })), [
+    { path: '$.prompt', problem: 'must be absent when origin is category' },
+  ]);
+  assert.deepEqual(originProblems(without(weakClaim(), 'weakness')), [
+    { path: '$.weakness', problem: 'is required when origin is weak-demand' },
+  ]);
+  assert.deepEqual(originProblems(categoryClaim({ demand: { impressions: 2, position: null } })), [
+    { path: '$.demand.impressions', problem: 'must be 0 when origin is category' },
+  ]);
+});
+
+test('originProblems puts the claim fields under the path it is given and keeps the demand at the root of the file', () => {
+  const claimLike = { ...categoryClaim({ prompt: { number: 7, text: 'x' } }), demand: { impressions: 3, position: 9 } };
+  assert.deepEqual(originProblems(claimLike, '$.claim'), [
+    { path: '$.claim.prompt', problem: 'must be absent when origin is category' },
+    { path: '$.demand.impressions', problem: 'must be 0 when origin is category' },
+    { path: '$.demand.position', problem: 'must be null when origin is category' },
+  ]);
+});
+
+test('originProblems puts the format rule at the path it is given, and a demand term needs no rule', () => {
+  assert.deepEqual(originProblems(categoryClaim({ format: 'term' })), [
+    { path: '$.format', problem: 'must be article when origin is category' },
+  ]);
+  assert.deepEqual(originProblems(weakClaim({ format: 'term' }), '$.claim', '$.entry.format'), [
+    { path: '$.entry.format', problem: 'must be article when origin is weak-demand' },
+  ]);
+  assert.deepEqual(originProblems(demandClaim({ format: 'term' })), []);
+  assert.deepEqual(originProblems(demandClaim({ format: 'article' })), []);
+});
+
+test('originProblems refuses an unknown origin instead of letting it pass every rule', () => {
+  assert.deepEqual(originProblems({ origin: 'video' }), [
+    { path: '$.origin', problem: `must be one of ${quoted(ORIGINS)}` },
+  ]);
+});
+
+test('originProblems reads a key set to undefined as absent and a key set to null as present', () => {
+  assert.deepEqual(originProblems(categoryClaim({ prompt: undefined, weakness: undefined })), []);
+  assert.deepEqual(originProblems(categoryClaim({ prompt: null })), [
+    { path: '$.prompt', problem: 'must be absent when origin is category' },
+  ]);
+  assert.deepEqual(originProblems(without(demandClaim(), 'demand')), []);
 });

@@ -143,8 +143,18 @@ export function fieldProblems({ draft, claim, context, runDate }) {
     draft.format === format
       ? []
       : [problem('format-mismatch', `the draft is a ${draft.format} and the claim is a ${format}`)];
+  const pinned =
+    claim.origin === 'category' && draft.fields.category !== claim.category
+      ? [
+          problem(
+            'category-mismatch',
+            `the draft sets category "${draft.fields.category}" but this claim covers the category "${claim.category}"; set the category field to "${claim.category}"`
+          ),
+        ]
+      : [];
   return [
     ...mismatch,
+    ...pinned,
     ...dayProblems(runDate),
     ...descriptionProblems(draft.fields.description),
     ...FORMAT_FIELDS[format](draft, context),

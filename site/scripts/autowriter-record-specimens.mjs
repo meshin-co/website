@@ -49,6 +49,12 @@ const withoutBand = (band) => ({
   record: Object.fromEntries(Object.entries(recordWith({ band })).filter(([key]) => key !== 'band')),
 });
 
+const weakWithoutWeakness = (band) => {
+  const record = recordWith({ band });
+  const { title, query } = record.claim;
+  return { record: { ...record, claim: { title, query, origin: 'weak-demand' } } };
+};
+
 const withoutFactRow = (band) => {
   const [, ...rows] = recordWith({ band }).claimTable;
   return { record: recordWith({ band, claimTable: rows }) };
@@ -130,6 +136,11 @@ export const recordSpecimens = ({ addUntrackedFile, editFile }) => ({
     gate: GATE,
     token: `generation-schema ${RECORD_PATH}: band is required`,
     plant: planScene(addUntrackedFile, withoutBand),
+  },
+  autowriterGenerationOriginMismatch: {
+    gate: GATE,
+    token: `generation-schema ${RECORD_PATH}: claim.weakness is required when origin is weak-demand`,
+    plant: planScene(addUntrackedFile, weakWithoutWeakness),
   },
   autowriterFactWithoutClaimRow: {
     gate: GATE,

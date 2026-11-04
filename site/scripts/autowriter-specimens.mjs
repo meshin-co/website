@@ -98,10 +98,18 @@ const claimOn = (title) => ({
   query: 'zz specimen query',
   demand: { impressions: 0, position: null },
   prompt: { number: 1, text: 'A planted specimen prompt.' },
+  origin: 'demand',
   runId: '1',
   status: 'claimed',
   claimedAt: '2026-11-01T07:00:00.000Z',
   expiresAt: '2099-01-01T00:00:00.000Z',
+});
+
+const categoryClaimWithPrompt = () => ({
+  ...claimOn('A planted category specimen'),
+  format: 'article',
+  origin: 'category',
+  category: 'governance',
 });
 
 const planLedger = (addUntrackedFile, build) => (copySite) =>
@@ -128,6 +136,11 @@ export const autowriterSpecimens = ({ addUntrackedFile, editFile, removeFile }) 
     token: `title-collision ${CLAIM_PATH}`,
     plant: async (copySite) =>
       addUntrackedFile(join(copySite, '..', CLAIM_PATH), asJson(claimOn(await heldTitle(copySite)))),
+  },
+  autowriterClaimOriginMismatch: {
+    gate: GATE,
+    token: `claim-schema ${CLAIM_PATH}: prompt must be absent when origin is category`,
+    plant: (copySite) => addUntrackedFile(join(copySite, '..', CLAIM_PATH), asJson(categoryClaimWithPrompt())),
   },
   autowriterEscalationFailed: {
     gate: GATE,

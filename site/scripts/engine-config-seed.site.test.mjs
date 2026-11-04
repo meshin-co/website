@@ -10,3 +10,9 @@ const SEED = fileURLToPath(new URL('../../seed/site/engine.config.json.seed', im
 test('the seeded engine configuration defines every value the engine requires, so a copy starts with none unset', () => {
   assert.deepEqual(inspectEngineConfig(readFileSync(SEED, 'utf8')).problems, []);
 });
+
+test('the seeded configuration starts a new site on one run a day and no category rotation', () => {
+  const { config } = inspectEngineConfig(readFileSync(SEED, 'utf8'));
+  assert.deepEqual(config.loop.writeTimesUtc, ['03:17']);
+  assert.deepEqual(config.loop.categoryRotation, []);
+});

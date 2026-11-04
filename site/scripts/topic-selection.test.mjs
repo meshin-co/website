@@ -31,6 +31,7 @@ const DECISION_KEYS = [
   'concepts',
   'decision',
   'entries',
+  'fallback',
   'proposals',
   'reason',
   'refusals',
@@ -63,6 +64,7 @@ test('the first unproven prompt that passes every check is the post, and the ent
       table: 'Buyer prompts',
       row: NOUN.cells,
       choice,
+      origin: 'demand',
     },
   ]);
   assert.deepEqual(decision.concepts, { named: [] });

@@ -1,4 +1,4 @@
-import { STRENGTHEN_BAND, strengthenCandidates } from './topic-demand.mjs';
+import { MIN_IMPRESSIONS, STRENGTHEN_BAND, strengthenCandidates } from './topic-demand.mjs';
 
 const { min, max } = STRENGTHEN_BAND;
 
@@ -13,6 +13,25 @@ export const postChoice = ({ number }, { windowEnd }) =>
 export const termChoice = (row, { measured }) => `Choice: signal 3, ${measuredLine(row, measured)}`;
 
 export const measuredChoice = (row, { measured }) => `Choice: signal 1, ${measuredLine(row, measured)}`;
+
+const WEAKNESS_WORDS = {
+  'no-buyer-prompt': 'no buyer prompt names it',
+  'impressions-at-floor': `impressions at the floor of ${MIN_IMPRESSIONS}`,
+  'position-beyond-strengthen-band': `position worse than ${max}`,
+};
+
+export const weakChoice = (row, { measured }) =>
+  `Choice: signal 3, ${measuredLine(row, measured)}; ` +
+  `weak demand: ${row.weakness.map((reason) => WEAKNESS_WORDS[reason]).join(', ')}`;
+
+const standingText = ({ articles, newest }) => {
+  if (articles === 0) return 'no article yet';
+  return newest === null ? plural(articles, 'article') : `${plural(articles, 'article')}, newest ${newest}`;
+};
+
+export const categoryChoice = (standing) =>
+  `Choice: category ${standing.category}, ${standingText(standing)}; ` +
+  'no unproven prompt or weak query survived, so the rotation chose it';
 
 export const strengthens = (choice, route) => `${choice}; strengthens ${route}`;
 

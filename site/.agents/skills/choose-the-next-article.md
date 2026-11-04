@@ -17,8 +17,7 @@ searched for.
 - `scripts/fetch-search-demand.mjs` is the command. `scripts/search-demand.mjs` holds the key, the
   signed assertion and the requests, `scripts/search-demand-rows.mjs` joins the reads to the 30
   prompts, and `scripts/search-demand-render.mjs` writes the text.
-- The answer engines are a different instrument: `probe-the-buyer-prompts.md`. Neither stands in for
-  the other.
+- The answer engines are a different instrument: `probe-the-buyer-prompts.md`. Neither stands in for the other.
 
 ## The three signals
 
@@ -38,10 +37,9 @@ searched for.
 By hand, take a measured row first, signals 1 and 3 resting on someone having searched and signal 2 on
 no one having. With none, an unproven prompt may still be chosen, knowingly, and the record says so.
 
-The unattended loop (`pick-the-next-topic.md`) writes one post a day, always from signal 2. Signal 1 is
-never a page: it becomes a strengthen report for a human. Signal 3 never gives a post, because a claim
-needs a prompt: a definitional query becomes a glossary term, any other a proposal for a prompt that
-the owner adopts. It writes the record lines below.
+The unattended loop (`pick-the-next-topic.md`) writes one post a run: from signal 2, else from signal 3 as a post with no buyer
+prompt, else on a configured category (`write-on-a-category.md`). Signal 1 is never a page: it becomes a strengthen report for a
+human. A definitional query becomes a glossary term. It writes the record lines below.
 
 ## Record the choice
 
@@ -49,6 +47,8 @@ One line in the commit message of the article, with the number that justified it
 
     Choice: <signal 1 or 3>, "<query>", <impressions> impressions at position <position>, measured <date>
     Choice: signal 2, prompt <number>, unproven, 0 impressions in the window to <window end>
+    Choice: signal 3, "<query>", <impressions> impressions at position <position>, measured <date>; weak demand: <reasons>
+    Choice: category <id>, <standing>; no unproven prompt or weak query survived, so the rotation chose it
 
 The next report is the only evidence the choice worked. Compare the same query or prompt in it.
 

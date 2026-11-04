@@ -6,12 +6,13 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { after, test } from 'node:test';
 
-import { newLedger, readLedger } from './autowriter-ledger.mjs';
+import { newLedger, readLedger, validateLedger } from './autowriter-ledger.mjs';
 import { entryPath, renderEntry } from './entry-files.mjs';
+import { QUERIES_ROW, callOf } from './fixtures/generation-input.mjs';
 import { RUN_DATE, claimFor, cleanDraft } from './fixtures/writer-drafts.mjs';
 import { ROUTES, adapterOn, completed, modelList, reply } from './fixtures/writer-vendors.mjs';
 import { makeRepo, removeRepo } from './fixtures/writer-repo.mjs';
-import { validateRecord } from './generation-record.mjs';
+import { callTotals, ledgerWithGeneration, validateRecord } from './generation-record.mjs';
 import { familyOf, filingProblems, recordPath } from './record-layout.mjs';
 import { REPORT_PATH, usdText } from './spend-report-text.mjs';
 import { recordMicro } from './spend-sum.mjs';
@@ -30,6 +31,30 @@ const TERM = claimFor('term');
 const claimPathOf = ({ slug, claimedAt }) => recordPath('claim', slug, claimedAt);
 const generationPathOf = ({ slug, claimedAt }) => recordPath('generation', slug, claimedAt);
 const ledgerPathOf = ({ slug, claimedAt }) => recordPath('ledger', slug, claimedAt);
+
+const withoutPrompt = (claim) => Object.fromEntries(Object.entries(claim).filter(([key]) => key !== 'prompt'));
+const CATEGORY_POST = {
+  ...withoutPrompt(POST),
+  demand: { impressions: 0, position: null },
+  origin: 'category',
+  category: 'governance',
+};
+const WEAK_POST = {
+  ...withoutPrompt(POST),
+  demand: { impressions: 9, position: 91.8 },
+  origin: 'weak-demand',
+  weakness: ['no-buyer-prompt', 'impressions-at-floor'],
+};
+const PROPOSAL_CALL = {
+  ...callOf('topic', { input: 1800, output: 60 }, 'category-topic'),
+  modelVariable: 'OPENAI_WRITING_MODEL',
+  configuredModel: 'gpt-6.1-terra',
+  resolvedModel: 'gpt-6.1-terra',
+};
+const CATEGORY_SHAPES = { [CATEGORY_POST.slug]: { row: null, table: null, proposal: { calls: [PROPOSAL_CALL] } } };
+const WEAK_SHAPES = { [WEAK_POST.slug]: { row: QUERIES_ROW, table: 'Queries' } };
+const TOPIC_COST = 0.0021;
+const ENTRY_COST = 0.0036;
 
 const put = (root, path, value) => {
   mkdirSync(dirname(join(root, path)), { recursive: true });
@@ -66,20 +91,27 @@ function adapterWith(steps, { note = null, shutdownDate = null } = {}) {
   };
 }
 
-function scene({ claims = [POST, TERM] } = {}) {
+const defaultShape = (claim) => ({
+  row: { '#': String(claim.prompt.number), Prompt: claim.prompt.text },
+  table: claim.format === 'term' ? 'Queries' : 'Buyer prompts',
+});
+
+function scene({ claims = [POST, TERM], shapes = {} } = {}) {
   const root = makeRepo();
   roots.push(root);
   for (const claim of claims) put(root, claimPathOf(claim), claim);
-  put(root, ledgerPathOf(claims[0]), newLedger({ slug: claims[0].slug, runId: claims[0].runId, pullRequest: null }));
+  const [anchor] = claims;
+  const opened = newLedger({ slug: anchor.slug, runId: anchor.runId, pullRequest: null });
+  const picked = shapes[anchor.slug]?.proposal?.calls ?? [];
+  put(root, ledgerPathOf(anchor), picked.length === 0 ? opened : ledgerWithGeneration(opened, callTotals(picked)));
   const decision = {
     schema: 1,
     decision: 'write',
-    ledgerPath: ledgerPathOf(claims[0]),
+    ledgerPath: ledgerPathOf(anchor),
     entries: claims.map((claim) => ({
       claimPath: claimPathOf(claim),
       claim,
-      row: { '#': String(claim.prompt.number), Prompt: claim.prompt.text },
-      table: claim.format === 'term' ? 'Queries' : 'Buyer prompts',
+      ...(shapes[claim.slug] ?? defaultShape(claim)),
       choice: `Choice: ${claim.slug}`,
     })),
     report: {
@@ -117,8 +149,8 @@ const assembled = ({ entries }) => ({
   ],
 });
 
-async function drive({ claims, steps, assemble, commit, adapterOptions, adapter: supplied } = {}) {
-  const { root, decision } = scene({ claims });
+async function drive({ claims, shapes, steps, assemble, commit, adapterOptions, adapter: supplied } = {}) {
+  const { root, decision } = scene({ claims, shapes });
   const adapter = supplied ?? adapterWith(steps, adapterOptions);
   const assembleCalls = [];
   const commitCalls = [];
@@ -441,4 +473,89 @@ test('the spend report in the one commit is stamped with the instant of the run 
   assert.ifError(run.error);
   const report = textsOf(run.commitCalls[0])[REPORT_PATH];
   assert.equal(report.split('\n')[3], `Generated-at: ${NOW.toISOString()}`);
+});
+
+const savedOf = (run, claim) => {
+  const texts = textsOf(run.commitCalls[0]);
+  return { record: JSON.parse(texts[generationPathOf(claim)]), ledger: JSON.parse(texts[ledgerPathOf(claim)]) };
+};
+const driveCategory = (steps) => drive({ claims: [CATEGORY_POST], shapes: CATEGORY_SHAPES, steps });
+
+test('a category entry counts its proposal call and its draft call once each, and publishes its draft call', async () => {
+  const run = await driveCategory([answer(1, cleanDraft('article'))]);
+  assert.ifError(run.error);
+  const { record, ledger } = savedOf(run, CATEGORY_POST);
+  assert.deepEqual([validateRecord(record), validateLedger(ledger)], [[], []]);
+  assert.deepEqual(
+    record.calls.map(({ role }) => role),
+    ['topic', 'draft']
+  );
+  assert.deepEqual(record.published, { callIndex: 1 });
+  assert.equal(record.responseId, 'resp_1');
+  assert.deepEqual(record.totals, { tokens: { input: 2800, output: 160 }, costUsd: ENTRY_COST });
+  assert.deepEqual(ledger.generation, record.totals);
+  assert.equal(ledger.spend.costUsd, ENTRY_COST);
+  assert.equal(run.summary.spend.costUsd, ENTRY_COST);
+  assert.equal(run.adapter.seen.length, 1);
+  assert.equal(CATEGORY_SHAPES[CATEGORY_POST.slug].proposal.calls.length, 1);
+});
+
+test('a category entry is written with its origin and category, no prompt, no report row and no report table', async () => {
+  const run = await driveCategory([answer(1, cleanDraft('article'))]);
+  assert.ifError(run.error);
+  const { record } = savedOf(run, CATEGORY_POST);
+  assert.deepEqual(record.claim, {
+    title: CATEGORY_POST.title,
+    query: CATEGORY_POST.query,
+    origin: 'category',
+    category: 'governance',
+  });
+  assert.deepEqual([record.demand.row, record.demand.report.table], [null, null]);
+  const { message } = run.commitCalls[0];
+  assert.match(message, /^Origin: category$/m);
+  assert.match(message, /^Category: governance$/m);
+  assert.doesNotMatch(message, /Serves buyer prompt/);
+  assert.doesNotMatch(run.adapter.seen[0].messages[0].content, /Search Console row it was chosen from/);
+});
+
+for (const [name, step, kind, cost] of [
+  ['billed and refused', new WriterError('output', 'cut off', { call: answer(1, {}) }), 'output', ENTRY_COST],
+  ['free and failed', new WriterError('vendor', 'openai answered HTTP 500', { status: 500 }), 'vendor', TOPIC_COST],
+])
+  test(`a category entry whose draft is ${name} keeps the proposal spend in the stopped ledger`, async () => {
+    const run = await driveCategory([step]);
+    assert.equal(run.error?.kind, kind);
+    assert.equal(run.error.spend.costUsd, cost);
+    const ledger = storedLedger(run.root, CATEGORY_POST);
+    assert.deepEqual([ledger.verdict.state, ledger.generation.costUsd, validateLedger(ledger)], ['stopped', cost, []]);
+  });
+
+test('a weak-demand entry is written with its row and weakness, no prompt and no proposal, and the message says so', async () => {
+  const run = await drive({ claims: [WEAK_POST], shapes: WEAK_SHAPES, steps: [answer(1, cleanDraft('article'))] });
+  assert.ifError(run.error);
+  const { record } = savedOf(run, WEAK_POST);
+  assert.deepEqual(validateRecord(record), []);
+  assert.deepEqual(record.claim, {
+    title: WEAK_POST.title,
+    query: WEAK_POST.query,
+    origin: 'weak-demand',
+    weakness: WEAK_POST.weakness,
+  });
+  assert.deepEqual(
+    [record.demand.row, record.demand.report.table, record.published],
+    [QUERIES_ROW, 'Queries', { callIndex: 0 }]
+  );
+  const { message } = run.commitCalls[0];
+  assert.match(message, /^Origin: weak-demand$/m);
+  assert.match(message, /^Weak query: no-buyer-prompt, impressions-at-floor$/m);
+  assert.doesNotMatch(message, /Serves buyer prompt|^Category:/m);
+});
+
+test('a demand entry keeps the line that says which buyer prompt it serves, and has no origin line', async () => {
+  const run = await drive({ steps: [answer(1, cleanDraft('article')), answer(2, cleanDraft('term'))] });
+  assert.ifError(run.error);
+  const { message } = run.commitCalls[0];
+  for (const { prompt } of [POST, TERM])
+    assert.ok(message.includes(`Serves buyer prompt ${prompt.number}: ${prompt.text}`));
+  assert.doesNotMatch(message, /^(Origin|Category|Weak query):/m);
 });

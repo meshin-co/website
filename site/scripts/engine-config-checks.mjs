@@ -1,3 +1,5 @@
+export const TIME_OF_DAY = /^([01][0-9]|2[0-3]):[0-5][0-9]$/;
+
 export const compilePattern = (source) => new RegExp(source);
 
 export function matchRoute({ rules, fallback }, route) {
@@ -84,6 +86,35 @@ function bandProblems({ demand: { strengthenBand } }) {
   return [problem('$.demand.strengthenBand.min', text)];
 }
 
+const WRITE_TIMES_FIELD = 'loop.writeTimesUtc';
+const WRITE_TIMES_PATH = `$.${WRITE_TIMES_FIELD}`;
+const NO_TIME =
+  'lists no time, so the workflow would lose its schedule block. To pause the writer, disable the Write daily workflow or leave one of its required secrets unset';
+
+const quoted = (value) => JSON.stringify(value);
+
+function writeTimeProblems({ loop: { writeTimesUtc: times } }) {
+  if (!Array.isArray(times)) {
+    return [
+      problem(
+        WRITE_TIMES_PATH,
+        `${quoted(times)} is not a list of times, which is an array such as ["03:17", "15:17"]`
+      ),
+    ];
+  }
+  if (times.length === 0) return [problem(WRITE_TIMES_PATH, NO_TIME)];
+  return times.flatMap((time, at) => {
+    const path = `${WRITE_TIMES_PATH}[${at}]`;
+    if (typeof time !== 'string' || !TIME_OF_DAY.test(time)) {
+      const text = `${quoted(time)} is not a time of day, which is HH:MM in 24 hours with two digits each, such as "03:17"`;
+      return [problem(path, text)];
+    }
+    const first = times.indexOf(time);
+    if (first === at) return [];
+    return [problem(path, `${quoted(time)} is already at ${WRITE_TIMES_FIELD}[${first}], and a time may appear once`)];
+  });
+}
+
 export const consistencyProblems = (config) => [
   ...patternProblems(config),
   ...overlapProblems(config),
@@ -92,4 +123,5 @@ export const consistencyProblems = (config) => [
   ...formatProblems(config),
   ...resourceProblems(config),
   ...bandProblems(config),
+  ...writeTimeProblems(config),
 ];

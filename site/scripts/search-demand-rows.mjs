@@ -1,4 +1,4 @@
-const FUNCTION_WORDS = new Set([
+export const FUNCTION_WORDS = new Set([
   'a',
   'an',
   'and',
