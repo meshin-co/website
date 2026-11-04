@@ -7,28 +7,28 @@ with ten live posts:
 
 | file                | bytes   | per post added |
 | ------------------- | ------- | -------------- |
-| `llms.txt`          | 5,773   | 0              |
-| `llms-full.txt`     | 247,488 | 14,778         |
-| `llms/post.txt`     | 147,811 | 14,778         |
-| `llms/glossary.txt` | 41,901  | 0              |
-| `llms/resource.txt` | 36,892  | 0              |
-| `llms/faq.txt`      | 16,328  | 0              |
-| `llms/service.txt`  | 4,604   | 0              |
-| `blog/rss.xml`      | 150,887 | 15,089         |
+| `dist/llms.txt`          | 5,773   | 0              |
+| `dist/llms-full.txt`     | 247,488 | 14,778         |
+| `dist/llms/post.txt`     | 147,811 | 14,778         |
+| `dist/llms/glossary.txt` | 41,901  | 0              |
+| `dist/llms/resource.txt` | 36,892  | 0              |
+| `dist/llms/faq.txt`      | 16,328  | 0              |
+| `dist/llms/service.txt`  | 4,604   | 0              |
+| `dist/blog/rss.xml`      | 150,887 | 15,089         |
 
 A post is 7,128 to 28,454 bytes in the llms files, 14,778 on average. Change 30 writes two entries a
-day, so at that rate `llms/post.txt` passes a megabyte after 29 days. `llms-full.txt` reaches its
+day, so at that rate `dist/llms/post.txt` passes a megabyte after 29 days. `dist/llms-full.txt` reaches its
 2,000,000 byte guard after 60 days and then changes shape without a finding, from the whole corpus to
-a list of pointers. `blog/rss.xml` lists every live post and passes ten megabytes within a year.
+a list of pointers. `dist/blog/rss.xml` lists every live post and passes ten megabytes within a year.
 
-Change 14 bounded `llms.txt` and set a cap of 100 entries per collection file. The cap bounds the
+Change 14 bounded `dist/llms.txt` and set a cap of 100 entries per collection file. The cap bounds the
 count and not the bytes: 100 posts are 1,477,800 bytes, about 370,000 tokens, in one file. The
 published figure for a large documentation page in the fetch-tool documentation of Anthropic is 100 kB,
 about 25,000 tokens, and 10 kB for an average one. A shard a retriever cannot read whole is not a shard.
 
 Two readers were left on the flat file. `gate:machine` reads only `/llms/<collection>.txt` for entry
 coverage, so the first sharded collection would report every entry as missing. `gate:parity` owes every
-entry a place in `llms-full.txt`, which a bounded `llms-full.txt` cannot give.
+entry a place in `dist/llms-full.txt`, which a bounded `dist/llms-full.txt` cannot give.
 
 ## What changes
 
@@ -53,16 +53,16 @@ caps the real corpus becomes a `post` index and four shards of 3, 3, 3 and 1 pos
 collections stay one file each. At two posts a day the `post` index passes its own 100000 bytes after
 about six years, and the guard names it then.
 
-**`llms-full.txt` becomes the index locked row L25 says it is.** One line per collection with its entry
+**`dist/llms-full.txt` becomes the index locked row L25 says it is.** One line per collection with its entry
 count and a link to the collection file, no entry, a 4096 byte guard. It was the concatenation of the
 collection files, so nothing is lost but the single request that returns every body. A request that
-returns every body cannot be bounded, and the bodies stay reachable: `llms.txt`, then the collection
+returns every body cannot be bounded, and the bodies stay reachable: `dist/llms.txt`, then the collection
 file, then at most one shard.
 
 **The readers follow the shards.** `gate:machine` reads a collection's index and every shard it names
 for entry coverage, checks each shard against its own cap and each file against the byte budget,
-refuses an index that carries an entry, and checks `llms-full.txt` the way it checks `llms.txt`: the
-size, the count and no entry inline. `gate:parity` stops owing an entry a place in `llms-full.txt`,
+refuses an index that carries an entry, and checks `dist/llms-full.txt` the way it checks `dist/llms.txt`: the
+size, the count and no entry inline. `gate:parity` stops owing an entry a place in `dist/llms-full.txt`,
 and the agent catalogue describes the file as an index. `generate-geo-baseline.mjs` already reads every
 file under `dist/llms/`, and `smoke:prod` asks `/llms.txt` for a 200 and nothing about its content, so
 neither changes.
@@ -94,21 +94,21 @@ Bytes of the files this change touches, from `dist/` of the build of 2026-11-04 
 
 | file                | before  | after                          | after a year at two posts a day |
 | ------------------- | ------- | ------------------------------ | ------------------------------- |
-| `llms.txt`          | 5,773   | 5,847                          | 5,847                           |
-| `llms-full.txt`     | 247,488 | 681                            | 682                             |
-| `llms/post.txt`     | 147,811 | 273 (index)                    | 16,641 (index)                  |
+| `dist/llms.txt`          | 5,773   | 5,847                          | 5,847                           |
+| `dist/llms-full.txt`     | 247,488 | 681                            | 682                             |
+| `dist/llms/post.txt`     | 147,811 | 273 (index)                    | 16,641 (index)                  |
 | `llms/post-1..n`    | none    | 26,244, 51,491, 59,598, 10,882 | 247 shards, largest 75,964      |
-| `llms/glossary.txt` | 41,901  | 41,901                         | one file to 33 terms            |
-| `llms/resource.txt` | 36,892  | 36,892                         | one file to 7 resources         |
-| `llms/faq.txt`      | 16,328  | 16,328                         | one file to 118 answers         |
-| `llms/service.txt`  | 4,604   | 4,604                          | one file to 48 offers           |
-| `blog/rss.xml`      | 150,887 | 150,887                        | at most 432,315                 |
-| `glossary/rss.xml`  | 48,150  | 22,621                         | at most 432,315                 |
-| `faq/rss.xml`       | 20,871  | 12,664                         | at most 432,315                 |
-| `rss.xml`           | 198,082 | 198,082                        | at most 1,441,050               |
+| `dist/llms/glossary.txt` | 41,901  | 41,901                         | one file to 33 terms            |
+| `dist/llms/resource.txt` | 36,892  | 36,892                         | one file to 7 resources         |
+| `dist/llms/faq.txt`      | 16,328  | 16,328                         | one file to 118 answers         |
+| `dist/llms/service.txt`  | 4,604   | 4,604                          | one file to 48 offers           |
+| `dist/blog/rss.xml`      | 150,887 | 150,887                        | at most 432,315                 |
+| `dist/glossary/rss.xml`  | 48,150  | 22,621                         | at most 432,315                 |
+| `dist/faq/rss.xml`       | 20,871  | 12,664                         | at most 432,315                 |
+| `dist/rss.xml`           | 198,082 | 198,082                        | at most 1,441,050               |
 
-Before, a year of two posts a day made `llms/post.txt` about 10.9 MB, `llms-full.txt` 11.0 MB, which
-it never reached because it fell back to pointers at 2,000,000 bytes on day 59, and `blog/rss.xml` 11.1
+Before, a year of two posts a day made `dist/llms/post.txt` about 10.9 MB, `dist/llms-full.txt` 11.0 MB, which
+it never reached because it fell back to pointers at 2,000,000 bytes on day 59, and `dist/blog/rss.xml` 11.1
 MB. The year row is the real generators run over 730 posts that repeat the ten measured sizes; the
 feed rows are the window times the largest measured item. `npm run measure:llms` reproduces the table
 of largest and mean entries from a build.

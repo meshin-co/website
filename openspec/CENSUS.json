@@ -42,15 +42,21 @@
     "The next article is chosen from a number"
   ],
   "content/generated-articles": [
+    "A category entry is a specific article and never a repeat",
     "A generated entry carries its provenance",
     "A generated entry clears the floor",
-    "A run writes one post, and the terms the glossary is missing",
+    "A run also writes the terms the glossary is missing",
+    "A run writes exactly one post",
+    "Every entry records where its topic came from",
     "Every load-bearing claim resolves to a source",
     "Generated prose does not collapse into the gates",
     "The configured model is checked before the first call",
     "The length floor is measured from what a person wrote",
+    "The next category is derived from the corpus",
     "The prompt names the shapes of prose that no copied block states",
-    "The prompt states the measured length once"
+    "The prompt states the measured length once",
+    "The recorded length limits are re-measured, never typed",
+    "The topic comes from a ladder of three rungs"
   ],
   "content/human-readability": [
     "A page holds only a few sentences over 25 words",
@@ -219,6 +225,7 @@
     "A missed statistics message is a warning, and a missed escalation is still a failure",
     "A report that disagrees with its records is refused",
     "A row shows its repair cost, and the Notes and the message total the rest",
+    "A topic proposal is part of the entry's cost",
     "An entry is announced as live only when its page answers on the live origin",
     "An entry is announced once, and a publish with several says so in one message",
     "An entry that merged and is not reachable is a warning of its own",
@@ -260,7 +267,9 @@
     "The monthly spend counts every call the machine paid for",
     "The pipeline cannot move the floor it is judged by",
     "The pipeline cannot remove the evidence the measurements exclude by",
+    "The schedule is configuration and the workflow is generated from it",
     "The watcher classifies by the failing job",
-    "The writer files each entry's records under the month of its claim"
+    "The writer files each entry's records under the month of its claim",
+    "Two runs cannot claim the same topic"
   ]
 }
