@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/named-person-responsible-for-ai-risk-in-vendor-procurement.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json on 2026-11-03. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json.",
+    "digest": "16b9746bbd1f"
+  },
+  {
+    "target": "/blog/named-person-responsible-for-ai-risk-in-vendor-procurement",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json on 2026-11-03. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json.",
+    "digest": "8f88442f33dc"
+  }
+]
