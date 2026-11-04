@@ -1,4 +1,5 @@
 import { archiveSnapshot, archiveUrlFor, capturedOn, isSnapshotOf } from '../src/utils/archive-url.mjs';
+import { readResponseText } from './response-text.mjs';
 import { autowriterAgent } from './site-brand.mjs';
 
 export const SNAPSHOT_WINDOW_DAYS = 180;
@@ -137,19 +138,6 @@ export async function closestSnapshot({
   return failure === undefined ? judge(answer, { url, citedOn, windowDays }) : unavailable(failure);
 }
 
-async function readText(response, maxBytes) {
-  const decoder = new TextDecoder();
-  let text = '';
-  let bytesRead = 0;
-  for await (const chunk of response.body ?? []) {
-    const kept = chunk.subarray(0, maxBytes - bytesRead);
-    text += decoder.decode(kept, { stream: true });
-    bytesRead += kept.length;
-    if (bytesRead >= maxBytes) break;
-  }
-  return text;
-}
-
 async function readCapture(response, maxBytes) {
   if (response.status !== 200)
     return unreadable(`the archive answered HTTP ${response.status} for the capture`, 'status');
@@ -158,7 +146,7 @@ async function readCapture(response, maxBytes) {
     const what = contentType === '' ? 'declares no content type' : `is ${contentType}`;
     return unreadable(`the capture ${what}, which the machine cannot read; a person must judge it`, 'content-type');
   }
-  return { kind: 'page', contentType, text: await readText(response, maxBytes) };
+  return { kind: 'page', contentType, text: await readResponseText(response, maxBytes) };
 }
 
 export async function readSnapshot({

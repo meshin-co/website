@@ -3,7 +3,8 @@ import { test } from 'node:test';
 
 import { parse } from 'yaml';
 
-import { archivedEntryText, RewriteError } from './citations.mjs';
+import { archivedEntryText } from './citation-rewrites.mjs';
+import { RewriteError } from './entry-surgery.mjs';
 
 const DEAD = 'https://example.org/report';
 const OTHER = 'https://example.org/elsewhere';

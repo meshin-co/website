@@ -12,6 +12,8 @@ export const probeUserAgent = (brand = siteBrand()) =>
   `Mozilla/5.0 (compatible; ${brand.name.split('.')[0]}-link-check; +https://${brand.name})`;
 
 const GONE = new Set([404, 410]);
+const CONCLUSIVE = new Set(['answered', 'dead']);
+const LOOKUP_FAILED = 'ENOTFOUND';
 const TIMEOUT_NAMES = new Set(['TimeoutError', 'AbortError']);
 
 const realSleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -22,6 +24,11 @@ function retryAfterMs(value, now) {
   if (Number.isFinite(seconds)) return Math.max(0, seconds * 1000);
   const date = Date.parse(value);
   return Number.isNaN(date) ? 0 : Math.max(0, date - now());
+}
+
+function lookupFailedFor(error, address) {
+  const { code, hostname } = error?.cause ?? {};
+  return code === LOOKUP_FAILED && (hostname === undefined || hostname === URL.parse(address)?.hostname);
 }
 
 async function observe(address, { fetch, timeoutMs, now, userAgent }) {
@@ -43,14 +50,19 @@ async function observe(address, { fetch, timeoutMs, now, userAgent }) {
       waitMs: retryAfterMs(response.headers?.get('retry-after'), now),
     };
   } catch (error) {
-    const detail = TIMEOUT_NAMES.has(error?.name) ? 'timed out' : (error?.cause?.code ?? error?.code ?? error?.message);
-    return { outcome: 'inconclusive', status: null, detail: String(detail), finalUrl: null, waitMs: 0 };
+    const code = error?.cause?.code ?? error?.code;
+    const detail = TIMEOUT_NAMES.has(error?.name) ? 'timed out' : (code ?? error?.message);
+    const outcome = lookupFailedFor(error, address) ? 'unresolved' : 'inconclusive';
+    return { outcome, status: null, detail: String(detail), finalUrl: null, waitMs: 0 };
   }
 }
 
+const countOf = (tries, outcome) => tries.filter((attempt) => attempt.outcome === outcome).length;
+
 function verdictOf(tries) {
-  if (tries.some((attempt) => attempt.outcome === 'answered')) return 'answered';
-  return tries.filter((attempt) => attempt.outcome === 'gone').length >= 2 ? 'dead' : 'unverified';
+  if (countOf(tries, 'answered') > 0) return 'answered';
+  if (countOf(tries, 'gone') >= 2) return 'dead';
+  return tries.length >= 2 && countOf(tries, 'unresolved') === tries.length ? 'unresolved' : 'unverified';
 }
 
 export async function probe(
@@ -69,7 +81,7 @@ export async function probe(
   while (tries.length < attempts) {
     const attempt = await observe(address, { fetch, timeoutMs, now, userAgent });
     tries.push(attempt);
-    if (verdictOf(tries) !== 'unverified' || tries.length === attempts) break;
+    if (CONCLUSIVE.has(verdictOf(tries)) || tries.length === attempts) break;
     const backoff = backoffMs[Math.min(tries.length - 1, backoffMs.length - 1)] ?? 0;
     await sleep(Math.min(Math.max(backoff, attempt.waitMs), RETRY_AFTER_CAP_MS));
   }
@@ -95,6 +107,15 @@ const notAsked = (address) => ({
   tries: [],
 });
 
+const notResolved = (address, asked) => ({
+  url: address,
+  verdict: 'unresolved',
+  status: null,
+  finalUrl: null,
+  reason: `not asked: the host name did not resolve for ${asked}`,
+  tries: [],
+});
+
 function groupByHost(addresses) {
   const hosts = new Map();
   for (const address of addresses) {
@@ -115,7 +136,12 @@ export async function probeAll(
   const worker = async () => {
     for (let group = queue.shift(); group !== undefined; group = queue.shift()) {
       let streak = 0;
+      let unresolvedFor = null;
       for (const [index, address] of group.entries()) {
+        if (unresolvedFor !== null) {
+          results.set(address, notResolved(address, unresolvedFor));
+          continue;
+        }
         if (streak >= STREAK_BEFORE_SKIPPING_A_HOST) {
           results.set(address, notAsked(address));
           continue;
@@ -123,6 +149,7 @@ export async function probeAll(
         if (index > 0) await sleep(hostGapMs);
         const result = await probeOne(address, { sleep, ...options });
         results.set(address, result);
+        if (result.verdict === 'unresolved') unresolvedFor = address;
         streak = result.verdict === 'unverified' ? streak + 1 : 0;
       }
     }

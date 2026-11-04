@@ -61,12 +61,16 @@ const resultOf = ({
     rows,
     waitingForCap,
     waitingForArchive,
+    lapsed: [],
     counts: {
       dead: (dead ?? rows).length + waitingForCap.length,
       archive: count('archive'),
       search: count('search'),
       unplaced: count('unplaced'),
       waiting: waitingForCap.length + waitingForArchive.length,
+      watching: 0,
+      restored: 0,
+      upgraded: 0,
     },
   };
 };
@@ -79,29 +83,29 @@ test('the branch is a branch of the writer, and a branch the watcher can slug', 
 });
 
 test('the summary line is one line of counts a person and a script can both read, with the pull request or none', () => {
-  const counts = { dead: 5, archive: 2, search: 1, unplaced: 1, waiting: 3 };
+  const counts = { dead: 5, archive: 2, search: 1, unplaced: 1, waiting: 3, watching: 4, restored: 0, upgraded: 0 };
 
   assert.equal(
     summaryLine({ counts, pullRequest: 'https://github.com/meshin-co/website/pull/12' }),
-    'repair-links: dead=5 archive=2 search=1 unplaced=1 waiting=3 pr=https://github.com/meshin-co/website/pull/12'
+    'repair-links: dead=5 archive=2 search=1 unplaced=1 waiting=3 watching=4 restored=0 upgraded=0 pr=https://github.com/meshin-co/website/pull/12'
   );
   assert.equal(
     summaryLine({ counts, pullRequest: null }),
-    'repair-links: dead=5 archive=2 search=1 unplaced=1 waiting=3 pr=none'
+    'repair-links: dead=5 archive=2 search=1 unplaced=1 waiting=3 watching=4 restored=0 upgraded=0 pr=none'
   );
   assert.ok(!summaryLine({ counts, pullRequest: null }).includes('\n'));
 });
 
 test('the summary line can say why nothing was checked, and still ends in the pull request field', () => {
   const line = summaryLine({
-    counts: { dead: 0, archive: 0, search: 0, unplaced: 0, waiting: 0 },
+    counts: { dead: 0, archive: 0, search: 0, unplaced: 0, waiting: 0, watching: 0, restored: 0, upgraded: 0 },
     pullRequest: null,
     note: 'pull request #4 is still open, so nothing was checked',
   });
 
   assert.equal(
     line,
-    'repair-links: dead=0 archive=0 search=0 unplaced=0 waiting=0 pr=none (pull request #4 is still open, so nothing was checked)'
+    'repair-links: dead=0 archive=0 search=0 unplaced=0 waiting=0 watching=0 restored=0 upgraded=0 pr=none (pull request #4 is still open, so nothing was checked)'
   );
 });
 

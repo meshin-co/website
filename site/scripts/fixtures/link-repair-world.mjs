@@ -31,7 +31,8 @@ export function probes(verdicts = {}) {
     return new Map(
       [...addresses].sort().map((address) => {
         const verdict = verdicts[address] ?? 'answered';
-        return [address, { url: address, verdict, status: verdict === 'dead' ? 404 : 200, reason: verdict }];
+        const status = { dead: 404, answered: 200 }[verdict] ?? null;
+        return [address, { url: address, verdict, status, reason: verdict }];
       })
     );
   };

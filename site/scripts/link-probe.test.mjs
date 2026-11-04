@@ -2,32 +2,10 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 
 import { startHost } from './fixtures/http-host.mjs';
+import { scripted, timedOut, unreachable, waits } from './fixtures/probe-fakes.mjs';
 import { ATTEMPTS, BACKOFF_MS, probe, probeAll, probeUserAgent } from './link-probe.mjs';
 
 const URL_UNDER_TEST = 'https://standards.example/doc.pdf';
-
-const timedOut = () => new DOMException('The operation was aborted due to timeout', 'TimeoutError');
-const unreachable = (code) => new TypeError('fetch failed', { cause: Object.assign(new Error(code), { code }) });
-
-function scripted(...steps) {
-  const calls = [];
-  const fetch = async (address, init) => {
-    calls.push({ address, ...init });
-    const step = steps[Math.min(calls.length - 1, steps.length - 1)];
-    if (step instanceof Error || step instanceof DOMException) throw step;
-    const { status, headers = {} } = typeof step === 'number' ? { status: step } : step;
-    return new Response(status === 200 ? 'body' : null, { status, headers });
-  };
-  fetch.calls = calls;
-  return fetch;
-}
-
-const waits = () => {
-  const slept = [];
-  const sleep = async (ms) => void slept.push(ms);
-  sleep.slept = slept;
-  return sleep;
-};
 
 test('a document that answers a GET is answered after a single request', async () => {
   const fetch = scripted(200);
@@ -129,7 +107,7 @@ test('a rate limit that lifts is answered', async () => {
 });
 
 test('a refusal, a server error and an unreachable host are each unverified, never dead', async () => {
-  for (const step of [401, 403, 405, 451, 500, 502, 503, unreachable('ENOTFOUND'), unreachable('ECONNREFUSED')]) {
+  for (const step of [401, 403, 405, 451, 500, 502, 503, unreachable('EAI_AGAIN'), unreachable('ECONNREFUSED')]) {
     const result = await probe(URL_UNDER_TEST, { fetch: scripted(step), sleep: waits() });
     assert.equal(result.verdict, 'unverified', String(step));
   }

@@ -7,14 +7,9 @@ import { fileURLToPath } from 'node:url';
 import { parse } from 'yaml';
 
 import { isSnapshotOf, searchFallbackUrl, standInKind } from '../src/utils/archive-url.mjs';
-import {
-  archivedEntryText,
-  citedUrls,
-  citingEntries,
-  RewriteError,
-  searchedEntryText,
-  SOURCE_COLLECTIONS,
-} from './citations.mjs';
+import { archivedEntryText, searchedEntryText } from './citation-rewrites.mjs';
+import { citedUrls, citingEntries, SOURCE_COLLECTIONS } from './citations.mjs';
+import { RewriteError } from './entry-surgery.mjs';
 import { DOI, NIST_ENTRY } from './fixtures/link-rot-entry.mjs';
 
 const REPO_ROOT = fileURLToPath(new URL('../../', import.meta.url));

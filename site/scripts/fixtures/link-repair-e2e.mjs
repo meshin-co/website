@@ -17,24 +17,35 @@ export const BRANCH = `autowriter/link-rot-${TODAY}`;
 export const newestCapture = () =>
   availabilityFor({ address: 'http://x.example/', timestamp: null }).archived_snapshots.closest;
 
-export async function startScene({ archive = {}, openBranches = [], refuse = {} } = {}) {
-  const dead = await startHost((req, res) => res.writeHead(404).end());
-  const address = `${dead.origin}/reports/ai-rmf`;
+const gone = (req, res) => res.writeHead(404).end();
+
+const openEntry = (address) => ({
+  [ENTRY]: entryText({
+    sources: [{ title: TITLE, url: address, publisher: 'NIST', retrieved: '2023-03-01' }],
+    body: `See [the framework](${address}) for the detail.\n`,
+  }),
+});
+
+export async function startScene({
+  archive = {},
+  openBranches = [],
+  refuse = {},
+  host = null,
+  respond = gone,
+  files = openEntry,
+  outbound = (address) => [address],
+} = {}) {
+  const dead = await startHost(respond);
+  const origin = host === null ? dead.origin : `http://${host}:${new URL(dead.origin).port}`;
+  const address = `${origin}/reports/ai-rmf`;
   const archiveHost = await startArchive(archive);
   const github = await startGitHub({ openBranches, refuse });
-  const repo = makeLinkRotRepo({
-    files: {
-      [ENTRY]: entryText({
-        sources: [{ title: TITLE, url: address, publisher: 'NIST', retrieved: '2023-03-01' }],
-        body: `See [the framework](${address}) for the detail.\n`,
-      }),
-    },
-    dist: { 'index.html': [address] },
-  });
+  const repo = makeLinkRotRepo({ files: files(address), dist: { 'index.html': outbound(address) } });
 
-  const run = () =>
+  const run = ({ today = TODAY, args = [], env = {}, nodeArgs = [] } = {}) =>
     new Promise((done) => {
-      const child = spawn(process.execPath, [SCRIPT, '--repo-root', repo.root, '--today', TODAY], {
+      const argv = [...nodeArgs, SCRIPT, '--repo-root', repo.root, '--today', today, ...args];
+      const child = spawn(process.execPath, argv, {
         cwd: SITE,
         env: {
           ...GIT_ENVIRONMENT,
@@ -43,6 +54,7 @@ export async function startScene({ archive = {}, openBranches = [], refuse = {} 
           GITHUB_REPOSITORY: REPOSITORY,
           AUTOWRITER_PAT: 'a-token-the-fake-accepts',
           REPAIR_LINKS_ARCHIVE_SPACING_MS: '0',
+          ...env,
         },
       });
       let stdout = '';

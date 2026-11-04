@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 
 import { SEARCH_ORIGIN, searchFallbackUrl } from '../src/utils/archive-url.mjs';
-import { archivedEntryText } from './citations.mjs';
+import { archivedEntryText } from './citation-rewrites.mjs';
 import { sweepLinks } from './link-repair-sweep.mjs';
 import { REGISTER_PATH, registerProblems } from './link-rot-register.mjs';
 import { ok } from './fixtures/wayback-fakes.mjs';
@@ -43,7 +43,7 @@ test('a dead address in a citation is replaced by the capture nearest the day it
       why: 'the Internet Archive capture of 2023-03-02 is 1 day from the citation date 2023-03-01 and carries the title',
     },
   ]);
-  assert.deepEqual(result.counts, { dead: 1, archive: 1, search: 0, unplaced: 0, waiting: 0 });
+  assert.deepEqual(result.counts, { dead: 1, archive: 1, search: 0, unplaced: 0, waiting: 0, watching: 0 });
   assert.deepEqual([...result.files.keys()].sort(), [REGISTER_PATH, GLOSSARY]);
   assert.deepEqual(registerProblems(registerOf(result)), []);
 });
@@ -87,7 +87,7 @@ test('an archive with nothing near the citation date sends the citation to the s
   assert.ok(row.replacement.startsWith(SEARCH_ORIGIN));
   assert.match(row.why, /no usable Internet Archive capture: the archive holds no snapshot of https:\/\/doi\.org/);
   assert.equal(row.citedOn, '2025-10-25');
-  assert.deepEqual(result.counts, { dead: 1, archive: 0, search: 1, unplaced: 0, waiting: 0 });
+  assert.deepEqual(result.counts, { dead: 1, archive: 0, search: 1, unplaced: 0, waiting: 0, watching: 0 });
 });
 
 test('a capture whose page lacks the title is not the document that was cited, so the citation rests on a search link', async (t) => {
@@ -112,7 +112,7 @@ test('an archive that does not answer changes nothing, counts the citation as wa
   assert.equal(result.files.size, 0);
   assert.equal(result.register.changed, false);
   assert.deepEqual(result.rows, []);
-  assert.deepEqual(result.counts, { dead: 1, archive: 0, search: 0, unplaced: 0, waiting: 1 });
+  assert.deepEqual(result.counts, { dead: 1, archive: 0, search: 0, unplaced: 0, waiting: 1, watching: 0 });
   assert.deepEqual(result.waitingForArchive, [{ address: NIST, entry: GLOSSARY }]);
 });
 

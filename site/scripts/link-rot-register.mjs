@@ -175,9 +175,9 @@ export const isSameRow = (left, right) => JSON.stringify(canonicalRow(left)) ===
 const sameRows = (left, right) =>
   left.length === right.length && left.every((row, index) => isSameRow(row, right[index]));
 
-export function planRegister({ existing, found, settled = new Set(), today }) {
+export function planRegister({ existing, found, removed = [], settled = new Set(), today }) {
   if (!isDay(today)) throw new RegisterError(`today must be a calendar day written YYYY-MM-DD, got ${String(today)}`);
-  const replaced = new Set(found.map(keyOf));
+  const replaced = new Set([...found, ...removed].map(keyOf));
   const held = (existing?.rows ?? []).filter(
     (row) => !replaced.has(keyOf(row)) && !(row.outcome === 'unplaced' && settled.has(row.original))
   );

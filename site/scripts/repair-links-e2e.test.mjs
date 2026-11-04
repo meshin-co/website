@@ -52,7 +52,7 @@ test('end to end, a dead third-party address becomes the archive capture nearest
   assert.match(register.rows[0].why, /capture of 2023-03-02 is 1 day from the citation date 2023-03-01/);
   assert.equal(
     lastLine(run.stdout),
-    'repair-links: dead=1 archive=1 search=0 unplaced=0 waiting=0 pr=https://github.com/meshin-co/website/pull/41'
+    'repair-links: dead=1 archive=1 search=0 unplaced=0 waiting=0 watching=0 restored=0 upgraded=0 pr=https://github.com/meshin-co/website/pull/41'
   );
 });
 
@@ -91,7 +91,7 @@ test('end to end, an archive with no snapshot leaves the citation on the search 
   assert.match(scene.github.created()[0].body.body, /a search page is not a source/i);
   assert.equal(
     lastLine(run.stdout),
-    'repair-links: dead=1 archive=0 search=1 unplaced=0 waiting=0 pr=https://github.com/meshin-co/website/pull/41'
+    'repair-links: dead=1 archive=0 search=1 unplaced=0 waiting=0 watching=0 restored=0 upgraded=0 pr=https://github.com/meshin-co/website/pull/41'
   );
 });
 

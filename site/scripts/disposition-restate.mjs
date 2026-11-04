@@ -36,7 +36,7 @@ export function repairedReason({ route, generationPath, attempt }) {
 }
 
 export const linkRepairedReason = ({ entries }) =>
-  `${OPENING}a link repair of ${joined(entries)} (register audits/link-rot.json). ` +
+  `${OPENING}a link repair of ${joined(entries)}. ` +
   `Only an address was rewritten, by the link repair job and not by a person, and no human has read the rewritten text. ${EARLIER_REVIEW}`;
 
 function problemWith(item) {

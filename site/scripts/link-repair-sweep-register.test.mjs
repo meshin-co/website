@@ -32,7 +32,7 @@ test('a second run over the repaired tree finds nothing to change, writes nothin
 
   assert.equal(second.files.size, 0);
   assert.equal(second.register.changed, false);
-  assert.deepEqual(second.counts, { dead: 0, archive: 0, search: 0, unplaced: 0, waiting: 0 });
+  assert.deepEqual(second.counts, { dead: 0, archive: 0, search: 0, unplaced: 0, waiting: 0, watching: 0 });
   assert.equal(scene.archive.requests().length, requested);
 });
 
@@ -68,7 +68,7 @@ test('an entry the rewrite cannot edit in place makes its citation unplaced with
   assert.equal(repaired.entry, GLOSSARY);
   assert.ok(result.files.has(GLOSSARY));
   assert.ok(!result.files.has('site/src/data/faq/a-flow-entry.md'));
-  assert.deepEqual(result.counts, { dead: 1, archive: 1, search: 0, unplaced: 1, waiting: 0 });
+  assert.deepEqual(result.counts, { dead: 1, archive: 1, search: 0, unplaced: 1, waiting: 0, watching: 0 });
 });
 
 test('an entry with no date to cite from makes its address unplaced with the reason, and the run goes on to the next address', async (t) => {
@@ -187,7 +187,7 @@ test('an unplaced address found again with the same words changes nothing, and k
 
   assert.equal(again.register.changed, false);
   assert.equal(again.files.size, 0);
-  assert.deepEqual(again.counts, { dead: 1, archive: 0, search: 0, unplaced: 1, waiting: 0 });
+  assert.deepEqual(again.counts, { dead: 1, archive: 0, search: 0, unplaced: 1, waiting: 0, watching: 0 });
   assert.deepEqual(again.newUnplaced, []);
 });
 

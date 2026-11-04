@@ -2,9 +2,12 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { SEARCH_ORIGIN, searchFallbackUrl } from '../src/utils/archive-url.mjs';
-import { RewriteError, archivedEntryText, citingEntries, searchedEntryText } from './citations.mjs';
+import { archivedEntryText, searchedEntryText } from './citation-rewrites.mjs';
+import { citingEntries } from './citations.mjs';
+import { RewriteError } from './entry-surgery.mjs';
 import { ARCHIVE_SPACING_MS, archiveRung } from './link-repair-archive.mjs';
 import { REGISTER_PATH, isSameRow, planRegister } from './link-rot-register.mjs';
+import { advanceWatch, dropHosts, hostnameOf, lapseEvidence, lapseSummary } from './link-rot-watch.mjs';
 import { readOutbound } from './outbound-links.mjs';
 
 export const MAX_ADDRESSES_PER_RUN = 20;
@@ -50,6 +53,12 @@ const unplacedRow = ({ original, why, pages, firstSeenDead }) => ({
 
 const failureText = (path, error) =>
   `${path}: ${error instanceof RewriteError ? error.message : `the repair of this citation failed: ${error.message}`}`;
+
+const evidenced = (lapse, row) => {
+  if (lapse === undefined) return row;
+  const evidence = row.outcome === 'unplaced' ? lapseSummary(lapse) : lapseEvidence(lapse);
+  return { ...row, why: `${evidence}; ${row.why}` };
+};
 
 function rewrite({ text, address, placed }) {
   return placed.kind === 'archive'
@@ -120,26 +129,37 @@ export async function sweepLinks({
   sleep,
   spacingMs = ARCHIVE_SPACING_MS,
   maxAddresses = MAX_ADDRESSES_PER_RUN,
+  watch = null,
+  rung = archiveRung({ closestSnapshot, readSnapshot, sleep, spacingMs }),
 }) {
   const outbound = outboundOf({ dist, origin });
   const candidates = [...outbound.keys()].filter((address) => !isStandIn(address));
   const probed = candidates.length === 0 ? new Map() : await probeAll(candidates);
   const verdictOf = (address) => probed.get(address)?.verdict;
-  const dead = candidates.filter((address) => verdictOf(address) === 'dead');
+  const verdicts = new Map(candidates.map((address) => [address, verdictOf(address)]));
+  const responders = candidates.filter((address) => typeof probed.get(address)?.status === 'number');
+  const advanced = watch === null ? null : advanceWatch({ state: watch, today, verdicts, responders });
+  const lapsed = advanced?.lapsed ?? [];
+  const lapseOf = (address) => lapsed.find(({ host }) => host === hostnameOf(address));
+  const dead = candidates.filter((address) => verdictOf(address) === 'dead' || lapseOf(address) !== undefined);
   const acting = dead.slice(0, maxAddresses);
   const waitingForCap = dead.slice(maxAddresses);
 
-  const rung = archiveRung({ closestSnapshot, readSnapshot, sleep, spacingMs });
   const known = existing?.rows ?? [];
   const texts = new Map();
   const rows = [];
   const waitingForArchive = [];
   for (const address of acting) {
-    const firstSeenDead = earliest(known, address) ?? today;
+    const lapse = lapseOf(address);
+    const firstSeenDead = earliest(known, address) ?? lapse?.firstSeen ?? today;
     const done = await repairAddress({ address, pages: outbound.get(address), repoRoot, rung, texts, firstSeenDead });
-    rows.push(...done.rows);
+    rows.push(...done.rows.map((row) => evidenced(lapse, row)));
     waitingForArchive.push(...done.waiting);
   }
+
+  const stillWaiting = new Set([...waitingForCap, ...waitingForArchive.map(({ address }) => address)].map(hostnameOf));
+  const repairedHosts = lapsed.map(({ host }) => host).filter((host) => !stillWaiting.has(host));
+  const watchState = advanced === null ? null : dropHosts(advanced.state, repairedHosts);
 
   const settled = new Set([
     ...candidates.filter((address) => verdictOf(address) === 'answered'),
@@ -161,6 +181,10 @@ export async function sweepLinks({
     rows,
     newUnplaced: rows.filter((row) => row.outcome === 'unplaced' && !known.some((old) => isSameRow(old, row))),
     entries: [...texts.keys()].sort(),
+    lapsed,
+    watching: advanced?.watching ?? [],
+    watchState,
+    witnessed: advanced?.witnessed ?? null,
     files,
     register,
     counts: {
@@ -169,6 +193,7 @@ export async function sweepLinks({
       search: count('search'),
       unplaced: count('unplaced'),
       waiting: waitingForCap.length + waitingForArchive.length,
+      watching: advanced?.watching.length ?? 0,
     },
   };
 }

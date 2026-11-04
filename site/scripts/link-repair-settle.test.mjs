@@ -74,7 +74,7 @@ test('a rewritten entry is formatted, rebuilt, the stale dispositions are listed
   assert.equal(entry.reason, linkRepairedReason({ entries: [ENTRY] }));
   assert.match(
     entry.reason,
-    /^The text of this target changed in the run in which the unattended writer added a link repair of site\/src\/data\/glossary\/ai-rmf\.md /
+    /^The text of this target changed in the run in which the unattended writer added a link repair of site\/src\/data\/glossary\/ai-rmf\.md\. /
   );
 });
 

@@ -5,7 +5,7 @@ import { test } from 'node:test';
 
 import { ATTEMPT_CAP } from './autowriter-ledger.mjs';
 import { refusalOf } from './autowriter-refusals.mjs';
-import { repairedReason, restateFile, restatedReason } from './disposition-restate.mjs';
+import { linkRepairedReason, repairedReason, restateFile, restatedReason } from './disposition-restate.mjs';
 import { recordDirectory, recordPath } from './record-layout.mjs';
 import { WriterError } from './writer-error.mjs';
 
@@ -136,3 +136,11 @@ for (const [name, attempt] of Object.entries(MALFORMED))
       (error) => error instanceof WriterError && error.kind === 'build' && /attempt/.test(error.message)
     );
   });
+
+test('the link repair reason does not claim the register holds a citation that a restore removed from it', () => {
+  const reason = linkRepairedReason({ entries: ['src/data/glossary/nist-ai-rmf.md'] });
+
+  assert.match(reason, /a link repair of src\/data\/glossary\/nist-ai-rmf\.md\./);
+  assert.match(reason, /Only an address was rewritten, by the link repair job and not by a person/);
+  assert.doesNotMatch(reason, /register|link-rot\.json/);
+});

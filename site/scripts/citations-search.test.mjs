@@ -4,7 +4,8 @@ import { test } from 'node:test';
 import { parse } from 'yaml';
 
 import { searchFallbackUrl, standInKind } from '../src/utils/archive-url.mjs';
-import { archivedEntryText, RewriteError, searchedEntryText } from './citations.mjs';
+import { archivedEntryText, searchedEntryText } from './citation-rewrites.mjs';
+import { RewriteError } from './entry-surgery.mjs';
 
 const DEAD = 'https://example.org/report';
 const OTHER = 'https://example.org/elsewhere';

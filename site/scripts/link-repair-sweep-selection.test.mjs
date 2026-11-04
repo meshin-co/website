@@ -19,7 +19,7 @@ test('an address that could not be verified is not dead: nothing is repaired, no
   const result = await sweep(scene);
 
   assert.equal(result.files.size, 0);
-  assert.deepEqual(result.counts, { dead: 0, archive: 0, search: 0, unplaced: 0, waiting: 0 });
+  assert.deepEqual(result.counts, { dead: 0, archive: 0, search: 0, unplaced: 0, waiting: 0, watching: 0 });
   assert.deepEqual(scene.archive.requests(), []);
 });
 
@@ -47,7 +47,7 @@ test('a dead address that no collection entry cites is unplaced, with the pages 
     },
   ]);
   assert.deepEqual([...result.files.keys()], [REGISTER_PATH]);
-  assert.deepEqual(result.counts, { dead: 1, archive: 0, search: 0, unplaced: 1, waiting: 0 });
+  assert.deepEqual(result.counts, { dead: 1, archive: 0, search: 0, unplaced: 1, waiting: 0, watching: 0 });
   assert.deepEqual(scene.archive.requests(), []);
 });
 
@@ -72,7 +72,7 @@ test('no more than twenty dead addresses are acted on in one run, the first twen
     rowsOf(result).map(({ original }) => original),
     addresses.slice(0, 20)
   );
-  assert.deepEqual(result.counts, { dead: 22, archive: 0, search: 0, unplaced: 20, waiting: 2 });
+  assert.deepEqual(result.counts, { dead: 22, archive: 0, search: 0, unplaced: 20, waiting: 2, watching: 0 });
 });
 
 test('the cap can be set, and a run under it has nothing waiting for it', async (t) => {
@@ -136,6 +136,6 @@ test('a build whose only outbound links go to hosts the gate never asks is not e
 
   const result = await sweep(scene);
 
-  assert.deepEqual(result.counts, { dead: 0, archive: 0, search: 0, unplaced: 0, waiting: 0 });
+  assert.deepEqual(result.counts, { dead: 0, archive: 0, search: 0, unplaced: 0, waiting: 0, watching: 0 });
   assert.deepEqual(scene.asked, []);
 });

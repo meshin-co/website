@@ -65,7 +65,11 @@ test('a dead citation is repaired on a branch of the writer, with one pull reque
     [['actions/workflows/watch-pr.yml/dispatches', { pr: '41' }, 'main']]
   );
   assert.equal(done.pullRequest, 'https://github.com/' + REPOSITORY + '/pull/41');
-  assert.equal(lines.at(-1), 'repair-links: dead=1 archive=1 search=0 unplaced=0 waiting=0 pr=' + done.pullRequest);
+  assert.equal(
+    lines.at(-1),
+    'repair-links: dead=1 archive=1 search=0 unplaced=0 waiting=0 watching=0 restored=0 upgraded=0 pr=' +
+      done.pullRequest
+  );
   assert.equal(repo.git('rev-parse', '--abbrev-ref', 'HEAD'), 'main', 'the checkout is left where it was found');
 });
 
@@ -98,7 +102,7 @@ test('with a link repair pull request already open nothing is checked, probed, c
   assert.equal(fake.created().length, 0);
   assert.equal(
     lines.at(-1),
-    'repair-links: dead=0 archive=0 search=0 unplaced=0 waiting=0 pr=none (pull request #41 (autowriter/link-rot-2026-10-30) is still open, so nothing was checked)'
+    'repair-links: dead=0 archive=0 search=0 unplaced=0 waiting=0 watching=0 restored=0 upgraded=0 pr=none (pull request #41 (autowriter/link-rot-2026-10-30) is still open, so nothing was checked)'
   );
 });
 
@@ -117,7 +121,10 @@ test('a run that finds nothing dead opens no branch and no pull request, and exi
 
   assert.deepEqual(repo.remoteBranches(), ['main']);
   assert.equal(fake.created().length, 0);
-  assert.equal(lines.at(-1), 'repair-links: dead=0 archive=0 search=0 unplaced=0 waiting=0 pr=none');
+  assert.equal(
+    lines.at(-1),
+    'repair-links: dead=0 archive=0 search=0 unplaced=0 waiting=0 watching=0 restored=0 upgraded=0 pr=none'
+  );
 });
 
 test('a dead address no entry cites is recorded in the register by a pull request that changes no entry', async (t) => {
