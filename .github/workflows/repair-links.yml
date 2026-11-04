@@ -75,5 +75,6 @@ jobs:
         env:
           AUTOWRITER_PAT: ${{ secrets.AUTOWRITER_PAT }}
         run: |
+          set -o pipefail
           node scripts/repair-links.mjs | tee "$RUNNER_TEMP/repair-links.txt"
           { echo '### Link repair'; echo; tail -n 1 "$RUNNER_TEMP/repair-links.txt"; } >> "$GITHUB_STEP_SUMMARY"

@@ -6,7 +6,7 @@ import { probeAll as probeOutbound } from './link-probe.mjs';
 import { ARCHIVE_SPACING_MS } from './link-repair-archive.mjs';
 import { connectGitHub, openLinkRotPulls, publishRepair } from './link-repair-publish.mjs';
 import { summaryLine } from './link-repair-report.mjs';
-import { settleDispositions } from './link-repair-settle.mjs';
+import { settleRepair } from './link-repair-settle.mjs';
 import { SweepError, sweepLinks } from './link-repair-sweep.mjs';
 import { REGISTER_PATH, readRegister } from './link-rot-register.mjs';
 import { siteOrigin } from './links-gate.mjs';
@@ -56,7 +56,7 @@ export async function repairLinks({
   readSnapshot = readCapture,
   sleep = realSleep,
   spacingMs = spacingFrom(env),
-  settle = settleDispositions,
+  settle = settleRepair,
   out = console.log,
 }) {
   const site = join(repoRoot, 'site');

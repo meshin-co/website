@@ -6,7 +6,7 @@ import test from 'node:test';
 
 import { sealSignature } from './autowriter-refusals.mjs';
 import { linkRepairedReason } from './disposition-restate.mjs';
-import { settleDispositions } from './link-repair-settle.mjs';
+import { settleRepair } from './link-repair-settle.mjs';
 import { GENERATED_STATUS } from './route-derive.mjs';
 
 const DISPOSITIONS = 'audits/phase-4.7/dispositions/generated-ai-rmf.json';
@@ -43,7 +43,7 @@ test('a repository with no dispositions has nothing that can go stale, so nothin
   const root = scratch(t, { withDispositions: false });
   const { seen, run } = commands([]);
 
-  assert.deepEqual(await settleDispositions({ repoRoot: root, result: { entries: [ENTRY] }, run }), []);
+  assert.deepEqual(await settleRepair({ repoRoot: root, result: { entries: [ENTRY] }, run }), []);
   assert.deepEqual(seen, []);
 });
 
@@ -51,18 +51,19 @@ test('a sweep that changed no entry leaves every disposition alone, so a registe
   const root = scratch(t);
   const { seen, run } = commands([]);
 
-  assert.deepEqual(await settleDispositions({ repoRoot: root, result: { entries: [] }, run }), []);
+  assert.deepEqual(await settleRepair({ repoRoot: root, result: { entries: [] }, run }), []);
   assert.deepEqual(seen, []);
 });
 
-test('a rewritten entry is rebuilt, the stale dispositions are listed from that build, restated and formatted, in that order', async (t) => {
+test('a rewritten entry is formatted, rebuilt, the stale dispositions are listed from that build, restated and formatted, in that order', async (t) => {
   const root = scratch(t);
   const { seen, run } = commands(stale);
 
-  const restated = await settleDispositions({ repoRoot: root, result: { entries: [ENTRY] }, run });
+  const restated = await settleRepair({ repoRoot: root, result: { entries: [ENTRY] }, run });
 
   assert.deepEqual(restated, [DISPOSITIONS]);
   assert.deepEqual(seen, [
+    'npx prettier --write ../' + ENTRY,
     'npm run build',
     'node scripts/stale-dispositions.mjs . dist',
     'npx prettier --write ../' + DISPOSITIONS,
@@ -81,7 +82,7 @@ test('the restated reason is not read as a seal, so the commit sink does not ref
   const root = scratch(t);
   const { run } = commands(stale);
 
-  await settleDispositions({ repoRoot: root, result: { entries: [ENTRY] }, run });
+  await settleRepair({ repoRoot: root, result: { entries: [ENTRY] }, run });
 
   assert.equal(
     sealSignature({
@@ -95,11 +96,36 @@ test('the restated reason is not read as a seal, so the commit sink does not ref
 
 test('a build that fails stops the job with the command that failed, and no disposition is restated', async (t) => {
   const root = scratch(t);
-  const run = () => ({ status: 1, stdout: '', stderr: 'the build failed' });
+  const run = (command) => ({ status: command === 'npm' ? 1 : 0, stdout: '', stderr: 'the build failed' });
 
   await assert.rejects(
-    settleDispositions({ repoRoot: root, result: { entries: [ENTRY] }, run }),
+    settleRepair({ repoRoot: root, result: { entries: [ENTRY] }, run }),
     /npm run build exited with status 1/
   );
   assert.equal(readFileSync(join(root, DISPOSITIONS), 'utf8'), layout(before));
+});
+
+test('every rewritten entry is formatted in one call before the build reads it, so a table a longer address widened is aligned again', async (t) => {
+  const root = scratch(t);
+  const { seen, run } = commands(stale);
+  const other = 'site/src/data/post/a-post.md';
+
+  await settleRepair({ repoRoot: root, result: { entries: [ENTRY, other] }, run });
+
+  assert.deepEqual(seen.slice(0, 2), ['npx prettier --write ../' + ENTRY + ' ../' + other, 'npm run build']);
+});
+
+test('a formatter that fails stops the job before any build, with the command that failed', async (t) => {
+  const root = scratch(t);
+  const seen = [];
+  const run = (command, args) => {
+    seen.push([command, ...args].join(' '));
+    return { status: 2, stdout: '', stderr: 'a syntax error' };
+  };
+
+  await assert.rejects(
+    settleRepair({ repoRoot: root, result: { entries: [ENTRY] }, run }),
+    /npx prettier --write \.\.\/site\/src\/data\/glossary\/ai-rmf\.md exited with status 2/
+  );
+  assert.deepEqual(seen, ['npx prettier --write ../' + ENTRY]);
 });

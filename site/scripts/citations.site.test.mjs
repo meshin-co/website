@@ -15,6 +15,7 @@ import {
   searchedEntryText,
   SOURCE_COLLECTIONS,
 } from './citations.mjs';
+import { DOI, NIST_ENTRY } from './fixtures/link-rot-entry.mjs';
 
 const REPO_ROOT = fileURLToPath(new URL('../../', import.meta.url));
 const snapshotOf = (address) => `https://web.archive.org/web/20251025031200/${address}`;
@@ -29,17 +30,15 @@ const realEntries = () =>
       .map((name) => ({ path: `${collection}/${name}`, text: readFileSync(join(directory, name), 'utf8') }));
   });
 
-test('the real NIST AI RMF glossary entry is rewritten with one changed line and one added line', () => {
-  const doi = 'https://doi.org/10.6028/NIST.AI.100-1';
-  const text = readFileSync(join(REPO_ROOT, 'site', 'src', 'data', 'glossary', 'nist-ai-rmf.md'), 'utf8');
-  const expected = text.replace(`    url: ${doi}\n`, `    url: ${snapshotOf(doi)}\n    original: ${doi}\n`);
+test('an entry shaped like the NIST AI RMF glossary entry is rewritten with one changed line and one added line', () => {
+  const expected = NIST_ENTRY.replace(`    url: ${DOI}\n`, `    url: ${snapshotOf(DOI)}\n    original: ${DOI}\n`);
 
-  const result = rewrite(text, doi);
+  const result = rewrite(NIST_ENTRY, DOI);
   const row = frontmatterOf(result).sources.at(-1);
 
-  assert.notEqual(expected, text);
+  assert.notEqual(expected, NIST_ENTRY);
   assert.equal(result, expected);
-  assert.deepEqual([row.url, row.original], [snapshotOf(doi), doi]);
+  assert.deepEqual([row.url, row.original], [snapshotOf(DOI), DOI]);
   assert.equal(isSnapshotOf(row.url, row.original), true);
 });
 
@@ -85,19 +84,17 @@ test('on the real tree, citedUrls and citingEntries agree about who cites an add
   }
 });
 
-test('the real NIST AI RMF glossary entry is rewritten to the search for its source with one changed line and one added line', () => {
-  const doi = 'https://doi.org/10.6028/NIST.AI.100-1';
-  const text = readFileSync(join(REPO_ROOT, 'site', 'src', 'data', 'glossary', 'nist-ai-rmf.md'), 'utf8');
-  const source = frontmatterOf(text).sources.find(({ url }) => url === doi);
+test('an entry shaped like the NIST AI RMF glossary entry is rewritten to the search for its source with one changed line and one added line', () => {
+  const source = frontmatterOf(NIST_ENTRY).sources.find(({ url }) => url === DOI);
   const standIn = searchFallbackUrl(source);
-  const expected = text.replace(`    url: ${doi}\n`, `    url: ${standIn}\n    original: ${doi}\n`);
+  const expected = NIST_ENTRY.replace(`    url: ${DOI}\n`, `    url: ${standIn}\n    original: ${DOI}\n`);
 
-  const result = searchedEntryText({ text, url: doi });
-  const row = frontmatterOf(result).sources.find(({ original }) => original === doi);
+  const result = searchedEntryText({ text: NIST_ENTRY, url: DOI });
+  const row = frontmatterOf(result).sources.find(({ original }) => original === DOI);
 
-  assert.notEqual(expected, text);
+  assert.notEqual(expected, NIST_ENTRY);
   assert.equal(result, expected);
-  assert.deepEqual([row.url, row.original], [standIn, doi]);
+  assert.deepEqual([row.url, row.original], [standIn, DOI]);
   assert.equal(standInKind(row), 'search');
 });
 
