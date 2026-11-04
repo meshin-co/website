@@ -17,7 +17,7 @@ Every built route whose page carries no `noindex` robots meta SHALL appear in `/
 
 ### Requirement: The static page list behind the machine files holds exactly the thirteen public pages
 
-`publicIndexableStaticPages` in `site/src/utils/machine-text.mjs`, which feeds the Pages section of `/llms.txt`, the static sidecars, the static sitemap dates and the page search shard, SHALL return exactly `/`, `/about`, `/approach`, `/pricing`, `/faq`, `/contact`, `/blog/tags`, `/ai-policy`, `/security`, `/now`, `/imprint`, `/privacy` and `/terms`, never `/search`, `/styleguide` or `/404`. Guarded by `site/src/utils/machine-text.test.mjs` under `npm run test`.
+`publicIndexableStaticPages` in `site/src/utils/machine-text.mjs`, which feeds the Pages section of `/llms.txt`, the static sidecars, the static sitemap dates and the page entries of the search index, SHALL return exactly `/`, `/about`, `/approach`, `/pricing`, `/faq`, `/contact`, `/blog/tags`, `/ai-policy`, `/security`, `/now`, `/imprint`, `/privacy` and `/terms`, never `/search`, `/styleguide` or `/404`. Guarded by `site/src/utils/machine-text.test.mjs` under `npm run test`.
 
 #### Scenario: A noindex page joins the public list
 
@@ -298,8 +298,8 @@ and how many owed cells it checked and found present.
 
 #### Scenario: An entry drops out of its search shard
 
-- **WHEN** a built entry has no entry in the search shard of its collection
-- **THEN** `npm run gate:parity` prints `PARITY <route> is owed a search entry: /search-index-<kind>.json holds no entry for it` and exits 1
+- **WHEN** a built entry has no row of its kind in the document pages the search index manifest names
+- **THEN** `npm run gate:parity` prints `PARITY <route> is owed a search entry: /search-index/manifest.json holds no entry for it` and exits 1
 
 #### Scenario: An entry loses its social card
 
@@ -498,3 +498,21 @@ Every public collection SHALL have a feed base, and its feed `/<base>/rss.xml` S
 
 - **WHEN** `/llms/post-1.txt` holds 4 entries
 - **THEN** `npm run gate:machine` prints `MACHINE /llms/post-1.txt holds 4 entries, over the 3 entry cap` and exits 1
+
+### Requirement: Every file of the search index is checked against the noindex header
+
+`npm run gate:machine` SHALL check the manifest, every term chunk and every document page of the search index against the built headers file, as it checks the markdown sidecars, and SHALL fail on a file that no `X-Robots-Tag: noindex` rule matches. `HEADER_GUARDED_MACHINE_FILE` in `site/scripts/machine.mjs` names the files, guarded by `site/scripts/machine.test.mjs` under `npm run test`.
+
+#### Scenario: The manifest loses its noindex header
+
+- **WHEN** the built headers file holds no rule that matches `/search-index/manifest.json`
+- **THEN** `npm run gate:machine` prints `MACHINE /search-index/manifest.json carries no X-Robots-Tag rule, its siblings carry noindex` and exits 1
+
+### Requirement: The search index lists no hub or entry of a collection that has no live entry
+
+`npm run gate:machine` SHALL read the manifest and the document pages of the search index through `site/scripts/collection-gate.mjs`, and SHALL fail when a page lists the hub or an entry of a collection that has no live entry, as it does for the sitemap and the feeds. Guarded by `site/scripts/collection-gate.test.mjs` under `npm run test`.
+
+#### Scenario: The index lists the hub of an empty collection
+
+- **WHEN** a document page of the search index lists `/case-studies` and the `case` collection has no live entry
+- **THEN** `npm run gate:machine` prints `MACHINE /search-index/manifest.json lists /case-studies but /case-studies has no live case entry` and exits 1

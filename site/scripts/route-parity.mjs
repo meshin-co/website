@@ -1,9 +1,11 @@
-import { listedPaths } from './collection-gate.mjs';
+import { KINDS } from '../public/search/shards.mjs';
+import { indexDocuments, listedPaths } from './collection-gate.mjs';
 import { META_TAG, declaredUrl, linkTags, attributeOf } from './head-tags.mjs';
 import { deriveRouteKinds } from './route-kinds.mjs';
 import { FEED_WINDOW } from '../src/utils/feeds.mjs';
 import { OG_HEIGHT, OG_WIDTH, markdownPath } from '../src/utils/machine-links.mjs';
 import { sidecarFileForRoute } from '../src/utils/machine-text.mjs';
+import { manifestPath } from '../src/utils/search-index.mjs';
 
 const PNG_SIGNATURE = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
 const PAGE_SHARD = 'page';
@@ -69,6 +71,7 @@ function routesBeyondFeedWindow(derivedRoutes, lastmods) {
 
 function readSurfaces({ site, texts, shipped, sitemapLastmods, collections, inlineKinds }, derived) {
   const listing = (file) => new Set(texts[file] === undefined ? [] : listedPaths(file, texts[file], site));
+  const documents = indexDocuments(texts);
   const llmsCollections = {};
   for (const file of Object.keys(texts)) {
     const kind = /^llms\/(.+?)(?:-\d+)?\.txt$/.exec(file)?.[1];
@@ -86,7 +89,9 @@ function readSurfaces({ site, texts, shipped, sitemapLastmods, collections, inli
     llmsCollections,
     feed: memo((base) => new Set(guidPaths(texts[`${base}/rss.xml`] ?? '', site))),
     merged: new Set(guidPaths(texts['rss.xml'] ?? '', site)),
-    shard: memo((kind) => listing(`search-index-${kind}.json`)),
+    shard: memo(
+      (kind) => new Set(documents.filter((document) => document.kind === KINDS[kind]?.label).map(({ href }) => href))
+    ),
     feedHeads,
     inlineKinds: new Set(inlineKinds),
     beyondFeedWindow: routesBeyondFeedWindow(derived.routes, sitemapLastmods),
@@ -185,11 +190,9 @@ export const SURFACES = {
   },
   'search-shard': {
     label: 'a search entry',
-    artifact: (info) => `/search-index-${shardKind(info)}.json`,
-    absence: (info, ctx) => {
-      const file = `/search-index-${shardKind(info)}.json`;
-      return ctx.shard(shardKind(info)).has(info.route) ? null : phrase(file, ctx, 'holds no entry for it');
-    },
+    artifact: () => manifestPath,
+    absence: (info, ctx) =>
+      ctx.shard(shardKind(info)).has(info.route) ? null : phrase(manifestPath, ctx, 'holds no entry for it'),
   },
   'og-image': {
     label: 'a social card',

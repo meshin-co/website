@@ -12,11 +12,7 @@ import engineConfig from '../../engine.config.json';
 
 export const prerender = true;
 
-export function getStaticPaths(): { params: { kind: string } }[] {
-  return Object.keys(KINDS).map((kind) => ({ params: { kind } }));
-}
-
-interface ShardEntry {
+interface SearchEntry {
   href: string;
   title: string;
   description: string;
@@ -36,7 +32,7 @@ const HOME_BODY_WITHOUT_SERVICES = [
   ...shift.after.items,
 ];
 
-const shardBuilders: Record<string, () => Promise<ShardEntry[]>> = {
+const entryBuilders: Record<string, () => Promise<SearchEntry[]>> = {
   post: async () =>
     (await getCollection('post', isLive)).map((entry) =>
       buildShardEntry('post', {
@@ -183,11 +179,10 @@ const shardBuilders: Record<string, () => Promise<ShardEntry[]>> = {
   },
 };
 
-export const GET: APIRoute = async ({ params }) => {
-  const build = shardBuilders[params.kind ?? ''];
-  if (!build) return new Response('unknown search shard', { status: 404 });
+export const GET: APIRoute = async () => {
+  const entries = (await Promise.all(Object.keys(KINDS).map((kind) => entryBuilders[kind]()))).flat();
 
-  return new Response(JSON.stringify(await build()), {
+  return new Response(JSON.stringify(entries), {
     headers: { 'Content-Type': 'application/json; charset=utf-8' },
   });
 };

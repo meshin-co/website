@@ -4,6 +4,8 @@ import { mkdtemp, mkdir, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
+import { buildSearchIndex, chunkPath, pagePath } from '../src/utils/search-index.mjs';
+
 import {
   agentInterfaceFindings,
   contentSignalGaps,
@@ -114,9 +116,9 @@ test('a named route that the build does not ship is a finding', () => {
 test('the openapi document and the shipped json routes must agree both ways', () => {
   const document = { paths: { '/feed.json': {}, '/ghost.json': {} } };
 
-  assert.deepEqual(openApiCoverageGaps(document, ['/feed.json', '/search-index-post.json']), [
+  assert.deepEqual(openApiCoverageGaps(document, ['/feed.json', '/data/extra.json']), [
     'openapi.json: /ghost.json is described but not shipped',
-    'openapi.json: /search-index-post.json is shipped but undescribed',
+    'openapi.json: /data/extra.json is shipped but undescribed',
   ]);
 });
 
@@ -220,10 +222,51 @@ test('a head link naming a manifest the build never wrote is a finding, not a cr
 });
 
 test('a json route the document forgot is caught against the real tree', async () => {
-  const dist = await buildTree({ 'search-index-post.json': '[]' });
+  const dist = await buildTree({ 'data/extra.json': '[]' });
+
+  assert.deepEqual(await agentInterfaceFindings(dist), ['openapi.json: /data/extra.json is shipped but undescribed']);
+});
+
+const SEARCH_MANIFEST = '/search-index/manifest.json';
+const { version: SEARCH_VERSION } = buildSearchIndex([]).manifest;
+const describing = (...routes) => JSON.stringify({ paths: Object.fromEntries(routes.map((route) => [route, {}])) });
+
+function searchIndexFiles(count) {
+  const files = {};
+  for (let at = 0; at < count; at += 1) {
+    files[chunkPath(SEARCH_VERSION, at).slice(1)] = '[]';
+    files[pagePath(SEARCH_VERSION, at).slice(1)] = '[]';
+  }
+  return files;
+}
+
+test('the files behind the search index manifest are implementation files, so 500 chunks and 500 pages leave a described tree clean', async () => {
+  const dist = await buildTree({
+    'openapi.json': describing('/feed.json', SEARCH_MANIFEST),
+    'search-index/manifest.json': '{}',
+    ...searchIndexFiles(500),
+  });
+
+  assert.deepEqual(await agentInterfaceFindings(dist), []);
+});
+
+test('the search index manifest is a public interface, so a document that forgets it is a finding however many files stand behind it', async () => {
+  const dist = await buildTree({ 'search-index/manifest.json': '{}', ...searchIndexFiles(2) });
 
   assert.deepEqual(await agentInterfaceFindings(dist), [
-    'openapi.json: /search-index-post.json is shipped but undescribed',
+    'openapi.json: /search-index/manifest.json is shipped but undescribed',
+  ]);
+});
+
+test('a JSON file the search index keeps outside a version directory is a finding too', async () => {
+  const dist = await buildTree({
+    'openapi.json': describing('/feed.json', SEARCH_MANIFEST),
+    'search-index/manifest.json': '{}',
+    'search-index/stray.json': '{}',
+  });
+
+  assert.deepEqual(await agentInterfaceFindings(dist), [
+    'openapi.json: /search-index/stray.json is shipped but undescribed',
   ]);
 });
 

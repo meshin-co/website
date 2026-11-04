@@ -5,6 +5,7 @@ import { dirname, join, relative, resolve } from 'node:path';
 
 import { brandFromDisk } from '../src/utils/brand.mjs';
 import { BOOKING_URL } from '../src/utils/booking.mjs';
+import { manifestPath, pagePath } from '../src/utils/search-index.mjs';
 import { autowriterSpecimens } from './autowriter-specimens.mjs';
 import { boundedIndexSpecimens, firstPostUrl } from './bounded-index-specimens.mjs';
 import { engineSpecimens } from './engine-specimens.mjs';
@@ -16,6 +17,7 @@ import { partitionSpecimens } from './partition-specimens.mjs';
 import { pressSpecimens } from './press-specimens.mjs';
 import { REGISTERS_BEGIN } from './registers.mjs';
 import { scheduleSpecimens } from './schedule-specimens.mjs';
+import { FIRST_QUERY_BUDGET_BYTES } from './search-budget.mjs';
 import { SPEC_SPECIMENS } from './spec-specimens.mjs';
 import { unattendedSpecimens } from './unattended-specimens.mjs';
 import { LLMS_TXT_MAX_BYTES } from './machine.mjs';
@@ -192,6 +194,12 @@ async function noindexEveryServicePage(copySite) {
 
 const withNoLiveServices = (token) => ({ gate: 'gate:machine', token, plant: noindexEveryServicePage });
 
+const withBodiesInRows = (text) => {
+  const rows = JSON.parse(text);
+  const bodyBytes = Math.ceil(FIRST_QUERY_BUDGET_BYTES / rows.length);
+  return JSON.stringify(rows.map((row) => [...row, randomBytes(bodyBytes).toString('base64')]));
+};
+
 export const SPECIMENS = {
   paid: {
     gate: 'gate:paid',
@@ -354,11 +362,11 @@ export const SPECIMENS = {
   },
   search: {
     gate: 'gate:search',
-    token: 'over 65536',
-    plant: (copySite) =>
-      editFile(join(copySite, 'dist/search-index-post.json'), (text) =>
-        JSON.stringify([...JSON.parse(text), { pad: randomBytes(96 * 1024).toString('base64') }])
-      ),
+    token: `bytes gz (over ${FIRST_QUERY_BUDGET_BYTES})`,
+    plant: async (copySite) => {
+      const { version } = JSON.parse(await readFile(join(copySite, 'dist', manifestPath), 'utf8'));
+      return editFile(join(copySite, 'dist', pagePath(version, 0)), withBodiesInRows);
+    },
   },
   skills: {
     gate: 'gate:skills',

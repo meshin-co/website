@@ -26,14 +26,14 @@ the built output, never in source. The gate is `npm run gate:machine` (`scripts/
 - .md sidecars per page, from `src/pages/[...slug].md.ts`.
 - OG images rendered by satori at `src/pages/og/[...slug].png.ts`; template in `src/utils/og-template.mjs`; hash-keyed
   render cache in `src/utils/og-cache.mjs`.
-- Search shards at /search-index- per `src/pages/search-index-[kind].json.ts`, ranked client-side by
-  `public/search/index-model.mjs`.
+- The search index in /search-index/, built by `scripts/build-search-index.mjs` and ranked client-side by
+  `public/search/index-model.mjs`. Only its `manifest.json` is public, listed in `/openapi.json` and the ai-catalog.
 
 ## Bounded by design
 
-Every generated index lists one line per unbounded collection, or is a window, or is shards. A new generated machine
-file needs a byte budget, a guard that fails over it, a planted specimen (`scripts/bounded-index-specimens.mjs`) and
-a `test:smoke` row (`extend-mutation-smoke.md`).
+Every generated index lists one line per unbounded collection, or is a window, or is shards; the search index is bounded
+by its first-query budget (`search-index.md`). A new generated machine file needs a byte budget, a guard that fails over
+it, a planted specimen (`scripts/bounded-index-specimens.mjs`) and a `test:smoke` row (`extend-mutation-smoke.md`).
 
 ## What updates when content changes
 
@@ -45,7 +45,7 @@ stays under its byte guard; sidecars exist for every route that should have one;
 index. llms derivation comes from the built routes minus the shared noindex set in `site/src/utils/machine-text.mjs`. A
 new collection touches four hand-lists plus endpoints: add-or-restore-a-collection.md.
 
-Machine-surface noindex headers (feeds, llms, sidecars, search shards) are correct forever and are written by
+Machine-surface noindex headers (feeds, llms, sidecars, the search index) are correct forever and are written by
 `scripts/gen-headers.mjs`; they are not the Phase-5 preview noindex.
 
 ## Feeds, sitemap and crawler register

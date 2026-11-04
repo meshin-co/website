@@ -19,8 +19,9 @@ lists disagree, and `scripts/jsonld-gate.mjs` fails closed on an unknown route p
 - The schema and the collections export in `site/src/content.config.ts`.
 - A feed endpoint beside `src/pages/blog/rss.xml.ts`, mounted at the collection base; it carries the
   newest `FEED_WINDOW` (15) entries through `collectionFeedItems`, so it needs no cap of its own.
-- A search shard kind in `src/pages/search-index-[kind].json.ts` with its budget in
-  `scripts/search-budget.mjs`.
+- A search kind: an entry in `KINDS`, `ENTRY_TEXT_CAPS` and `textFor` of `public/search/shards.mjs`, and an entry
+  builder in `src/pages/search-entries.json.ts`. Its documents join the one index, so `scripts/search-budget.mjs`
+  needs no change; `npm run gate:search` fails when the kind takes the index over a limit.
 - An llms section: the per-collection route `src/pages/llms/[collection].txt.ts` and the
   section list in `site/src/utils/llms-collections.mjs`. Until its largest entry is measured the
   collection takes the largest measured entry of any collection, a conservative entry cap. After the
@@ -35,7 +36,7 @@ lists disagree, and `scripts/jsonld-gate.mjs` fails closed on an unknown route p
 
 Speaking was deleted on 2026-09-12 and returns only when a real talk exists. To restore:
 re-add the collection schema and its data directory, the speaking routes under `src/pages/`,
-the nav links, the feed endpoint, the search shard, the Event node builders in
+the nav links, the feed endpoint, the search kind, the Event node builders in
 `site/src/utils/jsonld.mjs`, the four hand-lists above, and drop the name from NON_PUBLIC in
 `scripts/machine.mjs`. A talk lands only with a confirmed row in `docs/COPY-CHECKLIST.md`;
 nothing is invented to fill the hub.

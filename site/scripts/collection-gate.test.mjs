@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import { FEED_BASES } from '../src/utils/feeds.mjs';
-import { emptyCollectionFindings, listedPaths } from './collection-gate.mjs';
+import { emptyCollectionFindings, indexDocuments, listedPaths } from './collection-gate.mjs';
+import { indexFilesOf } from './fixtures/parity-world.mjs';
 
 const SITE = 'https://meshin.co';
 const INDEXABLE = '<!doctype html><html><head><meta content="index, follow" name="robots"></head><body></body></html>';
@@ -23,8 +24,10 @@ const sitemap = (...urls) =>
   `<?xml version="1.0" encoding="UTF-8"?><urlset>${urls.map((url) => `<url><loc>${url}</loc><lastmod>2026-10-11T17:56:33.000Z</lastmod></url>`).join('')}</urlset>`;
 const feedXml = (...urls) =>
   `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>meshin.co</title><link>${SITE}/</link>${urls.map((url) => `<item><title>T</title><link>${url}</link><guid isPermaLink="true">${url}</guid></item>`).join('')}</channel></rss>`;
-const shard = (...rows) =>
-  JSON.stringify(rows.map((row) => ({ title: 'T', description: 'D', kind: 'Page', text: 'x', ...row })));
+const searchIndex = (...documents) => indexFilesOf(documents);
+const MANIFEST = 'search-index/manifest.json';
+const pageOf = (texts) => Object.keys(texts).find((file) => /\/d\/\d+\.json$/.test(file));
+const chunkOf = (texts) => Object.keys(texts).find((file) => /\/t\/\d+\.json$/.test(file));
 const jsonFeed = (...urls) =>
   JSON.stringify({ version: 'https://jsonfeed.org/version/1.1', items: urls.map((url) => ({ id: url, url })) });
 
@@ -33,6 +36,11 @@ const because = '/case-studies has no live case entry';
 test('a build with no empty collection owes this guard nothing, whatever the hub looks like', () => {
   const world = { ...caseWorld({ hub: INDEXABLE, shipped: ['case-studies.md'] }), kinds: [] };
   assert.deepEqual(emptyCollectionFindings(world), []);
+});
+
+test('a build with no empty collection reads none of its surfaces, so a damaged one fails nothing here', () => {
+  const texts = { 'feed.json': '{"items":', [MANIFEST]: '[]' };
+  assert.deepEqual(emptyCollectionFindings({ ...caseWorld({ texts }), kinds: [] }), []);
 });
 
 test('an empty collection whose hub is noindex and offered nowhere is clean', () => {
@@ -130,18 +138,18 @@ test('llms.txt linking the empty hub, its feed, its mirror or its full-text file
   ]);
 });
 
-test('a sitemap, a search shard, the merged feed and the json feed each count when they list the empty hub or one of its entries', () => {
+test('a sitemap, the search index, the merged feed and the json feed each count when they list the empty hub or one of its entries', () => {
   const texts = {
     'feed.json': jsonFeed(`${SITE}/case-studies/first`),
     'rss.xml': feedXml(`${SITE}/case-studies/first`),
-    'search-index-page.json': shard({ href: '/case-studies', text: 'Nothing published yet.' }),
     'sitemap-0.xml': sitemap(`${SITE}/case-studies`),
+    ...searchIndex({ href: '/case-studies', description: 'Nothing published yet.' }),
   };
   assert.deepEqual(emptyCollectionFindings(caseWorld({ texts })), [
     `/feed.json lists /case-studies/first but ${because}`,
     `/rss.xml lists /case-studies/first but ${because}`,
-    `/search-index-page.json lists /case-studies but ${because}`,
     `/sitemap-0.xml lists /case-studies but ${because}`,
+    `/${MANIFEST} lists /case-studies but ${because}`,
   ]);
 });
 
@@ -188,7 +196,7 @@ test('a heading that carries the title of an empty collection in llms-full.txt i
 test('a path that merely begins with the hub name, or sits under another hub, is not under the empty hub', () => {
   const texts = {
     'llms.txt': llmsTxt(`${SITE}/case-studies-archive`, `${SITE}/blog/case-studies`, `${SITE}/case`),
-    'search-index-page.json': shard({ href: '/case-studies-archive' }, { href: '/blog/case-studies' }),
+    ...searchIndex({ href: '/case-studies-archive' }, { href: '/blog/case-studies' }),
   };
   assert.deepEqual(emptyCollectionFindings(caseWorld({ texts })), []);
 });
@@ -209,15 +217,94 @@ test('the hub named in prose, or inside a body line, is not a listing, so an art
       '',
       `See ${SITE}/case-studies for client work, or the case studies page.`,
     ].join('\n'),
-    'search-index-post.json': shard({ href: '/blog/an-article', text: 'Read /case-studies for client work.' }),
+    ...searchIndex({
+      href: '/blog/an-article',
+      kind: 'Writing',
+      description: 'Read /case-studies for client work.',
+    }),
     'feed.json': JSON.stringify({ items: [{ url: `${SITE}/blog/an-article`, content_text: `${SITE}/case-studies` }] }),
   };
   assert.deepEqual(emptyCollectionFindings(caseWorld({ texts })), []);
 });
 
 test('a surface that is not valid JSON fails loudly instead of being skipped', () => {
-  const texts = { 'search-index-page.json': '[{"href":' };
-  assert.throws(() => emptyCollectionFindings(caseWorld({ texts })), /search-index-page\.json is not valid JSON/);
+  const texts = { 'feed.json': '{"items":' };
+  assert.throws(() => emptyCollectionFindings(caseWorld({ texts })), /feed\.json is not valid JSON/);
+});
+
+test('a manifest or a page of the search index that is not valid JSON fails loudly and names the file', () => {
+  for (const file of [MANIFEST, pageOf(searchIndex({ href: '/a' }))]) {
+    const texts = { ...searchIndex({ href: '/a' }), [file]: '[["/a",' };
+    assert.throws(() => emptyCollectionFindings(caseWorld({ texts })), {
+      message: `collection-gate: ${file} is not valid JSON`,
+    });
+  }
+});
+
+test('a manifest that holds no document count or page size and a page that holds no list fail loudly, as a surface with no list does', () => {
+  const page = pageOf(searchIndex({ href: '/a' }));
+  for (const [file, text] of [
+    [MANIFEST, '[]'],
+    [MANIFEST, '{"version":"abc"}'],
+    [MANIFEST, '{"version":"abc","documents":3}'],
+    [MANIFEST, '{"version":"abc","documents":3,"pageSize":0}'],
+    [page, '{"href":"/a"}'],
+  ]) {
+    const texts = { ...searchIndex({ href: '/a' }), [file]: text };
+    assert.throws(() => emptyCollectionFindings(caseWorld({ texts })), {
+      message: `collection-gate: ${file} does not hold the list this guard reads`,
+    });
+  }
+});
+
+test('a page the manifest names but the build lacks fails loudly instead of listing less', () => {
+  const texts = searchIndex({ href: '/a' });
+  const page = pageOf(texts);
+  delete texts[page];
+  assert.throws(() => emptyCollectionFindings(caseWorld({ texts })), {
+    message: `collection-gate: ${page} is missing`,
+  });
+});
+
+test('pages of the search index with no manifest fail loudly instead of reading nothing', () => {
+  const texts = searchIndex({ href: '/case-studies' });
+  delete texts[MANIFEST];
+  assert.throws(() => emptyCollectionFindings(caseWorld({ texts })), {
+    message: `collection-gate: ${MANIFEST} is missing`,
+  });
+});
+
+test('a term chunk holds no list and is never read as one, so a damaged chunk changes nothing here', () => {
+  const texts = searchIndex({ href: '/a' }, { href: '/case-studies' });
+  const chunk = chunkOf(texts);
+  assert.ok(chunk, 'the index must hold a term chunk for this to prove anything');
+  texts[chunk] = 'not json';
+  assert.deepEqual(emptyCollectionFindings(caseWorld({ texts })), [`/${MANIFEST} lists /case-studies but ${because}`]);
+});
+
+test('an address in the search index is judged as every other surface is: a trailing slash does not hide the hub', () => {
+  const texts = searchIndex({ href: '/case-studies/' }, { href: '/case-studies/first/' });
+  assert.deepEqual(emptyCollectionFindings(caseWorld({ texts })), [
+    `/${MANIFEST} lists /case-studies but ${because}`,
+    `/${MANIFEST} lists /case-studies/first but ${because}`,
+  ]);
+});
+
+test('indexDocuments reads each document of the index with its kind in address order, and nothing from a build with no index', () => {
+  assert.deepEqual(indexDocuments({}), []);
+  assert.deepEqual(indexDocuments({ 'llms.txt': '# x' }), []);
+  assert.deepEqual(
+    indexDocuments(
+      searchIndex(
+        { href: '/b', title: 'B', description: 'The b page', kind: 'Writing' },
+        { href: '/a', title: 'A', description: 'The a page', kind: 'Glossary' }
+      )
+    ),
+    [
+      { href: '/a', title: 'A', description: 'The a page', kind: 'Glossary' },
+      { href: '/b', title: 'B', description: 'The b page', kind: 'Writing' },
+    ]
+  );
 });
 
 test('listedPaths reads each surface by its own shape and keeps only this siteâ€™s paths', () => {
@@ -232,6 +319,5 @@ test('listedPaths reads each surface by its own shape and keeps only this siteâ€
   assert.deepEqual(listedPaths('sitemap-0.xml', sitemap(`${SITE}/a`, `${SITE}/`), SITE), ['/a', '/']);
   assert.deepEqual(listedPaths('rss.xml', feedXml(`${SITE}/a`), SITE), ['/', '/a', '/a']);
   assert.deepEqual(listedPaths('case-studies/rss.xml', feedXml(), SITE), ['/']);
-  assert.deepEqual(listedPaths('search-index-page.json', shard({ href: '/a/' }, { href: '/b' }), SITE), ['/a', '/b']);
   assert.deepEqual(listedPaths('feed.json', jsonFeed(`${SITE}/a`), SITE), ['/a']);
 });

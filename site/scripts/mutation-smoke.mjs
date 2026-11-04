@@ -155,7 +155,7 @@ export const FAMILIES = [
   { id: 'template-without-booking-cta', kind: 'specimen', specimen: 'bookingCta' },
   { id: 'static-page-dates-disagree', kind: 'specimen', specimen: 'dates' },
   { id: 'static-page-lastmod-is-a-clock', kind: 'specimen', specimen: 'datesCollapse' },
-  { id: 'search-shard-over-budget', kind: 'specimen', specimen: 'search' },
+  { id: 'search-index-grows-with-corpus', kind: 'specimen', specimen: 'search' },
   { id: 'skill-names-a-missing-script', kind: 'specimen', specimen: 'skills' },
   { id: 'generated-report-without-provenance', kind: 'specimen', specimen: 'evidence' },
   { id: 'report-revision-that-is-not-a-commit', kind: 'specimen', specimen: 'evidenceRevisionNotACommit' },

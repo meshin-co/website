@@ -8,6 +8,7 @@ import {
   MERGED_FEED_MAX_BYTES,
   MERGED_FEED_WINDOW,
 } from '../src/utils/feeds.mjs';
+import { chunkPath, manifestPath, pagePath } from '../src/utils/search-index.mjs';
 import {
   llmsRouteGaps,
   publicCollections,
@@ -37,6 +38,7 @@ import {
   isTaxonomyRoute,
   LLMS_TXT_MAX_BYTES,
   unreferencedMachineFiles,
+  HEADER_GUARDED_MACHINE_FILE,
 } from './machine.mjs';
 import { renderHeaders } from './gen-headers.mjs';
 import { PLANTED_DATED_PAGE, withCatalogPages } from './fixtures/catalog-pages.mjs';
@@ -705,6 +707,34 @@ test('the catch-all block and a preview-host rule never count as a machine file 
 test('the header policy the build writes holds the llms index and every numbered shard to noindex', () => {
   const files = ['/llms.txt', '/llms-full.txt', '/llms/post.txt', '/llms/post-1.txt', '/llms/post-12.txt'];
   assert.deepEqual(machineHeaderGaps(renderHeaders([]), files), []);
+});
+
+const SEARCH_INDEX_VERSION = '0123456789';
+const SEARCH_INDEX_FILES = [
+  manifestPath,
+  chunkPath(SEARCH_INDEX_VERSION, 0),
+  chunkPath(SEARCH_INDEX_VERSION, 12),
+  pagePath(SEARCH_INDEX_VERSION, 0),
+];
+const guardedAmong = (shipped) => shipped.filter((file) => HEADER_GUARDED_MACHINE_FILE.test(file));
+
+test('the search index manifest, its term chunks and its document pages are held to the noindex header, beside markdown sidecars', () => {
+  const shipped = ['/about.html', '/about.md', '/robots.txt', ...SEARCH_INDEX_FILES, '/og/blog/a.png'];
+
+  assert.deepEqual(guardedAmong(shipped), ['/about.md', ...SEARCH_INDEX_FILES]);
+});
+
+test('a missing noindex header on the search index manifest is reported', () => {
+  assert.deepEqual(machineHeaderGaps(HEADERS, guardedAmong(['/about.html', manifestPath])), [
+    '/search-index/manifest.json carries no X-Robots-Tag rule, its siblings carry noindex',
+  ]);
+});
+
+test('the header policy the build writes holds every file of the search index to noindex', () => {
+  const guarded = guardedAmong(SEARCH_INDEX_FILES);
+
+  assert.deepEqual(guarded, SEARCH_INDEX_FILES);
+  assert.deepEqual(machineHeaderGaps(renderHeaders([]), guarded), []);
 });
 
 test('a machine file named by a page, another machine file or nothing at all', () => {

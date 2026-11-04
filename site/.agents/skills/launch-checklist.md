@@ -25,7 +25,7 @@ edge measurement is row G44 of `docs/plan/reference/known-gaps.md`. Nothing here
    means a Cloudflare-side rule outside this repo is adding it. Then verify the live robots meta
    and response headers on the production URL — the deployed header is the artifact, not the
    source file. The machine-surface noindex rules in `scripts/gen-headers.mjs` (feeds, llms
-   files, sidecars, search shards) stay.
+   files, sidecars, the search index) stay.
 3. Submit the sitemap to Google Search Console and Bing.
 
 ## After the flip

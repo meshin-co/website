@@ -26,10 +26,15 @@ only by the rule that names it, never by judgement.
    boots a Web Worker that reported `Failed to load Pagefind metadata` without ever requesting
    the metadata file, in three separate wirings (its own `astro-pagefind` component, a bundled
    module, and a plain static module), while the same calls from a page console worked. Instead,
-   `/search-index.json` is generated from the same collections at build time (25 KB raw, 7 KB gz,
-   fetched only on the first query) and ranked by `public/search/index-model.mjs`, which is unit
-   tested. `/search` now costs 1.1 KB gz of JS like every other route, and the search behaviour
-   itself is covered by `tests/search.spec.ts`.
+   the search index is built from the same collections at build time into `/search-index/`: a
+   manifest, term chunks and document pages, ranked in the browser by `public/search/index-model.mjs`,
+   which is unit tested. Nothing is fetched until the first query, which downloads the manifest, one
+   chunk for each distinct query word and the pages of its top 20 hits, never the whole index.
+   `npm run gate:search` holds the worst first query any query could cause to 64 KiB gz and the
+   index to 4000 files (43,312 bytes gz and 37 files on the build of 2026-11-04). `/search` costs
+   1,928 bytes gz of JS by the count of `site/scripts/gate.mjs` and 4,494 counting the two modules
+   `box.mjs` imports (row G30 of `docs/plan/reference/known-gaps.md`), against 10,240 per route, and
+   `tests/search.spec.ts` covers the search behaviour and holds a real first query to the budget.
 7. JSON-LD: every page's `@graph` parses, and every `@id` referenced anywhere resolves to exactly
    one node that declares it. Rich Results test on one page per type.
 8. Machine-interface parity: `/llms.txt`, `/llms-full.txt`, `/llms/` collection files, `/feed.json`, sitemap

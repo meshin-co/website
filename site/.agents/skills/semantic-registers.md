@@ -55,7 +55,7 @@ arithmetic by hand produced a published 44 when the artifact said 37.
 
 The unlinked-concept list is an opportunity list, not a defect list. Linking every mention would
 over-link; the phase decision is first mention per page. Noindex utility routes (`/404`,
-`/search`, `/styleguide`, and the search shard page) are excluded, because nothing there competes
+`/search` and `/styleguide`) are excluded, because nothing there competes
 for a query.
 
 Buyer-prompt gaps need owner facts or a new page. They stay `owner-blocked` in Phase 4.7 and feed

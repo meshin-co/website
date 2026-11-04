@@ -1,5 +1,7 @@
+import { KINDS } from '../../public/search/shards.mjs';
 import { FEED_WINDOW } from '../../src/utils/feeds.mjs';
 import { markdownPath } from '../../src/utils/machine-links.mjs';
+import { buildSearchIndex } from '../../src/utils/search-index.mjs';
 
 export const SITE = 'https://example.test';
 
@@ -75,8 +77,42 @@ export const feedOf = (routes) =>
     )
     .join('') +
   '</channel></rss>';
-const shard = (routes) =>
-  JSON.stringify(routes.map((route) => ({ href: route, title: route, description: '', kind: 'x', text: '' })));
+
+const INDEX_DIRECTORY = 'search-index/';
+const withDefaults = (document) => ({
+  title: 'Title',
+  description: 'Description',
+  kind: 'Page',
+  text: '',
+  ...document,
+});
+
+export const indexFilesOf = (documents) =>
+  Object.fromEntries(
+    [...buildSearchIndex(documents.map(withDefaults)).files].map(([urlPath, text]) => [urlPath.slice(1), text])
+  );
+
+export function dropIndex(texts) {
+  for (const file of Object.keys(texts)) {
+    if (file.startsWith(INDEX_DIRECTORY)) delete texts[file];
+  }
+  return texts;
+}
+
+export const replaceIndex = (texts, documents) => Object.assign(dropIndex(texts), indexFilesOf(documents));
+
+const searchEntry = (kind, route) => ({
+  href: route,
+  title: route,
+  description: '',
+  kind: KINDS[kind].label,
+  text: '',
+});
+
+const searchEntries = (entries) => [
+  ...[...PAGES, ...HUBS, TAG_INDEX, ...ARCHIVES].map((route) => searchEntry('page', route)),
+  ...Object.keys(entries).flatMap((kind) => entryRoutes(kind, entries).map((route) => searchEntry(kind, route))),
+];
 
 const entriesText = (count) => count + (count === 1 ? ' entry' : ' entries');
 const pointerLine = (kind, count) =>
@@ -118,14 +154,12 @@ function textsOf({ inlineKinds, entries, shardSize }) {
     'llms.txt': '# example.test\n\n## Pages\n\n' + listed.map(bullet).join('\n') + '\n',
     'llms-full.txt': pointerIndex(entries),
     'rss.xml': feedOf(allEntryRoutes(entries)),
-    'search-index-page.json': shard([...PAGES, ...HUBS, TAG_INDEX, ...ARCHIVES]),
-    'search-index-case.json': shard([]),
+    ...indexFilesOf(searchEntries(entries)),
   };
   for (const kind of Object.keys(entries)) {
     const routes = entryRoutes(kind, entries);
     Object.assign(texts, llmsFilesOf(kind, routes, shardSize));
     texts[baseOf(kind) + '/rss.xml'] = feedOf(routes.slice(0, FEED_WINDOW));
-    texts['search-index-' + kind + '.json'] = shard(routes);
   }
   return texts;
 }
