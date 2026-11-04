@@ -7,8 +7,12 @@ import {
   deployArgs,
   deploymentUrl,
   ledgerFindings,
+  measurementFindings,
   previewBranch,
 } from './deploy.mjs';
+import { fingerprint } from './lh-evidence.mjs';
+import { CLEAR_COMMAND, ledgerWithDebt } from './measurement-debt.mjs';
+import { newLedger } from './autowriter-ledger.mjs';
 
 const filled = {
   CLOUDFLARE_API_TOKEN: 't'.repeat(40),
@@ -100,4 +104,110 @@ test('a preview may never be labelled main, which would publish to production', 
   assert.equal(previewBranch(['--preview']), 'preview');
   assert.throws(() => previewBranch(['--preview', 'main']), /main/);
   assert.throws(() => previewBranch(['--preview', 'MAIN']), /main/);
+});
+
+const hash = (letter) => letter.repeat(40);
+const MEASURED = 'a'.repeat(64);
+const UNMEASURED = 'b'.repeat(64);
+const SLUG = 'named-person-responsible-for-ai-risk-in-vendor-procurement';
+const MERGED = 'd716823d25176f3ee98f8458aa8b6847e0ab6086';
+const DEBT_RECORDED = '2026-11-04T03:43:07.953Z';
+const MEASURED_AT = '2026-11-04T02:51:16.487Z';
+
+const green = (at = MEASURED_AT) => ({ fingerprint: MEASURED, recordedAt: at, phase: 'zz' });
+const owing = (slug = SLUG, recordedAt = DEBT_RECORDED) =>
+  ledgerWithDebt(newLedger({ slug, runId: '41', pullRequest: 84 }), {
+    mergedCommit: MERGED,
+    fingerprint: UNMEASURED,
+    now: new Date(recordedAt),
+  });
+
+test('a tree the last recorded run measured is published, whatever debts the ledgers hold', () => {
+  assert.deepEqual(measurementFindings({ record: green(), current: MEASURED, ledgers: [owing()] }), []);
+  assert.deepEqual(measurementFindings({ record: green(), current: MEASURED, ledgers: [] }), []);
+});
+
+test('a tree another run measured is refused, naming both trees, the entry that owes it and the command to run', () => {
+  const findings = measurementFindings({ record: green(), current: UNMEASURED, ledgers: [owing()] });
+
+  assert.equal(findings.length, 1);
+  assert.match(findings[0], /the tree being published, b{12}, was never measured by Lighthouse/);
+  assert.match(findings[0], new RegExp(`last recorded run \\(${MEASURED_AT}\\) measured a{12}`));
+  assert.match(findings[0], new RegExp(`${SLUG} owes the measurement`));
+  assert.match(findings[0], /d716823/);
+  assert.ok(findings[0].includes(CLEAR_COMMAND));
+  assert.match(findings[0], /commit audits\/lighthouse-green\.json/);
+});
+
+test('a repository with no recorded run refuses every tree, and every debt is owed', () => {
+  const findings = measurementFindings({
+    record: undefined,
+    current: UNMEASURED,
+    ledgers: [owing('one-entry'), owing('another-entry')],
+  });
+
+  assert.equal(findings.length, 1);
+  assert.match(findings[0], /no Lighthouse run is recorded for this repository/);
+  assert.match(findings[0], /one-entry owes/);
+  assert.match(findings[0], /another-entry owes/);
+});
+
+test('a debt recorded before the last run is history, not an owed measurement', () => {
+  const findings = measurementFindings({
+    record: green('2026-11-05T00:00:00.000Z'),
+    current: UNMEASURED,
+    ledgers: [owing()],
+  });
+
+  assert.equal(findings.length, 1);
+  assert.doesNotMatch(findings[0], /owes the measurement/);
+  assert.ok(findings[0].includes(CLEAR_COMMAND));
+});
+
+test('a ledger without a debt owes nothing, and a tree changed by hand is still refused', () => {
+  const findings = measurementFindings({
+    record: green(),
+    current: UNMEASURED,
+    ledgers: [newLedger({ slug: 'held', runId: '1', pullRequest: null })],
+  });
+
+  assert.equal(findings.length, 1);
+  assert.doesNotMatch(findings[0], /owes the measurement/);
+  assert.ok(findings[0].includes(CLEAR_COMMAND));
+});
+
+test('the command a person is told to run is the one the debt record carries', () => {
+  const ledger = owing();
+  ledger.measurementDebt.clear = 'cd site && GATE_PHASE=zz npm run gate:lh && GATE_PHASE=zz npm run lh:record';
+
+  const [finding] = measurementFindings({ record: green(), current: UNMEASURED, ledgers: [ledger] });
+
+  assert.ok(finding.includes(ledger.measurementDebt.clear));
+});
+
+test('deleting the debt from the ledger clears nothing, because the tree is what is judged', () => {
+  const { measurementDebt, ...withoutDebt } = owing();
+
+  assert.ok(measurementDebt);
+  assert.equal(measurementFindings({ record: green(), current: UNMEASURED, ledgers: [withoutDebt] }).length, 1);
+});
+
+test('a debt cannot be cleared by marking it, because nothing in a ledger is read as a clearance', () => {
+  const marked = { ...owing(), measurementDebt: { ...owing().measurementDebt, clearedAt: DEBT_RECORDED } };
+
+  assert.equal(measurementFindings({ record: green(), current: UNMEASURED, ledgers: [marked] }).length, 1);
+});
+
+const BLOB = hash('1');
+const ENTRY = 'site/src/data/post/a-new-entry.md';
+
+test('a content entry moves the fingerprint, and the prose around it does not, so a measured tree names its content', () => {
+  const before = [['site/src/pages/index.astro', BLOB]];
+  const withEntry = [...before, [ENTRY, hash('2')]];
+  const withLedger = [...withEntry, ['audits/autowriter/2026/11/a-new-entry.json', hash('3')]];
+  const withDocs = [...withLedger, ['docs/SEMANTIC-CORE.md', hash('4')]];
+
+  assert.notEqual(fingerprint(withEntry), fingerprint(before));
+  assert.equal(fingerprint(withLedger), fingerprint(withEntry));
+  assert.equal(fingerprint(withDocs), fingerprint(withEntry));
 });

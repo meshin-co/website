@@ -1,0 +1,231 @@
+{
+  "schema": 1,
+  "slug": "named-person-responsible-for-ai-risk-in-vendor-procurement",
+  "runId": "41623251197-1",
+  "generatedAt": "2026-11-03T10:59:27.266Z",
+  "claim": {
+    "title": "Named person responsible for AI risk in vendor procurement",
+    "query": "named person responsible for ai risk in vendor procurement",
+    "prompt": {
+      "number": 5,
+      "text": "named person responsible for AI risk in vendor procurement"
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-03",
+      "windowStart": "2026-08-03",
+      "windowEnd": "2026-11-01",
+      "table": "Buyer prompts"
+    },
+    "row": {
+      "#": "5",
+      "Prompt": "named person responsible for AI risk in vendor procurement",
+      "Must win": "`/faq/who-answers-customer-security-questionnaires`",
+      "Impressions": "unproven",
+      "Position": "-",
+      "Carried by": "-"
+    }
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/named-person-responsible-for-ai-risk-in-vendor-procurement",
+    "path": "site/src/data/post/named-person-responsible-for-ai-risk-in-vendor-procurement.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_0f6bb691dc23965d016ae9be0648d087d184d3a2352b6c2b71",
+  "published": {
+    "callIndex": 0
+  },
+  "calls": [
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0f6bb691dc23965d016ae9be0648d087d184d3a2352b6c2b71",
+      "requestDigest": "2c942203a60f40bf13388b5048af99678c339c9bc82a081027d001ced8f87334",
+      "tokens": {
+        "input": 10130,
+        "output": 4190
+      },
+      "costUsd": 0.03108,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 10130,
+      "output": 4190
+    },
+    "costUsd": 0.03108
+  },
+  "ledger": "audits/autowriter/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "8a11aa53fe0bd0ebf94683be0ac5b01f257a6691a996681aa961e0441e962dd0",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "d223b510ff5c07ad0f54209c52f0caaf40638510622f479aaec31683e43ee9da"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "67c26028e794a494b127f1ecdc8f116cbec1a8b7c64f199844770a998264767d"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "163efb2493ea36f55afb196dd378cb63b6283b8a046671e5e9a5cd7d17a8aec7"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "880d68340c8a5ee3a565266b9ca5c8f6384d0734074612cf64375277839ac4c5"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "55fb255974a6113f20d148cd5666fe2a3dfd397fb73b265232b177fe18baa16c"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "16c69f95b13fd6cca63db2df6a591adcd354a385d2c5e038ce324985fef36e06"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "b768988aa8877f677d70c5e6efb8954ff6ba6a8bf231aa834d63c75235d03dab"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "70ec4173e205e974cbaafaf270f1a24aa674c0aeb29feb653f7953f9b9b656b8"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "f9e37c623c6cd481fc79489dba4061b4920647cc9a7429a1d256a3eb9e5fbb97"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "7675607f78e9772c6ffd01a48db04a66d767585ad90644f06247acb451cf96f4"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "df07e5ca1fced82881ab08e3849da19ec0de824e4be87b2719f174f0f73f33c2"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "0090504ca9441d0f2375ba5d485091bbff2ce796",
+    "fingerprint": "681558ef8987ed010fefbb248603d0818730929f1a38e699c285e35138a2b332"
+  },
+  "claimTable": [
+    {
+      "sentence": "The named AI risk owner coordinates vendor review, records unresolved risks, and routes each decision to the person with authority to approve it.",
+      "marker": "own-reading",
+      "source": null,
+      "span": null
+    },
+    {
+      "sentence": "A recommendation to proceed is not a contract signature.",
+      "marker": "own-reading",
+      "source": null,
+      "span": null
+    },
+    {
+      "sentence": "Approval for a limited internal trial should not silently become approval for customer-facing use.",
+      "marker": "own-reading",
+      "source": null,
+      "span": null
+    }
+  ],
+  "band": {
+    "measuredOn": "2026-11-02",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 126,
+      "median": 15,
+      "shareBelowThreshold": 0.2064,
+      "shareJustBelow": 0.1747,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json",
+    "audits/autowriter/claims/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json",
+    "audits/autowriter/generations/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-named-person-responsible-for-ai-risk-in-vendor-procurement.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/named-person-responsible-for-ai-risk-in-vendor-procurement.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}

@@ -6,17 +6,35 @@
   "attempts": [],
   "spend": {
     "tokens": {
-      "input": 0,
-      "output": 0
+      "input": 10130,
+      "output": 4190
     },
-    "costUsd": 0
+    "costUsd": 0.03108
   },
   "verdict": {
-    "state": "open",
+    "state": "merged",
     "reason": null,
-    "decidedAt": null
+    "decidedAt": "2026-11-04T03:43:07.953Z"
   },
-  "escalations": [],
+  "escalations": [
+    {
+      "id": "esc-1",
+      "kind": "unrepairable",
+      "title": "Autowriter pull request #84: a job that is not a content gate failed, so the loop may not repair it",
+      "detail": "The watcher judged head b84e7e8242fa2f7f2ae9dc3177cfb3c467fc7c48: escalate, not-a-content-gate.\nFailing: cheap-gates (gate:links), visual-and-axe (1) (gate:visual), visual-and-axe (2) (gate:visual).\nPull request: https://github.com/meshin-co/website/pull/84",
+      "raisedAt": "2026-11-03T11:09:43.102Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-03T11:09:43.102Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 85,
+          "error": null
+        }
+      ]
+    }
+  ],
   "refusals": [
     {
       "title": "Fractional CAIO vs full-time CAIO cost",
@@ -42,5 +60,30 @@
       "against": "/glossary/ai-governance",
       "detail": "the query \"ai governance\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
     }
-  ]
+  ],
+  "generation": {
+    "tokens": {
+      "input": 10130,
+      "output": 4190
+    },
+    "costUsd": 0.03108
+  },
+  "resumes": [
+    {
+      "at": "2026-11-04T03:29:36.185Z",
+      "by": "main-change",
+      "mainSha": "7dd67201c9c6b065a500a62bc46b62ffbf843477",
+      "failedJobs": [
+        "cheap-gates",
+        "visual-and-axe (1)",
+        "visual-and-axe (2)"
+      ]
+    }
+  ],
+  "measurementDebt": {
+    "mergedCommit": "d716823d25176f3ee98f8458aa8b6847e0ab6086",
+    "fingerprint": "60fe521e74ba19a20f29f5407a75e89a47efcd36237471959e47f36ae398778e",
+    "recordedAt": "2026-11-04T03:43:07.953Z",
+    "clear": "cd site && GATE_PHASE=<bucket> npm run gate:lh && GATE_PHASE=<bucket> npm run lh:record"
+  }
 }

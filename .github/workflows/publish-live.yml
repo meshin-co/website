@@ -35,6 +35,11 @@ jobs:
         with:
           ref: ${{ steps.target.outputs.sha }}
 
+      - name: take the measurement evidence from the tip of main, because a record committed after the gated run is prose and the run's own commit cannot hold it
+        run: |
+          git fetch --no-tags --depth=1 origin "${{ github.sha }}"
+          git restore --source=FETCH_HEAD --worktree -- :/audits/lighthouse-green.json :/audits/autowriter
+
       - uses: actions/setup-node@v4
         with:
           node-version-file: site/.nvmrc
