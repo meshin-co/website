@@ -71,10 +71,25 @@ jobs:
       - name: build the site, so dist holds the addresses that are really linked
         run: npm run build
 
+      - name: restore how many scheduled runs in a row each host name has failed to resolve
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ runner.temp }}/link-rot-watch.json
+          key: link-rot-watch-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: link-rot-watch-
+
       - name: find the gone citations, repair each from the archive or a search link, and open one pull request
         env:
           AUTOWRITER_PAT: ${{ secrets.AUTOWRITER_PAT }}
+          REPAIR_LINKS_WATCH: ${{ runner.temp }}/link-rot-watch.json
         run: |
           set -o pipefail
           node scripts/repair-links.mjs | tee "$RUNNER_TEMP/repair-links.txt"
           { echo '### Link repair'; echo; tail -n 1 "$RUNNER_TEMP/repair-links.txt"; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: keep that count for the next scheduled run, even when this run failed
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ runner.temp }}/link-rot-watch.json
+          key: link-rot-watch-${{ github.run_id }}-${{ github.run_attempt }}
