@@ -308,3 +308,32 @@ test('entries are split into messages of three at most, in order, and no entry i
   assert.deepEqual(messageGroups(numbers.slice(0, 3)), [[1, 2, 3]]);
   assert.deepEqual(messageGroups([]), []);
 });
+
+const DEBT = {
+  tree: 'bbbbbbbbbbbb',
+  last: 'the last recorded run (2026-11-04T02:51:16.487Z) measured aaaaaaaaaaaa',
+  owed: [{ slug: 'a-post', mergedCommit: 'd716823', recordedAt: '2026-11-04T03:43:07.953Z' }],
+  clear: 'cd site && GATE_PHASE=<bucket> npm run gate:lh && GATE_PHASE=<bucket> npm run lh:record',
+};
+
+test('a live message about an unmeasured tree carries one warning section: the tree, the run before it, the entry that owes it and the command', () => {
+  const message = live([A_POST], { unmeasured: DEBT });
+
+  assert.deepEqual(blockKitProblems(message), []);
+  const warning = sectionsText(message);
+  assert.match(warning, /\*This build shipped without a Lighthouse measurement\*/);
+  assert.match(warning, /tree bbbbbbbbbbbb: the last recorded run \(2026-11-04T02:51:16\.487Z\) measured aaaaaaaaaaaa/);
+  assert.match(warning, /`a-post` owes the measurement \(merged as d716823\)/);
+  assert.match(
+    warning,
+    /GATE_PHASE=&lt;bucket&gt; npm run gate:lh &amp;&amp; GATE_PHASE=&lt;bucket&gt; npm run lh:record/
+  );
+  assert.match(message.text, /This build shipped without a Lighthouse measurement\. A person has something to do\./);
+  assert.ok(message.text.indexOf('A markdown sidecar') < message.text.indexOf('without a Lighthouse measurement'));
+  assert.ok(message.text.indexOf('without a Lighthouse measurement') < message.text.indexOf('Workflow run:'));
+});
+
+test('a live message about a measured tree says nothing about measurement', () => {
+  assert.doesNotMatch(live().text, /Lighthouse/);
+  assert.deepEqual(live([A_POST], { unmeasured: null }), live());
+});

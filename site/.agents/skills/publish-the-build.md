@@ -42,21 +42,21 @@ Both refuse a `dist/` whose routes differ from `audits/routes.json`, naming what
 Run the gates, then `npm run assets:routes` if the change is intended. The writer commits that ledger
 with every route it adds, so a refusal on its branch means a merge or a hand edit moved the routes.
 
-Production, never a preview, also refuses a tree no recorded Lighthouse run measured, and names the entry
-whose debt is open and the command that clears it: measure the tree, commit `audits/lighthouse-green.json`,
-press again. No flag, variable or dispatch input waives it; a press cannot measure, only a person can.
+Production, never a preview, also warns of a tree no recorded Lighthouse run measured and publishes it anyway: the
+line never stops for a measurement only a person can take. `::warning::DEPLOY` names the entry whose debt is open and
+the command that clears it; measure the tree and commit `audits/lighthouse-green.json`. No flag silences the warning.
 
 ## What CI does
 
 `deploy-preview` in `ci.yml` deploys every pull request to `pr-<number>`, smokes it and comments the URL.
-Production is **Publish Live**, pressed by hand: `run-publish-target.mjs` picks the run, `publish-target.mjs` holds the rules.
+Production is **Publish Live**, run by itself after a green `ci` push run on `main` or by dispatch: `run-publish-target.mjs` picks the run, `publish-target.mjs` holds the rules.
 
 ```mermaid
 flowchart LR
     A["merge to main"] --> B["ci builds once<br/>and gates that build"]
     B --> C["dist kept until it expires<br/>(retention-days in ci.yml)"]
-    C -.-> D{"Publish Live:<br/>empty ci_run = newest green run"}
-    D --> G["refuse if main moved on in anything but prose,<br/>or the tree is one no recorded<br/>Lighthouse run measured"]
+    C -.-> D{"Publish Live: the ci run that finished,<br/>or dispatch: ci_run, else newest green"}
+    D --> G["refuse if main moved on in anything but prose;<br/>warn if no recorded Lighthouse run<br/>measured the tree, then publish"]
     G --> H["Pages, smoke, IndexNow, live entry"]
 ```
 
@@ -77,4 +77,4 @@ on the apex. Only a live response can confirm the headers of `dist/_headers`; a 
 `scripts/live-announce.mjs` asks `site.site`, not `pages.dev`, for the page of every entry no message announced
 (`scripts/live-probe.mjs`: 8 requests, 140 s of waiting) and posts the month, cost, buyer prompt, links and check
 time. A page that never answers is a warning message and a `::warning::`; the step exits 0 and the next publish
-asks again. Cache steps keep the state; with none, only the last 48 hours are announced.
+asks again. A tree no run measured adds a section to the same message. Cache steps keep the state; with none, only the last 48 hours are announced.

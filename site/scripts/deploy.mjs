@@ -65,18 +65,32 @@ const owesMeasurement = ({ measurementDebt: debt }, record) =>
   (record === undefined ||
     (debt.fingerprint !== record.fingerprint && Date.parse(debt.recordedAt) > Date.parse(record.recordedAt)));
 
-export function measurementFindings({ record, current, ledgers }) {
-  if (record?.fingerprint === current) return [];
-  const last = record
-    ? `the last recorded run (${record.recordedAt}) measured ${shortTree(record.fingerprint)}`
-    : 'no Lighthouse run is recorded for this repository';
+export function unmeasuredTree({ record, current, ledgers }) {
+  if (record?.fingerprint === current) return null;
   const owed = ledgers.filter((ledger) => owesMeasurement(ledger, record));
-  const entries = owed.map(
-    ({ slug, measurementDebt }) =>
-      `${slug} owes the measurement (merged as ${shortCommit(measurementDebt.mergedCommit)}, debt recorded ${measurementDebt.recordedAt}). `
-  );
   const commands = [...new Set(owed.map(({ measurementDebt }) => measurementDebt.clear))];
+  return {
+    tree: shortTree(current),
+    last: record
+      ? `the last recorded run (${record.recordedAt}) measured ${shortTree(record.fingerprint)}`
+      : 'no Lighthouse run is recorded for this repository',
+    owed: owed.map(({ slug, measurementDebt }) => ({
+      slug,
+      mergedCommit: shortCommit(measurementDebt.mergedCommit),
+      recordedAt: measurementDebt.recordedAt,
+    })),
+    clear: (commands.length > 0 ? commands : [CLEAR_COMMAND]).join(' or '),
+  };
+}
+
+export function measurementWarnings(measurement) {
+  const debt = unmeasuredTree(measurement);
+  if (debt === null) return [];
+  const entries = debt.owed.map(
+    ({ slug, mergedCommit, recordedAt }) =>
+      `${slug} owes the measurement (merged as ${mergedCommit}, debt recorded ${recordedAt}). `
+  );
   return [
-    `the tree being published, ${shortTree(current)}, was never measured by Lighthouse: ${last}. ${entries.join('')}On a quiet machine run ${(commands.length > 0 ? commands : [CLEAR_COMMAND]).join(' or ')}, commit audits/lighthouse-green.json, then publish again; nothing but a recorded measurement of this tree clears it`,
+    `the tree being published, ${debt.tree}, was never measured by Lighthouse: ${debt.last}. ${entries.join('')}It is published anyway, because a measurement only a person can take does not hold the line. The debt stays open: on a quiet machine run ${debt.clear}, then commit audits/lighthouse-green.json; nothing but a recorded measurement of this tree clears it`,
   ];
 }

@@ -271,9 +271,9 @@ export const FAMILIES = [
   { id: 'noindex-page-cannot-waive-its-seo', kind: 'specimen', specimen: 'lighthouseSelfWaivingNoindex', slow: true },
   { id: 'lighthouse-record-of-a-tree-the-run-never-measured', kind: 'lh-record', proves: 'lh:record' },
   {
-    id: 'press-publishes-a-tree-no-lighthouse-run-measured',
+    id: 'press-warns-of-a-tree-no-lighthouse-run-measured',
     kind: 'specimen',
-    specimen: 'pressPublishesUnmeasuredTree',
+    specimen: 'pressWarnsOfUnmeasuredTree',
   },
   { id: 'unattended-process-cannot-seal-dispositions', kind: 'specimen', specimen: 'unattendedSealsDispositions' },
   {

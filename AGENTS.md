@@ -53,8 +53,9 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
 - Every phase ends with the Calibration Gate in `docs/plan/reference/calibration-gate.md`. No merge without a green gate
   and a generated `audits/phase-N/REPORT.md`. There is no waiver path and no "fix next phase".
   Lighthouse is the local half of that gate (L59); `npm run gate:lh` ends by recording the tree it
-  measured, and a push of an unmeasured tree is refused by `.githooks/pre-push`. So is its publication: Publish Live
-  refuses a tree no recorded run measured, and no flag, variable or input waives that.
+  measured, and a push of an unmeasured tree is refused by `.githooks/pre-push`. Publication is not stopped by it:
+  Publish Live runs by itself after a green `ci` run, and a tree no recorded run measured is published with a
+  `::warning::` and a line in the live-entry Slack message, the debt staying open until `lh:record` clears it.
 - Lighthouse must read 100/100/100/100 on mobile and desktop for every audited route. A run at
   97–99 is re-run up to three times, then it is a failure.
 - Blocking budgets, measured from the shipped build and never from a config file: JS ≤10 KB gz,

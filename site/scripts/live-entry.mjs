@@ -4,8 +4,10 @@ import { entriesInBuild } from './entries-in-build.mjs';
 import { runLink } from './github-links.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 import { siteOrigin } from './links-gate.mjs';
+import { unmeasuredTree } from './deploy.mjs';
 import { announceEntries } from './live-announce.mjs';
 import { announce, readState, selectEntries, writeState } from './live-state.mjs';
+import { readMeasurementState } from './measurement-state.mjs';
 import { SITE_CONFIG } from './site-brand.mjs';
 import { ceilingStatus } from './spend-ceiling.mjs';
 import { countText } from './spend-report-text.mjs';
@@ -30,11 +32,17 @@ function parseArguments(argv) {
   return options;
 }
 
+async function describeUnmeasured(repoRoot) {
+  const measurement = await readMeasurementState(repoRoot);
+  if (measurement.reason) throw new Error(measurement.reason);
+  return unmeasuredTree(measurement);
+}
+
 const recordedLine = (count) =>
   `live entry: first run: recorded ${countText(count, 'existing entry', 'existing entries')} as already announced, without a message`;
 
 async function run({ options, origin, io }) {
-  const { env, now, statusOf, stdout, stderr } = io;
+  const { env, now, statusOf, unmeasuredOf, stdout, stderr } = io;
   const repoRoot = options['repo-root'] === undefined ? REPOSITORY_ROOT : resolve(options['repo-root']);
   const statePath = resolve(options.state);
   const instant = now();
@@ -58,17 +66,22 @@ async function run({ options, origin, io }) {
     writeState(statePath, known);
   };
   const status = statusOf({ repoRoot, now: instant });
-  await announceEntries({ ...io, entries: fresh, origin, status, links: { run: runLink(env) }, record });
+  const unmeasured = await unmeasuredOf(repoRoot).catch((error) => {
+    stderr(`::warning::live entry: whether the tree was measured is unknown: ${error.message}`);
+    return null;
+  });
+  await announceEntries({ ...io, entries: fresh, origin, status, unmeasured, links: { run: runLink(env) }, record });
   return 0;
 }
 
 export async function runCli(argv, io = {}) {
   const { env = process.env, fetch = globalThis.fetch, now = () => new Date(), sleep, statusOf = ceilingStatus } = io;
+  const { unmeasuredOf = describeUnmeasured } = io;
   const { stdout = console.log, stderr = console.error } = io;
   try {
     const options = parseArguments(argv);
     const origin = io.origin ?? siteOrigin(SITE_CONFIG);
-    return await run({ options, origin, io: { env, fetch, now, sleep, statusOf, stdout, stderr } });
+    return await run({ options, origin, io: { env, fetch, now, sleep, statusOf, unmeasuredOf, stdout, stderr } });
   } catch (error) {
     if (error instanceof UsageError) {
       stderr(`live entry: ${error.message}\n${USAGE}`);

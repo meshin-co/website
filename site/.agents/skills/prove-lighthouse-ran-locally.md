@@ -63,12 +63,12 @@ naming when the last run happened; a prose-only commit changes no fingerprint an
 `core.hooksPath` at `.githooks`, so after a fresh clone run it once before pushing or the hook is simply absent. There
 is no waiver: a tree that needs a new measurement gets one.
 
-Publish Live makes the same comparison before it uploads (`measurementFindings` in `scripts/deploy.mjs`), against the
-record at the tip of main, because the record is committed after the build and is prose. The writer merges entries
-that no run measured and records a `measurementDebt` in the entry's ledger; the entry's content moves the
-fingerprint, so the press refuses that tree, names the entry that owes the measurement and prints the debt's `clear`
-command. Nothing in a ledger clears a debt: deleting it or marking it cleared moves no fingerprint. Only `lh:record`
-of a tree that carries the entry does, and no flag, variable or workflow input waives it.
+Publish Live runs by itself after a green `ci` push run and compares the tree against the record at the tip of main
+(`unmeasuredTree` in `scripts/deploy.mjs`, fed by `scripts/measurement-state.mjs`), because the record is committed after the build and is prose. The writer
+records a `measurementDebt` in the ledger of an entry no run measured; the content moves the fingerprint, so the press
+prints a `::warning::DEPLOY` naming the entry and the debt's `clear` command, and publishes anyway, and the live-entry
+Slack message says so too. Nothing in a ledger clears the debt, and no flag or input silences the warning: only
+`lh:record` of a tree that carries the entry does.
 
 ## The one request the run blocks
 

@@ -641,6 +641,20 @@ const commandFor = (specimen, copySite, env = specimen.env) => {
   return ['env', [...assignments, ...npm], copySite];
 };
 
+const judgeWarning = (specimen, planted) => {
+  if (planted.code !== 0)
+    return {
+      ok: false,
+      reason: `${specimen.gate} refused the specimen, though it may only warn: ${tail(planted.output)}`,
+    };
+  if (!flatten(planted.output).includes(specimen.token))
+    return { ok: false, reason: `${specimen.gate} stayed silent on the specimen, which it must warn about` };
+  return {
+    ok: true,
+    reason: `${specimen.gate} warned on the specimen (${specimen.token}) and went through, silent without it`,
+  };
+};
+
 export async function proveWithSpecimen(specimen, { copySite, run }) {
   const command = commandFor(specimen, copySite);
   const plantedCommand = specimen.plantedEnv
@@ -663,6 +677,7 @@ export async function proveWithSpecimen(specimen, { copySite, run }) {
     await restore();
   }
 
+  if (specimen.warns) return judgeWarning(specimen, planted);
   if (planted.code === 0) return { ok: false, reason: `${specimen.gate} stayed green on the specimen` };
   if (!flatten(planted.output).includes(specimen.token))
     return { ok: false, reason: `${specimen.gate} failed for the wrong reason: ${tail(planted.output)}` };

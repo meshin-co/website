@@ -33,7 +33,7 @@ const surfaceLines = ({ slug, surfaces }) =>
         `::warning::live entry: ${slug} is live, but a surface does not answer: ${label} ${url}, ${failureOf(probe)}`
     );
 
-export async function announceEntries({ entries, origin, status, links, record, ...io }) {
+export async function announceEntries({ entries, origin, status, links, unmeasured, record, ...io }) {
   const { env, fetch, now, sleep, stdout, stderr } = io;
   const listed = entries.map(({ format, slug }) => surfacesOf({ format, slug, origin }));
   const probes = await probeAll({ urls: listed.flat().map(({ url }) => url), fetch, sleep, now });
@@ -43,7 +43,7 @@ export async function announceEntries({ entries, origin, status, links, record, 
   for (const group of messageGroups(live)) {
     group.forEach((entry) => stdout(liveLine(entry)));
     group.flatMap(surfaceLines).forEach(stderr);
-    if (await post('live entry', liveMessage({ status, entries: group, links })))
+    if (await post('live entry', liveMessage({ status, entries: group, links, unmeasured })))
       record(group.map(({ route }) => route));
   }
   const unreachable = probed.filter(({ page }) => !page.probe.reachable);

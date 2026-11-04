@@ -229,19 +229,21 @@ const wranglerRan = (log) => {
   }
 };
 
-test('a production deploy while a measurement debt is open is refused, naming the entry and the command, before wrangler', () => {
+const UNMEASURED_WARNING = /::warning::DEPLOY the tree being published, [0-9a-f]{12}, was never measured by Lighthouse/;
+
+test('a production deploy while a measurement debt is open goes through and warns, naming the entry and the command', () => {
   const { site, log } = workspace({ routes: ['/'], owing: true });
 
   const result = runIn(site, RUN_DEPLOY, [], CREDENTIALS);
 
-  assert.equal(result.status, 1);
-  assert.match(result.stderr, /DEPLOY the tree being published, [0-9a-f]{12}, was never measured by Lighthouse/);
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stderr, UNMEASURED_WARNING);
   assert.match(result.stderr, new RegExp(`${ENTRY_SLUG} owes the measurement`));
   assert.match(result.stderr, /GATE_PHASE=<bucket> npm run gate:lh && GATE_PHASE=<bucket> npm run lh:record/);
-  assert.equal(wranglerRan(log), false, 'wrangler must not be spawned');
+  assert.equal(wranglerRan(log), true);
 });
 
-test('the same deploy goes through once a recorded run measured the tree that carries the entry', () => {
+test('the same deploy is silent about measurement once a recorded run measured the tree that carries the entry', () => {
   const { site, root, log } = workspace({ routes: ['/'], owing: true });
   recordMeasured(root, '2026-11-04T09:00:00.000Z');
   commit(root, 'chore(audits): clear the debt by measuring');
@@ -249,17 +251,18 @@ test('the same deploy goes through once a recorded run measured the tree that ca
   const result = runIn(site, RUN_DEPLOY, [], CREDENTIALS);
 
   assert.equal(result.status, 0, result.stderr);
+  assert.doesNotMatch(result.stderr, /Lighthouse/);
   assert.equal(wranglerRan(log), true);
 });
 
-test('a tree no run was ever recorded for is refused', () => {
+test('a tree no run was ever recorded for is published with a warning that says so', () => {
   const { site, log } = workspace({ routes: ['/'], measured: false });
 
   const result = runIn(site, RUN_DEPLOY, [], CREDENTIALS);
 
-  assert.equal(result.status, 1);
+  assert.equal(result.status, 0, result.stderr);
   assert.match(result.stderr, /no Lighthouse run is recorded for this repository/);
-  assert.equal(wranglerRan(log), false);
+  assert.equal(wranglerRan(log), true);
 });
 
 test('a content entry moves the fingerprint of the tree, so the record made before it covers nothing', () => {
@@ -271,9 +274,9 @@ test('a content entry moves the fingerprint of the tree, so the record made befo
   const result = runIn(site, RUN_DEPLOY, [], CREDENTIALS);
 
   assert.notEqual(treeOf(root), before);
-  assert.equal(result.status, 1);
-  assert.match(result.stderr, /was never measured by Lighthouse/);
-  assert.equal(wranglerRan(log), false);
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stderr, UNMEASURED_WARNING);
+  assert.equal(wranglerRan(log), true);
 });
 
 const CLEARING_ATTEMPTS = {
@@ -303,7 +306,7 @@ const CLEARING_ATTEMPTS = {
 };
 
 for (const [attempt, act] of Object.entries(CLEARING_ATTEMPTS)) {
-  test(`${attempt} leaves the build fingerprint untouched and clears nothing`, () => {
+  test(`${attempt} leaves the build fingerprint untouched and the warning in place`, () => {
     const { site, root, log } = workspace({ routes: ['/'], owing: true });
     const before = treeOf(root);
 
@@ -312,9 +315,9 @@ for (const [attempt, act] of Object.entries(CLEARING_ATTEMPTS)) {
     const result = runIn(site, RUN_DEPLOY, [], CREDENTIALS);
 
     assert.equal(treeOf(root), before, 'the attempt must be one the fingerprint cannot see');
-    assert.equal(result.status, 1);
-    assert.match(result.stderr, /was never measured by Lighthouse/);
-    assert.equal(wranglerRan(log), false);
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stderr, UNMEASURED_WARNING);
+    assert.equal(wranglerRan(log), true);
   });
 }
 
@@ -329,13 +332,14 @@ test('a record that names another tree clears nothing, however recent it is', ()
 
   const result = runIn(site, RUN_DEPLOY, [], CREDENTIALS);
 
-  assert.equal(result.status, 1);
-  assert.equal(wranglerRan(log), false);
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stderr, UNMEASURED_WARNING);
+  assert.equal(wranglerRan(log), true);
 });
 
-test('no flag and no variable waives the refusal', () => {
-  const { site, log } = workspace({ routes: ['/'], owing: true });
-  const waivers = {
+test('no flag and no variable silences the warning', () => {
+  const { site } = workspace({ routes: ['/'], owing: true });
+  const quiet = {
     CI: 'true',
     GITHUB_ACTIONS: 'true',
     FORCE: '1',
@@ -345,12 +349,11 @@ test('no flag and no variable waives the refusal', () => {
     AUTOWRITER_UNATTENDED: '1',
   };
 
-  const withVariables = runIn(site, RUN_DEPLOY, [], { ...CREDENTIALS, ...waivers });
+  const withVariables = runIn(site, RUN_DEPLOY, [], { ...CREDENTIALS, ...quiet });
   const withFlags = runIn(site, RUN_DEPLOY, ['--force', '--allow-unmeasured', '--waive-measurement'], CREDENTIALS);
 
-  assert.equal(withVariables.status, 1);
-  assert.equal(withFlags.status, 1);
-  assert.equal(wranglerRan(log), false);
+  assert.match(withVariables.stderr, UNMEASURED_WARNING);
+  assert.match(withFlags.stderr, UNMEASURED_WARNING);
 });
 
 test('a preview is not a publication, so a pull request is previewed before anything measured it', () => {
@@ -359,6 +362,7 @@ test('a preview is not a publication, so a pull request is previewed before anyt
   const result = runIn(site, RUN_DEPLOY, ['--preview', 'pr-9'], CREDENTIALS);
 
   assert.equal(result.status, 0, result.stderr);
+  assert.doesNotMatch(result.stderr, /Lighthouse/);
   assert.equal(wranglerRan(log), true);
 });
 
