@@ -51,10 +51,9 @@ a repeat of the post's concept is skipped. `WRITING_TERM_CAP` (unset means 1) bo
 
 A measured query at a position from 8 to 30 (`scripts/topic-demand.mjs`) is never a new page: it is a
 strengthen report naming its route, query and number, for a human. When no rung gives a topic, the first
-report is the decision `strengthen`: no claim, and no spend unless proposals were made. The band is calibrated on the real
-report (measured 2026-11-01): no query sits between 8 and 30; the nearest are `meshin` at 7.0 and
-`ai governance` at 67.0, so `position <= 30` would select the empty set. Below 8 the page is already on
-page one and above 30 it is not one step away. A measured query no prompt names, with no answering page
+report is the decision `strengthen`: no claim, and no spend unless proposals were made. The report in
+`audits/search-demand.md` is the evidence for the band; read it before moving the band. Below 8 the page is
+already on page one and above 30 it is not one step away. A measured query no prompt names, with no answering page
 and a question or procedure cue, is a proposal for a new buyer prompt, and with no unproven prompt left the best one is written as a `weak-demand` post (rung 2). The owner adopts a prompt; the machine
 never does.
 
