@@ -47,7 +47,7 @@ The Slack message is Block Kit `{ text, blocks }` from `scripts/escalation-slack
 detail with addresses as links, fields Pull request, Workflow run and Issue, the ledger path; `text` repeats it for a phone.
 Slack carries `spend-ceiling`, `credential` and `no-convergence` at once; `hard-stop` and `unrepairable` open an issue and wait
 for the digest. It reads `GITHUB_TOKEN`, `GITHUB_REPOSITORY` and `SLACK_WEBHOOK_URL`. Unlike the statistics message a missed one is
-never quiet: the receipt names it, the command exits 1, the gate stays red until `redeliver`. No secret, the webhook included, is logged. An escalated pull request can re-enter the loop: `resume-an-escalated-pull-request.md`.
+never quiet: the receipt names it, the command exits 1, the gate stays red until `redeliver`. A 4xx on the blocks is retried as `text` alone; that receipt is delivered, its `error` says the formatted message was refused, and the run prints a `::warning::`. No secret, the webhook included, is logged. An escalated pull request can re-enter the loop: `resume-an-escalated-pull-request.md`.
 
 ## The aggregate check
 

@@ -3,7 +3,7 @@ import { join } from 'node:path';
 
 import { ESCALATION_KINDS, newLedger, readLedger, requiredChannels, writeLedger } from './autowriter-ledger.mjs';
 import { variable } from './escalate-channels.mjs';
-import { EscalationError, describeReceipt, escalate } from './escalate.mjs';
+import { EscalationError, describeReceipt, escalate, wasPlainText } from './escalate.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 
 const LOCAL_RUN_ID = 'local';
@@ -83,7 +83,11 @@ export async function runCli(argv, io = {}) {
     return 2;
   }
   const show = (escalation) =>
-    latestReceipts(escalation).forEach((receipt) => stdout(describeReceipt(escalation, receipt)));
+    latestReceipts(escalation).forEach((receipt) => {
+      const line = describeReceipt(escalation, receipt);
+      if (wasPlainText(receipt)) stderr(`::warning::${line}`);
+      else stdout(line);
+    });
   try {
     const { 'ledger-dir': ledgerDir, slug, kind, title, detail } = options;
     show(await raiseOnRun({ ledgerDir, slug, kind, title, detail, env, fetch, now }));
