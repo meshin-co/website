@@ -49,6 +49,9 @@ export function searchFallbackUrl({ title, publisher }) {
 export const isSearchFor = (url, { title, publisher }) =>
   phraseOf(title) !== '' && url === searchFallbackUrl({ title, publisher });
 
+/** @typedef {{ url: string, original?: string, title?: string, publisher?: string }} SourceRow */
+
+/** @param {SourceRow} row */
 export function standInKind({ url, original, title, publisher }) {
   if (typeof original !== 'string') return null;
   if (isSnapshotOf(url, original) && capturedOn(url) !== null) return 'archive';
@@ -60,6 +63,7 @@ const NOTE_OF = {
   search: () => SEARCH_NOTE,
 };
 
+/** @param {SourceRow} row */
 export function standInNote(row) {
   const kind = standInKind(row);
   return kind === null ? null : NOTE_OF[kind](row);
@@ -71,4 +75,5 @@ export const isStandInNote = (text) =>
 
 export const isStandInPhrase = (text) => text === ARCHIVE_NOTE_LEAD || text === SEARCH_NOTE;
 
+/** @param {{ url: string, original?: string }} source */
 export const citedHost = ({ original, url }) => new URL(original ?? url).hostname.replace(/^www\./, '');

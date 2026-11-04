@@ -20,11 +20,25 @@ const GREEN_REPORT = {
 };
 
 const git = (cwd, ...args) =>
-  execFileSync('git', ['-c', 'user.name=specimen', '-c', 'user.email=specimen@example.invalid', ...args], {
-    cwd,
-    encoding: 'utf8',
-    stdio: ['ignore', 'pipe', 'pipe'],
-  }).trim();
+  execFileSync(
+    'git',
+    [
+      '-c',
+      'user.name=specimen',
+      '-c',
+      'user.email=specimen@example.invalid',
+      '-c',
+      'maintenance.auto=false',
+      '-c',
+      'gc.auto=0',
+      ...args,
+    ],
+    {
+      cwd,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    }
+  ).trim();
 
 async function writeMeasuredReports(root) {
   for (const factor of ['mobile', 'desktop']) {
