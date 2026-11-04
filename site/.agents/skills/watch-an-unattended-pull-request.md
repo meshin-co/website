@@ -17,7 +17,7 @@ dependency, so the job needs no `npm ci` while it holds a token that can merge.
 ## The verdicts
 
 - **merge:** every required job `success`, the aggregate `all required jobs passed` `success`, every
-  commit by `autowriter-bot@meshin.co`, and the pull request at least 12 hours old. The runner squash
+  commit by `autowriter-bot@<site.name>`, and the pull request at least 12 hours old. The runner squash
   merges the head it judged; a 409 means the head moved, so it starts a successor instead.
 - **catch-up:** the merge case, but `main` changed a derived file since the branch left it. The repair job
   merges `origin/main` in and regenerates the derived set (`scripts/catch-up.mjs`, run by `npm run catch-up:entry`,

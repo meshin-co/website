@@ -13,7 +13,7 @@ it, which git ignores, and fill it in. Three variables are required:
 | -------------------------- | --------------------------------------------------------------------------- |
 | `CLOUDFLARE_API_TOKEN`     | Custom token: Account → Cloudflare Pages → Edit, User → User Details → Read |
 | `CLOUDFLARE_ACCOUNT_ID`    | The account the Pages project lives in                                      |
-| `CLOUDFLARE_PAGES_PROJECT` | The project serving `meshin.pages.dev` (L16)                                |
+| `CLOUDFLARE_PAGES_PROJECT` | The project serving `<name>.pages.dev` (L16)                                |
 
 Add `Zone → DNS → Edit` only if the apex is ever attached from a script; today the owner does it by hand (row G35).
 

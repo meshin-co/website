@@ -6,7 +6,7 @@ the platform can refuse a job for reasons that have nothing to do with the commi
 ## Step 1: did our code run at all?
 
 ```
-gh api "repos/meshin-co/website/actions/runs/<id>/jobs" \
+gh api "repos/{owner}/{repo}/actions/runs/<id>/jobs" \
   --jq '.jobs[] | {name, conclusion, steps: [.steps[]?.name]}'
 ```
 
@@ -21,7 +21,7 @@ For a refused job `gh run view --log-failed` returns nothing and the log endpoin
 check run:
 
 ```
-gh api "repos/meshin-co/website/check-runs/<job-id>/annotations" \
+gh api "repos/{owner}/{repo}/check-runs/<job-id>/annotations" \
   --jq '.[] | .annotation_level + ": " + .message'
 ```
 

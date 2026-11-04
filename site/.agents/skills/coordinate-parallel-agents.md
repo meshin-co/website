@@ -1,6 +1,6 @@
 # Coordinate Parallel Agents
 
-meshin.co phases run with several subagents editing the same checkout at once. This is the
+Phases run with several subagents editing the same checkout at once. This is the
 protocol that keeps concurrent edits from colliding, derived from running it under Phase 4.5 and
 4.6. It supplements, never replaces, whatever the dispatching agent states as the wave's explicit
 file assignments and cross-task contracts.

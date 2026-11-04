@@ -1,6 +1,6 @@
 # Link Out
 
-Every link that leaves `meshin.co` carries exactly one rel value:
+Every link that leaves the site carries exactly one rel value:
 
     rel="nofollow noopener noreferrer"
 

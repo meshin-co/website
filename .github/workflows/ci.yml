@@ -305,7 +305,7 @@ jobs:
           credential="$(printf 'x-access-token:%s' "$AUTOWRITER_PAT" | base64 | tr -d '\n')"
           echo "::add-mask::$credential"
           git config user.name 'baseline-bot'
-          git config user.email 'baseline-bot@meshin.co'
+          git config user.email "baseline-bot@$(node --input-type=module -e "import { brandFromDisk } from './src/utils/brand.mjs'; console.log(brandFromDisk().name)")"
           git add tests/__screenshots__/linux
           git commit -m 'test: regenerate linux baselines on the CI runner' || echo 'no changes'
           git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $credential" pull --rebase origin "${GITHUB_REF_NAME}"

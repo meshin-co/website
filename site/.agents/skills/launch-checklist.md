@@ -15,13 +15,13 @@ edge measurement is row G44 of `docs/plan/reference/known-gaps.md`. Nothing here
 
 ## The flip
 
-1. Attach the apex `meshin.co` to the Cloudflare Pages project; `www` 301s to the apex; keep
+1. Attach the apex to the Cloudflare Pages project; `www` 301s to the apex; keep
    the L4 verification TXT record, DNS-only.
 2. No preview noindex is removed by hand: `scripts/gen-headers.mjs` sends `X-Robots-Tag: noindex`
    for `https://:project.pages.dev/*` and `https://:version.:project.pages.dev/*` only, so
-   `meshin.pages.dev` and every preview URL stay out of the index once the apex is live, while
-   `meshin.co` carries no such header on its pages. Verify both halves on the deployed hosts
-   (noindex present on `meshin.pages.dev`, absent on `meshin.co`); an `X-Robots-Tag` on the apex
+   `<project>.pages.dev` and every preview URL stay out of the index once the apex is live, while
+   the apex carries no such header on its pages. Verify both halves on the deployed hosts
+   (noindex present on `<project>.pages.dev`, absent on the apex); an `X-Robots-Tag` on the apex
    means a Cloudflare-side rule outside this repo is adding it. Then verify the live robots meta
    and response headers on the production URL — the deployed header is the artifact, not the
    source file. The machine-surface noindex rules in `scripts/gen-headers.mjs` (feeds, llms

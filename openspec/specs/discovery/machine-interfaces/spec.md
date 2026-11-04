@@ -68,8 +68,8 @@ Every built collection leaf route, every public static page and every collection
 
 #### Scenario: A sidecar names another page as its source
 
-- **WHEN** the `Source:` line of `/about.md` reads `https://meshin.co/wrong-page`
-- **THEN** `npm run gate:machine` prints `MACHINE sidecar for /about canonical is https://meshin.co/wrong-page, expected https://meshin.co/about` and exits 1
+- **WHEN** the `Source:` line of `/about.md` reads `https://example.com/wrong-page`
+- **THEN** `npm run gate:machine` prints `MACHINE sidecar for /about canonical is https://example.com/wrong-page, expected https://example.com/about` and exits 1
 
 ### Requirement: The merged feed carries at least five entries of each collection, or all of a smaller one
 
@@ -118,7 +118,7 @@ Each collection hub, `/blog`, `/services`, `/resources`, `/glossary`, `/case-stu
 
 #### Scenario: A noindex page leaks into the sitemap
 
-- **WHEN** `/sitemap-0.xml` gains `<loc>https://meshin.co/search</loc>`
+- **WHEN** `/sitemap-0.xml` gains `<loc>https://example.com/search</loc>`
 - **THEN** `npm run gate:machine` prints `MACHINE sitemap lists noindex route /search` and exits 1
 
 ### Requirement: Every dated live route carries a lastmod in the sitemap
@@ -137,17 +137,17 @@ Every live route that `siteLastmods` in `site/src/utils/sitemap-lastmod.mjs` dat
 
 ### Requirement: Every page declares its own bare URL as canonical and og:url
 
-Every built route SHALL carry a `<link rel="canonical">` and a `<meta property="og:url">` equal to its bare absolute URL: `https://meshin.co` for `/`, otherwise the origin plus the route with no trailing slash and no `.html`. `npm run gate:machine` enforces this, and the `canonical-names-a-built-file` family of `npm run test:smoke` plants the canonical `https://meshin.co/about.html` and requires that failure.
+Every built route SHALL carry a `<link rel="canonical">` and a `<meta property="og:url">` equal to its bare absolute URL: `https://example.com` for `/`, otherwise the origin plus the route with no trailing slash and no `.html`. `npm run gate:machine` enforces this, and the `canonical-names-a-built-file` family of `npm run test:smoke` plants the canonical `https://example.com/about.html` and requires that failure.
 
 #### Scenario: A canonical carries a trailing slash
 
-- **WHEN** `/about` declares `https://meshin.co/about/` as its canonical
-- **THEN** `npm run gate:machine` prints `MACHINE /about canonical is https://meshin.co/about/, expected https://meshin.co/about` and exits 1
+- **WHEN** `/about` declares `https://example.com/about/` as its canonical
+- **THEN** `npm run gate:machine` prints `MACHINE /about canonical is https://example.com/about/, expected https://example.com/about` and exits 1
 
 #### Scenario: A page has no og:url
 
 - **WHEN** `/about` ships without `<meta property="og:url">`
-- **THEN** `npm run gate:machine` prints `MACHINE /about og:url is (missing), expected https://meshin.co/about` and exits 1
+- **THEN** `npm run gate:machine` prints `MACHINE /about og:url is (missing), expected https://example.com/about` and exits 1
 
 ### Requirement: The page catalog behind the machine files matches every shipped description
 
@@ -179,7 +179,7 @@ Every entry of `STATIC_PAGE_CATALOG` and `HUB_PAGES` in `site/src/utils/machine-
 
 ### Requirement: robots.txt is the generated crawler register
 
-`site/public/robots.txt` SHALL equal the output of `site/scripts/gen-robots.mjs`: a `*` group, then one group for each of 22 named training, retrieval and search crawlers in a pinned order, each with `Allow: /` and the `*` group's disallows, `/search` and `/styleguide`, plus `/api` only when a pages `api` directory exists, then a `Sitemap:` line naming `https://meshin.co/sitemap-index.xml`. Guarded by `site/scripts/gen-robots.test.mjs` under `npm run test`.
+`site/public/robots.txt` SHALL equal the output of `site/scripts/gen-robots.mjs`: a `*` group, then one group for each of 22 named training, retrieval and search crawlers in a pinned order, each with `Allow: /` and the `*` group's disallows, `/search` and `/styleguide`, plus `/api` only when a pages `api` directory exists, then a `Sitemap:` line naming `https://example.com/sitemap-index.xml`. Guarded by `site/scripts/gen-robots.test.mjs` under `npm run test`.
 
 #### Scenario: robots.txt is edited by hand
 
@@ -221,7 +221,7 @@ The card template in `site/src/utils/og-template.mjs` SHALL draw on a fixed 1200
 
 #### Scenario: A post's og:image points elsewhere
 
-- **WHEN** `articleMetadata` stops pointing a post's `og:image` at `https://meshin.co/og/post/<id>.png`
+- **WHEN** `articleMetadata` stops pointing a post's `og:image` at `https://example.com/og/post/<id>.png`
 - **THEN** `npm run test` fails the test `article metadata carries the absolute og image and the article dates`
 
 ### Requirement: llms.txt inlines what is bounded and points at what is unbounded
@@ -230,7 +230,7 @@ The card template in `site/src/utils/og-template.mjs` SHALL draw on a fixed 1200
 
 #### Scenario: A blog post is listed inline
 
-- **WHEN** `/llms.txt` gains a line linking `https://meshin.co/blog/a-post`
+- **WHEN** `/llms.txt` gains a line linking `https://example.com/blog/a-post`
 - **THEN** `npm run gate:machine` prints `MACHINE llms.txt lists /blog/a-post inline, entries of an unbounded collection belong in /llms/` and exits 1
 
 ### Requirement: llms.txt stays under 8192 bytes

@@ -23,8 +23,8 @@ No title or meta description is ever truncated with an ellipsis, mid-clause or o
   `can-you-get-us-iso-iec-42001-certified-or-just-a-working-system.md` for a real example). The
   faq collection schema in `content.config.ts` refines the computed default and fails the build
   naming `description` when neither the override nor the mechanical rule clears 120–160 chars.
-- FAQ `<title>`/`og:title` use the full question when it fits inside 58 characters (70 minus the
-  ` — meshin.co` suffix). A longer question needs a hand-authored `shortTitle:` frontmatter
+- FAQ `<title>`/`og:title` use the full question when it fits inside the title budget (70 minus the
+  ` — <site.name>` suffix). A longer question needs a hand-authored `shortTitle:` frontmatter
   field — the `<h1>` still shows the full question, only the title tag and OG title shorten.
   `pageTitle()`'s clause-boundary fallback (comma/`and`/`or`/`but` boundary, no ellipsis, no
   trailing conjunction) only fires when a `shortTitle` is missing; every FAQ entry needing one
