@@ -51,10 +51,12 @@ not match its rows (`gate:links`); an `original` that `url` does not stand in fo
 `source-original-must-match-its-stand-in`.
 
 **Never blocks, and never stops a pipeline:** a gone outbound address, a citation resting on a search link, an
-`unverified` host (403, 429, 5xx, timeout, no answer) and the archive being down. `gate:links` reads the outbound
-addresses from `dist/` with `scripts/outbound-links.mjs` and never fetches one: a third party's page is not a defect in
-this change. `scripts/link-probe.mjs` judges them, by GET only: linkinator kept a HEAD's 404 when its follow-up GET
-failed, and NIST answers HEAD 404 and GET 200 (33 pages red in CI, 2026-11-03). Dead is two 404 or 410 and no 2xx.
+`unverified` host (403, 429, 5xx, timeout), a host name that does not resolve, a run in which no host answered, the
+archive being down and a lost watch cache. `gate:links` reads the outbound addresses from `dist/` with
+`scripts/outbound-links.mjs` and never fetches one: a third party's page is not a defect in this change.
+`scripts/link-probe.mjs` judges them, by GET only: linkinator kept a HEAD's 404 when its follow-up GET failed, and NIST
+answers HEAD 404 and GET 200 (33 pages red in CI, 2026-11-03, for a citation that was alive). Dead is two 404 or 410 and
+no 2xx, or a host name that did not resolve on three scheduled days (`follow-a-citation-across-days.md`).
 
 ## A cited address that has gone
 
@@ -64,16 +66,15 @@ A source row keeps `url`, what the page links to, and `original`, what was cited
     original: https://example.com/standard
 
 Every consumer keeps working on `url`, and the anchor still takes its rel from `EXTERNAL_REL`. The unattended writer
-binds its claims to `original ?? url`. `src/content.config.ts` refuses an `original` that `url` does not stand in for:
-its Internet Archive snapshot, or the search for the source's own `title` and `publisher`.
+binds its claims to `original ?? url`. `src/content.config.ts` refuses an `original` that `url` does not stand in for
+(its Internet Archive snapshot, or the search for the source's `title` and `publisher`), so a citation that goes back to
+its address loses its `original` line.
 
-The job takes three rungs and ends in no failure and no guess at another source. (1) The cited address, while it
-answers. (2) The Internet Archive capture nearest the day it was cited (`retrieved`, else `updatedDate`), never the
-newest, which can be a different document. (3) When the archive holds nothing usable, a search for the title and
-publisher: a search for the dead address finds nothing, one for its title finds where the page moved.
-
-The machine rewrites addresses, never words, so the claim beside a stand-in still describes the page that was cited. The
-signals are the note the page prints (`Internet Archive copy, captured <day>`, or `the original page has gone; this link
-is a search for it`) and the generated register `audits/link-rot.json`. A person acts only on an `unplaced` row (an
-address no entry can be repaired for), or to replace a search link with a source read in a browser.
-`.github/workflows/repair-links.yml` runs `scripts/repair-links.mjs` daily; `repair-a-dead-citation.md` has the files.
+The job takes three rungs and ends in no failure and no guess at another source: the cited address while it answers,
+the Internet Archive capture nearest the day it was cited (`retrieved`, else `updatedDate`), never the newest, and, when
+the archive holds nothing usable, a search for the title and publisher. A search link is asked about again every day and
+comes back by itself (`repair-a-dead-citation.md` has the files). The machine rewrites addresses, never words, so the
+claim beside a stand-in still describes the page that was cited. The signals are the note the page prints (`Internet
+Archive copy, captured <day>`, or `the original page has gone; this link is a search for it`) and the register
+`audits/link-rot.json`. A person acts only on an `unplaced` row, or to replace a search link with a source read in a
+browser.

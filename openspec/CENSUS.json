@@ -68,6 +68,9 @@
     "The human gate judges the main text of every built page except the utility and pagination routes"
   ],
   "delivery/link-integrity": [
+    "A citation on a search link is asked about again every day",
+    "A host name that does not resolve is dead only after three scheduled days",
+    "A name counts only on a run in which another host answered",
     "A route earns an inbound link from a page, not from the chrome",
     "A scheduled job repairs a dead outbound citation from the archive, else from a search",
     "Every built page is valid HTML under the recommended html-validate rules",
