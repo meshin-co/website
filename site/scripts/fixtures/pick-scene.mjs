@@ -4,6 +4,9 @@ import { dirname, join, relative } from 'node:path';
 
 import { table } from '../markdown-table.mjs';
 import { runCli } from '../pick-a-topic.mjs';
+import { siteBrand } from '../site-brand.mjs';
+
+const BRAND = siteBrand().name;
 
 export const NOW = new Date('2026-11-02T04:00:00.000Z');
 
@@ -35,7 +38,7 @@ export const reportText = ({ prompts = [], queries = [] } = {}) =>
     '',
     'Measured: 2026-11-01 (window 2026-08-01 to 2026-10-30)',
     '',
-    'Property: sc-domain:meshin.co',
+    `Property: sc-domain:${BRAND}`,
     '',
     '## Queries',
     '',
@@ -104,7 +107,7 @@ export async function withPickRepo({ report = reportText(), posts = {} } = {}, b
     mkdirSync(join(root, 'docs'), { recursive: true });
     cpSync(LIVE_CORE, join(root, 'docs', 'SEMANTIC-CORE.md'));
     put(root, 'audits/search-demand.md', report);
-    put(root, 'site/src/config.yaml', 'site:\n  name: meshin.co\n');
+    put(root, 'site/src/config.yaml', `site:\n  name: ${BRAND}\n`);
     put(root, 'site/content-facts.json', '{}\n');
     for (const [slug, frontmatter] of Object.entries(posts)) put(root, `${POSTS}/${slug}.md`, postSource(frontmatter));
     return await body(sceneOf(root));

@@ -200,8 +200,16 @@
     "The mutation smoke rejects a family that would prove nothing"
   ],
   "governance/engine-portability": [
+    "A citation of a file the engine writes does not dangle",
+    "A document an engine file names travels once it names no site",
+    "A file can declare that it belongs to one site",
+    "An engine file names no site",
+    "Engine source holds no copy of a site's pages",
+    "Every file the engine expects is served",
+    "Every tracked file has one class, derived from a property it has",
     "One file holds what the engine knows about its site",
-    "The diff classifier has one implementation"
+    "The diff classifier has one implementation",
+    "The interview names everything the engine needs from its owner"
   ],
   "governance/spend-reporting": [
     "A block payload that Slack refuses is delivered as plain text",
