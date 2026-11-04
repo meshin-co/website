@@ -96,19 +96,34 @@ function slackMessage(context) {
   });
 }
 
+const failed = (result) => result.failure !== undefined;
+const accepted = (result) => !failed(result) && result.status >= 200 && result.status <= 299;
+const refusedWithClientError = (result) => !failed(result) && result.status >= 400 && result.status <= 499;
+const hasPlainText = ({ blocks, text }) => Array.isArray(blocks) && typeof text === 'string' && text.trim() !== '';
+
+const excerptOf = (result, clean) => clean(result.text).slice(0, MAX_EXCERPT_LENGTH);
+const refusalOf = (result, clean) => `Slack answered HTTP ${result.status}: ${excerptOf(result, clean)}`;
+const errorOf = (result, clean) => (failed(result) ? `request failed: ${result.failure}` : refusalOf(result, clean));
+const retryErrorOf = (result, clean) =>
+  failed(result)
+    ? `the plain text request failed: ${result.failure}`
+    : `HTTP ${result.status}: ${excerptOf(result, clean)} to the plain text sent after it`;
+const withStatus = (result, outcome) => (failed(result) ? outcome : { status: result.status, ...outcome });
+
+const plainTextOf = (text, status) =>
+  `${text}\n\nSent as plain text: Slack rejected the formatted version of this message (HTTP ${status}). The reason is in the warning on the workflow run.`;
+
 export async function postSlackMessage({ env, fetch, clean, message }) {
   if (absentVariables(env, ['SLACK_WEBHOOK_URL']).length > 0) return { error: NOT_SET.SLACK_WEBHOOK_URL };
-  const result = await send({
-    fetch,
-    url: variable(env, 'SLACK_WEBHOOK_URL'),
-    headers: { 'Content-Type': 'application/json' },
-    body: message,
-  });
-  if (result.failure !== undefined) return { error: `request failed: ${result.failure}` };
-  const { status, text: answer } = result;
-  if (status < 200 || status > 299)
-    return { status, error: `Slack answered HTTP ${status}: ${clean(answer).slice(0, MAX_EXCERPT_LENGTH)}` };
-  return { status };
+  const request = { fetch, url: variable(env, 'SLACK_WEBHOOK_URL'), headers: { 'Content-Type': 'application/json' } };
+  const first = await send({ ...request, body: message });
+  if (accepted(first)) return { status: first.status };
+  if (!refusedWithClientError(first) || !hasPlainText(message))
+    return withStatus(first, { error: errorOf(first, clean) });
+  const refusal = refusalOf(first, clean);
+  const plain = await send({ ...request, body: { text: plainTextOf(message.text, first.status) } });
+  if (accepted(plain)) return { status: plain.status, rejected: refusal };
+  return withStatus(plain, { error: `${refusal}, then ${retryErrorOf(plain, clean)}` });
 }
 
 const postToSlack = (context) => postSlackMessage({ ...context, message: slackMessage(context) });

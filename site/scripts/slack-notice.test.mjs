@@ -106,3 +106,43 @@ test('a notice Slack refuses, one it never receives and one with no webhook all 
   const unset = await run({ env: {}, fetch: answering(200).fetch });
   assert.deepEqual([refused.delivered, unreachable.delivered, unset.delivered], [false, false, false]);
 });
+
+const sequence = (...answers) => {
+  const calls = [];
+  const fetch = async (url, init) => {
+    calls.push(JSON.parse(init.body));
+    return answers.shift();
+  };
+  return { fetch, calls };
+};
+const reply = (status, text) => new Response(text, { status });
+const FALLBACK_LINE =
+  '::warning::spend report: slack delivered as plain text (HTTP 200): the formatted message was refused: Slack answered HTTP 400: invalid_blocks';
+
+test('a notice whose blocks Slack refuses is delivered as plain text, and the refusal is a warning annotation, not stdout', async () => {
+  const { fetch, calls } = sequence(reply(400, 'invalid_blocks'), reply(200, 'ok'));
+  const { out, err, delivered } = await run({ fetch });
+  assert.equal(delivered, true);
+  assert.equal(calls.length, 2);
+  assert.deepEqual(Object.keys(calls[1]), ['text']);
+  assert.deepEqual(out, []);
+  assert.deepEqual(err, [FALLBACK_LINE]);
+});
+
+test('a notice whose blocks and plain text Slack both refuse is a warning and returns false, never a throw', async () => {
+  const { fetch } = sequence(reply(400, 'invalid_blocks'), reply(400, 'no_text'));
+  const { out, err, delivered } = await run({ fetch });
+  assert.equal(delivered, false);
+  assert.deepEqual(out, []);
+  assert.deepEqual(err, [
+    '::warning::spend report: slack NOT delivered: Slack answered HTTP 400: invalid_blocks, then HTTP 400: no_text to the plain text sent after it',
+  ]);
+});
+
+test('a refusal that echoes the webhook never puts it in the warning of a notice that was then delivered as plain text', async () => {
+  const { fetch } = sequence(reply(400, `bad ${WEBHOOK}`), reply(200, 'ok'));
+  const { out, err } = await run({ fetch });
+  const shown = [...out, ...err].join('\n');
+  assert.equal(shown.includes('xoxSECRETpath'), false);
+  assert.match(shown, /\[SLACK_WEBHOOK_URL\]/);
+});

@@ -118,10 +118,15 @@ function recordingIo({ snapshot, merge, tick, failWith, calls, tree, mergedLedge
   };
 }
 
-function recordingFetch(requests, issueStatus) {
+function recordingFetch(requests, issueStatus, slackStatuses) {
+  const slackAnswers = [...slackStatuses];
   return async (url, init) => {
     requests.push({ url: String(url), body: JSON.parse(init.body) });
     const isIssue = String(url).endsWith('/issues');
+    if (!isIssue && slackAnswers.length > 0) {
+      const status = slackAnswers.shift();
+      return { status, text: async () => (status === 200 ? 'ok' : 'invalid_blocks') };
+    }
     const issue = JSON.stringify({ number: 9, html_url: 'https://github.test/issues/9' });
     if (isIssue && issueStatus !== 201) return { status: issueStatus, text: async () => '{"message":"Server Error"}' };
     return { status: isIssue ? 201 : 200, text: async () => (isIssue ? issue : 'ok') };
@@ -142,6 +147,7 @@ export async function harness({
   mergedLedger = ledgerRecord(),
   commits = null,
   issueStatus = 201,
+  slackStatuses = [],
 }) {
   const workdir = await mkdtemp(join(tmpdir(), 'watch-'));
   const summary = join(workdir, 'summary.md');
@@ -171,7 +177,7 @@ export async function harness({
     ...(slack ? { SLACK_WEBHOOK_URL: WEBHOOK } : {}),
   };
   const io = recordingIo({ snapshot, merge, tick, failWith, calls, tree, mergedLedger });
-  const fetch = recordingFetch(requests, issueStatus);
+  const fetch = recordingFetch(requests, issueStatus, slackStatuses);
   const now = () => hoursAfterOpening(bundle, hours);
   const run = () => watch({ number: 72, env, fetch, io, workdir, now, afterRepair });
   const ledgerPath = join(workdir, ledger?.path ?? recordPath('ledger', 'a-slug', now()));

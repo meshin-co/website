@@ -60,8 +60,8 @@ message (`node scripts/spend-report.mjs notify`, `scripts/spend-slack.mjs`), the
 - Links are `<url|label>`: `#84`, `run 777`, the entry under `site.site`, `#41`. `scripts/github-links.mjs` builds them from
   `GITHUB_SERVER_URL`, `GITHUB_REPOSITORY` and `GITHUB_RUN_ID`; `PULL_REQUEST` is the number, and with none there is no link.
 - `Warnings: 0 (...)` is a context line; N above 0 is a section with 3 listed, then `and K more in audits/spend-report.md`. No note appears.
-- A missed message is not an escalation: `deliverNotice` (`scripts/slack-notice.mjs`) prints `::warning::<label>: slack NOT delivered:
-<reason>`, the webhook removed by `redactorFor`, and exits 0. Exit 1 and 2 stay for causes that are not delivery.
+- A missed message is not an escalation: `deliverNotice` (`scripts/slack-notice.mjs`) prints `::warning::<label>: slack NOT delivered: <reason>`, the webhook removed by `redactorFor`, and exits 0. Exit 1 and 2 stay for causes that are not delivery.
+  A 4xx on the blocks is a formatting defect, not a missed message: `postSlackMessage` sends the `text` alone, ending in a line that says Slack refused the formatted version, and `deliverNotice` prints `::warning::<label>: slack delivered as plain text` with Slack's reason. Read that warning and fix the builder.
 - Live entry (`scripts/live-entry.mjs`, `scripts/live-slack.mjs`; `publish-the-build.md`): once per entry, when its page answers 2xx on
   `site.site`. Links come from `scripts/entry-surfaces.mjs` over `owedFor` and `SURFACES` (`scripts/route-parity.mjs`), the prompt is `claim.prompt`
   of the record (`scripts/entries-in-build.mjs`), `scripts/live-state.mjs` remembers it. An unreachable page is a warning message and stays unannounced.

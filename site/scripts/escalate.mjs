@@ -53,7 +53,8 @@ export function receiptOf(channel, attemptedAt, outcome, clean) {
     return { channel, attemptedAt, delivered: false, status: outcome.status ?? null, issue: null, error };
   }
   const issue = outcome.issue?.number ?? null;
-  return { channel, attemptedAt, delivered: true, status: outcome.status, issue, error: null };
+  const error = outcome.rejected === undefined ? null : `the formatted message was refused: ${clean(outcome.rejected)}`;
+  return { channel, attemptedAt, delivered: true, status: outcome.status, issue, error };
 }
 
 async function attempt(channels, context) {
@@ -171,8 +172,11 @@ function parseArguments(argv) {
   return { command, options };
 }
 
+export const wasPlainText = (receipt) => receipt.delivered && receipt.error !== null;
+
 export function describeDelivery(label, receipt) {
   if (!receipt.delivered) return `${label} NOT delivered: ${receipt.error}`;
+  if (wasPlainText(receipt)) return `${label} delivered as plain text (HTTP ${receipt.status}): ${receipt.error}`;
   const issue = receipt.issue === null ? '' : `, issue #${receipt.issue}`;
   return `${label} delivered (HTTP ${receipt.status}${issue})`;
 }
@@ -196,7 +200,11 @@ export async function runCli(argv, io = {}) {
   }
   const { command, options } = parsed;
   const show = (escalation) =>
-    latestReceipts(escalation).forEach((receipt) => stdout(describeReceipt(escalation, receipt)));
+    latestReceipts(escalation).forEach((receipt) => {
+      const line = describeReceipt(escalation, receipt);
+      if (wasPlainText(receipt)) stderr(`::warning::${line}`);
+      else stdout(line);
+    });
   try {
     const request = { ledgerPath: options.ledger, env, fetch, now };
     show(

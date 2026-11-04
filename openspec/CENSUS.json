@@ -204,6 +204,7 @@
     "The diff classifier has one implementation"
   ],
   "governance/spend-reporting": [
+    "A block payload that Slack refuses is delivered as plain text",
     "A day that ends with no entry still posts to Slack",
     "A line is a warning only when a person has something to do about it",
     "A missed live message never fails the publish",

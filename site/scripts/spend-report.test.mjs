@@ -403,11 +403,11 @@ test('notify refuses a result that is not a successful write, and posts nothing'
 test('a refused message is a warning and not a failed run: exit 0, one line on stderr, nothing on stdout, no webhook in it', () =>
   withRepo(async (repo) => {
     shipped(repo);
-    const answer = () => new Response(`invalid_token for ${WEBHOOK}`, { status: 404 });
+    const answer = () => new Response(`invalid_token for ${WEBHOOK}`, { status: 500 });
     const { code, out, err, printed } = await notify(repo, entriesOf('a-post'), { answer });
     assert.equal(code, 0);
     assert.deepEqual(out, []);
-    assert.deepEqual(err, [`${WARNING} Slack answered HTTP 404: invalid_token for [SLACK_WEBHOOK_URL]`]);
+    assert.deepEqual(err, [`${WARNING} Slack answered HTTP 500: invalid_token for [SLACK_WEBHOOK_URL]`]);
     assert.doesNotMatch(printed(), SECRETS);
   }));
 
@@ -440,7 +440,7 @@ test('a missed message does nothing else: one request, to Slack only, and no fil
     const before = repo.listing();
     const stamps = before.map((name) => statSync(join(repo.root, name)).mtimeMs);
     const { requests } = await notify(repo, entriesOf('a-post'), {
-      answer: () => new Response('no_service', { status: 404 }),
+      answer: () => new Response('no_service', { status: 500 }),
     });
     assert.deepEqual(
       requests.map(({ url }) => url),
@@ -567,4 +567,21 @@ test('when the ceiling status cannot be read nothing is posted, and the run fail
     assert.equal(code, 1);
     assert.deepEqual(run.requests, []);
     assert.match(run.err.join('\n'), /spend report: git for-each-ref failed/);
+  }));
+
+test('blocks Slack refuses with a 4xx are followed by the plain text: exit 0, two requests, the second text alone, one warning on stderr', () =>
+  withRepo(async (repo) => {
+    shipped(repo);
+    let sent = 0;
+    const answer = () => (sent++ === 0 ? new Response('invalid_blocks', { status: 400 }) : new Response('ok'));
+    const { code, requests, out, err, printed } = await notify(repo, entriesOf('a-post'), { answer });
+    assert.equal(code, 0);
+    assert.equal(requests.length, 2);
+    assert.deepEqual(Object.keys(requests[1].body), ['text']);
+    assert.ok(requests[1].body.text.startsWith(requests[0].body.text));
+    assert.deepEqual(out, []);
+    assert.deepEqual(err, [
+      '::warning::spend report: slack delivered as plain text (HTTP 200): the formatted message was refused: Slack answered HTTP 400: invalid_blocks',
+    ]);
+    assert.doesNotMatch(printed(), SECRETS);
   }));

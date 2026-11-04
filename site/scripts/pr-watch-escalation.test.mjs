@@ -79,6 +79,25 @@ test('the Slack message of a watcher escalation is a payload Slack accepts', asy
   assert.deepEqual(blockKitProblems(slackMessageOf(requests)), []);
 });
 
+test('a watcher escalation whose blocks Slack refuses is delivered as plain text, passes the job, and the ledger on the branch says so', async () => {
+  const ledger = ledgerRecord({ attempts: spentAttempts });
+  const { run, calls, requests, ledgerPath } = await harness({
+    bundle: scenario('content-gate-failure'),
+    ledger,
+    slackStatuses: [400, 200],
+  });
+  const { action } = await run();
+
+  const posted = requests.filter(({ url }) => url === WEBHOOK);
+  assert.equal(action, 'escalated');
+  assert.equal(posted.length, 2);
+  assert.deepEqual(Object.keys(posted[1].body), ['text']);
+  const [, slack] = readJson(ledgerPath).escalations[0].receipts;
+  assert.equal(slack.delivered, true);
+  assert.equal(slack.error, 'the formatted message was refused: Slack answered HTTP 400: invalid_blocks');
+  assert.deepEqual(writtenNames(calls), ['putLedger']);
+});
+
 test('a pull request the ledger on the branch does not name is a link in the Slack message all the same', async () => {
   const error = refusal(401, 'Bad credentials');
   const ledger = ledgerRecord({ pullRequest: null });
