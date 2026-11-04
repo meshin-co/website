@@ -1,3 +1,7 @@
+---
+record: true
+---
+
 # Finishing change 26: what was found, what was done, what remains
 
 Written 2026-11-04 when Main stood the work down. Change 26 is archived and its open items are in gap row G63;
