@@ -67,5 +67,17 @@
       "output": 4190
     },
     "costUsd": 0.03108
-  }
+  },
+  "resumes": [
+    {
+      "at": "2026-11-04T03:29:36.185Z",
+      "by": "main-change",
+      "mainSha": "7dd67201c9c6b065a500a62bc46b62ffbf843477",
+      "failedJobs": [
+        "cheap-gates",
+        "visual-and-axe (1)",
+        "visual-and-axe (2)"
+      ]
+    }
+  ]
 }
