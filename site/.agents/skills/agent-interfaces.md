@@ -25,7 +25,8 @@ fails when they differ. Lighthouse rejected the directive as unknown until 13.1.
 No list of routes is typed out. `publicJsonRoutes()` walks the built output; the capability
 manifest lists a file only when that file is in `dist`; the content signal is emitted per group by
 the same loop that emits the groups. A hand-kept array would drift from the build within one
-change, and the gate exists because that drift is invisible to a human reader.
+change, and the gate exists because that drift is invisible to a human reader. The manifest lists
+`/llms.txt`, `/llms-full.txt` (an index, no entry) and each `/llms/{collection}.txt`, never a shard.
 
 `gate-routes.json` is excluded from the OpenAPI document by name: it is a harness artifact, not an
 interface. If another internal JSON file ever lands in `dist`, exclude it the same way, with its
@@ -57,18 +58,17 @@ edge handler. `npm run smoke:prod` asks the live home page for markdown, which i
 that exists, and it is check 21 of 21.
 
 `HEAD` negotiates with `GET`: a `HEAD` that answers `text/html` while its own `GET` answers
-markdown misinforms the client, and the live site did exactly that until it was fixed.
-
-The handler itself is `scripts/markdown-negotiation.mjs`, copied verbatim by
-`scripts/gen-edge-worker.mjs` so that the code Pages runs is the code the tests drive.
+markdown misinforms the client, and the live site did exactly that until it was fixed. The handler
+is `scripts/markdown-negotiation.mjs`, copied verbatim by `scripts/gen-edge-worker.mjs` so that the
+code Pages runs is the code the tests drive.
 
 ## Before adding a fifth interface
 
 Read the matching file in `.agents/skills/ai-agent-readiness/`, which covers twenty protocols and
 is written to be copied into another project unchanged. Its rule governs here: publish a card only
 when the service behind it is real. This site has no accounts, no agent, no MCP server and nothing
-to sell, so it publishes none of those cards, and
-the proposal of the change `15-agent-readiness` records each refusal with its reason.
+to sell, so it publishes none of those cards, and the proposal of the change `15-agent-readiness`
+records each refusal with its reason.
 
 ## Two switches that outrank the build
 
@@ -76,5 +76,5 @@ A platform can rewrite `robots.txt` and can refuse a crawler before any file is 
 2026-10-24 on Cloudflare: Bot Preference Sync had been prepending 128 lines carrying `ai-train=no`
 and `Disallow: /`, and `ai_bots_protection` in the zone's bot settings was `block`, which answered
 403 to nine crawlers before any file was read. Both are off now, and all 22 crawlers in the
-register answer 200. Compare the live file against
-`dist/robots.txt` byte for byte before concluding anything about what agents see.
+register answer 200. Compare the live file against `dist/robots.txt` byte for byte before
+concluding anything about what agents see.

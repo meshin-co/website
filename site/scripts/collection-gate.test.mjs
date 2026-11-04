@@ -157,17 +157,30 @@ test('a trailing slash, a query string or a fragment does not hide the hub from 
   }
 });
 
-test('the heading of an empty collection in llms-full.txt is a finding, because the section is offered with nothing in it', () => {
-  const texts = { 'llms-full.txt': '# meshin.co\n\n## Offers\n\n## Case studies\n\n## Questions and answers\n' };
+const pointerLine = (path) => `- [Pointer](${SITE}${path}): 3 entries, full body text of each.`;
+const llmsFull = (...paths) => ['# meshin.co', '', '## Collections', '', ...paths.map(pointerLine)].join('\n');
+
+test('llms-full.txt pointing at the full-text file of an empty collection is a finding, as any listing surface is', () => {
+  const texts = {
+    'llms-full.txt': llmsFull('/llms/faq.txt', '/llms/case.txt', '/llms/case-1.txt', '/llms/case-12.txt'),
+  };
   assert.deepEqual(emptyCollectionFindings(caseWorld({ texts })), [
-    '/llms-full.txt carries the heading "Case studies" but ' + because,
+    `/llms-full.txt lists /llms/case.txt but ${because}`,
+    `/llms-full.txt lists /llms/case-1.txt but ${because}`,
+    `/llms-full.txt lists /llms/case-12.txt but ${because}`,
   ]);
 });
 
-test('a heading is read in llms-full.txt only, and only as a whole line', () => {
+test('llms-full.txt pointing only at the collections that have entries is clean for an empty collection', () => {
   const texts = {
-    'llms/post.txt': '## Case studies\n',
-    'llms-full.txt': 'See the ## Case studies heading, or ### Case studies in detail.\n',
+    'llms-full.txt': llmsFull('/llms/faq.txt', '/llms/post.txt', '/llms/post-2.txt', '/llms/case-study.txt'),
+  };
+  assert.deepEqual(emptyCollectionFindings(caseWorld({ texts })), []);
+});
+
+test('a heading that carries the title of an empty collection in llms-full.txt is no finding, the file holds pointers', () => {
+  const texts = {
+    'llms-full.txt': ['# meshin.co', '', '## Case studies', '', pointerLine('/llms/faq.txt')].join('\n'),
   };
   assert.deepEqual(emptyCollectionFindings(caseWorld({ texts })), []);
 });
@@ -187,7 +200,7 @@ test('a link to another origin that shares the hub’s path is not a listing of 
 
 test('the hub named in prose, or inside a body line, is not a listing, so an article may mention it', () => {
   const texts = {
-    'llms-full.txt': [
+    'llms/post.txt': [
       '## Writing',
       '',
       '# An article',

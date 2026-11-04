@@ -1,7 +1,17 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { FEED_BASES, emptyHubRoutes, isPublished, toFeedSource } from './feeds.mjs';
+import {
+  COLLECTION_FEED_MAX_BYTES,
+  FEED_BASES,
+  FEED_WINDOW,
+  LARGEST_MEASURED_FEED_ITEM_BYTES,
+  MERGED_FEED_MAX_BYTES,
+  MERGED_FEED_WINDOW,
+  emptyHubRoutes,
+  isPublished,
+  toFeedSource,
+} from './feeds.mjs';
 
 const ORIGIN = 'https://meshin.co';
 
@@ -9,6 +19,19 @@ test('FEED_BASES covers exactly the six public collections with their URL bases'
   assert.deepEqual(Object.keys(FEED_BASES), ['post', 'service', 'resource', 'glossary', 'case', 'faq']);
   assert.deepEqual(FEED_BASES.faq, 'faq');
   assert.deepEqual(FEED_BASES.case, 'case-studies');
+});
+
+test('the feed windows and byte budgets are 15, 50, 28821, 432315 and 1441050', () => {
+  assert.equal(FEED_WINDOW, 15);
+  assert.equal(MERGED_FEED_WINDOW, 50);
+  assert.equal(LARGEST_MEASURED_FEED_ITEM_BYTES, 28_821);
+  assert.equal(COLLECTION_FEED_MAX_BYTES, 432_315);
+  assert.equal(MERGED_FEED_MAX_BYTES, 1_441_050);
+});
+
+test('the byte budgets are the window times the largest measured feed item', () => {
+  assert.equal(COLLECTION_FEED_MAX_BYTES, FEED_WINDOW * LARGEST_MEASURED_FEED_ITEM_BYTES);
+  assert.equal(MERGED_FEED_MAX_BYTES, MERGED_FEED_WINDOW * LARGEST_MEASURED_FEED_ITEM_BYTES);
 });
 
 test('isPublished excludes a draft entry but keeps a live noindex entry', () => {

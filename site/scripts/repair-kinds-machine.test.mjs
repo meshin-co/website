@@ -29,6 +29,7 @@ const DECIDED = [
   'machine-header',
   'machine-file-unreferenced',
   'llms-corpus',
+  'feed-size',
 ];
 
 const oneSentence = (why) => {
@@ -51,9 +52,15 @@ for (const rule of DECIDED) {
   });
 }
 
-test('the machine table holds exactly the 23 family ids of the machine gate', () => {
+test('the machine table holds exactly the 24 family ids of the machine gate', () => {
   assert.deepEqual(Object.keys(MACHINE_KINDS).sort(), [...DECIDED].sort());
-  assert.equal(DECIDED.length, 23);
+  assert.equal(DECIDED.length, 24);
+});
+
+test('the llms-size reason covers every machine text file, and the feed-size reason covers every feed file', () => {
+  assert.match(MACHINE_KINDS['llms-size'].why, /every machine text file/);
+  assert.doesNotMatch(MACHINE_KINDS['llms-size'].why, /llms-full\.txt/);
+  assert.match(MACHINE_KINDS['feed-size'].why, /feed file/);
 });
 
 test('no two machine rows give the same reason', () => {

@@ -33,9 +33,10 @@ const SINGLE_FILE_ENTRIES = [
     path: '/llms-full.txt',
     namespace: 'llms',
     name: 'full',
-    displayName: 'Everything in full',
+    displayName: 'Full text index',
     type: TEXT_MEDIA_TYPE,
-    description: 'Full body text of every live entry, one section per collection.',
+    description:
+      'Index of the full-text collection files: one line per collection with its entry count, no entry text.',
   },
   {
     path: OPENAPI_PATH,
@@ -77,7 +78,7 @@ const COLLECTION_ENTRIES = LLMS_COLLECTIONS.map(({ name, title, file }) => ({
   name,
   displayName: `Full text: ${title}`,
   type: TEXT_MEDIA_TYPE,
-  description: `Full body text of every live entry in ${title.toLowerCase()}.`,
+  description: `Full body text of every live entry in ${title.toLowerCase()}. A collection over its entry cap is an index of numbered shard files.`,
 }));
 
 const SEARCH_SHARD_ENTRIES = Object.entries(KINDS).map(([kind, { label, plural }]) => ({

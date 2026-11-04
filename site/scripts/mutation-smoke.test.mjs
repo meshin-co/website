@@ -171,3 +171,28 @@ test('each rule the autowriter gate holds on the workflows has its own family, w
     assert.equal(SPECIMENS[specimen].token, `${rule} .github/workflows/ci.yml`, id);
   }
 });
+
+test('each bound on a generated machine index has its own family, and the two determinism plants run test:llms', () => {
+  const rows = {
+    'machine-llms-shard-over-budget': 'machineLlmsShardOverBudget',
+    'machine-llms-full-over-budget': 'machineLlmsFullOverBudget',
+    'machine-llms-full-inlines-entries': 'machineLlmsFullInlinesEntries',
+    'machine-llms-shard-over-cap': 'machineLlmsShardOverCap',
+    'machine-llms-shard-omits-entry': 'machineLlmsShardOmitsEntry',
+    'machine-llms-index-carries-entry': 'machineLlmsIndexCarriesEntry',
+    'machine-llms-full-count-drifts': 'machineLlmsFullCountDrifts',
+    'machine-feed-over-window': 'machineFeedOverWindow',
+    'machine-feed-over-budget': 'machineFeedOverBudget',
+    'llms-drops-the-id-tie-break': 'llmsDropsTheIdTieBreak',
+    'llms-appends-a-timestamp': 'llmsAppendsATimestamp',
+    'parity-entry-leaves-its-llms-shards': 'parityEntryLeavesItsLlmsShards',
+  };
+  const families = manifestFamilies(FAMILIES);
+  for (const [id, specimen] of Object.entries(rows)) {
+    const family = families.find((entry) => entry.id === id);
+    assert.equal(family?.kind, 'specimen', id);
+    assert.equal(family.specimen, specimen, id);
+  }
+  assert.equal(provesOf(families.find((entry) => entry.id === 'llms-drops-the-id-tie-break')), 'test:llms');
+  assert.equal(provesOf(families.find((entry) => entry.id === 'llms-appends-a-timestamp')), 'test:llms');
+});

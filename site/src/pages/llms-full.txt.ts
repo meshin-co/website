@@ -2,8 +2,7 @@ import { getCollection } from 'astro:content';
 
 import { SITE } from 'astrowind:config';
 import { absoluteUrl, renderLlmsFull } from '~/utils/machine-text.mjs';
-import { LLMS_COLLECTIONS, orderEntries, toLlmsEntry } from '~/utils/llms-collections.mjs';
-import { LLMS_FULL_MAX_BYTES } from '~/utils/llms-collections.mjs';
+import { LLMS_COLLECTIONS, LLMS_FILE_MAX_BYTES, llmsCollectionPointers } from '~/utils/llms-collections.mjs';
 
 export const prerender = true;
 
@@ -14,21 +13,17 @@ const isLive = ({ data }: LiveEntry) => !data.draft && !data.noindex;
 export const GET = async () => {
   const site = import.meta.env.SITE.replace(/\/$/, '');
 
-  const sections = [];
-  for (const { name, base, title } of LLMS_COLLECTIONS) {
-    const entries = await getCollection(name as Parameters<typeof getCollection>[0], isLive);
-    if (entries.length === 0) continue;
-    const mapped = orderEntries(entries.map(toLlmsEntry())).map((entry) => ({
-      title: entry.title,
-      url: absoluteUrl(site, `${base}/${entry.id}`),
-      summary: entry.description,
-      body: entry.body,
-      updated: entry.updated,
-    }));
-    sections.push({ title, url: absoluteUrl(site, `/llms/${name}.txt`), entries: mapped });
+  const entryCounts: Record<string, number> = {};
+  for (const { name } of LLMS_COLLECTIONS) {
+    entryCounts[name] = (await getCollection(name as Parameters<typeof getCollection>[0], isLive)).length;
   }
 
-  return new Response(renderLlmsFull({ site: SITE.name, sections, maxBytes: LLMS_FULL_MAX_BYTES }), {
+  const pointers = llmsCollectionPointers(entryCounts).map((pointer) => ({
+    ...pointer,
+    url: absoluteUrl(site, pointer.url),
+  }));
+
+  return new Response(renderLlmsFull({ site: SITE.name, maxFileBytes: LLMS_FILE_MAX_BYTES, pointers }), {
     headers: { 'Content-Type': 'text/plain; charset=utf-8' },
   });
 };

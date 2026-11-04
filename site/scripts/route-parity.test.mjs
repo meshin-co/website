@@ -1,8 +1,14 @@
 import assert from 'node:assert/strict';
+import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 
-import { CONDITIONAL, OWED, SURFACE_IDS, parityLines, routeParity } from './route-parity.mjs';
-import { SITE, buildWorld, pngHead, urlOf } from './fixtures/parity-world.mjs';
+import { FEED_WINDOW } from '../src/utils/feeds.mjs';
+import { SPECIMENS } from './mutation-specimens.mjs';
+import { readWorld } from './route-parity-gate.mjs';
+import { CONDITIONAL, OWED, SURFACE_IDS, owedFor, parityLines, routeParity } from './route-parity.mjs';
+import { SITE, allEntryRoutes, buildWorld, feedOf, pngHead, urlOf } from './fixtures/parity-world.mjs';
 
 const dropLine = (text, needle) =>
   text
@@ -27,6 +33,46 @@ const dropHeadTag = (world, route, pattern) => {
 };
 
 const findingsOf = (world) => routeParity(world).findings;
+
+const NEWER = '2026-10-02T00:00:00.000Z';
+const OLDER = '2026-09-01T00:00:00.000Z';
+const GLOSSARY_TERMS = 1;
+const FEED_ITEM_OWED = ' is owed an item in its collection feed';
+
+const idOf = (number) => 'post-' + String(number).padStart(2, '0');
+const routeOf = (number) => '/blog/' + idOf(number);
+const routesOf = (first, last) => Array.from({ length: last - first + 1 }, (_, at) => routeOf(first + at));
+const postsWorld = (count) => buildWorld({ entries: { post: Array.from({ length: count }, (_, at) => idOf(at + 1)) } });
+
+async function withFiles(files, use) {
+  const root = mkdtempSync(join(tmpdir(), 'route-parity-'));
+  try {
+    for (const [name, text] of Object.entries(files)) {
+      mkdirSync(dirname(join(root, name)), { recursive: true });
+      writeFileSync(join(root, name), text);
+    }
+    return await use(root);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
+const readWorldOf = (files) => withFiles(files, readWorld);
+
+const readLlmsFiles = (root) =>
+  Object.fromEntries(
+    readdirSync(join(root, 'dist/llms')).map((name) => [
+      'llms/' + name,
+      readFileSync(join(root, 'dist/llms', name), 'utf8'),
+    ])
+  );
+
+const llmsFilesOf = (world) =>
+  Object.fromEntries(
+    Object.entries(world.texts)
+      .filter(([file]) => file.startsWith('llms/post'))
+      .map(([file, text]) => ['dist/' + file, text])
+  );
 
 const MUTATIONS = [
   ['sitemap', '/blog/first', 'a sitemap entry with a lastmod', (world) => dropSitemap(world, '/blog/first')],
@@ -85,12 +131,6 @@ const MUTATIONS = [
     '/blog/first',
     'a place in its llms collection file',
     (world) => (world.texts['llms/post.txt'] = dropBlock(world.texts['llms/post.txt'], '/blog/first')),
-  ],
-  [
-    'llms-full',
-    '/glossary/evals',
-    'full text in llms-full.txt',
-    (world) => (world.texts['llms-full.txt'] = dropBlock(world.texts['llms-full.txt'], '/glossary/evals')),
   ],
   [
     'collection-feed',
@@ -191,9 +231,21 @@ test('each kind is owed what the generators emit for it, and the withheld kinds 
   assert.deepEqual(OWED.withheld, []);
   assert.deepEqual(OWED.pagination, []);
   assert.deepEqual(OWED.archive, ['sitemap', 'search-shard', 'og-image']);
-  assert.ok(OWED.entry.includes('collection-feed') && OWED.entry.includes('llms-full'));
+  assert.ok(OWED.entry.includes('collection-feed'));
+  assert.ok(!OWED.entry.includes('llms-full') && !SURFACE_IDS.includes('llms-full'));
   assert.ok(!OWED.page.includes('sidecar-link'));
   assert.ok(OWED.hub.includes('feed-link') && OWED.hub.includes('sidecar-link'));
+});
+
+test('an entry that appears in no line of llms-full.txt is not a finding, because that file lists collections and no entry', () => {
+  const world = buildWorld();
+  const pointers = world.texts['llms-full.txt'];
+
+  for (const route of allEntryRoutes()) assert.equal(pointers.includes(urlOf(route)), false, route);
+  assert.ok(pointers.includes(urlOf('/llms/post.txt')) && pointers.includes(urlOf('/llms/glossary.txt')));
+  assert.deepEqual(findingsOf(world), []);
+  delete world.texts['llms-full.txt'];
+  assert.deepEqual(findingsOf(world), []);
 });
 
 test('an entry is owed an llms.txt line only when its collection is listed inline', () => {
@@ -207,11 +259,192 @@ test('an entry is owed an llms.txt line only when its collection is listed inlin
   assert.ok(findings[0].text.startsWith('/blog/first is owed a line in llms.txt'), findings[0].text);
 });
 
+test('an entry listed only in a numbered shard of its collection is present, because the index and every shard are read', () => {
+  const world = buildWorld({ shardSize: 1 });
+  const holdsSecond = (file) => world.texts[file].includes(urlOf('/blog/second'));
+
+  assert.deepEqual(['llms/post.txt', 'llms/post-1.txt', 'llms/post-2.txt'].map(holdsSecond), [false, false, true]);
+  assert.deepEqual(findingsOf(world), []);
+});
+
+test('an entry listed in no file of its collection is a finding that names the collection file and its shards', () => {
+  const world = buildWorld({ shardSize: 1 });
+  world.texts['llms/post-2.txt'] = dropBlock(world.texts['llms/post-2.txt'], '/blog/second');
+  const findings = findingsOf(world);
+
+  assert.equal(findings.length, 1, JSON.stringify(findings));
+  assert.equal(
+    findings[0].text,
+    '/blog/second is owed a place in its llms collection file: /llms/post.txt and its shards do not list it'
+  );
+  assert.deepEqual(findings[0].subjects, ['/blog/second', '/llms/post.txt']);
+});
+
+test('the llms shard specimen strips the URL line of its entry from the one file that lists it, wherever that file is', async () => {
+  const { plant, token } = SPECIMENS.parityEntryLeavesItsLlmsShards;
+  const route = token.split(' ')[0];
+  const slug = route.slice('/blog/'.length);
+  const layouts = [
+    [slug, 'a'],
+    [slug, 'a', 'b', 'c', 'd'],
+    ['a', 'b', slug, 'c', 'd'],
+    ['a', 'b', 'c', 'd', slug],
+  ];
+
+  for (const ids of layouts) {
+    const world = buildWorld({ entries: { post: ids }, shardSize: 2 });
+    await withFiles(llmsFilesOf(world), async (copySite) => {
+      const pristine = readLlmsFiles(copySite);
+      assert.deepEqual(findingsOf(world), []);
+
+      const restore = await plant(copySite);
+      const planted = readLlmsFiles(copySite);
+      const changed = Object.keys(planted).filter((file) => planted[file] !== pristine[file]);
+
+      assert.equal(changed.length, 1, JSON.stringify(changed));
+      assert.ok(pristine[changed[0]].includes(urlOf(route)), changed[0]);
+      assert.equal(planted[changed[0]].includes(urlOf(route)), false, changed[0]);
+      assert.deepEqual(
+        findingsOf({ ...world, texts: { ...world.texts, ...planted } }).map(({ text }) => text),
+        [token]
+      );
+
+      await restore();
+      assert.deepEqual(readLlmsFiles(copySite), pristine);
+    });
+  }
+});
+
+test('the collection feed specimen removes an item the feed really carries, so it stays inside the window as the collection grows', async () => {
+  const { plant, token } = SPECIMENS.parityEntryLeavesItsCollectionFeed;
+
+  for (const count of [3, FEED_WINDOW, FEED_WINDOW * 3]) {
+    const world = postsWorld(count);
+    await withFiles({ 'dist/blog/rss.xml': world.texts['blog/rss.xml'] }, async (copySite) => {
+      await plant(copySite);
+      const planted = readFileSync(join(copySite, 'dist/blog/rss.xml'), 'utf8');
+      const findings = findingsOf({ ...world, texts: { ...world.texts, 'blog/rss.xml': planted } });
+
+      assert.equal(findings.length, 1, JSON.stringify(findings));
+      assert.ok(findings[0].text.endsWith(token), findings[0].text);
+    });
+  }
+});
+
+test('the world read from a build holds the index and every numbered shard of an llms collection', async () => {
+  const { texts } = await readWorldOf({
+    'index.html': '<!doctype html><html><head></head></html>',
+    'sitemap-0.xml': '<urlset></urlset>',
+    'llms/post.txt': '# example.test\n',
+    'llms/post-1.txt': '# example.test\n',
+    'llms/post-12.txt': '# example.test\n',
+  });
+  const llmsFiles = Object.keys(texts).filter((file) => file.startsWith('llms/'));
+
+  assert.deepEqual(llmsFiles.sort(), ['llms/post-1.txt', 'llms/post-12.txt', 'llms/post.txt']);
+});
+
 test('only the newest entry of a collection is owed a place in the merged feed', () => {
   const world = buildWorld();
   world.texts['rss.xml'] = dropItem(world.texts['rss.xml'], '/blog/second');
 
   assert.deepEqual(findingsOf(world), []);
+});
+
+test('an entry inside its collection feed window and absent from the feed is a finding', () => {
+  const world = postsWorld(FEED_WINDOW + 1);
+  world.texts['blog/rss.xml'] = dropItem(world.texts['blog/rss.xml'], routeOf(FEED_WINDOW));
+  const findings = findingsOf(world);
+
+  assert.equal(findings.length, 1, JSON.stringify(findings));
+  assert.ok(findings[0].text.startsWith(routeOf(FEED_WINDOW) + FEED_ITEM_OWED), findings[0].text);
+});
+
+test('an entry past its collection feed window is owed no feed item, so its absence from the feed is not a finding', () => {
+  const world = postsWorld(FEED_WINDOW + 1);
+  const { findings, ledger } = routeParity(world);
+
+  assert.equal(world.texts['blog/rss.xml'].includes(urlOf(routeOf(FEED_WINDOW + 1))), false);
+  assert.deepEqual(findings, []);
+  assert.deepEqual(ledger.surfaces['collection-feed'], {
+    owed: FEED_WINDOW + GLOSSARY_TERMS,
+    present: FEED_WINDOW + GLOSSARY_TERMS,
+  });
+});
+
+test('the window holds the newest entries by last modification, wherever their routes sort', () => {
+  const newest = routeOf(FEED_WINDOW + 1);
+  const windowRoutes = [newest, ...routesOf(1, FEED_WINDOW - 1)];
+  const world = postsWorld(FEED_WINDOW + 1);
+  world.sitemapLastmods.set(newest, NEWER);
+
+  world.texts['blog/rss.xml'] = feedOf(windowRoutes);
+  assert.deepEqual(findingsOf(world), []);
+
+  world.texts['blog/rss.xml'] = feedOf(windowRoutes.slice(1));
+  const findings = findingsOf(world);
+  assert.equal(findings.length, 1, JSON.stringify(findings));
+  assert.ok(findings[0].text.startsWith(newest + FEED_ITEM_OWED), findings[0].text);
+});
+
+test('entries that share a last modification across the cut are ordered by route, whatever order the routes arrive in', () => {
+  const arrivals = [
+    (routes) => routes,
+    (routes) => [...routes].reverse(),
+    (routes) => [...routes.slice(7), ...routes.slice(0, 7)],
+    (routes) => [...routes.filter((_, at) => at % 2 === 0), ...routes.filter((_, at) => at % 2 === 1)],
+  ];
+
+  for (const arrive of arrivals) {
+    const world = postsWorld(FEED_WINDOW + 1);
+    for (const route of routesOf(1, FEED_WINDOW - 1)) world.sitemapLastmods.set(route, NEWER);
+    for (const route of routesOf(FEED_WINDOW, FEED_WINDOW + 1)) world.sitemapLastmods.set(route, OLDER);
+    world.routes = arrive(world.routes);
+    const { findings, ledger } = routeParity(world);
+
+    assert.deepEqual(findings, []);
+    assert.equal(ledger.surfaces['collection-feed'].owed, FEED_WINDOW + GLOSSARY_TERMS);
+  }
+});
+
+test('a route with no lastmod sorts oldest, so it is the entry the window cuts', () => {
+  const lacking = routeOf(1);
+  const unlist = [(lastmods) => lastmods.delete(lacking), (lastmods) => lastmods.set(lacking, null)];
+
+  for (const remove of unlist) {
+    const world = postsWorld(FEED_WINDOW + 1);
+    remove(world.sitemapLastmods);
+    world.texts['blog/rss.xml'] = feedOf(routesOf(2, FEED_WINDOW + 1));
+    const findings = findingsOf(world);
+
+    assert.equal(findings.length, 1, JSON.stringify(findings));
+    assert.ok(findings[0].text.startsWith(lacking + ' is owed a sitemap entry with a lastmod'), findings[0].text);
+  }
+});
+
+test('a collection of at most the window owes every one of its entries a feed item', () => {
+  for (const count of [2, FEED_WINDOW]) {
+    const world = postsWorld(count);
+    const owed = count + GLOSSARY_TERMS;
+    assert.deepEqual(routeParity(world).ledger.surfaces['collection-feed'], { owed, present: owed });
+
+    world.texts['blog/rss.xml'] = dropItem(world.texts['blog/rss.xml'], routeOf(count));
+    const findings = findingsOf(world);
+    assert.equal(findings.length, 1, JSON.stringify(findings));
+    assert.ok(findings[0].text.startsWith(routeOf(count) + FEED_ITEM_OWED), findings[0].text);
+  }
+});
+
+test('an entry asked about with no feed window known is owed its feed item, which is how the live announcement asks', () => {
+  const entry = { kind: 'entry', collection: 'post', route: '/blog/first' };
+  const asked = { inlineKinds: new Set(), feedHeads: new Map() };
+
+  assert.deepEqual(owedFor(entry, asked), OWED.entry);
+  assert.deepEqual(owedFor(entry, { ...asked, beyondFeedWindow: new Set() }), OWED.entry);
+  assert.deepEqual(
+    owedFor(entry, { ...asked, beyondFeedWindow: new Set(['/blog/first']) }),
+    OWED.entry.filter((surface) => surface !== 'collection-feed')
+  );
 });
 
 test('a card that is not a 1200 by 630 PNG is a finding', () => {
@@ -293,6 +526,6 @@ test('the summary lines name the declared exceptions and empty collections with 
 
   assert.equal(lines.length, 2);
   assert.match(lines[0], /^machine: route parity derived 13 routes \(3 entry, 2 hub, 2 page,/);
-  assert.match(lines[0], /checked \d+ owed cells across 11 surfaces, \d+ present/);
+  assert.match(lines[0], /checked \d+ owed cells across 10 surfaces, \d+ present/);
   assert.equal(lines[1], 'machine: route parity declares 2 exceptions (/404, /search) and 1 empty collection (case)');
 });

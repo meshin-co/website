@@ -6,6 +6,7 @@ import { dirname, join, relative, resolve } from 'node:path';
 import { brandFromDisk } from '../src/utils/brand.mjs';
 import { BOOKING_URL } from '../src/utils/booking.mjs';
 import { autowriterSpecimens } from './autowriter-specimens.mjs';
+import { boundedIndexSpecimens, firstPostUrl } from './bounded-index-specimens.mjs';
 import { engineSpecimens } from './engine-specimens.mjs';
 import { paritySpecimens } from './parity-specimens.mjs';
 import { evidenceSpecimens } from './evidence-specimens.mjs';
@@ -24,6 +25,7 @@ export const flatten = (output) => String(output).replace(ANSI_SEQUENCE, '').rep
 const tail = (output) => flatten(output).slice(-300);
 
 const ORIGIN = `https://${brandFromDisk().name}`;
+const ORPHAN_SHARD = 'post-99';
 
 const git = (path, ...args) => execFileSync('git', [...args, path], { cwd: dirname(path), stdio: 'ignore' });
 
@@ -569,8 +571,7 @@ export const SPECIMENS = {
     gate: 'gate:machine',
     token: 'inline, entries of an unbounded collection belong in /llms/',
     plant: async (copySite) => {
-      const posts = await readFile(join(copySite, 'dist/llms/post.txt'), 'utf8');
-      const url = /^\[(https:\/\/[^\]]+\/blog\/[^\]]+)\]/m.exec(posts)[1];
+      const url = await firstPostUrl(copySite);
       return editFile(
         join(copySite, 'dist/llms.txt'),
         (text) => `${text}\n- [Inlined](${url}): an entry listed inline\n`
@@ -587,9 +588,10 @@ export const SPECIMENS = {
   },
   machineLlmsOrphanShard: {
     gate: 'gate:machine',
-    token: '/llms/post-1.txt ships but the post index does not list it',
-    plant: (copySite) => addUntrackedFile(join(copySite, 'dist/llms/post-1.txt'), '# Orphan shard\n'),
+    token: `/llms/${ORPHAN_SHARD}.txt ships but the post index does not list it`,
+    plant: (copySite) => addUntrackedFile(join(copySite, `dist/llms/${ORPHAN_SHARD}.txt`), '# Orphan shard\n'),
   },
+  ...boundedIndexSpecimens({ editFile }),
   emptyCollectionIndexable: withNoLiveServices('/services is indexable but has no live service entry'),
   emptyCollectionMirrorShips: withNoLiveServices('/services.md ships but /services has no live service entry'),
   emptyCollectionListed: withNoLiveServices('/sitemap-0.xml lists /services but /services has no live service entry'),

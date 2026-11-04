@@ -11,7 +11,7 @@ export const MACHINE_KINDS = tableOf({
     'The llms.txt file lists a page that is marked noindex, which is a generator rule fault, not entry text.'
   ),
   'llms-size': refuse(
-    'The byte guard on llms.txt and llms-full.txt is a site-wide budget, and changing it is a decision for the owner.'
+    'The byte guard on every machine text file is a site-wide budget, and changing it is a decision for the owner.'
   ),
   'llms-omits-route': refuse(
     'An llms file that omits an indexable route is a generator fault, because the files are built from the route list.'
@@ -43,7 +43,10 @@ export const MACHINE_KINDS = tableOf({
   'hub-feed-link-missing': refuse('A hub that does not advertise its feed is a template fault, not entry text.'),
   'feed-base-missing': refuse('A collection with no FEED_BASES entry is a configuration fault, not entry text.'),
   'feed-coverage': refuse(
-    'A feed that omits a live route, or a feed.json that does not mirror rss.xml, is a generator fault.'
+    'A feed that omits a route inside its window, carries more items than its window, or a feed.json that does not mirror rss.xml, is a generator fault.'
+  ),
+  'feed-size': refuse(
+    'The byte guard on every feed file is a site-wide budget, and changing it is a decision for the owner.'
   ),
   'catalog-route-missing': refuse('A catalog page that did not build is a site structure fault, not entry text.'),
   'catalog-description-drift': refuse(

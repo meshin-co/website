@@ -15,6 +15,14 @@ const LLMS_FULL = '/llms-full.txt';
 const SITEMAP = '/sitemap-0.xml';
 const HUMANS = '/humans.txt';
 const LLMS_BYTE_GUARD = 8192;
+const LLMS_FULL_BYTE_GUARD = 4096;
+const LLMS_FILE_BYTE_GUARD = 100000;
+const COLLECTION_FEED_BYTE_GUARD = 432315;
+const MERGED_FEED_BYTE_GUARD = 1441050;
+const COLLECTION_FEED_WINDOW = 15;
+const MERGED_FEED_WINDOW = 50;
+const STRAY_SHARD = 'llms/post-4.txt';
+const LAST_SHARD_RULE = '\n/llms/post-3.txt\n  X-Robots-Tag: all\n';
 const FILLER = `${'filler '.repeat(1100)}\n`;
 const PLANTED_INSTANT = '2026-10-01T00:00:00.000Z';
 const STALE_DAY = '1999-01-01';
@@ -32,6 +40,8 @@ const UNLISTED_SPRINT = 'llms.txt and /llms/ are missing indexable route /servic
 const failure = (rule, text, subjects = []) => ({ rule, subjects, text });
 const instantOf = (day) => `${day}T00:00:00.000Z`;
 const bytesOf = (scene, file) => Buffer.byteLength(readText(scene.distFile(file)), 'utf8');
+const overGuard = (bytes) => 'x'.repeat(bytes);
+const entryLine = (url) => `[${url}](${url})\n`;
 
 function catalogPage(path) {
   const page = SCENE_PAGES.find((candidate) => candidate.path === path);
@@ -49,6 +59,13 @@ function together(...steps) {
     for (const step of steps) step(scene);
   };
 }
+
+const moveEntryLine = (url, from, to) => together(dropDist(from, url), appendDist(to, entryLine(url)));
+
+const padFeedJson = (bytes) => (scene) =>
+  editJson(scene.distFile('feed.json'), (feed) => {
+    feed.padding = overGuard(bytes);
+  });
 
 const dropGlossaryFromFeedJson = (scene) =>
   editJson(scene.distFile('feed.json'), (feed) => {
@@ -69,6 +86,12 @@ const withPlantedDescription = (html) =>
   html.replace(/(<meta name="description" content=")[^"]*/, `$1${PLANTED_DESCRIPTION}`);
 const withOtherRobotsTag = (text) => text.replace(FEED_JSON_RULE, FEED_JSON_RULE.replace('noindex', 'all'));
 const withOtherCount = (text) => text.replace('llms/glossary.txt): 1 entry', 'llms/glossary.txt): 7 entries');
+const withOtherFullCount = (text) => text.replace('llms/resource.txt): 1 entry', 'llms/resource.txt): 9 entries');
+const withItemsPast = (limit) => (xml) => {
+  const item = xml.match(/<item>.*?<\/item>\n/)[0];
+  const carried = xml.match(/<item>/g).length;
+  return xml.replace('</channel>', `${item.repeat(limit + 1 - carried)}</channel>`);
+};
 
 export const PLANTS = [
   {
@@ -97,20 +120,44 @@ export const PLANTS = [
     },
   },
   {
-    name: 'llms.txt, llms-full.txt and a per-collection file each leave out a route',
-    plant: together(
-      dropDist('llms.txt', `(${ORIGIN}/services/sprint)`),
-      dropDist('llms.txt', `(${ORIGIN}/about)`),
-      dropDist('llms-full.txt', `${ORIGIN}/glossary/evals`),
-      dropDist('llms/post.txt', `${ORIGIN}/blog/first-post`)
-    ),
+    name: 'llms-full.txt grows past its byte guard',
+    plant: appendDist('llms-full.txt', FILLER),
+    expected: (scene) => {
+      const bytes = bytesOf(scene, 'llms-full.txt');
+      const text = `llms-full.txt is ${bytes} bytes, over the ${LLMS_FULL_BYTE_GUARD} byte guard`;
+      return [failure('llms-size', text, [LLMS_FULL])];
+    },
+  },
+  {
+    name: 'a shard of a collection file grows past its byte guard',
+    plant: appendDist('llms/post-1.txt', overGuard(LLMS_FILE_BYTE_GUARD)),
+    expected: (scene) => {
+      const bytes = bytesOf(scene, 'llms/post-1.txt');
+      const text = `llms/post-1.txt is ${bytes} bytes, over the ${LLMS_FILE_BYTE_GUARD} byte guard`;
+      return [failure('llms-size', text, ['/llms/post-1.txt'])];
+    },
+  },
+  {
+    name: 'llms.txt leaves out a service and a static page',
+    plant: together(dropDist('llms.txt', `(${ORIGIN}/services/sprint)`), dropDist('llms.txt', `(${ORIGIN}/about)`)),
     expected: () => [
       failure('llms-omits-route', 'llms.txt omits /services/sprint', [LLMS, '/services/sprint']),
       failure('llms-omits-route', 'llms.txt and /llms/ are missing indexable route /about', [LLMS, '/about']),
       failure('llms-omits-route', UNLISTED_SPRINT, [LLMS, '/services/sprint']),
-      failure('llms-omits-route', 'llms-full.txt omits /glossary/evals', [LLMS_FULL, '/glossary/evals']),
-      failure('llms-omits-route', '/llms/post.txt omits /blog/first-post', ['/llms/post.txt', '/blog/first-post']),
-      failure('llms-corpus', 'llms.txt says 2 entries for post, its files hold 1'),
+    ],
+  },
+  {
+    name: 'a shard of a collection file leaves out an entry',
+    plant: dropDist('llms/post-1.txt', `${ORIGIN}/blog/third-post`),
+    expected: () => [
+      failure('llms-omits-route', '/llms/post.txt omits /blog/third-post', ['/llms/post.txt', '/blog/third-post']),
+      failure('llms-omits-route', 'llms.txt and /llms/ are missing indexable route /blog/third-post', [
+        LLMS,
+        '/blog/third-post',
+      ]),
+      failure('llms-corpus', '/llms/post-1.txt holds 2 entries, the index says 3 (range 1-3)'),
+      failure('llms-corpus', 'llms.txt says 7 entries for post, its files hold 6'),
+      failure('llms-corpus', 'llms-full.txt says 7 entries for post, its files hold 6'),
     ],
   },
   {
@@ -122,9 +169,43 @@ export const PLANTS = [
     },
   },
   {
+    name: 'llms-full.txt lists an entry of a collection inline',
+    plant: appendDist('llms-full.txt', `- [Evals](${ORIGIN}/glossary/evals): a term\n`),
+    expected: () => {
+      const text = `llms-full.txt lists /glossary/evals inline, ${INLINE_REASON}`;
+      return [failure('llms-lists-inline', text, [LLMS_FULL, '/glossary/evals'])];
+    },
+  },
+  {
     name: 'a collection with entries ships no full-text file',
     plant: removeDist('llms/service.txt'),
     expected: () => [failure('llms-file-missing', 'no /llms/service.txt full-text file', ['/llms/service.txt'])],
+  },
+  {
+    name: 'an entry moves from the last shard into a full one, which then holds more than its entry cap',
+    plant: moveEntryLine(`${ORIGIN}/blog/seventh-post`, 'llms/post-3.txt', 'llms/post-2.txt'),
+    expected: () => [
+      failure('llms-corpus', '/llms/post-2.txt holds 4 entries, over the 3 entry cap'),
+      failure('llms-corpus', '/llms/post-2.txt holds 4 entries, the index says 3 (range 4-6)'),
+      failure('llms-corpus', '/llms/post-3.txt holds 0 entries, the index says 1 (range 7-7)'),
+    ],
+  },
+  {
+    name: 'the index of a sharded collection lists an entry itself',
+    plant: appendDist('llms/post.txt', entryLine(`${ORIGIN}/blog/second-post`)),
+    expected: () => [
+      failure('llms-corpus', `/llms/post.txt is an index of shards but lists ${ORIGIN}/blog/second-post itself`),
+    ],
+  },
+  {
+    name: 'a shard is shipped that its index does not list and nothing references',
+    plant: (scene) => writeText(scene.distFile(STRAY_SHARD), '# stray\n'),
+    expected: () => [
+      failure('llms-corpus', '/llms/post-4.txt ships but the post index does not list it'),
+      failure('machine-file-unreferenced', '/llms/post-4.txt is shipped but nothing references it', [
+        '/llms/post-4.txt',
+      ]),
+    ],
   },
   {
     name: 'feed.json and the sitemap cover no glossary entry',
@@ -218,6 +299,39 @@ export const PLANTS = [
     expected: () => [failure('feed-coverage', '/blog/rss.xml omits /blog/second-post')],
   },
   {
+    name: 'a collection feed and the merged feed carry more items than their windows',
+    plant: together(
+      editDist('faq/rss.xml', withItemsPast(COLLECTION_FEED_WINDOW)),
+      editDist('rss.xml', withItemsPast(MERGED_FEED_WINDOW))
+    ),
+    expected: () => [
+      failure(
+        'feed-coverage',
+        `/faq/rss.xml carries ${COLLECTION_FEED_WINDOW + 1} items, window is ${COLLECTION_FEED_WINDOW}`
+      ),
+      failure(
+        'feed-coverage',
+        `merged rss.xml carries ${MERGED_FEED_WINDOW + 1} items, window is ${MERGED_FEED_WINDOW}`
+      ),
+    ],
+  },
+  {
+    name: 'a collection feed, the merged feed and feed.json each grow past their byte guards',
+    plant: together(
+      appendDist('glossary/rss.xml', overGuard(COLLECTION_FEED_BYTE_GUARD)),
+      appendDist('rss.xml', overGuard(MERGED_FEED_BYTE_GUARD)),
+      padFeedJson(MERGED_FEED_BYTE_GUARD)
+    ),
+    expected: (scene) => {
+      const over = (file, guard) => `${file} is ${bytesOf(scene, file)} bytes, over the ${guard} byte guard`;
+      return [
+        failure('feed-size', over('glossary/rss.xml', COLLECTION_FEED_BYTE_GUARD), ['/glossary/rss.xml']),
+        failure('feed-size', over('rss.xml', MERGED_FEED_BYTE_GUARD), ['/rss.xml']),
+        failure('feed-size', over('feed.json', MERGED_FEED_BYTE_GUARD), ['/feed.json']),
+      ];
+    },
+  },
+  {
     name: 'a catalog page did not build',
     plant: removeDist('blog/tags.html'),
     expected: () => [failure('catalog-route-missing', NOT_BUILT, ['/blog/tags'])],
@@ -236,6 +350,13 @@ export const PLANTS = [
     expected: () => [failure('machine-header', '/feed.json carries X-Robots-Tag "all", its siblings carry noindex')],
   },
   {
+    name: 'a numbered llms shard carries another X-Robots-Tag than its siblings',
+    plant: appendDist('_headers', LAST_SHARD_RULE),
+    expected: () => [
+      failure('machine-header', '/llms/post-3.txt carries X-Robots-Tag "all", its siblings carry noindex'),
+    ],
+  },
+  {
     name: 'a machine file is shipped and nothing references it',
     plant: (scene) => writeText(scene.distFile('stray/rss.xml'), '<rss version="2.0"><channel></channel></rss>\n'),
     expected: () => {
@@ -247,6 +368,11 @@ export const PLANTS = [
     name: 'llms.txt states another entry count than the files hold',
     plant: editDist('llms.txt', withOtherCount),
     expected: () => [failure('llms-corpus', 'llms.txt says 7 entries for glossary, its files hold 1')],
+  },
+  {
+    name: 'llms-full.txt states another entry count than the files hold',
+    plant: editDist('llms-full.txt', withOtherFullCount),
+    expected: () => [failure('llms-corpus', 'llms-full.txt says 9 entries for resource, its files hold 1')],
   },
 ];
 

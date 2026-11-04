@@ -325,6 +325,17 @@ export const FAMILIES = [
   { id: 'machine-llms-inlines-entries', kind: 'specimen', specimen: 'machineLlmsInlinesEntries' },
   { id: 'machine-llms-count-drifts', kind: 'specimen', specimen: 'machineLlmsCountDrifts' },
   { id: 'machine-llms-orphan-shard', kind: 'specimen', specimen: 'machineLlmsOrphanShard' },
+  { id: 'machine-llms-shard-over-budget', kind: 'specimen', specimen: 'machineLlmsShardOverBudget' },
+  { id: 'machine-llms-full-over-budget', kind: 'specimen', specimen: 'machineLlmsFullOverBudget' },
+  { id: 'machine-llms-full-inlines-entries', kind: 'specimen', specimen: 'machineLlmsFullInlinesEntries' },
+  { id: 'machine-llms-shard-over-cap', kind: 'specimen', specimen: 'machineLlmsShardOverCap' },
+  { id: 'machine-llms-shard-omits-entry', kind: 'specimen', specimen: 'machineLlmsShardOmitsEntry' },
+  { id: 'machine-llms-index-carries-entry', kind: 'specimen', specimen: 'machineLlmsIndexCarriesEntry' },
+  { id: 'machine-llms-full-count-drifts', kind: 'specimen', specimen: 'machineLlmsFullCountDrifts' },
+  { id: 'machine-feed-over-window', kind: 'specimen', specimen: 'machineFeedOverWindow' },
+  { id: 'machine-feed-over-budget', kind: 'specimen', specimen: 'machineFeedOverBudget' },
+  { id: 'llms-drops-the-id-tie-break', kind: 'specimen', specimen: 'llmsDropsTheIdTieBreak' },
+  { id: 'llms-appends-a-timestamp', kind: 'specimen', specimen: 'llmsAppendsATimestamp' },
   { id: 'empty-collection-hub-is-indexable', kind: 'specimen', specimen: 'emptyCollectionIndexable' },
   { id: 'empty-collection-mirror-ships', kind: 'specimen', specimen: 'emptyCollectionMirrorShips' },
   { id: 'empty-collection-is-listed-in-a-machine-output', kind: 'specimen', specimen: 'emptyCollectionListed' },
@@ -334,6 +345,7 @@ export const FAMILIES = [
   { id: 'parity-entry-leaves-its-collection-feed', kind: 'specimen', specimen: 'parityEntryLeavesItsCollectionFeed' },
   { id: 'parity-entry-loses-its-search-entry', kind: 'specimen', specimen: 'parityEntryLosesItsSearchEntry' },
   { id: 'parity-entry-loses-its-markdown-link', kind: 'specimen', specimen: 'parityEntryLosesItsMarkdownLink' },
+  { id: 'parity-entry-leaves-its-llms-shards', kind: 'specimen', specimen: 'parityEntryLeavesItsLlmsShards' },
 ];
 
 const KINDS = ['build', 'build-then-gate', 'gate', 'pure', 'pagination', 'specimen', 'lh-record'];

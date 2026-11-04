@@ -158,9 +158,9 @@
   },
   {
     "target": "src/utils/llms-collections.mjs",
-    "status": "verified",
-    "reason": "'All updates' feed title and description are short and consistent with the per-collection feed description pattern below it",
-    "digest": "f87df881b674"
+    "status": "rewritten",
+    "reason": "Re-read 2026-11-04 against src/utils/llms-collections.mjs, src/utils/feeds.mjs, src/utils/feed-items.mjs and src/pages/llms-full.txt.ts. Change 40 changed the pointer strings that /llms.txt carries; they ship in /llms.txt and in no HTML page. (1) The pointer to /llms-full.txt was titled \"Everything in full\" with the description \"Full body text of every live entry, one section per collection.\"; it is now titled \"Full text index\" with the description \"The collection files that hold the full body text of every live entry, one line each.\" That is true: /llms-full.txt is now an index with one line per collection file and holds no entry. (2) The merged feed description, \"Merged full-text feed of every live entry, newest first.\", is now \"Merged full-text feed of the 50 newest entries, with at least five of each collection.\": /rss.xml carries a window of MERGED_FEED_WINDOW entries (50) and mergedFeedItems in src/utils/feed-items.mjs calls mergeWithKindFloor with window MERGED_FEED_WINDOW and floor 5, so the sentence names the window and the floor the feed applies. (3) Each collection feed description, \"Full-text feed of every live entry in <collection>.\", is now \"Full-text feed of the 15 newest entries in <collection>.\": FEED_WINDOW is 15. The two numbers are imported from src/utils/feeds.mjs and not typed into the string, so the copy cannot drift from the window the feed applies. The titles \"All updates\", \"Offers feed\" and the other feed titles, the collection titles and the per-collection pointer description \"<n> entries, full body text of each.\" are unchanged; \"All updates\" and its per-collection pattern were verified on the earlier seal and still agree with the new descriptions. The dist in this worktree is the build from before change 40, so the strings were re-read in source and in the output of llmsFeedPointers and llmsFullTextPointers, not in a rebuilt /llms.txt.",
+    "digest": "e6093bbc32c3"
   },
   {
     "target": "src/utils/og-template.mjs",

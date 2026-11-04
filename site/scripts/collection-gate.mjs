@@ -2,7 +2,6 @@ import { readdir, readFile } from 'node:fs/promises';
 import { join, relative, sep } from 'node:path';
 
 import { FEED_BASES } from '../src/utils/feeds.mjs';
-import { LLMS_COLLECTIONS } from '../src/utils/llms-collections.mjs';
 import { isNoindex } from './gate.mjs';
 
 const OFFERING_SURFACE =
@@ -79,10 +78,6 @@ export function emptyCollectionFindings({ kinds, routes, htmlByRoute, shipped, t
       for (const path of new Set(listedPaths(file, text, site))) {
         if (owns(path)) findings.push(`/${file} lists ${path} ${because}`);
       }
-    }
-    const title = LLMS_COLLECTIONS.find(({ name }) => name === kind)?.title;
-    if (title !== undefined && texts['llms-full.txt']?.split('\n').includes(`## ${title}`)) {
-      findings.push(`/llms-full.txt carries the heading "${title}" ${because}`);
     }
     return findings;
   });

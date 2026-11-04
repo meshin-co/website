@@ -65,7 +65,6 @@ export async function readWorld(distDir) {
   const named = [
     'sitemap-0.xml',
     'llms.txt',
-    'llms-full.txt',
     'rss.xml',
     ...collections.map(({ base }) => base + '/rss.xml'),
     ...shipped.filter((file) => /^llms\/[^/]+\.txt$/.test(file) || /^search-index-[^/]+\.json$/.test(file)),

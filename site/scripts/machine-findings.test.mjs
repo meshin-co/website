@@ -38,6 +38,7 @@ const MACHINE_RULES = [
   'machine-header',
   'machine-file-unreferenced',
   'llms-corpus',
+  'feed-size',
 ];
 
 const scenes = [];
@@ -104,11 +105,11 @@ test('the planted scene fails the gate as it always did, with the same two summa
   }
 });
 
-test('the rule ids the planted scenes emit are exactly the 23 families, and the repairability table knows them', () => {
+test('the rule ids the planted scenes emit are exactly the 24 families, and the repairability table knows them', () => {
   const absent = emittedBy('absent');
   const missing = emittedBy('missing');
 
-  assert.equal(MACHINE_RULES.length, 23);
+  assert.equal(MACHINE_RULES.length, 24);
   assert.deepEqual(absent, without('humans-components-missing'));
   assert.deepEqual(missing, without('humans-component-absent'));
   assert.deepEqual(sorted([...absent, ...missing]), sorted(MACHINE_RULES));
@@ -161,6 +162,23 @@ test('the planted scene prints the lines it plants, and no other line', () => {
     const planted = expectedFailures(scene, variant).map(({ text }) => `MACHINE ${text}`);
 
     assert.deepEqual(linesOf(run.stderr).sort(), planted.sort(), variant);
+  }
+});
+
+test('a numbered llms shard is held to the noindex rule and to being referenced, and the shards its index names are not unreferenced', () => {
+  const named = ['/llms/post.txt', '/llms/post-1.txt', '/llms/post-2.txt', '/llms/post-3.txt'];
+
+  for (const variant of VARIANTS) {
+    const printed = linesOf(runs[variant].run.stderr);
+
+    assert.ok(
+      printed.includes('MACHINE /llms/post-3.txt carries X-Robots-Tag "all", its siblings carry noindex'),
+      variant
+    );
+    assert.ok(printed.includes('MACHINE /llms/post-4.txt is shipped but nothing references it'), variant);
+    for (const file of named) {
+      assert.ok(!printed.some((line) => line.includes(`${file} is shipped but nothing references it`)), file);
+    }
   }
 });
 

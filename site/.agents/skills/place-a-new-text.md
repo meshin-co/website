@@ -25,9 +25,10 @@ missing.
 ## What a new entry drags with it
 
 Adding one collection entry is never one file. `add-collection-entry.md` is the procedure; the
-surfaces that follow automatically are the `.md` sidecar, the per-collection feed and the merged
-feed, the `/llms/` collection file and `llms-full.txt` body, the search index shard, the JSON-LD graph for
-its family, the sitemap entry with `lastmod`, and the OG card.
+surfaces that follow automatically are the `.md` sidecar, an item in the per-collection feed and the
+merged feed while it is inside their windows (the newest 15, and the newest 50 with a per-kind floor
+of 5), its place in the `/llms/` collection files, the search index shard, the JSON-LD graph for its
+family, the sitemap entry with `lastmod`, and the OG card.
 
 All of those are build outputs. Verify them in `dist/`, never in source
 (`verify-in-the-built-output.md`).

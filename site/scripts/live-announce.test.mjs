@@ -5,7 +5,7 @@ import { entriesInBuild } from './entries-in-build.mjs';
 import { surfacesOf } from './entry-surfaces.mjs';
 import { runLink } from './github-links.mjs';
 import { blockKitProblems } from './fixtures/block-kit.mjs';
-import { ARTICLE, NOW, RUN_ENV, STATUS, TERM, failing, liveWorld } from './fixtures/live-world.mjs';
+import { ARTICLE, NOW, RUN_ENV, STATUS, TERM, aged, failing, liveWorld } from './fixtures/live-world.mjs';
 import { announceEntries } from './live-announce.mjs';
 import { OWED, SURFACES } from './route-parity.mjs';
 import { selectEntries } from './live-state.mjs';
@@ -34,7 +34,7 @@ async function announced(t, options, { webhook = true } = {}) {
 test('every surface the shared derivation lists is a link in the message and was asked for on the live origin', async (t) => {
   const { w } = await announced(t, { entries: [ARTICLE] });
   const surfaces = surfacesOf({ format: 'article', slug: 'a-post', origin: w.origin });
-  assert.ok(surfaces.length >= 8);
+  assert.ok(surfaces.length >= 7);
   for (const { url } of surfaces) {
     const { pathname } = new URL(url);
     assert.ok(w.posted()[0].text.includes(`<${url}|${pathname}>`), url);
@@ -54,13 +54,20 @@ test('when the shared derivation gains a surface, the message gains it and the l
   assert.equal(w.visits('/planted/blog/a-post'), 1);
 });
 
-test('a surface that two entries share, the sitemap and the full llms file, is asked for once, not once per entry', async (t) => {
-  const { w } = await announced(t, { entries: [ARTICLE, TERM] });
-  const shared = ['/sitemap-0.xml', '/llms-full.txt'];
+test('surfaces that two entries of one collection share are asked for once, not once per entry', async (t) => {
+  const { w } = await announced(t, { entries: [aged('post-a', 6), aged('post-b', 3)] });
+  const shared = ['/sitemap-0.xml', '/llms/post.txt', '/blog/rss.xml', '/search-index-post.json'];
   assert.deepEqual(
     shared.map((path) => w.visits(path)),
-    [1, 1]
+    [1, 1, 1, 1]
   );
+  assert.equal(w.visits('/blog/post-a'), 1);
+  assert.equal(w.visits('/blog/post-b'), 1);
+});
+
+test('a surface that an article and a glossary term share, the sitemap, is asked for once, not once per entry', async (t) => {
+  const { w } = await announced(t, { entries: [ARTICLE, TERM] });
+  assert.equal(w.visits('/sitemap-0.xml'), 1);
   assert.equal(w.visits('/blog/a-post'), 1);
   assert.equal(w.visits('/glossary/a-term'), 1);
 });
