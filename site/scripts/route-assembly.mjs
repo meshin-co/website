@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { restatedReason } from './disposition-restate.mjs';
-import { renderEntry } from './entry-files.mjs';
+import { entryPath, entryRoute, renderEntry } from './entry-files.mjs';
 import { recordPath } from './record-layout.mjs';
 import { regenerateRouteLedger } from './route-ledger.mjs';
 import { addTargetQuery, dispositionFor, insertPassage, targetQueryFor } from './route-derive.mjs';
@@ -110,6 +110,18 @@ async function requireGreenBaseline(execute) {
   if (gate.status !== 0) throw baselineFailure({ name, command, result: gate, excerpt: outputHead });
 }
 
+async function regenerate({ repoRoot, transaction, execute, succeed, reason, generated, settle }) {
+  await succeed(BUILD);
+  for (const command of REGENERATE) await succeed(command);
+  const ledger = await regenerateRouteLedger({ repoRoot, transaction, succeed });
+  await settle();
+  const restated = await restateStale({ repoRoot, transaction, succeed, reason, mayNotBeStale: generated });
+  await formatDispositions(succeed, [...generated, ...restated]);
+  const blocking = await runBlockingChecks(succeed);
+  const information = await runInformationGates(execute);
+  return { ledger, restated, gates: [...blocking, ...information] };
+}
+
 export async function assembleRoute({ repoRoot, entries, runDate, run }) {
   const plan = planRoute({ repoRoot, entries, runDate });
   const transaction = fileTransaction(repoRoot);
@@ -117,22 +129,74 @@ export async function assembleRoute({ repoRoot, entries, runDate, run }) {
   try {
     await requireGreenBaseline(execute);
     await writeSources({ plan, transaction, succeed });
-    await succeed(BUILD);
-    for (const command of REGENERATE) await succeed(command);
-    const ledger = await regenerateRouteLedger({ repoRoot, transaction, succeed });
-    for (const planned of plan.plans) await writeDisposition({ planned, runDate, transaction, succeed });
-    const restated = await restateStale({
+    const settle = async () => {
+      for (const planned of plan.plans) await writeDisposition({ planned, runDate, transaction, succeed });
+    };
+    const { ledger, restated, gates } = await regenerate({
       repoRoot,
       transaction,
+      execute,
       succeed,
       reason: plan.reason,
-      mayNotBeStale: plan.generated,
+      generated: plan.generated,
+      settle,
     });
-    await formatDispositions(succeed, [...plan.generated, ...restated]);
-    const blocking = await runBlockingChecks(succeed);
-    const information = await runInformationGates(execute);
     const carried = ledger.changed ? [ledger.path] : [];
-    return { files: filesOf(repoRoot, [...plan.paths, ...carried, ...restated]), gates: [...blocking, ...information] };
+    return { files: filesOf(repoRoot, [...plan.paths, ...carried, ...restated]), gates };
+  } finally {
+    transaction.restore();
+  }
+}
+
+function healedPlan({ claim, passage }) {
+  const route = entryRoute(claim);
+  return {
+    claim,
+    route,
+    disposition: recordPath('disposition', claim.slug, claim.claimedAt),
+    target: siteRelative(entryPath(claim)),
+    query: targetQueryFor({ claim }),
+    passage: passage === null ? null : { promptNumber: claim.prompt.number, passage, route },
+  };
+}
+
+const withQuery = (text, { route, query }) =>
+  JSON.parse(text).targetQuery?.[route] === query ? text : addTargetQuery(text, route, query);
+
+async function redigest({ planned, repoRoot, transaction, succeed }) {
+  const rows = JSON.parse(readFileSync(join(repoRoot, planned.disposition), 'utf8'));
+  const fresh = [];
+  for (const row of rows) fresh.push({ ...row, digest: await digestOf(succeed, row.target) });
+  transaction.write(planned.disposition, `${JSON.stringify(fresh, null, 2)}\n`);
+}
+
+export async function healRoute({ repoRoot, entries, run }) {
+  const plans = entries.map(healedPlan);
+  const generated = plans.map(({ disposition }) => disposition);
+  const transaction = fileTransaction(repoRoot);
+  const { execute, succeed } = commandsIn({ run, cwd: join(repoRoot, SITE_DIRECTORY), plans });
+  const read = (path) => readFileSync(join(repoRoot, path), 'utf8');
+  try {
+    transaction.write(CONTENT_FACTS, plans.reduce(withQuery, read(CONTENT_FACTS)));
+    await succeed(prettier(siteRelative(CONTENT_FACTS)));
+    const withPassage = (text, { passage }) => (passage === null ? text : insertPassage(text, passage));
+    transaction.write(SEMANTIC_CORE, plans.reduce(withPassage, read(SEMANTIC_CORE)));
+    const settle = async () => {
+      for (const planned of plans) await redigest({ planned, repoRoot, transaction, succeed });
+    };
+    const { ledger, restated, gates } = await regenerate({
+      repoRoot,
+      transaction,
+      execute,
+      succeed,
+      reason: restatedReason({
+        routes: plans.map(({ route }) => route),
+        generationPaths: plans.map(({ claim }) => recordPath('generation', claim.slug, claim.claimedAt)),
+      }),
+      generated,
+      settle,
+    });
+    return { files: filesOf(repoRoot, [CONTENT_FACTS, SEMANTIC_CORE, ledger.path, ...generated, ...restated]), gates };
   } finally {
     transaction.restore();
   }

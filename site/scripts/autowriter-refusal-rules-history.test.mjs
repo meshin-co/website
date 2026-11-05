@@ -365,10 +365,10 @@ test('a person who removed a record is not judged, so a record can still be remo
 });
 
 test('a pipeline commit that wrote or changed a record, or removed a file that is no record, removed no record', () => {
-  const root = repoWith({ [RECORD]: '{}\n', 'site/src/data/post/old.md': 'old\n' });
+  const root = repoWith({ [RECORD]: '{}\n', 'site/src/data/post/second-post.md': 'old\n' });
   commitAs(root, BOT, {
     write: { [RECORD]: '{"again":1}\n', [SECOND_RECORD]: '{}\n' },
-    remove: ['site/src/data/post/old.md'],
+    remove: ['site/src/data/post/second-post.md'],
     message: written('second-post'),
   });
   assert.deepEqual(historyReport({ root }), { findings: [], commits: 1, skipped: null });
@@ -388,20 +388,21 @@ for (const [how, target, inFamily] of MOVES) {
     const write = { [target]: '{"slug":"first-post"}\n' };
     const sha = commitAs(root, BOT, { remove: [RECORD], write, message: 'feat(autowriter): move first-post' });
     const { findings, commits } = historyReport({ root });
+    const removals = findings.filter(({ rule }) => rule === REMOVED);
     const judgedOn = inFamily ? [RECORD, target].sort() : [RECORD];
 
     assert.equal(commits, 1);
     assert.deepEqual(
-      findings.map(({ rule, path }) => [rule, path]).sort(),
+      removals.map(({ rule, path }) => [rule, path]).sort(),
       judgedOn.map((path) => [REMOVED, path])
     );
-    for (const finding of findings) assert.equal(finding.detail, removedDetail(RECORD, sha));
+    for (const finding of removals) assert.equal(finding.detail, removedDetail(RECORD, sha));
   });
 }
 
 for (const [where, path] of PLACEMENTS) {
   test(`a pipeline commit that moved a record into the directory from elsewhere, ${where}, added it and is not found`, () => {
-    const elsewhere = 'audits/elsewhere/first-post.json';
+    const elsewhere = 'site/src/data/post/first-post.md';
     const root = repoWith({ [elsewhere]: '{}\n' });
     const sha = commitAs(root, BOT, { remove: [elsewhere], write: { [path]: '{}\n' }, message: written('first-post') });
 

@@ -129,6 +129,17 @@ function refuseTruncated(lists) {
   if (cut) throw new Error(`the ${cut[0]} list is incomplete: reading more than one page is not supported`);
 }
 
+const COMPARE_FILES_PAGE = 300;
+
+export async function readDrift(api, { head, base }) {
+  const { ahead_by: behindBy, files = [] } = await api.get(`compare/${head}...${encodeURIComponent(base)}`);
+  if (files.length >= COMPARE_FILES_PAGE) return { behindBy, paths: null };
+  const paths = files.flatMap(({ filename, previous_filename: previous }) =>
+    previous ? [filename, previous] : [filename]
+  );
+  return { behindBy, paths };
+}
+
 export async function readSnapshot(api, number) {
   const first = await api.get(`pulls/${number}`);
   const head = first.head.sha;
@@ -144,8 +155,9 @@ export async function readSnapshot(api, number) {
   refuseTruncated({ commits, checkRuns, runs, jobs });
   const slug = slugOfBranch(first.head.ref);
   const ledger = slug === null ? null : await readLedgerFile(api, { slug, head });
+  const drift = await readDrift(api, { head, base: first.base.ref });
   const pullRequest = await api.get(`pulls/${number}`);
-  return { pullRequest, commits, checkRuns, runs, jobs, ledger };
+  return { pullRequest, commits, checkRuns, runs, jobs, ledger, drift };
 }
 
 export async function mergePullRequest(api, { number, head }) {

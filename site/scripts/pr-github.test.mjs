@@ -116,6 +116,7 @@ test('a snapshot carries every list and no ledger for a branch the watcher does 
     runs: bundle.runs,
     jobs: bundle.jobs,
     ledger: null,
+    drift: { behindBy: 0, paths: [] },
   });
 });
 

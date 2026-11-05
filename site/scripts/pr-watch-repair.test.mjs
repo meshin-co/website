@@ -44,7 +44,7 @@ test('the outputs tell the workflow to repair, which head was judged and which b
 
   assert.equal(
     readFileSync(outputs, 'utf8'),
-    `repair=true\nhead=${bundle.pullRequest.head.sha}\nbranch=autowriter/a-slug\n`
+    `repair=true\nhead=${bundle.pullRequest.head.sha}\nbranch=autowriter/a-slug\nkind=entry\n`
   );
 });
 

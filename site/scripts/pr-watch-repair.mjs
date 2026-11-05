@@ -9,6 +9,9 @@ export const REPAIR_STATEMENTS = {
   'spend-ceiling': 'the monthly spend ceiling is reached, so no model was called',
   credential: 'the vendor key is missing or was refused',
   failed: 'the repair job failed before it could finish',
+  conflict: 'catching the branch up on main met a conflict in a file that is not derived, which only a person can read',
+  unconverged:
+    'catching the branch up on main did not reach a fixed point, so regenerating the derived files after it still changed them or dropped a row',
 };
 
 export function repairFinding({ result, number }, links) {
@@ -26,7 +29,12 @@ export function repairFinding({ result, number }, links) {
 
 export const repairOutputs = ({ action, result, snapshot }) =>
   action === 'repair'
-    ? { repair: 'true', head: result.evidence.head, branch: snapshot.pullRequest.head.ref }
+    ? {
+        repair: 'true',
+        head: result.evidence.head,
+        branch: snapshot.pullRequest.head.ref,
+        kind: result.verdict === 'catch-up' ? 'catch-up' : 'entry',
+      }
     : { repair: 'false' };
 
 export function writeOutputs(env, values) {

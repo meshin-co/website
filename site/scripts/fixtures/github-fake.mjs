@@ -56,7 +56,12 @@ export const withTree =
   (call) =>
     call.path.startsWith('git/trees/') ? treeListing(paths) : contents(call.path);
 
-export function serving(bundle, { second = bundle.pullRequest, ledger = notFound, tree = [] } = {}) {
+const NO_DRIFT = { ahead_by: 0, behind_by: 0, files: [] };
+
+export function serving(
+  bundle,
+  { second = bundle.pullRequest, ledger = notFound, tree = [], compare = NO_DRIFT } = {}
+) {
   let pullReads = 0;
   return ({ path }) => {
     if (path === `pulls/${bundle.pullRequest.number}`) {
@@ -68,6 +73,7 @@ export function serving(bundle, { second = bundle.pullRequest, ledger = notFound
     if (path.startsWith('actions/runs?')) return json(bundle.runs);
     if (/^actions\/runs\/\d+\/jobs\?/.test(path)) return json(bundle.jobs);
     if (path.startsWith('git/trees/')) return typeof tree === 'function' ? tree(path) : treeListing(tree);
+    if (path.startsWith('compare/')) return json(compare);
     if (path.startsWith('contents/')) return ledger(path);
     throw new Error(`unexpected request ${path}`);
   };

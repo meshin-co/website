@@ -70,6 +70,7 @@ const STATEMENTS = {
   'no-pull-request-run': 'the head commit has checks, but none from the pull-request run',
   'no-checks': 'the head commit has no check runs',
   'chain-too-old': 'the watcher has been waiting longer than a pull request may take to settle',
+  'catch-up-cap': 'the branch was caught up on main as many times as the cap allows and main moved again each time',
 };
 
 export class WatchError extends Error {}
@@ -218,6 +219,7 @@ const ACTIONS = {
   merge,
   unsettled: continueChain,
   repairable: async () => 'repair',
+  'catch-up': async () => 'repair',
   escalate: (step) => raise(step, findingFor(step, step.result.kind)),
   'blocked-by-human': async () => 'stopped',
   done: async () => 'stopped',

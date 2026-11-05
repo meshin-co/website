@@ -19,6 +19,9 @@ dependency, so the job needs no `npm ci` while it holds a token that can merge.
 - **merge:** every required job `success`, the aggregate `all required jobs passed` `success`, every
   commit by `autowriter-bot@meshin.co`, and the pull request at least 12 hours old. The runner squash
   merges the head it judged; a 409 means the head moved, so it starts a successor instead.
+- **catch-up:** the merge case, but `main` changed a derived file since the branch left it. The repair job
+  merges `origin/main` in and regenerates the derived set (`scripts/catch-up.mjs`, run by `npm run catch-up:entry`,
+  the files named in `scripts/derived-files.mjs`), then pushes a fast-forward; 3 spent is `no-convergence`.
 - **unsettled:** a job still running, a head that moved since the checks were read, a quarantine not over,
   or the first sight of a cancellation. The runner starts a successor.
 - **repairable:** only `cheap-gates` or `build` failed, in a step that is not setup. Phase one repairs
@@ -74,5 +77,4 @@ into `scripts/fixtures/pr-watch/<scenario>.json`, then a failing test, then the 
 
 A run that fails for any reason other than a verdict (an outage, a malformed ledger, a missing secret)
 ends its chain and nothing restarts it: read the log, fix the cause, start a chain again. The workflow
-can be dispatched only once it is on `main`. It never reads which files a pull request changed; what
-the writer may touch is for the phase that builds the writer.
+can be dispatched only once it is on `main`. It reads the files `main` changed only to find a derived one.

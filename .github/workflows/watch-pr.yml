@@ -45,6 +45,7 @@ jobs:
       repair: ${{ steps.judge.outputs.repair }}
       head: ${{ steps.judge.outputs.head }}
       branch: ${{ steps.judge.outputs.branch }}
+      kind: ${{ steps.judge.outputs.kind }}
     steps:
       - uses: actions/checkout@v4
 
@@ -73,7 +74,7 @@ jobs:
       checks: read
       actions: read
     outputs:
-      outcome: ${{ steps.rewrite.outputs.outcome }}
+      outcome: ${{ steps.rewrite.outputs.outcome || steps.catchup.outputs.outcome }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -92,6 +93,7 @@ jobs:
 
       - name: repair the entry on a local commit, which this step never pushes
         id: rewrite
+        if: needs.watch.outputs.kind != 'catch-up'
         env:
           GITHUB_TOKEN: ${{ github.token }}
           PULL_REQUEST: ${{ inputs.pr }}
@@ -115,8 +117,27 @@ jobs:
           echo "outcome=$outcome" >> "$GITHUB_OUTPUT"
           echo "commit=$commit" >> "$GITHUB_OUTPUT"
 
+      - name: catch the branch up on main on a local merge commit, which this step never pushes and which holds no secret
+        id: catchup
+        if: needs.watch.outputs.kind == 'catch-up'
+        env:
+          HEAD_SHA: ${{ needs.watch.outputs.head }}
+        run: |
+          status=0
+          npm run --silent catch-up:entry -- --head "$HEAD_SHA" > "$RUNNER_TEMP/catch-up-output.txt" || status=$?
+          cat "$RUNNER_TEMP/catch-up-output.txt"
+          echo "catch-up:entry exited with status $status"
+          last="$(tail -n 1 "$RUNNER_TEMP/catch-up-output.txt")"
+          outcome="$(printf '%s' "$last" | jq -r '.outcome | strings' 2>/dev/null || true)"
+          commit="$(printf '%s' "$last" | jq -r '.commit | strings' 2>/dev/null || true)"
+          case "$outcome" in repaired|stale|conflict|unconverged|failed) ;; *) outcome=failed ;; esac
+          case "$commit" in *[!0-9a-f]*) commit= ;; esac
+          [ "${#commit}" -eq 40 ] || commit=
+          echo "outcome=$outcome" >> "$GITHUB_OUTPUT"
+          echo "commit=$commit" >> "$GITHUB_OUTPUT"
+
       - name: push the commit to the pull request branch as a fast-forward, which a branch that moved refuses
-        if: steps.rewrite.outputs.commit != ''
+        if: steps.rewrite.outputs.commit != '' || steps.catchup.outputs.commit != ''
         env:
           AUTOWRITER_PAT: ${{ secrets.AUTOWRITER_PAT }}
           BRANCH: ${{ needs.watch.outputs.branch }}

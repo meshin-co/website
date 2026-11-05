@@ -10,12 +10,14 @@ import {
   removalRefusalFor,
   sealSignature,
 } from './autowriter-refusals.mjs';
+import { classifyPath } from './derived-files.mjs';
 import { BOT_EMAIL } from './pr-classify.mjs';
-import { recordDirectory } from './record-layout.mjs';
+import { recordDirectory, slugOfRecord } from './record-layout.mjs';
 
 const PATH_RULE = 'refused-path-committed';
 const SEAL_RULE = 'disposition-seal-committed';
 const REMOVAL_RULE = 'generation-record-removed-committed';
+const UNREGISTERED_RULE = 'unregistered-path-committed';
 const SHALLOW_REASON = 'the clone is shallow';
 const MAX_BUFFER = 256 * 1024 * 1024;
 const SHORT_SHA = 12;
@@ -127,13 +129,34 @@ function refusedThings({ changes }, read) {
   });
 }
 
-export function judgeCommit(commit, read) {
-  const things = refusedThings(commit, read);
+export const LEGACY_UNREGISTERED = [
+  { sha: 'e8874d4602b5944138a0017d3d5e862c9e7a728e', prefix: 'site/tests/__screenshots__/linux/' },
+];
+
+const isLegacy = (sha, path) =>
+  LEGACY_UNREGISTERED.some((legacy) => legacy.sha === sha && path.startsWith(legacy.prefix));
+
+function unregisteredThings({ sha, records, changes }) {
+  const slugs = records.map(slugOfRecord);
+  return changes
+    .map(({ path }) => path)
+    .filter((path) => refusalFor(path) === null && classifyPath(path, slugs) === 'foreign' && !isLegacy(sha, path))
+    .map((path) => ({
+      rule: UNREGISTERED_RULE,
+      detail: `touched ${path}, which is not this run's own and is not registered in derived-files.mjs for the catch-up to heal`,
+    }));
+}
+
+const located = (commit, things) => {
   const commitId = `in commit ${commit.sha.slice(0, SHORT_SHA)}`;
   return commit.records.flatMap((record) =>
     things.map(({ rule, detail }) => ({ rule, path: record, detail: `${detail}, ${commitId}` }))
   );
-}
+};
+
+export const judgeCommit = (commit, read) => located(commit, refusedThings(commit, read));
+
+export const judgeSurface = (commit) => located(commit, unregisteredThings(commit));
 
 const notJudged = (skipped) => ({ findings: [], commits: null, skipped });
 
@@ -142,5 +165,6 @@ export function historyReport({ root, git = repositoryGit(root) }) {
   if (git(['rev-parse', '--is-shallow-repository']).trim() === 'true') return notJudged(SHALLOW_REASON);
   const commits = pipelineCommits(git);
   const read = (id) => git(['cat-file', 'blob', id]);
-  return { findings: commits.flatMap((commit) => judgeCommit(commit, read)), commits: commits.length, skipped: null };
+  const findings = commits.flatMap((commit) => [...judgeCommit(commit, read), ...judgeSurface(commit)]);
+  return { findings, commits: commits.length, skipped: null };
 }
