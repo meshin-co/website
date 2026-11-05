@@ -1,0 +1,82 @@
+{
+  "schema": 1,
+  "slug": "build-vs-buy-ai-3-year-tco",
+  "runId": "42015091634-1",
+  "pullRequest": null,
+  "attempts": [],
+  "spend": {
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "costUsd": 0
+  },
+  "verdict": {
+    "state": "open",
+    "reason": null,
+    "decidedAt": null
+  },
+  "escalations": [],
+  "refusals": [
+    {
+      "title": "Fractional CAIO vs full-time CAIO cost",
+      "reason": "slug-held",
+      "against": "audits/autowriter/2026/11/fractional-caio-vs-full-time-caio-cost.json",
+      "detail": "slug \"fractional-caio-vs-full-time-caio-cost\" already has the ledger audits/autowriter/2026/11/fractional-caio-vs-full-time-caio-cost.json, so an earlier run owns it and the topic cannot be tried again yet; no procedure frees a slug safely, and removing the ledger is not one, because it records spend that the monthly spend ceiling counts"
+    },
+    {
+      "title": "AI readiness assessment template for SMB",
+      "reason": "family-served",
+      "against": "/blog/ai-readiness-assessment-template-for-smb",
+      "detail": "the prompt already lists /blog/ai-readiness-assessment-template-for-smb among its routes and that route is in the article family, so another article would answer the same prompt twice"
+    },
+    {
+      "title": "AI governance consultant ISO 42001 small company",
+      "reason": "register-owner",
+      "against": "/glossary/ai-governance",
+      "detail": "the query \"ai governance consultant iso 42001 small company\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+    },
+    {
+      "title": "Named person responsible for AI risk in vendor procurement",
+      "reason": "family-served",
+      "against": "/blog/named-person-responsible-for-ai-risk-in-vendor-procurement",
+      "detail": "the prompt already lists /blog/named-person-responsible-for-ai-risk-in-vendor-procurement among its routes and that route is in the article family, so another article would answer the same prompt twice"
+    },
+    {
+      "title": "AI acceptable use policy template",
+      "reason": "family-served",
+      "against": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
+      "detail": "the prompt already lists /blog/ai-acceptable-use-policy-for-a-50-person-company among its routes and that route is in the article family, so another article would answer the same prompt twice"
+    },
+    {
+      "title": "Why do AI pilots fail to reach production?",
+      "reason": "family-served",
+      "against": "/blog/why-your-ai-pilot-never-reached-production",
+      "detail": "the prompt already lists /blog/why-your-ai-pilot-never-reached-production among its routes and that route is in the article family, so another article would answer the same prompt twice"
+    },
+    {
+      "title": "LLM gateway for governance and audit",
+      "reason": "register-owner",
+      "against": "/glossary/llm-gateway",
+      "detail": "the query \"llm gateway for governance and audit\" names the concept \"LLM gateway\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/llm-gateway"
+    },
+    {
+      "title": "How to put evals for AI agents into CI",
+      "reason": "register-owner",
+      "against": "/glossary/evals",
+      "detail": "the query \"how to put evals for ai agents into ci\" names the concept \"Evals\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/evals"
+    },
+    {
+      "title": "AI vendor assessment questionnaire template",
+      "reason": "title-collision",
+      "against": "AI vendor assessment questionnaire template",
+      "detail": "title \"AI vendor assessment questionnaire template\" is also claimed by audits/autowriter/claims/2026/11/ai-vendor-assessment-questionnaire-template.json"
+    },
+    {
+      "title": "What is AI governance?",
+      "reason": "register-owner",
+      "against": "/glossary/ai-governance",
+      "detail": "the query \"ai governance\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+    }
+  ]
+}
