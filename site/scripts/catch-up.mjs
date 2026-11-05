@@ -31,8 +31,19 @@ const ROW_FILES = {
 const lines = (text) => text.split('\n').filter((line) => line !== '');
 const withoutComma = (line) => line.replace(/,$/, '');
 
+const IDENTITY = [
+  '-c',
+  `user.name=${BOT_NAME}`,
+  '-c',
+  `user.email=${BOT_EMAIL}`,
+  '-c',
+  'commit.gpgsign=false',
+  '-c',
+  'core.hooksPath=/dev/null',
+];
+
 function gitIn(run, repoRoot) {
-  const git = (...args) => run('git', args, { cwd: repoRoot });
+  const git = (...args) => run('git', [...IDENTITY, ...args], { cwd: repoRoot });
   const read = (...args) => {
     const result = git(...args);
     if (result.status !== 0)
