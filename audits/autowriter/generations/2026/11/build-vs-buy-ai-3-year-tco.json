@@ -1,0 +1,254 @@
+{
+  "schema": 1,
+  "slug": "build-vs-buy-ai-3-year-tco",
+  "runId": "42015091634-1",
+  "generatedAt": "2026-11-05T11:03:18.146Z",
+  "claim": {
+    "title": "Build vs buy AI 3-year TCO",
+    "query": "build vs buy ai 3-year tco",
+    "prompt": {
+      "number": 13,
+      "text": "build vs buy AI 3-year TCO"
+    },
+    "origin": "demand"
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-05",
+      "windowStart": "2026-08-05",
+      "windowEnd": "2026-11-03",
+      "table": "Buyer prompts"
+    },
+    "row": {
+      "#": "13",
+      "Prompt": "build vs buy AI 3-year TCO",
+      "Must win": "`/resources/build-vs-buy-ai-kit`",
+      "Impressions": "unproven",
+      "Position": "-",
+      "Carried by": "-"
+    }
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/build-vs-buy-ai-3-year-tco",
+    "path": "site/src/data/post/build-vs-buy-ai-3-year-tco.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_028f49feda728ec8016aec6202e0c087d1a8f63b718b2d865b",
+  "published": {
+    "callIndex": 1
+  },
+  "calls": [
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0f83479d16307e8b016aec61bc7c0c87d1856d50337654c99d",
+      "requestDigest": "2dfe711c3e37b06fd96ac91de4938c1dc03aa66d0ce4dd0d2fe9a8e30b9bd72e",
+      "tokens": {
+        "input": 10459,
+        "output": 4302
+      },
+      "costUsd": 0.031969,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_028f49feda728ec8016aec6202e0c087d1a8f63b718b2d865b",
+      "requestDigest": "4f15f99e29369af0d61f5dbadb555e65ce1152bbe4d7a8113f26345668a53633",
+      "tokens": {
+        "input": 13535,
+        "output": 3491
+      },
+      "costUsd": 0.03099,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 23994,
+      "output": 7793
+    },
+    "costUsd": 0.062959
+  },
+  "ledger": "audits/autowriter/2026/11/build-vs-buy-ai-3-year-tco.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "310a55387bc73ffda50d02c82c2b6ee1257c17b4b80f356172cb29b1d86d33f7",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "42702fd9e59dee73ae64fba75624c834724b5b4e7598ab0adc1b48c1bfc9633c"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "67c26028e794a494b127f1ecdc8f116cbec1a8b7c64f199844770a998264767d"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "06fe1a1a0baa9b35048ce8b9010c690a2bef59f89f3259d2f524c4c7b97aa0eb"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "3391cfbba421ae3e122272b5c2215633533bc3bed03a747ca25c6cb5e03d201e"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "1fa2a5d0652a86130f27d5351f23b02eba117dcf8d7ec26a73f65e4b0ed2d024"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "ff3fcc46fa3853ece0577e31507abad513b0cd34ffeaf8a0b37921dfb0e41ae1"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "70ec4173e205e974cbaafaf270f1a24aa674c0aeb29feb653f7953f9b9b656b8"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "f9e37c623c6cd481fc79489dba4061b4920647cc9a7429a1d256a3eb9e5fbb97"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "df66f7228baec3b1783c95ebd2b7e57f0566cfe6eed5589665d04b74e19d5e28"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "df07e5ca1fced82881ab08e3849da19ec0de824e4be87b2719f174f0f73f33c2"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "f3e9cbc66a126ff4d8e5a023f8973f8beccf7854",
+    "fingerprint": "a37b2724d96c88fd21cfebf4981aa5a65b555c9c9483d82b5cb9619b9c7eb15e"
+  },
+  "claimTable": [
+    {
+      "sentence": "For build vs buy AI 3-year TCO, compare the same workload, risk controls and exit costs.",
+      "marker": "sourced",
+      "source": {
+        "id": "kit",
+        "title": "Build vs buy AI kit",
+        "url": "https://meshin.co/resources/build-vs-buy-ai-kit"
+      },
+      "span": "The build vs buy AI kit: six criteria I work through before recommending either path, and a total cost of ownership table you fill in for both sides."
+    },
+    {
+      "sentence": "For build vs buy AI 3-year TCO, estimate costs across the whole operating period, not just a quote or a development budget.",
+      "marker": "sourced",
+      "source": {
+        "id": "kit",
+        "title": "Build vs buy AI kit",
+        "url": "https://meshin.co/resources/build-vs-buy-ai-kit"
+      },
+      "span": "The Total cost over years criterion needs a total cost of ownership (TCO) estimate, and a vendor quote covers only part of it."
+    }
+  ],
+  "band": {
+    "measuredOn": "2026-11-02",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 131,
+      "median": 14,
+      "shareBelowThreshold": 0.2901,
+      "shareJustBelow": 0.2825,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/build-vs-buy-ai-3-year-tco.json",
+    "audits/autowriter/claims/2026/11/build-vs-buy-ai-3-year-tco.json",
+    "audits/autowriter/generations/2026/11/build-vs-buy-ai-3-year-tco.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-build-vs-buy-ai-3-year-tco.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/build-vs-buy-ai-3-year-tco.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}
