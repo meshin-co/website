@@ -14,6 +14,8 @@ import { CATEGORY_ROTATION, readPublishedPosts } from './topic-categories.mjs';
 import { casedForms, casingTexts } from './topic-casing.mjs';
 import { readPromptSources } from './topic-core.mjs';
 import { buildRun } from './topic-entries.mjs';
+import { CATCH_UP_AFTER_MINUTES, WRITE_TIMES_UTC } from './schedule-workflow.mjs';
+import { slotStanding } from './slot-standing.mjs';
 import { readConceptRegister, routeOf } from './topic-owners.mjs';
 import { proposalLines, proposeTopic, wantsProposal } from './topic-proposal.mjs';
 import { selectTopic } from './topic-selection.mjs';
@@ -217,6 +219,7 @@ export async function runCli(argv, io = {}) {
     fetch = globalThis.fetch,
     now = () => new Date(),
     rotation = CATEGORY_ROTATION,
+    schedule = { times: WRITE_TIMES_UTC, catchUpMinutes: CATCH_UP_AFTER_MINUTES },
     select = selectTopic,
     build = buildRun,
   } = io;
@@ -235,7 +238,8 @@ export async function runCli(argv, io = {}) {
     for (const line of printedLines(decision, proposal)) say(stdout, line);
     if (options.write) {
       const runId = runIdFor({ runId: options.runId, env, now: instant });
-      const request = { decision, report: inputs.report, runId, now: instant, reportPath: REPORT_PATH };
+      const { catchUp } = slotStanding({ ...schedule, claims: inputs.claims, now: instant });
+      const request = { decision, report: inputs.report, runId, now: instant, reportPath: REPORT_PATH, catchUp };
       const run = decision.decision === 'write' ? build(request) : null;
       persist({ decision, run, output: options.output, repoRoot });
     }

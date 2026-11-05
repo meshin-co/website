@@ -21,11 +21,15 @@ test('the workflow marks every step as unattended, so the seal and the Lighthous
   assert.equal(WORKFLOW.env?.AUTOWRITER_UNATTENDED, '1');
 });
 
-test('the ceiling job runs before any job that spends, and waits only on the readiness check', () => {
+test('the ceiling job runs before any job that spends, and waits only on the readiness check and the slot check, neither of which spends', () => {
   assert.ok(ceiling, 'no ceiling job');
   const order = Object.keys(WORKFLOW.jobs);
-  assert.equal(order.indexOf('ceiling'), 1, 'only the readiness check comes before the ceiling');
-  assert.deepEqual(needsOf(ceiling), ['configured']);
+  assert.deepEqual(
+    order.slice(0, 3),
+    ['configured', 'due', 'ceiling'],
+    'only the readiness and slot checks come before the ceiling'
+  );
+  assert.deepEqual(needsOf(ceiling), ['configured', 'due']);
 });
 
 test('the write job needs the ceiling job and runs only when it did not stop the day', () => {

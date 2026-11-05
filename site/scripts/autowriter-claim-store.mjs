@@ -14,7 +14,20 @@ const MAX_SHOWN = 5;
 const present = (fields) =>
   Object.fromEntries(Object.entries(fields).filter(([, value]) => value !== undefined && value !== null));
 
-export function newClaim({ slug, title, format, query, demand, prompt, origin, category, weakness, runId, now }) {
+export function newClaim({
+  slug,
+  title,
+  format,
+  query,
+  demand,
+  prompt,
+  origin,
+  category,
+  weakness,
+  catchUp,
+  runId,
+  now,
+}) {
   return {
     schema: 1,
     slug,
@@ -23,6 +36,7 @@ export function newClaim({ slug, title, format, query, demand, prompt, origin, c
     query,
     demand,
     ...present({ prompt, origin, category, weakness }),
+    ...present({ catchUp }),
     runId,
     status: 'claimed',
     claimedAt: now.toISOString(),

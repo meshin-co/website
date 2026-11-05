@@ -9,6 +9,7 @@ import { parse } from 'yaml';
 
 import { readEngineConfig } from './engine-config.mjs';
 import {
+  CATCH_UP_AFTER_MINUTES,
   REGENERATE_COMMAND,
   SCHEDULE_COMMENT,
   WRITE_DAILY_PATH,
@@ -41,17 +42,88 @@ const workflowOf = (...scheduleBlocks) =>
 
 const blockOf = (...entries) => ['  schedule:', `    ${SCHEDULE_COMMENT}`, ...cronEntries(...entries)];
 const GENERATED = workflowOf(blockOf('17 3 * * *', '17 15 * * *'));
-const rulesOf = (text, times = TIMES) => scheduleFindings(text, times).map(({ rule }) => rule);
+const rulesOf = (text, times = TIMES, delays = []) => scheduleFindings(text, times, delays).map(({ rule }) => rule);
 
-test('the committed workflow holds one cron entry per configured time, in ascending order, and nothing else is scheduled', () => {
-  const configured = readEngineConfig().loop.writeTimesUtc;
-  const wanted = [...configured].sort().map((time) => {
+const CATCH_UP = [120, 240];
+const CAUGHT = ['17 3 * * *', '17 5 * * *', '17 7 * * *', '17 15 * * *', '17 17 * * *', '17 19 * * *'];
+const WITH_CATCH_UP = workflowOf(blockOf(...CAUGHT));
+
+test('the committed workflow holds one cron entry per configured time and one per time and delay of catch-up, in ascending order, and nothing else is scheduled', () => {
+  const { writeTimesUtc: configured, catchUpAfterMinutes: delays } = readEngineConfig().loop;
+  const minutes = [...configured].flatMap((time) => {
     const [hour, minute] = time.split(':').map(Number);
-    return { cron: `${minute} ${hour} * * *` };
+    return [0, ...delays].map((delay) => hour * 60 + minute + delay);
   });
+  const wanted = minutes
+    .sort((first, second) => first - second)
+    .map((total) => ({ cron: `${total % 60} ${Math.floor(total / 60)} * * *` }));
+  assert.equal(wanted.length, configured.length * (1 + delays.length));
   assert.deepEqual(parse(COMMITTED).on.schedule, wanted);
-  assert.equal(withSchedule(COMMITTED, configured), COMMITTED);
-  assert.deepEqual(scheduleFindings(COMMITTED, configured), []);
+  assert.equal(withSchedule(COMMITTED, configured, delays), COMMITTED);
+  assert.deepEqual(scheduleFindings(COMMITTED, configured, delays), []);
+});
+
+test('the delays the catch-up crons are generated from are the loop.catchUpAfterMinutes of the engine configuration, and cannot be changed', () => {
+  assert.deepEqual(CATCH_UP_AFTER_MINUTES, readEngineConfig().loop.catchUpAfterMinutes);
+  assert.throws(() => CATCH_UP_AFTER_MINUTES.push(30), TypeError);
+});
+
+test('every write time brings one catch-up entry for each delay, written into the same ascending block', () => {
+  assert.deepEqual(scheduleLines(['15:17', '03:17'], CATCH_UP), blockOf(...CAUGHT));
+  assert.deepEqual(scheduleLines(TIMES, []), blockOf('17 3 * * *', '17 15 * * *'));
+});
+
+test('a generated workflow with catch-up is valid YAML that GitHub reads as the write crons and the catch-up crons', () => {
+  const loaded = parse(withSchedule(workflowOf(blockOf('1 1 * * *')), TIMES, CATCH_UP));
+  assert.deepEqual(
+    loaded.on.schedule,
+    CAUGHT.map((cron) => ({ cron }))
+  );
+});
+
+test('a workflow generated before catch-up existed is behind the configuration, and the gate names the four crons it lacks', () => {
+  assert.deepEqual(rulesOf(GENERATED, TIMES, CATCH_UP), [
+    'cron-missing',
+    'cron-missing',
+    'cron-missing',
+    'cron-missing',
+  ]);
+  assert.equal(withSchedule(GENERATED, TIMES, CATCH_UP), WITH_CATCH_UP);
+});
+
+test('a catch-up cron moved by hand is named as differing, and the finding says which slot it retries', () => {
+  const [found, ...others] = scheduleFindings(WITH_CATCH_UP.replace("'17 5 * * *'", "'17 6 * * *'"), TIMES, CATCH_UP);
+  assert.deepEqual(others, []);
+  assert.equal(found.rule, 'cron-differs');
+  assert.match(
+    found.detail,
+    /^line 7 holds "17 6 \* \* \*", but loop\.catchUpAfterMinutes gives "17 5 \* \* \*" for 05:17 \(120 minutes after 03:17\);/
+  );
+});
+
+test('a catch-up cron deleted by hand is named as missing, with the slot and delay it served', () => {
+  const [found, ...others] = scheduleFindings(WITH_CATCH_UP.replace("    - cron: '17 19 * * *'", ''), TIMES, CATCH_UP);
+  assert.deepEqual(others, []);
+  assert.equal(found.rule, 'cron-missing');
+  assert.match(
+    found.detail,
+    /^no cron entry retries the 15:17 slot 240 minutes late \(loop\.catchUpAfterMinutes\), which would be "17 19 \* \* \*";/
+  );
+});
+
+test('a cron that neither a write time nor a catch-up produces is extra, so a hand-written attempt cannot hide among the generated ones', () => {
+  const [found, ...others] = scheduleFindings(
+    WITH_CATCH_UP.replace("    - cron: '17 19 * * *'", "    - cron: '17 19 * * *'\n    - cron: '47 21 * * *'"),
+    TIMES,
+    CATCH_UP
+  );
+  assert.deepEqual(others, []);
+  assert.equal(found.rule, 'cron-extra');
+  assert.match(found.detail, /which no time in loop\.writeTimesUtc or loop\.catchUpAfterMinutes produces;/);
+});
+
+test('a configuration with the catch-ups turned off makes every committed catch-up cron extra', () => {
+  assert.deepEqual(rulesOf(WITH_CATCH_UP, TIMES, []), ['cron-extra', 'cron-extra', 'cron-extra', 'cron-extra']);
 });
 
 test('the times the schedule is generated from are the loop.writeTimesUtc of the engine configuration, and cannot be changed', () => {
@@ -216,7 +288,10 @@ test('a configured time with no cron entry is named with the entry it needs', ()
 test('a cron entry with no configured time is named with its line', () => {
   const [found] = scheduleFindings(workflowOf(blockOf('17 3 * * *', '17 15 * * *', '0 22 * * *')), TIMES);
   assert.equal(found.rule, 'cron-extra');
-  assert.match(found.detail, /^line 8 holds "0 22 \* \* \*", which no time in loop\.writeTimesUtc produces;/);
+  assert.match(
+    found.detail,
+    /^line 8 holds "0 22 \* \* \*", which no time in loop\.writeTimesUtc or loop\.catchUpAfterMinutes produces;/
+  );
 });
 
 test('a hand edit to several lines at once is named once for each line, never as one vague difference', () => {

@@ -55,6 +55,15 @@
           "minItems": 1,
           "uniqueItems": true,
           "items": { "enum": ["no-buyer-prompt", "impressions-at-floor", "position-beyond-strengthen-band"] }
+        },
+        "catchUp": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["slot", "lateMinutes"],
+          "properties": {
+            "slot": { "type": "string", "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$" },
+            "lateMinutes": { "type": "integer", "minimum": 0 }
+          }
         }
       }
     },

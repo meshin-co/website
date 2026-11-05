@@ -4,9 +4,13 @@ run-name: Write daily (${{ github.event_name }})
 
 on:
   schedule:
-    # written by npm run assets:schedule from loop.writeTimesUtc; give each time a minute off the top of the hour, where scheduled runs queue
+    # written by npm run assets:schedule from loop.writeTimesUtc and loop.catchUpAfterMinutes; give each time a minute off the top of the hour, where scheduled runs queue
     - cron: '17 3 * * *'
+    - cron: '17 5 * * *'
+    - cron: '17 7 * * *'
     - cron: '17 15 * * *'
+    - cron: '17 17 * * *'
+    - cron: '17 19 * * *'
   workflow_dispatch:
 
 concurrency:
@@ -60,9 +64,32 @@ jobs:
             echo 'workflow reports green and writes nothing, rather than failing every morning.'
           } >> "$GITHUB_STEP_SUMMARY"
 
-  ceiling:
+  due:
     needs: configured
     if: github.ref == 'refs/heads/main' && needs.configured.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      due: ${{ steps.slot.outputs.due }}
+    steps:
+      # the tip of main as it is now: a run queued behind another starts after that run pushed its claim, and its default checkout predates it
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: site/.nvmrc
+
+      - name: stop a scheduled run when the day already holds an article for every slot that has passed
+        id: slot
+        run: node scripts/slot-due.mjs --event "$GITHUB_EVENT_NAME"
+
+  ceiling:
+    needs: [configured, due]
+    if: github.ref == 'refs/heads/main' && needs.configured.outputs.ready == 'true' && needs.due.outputs.due == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -101,8 +128,8 @@ jobs:
         run: node scripts/spend-ended.mjs ceiling
 
   write:
-    needs: [configured, ceiling]
-    if: github.ref == 'refs/heads/main' && needs.configured.outputs.ready == 'true' && needs.ceiling.outputs.stopped != 'true'
+    needs: [configured, due, ceiling]
+    if: github.ref == 'refs/heads/main' && needs.configured.outputs.ready == 'true' && needs.due.outputs.due == 'true' && needs.ceiling.outputs.stopped != 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:

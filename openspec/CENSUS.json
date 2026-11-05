@@ -266,6 +266,7 @@
     "Three windows are totalled and each is defined in the file"
   ],
   "governance/unattended-publishing": [
+    "A dropped slot is run late and a filled slot is never run twice",
     "A failed demand refresh stops the run",
     "A held slug is refused without an unsafe remedy",
     "A record outside its month directory fails the gate",

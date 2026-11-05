@@ -4,20 +4,26 @@ import { parseArgs } from 'node:util';
 
 import { readEngineConfig } from './engine-config.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
-import { WRITE_DAILY_PATH, withSchedule } from './schedule-workflow.mjs';
+import { WRITE_DAILY_PATH, cronPlan, withSchedule } from './schedule-workflow.mjs';
 
 const REPOSITORY_ROOT = resolve(import.meta.dirname, '..', '..');
 const CONFIG_PATH = 'site/engine.config.json';
 const USAGE = 'usage: node scripts/generate-schedule.mjs [--root <repository root>]';
 
 export function generateSchedule(root = REPOSITORY_ROOT) {
-  const times = readEngineConfig(join(root, CONFIG_PATH)).loop.writeTimesUtc;
+  const { writeTimesUtc: times, catchUpAfterMinutes } = readEngineConfig(join(root, CONFIG_PATH)).loop;
   const workflowFile = join(root, WRITE_DAILY_PATH);
   const current = readFileSync(workflowFile, 'utf8');
-  const next = withSchedule(current, times);
+  const next = withSchedule(current, times, catchUpAfterMinutes);
   const changed = next !== current;
   if (changed) writeFileSync(workflowFile, next);
-  return { path: WRITE_DAILY_PATH, times, changed };
+  return {
+    path: WRITE_DAILY_PATH,
+    times,
+    catchUpAfterMinutes,
+    changed,
+    crons: cronPlan(times, catchUpAfterMinutes).length,
+  };
 }
 
 function readRoot(argv) {
@@ -38,12 +44,16 @@ export function main(argv) {
     return;
   }
   try {
-    const { path, times, changed } = generateSchedule(root);
+    const { path, times, catchUpAfterMinutes, changed, crons } = generateSchedule(root);
     const listed = times.join(', ');
+    const retries =
+      catchUpAfterMinutes.length === 0
+        ? ''
+        : ` and ${catchUpAfterMinutes.join(', ')} minutes later (loop.catchUpAfterMinutes)`;
     console.log(
       changed
-        ? `schedule: wrote ${times.length} cron ${times.length === 1 ? 'entry' : 'entries'} into ${path} for ${listed} (loop.writeTimesUtc)`
-        : `schedule: ${path} already holds the cron entries for ${listed} (loop.writeTimesUtc); nothing written`
+        ? `schedule: wrote ${crons} cron ${crons === 1 ? 'entry' : 'entries'} into ${path} for ${listed} (loop.writeTimesUtc)${retries}`
+        : `schedule: ${path} already holds the cron entries for ${listed} (loop.writeTimesUtc)${retries}; nothing written`
     );
   } catch (failure) {
     console.error(`schedule: ${failure.message}`);

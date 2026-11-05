@@ -296,6 +296,8 @@ export const FAMILIES = [
   { id: 'engine-loses-an-anchor-file-it-reads', kind: 'specimen', specimen: 'engineAnchorFileRemoved' },
   { id: 'ci-classifier-reexpressed-as-a-shell-case', kind: 'specimen', specimen: 'engineClassifierReexpressed' },
   { id: 'write-schedule-hand-edited', kind: 'specimen', specimen: 'scheduleCronHandEdited' },
+  { id: 'write-schedule-catch-up-hand-written', kind: 'specimen', specimen: 'scheduleCatchUpHandWritten' },
+  { id: 'write-schedule-catch-up-removed', kind: 'specimen', specimen: 'scheduleCatchUpRemoved' },
   { id: 'tracked-file-fits-no-partition-rule', kind: 'specimen', specimen: 'partitionFileFitsNoRule' },
   { id: 'anchor-file-nothing-in-the-engine-serves', kind: 'specimen', specimen: 'partitionAnchorUnserved' },
   { id: 'engine-file-names-the-site-past-the-ceiling', kind: 'specimen', specimen: 'partitionSiteBound' },

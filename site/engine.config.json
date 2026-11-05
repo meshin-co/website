@@ -38,6 +38,7 @@
     "claimLifetimeDays": 14,
     "holdLabel": "autowriter-hold",
     "writeTimesUtc": ["03:17", "15:17"],
+    "catchUpAfterMinutes": [120, 240],
     "categoryRotation": ["governance", "agentic-architecture", "operating-model", "executive"]
   },
   "demand": {

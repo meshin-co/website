@@ -24,7 +24,7 @@ const readersOf = (directory) =>
 
 const strangersIn = (directory) => readersOf(directory).filter((file) => !MAY_READ.includes(file));
 
-test("GitHub's schedule is late by minutes to hours, so no script but the schedule modules may read the configured times or key logic off a slot", () => {
+test("GitHub's schedule is late by minutes to hours and sometimes absent, so only the schedule modules name the configured times, and every other script takes them from schedule-workflow.mjs", () => {
   assert.deepEqual(strangersIn(SCRIPTS), []);
 });
 
