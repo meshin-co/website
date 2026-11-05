@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/build-vs-buy-ai-3-year-tco.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/build-vs-buy-ai-3-year-tco.json on 2026-11-05. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/build-vs-buy-ai-3-year-tco.json.",
+    "digest": "cf9801126301"
+  },
+  {
+    "target": "/blog/build-vs-buy-ai-3-year-tco",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/build-vs-buy-ai-3-year-tco.json on 2026-11-05. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/build-vs-buy-ai-3-year-tco.json.",
+    "digest": "a9c93c061be7"
+  }
+]
