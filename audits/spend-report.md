@@ -1,21 +1,21 @@
 # Spend report: what writing each entry cost
 
-Generated-from: 1d97859e1a888eab7b1ca14046ab8de63f953807
-Generated-at: 2026-11-05T05:59:43.314Z
+Generated-from: 313e59e
+Generated-at: 2026-11-05T17:09:12.691Z
 
 ## This month
 
-2026-11 so far: 0.174118 USD spent of the 25.00 USD monthly ceiling, 24.825882 USD left.
+2026-11 so far: 0.237077 USD spent of the 25.00 USD monthly ceiling, 24.762923 USD left.
 
-The figure is the spend of the UTC calendar month of 2026-11-05T05:59:43.314Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
+The figure is the spend of the UTC calendar month of 2026-11-05T17:09:12.691Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
 
 | What was paid for               | Cost (USD) |
 | ------------------------------- | ---------- |
-| Writing calls of entries        | 0.15137    |
+| Writing calls of entries        | 0.214329   |
 | Repair calls                    | 0.00       |
 | Runs that ended with no entry   | 0.022748   |
 | Spend with no generation record | 0.00       |
-| Everything paid for             | 0.174118   |
+| Everything paid for             | 0.237077   |
 
 ## About this file
 
@@ -25,37 +25,37 @@ Cost means the cost of the writing calls of an entry: its draft and its correcti
 
 ## This entry
 
-The newest run: the run of the newest record, which was generated at 2026-11-05T05:59:43.308Z. A run that wrote an article and a term lists both.
+The newest run: the run of the newest record, which was generated at 2026-11-05T11:03:18.146Z. A run that wrote an article and a term lists both.
 
-| Generated (UTC)          | Format  | Slug                                        | Input tokens | Output tokens | Cost (USD) | Repair (USD) |
-| ------------------------ | ------- | ------------------------------------------- | ------------ | ------------- | ---------- | ------------ |
-| 2026-11-05T05:59:43.308Z | article | ai-vendor-assessment-questionnaire-template | 23,974       | 7,495         | 0.061449   | 0.00         |
+| Generated (UTC)          | Format  | Slug                       | Input tokens | Output tokens | Cost (USD) | Repair (USD) |
+| ------------------------ | ------- | -------------------------- | ------------ | ------------- | ---------- | ------------ |
+| 2026-11-05T11:03:18.146Z | article | build-vs-buy-ai-3-year-tco | 23,994       | 7,793         | 0.062959   | 0.00         |
 
 ## Last 30 days
 
-The 30 days of 24 hours each that end at the newest record: after 2026-10-06T05:59:43.308Z and through 2026-11-05T05:59:43.308Z. The start is excluded and the end is included, so an entry generated exactly at the start is outside the window. The window ends at the newest record and not at the clock, so this file does not change at midnight. Read long after the last run, it still describes the 30 days before that run. These 30 days are not the UTC calendar month of the monthly spend ceiling in `site/engine.config.json`: that ceiling counts calendar months and counts every call the machine paid for, not only the writing calls of entries. This table counts the writing calls of entries only.
+The 30 days of 24 hours each that end at the newest record: after 2026-10-06T11:03:18.146Z and through 2026-11-05T11:03:18.146Z. The start is excluded and the end is included, so an entry generated exactly at the start is outside the window. The window ends at the newest record and not at the clock, so this file does not change at midnight. Read long after the last run, it still describes the 30 days before that run. These 30 days are not the UTC calendar month of the monthly spend ceiling in `site/engine.config.json`: that ceiling counts calendar months and counts every call the machine paid for, not only the writing calls of entries. This table counts the writing calls of entries only.
 
 | Format  | Entries | Input tokens | Output tokens | Cost (USD) |
 | ------- | ------- | ------------ | ------------- | ---------- |
-| all     | 3       | 57,400       | 18,794        | 0.15137    |
-| article | 3       | 57,400       | 18,794        | 0.15137    |
+| all     | 4       | 81,394       | 26,587        | 0.214329   |
+| article | 4       | 81,394       | 26,587        | 0.214329   |
 
 ## All time
 
-Every entry recorded: from 2026-11-03T05:36:35.954Z, the oldest record, through 2026-11-05T05:59:43.308Z, the newest. The first table counts the writing calls of entries only. The second table adds every other call the machine paid for, so its last row is the whole spend the ledgers and records show.
+Every entry recorded: from 2026-11-03T05:36:35.954Z, the oldest record, through 2026-11-05T11:03:18.146Z, the newest. The first table counts the writing calls of entries only. The second table adds every other call the machine paid for, so its last row is the whole spend the ledgers and records show.
 
 | Format  | Entries | Input tokens | Output tokens | Cost (USD) |
 | ------- | ------- | ------------ | ------------- | ---------- |
-| all     | 3       | 57,400       | 18,794        | 0.15137    |
-| article | 3       | 57,400       | 18,794        | 0.15137    |
+| all     | 4       | 81,394       | 26,587        | 0.214329   |
+| article | 4       | 81,394       | 26,587        | 0.214329   |
 
 | What was paid for               | Cost (USD) |
 | ------------------------------- | ---------- |
-| Writing calls of entries        | 0.15137    |
+| Writing calls of entries        | 0.214329   |
 | Repair calls                    | 0.00       |
 | Runs that ended with no entry   | 0.022748   |
 | Spend with no generation record | 0.00       |
-| Everything paid for             | 0.174118   |
+| Everything paid for             | 0.237077   |
 
 ## Every entry
 
@@ -63,6 +63,7 @@ One row per generation record, newest first. The cost is the cost of its writing
 
 | Generated (UTC)          | Format  | Slug                                                       | Input tokens | Output tokens | Cost (USD) | Repair (USD) |
 | ------------------------ | ------- | ---------------------------------------------------------- | ------------ | ------------- | ---------- | ------------ |
+| 2026-11-05T11:03:18.146Z | article | build-vs-buy-ai-3-year-tco                                 | 23,994       | 7,793         | 0.062959   | 0.00         |
 | 2026-11-05T05:59:43.308Z | article | ai-vendor-assessment-questionnaire-template                | 23,974       | 7,495         | 0.061449   | 0.00         |
 | 2026-11-03T10:59:27.266Z | article | named-person-responsible-for-ai-risk-in-vendor-procurement | 10,130       | 4,190         | 0.03108    | 0.00         |
 | 2026-11-03T05:36:35.954Z | article | ai-readiness-assessment-template-for-smb                   | 23,296       | 7,109         | 0.058841   | 0.00         |
@@ -73,7 +74,7 @@ The model and the two rates, in USD per million tokens, that each cost was compu
 
 | Model         | Input USD per million tokens | Output USD per million tokens | Entries | First                    | Last                     |
 | ------------- | ---------------------------- | ----------------------------- | ------- | ------------------------ | ------------------------ |
-| gpt-6.1-terra | 1                            | 5                             | 3       | 2026-11-03T05:36:35.954Z | 2026-11-05T05:59:43.308Z |
+| gpt-6.1-terra | 1                            | 5                             | 4       | 2026-11-03T05:36:35.954Z | 2026-11-05T11:03:18.146Z |
 
 ## Notes
 
