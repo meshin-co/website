@@ -92,8 +92,10 @@ const gate = (root) => gateFrom(SITE, root);
 const skippedLines = (run) => run.stdout.split('\n').filter((line) => line.startsWith(SKIPPED));
 
 const pipelineWrites = (root, extra = {}) => {
+  const entry = { write: { [ENTRY_PATH]: entryText() }, message: 'chore(fixture): the entry is already in the corpus' };
+  commitAs(root, HUMAN, entry);
   const band = JSON.parse(bandSceneFiles()[BAND_PATH]);
-  const written = { [RECORD_PATH]: asJson(recordWith({ band })), [ENTRY_PATH]: entryText(), ...extra };
+  const written = { [RECORD_PATH]: asJson(recordWith({ band })), ...extra };
   const report = spendReportFiles(root, [{ path: RECORD_PATH, text: written[RECORD_PATH] }]);
   const write = { ...written, ...report };
   const message = `feat(autowriter): write zz-specimen\n\nProvenance: ${RECORD_PATH}`;

@@ -8,6 +8,8 @@ export const OUTCOMES = [
   'spend-ceiling',
   'credential',
   'failed',
+  'conflict',
+  'unconverged',
 ];
 
 export const ESCALATION_KIND = {
@@ -16,6 +18,8 @@ export const ESCALATION_KIND = {
   'spend-ceiling': 'spend-ceiling',
   credential: 'credential',
   failed: 'hard-stop',
+  conflict: 'hard-stop',
+  unconverged: 'no-convergence',
 };
 
 export const isOutcome = (word) => OUTCOMES.includes(word);

@@ -92,7 +92,15 @@ test('a repair that ended as repaired or stale hands the pull request to a succe
 });
 
 test('every other outcome is an escalation of the kind the loop files that outcome under', () => {
-  assert.deepEqual(STOPS.toSorted(), ['credential', 'failed', 'no-convergence', 'spend-ceiling', 'unrepairable']);
+  assert.deepEqual(STOPS.toSorted(), [
+    'conflict',
+    'credential',
+    'failed',
+    'no-convergence',
+    'spend-ceiling',
+    'unconverged',
+    'unrepairable',
+  ]);
   for (const outcome of STOPS) {
     const found = afterRepair(green(), outcome);
 

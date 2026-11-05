@@ -22,6 +22,7 @@ const scriptOf = (step, name) => {
 };
 
 const REWRITE = stepOf(repair, (step) => step.id === 'rewrite');
+const CATCH_UP = stepOf(repair, (step) => step.id === 'catchup');
 const PUSH = stepOf(repair, (step) => /git .*push/.test(step.run ?? ''));
 const AFTER = stepOf(follow, (step) => /watch:pr/.test(step.run ?? ''));
 
@@ -82,6 +83,8 @@ function runScript(script, { root, cwd = root, env = {}, stdout = '', status = 0
 const lastLine = (patch) =>
   JSON.stringify({ ok: false, outcome: 'no-convergence', commit: null, reason: 'a reason', ...patch });
 const rewriting = (stdout, status = 1) => runScript(scriptOf(REWRITE, 'rewrite'), { root: scene(), stdout, status });
+const catching = (stdout, status = 1) => runScript(scriptOf(CATCH_UP, 'catchup'), { root: scene(), stdout, status });
+const CATCH_UP_ONLY = ['conflict', 'unconverged'];
 
 test('a repair that made a commit hands the workflow its outcome and the commit to push, and the step passes', () => {
   const printed = `fetching the findings\n${lastLine({ ok: true, outcome: 'repaired', commit: COMMIT })}\n`;
@@ -155,11 +158,31 @@ test('an outcome in capitals, with a space or with a path in it is not an outcom
 });
 
 test('every outcome the repair command can print passes through the step unchanged', () => {
-  for (const outcome of OUTCOMES) {
+  for (const outcome of OUTCOMES.filter((word) => !CATCH_UP_ONLY.includes(word))) {
     const found = rewriting(`${lastLine({ outcome })}\n`);
 
     assert.equal(found.outputs, `outcome=${outcome}\ncommit=\n`, outcome);
   }
+});
+
+test('a catch-up hands the workflow the merge commit to push, and every outcome it can print passes unchanged', () => {
+  const merged = catching(`${lastLine({ ok: true, outcome: 'repaired', commit: COMMIT })}\n`, 0);
+
+  assert.equal(merged.status, 0);
+  assert.equal(merged.outputs, `outcome=repaired\ncommit=${COMMIT}\n`);
+  assert.deepEqual(merged.commands, [`run --silent catch-up:entry -- --head ${HEAD}`]);
+  for (const outcome of ['stale', 'conflict', 'unconverged', 'failed'])
+    assert.equal(catching(`${lastLine({ outcome })}\n`).outputs, `outcome=${outcome}\ncommit=\n`, outcome);
+});
+
+test('a word the catch-up command cannot print is failed, and a commit that is not a whole hash is dropped', () => {
+  for (const outcome of ['no-convergence', 'unrepairable', 'spend-ceiling', 'credential', 'nonsense'])
+    assert.equal(catching(`${lastLine({ outcome })}\n`).outputs, 'outcome=failed\ncommit=\n', outcome);
+  assert.equal(catching('no json here\n').outputs, 'outcome=failed\ncommit=\n');
+  assert.equal(
+    catching(`${lastLine({ outcome: 'repaired', commit: 'abc' })}\n`).outputs,
+    'outcome=repaired\ncommit=\n'
+  );
 });
 
 test('a lowercase word that is not one of the outcomes is failed, so the follow-up is never given a word it refuses', () => {

@@ -88,6 +88,7 @@ test('the specimen module names every failure mode of the gate, each against gat
     'autowriterClaimOriginMismatch',
     'autowriterClaimTitleCollides',
     'autowriterClassifierJudgesLastPush',
+    'autowriterCommitAnUnregisteredPath',
     'autowriterCommitMovesTheBand',
     'autowriterCommitMovesTheEntryLength',
     'autowriterCommitRemovesAGenerationRecord',

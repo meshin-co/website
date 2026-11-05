@@ -120,4 +120,9 @@ export const historySpecimens = () => ({
     token: `generation-record-removed-committed ${RECORD}: removed ${RECORD} (generation-record-removed:`,
     plant: planRemoval,
   },
+  autowriterCommitAnUnregisteredPath: {
+    gate: GATE,
+    token: `unregistered-path-committed ${RECORD}: touched audits/zz-specimen-derived.json, which is not this run's own`,
+    plant: planCommit(({ original }) => ({ 'audits/zz-specimen-derived.json': markerOn(original) })),
+  },
 });

@@ -52,6 +52,13 @@ const REFUSED = [
     path: 'audits/phase-zz/lh-mobile/lhr-0.json',
     id: 'lighthouse-report',
   },
+  {
+    name: 'autowriterCommitAnUnregisteredPath',
+    family: 'autowriter-commit-an-unregistered-path',
+    path: 'audits/zz-specimen-derived.json',
+    id: 'unregistered-path',
+    token: `unregistered-path-committed ${RECORD}: touched audits/zz-specimen-derived.json, which is not this run's own`,
+  },
 ];
 const SEAL = { name: 'autowriterCommitSealsDispositions', family: 'autowriter-commit-seals-dispositions' };
 const REMOVAL = {
@@ -65,7 +72,10 @@ const DEBT = {
 const NAMES = [...REFUSED.map(({ name }) => name), SEAL.name, REMOVAL.name].sort();
 const TOKENS = {
   ...Object.fromEntries(
-    REFUSED.map(({ name, path, id }) => [name, `refused-path-committed ${RECORD}: touched ${path} (${id}:`])
+    REFUSED.map(({ name, path, id, token }) => [
+      name,
+      token ?? `refused-path-committed ${RECORD}: touched ${path} (${id}:`,
+    ])
   ),
   [SEAL.name]: `disposition-seal-committed ${RECORD}: sealed`,
   [REMOVAL.name]: `generation-record-removed-committed ${RECORD}: removed ${RECORD} (generation-record-removed:`,

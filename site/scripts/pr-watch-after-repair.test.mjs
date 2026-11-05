@@ -34,6 +34,9 @@ const STATEMENTS = {
   'spend-ceiling': 'the monthly spend ceiling is reached, so no model was called',
   credential: 'the vendor key is missing or was refused',
   failed: 'the repair job failed before it could finish',
+  conflict: 'catching the branch up on main met a conflict in a file that is not derived, which only a person can read',
+  unconverged:
+    'catching the branch up on main did not reach a fixed point, so regenerating the derived files after it still changed them or dropped a row',
 };
 
 const FILED_AS = {
@@ -42,9 +45,19 @@ const FILED_AS = {
   'spend-ceiling': 'spend-ceiling',
   credential: 'credential',
   failed: 'hard-stop',
+  conflict: 'hard-stop',
+  unconverged: 'no-convergence',
 };
 
-const REQUESTS = { unrepairable: 1, 'no-convergence': 2, 'spend-ceiling': 2, credential: 2, failed: 1 };
+const REQUESTS = {
+  unrepairable: 1,
+  'no-convergence': 2,
+  'spend-ceiling': 2,
+  credential: 2,
+  failed: 1,
+  conflict: 1,
+  unconverged: 2,
+};
 
 const detailOf = (outcome, { run = REPAIR_RUN_URL, pullRequest = PULL_REQUEST_URL } = {}) =>
   [

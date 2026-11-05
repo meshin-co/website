@@ -5,11 +5,14 @@ import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 import { DUPLICATE_MINIMUM_WORDS } from './content-gate.mjs';
+import { generatedSlugs } from './measure-sentence-band.mjs';
 import { loadCorpus, measureCorpus } from './sentence-band.mjs';
 
 const REPO = fileURLToPath(new URL('../../', import.meta.url));
 
-const LIVE = measureCorpus(loadCorpus(REPO, { exclude: [] }), { threshold: DUPLICATE_MINIMUM_WORDS });
+const LIVE = measureCorpus(loadCorpus(REPO, { exclude: generatedSlugs(REPO) }), {
+  threshold: DUPLICATE_MINIMUM_WORDS,
+});
 const within = (value, low, high) => value >= low && value <= high;
 
 test('the extraction reproduces the hand-written corpus of each format as the owner measured it', () => {

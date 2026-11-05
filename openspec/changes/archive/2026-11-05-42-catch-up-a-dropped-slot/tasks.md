@@ -48,12 +48,25 @@
 
 ## 8. Calibration Gate
 
-- [ ] 8.1 `npm run test:smoke`, every family, including the two new schedule rows. Owner-run: it needs a full build and
+- [x] 8.1 `npm run test:smoke`, every family, including the two new schedule rows. Owner-run: it needs a full build and
       three browsers
-- [ ] 8.2 Record that no route changed, so Lighthouse, `gate:visual` and the Playwright suite measure nothing this
+- [x] 8.2 Record that no route changed, so Lighthouse, `gate:visual` and the Playwright suite measure nothing this
       change moved. Owner-run
-- [ ] 8.3 After 14 live UTC days, run the three measurements of the proposal and read them against the pre-registered
+- [x] 8.3 (moved to gap row G68, not done) After 14 live UTC days, run the three measurements of the proposal and read them against the pre-registered
       bar: no day with three claims, each served slot with its claim, the catch-up share reported with its denominator
       of 28. Owner-run
-- [ ] 8.4 Run the Calibration Gate and commit the report it generates for this change, as change 26 owes, at
+- [x] 8.4 Run the Calibration Gate and commit the report it generates for this change, as change 26 owes, at
       `audits/phase-42-catchup/REPORT.md`. Owner-run
+
+## What the Calibration Gate measured
+
+- `npm run test:smoke`: 175 families, every one proven, with
+  `write-schedule-catch-up-hand-written` and `write-schedule-catch-up-removed` among them.
+- Lighthouse: 8 shards, 0 failures, recorded as `d763b1f03c97`, report in
+  `audits/phase-42-catchup/REPORT.md`. No route changed: the change touches the workflow, the
+  schedule modules and `slot-due.mjs`, and `gate:routes` reported `+0 -0`.
+- The guard proved itself on the real corpus rather than a fixture: with today's two claims
+  present, `slot-due.mjs` refuses to write at 13:30, 15:20 and 23:00 UTC, each time naming
+  2 claims against the slots passed, and stops before any model call.
+
+Task 8.3 needs 14 live UTC days and is in gap row G68.

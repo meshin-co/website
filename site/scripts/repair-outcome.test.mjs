@@ -6,7 +6,7 @@ import { test } from 'node:test';
 import { ESCALATION_KINDS } from './autowriter-ledger.mjs';
 import { ESCALATION_KIND, OUTCOMES, RepairStop, exitCodeOf, isOutcome } from './repair-outcome.mjs';
 
-test('a repair ends in exactly one of seven outcomes, and the watcher reads no other word', () => {
+test('a repair ends in exactly one of nine outcomes, and the watcher reads no other word', () => {
   assert.deepEqual(OUTCOMES, [
     'repaired',
     'stale',
@@ -15,6 +15,8 @@ test('a repair ends in exactly one of seven outcomes, and the watcher reads no o
     'spend-ceiling',
     'credential',
     'failed',
+    'conflict',
+    'unconverged',
   ]);
   for (const outcome of OUTCOMES) assert.equal(isOutcome(outcome), true);
   for (const word of ['', 'done', 'REPAIRED', undefined, null, 7]) assert.equal(isOutcome(word), false);

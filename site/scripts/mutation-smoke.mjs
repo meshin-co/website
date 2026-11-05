@@ -254,6 +254,7 @@ export const FAMILIES = [
     specimen: 'autowriterCommitWritesLighthouseReport',
   },
   { id: 'autowriter-commit-seals-dispositions', kind: 'specimen', specimen: 'autowriterCommitSealsDispositions' },
+  { id: 'autowriter-commit-an-unregistered-path', kind: 'specimen', specimen: 'autowriterCommitAnUnregisteredPath' },
   {
     id: 'autowriter-merged-ledger-without-its-measurement-debt',
     kind: 'specimen',

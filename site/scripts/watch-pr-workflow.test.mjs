@@ -37,6 +37,7 @@ const found = (step, name) => {
 };
 
 const rewrite = stepsOf(repair).find((step) => step.id === 'rewrite');
+const catchup = stepsOf(repair).find((step) => step.id === 'catchup');
 const push = stepRunning(repair, /git .*push/);
 const judge = stepsOf(watch).find((step) => step.id === 'judge');
 const after = stepRunning(follow, /watch:pr/);
@@ -73,6 +74,7 @@ test('the watch step is named judge, and its job hands the repair what it judged
     repair: expression('steps.judge.outputs.repair'),
     head: expression('steps.judge.outputs.head'),
     branch: expression('steps.judge.outputs.branch'),
+    kind: expression('steps.judge.outputs.kind'),
   });
 });
 
@@ -89,7 +91,9 @@ test('the repair job may read the repository, the pull request, the checks and t
 
 test('the repair job hands the follow-up the outcome of the step that ran the repair', () => {
   found(rewrite, 'rewrite');
-  assert.deepEqual(repair?.outputs, { outcome: expression('steps.rewrite.outputs.outcome') });
+  assert.deepEqual(repair?.outputs, {
+    outcome: expression('steps.rewrite.outputs.outcome || steps.catchup.outputs.outcome'),
+  });
 });
 
 test('the follow-up runs after both jobs, even after a repair that failed, and only when a repair was asked for', () => {
@@ -130,9 +134,27 @@ test('layer two against two repairs: the repair is pinned to the head the watche
 });
 
 test('layer three against two repairs: the push is a plain fast-forward, which a branch that moved refuses', () => {
-  assert.equal(found(push, 'push').if, "steps.rewrite.outputs.commit != ''");
+  assert.equal(found(push, 'push').if, "steps.rewrite.outputs.commit != '' || steps.catchup.outputs.commit != ''");
   assert.match(push.run, /push origin "HEAD:refs\/heads\/\$BRANCH"/);
   assert.doesNotMatch(push.run, /--force|--force-with-lease|--mirror|--delete|\s-f\s|\s\+/);
+});
+
+test('the catch-up step runs for the kind of repair that is a catch-up, and the rewrite runs for every other kind', () => {
+  assert.equal(found(catchup, 'catchup').if, "needs.watch.outputs.kind == 'catch-up'");
+  assert.equal(found(rewrite, 'rewrite').if, "needs.watch.outputs.kind != 'catch-up'");
+});
+
+test('the catch-up step holds no secret and no token, and is pinned to the head the watcher judged', () => {
+  assert.deepEqual(found(catchup, 'catchup').env, { HEAD_SHA: expression('needs.watch.outputs.head') });
+  assert.match(catchup.run, /npm run --silent catch-up:entry -- --head "\$HEAD_SHA"/);
+  assert.doesNotMatch(catchup.run, /\$\{\{|secrets\.|AUTOWRITER_PAT|--force/);
+});
+
+test('the catch-up runs after the install and before the push, so it sees the dependencies and never the credential', () => {
+  const install = stepsOf(repair).find((step) => /^npm ci$/.test(step.run ?? ''));
+  const order = (step) => stepsOf(repair).indexOf(found(step, 'step'));
+  assert.ok(order(install) < order(catchup));
+  assert.ok(order(catchup) < order(push));
 });
 
 test('the repair job checks out the head the watcher judged, whole, with no credential left on disk', () => {

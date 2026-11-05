@@ -269,6 +269,7 @@
     "A dropped slot is run late and a filled slot is never run twice",
     "A failed demand refresh stops the run",
     "A held slug is refused without an unsafe remedy",
+    "A pull request main has moved under is caught up on main, and its derived files are regenerated, never merged",
     "A record outside its month directory fails the gate",
     "A repair that spent money and failed records its spend",
     "A run claims its topic before it spends",

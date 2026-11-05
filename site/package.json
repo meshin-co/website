@@ -78,6 +78,7 @@
     "measure:llms": "node scripts/measure-llms-entries.mjs dist",
     "measure:search": "node scripts/measure-search.mjs dist",
     "repair:entry": "node --env-file-if-exists=.env scripts/repair-entry.mjs",
+    "catch-up:entry": "node scripts/catch-up-entry.mjs",
     "resume:pr": "node scripts/run-pr-resume.mjs",
     "pick:topic": "node scripts/pick-a-topic.mjs",
     "prepare": "[ -n \"$CI\" ] || (cd .. && git config core.hooksPath .githooks)",
