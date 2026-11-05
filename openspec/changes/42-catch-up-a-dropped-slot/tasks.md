@@ -56,4 +56,4 @@
       bar: no day with three claims, each served slot with its claim, the catch-up share reported with its denominator
       of 28. Owner-run
 - [ ] 8.4 Run the Calibration Gate and commit the report it generates for this change, as change 26 owes, at
-      `audits/phase-42-catch-up/REPORT.md`. Owner-run
+      `audits/phase-42-catchup/REPORT.md`. Owner-run

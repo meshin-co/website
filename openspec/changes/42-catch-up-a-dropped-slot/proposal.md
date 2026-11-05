@@ -159,5 +159,5 @@ None of these has been run on this tree. Each is an unticked task.
 - Lighthouse and the visual suite are not owed: no route changes. The Calibration Gate step list still applies, so the
   owner records that.
 - The first live scheduled day on the new cron, read with the three commands above.
-- The Calibration Gate report for this change, committed as `audits/phase-42-catch-up/REPORT.md` once the owner has run
+- The Calibration Gate report for this change, committed as `audits/phase-42-catchup/REPORT.md` once the owner has run
   the gate (the file does not exist before then).
