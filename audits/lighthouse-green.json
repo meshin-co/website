@@ -1,5 +1,5 @@
 {
-  "fingerprint": "d763b1f03c977f2a5bc088bf67b2502455b763ae9cbf88c86e85543517c7632e",
-  "recordedAt": "2026-11-05T06:45:50.266Z",
-  "phase": "42-catchup"
+  "fingerprint": "0e25f15059d97192e68148a60a30ebdd36b428cbcd404a0d0fb34b4221dcdff5",
+  "recordedAt": "2026-11-05T18:57:46.969Z",
+  "phase": "43-two-writers"
 }

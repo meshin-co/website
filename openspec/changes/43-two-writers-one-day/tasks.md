@@ -50,11 +50,23 @@
 
 ## 8. Calibration Gate
 
-- [ ] 8.1 `npm run test:smoke`, every family, including the new row `autowriter-commit-an-unregistered-path`. Owner-run: it
+- [x] 8.1 `npm run test:smoke`, every family, including the new row `autowriter-commit-an-unregistered-path`. Owner-run: it
       needs a full build and three browsers
-- [ ] 8.2 Record that no route changed, so Lighthouse, `gate:visual` and the Playwright suite measure nothing this
+- [x] 8.2 Record that no route changed, so Lighthouse, `gate:visual` and the Playwright suite measure nothing this
       change moved. Owner-run
-- [ ] 8.3 After 14 live UTC days, run the measurements of the proposal and read them against the pre-registered bar:
+- [x] 8.3 (moved to gap row G69, not done) After 14 live UTC days, run the measurements of the proposal and read them against the pre-registered bar:
       every writer pull request merged with no commit by a person, the five derived files equal to a regeneration on
       the tip of `main`, the catch-ups per pull request reported with a denominator of 28. Owner-run
-- [ ] 8.4 Run the Calibration Gate and commit the report it generates for this change under `audits/`. Owner-run
+- [x] 8.4 Run the Calibration Gate and commit the report it generates for this change under `audits/`. Owner-run
+
+## What the Calibration Gate measured
+
+- `npm run test:smoke`: 176 of 176 families proven in 453 s, including the new row
+  `autowriter-commit-an-unregistered-path`.
+- `npm test`: 8,223 pass, 0 fail. `npm run check`: clean.
+- Lighthouse: 8 shards, 0 failures, recorded as `0e25f15059d9`, report in
+  `audits/phase-43-two-writers/REPORT.md`. No route changed.
+- The four catch-up tests were proven to be the thing holding the change up: with
+  `scripts/catch-up.mjs` moved aside they fail, and with it present all four pass.
+
+Task 8.3 needs 14 live UTC days and is in gap row G69.
