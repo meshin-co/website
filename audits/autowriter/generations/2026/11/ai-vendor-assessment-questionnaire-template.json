@@ -1,0 +1,244 @@
+{
+  "schema": 1,
+  "slug": "ai-vendor-assessment-questionnaire-template",
+  "runId": "41976977113-1",
+  "generatedAt": "2026-11-05T05:59:43.308Z",
+  "claim": {
+    "title": "AI vendor assessment questionnaire template",
+    "query": "ai vendor assessment questionnaire template",
+    "prompt": {
+      "number": 12,
+      "text": "AI vendor assessment questionnaire template"
+    },
+    "origin": "demand"
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-05",
+      "windowStart": "2026-08-05",
+      "windowEnd": "2026-11-03",
+      "table": "Buyer prompts"
+    },
+    "row": {
+      "#": "12",
+      "Prompt": "AI vendor assessment questionnaire template",
+      "Must win": "`/resources/ai-governance-starter-kit`",
+      "Impressions": "unproven",
+      "Position": "-",
+      "Carried by": "-"
+    }
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/ai-vendor-assessment-questionnaire-template",
+    "path": "site/src/data/post/ai-vendor-assessment-questionnaire-template.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_0b1e575749825714016aec1add46a087d1af850b194713a666",
+  "published": {
+    "callIndex": 1
+  },
+  "calls": [
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_029e93c21316592e016aec1a98be6087d1877b9ce591341a74",
+      "requestDigest": "c2463580616bf9e56c6f86daa065d435bc5f463e5041f8fc2ce2c09459c0f47a",
+      "tokens": {
+        "input": 10410,
+        "output": 4253
+      },
+      "costUsd": 0.031675,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0b1e575749825714016aec1add46a087d1af850b194713a666",
+      "requestDigest": "103b44240660e93fae0e24256102874d4acf3e83f6530f0121c5da6098056279",
+      "tokens": {
+        "input": 13564,
+        "output": 3242
+      },
+      "costUsd": 0.029774,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 23974,
+      "output": 7495
+    },
+    "costUsd": 0.061449
+  },
+  "ledger": "audits/autowriter/2026/11/ai-vendor-assessment-questionnaire-template.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "47d6248510eb0de9c4ec9bb0e097e347123ce3efc8532a3e45bf304bd9a3a3e9",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "42702fd9e59dee73ae64fba75624c834724b5b4e7598ab0adc1b48c1bfc9633c"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "67c26028e794a494b127f1ecdc8f116cbec1a8b7c64f199844770a998264767d"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "06fe1a1a0baa9b35048ce8b9010c690a2bef59f89f3259d2f524c4c7b97aa0eb"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "3391cfbba421ae3e122272b5c2215633533bc3bed03a747ca25c6cb5e03d201e"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "1fa2a5d0652a86130f27d5351f23b02eba117dcf8d7ec26a73f65e4b0ed2d024"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "ff3fcc46fa3853ece0577e31507abad513b0cd34ffeaf8a0b37921dfb0e41ae1"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "70ec4173e205e974cbaafaf270f1a24aa674c0aeb29feb653f7953f9b9b656b8"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "f9e37c623c6cd481fc79489dba4061b4920647cc9a7429a1d256a3eb9e5fbb97"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "df66f7228baec3b1783c95ebd2b7e57f0566cfe6eed5589665d04b74e19d5e28"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "df07e5ca1fced82881ab08e3849da19ec0de824e4be87b2719f174f0f73f33c2"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "1d97859e1a888eab7b1ca14046ab8de63f953807",
+    "fingerprint": "a37b2724d96c88fd21cfebf4981aa5a65b555c9c9483d82b5cb9619b9c7eb15e"
+  },
+  "claimTable": [
+    {
+      "sentence": "For a processor handling personal data, GDPR Article 28 calls for a contract or other legal act that sets out the subject matter and duration of processing.",
+      "marker": "sourced",
+      "source": {
+        "id": "gdpr",
+        "title": "Regulation (EU) 2016/679",
+        "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+      },
+      "span": "the subject-matter and duration of the processing"
+    }
+  ],
+  "band": {
+    "measuredOn": "2026-11-02",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 131,
+      "median": 15,
+      "shareBelowThreshold": 0.2214,
+      "shareJustBelow": 0.1909,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/ai-vendor-assessment-questionnaire-template.json",
+    "audits/autowriter/claims/2026/11/ai-vendor-assessment-questionnaire-template.json",
+    "audits/autowriter/generations/2026/11/ai-vendor-assessment-questionnaire-template.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-ai-vendor-assessment-questionnaire-template.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-named-person-responsible-for-ai-risk-in-vendor-procurement.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/ai-vendor-assessment-questionnaire-template.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}

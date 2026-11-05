@@ -66,7 +66,7 @@ title `{artifact name} — meshin.co` · meta: one sentence naming the artifact 
 | `/resources/handover-playbook`                     | handover playbook                     | Handover Playbook — meshin.co                     | The Handover Playbook is six fill-in tables for moving AI leadership from an outside lead to a named owner, from the test to a later check.            | Handover Playbook                     | 31    | ✓       |
 | `/resources/llm-gateway-governance-config`         | llm gateway governance config         | LLM Gateway Governance Config — meshin.co         | LLM gateway governance config: a policy schema of five keys (allowed models, redaction, rate limit, log retention and fallback), each with an example. | LLM Gateway Governance Config         | 26    | ✓       |
 
-### article (10)
+### article (11)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
@@ -75,6 +75,7 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/adoption-telemetry-measuring-if-ai-is-actually-used`        | adoption telemetry for ai tools                            | Adoption telemetry for AI tools: what a trial found — meshin.co        | Adoption telemetry for AI tools: six measures, each with a stated limit, and the 2025 METR trial that shows why self-report misleads.                 | Adoption telemetry for AI tools: what a trial found        | 42    | ✓       |
 | `/blog/ai-acceptable-use-policy-for-a-50-person-company`           | ai acceptable use policy                                   | What actually belongs in an AI acceptable use policy — meshin.co       | What a working AI acceptable use policy has to decide, what it must refuse to do, and how a company of 30 to 300 people gets staff to follow it.      | What actually belongs in an AI acceptable use policy       | 32    | ✓       |
 | `/blog/ai-readiness-assessment-template-for-smb`                   | ai readiness assessment template for smb                   | AI readiness assessment template for SMB — meshin.co                   | Use an AI readiness scorecard to assess a proposed workflow, record evidence, and decide what needs work before a pilot.                              | AI readiness assessment template for SMB                   | 32    | ✓       |
+| `/blog/ai-vendor-assessment-questionnaire-template`                | ai vendor assessment questionnaire template                | AI vendor assessment questionnaire template — meshin.co                | Use an AI vendor assessment questionnaire template to check data handling, security, model changes and incident response before buying.               | AI vendor assessment questionnaire template                | 31    | ✓       |
 | `/blog/evals-in-ci-for-llm-agents`                                 | evals in ci without a golden answer                        | Evals in CI for LLM agents, without a golden answer — meshin.co        | How to build an eval set from production traffic, score an LLM agent without a golden answer, and fail a merge in CI when it regresses.               | Evals in CI for LLM agents, without a golden answer        | 28    | ✓       |
 | `/blog/handing-over-ai-leadership-to-an-internal-owner`            | how to hand over ai leadership to internal owner           | How to hand over AI leadership to an internal owner — meshin.co        | How to hand over AI leadership in steps that end in a test: what moves, who takes the role and how to tell it worked.                                 | How to hand over AI leadership to an internal owner        | 38    | ✓       |
 | `/blog/how-to-build-an-ai-system-register-in-a-week`               | ai system register                                         | How to build an AI system register in a week — meshin.co               | A step-by-step way to build an AI system register in a week without buying a tool, so a security reviewer gets the document they ask for first.       | How to build an AI system register in a week               | 33    | ✓       |
@@ -301,6 +302,7 @@ Why: the engineering credibility wedge — evals in CI is the Sprint's success c
 Must win: `/resources/ai-governance-starter-kit`.
 Passage: "AI governance starter kit: a table of who signs each document a security review asks for, six vendor questionnaire topics and an incident call order." (`/resources/ai-governance-starter-kit`)
 Passage: "The other three documents describe how you handle AI. This one asks each vendor how it handles your data." (`/resources/ai-governance-starter-kit`)
+Passage: "An AI vendor assessment questionnaire template helps buyers ask how a supplier handles data, secures its service, tests its models and responds to incidents." (`/blog/ai-vendor-assessment-questionnaire-template`)
 Why: the questionnaire is inside the kit; one artifact page covering four procurement documents matches how the buyer searches, and the questionnaire has its own section on that page.
 
 **13. build vs buy AI 3-year TCO**
@@ -416,16 +418,16 @@ One owning route per entity. The mention count is inbound references from other 
 | Entity                         | Owned by                                   | Mentioned by |
 | ------------------------------ | ------------------------------------------ | ------------ |
 | Agentic workflow               | `/glossary/agentic-workflow`               | 13           |
-| AI governance                  | `/glossary/ai-governance`                  | 36           |
+| AI governance                  | `/glossary/ai-governance`                  | 37           |
 | AI impact assessment           | `/glossary/ai-impact-assessment`           | 2            |
 | AI management system           | `/glossary/ai-management-system`           | 6            |
 | AI operating model             | `/glossary/ai-operating-model`             | 14           |
-| AI register                    | `/glossary/ai-register`                    | 36           |
+| AI register                    | `/glossary/ai-register`                    | 37           |
 | Conformity assessment          | `/glossary/conformity-assessment`          | 5            |
-| Data classification            | `/glossary/data-classification`            | 12           |
+| Data classification            | `/glossary/data-classification`            | 13           |
 | DPIA                           | `/glossary/dpia`                           | 5            |
 | EU AI Act                      | `/glossary/eu-ai-act`                      | 41           |
-| Evals                          | `/glossary/evals`                          | 34           |
+| Evals                          | `/glossary/evals`                          | 35           |
 | Guardrails                     | `/glossary/guardrails`                     | 7            |
 | Hallucination rate             | `/glossary/hallucination-rate`             | 4            |
 | High-risk AI system            | `/glossary/high-risk-ai-system`            | 10           |
@@ -445,7 +447,7 @@ One owning route per entity. The mention count is inbound references from other 
 | Retrieval augmented generation | `/glossary/retrieval-augmented-generation` | 4            |
 | Serious incident reporting     | `/glossary/serious-incident-reporting`     | 3            |
 | Shadow AI                      | `/glossary/shadow-ai`                      | 9            |
-| Sub-processor                  | `/glossary/sub-processor`                  | 6            |
+| Sub-processor                  | `/glossary/sub-processor`                  | 7            |
 | Technical documentation        | `/glossary/technical-documentation`        | 8            |
 
 #### Concept register (32)
