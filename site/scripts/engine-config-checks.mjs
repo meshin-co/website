@@ -115,6 +115,41 @@ function writeTimeProblems({ loop: { writeTimesUtc: times } }) {
   });
 }
 
+const CATCH_UP_PATH = '$.loop.catchUpAfterMinutes';
+const MINUTES_IN_DAY = 1440;
+const minuteOfDay = (time) => Number(time.slice(0, 2)) * 60 + Number(time.slice(3));
+const clock = (minute) => `${String(Math.floor(minute / 60)).padStart(2, '0')}:${String(minute % 60).padStart(2, '0')}`;
+
+function catchUpProblems({ loop: { writeTimesUtc: times, catchUpAfterMinutes: delays } }) {
+  const usable =
+    Array.isArray(times) &&
+    times.every((time, at) => typeof time === 'string' && TIME_OF_DAY.test(time) && times.indexOf(time) === at);
+  if (!usable || !Array.isArray(delays)) return [];
+  const taken = new Map(times.map((time) => [minuteOfDay(time), `a write time`]));
+  const problems = [];
+  delays.forEach((delay, at) => {
+    if (!Number.isInteger(delay) || delay < 1 || delay >= MINUTES_IN_DAY) return;
+    for (const time of times) {
+      const landing = minuteOfDay(time) + delay;
+      const own = `${delay} minutes after ${time}`;
+      if (landing >= MINUTES_IN_DAY) {
+        const text = `${own} is ${clock(landing - MINUTES_IN_DAY)} the next day, where that slot no longer counts; keep every retry inside the UTC day of its slot`;
+        problems.push(problem(`${CATCH_UP_PATH}[${at}]`, text));
+      } else if (taken.has(landing)) {
+        const holder = taken.get(landing);
+        const text =
+          holder === 'a write time'
+            ? `${own} is ${clock(landing)}, which is a write time`
+            : `${own} is ${clock(landing)}, which ${holder} already is`;
+        problems.push(problem(`${CATCH_UP_PATH}[${at}]`, text));
+      } else {
+        taken.set(landing, own);
+      }
+    }
+  });
+  return problems;
+}
+
 export const consistencyProblems = (config) => [
   ...patternProblems(config),
   ...overlapProblems(config),
@@ -124,4 +159,5 @@ export const consistencyProblems = (config) => [
   ...resourceProblems(config),
   ...bandProblems(config),
   ...writeTimeProblems(config),
+  ...catchUpProblems(config),
 ];

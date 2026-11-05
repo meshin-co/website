@@ -76,7 +76,7 @@ export const modelNeverCalled = () => {
 };
 
 function sceneOf(root) {
-  const run = async (argv = [], { vendor, rotation, env, fetch, now = () => NOW } = {}) => {
+  const run = async (argv = [], { vendor, rotation, schedule, env, fetch, now = () => NOW } = {}) => {
     const stdout = [];
     const stderr = [];
     const exit = await runCli(argv, {
@@ -85,6 +85,7 @@ function sceneOf(root) {
       fetch: fetch ?? vendor?.fetch ?? modelNeverCalled,
       now,
       ...(rotation === undefined ? {} : { rotation }),
+      ...(schedule === undefined ? {} : { schedule }),
       stdout: (line) => stdout.push(line),
       stderr: (line) => stderr.push(line),
     });

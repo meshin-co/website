@@ -21,6 +21,7 @@ const LOOP = {
   claimLifetimeDays: 21,
   holdLabel: 'pause-bot',
   writeTimesUtc: ['05:30', '17:45'],
+  catchUpAfterMinutes: [90, 180],
   categoryRotation: ['executive', 'governance'],
 };
 const DEMAND = {
@@ -108,6 +109,13 @@ const LIVE = [
     ['05:30', '17:45'],
   ],
   [
+    'the delays the writer retries a slot at come from the loop section',
+    'site/scripts/schedule-workflow.mjs',
+    withLoop,
+    'm.CATCH_UP_AFTER_MINUTES',
+    [90, 180],
+  ],
+  [
     'the categories the writer rotates through come from the loop section',
     'site/scripts/topic-categories.mjs',
     withLoop,
@@ -133,6 +141,7 @@ const REQUIRED = [
   ['site/scripts/search-demand-gate.mjs', 'demand.maxAgeDays'],
   ['site/scripts/topic-demand.mjs', 'demand.strengthenBand'],
   ['site/scripts/schedule-workflow.mjs', 'loop.writeTimesUtc'],
+  ['site/scripts/schedule-workflow.mjs', 'loop.catchUpAfterMinutes'],
   ['site/scripts/topic-categories.mjs', 'loop.categoryRotation'],
 ];
 

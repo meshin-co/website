@@ -18,7 +18,8 @@ const GATE = join(SCRIPTS, 'schedule-gate.mjs');
 const GENERATOR = join(SCRIPTS, 'generate-schedule.mjs');
 const CONFIG = JSON.parse(readFileSync(join(SITE, 'engine.config.json'), 'utf8'));
 const TIMES = ['03:17', '15:17'];
-const GENERATED = withSchedule(readFileSync(join(REPOSITORY, WRITE_DAILY_PATH), 'utf8'), TIMES);
+const DELAYS = CONFIG.loop.catchUpAfterMinutes;
+const GENERATED = withSchedule(readFileSync(join(REPOSITORY, WRITE_DAILY_PATH), 'utf8'), TIMES, DELAYS);
 const PACKAGE = JSON.parse(readFileSync(join(SITE, 'package.json'), 'utf8'));
 const CI = parse(readFileSync(join(REPOSITORY, '.github', 'workflows', 'ci.yml'), 'utf8'));
 const FILE = '\\.github/workflows/write-daily\\.yml';
@@ -27,14 +28,14 @@ const FIX = 'run npm run assets:schedule to write it again from loop\\.writeTime
 const roots = [];
 after(() => roots.forEach((root) => rmSync(root, { recursive: true, force: true })));
 
-function scene({ times = TIMES, workflow = GENERATED } = {}) {
+function scene({ times = TIMES, delays = DELAYS, workflow = GENERATED } = {}) {
   const root = mkdtempSync(join(tmpdir(), 'schedule-gate-'));
   roots.push(root);
   const put = (path, text) => {
     mkdirSync(dirname(join(root, path)), { recursive: true });
     writeFileSync(join(root, path), text);
   };
-  const loop = { ...CONFIG.loop, writeTimesUtc: times };
+  const loop = { ...CONFIG.loop, writeTimesUtc: times, catchUpAfterMinutes: delays };
   put('site/engine.config.json', JSON.stringify({ ...CONFIG, loop }, null, 2));
   if (workflow !== null) put(WRITE_DAILY_PATH, workflow);
   return root;
@@ -50,13 +51,13 @@ test('the schedule of this repository is the one its configuration generates, an
   assert.equal(result.stderr, '');
   assert.equal(
     result.stdout,
-    `schedule: 0 findings (${WRITE_DAILY_PATH} starts the writer at ${configured} UTC, the times of loop.writeTimesUtc)\n`
+    `schedule: 0 findings (${WRITE_DAILY_PATH} starts the writer at ${configured} UTC, the times of loop.writeTimesUtc, and tries each slot again ${DELAYS.join(', ')} minutes later, the delays of loop.catchUpAfterMinutes)\n`
   );
 });
 
 test('a generated workflow passes whatever the configured times are', () => {
   for (const times of [['00:00'], ['23:59'], ['05:30', '17:45', '09:05']]) {
-    const result = gate('--root', scene({ times, workflow: withSchedule(GENERATED, times) }));
+    const result = gate('--root', scene({ times, delays: [], workflow: withSchedule(GENERATED, times) }));
     assert.equal(result.status, 0, `${times.join(' ')}: ${result.stderr}`);
   }
 });
@@ -68,7 +69,10 @@ const HAND_EDITS = [
   ['a cron entry removed', GENERATED.replace(`${SECOND}\n`, ''), 'cron-missing'],
   [
     'the entries put in the wrong order',
-    GENERATED.replace(`    - cron: '17 3 * * *'\n${SECOND}`, `${SECOND}\n    - cron: '17 3 * * *'`),
+    GENERATED.replace(
+      "    - cron: '17 3 * * *'\n    - cron: '17 5 * * *'",
+      "    - cron: '17 5 * * *'\n    - cron: '17 3 * * *'"
+    ),
     'cron-order',
   ],
   [
@@ -94,7 +98,7 @@ for (const [label, workflow, rule] of HAND_EDITS) {
     assert.match(lines[0], new RegExp(`^SCHEDULE ${rule} ${FILE}: .*; ${FIX}$`));
     assert.match(
       result.stdout,
-      /^schedule: 1 finding \(.*write-daily\.yml must hold the schedule npm run assets:schedule writes from loop\.writeTimesUtc\)\n$/
+      /^schedule: 1 finding \(.*write-daily\.yml must hold the schedule npm run assets:schedule writes from loop\.writeTimesUtc and loop\.catchUpAfterMinutes\)\n$/
     );
   });
 }
@@ -112,7 +116,7 @@ test('a changed configuration with a workflow nobody regenerated fails, and rege
   assert.equal(outdated.status, 1);
   assert.deepEqual(
     findingsOf(outdated).map((line) => line.split(' ')[1]),
-    ['cron-differs', 'cron-differs']
+    Array(6).fill('cron-differs')
   );
   const generated = spawnSync(process.execPath, [GENERATOR, '--root', root], { encoding: 'utf8' });
   assert.equal(generated.status, 0, generated.stderr);

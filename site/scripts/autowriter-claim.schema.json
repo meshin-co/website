@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Autowriter topic claim",
-  "description": "One file per claimed topic at audits/autowriter/claims/<year>/<month>/<slug>.json, in the month of claimedAt, committed to the default branch before the writing model is called. status is claimed while no entry exists for it and written once the entry does. origin says which rung of the picker chose the topic: demand (a buyer prompt the demand report names), weak-demand (a measured query no buyer prompt names) or category (a configured category turned into one query); a claim with no origin was written before the picker had more than one rung and is a demand claim. The shape is checked here; the rules that compare fields with each other or with other files (what each origin requires and forbids, expiry after claim, demand that makes sense, the file name, title collisions) are checked in autowriter-claims.mjs.",
+  "description": "One file per claimed topic at audits/autowriter/claims/<year>/<month>/<slug>.json, in the month of claimedAt, committed to the default branch before the writing model is called. status is claimed while no entry exists for it and written once the entry does. origin says which rung of the picker chose the topic: demand (a buyer prompt the demand report names), weak-demand (a measured query no buyer prompt names) or category (a configured category turned into one query); a claim with no origin was written before the picker had more than one rung and is a demand claim. catchUp is present only on a claim made by a run that filled a slot at least loop.catchUpAfterMinutes' first delay late, names that slot as HH:MM and says how many minutes late the run was; a claim made on time, and every claim written before the field existed, has no catchUp key, so the field says how often GitHub dropped a slot and never says where the topic came from. The shape is checked here; the rules that compare fields with each other or with other files (what each origin requires and forbids, expiry after claim, demand that makes sense, the file name, title collisions) are checked in autowriter-claims.mjs.",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema", "slug", "title", "format", "query", "demand", "runId", "status", "claimedAt", "expiresAt"],
@@ -39,6 +39,21 @@
       "uniqueItems": true,
       "items": {
         "enum": ["no-buyer-prompt", "impressions-at-floor", "position-beyond-strengthen-band"]
+      }
+    },
+    "catchUp": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slot", "lateMinutes"],
+      "properties": {
+        "slot": {
+          "type": "string",
+          "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$"
+        },
+        "lateMinutes": {
+          "type": "integer",
+          "minimum": 0
+        }
       }
     },
     "runId": {

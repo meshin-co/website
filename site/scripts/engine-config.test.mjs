@@ -218,7 +218,9 @@ test('a refused schedule names every bad entry at once, so one edit fixes the fi
 
 test('the times the engine accepts run from 00:00 to 23:59 and a single time is a schedule', () => {
   for (const times of [['00:00'], ['23:59'], ['00:00', '23:59'], ['09:05', '12:30', '19:45']]) {
-    assert.deepEqual(inspected(mutated('loop.writeTimesUtc', times)).problems, [], times.join(' '));
+    const config = mutated('loop.writeTimesUtc', times);
+    config.loop.catchUpAfterMinutes = [];
+    assert.deepEqual(inspected(config).problems, [], times.join(' '));
   }
 });
 

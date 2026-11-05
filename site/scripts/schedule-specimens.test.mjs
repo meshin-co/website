@@ -20,6 +20,22 @@ const GATE = 'gate:schedule';
 const CONFIG = 'site/engine.config.json';
 const WORKFLOW = '.github/workflows/write-daily.yml';
 const CRON = /^ {4}- cron: '(\d+) (\d+) \* \* \*'$/gm;
+const CATCH_UP_SPECIMENS = [
+  {
+    name: 'scheduleCatchUpHandWritten',
+    id: 'write-schedule-catch-up-hand-written',
+    token: 'SCHEDULE cron-extra .github/workflows/write-daily.yml',
+    change: (before, after) =>
+      after.length - before.length === 1 && after.every((line) => line === '47 21' || before.includes(line)),
+  },
+  {
+    name: 'scheduleCatchUpRemoved',
+    id: 'write-schedule-catch-up-removed',
+    token: 'SCHEDULE cron-missing .github/workflows/write-daily.yml',
+    change: (before, after) => before.length - after.length === 1 && after.every((line) => before.includes(line)),
+  },
+];
+const minuteHour = (line) => /'(\d+) (\d+)/.exec(line).slice(1, 3).join(' ');
 
 const scenes = [];
 afterEach(async () => {
@@ -52,7 +68,7 @@ const cronLines = async (root) =>
   [...(await readFile(join(root, WORKFLOW), 'utf8')).matchAll(CRON)].map(([line]) => line);
 
 test('the module names one specimen for the schedule gate, and the smoke spreads it', () => {
-  assert.deepEqual(Object.keys(scheduleSpecimens({})), [NAME]);
+  assert.deepEqual(Object.keys(scheduleSpecimens({})), [NAME, ...CATCH_UP_SPECIMENS.map(({ name }) => name)]);
   assert.equal(Object.hasOwn(SPECIMENS, NAME), true);
 });
 
@@ -114,3 +130,38 @@ test('a gate:schedule that stays green turns the family red, so the family is lo
   assert.equal(result.ok, false);
   assert.match(result.reason, /stayed green on the specimen/);
 });
+
+for (const { name, id, token, change } of CATCH_UP_SPECIMENS) {
+  test(`${name} names the finding ${token} and has one smoke family called ${id}`, () => {
+    assert.equal(SPECIMENS[name].gate, GATE);
+    assert.ok(SPECIMENS[name].token.startsWith(token));
+    assert.deepEqual(
+      FAMILIES.filter((entry) => entry.kind === 'specimen' && entry.specimen === name),
+      [{ id, kind: 'specimen', specimen: name }]
+    );
+  });
+
+  test(`${name} changes the cron list by the one line a hand edit of the catch-up would, and the restore puts the file back`, async () => {
+    const { root, site } = await world();
+    const before = await readFile(join(root, WORKFLOW), 'utf8');
+    const lines = (await cronLines(root)).map(minuteHour);
+    const restore = await SPECIMENS[name].plant(site);
+    const planted = (await cronLines(root)).map(minuteHour);
+    assert.equal(change(lines, planted), true, `${lines.join(', ')} became ${planted.join(', ')}`);
+    await restore();
+    assert.equal(await readFile(join(root, WORKFLOW), 'utf8'), before);
+  });
+
+  test(`${name} turns gate:schedule red with its finding, green again once restored, and the smoke procedure proves it`, async () => {
+    const { site } = await world();
+    assert.equal((await run('npm', ['run', GATE], site)).code, 0);
+    const restore = await SPECIMENS[name].plant(site);
+    const planted = await run('npm', ['run', GATE], site);
+    await restore();
+    assert.notEqual(planted.code, 0, planted.output);
+    assert.ok(planted.output.includes(token), planted.output);
+    assert.equal((await run('npm', ['run', GATE], site)).code, 0);
+    const proof = await proveWithSpecimen(SPECIMENS[name], { copySite: site, run });
+    assert.equal(proof.ok, true, proof.reason);
+  });
+}

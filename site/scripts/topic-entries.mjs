@@ -12,7 +12,7 @@ const reportBlock = (report, path) => ({
   generatedFrom: report.generatedFrom,
 });
 
-function claimOf(entry, { runId, now }) {
+function claimOf(entry, { runId, now, catchUp }) {
   const { topic, format, demand, prompt, origin, category, weakness } = entry;
   const claim = newClaim({
     slug: topic.slug,
@@ -24,6 +24,7 @@ function claimOf(entry, { runId, now }) {
     origin,
     category,
     weakness: weakness && [...weakness],
+    catchUp: catchUp && { ...catchUp },
     runId,
     now,
   });
@@ -43,9 +44,9 @@ function assertWritable({ decision: kind, entries }) {
   }
 }
 
-export function buildRun({ decision, report, runId, now, reportPath }) {
+export function buildRun({ decision, report, runId, now, reportPath, catchUp = null }) {
   assertWritable(decision);
-  const claims = decision.entries.map((entry) => claimOf(entry, { runId, now }));
+  const claims = decision.entries.map((entry) => claimOf(entry, { runId, now, catchUp }));
   const refusals = decision.refusals.map((refusal) => ({ ...refusal }));
   const postSlug = decision.entries[0].topic.slug;
   const ledger = openLedger({ slug: postSlug, runId, proposal: decision.entries[0].proposal });

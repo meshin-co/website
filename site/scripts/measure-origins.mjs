@@ -27,6 +27,7 @@ const TABLE_HEADER = [
   'mean USD per entry',
 ];
 const LIST_HEADER = ['slug', 'origin', 'category or weakness', 'date'];
+const CATCH_UP_HEADER = ['slug', 'slot', 'minutes late', 'date'];
 
 class OriginsError extends Error {}
 
@@ -97,6 +98,7 @@ function summarise(repoRoot, record) {
     date: publishDateOf(repoRoot, record) ?? record.generatedAt.slice(0, 10),
     category: record.claim.category,
     weakness: record.claim.weakness ?? [],
+    catchUp: record.claim.catchUp ?? null,
     calls: record.calls.length,
     tokens: record.totals.tokens.input + record.totals.tokens.output,
     cost: costOf(record),
@@ -147,6 +149,16 @@ function listLines(entries) {
   return [...heading, ...aligned([LIST_HEADER, ...rows])];
 }
 
+function catchUpLines(entries) {
+  const late = entries
+    .filter(({ catchUp }) => catchUp !== null)
+    .sort((left, right) => left.date.localeCompare(right.date) || left.slug.localeCompare(right.slug));
+  const heading = ['', 'caught up late, oldest first'];
+  if (late.length === 0) return [...heading, 'none'];
+  const rows = late.map(({ slug, catchUp, date }) => [slug, catchUp.slot, String(catchUp.lateMinutes), date]);
+  return [...heading, ...aligned([CATCH_UP_HEADER, ...rows])];
+}
+
 function describe(entries) {
   if (entries.length === 0) return ['0 entries'];
   const byOrigin = (origin) => entries.filter((entry) => entry.origin === origin);
@@ -166,6 +178,12 @@ function describe(entries) {
       CATEGORIES,
       (category) => byOrigin('category').filter((entry) => entry.category === category).length
     ),
+    ...countLines(
+      'arrival',
+      ['on time', 'catch-up'],
+      (arrival) => entries.filter(({ catchUp }) => (catchUp === null) === (arrival === 'on time')).length
+    ),
+    ...catchUpLines(entries),
     ...listLines(entries),
   ];
 }

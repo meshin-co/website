@@ -251,7 +251,7 @@ test('no secret value from a vendor entry reaches the record', () => {
   assert.ok(!text.includes('AUTOWRITER_OPENAI_API_KEY'), 'the name of the key reached the record');
 });
 
-const CLAIM_KEYS = ['title', 'query', 'prompt', 'origin', 'category', 'weakness'];
+const CLAIM_KEYS = ['title', 'query', 'prompt', 'origin', 'category', 'weakness', 'catchUp'];
 
 test('the claim block lists the origin fields beside the prompt, with the origins and reasons of the claim itself', () => {
   const { claim } = schema.properties;

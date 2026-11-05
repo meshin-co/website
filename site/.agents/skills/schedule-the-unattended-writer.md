@@ -19,8 +19,9 @@ the times configuration: nobody types a cron line.
    `cron-order`, `schedule-missing`, `schedule-twice`, `schedule-block-differs` or `workflow-missing`; the detail names
    the line and `npm run assets:schedule`. An invalid `loop` section reads `config-invalid`.
 
-The rules live in `scripts/schedule-workflow.mjs`. Its planted specimen is `scripts/schedule-specimens.mjs` (one cron
-minute moved by one, the mutation row `write-schedule-hand-edited`); `extend-mutation-smoke.md` says how it is run.
+The rules live in `scripts/schedule-workflow.mjs`. Its specimens, `scripts/schedule-specimens.mjs`, move a cron minute,
+write a catch-up cron and remove one (rows `write-schedule-hand-edited`, `write-schedule-catch-up-hand-written`,
+`write-schedule-catch-up-removed`); `extend-mutation-smoke.md` says how they run.
 
 ## Pause the writer, never empty the list
 
@@ -30,14 +31,18 @@ Actions tab, or leave one secret or variable of its `configured` job unset (`AUT
 `AUTOWRITER_OPENAI_API_KEY`, `GSC_SERVICE_ACCOUNT_JSON`, `SLACK_WEBHOOK_URL` and the four writer variables): the run ends
 green and its summary names what is missing.
 
-## GitHub starts a run late, or not at all
+## A slot GitHub never starts is run late
 
-GitHub documents that a scheduled run can be delayed under load, worst at the start of every hour, and that queued
-runs may be dropped. Plan for a delay of minutes, and for much more. So nothing may read the slot: a run behaves the same at any minute,
-and chooses by what the corpus and the demand report hold when it starts. `scripts/write-times-readers.test.mjs`
-fails when a script other than `schedule-workflow.mjs`, `generate-schedule.mjs`, `schedule-gate.mjs`,
-`schedule-specimens.mjs` and `engine-config-checks.mjs` names `writeTimesUtc`. It pins the key only: a script that
-read the clock and guessed a slot would pass it. Nothing detects a slot GitHub never starts.
+GitHub documents that a scheduled run can be delayed under load and that queued runs may be dropped; on 2026-11-05 the
+03:17 slot never fired. `loop.catchUpAfterMinutes` (shipped `[120, 240]`) adds a cron entry for each time and delay,
+written by `npm run assets:schedule` and held by `gate:schedule` like the first two. A delay that passes midnight or
+shares a minute is refused at load. The `due` job (`scripts/slot-due.mjs`, over `scripts/slot-standing.mjs`) runs first
+and ends a scheduled run green, before any model, when the UTC day holds as many article claims (by `claimedAt`) as
+slots have passed; a manual run always writes. A slot that has its entry is never run twice. A claim whose write failed
+still counts, because money was spent and an escalation raised; a run that failed before its claim is retried.
+A run filling a slot at least the first delay late stamps its claims `catchUp: {slot, lateMinutes}`, never `origin`;
+`npm run measure:origins` counts them. The pick still reads the corpus and the demand report, never the clock.
+`scripts/write-times-readers.test.mjs` fails when a script outside the schedule modules names `writeTimesUtc`.
 
 ## Two runs in flight
 
