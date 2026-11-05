@@ -420,7 +420,7 @@ One owning route per entity. The mention count is inbound references from other 
 | Entity                         | Owned by                                   | Mentioned by |
 | ------------------------------ | ------------------------------------------ | ------------ |
 | Agentic workflow               | `/glossary/agentic-workflow`               | 13           |
-| AI governance                  | `/glossary/ai-governance`                  | 37           |
+| AI governance                  | `/glossary/ai-governance`                  | 38           |
 | AI impact assessment           | `/glossary/ai-impact-assessment`           | 2            |
 | AI management system           | `/glossary/ai-management-system`           | 6            |
 | AI operating model             | `/glossary/ai-operating-model`             | 14           |
@@ -429,7 +429,7 @@ One owning route per entity. The mention count is inbound references from other 
 | Data classification            | `/glossary/data-classification`            | 13           |
 | DPIA                           | `/glossary/dpia`                           | 5            |
 | EU AI Act                      | `/glossary/eu-ai-act`                      | 41           |
-| Evals                          | `/glossary/evals`                          | 35           |
+| Evals                          | `/glossary/evals`                          | 36           |
 | Guardrails                     | `/glossary/guardrails`                     | 7            |
 | Hallucination rate             | `/glossary/hallucination-rate`             | 4            |
 | High-risk AI system            | `/glossary/high-risk-ai-system`            | 10           |
