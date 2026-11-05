@@ -33,21 +33,21 @@
     "target": "/blog",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/named-person-responsible-for-ai-risk-in-vendor-procurement (generation record audits/autowriter/generations/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "f00abdb250b7"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-vendor-assessment-questionnaire-template (generation record audits/autowriter/generations/2026/11/ai-vendor-assessment-questionnaire-template.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "ac4993fcb9f5"
   },
   {
     "target": "/blog",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/named-person-responsible-for-ai-risk-in-vendor-procurement (generation record audits/autowriter/generations/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "f00abdb250b7"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-vendor-assessment-questionnaire-template (generation record audits/autowriter/generations/2026/11/ai-vendor-assessment-questionnaire-template.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "ac4993fcb9f5"
   },
   {
     "target": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/named-person-responsible-for-ai-risk-in-vendor-procurement (generation record audits/autowriter/generations/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "a800f9840f92"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-vendor-assessment-questionnaire-template (generation record audits/autowriter/generations/2026/11/ai-vendor-assessment-questionnaire-template.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "f4bd6d3430bf"
   },
   {
     "target": "/blog/category/agentic-architecture",
@@ -80,8 +80,8 @@
   {
     "target": "/blog/category/governance",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/named-person-responsible-for-ai-risk-in-vendor-procurement (generation record audits/autowriter/generations/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "162dc02d8dd4"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-vendor-assessment-questionnaire-template (generation record audits/autowriter/generations/2026/11/ai-vendor-assessment-questionnaire-template.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "96f514aceacd"
   },
   {
     "target": "/blog/category/operating-model",
@@ -114,8 +114,8 @@
   {
     "target": "/blog/how-to-build-an-ai-system-register-in-a-week",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/named-person-responsible-for-ai-risk-in-vendor-procurement (generation record audits/autowriter/generations/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "84297ba1766a"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-vendor-assessment-questionnaire-template (generation record audits/autowriter/generations/2026/11/ai-vendor-assessment-questionnaire-template.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "2eb1d648faed"
   },
   {
     "target": "/blog/tag/acceptable-use-policy",
@@ -148,22 +148,22 @@
     "target": "/blog/tag/ai-governance",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/named-person-responsible-for-ai-risk-in-vendor-procurement (generation record audits/autowriter/generations/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "05046a24f5c0"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-vendor-assessment-questionnaire-template (generation record audits/autowriter/generations/2026/11/ai-vendor-assessment-questionnaire-template.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "b66357adcd0d"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "body.h1",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/named-person-responsible-for-ai-risk-in-vendor-procurement (generation record audits/autowriter/generations/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "05046a24f5c0"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-vendor-assessment-questionnaire-template (generation record audits/autowriter/generations/2026/11/ai-vendor-assessment-questionnaire-template.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "b66357adcd0d"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/named-person-responsible-for-ai-risk-in-vendor-procurement (generation record audits/autowriter/generations/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "05046a24f5c0"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-vendor-assessment-questionnaire-template (generation record audits/autowriter/generations/2026/11/ai-vendor-assessment-questionnaire-template.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "b66357adcd0d"
   },
   {
     "target": "/blog/tag/ai-pilots",
@@ -285,8 +285,8 @@
   {
     "target": "/blog/tag/security-review",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/named-person-responsible-for-ai-risk-in-vendor-procurement (generation record audits/autowriter/generations/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "66a8f6b95f02"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-vendor-assessment-questionnaire-template (generation record audits/autowriter/generations/2026/11/ai-vendor-assessment-questionnaire-template.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "e2d63de404f0"
   },
   {
     "target": "/blog/tag/shadow-ai",
