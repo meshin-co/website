@@ -1,8 +1,8 @@
 # Search demand: what Search Console measured
 
-Generated-from: 1d97859
+Generated-from: 3b02d30
 
-Measured: 2026-11-05 (window 2026-08-05 to 2026-11-03)
+Measured: 2026-11-06 (window 2026-08-06 to 2026-11-04)
 
 Property: sc-domain:meshin.co
 
