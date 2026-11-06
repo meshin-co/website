@@ -33,7 +33,10 @@ const planted = [
   {
     label: 'the job if loses always()',
     text: () =>
-      plant("if: always() && github.event_name != 'workflow_dispatch'", "if: github.event_name != 'workflow_dispatch'"),
+      plant(
+        "if: always() && (github.event_name != 'workflow_dispatch' || inputs.full)",
+        "if: (github.event_name != 'workflow_dispatch' || inputs.full)",
+      ),
     rules: ['aggregate-not-always'],
     detail: /all-required-jobs-passed/,
   },
