@@ -6,17 +6,35 @@
   "attempts": [],
   "spend": {
     "tokens": {
-      "input": 0,
-      "output": 0
+      "input": 23916,
+      "output": 7187
     },
-    "costUsd": 0
+    "costUsd": 0.059851
   },
   "verdict": {
-    "state": "open",
-    "reason": null,
-    "decidedAt": null
+    "state": "escalated",
+    "reason": "Write daily stopped while writing iso-42001-gap-assessment (build)",
+    "decidedAt": "2026-11-06T16:18:29.039Z"
   },
-  "escalations": [],
+  "escalations": [
+    {
+      "id": "esc-1",
+      "kind": "hard-stop",
+      "title": "Write daily stopped while writing iso-42001-gap-assessment (build)",
+      "detail": "npm run write:entry failed with kind build: npm run gate:editorial exited with status 1:\neditorial ledger: 2132 rows across 118 routes { rewritten: 1874, verified: 256, unreviewed: 2 }\nshipped text tracing to no source row: 0\nsource copy no page ships: 10 (14 declared state-conditional, 0 unexplained, 4 that the build now ships: reported, not gated)\ndispositions: 442 declared, 0 stale, 0 naming a missing file, 29 on files with no copy rows (reported, not gated)\nfindings: 2\n  unreviewed copy (2):\n    /blog/page/2 | Writing, page 2 — meshin.co\n    /blog/page/2 | Writing, page 2. Spend recorded so far: 0.059851 USD. The claim for iso-42001-gap-assessment is marked abandoned and keeps its slug, so the next catch-up run of the day writes a different topic.",
+      "raisedAt": "2026-11-06T16:18:28.519Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-06T16:18:28.519Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 102,
+          "error": null
+        }
+      ]
+    }
+  ],
   "refusals": [
     {
       "title": "Fractional CAIO vs full-time CAIO cost",
@@ -138,5 +156,12 @@
       "against": "/glossary/ai-governance",
       "detail": "the query \"ai governance\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
     }
-  ]
+  ],
+  "generation": {
+    "tokens": {
+      "input": 23916,
+      "output": 7187
+    },
+    "costUsd": 0.059851
+  }
 }

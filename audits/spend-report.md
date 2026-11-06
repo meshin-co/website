@@ -1,21 +1,21 @@
 # Spend report: what writing each entry cost
 
-Generated-from: 448df6b
-Generated-at: 2026-11-06T15:09:56.031Z
+Generated-from: 2d4613a
+Generated-at: 2026-11-06T16:18:29.221Z
 
 ## This month
 
-2026-11 so far: 0.35853 USD spent of the 25.00 USD monthly ceiling, 24.64147 USD left.
+2026-11 so far: 0.418381 USD spent of the 25.00 USD monthly ceiling, 24.581619 USD left.
 
-The figure is the spend of the UTC calendar month of 2026-11-06T15:09:56.031Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
+The figure is the spend of the UTC calendar month of 2026-11-06T16:18:29.221Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
 
 | What was paid for               | Cost (USD) |
 | ------------------------------- | ---------- |
 | Writing calls of entries        | 0.214329   |
 | Repair calls                    | 0.00       |
-| Runs that ended with no entry   | 0.144201   |
+| Runs that ended with no entry   | 0.204052   |
 | Spend with no generation record | 0.00       |
-| Everything paid for             | 0.35853    |
+| Everything paid for             | 0.418381   |
 
 ## About this file
 
@@ -53,9 +53,9 @@ Every entry recorded: from 2026-11-03T05:36:35.954Z, the oldest record, through 
 | ------------------------------- | ---------- |
 | Writing calls of entries        | 0.214329   |
 | Repair calls                    | 0.00       |
-| Runs that ended with no entry   | 0.144201   |
+| Runs that ended with no entry   | 0.204052   |
 | Spend with no generation record | 0.00       |
-| Everything paid for             | 0.35853    |
+| Everything paid for             | 0.418381   |
 
 ## Every entry
 
@@ -78,8 +78,9 @@ The model and the two rates, in USD per million tokens, that each cost was compu
 
 ## Notes
 
-These runs ended with no entry and together cost 0.144201 USD. That spend is in no entry row; the paid tables count it under Runs that ended with no entry. A note is not a warning: nothing a person does can clear it, because a run that ended will never gain a record.
+These runs ended with no entry and together cost 0.204052 USD. That spend is in no entry row; the paid tables count it under Runs that ended with no entry. A note is not a warning: nothing a person does can clear it, because a run that ended will never gain a record.
 
 - agentic-automation-consultant-for-b2b: this run ended on 2026-11-06 with the verdict escalated and left no generation record, so no entry is counted for it; its ledger records 0.061445 USD for the generation, and the monthly spend ceiling counts that cost
 - ai-incident-response-plan-template: this run ended on 2026-11-06 with the verdict escalated and left no generation record, so no entry is counted for it; its ledger records 0.060008 USD for the generation, and the monthly spend ceiling counts that cost
 - fractional-caio-vs-full-time-caio-cost: a person discarded this attempt on 2026-11-02 and its generation record went with it, so no entry is counted for it and its cost cannot be checked against a record; its ledger records 0.022748 USD for the generation, and the monthly spend ceiling counts that cost
+- iso-42001-gap-assessment: this run ended on 2026-11-06 with the verdict escalated and left no generation record, so no entry is counted for it; its ledger records 0.059851 USD for the generation, and the monthly spend ceiling counts that cost
