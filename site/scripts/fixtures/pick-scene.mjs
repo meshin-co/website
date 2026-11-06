@@ -1,4 +1,4 @@
-import { cpSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, relative } from 'node:path';
 
@@ -10,7 +10,39 @@ const BRAND = siteBrand().name;
 
 export const NOW = new Date('2026-11-02T04:00:00.000Z');
 
-const LIVE_CORE = new URL('../../../docs/SEMANTIC-CORE.md', import.meta.url);
+const FIXTURE_CONCEPTS = [
+  [
+    'Evals',
+    '/glossary/evals',
+    'An eval is a repeatable test that scores an AI system against examples with known answers.',
+  ],
+  [
+    'AI register',
+    '/glossary/ai-register',
+    'An AI register is a company inventory of every AI system it builds, buys or uses.',
+  ],
+  [
+    'Guardrails',
+    '/glossary/guardrails',
+    'A guardrail is a rule that stops an AI system before it does something it may not do.',
+  ],
+];
+
+const EMPTY_CORE = [
+  '# Semantic core',
+  '',
+  '<!-- semantic-core:begin generated -->',
+  '',
+  '<!-- semantic-core:end generated -->',
+  '',
+  '#### Concept register (3)',
+  '',
+  table(
+    ['Concept', 'Defined by', 'Definition'],
+    FIXTURE_CONCEPTS.map(([concept, route, text]) => [concept, `\`${route}\``, text])
+  ),
+  '',
+].join('\n');
 const POSTS = 'site/src/data/post';
 const QUERY_HEADER = ['Query', 'Impressions', 'Clicks', 'Position', 'CTR', 'Page', 'Prompts'];
 const PROMPT_HEADER = ['#', 'Prompt', 'Must win', 'Impressions', 'Position', 'Carried by'];
@@ -101,12 +133,12 @@ function sceneOf(root) {
   };
 }
 
-export async function withPickRepo({ report = reportText(), posts = {} } = {}, body) {
+export async function withPickRepo({ report = reportText(), posts = {}, core = EMPTY_CORE } = {}, body) {
   const root = mkdtempSync(join(tmpdir(), 'pick-scene-'));
   try {
     mkdirSync(join(root, POSTS), { recursive: true });
     mkdirSync(join(root, 'docs'), { recursive: true });
-    cpSync(LIVE_CORE, join(root, 'docs', 'SEMANTIC-CORE.md'));
+    put(root, 'docs/SEMANTIC-CORE.md', core);
     put(root, 'audits/search-demand.md', report);
     put(root, 'site/src/config.yaml', `site:\n  name: ${BRAND}\n`);
     put(root, 'site/content-facts.json', '{}\n');
