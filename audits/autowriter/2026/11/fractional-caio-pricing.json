@@ -12,11 +12,29 @@
     "costUsd": 0.026878
   },
   "verdict": {
-    "state": "open",
-    "reason": null,
-    "decidedAt": null
+    "state": "escalated",
+    "reason": "Autowriter pull request #104: a job that is not a content gate failed, so the loop may not repair it",
+    "decidedAt": "2026-11-06T17:48:17.376Z"
   },
-  "escalations": [],
+  "escalations": [
+    {
+      "id": "esc-1",
+      "kind": "unrepairable",
+      "title": "Autowriter pull request #104: a job that is not a content gate failed, so the loop may not repair it",
+      "detail": "The watcher judged head 46b062a2aeaa4aadcb84682b0810804994bb0423: escalate, not-a-content-gate.\nFailing: types-and-units.\nPull request: https://github.com/meshin-co/website/pull/104",
+      "raisedAt": "2026-11-06T17:48:16.810Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-06T17:48:16.811Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 105,
+          "error": null
+        }
+      ]
+    }
+  ],
   "refusals": [
     {
       "title": "Fractional CAIO vs full-time CAIO cost",
