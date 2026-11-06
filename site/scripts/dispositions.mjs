@@ -60,12 +60,27 @@ const comparable = (text) =>
     .toLowerCase()
     .replace(/[\u2018\u2019\u201c\u201d'"]/g, '');
 
-export function inheritDerivedStatus(rows) {
-  const sources = rows.filter((row) => REVIEWED.has(row.status) && !row.usedIn.every((used) => used.startsWith('/')));
+const escapeForPattern = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const numberedPage = (source, suffix) =>
+  new RegExp(`^${escapeForPattern(source)} \\d+${suffix === '' ? '' : `\\s*${escapeForPattern(suffix)}`}$`);
+
+const isRendered = (row) => row.usedIn.every((used) => used.startsWith('/'));
+
+export function inheritDerivedStatus(rows, { titleSuffix = '' } = {}) {
+  const suffix = comparable(titleSuffix);
+  const sources = rows.filter((row) => REVIEWED.has(row.status) && !isRendered(row));
   return rows.map((row) => {
-    if (REVIEWED.has(row.status) || !row.usedIn.every((used) => used.startsWith('/'))) return row;
+    if (REVIEWED.has(row.status) || !isRendered(row)) return row;
     const rendered = comparable(row.text);
-    const source = sources.find((candidate) => comparable(candidate.text).includes(rendered));
+    const source = sources.find((candidate) => {
+      const text = comparable(candidate.text);
+      return (
+        text.includes(rendered) ||
+        numberedPage(text, '').test(rendered) ||
+        (suffix !== '' && numberedPage(text, suffix).test(rendered))
+      );
+    });
     return source
       ? {
           ...row,

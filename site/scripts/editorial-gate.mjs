@@ -4,6 +4,7 @@ import { join, relative, resolve } from 'node:path';
 import { parse } from 'yaml';
 
 import { applyConditionalCopy, applyDispositions, digestFor, inheritDerivedStatus } from './dispositions.mjs';
+import { brandFromDisk, titleSuffix } from '../src/utils/brand.mjs';
 import { exitWhenUnattended, refuseWhenUnattended } from './human-only.mjs';
 import { recordGateFindings } from './gate-findings.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
@@ -117,7 +118,10 @@ export function buildReport(dist) {
   const conditional = applyConditionalCopy(built.dead, declarations);
   const applied = applyDispositions(built.rows, dispositions);
   const { stale, unmatched } = applied;
-  const rows = inheritDerivedStatus(applied.rows);
+  const config = join(SITE, 'src/config.yaml');
+  const rows = inheritDerivedStatus(applied.rows, {
+    titleSuffix: existsSync(config) ? titleSuffix(brandFromDisk(config)) : '',
+  });
   const missingTarget = unmatched.filter(
     (entry) => !existsSync(resolve(SITE, entry.target.replace(/^site\//, ''))) && !entry.target.startsWith('/')
   );
