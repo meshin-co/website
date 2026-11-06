@@ -35,7 +35,7 @@ const planted = [
     text: () =>
       plant(
         "if: always() && (github.event_name != 'workflow_dispatch' || inputs.full)",
-        "if: (github.event_name != 'workflow_dispatch' || inputs.full)",
+        "if: (github.event_name != 'workflow_dispatch' || inputs.full)"
       ),
     rules: ['aggregate-not-always'],
     detail: /all-required-jobs-passed/,
