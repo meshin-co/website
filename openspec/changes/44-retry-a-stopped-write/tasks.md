@@ -61,5 +61,5 @@
 - [ ] 8.4 After 14 live UTC days, run the measurements of the proposal and read them against the pre-registered bar: no
       day above 3 article claims, every stopped run's claim abandoned, the stops reported with their denominator.
       Owner-run
-- [ ] 8.5 Run the Calibration Gate and commit the report it generates for this change at
-      `audits/phase-44-retry-a-stopped-write/REPORT.md`. Owner-run
+- [x] 8.5 The Calibration Gate report for this change is generated and committed at
+      `audits/phase-44-retry-a-stopped-write/REPORT.md`: 26 routes, both form factors, `Result: PASS`

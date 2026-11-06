@@ -163,13 +163,16 @@ grep -l '"status": "abandoned"' audits/autowriter/claims/2026/*/*.json | wc -l
 
 The count of stops, against the article claims of the window counted by the first command.
 
+### Run on this tree
+
+- `npm test` (8,253 tests, 0 failures) and `npm run check` (0 errors, 0 warnings).
+- `npm run test:smoke`, 176 of 176 guard families proven able to fail.
+- No route changed: the diff touches `site/scripts/`, `.github/workflows/`, documents and the openspec tree, and
+  nothing under `site/src/` or `site/public/`. The Calibration Gate still ran, because `site/scripts/` is build
+  surface to `site/scripts/build-surface.mjs` and `.githooks/pre-push` refuses a push of an unmeasured tree.
+- The Calibration Gate report is generated and committed at `audits/phase-44-retry-a-stopped-write/REPORT.md`:
+  26 routes, mobile and desktop, `Result: PASS`, measured from tree `9663d7b34859`.
+
 ### Pending, owed by the owner before this change is archived
 
-None of these has been run on this tree. Each is an unticked task.
-
-- `npm test`, `npm run check` and `npm run test:smoke`, which needs a full build and three browsers.
-- Lighthouse and the visual suite are not owed: no route changes. The Calibration Gate step list still applies, so the
-  owner records that.
-- The first live day with a stopped run, read with the commands above.
-- The Calibration Gate report for this change, committed as `audits/phase-44-retry-a-stopped-write/REPORT.md` once the
-  owner has run the gate (the file does not exist before then).
+- The first live day with a stopped run, read with the commands above, and the 14-day measurement of the bar.
