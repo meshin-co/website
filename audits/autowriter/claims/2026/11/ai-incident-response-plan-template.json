@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "slug": "ai-incident-response-plan-template",
+  "title": "AI incident response plan template",
+  "format": "article",
+  "query": "ai incident response plan template",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "prompt": {
+    "number": 22,
+    "text": "AI incident response plan template"
+  },
+  "origin": "demand",
+  "catchUp": {
+    "slot": "03:17",
+    "lateMinutes": 710
+  },
+  "runId": "42239805981-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-06T15:07:16.631Z",
+  "expiresAt": "2026-11-20T15:07:16.631Z"
+}
