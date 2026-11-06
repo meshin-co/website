@@ -8,6 +8,7 @@ import { FINDING, before, claim, cleanup, reworded, withoutASentence, world } fr
 import { removalProblems } from './repair-guard.mjs';
 import { RepairStop } from './repair-outcome.mjs';
 import { rewriteEntry } from './repair-rewrite.mjs';
+import { CORRECTION_ROUNDS } from './write-draft.mjs';
 
 after(cleanup);
 
@@ -62,9 +63,9 @@ test('a rewrite that passes by deleting a sentence is refused, even after the co
 
   assert.deepEqual(
     calls.map(({ role }) => role),
-    ['repair', 'repair-correction']
+    ['repair', ...Array.from({ length: CORRECTION_ROUNDS }, () => 'repair-correction')]
   );
-  assert.equal(scene.adapter.requests.length, 2);
+  assert.equal(scene.adapter.requests.length, CORRECTION_ROUNDS + 1);
   assert.ok(scene.adapter.requests[1].messages.at(-1).content.includes('never delete'));
 });
 

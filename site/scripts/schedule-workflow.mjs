@@ -1,8 +1,9 @@
 import { readEngineConfig } from './engine-config.mjs';
 
-const { writeTimesUtc, catchUpAfterMinutes } = readEngineConfig().loop;
+const { writeTimesUtc, catchUpAfterMinutes, stoppedRunRetriesPerDay } = readEngineConfig().loop;
 export const WRITE_TIMES_UTC = writeTimesUtc;
 export const CATCH_UP_AFTER_MINUTES = catchUpAfterMinutes;
+export const STOPPED_RUN_RETRIES_PER_DAY = stoppedRunRetriesPerDay;
 export const WRITE_DAILY_PATH = '.github/workflows/write-daily.yml';
 export const REGENERATE_COMMAND = 'npm run assets:schedule';
 export const SCHEDULE_COMMENT = `# written by ${REGENERATE_COMMAND} from loop.writeTimesUtc and loop.catchUpAfterMinutes; give each time a minute off the top of the hour, where scheduled runs queue`;

@@ -27,12 +27,25 @@ const REVISION = 'abc1234';
 const failedRunSteps = () => STEPS.filter((step) => /steps\.write\.outcome\s*==\s*'failure'/.test(step.if ?? ''));
 const commitStep = () => failedRunSteps().find(({ run = '' }) => run.includes('commit-to-main.mjs'));
 const escalateStep = () => failedRunSteps().find(({ run = '' }) => run.includes('escalate-run.mjs'));
+const releaseStep = () => failedRunSteps().find(({ run = '' }) => run.includes('release-claim.mjs'));
 
 test('the commit of a failed write holds the report beside the ledger, so main does not go red on the spend it records', () => {
   const step = commitStep();
   assert.ok(step, 'no step commits the ledger of a failed write');
-  assert.match(step.run, /--path "\$\(jq -r \.ledgerPath "\$DECISION_FILE"\)"/);
+  assert.match(step.run, /jq -r '\.entries\[\]\.claimPath, \.ledgerPath' "\$DECISION_FILE"/);
   assert.ok(step.run.includes(`--path ${REPORT_PATH}`), step.run);
+});
+
+test('the claims of a stopped run are released, so the slot they held is owed again', () => {
+  const step = releaseStep();
+  assert.ok(step, 'no step releases the claims of a failed write');
+  assert.match(step.run, /release-claim\.mjs --decision "\$DECISION_FILE"/);
+});
+
+test('the claims are released after the tree returns to the claim commit and before they are committed', () => {
+  const checkout = STEPS.find(({ run = '' }) => run.includes('git checkout --detach'));
+  assert.ok(STEPS.indexOf(checkout) < STEPS.indexOf(releaseStep()), 'the release runs against the written tree');
+  assert.ok(STEPS.indexOf(releaseStep()) < STEPS.indexOf(commitStep()), 'the release lands after its own commit');
 });
 
 test('the report is regenerated after the escalation and before the commit, because it names the verdict the ledger ends on', () => {

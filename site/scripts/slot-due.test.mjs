@@ -15,7 +15,8 @@ after(() => roots.forEach((root) => rmSync(root, { recursive: true, force: true 
 function repoWith(...claimTimes) {
   const root = mkdtempSync(join(tmpdir(), 'slot-due-'));
   roots.push(root);
-  claimTimes.forEach((at, index) => {
+  claimTimes.forEach((entry, index) => {
+    const { at, status } = typeof entry === 'string' ? { at: entry, status: 'claimed' } : entry;
     const now = new Date(at);
     const slug = `entry-${index}`;
     const claim = newClaim({
@@ -29,12 +30,12 @@ function repoWith(...claimTimes) {
       runId: `run-${index}`,
       now,
     });
-    writeClaim(join(root, recordPath('claim', slug, now)), claim);
+    writeClaim(join(root, recordPath('claim', slug, now)), { ...claim, status });
   });
   return root;
 }
 
-function run(root, argv) {
+function run(root, argv, forgivenPerDay = 0) {
   const output = join(root, 'github-output.txt');
   writeFileSync(output, '');
   const lines = [];
@@ -46,6 +47,7 @@ function run(root, argv) {
     stderr: (line) => errors.push(line),
     times: ['03:17', '15:17'],
     catchUpMinutes: [120, 240],
+    forgivenPerDay,
   });
   return { code, lines, errors, output: readFileSync(output, 'utf8') };
 }
@@ -65,6 +67,15 @@ test('a scheduled run at 05:17 after the 03:17 slot produced an entry is not due
   assert.equal(code, 0);
   assert.match(output, /^due=false$/m);
   assert.match(lines.join('\n'), /1 article claimed today for 1 slot passed/);
+});
+
+test('the catch-up after a stopped run is due again and names the stopped run it forgave', () => {
+  const root = repoWith({ at: '2026-11-05T03:20:00Z', status: 'abandoned' });
+  const { code, lines, output } = run(root, ['--event', 'schedule', '--now', '2026-11-05T05:17:04Z'], 1);
+  assert.equal(code, 0);
+  assert.match(output, /^due=true$/m);
+  assert.match(lines.join('\n'), /0 articles claimed today for 1 slot passed, with 1 stopped run forgiven/);
+  assert.match(lines.join('\n'), /03:17 slot is 120 minutes late/);
 });
 
 test('two entries and two slots: the late afternoon attempts do nothing', () => {

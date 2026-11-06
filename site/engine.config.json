@@ -32,6 +32,8 @@
   },
   "loop": {
     "attemptCap": 3,
+    "correctionRounds": 2,
+    "stoppedRunRetriesPerDay": 1,
     "tickMinutes": 3,
     "quarantineHours": 12,
     "monthlySpendCeilingUsd": 25,

@@ -15,6 +15,8 @@ const sceneOf = (options) => {
 
 const LOOP = {
   attemptCap: 7,
+  correctionRounds: 3,
+  stoppedRunRetriesPerDay: 2,
   tickMinutes: 6,
   quarantineHours: 20,
   monthlySpendCeilingUsd: 41.5,
@@ -122,6 +124,20 @@ const LIVE = [
     'm.CATEGORY_ROTATION',
     ['executive', 'governance'],
   ],
+  [
+    'the corrections the writer may ask for come from the loop section',
+    'site/scripts/write-draft.mjs',
+    withLoop,
+    'm.CORRECTION_ROUNDS',
+    3,
+  ],
+  [
+    'the stopped runs a day forgives come from the loop section',
+    'site/scripts/schedule-workflow.mjs',
+    withLoop,
+    'm.STOPPED_RUN_RETRIES_PER_DAY',
+    2,
+  ],
 ];
 
 for (const [label, module, mutate, expression, expected] of LIVE) {
@@ -143,6 +159,8 @@ const REQUIRED = [
   ['site/scripts/schedule-workflow.mjs', 'loop.writeTimesUtc'],
   ['site/scripts/schedule-workflow.mjs', 'loop.catchUpAfterMinutes'],
   ['site/scripts/topic-categories.mjs', 'loop.categoryRotation'],
+  ['site/scripts/write-draft.mjs', 'loop.correctionRounds'],
+  ['site/scripts/schedule-workflow.mjs', 'loop.stoppedRunRetriesPerDay'],
 ];
 
 for (const [module, field] of REQUIRED) {

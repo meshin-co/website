@@ -80,13 +80,14 @@ test('claims live beside the ledgers, one file per slug filed by month, in the t
     'audits/autowriter/claims/2026/11/what-is-a-model-card.json'
   );
   assert.deepEqual(CLAIM_FORMATS, ['term', 'article']);
-  assert.deepEqual(CLAIM_STATUSES, ['claimed', 'written']);
+  assert.deepEqual(CLAIM_STATUSES, ['claimed', 'written', 'abandoned']);
 });
 
 test('a well-formed claim has no problems, for an unproven prompt as much as for a measured one', () => {
   assert.deepEqual(validateClaim(claim()), []);
   assert.deepEqual(validateClaim(claim({ demand: { impressions: 0, position: null } })), []);
   assert.deepEqual(validateClaim(claim({ status: 'written' })), []);
+  assert.deepEqual(validateClaim(claim({ status: 'abandoned' })), []);
 });
 
 const withoutQuery = Object.fromEntries(Object.entries(claim()).filter(([key]) => key !== 'query'));
@@ -95,7 +96,7 @@ const DEFECTS = [
   ['an unknown field', { ...claim(), score: 3 }, 'score has an unexpected key'],
   ['a missing field', withoutQuery, 'query is required'],
   ['an unknown format', claim({ format: 'video' }), 'format must be one of "term", "article"'],
-  ['an unknown status', claim({ status: 'done' }), 'status must be one of "claimed", "written"'],
+  ['an unknown status', claim({ status: 'done' }), 'status must be one of "claimed", "written", "abandoned"'],
   ['a blank title', claim({ title: ' ' }), 'title must match pattern \\S'],
   ['an upper-case slug', claim({ slug: 'What-Is' }), 'slug must match pattern ^[a-z0-9]+(-[a-z0-9]+)*$'],
   [

@@ -4,7 +4,7 @@ import { parseArgs } from 'node:util';
 
 import { readClaims } from './autowriter-claim-store.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
-import { CATCH_UP_AFTER_MINUTES, WRITE_TIMES_UTC } from './schedule-workflow.mjs';
+import { CATCH_UP_AFTER_MINUTES, STOPPED_RUN_RETRIES_PER_DAY, WRITE_TIMES_UTC } from './schedule-workflow.mjs';
 import { slotStanding } from './slot-standing.mjs';
 
 const REPOSITORY_ROOT = resolve(import.meta.dirname, '..', '..');
@@ -33,11 +33,15 @@ function parse(argv) {
   return values;
 }
 
-function verdict({ event, repoRoot, now, times, catchUpMinutes }) {
+function verdict({ event, repoRoot, now, times, catchUpMinutes, forgivenPerDay }) {
   if (event === 'workflow_dispatch')
     return { due: true, text: 'slot: started by hand (workflow_dispatch), so no slot quota applies; the run writes' };
-  const found = slotStanding({ times, catchUpMinutes, claims: readClaims(repoRoot), now });
-  const held = `${counted(found.entries, 'article')} claimed today for ${counted(found.passed, 'slot')} passed`;
+  const found = slotStanding({ times, catchUpMinutes, forgivenPerDay, claims: readClaims(repoRoot), now });
+  const forgiven =
+    found.forgiven === 0
+      ? ''
+      : `, with ${counted(found.forgiven, 'stopped run')} forgiven so the slot is written again`;
+  const held = `${counted(found.entries, 'article')} claimed today for ${counted(found.passed, 'slot')} passed${forgiven}`;
   if (!found.due)
     return { due: false, text: `slot: ${held}, so nothing is owed; the run stops before any model is called` };
   const late = `the ${found.slot} slot is ${counted(found.lateMinutes, 'minute')} late`;
@@ -53,6 +57,7 @@ export function runCli(argv, io = {}) {
     now = () => new Date(),
     times = WRITE_TIMES_UTC,
     catchUpMinutes = CATCH_UP_AFTER_MINUTES,
+    forgivenPerDay = STOPPED_RUN_RETRIES_PER_DAY,
   } = io;
   let outcome;
   try {
@@ -60,7 +65,7 @@ export function runCli(argv, io = {}) {
     const instant = values.now === undefined ? now() : new Date(values.now);
     const repoRoot =
       values['repo-root'] === undefined ? (io.repoRoot ?? REPOSITORY_ROOT) : resolve(values['repo-root']);
-    outcome = verdict({ event: values.event, repoRoot, now: instant, times, catchUpMinutes });
+    outcome = verdict({ event: values.event, repoRoot, now: instant, times, catchUpMinutes, forgivenPerDay });
   } catch (error) {
     stderr(`slot-due: ${error.message}`);
     return error instanceof UsageError ? 2 : 1;

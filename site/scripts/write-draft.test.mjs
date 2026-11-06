@@ -3,7 +3,7 @@ import './fixtures/no-network.mjs';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { CORRECTION_ROUNDS, draftEntry, meter } from './write-draft.mjs';
+import { CORRECTION_ROUNDS, countedCorrections, draftEntry, meter } from './write-draft.mjs';
 import { WriterError } from './writer-error.mjs';
 
 const PRICE = { inputPerMillion: 4, outputPerMillion: 20 };
@@ -95,15 +95,47 @@ test('one correction round names the problems and carries the first answer back'
   assert.equal(outcome.finalCall, calls[1]);
 });
 
-test('the correction budget is one: a second failing draft returns no draft and makes no third call', async () => {
-  assert.equal(CORRECTION_ROUNDS, 1);
+test('a budget of one stops after the first correction and makes no third call', async () => {
   const adapter = scriptedAdapter([answer(1), answer(2), answer(3)]);
   const calls = [];
-  const outcome = await draftEntry({ adapter, request: REQUEST, check: refusing, correct, calls });
+  const outcome = await draftEntry({ adapter, request: REQUEST, check: refusing, correct, calls, rounds: 1 });
   assert.equal(outcome.draft, null);
   assert.deepEqual(outcome.problems, [{ rule: 'words', detail: 'n=2' }]);
   assert.equal(adapter.seen.length, 2);
   assert.equal(calls.length, 2);
+});
+
+test('a budget of two asks a second time, so a draft the first correction missed still lands', async () => {
+  const check = (json) => (json.n === 3 ? { draft: json, problems: [] } : refusing(json));
+  const adapter = scriptedAdapter([answer(1), answer(2), answer(3)]);
+  const calls = [];
+  const outcome = await draftEntry({ adapter, request: REQUEST, check, correct, calls, rounds: 2 });
+  assert.deepEqual(outcome.draft, { n: 3 });
+  assert.deepEqual(
+    calls.map((call) => call.role),
+    ['draft', 'correction', 'correction']
+  );
+  assert.deepEqual(adapter.seen[2].messages.at(-2), { role: 'assistant', content: '{"n":2}' });
+});
+
+test('a budget of two stops after the second correction, so the spend of one entry is bounded', async () => {
+  const adapter = scriptedAdapter([answer(1), answer(2), answer(3), answer(4)]);
+  const calls = [];
+  const outcome = await draftEntry({ adapter, request: REQUEST, check: refusing, correct, calls, rounds: 2 });
+  assert.equal(outcome.draft, null);
+  assert.equal(adapter.seen.length, 3);
+});
+
+test('the budget the writer uses by default is the one engine.config.json names', async () => {
+  const adapter = scriptedAdapter(Array.from({ length: CORRECTION_ROUNDS + 2 }, (unused, at) => answer(at + 1)));
+  const calls = [];
+  await draftEntry({ adapter, request: REQUEST, check: refusing, correct, calls });
+  assert.equal(adapter.seen.length, CORRECTION_ROUNDS + 1);
+});
+
+test('the count the stop message carries reads as English for one correction and for more', () => {
+  assert.equal(countedCorrections(1), '1 correction');
+  assert.equal(countedCorrections(2), '2 corrections');
 });
 
 test('a billed response that could not be used still lands in the calls, then the error goes on', async () => {
