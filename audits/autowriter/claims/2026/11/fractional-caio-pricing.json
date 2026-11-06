@@ -14,7 +14,7 @@
   },
   "origin": "demand",
   "runId": "42263444959-1",
-  "status": "claimed",
+  "status": "written",
   "claimedAt": "2026-11-06T17:39:41.775Z",
   "expiresAt": "2026-11-20T17:39:41.775Z"
 }
