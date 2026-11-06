@@ -19,6 +19,7 @@ jobs:
   changes:
     if: github.event_name != 'workflow_dispatch' || inputs.full
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     outputs:
       code: ${{ steps.classify.outputs.code }}
     steps:
@@ -41,6 +42,7 @@ jobs:
     if: (github.event_name != 'workflow_dispatch' || inputs.full) && needs.changes.outputs.code == 'true'
     needs: changes
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -66,6 +68,7 @@ jobs:
   types-and-units:
     if: github.event_name != 'workflow_dispatch' || inputs.full
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -98,6 +101,7 @@ jobs:
     if: (github.event_name != 'workflow_dispatch' || inputs.full) && needs.changes.outputs.code == 'true'
     needs: [changes, build, types-and-units]
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     env:
       GATE_FINDINGS_DIR: ${{ github.workspace }}/gate-findings
     steps:
@@ -146,6 +150,7 @@ jobs:
     if: (github.event_name != 'workflow_dispatch' || inputs.full) && needs.changes.outputs.code == 'true'
     needs: [changes, build, types-and-units]
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -175,6 +180,7 @@ jobs:
     if: github.event_name == 'pull_request' && needs.changes.outputs.code == 'true'
     needs: [changes, build, types-and-units, cheap-gates, visual-and-axe]
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
       pull-requests: write
@@ -240,6 +246,7 @@ jobs:
     if: failure()
     needs: [build, types-and-units, cheap-gates, visual-and-axe]
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
       actions: write
     steps:
@@ -251,6 +258,7 @@ jobs:
     if: always() && (github.event_name != 'workflow_dispatch' || inputs.full)
     needs: [changes, build, types-and-units, cheap-gates, visual-and-axe, deploy-preview]
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -267,6 +275,7 @@ jobs:
   regen-baselines:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: read
     defaults:
