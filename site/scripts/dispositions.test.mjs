@@ -105,6 +105,75 @@ test('a rendered row inherits the disposition of the reviewed source text it ren
   assert.equal(rendered.derivedFrom, 'src/data/faq/a.md');
 });
 
+test('a paginated title inherits the template string it is built from, for page 2 and for every page after it', () => {
+  const inherited = inheritDerivedStatus(
+    [
+      {
+        location: 'text',
+        text: 'Writing, page',
+        status: 'rewritten',
+        reason: 'the title keeps the "Writing, page N" pattern',
+        usedIn: ['src/pages/blog/page/[page].astro'],
+      },
+      { location: 'head.title', text: 'Writing, page 2 — meshin.co', status: 'unreviewed', usedIn: ['/blog/page/2'] },
+      { location: 'head.h1', text: 'Writing, page 2', status: 'unreviewed', usedIn: ['/blog/page/2'] },
+      { location: 'head.title', text: 'Writing, page 17 — meshin.co', status: 'unreviewed', usedIn: ['/blog/page/17'] },
+    ],
+    { titleSuffix: ' — meshin.co' }
+  );
+  const rendered = inherited.filter((row) => row.usedIn[0].startsWith('/blog/page/'));
+  assert.deepEqual(
+    rendered.map((row) => row.status),
+    ['rewritten', 'rewritten', 'rewritten']
+  );
+  assert.equal(rendered[0].derivedFrom, 'src/pages/blog/page/[page].astro');
+  assert.equal(rendered[0].reason, 'the title keeps the "Writing, page N" pattern');
+});
+
+test('a number alone does not open the rule: a page title that adds words nobody read stays unreviewed', () => {
+  const inherited = inheritDerivedStatus(
+    [
+      {
+        location: 'text',
+        text: 'Writing, page',
+        status: 'rewritten',
+        reason: 'the title keeps the "Writing, page N" pattern',
+        usedIn: ['src/pages/blog/page/[page].astro'],
+      },
+      {
+        location: 'head.title',
+        text: 'Writing, page 2 and something new — meshin.co',
+        status: 'unreviewed',
+        usedIn: ['/blog/page/2'],
+      },
+      { location: 'head.title', text: 'Writing, page two', status: 'unreviewed', usedIn: ['/blog/page/two'] },
+    ],
+    { titleSuffix: ' — meshin.co' }
+  );
+  assert.deepEqual(
+    inherited.filter((row) => row.usedIn[0].startsWith('/blog/page/')).map((row) => row.status),
+    ['unreviewed', 'unreviewed']
+  );
+});
+
+test('with no title suffix given, only the bare numbered form inherits, so the rule never guesses a brand', () => {
+  const inherited = inheritDerivedStatus([
+    {
+      location: 'text',
+      text: 'Writing, page',
+      status: 'rewritten',
+      reason: 'the title keeps the "Writing, page N" pattern',
+      usedIn: ['src/pages/blog/page/[page].astro'],
+    },
+    { location: 'head.title', text: 'Writing, page 2 — meshin.co', status: 'unreviewed', usedIn: ['/blog/page/2'] },
+    { location: 'head.h1', text: 'Writing, page 2', status: 'unreviewed', usedIn: ['/blog/page/2'] },
+  ]);
+  assert.deepEqual(
+    inherited.filter((row) => row.usedIn[0].startsWith('/blog/page/')).map((row) => row.status),
+    ['unreviewed', 'rewritten']
+  );
+});
+
 test('a rendered row composed differently stays unreviewed, because nobody read those words', () => {
   const inherited = inheritDerivedStatus([
     { location: 'frontmatter.title', text: 'What a CAIO does', status: 'verified', usedIn: ['src/data/faq/a.md'] },

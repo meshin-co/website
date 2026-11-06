@@ -53,6 +53,17 @@
       are removed, because no finding carries it any more
 - [x] 5b.4 The gate now prints a sample of its unreviewed rows, which it never did, so the next stop names the rows
       instead of only counting them
+- [x] 5b.5 Run 42250344080, started by hand after the editorial change merged, named the last two: `/blog/page/2 |
+  Writing, page 2 — meshin.co` and `/blog/page/2 | Writing, page 2`. The route is a side effect of the thirteenth
+      post and no disposition names it, so both rows read unreviewed. `inheritDerivedStatus` only let a rendered row
+      inherit a reviewed source that contains it, and `Writing, page 2` is not contained in the template's
+      `Writing, page`
+- [x] 5b.6 A rendered row also inherits a reviewed source when it is that source followed by a number, optionally
+      followed by the site's own title suffix, which `site/src/utils/brand.mjs` derives from `src/config.yaml`. The
+      disposition of `src/pages/blog/page/[page].astro` already records that the title "keeps the \"Writing, page N\"
+      pattern", so the review was always meant to cover every N, and page 3 at 25 posts needs no hand work. A rendered
+      row that adds any other word still stays unreviewed: the test
+      `a rendered row composed differently stays unreviewed, because nobody read those words` is unchanged and green
 
 ## 6. Proof
 
