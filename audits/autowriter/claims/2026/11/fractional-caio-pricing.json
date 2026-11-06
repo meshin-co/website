@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "slug": "fractional-caio-pricing",
+  "title": "Fractional CAIO pricing",
+  "format": "article",
+  "query": "fractional caio pricing",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "prompt": {
+    "number": 26,
+    "text": "fractional CAIO pricing"
+  },
+  "origin": "demand",
+  "runId": "42263444959-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-06T17:39:41.775Z",
+  "expiresAt": "2026-11-20T17:39:41.775Z"
+}
