@@ -128,10 +128,6 @@ export function buildReport(dist) {
     dead: conditional.remaining,
     stale: [
       ...stale,
-      ...conditional.stale.map((entry) => ({
-        target: entry.text.slice(0, 40),
-        why: 'declared conditional but the build ships it',
-      })),
       ...conditional.invalid.map((entry) => ({
         target: entry.text.slice(0, 40),
         why: 'conditional declaration carries no reason',
@@ -143,6 +139,7 @@ export function buildReport(dist) {
   const counts = {
     untraceable: built.untraceable.length,
     dead: built.dead.length,
+    shipping: conditional.stale.length,
     stale: stale.length,
     unmatched: unmatched.length,
     missingTarget: missingTarget.length,
@@ -214,18 +211,20 @@ function report(dist, { write }) {
   console.log(`editorial ledger: ${rows.length} rows across ${built.pages} routes`, byStatus);
   console.log(`shipped text tracing to no source row: ${built.untraceable.length}`);
   console.log(
-    `source copy no page ships: ${built.dead.length} (${declarations.length} declared state-conditional, ${conditional.remaining.length} unexplained)`
+    `source copy no page ships: ${built.dead.length} (${declarations.length} declared state-conditional, ${conditional.remaining.length} unexplained, ${conditional.stale.length} that the build now ships: reported, not gated)`
   );
   console.log(
     `dispositions: ${dispositions.length} declared, ${stale.length} stale, ${missingTarget.length} naming a missing file, ${noRowsEntries.length} on files with no copy rows (reported, not gated)`
   );
   if (findings.length > 0) {
     console.log(`findings: ${findings.length}`);
+    const unreviewed = rows.filter(isPending);
     const sample = (label, entries, format) => {
       if (entries.length === 0) return;
       console.log(`  ${label} (${entries.length}):`);
       for (const entry of entries.slice(0, 4)) console.log(`    ${format(entry)}`);
     };
+    sample('unreviewed copy', unreviewed, (entry) => `${entry.usedIn[0]} | ${entry.text.slice(0, 70)}`);
     sample(
       'shipped text tracing to no source row',
       built.untraceable,

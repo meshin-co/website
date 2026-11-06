@@ -36,6 +36,24 @@
 - [x] 5.2 `.github/workflows/write-daily.yml` runs `release-claim.mjs` on the failed-write path and commits the released
       claims next to the ledger
 
+## 5b. What the first real run after the fix found
+
+- [x] 5b.1 Run 42239805981, started by hand on the merged tree, passed the writer's own checks for the first time and
+      stopped at `gate:editorial` with 6 findings. The release step ran in production: it stamped
+      `audits/autowriter/claims/2026/11/ai-incident-response-plan-template.json` abandoned and committed it
+- [x] 5b.2 Name the 6: the thirteenth article is the first that paginates `/blog` (`postsPerPage: 12`), so
+      `/blog/2` ships and four strings that `audits/phase-4.7/conditional-copy.json` declares state-conditional
+      ("Older articles, continuing from the first page.", "Writing, page", "Previous page", "Next page") stop being
+      dead. `site/scripts/editorial-gate.mjs` turned every one of them into a `stale` finding, so the engine could
+      never publish a thirteenth article. The other 2 findings are unreviewed rows that no run has yet named
+- [x] 5b.3 A declared state-conditional text that the build now ships is reported, not gated: the string ships in
+      some states by definition, it keeps its own editorial row and disposition, and
+      `audits/phase-4.7/inventory.json` counts it as `shipping`. An invalid declaration, one with no reason, is
+      still gated. The rule `stale-conditional-declaration` and its row in `site/scripts/repair-kinds-ledger.mjs`
+      are removed, because no finding carries it any more
+- [x] 5b.4 The gate now prints a sample of its unreviewed rows, which it never did, so the next stop names the rows
+      instead of only counting them
+
 ## 6. Proof
 
 - [x] 6.1 Tests first, each red before the code: a stopped claim is forgiven once and leaves its slot owed, a second is

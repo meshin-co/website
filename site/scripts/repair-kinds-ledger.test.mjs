@@ -11,7 +11,6 @@ const DECIDED = {
     'untraceable-copy': ['refuse'],
     'dead-copy': ['refuse'],
     'stale-disposition': ['restate'],
-    'stale-conditional-declaration': ['refuse'],
     'invalid-conditional-declaration': ['refuse'],
     'disposition-target-missing': ['refuse'],
   },
@@ -45,7 +44,7 @@ for (const [name, decided] of Object.entries(DECIDED)) {
   }
 }
 
-test('the editorial table holds exactly the 7 rules of the editorial gate', () => {
+test('the editorial table holds exactly the 6 rules of the editorial gate', () => {
   assert.deepEqual(Object.keys(EDITORIAL_KINDS).sort(), Object.keys(DECIDED.editorial).sort());
 });
 
