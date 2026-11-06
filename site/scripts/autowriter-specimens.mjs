@@ -19,7 +19,7 @@ const WORKFLOW_PATH = '../.github/workflows/ci.yml';
 const CORE_PATH = '../docs/SEMANTIC-CORE.md';
 
 const AGGREGATE_NEEDS = 'needs: [changes, build, types-and-units, cheap-gates, visual-and-axe, deploy-preview]';
-const AGGREGATE_IF = "if: always() && github.event_name != 'workflow_dispatch'";
+const AGGREGATE_IF = "if: always() && (github.event_name != 'workflow_dispatch' || inputs.full)";
 const AGGREGATE_NAME =
   "name: ${{ github.event_name == 'pull_request' && 'all required jobs passed' || format('all required jobs passed ({0})', github.event_name) }}";
 const BASELINES_STEP = 'name: Commit regenerated linux baselines\n        env:\n          ';

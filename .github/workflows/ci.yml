@@ -5,6 +5,11 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      full:
+        description: Run the whole graph against this ref, the way a push to main does, when the build a press needs was lost
+        type: boolean
+        default: false
 
 defaults:
   run:
@@ -12,7 +17,7 @@ defaults:
 
 jobs:
   changes:
-    if: github.event_name != 'workflow_dispatch'
+    if: github.event_name != 'workflow_dispatch' || inputs.full
     runs-on: ubuntu-latest
     outputs:
       code: ${{ steps.classify.outputs.code }}
@@ -33,7 +38,7 @@ jobs:
         run: node scripts/run-classify-diff.mjs --before "$BEFORE" --after "$AFTER" >> "$GITHUB_OUTPUT"
 
   build:
-    if: github.event_name != 'workflow_dispatch' && needs.changes.outputs.code == 'true'
+    if: (github.event_name != 'workflow_dispatch' || inputs.full) && needs.changes.outputs.code == 'true'
     needs: changes
     runs-on: ubuntu-latest
     steps:
@@ -59,7 +64,7 @@ jobs:
           include-hidden-files: true
 
   types-and-units:
-    if: github.event_name != 'workflow_dispatch'
+    if: github.event_name != 'workflow_dispatch' || inputs.full
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -90,7 +95,7 @@ jobs:
       - run: npm run gate:brand
 
   cheap-gates:
-    if: github.event_name != 'workflow_dispatch' && needs.changes.outputs.code == 'true'
+    if: (github.event_name != 'workflow_dispatch' || inputs.full) && needs.changes.outputs.code == 'true'
     needs: [changes, build, types-and-units]
     runs-on: ubuntu-latest
     env:
@@ -138,7 +143,7 @@ jobs:
           retention-days: 14
 
   visual-and-axe:
-    if: github.event_name != 'workflow_dispatch' && needs.changes.outputs.code == 'true'
+    if: (github.event_name != 'workflow_dispatch' || inputs.full) && needs.changes.outputs.code == 'true'
     needs: [changes, build, types-and-units]
     runs-on: ubuntu-latest
     strategy:
@@ -243,7 +248,7 @@ jobs:
 
   all-required-jobs-passed:
     name: ${{ github.event_name == 'pull_request' && 'all required jobs passed' || format('all required jobs passed ({0})', github.event_name) }}
-    if: always() && github.event_name != 'workflow_dispatch'
+    if: always() && (github.event_name != 'workflow_dispatch' || inputs.full)
     needs: [changes, build, types-and-units, cheap-gates, visual-and-axe, deploy-preview]
     runs-on: ubuntu-latest
     steps:
