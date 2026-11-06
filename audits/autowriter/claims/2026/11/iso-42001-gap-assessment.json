@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "slug": "iso-42001-gap-assessment",
+  "title": "ISO 42001 gap assessment",
+  "format": "article",
+  "query": "iso 42001 gap assessment",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "prompt": {
+    "number": 24,
+    "text": "ISO 42001 gap assessment"
+  },
+  "origin": "demand",
+  "runId": "42250344080-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-06T16:15:22.279Z",
+  "expiresAt": "2026-11-20T16:15:22.279Z"
+}
