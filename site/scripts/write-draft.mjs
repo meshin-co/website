@@ -1,6 +1,9 @@
+import { readEngineConfig } from './engine-config.mjs';
 import { WRITING_ROLES, callRecord } from './generation-record.mjs';
 
-export const CORRECTION_ROUNDS = 1;
+export const CORRECTION_ROUNDS = readEngineConfig().loop.correctionRounds;
+
+export const countedCorrections = (rounds) => `${rounds} correction${rounds === 1 ? '' : 's'}`;
 
 export function meter(adapter, calls) {
   return async (role, request) => {
@@ -15,7 +18,15 @@ export function meter(adapter, calls) {
   };
 }
 
-export async function draftEntry({ adapter, request, check, correct, calls, roles = WRITING_ROLES }) {
+export async function draftEntry({
+  adapter,
+  request,
+  check,
+  correct,
+  calls,
+  roles = WRITING_ROLES,
+  rounds = CORRECTION_ROUNDS,
+}) {
   const ask = meter(adapter, calls);
   const messages = [{ role: 'user', content: request.user }];
   for (let round = 0; ; round += 1) {
@@ -29,7 +40,7 @@ export async function draftEntry({ adapter, request, check, correct, calls, role
     const { draft, problems } = check(result.json);
     const finalCall = calls.at(-1);
     if (problems.length === 0) return { draft, problems, finalCall };
-    if (round === CORRECTION_ROUNDS) return { draft: null, problems, finalCall };
+    if (round === rounds) return { draft: null, problems, finalCall };
     messages.push({ role: 'assistant', content: result.text }, { role: 'user', content: correct(problems) });
   }
 }

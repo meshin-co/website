@@ -112,6 +112,8 @@
       "additionalProperties": false,
       "required": [
         "attemptCap",
+        "correctionRounds",
+        "stoppedRunRetriesPerDay",
         "tickMinutes",
         "quarantineHours",
         "monthlySpendCeilingUsd",
@@ -126,6 +128,18 @@
           "type": "integer",
           "minimum": 1,
           "description": "Most repair attempts one article gets before the loop escalates."
+        },
+        "correctionRounds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3,
+          "description": "Times the writer is handed its own failed checks and asked to return a corrected draft, before the run stops. The first draft is not a correction, so a budget of 2 costs at most three model calls for one entry. Each round costs about one draft's tokens, so the budget is small on purpose."
+        },
+        "stoppedRunRetriesPerDay": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5,
+          "description": "Article claims a day forgives after a run stopped without writing. A forgiven claim leaves its slot owed, so the next catch-up cron writes a different topic; the claims beyond that number count as entries again and the day stops, so a failing model cannot spend all day. 0 keeps the old behaviour, where one stopped run ends the day."
         },
         "tickMinutes": {
           "type": "integer",

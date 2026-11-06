@@ -12,8 +12,8 @@ const claimAt = (claimedAt, extra = {}) => ({
   claim: { slug: 'a-slug', format: 'article', status: 'claimed', claimedAt, ...extra },
 });
 
-const standingAt = (now, claims = [], delays = DELAYS) =>
-  slotStanding({ times: TIMES, catchUpMinutes: delays, claims, now: new Date(now) });
+const standingAt = (now, claims = [], delays = DELAYS, forgivenPerDay = 0) =>
+  slotStanding({ times: TIMES, catchUpMinutes: delays, claims, now: new Date(now), forgivenPerDay });
 
 test('a slot GitHub never fired is due two hours late, and the run is labelled with the slot it fills and how late it is', () => {
   const found = standingAt('2026-11-05T05:17:04Z');
@@ -78,9 +78,45 @@ test('a glossary term claimed today is not an article, so it satisfies no slot',
   assert.equal(standingAt('2026-11-05T05:17:00Z', claims).due, true);
 });
 
-test('a claim whose write failed still counts: money was spent and the owner was told, so the slot is not retried blind', () => {
-  const failed = claimAt('2026-11-05T03:20:00Z', { slug: 'failed', expiresAt: '2026-11-19T03:20:00Z' });
-  assert.equal(standingAt('2026-11-05T05:17:00Z', [failed]).due, false);
+test('a claim whose write stopped is forgiven once, so the slot it held is owed again', () => {
+  const stopped = claimAt('2026-11-05T03:20:00Z', { slug: 'stopped', status: 'abandoned' });
+  const found = standingAt('2026-11-05T05:17:00Z', [stopped], DELAYS, 1);
+  assert.equal(found.due, true);
+  assert.equal(found.slot, '03:17');
+  assert.equal(found.forgiven, 1);
+});
+
+test('a second stopped claim is not forgiven, so a model that keeps failing cannot spend all day', () => {
+  const stopped = [
+    claimAt('2026-11-05T03:20:00Z', { slug: 'stopped-once', status: 'abandoned' }),
+    claimAt('2026-11-05T05:20:00Z', { slug: 'stopped-twice', status: 'abandoned' }),
+  ];
+  const found = standingAt('2026-11-05T07:17:00Z', stopped, DELAYS, 1);
+  assert.equal(found.due, false);
+  assert.equal(found.entries, 1);
+  assert.equal(found.forgiven, 1);
+});
+
+test('the afternoon slot is still owed after a stopped morning run, because a day owes one entry per slot', () => {
+  const stopped = [
+    claimAt('2026-11-05T03:20:00Z', { slug: 'stopped-once', status: 'abandoned' }),
+    claimAt('2026-11-05T05:20:00Z', { slug: 'stopped-twice', status: 'abandoned' }),
+  ];
+  const found = standingAt('2026-11-05T15:17:00Z', stopped, DELAYS, 1);
+  assert.equal(found.due, true);
+  assert.equal(found.slot, '15:17');
+});
+
+test('forgiving nothing keeps a stopped claim counting, so the day stops and the owner looks', () => {
+  const stopped = claimAt('2026-11-05T03:20:00Z', { slug: 'stopped', status: 'abandoned' });
+  assert.equal(standingAt('2026-11-05T05:17:00Z', [stopped], DELAYS, 0).due, false);
+});
+
+test('a written claim is never forgiven, so an entry the day produced is never written twice', () => {
+  const written = claimAt('2026-11-05T03:20:00Z', { slug: 'written', status: 'written' });
+  const found = standingAt('2026-11-05T05:17:00Z', [written], DELAYS, 1);
+  assert.equal(found.due, false);
+  assert.equal(found.forgiven, 0);
 });
 
 test('a claim before any slot has elapsed leaves the day owed nothing, so a run before 03:17 has nothing to catch up', () => {

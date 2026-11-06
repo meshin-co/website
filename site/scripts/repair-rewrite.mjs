@@ -1,7 +1,7 @@
 import { REPAIR_ROLES } from './generation-record.mjs';
 import { removalProblems } from './repair-guard.mjs';
 import { RepairStop } from './repair-outcome.mjs';
-import { CORRECTION_ROUNDS, draftEntry } from './write-draft.mjs';
+import { CORRECTION_ROUNDS, countedCorrections, draftEntry } from './write-draft.mjs';
 import { WriterError } from './writer-error.mjs';
 import { OUTPUT_SCHEMA_NAME, outputSchema, parseOutput } from './writer-output.mjs';
 import { loadPreflightContext, preflight } from './writer-preflight.mjs';
@@ -64,8 +64,8 @@ export async function rewriteEntry({
       'no rewrite of ' +
         claim.slug +
         " passed the repair's own checks after " +
-        CORRECTION_ROUNDS +
-        ' correction: ' +
+        countedCorrections(CORRECTION_ROUNDS) +
+        ': ' +
         rulesOf(outcome.problems)
     );
   return { draft: outcome.draft, prompt };

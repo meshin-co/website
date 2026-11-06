@@ -286,6 +286,10 @@ jobs:
           CLAIM_SHA: ${{ steps.claim.outputs.sha }}
         run: git checkout --detach "$CLAIM_SHA"
 
+      - name: release the claims of the stopped run, so the slot it held is owed again
+        if: failure() && steps.write.outcome == 'failure'
+        run: node scripts/release-claim.mjs --decision "$DECISION_FILE"
+
       - name: escalate a failed write
         if: failure() && steps.write.outcome == 'failure'
         env:
@@ -303,14 +307,16 @@ jobs:
           slug="$(basename "$(jq -r .ledgerPath "$DECISION_FILE")" .json)"
           node scripts/escalate-run.mjs --ledger-dir "$GITHUB_WORKSPACE/$(dirname "$(jq -r .ledgerPath "$DECISION_FILE")")" --slug "$slug" --kind "$kind" \
             --title "Write daily stopped while writing $slug ($failure)" \
-            --detail "npm run write:entry failed with kind $failure: $message. Spend recorded so far: $cost USD. The claim for $slug stays committed and expires on its own."
+            --detail "npm run write:entry failed with kind $failure: $message. Spend recorded so far: $cost USD. The claim for $slug is marked abandoned and keeps its slug, so the next catch-up run of the day writes a different topic."
 
-      - name: commit the ledger, which holds the spend of the failed write, and the report that counts it
+      - name: commit the ledger, which holds the spend of the failed write, the released claims and the report that counts the spend
         if: failure() && steps.write.outcome == 'failure'
         run: |
           slug="$(basename "$(jq -r .ledgerPath "$DECISION_FILE")" .json)"
           node scripts/spend-report.mjs
-          node scripts/commit-to-main.mjs --message "chore(autowriter): record the stopped run of $slug" --path "$(jq -r .ledgerPath "$DECISION_FILE")" --path audits/spend-report.md
+          paths=()
+          while IFS= read -r path; do paths+=(--path "$path"); done < <(jq -r '.entries[].claimPath, .ledgerPath' "$DECISION_FILE")
+          node scripts/commit-to-main.mjs --message "chore(autowriter): record the stopped run of $slug" "${paths[@]}" --path audits/spend-report.md
 
       - name: escalate a written entry that could not reach a pull request
         if: failure() && steps.write.outcome == 'success'

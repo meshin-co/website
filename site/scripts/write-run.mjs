@@ -14,7 +14,7 @@ import { recordPath } from './record-layout.mjs';
 import { assembleRoute } from './route-assembly.mjs';
 import { spendReportFile } from './spend-report.mjs';
 import { REPORT_PATH } from './spend-report-text.mjs';
-import { CORRECTION_ROUNDS, draftEntry } from './write-draft.mjs';
+import { CORRECTION_ROUNDS, countedCorrections, draftEntry } from './write-draft.mjs';
 import { openRun } from './write-open.mjs';
 import { createAdapter } from './writer-adapter.mjs';
 import { WriterError } from './writer-error.mjs';
@@ -65,7 +65,7 @@ async function draftOne({ state, stage }) {
   if (outcome.draft === null)
     throw new WriterError(
       'output',
-      `no draft of ${claim.slug} passed the writer's own checks after ${CORRECTION_ROUNDS} correction: ${rulesOf(outcome.problems)}`
+      `no draft of ${claim.slug} passed the writer's own checks after ${countedCorrections(CORRECTION_ROUNDS)}: ${rulesOf(outcome.problems)}`
     );
   Object.assign(state, { prompt, draft: outcome.draft, finalCall: outcome.finalCall });
 }

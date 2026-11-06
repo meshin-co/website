@@ -24,7 +24,8 @@ function claimTitleRefusal({ topic, holders, suffix }) {
 function claimSlugRefusal({ topic, holders }) {
   const holder = holders.find(({ claim }) => claim.slug === topic.slug);
   if (!holder) return null;
-  const state = holder.claim.status === 'written' ? 'written' : `claimed until ${holder.claim.expiresAt}`;
+  const held = `${holder.claim.status === 'abandoned' ? 'abandoned, held' : 'claimed'} until ${holder.claim.expiresAt}`;
+  const state = holder.claim.status === 'written' ? 'written' : held;
   return refusal('slug-held', holder.path, `slug "${topic.slug}" is held by ${holder.path} (${state})`);
 }
 

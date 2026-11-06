@@ -38,8 +38,10 @@ GitHub documents that a scheduled run can be delayed under load and that queued 
 written by `npm run assets:schedule` and held by `gate:schedule` like the first two. A delay that passes midnight or
 shares a minute is refused at load. The `due` job (`scripts/slot-due.mjs`, over `scripts/slot-standing.mjs`) runs first
 and ends a scheduled run green, before any model, when the UTC day holds as many article claims (by `claimedAt`) as
-slots have passed; a manual run always writes. A slot that has its entry is never run twice. A claim whose write failed
-still counts, because money was spent and an escalation raised; a run that failed before its claim is retried.
+slots have passed; a manual run always writes. A slot that has its entry is never run twice. A run that failed before
+its claim is retried. A claim whose write stopped is stamped `abandoned` by `scripts/release-claim.mjs`, and
+`loop.stoppedRunRetriesPerDay` (shipped `1`) of those a day do not count, so the next catch-up writes a different
+topic; the ones beyond it count again and the day stops (2026-11-06: one stop, issue #98, and nothing published).
 A run filling a slot at least the first delay late stamps its claims `catchUp: {slot, lateMinutes}`, never `origin`;
 `npm run measure:origins` counts them. The pick still reads the corpus and the demand report, never the clock.
 `scripts/write-times-readers.test.mjs` fails when a script outside the schedule modules names `writeTimesUtc`.

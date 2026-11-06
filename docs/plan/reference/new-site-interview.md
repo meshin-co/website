@@ -22,7 +22,7 @@ it, and to the table of config values in Part 1 or to the secret and variable ta
 ## The three parts
 
 1. The site: scope and layout, identity, pages and navigation, the loop policy, Search Console demand,
-   hosting and the performance bar. Question ids `S1` to `S48`.
+   hosting and the performance bar. Question ids `S1` to `S50`; S49 and S50 belong to the loop policy.
 2. The semantic core: the business, the buyer, what the owner can prove, families, buyer prompts,
    words, categories and tags, and the contract a complete core must meet. Ids `K1` to `K34`.
 3. The platform: the secrets and the repository settings with what fails when each is absent, the
@@ -37,7 +37,7 @@ This part collects what only the owner can say about the new site, apart from th
 1. Phase 1 (S1 to S6) fixes scope and layout. S2 needs S1. Every later phase depends on it.
 2. Phase 2 (S7 to S19) is identity. S8 needs S3 and S7. S12 needs S11. S13 needs S11 and S12. S15 needs S7. S16 needs S3 and S7. S17 needs S4. S19 needs S7 and S18.
 3. Phase 3 (S20 to S29) is pages, hubs and navigation. S21 needs S20. S26 needs S22. S29 needs S15, S20 and S21.
-4. Phase 4 (S30 to S35) is the loop policy. It needs S2. S33 needs S30. S34 needs S32.
+4. Phase 4 (S30 to S35, S49 and S50) is the loop policy. It needs S2. S33 needs S30. S34 needs S32. S49 needs S2. S50 needs S30 and S33.
 5. Phase 5 (S36 to S40) is Search Console demand. It needs S1 and S7.
 6. Phase 6 (S41 to S46) is hosting. It needs S3. S43 needs S7, S8 and S41. S46 needs S43.
 7. Phase 7 (S47 and S48) is the performance bar. S47 needs S5. S48 needs S18.
@@ -435,7 +435,7 @@ The site shell and the harness are always adopted. They are the Astro app, the g
 
 ### Phase 4. Loop policy
 
-These values are the owner's risk appetite for a machine that writes and merges without a person. They are read from the `loop` section of `site/engine.config.json`. The locked row L62 in `docs/plan/reference/locked-decisions.md` and two tests state the shipped attempt cap, quarantine and spend ceiling, so S31 to S33 each need the edits named in their "If wrong" line.
+These values are the owner's risk appetite for a machine that writes and merges without a person. They are read from the `loop` section of `site/engine.config.json`. The locked row L62 in `docs/plan/reference/locked-decisions.md` and two tests state the shipped attempt cap, quarantine and spend ceiling, so S31 to S33 each need the edits named in their "If wrong" line. S49 and S50 sit here with the other writer-loop questions; they are numbered after S48 so that no earlier id moves.
 
 #### S30. Writer schedule
 
@@ -521,6 +521,34 @@ These values are the owner's risk appetite for a machine that writes and merges 
   **Lands in:** `loop.holdLabel`; the GitHub label of the same name (created in the repository settings part).
   **If wrong:** A label spelled differently from the config does nothing, and the watcher still merges after the quarantine, with no message [INFERENCE: no check that the label exists was found]. A comma prints `ENGINE config-invalid loop.holdLabel: must match pattern ^[^,\n]+$ in site/engine.config.json; The pull request label that stops the watcher from merging.` More than 50 characters prints `must have at most 50 characters` on the same field.
   **Needs:** S2
+
+#### S49. Correction rounds
+
+**Ask:** How many times may the writer be handed its own failed checks and asked for a corrected draft before the run stops?
+**Cannot be derived because:** It trades the cost of one more model call on every entry that needs it against the chance that an entry lands, and only the owner sets that spend.
+**Options:**
+
+- **A. 1 round:** at most two model calls for one entry, the first draft and one correction. Cost: the cheapest entry, but an entry whose draft still fails after one correction stops the run. On 2026-11-06 a scheduled run stopped this way, after one correction, on `paragraph-words, sentence-not-in-entry, fact-unbound`, and raised issue #98.
+- **B. 2 rounds:** at most three model calls for one entry. The shipped value. Cost: one more call, about one draft's tokens, on each entry that still fails after its first correction.
+- **C. 3 rounds:** at most four model calls for one entry, the maximum the schema allows. Cost: the most spend on an entry that keeps failing, and every extra round is paid before the run stops and a person hears of it.
+- **Recommended:** B, because the first draft is not a correction, so the budget costs at most three calls for one entry, and a second correction gives the writer one more try at a failure like the one that stopped the run of 2026-11-06, unless early runs show entries landing only on the first or second draft; then A. Take C only when stopped runs keep naming rules that a third correction would plausibly fix [INFERENCE: no measure of how many entries land on each round was found in the repository].
+  **Lands in:** `site/engine.config.json` key `loop.correctionRounds` (an integer, 1 to 3). `site/scripts/write-draft.mjs` reads it as `CORRECTION_ROUNDS`, and `site/scripts/write-run.mjs` and `site/scripts/repair-rewrite.mjs` use it. It is a different cap from `loop.attemptCap` (S31): the rounds are corrections inside one run before anything is committed, while the cap counts repair attempts on an article that already has a pull request [INFERENCE: the second half is read from the S31 text, not from the code].
+  **If wrong:** Too low, the run stops with `no draft of <slug> passed the writer's own checks after <n> corrections: <rules>`, spends its calls and, unless S50 forgives the stopped claim, ends the day. Too high, a failing model spends up to one more call per entry before the run stops, and the ceiling (S33) is checked only once before each write job, so it does not cap a run in flight. A value outside 1 to 3 prints `ENGINE config-invalid loop.correctionRounds: must be <= 3 in site/engine.config.json; <description>` or the same line with `must be >= 1` [INFERENCE: the wording of the `<= 3` form follows the `>=` messages the config test pins]. No test pins the shipped number: `site/scripts/write-draft.test.mjs` reads `CORRECTION_ROUNDS`.
+  **Needs:** S2
+
+#### S50. Stopped runs forgiven in a day
+
+**Ask:** When a run stops without writing, how many such stopped article claims in one UTC day should the loop forgive, so that the next catch-up run writes a different topic?
+**Cannot be derived because:** It trades a day that publishes against the spend of a model that keeps failing, and only the owner sets that risk.
+**Options:**
+
+- **A. 0, none forgiven:** the earlier behaviour. A claim that stopped without writing counts as an entry, so one stopped run ends the day. Cost: on 2026-11-06 the 13:00 UTC catch-up read `slot: 1 article claimed today for 1 slot passed, so nothing is owed` and the day published no article.
+- **B. 1 forgiven:** the shipped value. The first stopped claim of the day is stamped `abandoned` and leaves its slot owed, so the next catch-up cron writes a different topic. Cost: one more run of a failing model in a day, at most one more model call than the correction rounds (S49).
+- **C. 2 to 5 forgiven:** the schema allows up to 5. Cost: the more forgiven, the more days publish despite stops, and the more a model that fails every time can spend in one day before the day stops. The day holds up to the slots passed plus the forgiven number of article claims, each costing up to one more model call than the correction rounds [INFERENCE: read from `articlesClaimedOn` in `site/scripts/slot-standing.mjs`].
+- **Recommended:** B, because one retry lets a day recover from a single bad draft or topic, and the next stopped run still ends the day, so a failing model cannot spend all day, unless the monthly ceiling (S33) is tight; then A. A retry needs a catch-up delay left in the day (S30), because the forgiven slot is written only by a later run [INFERENCE].
+  **Lands in:** `site/engine.config.json` key `loop.stoppedRunRetriesPerDay` (an integer, 0 to 5). `site/scripts/schedule-workflow.mjs` reads it as `STOPPED_RUN_RETRIES_PER_DAY`, and `site/scripts/slot-due.mjs` and `site/scripts/pick-a-topic.mjs` use it through `site/scripts/slot-standing.mjs`. The stamp is made by `site/scripts/release-claim.mjs`; the skill `schedule-the-unattended-writer.md` describes it.
+  **If wrong:** Too low, a stopped run ends the day with the slot unwritten, and the due job prints `slot: <n> article claimed today for <m> slot passed, so nothing is owed`. Too high, the same failing model is called again for each forgiven claim before the day stops. A value outside 0 to 5 prints `ENGINE config-invalid loop.stoppedRunRetriesPerDay: must be <= 5 in site/engine.config.json; <description>` or the same line with `must be >= 0` [INFERENCE: the wording of the `<= 5` form follows the `>=` messages the config test pins]. When a claim is forgiven, the `slot-due.mjs` text adds `, with <n> stopped run forgiven so the slot is written again`.
+  **Needs:** S2, S30, S33
 
 ### Phase 5. Search Console demand
 
@@ -729,20 +757,22 @@ The numbers in `site/budgets.json` and `site/lighthouserc.cjs` were set by measu
 | 17  | `content.formats.article.author`             | S12      | Author slug.                                                                                              |
 | 18  | `content.formats.article.resourceCollection` | S21      | Resource collection.                                                                                      |
 | 19  | `loop.attemptCap`                            | S31      |                                                                                                           |
-| 20  | `loop.quarantineHours`                       | S32      |                                                                                                           |
-| 21  | `loop.monthlySpendCeilingUsd`                | S33      |                                                                                                           |
-| 22  | `loop.claimLifetimeDays`                     | S34      |                                                                                                           |
-| 23  | `loop.holdLabel`                             | S35      |                                                                                                           |
-| 24  | `loop.writeTimesUtc`                         | S30      |                                                                                                           |
-| 25  | `loop.catchUpAfterMinutes`                   | S30      |                                                                                                           |
-| 26  | `loop.categoryRotation`                      | S30      |                                                                                                           |
-| 27  | `demand.property`                            | S36      |                                                                                                           |
-| 28  | `demand.windowDays`                          | S37      |                                                                                                           |
-| 29  | `demand.dataLagDays`                         | S37      |                                                                                                           |
-| 30  | `demand.maxAgeDays`                          | S38      |                                                                                                           |
-| 31  | `demand.minImpressions`                      | S39      |                                                                                                           |
-| 32  | `demand.strengthenBand.min`                  | S40      |                                                                                                           |
-| 33  | `demand.strengthenBand.max`                  | S40      |                                                                                                           |
+| 20  | `loop.correctionRounds`                      | S49      |                                                                                                           |
+| 21  | `loop.stoppedRunRetriesPerDay`               | S50      |                                                                                                           |
+| 22  | `loop.quarantineHours`                       | S32      |                                                                                                           |
+| 23  | `loop.monthlySpendCeilingUsd`                | S33      |                                                                                                           |
+| 24  | `loop.claimLifetimeDays`                     | S34      |                                                                                                           |
+| 25  | `loop.holdLabel`                             | S35      |                                                                                                           |
+| 26  | `loop.writeTimesUtc`                         | S30      |                                                                                                           |
+| 27  | `loop.catchUpAfterMinutes`                   | S30      |                                                                                                           |
+| 28  | `loop.categoryRotation`                      | S30      |                                                                                                           |
+| 29  | `demand.property`                            | S36      |                                                                                                           |
+| 30  | `demand.windowDays`                          | S37      |                                                                                                           |
+| 31  | `demand.dataLagDays`                         | S37      |                                                                                                           |
+| 32  | `demand.maxAgeDays`                          | S38      |                                                                                                           |
+| 33  | `demand.minImpressions`                      | S39      |                                                                                                           |
+| 34  | `demand.strengthenBand.min`                  | S40      |                                                                                                           |
+| 35  | `demand.strengthenBand.max`                  | S40      |                                                                                                           |
 
 ## Part 2. The semantic core and the buyer prompts
 

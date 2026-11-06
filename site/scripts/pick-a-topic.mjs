@@ -14,7 +14,7 @@ import { CATEGORY_ROTATION, readPublishedPosts } from './topic-categories.mjs';
 import { casedForms, casingTexts } from './topic-casing.mjs';
 import { readPromptSources } from './topic-core.mjs';
 import { buildRun } from './topic-entries.mjs';
-import { CATCH_UP_AFTER_MINUTES, WRITE_TIMES_UTC } from './schedule-workflow.mjs';
+import { CATCH_UP_AFTER_MINUTES, STOPPED_RUN_RETRIES_PER_DAY, WRITE_TIMES_UTC } from './schedule-workflow.mjs';
 import { slotStanding } from './slot-standing.mjs';
 import { readConceptRegister, routeOf } from './topic-owners.mjs';
 import { proposalLines, proposeTopic, wantsProposal } from './topic-proposal.mjs';
@@ -219,7 +219,11 @@ export async function runCli(argv, io = {}) {
     fetch = globalThis.fetch,
     now = () => new Date(),
     rotation = CATEGORY_ROTATION,
-    schedule = { times: WRITE_TIMES_UTC, catchUpMinutes: CATCH_UP_AFTER_MINUTES },
+    schedule = {
+      times: WRITE_TIMES_UTC,
+      catchUpMinutes: CATCH_UP_AFTER_MINUTES,
+      forgivenPerDay: STOPPED_RUN_RETRIES_PER_DAY,
+    },
     select = selectTopic,
     build = buildRun,
   } = io;
