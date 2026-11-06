@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "slug": "agentic-automation-consultant-for-b2b",
+  "title": "Agentic automation consultant for B2B",
+  "format": "article",
+  "query": "agentic automation consultant for b2b",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "prompt": {
+    "number": 18,
+    "text": "agentic automation consultant for B2B"
+  },
+  "origin": "demand",
+  "catchUp": {
+    "slot": "03:17",
+    "lateMinutes": 460
+  },
+  "runId": "42206394607-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-06T10:57:52.308Z",
+  "expiresAt": "2026-11-20T10:57:52.308Z"
+}
