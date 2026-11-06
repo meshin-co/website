@@ -13,7 +13,6 @@ const RULES = [
   'untraceable-copy',
   'dead-copy',
   'stale-disposition',
-  'stale-conditional-declaration',
   'invalid-conditional-declaration',
   'disposition-target-missing',
 ];
@@ -49,7 +48,7 @@ const planted = {
 
 const recordFor = (rule, input = planted) => editorialRecords(input).find((record) => record.rule === rule);
 
-test('one planted case per kind yields exactly the seven rule ids', () => {
+test('one planted case per kind yields exactly the six rule ids', () => {
   assert.deepEqual(
     editorialRecords(planted).map((record) => record.rule),
     RULES
@@ -137,13 +136,8 @@ test('a disposition target is normalised: a route stays, site/ stays, ./ is drop
   assert.deepEqual(subjectOf('./site/src/data/glossary/x.md'), ['site/src/data/glossary/x.md']);
 });
 
-test('stale-conditional-declaration points at the declaration file and carries the text', () => {
-  assert.deepEqual(recordFor('stale-conditional-declaration'), {
-    rule: 'stale-conditional-declaration',
-    subjects: [CONDITIONAL_FILE],
-    detail: 'declared conditional but the build ships it',
-    excerpt: 'Declared but shipped',
-  });
+test('a declaration whose text the build now ships is no record at all, because the string ships in some states by definition', () => {
+  assert.equal(recordFor('stale-conditional-declaration'), undefined);
 });
 
 test('invalid-conditional-declaration points at the declaration file and carries the text', () => {

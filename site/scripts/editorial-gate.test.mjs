@@ -124,6 +124,31 @@ const withoutMarker = () => {
   return env;
 };
 
+test('a state-conditional declaration whose text the build now ships is reported, not gated, because the string ships in some states by definition', () => {
+  const { root, site } = fixtureRoot([{ target: '/some-route-with-no-rows', status: 'verified' }], {
+    '../conditional-copy.json': [{ text: 'Next page', reason: 'only ships once the corpus paginates' }],
+  });
+
+  try {
+    let exitCode = 0;
+    let output = '';
+    try {
+      output = execFileSync('node', [SCRIPT, site, 'dist'], { encoding: 'utf8' });
+    } catch (err) {
+      exitCode = err.status;
+      output = err.stdout ?? '';
+    }
+    assert.equal(exitCode, 0, output);
+    assert.match(output, /1 that the build now ships: reported, not gated/);
+
+    const inventory = JSON.parse(readFileSync(join(root, 'audits/phase-4.7/inventory.json'), 'utf8'));
+    assert.equal(inventory.counts.shipping, 1);
+    assert.equal(inventory.counts.stale, 0);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
 test('the dispositions are read from a flat file, from a file under its month and from one deeper, and all three are counted', () => {
   const { root } = atAnyDepth();
 

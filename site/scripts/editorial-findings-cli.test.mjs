@@ -21,7 +21,6 @@ const RULES = [
   'untraceable-copy',
   'dead-copy',
   'stale-disposition',
-  'stale-conditional-declaration',
   'invalid-conditional-declaration',
   'disposition-target-missing',
 ];
@@ -109,10 +108,6 @@ test('the CLI writes one record per kind and every rule id is known', () =>
     assert.deepEqual(
       of('stale-disposition').map((finding) => finding.subjects),
       [['site/src/data/glossary/shipped.md']]
-    );
-    assert.deepEqual(
-      of('stale-conditional-declaration').map((finding) => finding.subjects),
-      [[CONDITIONAL_FILE]]
     );
     assert.deepEqual(
       of('invalid-conditional-declaration').map((finding) => finding.subjects),

@@ -28,7 +28,7 @@ export function editorialRecords({
   conditional = {},
   missingTarget = [],
 }) {
-  const { stale: staleDeclarations = [], invalid = [] } = conditional;
+  const { invalid = [] } = conditional;
   return [
     ...rows
       .filter(isPending)
@@ -38,14 +38,6 @@ export function editorialRecords({
     ),
     ...dead.map((entry) => record('dead-copy', copySubjects(entry), 'source copy no page ships', entry.text)),
     ...stale.map((entry) => record('stale-disposition', [repoPath(entry.target)], entry.why, entry.location)),
-    ...staleDeclarations.map((entry) =>
-      record(
-        'stale-conditional-declaration',
-        [CONDITIONAL_FILE],
-        'declared conditional but the build ships it',
-        entry.text
-      )
-    ),
     ...invalid.map((entry) =>
       record(
         'invalid-conditional-declaration',

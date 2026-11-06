@@ -14,9 +14,6 @@ export const EDITORIAL_KINDS = tableOf({
   'stale-disposition': restate(
     'The digest of a generated disposition no longer matches the text just written, and restating it is deterministic and never the seal.'
   ),
-  'stale-conditional-declaration': refuse(
-    'The conditional-copy.json file is owner data, and only the owner can say whether a declaration still holds.'
-  ),
   'invalid-conditional-declaration': refuse(
     'A conditional declaration with no reason is owner data that only the owner can complete.'
   ),

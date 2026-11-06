@@ -18,18 +18,18 @@ test('the table covers the five gates that upload findings, and each one is an n
   for (const gate of GATES) assert.ok(SCRIPTS[gate], `package.json has no script ${gate}`);
 });
 
-test('the table holds 84 kinds: 36 rewrites, 2 restates and 46 refusals', () => {
-  assert.equal(listRows().length, 84);
+test('the table holds 83 kinds: 36 rewrites, 2 restates and 45 refusals', () => {
+  assert.equal(listRows().length, 83);
   assert.equal(countBy('rewrite'), 36);
   assert.equal(countBy('restate'), 2);
-  assert.equal(countBy(null), 46);
+  assert.equal(countBy(null), 45);
 });
 
 test('each gate holds the number of kinds its gate can emit', () => {
   const sizes = Object.fromEntries(GATES.map((gate) => [gate, Object.keys(RULES[gate]).length]));
   assert.deepEqual(sizes, {
     'gate:content': 34,
-    'gate:editorial': 7,
+    'gate:editorial': 6,
     'gate:human': 17,
     'gate:machine': 24,
     'gate:registers': 2,
