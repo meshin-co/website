@@ -1,0 +1,215 @@
+{
+  "schema": 1,
+  "slug": "fractional-caio-pricing",
+  "runId": "42263444959-1",
+  "generatedAt": "2026-11-06T17:41:31.723Z",
+  "claim": {
+    "title": "Fractional CAIO pricing",
+    "query": "fractional caio pricing",
+    "prompt": {
+      "number": 26,
+      "text": "fractional CAIO pricing"
+    },
+    "origin": "demand"
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-06",
+      "windowStart": "2026-08-06",
+      "windowEnd": "2026-11-04",
+      "table": "Buyer prompts"
+    },
+    "row": {
+      "#": "26",
+      "Prompt": "fractional CAIO pricing",
+      "Must win": "`/pricing`",
+      "Impressions": "unproven",
+      "Position": "-",
+      "Carried by": "-"
+    }
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/fractional-caio-pricing",
+    "path": "site/src/data/post/fractional-caio-pricing.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_0c1aba00bc06d0f0016aee10e19df887d1998abd76fc304cd5",
+  "published": {
+    "callIndex": 0
+  },
+  "calls": [
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0c1aba00bc06d0f0016aee10e19df887d1998abd76fc304cd5",
+      "requestDigest": "710393fb1fa82f04b20071dfaf17c7021580ac648d549744ba11c64a736fb6bb",
+      "tokens": {
+        "input": 10373,
+        "output": 3301
+      },
+      "costUsd": 0.026878,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 10373,
+      "output": 3301
+    },
+    "costUsd": 0.026878
+  },
+  "ledger": "audits/autowriter/2026/11/fractional-caio-pricing.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "23e15ff7238ba87e7b63bc68063896162ac2f6059e8db7224dc2dd50f69ece99",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "42702fd9e59dee73ae64fba75624c834724b5b4e7598ab0adc1b48c1bfc9633c"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "67c26028e794a494b127f1ecdc8f116cbec1a8b7c64f199844770a998264767d"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "06fe1a1a0baa9b35048ce8b9010c690a2bef59f89f3259d2f524c4c7b97aa0eb"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "3391cfbba421ae3e122272b5c2215633533bc3bed03a747ca25c6cb5e03d201e"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "6597520f44608b3acadb964b1c4c2d53b4fcc5120d9f7e9e6e51dde1ff47dcff"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "050176e5e1de97d06d56a2017983996e03d4b50370509dc36c40c6ea1968c3eb"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "70ec4173e205e974cbaafaf270f1a24aa674c0aeb29feb653f7953f9b9b656b8"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "f9e37c623c6cd481fc79489dba4061b4920647cc9a7429a1d256a3eb9e5fbb97"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "391e28169b93abd37778683253ee1224fa88449c8e136b6fb2fc1c1b639c8259"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "df07e5ca1fced82881ab08e3849da19ec0de824e4be87b2719f174f0f73f33c2"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "743ea5803eac7bbe3409a50771b62a6cc722b55d",
+    "fingerprint": "e407934dd2b631daaf0ec781f4bbc4e6fc3fc885b26257c636b087ec84310599"
+  },
+  "claimTable": [],
+  "band": {
+    "measuredOn": "2026-11-02",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 127,
+      "median": 15,
+      "shareBelowThreshold": 0.2205,
+      "shareJustBelow": 0.2048,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/fractional-caio-pricing.json",
+    "audits/autowriter/claims/2026/11/fractional-caio-pricing.json",
+    "audits/autowriter/generations/2026/11/fractional-caio-pricing.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-build-vs-buy-ai-3-year-tco.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-fractional-caio-pricing.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/fractional-caio-pricing.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}
