@@ -23,3 +23,18 @@ test('main keeps its own run, because publishing reads the last green run on mai
 
   assert.ok(on.push.branches.includes('main'));
 });
+
+test('every job carries a timeout, because a hung step reads exactly like a slow one and blocks the merge for hours', () => {
+  const jobs = Object.entries(workflow().jobs);
+  const uncapped = jobs.filter(([, job]) => typeof job['timeout-minutes'] !== 'number');
+
+  assert.deepEqual(
+    uncapped.map(([name]) => name),
+    [],
+    'a job with no timeout-minutes runs until the 6 hour default'
+  );
+  assert.ok(
+    jobs.every(([, job]) => job['timeout-minutes'] <= 20),
+    'the longest job in a green run takes about 5 minutes, so 20 is already generous'
+  );
+});
