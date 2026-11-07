@@ -110,10 +110,10 @@ Bytes of the files this change touches, from `dist/` of the build of 2026-11-04 
 Before, a year of two posts a day made `dist/llms/post.txt` about 10.9 MB, `dist/llms-full.txt` 11.0 MB, which
 it never reached because it fell back to pointers at 2,000,000 bytes on day 59, and `dist/blog/rss.xml` 11.1
 MB. The year row is the real generators run over 730 posts that repeat the ten measured sizes; the
-feed rows are the window times the largest measured item. `npm run measure:llms` reproduces the table
+feed rows are the window times the largest measured item. `measure:llms` reproduces the table
 of largest and mean entries from a build.
 
 ## Calibration
 
 The cap is a measurement of ten posts. The Calibration Gate in the tasks asks for it to be measured
-again with `npm run measure:llms` once the writer has produced a month of entries.
+again with `measure:llms` once the writer has produced a month of entries.

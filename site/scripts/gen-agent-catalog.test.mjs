@@ -199,7 +199,7 @@ test('the llms-full.txt entry calls the file an index of the collection files th
   });
 });
 
-test('each collection entry keeps its full body text claim and says a collection over its entry cap is an index of numbered shard files', async () => {
+test('each collection entry keeps its full body text claim and says a collection that does not fit in one file under /llms/ is an index of numbered shard files', async () => {
   await withDist(
     LLMS_COLLECTIONS.map(({ file }) => file),
     async (dist) => {
@@ -209,7 +209,10 @@ test('each collection entry keeps its full body text claim and says a collection
       for (const { file, title } of LLMS_COLLECTIONS) {
         const { description } = entryAt(catalog, file);
         assert.ok(description.startsWith(`Full body text of every live entry in ${title.toLowerCase()}.`), description);
-        assert.ok(description.includes('over its entry cap is an index of numbered shard files'), description);
+        assert.ok(
+          description.includes('that does not fit in one file under /llms/ is an index of numbered shard files'),
+          description
+        );
       }
     }
   );

@@ -23,10 +23,8 @@ lists disagree, and `scripts/jsonld-gate.mjs` fails closed on an unknown route p
   builder in `src/pages/search-entries.json.ts`. Its documents join the one index, so `scripts/search-budget.mjs`
   needs no change; `npm run gate:search` fails when the kind takes the index over a limit.
 - An llms section: the per-collection route `src/pages/llms/[collection].txt.ts` and the
-  section list in `site/src/utils/llms-collections.mjs`. Until its largest entry is measured the
-  collection takes the largest measured entry of any collection, a conservative entry cap. After the
-  first build run `npm run measure:llms` and add the collection's largest entry to
-  `LARGEST_MEASURED_ENTRY_BYTES`; never type the cap.
+  section list in `site/src/utils/llms-collections.mjs`. Nothing is measured or recorded for it: the build fills each
+  shard with as many entries as fit `LLMS_FILE_MAX_BYTES` and `npm run gate:machine` fails any built file over it.
 - JSON-LD node builders in `site/src/utils/jsonld.mjs`, with an itemListElement list on the
   hub.
 - Internal-only collections (author) go into the NON_PUBLIC set in `scripts/machine.mjs`

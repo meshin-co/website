@@ -87,7 +87,7 @@ const COLLECTION_ENTRIES = LLMS_COLLECTIONS.map(({ name, title, file }) => ({
   name,
   displayName: `Full text: ${title}`,
   type: TEXT_MEDIA_TYPE,
-  description: `Full body text of every live entry in ${title.toLowerCase()}. A collection over its entry cap is an index of numbered shard files.`,
+  description: `Full body text of every live entry in ${title.toLowerCase()}. A collection that does not fit in one file under /llms/ is an index of numbered shard files.`,
 }));
 
 const MACHINE_ENTRY_POINTS = [...SINGLE_FILE_ENTRIES, ...COLLECTION_ENTRIES];

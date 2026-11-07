@@ -1,14 +1,13 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { LLMS_COLLECTIONS, LLMS_SHARD_MAX_ENTRIES, llmsCollectionFiles } from '../src/utils/llms-collections.mjs';
+import { LLMS_COLLECTIONS, LLMS_FILE_MAX_BYTES, llmsCollectionFiles } from '../src/utils/llms-collections.mjs';
 import { llmsCollectionText, llmsCorpusGaps } from './llms-corpus.mjs';
 
-const collectionOf = (name) => LLMS_COLLECTIONS.find((collection) => collection.name === name);
-const POST = collectionOf('post');
-const GLOSSARY = collectionOf('glossary');
-const CAP = LLMS_SHARD_MAX_ENTRIES.post;
-const SHARDED = 3 * CAP + 1;
+const POST = LLMS_COLLECTIONS.find((collection) => collection.name === 'post');
+const PER_SHARD = 3;
+const SHARDED = 3 * PER_SHARD + 1;
+const HEAVY_BODY = 'x'.repeat(Math.floor(LLMS_FILE_MAX_BYTES / (PER_SHARD + 1)));
 
 const idOf = (index) => `entry-${String(index).padStart(4, '0')}`;
 const urlOf = (collection, index) => `https://meshin.co${collection.base}/${idOf(index)}`;
@@ -25,31 +24,38 @@ const entriesOf = (collection, count) =>
     title: idOf(index),
     url: urlOf(collection, index),
     summary: 'Summary.',
-    body: 'Body.',
+    body: HEAVY_BODY,
     published: new Date(Date.UTC(2026, 0, 1, 0, 0, index)).toISOString(),
   }));
 
 const pointerText = (collection, count) =>
   `# meshin.co\n\n- [${collection.title}](https://meshin.co${collection.file}): ${count} entries, full body text of each.\n`;
 
-const corpusOf = (count, { collection = POST, llmsTxtCount = count, llmsFullCount = count } = {}) => ({
-  llmsTxt: pointerText(collection, llmsTxtCount),
-  llmsFullTxt: pointerText(collection, llmsFullCount),
+const corpusOf = (count, { llmsTxtCount = count, llmsFullCount = count } = {}) => ({
+  llmsTxt: pointerText(POST, llmsTxtCount),
+  llmsFullTxt: pointerText(POST, llmsFullCount),
   files: Object.fromEntries(
     llmsCollectionFiles({
       site: 'meshin.co',
       origin: 'https://meshin.co',
-      name: collection.name,
-      title: collection.title,
-      entries: entriesOf(collection, count),
+      name: POST.name,
+      title: POST.title,
+      entries: entriesOf(POST, count),
     }).map(({ param, text }) => [param, text])
   ),
 });
 
-const gaps = (corpus, collection = POST) => llmsCorpusGaps({ ...corpus, collections: [collection] });
+const gaps = (corpus) => llmsCorpusGaps({ ...corpus, collections: [POST] });
+
+test('the fixtures are packed by the bytes they render to: three heavy entries fill one file and a fourth starts a second shard', () => {
+  assert.deepEqual(Object.keys(corpusOf(PER_SHARD).files), ['post']);
+  assert.deepEqual(Object.keys(corpusOf(PER_SHARD + 1).files), ['post', 'post-1', 'post-2']);
+  assert.deepEqual(Object.keys(corpusOf(SHARDED).files), ['post', 'post-1', 'post-2', 'post-3', 'post-4']);
+});
 
 test('a single file collection and a sharded collection are both clean', () => {
-  for (const count of [CAP, CAP + 1, SHARDED]) assert.deepEqual(gaps(corpusOf(count)), [], `${count} entries`);
+  for (const count of [PER_SHARD, PER_SHARD + 1, SHARDED])
+    assert.deepEqual(gaps(corpusOf(count)), [], `${count} entries`);
 });
 
 test('the llms.txt count must equal the entries shipped, single file or sharded', () => {
@@ -76,7 +82,7 @@ test('llms.txt and llms-full.txt are each held to the count, so one drifting doe
 });
 
 test('a collection with files but no count line in llms.txt is reported', () => {
-  const corpus = corpusOf(CAP);
+  const corpus = corpusOf(PER_SHARD);
   assert.deepEqual(gaps({ ...corpus, llmsTxt: '# meshin.co\n' }), ['llms.txt has no count line for post']);
 });
 
@@ -126,17 +132,10 @@ test('a shard the index does not list, or lists without shipping, is reported', 
   assert.ok(gaps(missing).includes('the post index lists /llms/post-3.txt, which did not ship'));
 });
 
-test('a shard over the entry cap is reported', () => {
+test('a shard that holds more entries than the index counts is reported', () => {
   const corpus = corpusOf(SHARDED);
   corpus.files['post-1'] += `\n${urlLine('https://meshin.co/blog/extra')}\n`;
-  assert.ok(gaps(corpus).includes('/llms/post-1.txt holds 4 entries, over the 3 entry cap'));
-});
-
-test('the cap a shard is held to is the cap of its own collection', () => {
-  const corpus = corpusOf(34, { collection: GLOSSARY });
-  assert.deepEqual(gaps(corpus, GLOSSARY), []);
-  corpus.files['glossary-1'] += `\n${urlLine('https://meshin.co/glossary/extra')}\n`;
-  assert.ok(gaps(corpus, GLOSSARY).includes('/llms/glossary-1.txt holds 34 entries, over the 33 entry cap'));
+  assert.ok(gaps(corpus).includes('/llms/post-1.txt holds 4 entries, the index says 3 (range 1-3)'));
 });
 
 test('an index that lists an entry itself is reported, once for each entry it lists', () => {
@@ -153,7 +152,7 @@ test('a collection with neither files nor a count line is skipped, it is an empt
 });
 
 test('a shard shipped beside a single-file collection is reported, there is no index to list it', () => {
-  const corpus = corpusOf(CAP);
+  const corpus = corpusOf(PER_SHARD);
   corpus.files['post-1'] = '# meshin.co\n';
   assert.ok(gaps(corpus).includes('/llms/post-1.txt ships but the post index does not list it'));
 });
@@ -186,7 +185,7 @@ test('a shard the index names but the build did not ship adds nothing and is not
 });
 
 test('a single file collection is its own text, and a collection with no file has none', () => {
-  const { files } = corpusOf(CAP);
+  const { files } = corpusOf(PER_SHARD);
   assert.equal(llmsCollectionText(files, 'post'), files.post);
   assert.equal(llmsCollectionText({}, 'post'), undefined);
 });

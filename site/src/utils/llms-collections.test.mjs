@@ -8,16 +8,13 @@ import {
   llmsFullTextPointers,
   llmsCollectionFiles,
   llmsCollectionPointers,
-  LLMS_SHARD_MAX_ENTRIES,
-  LLMS_SHARD_FRAME_BYTES,
   LLMS_FILE_MAX_BYTES,
   LLMS_FULL_MAX_BYTES,
-  LARGEST_MEASURED_ENTRY_BYTES,
   orderEntries,
   toLlmsEntry,
 } from './llms-collections.mjs';
 import { FEED_WINDOW, MERGED_FEED_WINDOW } from './feeds.mjs';
-import { entryCount, renderLlmsCollection } from './machine-text.mjs';
+import { entryCount, renderLlmsCollection, renderLlmsShard } from './machine-text.mjs';
 
 test('the llms surface covers exactly the six public collections', () => {
   assert.deepEqual(
@@ -168,13 +165,11 @@ test('llmsCollectionPointers gives the line llms.txt carries for each non-empty 
   assert.deepEqual(llmsFullTextPointers(counts).slice(1), pointers);
 });
 
-const stamp = (index) => new Date(Date.UTC(2026, 0, 1, 0, 0, index)).toISOString();
-
 const twoADay = (index) => new Date(Date.UTC(2026, 0, 1 + Math.floor(index / 2))).toISOString();
 
 const POST = LLMS_COLLECTIONS.find((collection) => collection.name === 'post');
 
-const makeEntry = (index, { base = '/blog', published = stamp, body = `Body ${index}.` } = {}) => {
+const makeEntry = (index, { base, body }) => {
   const id = `entry-${String(index).padStart(4, '0')}`;
   return {
     id,
@@ -182,64 +177,76 @@ const makeEntry = (index, { base = '/blog', published = stamp, body = `Body ${in
     url: `https://meshin.co${base}/${id}`,
     summary: `Summary ${index}.`,
     body,
-    published: published(index),
-    updated: published(index),
+    published: twoADay(index),
+    updated: twoADay(index),
     draft: false,
     noindex: false,
   };
 };
 
-const makeEntries = (count, options) => Array.from({ length: count }, (_, index) => makeEntry(index, options));
-
-const filesOf = (entries, { collection = POST, max } = {}) =>
+const filesOf = (entries, { collection = POST, maxBytes } = {}) =>
   llmsCollectionFiles({
     site: 'meshin.co',
     origin: 'https://meshin.co',
     name: collection.name,
     title: collection.title,
     entries,
-    max,
+    maxBytes,
   });
 const entryUrlsIn = (text) => [...text.matchAll(/^\[(https:\/\/meshin\.co\/[^\]]+)\]\(\1\)$/gm)].map(([, url]) => url);
 const textOf = (files, param) => files.find((file) => file.param === param)?.text;
 const bytesOf = (text) => Buffer.byteLength(text, 'utf8');
-
-const tiedEntries = () => makeEntries(4 * LLMS_SHARD_MAX_ENTRIES.post + 1, { published: twoADay });
-
-const boundaryCases = () =>
-  LLMS_COLLECTIONS.flatMap((collection) => {
-    const cap = LLMS_SHARD_MAX_ENTRIES[collection.name];
-    return [cap, cap + 1, 2 * cap, 2 * cap + 1].map((count) => ({
-      collection,
-      cap,
-      count,
-      label: `${collection.name} with ${count} entries`,
-      entries: makeEntries(count, { base: collection.base }),
-    }));
-  });
-const casesAtCap = () => boundaryCases().filter(({ cap, count }) => count === cap);
-const casesAboveCap = () => boundaryCases().filter(({ cap, count }) => count > cap);
-
-const rangesOf = (count, cap) =>
-  Array.from({ length: Math.ceil(count / cap) }, (_, index) => ({
-    shard: index + 1,
-    from: index * cap + 1,
-    to: Math.min((index + 1) * cap, count),
-  }));
-
-const largestEntryBytes = ({ name }) =>
-  LARGEST_MEASURED_ENTRY_BYTES[name] ?? Math.max(...Object.values(LARGEST_MEASURED_ENTRY_BYTES));
 
 const entryAndSeparatorBytes = (collection, entry) =>
   bytesOf(renderLlmsCollection({ site: 'meshin.co', title: collection.title, entries: [entry, entry] })) -
   bytesOf(renderLlmsCollection({ site: 'meshin.co', title: collection.title, entries: [entry] }));
 
 const entryOfBytes = (collection, index, bytes) => {
-  const probe = makeEntry(index, { base: collection.base, published: twoADay, body: 'x' });
+  const probe = makeEntry(index, { base: collection.base, body: 'x' });
   const entry = { ...probe, body: 'x'.repeat(1 + bytes - entryAndSeparatorBytes(collection, probe)) };
   assert.equal(entryAndSeparatorBytes(collection, entry), bytes);
   return entry;
 };
+
+const HEAVY_BYTES = 30_000;
+
+const MEASURED_POST_BYTES = [8791, 10205, 7128, 8270, 26578, 16523, 28454, 20951, 10073, 10819, 11626, 10901, 9874];
+
+const measuredPosts = (count) =>
+  Array.from({ length: count }, (_, index) =>
+    entryOfBytes(POST, index, MEASURED_POST_BYTES[index % MEASURED_POST_BYTES.length])
+  );
+
+const shardUrl = (position) => `https://meshin.co/llms/post-${position}.txt`;
+
+const renderedShard = (entries, { from, to, nextUrl }) =>
+  renderLlmsShard({
+    site: 'meshin.co',
+    title: POST.title,
+    entries: entries.slice(from - 1, to),
+    from,
+    to,
+    nextUrl,
+  });
+
+const SHARDED_COUNT = 7;
+const SHARD_RANGES = [
+  { shard: 1, from: 1, to: 3 },
+  { shard: 2, from: 4, to: 6 },
+  { shard: 3, from: 7, to: 7 },
+];
+
+const heavyEntries = (collection, count) =>
+  Array.from({ length: count }, (_, index) => entryOfBytes(collection, index, HEAVY_BYTES));
+
+const tiedEntries = () => heavyEntries(POST, 9);
+
+const shardedCases = () =>
+  LLMS_COLLECTIONS.map((collection) => ({
+    collection,
+    label: `${collection.name} with ${SHARDED_COUNT} entries of ${HEAVY_BYTES} bytes`,
+    entries: heavyEntries(collection, SHARDED_COUNT),
+  }));
 
 test('orderEntries sorts by publish date then id, a total order that ignores input order', () => {
   const entries = [
@@ -258,53 +265,44 @@ test('orderEntries sorts by publish date then id, a total order that ignores inp
   );
 });
 
-test('the entry caps are service 48, post 3, resource 7, glossary 33, faq 118 and case 3', () => {
-  assert.deepEqual(LLMS_SHARD_MAX_ENTRIES, { service: 48, post: 3, resource: 7, glossary: 33, faq: 118, case: 3 });
-});
-
-test("every cap keeps its collection's largest measured entry inside the file budget", () => {
-  for (const collection of LLMS_COLLECTIONS) {
-    const cap = LLMS_SHARD_MAX_ENTRIES[collection.name];
-    const largest = largestEntryBytes(collection);
-    assert.ok(cap >= 1, `${collection.name} holds at least one entry`);
-    assert.ok(
-      cap * largest + LLMS_SHARD_FRAME_BYTES <= LLMS_FILE_MAX_BYTES,
-      `${collection.name}: ${cap} entries of ${largest} bytes`
-    );
-  }
-});
-
-test('the byte guards are 100000 for a file under /llms/, 1024 for its frame and 4096 for llms-full.txt', () => {
+test('the byte guards are 100000 for a file under /llms/ and 4096 for llms-full.txt', () => {
   assert.equal(LLMS_FILE_MAX_BYTES, 100_000);
-  assert.equal(LLMS_SHARD_FRAME_BYTES, 1_024);
   assert.equal(LLMS_FULL_MAX_BYTES, 4_096);
 });
 
-test('a collection at exactly its cap is one file with no index', () => {
-  for (const { collection, count, label, entries } of casesAtCap()) {
-    const files = filesOf(entries, { collection });
+test('a collection that fits the file budget is one file with no index, whichever collection it is', () => {
+  for (const collection of LLMS_COLLECTIONS) {
+    const files = filesOf(heavyEntries(collection, 3), { collection });
     assert.deepEqual(
       files.map((file) => file.param),
       [collection.name],
-      label
+      collection.name
     );
-    assert.equal(entryUrlsIn(files[0].text).length, count, label);
+    assert.equal(entryUrlsIn(files[0].text).length, 3, collection.name);
   }
 });
 
-test('one entry over the cap makes an index and two shards named post-1 and post-2', () => {
-  const files = filesOf(makeEntries(4));
+test('a collection whose text is exactly the budget stays one file, and one byte less makes an index and two shards', () => {
+  const entries = heavyEntries(POST, 3);
+  const whole = bytesOf(renderLlmsCollection({ site: 'meshin.co', title: POST.title, entries }));
+  assert.deepEqual(
+    filesOf(entries, { maxBytes: whole }).map((file) => file.param),
+    ['post']
+  );
+  const files = filesOf(entries, { maxBytes: whole - 1 });
   assert.deepEqual(
     files.map((file) => file.param),
     ['post', 'post-1', 'post-2']
   );
-  assert.equal(entryUrlsIn(textOf(files, 'post-1')).length, 3);
-  assert.equal(entryUrlsIn(textOf(files, 'post-2')).length, 1);
+  assert.deepEqual(
+    ['post-1', 'post-2'].map((param) => entryUrlsIn(textOf(files, param)).length),
+    [2, 1]
+  );
 });
 
-test('above its cap every collection is an index plus ceil(count / cap) shards', () => {
-  for (const { collection, cap, count, label, entries } of casesAboveCap()) {
-    const shards = rangesOf(count, cap).map(({ shard }) => `${collection.name}-${shard}`);
+test('above the file budget every collection is an index plus the shards the budget needs', () => {
+  for (const { collection, label, entries } of shardedCases()) {
+    const shards = SHARD_RANGES.map(({ shard }) => `${collection.name}-${shard}`);
     assert.deepEqual(
       filesOf(entries, { collection }).map((file) => file.param),
       [collection.name, ...shards],
@@ -314,10 +312,10 @@ test('above its cap every collection is an index plus ceil(count / cap) shards',
 });
 
 test('the index lists every shard with its range and count and carries no entry', () => {
-  for (const { collection, cap, count, label, entries } of casesAboveCap()) {
+  for (const { collection, label, entries } of shardedCases()) {
     const index = textOf(filesOf(entries, { collection }), collection.name);
     assert.deepEqual(entryUrlsIn(index), [], label);
-    for (const { shard, from, to } of rangesOf(count, cap)) {
+    for (const { shard, from, to } of SHARD_RANGES) {
       const line = `- [Entries ${from}-${to}](https://meshin.co/llms/${collection.name}-${shard}.txt): ${entryCount(to - from + 1)}\n`;
       assert.ok(index.includes(line), `${label}: shard ${shard}`);
     }
@@ -325,7 +323,7 @@ test('the index lists every shard with its range and count and carries no entry'
 });
 
 test('walking next links from shard 1 reaches every entry exactly once, whatever the size', () => {
-  for (const { collection, count, label, entries } of casesAboveCap()) {
+  for (const { collection, label, entries } of shardedCases()) {
     const files = filesOf(entries, { collection });
     const seen = [];
     let param = `${collection.name}-1`;
@@ -336,8 +334,8 @@ test('walking next links from shard 1 reaches every entry exactly once, whatever
       assert.equal(next === undefined, /^This is the last part\.$/m.test(text), `${label}/${param} ends one way`);
       param = next;
     }
-    assert.equal(seen.length, count, `${label}: entries reached`);
-    assert.equal(new Set(seen).size, count, `${label}: entries are all distinct`);
+    assert.equal(seen.length, SHARDED_COUNT, `${label}: entries reached`);
+    assert.equal(new Set(seen).size, SHARDED_COUNT, `${label}: entries are all distinct`);
     assert.deepEqual(
       seen,
       orderEntries(entries).map((entry) => entry.url),
@@ -346,24 +344,23 @@ test('walking next links from shard 1 reaches every entry exactly once, whatever
   }
 });
 
-test('each shard declares the range it holds and none holds more than its cap', () => {
-  for (const { collection, cap, count, label, entries } of casesAboveCap()) {
+test('each shard declares the range it holds and stays within the file budget', () => {
+  for (const { collection, label, entries } of shardedCases()) {
     const files = filesOf(entries, { collection });
-    for (const { shard, from, to } of rangesOf(count, cap)) {
+    for (const { shard, from, to } of SHARD_RANGES) {
       const text = textOf(files, `${collection.name}-${shard}`);
-      const held = entryUrlsIn(text).length;
       assert.ok(
         text.includes(`## ${collection.title}, entries ${from}-${to}\n`),
         `${label}: shard ${shard} says ${from}-${to}`
       );
-      assert.equal(held, to - from + 1, `${label}: shard ${shard} holds its range`);
-      assert.ok(held <= cap, `${label}: shard ${shard} is within the cap of ${cap}`);
+      assert.equal(entryUrlsIn(text).length, to - from + 1, `${label}: shard ${shard} holds its range`);
+      assert.ok(bytesOf(text) <= LLMS_FILE_MAX_BYTES, `${label}: shard ${shard} is within the file budget`);
     }
   }
 });
 
-test('a draft or noindex entry never counts toward the cap', () => {
-  const entries = makeEntries(LLMS_SHARD_MAX_ENTRIES.post + 2);
+test('a draft or noindex entry never counts toward the budget', () => {
+  const entries = heavyEntries(POST, 4);
   entries[0].draft = true;
   entries[1].noindex = true;
   assert.deepEqual(
@@ -372,8 +369,9 @@ test('a draft or noindex entry never counts toward the cap', () => {
   );
 });
 
-test('an explicit max replaces the cap of the collection', () => {
-  const files = filesOf(makeEntries(5), { max: 2 });
+test('an explicit maxBytes replaces the file budget', () => {
+  const entries = Array.from({ length: 5 }, (_, index) => entryOfBytes(POST, index, 1_000));
+  const files = filesOf(entries, { maxBytes: 2_500 });
   assert.deepEqual(
     files.map((file) => file.param),
     ['post', 'post-1', 'post-2', 'post-3']
@@ -384,44 +382,140 @@ test('an explicit max replaces the cap of the collection', () => {
   );
 });
 
-test('every collection at 3 caps and one entry of its largest measured size stays inside the file budget in every file', () => {
-  for (const collection of LLMS_COLLECTIONS) {
-    const cap = LLMS_SHARD_MAX_ENTRIES[collection.name];
-    const largest = largestEntryBytes(collection);
-    const entries = Array.from({ length: 3 * cap + 1 }, (_, index) => entryOfBytes(collection, index, largest));
-    const sizes = filesOf(entries, { collection }).map((file) => bytesOf(file.text));
+test('an entry larger than the whole file budget gets a shard of its own and is never split', () => {
+  const small = (index) => entryOfBytes(POST, index, 1_000);
+  const huge = entryOfBytes(POST, 1, LLMS_FILE_MAX_BYTES + 20_000);
+  const entries = [small(0), huge, small(2), small(3)];
+  const files = filesOf(entries);
+  assert.deepEqual(
+    files.map((file) => file.param),
+    ['post', 'post-1', 'post-2', 'post-3']
+  );
+  const [first, hugeShard, last] = ['post-1', 'post-2', 'post-3'].map((param) => textOf(files, param));
+  assert.deepEqual(entryUrlsIn(first), [entries[0].url]);
+  assert.deepEqual(entryUrlsIn(hugeShard), [entries[1].url]);
+  assert.deepEqual(entryUrlsIn(last), [entries[2].url, entries[3].url]);
+  assert.ok(bytesOf(hugeShard) > LLMS_FILE_MAX_BYTES, `the shard of the huge entry is ${bytesOf(hugeShard)} bytes`);
+  assert.ok(bytesOf(first) <= LLMS_FILE_MAX_BYTES);
+  assert.ok(bytesOf(last) <= LLMS_FILE_MAX_BYTES);
+  assert.ok(hugeShard.includes(entries[1].body), 'the huge entry is whole in its shard');
+  const index = textOf(files, 'post');
+  for (const [shard, range] of [
+    [1, '1-1'],
+    [2, '2-2'],
+    [3, '3-4'],
+  ]) {
     assert.ok(
-      Math.max(...sizes) >= cap * largest,
-      `${collection.name} fills a shard with ${cap} entries of ${largest} bytes`
+      index.includes(`- [Entries ${range}](https://meshin.co/llms/post-${shard}.txt)`),
+      `the index lists shard ${shard}`
     );
-    assert.ok(
-      Math.max(...sizes) <= LLMS_FILE_MAX_BYTES,
-      `${collection.name} stays within ${LLMS_FILE_MAX_BYTES} bytes`
-    );
+  }
+  assert.ok(first.includes('Next part: [https://meshin.co/llms/post-2.txt]'));
+  assert.ok(hugeShard.includes('Next part: [https://meshin.co/llms/post-3.txt]'));
+  assert.ok(last.endsWith('\n\n---\n\nThis is the last part.\n'));
+});
+
+test('the budget counts bytes, not characters: the same number of characters in two-byte letters needs more shards', () => {
+  const maxBytes = 3_000;
+  const entriesOf = (letter) =>
+    Array.from({ length: 6 }, (_, index) => makeEntry(index, { base: POST.base, body: letter.repeat(1_000) }));
+  const ascii = filesOf(entriesOf('e'), { maxBytes });
+  const twoByte = filesOf(entriesOf('é'), { maxBytes });
+  assert.deepEqual(
+    ascii.slice(1).map((file) => entryUrlsIn(file.text).length),
+    [2, 2, 2]
+  );
+  assert.deepEqual(
+    twoByte.slice(1).map((file) => entryUrlsIn(file.text).length),
+    [1, 1, 1, 1, 1, 1]
+  );
+  for (const file of twoByte.slice(1)) {
+    assert.ok(bytesOf(file.text) <= maxBytes, `${file.param} is ${bytesOf(file.text)} bytes`);
   }
 });
 
-test('a year of two posts a day stays inside the file budget in every file', () => {
-  const measuredBytes = [7128, 8270, 8791, 10073, 10205, 10813, 16523, 20951, 26578, 28454];
-  const entries = Array.from({ length: 740 }, (_, index) =>
-    entryOfBytes(POST, index, measuredBytes[index % measuredBytes.length])
+test('the frame is measured as rendered: a range that gains a digit leaves room for one entry fewer', () => {
+  const entries = Array.from({ length: 14 }, (_, index) => entryOfBytes(POST, index, 2_000));
+  const maxBytes = bytesOf(renderedShard(entries, { from: 1, to: 3, nextUrl: shardUrl(2) }));
+  const shards = filesOf(entries, { maxBytes }).slice(1);
+  assert.deepEqual(
+    shards.map((file) => entryUrlsIn(file.text).length),
+    [3, 3, 3, 2, 3]
   );
+  assert.deepEqual(
+    shards.map((file) => /entries (\d+-\d+)\n/.exec(file.text)[1]),
+    ['1-3', '4-6', '7-9', '10-11', '12-14']
+  );
+  assert.equal(bytesOf(shards[0].text), maxBytes, 'the first shard is exactly the budget');
+  assert.ok(
+    bytesOf(renderedShard(entries, { from: 10, to: 12, nextUrl: shardUrl(5) })) > maxBytes,
+    'three entries under the range 10-12 are over the budget'
+  );
+});
+
+test('one byte under the rendered size of three entries, a shard holds two', () => {
+  const entries = Array.from({ length: 14 }, (_, index) => entryOfBytes(POST, index, 2_000));
+  const threeEntryShard = bytesOf(renderedShard(entries, { from: 1, to: 3, nextUrl: shardUrl(2) }));
+  const shards = filesOf(entries, { maxBytes: threeEntryShard - 1 }).slice(1);
+  assert.deepEqual(
+    shards.map((file) => entryUrlsIn(file.text).length),
+    [2, 2, 2, 2, 2, 2, 2]
+  );
+});
+
+test('every shard but the last is full: the next entry would take it over the file budget', () => {
+  const entries = measuredPosts(40);
+  const shards = filesOf(entries).slice(1);
+  assert.ok(shards.length > 2, 'the fixture makes several shards');
+  shards.slice(0, -1).forEach(({ text }, position) => {
+    const [, from, to] = /entries (\d+)-(\d+)\n/.exec(text).map(Number);
+    const withNext = renderedShard(entries, {
+      from,
+      to: to + 1,
+      nextUrl: to + 1 < entries.length ? shardUrl(position + 2) : null,
+    });
+    assert.ok(bytesOf(text) <= LLMS_FILE_MAX_BYTES, `shard ${position + 1} is within the budget`);
+    assert.ok(
+      bytesOf(withNext) > LLMS_FILE_MAX_BYTES,
+      `shard ${position + 1} with entry ${to + 1} is ${bytesOf(withNext)} bytes, which still fits`
+    );
+  });
+});
+
+test('ten posts sized like the measured ones pack into the fewest shards their bytes allow, not three to a file', () => {
+  const sizes = MEASURED_POST_BYTES.slice(0, 10);
+  const fewestShards = Math.ceil(sizes.reduce((sum, bytes) => sum + bytes, 0) / LLMS_FILE_MAX_BYTES);
+  const shards = filesOf(measuredPosts(10)).slice(1);
+  assert.equal(shards.length, fewestShards);
+  assert.deepEqual(
+    shards.map((file) => entryUrlsIn(file.text).length),
+    [6, 4]
+  );
+  for (const file of shards) {
+    assert.ok(bytesOf(file.text) <= LLMS_FILE_MAX_BYTES, `${file.param} is ${bytesOf(file.text)} bytes`);
+  }
+});
+
+test('a year of two posts a day stays inside the file budget in every file, and no two neighbouring shards fit in one', () => {
+  const entries = measuredPosts(740);
   const files = filesOf(entries);
-  const shards = rangesOf(entries.length, LLMS_SHARD_MAX_ENTRIES.post);
-  assert.equal(files.length, 1 + shards.length);
+  const shards = files.filter((file) => file.param !== 'post');
   for (const file of files) {
     assert.ok(bytesOf(file.text) <= LLMS_FILE_MAX_BYTES, `${file.param} is ${bytesOf(file.text)} bytes`);
   }
   const index = textOf(files, 'post');
-  for (const { shard } of shards) {
-    assert.ok(index.includes(`(https://meshin.co/llms/post-${shard}.txt)`), `the index lists post-${shard}`);
+  for (const { param } of shards) {
+    assert.ok(index.includes(`(https://meshin.co/llms/${param}.txt)`), `the index lists ${param}`);
   }
+  shards.slice(1).forEach(({ param, text }, position) => {
+    const together = bytesOf(shards[position].text) + bytesOf(text);
+    assert.ok(together > LLMS_FILE_MAX_BYTES, `${shards[position].param} and ${param} are ${together} bytes together`);
+  });
 });
 
 test('a newer entry lands at the end, so earlier shards stay byte for byte unchanged and only the old last shard and the index move', () => {
-  const cap = LLMS_SHARD_MAX_ENTRIES.post;
-  const before = filesOf(makeEntries(2 * cap + 1));
-  const after = filesOf(makeEntries(2 * cap + 2));
+  const before = filesOf(heavyEntries(POST, SHARDED_COUNT));
+  const after = filesOf(heavyEntries(POST, SHARDED_COUNT + 1));
   assert.equal(textOf(after, 'post-1'), textOf(before, 'post-1'));
   assert.equal(textOf(after, 'post-2'), textOf(before, 'post-2'));
   assert.notEqual(textOf(after, 'post-3'), textOf(before, 'post-3'));
@@ -429,9 +523,9 @@ test('a newer entry lands at the end, so earlier shards stay byte for byte uncha
 });
 
 test('an entry back-dated into the middle shifts every later shard, which is the cost of ordering by publish date', () => {
-  const entries = makeEntries(4 * LLMS_SHARD_MAX_ENTRIES.post);
+  const entries = heavyEntries(POST, 12);
   const backdated = [
-    { ...makeEntry(0), id: 'entry-late', url: 'https://meshin.co/blog/entry-late', published: stamp(1) },
+    { ...entryOfBytes(POST, 1, HEAVY_BYTES), id: 'entry-0001-late', url: 'https://meshin.co/blog/entry-0001-late' },
     ...entries,
   ];
   const before = filesOf(entries);

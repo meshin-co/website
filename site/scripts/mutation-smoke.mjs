@@ -331,7 +331,6 @@ export const FAMILIES = [
   { id: 'machine-llms-shard-over-budget', kind: 'specimen', specimen: 'machineLlmsShardOverBudget' },
   { id: 'machine-llms-full-over-budget', kind: 'specimen', specimen: 'machineLlmsFullOverBudget' },
   { id: 'machine-llms-full-inlines-entries', kind: 'specimen', specimen: 'machineLlmsFullInlinesEntries' },
-  { id: 'machine-llms-shard-over-cap', kind: 'specimen', specimen: 'machineLlmsShardOverCap' },
   { id: 'machine-llms-shard-omits-entry', kind: 'specimen', specimen: 'machineLlmsShardOmitsEntry' },
   { id: 'machine-llms-index-carries-entry', kind: 'specimen', specimen: 'machineLlmsIndexCarriesEntry' },
   { id: 'machine-llms-full-count-drifts', kind: 'specimen', specimen: 'machineLlmsFullCountDrifts' },

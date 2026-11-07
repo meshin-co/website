@@ -55,7 +55,7 @@
 
 - [x] 7.1 `npm run test:smoke` proves every guard family can still fail, including the thirteen new
       ones. Not run here: it needs a full build and three browsers
-- [x] 7.2 (moved to gap row G65, not done) After 30 days of live runs, run `npm run build && npm run measure:llms`, and compare the
+- [x] 7.2 (moved to gap row G65, not done) After 30 days of live runs, run `npm run build && measure:llms`, and compare the
       largest entry of each collection with `LARGEST_MEASURED_ENTRY_BYTES`. A line that says `grew past the record`
       lowers that collection's cap by a decision recorded here, and a shard over `LLMS_FILE_MAX_BYTES`
       fails `gate:machine` before this is due

@@ -8,9 +8,16 @@ import { afterEach, test } from 'node:test';
 import { pathToFileURL } from 'node:url';
 
 import { FEED_WINDOW } from '../src/utils/feeds.mjs';
-import { LLMS_SHARD_MAX_ENTRIES } from '../src/utils/llms-collections.mjs';
 import { SCENE_EMPTY_COLLECTIONS } from './fixtures/machine-scene-catalog.mjs';
-import { LIVE, ORIGIN, buildMachineScene, readText, removeScene, runMachine } from './fixtures/machine-scene.mjs';
+import {
+  LIVE,
+  ORIGIN,
+  POSTS_PER_SHARD,
+  buildMachineScene,
+  readText,
+  removeScene,
+  runMachine,
+} from './fixtures/machine-scene.mjs';
 
 const REAL_SITE = join(import.meta.dirname, '..');
 const scenes = [];
@@ -91,11 +98,10 @@ const entryLines = (text) =>
   text.split('\n').filter((line) => /^\[https?:\/\/[^\]]+\]\(https?:\/\/[^)]+\)$/.test(line));
 const guidsOf = (xml) => [...xml.matchAll(/<guid[^>]*>([^<]+)<\/guid>/g)].map(([, url]) => url);
 
-test('the scene fills two post shards to the cap and puts one entry in a third, so each shard can be damaged on its own', async () => {
+test('the scene packs its posts by bytes into two shards of three and a third of one, so each shard can be damaged on its own', async () => {
   const scene = await sceneOf();
-  const cap = LLMS_SHARD_MAX_ENTRIES.post;
 
-  assert.equal(LIVE.post.length, 2 * cap + 1);
+  assert.equal(LIVE.post.length, 2 * POSTS_PER_SHARD + 1);
   assert.deepEqual(readdirSync(scene.distFile('llms')).sort(), [
     'faq.txt',
     'glossary.txt',
@@ -108,7 +114,7 @@ test('the scene fills two post shards to the cap and puts one entry in a third, 
   ]);
   assert.equal(entryLines(readText(scene.distFile('llms/post.txt'))).length, 0);
   const held = [1, 2, 3].map((part) => entryLines(readText(scene.distFile(`llms/post-${part}.txt`))).length);
-  assert.deepEqual(held, [cap, cap, 1]);
+  assert.deepEqual(held, [POSTS_PER_SHARD, POSTS_PER_SHARD, 1]);
 });
 
 test('the scene llms-full.txt is an index of the collection files, a line for each collection with a live entry and no entry', async () => {

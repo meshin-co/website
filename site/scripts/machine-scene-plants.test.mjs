@@ -68,7 +68,7 @@ test('the variants differ only in the one plant that writes humans.txt', () => {
 test('every expected failure carries a rule the table knows, its text and subjects that are built paths', async () => {
   for (const variant of VARIANTS) {
     const failures = await expectedOf(variant);
-    assert.ok(failures.length >= 51, `${variant} expects ${failures.length} failures`);
+    assert.ok(failures.length >= 48, `${variant} expects ${failures.length} failures`);
     for (const { rule, text, subjects } of failures) {
       assert.match(rule, RULE_ID);
       assert.ok(knownRule({ gate: GATE, rule }), `the table does not know ${rule}`);
@@ -83,7 +83,7 @@ test('every expected failure carries a rule the table knows, its text and subjec
 test('no two planted failures are the same line, so each plant is proven on its own', async () => {
   for (const variant of VARIANTS) {
     const keys = (await expectedOf(variant)).map(({ rule, text }) => `${rule}: ${text}`);
-    assert.ok(keys.length >= 51, `${variant} plants ${keys.length} failures`);
+    assert.ok(keys.length >= 48, `${variant} plants ${keys.length} failures`);
     assert.deepEqual(keys, [...new Set(keys)]);
   }
 });
@@ -91,7 +91,7 @@ test('no two planted failures are the same line, so each plant is proven on its 
 test('every plant has a name of its own, a plant and a list of what it must trip', () => {
   const names = PLANTS.map((entry) => entry.name);
 
-  assert.ok(names.length >= 34, `the scene holds ${names.length} plants`);
+  assert.ok(names.length >= 33, `the scene holds ${names.length} plants`);
   assert.equal(new Set(names).size, names.length);
   for (const entry of PLANTS) {
     assert.ok(typeof entry.name === 'string' && entry.name.length > 10, String(entry.name));

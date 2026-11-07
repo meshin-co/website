@@ -2,13 +2,11 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 import { COLLECTION_FEED_MAX_BYTES, FEED_WINDOW } from '../src/utils/feeds.mjs';
-import { LLMS_FILE_MAX_BYTES, LLMS_FULL_MAX_BYTES, LLMS_SHARD_MAX_ENTRIES } from '../src/utils/llms-collections.mjs';
+import { LLMS_FILE_MAX_BYTES, LLMS_FULL_MAX_BYTES } from '../src/utils/llms-collections.mjs';
 
 const GATE = 'gate:machine';
 const UNIT_GATE = 'test:llms';
 const PADDING = 'padding ';
-const SHARD_SEPARATOR = '\n\n---\n\n';
-const SHARD_HEADING = /^# [^\n]*\n\n## [^\n]*\n\n/;
 const POST_ENTRY_LINE = /^\[(https?:\/\/[^\]]+\/blog\/[^\]]+)\]\(\1\)\n\n/m;
 const FEED_ITEM = /<item>[\s\S]*?<\/item>/g;
 const COLLECTION_SOURCE = 'src/utils/llms-collections.mjs';
@@ -21,11 +19,6 @@ export const llmsCollectionFiles = (request) =>
 const DOT_REPORTER = { NODE_OPTIONS: '--test-reporter=dot' };
 
 const paddingPast = (limit) => PADDING.repeat(Math.ceil(limit / PADDING.length) + 1);
-const entryBlocks = (shard) =>
-  shard
-    .split(SHARD_SEPARATOR)
-    .slice(0, -1)
-    .map((part, index) => (index === 0 ? part.replace(SHARD_HEADING, '') : part));
 
 export async function firstPostUrl(copySite, shard = 'post-1') {
   const text = await readFile(join(copySite, `dist/llms/${shard}.txt`), 'utf8');
@@ -65,17 +58,6 @@ export const boundedIndexSpecimens = ({ editFile }) => ({
         join(copySite, 'dist/llms-full.txt'),
         (text) => `${text}\n- [Inlined](${url}): an entry listed inline\n`
       );
-    },
-  },
-  machineLlmsShardOverCap: {
-    gate: GATE,
-    token: `entries, over the ${LLMS_SHARD_MAX_ENTRIES.post} entry cap`,
-    plant: async (copySite) => {
-      const [extra] = entryBlocks(await readFile(join(copySite, 'dist/llms/post-4.txt'), 'utf8'));
-      return editFile(join(copySite, 'dist/llms/post-3.txt'), (text) => {
-        const parts = text.split(SHARD_SEPARATOR);
-        return [...parts.slice(0, -1), extra, parts.at(-1)].join(SHARD_SEPARATOR);
-      });
     },
   },
   machineLlmsShardOmitsEntry: {

@@ -69,8 +69,8 @@ export function renderLlmsFull({ site, maxFileBytes, pointers }) {
   const tagline = [
     'The full text of every live entry is in the collection files below.',
     'This file lists them and holds no entry.',
-    'A collection past its entry cap is an index of numbered parts.',
     `No file under /llms/ is over ${maxFileBytes} bytes.`,
+    'A collection that does not fit in one such file is an index of numbered parts.',
   ].join(' ');
   return renderLlmsTxt({ site, tagline, sections: [{ title: 'Collections', items: pointers }] });
 }

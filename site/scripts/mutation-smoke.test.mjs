@@ -177,7 +177,6 @@ test('each bound on a generated machine index has its own family, and the two de
     'machine-llms-shard-over-budget': 'machineLlmsShardOverBudget',
     'machine-llms-full-over-budget': 'machineLlmsFullOverBudget',
     'machine-llms-full-inlines-entries': 'machineLlmsFullInlinesEntries',
-    'machine-llms-shard-over-cap': 'machineLlmsShardOverCap',
     'machine-llms-shard-omits-entry': 'machineLlmsShardOmitsEntry',
     'machine-llms-index-carries-entry': 'machineLlmsIndexCarriesEntry',
     'machine-llms-full-count-drifts': 'machineLlmsFullCountDrifts',

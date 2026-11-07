@@ -1,5 +1,3 @@
-import { LLMS_SHARD_MAX_ENTRIES } from '../src/utils/llms-collections.mjs';
-
 const ENTRY_LINE = /^\[(https?:\/\/[^\]]+)\]\(\1\)$/gm;
 const INDEX_LINE = /^- \[Entries (\d+)-(\d+)\]\(https?:\/\/[^)]*(\/llms\/[^)/]+\.txt)\): (\d+) entr/gm;
 
@@ -39,10 +37,6 @@ function rowGaps(row, position, rows, text, state) {
   const urls = entryUrls(text);
   if (urls.length !== row.count || row.to - row.from + 1 !== row.count) {
     gaps.push(`${row.path} holds ${urls.length} entries, the index says ${row.count} (range ${row.from}-${row.to})`);
-  }
-  const cap = LLMS_SHARD_MAX_ENTRIES[state.name];
-  if (urls.length > cap) {
-    gaps.push(`${row.path} holds ${urls.length} entries, over the ${cap} entry cap`);
   }
   for (const url of urls) {
     if (state.seen.has(url)) gaps.push(`${url} ships twice across the ${state.name} shards`);
