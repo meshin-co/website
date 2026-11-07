@@ -39,6 +39,7 @@ function liveInputs() {
     rotation: CATEGORY_ROTATION,
     now: NOW,
     settings: { termArm: true, termCap: 1 },
+    order: null,
   };
 }
 

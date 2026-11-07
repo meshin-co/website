@@ -112,6 +112,15 @@ const categoryClaimWithPrompt = () => ({
   category: 'governance',
 });
 
+const withoutPrompt = (claim) => Object.fromEntries(Object.entries(claim).filter(([key]) => key !== 'prompt'));
+
+const orderedClaimWithWeakness = () => ({
+  ...withoutPrompt(claimOn('A planted ordered specimen')),
+  format: 'article',
+  origin: 'ordered',
+  weakness: ['no-buyer-prompt'],
+});
+
 const planLedger = (addUntrackedFile, build) => (copySite) =>
   addUntrackedFile(join(copySite, '..', LEDGER_PATH), asJson(build()));
 
@@ -141,6 +150,11 @@ export const autowriterSpecimens = ({ addUntrackedFile, editFile, removeFile }) 
     gate: GATE,
     token: `claim-schema ${CLAIM_PATH}: prompt must be absent when origin is category`,
     plant: (copySite) => addUntrackedFile(join(copySite, '..', CLAIM_PATH), asJson(categoryClaimWithPrompt())),
+  },
+  autowriterOrderedClaimOffItsRules: {
+    gate: GATE,
+    token: `claim-schema ${CLAIM_PATH}: weakness must be absent when origin is ordered`,
+    plant: (copySite) => addUntrackedFile(join(copySite, '..', CLAIM_PATH), asJson(orderedClaimWithWeakness())),
   },
   autowriterEscalationFailed: {
     gate: GATE,

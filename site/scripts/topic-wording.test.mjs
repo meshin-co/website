@@ -5,9 +5,13 @@ import {
   categoryChoice,
   measuredChoice,
   measuredReason,
+  noSuchPrompt,
   noneReason,
+  orderedChoice,
+  orderedReason,
   postChoice,
   promptReason,
+  retiredPrompt,
   strengthens,
   termChoice,
   termReason,
@@ -175,4 +179,39 @@ test('the choice line of a category names it, how many articles it has and the n
     categoryChoice({ category: 'operating-model', articles: 0, newest: null }),
     `Choice: category operating-model, no article yet; ${why}`
   );
+});
+
+test('the choice line of an order by prompt number names the prompt and says it was requested by hand', () => {
+  assert.equal(orderedChoice({ kind: 'prompt', number: 30 }), 'Choice: ordered, prompt 30, requested by hand');
+});
+
+test('the choice line of an order by title quotes the title as it was ordered and says it was requested by hand', () => {
+  assert.equal(
+    orderedChoice({ kind: 'title', text: 'Why AI steering committees stall' }),
+    'Choice: ordered, "Why AI steering committees stall", requested by hand'
+  );
+});
+
+test('the reason of a refused order names the order, the refusal and its cause, and says no other topic was tried', () => {
+  const detail =
+    'the slug "a" would publish at /blog/a, which the generated layer of docs/SEMANTIC-CORE.md already lists';
+  assert.equal(
+    orderedReason({ kind: 'prompt', number: 3 }, { outcome: 'route-exists', detail }),
+    `The order for prompt 3 was refused (route-exists), so nothing was written and no other topic was tried: ${detail}`
+  );
+  assert.equal(
+    orderedReason({ kind: 'title', text: 'Why AI steering committees stall' }, { outcome: 'slug-held', detail }),
+    'The order for "Why AI steering committees stall" was refused (slug-held), ' +
+      `so nothing was written and no other topic was tried: ${detail}`
+  );
+});
+
+test('the cause of an order for a prompt the report does not hold gives its number and how many prompts it holds', () => {
+  assert.equal(noSuchPrompt(31, 30), 'the report holds no prompt numbered 31; it holds 30 prompts');
+  assert.equal(noSuchPrompt(2, 1), 'the report holds no prompt numbered 2; it holds 1 prompt');
+  assert.equal(noSuchPrompt(1, 0), 'the report holds no prompt numbered 1; it holds 0 prompts');
+});
+
+test('the cause of an order for a retired prompt names the core that retires it and says no article is written', () => {
+  assert.equal(retiredPrompt(17), 'prompt 17 is retired in docs/SEMANTIC-CORE.md, so no article is written for it');
 });

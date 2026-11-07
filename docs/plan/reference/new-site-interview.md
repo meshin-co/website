@@ -748,6 +748,20 @@ The numbers in `site/budgets.json` and `site/lighthouserc.cjs` were set by measu
   **If wrong:** `npm run build` fails with `OVER BUDGET <route> <key> <measured> > <limit>`. A build with no font files fails with `OVER BUDGET fonts measured 0 bytes in dist/_astro/fonts, so the fonts budget proved nothing`.
   **Needs:** S18
 
+#### S49. Keyword demand the site does not touch yet
+
+**Ask:** Do you want a second demand instrument, one that can name phrases the site has never ranked for?
+**Cannot be derived because:** It decides whether the writer may be aimed at demand no page of the site has reached.
+**Options:**
+
+- **A. Bing Webmaster Tools:** one secret, `BING_WEBMASTER_API_KEY`, from Settings, API access, after verifying the site at `https://www.bing.com/webmasters` by importing it from Search Console or by the CNAME it offers. Cost: no money, because the tool and its API carry no paid tier, which is what L58 requires; and the smaller index of one engine, so a phrase with real Google demand can be missing from the answer.
+- **B. Search Console only:** Cost: the demand half of the picker can only ever see queries the site already ranks for. On this site that was 0 candidates on every one of the 13 reports between 2026-11-02 and 2026-11-07, so the writer falls through to the semantic core every run.
+- **C. A paid source (DataForSEO, Ahrefs, Semrush):** Cost: breaks L58, the rule that every service the site depends on carries a permanent free tier.
+- **Recommended:** A, because it is the only free instrument that answers for a phrase the site has never served, unless the subject is one Bing has too little data for, in which case B and a hand-written core is honest.
+  **Lands in:** repository secret `BING_WEBMASTER_API_KEY`; the same name in a local `.env` beside `site/.env.example`.
+  **If wrong:** Without the key the keyword audit fails naming the variable and writes nothing, because an empty report reads like a phrase nobody searched for. A key Bing refuses fails naming the response status.
+  **Needs:** S36
+
 ### Config values and the question that sets them
 
 | #   | Leaf value of `site/engine.config.json`      | Question | Note                                                                                                      |

@@ -1,9 +1,8 @@
 # Choose the Next Article
 
-The next article comes from what people searched for, not from taste. `audits/search-demand.md`
-holds what Search Console measured for the property in `site/engine.config.json` over a 90-day
-window, Google web search only. Read it before step 1 of `run-the-growth-loop.md`, and write down
-the number that made the choice.
+The next article comes from what people searched for, not from taste. `audits/search-demand.md` holds what Search
+Console measured for the property in `site/engine.config.json` over a 90-day window, Google web search only. Read it
+before step 1 of `run-the-growth-loop.md`, and write down the number that made the choice.
 
 ## A fresh report first
 
@@ -38,8 +37,8 @@ By hand, take a measured row first, signals 1 and 3 resting on someone having se
 no one having. With none, an unproven prompt may still be chosen, knowingly, and the record says so.
 
 The unattended loop (`pick-the-next-topic.md`) writes one post a run: from signal 2, else from signal 3 as a post with no buyer
-prompt, else on a configured category (`write-on-a-category.md`). Signal 1 is never a page: it becomes a strengthen report for a
-human. A definitional query becomes a glossary term. It writes the record lines below.
+prompt, else on a configured category (`write-on-a-category.md`); a hand order (`order-a-topic-by-hand.md`) outranks all three. Signal 1 is
+never a page: it becomes a strengthen report for a human. A definitional query becomes a glossary term. It writes the record lines below.
 
 ## Record the choice
 
@@ -49,6 +48,8 @@ One line in the commit message of the article, with the number that justified it
     Choice: signal 2, prompt <number>, unproven, 0 impressions in the window to <window end>
     Choice: signal 3, "<query>", <impressions> impressions at position <position>, measured <date>; weak demand: <reasons>
     Choice: category <id>, <standing>; no unproven prompt or weak query survived, so the rotation chose it
+    Choice: ordered, prompt <number>, requested by hand
+    Choice: ordered, "<title>", requested by hand
 
 The next report is the only evidence the choice worked. Compare the same query or prompt in it.
 

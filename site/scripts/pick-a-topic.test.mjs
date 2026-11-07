@@ -16,7 +16,9 @@ import { BAND_FILE } from './sentence-band.mjs';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPORT = 'audits/search-demand.md';
 const INPUT_KEYS =
-  'claims concepts forms generated ledgerPaths now posts promptSources report rotation settings suffix'.split(' ');
+  'claims concepts forms generated ledgerPaths now order posts promptSources report rotation settings suffix'.split(
+    ' '
+  );
 const NOW = new Date('2026-11-02T04:00:00.000Z');
 const POST = 'fractional-caio-vs-full-time-caio-cost';
 const TERM = 'what-is-a-model-card';
@@ -184,12 +186,86 @@ test('--write without --output exits 2 naming --output and writes nothing', asyn
 });
 
 test('an unknown flag, a flag without its value and a bad --now exit 2 and name the flag', async () => {
-  const cases = [['--force'], ['--run-id'], ['--summary', '--write'], ['--output'], ['--now'], ['--now', 'yesterday']];
+  const cases = [
+    ['--force'],
+    ['--run-id'],
+    ['--summary', '--write'],
+    ['--output'],
+    ['--now'],
+    ['--now', 'yesterday'],
+    ['--order-prompt'],
+    ['--order-title'],
+    ['--order-prompt', '--write'],
+    ['--order-title', '--write'],
+  ];
   for (const argv of cases) {
     await scenario(NONE, {}, async ({ run, seen, message }) => {
       assert.equal(await run(argv), 2, argv.join(' '));
       assert.ok(message().includes(argv[0]), argv.join(' '));
       assert.deepEqual(seen.out, [], argv.join(' '));
+    });
+  }
+});
+
+test('--order-prompt and --order-title hand the selection an order, and no order flag hands it none', async () => {
+  const cases = [
+    [[], null],
+    [['--order-prompt', '30'], { kind: 'prompt', number: 30 }],
+    [['--order-prompt', '31'], { kind: 'prompt', number: 31 }],
+    [
+      ['--order-title', 'Why AI steering committees stall'],
+      { kind: 'title', text: 'Why AI steering committees stall' },
+    ],
+    [
+      ['--order-title', '  Why   AI\nsteering committees  stall '],
+      { kind: 'title', text: 'Why AI steering committees stall' },
+    ],
+  ];
+  for (const [argv, order] of cases) {
+    await scenario(NONE, {}, async ({ run, seen, message }) => {
+      assert.equal(await run(argv), 0, message());
+      assert.deepEqual(seen.inputs.order, order, argv.join(' '));
+    });
+  }
+});
+
+test('--order-prompt and --order-title together exit 2 naming both flags, before any input is read, in either order', async () => {
+  const cases = [
+    ['--order-prompt', '3', '--order-title', 'x'],
+    ['--order-title', 'x', '--order-prompt', '3'],
+  ];
+  for (const argv of cases) {
+    await scenario(NONE, {}, async ({ root, run, seen, message }) => {
+      rmSync(join(root, REPORT));
+      assert.equal(await run(argv), 2, argv.join(' '));
+      assert.match(message(), /--order-prompt/);
+      assert.match(message(), /--order-title/);
+      assert.equal(seen.inputs, null);
+      assert.deepEqual(seen.out, []);
+    });
+  }
+});
+
+test('--order-prompt with anything but a positive whole number exits 2 naming the flag and the value', async () => {
+  const values = ['0', '-1', '3.5', 'three', '', ' 3', '03', '+3', '1e1', '0x10', '99999999999999999999'];
+  for (const value of values) {
+    await scenario(NONE, {}, async ({ root, run, seen, message }) => {
+      rmSync(join(root, REPORT));
+      assert.equal(await run(['--order-prompt', value]), 2, value);
+      assert.ok(message().includes('--order-prompt'), value);
+      assert.ok(message().includes(JSON.stringify(value)), value);
+      assert.equal(seen.inputs, null, value);
+    });
+  }
+});
+
+test('--order-title with nothing in it but white space exits 2 naming the flag', async () => {
+  for (const value of ['', ' ', '\n\t ']) {
+    await scenario(NONE, {}, async ({ root, run, seen, message }) => {
+      rmSync(join(root, REPORT));
+      assert.equal(await run(['--order-title', value]), 2, JSON.stringify(value));
+      assert.ok(message().includes('--order-title'), JSON.stringify(value));
+      assert.equal(seen.inputs, null);
     });
   }
 });
@@ -350,4 +426,17 @@ test('end to end, the frozen report and the live semantic core give a decision t
     assert.match(out.at(-1), /^Examined \d+ candidates?, set aside \d+\.$/);
     assert.deepEqual(snapshot(root), before);
   });
+});
+
+test('an ordered entry is printed after its choice line with the prompt it serves, or with the word ordered when it has none', () => {
+  const entry = (extra) => ({ format: 'article', topic: { title: 'T', slug: 't' }, origin: 'ordered', ...extra });
+  const written = (choice, entries) =>
+    decisionOf({ decision: 'write', choice, entries, trail: [{ outcome: 'chosen' }] });
+  const byPrompt = written('Choice: ordered, prompt 30, requested by hand', [
+    entry({ prompt: { number: 30, text: 'p' } }),
+  ]);
+  const byTitle = written('Choice: ordered, "T", requested by hand', [entry({})]);
+  const tally = 'Examined 1 candidate, set aside 0.';
+  assert.deepEqual(printedLines(byPrompt), [byPrompt.choice, 'article: T, /blog/t, prompt 30', tally]);
+  assert.deepEqual(printedLines(byTitle), [byTitle.choice, 'article: T, /blog/t, ordered', tally]);
 });

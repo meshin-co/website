@@ -182,6 +182,21 @@ const asCategory = () =>
     origin: 'category',
     category: 'governance',
   });
+const asOrderedByPrompt = () =>
+  newClaim({
+    ...BASIS,
+    slug: 'an-ordered-prompt-claim',
+    demand: { impressions: 0, position: null },
+    prompt: PROMPT,
+    origin: 'ordered',
+  });
+const asOrderedByTitle = () =>
+  newClaim({
+    ...BASIS,
+    slug: 'an-ordered-title-claim',
+    demand: { impressions: 0, position: null },
+    origin: 'ordered',
+  });
 const KEYS = ['schema', 'slug', 'title', 'format', 'query', 'demand'];
 const TAIL = ['runId', 'status', 'claimedAt', 'expiresAt'];
 
@@ -189,7 +204,10 @@ test('a new claim keeps the origin fields it is given, after the demand, and inv
   assert.deepEqual(Object.keys(asDemand()), [...KEYS, 'prompt', 'origin', ...TAIL]);
   assert.deepEqual(Object.keys(asWeak()), [...KEYS, 'origin', 'weakness', ...TAIL]);
   assert.deepEqual(Object.keys(asCategory()), [...KEYS, 'origin', 'category', ...TAIL]);
-  for (const made of [asDemand(), asWeak(), asCategory()]) assert.deepEqual(validateClaim(made), []);
+  assert.deepEqual(Object.keys(asOrderedByPrompt()), [...KEYS, 'prompt', 'origin', ...TAIL]);
+  assert.deepEqual(Object.keys(asOrderedByTitle()), [...KEYS, 'origin', ...TAIL]);
+  for (const made of [asDemand(), asWeak(), asCategory(), asOrderedByPrompt(), asOrderedByTitle()])
+    assert.deepEqual(validateClaim(made), []);
 });
 
 test('a new claim leaves out a key that is undefined or null, so no claim file ever holds a null prompt', () => {
@@ -212,11 +230,17 @@ test('a claim made with no origin has none, so it is still the demand claim it a
 
 test('a claim of each origin is written and read back equal, and a claim with no prompt holds no prompt key', () => {
   inTemp((root) => {
-    for (const claimed of [asDemand(), asWeak(), asCategory()]) {
+    for (const [claimed, holdsPrompt] of [
+      [asDemand(), true],
+      [asWeak(), false],
+      [asCategory(), false],
+      [asOrderedByPrompt(), true],
+      [asOrderedByTitle(), false],
+    ]) {
       const path = join(root, filedAt(claimed.slug));
       writeClaim(path, claimed);
       assert.deepEqual(readClaim(path), claimed);
-      assert.equal(Object.hasOwn(JSON.parse(readFileSync(path, 'utf8')), 'prompt'), claimed.origin === 'demand');
+      assert.equal(Object.hasOwn(JSON.parse(readFileSync(path, 'utf8')), 'prompt'), holdsPrompt, claimed.slug);
     }
   });
 });
@@ -228,6 +252,21 @@ test('a claim that breaks an origin rule is refused before a byte is written, na
       () => writeClaim(path, { ...asCategory(), prompt: PROMPT }),
       /does not match the claim schema: prompt must be absent when origin is category/
     );
+    assert.equal(existsSync(path), false);
+  });
+});
+
+test('an ordered claim that names a weakness or a category is refused before a byte is written, naming the rule', () => {
+  inTemp((root) => {
+    const path = join(root, filedAt('an-ordered-title-claim'));
+    for (const [field, value] of [
+      ['weakness', ['no-buyer-prompt']],
+      ['category', 'governance'],
+    ])
+      assert.throws(
+        () => writeClaim(path, { ...asOrderedByTitle(), [field]: value }),
+        new RegExp(`does not match the claim schema: ${field} must be absent when origin is ordered`)
+      );
     assert.equal(existsSync(path), false);
   });
 });

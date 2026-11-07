@@ -53,6 +53,9 @@ const PROPOSAL_CALL = {
 };
 const CATEGORY_SHAPES = { [CATEGORY_POST.slug]: { row: null, table: null, proposal: { calls: [PROPOSAL_CALL] } } };
 const WEAK_SHAPES = { [WEAK_POST.slug]: { row: QUERIES_ROW, table: 'Queries' } };
+const ORDERED_TITLE_POST = { ...withoutPrompt(POST), demand: { impressions: 0, position: null }, origin: 'ordered' };
+const ORDERED_PROMPT_POST = { ...POST, origin: 'ordered' };
+const ORDERED_TITLE_SHAPES = { [ORDERED_TITLE_POST.slug]: { row: null, table: null } };
 const TOPIC_COST = 0.0021;
 const ENTRY_COST = 0.0036;
 
@@ -549,6 +552,34 @@ test('a weak-demand entry is written with its row and weakness, no prompt and no
   assert.match(message, /^Origin: weak-demand$/m);
   assert.match(message, /^Weak query: no-buyer-prompt, impressions-at-floor$/m);
   assert.doesNotMatch(message, /Serves buyer prompt|^Category:/m);
+});
+
+test('an ordered entry with no prompt is written with no row and no table, and the message says it was ordered by hand', async () => {
+  const claim = ORDERED_TITLE_POST;
+  const steps = [answer(1, cleanDraft('article'))];
+  const run = await drive({ claims: [claim], shapes: ORDERED_TITLE_SHAPES, steps });
+  assert.ifError(run.error);
+  const { record } = savedOf(run, claim);
+  assert.deepEqual(validateRecord(record), []);
+  assert.deepEqual(record.claim, { title: claim.title, query: claim.query, origin: 'ordered' });
+  assert.deepEqual([record.demand.row, record.demand.report.table, record.published], [null, null, { callIndex: 0 }]);
+  const { message } = run.commitCalls[0];
+  assert.match(message, /^Origin: ordered$/m);
+  assert.match(message, /^Ordered by hand$/m);
+  assert.doesNotMatch(message, /Serves buyer prompt|^Category:|^Weak query:/m);
+});
+
+test('an ordered entry that has a prompt serves it like a demand entry, and the message has no origin line', async () => {
+  const claim = ORDERED_PROMPT_POST;
+  const run = await drive({ claims: [claim], steps: [answer(1, cleanDraft('article'))] });
+  assert.ifError(run.error);
+  const { record } = savedOf(run, claim);
+  assert.deepEqual(validateRecord(record), []);
+  assert.deepEqual(record.claim, { title: claim.title, query: claim.query, prompt: claim.prompt, origin: 'ordered' });
+  assert.equal(record.demand.report.table, 'Buyer prompts');
+  const { message } = run.commitCalls[0];
+  assert.ok(message.includes(`Serves buyer prompt ${claim.prompt.number}: ${claim.prompt.text}`));
+  assert.doesNotMatch(message, /^(Origin|Category|Weak query|Ordered by hand)/m);
 });
 
 test('a demand entry keeps the line that says which buyer prompt it serves, and has no origin line', async () => {

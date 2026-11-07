@@ -9,17 +9,29 @@ import { fileURLToPath } from 'node:url';
 
 import { buildRecord } from './generation-record.mjs';
 import { recordPath } from './record-layout.mjs';
-import { callOf, categoryInput, recordInput, weakDemandInput } from './fixtures/generation-input.mjs';
+import {
+  callOf,
+  categoryInput,
+  orderedPromptInput,
+  orderedTitleInput,
+  recordInput,
+  weakDemandInput,
+} from './fixtures/generation-input.mjs';
 import { run } from './measure-origins.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REAL_ROOT = join(HERE, '..', '..');
 const SCRIPT = join(HERE, 'measure-origins.mjs');
 
-const INPUTS = { demand: recordInput, 'weak-demand': weakDemandInput, category: categoryInput };
+const INPUTS = {
+  demand: recordInput,
+  'weak-demand': weakDemandInput,
+  category: categoryInput,
+  ordered: orderedPromptInput,
+};
 
-function recordOf({ origin = 'demand', slug, at, explicit = false, extra = {} }) {
-  const base = INPUTS[origin]();
+function recordOf({ origin = 'demand', input = INPUTS[origin], slug, at, explicit = false, extra = {} }) {
+  const base = input();
   const entryPath = 'site/src/data/post/' + slug + '.md';
   const claim = { ...base.claim, slug, ...(explicit ? { origin } : {}), ...extra };
   return buildRecord({
@@ -70,6 +82,20 @@ function mixedTree(root) {
   plant(root, recordOf({ origin: 'weak-demand', slug: 'a-weak-entry', at: '2026-11-03T07:00:00.000Z' }));
   plant(root, recordOf({ origin: 'category', slug: 'a-category-entry', at: '2026-11-03T08:00:00.000Z' }));
   plantEntry(root, 'a-weak-entry', '2026-11-05');
+}
+
+function orderedTree(root) {
+  mixedTree(root);
+  plant(root, recordOf({ origin: 'ordered', slug: 'an-ordered-prompt-entry', at: '2026-11-04T07:00:00.000Z' }));
+  plant(
+    root,
+    recordOf({
+      origin: 'ordered',
+      input: orderedTitleInput,
+      slug: 'an-ordered-title-entry',
+      at: '2026-11-04T08:00:00.000Z',
+    })
+  );
 }
 
 function snapshot(root) {
@@ -178,6 +204,40 @@ test('the rewrite list holds only entries without a buyer prompt, oldest first, 
   });
 });
 
+test('an ordered entry counts in the ordered row, whether it was ordered by prompt or by title', () => {
+  withRoot((root) => {
+    orderedTree(root);
+    const { code, out, err } = measure(root);
+    assert.deepEqual(err, []);
+    assert.equal(code, 0);
+    assert.equal(out[0], '6 entries');
+    assert.deepEqual(
+      out.slice(2, 8).map((line) => cellsOf(line)[0]),
+      ['origin', 'demand', 'weak-demand', 'category', 'ordered', 'all']
+    );
+    assert.deepEqual(rowOf(out, 'ordered'), [
+      ...['ordered', '2', '4', '60000'],
+      ...['0.0000', '0.1000', '0.0000', '0.1000', '0.0500'],
+    ]);
+    assert.equal(rowOf(out, 'demand')[1], '2');
+  });
+});
+
+test('the rewrite list holds an ordered entry only when it was ordered by title, and shows no category or weakness for it', () => {
+  withRoot((root) => {
+    orderedTree(root);
+    const { out } = measure(root);
+    const start = out.findIndex((line) => line.startsWith('written without a buyer prompt'));
+    assert.notEqual(start, -1);
+    assert.deepEqual(out.slice(start + 1).map(cellsOf), [
+      ['slug', 'origin', 'category or weakness', 'date'],
+      ['a-category-entry', 'category', 'governance', '2026-11-03'],
+      ['an-ordered-title-entry', 'ordered', '2026-11-04'],
+      ['a-weak-entry', 'weak-demand', 'no-buyer-prompt', '2026-11-05'],
+    ]);
+  });
+});
+
 test('with only demand entries the rewrite list says none', () => {
   withRoot((root) => {
     plant(root, recordOf({ slug: 'a-legacy-entry', at: '2026-11-02T08:00:00.000Z' }));
@@ -237,5 +297,6 @@ test('over the committed tree it exits 0 and counts every committed record as de
   assert.equal(rowOf(out, 'demand')[1], String(total));
   assert.equal(rowOf(out, 'weak-demand')[1], '0');
   assert.equal(rowOf(out, 'category')[1], '0');
+  assert.equal(rowOf(out, 'ordered')[1], '0');
   assert.equal(out.at(-1), 'none');
 });

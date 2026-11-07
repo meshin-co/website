@@ -163,10 +163,16 @@ const demandText = ({ impressions, position }, row) =>
     .filter(Boolean)
     .join('\n');
 
-const originFact = (claim) =>
-  claim.origin === 'category'
-    ? `Origin: category. This entry is written to cover the category ${claim.category}, with the target query "${claim.query}", and no measured demand exists for it yet. It must still answer exactly one question and define no concept that the concept register of docs/SEMANTIC-CORE.md assigns elsewhere. Set the category field of the entry to "${claim.category}".`
-    : `Origin: weak-demand. The target query "${claim.query}" was measured in Search Console with ${claim.demand.impressions} impressions and ${positionText(claim.demand.position)}, and no buyer prompt backs it. It must still answer exactly one question.`;
+const ORIGIN_FACTS = {
+  category: (claim) =>
+    `Origin: category. This entry is written to cover the category ${claim.category}, with the target query "${claim.query}", and no measured demand exists for it yet. It must still answer exactly one question and define no concept that the concept register of docs/SEMANTIC-CORE.md assigns elsewhere. Set the category field of the entry to "${claim.category}".`,
+  'weak-demand': (claim) =>
+    `Origin: weak-demand. The target query "${claim.query}" was measured in Search Console with ${claim.demand.impressions} impressions and ${positionText(claim.demand.position)}, and no buyer prompt backs it. It must still answer exactly one question.`,
+  ordered: (claim) =>
+    `Origin: ordered. The owner asked for this article by hand, under the title "${claim.title}" and with the target query "${claim.query}". It must still answer exactly one question.`,
+};
+
+const originFact = (claim) => ORIGIN_FACTS[claim.origin](claim);
 
 export const claimFacts = (claim) => [
   `Format: ${NOUN[claim.format]}`,

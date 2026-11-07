@@ -5,7 +5,15 @@ import { promptCandidates, termCandidates, weakCandidates } from './topic-demand
 import { topicFrom } from './topic-format.mjs';
 import { ownerRefusal } from './topic-owners.mjs';
 import { existingArticles, repeatRefusal } from './topic-repeat.mjs';
-import { postChoice, promptReason, strengthens, termChoice, termReason } from './topic-wording.mjs';
+import {
+  noSuchPrompt,
+  postChoice,
+  promptReason,
+  retiredPrompt,
+  strengthens,
+  termChoice,
+  termReason,
+} from './topic-wording.mjs';
 
 const POST_ADVISED = new Set(['register-owner', 'family-served']);
 
@@ -137,12 +145,12 @@ const definitionMismatch = (text, topic) => ({
   detail: `the query "${text}" asks for the definition of "${topic.subject}", which is a glossary entry, not an article`,
 });
 
-export function examineQuery(text, context) {
+export function examineQuery(text, context, promptRoutes = []) {
   const topic = topicFrom(restoreCase(text, context.forms));
   if (topic.format === null) return { outcome: topic.reason, detail: UNMADE_DETAIL[topic.reason](text) };
   if (topic.format !== 'article') return definitionMismatch(text, topic);
   const { concepts, generated } = context;
-  const owned = ownerRefusal({ topic, concepts, promptRoutes: [], generated });
+  const owned = ownerRefusal({ topic, concepts, promptRoutes, generated });
   if (owned) return refusedBy(topic, owned);
   const held = claimRefusal({ ...context, topic }) ?? repeatRefusal({ topic, existing: existingArticles(context) });
   return held ? refusedBy(topic, held) : survives(topic);
@@ -159,5 +167,31 @@ export function walkWeak(context) {
       break;
     }
   }
+  return walk;
+}
+
+const orderSubject = (order) => (order.kind === 'prompt' ? { number: order.number } : { query: order.text });
+
+function orderCandidate(order, { report, promptSources }) {
+  if (order.kind === 'title') return { candidate: { arm: 'ordered', order }, text: order.text };
+  const row = report.prompts.find(({ number }) => number === order.number);
+  if (row === undefined) {
+    return { refused: { outcome: 'no-such-prompt', detail: noSuchPrompt(order.number, report.prompts.length) } };
+  }
+  const source = promptSources.get(row.number);
+  if (source?.retired) return { refused: { outcome: 'retired', detail: retiredPrompt(row.number) } };
+  const { number, prompt, impressions, position, cells } = row;
+  const candidate = { arm: 'ordered', order, number, prompt, impressions, position, row: cells };
+  return { candidate, text: prompt, routes: source?.routes ?? [] };
+}
+
+export function walkOrdered(context) {
+  const { order } = context;
+  const walk = { chosen: null, trail: [], refusals: [] };
+  const resolved = orderCandidate(order, context);
+  const result = resolved.refused ?? examineQuery(resolved.text, context, resolved.routes);
+  walk.trail.push(stepOf('ordered', orderSubject(order), result));
+  if (result.refusal) walk.refusals.push(result.refusal);
+  if (result.outcome === 'chosen') walk.chosen = { candidate: resolved.candidate, topic: result.topic };
   return walk;
 }

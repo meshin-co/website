@@ -24,6 +24,7 @@ const quoted = (values) => values.map((value) => JSON.stringify(value)).join(', 
 
 const ORIGIN_FIELDS = ['prompt', 'category', 'weakness'];
 const FIELD_OF_ORIGIN = { demand: 'prompt', 'weak-demand': 'weakness', category: 'category' };
+const OPTIONAL_FIELD_OF_ORIGIN = { ordered: 'prompt' };
 const DEMAND_RULES = {
   demand: [],
   'weak-demand': [
@@ -34,10 +35,12 @@ const DEMAND_RULES = {
     ['impressions', (value) => value === 0, 'must be 0'],
     ['position', (value) => value === null, 'must be null'],
   ],
+  ordered: [],
 };
 
 function fieldProblems(claimLike, origin, at) {
   return ORIGIN_FIELDS.flatMap((field) => {
+    if (OPTIONAL_FIELD_OF_ORIGIN[origin] === field) return [];
     const needed = FIELD_OF_ORIGIN[origin] === field;
     if (needed === (claimLike[field] !== undefined)) return [];
     return [problem(`${at}.${field}`, `${needed ? 'is required' : 'must be absent'} when origin is ${origin}`)];
@@ -54,7 +57,7 @@ const demandRuleProblems = (origin, demand) =>
     .filter(([key, holds]) => !holds(demand?.[key]))
     .map(([key, , wants]) => problem(`$.demand.${key}`, `${wants} when origin is ${origin}`));
 
-const ARTICLE_ONLY = ['weak-demand', 'category'];
+const ARTICLE_ONLY = ['weak-demand', 'category', 'ordered'];
 
 const formatProblems = ({ format }, origin, at) =>
   ARTICLE_ONLY.includes(origin) && format !== 'article'

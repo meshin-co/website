@@ -314,10 +314,18 @@ const categoryClaim = (extra = {}) => ({
   category: 'governance',
   ...extra,
 });
+const orderedByPrompt = (extra = {}) => claim({ format: 'article', origin: 'ordered', ...extra });
+const orderedByTitle = (extra = {}) => ({
+  ...without(claim(), 'prompt'),
+  format: 'article',
+  demand: { impressions: 0, position: null },
+  origin: 'ordered',
+  ...extra,
+});
 const quoted = (values) => values.map((value) => JSON.stringify(value)).join(', ');
 
-test('the origins are the three rungs of the picker, and the weakness reasons are the three things a weak query lacks', () => {
-  assert.deepEqual(ORIGINS, ['demand', 'weak-demand', 'category']);
+test('the origins are the three rungs of the picker and the topic a person ordered, and the weakness reasons are the three things a weak query lacks', () => {
+  assert.deepEqual(ORIGINS, ['demand', 'weak-demand', 'category', 'ordered']);
   assert.deepEqual(WEAKNESS_REASONS, ['no-buyer-prompt', 'impressions-at-floor', 'position-beyond-strengthen-band']);
 });
 
@@ -334,6 +342,9 @@ test('a well-formed claim of every origin has no problems, and so has a claim wr
   assert.deepEqual(validateClaim(weakClaim()), []);
   assert.deepEqual(validateClaim(weakClaim({ weakness: [...WEAKNESS_REASONS] })), []);
   for (const category of CATEGORIES) assert.deepEqual(validateClaim(categoryClaim({ category })), [], category);
+  assert.deepEqual(validateClaim(orderedByPrompt()), []);
+  assert.deepEqual(validateClaim(orderedByPrompt({ demand: { impressions: 0, position: null } })), []);
+  assert.deepEqual(validateClaim(orderedByTitle()), []);
 });
 
 const ORIGIN_DEFECTS = [
@@ -443,6 +454,36 @@ const ORIGIN_DEFECTS = [
     categoryClaim({ format: 'term' }),
     ['format must be article when origin is category'],
   ],
+  [
+    'an ordered claim that names a category',
+    orderedByTitle({ category: 'governance' }),
+    ['category must be absent when origin is ordered'],
+  ],
+  [
+    'an ordered claim that names a weakness',
+    orderedByPrompt({ weakness: ['no-buyer-prompt'] }),
+    ['weakness must be absent when origin is ordered'],
+  ],
+  [
+    'an ordered claim that names a category and a weakness',
+    orderedByTitle({ category: 'governance', weakness: ['no-buyer-prompt'] }),
+    ['category must be absent when origin is ordered', 'weakness must be absent when origin is ordered'],
+  ],
+  [
+    'an ordered claim whose prompt is null instead of absent',
+    orderedByTitle({ prompt: null }),
+    ['prompt must be of type object'],
+  ],
+  [
+    'an ordered claim for a term',
+    orderedByPrompt({ format: 'term' }),
+    ['format must be article when origin is ordered'],
+  ],
+  [
+    'an ordered claim with impressions and no position',
+    orderedByPrompt({ demand: { impressions: 4, position: null } }),
+    ['demand.position must be a number when impressions is above 0'],
+  ],
 ];
 
 for (const [name, value, expected] of ORIGIN_DEFECTS) {
@@ -491,9 +532,29 @@ test('originProblems puts the format rule at the path it is given, and a demand 
   assert.deepEqual(originProblems(demandClaim({ format: 'article' })), []);
 });
 
+test('originProblems lets an ordered claim hold a prompt or none, and refuses a category or a weakness on it', () => {
+  assert.deepEqual(originProblems(orderedByPrompt()), []);
+  assert.deepEqual(originProblems(orderedByTitle()), []);
+  assert.deepEqual(originProblems(orderedByTitle({ weakness: ['no-buyer-prompt'] })), [
+    { path: '$.weakness', problem: 'must be absent when origin is ordered' },
+  ]);
+  assert.deepEqual(originProblems(orderedByPrompt({ category: 'governance' }), '$.claim'), [
+    { path: '$.claim.category', problem: 'must be absent when origin is ordered' },
+  ]);
+  assert.deepEqual(originProblems(orderedByTitle({ format: 'term' }), '$.claim', '$.entry.format'), [
+    { path: '$.entry.format', problem: 'must be article when origin is ordered' },
+  ]);
+});
+
 test('originProblems refuses an unknown origin instead of letting it pass every rule', () => {
   assert.deepEqual(originProblems({ origin: 'video' }), [
     { path: '$.origin', problem: `must be one of ${quoted(ORIGINS)}` },
+  ]);
+});
+
+test('an unknown origin is refused with the four origins listed in the order of the schema', () => {
+  assert.deepEqual(originProblems({ origin: 'video' }), [
+    { path: '$.origin', problem: 'must be one of "demand", "weak-demand", "category", "ordered"' },
   ]);
 });
 

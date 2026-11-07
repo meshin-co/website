@@ -94,6 +94,7 @@ function summarise(repoRoot, record) {
   return {
     slug: record.slug,
     origin,
+    prompted: record.claim.prompt !== undefined,
     detail: origin === 'category' ? record.claim.category : (record.claim.weakness ?? []).join(','),
     date: publishDateOf(repoRoot, record) ?? record.generatedAt.slice(0, 10),
     category: record.claim.category,
@@ -141,7 +142,7 @@ const countLines = (heading, keys, counts) => [
 
 function listLines(entries) {
   const unprompted = entries
-    .filter(({ origin }) => origin !== 'demand')
+    .filter(({ prompted }) => !prompted)
     .sort((left, right) => left.date.localeCompare(right.date) || left.slug.localeCompare(right.slug));
   const heading = ['', 'written without a buyer prompt, oldest first'];
   if (unprompted.length === 0) return [...heading, 'none'];

@@ -56,7 +56,7 @@ function repository({
     join(root, generationFile),
     buildRecord({
       ...recordInput(),
-      claim,
+      claim: claimed,
       format: 'article',
       route: ROUTE,
       entryPath: ENTRY,
@@ -118,6 +118,17 @@ test('a repairable pull request opens into the entry as it stands, with its clai
   assert.equal(situation.ledger.attempts.length, 0);
   assert.equal(situation.claim.slug, claim.slug);
   assert.equal(situation.record.slug, claim.slug);
+  assert.ok(sameEntry(situation.before, draft), 'the entry on disk reads back as the draft that wrote it');
+});
+
+test('an ordered entry that has a buyer prompt opens like a demand entry, from its claim, record and passage', async () => {
+  const situation = await open({ repoRoot: repository({ claimed: { ...claim, origin: 'ordered' } }) });
+
+  assert.equal(situation.slug, claim.slug);
+  assert.equal(situation.claim.origin, 'ordered');
+  assert.equal(situation.record.claim.origin, 'ordered');
+  assert.equal(situation.route, ROUTE);
+  assert.equal(situation.runDate, RUN_DATE);
   assert.ok(sameEntry(situation.before, draft), 'the entry on disk reads back as the draft that wrote it');
 });
 
@@ -204,6 +215,7 @@ test('a record and a ledger filed in another month than the month of the claim a
 const PROMPTLESS = {
   'weak-demand': { origin: 'weak-demand', weakness: ['no-buyer-prompt'] },
   category: { origin: 'category', category: 'governance', demand: { impressions: 0, position: null } },
+  ordered: { origin: 'ordered' },
 };
 
 for (const [origin, fields] of Object.entries(PROMPTLESS)) {
