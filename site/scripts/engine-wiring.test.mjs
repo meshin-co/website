@@ -24,6 +24,7 @@ const LOOP = {
   holdLabel: 'pause-bot',
   writeTimesUtc: ['05:30', '17:45'],
   catchUpAfterMinutes: [90, 180],
+  cronLeadMinutes: 95,
   categoryRotation: ['executive', 'governance'],
 };
 const DEMAND = {
@@ -118,6 +119,13 @@ const LIVE = [
     [90, 180],
   ],
   [
+    'the lead the cron entries are set before their times comes from the loop section',
+    'site/scripts/schedule-workflow.mjs',
+    withLoop,
+    'm.CRON_LEAD_MINUTES',
+    95,
+  ],
+  [
     'the categories the writer rotates through come from the loop section',
     'site/scripts/topic-categories.mjs',
     withLoop,
@@ -158,6 +166,7 @@ const REQUIRED = [
   ['site/scripts/topic-demand.mjs', 'demand.strengthenBand'],
   ['site/scripts/schedule-workflow.mjs', 'loop.writeTimesUtc'],
   ['site/scripts/schedule-workflow.mjs', 'loop.catchUpAfterMinutes'],
+  ['site/scripts/schedule-workflow.mjs', 'loop.cronLeadMinutes'],
   ['site/scripts/topic-categories.mjs', 'loop.categoryRotation'],
   ['site/scripts/write-draft.mjs', 'loop.correctionRounds'],
   ['site/scripts/schedule-workflow.mjs', 'loop.stoppedRunRetriesPerDay'],

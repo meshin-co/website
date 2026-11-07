@@ -1,23 +1,23 @@
 # Schedule the Unattended Writer
 
-`.github/workflows/write-daily.yml` starts the writer at the UTC times in `site/engine.config.json`, key
-`loop.writeTimesUtc` (shipped `["03:17", "15:17"]`). A run writes one article unless no rung of the topic ladder gives
-it a topic (`write-on-a-category.md`), so two times mean up to two articles a day. Change `30-write-twice-a-day` made
-the times configuration: nobody types a cron line.
+`.github/workflows/write-daily.yml` is generated from `site/engine.config.json`: `loop.writeTimesUtc` (shipped
+`["06:00", "15:00"]`) is when an article is wanted, `loop.cronLeadMinutes` (shipped `440`) how much earlier each cron is
+set, because GitHub's queue starts a scheduled run hours late and no setting here changes that (`set-the-cron-lead.md`).
+A run writes one article unless no rung of the topic ladder gives it a topic (`write-on-a-category.md`), so two times mean
+up to two articles a day. Change `30-write-twice-a-day` made the times configuration: nobody types a cron line.
 
 ## Change the times
 
-1. Edit the list. Each time is `HH:MM` in 24 hours, two digits each, UTC; at least one; none twice. Keep the minute off
-   `00`, where scheduled runs queue. A non-list, a time that is not `HH:MM` and a repeat are refused at load, naming
-   the value and its place, for example `"3:17" is not a time of day` at `$.loop.writeTimesUtc[0]`.
-2. `cd site && npm run assets:schedule` (`scripts/generate-schedule.mjs`) rewrites the `schedule:` block under `on:`
-   of the workflow: one comment line and one `- cron: 'M H * * *'` per time, ascending. It touches nothing else and
-   prints either what it wrote or that nothing changed.
-3. `npm run gate:schedule` (`scripts/schedule-gate.mjs`, in the `types-and-units` job of `ci.yml`) regenerates the
-   block in memory and fails when the committed file differs. It prints
-   `SCHEDULE <rule> .github/workflows/write-daily.yml: <detail>` with `cron-differs`, `cron-extra`, `cron-missing`,
-   `cron-order`, `schedule-missing`, `schedule-twice`, `schedule-block-differs` or `workflow-missing`; the detail names
-   the line and `npm run assets:schedule`. An invalid `loop` section reads `config-invalid`.
+1. Edit the list. Each time is `HH:MM` in 24 hours, two digits each, UTC; at least one; none twice. Keep each cron's
+   minute off `00`, where scheduled runs queue. A non-list, a time that is not `HH:MM` and a repeat are refused at load,
+   naming the value and its place, for example `"3:17" is not a time of day` at `$.loop.writeTimesUtc[0]`.
+2. `cd site && npm run assets:schedule` (`scripts/generate-schedule.mjs`) rewrites the `schedule:` block under `on:` of the
+   workflow: one comment line and one `- cron: 'M H * * *'` per time and catch-up delay, each `loop.cronLeadMinutes` before
+   its time. It touches nothing else and prints either what it wrote or that nothing changed.
+3. `npm run gate:schedule` (`scripts/schedule-gate.mjs`, in the `types-and-units` job of `ci.yml`) regenerates the block in
+   memory and fails when the committed file differs. It prints `SCHEDULE <rule> .github/workflows/write-daily.yml: <detail>`
+   with `cron-differs`, `cron-extra`, `cron-missing`, `cron-order`, `schedule-missing`, `schedule-twice`, `schedule-block-differs`
+   or `workflow-missing`; the detail names the line and `npm run assets:schedule`. An invalid `loop` section reads `config-invalid`.
 
 The rules live in `scripts/schedule-workflow.mjs`. Its specimens, `scripts/schedule-specimens.mjs`, move a cron minute,
 write a catch-up cron and remove one (rows `write-schedule-hand-edited`, `write-schedule-catch-up-hand-written`,
@@ -33,9 +33,9 @@ green and its summary names what is missing.
 
 ## A slot GitHub never starts is run late
 
-GitHub documents that a scheduled run can be delayed under load and that queued runs may be dropped; on 2026-11-05 the
-03:17 slot never fired. `loop.catchUpAfterMinutes` (shipped `[120, 240]`) adds a cron entry for each time and delay,
-written by `npm run assets:schedule` and held by `gate:schedule` like the first two. A delay that passes midnight or
+GitHub documents that a scheduled run can be delayed under load and that queued runs may be dropped; the 03:17 slot of
+2026-11-05 first looked dropped and started 461 minutes late. `loop.catchUpAfterMinutes` (shipped `[120, 240]`) adds a cron
+entry for each time and delay, written by `npm run assets:schedule` and held by `gate:schedule` like them. A delay that passes midnight or
 shares a minute is refused at load. The `due` job (`scripts/slot-due.mjs`, over `scripts/slot-standing.mjs`) runs first
 and ends a scheduled run green, before any model, when the UTC day holds as many article claims (by `claimedAt`) as
 slots have passed; a manual run always writes. A slot that has its entry is never run twice. A run that failed before

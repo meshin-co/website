@@ -14,8 +14,12 @@ const finding = (rule, where, detail) => ({ rule, where, detail });
 
 function timesOf(root) {
   try {
-    const { writeTimesUtc: times, catchUpAfterMinutes: catchUp } = readEngineConfig(join(root, CONFIG_PATH)).loop;
-    return { times, catchUp };
+    const {
+      writeTimesUtc: times,
+      catchUpAfterMinutes: catchUp,
+      cronLeadMinutes: lead,
+    } = readEngineConfig(join(root, CONFIG_PATH)).loop;
+    return { times, catchUp, lead };
   } catch (error) {
     if (!(error instanceof EngineConfigError)) throw error;
     return { problem: finding('config-invalid', CONFIG_PATH, error.message) };
@@ -23,17 +27,18 @@ function timesOf(root) {
 }
 
 export function scheduleReport(root = REPOSITORY_ROOT) {
-  const { times, catchUp, problem } = timesOf(root);
-  if (problem !== undefined) return { times: null, catchUp: null, findings: [problem] };
+  const { times, catchUp, lead, problem } = timesOf(root);
+  if (problem !== undefined) return { times: null, catchUp: null, lead: null, findings: [problem] };
   const file = join(root, WRITE_DAILY_PATH);
   if (!existsSync(file)) {
     const detail = `the file is absent, so nothing runs the writer; restore it, then run ${REGENERATE_COMMAND}`;
-    return { times, catchUp, findings: [finding('workflow-missing', WRITE_DAILY_PATH, detail)] };
+    return { times, catchUp, lead, findings: [finding('workflow-missing', WRITE_DAILY_PATH, detail)] };
   }
   return {
     times,
     catchUp,
-    findings: scheduleFindings(readFileSync(file, 'utf8'), times, catchUp).map(({ rule, detail }) =>
+    lead,
+    findings: scheduleFindings(readFileSync(file, 'utf8'), times, catchUp, lead).map(({ rule, detail }) =>
       finding(rule, WRITE_DAILY_PATH, detail)
     ),
   };
@@ -54,10 +59,13 @@ const retriesOf = (catchUp) =>
     ? ''
     : `, and tries each slot again ${catchUp.join(', ')} minutes later, the delays of loop.catchUpAfterMinutes`;
 
-const summaryOf = ({ times, catchUp, findings }) =>
+const leadOf = (lead) =>
+  lead === 0 ? '' : `, with every cron entry set ${lead} minutes before its time, the lead of loop.cronLeadMinutes`;
+
+const summaryOf = ({ times, catchUp, lead, findings }) =>
   findings.length === 0
-    ? `schedule: 0 findings (${WRITE_DAILY_PATH} starts the writer at ${times.join(', ')} UTC, the times of loop.writeTimesUtc${retriesOf(catchUp)})`
-    : `schedule: ${findings.length} ${findings.length === 1 ? 'finding' : 'findings'} (${WRITE_DAILY_PATH} must hold the schedule ${REGENERATE_COMMAND} writes from loop.writeTimesUtc and loop.catchUpAfterMinutes)`;
+    ? `schedule: 0 findings (${WRITE_DAILY_PATH} starts the writer for ${times.join(', ')} UTC, the times of loop.writeTimesUtc${retriesOf(catchUp)}${leadOf(lead)})`
+    : `schedule: ${findings.length} ${findings.length === 1 ? 'finding' : 'findings'} (${WRITE_DAILY_PATH} must hold the schedule ${REGENERATE_COMMAND} writes from loop.writeTimesUtc, loop.catchUpAfterMinutes and loop.cronLeadMinutes)`;
 
 export function main(argv) {
   const { root, error } = readRoot(argv);

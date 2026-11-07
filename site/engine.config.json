@@ -39,8 +39,9 @@
     "monthlySpendCeilingUsd": 25,
     "claimLifetimeDays": 14,
     "holdLabel": "autowriter-hold",
-    "writeTimesUtc": ["03:17", "15:17"],
+    "writeTimesUtc": ["06:00", "15:00"],
     "catchUpAfterMinutes": [120, 240],
+    "cronLeadMinutes": 440,
     "categoryRotation": ["governance", "agentic-architecture", "operating-model", "executive"]
   },
   "demand": {

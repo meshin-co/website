@@ -11,18 +11,19 @@ const CONFIG_PATH = 'site/engine.config.json';
 const USAGE = 'usage: node scripts/generate-schedule.mjs [--root <repository root>]';
 
 export function generateSchedule(root = REPOSITORY_ROOT) {
-  const { writeTimesUtc: times, catchUpAfterMinutes } = readEngineConfig(join(root, CONFIG_PATH)).loop;
+  const { writeTimesUtc: times, catchUpAfterMinutes, cronLeadMinutes } = readEngineConfig(join(root, CONFIG_PATH)).loop;
   const workflowFile = join(root, WRITE_DAILY_PATH);
   const current = readFileSync(workflowFile, 'utf8');
-  const next = withSchedule(current, times, catchUpAfterMinutes);
+  const next = withSchedule(current, times, catchUpAfterMinutes, cronLeadMinutes);
   const changed = next !== current;
   if (changed) writeFileSync(workflowFile, next);
   return {
     path: WRITE_DAILY_PATH,
     times,
     catchUpAfterMinutes,
+    cronLeadMinutes,
     changed,
-    crons: cronPlan(times, catchUpAfterMinutes).length,
+    crons: cronPlan(times, catchUpAfterMinutes, cronLeadMinutes).length,
   };
 }
 
@@ -44,16 +45,17 @@ export function main(argv) {
     return;
   }
   try {
-    const { path, times, catchUpAfterMinutes, changed, crons } = generateSchedule(root);
+    const { path, times, catchUpAfterMinutes, cronLeadMinutes, changed, crons } = generateSchedule(root);
     const listed = times.join(', ');
     const retries =
       catchUpAfterMinutes.length === 0
         ? ''
         : ` and ${catchUpAfterMinutes.join(', ')} minutes later (loop.catchUpAfterMinutes)`;
+    const lead = cronLeadMinutes === 0 ? '' : `, each set ${cronLeadMinutes} minutes earlier (loop.cronLeadMinutes)`;
     console.log(
       changed
-        ? `schedule: wrote ${crons} cron ${crons === 1 ? 'entry' : 'entries'} into ${path} for ${listed} (loop.writeTimesUtc)${retries}`
-        : `schedule: ${path} already holds the cron entries for ${listed} (loop.writeTimesUtc)${retries}; nothing written`
+        ? `schedule: wrote ${crons} cron ${crons === 1 ? 'entry' : 'entries'} into ${path} for ${listed} (loop.writeTimesUtc)${retries}${lead}`
+        : `schedule: ${path} already holds the cron entries for ${listed} (loop.writeTimesUtc)${retries}${lead}; nothing written`
     );
   } catch (failure) {
     console.error(`schedule: ${failure.message}`);

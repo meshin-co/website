@@ -46,7 +46,8 @@ test('the real configuration loads, and what it returns cannot be changed by a c
   }, TypeError);
   assert.throws(() => (config.content.formats.article.author = 'x'), TypeError);
   assert.equal(config.loop.attemptCap, 3);
-  assert.deepEqual(config.loop.writeTimesUtc, ['03:17', '15:17']);
+  assert.deepEqual(config.loop.writeTimesUtc, ['06:00', '15:00']);
+  assert.equal(config.loop.cronLeadMinutes, 440);
   assert.deepEqual(config.loop.categoryRotation, [
     'governance',
     'agentic-architecture',
@@ -134,6 +135,10 @@ const MALFORMED = [
   ['loop.quarantineHours', 0.5, 'must be of type integer'],
   ['loop.monthlySpendCeilingUsd', 0, 'must be >= 0.01'],
   ['loop.claimLifetimeDays', -1, 'must be >= 1'],
+  ['loop.cronLeadMinutes', -1, 'must be >= 0'],
+  ['loop.cronLeadMinutes', 1440, 'must be <= 1439'],
+  ['loop.cronLeadMinutes', 7.5, 'must be of type integer'],
+  ['loop.cronLeadMinutes', '440', 'must be of type integer'],
   ['loop.holdLabel', '', 'must have at least 1 characters'],
   ['loop.holdLabel', 'a,b', 'must match pattern'],
   ['diff.proseDirectories', ['docs'], 'must match pattern'],
@@ -181,6 +186,11 @@ test('an empty category rotation is legal and turns the fallback off, so the loo
   const { config, problems } = inspected(mutated('loop.categoryRotation', []));
   assert.deepEqual(problems, []);
   assert.deepEqual(config.loop.categoryRotation, []);
+});
+
+test('a cron lead of 0 and of 1439 minutes are legal, because 0 sets each cron at its wanted time', () => {
+  for (const lead of [0, 1439])
+    assert.deepEqual(inspected(mutated('loop.cronLeadMinutes', lead)).problems, [], `${lead}`);
 });
 
 const WRITE_TIMES = [

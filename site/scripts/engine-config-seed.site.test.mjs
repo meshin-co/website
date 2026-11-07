@@ -11,8 +11,9 @@ test('the seeded engine configuration defines every value the engine requires, s
   assert.deepEqual(inspectEngineConfig(readFileSync(SEED, 'utf8')).problems, []);
 });
 
-test('the seeded configuration starts a new site on one run a day and no category rotation', () => {
+test('the seeded configuration starts a new site on one run a day, each cron at its time, and no category rotation', () => {
   const { config } = inspectEngineConfig(readFileSync(SEED, 'utf8'));
   assert.deepEqual(config.loop.writeTimesUtc, ['03:17']);
+  assert.equal(config.loop.cronLeadMinutes, 0);
   assert.deepEqual(config.loop.categoryRotation, []);
 });

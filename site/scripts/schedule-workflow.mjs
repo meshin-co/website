@@ -1,12 +1,13 @@
 import { readEngineConfig } from './engine-config.mjs';
 
-const { writeTimesUtc, catchUpAfterMinutes, stoppedRunRetriesPerDay } = readEngineConfig().loop;
+const { writeTimesUtc, catchUpAfterMinutes, cronLeadMinutes, stoppedRunRetriesPerDay } = readEngineConfig().loop;
 export const WRITE_TIMES_UTC = writeTimesUtc;
 export const CATCH_UP_AFTER_MINUTES = catchUpAfterMinutes;
+export const CRON_LEAD_MINUTES = cronLeadMinutes;
 export const STOPPED_RUN_RETRIES_PER_DAY = stoppedRunRetriesPerDay;
 export const WRITE_DAILY_PATH = '.github/workflows/write-daily.yml';
 export const REGENERATE_COMMAND = 'npm run assets:schedule';
-export const SCHEDULE_COMMENT = `# written by ${REGENERATE_COMMAND} from loop.writeTimesUtc and loop.catchUpAfterMinutes; give each time a minute off the top of the hour, where scheduled runs queue`;
+export const SCHEDULE_COMMENT = `# written by ${REGENERATE_COMMAND} from loop.writeTimesUtc, loop.catchUpAfterMinutes and loop.cronLeadMinutes: each cron is set loop.cronLeadMinutes before the time it serves, listed in the order of those times, because GitHub starts a scheduled run late; give each cron a minute off the top of the hour, where scheduled runs queue`;
 
 const ON_KEY = /^on:\s*$/;
 const TOP_LEVEL = /^[^\s#]/;
@@ -26,8 +27,10 @@ const MINUTES_IN_DAY = 1440;
 const pad = (value) => String(value).padStart(2, '0');
 const minuteOfDay = (time) => Number(time.slice(0, 2)) * 60 + Number(time.slice(3));
 const clockOf = (minute) => `${pad(Math.floor(minute / 60))}:${pad(minute % 60)}`;
+const wrapped = (minute) => ((minute % MINUTES_IN_DAY) + MINUTES_IN_DAY) % MINUTES_IN_DAY;
+const clockBefore = (time, minutes) => clockOf(wrapped(minuteOfDay(time) - minutes));
 
-export function cronPlan(times, catchUpMinutes = []) {
+export function cronPlan(times, catchUpMinutes = [], leadMinutes = 0) {
   return sortedTimes(times)
     .flatMap((slot) => [
       { time: slot, slot, delay: 0 },
@@ -38,13 +41,13 @@ export function cronPlan(times, catchUpMinutes = []) {
       })),
     ])
     .sort((first, second) => (first.time < second.time ? -1 : first.time > second.time ? 1 : 0))
-    .map((entry) => ({ ...entry, cron: cronOf(entry.time) }));
+    .map((entry) => ({ ...entry, cron: cronOf(clockBefore(entry.time, leadMinutes)) }));
 }
 
-export const scheduleLines = (times, catchUpMinutes = []) => [
+export const scheduleLines = (times, catchUpMinutes = [], leadMinutes = 0) => [
   '  schedule:',
   `    ${SCHEDULE_COMMENT}`,
-  ...cronPlan(times, catchUpMinutes).map(({ cron }) => `    - cron: '${cron}'`),
+  ...cronPlan(times, catchUpMinutes, leadMinutes).map(({ cron }) => `    - cron: '${cron}'`),
 ];
 
 function triggersOf(lines) {
@@ -72,12 +75,12 @@ function scheduleBlocks(lines, triggers) {
   return blocks;
 }
 
-export function withSchedule(text, times, catchUpMinutes = []) {
+export function withSchedule(text, times, catchUpMinutes = [], leadMinutes = 0) {
   const lines = text.split('\n');
   const triggers = triggersOf(lines);
   if (triggers === null) throw new Error(`${WRITE_DAILY_PATH} has no on: key, so there is nowhere to put the schedule`);
   const [first, ...others] = scheduleBlocks(lines, triggers);
-  const generated = scheduleLines(times, catchUpMinutes);
+  const generated = scheduleLines(times, catchUpMinutes, leadMinutes);
   for (const { start, end } of others.reverse()) lines.splice(start, end - start);
   if (first === undefined) lines.splice(triggers.start + 1, 0, ...generated);
   else lines.splice(first.start, first.end - first.start, ...generated);
@@ -147,7 +150,7 @@ function cronFindings(entries, wanted) {
   return [...differs, ...surplus, ...lacking, ...reordered];
 }
 
-export function scheduleFindings(text, times, catchUpMinutes = []) {
+export function scheduleFindings(text, times, catchUpMinutes = [], leadMinutes = 0) {
   const lines = text.split('\n');
   const triggers = triggersOf(lines);
   const blocks = triggers === null ? [] : scheduleBlocks(lines, triggers);
@@ -169,8 +172,9 @@ export function scheduleFindings(text, times, catchUpMinutes = []) {
           ),
         ]
       : [];
-  const found = [...twice, ...cronFindings(entriesOf(lines, blocks[0]), cronPlan(times, catchUpMinutes))];
-  if (found.length === 0 && withSchedule(text, times, catchUpMinutes) !== text) {
+  const wanted = cronPlan(times, catchUpMinutes, leadMinutes);
+  const found = [...twice, ...cronFindings(entriesOf(lines, blocks[0]), wanted)];
+  if (found.length === 0 && withSchedule(text, times, catchUpMinutes, leadMinutes) !== text) {
     return [
       finding(
         'schedule-block-differs',
