@@ -263,7 +263,7 @@ The count on a collection's line in `/llms.txt` and in `/llms-full.txt` SHALL eq
 #### Scenario: An index carries an entry itself
 
 - **WHEN** `/llms/post.txt` indexes shards and also lists the URL of `/blog/a-post` as an entry
-- **THEN** `npm run gate:machine` prints `MACHINE /llms/post.txt is an index of shards but lists https://meshin.co/blog/a-post itself` and exits 1
+- **THEN** `npm run gate:machine` prints `MACHINE /llms/post.txt is an index of shards but lists https://example.com/blog/a-post itself` and exits 1
 
 ### Requirement: The llms files order entries by a total key and no generator reads a clock
 
@@ -399,7 +399,7 @@ For each public collection with a live entry, every live entry SHALL appear exac
 #### Scenario: An entry ships twice
 
 - **WHEN** `/llms/post-2.txt` repeats the URL line of an entry that `/llms/post-1.txt` holds
-- **THEN** `npm run gate:machine` prints `MACHINE https://meshin.co/blog/a-post ships twice across the post shards` and exits 1
+- **THEN** `npm run gate:machine` prints `MACHINE https://example.com/blog/a-post ships twice across the post shards` and exits 1
 
 #### Scenario: A collection file was not built
 
@@ -412,7 +412,7 @@ For each public collection with a live entry, every live entry SHALL appear exac
 
 #### Scenario: An entry is listed in llms-full.txt
 
-- **WHEN** `/llms-full.txt` gains a line linking `https://meshin.co/blog/a-post`
+- **WHEN** `/llms-full.txt` gains a line linking `https://example.com/blog/a-post`
 - **THEN** `npm run gate:machine` prints `MACHINE llms-full.txt lists /blog/a-post inline, entries of an unbounded collection belong in /llms/` and exits 1
 
 #### Scenario: A count drifts from the shipped entries
