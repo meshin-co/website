@@ -66,7 +66,7 @@ title `{artifact name} — meshin.co` · meta: one sentence naming the artifact 
 | `/resources/handover-playbook`                     | handover playbook                     | Handover Playbook — meshin.co                     | The Handover Playbook is six fill-in tables for moving AI leadership from an outside lead to a named owner, from the test to a later check.            | Handover Playbook                     | 31    | ✓       |
 | `/resources/llm-gateway-governance-config`         | llm gateway governance config         | LLM Gateway Governance Config — meshin.co         | LLM gateway governance config: a policy schema of five keys (allowed models, redaction, rate limit, log retention and fallback), each with an example. | LLM Gateway Governance Config         | 26    | ✓       |
 
-### article (13)
+### article (14)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
@@ -75,6 +75,7 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/adoption-telemetry-measuring-if-ai-is-actually-used`        | adoption telemetry for ai tools                            | Adoption telemetry for AI tools: what a trial found — meshin.co        | Adoption telemetry for AI tools: six measures, each with a stated limit, and the 2025 METR trial that shows why self-report misleads.                 | Adoption telemetry for AI tools: what a trial found        | 42    | ✓       |
 | `/blog/ai-acceptable-use-policy-for-a-50-person-company`           | ai acceptable use policy                                   | What actually belongs in an AI acceptable use policy — meshin.co       | What a working AI acceptable use policy has to decide, what it must refuse to do, and how a company of 30 to 300 people gets staff to follow it.      | What actually belongs in an AI acceptable use policy       | 32    | ✓       |
 | `/blog/ai-readiness-assessment-template-for-smb`                   | ai readiness assessment template for smb                   | AI readiness assessment template for SMB — meshin.co                   | Use an AI readiness scorecard to assess a proposed workflow, record evidence, and decide what needs work before a pilot.                              | AI readiness assessment template for SMB                   | 32    | ✓       |
+| `/blog/ai-readiness-scorecard-five-drivers`                        | ai readiness scorecard five drivers                        | AI readiness scorecard five drivers — meshin.co                        | AI readiness scorecard five drivers: assess strategy, data, delivery, people, and governance for a specific workflow.                                 | AI readiness scorecard five drivers                        | 34    | ✓       |
 | `/blog/ai-vendor-assessment-questionnaire-template`                | ai vendor assessment questionnaire template                | AI vendor assessment questionnaire template — meshin.co                | Use an AI vendor assessment questionnaire template to check data handling, security, model changes and incident response before buying.               | AI vendor assessment questionnaire template                | 31    | ✓       |
 | `/blog/build-vs-buy-ai-3-year-tco`                                 | build vs buy ai 3-year tco                                 | Build vs buy AI 3-year TCO — meshin.co                                 | Build vs buy AI 3-year TCO: compare costs across the same workload, risk controls and exit plan.                                                      | Build vs buy AI 3-year TCO                                 | 31    | ✓       |
 | `/blog/evals-in-ci-for-llm-agents`                                 | evals in ci without a golden answer                        | Evals in CI for LLM agents, without a golden answer — meshin.co        | How to build an eval set from production traffic, score an LLM agent without a golden answer, and fail a merge in CI when it regresses.               | Evals in CI for LLM agents, without a golden answer        | 28    | ✓       |
@@ -400,7 +401,8 @@ Why: exact-match artifact query; the downloads metric (PRD §5) counts it. GitHu
 
 **29. AI readiness scorecard five drivers**
 Must win: `/resources/ai-readiness-scorecard`, support `/services/ai-readiness-and-risk-assessment` ("score you on five readiness drivers").
-Passage: "A five-axis AI readiness scorecard you score yourself in an afternoon: strategy, data, delivery, people, and governance." (resource lead)
+Passage: "A five-axis AI readiness scorecard you score yourself in an afternoon: strategy, data, delivery, people, and governance." (`/resources/ai-readiness-scorecard`) (resource lead)
+Passage: "The five drivers of an AI readiness scorecard are strategy, data, delivery, people, and governance." (`/blog/ai-readiness-scorecard-five-drivers`)
 Why: the "five drivers" phrasing must appear verbatim-adjacent so retrieval can bind it; free scorecard → paid Assessment path.
 
 **30. board memo AI strategy one page**
@@ -422,16 +424,16 @@ One owning route per entity. The mention count is inbound references from other 
 | Entity                         | Owned by                                   | Mentioned by |
 | ------------------------------ | ------------------------------------------ | ------------ |
 | Agentic workflow               | `/glossary/agentic-workflow`               | 13           |
-| AI governance                  | `/glossary/ai-governance`                  | 38           |
+| AI governance                  | `/glossary/ai-governance`                  | 40           |
 | AI impact assessment           | `/glossary/ai-impact-assessment`           | 2            |
 | AI management system           | `/glossary/ai-management-system`           | 6            |
 | AI operating model             | `/glossary/ai-operating-model`             | 16           |
 | AI register                    | `/glossary/ai-register`                    | 37           |
 | Conformity assessment          | `/glossary/conformity-assessment`          | 5            |
-| Data classification            | `/glossary/data-classification`            | 13           |
+| Data classification            | `/glossary/data-classification`            | 14           |
 | DPIA                           | `/glossary/dpia`                           | 5            |
 | EU AI Act                      | `/glossary/eu-ai-act`                      | 41           |
-| Evals                          | `/glossary/evals`                          | 36           |
+| Evals                          | `/glossary/evals`                          | 37           |
 | Guardrails                     | `/glossary/guardrails`                     | 7            |
 | Hallucination rate             | `/glossary/hallucination-rate`             | 4            |
 | High-risk AI system            | `/glossary/high-risk-ai-system`            | 10           |

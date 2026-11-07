@@ -1,0 +1,260 @@
+{
+  "schema": 1,
+  "slug": "ai-readiness-scorecard-five-drivers",
+  "runId": "42369598772-1",
+  "generatedAt": "2026-11-07T11:51:35.921Z",
+  "claim": {
+    "title": "AI readiness scorecard five drivers",
+    "query": "ai readiness scorecard five drivers",
+    "prompt": {
+      "number": 29,
+      "text": "AI readiness scorecard five drivers"
+    },
+    "origin": "demand",
+    "catchUp": {
+      "slot": "03:17",
+      "lateMinutes": 511
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-07",
+      "windowStart": "2026-08-07",
+      "windowEnd": "2026-11-05",
+      "table": "Buyer prompts"
+    },
+    "row": {
+      "#": "29",
+      "Prompt": "AI readiness scorecard five drivers",
+      "Must win": "`/resources/ai-readiness-scorecard`",
+      "Impressions": "unproven",
+      "Position": "-",
+      "Carried by": "-"
+    }
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/ai-readiness-scorecard-five-drivers",
+    "path": "site/src/data/post/ai-readiness-scorecard-five-drivers.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_0195842b84185c03016aef1049515487d28d174a34117869df",
+  "published": {
+    "callIndex": 1
+  },
+  "calls": [
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0cc7472755ed6d37016aef10139d5c87d293779ac70c4d1d88",
+      "requestDigest": "afb96d45f0a7a16c5e41ba1b45b5c1a7da69a8385f65b51e18700a768f9edd5c",
+      "tokens": {
+        "input": 10374,
+        "output": 4074
+      },
+      "costUsd": 0.030744,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0195842b84185c03016aef1049515487d28d174a34117869df",
+      "requestDigest": "1dc6b7adf83fc8a92fc8e60c5bff9c87bf68ab604bbb38a267547bcfd2357eb7",
+      "tokens": {
+        "input": 13511,
+        "output": 3256
+      },
+      "costUsd": 0.029791,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 23885,
+      "output": 7330
+    },
+    "costUsd": 0.060535
+  },
+  "ledger": "audits/autowriter/2026/11/ai-readiness-scorecard-five-drivers.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "77c3d7d93c9eda2ff278c6c3a93283eb2275595c597cf6db100a502b4d4b2235",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "42702fd9e59dee73ae64fba75624c834724b5b4e7598ab0adc1b48c1bfc9633c"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "06fe1a1a0baa9b35048ce8b9010c690a2bef59f89f3259d2f524c4c7b97aa0eb"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "3391cfbba421ae3e122272b5c2215633533bc3bed03a747ca25c6cb5e03d201e"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "cbbafaab8152bc089e119b5851b812a141acfd47c4e7520e208108051c7080d1"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "5fd48599f07d09669e89982e04eed6c6f9447f1ba3b2cca385e757dd56b85030"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "70ec4173e205e974cbaafaf270f1a24aa674c0aeb29feb653f7953f9b9b656b8"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "f9e37c623c6cd481fc79489dba4061b4920647cc9a7429a1d256a3eb9e5fbb97"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "664e1880dcfdbd8f008ae5f287b3a55b0029913b8ed9019eb67ddfb4f2fd9b57"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "df07e5ca1fced82881ab08e3849da19ec0de824e4be87b2719f174f0f73f33c2"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "28558d2f0f945cad1ba71d962004e61c6bafdb3c",
+    "fingerprint": "533bde6c93149c553da77dadc89f12b9bf09ea1f6f7ab05b5552483739f6d62d"
+  },
+  "claimTable": [
+    {
+      "sentence": "The five drivers of an AI readiness scorecard are strategy, data, delivery, people, and governance.",
+      "marker": "sourced",
+      "source": {
+        "id": "scorecard",
+        "title": "AI readiness scorecard",
+        "url": "https://meshin.co/resources/ai-readiness-scorecard"
+      },
+      "span": "A five-axis AI readiness scorecard you score yourself in an afternoon: strategy, data, delivery, people, and governance."
+    },
+    {
+      "sentence": "The AI readiness scorecard five drivers framework covers strategy, data, delivery, people, and governance.",
+      "marker": "sourced",
+      "source": {
+        "id": "scorecard",
+        "title": "AI readiness scorecard",
+        "url": "https://meshin.co/resources/ai-readiness-scorecard"
+      },
+      "span": "A five-axis AI readiness scorecard you score yourself in an afternoon: strategy, data, delivery, people, and governance."
+    }
+  ],
+  "band": {
+    "measuredOn": "2026-11-02",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 120,
+      "median": 15,
+      "shareBelowThreshold": 0.2167,
+      "shareJustBelow": 0.1584,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/ai-readiness-scorecard-five-drivers.json",
+    "audits/autowriter/claims/2026/11/ai-readiness-scorecard-five-drivers.json",
+    "audits/autowriter/generations/2026/11/ai-readiness-scorecard-five-drivers.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-ai-readiness-scorecard-five-drivers.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-build-vs-buy-ai-3-year-tco.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-fractional-caio-pricing.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/ai-readiness-scorecard-five-drivers.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}
