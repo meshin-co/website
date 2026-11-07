@@ -20,6 +20,7 @@ const CONFIG = JSON.parse(readFileSync(join(REPOSITORY, 'site', 'engine.config.j
 const CURRENT_TIMES = CONFIG.loop.writeTimesUtc;
 const CURRENT_LEAD = CONFIG.loop.cronLeadMinutes;
 const DELAYS = CONFIG.loop.catchUpAfterMinutes;
+const FIXTURE_DELAYS = [120, 240];
 const NEW_TIMES = ['05:30', '17:45'];
 const CURRENT = withSchedule(
   readFileSync(join(REPOSITORY, WRITE_DAILY_PATH), 'utf8'),
@@ -102,28 +103,28 @@ test('a workflow with no on: key stops the generator and is left exactly as it w
 });
 
 test('run as a script it writes, says what it wrote, and a second run says it had nothing to write', () => {
-  const { root, text } = scene({ lead: 95 });
+  const { root, text } = scene({ delays: FIXTURE_DELAYS, lead: 95 });
   const first = cli('--root', root);
   assert.equal(first.status, 0, first.stderr);
   assert.equal(
     first.stdout,
-    'schedule: wrote 8 cron entries into .github/workflows/write-daily.yml for 05:30, 17:45 (loop.writeTimesUtc) and 30, 120, 240 minutes later (loop.catchUpAfterMinutes), each set 95 minutes earlier (loop.cronLeadMinutes)\n'
+    'schedule: wrote 6 cron entries into .github/workflows/write-daily.yml for 05:30, 17:45 (loop.writeTimesUtc) and 120, 240 minutes later (loop.catchUpAfterMinutes), each set 95 minutes earlier (loop.cronLeadMinutes)\n'
   );
   const written = text();
   const second = cli('--root', root);
   assert.equal(second.status, 0, second.stderr);
   assert.equal(
     second.stdout,
-    'schedule: .github/workflows/write-daily.yml already holds the cron entries for 05:30, 17:45 (loop.writeTimesUtc) and 30, 120, 240 minutes later (loop.catchUpAfterMinutes), each set 95 minutes earlier (loop.cronLeadMinutes); nothing written\n'
+    'schedule: .github/workflows/write-daily.yml already holds the cron entries for 05:30, 17:45 (loop.writeTimesUtc) and 120, 240 minutes later (loop.catchUpAfterMinutes), each set 95 minutes earlier (loop.cronLeadMinutes); nothing written\n'
   );
   assert.equal(text(), written);
 });
 
 test('run as a script it does not mention a lead of 0, so the text is the one it had before the lead existed', () => {
-  const { root } = scene({ lead: 0 });
+  const { root } = scene({ delays: FIXTURE_DELAYS, lead: 0 });
   assert.equal(
     cli('--root', root).stdout,
-    'schedule: wrote 8 cron entries into .github/workflows/write-daily.yml for 05:30, 17:45 (loop.writeTimesUtc) and 30, 120, 240 minutes later (loop.catchUpAfterMinutes)\n'
+    'schedule: wrote 6 cron entries into .github/workflows/write-daily.yml for 05:30, 17:45 (loop.writeTimesUtc) and 120, 240 minutes later (loop.catchUpAfterMinutes)\n'
   );
 });
 
