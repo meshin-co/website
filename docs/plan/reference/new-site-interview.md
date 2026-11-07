@@ -22,7 +22,7 @@ it, and to the table of config values in Part 1 or to the secret and variable ta
 ## The three parts
 
 1. The site: scope and layout, identity, pages and navigation, the loop policy, Search Console demand,
-   hosting and the performance bar. Question ids `S1` to `S50`; S49 and S50 belong to the loop policy.
+   hosting and the performance bar. Question ids `S1` to `S51`; S49 to S51 belong to the loop policy.
 2. The semantic core: the business, the buyer, what the owner can prove, families, buyer prompts,
    words, categories and tags, and the contract a complete core must meet. Ids `K1` to `K34`.
 3. The platform: the secrets and the repository settings with what fails when each is absent, the
@@ -37,7 +37,7 @@ This part collects what only the owner can say about the new site, apart from th
 1. Phase 1 (S1 to S6) fixes scope and layout. S2 needs S1. Every later phase depends on it.
 2. Phase 2 (S7 to S19) is identity. S8 needs S3 and S7. S12 needs S11. S13 needs S11 and S12. S15 needs S7. S16 needs S3 and S7. S17 needs S4. S19 needs S7 and S18.
 3. Phase 3 (S20 to S29) is pages, hubs and navigation. S21 needs S20. S26 needs S22. S29 needs S15, S20 and S21.
-4. Phase 4 (S30 to S35, S49 and S50) is the loop policy. It needs S2. S33 needs S30. S34 needs S32. S49 needs S2. S50 needs S30 and S33.
+4. Phase 4 (S30 to S35 and S49 to S51) is the loop policy. It needs S2. S33 needs S30. S34 needs S32. S49 needs S2. S50 needs S30 and S33. S51 needs S30.
 5. Phase 5 (S36 to S40) is Search Console demand. It needs S1 and S7.
 6. Phase 6 (S41 to S46) is hosting. It needs S3. S43 needs S7, S8 and S41. S46 needs S43.
 7. Phase 7 (S47 and S48) is the performance bar. S47 needs S5. S48 needs S18.
@@ -435,21 +435,21 @@ The site shell and the harness are always adopted. They are the Astro app, the g
 
 ### Phase 4. Loop policy
 
-These values are the owner's risk appetite for a machine that writes and merges without a person. They are read from the `loop` section of `site/engine.config.json`. The locked row L62 in `docs/plan/reference/locked-decisions.md` and two tests state the shipped attempt cap, quarantine and spend ceiling, so S31 to S33 each need the edits named in their "If wrong" line. S49 and S50 sit here with the other writer-loop questions; they are numbered after S48 so that no earlier id moves.
+These values are the owner's risk appetite for a machine that writes and merges without a person. They are read from the `loop` section of `site/engine.config.json`. The locked row L62 in `docs/plan/reference/locked-decisions.md` and two tests state the shipped attempt cap, quarantine and spend ceiling, so S31 to S33 each need the edits named in their "If wrong" line. S49 to S51 sit here with the other writer-loop questions; they are numbered after S48 so that no earlier id moves.
 
 #### S30. Writer schedule
 
-**Ask:** At which times of day, in UTC, should the writer run, how long after a slot should the workflow try it again if GitHub never started it, and which categories should it take turns in when search demand names no topic?
+**Ask:** At which times of day, in UTC, do you want an article, how long after a slot should the workflow try it again if GitHub never started it, and which categories should it take turns in when search demand names no topic?
 **Cannot be derived because:** The times are the owner's rhythm and the categories are the owner's editorial scope. Nothing in the repository or in the search data says either one.
 **Options:**
 
 - **A. Two runs a day:** two times, such as `03:17` and `15:17`, a half day apart. Every run writes one entry, so a day adds up to two entries plus the glossary cap (`WRITING_TERM_CAP`) per run. Cost: the most spend and the most pull requests to read.
 - **B. One run a day:** one time. Cost: half the entries of A, and a predictable day.
 - **C. Three or more runs a day:** a longer list of times. Cost: the monthly ceiling (S33) is reached sooner and the quarantine (S32) has more to review.
-- **Late attempts:** the minutes after each time at which the workflow tries that slot again, such as `120` and `240`. GitHub drops scheduled runs under load, and an attempt writes only when the day holds fewer article claims than slots have passed, so a slot that already has its entry is never run twice. Cost: two extra cron entries per time per day, each ending in one short job when nothing is owed. An empty list turns the retries off.
+- **Late attempts:** the minutes after each time at which the workflow tries that slot again, such as `120` and `240`. GitHub drops scheduled runs under load, and an attempt writes only when the day holds fewer article claims than slots have passed, so a slot that already has its entry is never run twice. The cron entry of each attempt is set earlier by the lead of S51, like the entry of the time itself. Cost: two extra cron entries per time per day, each ending in one short job when nothing is owed. An empty list turns the retries off.
 - **Categories:** the ids of the categories the writer takes turns in, each one of the site's article categories (`CATEGORIES` in `site/scripts/entry-limits.mjs`). The writer takes the listed category with the fewest entries first, counting published entries and claims, so the order of the list carries no meaning. One model call proposes the query for that category. An entry written this way, or from a weak measured query, has no buyer prompt and registers no passage in `docs/SEMANTIC-CORE.md`, and `npm run measure:origins` lists it so a person can rewrite it once traffic arrives. Its cost, which you accept with this list, is topics nobody has searched and a drift down in quality. An empty list turns that fallback off: a run that demand has nothing for then ends with no entry.
-- **Recommended:** B with the one time just before you read GitHub, because the quarantine (S32) is your review window and the ceiling (S33) stays predictable, unless you want two entries a day; then A. Give each time a minute off the top of the hour, where scheduled runs queue, and list every category the site writes in.
-  **Lands in:** `site/engine.config.json` keys `loop.writeTimesUtc` (a list of `HH:MM` times in UTC, at least one, none twice), `loop.catchUpAfterMinutes` (a list of whole minutes; each time and delay must stay inside the UTC day and land on a minute no other cron uses) and `loop.categoryRotation` (a list of category ids, which may be empty). `.github/workflows/write-daily.yml` takes its `on.schedule` block from `loop.writeTimesUtc` and `loop.catchUpAfterMinutes`: run `npm run assets:schedule` after you change the list, and `npm run gate:schedule` refuses a workflow whose cron lines differ from it. GitHub starts a scheduled run minutes to hours late, so nothing in the engine assumes a run began at its configured minute.
+- **Recommended:** B with the one time just before you read GitHub, because the quarantine (S32) is your review window and the ceiling (S33) stays predictable, unless you want two entries a day; then A. Keep the minute of each cron entry off the top of the hour, where scheduled runs queue: with a lead of 0 (S51) that means a time off the hour, and with a lead that is not a whole number of hours a time on the hour already does it. List every category the site writes in.
+  **Lands in:** `site/engine.config.json` keys `loop.writeTimesUtc` (a list of `HH:MM` times in UTC, at least one, none twice), `loop.catchUpAfterMinutes` (a list of whole minutes; each time and delay must stay inside the UTC day and land on a minute no other cron uses) and `loop.categoryRotation` (a list of category ids, which may be empty). `.github/workflows/write-daily.yml` takes its `on.schedule` block from `loop.writeTimesUtc`, `loop.catchUpAfterMinutes` and `loop.cronLeadMinutes` (S51): run `npm run assets:schedule` after you change a list or the lead, and `npm run gate:schedule` refuses a workflow whose cron lines differ from them. GitHub starts a scheduled run minutes to hours late, so nothing in the engine assumes a run began at its configured minute.
   **If wrong:** A time you did not mean shows as runs at the wrong hour. A hand-edited cron line prints `SCHEDULE cron-differs .github/workflows/write-daily.yml` and names `npm run assets:schedule`. An empty `loop.writeTimesUtc` prints `ENGINE config-invalid loop.writeTimesUtc`; to pause the writer, disable the Write daily workflow or leave one of its required secrets unset. A category id that is not one of the site's article categories is refused when the picker loads, naming the id.
   **Needs:** S2
 
@@ -549,6 +549,20 @@ These values are the owner's risk appetite for a machine that writes and merges 
   **Lands in:** `site/engine.config.json` key `loop.stoppedRunRetriesPerDay` (an integer, 0 to 5). `site/scripts/schedule-workflow.mjs` reads it as `STOPPED_RUN_RETRIES_PER_DAY`, and `site/scripts/slot-due.mjs` and `site/scripts/pick-a-topic.mjs` use it through `site/scripts/slot-standing.mjs`. The stamp is made by `site/scripts/release-claim.mjs`; the skill `schedule-the-unattended-writer.md` describes it.
   **If wrong:** Too low, a stopped run ends the day with the slot unwritten, and the due job prints `slot: <n> article claimed today for <m> slot passed, so nothing is owed`. Too high, the same failing model is called again for each forgiven claim before the day stops. A value outside 0 to 5 prints `ENGINE config-invalid loop.stoppedRunRetriesPerDay: must be <= 5 in site/engine.config.json; <description>` or the same line with `must be >= 0` [INFERENCE: the wording of the `<= 5` form follows the `>=` messages the config test pins]. When a claim is forgiven, the `slot-due.mjs` text adds `, with <n> stopped run forgiven so the slot is written again`.
   **Needs:** S2, S30, S33
+
+#### S51. Cron lead
+
+**Ask:** By how many minutes before the time you want an article should the workflow's cron entry be set, to make up for the delay GitHub adds to a scheduled run?
+**Cannot be derived because:** The delay is GitHub's queue for this one repository, and only the runs measured on it show its size. A public repository on the free plan cannot remove it with a setting, and nothing in the code or in the search data holds it.
+**Options:**
+
+- **A. 0, no lead:** each cron entry is set at the time it serves. Cost: a run starts as late as GitHub makes it. On this repository the 03:17 slot was started 458, 461, 461 and 417 minutes late on 2026-11-03, 2026-11-04, 2026-11-05 and 2026-11-07. It is right for a runner that starts on time, and for a new site until it has measured its own runs.
+- **B. The shortest measured delay:** every cron entry, the retries of S30 included, is set that many minutes earlier, wrapping across midnight. Cost: the arrival is predictable, not instant. A lead of 417 would have started none of the four runs above before its slot and would have put them from 0 to 44 minutes after the wanted time, the 44 being the spread between the shortest and the longest delay.
+- **C. About the middle of the measured delays:** the shipped choice for this repository is 440. Cost: the arrival centres on the wanted time, and the four runs above would have landed from 23 minutes before it to 21 minutes after it. A run that starts before its slot finds nothing owed and ends without writing, and the next entry, a retry, writes the slot: 97 minutes late if that retry also starts 417 minutes after its cron.
+- **Recommended:** A for a new site, because a lead chosen before its own scheduled runs have been measured is a guess, and a lead longer than the real delay makes runs start early and write nothing. Measure the gap between each scheduled run's cron time and its start in the Actions tab; both B and C assume that the delay stays the same when the cron moves. Then take B if you would rather never wait for a retry, or C if you would rather centre the arrival on the wanted time.
+  **Lands in:** `site/engine.config.json` key `loop.cronLeadMinutes` (an integer, 0 to 1439). `site/scripts/schedule-workflow.mjs` reads it as `CRON_LEAD_MINUTES`, and its `cronPlan` subtracts it from the cron of every entry; the time, the slot and the delay of the entry stay as S30 gives them. `site/scripts/slot-standing.mjs` and `site/scripts/slot-due.mjs` never read it, so lateness is still measured against the times of S30. Run `npm run assets:schedule` after you change it, and `npm run gate:schedule` refuses a workflow whose cron lines differ.
+  **If wrong:** Too long, a run starts before its slot and the due job ends it before any model is called, printing for the first slot of a day `slot: 0 articles claimed today for 0 slots passed, so nothing is owed`; the slot waits for its retry. Too short, every run starts late by the difference. A hand-edited cron line prints `SCHEDULE cron-differs .github/workflows/write-daily.yml` and names `npm run assets:schedule`. A value outside 0 to 1439 prints `ENGINE config-invalid loop.cronLeadMinutes: must be <= 1439 in site/engine.config.json; <description>` or the same line with `must be >= 0`.
+  **Needs:** S30
 
 ### Phase 5. Search Console demand
 
@@ -765,14 +779,15 @@ The numbers in `site/budgets.json` and `site/lighthouserc.cjs` were set by measu
 | 25  | `loop.holdLabel`                             | S35      |                                                                                                           |
 | 26  | `loop.writeTimesUtc`                         | S30      |                                                                                                           |
 | 27  | `loop.catchUpAfterMinutes`                   | S30      |                                                                                                           |
-| 28  | `loop.categoryRotation`                      | S30      |                                                                                                           |
-| 29  | `demand.property`                            | S36      |                                                                                                           |
-| 30  | `demand.windowDays`                          | S37      |                                                                                                           |
-| 31  | `demand.dataLagDays`                         | S37      |                                                                                                           |
-| 32  | `demand.maxAgeDays`                          | S38      |                                                                                                           |
-| 33  | `demand.minImpressions`                      | S39      |                                                                                                           |
-| 34  | `demand.strengthenBand.min`                  | S40      |                                                                                                           |
-| 35  | `demand.strengthenBand.max`                  | S40      |                                                                                                           |
+| 28  | `loop.cronLeadMinutes`                       | S51      |                                                                                                           |
+| 29  | `loop.categoryRotation`                      | S30      |                                                                                                           |
+| 30  | `demand.property`                            | S36      |                                                                                                           |
+| 31  | `demand.windowDays`                          | S37      |                                                                                                           |
+| 32  | `demand.dataLagDays`                         | S37      |                                                                                                           |
+| 33  | `demand.maxAgeDays`                          | S38      |                                                                                                           |
+| 34  | `demand.minImpressions`                      | S39      |                                                                                                           |
+| 35  | `demand.strengthenBand.min`                  | S40      |                                                                                                           |
+| 36  | `demand.strengthenBand.max`                  | S40      |                                                                                                           |
 
 ## Part 2. The semantic core and the buyer prompts
 
@@ -1573,13 +1588,13 @@ The first is merged. The second and the third are on branches that `main` does n
 #### P15. When the writer starts
 
 **Ask:** At which hours in UTC should the writer start, and which person commits a change of them last?
-**Cannot be derived because:** it depends on when you read pull requests and which timezone you work in. The shipped times, `03:17` and `15:17`, carry one site's choice. S30 sets them in `loop.writeTimesUtc`, and the `schedule:` block of the workflow is generated from them (`.github/workflows/write-daily.yml:6-13`).
+**Cannot be derived because:** it depends on when you read pull requests and which timezone you work in. The shipped times, `06:00` and `15:00`, carry one site's choice. S30 sets them in `loop.writeTimesUtc`, and the `schedule:` block of the workflow is generated from them and from the lead of S51 (`.github/workflows/write-daily.yml:6-13`).
 **Options:**
 
 - **A. Keep the shipped times:** Cost: they may not suit your day.
-- **B. Pick times that put the merges in your working hours:** a merge cannot happen before the pull request is `loop.quarantineHours` old. So the earliest merge is the start time, plus the run time, plus the quarantine, plus up to one tick. Keep the minute off the top of the hour, because scheduled runs queue there (the generated comment at `.github/workflows/write-daily.yml:7`). GitHub starts a scheduled run late, by minutes and sometimes by much more, so a time is a target and nothing in the engine reads it.
+- **B. Pick times that put the merges in your working hours:** a merge cannot happen before the pull request is `loop.quarantineHours` old. So the earliest merge is the start time, plus the run time, plus the quarantine, plus up to one tick. Keep each cron entry off the top of the hour, because scheduled runs queue there (the generated comment at `.github/workflows/write-daily.yml:7`); a lead that is not a whole number of hours (S51) already does that for a time on the hour. GitHub starts a scheduled run late, by minutes and sometimes by much more, so a time is a target and nothing in the engine reads it.
 - **C. Dispatch only:** disable the workflow in the Actions tab and enable it for each run you start by hand (`workflow_dispatch`, `.github/workflows/write-daily.yml:14`). Do not empty `loop.writeTimesUtc` or delete the `schedule:` block: the config check and `gate:schedule` refuse both. Cost: a person starts every run, so nothing is unattended.
 - **Recommended:** B, because the quarantine fixes when a merge can happen and you can plan the day you read the pull requests, unless you want the loop to run unnoticed. Then A.
-  **Lands in:** `site/engine.config.json`, key `loop.writeTimesUtc`, in UTC (S30). `npm run assets:schedule` then writes the `on.schedule` cron lines of `.github/workflows/write-daily.yml`.
+  **Lands in:** `site/engine.config.json`, key `loop.writeTimesUtc`, in UTC (S30), and key `loop.cronLeadMinutes` (S51). `npm run assets:schedule` then writes the `on.schedule` cron lines of `.github/workflows/write-daily.yml`.
   **If wrong:** The timing is only off. A cron line edited by hand fails `gate:schedule` (`SCHEDULE cron-differs`). GitHub disables scheduled workflows of a public repository after 60 days without repository activity [INFERENCE: GitHub documentation, not read in full]. Failed scheduled runs email the user who created the workflow, or the user who last changed the cron line (https://docs.github.com/en/actions/concepts/workflows-and-actions/notifications-for-workflow-runs). Keep yourself, not the bot, as the last editor.
   **Needs:** P1, P14

@@ -11,35 +11,42 @@ import { EngineConfigError } from './engine-config.mjs';
 import { readPartitionFacts } from './engine-partition-facts.mjs';
 import { SCENE_FILES, sceneReader } from './fixtures/partition-scene.mjs';
 import { generateSchedule } from './generate-schedule.mjs';
-import { WRITE_DAILY_PATH, scheduleFindings, withSchedule } from './schedule-workflow.mjs';
+import { WRITE_DAILY_PATH, cronPlan, scheduleFindings, withSchedule } from './schedule-workflow.mjs';
 
 const SCRIPTS = import.meta.dirname;
 const REPOSITORY = resolve(SCRIPTS, '..', '..');
 const GENERATOR = join(SCRIPTS, 'generate-schedule.mjs');
 const CONFIG = JSON.parse(readFileSync(join(REPOSITORY, 'site', 'engine.config.json'), 'utf8'));
-const CURRENT_TIMES = ['03:17', '15:17'];
+const CURRENT_TIMES = CONFIG.loop.writeTimesUtc;
+const CURRENT_LEAD = CONFIG.loop.cronLeadMinutes;
 const DELAYS = CONFIG.loop.catchUpAfterMinutes;
 const NEW_TIMES = ['05:30', '17:45'];
-const CURRENT = withSchedule(readFileSync(join(REPOSITORY, WRITE_DAILY_PATH), 'utf8'), CURRENT_TIMES, DELAYS);
+const CURRENT = withSchedule(
+  readFileSync(join(REPOSITORY, WRITE_DAILY_PATH), 'utf8'),
+  CURRENT_TIMES,
+  DELAYS,
+  CURRENT_LEAD
+);
+const FIRST_CRON = cronPlan(CURRENT_TIMES, DELAYS, CURRENT_LEAD)[0].cron;
 
 const roots = [];
 after(() => roots.forEach((root) => rmSync(root, { recursive: true, force: true })));
 
-function scene({ times = NEW_TIMES, delays = DELAYS, workflow = CURRENT } = {}) {
+function scene({ times = NEW_TIMES, delays = DELAYS, lead = CURRENT_LEAD, workflow = CURRENT } = {}) {
   const root = mkdtempSync(join(tmpdir(), 'generate-schedule-'));
   roots.push(root);
   const put = (path, text) => {
     mkdirSync(dirname(join(root, path)), { recursive: true });
     writeFileSync(join(root, path), text);
   };
-  const loop = { ...CONFIG.loop, writeTimesUtc: times, catchUpAfterMinutes: delays };
+  const loop = { ...CONFIG.loop, writeTimesUtc: times, catchUpAfterMinutes: delays, cronLeadMinutes: lead };
   put('site/engine.config.json', JSON.stringify({ ...CONFIG, loop }, null, 2));
   if (workflow !== null) put(WRITE_DAILY_PATH, workflow);
   return { root, file: join(root, WRITE_DAILY_PATH), text: () => readFileSync(join(root, WRITE_DAILY_PATH), 'utf8') };
 }
 
 const cli = (...args) => spawnSync(process.execPath, [GENERATOR, ...args], { encoding: 'utf8' });
-const rulesOf = (text, times) => scheduleFindings(text, times, DELAYS).map(({ rule }) => rule);
+const rulesOf = (text, times) => scheduleFindings(text, times, DELAYS, CURRENT_LEAD).map(({ rule }) => rule);
 
 test('the generator writes the cron entries of the configured times into the workflow and touches nothing else', () => {
   const { root, text } = scene();
@@ -48,11 +55,12 @@ test('the generator writes the cron entries of the configured times into the wor
     path: WRITE_DAILY_PATH,
     times: NEW_TIMES,
     catchUpAfterMinutes: DELAYS,
+    cronLeadMinutes: CURRENT_LEAD,
     changed: true,
     crons: NEW_TIMES.length * (1 + DELAYS.length),
   });
-  assert.deepEqual(scheduleFindings(text(), NEW_TIMES, DELAYS), []);
-  assert.equal(withSchedule(text(), CURRENT_TIMES, DELAYS), CURRENT);
+  assert.deepEqual(scheduleFindings(text(), NEW_TIMES, DELAYS, CURRENT_LEAD), []);
+  assert.equal(withSchedule(text(), CURRENT_TIMES, DELAYS, CURRENT_LEAD), CURRENT);
 });
 
 test('a workflow that already holds the schedule is not written again, so no file changes and no commit is made', () => {
@@ -69,11 +77,12 @@ test('a deleted schedule block is put back, and an edited cron line is overwritt
   const missing = scene({ workflow: CURRENT.replace(block, '') });
   assert.deepEqual(rulesOf(missing.text(), NEW_TIMES), ['schedule-missing']);
   generateSchedule(missing.root);
-  assert.deepEqual(scheduleFindings(missing.text(), NEW_TIMES, DELAYS), []);
+  assert.deepEqual(scheduleFindings(missing.text(), NEW_TIMES, DELAYS, CURRENT_LEAD), []);
 
-  const edited = scene({ workflow: CURRENT.replace("'17 3 * * *'", "'59 23 * * *'") });
+  const edited = scene({ workflow: CURRENT.replace(`'${FIRST_CRON}'`, "'59 23 * * *'") });
+  assert.notEqual(edited.text(), CURRENT);
   generateSchedule(edited.root);
-  assert.deepEqual(scheduleFindings(edited.text(), NEW_TIMES, DELAYS), []);
+  assert.deepEqual(scheduleFindings(edited.text(), NEW_TIMES, DELAYS, CURRENT_LEAD), []);
 });
 
 test('an unreadable configuration stops the generator before the workflow is touched, and says how to pause the writer', () => {
@@ -93,21 +102,37 @@ test('a workflow with no on: key stops the generator and is left exactly as it w
 });
 
 test('run as a script it writes, says what it wrote, and a second run says it had nothing to write', () => {
-  const { root, text } = scene();
+  const { root, text } = scene({ lead: 95 });
   const first = cli('--root', root);
   assert.equal(first.status, 0, first.stderr);
   assert.equal(
     first.stdout,
-    'schedule: wrote 6 cron entries into .github/workflows/write-daily.yml for 05:30, 17:45 (loop.writeTimesUtc) and 120, 240 minutes later (loop.catchUpAfterMinutes)\n'
+    'schedule: wrote 6 cron entries into .github/workflows/write-daily.yml for 05:30, 17:45 (loop.writeTimesUtc) and 120, 240 minutes later (loop.catchUpAfterMinutes), each set 95 minutes earlier (loop.cronLeadMinutes)\n'
   );
   const written = text();
   const second = cli('--root', root);
   assert.equal(second.status, 0, second.stderr);
   assert.equal(
     second.stdout,
-    'schedule: .github/workflows/write-daily.yml already holds the cron entries for 05:30, 17:45 (loop.writeTimesUtc) and 120, 240 minutes later (loop.catchUpAfterMinutes); nothing written\n'
+    'schedule: .github/workflows/write-daily.yml already holds the cron entries for 05:30, 17:45 (loop.writeTimesUtc) and 120, 240 minutes later (loop.catchUpAfterMinutes), each set 95 minutes earlier (loop.cronLeadMinutes); nothing written\n'
   );
   assert.equal(text(), written);
+});
+
+test('run as a script it does not mention a lead of 0, so the text is the one it had before the lead existed', () => {
+  const { root } = scene({ lead: 0 });
+  assert.equal(
+    cli('--root', root).stdout,
+    'schedule: wrote 6 cron entries into .github/workflows/write-daily.yml for 05:30, 17:45 (loop.writeTimesUtc) and 120, 240 minutes later (loop.catchUpAfterMinutes)\n'
+  );
+});
+
+test('a change of the lead alone rewrites the cron entries, so the workflow follows the configuration', () => {
+  const { root, text } = scene({ times: CURRENT_TIMES, lead: 0 });
+  const result = generateSchedule(root);
+  assert.deepEqual([result.changed, result.cronLeadMinutes], [true, 0]);
+  assert.deepEqual(scheduleFindings(text(), CURRENT_TIMES, DELAYS, 0), []);
+  assert.equal(withSchedule(text(), CURRENT_TIMES, DELAYS, CURRENT_LEAD), CURRENT);
 });
 
 test('run as a script it says one entry in the singular', () => {

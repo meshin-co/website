@@ -121,6 +121,7 @@
         "holdLabel",
         "writeTimesUtc",
         "catchUpAfterMinutes",
+        "cronLeadMinutes",
         "categoryRotation"
       ],
       "properties": {
@@ -169,13 +170,19 @@
           "description": "The pull request label that stops the watcher from merging."
         },
         "writeTimesUtc": {
-          "description": "UTC times of day, each HH:MM in 24 hours with two digits, at which the unattended writer runs. The list holds at least one time and none twice: pause the writer by disabling its workflow or leaving a required secret unset, never by emptying the list. npm run assets:schedule writes these times into the workflow, and GitHub starts a scheduled run late, so nothing may assume a run began at its minute."
+          "description": "UTC times of day, each HH:MM in 24 hours with two digits, at which an article is wanted. The list holds at least one time and none twice: pause the writer by disabling its workflow or leaving a required secret unset, never by emptying the list. npm run assets:schedule writes a cron entry for each time into the workflow, set cronLeadMinutes earlier, and GitHub starts a scheduled run late, so nothing may assume a run began at its minute."
         },
         "catchUpAfterMinutes": {
           "type": "array",
           "uniqueItems": true,
           "items": { "type": "integer", "minimum": 1, "maximum": 1439 },
-          "description": "Whole minutes after each of writeTimesUtc at which the workflow tries that slot again. A retry runs the writer only when the day holds fewer article claims than slots have passed, so a slot GitHub never fired is run late and a slot that already produced an entry is never run twice. npm run assets:schedule writes one extra cron entry for every time and every delay. A delay that carries a slot past midnight, or lands on a write time or another retry, is refused. An empty list turns the retries off."
+          "description": "Whole minutes after each of writeTimesUtc at which the workflow tries that slot again. A retry runs the writer only when the day holds fewer article claims than slots have passed, so a slot GitHub never fired is run late and a slot that already produced an entry is never run twice. npm run assets:schedule writes one extra cron entry for every time and every delay, each set cronLeadMinutes earlier like the entry of the time itself. A delay that carries a slot past midnight, or lands on a write time or another retry, is refused. An empty list turns the retries off."
+        },
+        "cronLeadMinutes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1439,
+          "description": "Whole minutes before its time at which npm run assets:schedule sets every cron entry, the catch-up entries included, wrapping across midnight. GitHub starts a scheduled run late, and on a public repository on the free plan no setting removes that delay, so a cron set about that long early brings the run near the time an article is wanted: predictable, not instant. writeTimesUtc and catchUpAfterMinutes still say when an article is wanted, and lateness is measured against them, never against the cron. 0 sets each cron at its wanted time, which is right for a runner that starts on time."
         },
         "categoryRotation": {
           "type": "array",

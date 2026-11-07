@@ -31,8 +31,8 @@ Follow `grill-me`.
 
 The bank has three parts. Each opens with its own order and dependencies; follow them.
 
-1. **The site,** S1 to S50: whether the loop runs, the layout, identity, pages and navigation, the loop's
-   limits (S30 asks the times the writer runs and the categories it writes on when demand is empty, S49 and S50 what the writer may spend on fixing and retrying its own stopped run), Search Console demand, hosting and the performance bar. The answers land in
+1. **The site,** S1 to S51: whether the loop runs, the layout, identity, pages and navigation, the loop's
+   limits (S30 asks the times an article is wanted and the categories the writer takes when demand is empty, S49 and S50 what the writer may spend on fixing and retrying its own stopped run, S51 how many minutes before those times the cron entries are set), Search Console demand, hosting and the performance bar. The answers land in
    `site/engine.config.json` and `site/src/config.yaml`.
 2. **The semantic core,** K1 to K34: section 4.
 3. **The platform,** P1 to P15: the accounts, the secrets and the settings. Section 5.

@@ -15,11 +15,13 @@ import {
   WRITE_DAILY_PATH,
   WRITE_TIMES_UTC,
   cronOf,
+  cronPlan,
   scheduleFindings,
   scheduleLines,
   sortedTimes,
   withSchedule,
 } from './schedule-workflow.mjs';
+import { slotStanding } from './slot-standing.mjs';
 
 const REPOSITORY = resolve(import.meta.dirname, '..', '..');
 const COMMITTED = readFileSync(resolve(REPOSITORY, WRITE_DAILY_PATH), 'utf8');
@@ -48,19 +50,20 @@ const CATCH_UP = [120, 240];
 const CAUGHT = ['17 3 * * *', '17 5 * * *', '17 7 * * *', '17 15 * * *', '17 17 * * *', '17 19 * * *'];
 const WITH_CATCH_UP = workflowOf(blockOf(...CAUGHT));
 
-test('the committed workflow holds one cron entry per configured time and one per time and delay of catch-up, in ascending order, and nothing else is scheduled', () => {
-  const { writeTimesUtc: configured, catchUpAfterMinutes: delays } = readEngineConfig().loop;
+test('the committed workflow holds one cron entry per configured time and one per time and delay of catch-up, each set the configured lead before the time it serves, in the order of those times, and nothing else is scheduled', () => {
+  const { writeTimesUtc: configured, catchUpAfterMinutes: delays, cronLeadMinutes: lead } = readEngineConfig().loop;
   const minutes = [...configured].flatMap((time) => {
     const [hour, minute] = time.split(':').map(Number);
     return [0, ...delays].map((delay) => hour * 60 + minute + delay);
   });
   const wanted = minutes
     .sort((first, second) => first - second)
+    .map((total) => (total - lead + 1440) % 1440)
     .map((total) => ({ cron: `${total % 60} ${Math.floor(total / 60)} * * *` }));
   assert.equal(wanted.length, configured.length * (1 + delays.length));
   assert.deepEqual(parse(COMMITTED).on.schedule, wanted);
-  assert.equal(withSchedule(COMMITTED, configured, delays), COMMITTED);
-  assert.deepEqual(scheduleFindings(COMMITTED, configured, delays), []);
+  assert.equal(withSchedule(COMMITTED, configured, delays, lead), COMMITTED);
+  assert.deepEqual(scheduleFindings(COMMITTED, configured, delays, lead), []);
 });
 
 test('the delays the catch-up crons are generated from are the loop.catchUpAfterMinutes of the engine configuration, and cannot be changed', () => {
@@ -158,6 +161,7 @@ test('the generated block is one comment naming its source and its generator, th
   assert.equal(SCHEDULE_COMMENT.startsWith('# '), true);
   assert.match(SCHEDULE_COMMENT, /loop\.writeTimesUtc/);
   assert.match(SCHEDULE_COMMENT, /npm run assets:schedule/);
+  assert.match(SCHEDULE_COMMENT, /loop\.cronLeadMinutes/);
   assert.match(SCHEDULE_COMMENT, /off the top of the hour/);
   assert.deepEqual(scheduleLines(['15:17', '03:17']), blockOf('17 3 * * *', '17 15 * * *'));
   assert.equal(scheduleLines(TIMES).filter((line) => line.trim().startsWith('#')).length, 1);
@@ -312,3 +316,178 @@ test('a workflow with no on: key has no schedule, and the gate says so and does 
 test('an unsorted configuration is checked against the sorted schedule, so the order of the list never matters', () => {
   assert.deepEqual(scheduleFindings(GENERATED, ['15:17', '03:17']), []);
 });
+
+const WANTED = ['06:00', '15:00'];
+const DELAYS = [120, 240];
+const LEAD = 440;
+const AT_LEAD = [
+  { time: '06:00', slot: '06:00', delay: 0, cron: '40 22 * * *' },
+  { time: '08:00', slot: '06:00', delay: 120, cron: '40 0 * * *' },
+  { time: '10:00', slot: '06:00', delay: 240, cron: '40 2 * * *' },
+  { time: '15:00', slot: '15:00', delay: 0, cron: '40 7 * * *' },
+  { time: '17:00', slot: '15:00', delay: 120, cron: '40 9 * * *' },
+  { time: '19:00', slot: '15:00', delay: 240, cron: '40 11 * * *' },
+];
+
+const LED = workflowOf(blockOf(...AT_LEAD.map(({ cron }) => cron)));
+const findingsAt = (text, lead = LEAD) => scheduleFindings(text, WANTED, DELAYS, lead);
+const rulesIn = (findings) => findings.map(({ rule }) => rule);
+const cronsOf = (lead) => cronPlan(WANTED, DELAYS, lead).map(({ cron }) => cron);
+
+test('a lead sets every cron that many minutes before the time it serves, and wraps across midnight to the evening before', () => {
+  assert.deepEqual(cronPlan(WANTED, DELAYS, LEAD), AT_LEAD);
+});
+
+test('a lead of 0 leaves every cron at the time it serves, and so does leaving the lead out', () => {
+  const atTheirTimes = ['0 6 * * *', '0 8 * * *', '0 10 * * *', '0 15 * * *', '0 17 * * *', '0 19 * * *'];
+  assert.deepEqual(cronsOf(0), atTheirTimes);
+  assert.deepEqual(cronPlan(WANTED, DELAYS), cronPlan(WANTED, DELAYS, 0));
+});
+
+for (const [time, lead, cron] of [
+  ['06:00', 440, '40 22 * * *'],
+  ['00:10', 30, '40 23 * * *'],
+  ['00:00', 1, '59 23 * * *'],
+  ['07:20', 440, '0 0 * * *'],
+  ['03:17', 1439, '18 3 * * *'],
+  ['23:59', 1439, '0 0 * * *'],
+  ['12:00', 0, '0 12 * * *'],
+]) {
+  test(`${time} UTC with a lead of ${lead} minutes becomes the cron expression ${cron}, and its time, slot and delay stay as they were`, () => {
+    assert.deepEqual(cronPlan([time], [], lead), [{ time, slot: time, delay: 0, cron }]);
+  });
+}
+
+test('the catch-up entries take the same lead as the entries of the times themselves', () => {
+  const retries = cronPlan(WANTED, DELAYS, LEAD).filter(({ delay }) => delay > 0);
+  assert.deepEqual(
+    retries.map(({ time, cron }) => [time, cron]),
+    [
+      ['08:00', '40 0 * * *'],
+      ['10:00', '40 2 * * *'],
+      ['17:00', '40 9 * * *'],
+      ['19:00', '40 11 * * *'],
+    ]
+  );
+});
+
+test('the lead changes only the cron of an entry: its time, slot and delay are what the findings quote and the slot decision measures against', () => {
+  const quoted = (lead) => cronPlan(WANTED, DELAYS, lead).map(({ time, slot, delay }) => ({ time, slot, delay }));
+  for (const lead of [1, 20, LEAD, 1439]) assert.deepEqual(quoted(lead), quoted(0), `lead ${lead}`);
+});
+
+test('with a lead the entries are listed in the order of the times they serve, so the entry that wraps to the evening before comes first', () => {
+  assert.deepEqual(scheduleLines(['15:00', '06:00'], [], LEAD), blockOf('40 22 * * *', '40 7 * * *'));
+});
+
+test('a generated workflow with a lead is valid YAML that GitHub reads as the shifted crons', () => {
+  const loaded = parse(withSchedule(workflowOf(blockOf('1 1 * * *')), WANTED, DELAYS, LEAD));
+  assert.deepEqual(
+    loaded.on.schedule,
+    AT_LEAD.map(({ cron }) => ({ cron }))
+  );
+  assert.equal(withSchedule(LED, WANTED, DELAYS, LEAD), LED);
+});
+
+test('a workflow generated with the lead passes, and one generated without it or with another lead is behind the configuration', () => {
+  assert.deepEqual(findingsAt(LED), []);
+  const unled = workflowOf(blockOf(...cronsOf(0)));
+  assert.deepEqual(rulesIn(findingsAt(unled)), Array(6).fill('cron-differs'));
+  assert.deepEqual(rulesIn(findingsAt(LED, 0)), Array(6).fill('cron-differs'));
+  assert.deepEqual(rulesIn(findingsAt(LED, LEAD - 1)), Array(6).fill('cron-differs'));
+  assert.equal(withSchedule(unled, WANTED, DELAYS, LEAD), LED);
+});
+
+test('a cron moved by hand is named with the time and the slot it serves, in the words it has without a lead', () => {
+  const [found, ...others] = findingsAt(LED.replace("'40 0 * * *'", "'40 1 * * *'"));
+  assert.deepEqual(others, []);
+  assert.equal(found.rule, 'cron-differs');
+  assert.equal(
+    found.detail,
+    'line 7 holds "40 1 * * *", but loop.catchUpAfterMinutes gives "40 0 * * *" for 08:00 (120 minutes after 06:00); run npm run assets:schedule to write it again from loop.writeTimesUtc'
+  );
+});
+
+test('a cron missing from a workflow with a lead is named with the time it serves and not the clock it fires at', () => {
+  const [found, ...others] = findingsAt(LED.replace("    - cron: '40 22 * * *'\n", ''));
+  assert.deepEqual(others, []);
+  assert.equal(found.rule, 'cron-missing');
+  assert.equal(
+    found.detail,
+    'no cron entry runs the writer at 06:00 (loop.writeTimesUtc), which would be "40 22 * * *"; run npm run assets:schedule to write it again from loop.writeTimesUtc'
+  );
+});
+
+test('entries in the order of their own clock are out of order, because the order is the one of the times they serve', () => {
+  const byClock = workflowOf(
+    blockOf('40 0 * * *', '40 2 * * *', '40 7 * * *', '40 9 * * *', '40 11 * * *', '40 22 * * *')
+  );
+  assert.deepEqual(rulesIn(findingsAt(byClock)), ['cron-order']);
+  assert.equal(withSchedule(byClock, WANTED, DELAYS, LEAD), LED);
+});
+
+const MINUTE_MS = 60_000;
+const DAY_MS = 1440 * MINUTE_MS;
+const FIRST_DAY = Date.UTC(2026, 10, 2);
+const DAYS = 5;
+
+function startsAfterLag(lead, lag) {
+  const instants = [];
+  for (let day = -1; day < DAYS; day += 1) {
+    for (const { cron } of cronPlan(WANTED, DELAYS, lead)) {
+      const [minute, hour] = cron.split(' ').map(Number);
+      instants.push(FIRST_DAY + day * DAY_MS + (hour * 60 + minute + lag) * MINUTE_MS);
+    }
+  }
+  return instants.sort((first, second) => first - second);
+}
+
+function writtenAt(instants) {
+  const claims = [];
+  for (const instant of instants) {
+    const now = new Date(instant);
+    if (!slotStanding({ times: WANTED, catchUpMinutes: DELAYS, claims, now }).due) continue;
+    const claim = {
+      slug: `entry-${claims.length}`,
+      format: 'article',
+      status: 'written',
+      claimedAt: now.toISOString(),
+    };
+    claims.push({ claim });
+  }
+  return claims.map(({ claim }) => claim.claimedAt);
+}
+
+const dayOf = (day) => new Date(FIRST_DAY + day * DAY_MS).toISOString().slice(0, 10);
+
+for (const lag of [0, 417, 440, 458, 461]) {
+  test(`runs that all start ${lag} minutes after their cron write one article for each slot of every day and never an extra one`, () => {
+    const written = writtenAt(startsAfterLag(LEAD, lag));
+    for (let day = 0; day < DAYS; day += 1) {
+      assert.equal(written.filter((at) => at.startsWith(dayOf(day))).length, WANTED.length, dayOf(day));
+    }
+  });
+}
+
+test('a run that starts exactly the lead after its cron writes at the times the articles are wanted', () => {
+  assert.deepEqual(
+    writtenAt(startsAfterLag(LEAD, LEAD)).filter((at) => at.startsWith(dayOf(1))),
+    ['2026-11-03T06:00:00.000Z', '2026-11-03T15:00:00.000Z']
+  );
+});
+
+test('a run that starts 23 minutes before its slot owes nothing, and the next cron writes the slot 97 minutes late', () => {
+  assert.deepEqual(
+    writtenAt(startsAfterLag(LEAD, 417)).filter((at) => at.startsWith(dayOf(1))),
+    ['2026-11-03T07:37:00.000Z', '2026-11-03T16:37:00.000Z']
+  );
+});
+
+for (const lead of [0, 1, 59, 440, 1439]) {
+  test(`with a lead of ${lead} minutes a runner that never starts late writes one article for each slot of every day and never an extra one`, () => {
+    const written = writtenAt(startsAfterLag(lead, 0));
+    for (let day = 0; day < DAYS; day += 1) {
+      assert.equal(written.filter((at) => at.startsWith(dayOf(day))).length, WANTED.length, dayOf(day));
+    }
+  });
+}

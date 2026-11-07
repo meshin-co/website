@@ -28,14 +28,14 @@ const FIX = 'run npm run assets:schedule to write it again from loop\\.writeTime
 const roots = [];
 after(() => roots.forEach((root) => rmSync(root, { recursive: true, force: true })));
 
-function scene({ times = TIMES, delays = DELAYS, workflow = GENERATED } = {}) {
+function scene({ times = TIMES, delays = DELAYS, lead = 0, workflow = GENERATED } = {}) {
   const root = mkdtempSync(join(tmpdir(), 'schedule-gate-'));
   roots.push(root);
   const put = (path, text) => {
     mkdirSync(dirname(join(root, path)), { recursive: true });
     writeFileSync(join(root, path), text);
   };
-  const loop = { ...CONFIG.loop, writeTimesUtc: times, catchUpAfterMinutes: delays };
+  const loop = { ...CONFIG.loop, writeTimesUtc: times, catchUpAfterMinutes: delays, cronLeadMinutes: lead };
   put('site/engine.config.json', JSON.stringify({ ...CONFIG, loop }, null, 2));
   if (workflow !== null) put(WRITE_DAILY_PATH, workflow);
   return root;
@@ -51,14 +51,17 @@ test('the schedule of this repository is the one its configuration generates, an
   assert.equal(result.stderr, '');
   assert.equal(
     result.stdout,
-    `schedule: 0 findings (${WRITE_DAILY_PATH} starts the writer at ${configured} UTC, the times of loop.writeTimesUtc, and tries each slot again ${DELAYS.join(', ')} minutes later, the delays of loop.catchUpAfterMinutes)\n`
+    `schedule: 0 findings (${WRITE_DAILY_PATH} starts the writer for ${configured} UTC, the times of loop.writeTimesUtc, and tries each slot again ${DELAYS.join(', ')} minutes later, the delays of loop.catchUpAfterMinutes, with every cron entry set ${CONFIG.loop.cronLeadMinutes} minutes before its time, the lead of loop.cronLeadMinutes)\n`
   );
 });
 
-test('a generated workflow passes whatever the configured times are', () => {
+test('a generated workflow passes whatever the configured times and lead are', () => {
   for (const times of [['00:00'], ['23:59'], ['05:30', '17:45', '09:05']]) {
-    const result = gate('--root', scene({ times, delays: [], workflow: withSchedule(GENERATED, times) }));
-    assert.equal(result.status, 0, `${times.join(' ')}: ${result.stderr}`);
+    for (const lead of [0, 440, 1439]) {
+      const workflow = withSchedule(GENERATED, times, [], lead);
+      const result = gate('--root', scene({ times, delays: [], lead, workflow }));
+      assert.equal(result.status, 0, `${times.join(' ')} with a lead of ${lead}: ${result.stderr}`);
+    }
   }
 });
 
@@ -98,7 +101,7 @@ for (const [label, workflow, rule] of HAND_EDITS) {
     assert.match(lines[0], new RegExp(`^SCHEDULE ${rule} ${FILE}: .*; ${FIX}$`));
     assert.match(
       result.stdout,
-      /^schedule: 1 finding \(.*write-daily\.yml must hold the schedule npm run assets:schedule writes from loop\.writeTimesUtc and loop\.catchUpAfterMinutes\)\n$/
+      /^schedule: 1 finding \(.*write-daily\.yml must hold the schedule npm run assets:schedule writes from loop\.writeTimesUtc, loop\.catchUpAfterMinutes and loop\.cronLeadMinutes\)\n$/
     );
   });
 }
@@ -122,7 +125,34 @@ test('a changed configuration with a workflow nobody regenerated fails, and rege
   assert.equal(generated.status, 0, generated.stderr);
   const fixed = gate('--root', root);
   assert.equal(fixed.status, 0, fixed.stderr);
-  assert.match(fixed.stdout, /starts the writer at 05:30, 17:45 UTC/);
+  assert.match(fixed.stdout, /starts the writer for 05:30, 17:45 UTC/);
+});
+
+test('a configuration with a lead and a workflow nobody regenerated fails on every entry, and regenerating it makes the gate pass', () => {
+  const root = scene({ lead: 95 });
+  const outdated = gate('--root', root);
+  assert.equal(outdated.status, 1);
+  assert.deepEqual(
+    findingsOf(outdated).map((line) => line.split(' ')[1]),
+    Array(6).fill('cron-differs')
+  );
+  const generated = spawnSync(process.execPath, [GENERATOR, '--root', root], { encoding: 'utf8' });
+  assert.equal(generated.status, 0, generated.stderr);
+  const fixed = gate('--root', root);
+  assert.equal(fixed.status, 0, fixed.stderr);
+  assert.match(
+    fixed.stdout,
+    /, with every cron entry set 95 minutes before its time, the lead of loop\.cronLeadMinutes\)\n$/
+  );
+});
+
+test('a lead of 0 is not mentioned in the summary, because the cron entries then sit at their times', () => {
+  const result = gate('--root', scene());
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(
+    result.stdout,
+    `schedule: 0 findings (${WRITE_DAILY_PATH} starts the writer for ${TIMES.join(', ')} UTC, the times of loop.writeTimesUtc, and tries each slot again ${DELAYS.join(', ')} minutes later, the delays of loop.catchUpAfterMinutes)\n`
+  );
 });
 
 test('every problem is printed, so one run shows everything a hand edit changed', () => {

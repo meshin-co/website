@@ -2,7 +2,7 @@
 
 Generated from raw check output by `scripts/report.mjs`. Do not hand-edit.
 
-Generated-from: c26c32a
+Generated-from: 6acd90f
 
 Asserted: lighthouse scores, lighthouse metric budgets, byte budgets
 

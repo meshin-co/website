@@ -147,3 +147,27 @@ test('three slots in a day owe three entries, and the count follows the configur
     false
   );
 });
+
+const afterLead = (now, claims = []) =>
+  slotStanding({ times: ['06:00', '15:00'], catchUpMinutes: DELAYS, claims, now: new Date(now) });
+
+test('a run on time at 22:40, the cron of the 06:00 slot set 440 minutes before it, lands on the evening before the slot and writes no extra article when that day holds both its entries', () => {
+  const claims = [
+    claimAt('2026-11-06T06:02:10Z', { slug: 'morning' }),
+    claimAt('2026-11-06T15:01:30Z', { slug: 'afternoon' }),
+  ];
+  const found = afterLead('2026-11-06T22:40:00Z', claims);
+  assert.deepEqual([found.day, found.passed, found.entries, found.due, found.slot], ['2026-11-06', 2, 2, false, null]);
+});
+
+test('the same run is owed the entry of the afternoon slot when that day holds only one, because a day owes one entry for each slot that has passed and no more', () => {
+  const found = afterLead('2026-11-06T22:40:00Z', [claimAt('2026-11-06T06:02:10Z', { slug: 'morning' })]);
+  assert.deepEqual([found.due, found.slot, found.lateMinutes], [true, '15:00', 460]);
+});
+
+test('a run that starts before the first slot of its day owes nothing even when the day holds no entry, and the slot is owed from its own minute', () => {
+  assert.equal(afterLead('2026-11-07T05:37:00Z').due, false);
+  assert.equal(afterLead('2026-11-07T05:59:59Z').due, false);
+  const found = afterLead('2026-11-07T06:00:00Z');
+  assert.deepEqual([found.due, found.slot, found.lateMinutes, found.catchUp], [true, '06:00', 0, null]);
+});
