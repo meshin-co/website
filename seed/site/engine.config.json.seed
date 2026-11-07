@@ -87,7 +87,7 @@
     "claimLifetimeDays": 14,
     "holdLabel": "autowriter-hold",
     "writeTimesUtc": ["03:17"],
-    "catchUpAfterMinutes": [120, 240],
+    "catchUpAfterMinutes": [30, 120, 240],
     "cronLeadMinutes": 0,
     "categoryRotation": []
   },

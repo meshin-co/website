@@ -9,9 +9,9 @@ const REAL = JSON.parse(readFileSync(ENGINE_CONFIG_FILE, 'utf8'));
 
 const inspectedLoop = (changes) => inspectEngineConfig(JSON.stringify({ ...REAL, loop: { ...REAL.loop, ...changes } }));
 
-test('the shipped configuration retries a slot two and four hours late, and what it returns cannot be changed', () => {
+test('the shipped configuration retries a slot half an hour, two hours and four hours late, and what it returns cannot be changed', () => {
   const { catchUpAfterMinutes } = readEngineConfig().loop;
-  assert.deepEqual(catchUpAfterMinutes, [120, 240]);
+  assert.deepEqual(catchUpAfterMinutes, [30, 120, 240]);
   assert.throws(() => catchUpAfterMinutes.push(60), TypeError);
 });
 
