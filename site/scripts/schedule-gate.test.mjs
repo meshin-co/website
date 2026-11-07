@@ -19,6 +19,15 @@ const GENERATOR = join(SCRIPTS, 'generate-schedule.mjs');
 const CONFIG = JSON.parse(readFileSync(join(SITE, 'engine.config.json'), 'utf8'));
 const TIMES = ['03:17', '15:17'];
 const DELAYS = CONFIG.loop.catchUpAfterMinutes;
+const ENTRY_COUNT = CONFIG.loop.writeTimesUtc.length * (DELAYS.length + 1);
+
+function withFirstTwoEntriesSwapped(workflow) {
+  const lines = workflow.split('\n');
+  const first = lines.findIndex((line) => line.trimStart().startsWith('- cron:'));
+  const swapped = [...lines];
+  [swapped[first], swapped[first + 1]] = [swapped[first + 1], swapped[first]];
+  return swapped.join('\n');
+}
 const GENERATED = withSchedule(readFileSync(join(REPOSITORY, WRITE_DAILY_PATH), 'utf8'), TIMES, DELAYS);
 const PACKAGE = JSON.parse(readFileSync(join(SITE, 'package.json'), 'utf8'));
 const CI = parse(readFileSync(join(REPOSITORY, '.github', 'workflows', 'ci.yml'), 'utf8'));
@@ -70,14 +79,7 @@ const HAND_EDITS = [
   ['a cron line edited by hand', GENERATED.replace("'17 3 * * *'", "'17 4 * * *'"), 'cron-differs'],
   ['an extra cron entry added', GENERATED.replace(SECOND, `${SECOND}\n    - cron: '17 21 * * *'`), 'cron-extra'],
   ['a cron entry removed', GENERATED.replace(`${SECOND}\n`, ''), 'cron-missing'],
-  [
-    'the entries put in the wrong order',
-    GENERATED.replace(
-      "    - cron: '17 3 * * *'\n    - cron: '17 5 * * *'",
-      "    - cron: '17 5 * * *'\n    - cron: '17 3 * * *'"
-    ),
-    'cron-order',
-  ],
+  ['the entries put in the wrong order', withFirstTwoEntriesSwapped(GENERATED), 'cron-order'],
   [
     'the schedule block deleted',
     GENERATED.replace(/ {2}schedule:[^]*?(?= {2}workflow_dispatch:)/, ''),
@@ -119,7 +121,7 @@ test('a changed configuration with a workflow nobody regenerated fails, and rege
   assert.equal(outdated.status, 1);
   assert.deepEqual(
     findingsOf(outdated).map((line) => line.split(' ')[1]),
-    Array(6).fill('cron-differs')
+    Array(ENTRY_COUNT).fill('cron-differs')
   );
   const generated = spawnSync(process.execPath, [GENERATOR, '--root', root], { encoding: 'utf8' });
   assert.equal(generated.status, 0, generated.stderr);
@@ -134,7 +136,7 @@ test('a configuration with a lead and a workflow nobody regenerated fails on eve
   assert.equal(outdated.status, 1);
   assert.deepEqual(
     findingsOf(outdated).map((line) => line.split(' ')[1]),
-    Array(6).fill('cron-differs')
+    Array(ENTRY_COUNT).fill('cron-differs')
   );
   const generated = spawnSync(process.execPath, [GENERATOR, '--root', root], { encoding: 'utf8' });
   assert.equal(generated.status, 0, generated.stderr);

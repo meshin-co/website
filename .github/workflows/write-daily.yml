@@ -6,9 +6,11 @@ on:
   schedule:
     # written by npm run assets:schedule from loop.writeTimesUtc, loop.catchUpAfterMinutes and loop.cronLeadMinutes: each cron is set loop.cronLeadMinutes before the time it serves, listed in the order of those times, because GitHub starts a scheduled run late; give each cron a minute off the top of the hour, where scheduled runs queue
     - cron: '40 22 * * *'
+    - cron: '10 23 * * *'
     - cron: '40 0 * * *'
     - cron: '40 2 * * *'
     - cron: '40 7 * * *'
+    - cron: '10 8 * * *'
     - cron: '40 9 * * *'
     - cron: '40 11 * * *'
   workflow_dispatch:

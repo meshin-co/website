@@ -107,14 +107,14 @@ test('run as a script it writes, says what it wrote, and a second run says it ha
   assert.equal(first.status, 0, first.stderr);
   assert.equal(
     first.stdout,
-    'schedule: wrote 6 cron entries into .github/workflows/write-daily.yml for 05:30, 17:45 (loop.writeTimesUtc) and 120, 240 minutes later (loop.catchUpAfterMinutes), each set 95 minutes earlier (loop.cronLeadMinutes)\n'
+    'schedule: wrote 8 cron entries into .github/workflows/write-daily.yml for 05:30, 17:45 (loop.writeTimesUtc) and 30, 120, 240 minutes later (loop.catchUpAfterMinutes), each set 95 minutes earlier (loop.cronLeadMinutes)\n'
   );
   const written = text();
   const second = cli('--root', root);
   assert.equal(second.status, 0, second.stderr);
   assert.equal(
     second.stdout,
-    'schedule: .github/workflows/write-daily.yml already holds the cron entries for 05:30, 17:45 (loop.writeTimesUtc) and 120, 240 minutes later (loop.catchUpAfterMinutes), each set 95 minutes earlier (loop.cronLeadMinutes); nothing written\n'
+    'schedule: .github/workflows/write-daily.yml already holds the cron entries for 05:30, 17:45 (loop.writeTimesUtc) and 30, 120, 240 minutes later (loop.catchUpAfterMinutes), each set 95 minutes earlier (loop.cronLeadMinutes); nothing written\n'
   );
   assert.equal(text(), written);
 });
@@ -123,7 +123,7 @@ test('run as a script it does not mention a lead of 0, so the text is the one it
   const { root } = scene({ lead: 0 });
   assert.equal(
     cli('--root', root).stdout,
-    'schedule: wrote 6 cron entries into .github/workflows/write-daily.yml for 05:30, 17:45 (loop.writeTimesUtc) and 120, 240 minutes later (loop.catchUpAfterMinutes)\n'
+    'schedule: wrote 8 cron entries into .github/workflows/write-daily.yml for 05:30, 17:45 (loop.writeTimesUtc) and 30, 120, 240 minutes later (loop.catchUpAfterMinutes)\n'
   );
 });
 

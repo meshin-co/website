@@ -319,6 +319,7 @@ test('an unsorted configuration is checked against the sorted schedule, so the o
 
 const WANTED = ['06:00', '15:00'];
 const DELAYS = [120, 240];
+const SHIPPED_DELAYS = [30, 120, 240];
 const LEAD = 440;
 const AT_LEAD = [
   { time: '06:00', slot: '06:00', delay: 0, cron: '40 22 * * *' },
@@ -434,7 +435,7 @@ const DAYS = 5;
 function startsAfterLag(lead, lag) {
   const instants = [];
   for (let day = -1; day < DAYS; day += 1) {
-    for (const { cron } of cronPlan(WANTED, DELAYS, lead)) {
+    for (const { cron } of cronPlan(WANTED, SHIPPED_DELAYS, lead)) {
       const [minute, hour] = cron.split(' ').map(Number);
       instants.push(FIRST_DAY + day * DAY_MS + (hour * 60 + minute + lag) * MINUTE_MS);
     }
@@ -446,7 +447,7 @@ function writtenAt(instants) {
   const claims = [];
   for (const instant of instants) {
     const now = new Date(instant);
-    if (!slotStanding({ times: WANTED, catchUpMinutes: DELAYS, claims, now }).due) continue;
+    if (!slotStanding({ times: WANTED, catchUpMinutes: SHIPPED_DELAYS, claims, now }).due) continue;
     const claim = {
       slug: `entry-${claims.length}`,
       format: 'article',
@@ -476,11 +477,19 @@ test('a run that starts exactly the lead after its cron writes at the times the 
   );
 });
 
-test('a run that starts 23 minutes before its slot owes nothing, and the next cron writes the slot 97 minutes late', () => {
+test('a run that starts 23 minutes before its slot owes nothing, and the first catch-up writes it 7 minutes late', () => {
   assert.deepEqual(
     writtenAt(startsAfterLag(LEAD, 417)).filter((at) => at.startsWith(dayOf(1))),
-    ['2026-11-03T07:37:00.000Z', '2026-11-03T16:37:00.000Z']
+    ['2026-11-03T06:07:00.000Z', '2026-11-03T15:07:00.000Z']
   );
+});
+
+test('every measured delay writes the slot within the half hour after it, early arrival included', () => {
+  for (const lag of [417, 440, 458, 461]) {
+    const [morning] = writtenAt(startsAfterLag(LEAD, lag)).filter((at) => at.startsWith(dayOf(1)));
+    const minutes = (Date.parse(morning) - Date.parse(`${dayOf(1)}T06:00:00.000Z`)) / 60_000;
+    assert.ok(minutes >= 0 && minutes <= 30, `${lag} minutes of delay wrote the 06:00 slot ${minutes} minutes late`);
+  }
 });
 
 for (const lead of [0, 1, 59, 440, 1439]) {

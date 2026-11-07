@@ -39,9 +39,10 @@ assumes the delay stays the same when the cron moves.
 
 A run that starts before its slot owes nothing. The `due` job (`scripts/slot-due.mjs`) ends it green before any model is
 called, with a line such as
-`slot: 0 articles claimed today for 0 slots passed, so nothing is owed; the run stops before any model is called`. The
-first catch-up entry then writes the slot, 97 minutes after it when every run starts 417 minutes after its cron
-(`scripts/schedule-workflow.test.mjs`).
+`slot: 0 articles claimed today for 0 slots passed, so nothing is owed; the run stops before any model is called`. That
+is why the first delay of `loop.catchUpAfterMinutes` is 30 and not two hours: at the shortest measured delay the slot's
+own entry arrives 23 minutes early and writes nothing, and the 30-minute entry then writes it 7 minutes late instead of 97. Across every measured delay the 06:00 slot is written inside the half hour after it
+(`scripts/schedule-workflow.test.mjs`). Keep a short first delay whenever the lead can overshoot.
 
 A run that starts exactly at its cron minute, with no delay at all, lands on the evening before the slot's own UTC day for
 the first slot (22:40 for 06:00) and must not write an extra article. The day's slot quota (`scripts/slot-standing.mjs`)
@@ -55,3 +56,7 @@ entries owes nothing and a day missing one owes that one and no other. `scripts/
 2. Choose a lead from the shortest delay (no run starts before its slot) up to the middle of them (the arrival centres on
    the slot, and a run that comes early waits for its retry). The key is an integer from 0 to 1439; a new site starts at 0.
 3. `cd site && npm run assets:schedule`, then `npm run gate:schedule`.
+4. The times are UTC, and no part of the engine knows a civil time zone. A reader whose country changes its offset
+   reads the articles an hour earlier or later from that date on; Israel moves to UTC+3 in late March, so 06:00 UTC
+   stops being 08:00 there and becomes 09:00. Move `loop.writeTimesUtc`, not the lead: the lead measures GitHub's
+   queue, which no civil clock touches.
