@@ -6,17 +6,35 @@
   "attempts": [],
   "spend": {
     "tokens": {
-      "input": 0,
-      "output": 0
+      "input": 40915,
+      "output": 12679
     },
-    "costUsd": 0
+    "costUsd": 0.10431
   },
   "verdict": {
-    "state": "open",
-    "reason": null,
-    "decidedAt": null
+    "state": "escalated",
+    "reason": "Write daily stopped while writing what-does-a-chief-ai-officer-do-in-a-50-person-company (output)",
+    "decidedAt": "2026-11-07T10:19:00.235Z"
   },
-  "escalations": [],
+  "escalations": [
+    {
+      "id": "esc-1",
+      "kind": "hard-stop",
+      "title": "Write daily stopped while writing what-does-a-chief-ai-officer-do-in-a-50-person-company (output)",
+      "detail": "npm run write:entry failed with kind output: no draft of what-does-a-chief-ai-officer-do-in-a-50-person-company passed the writer's own checks after 2 corrections: fact-unbound. Spend recorded so far: 0.10431 USD. The claim for what-does-a-chief-ai-officer-do-in-a-50-person-company is marked abandoned and keeps its slug, so the next catch-up run of the day writes a different topic.",
+      "raisedAt": "2026-11-07T10:18:59.584Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-07T10:18:59.584Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 110,
+          "error": null
+        }
+      ]
+    }
+  ],
   "refusals": [
     {
       "title": "Fractional CAIO vs full-time CAIO cost",
@@ -156,5 +174,12 @@
       "against": "/glossary/ai-governance",
       "detail": "the query \"ai governance\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
     }
-  ]
+  ],
+  "generation": {
+    "tokens": {
+      "input": 40915,
+      "output": 12679
+    },
+    "costUsd": 0.10431
+  }
 }
