@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "slug": "what-does-a-chief-ai-officer-do-in-a-50-person-company",
+  "title": "What does a chief AI officer do in a 50 person company?",
+  "format": "article",
+  "query": "what does a chief ai officer do in a 50 person company",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "prompt": {
+    "number": 27,
+    "text": "what does a chief AI officer do in a 50 person company"
+  },
+  "origin": "demand",
+  "catchUp": {
+    "slot": "03:17",
+    "lateMinutes": 419
+  },
+  "runId": "42363102829-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-07T10:16:22.097Z",
+  "expiresAt": "2026-11-21T10:16:22.097Z"
+}
