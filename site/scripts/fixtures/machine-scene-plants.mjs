@@ -60,8 +60,6 @@ function together(...steps) {
   };
 }
 
-const moveEntryLine = (url, from, to) => together(dropDist(from, url), appendDist(to, entryLine(url)));
-
 const padFeedJson = (bytes) => (scene) =>
   editJson(scene.distFile('feed.json'), (feed) => {
     feed.padding = overGuard(bytes);
@@ -180,15 +178,6 @@ export const PLANTS = [
     name: 'a collection with entries ships no full-text file',
     plant: removeDist('llms/service.txt'),
     expected: () => [failure('llms-file-missing', 'no /llms/service.txt full-text file', ['/llms/service.txt'])],
-  },
-  {
-    name: 'an entry moves from the last shard into a full one, which then holds more than its entry cap',
-    plant: moveEntryLine(`${ORIGIN}/blog/seventh-post`, 'llms/post-3.txt', 'llms/post-2.txt'),
-    expected: () => [
-      failure('llms-corpus', '/llms/post-2.txt holds 4 entries, over the 3 entry cap'),
-      failure('llms-corpus', '/llms/post-2.txt holds 4 entries, the index says 3 (range 4-6)'),
-      failure('llms-corpus', '/llms/post-3.txt holds 0 entries, the index says 1 (range 7-7)'),
-    ],
   },
   {
     name: 'the index of a sharded collection lists an entry itself',

@@ -195,6 +195,17 @@ test('deriveBand refuses a format with no entry long enough to measure', () => {
   assert.throws(() => deriveBand(measure([]), 'article'), BandError);
 });
 
+test('deriveBand refuses a format with one measured entry, since a band is the spread between entries', () => {
+  const lone = [entry('post/only', 'post', repeat(14, 10))];
+  assert.throws(
+    () => deriveBand(measure(lone), 'article'),
+    /the article band would have no width: 1 article has 8 sentences or more/
+  );
+  const pair = CORPUS.filter(({ collection }) => collection === 'post');
+  assert.equal(pair.length, 2);
+  assert.doesNotThrow(() => deriveBand(measure(pair), 'article'));
+});
+
 test('deriveBand throws when the band it derived would admit an entry of eleven-word sentences, for either format', () => {
   for (const { format, collection } of FORMATS)
     assert.throws(
@@ -222,7 +233,8 @@ test('a median floor exactly at the threshold is accepted for either format', ()
 
 test('a share rounded up to four decimals admits the entry that sets a cap, and one rounded down would not', () => {
   const lengths = [...repeat(10, 26), ...repeat(15, 25)];
-  const band = deriveBand(measure([entry('glossary/odd', 'glossary', lengths)]), 'term');
+  const twins = [entry('glossary/odd', 'glossary', lengths), entry('glossary/odd-too', 'glossary', lengths)];
+  const band = deriveBand(measure(twins), 'term');
   assert.equal(band.belowThresholdCap, 0.5099);
   assert.equal(band.justBelowCap, 0.5099);
   assert.deepEqual(rulesOf(lengths, band), []);

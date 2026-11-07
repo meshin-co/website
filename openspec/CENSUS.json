@@ -124,9 +124,9 @@
   ],
   "discovery/machine-interfaces": [
     "A check that examines nothing is a finding",
-    "A collection file holds at most its entry cap and shards beyond that",
     "A route's kind is derived, never listed",
     "A second build of an unchanged tree writes byte-identical llms files",
+    "A shard holds as many ordered entries as fit 100000 bytes of its own text",
     "Draft and noindex entries never reach llms-full.txt, the collection files or the feeds",
     "Each collection feed carries the newest entries of its collection and no more than its window",
     "Each collection hub advertises its own collection feed",

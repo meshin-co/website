@@ -54,13 +54,13 @@ Every reference on a page, meaning an object whose only key is `@id`, SHALL name
 
 #### Scenario: A node points at an undeclared id
 
-- **WHEN** the Person node on `/about` points `worksFor` at `https://meshin.co/#company`
-- **THEN** `npm run gate:jsonld` prints `JSONLD /about references undeclared https://meshin.co/#company` and exits 1
+- **WHEN** the Person node on `/about` points `worksFor` at `https://example.com/#company`
+- **THEN** `npm run gate:jsonld` prints `JSONLD /about references undeclared https://example.com/#company` and exits 1
 
 #### Scenario: A page points at breadcrumbs it does not carry
 
-- **WHEN** the ProfilePage node on `/about` points `breadcrumb` at `https://meshin.co/about#breadcrumbs`
-- **THEN** `npm run gate:jsonld` prints `JSONLD /about references undeclared https://meshin.co/about#breadcrumbs` and exits 1
+- **WHEN** the ProfilePage node on `/about` points `breadcrumb` at `https://example.com/about#breadcrumbs`
+- **THEN** `npm run gate:jsonld` prints `JSONLD /about references undeclared https://example.com/about#breadcrumbs` and exits 1
 
 #### Scenario: A composed graph leaves a reference dangling
 
@@ -73,8 +73,8 @@ No `@id` SHALL be declared by two nodes on the same page, counted across all of 
 
 #### Scenario: A page declares the same node twice
 
-- **WHEN** a second Person node with `https://meshin.co/#person` is added to `/about`
-- **THEN** `npm run gate:jsonld` prints `JSONLD /about declares https://meshin.co/#person twice` and exits 1
+- **WHEN** a second Person node with `https://example.com/#person` is added to `/about`
+- **THEN** `npm run gate:jsonld` prints `JSONLD /about declares https://example.com/#person twice` and exits 1
 
 ### Requirement: Every node type has a required-property family
 
@@ -92,12 +92,12 @@ Every node a page owns, meaning its `@id` names that page's own URL or it has no
 #### Scenario: The organization loses its logo
 
 - **WHEN** the home page Organization node loses `logo`
-- **THEN** `npm run gate:jsonld` prints `JSONLD / Organization node https://meshin.co/#org is missing required property logo` and exits 1
+- **THEN** `npm run gate:jsonld` prints `JSONLD / Organization node https://example.com/#org is missing required property logo` and exits 1
 
 #### Scenario: The website loses its search action
 
 - **WHEN** the home page WebSite node loses `potentialAction`
-- **THEN** `npm run gate:jsonld` prints `JSONLD / WebSite node https://meshin.co/#website is missing required property potentialAction` and exits 1
+- **THEN** `npm run gate:jsonld` prints `JSONLD / WebSite node https://example.com/#website is missing required property potentialAction` and exits 1
 
 ### Requirement: The graph builder emits one schema.org document with the nodes under @graph
 
@@ -165,7 +165,7 @@ whose three dates disagree (`site/scripts/date-agreement.mjs`).
 #### Scenario: A listed route ships a graph that declares an id twice
 
 - **WHEN** `/styleguide` gains a graph holding two nodes with one `@id`
-- **THEN** `npm run gate:jsonld` prints `JSONLD /styleguide declares https://meshin.co/#org twice` and exits 1
+- **THEN** `npm run gate:jsonld` prints `JSONLD /styleguide declares https://example.com/#org twice` and exits 1
 
 #### Scenario: The listed routes ship no graph
 

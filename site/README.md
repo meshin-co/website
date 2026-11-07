@@ -1,6 +1,6 @@
 # site
 
-The Astro application behind meshin.co. The methodology that governs it lives one level up:
+The Astro application behind this site. The methodology that governs it lives one level up:
 read `../AGENTS.md` first, then `../openspec/INDEX.md`.
 
 Scaffolded from AstroWind and since rewritten: the template's demo pages, widgets, analytics and

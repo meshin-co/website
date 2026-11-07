@@ -194,7 +194,7 @@ Every built page other than /, /styleguide and the 404 page SHALL be the target 
 
 ### Requirement: Every outbound link carries nofollow, noopener and noreferrer
 
-Every `<a>` whose href starts with http:// or https:// and names a host other than meshin.co or one of its subdomains SHALL carry the rel tokens nofollow, noopener and noreferrer, in any order; extra tokens such as me are allowed. `npm run gate:external` checks every built page with `site/scripts/run-external-links.mjs`, and `site/scripts/external-links.test.mjs` pins the required set to exactly those three tokens.
+Every `<a>` whose href starts with http:// or https:// and names a host other than the site's own host or one of its subdomains SHALL carry the rel tokens nofollow, noopener and noreferrer, in any order; extra tokens such as me are allowed. `npm run gate:external` checks every built page with `site/scripts/run-external-links.mjs`, and `site/scripts/external-links.test.mjs` pins the required set to exactly those three tokens.
 
 #### Scenario: An outbound link lacks two of the tokens
 
@@ -203,7 +203,7 @@ Every `<a>` whose href starts with http:// or https:// and names a host other th
 
 ### Requirement: No internal link carries nofollow
 
-An `<a>` whose href starts with / or names meshin.co or www.meshin.co over http or https SHALL NOT carry rel nofollow, so internal links keep their ranking signal. `npm run gate:external` reports every such link with the page it sits on.
+An `<a>` whose href starts with / or names the site's own host or its www form over http or https SHALL NOT carry rel nofollow, so internal links keep their ranking signal. `npm run gate:external` reports every such link with the page it sits on.
 
 #### Scenario: An internal link is marked nofollow
 
@@ -212,7 +212,7 @@ An `<a>` whose href starts with / or names meshin.co or www.meshin.co over http 
 
 ### Requirement: The build adds the outbound rel tokens and strips target from Markdown links
 
-The Markdown pass rehypeExternalLinks in `site/src/utils/pipeline.mjs` SHALL merge nofollow, noopener and noreferrer into the rel of every http or https link whose hostname is not meshin.co, keep any other token, and remove its target attribute; relative and meshin.co links stay untouched. externalRelAttrs SHALL return the same three tokens for such an href and no rel at all for an internal one. `site/src/utils/pipeline.test.mjs` pins both.
+The Markdown pass rehypeExternalLinks in `site/src/utils/pipeline.mjs` SHALL merge nofollow, noopener and noreferrer into the rel of every http or https link whose hostname is not the site's own host, keep any other token, and remove its target attribute; relative links and links to the site's own host stay untouched. externalRelAttrs SHALL return the same three tokens for such an href and no rel at all for an internal one. `site/src/utils/pipeline.test.mjs` pins both.
 
 #### Scenario: The Markdown pass keeps a target
 
@@ -221,7 +221,7 @@ The Markdown pass rehypeExternalLinks in `site/src/utils/pipeline.mjs` SHALL mer
 
 #### Scenario: An internal href is given a rel
 
-- **WHEN** externalRelAttrs returns a rel for https://meshin.co/services
+- **WHEN** externalRelAttrs returns a rel for https://example.com/services
 - **THEN** `npm run test` fails the test `an outbound href gets the full rel, an internal one gets no rel at all`
 
 ### Requirement: A route earns an inbound link from a page, not from the chrome

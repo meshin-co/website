@@ -26,7 +26,7 @@ must never reach a file, a log line or a commit.**
 
 ## The three verdicts, and the fourth column that makes them mean anything
 
-`cited` means the engine returned a `meshin.co` URL among its sources. `mentioned` means the
+`cited` means the engine returned a URL on the site's host among its sources. `mentioned` means the
 answer named the site or the owner without citing it. `absent` means neither.
 
 The retrieval column is what separates two very different absences: the engine searched and we
@@ -37,7 +37,7 @@ first run, OpenAI and Gemini performed zero searches on the verbatim buyer promp
 ## Traps this probe already hit
 
 - **Gemini hides real hosts.** Its grounding chunks are `vertexaisearch.cloud.google.com`
-  redirects. Without following them, a `meshin.co` citation can never match. `resolveCitationHosts`
+  redirects. Without following them, a citation of the site can never match. `resolveCitationHosts`
   follows each redirect and keeps the original URL when that fails.
 - **The prompts stay verbatim.** Adding "search the web and cite sources" would raise the
   retrieval rate and stop measuring what a buyer actually types.

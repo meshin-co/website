@@ -4,9 +4,10 @@
 under `audits/phase-local/`, which git ignores, so an ad-hoc run leaves the tree clean. It is the
 scripted half of the Calibration Gate's edge checks, which were prose until 2026-09-15.
 
-    npm run smoke:prod https://meshin.co
+    npm run smoke:prod <origin>
 
-Default origin is `https://meshin.co`. Any origin works, which is how the check is rehearsed:
+Default origin is `https://` plus `site.name` from `site/src/config.yaml`. Any origin works, which is
+how the check is rehearsed:
 
     GATE_SERVER_PORT=4340 node scripts/gate-server.mjs dist &
     npm run smoke:prod http://127.0.0.1:4340
@@ -50,7 +51,7 @@ Run it against the production URL immediately, naming the committed artifact as 
 argument, and commit that file. The default path is ignored on purpose: a run without it never
 overwrites the phase 5 record.
 
-    npm run smoke:prod https://meshin.co ../audits/phase-5/smoke-prod.md
+    npm run smoke:prod <origin> ../audits/phase-5/smoke-prod.md
 
 That artifact is the only evidence this repository can produce about the live origin: Lighthouse
 starts the gate server against the build and takes no origin, so no score here describes what the

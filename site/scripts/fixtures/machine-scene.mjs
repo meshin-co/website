@@ -94,6 +94,9 @@ export const LIVE = {
   faq: QUESTIONS,
 };
 
+export const POSTS_PER_SHARD = 3;
+const HEAVY_POST_BODY = 'x'.repeat(Math.floor(LLMS_FILE_MAX_BYTES / (POSTS_PER_SHARD + 1)));
+
 const KINDS = Object.keys(FEED_BASES);
 const LIVE_KINDS = Object.keys(LIVE);
 const EMPTY_KINDS = KINDS.filter((kind) => !LIVE_KINDS.includes(kind));
@@ -168,13 +171,18 @@ const windowRoutes = (kind) =>
     .slice(0, FEED_WINDOW)
     .map((entry) => routeOf(kind, entry));
 
+const llmsBodyOf = (kind, entry) => {
+  const text = `The text of ${entry.title}.`;
+  return kind === 'post' ? `${text}\n\n${HEAVY_POST_BODY}` : text;
+};
+
 const llmsEntries = (kind) =>
   LIVE[kind].map((entry) => ({
     id: entry.slug,
     title: entry.title,
     url: urlOf(routeOf(kind, entry)),
     summary: NOTE,
-    body: `The text of ${entry.title}.`,
+    body: llmsBodyOf(kind, entry),
     updated: instantOf(entry.updated),
     published: instantOf(entry.published),
   }));

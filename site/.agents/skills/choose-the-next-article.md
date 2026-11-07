@@ -1,9 +1,9 @@
 # Choose the Next Article
 
 The next article comes from what people searched for, not from taste. `audits/search-demand.md`
-holds what Search Console measured for `sc-domain:meshin.co` over a 90-day window, Google web search
-only. Read it before step 1 of `run-the-growth-loop.md`, and write down the number that made the
-choice.
+holds what Search Console measured for the property in `site/engine.config.json` over a 90-day
+window, Google web search only. Read it before step 1 of `run-the-growth-loop.md`, and write down
+the number that made the choice.
 
 ## A fresh report first
 

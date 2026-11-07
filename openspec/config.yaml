@@ -1,7 +1,7 @@
 schema: spec-driven
 
 context: |
-  meshin.co is a static Astro site whose behaviour is enforced by about twenty gate scripts under
+  This project is a static Astro site whose behaviour is enforced by about twenty gate scripts under
   site/scripts, run by npm from the site directory. A claim counts only when a gate, a unit test or
   a planted mutation specimen can fail on it.
 

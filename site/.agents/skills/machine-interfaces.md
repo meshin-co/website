@@ -15,14 +15,15 @@ the built output, never in source. The gate is `npm run gate:machine` (`scripts/
   collection (name, entry count, link to its file). Pages link it from `CommonMeta.astro`.
 - /llms-full.txt — an index of the collection files, one line each and no entry, `src/pages/llms-full.txt.ts`, at most
   `LLMS_FULL_MAX_BYTES` (4 KiB).
-- /llms/{collection}.txt — the full text of one collection, `src/pages/llms/[collection].txt.ts`. Above
-  `LLMS_SHARD_MAX_ENTRIES[name]` entries it is an index of `/llms/{collection}-{n}.txt` shards chained by next links. No
-  file under /llms/ passes `LLMS_FILE_MAX_BYTES` (100 kB). The cap derives from `LARGEST_MEASURED_ENTRY_BYTES` in
-  `src/utils/llms-collections.mjs`: to re-calibrate, edit the measurement and never the cap, then re-measure after a
-  build with `npm run measure:llms`. A collection with no measurement yet takes the largest measured entry of any
-  collection, a conservative cap. Entries sort by publish date then id and nothing reads a clock: `npm run build` is the
-  only regeneration step and a second build is byte-identical (`npm run test:llms`). A new entry moves only the last
-  shard and the index; a back-dated entry shifts every later shard. `scripts/llms-corpus.mjs` checks the rest.
+- /llms/{collection}.txt — the full text of one collection, `src/pages/llms/[collection].txt.ts`. A collection that
+  fits `LLMS_FILE_MAX_BYTES` (100 kB) is one file. A larger one is an index of `/llms/{collection}-{n}.txt` shards
+  chained by next links, each filled with as many ordered entries as keep the text it renders to, heading and next-part
+  line included, at or under that budget, measured in `src/utils/llms-collections.mjs` with `Buffer.byteLength`. An entry
+  larger than the budget alone gets a shard of its own, and `npm run gate:machine` fails any built file over the budget.
+  No cap is recorded and nothing is re-measured when a collection is added. Entries sort by publish date then id and
+  nothing reads a clock: `npm run build` is the only regeneration step and a second build is byte-identical
+  (`npm run test:llms`). A new entry changes only the last shard and the index, unless it overflows that shard; a
+  back-dated entry shifts every later shard. `scripts/llms-corpus.mjs` checks the rest.
 - .md sidecars per page, from `src/pages/[...slug].md.ts`.
 - OG images rendered by satori at `src/pages/og/[...slug].png.ts`; template in `src/utils/og-template.mjs`; hash-keyed
   render cache in `src/utils/og-cache.mjs`.

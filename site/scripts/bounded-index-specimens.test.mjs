@@ -6,17 +6,13 @@ import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 
 import { COLLECTION_FEED_MAX_BYTES, FEED_WINDOW } from '../src/utils/feeds.mjs';
-import {
-  LLMS_FILE_MAX_BYTES,
-  LLMS_FULL_MAX_BYTES,
-  LLMS_SHARD_MAX_ENTRIES,
-  llmsCollectionFiles,
-} from '../src/utils/llms-collections.mjs';
+import { LLMS_FILE_MAX_BYTES, LLMS_FULL_MAX_BYTES, llmsCollectionFiles } from '../src/utils/llms-collections.mjs';
 import { SPECIMENS } from './mutation-specimens.mjs';
 
 const SITE_ROOT = join(import.meta.dirname, '..');
-const CAP = LLMS_SHARD_MAX_ENTRIES.post;
-const POSTS = CAP * 3 + 1;
+const PER_SHARD = 3;
+const POSTS = PER_SHARD * 3 + 1;
+const HEAVY_BODY = 'x'.repeat(Math.floor(LLMS_FILE_MAX_BYTES / (PER_SHARD + 1)));
 const ORIGIN = 'https://meshin.co';
 const urlOf = (index) => `${ORIGIN}/blog/post-${String(index).padStart(2, '0')}`;
 const dayOf = (index) => `2026-01-${String(index + 1).padStart(2, '0')}T00:00:00.000Z`;
@@ -26,7 +22,7 @@ const entries = Array.from({ length: POSTS }, (_, index) => ({
   title: `Post ${index}`,
   url: urlOf(index),
   summary: `Summary ${index}.`,
-  body: `Body ${index}.`,
+  body: HEAVY_BODY,
   published: dayOf(index),
   updated: dayOf(index),
   draft: false,
@@ -43,7 +39,6 @@ const builtFiles = () => {
     name: 'post',
     title: 'Writing',
     entries,
-    max: CAP,
   });
   const files = Object.fromEntries(shards.map(({ param, text }) => [`dist/llms/${param}.txt`, text]));
   files['dist/llms-full.txt'] =
@@ -80,12 +75,11 @@ const bytes = (text) => Buffer.byteLength(text, 'utf8');
 const entryUrls = (text) => [...text.matchAll(/^\[(https:\/\/[^\]]+)\]\(\1\)$/gm)].map(([, url]) => url);
 const escaped = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-test('the nine bounded-index plants each belong to gate:machine', () => {
+test('the eight bounded-index plants each belong to gate:machine', () => {
   const names = [
     'machineLlmsShardOverBudget',
     'machineLlmsFullOverBudget',
     'machineLlmsFullInlinesEntries',
-    'machineLlmsShardOverCap',
     'machineLlmsShardOmitsEntry',
     'machineLlmsIndexCarriesEntry',
     'machineLlmsFullCountDrifts',
@@ -116,9 +110,14 @@ test('a test:llms plant reads its failures through the dot reporter, because the
 test('the tokens that carry a number take it from the constant the gate guards with, never from a retyped literal', () => {
   assert.equal(SPECIMENS.machineLlmsShardOverBudget.token, `bytes, over the ${LLMS_FILE_MAX_BYTES} byte guard`);
   assert.equal(SPECIMENS.machineLlmsFullOverBudget.token, `bytes, over the ${LLMS_FULL_MAX_BYTES} byte guard`);
-  assert.equal(SPECIMENS.machineLlmsShardOverCap.token, `entries, over the ${CAP} entry cap`);
   assert.equal(SPECIMENS.machineFeedOverWindow.token, `items, window is ${FEED_WINDOW}`);
   assert.equal(SPECIMENS.machineFeedOverBudget.token, `bytes, over the ${COLLECTION_FEED_MAX_BYTES} byte guard`);
+});
+
+test('the fixture is packed by bytes: three heavy posts fill each of the first three shards and the last holds one', () => {
+  const files = builtFiles();
+  const held = [1, 2, 3, 4].map((part) => entryUrls(files[`dist/llms/post-${part}.txt`]).length);
+  assert.deepEqual(held, [PER_SHARD, PER_SHARD, PER_SHARD, 1]);
 });
 
 test('a shard pushed past the file budget is over it by bytes and restores', async () => {
@@ -141,17 +140,6 @@ test('llms-full.txt gains a line linking a post that a shard really holds', asyn
     const url = /\((https:[^)]+)\)/.exec(added)[1];
     assert.match(url, /\/blog\//);
     assert.ok(files['dist/llms/post-1.txt'].includes(`[${url}](${url})`));
-  });
-});
-
-test('a fourth entry block lands in post-3, copied from post-4, so the shard holds one more than its cap', async () => {
-  await withPlanted('machineLlmsShardOverCap', ({ read, files }) => {
-    assert.equal(entryUrls(files['dist/llms/post-3.txt']).length, CAP);
-    const planted = read('dist/llms/post-3.txt');
-    assert.equal(entryUrls(planted).length, CAP + 1);
-    assert.ok(entryUrls(files['dist/llms/post-4.txt']).every((url) => entryUrls(planted).includes(url)));
-    assert.equal(read('dist/llms/post-4.txt'), files['dist/llms/post-4.txt']);
-    assert.ok(planted.endsWith(files['dist/llms/post-3.txt'].slice(-40)));
   });
 });
 
@@ -196,11 +184,12 @@ test('the post feed is padded past its byte budget and stays one document', asyn
 });
 
 test('the orphan shard names a shard number no index lists, and the inlined-entry plant reads a shard', async () => {
-  const { copySite } = scratchSite();
+  const { copySite, files } = scratchSite();
   try {
     const restoreOrphan = await SPECIMENS.machineLlmsOrphanShard.plant(copySite);
     const orphan = /\/llms\/(post-\d+)\.txt/.exec(SPECIMENS.machineLlmsOrphanShard.token)[1];
-    assert.ok(Number(orphan.split('-')[1]) > Math.ceil(POSTS / CAP));
+    const shards = Object.keys(files).filter((file) => /^dist\/llms\/post-\d+\.txt$/.test(file));
+    assert.ok(Number(orphan.split('-')[1]) > shards.length);
     assert.equal(existsSync(join(copySite, `dist/llms/${orphan}.txt`)), true);
     await restoreOrphan();
     assert.equal(existsSync(join(copySite, `dist/llms/${orphan}.txt`)), false);

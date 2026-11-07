@@ -71,28 +71,6 @@ export function llmsFullTextPointers(counts) {
 
 export const LLMS_FILE_MAX_BYTES = 100_000;
 
-export const LLMS_SHARD_FRAME_BYTES = 1_024;
-
-export const LARGEST_MEASURED_ENTRY_BYTES = {
-  service: 2_055,
-  post: 28_454,
-  resource: 13_269,
-  glossary: 2_938,
-  faq: 832,
-};
-
-const LARGEST_MEASURED_ENTRY_ANYWHERE = Math.max(...Object.values(LARGEST_MEASURED_ENTRY_BYTES));
-
-export const LLMS_SHARD_MAX_ENTRIES = Object.fromEntries(
-  LLMS_COLLECTIONS.map(({ name }) => [
-    name,
-    Math.floor(
-      (LLMS_FILE_MAX_BYTES - LLMS_SHARD_FRAME_BYTES) /
-        (LARGEST_MEASURED_ENTRY_BYTES[name] ?? LARGEST_MEASURED_ENTRY_ANYWHERE)
-    ),
-  ])
-);
-
 export const LLMS_FULL_MAX_BYTES = 4_096;
 
 const compare = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
@@ -101,31 +79,51 @@ export function orderEntries(entries) {
   return [...entries].sort((a, b) => compare(a.published ?? '', b.published ?? '') || compare(a.id, b.id));
 }
 
-export function llmsCollectionFiles({ site, origin, name, title, entries, max = LLMS_SHARD_MAX_ENTRIES[name] }) {
-  const live = orderEntries(entries.filter((entry) => !entry.draft && !entry.noindex));
-  if (live.length <= max) return [{ param: name, text: renderLlmsCollection({ site, title, entries: live }) }];
+const bytesOf = (text) => Buffer.byteLength(text, 'utf8');
 
-  const parts = Array.from({ length: Math.ceil(live.length / max) }, (_, index) => {
-    const from = index * max + 1;
-    const slice = live.slice(index * max, index * max + max);
-    return { param: `${name}-${index + 1}`, from, to: from + slice.length - 1, entries: slice };
+function packShards({ total, maxBytes, render }) {
+  const shards = [];
+  let first = 0;
+  while (first < total) {
+    const position = shards.length;
+    let end = first + 1;
+    let text = render({ position, first, end });
+    while (end < total) {
+      const longer = render({ position, first, end: end + 1 });
+      if (bytesOf(longer) > maxBytes) break;
+      end += 1;
+      text = longer;
+    }
+    shards.push({ from: first + 1, to: end, text });
+    first = end;
+  }
+  return shards;
+}
+
+export function llmsCollectionFiles({ site, origin, name, title, entries, maxBytes = LLMS_FILE_MAX_BYTES }) {
+  const live = orderEntries(entries.filter((entry) => !entry.draft && !entry.noindex));
+  const whole = renderLlmsCollection({ site, title, entries: live });
+  if (bytesOf(whole) <= maxBytes) return [{ param: name, text: whole }];
+
+  const paramOf = (position) => `${name}-${position + 1}`;
+  const urlOf = (position) => absoluteUrl(origin, `/llms/${paramOf(position)}.txt`);
+  const shards = packShards({
+    total: live.length,
+    maxBytes,
+    render: ({ position, first, end }) =>
+      renderLlmsShard({
+        site,
+        title,
+        entries: live.slice(first, end),
+        from: first + 1,
+        to: end,
+        nextUrl: end < live.length ? urlOf(position + 1) : null,
+      }),
   });
-  const urlOf = (part) => absoluteUrl(origin, `/llms/${part.param}.txt`);
-  const shards = parts.map((part, index) => ({
-    param: part.param,
-    text: renderLlmsShard({
-      site,
-      title,
-      entries: part.entries,
-      from: part.from,
-      to: part.to,
-      nextUrl: parts[index + 1] ? urlOf(parts[index + 1]) : null,
-    }),
-  }));
   const index = renderLlmsIndex({
     site,
     title,
-    shards: parts.map((part) => ({ url: urlOf(part), from: part.from, to: part.to, count: part.entries.length })),
+    shards: shards.map(({ from, to }, position) => ({ url: urlOf(position), from, to, count: to - from + 1 })),
   });
-  return [{ param: name, text: index }, ...shards];
+  return [{ param: name, text: index }, ...shards.map(({ text }, position) => ({ param: paramOf(position), text }))];
 }

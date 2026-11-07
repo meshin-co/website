@@ -68,8 +68,8 @@ Every built collection leaf route, every public static page and every collection
 
 #### Scenario: A sidecar names another page as its source
 
-- **WHEN** the `Source:` line of `/about.md` reads `https://meshin.co/wrong-page`
-- **THEN** `npm run gate:machine` prints `MACHINE sidecar for /about canonical is https://meshin.co/wrong-page, expected https://meshin.co/about` and exits 1
+- **WHEN** the `Source:` line of `/about.md` reads `https://example.com/wrong-page`
+- **THEN** `npm run gate:machine` prints `MACHINE sidecar for /about canonical is https://example.com/wrong-page, expected https://example.com/about` and exits 1
 
 ### Requirement: The merged feed carries at least five entries of each collection, or all of a smaller one
 
@@ -118,7 +118,7 @@ Each collection hub, `/blog`, `/services`, `/resources`, `/glossary`, `/case-stu
 
 #### Scenario: A noindex page leaks into the sitemap
 
-- **WHEN** `/sitemap-0.xml` gains `<loc>https://meshin.co/search</loc>`
+- **WHEN** `/sitemap-0.xml` gains `<loc>https://example.com/search</loc>`
 - **THEN** `npm run gate:machine` prints `MACHINE sitemap lists noindex route /search` and exits 1
 
 ### Requirement: Every dated live route carries a lastmod in the sitemap
@@ -137,17 +137,17 @@ Every live route that `siteLastmods` in `site/src/utils/sitemap-lastmod.mjs` dat
 
 ### Requirement: Every page declares its own bare URL as canonical and og:url
 
-Every built route SHALL carry a `<link rel="canonical">` and a `<meta property="og:url">` equal to its bare absolute URL: `https://meshin.co` for `/`, otherwise the origin plus the route with no trailing slash and no `.html`. `npm run gate:machine` enforces this, and the `canonical-names-a-built-file` family of `npm run test:smoke` plants the canonical `https://meshin.co/about.html` and requires that failure.
+Every built route SHALL carry a `<link rel="canonical">` and a `<meta property="og:url">` equal to its bare absolute URL: `https://example.com` for `/`, otherwise the origin plus the route with no trailing slash and no `.html`. `npm run gate:machine` enforces this, and the `canonical-names-a-built-file` family of `npm run test:smoke` plants the canonical `https://example.com/about.html` and requires that failure.
 
 #### Scenario: A canonical carries a trailing slash
 
-- **WHEN** `/about` declares `https://meshin.co/about/` as its canonical
-- **THEN** `npm run gate:machine` prints `MACHINE /about canonical is https://meshin.co/about/, expected https://meshin.co/about` and exits 1
+- **WHEN** `/about` declares `https://example.com/about/` as its canonical
+- **THEN** `npm run gate:machine` prints `MACHINE /about canonical is https://example.com/about/, expected https://example.com/about` and exits 1
 
 #### Scenario: A page has no og:url
 
 - **WHEN** `/about` ships without `<meta property="og:url">`
-- **THEN** `npm run gate:machine` prints `MACHINE /about og:url is (missing), expected https://meshin.co/about` and exits 1
+- **THEN** `npm run gate:machine` prints `MACHINE /about og:url is (missing), expected https://example.com/about` and exits 1
 
 ### Requirement: The page catalog behind the machine files matches every shipped description
 
@@ -179,7 +179,7 @@ Every entry of `STATIC_PAGE_CATALOG` and `HUB_PAGES` in `site/src/utils/machine-
 
 ### Requirement: robots.txt is the generated crawler register
 
-`site/public/robots.txt` SHALL equal the output of `site/scripts/gen-robots.mjs`: a `*` group, then one group for each of 22 named training, retrieval and search crawlers in a pinned order, each with `Allow: /` and the `*` group's disallows, `/search` and `/styleguide`, plus `/api` only when a pages `api` directory exists, then a `Sitemap:` line naming `https://meshin.co/sitemap-index.xml`. Guarded by `site/scripts/gen-robots.test.mjs` under `npm run test`.
+`site/public/robots.txt` SHALL equal the output of `site/scripts/gen-robots.mjs`: a `*` group, then one group for each of 22 named training, retrieval and search crawlers in a pinned order, each with `Allow: /` and the `*` group's disallows, `/search` and `/styleguide`, plus `/api` only when a pages `api` directory exists, then a `Sitemap:` line naming `https://example.com/sitemap-index.xml`. Guarded by `site/scripts/gen-robots.test.mjs` under `npm run test`.
 
 #### Scenario: robots.txt is edited by hand
 
@@ -221,7 +221,7 @@ The card template in `site/src/utils/og-template.mjs` SHALL draw on a fixed 1200
 
 #### Scenario: A post's og:image points elsewhere
 
-- **WHEN** `articleMetadata` stops pointing a post's `og:image` at `https://meshin.co/og/post/<id>.png`
+- **WHEN** `articleMetadata` stops pointing a post's `og:image` at `https://example.com/og/post/<id>.png`
 - **THEN** `npm run test` fails the test `article metadata carries the absolute og image and the article dates`
 
 ### Requirement: llms.txt inlines what is bounded and points at what is unbounded
@@ -230,7 +230,7 @@ The card template in `site/src/utils/og-template.mjs` SHALL draw on a fixed 1200
 
 #### Scenario: A blog post is listed inline
 
-- **WHEN** `/llms.txt` gains a line linking `https://meshin.co/blog/a-post`
+- **WHEN** `/llms.txt` gains a line linking `https://example.com/blog/a-post`
 - **THEN** `npm run gate:machine` prints `MACHINE llms.txt lists /blog/a-post inline, entries of an unbounded collection belong in /llms/` and exits 1
 
 ### Requirement: llms.txt stays under 8192 bytes
@@ -263,7 +263,7 @@ The count on a collection's line in `/llms.txt` and in `/llms-full.txt` SHALL eq
 #### Scenario: An index carries an entry itself
 
 - **WHEN** `/llms/post.txt` indexes shards and also lists the URL of `/blog/a-post` as an entry
-- **THEN** `npm run gate:machine` prints `MACHINE /llms/post.txt is an index of shards but lists https://meshin.co/blog/a-post itself` and exits 1
+- **THEN** `npm run gate:machine` prints `MACHINE /llms/post.txt is an index of shards but lists https://example.com/blog/a-post itself` and exits 1
 
 ### Requirement: The llms files order entries by a total key and no generator reads a clock
 
@@ -399,7 +399,7 @@ For each public collection with a live entry, every live entry SHALL appear exac
 #### Scenario: An entry ships twice
 
 - **WHEN** `/llms/post-2.txt` repeats the URL line of an entry that `/llms/post-1.txt` holds
-- **THEN** `npm run gate:machine` prints `MACHINE https://meshin.co/blog/a-post ships twice across the post shards` and exits 1
+- **THEN** `npm run gate:machine` prints `MACHINE https://example.com/blog/a-post ships twice across the post shards` and exits 1
 
 #### Scenario: A collection file was not built
 
@@ -412,7 +412,7 @@ For each public collection with a live entry, every live entry SHALL appear exac
 
 #### Scenario: An entry is listed in llms-full.txt
 
-- **WHEN** `/llms-full.txt` gains a line linking `https://meshin.co/blog/a-post`
+- **WHEN** `/llms-full.txt` gains a line linking `https://example.com/blog/a-post`
 - **THEN** `npm run gate:machine` prints `MACHINE llms-full.txt lists /blog/a-post inline, entries of an unbounded collection belong in /llms/` and exits 1
 
 #### Scenario: A count drifts from the shipped entries
@@ -422,7 +422,7 @@ For each public collection with a live entry, every live entry SHALL appear exac
 
 ### Requirement: No file under /llms/ is over 100000 bytes
 
-Every file under `/llms/` SHALL stay at or under `LLMS_FILE_MAX_BYTES`, 100000 bytes, in `site/src/utils/llms-collections.mjs`: what the fetch-tool documentation of Anthropic calls a large documentation page, about 25000 tokens. The entry caps keep the largest measured entry of each collection under it, and `npm run gate:machine` fails the file that is not.
+Every file under `/llms/` SHALL stay at or under `LLMS_FILE_MAX_BYTES`, 100000 bytes, in `site/src/utils/llms-collections.mjs`: what the fetch-tool documentation of Anthropic calls a large documentation page, about 25000 tokens. `llmsCollectionFiles` packs every shard to fit it, and `npm run gate:machine` fails the file that is not.
 
 #### Scenario: A shard outgrows its budget
 
@@ -485,19 +485,24 @@ Every public collection SHALL have a feed base, and its feed `/<base>/rss.xml` S
 - **WHEN** `/llms-full.txt` grows to 5000 bytes
 - **THEN** `npm run gate:machine` prints `MACHINE llms-full.txt is 5000 bytes, over the 4096 byte guard` and exits 1
 
-### Requirement: A collection file holds at most its entry cap and shards beyond that
+### Requirement: A shard holds as many ordered entries as fit 100000 bytes of its own text
 
-`LLMS_SHARD_MAX_ENTRIES` in `site/src/utils/llms-collections.mjs` SHALL give each collection the entries that fit 100000 bytes beside a 1024 byte frame at its largest measured entry: service 48, post 3, resource 7, glossary 33, faq 118, case 3. At or under its cap `/llms/<collection>.txt` holds the entries; above it that file indexes `/llms/<collection>-<n>.txt` shards, each with its range and count, chained by next links. `npm run gate:machine` fails a shard over its cap.
+`llmsCollectionFiles` in `site/src/utils/llms-collections.mjs` SHALL keep a collection in `/llms/<collection>.txt` while it renders to at most `LLMS_FILE_MAX_BYTES`, 100000 bytes. Above that the file indexes `/llms/<collection>-<n>.txt` shards, each filled with as many ordered entries as keep its own rendered text, in UTF-8 bytes, at or under the budget. An entry over the budget alone gets a shard of its own. Guarded by `site/src/utils/llms-collections.test.mjs` under `npm run test`.
 
-#### Scenario: A collection has one entry over its cap
+#### Scenario: A collection is one byte over the budget
 
-- **WHEN** `post` holds 4 live entries
-- **THEN** `npm run test` passes the test `one entry over the cap makes an index and two shards named post-1 and post-2`, and a collection of exactly 3 stays one file
+- **WHEN** the budget equals the rendered size of three `post` entries, and then is one byte less
+- **THEN** `npm run test` passes the test `a collection whose text is exactly the budget stays one file, and one byte less makes an index and two shards`: the first stays one file, the second makes an index and two shards named post-1 and post-2
 
-#### Scenario: A shard holds more than its cap
+#### Scenario: A shard stops before the entry that would push it over
 
-- **WHEN** `/llms/post-1.txt` holds 4 entries
-- **THEN** `npm run gate:machine` prints `MACHINE /llms/post-1.txt holds 4 entries, over the 3 entry cap` and exits 1
+- **WHEN** five entries of about 1000 bytes are packed under a budget of 2500 bytes
+- **THEN** `npm run test` passes the test `an explicit maxBytes replaces the file budget`: shards post-1, post-2 and post-3 hold 2, 2 and 1 entries
+
+#### Scenario: One entry is larger than the whole budget
+
+- **WHEN** an entry renders to more bytes than the budget alone
+- **THEN** `npm run test` passes the test `an entry larger than the whole file budget gets a shard of its own and is never split`, and `npm run gate:machine` fails that shard as a file over the byte guard
 
 ### Requirement: Every file of the search index is checked against the noindex header
 

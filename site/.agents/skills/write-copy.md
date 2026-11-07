@@ -1,4 +1,4 @@
-# Write Copy for meshin.co
+# Write Copy
 
 Read this before writing or editing any user-facing string: page prose, a frontmatter field, a
 button label, a meta description, an aria-label. `place-a-new-text.md` decides where a new text
@@ -6,12 +6,9 @@ belongs; this file decides how it reads.
 
 ## The voice
 
-Direct and engineering. A reader is a founder or an engineering leader deciding whether to spend
-money. Numbers and dates instead of adjectives. The sentence a competitor could also write about
-themselves is the sentence to cut.
-
-Natural, intelligent, professional, credible — and none of those means casual. No fake warmth, no
-exclamation, no "let's dive in".
+The voice is the `Copy tone` bullet of `AGENTS.md`, which the owner sets and the writer receives word
+for word. This file never restates it: a voice written in two places drifts apart, and a skill that
+still says "direct and engineering" after the owner chose another register misleads every agent.
 
 ## Answer first
 
@@ -26,7 +23,7 @@ page around it.
 
 `npm run gate:content` fails the build on each of these, and each has a test proving it can fail:
 
-- 52 banned phrases in `banned-phrases.json` (leverage, seamless, cutting-edge, world-class, …)
+- the banned phrases in `banned-phrases.json` (leverage, seamless, cutting-edge, world-class, …)
 - formulaic transitions: moreover, furthermore, additionally, in conclusion, in summary, as such
 - `not only X but also Y`
 - guide preambles: "this guide will help you", "in this article we"
@@ -37,13 +34,12 @@ page around it.
 - a sentence over 40 words, a paragraph over 75 words
 - the same sentence on two routes
 
-Zero of the machine patterns exist in the corpus today. Keep it that way.
-
 ## Facts
 
-Never invent an owner fact, client name, metric, testimonial, credential, price or date. Prices
-stay off the site entirely (L8). An unknown fact leaves the existing wording alone and becomes a
-row in `docs/COPY-CHECKLIST.md` naming exactly what is needed.
+Never invent an owner fact, client name, metric, testimonial, credential, price or date. A figure
+that is not on the allowed list in `content-facts.json` fails `unsourced-number`. An unknown fact
+leaves the existing wording alone and becomes a row in `docs/COPY-CHECKLIST.md` naming exactly what
+is needed.
 
 Every claim that needs a source carries one, and zod fails the build without `shortAnswer`,
 `updatedDate` and at least one source on a post, term or service. Bump `updatedDate` when you
@@ -60,7 +56,7 @@ list, and never set it to a review that changed nothing: it is a claim every mac
 
 A heading where the hierarchy is real. A list only when the information is list-shaped — not
 because three items were easy to generate. A table only when a comparison earns it. Bold sparingly.
-No numbered section labels and no figure-number chips (L9a).
+No numbered section labels and no figure-number chips.
 
 A page ends on its last real point or a concrete next step. No recap paragraph, no
 key-takeaways block that repeats the body in shorter words.
@@ -73,7 +69,6 @@ describes what the image shows for someone who cannot see it; a decorative image
 
 ## Terminology
 
-One spelling per concept, everywhere: `evals`, `AI register`, `shadow AI`, `ISO/IEC 42001`,
-`NIST AI RMF`, `EU AI Act`. A concept is defined on exactly one page — the one the concept
-register in `docs/SEMANTIC-CORE.md` names — and every other page links to it rather than
-redefining it.
+One spelling per concept, everywhere, as the concept register in `docs/SEMANTIC-CORE.md` spells it.
+A concept is defined on exactly one page, the one that register names, and every other page links to
+it rather than redefining it.
