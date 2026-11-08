@@ -12,9 +12,9 @@
     "costUsd": 0.027225
   },
   "verdict": {
-    "state": "open",
+    "state": "merged",
     "reason": null,
-    "decidedAt": null
+    "decidedAt": "2026-11-08T18:45:38.690Z"
   },
   "escalations": [],
   "refusals": [
@@ -181,5 +181,11 @@
       "output": 3371
     },
     "costUsd": 0.027225
+  },
+  "measurementDebt": {
+    "mergedCommit": "7da841fd7b8600601d2e6c17f93c70c8cf3cdff5",
+    "fingerprint": "8e8b22128ab03ab2e2da114b1b20a6be8174575e88bfbe0b8a8ce239357ec70a",
+    "recordedAt": "2026-11-08T18:45:38.690Z",
+    "clear": "cd site && GATE_PHASE=<bucket> npm run gate:lh && GATE_PHASE=<bucket> npm run lh:record"
   }
 }
