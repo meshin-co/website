@@ -84,6 +84,31 @@ const category = {
   proposal: PROPOSAL,
 };
 
+const orderedByPrompt = {
+  format: 'article',
+  topic: topicOf(
+    'What an AI register holds for each model',
+    'what-an-ai-register-holds-for-each-model',
+    'ai register contents'
+  ),
+  prompt: { number: 30, text: 'what should an AI register hold for each model' },
+  demand: { impressions: 4, position: 33.1 },
+  table: 'Buyer prompts',
+  row: { '#': '30', Prompt: 'what should an AI register hold for each model' },
+  choice: 'Choice: ordered, prompt 30, requested by hand',
+  origin: 'ordered',
+};
+
+const orderedByTitle = {
+  format: 'article',
+  topic: topicOf('Why AI steering committees stall', 'why-ai-steering-committees-stall', 'ai steering committee'),
+  demand: { impressions: 0, position: null },
+  table: null,
+  row: null,
+  choice: 'Choice: ordered, "Why AI steering committees stall", requested by hand',
+  origin: 'ordered',
+};
+
 const decisionOf = (entries, extra = {}) => ({
   decision: 'write',
   choice: entries[0].choice,
@@ -129,8 +154,22 @@ test('a demand claim keeps its prompt and names no category and no weakness', ()
   assert.deepEqual(validateClaim(claim), []);
 });
 
+test('an ordered claim carries its origin, no category and no weakness, and a prompt only when it was ordered by prompt', () => {
+  const byPrompt = claimOf(orderedByPrompt);
+  const byTitle = claimOf(orderedByTitle);
+  assert.deepEqual(byPrompt.prompt, { number: 30, text: 'what should an AI register hold for each model' });
+  assert.deepEqual(byPrompt.demand, { impressions: 4, position: 33.1 });
+  assert.equal(Object.hasOwn(byTitle, 'prompt'), false);
+  assert.deepEqual(byTitle.demand, { impressions: 0, position: null });
+  for (const claim of [byPrompt, byTitle]) {
+    assert.equal(claim.origin, 'ordered');
+    for (const key of ['category', 'weakness']) assert.equal(Object.hasOwn(claim, key), false, key);
+    assert.deepEqual(validateClaim(claim), []);
+  }
+});
+
 test('no claim of any origin holds a null or an undefined field', () => {
-  for (const entry of [demand, weak, category]) {
+  for (const entry of [demand, weak, category, orderedByPrompt, orderedByTitle]) {
     const values = Object.values(claimOf(entry));
     assert.equal(values.includes(null), false, entry.origin);
     assert.equal(values.includes(undefined), false, entry.origin);
@@ -151,6 +190,17 @@ test('a category entry of the decision file has no row and no table, and holds e
   assert.equal(entry.proposal.calls.length, 2);
 });
 
+test('an ordered entry of the decision file names the row and table of its prompt, or null for both, and no proposal', () => {
+  const [byPrompt] = run(decisionOf([orderedByPrompt])).file.entries;
+  const [byTitle] = run(decisionOf([orderedByTitle])).file.entries;
+  for (const entry of [byPrompt, byTitle]) {
+    assert.deepEqual(Object.keys(entry).sort(), ['choice', 'claim', 'claimPath', 'row', 'table']);
+    assert.deepEqual(validateClaim(entry.claim), []);
+  }
+  assert.deepEqual([byPrompt.row, byPrompt.table], [orderedByPrompt.row, 'Buyer prompts']);
+  assert.deepEqual([byTitle.row, byTitle.table], [null, null]);
+});
+
 test('the ledger of a category run holds the proposal spend as its generation, so the claim commit records it', () => {
   const { ledger } = run(decisionOf([category]));
   assert.deepEqual(callTotals(PROPOSAL.calls), PROPOSAL_SPEND);
@@ -161,8 +211,8 @@ test('the ledger of a category run holds the proposal spend as its generation, s
   assert.deepEqual(validateLedger(ledger), []);
 });
 
-test('the ledger of a demand run and of a weak-demand run holds no generation, because nothing was spent yet', () => {
-  for (const entry of [demand, weak]) {
+test('the ledger of a demand, a weak-demand and an ordered run holds no generation, because nothing was spent yet', () => {
+  for (const entry of [demand, weak, orderedByPrompt, orderedByTitle]) {
     const { ledger } = run(decisionOf([entry]));
     assert.equal(Object.hasOwn(ledger, 'generation'), false, entry.origin);
     assert.deepEqual(ledger.spend, { tokens: { input: 0, output: 0 }, costUsd: 0 }, entry.origin);
@@ -197,6 +247,16 @@ test('a category run is plain JSON that survives being written and read back', (
   const { file, ledger } = run(decisionOf([category], { refusals: [REFUSED] }));
   assert.deepEqual(JSON.parse(JSON.stringify(file)), file);
   assert.deepEqual(JSON.parse(JSON.stringify(ledger)), ledger);
+});
+
+test('an ordered run is plain JSON that survives being written and read back, and its claims stay valid', () => {
+  for (const entry of [orderedByPrompt, orderedByTitle]) {
+    const { file, ledger } = run(decisionOf([entry]));
+    const read = JSON.parse(JSON.stringify(file));
+    assert.deepEqual(read, file, entry.choice);
+    assert.deepEqual(JSON.parse(JSON.stringify(ledger)), ledger, entry.choice);
+    assert.deepEqual(validateClaim(read.entries[0].claim), [], entry.choice);
+  }
 });
 
 test('a weak-demand article leads a run that also claims a term that has its own prompt', () => {

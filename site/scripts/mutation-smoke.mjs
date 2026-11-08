@@ -5,6 +5,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { proveRecordRefusal } from './lh-record-family.mjs';
+import { ORDER_CHECKS, runOrderCheck } from './order-guard-checks.mjs';
 import { REPAIR_CHECKS, runRepairCheck } from './repair-guard-checks.mjs';
 import { SPECIMENS, assertStandaloneRepo, flatten, proveWithSpecimen } from './mutation-specimens.mjs';
 import { canonicalHref, robotsContent, robotsMeta, tagArchiveFindings } from './pagination-markup.mjs';
@@ -16,7 +17,7 @@ const REPO = resolve(SITE, '..');
 const FIXTURES = join(SITE, 'tests', 'guard-mutations', 'fixtures');
 const LIVE_POST_TARGET = 13;
 const GATES = ['budget', 'jsonld', 'jsonld-properties', 'content-gate', 'docs', 'external'];
-const CHECKS = ['semantic-title', ...Object.keys(REPAIR_CHECKS)];
+const CHECKS = ['semantic-title', ...Object.keys(REPAIR_CHECKS), ...Object.keys(ORDER_CHECKS)];
 const SCOPES = ['category', 'tag'];
 
 export const FAMILIES = [
@@ -128,6 +129,17 @@ export const FAMILIES = [
   { id: 'repair-scope-check-leaves-the-entry', kind: 'pure', proves: 'repair:entry', check: 'repair-scope' },
   { id: 'route-ledger-hides-a-dropped-route', kind: 'pure', proves: 'repair:entry', check: 'repair-route-ledger' },
   { id: 'repair-attempt-past-the-cap', kind: 'pure', proves: 'repair:entry', check: 'repair-attempt-cap' },
+  {
+    id: 'order-refusal-falls-back-to-the-ladder',
+    kind: 'pure',
+    proves: 'pick:topic',
+    check: 'order-refusal-is-terminal',
+  },
+  {
+    id: 'autowriter-ordered-claim-contradicts-its-origin',
+    kind: 'specimen',
+    specimen: 'autowriterOrderedClaimOffItsRules',
+  },
   { id: 'agents-content-signal', kind: 'specimen', specimen: 'agents' },
   { id: 'agents-openapi-drift', kind: 'specimen', specimen: 'agents-openapi-drift' },
   { id: 'agents-manifest-dangles', kind: 'specimen', specimen: 'agents-manifest-dangles' },
@@ -305,6 +317,7 @@ export const FAMILIES = [
   { id: 'export-no-longer-builds', kind: 'specimen', specimen: 'exportBuildBroken' },
   { id: 'interview-stops-naming-a-config-value', kind: 'specimen', specimen: 'interviewConfigValueDropped' },
   { id: 'interview-stops-naming-a-workflow-secret', kind: 'specimen', specimen: 'interviewWorkflowSecretDropped' },
+  { id: 'interview-reuses-a-question-id', kind: 'specimen', specimen: 'interviewReusesAQuestionId' },
   { id: 'pagination-page-2', kind: 'pagination', proves: 'build', fixture: 'live-post.md', slow: true },
   {
     id: 'category-pagination-page-2',
@@ -750,8 +763,12 @@ const EXECUTORS = {
   build: (copySite, entry) => runPlantedFamily(copySite, entry, false),
   'build-then-gate': (copySite, entry) => runPlantedFamily(copySite, entry, true),
   gate: (copySite, entry, work) => runGateFamily(copySite, entry, work),
-  pure: (copySite, entry) =>
-    entry.check === 'semantic-title' ? runPureFamily(copySite) : runRepairCheck(entry.check, copySite),
+  pure: (copySite, entry) => {
+    if (entry.check === 'semantic-title') return runPureFamily(copySite);
+    return Object.hasOwn(ORDER_CHECKS, entry.check)
+      ? runOrderCheck(entry.check, copySite)
+      : runRepairCheck(entry.check, copySite);
+  },
   pagination: (copySite, entry) => runPaginationFamily(copySite, entry),
   specimen: async (copySite, entry, work) => {
     await restoreDist(copySite, work);

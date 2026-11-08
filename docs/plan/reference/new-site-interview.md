@@ -22,7 +22,8 @@ it, and to the table of config values in Part 1 or to the secret and variable ta
 ## The three parts
 
 1. The site: scope and layout, identity, pages and navigation, the loop policy, Search Console demand,
-   hosting and the performance bar. Question ids `S1` to `S51`; S49 to S51 belong to the loop policy.
+   hosting, the performance bar and the second demand instrument. Question ids `S1` to `S52`; S49 to
+   S51 belong to the loop policy.
 2. The semantic core: the business, the buyer, what the owner can prove, families, buyer prompts,
    words, categories and tags, and the contract a complete core must meet. Ids `K1` to `K34`.
 3. The platform: the secrets and the repository settings with what fails when each is absent, the
@@ -41,7 +42,8 @@ This part collects what only the owner can say about the new site, apart from th
 5. Phase 5 (S36 to S40) is Search Console demand. It needs S1 and S7.
 6. Phase 6 (S41 to S46) is hosting. It needs S3. S43 needs S7, S8 and S41. S46 needs S43.
 7. Phase 7 (S47 and S48) is the performance bar. S47 needs S5. S48 needs S18.
-8. Other parts own the semantic core (buyer prompts, categories, tags, the business reason of each family), the secret values and the repository settings. This part asks only the names and policies they need.
+8. Phase 8 (S52) is the second demand instrument, the one that can name a phrase the site has never ranked for. It needs S36.
+9. Other parts own the semantic core (buyer prompts, categories, tags, the business reason of each family), the secret values and the repository settings. This part asks only the names and policies they need.
 
 ### Phase 1. Scope and layout
 
@@ -747,6 +749,25 @@ The numbers in `site/budgets.json` and `site/lighthouserc.cjs` were set by measu
   **Lands in:** `site/budgets.json` (`js`, `css`, `page`, `fonts`, optional `routes`); the last step of `npm run build` runs `node scripts/gate.mjs dist budgets.json`.
   **If wrong:** `npm run build` fails with `OVER BUDGET <route> <key> <measured> > <limit>`. A build with no font files fails with `OVER BUDGET fonts measured 0 bytes in dist/_astro/fonts, so the fonts budget proved nothing`.
   **Needs:** S18
+
+### Phase 8. The second demand instrument
+
+Search Console reports only queries the site was already shown for, so it cannot name an
+opportunity the site has never reached. This phase is the instrument that can.
+
+#### S52. Keyword demand the site does not touch yet
+
+**Ask:** Do you want a second demand instrument, one that can name phrases the site has never ranked for?
+**Cannot be derived because:** It decides whether the writer may be aimed at demand no page of the site has reached.
+**Options:**
+
+- **A. Bing Webmaster Tools:** one secret, `BING_WEBMASTER_API_KEY`, from Settings, API access, after verifying the site at `https://www.bing.com/webmasters` by importing it from Search Console or by the CNAME it offers. Cost: no money, because the tool and its API carry no paid tier, which is what L58 requires; the smaller index of one engine, so a phrase with real Google demand can be missing from the answer; and a phrase has to be named before Bing prices it, because `GetRelatedKeywords` answers nothing for any phrase, so the instrument never proposes a subject of its own.
+- **B. Search Console only:** Cost: the demand half of the picker can only ever see queries the site already ranks for. On this site that was 0 candidates on every one of the 13 reports between 2026-11-02 and 2026-11-07, so the writer falls through to the semantic core every run.
+- **C. A paid source (DataForSEO, Ahrefs, Semrush):** Cost: breaks L58, the rule that every service the site depends on carries a permanent free tier.
+- **Recommended:** A, because it is the only free instrument that answers for a phrase the site has never served, unless the subject is one Bing has too little data for, in which case B and a hand-written core is honest.
+  **Lands in:** repository secret `BING_WEBMASTER_API_KEY`; the same name in a local `.env` beside `site/.env.example`.
+  **If wrong:** Without the key the keyword audit fails naming the variable and writes nothing, because an empty report reads like a phrase nobody searched for. A key Bing refuses fails naming the response status.
+  **Needs:** S36
 
 ### Config values and the question that sets them
 

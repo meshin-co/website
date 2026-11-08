@@ -12,6 +12,8 @@ import {
   MODEL_VARIABLE,
   RESOLVED_MODEL,
   categoryInput,
+  orderedPromptInput,
+  orderedTitleInput,
   recordInput,
   weakDemandInput,
 } from './fixtures/generation-input.mjs';
@@ -340,6 +342,8 @@ test('a model with a shutdown date is recorded with a note that names the variab
 
 const weakBase = buildRecord(weakDemandInput());
 const categoryBase = buildRecord(categoryInput());
+const orderedPromptBase = buildRecord(orderedPromptInput());
+const orderedTitleBase = buildRecord(orderedTitleInput());
 const changed = (record, change) => {
   const copy = structuredClone(record);
   change(copy);
@@ -460,6 +464,25 @@ const ORIGIN_DEFECTS = [
       r.band.measured.format = 'term';
     }),
     ['entry.format must be article when origin is weak-demand'],
+  ],
+  [
+    'a weakness on an ordered entry',
+    changed(orderedTitleBase, (r) => (r.claim.weakness = ['no-buyer-prompt'])),
+    ['claim.weakness must be absent when origin is ordered'],
+  ],
+  [
+    'a category on an ordered entry',
+    changed(orderedPromptBase, (r) => (r.claim.category = 'governance')),
+    ['claim.category must be absent when origin is ordered'],
+  ],
+  [
+    'an ordered entry that is a term',
+    changed(orderedPromptBase, (r) => {
+      r.entry.format = 'term';
+      r.band.limits.format = 'term';
+      r.band.measured.format = 'term';
+    }),
+    ['entry.format must be article when origin is ordered'],
   ],
 ];
 

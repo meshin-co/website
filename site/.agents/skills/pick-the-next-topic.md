@@ -9,13 +9,14 @@ for measured concepts the glossary lacks, and no page for a concept the register
 ## Run it
 
 ```
-npm run pick:topic -- [--write --output <file>] [--run-id <id>] [--now <ISO date>] [--summary <file>]
+npm run pick:topic -- [--write --output <file>] [--run-id <id>] [--now <ISO date>] [--summary <file>] [--order-prompt <number> | --order-title <text>]
 ```
 
 - With no flag it previews: it prints the decision and writes nothing. `--now` fixes the clock.
 - `--write` writes each claim, the ledger and, to `--output`, the decision file. Exit 0 for every decision, 1 for an
   unreadable input, a failed write or a failed proposal (last stdout line `{"ok":false,"kind":...}`), 2 for a bad flag or setting.
 - `--summary` appends a Markdown summary; `--run-id` tags claims and ledger. A preview calls no model; `--write` calls one only on rung 3 (`write-on-a-category.md`).
+- `--order-prompt <number>` or `--order-title <text>` orders a topic by hand. It wins over every rung below, is checked like the post arm and never falls back: a refused order ends in `none` (`order-a-topic-by-hand.md`).
 
 ## The post arm
 

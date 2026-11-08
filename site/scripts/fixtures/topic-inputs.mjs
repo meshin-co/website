@@ -84,6 +84,7 @@ export const inputsFor = (report, extra = {}) => ({
   suffix: SUFFIX,
   now: NOW,
   settings: { termArm: true, termCap: 1 },
+  order: null,
   ...extra,
 });
 

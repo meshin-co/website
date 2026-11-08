@@ -109,6 +109,7 @@ test('the specimen module names every failure mode of the gate, each against gat
     'autowriterLengthRecordFedByTheEntry',
     'autowriterLengthRecordStale',
     'autowriterMeasurementDebtMissing',
+    'autowriterOrderedClaimOffItsRules',
     'autowriterProseOffTheBand',
     'autowriterPushWithDefaultToken',
     'autowriterRecordMisfiled',
@@ -350,6 +351,24 @@ test('the claim specimen repeats a title the generated layer already holds, in o
           `: title ".+" is already the title of /[a-z/-]+ in the generated layer of docs/SEMANTIC-CORE\\.md \\(".+${SUFFIX_PATTERN}"\\)$`
       )
     );
+  });
+});
+
+test('the ordered claim specimen is an article claim ordered by title that holds a weakness, and the gate names that one rule', async () => {
+  await inTempRepo(async (root) => {
+    const restore = await planted('autowriterOrderedClaimOffItsRules', root);
+    const claim = JSON.parse(readFileSync(join(root, CLAIM), 'utf8'));
+    const lines = gate(root)
+      .stderr.trim()
+      .split('\n')
+      .filter((text) => text.includes(CLAIM));
+    await restore();
+    assert.equal(claim.origin, 'ordered');
+    assert.equal(claim.format, 'article');
+    assert.equal(Object.hasOwn(claim, 'prompt'), false);
+    assert.equal(Object.hasOwn(claim, 'category'), false);
+    assert.ok(Array.isArray(claim.weakness) && claim.weakness.length > 0);
+    assert.deepEqual(lines, [`AUTOWRITER claim-schema ${CLAIM}: weakness must be absent when origin is ordered`]);
   });
 });
 

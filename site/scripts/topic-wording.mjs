@@ -10,6 +10,19 @@ const measuredLine = ({ query, impressions, position }, measured) =>
 export const postChoice = ({ number }, { windowEnd }) =>
   `Choice: signal 2, prompt ${number}, unproven, 0 impressions in the window to ${windowEnd}`;
 
+const orderName = (order) => (order.kind === 'prompt' ? `prompt ${order.number}` : `"${order.text}"`);
+
+export const orderedChoice = (order) => `Choice: ordered, ${orderName(order)}, requested by hand`;
+
+export const orderedReason = (order, { outcome, detail }) =>
+  `The order for ${orderName(order)} was refused (${outcome}), so nothing was written and no other topic was tried: ${detail}`;
+
+export const noSuchPrompt = (number, count) =>
+  `the report holds no prompt numbered ${number}; it holds ${plural(count, 'prompt')}`;
+
+export const retiredPrompt = (number) =>
+  `prompt ${number} is retired in docs/SEMANTIC-CORE.md, so no article is written for it`;
+
 export const termChoice = (row, { measured }) => `Choice: signal 3, ${measuredLine(row, measured)}`;
 
 export const measuredChoice = (row, { measured }) => `Choice: signal 1, ${measuredLine(row, measured)}`;

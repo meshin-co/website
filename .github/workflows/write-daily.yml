@@ -14,6 +14,15 @@ on:
     - cron: '40 9 * * *'
     - cron: '40 11 * * *'
   workflow_dispatch:
+    inputs:
+      prompt:
+        description: 'Order the article for one buyer prompt: its number in the Buyer prompts table of docs/SEMANTIC-CORE.md, 1 to 30. Leave empty to let the picker choose.'
+        required: false
+        type: string
+      title:
+        description: 'Order an article by its title. The text is the article title and the target query, and no model rewrites it: the picker only capitalises the first letter, restores known acronyms such as AI, and adds a question mark to a question. Leave empty to let the picker choose. Give this or the prompt number, not both.'
+        required: false
+        type: string
 
 concurrency:
   group: write-daily
@@ -201,9 +210,14 @@ jobs:
           OPENAI_WRITING_INPUT_USD_PER_MILLION: ${{ vars.OPENAI_WRITING_INPUT_USD_PER_MILLION }}
           OPENAI_WRITING_OUTPUT_USD_PER_MILLION: ${{ vars.OPENAI_WRITING_OUTPUT_USD_PER_MILLION }}
           AUTOWRITER_OPENAI_API_KEY: ${{ secrets.AUTOWRITER_OPENAI_API_KEY }}
+          ORDER_PROMPT: ${{ inputs.prompt }}
+          ORDER_TITLE: ${{ inputs.title }}
         run: |
           status=0
-          npm run --silent pick:topic -- --write --output "$DECISION_FILE" --summary "$GITHUB_STEP_SUMMARY" --run-id "${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" > "$RUNNER_TEMP/pick-output.txt" || status=$?
+          order=()
+          if [ -n "$ORDER_PROMPT" ]; then order+=(--order-prompt "$ORDER_PROMPT"); fi
+          if [ -n "$ORDER_TITLE" ]; then order+=(--order-title "$ORDER_TITLE"); fi
+          npm run --silent pick:topic -- --write --output "$DECISION_FILE" --summary "$GITHUB_STEP_SUMMARY" --run-id "${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" "${order[@]}" > "$RUNNER_TEMP/pick-output.txt" || status=$?
           cat "$RUNNER_TEMP/pick-output.txt"
           tail -n 1 "$RUNNER_TEMP/pick-output.txt" > "$PICK_RESULT_FILE"
           if [ "$status" -ne 0 ]; then exit "$status"; fi

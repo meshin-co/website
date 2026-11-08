@@ -228,3 +228,21 @@ export function categoryInput() {
     published: { callIndex: 2 },
   };
 }
+
+export function orderedPromptInput() {
+  const input = recordInput();
+  return { ...input, claim: { ...input.claim, origin: 'ordered' } };
+}
+
+export function orderedTitleInput() {
+  const input = recordInput();
+  return {
+    ...input,
+    claim: {
+      ...withoutPrompt(input.claim),
+      demand: { impressions: 0, position: null },
+      origin: 'ordered',
+    },
+    decision: { ...input.decision, row: null, report: { ...input.decision.report, table: null } },
+  };
+}

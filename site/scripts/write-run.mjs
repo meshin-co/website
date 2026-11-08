@@ -153,6 +153,7 @@ function ledgerFor({ ledger, calls }) {
 const ORIGIN_DETAIL = {
   category: ({ category }) => `Category: ${category}`,
   'weak-demand': ({ weakness }) => `Weak query: ${weakness.join(', ')}`,
+  ordered: () => 'Ordered by hand',
 };
 
 const servesLines = (claim) =>

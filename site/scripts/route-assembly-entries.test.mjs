@@ -332,6 +332,7 @@ const PROMPTLESS = {
     category: 'governance',
     demand: { impressions: 0, position: null },
   }),
+  ordered: withoutPrompt(claimOf('article'), { origin: 'ordered' }),
 };
 const buyerPromptsOf = (doc) =>
   doc.slice(doc.indexOf('### The 30 buyer prompts')).split(/<!-- REGISTERS:BEGIN -->|\n### Registers/)[0];
@@ -384,3 +385,16 @@ for (const [origin, claim] of Object.entries(PROMPTLESS)) {
     assert.ok(after.includes(`| \`${POST_ROUTE}\` | ai incident runbook |`));
   });
 }
+
+test('ordered: an entry ordered by buyer prompt registers its passage under that prompt, as a demand entry does', async () => {
+  const root = repo();
+  const claim = { ...claimOf('article'), origin: 'ordered' };
+  const result = await assemble(root, fakeRun(root), [{ claim, draft: DRAFTS.article }]);
+  const added = allPassages(textOf(result, CORE)).filter(({ route }) => route === POST_ROUTE);
+
+  assert.deepEqual(
+    added.map(({ text }) => text),
+    [DRAFTS.article.passage]
+  );
+  assert.ok(result.gates.every(({ exit }) => exit === 0));
+});

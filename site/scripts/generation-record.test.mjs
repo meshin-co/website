@@ -16,6 +16,8 @@ import {
   TERM_SLUG,
   callOf,
   categoryInput,
+  orderedPromptInput,
+  orderedTitleInput,
   recordInput,
   termInput,
   weakDemandInput,
@@ -40,6 +42,8 @@ test('the claims of the fixtures are claims the claim store would accept', () =>
   assert.deepEqual(validateClaim(termInput().claim), []);
   assert.deepEqual(validateClaim(weakDemandInput().claim), []);
   assert.deepEqual(validateClaim(categoryInput().claim), []);
+  assert.deepEqual(validateClaim(orderedPromptInput().claim), []);
+  assert.deepEqual(validateClaim(orderedTitleInput().claim), []);
 });
 
 test('a record built from a run has no problems and carries the schema keys in the schema order', () => {
@@ -262,7 +266,7 @@ test('the claim block lists the origin fields beside the prompt, with the origin
 });
 
 test('every claim field the schema lists reaches the record, and no other claim field does', () => {
-  for (const input of [recordInput(), weakDemandInput(), categoryInput()]) {
+  for (const input of [recordInput(), weakDemandInput(), categoryInput(), orderedPromptInput(), orderedTitleInput()]) {
     const record = buildRecord({ ...input, claim: { ...input.claim, stray: 'x' } });
     const expected = CLAIM_KEYS.filter((key) => input.claim[key] !== undefined);
     assert.deepEqual(Object.keys(record.claim), expected, input.claim.slug);
@@ -301,6 +305,30 @@ test('a category record names the origin and the category and holds no prompt, n
     origin: 'category',
     category: 'governance',
   });
+  assert.equal(record.demand.row, null);
+  assert.equal(record.demand.report.table, null);
+  assert.deepEqual([record.demand.impressions, record.demand.position], [0, null]);
+});
+
+test('an ordered record of a prompt names the origin, keeps the prompt and keeps the row of that prompt', () => {
+  const input = orderedPromptInput();
+  const record = buildRecord(input);
+  assert.deepEqual(validateRecord(record), []);
+  assert.deepEqual(record.claim, {
+    title: input.claim.title,
+    query: input.claim.query,
+    prompt: input.claim.prompt,
+    origin: 'ordered',
+  });
+  assert.equal(record.demand.report.table, 'Buyer prompts');
+  assert.deepEqual(record.demand.row, input.decision.row);
+});
+
+test('an ordered record of a title holds no prompt, no report row and no report table, and no demand', () => {
+  const input = orderedTitleInput();
+  const record = buildRecord(input);
+  assert.deepEqual(validateRecord(record), []);
+  assert.deepEqual(record.claim, { title: input.claim.title, query: input.claim.query, origin: 'ordered' });
   assert.equal(record.demand.row, null);
   assert.equal(record.demand.report.table, null);
   assert.deepEqual([record.demand.impressions, record.demand.position], [0, null]);

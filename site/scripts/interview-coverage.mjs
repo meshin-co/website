@@ -7,6 +7,8 @@ const ENV_EXAMPLE_PATH = 'site/.env.example';
 const WORKFLOWS_DIRECTORY = '.github/workflows';
 const WORKFLOW_FILE = /\.ya?ml$/;
 const RULE = 'interview-gap';
+const DUPLICATE_RULE = 'interview-duplicate-id';
+const STEP_HEADING = /^#### (S\d+)\. (.+)$/gm;
 const ISSUED_BY_GITHUB = 'GITHUB_TOKEN';
 const CONFIG_KIND = 'config value';
 const ENV_KIND = 'env example variable';
@@ -45,14 +47,29 @@ function isNamed(text, name) {
   return false;
 }
 
+function duplicateIdFindings(bank) {
+  const titlesById = new Map();
+  for (const [, id, title] of bank.matchAll(STEP_HEADING)) {
+    titlesById.set(id, [...(titlesById.get(id) ?? []), title.trim()]);
+  }
+  return [...titlesById]
+    .filter(([, titles]) => titles.length > 1)
+    .map(([id, titles]) => ({
+      rule: DUPLICATE_RULE,
+      where: id,
+      detail: `${titles.length} questions in ${INTERVIEW_PATH} head with ${id} (${titles.join('; ')}), so an answer recorded against that id names two questions`,
+    }));
+}
+
 export function interviewFindings({ configPaths, workflows, envExample, bank }) {
-  return [...kindsByName({ configPaths, workflows, envExample })]
+  const gaps = [...kindsByName({ configPaths, workflows, envExample })]
     .filter(([name]) => !isNamed(bank, name))
     .map(([name, kinds]) => ({
       rule: RULE,
       where: name,
       detail: `${kinds.join(', ')}; no question in ${INTERVIEW_PATH} names it, so the owner is never asked for it`,
     }));
+  return [...gaps, ...duplicateIdFindings(bank)];
 }
 
 const readIfPresent = (file) => (existsSync(file) ? readFileSync(file, 'utf8') : '');

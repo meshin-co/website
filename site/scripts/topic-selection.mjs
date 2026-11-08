@@ -1,11 +1,13 @@
 import { categoryStandings, rotationOrder } from './topic-categories.mjs';
 import { proposalCandidates, strengthenCandidates } from './topic-demand.mjs';
-import { examineQuery, walkPosts, walkTerms, walkWeak } from './topic-walk.mjs';
+import { examineQuery, walkOrdered, walkPosts, walkTerms, walkWeak } from './topic-walk.mjs';
 import {
   categoryChoice,
   measuredChoice,
   measuredReason,
   noneReason,
+  orderedChoice,
+  orderedReason,
   postChoice,
   termChoice,
   weakChoice,
@@ -13,11 +15,21 @@ import {
 
 const WIRED_FROM = { posts: 'readPublishedPosts', rotation: 'CATEGORY_ROTATION' };
 
+const ORDER_SHAPE = "null, { kind: 'prompt', number } or { kind: 'title', text }";
+
+const isOrder = (order) =>
+  order === null ||
+  (order?.kind === 'prompt' && Number.isSafeInteger(order.number) && order.number > 0) ||
+  (order?.kind === 'title' && typeof order.text === 'string' && order.text.trim() !== '');
+
 function requireWiring(inputs) {
   for (const [name, source] of Object.entries(WIRED_FROM)) {
     if (!Array.isArray(inputs[name])) {
       throw new TypeError(`inputs.${name} must be an array, read with ${source} of topic-categories.mjs`);
     }
+  }
+  if (!isOrder(inputs.order)) {
+    throw new TypeError(`inputs.order must be ${ORDER_SHAPE}, read from the order flags of pick-a-topic.mjs`);
   }
 }
 
@@ -59,7 +71,34 @@ const weakEntry = ({ candidate, topic }, report) => ({
   weakness: candidate.weakness,
 });
 
-const leadEntry = (lead, report) => (lead.candidate.arm === 'weak' ? weakEntry(lead, report) : postEntry(lead, report));
+const orderedByPrompt = ({ candidate, topic }) => ({
+  format: 'article',
+  topic,
+  prompt: { number: candidate.number, text: candidate.prompt },
+  demand: { impressions: candidate.impressions, position: candidate.position },
+  table: 'Buyer prompts',
+  row: candidate.row,
+  choice: orderedChoice(candidate.order),
+  origin: 'ordered',
+});
+
+const orderedByTitle = ({ candidate, topic }) => ({
+  format: 'article',
+  topic,
+  demand: { impressions: 0, position: null },
+  table: null,
+  row: null,
+  choice: orderedChoice(candidate.order),
+  origin: 'ordered',
+});
+
+const LEAD_ENTRIES = {
+  post: postEntry,
+  weak: weakEntry,
+  ordered: (lead) => (lead.candidate.order.kind === 'prompt' ? orderedByPrompt(lead) : orderedByTitle(lead)),
+};
+
+const leadEntry = (lead, report) => LEAD_ENTRIES[lead.candidate.arm](lead, report);
 
 function promptOf({ prompts }, report, fallback) {
   const found = report.prompts.find(({ number }) => number === prompts[0]);
@@ -132,10 +171,10 @@ const strengthenDecision = (first, rest, shared) => ({
   ...shared,
 });
 
-const noneDecision = (report, shared) => ({
+const noneDecision = (reason, shared) => ({
   decision: 'none',
   choice: null,
-  reason: noneReason({ report, trail: shared.trail }),
+  reason,
   entries: [],
   strengthen: null,
   advisories: [],
@@ -147,8 +186,16 @@ const categoryFallback = ({ rotation, posts, claims, now }) => ({
   categories: rotationOrder({ rotation, posts, claims, now }),
 });
 
+function selectOrdered(inputs) {
+  const ordered = walkOrdered(inputs);
+  const shared = { refusals: ordered.refusals, proposals: [], trail: ordered.trail };
+  if (ordered.chosen) return writeDecision({ inputs, lead: ordered.chosen, survivors: [], advisories: [], shared });
+  return noneDecision(orderedReason(inputs.order, ordered.trail[0]), { ...shared, fallback: null });
+}
+
 export function selectTopic(inputs) {
   requireWiring(inputs);
+  if (inputs.order !== null) return selectOrdered(inputs);
   const { report } = inputs;
   const posts = walkPosts(inputs);
   const weak = posts.chosen ? { chosen: null, trail: [], refusals: [] } : walkWeak(inputs);
@@ -164,7 +211,8 @@ export function selectTopic(inputs) {
   if (lead) return writeDecision({ inputs, lead, survivors: terms.survivors, advisories, shared });
   const unwritten = { ...shared, fallback: categoryFallback(inputs) };
   const [first, ...rest] = advisories;
-  return first ? strengthenDecision(first, rest, unwritten) : noneDecision(report, unwritten);
+  if (first) return strengthenDecision(first, rest, unwritten);
+  return noneDecision(noneReason({ report, trail: unwritten.trail }), unwritten);
 }
 
 export function categoryEntry({ category, query, proposal, ...context }) {

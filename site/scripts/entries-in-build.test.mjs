@@ -121,15 +121,18 @@ const CATEGORY = {
   hoursAgo: 1,
   promptless: { origin: 'category', category: 'governance' },
 };
+const ORDERED = { slug: 'an-ordered-post', hoursAgo: 4, promptless: { origin: 'ordered' } };
 
 test('an entry whose record names no buyer prompt is carried without a prompt key, and nothing throws', async () => {
-  await inRepo({ entries: [ARTICLE, WEAK, CATEGORY] }, async (repo) => {
+  await inRepo({ entries: [ARTICLE, WEAK, CATEGORY, ORDERED] }, async (repo) => {
     const { entries, problems } = await found(repo);
     assert.deepEqual(problems, []);
     const bySlug = Object.fromEntries(entries.map((entry) => [entry.slug, entry]));
-    assert.deepEqual(Object.keys(bySlug).sort(), ['a-category-post', 'a-post', 'a-weak-post']);
-    for (const slug of ['a-weak-post', 'a-category-post']) assert.ok(!('prompt' in bySlug[slug]), slug);
+    assert.deepEqual(Object.keys(bySlug).sort(), ['a-category-post', 'a-post', 'a-weak-post', 'an-ordered-post']);
+    for (const slug of ['a-weak-post', 'a-category-post', 'an-ordered-post'])
+      assert.ok(!('prompt' in bySlug[slug]), slug);
     assert.deepEqual(bySlug['a-post'].prompt, ARTICLE.prompt);
     assert.equal(bySlug['a-weak-post'].route, '/blog/a-weak-post');
+    assert.equal(bySlug['an-ordered-post'].route, '/blog/an-ordered-post');
   });
 });

@@ -2,7 +2,7 @@ import './fixtures/no-network.mjs';
 
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { chmodSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { after, test } from 'node:test';
@@ -124,7 +124,7 @@ test('the first step names the file the picker result goes to, beside the two fi
   assert.equal(steps.indexOf(NAMING), 0);
 });
 
-test('the pick step has the five writer variables the category proposal needs, and the two term settings it already had', () => {
+test('the pick step has the five writer variables the category proposal needs, the two term settings it already had, and the two order inputs', () => {
   assert.deepEqual(PICK.env, {
     WRITING_TERM_ARM: "${{ vars.WRITING_TERM_ARM || 'on' }}",
     WRITING_TERM_CAP: "${{ vars.WRITING_TERM_CAP || '1' }}",
@@ -133,6 +133,8 @@ test('the pick step has the five writer variables the category proposal needs, a
     OPENAI_WRITING_INPUT_USD_PER_MILLION: '${{ vars.OPENAI_WRITING_INPUT_USD_PER_MILLION }}',
     OPENAI_WRITING_OUTPUT_USD_PER_MILLION: '${{ vars.OPENAI_WRITING_OUTPUT_USD_PER_MILLION }}',
     AUTOWRITER_OPENAI_API_KEY: '${{ secrets.AUTOWRITER_OPENAI_API_KEY }}',
+    ORDER_PROMPT: '${{ inputs.prompt }}',
+    ORDER_TITLE: '${{ inputs.title }}',
   });
 });
 
@@ -264,4 +266,85 @@ test('the escalation step never fails for the shape of the result, so the run re
   for (const result of ['{"kind":', '"just a string"\n', 'null\n', '42\n']) {
     assert.equal(escalating(result).status, 0, result);
   }
+});
+
+const INPUTS = WORKFLOW.on.workflow_dispatch?.inputs ?? {};
+const NO_ORDER = ['run', '--silent', 'pick:topic', '--', '--write', '--output'];
+const orderArgv = (env, options = {}) => {
+  const found = runStep(PICK, { decision: { decision: 'write' }, env, ...options });
+  return { ...found, argv: found.calls[0].slice(NO_ORDER.length + 5) };
+};
+
+test('a hand dispatch offers two optional text inputs, the buyer prompt number and the article title, and a schedule offers none', () => {
+  assert.deepEqual(Object.keys(INPUTS), ['prompt', 'title']);
+  for (const input of Object.values(INPUTS)) {
+    assert.equal(input.type, 'string');
+    assert.equal(input.required, false);
+    assert.equal(Object.hasOwn(input, 'default'), false);
+  }
+  assert.match(INPUTS.prompt.description, /docs\/SEMANTIC-CORE\.md/);
+  assert.match(INPUTS.prompt.description, /1 to 30/);
+  assert.match(INPUTS.title.description, /article title/);
+  assert.match(INPUTS.title.description, /no model rewrites it/);
+  assert.ok(WORKFLOW.on.schedule.length > 0);
+});
+
+test('the order inputs reach the picker only through the environment of the step, never inside its script', () => {
+  assert.equal(PICK.run.includes('${{'), false);
+  assert.equal(PICK.run.includes('inputs.'), false);
+  assert.equal(PICK.env.ORDER_PROMPT, '${{ inputs.prompt }}');
+  assert.equal(PICK.env.ORDER_TITLE, '${{ inputs.title }}');
+});
+
+test('a scheduled run, and a dispatch that leaves both inputs empty, pass no order flag', () => {
+  const unset = orderArgv({});
+  const empty = orderArgv({ ORDER_PROMPT: '', ORDER_TITLE: '' });
+  assert.equal(unset.status, 0);
+  assert.deepEqual(unset.argv, []);
+  assert.deepEqual(empty.argv, []);
+  assert.deepEqual(
+    empty.calls[0],
+    unset.calls[0].map((argument) => argument.replace(unset.root, empty.root))
+  );
+});
+
+test('a prompt number is passed as --order-prompt after the run id, and only that flag', () => {
+  const { status, argv } = orderArgv({ ORDER_PROMPT: '30' });
+  assert.equal(status, 0);
+  assert.deepEqual(argv, ['--order-prompt', '30']);
+});
+
+test('a title is passed as --order-title in one piece, with its spaces, quotes and shell characters untouched', () => {
+  const titles = [
+    'Why AI steering committees stall',
+    '  spaced   out  ',
+    `a "quoted" 'title' with $HOME and $(touch pwned) and \`touch pwned\`; touch pwned #`,
+    '--order-prompt 3',
+    '*',
+  ];
+  for (const title of titles) {
+    const { status, argv, root } = orderArgv({ ORDER_TITLE: title });
+    assert.equal(status, 0, title);
+    assert.deepEqual(argv, ['--order-title', title], title);
+    assert.equal(existsSync(join(root, 'pwned')), false, title);
+  }
+});
+
+test('a title with a new line stays one argument of the picker', () => {
+  const title = 'first line\nsecond line';
+  const { root } = orderArgv({ ORDER_TITLE: title });
+  const sent = readFileSync(join(root, 'calls.log'), 'utf8').split('\0');
+  assert.equal(sent[sent.indexOf('--order-title') + 1], title);
+});
+
+test('both inputs together pass both flags, so the picker refuses them in one voice and the step fails with its exit status', () => {
+  const both = orderArgv({ ORDER_PROMPT: '3', ORDER_TITLE: 'x' }, { status: 2, stdout: '' });
+  assert.deepEqual(both.argv, ['--order-prompt', '3', '--order-title', 'x']);
+  assert.equal(both.status, 2);
+  assert.equal(both.outputs, '');
+});
+
+test('a prompt number that is not a number is passed on as typed, for the picker to refuse', () => {
+  assert.deepEqual(orderArgv({ ORDER_PROMPT: 'three' }).argv, ['--order-prompt', 'three']);
+  assert.deepEqual(orderArgv({ ORDER_PROMPT: ' 3' }).argv, ['--order-prompt', ' 3']);
 });

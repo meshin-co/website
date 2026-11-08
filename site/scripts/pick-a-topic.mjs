@@ -30,15 +30,54 @@ const REPORT_PATH = 'audits/search-demand.md';
 const CORE_PATH = 'docs/SEMANTIC-CORE.md';
 const CONFIG_PATH = 'site/src/config.yaml';
 const USAGE =
-  'usage: node scripts/pick-a-topic.mjs [--write --output <decision.json>] [--run-id <id>] [--now <ISO>] [--summary <path>]';
-const VALUE_FLAGS = { '--output': 'output', '--run-id': 'runId', '--now': 'now', '--summary': 'summary' };
+  'usage: node scripts/pick-a-topic.mjs [--write --output <decision.json>] [--run-id <id>] [--now <ISO>] ' +
+  '[--summary <path>] [--order-prompt <number> | --order-title <text>]';
+const VALUE_FLAGS = {
+  '--output': 'output',
+  '--run-id': 'runId',
+  '--now': 'now',
+  '--summary': 'summary',
+  '--order-prompt': 'orderPrompt',
+  '--order-title': 'orderTitle',
+};
+const WHOLE_NUMBER = /^[1-9][0-9]*$/;
 const NO_PROPOSAL = { calls: [], preview: false };
 
 class UsageError extends Error {}
 class InputError extends Error {}
 
+function promptOrder(value) {
+  const number = Number(value);
+  if (!WHOLE_NUMBER.test(value) || !Number.isSafeInteger(number)) {
+    throw new UsageError(`--order-prompt must be a positive whole number, got ${JSON.stringify(value)}. ${USAGE}`);
+  }
+  return { kind: 'prompt', number };
+}
+
+function titleOrder(value) {
+  const text = value.replace(/\s+/g, ' ').trim();
+  if (text === '') throw new UsageError(`--order-title needs a title with a word in it. ${USAGE}`);
+  return { kind: 'title', text };
+}
+
+function orderFrom({ orderPrompt, orderTitle }) {
+  if (orderPrompt !== null && orderTitle !== null) {
+    throw new UsageError(`--order-prompt and --order-title name two topics and a run writes one: give one. ${USAGE}`);
+  }
+  if (orderPrompt !== null) return promptOrder(orderPrompt);
+  return orderTitle === null ? null : titleOrder(orderTitle);
+}
+
 export function parseArguments(argv) {
-  const options = { write: false, output: null, runId: null, now: null, summary: null };
+  const options = {
+    write: false,
+    output: null,
+    runId: null,
+    now: null,
+    summary: null,
+    orderPrompt: null,
+    orderTitle: null,
+  };
   for (let index = 0; index < argv.length; index += 1) {
     const flag = argv[index];
     if (flag === '--write') {
@@ -56,7 +95,8 @@ export function parseArguments(argv) {
     throw new UsageError(`--write needs --output <decision.json>. ${USAGE}`);
   if (options.now !== null && Number.isNaN(Date.parse(options.now)))
     throw new UsageError(`--now must be an ISO instant, got ${options.now}. ${USAGE}`);
-  return options;
+  const { orderPrompt, orderTitle, ...parsed } = options;
+  return { ...parsed, order: orderFrom({ orderPrompt, orderTitle }) };
 }
 
 export function runIdFor({ runId, env, now }) {
@@ -98,7 +138,7 @@ function claimsOf(repoRoot) {
   }
 }
 
-function gatherInputs({ repoRoot, settings, now, rotation }) {
+function gatherInputs({ repoRoot, settings, now, rotation, order }) {
   const report = readInput(repoRoot, REPORT_PATH, readDemandReport);
   const core = readInput(repoRoot, CORE_PATH, (text) => text);
   const suffix = readInput(repoRoot, CONFIG_PATH, (text) => titleSuffix(readBrand(text)));
@@ -115,6 +155,7 @@ function gatherInputs({ repoRoot, settings, now, rotation }) {
     suffix,
     now,
     settings,
+    order,
   };
 }
 
@@ -233,7 +274,7 @@ export async function runCli(argv, io = {}) {
     const options = parseArguments(argv);
     const instant = options.now === null ? now() : new Date(options.now);
     const settings = readTopicSettings(env);
-    const inputs = gatherInputs({ repoRoot, settings, now: instant, rotation });
+    const inputs = gatherInputs({ repoRoot, settings, now: instant, rotation, order: options.order });
     const selected = select(inputs);
     const proposed =
       options.write && wantsProposal(selected) ? await proposeWith({ decision: selected, inputs, env, fetch }) : null;

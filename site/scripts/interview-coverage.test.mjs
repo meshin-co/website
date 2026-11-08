@@ -198,3 +198,27 @@ test('the reader finds the real inputs of this repository, so a moved file canno
   assert.match(envExample, /^[A-Z_]+=/m);
   assert.match(bank, /^#### S1\. /m);
 });
+
+test('two questions sharing one id is a finding that names the id and both titles', () => {
+  const bank = ['#### S49. Correction rounds', 'body', '#### S49. Keyword demand', 'body'].join('\n\n');
+  const found = interviewFindings({ configPaths: [], workflows: [], envExample: '', bank });
+  assert.deepEqual(
+    found.map(({ rule, where }) => [rule, where]),
+    [['interview-duplicate-id', 'S49']]
+  );
+  assert.match(found[0].detail, /Correction rounds/);
+  assert.match(found[0].detail, /Keyword demand/);
+});
+
+test('an id used once is no finding, however many questions the bank holds', () => {
+  const bank = ['#### S1. One', '#### S2. Two', '#### S52. Fifty-two'].join('\n\n');
+  assert.deepEqual(interviewFindings({ configPaths: [], workflows: [], envExample: '', bank }), []);
+});
+
+test('the shipped interview gives every question its own id', () => {
+  const { bank } = readInterviewInputs(REPOSITORY);
+  const duplicates = interviewFindings({ configPaths: [], workflows: [], envExample: '', bank }).filter(
+    ({ rule }) => rule === 'interview-duplicate-id'
+  );
+  assert.deepEqual(duplicates, []);
+});

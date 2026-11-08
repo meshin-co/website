@@ -72,7 +72,8 @@ const CATEGORY = withoutPrompt({
   category: 'agentic-architecture',
   demand: { impressions: 0, position: null },
 });
-const PROMPTLESS = { 'weak-demand': WEAK, category: CATEGORY };
+const ORDERED = withoutPrompt({ origin: 'ordered', demand: { impressions: 0, position: null } });
+const PROMPTLESS = { 'weak-demand': WEAK, category: CATEGORY, ordered: ORDERED };
 
 const hereRoot = makeRepo();
 after(() => removeRepo(hereRoot));
@@ -187,6 +188,22 @@ test('category: the user prompt tells the model to set the category field to the
   assert.ok(!linesOf(build(WEAK).user, '- Origin:')[0].includes('Set the category field'));
 });
 
+test('ordered: the entry is said to be asked for by hand under its title and target query, with no Search Console figure', () => {
+  const { user } = build(ORDERED);
+  const [origin] = linesOf(user, '- Origin:');
+  assert.ok(origin.startsWith('- Origin: ordered.'));
+  assert.ok(origin.includes('The owner asked for this article by hand'));
+  assert.ok(origin.includes(`under the title "${ORDERED.title}"`));
+  assert.ok(origin.includes(`target query "${ORDERED.query}"`));
+  assert.ok(origin.includes('exactly one question'));
+  assert.ok(!origin.includes('Search Console'));
+  assert.ok(!/impressions|position/.test(origin));
+});
+
+test('an origin the prompt has no sentence for is a TypeError, never the sentence of another origin', () => {
+  assert.throws(() => build(withoutPrompt({ origin: 'video' })), TypeError);
+});
+
 test('a claim with a buyer prompt keeps its buyer-prompt sentences and gains no origin line', () => {
   const claim = claimFor('article');
   const { system, user } = build(claim);
@@ -196,5 +213,15 @@ test('a claim with a buyer prompt keeps its buyer-prompt sentences and gains no 
   assert.ok(system.includes('a passage of the block of that buyer prompt or a source you cite'));
   assert.ok(system.includes('asks a question a buyer asks on the way to that prompt'));
   assert.ok(system.includes('should quote for the buyer prompt.'));
+  assert.ok(!user.includes('- Origin:'));
+});
+
+test('an ordered claim with a buyer prompt is prompted as a demand claim is: its prompt sentences and no origin line', () => {
+  const demand = claimFor('article');
+  const ordered = { ...demand, origin: 'ordered' };
+  const { user } = build(ordered);
+  assert.deepEqual(build(ordered), build(demand));
+  assert.ok(user.includes(`- Buyer prompt ${ordered.prompt.number}: ${ordered.prompt.text}`));
+  assert.ok(user.includes('The block of docs/SEMANTIC-CORE.md for this buyer prompt, copied from the file:\n**22. '));
   assert.ok(!user.includes('- Origin:'));
 });
