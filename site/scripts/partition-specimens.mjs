@@ -14,6 +14,7 @@ const MISSING_IMPORT = "import '~/data/author/nobody-here.md';";
 const INTERVIEW_COPY = `../${INTERVIEW_PATH}`;
 const DROPPED_CONFIG_PATH = 'loop.claimLifetimeDays';
 const DROPPED_SECRET = 'AUTOWRITER_PAT';
+const REUSED_ID = 'S1';
 
 const withoutMentions = (name) => (text) => text.replaceAll(name, '');
 
@@ -49,5 +50,11 @@ export const partitionSpecimens = ({ editFile, removeFile, addFile }) => ({
     gate: ENGINE_GATE,
     token: `ENGINE interview-gap ${DROPPED_SECRET}: workflow secret;`,
     plant: (copySite) => editFile(join(copySite, INTERVIEW_COPY), withoutMentions(DROPPED_SECRET)),
+  },
+  interviewReusesAQuestionId: {
+    gate: ENGINE_GATE,
+    token: `ENGINE interview-duplicate-id ${REUSED_ID}: 2 questions in`,
+    plant: (copySite) =>
+      editFile(join(copySite, INTERVIEW_COPY), (text) => `${text}\n#### ${REUSED_ID}. A question that steals an id\n`),
   },
 });

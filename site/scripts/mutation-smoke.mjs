@@ -317,6 +317,7 @@ export const FAMILIES = [
   { id: 'export-no-longer-builds', kind: 'specimen', specimen: 'exportBuildBroken' },
   { id: 'interview-stops-naming-a-config-value', kind: 'specimen', specimen: 'interviewConfigValueDropped' },
   { id: 'interview-stops-naming-a-workflow-secret', kind: 'specimen', specimen: 'interviewWorkflowSecretDropped' },
+  { id: 'interview-reuses-a-question-id', kind: 'specimen', specimen: 'interviewReusesAQuestionId' },
   { id: 'pagination-page-2', kind: 'pagination', proves: 'build', fixture: 'live-post.md', slow: true },
   {
     id: 'category-pagination-page-2',

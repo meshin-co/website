@@ -23,12 +23,13 @@ const COPY_SITE = '/copy/site';
 const NAMES = [
   'exportBuildBroken',
   'interviewConfigValueDropped',
+  'interviewReusesAQuestionId',
   'interviewWorkflowSecretDropped',
   'partitionAnchorUnserved',
   'partitionFileFitsNoRule',
   'partitionSiteBound',
 ];
-const INTERVIEW_NAMES = ['interviewConfigValueDropped', 'interviewWorkflowSecretDropped'];
+const INTERVIEW_NAMES = ['interviewConfigValueDropped', 'interviewWorkflowSecretDropped', 'interviewReusesAQuestionId'];
 const TOKEN_PREFIX = { 'gate:partition': 'PARTITION ', 'gate:export': 'EXPORT ', 'gate:engine': 'ENGINE ' };
 const GATE = 'gate:engine';
 const CHECK = join(REAL_SITE, 'scripts/check-engine.mjs');
@@ -107,6 +108,7 @@ test('each plant changes one file at the repository root or the site, and return
       ['edit', '/copy/site/src/pages/styleguide.astro'],
       ['edit', `/copy/${INTERVIEW_PATH}`],
       ['edit', `/copy/${INTERVIEW_PATH}`],
+      ['edit', `/copy/${INTERVIEW_PATH}`],
       ['remove', '/copy/seed/site/src/data/tags.mjs.seed'],
       ['add', '/copy/mystery.bin'],
       ['add', '/copy/site/.agents/skills/names-the-site.md'],
@@ -114,9 +116,9 @@ test('each plant changes one file at the repository root or the site, and return
   );
   assert.deepEqual(
     restored.map((restore) => restore()),
-    ['edit', 'edit', 'edit', 'remove', 'add', 'add']
+    ['edit', 'edit', 'edit', 'edit', 'remove', 'add', 'add']
   );
-  assert.ok(calls[5][2].includes(brandFromDisk().name), 'the planted skill names the site');
+  assert.ok(calls[6][2].includes(brandFromDisk().name), 'the planted skill names the site');
   assert.match(calls[0][2], /^---\nimport '~\/data\/author\/nobody-here\.md';\nbody\n$/);
 });
 
