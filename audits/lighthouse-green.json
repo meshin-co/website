@@ -1,5 +1,5 @@
 {
-  "fingerprint": "cf819a2e497c515e4a3e306617f9460938fbeb3deba620b87157d01312763860",
-  "recordedAt": "2026-11-07T15:51:29.152Z",
-  "phase": "44-retry-a-stopped-write"
+  "fingerprint": "a5fb7e4a033dc971b4e38368ba831f2d453c1718b3705665abc99edaa90f5374",
+  "recordedAt": "2026-11-08T05:59:02.689Z",
+  "phase": "45-order-a-topic-by-hand"
 }
