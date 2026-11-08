@@ -13,8 +13,8 @@
   },
   "verdict": {
     "state": "escalated",
-    "reason": "Autowriter pull request #117: a job that is not a content gate failed, so the loop may not repair it",
-    "decidedAt": "2026-11-08T15:14:02.433Z"
+    "reason": "Autowriter pull request #117: the head commit has no check runs",
+    "decidedAt": "2026-11-08T18:49:15.388Z"
   },
   "escalations": [
     {
@@ -30,6 +30,23 @@
           "delivered": true,
           "status": 201,
           "issue": 118,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "esc-2",
+      "kind": "hard-stop",
+      "title": "Autowriter pull request #117: the head commit has no check runs",
+      "detail": "The watcher judged head 8cd9e7af7fb3a54d861bdd5a9a22a6254853d009: escalate, no-checks.\nPull request: https://github.com/meshin-co/website/pull/117",
+      "raisedAt": "2026-11-08T18:49:14.971Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-08T18:49:14.972Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 119,
           "error": null
         }
       ]
