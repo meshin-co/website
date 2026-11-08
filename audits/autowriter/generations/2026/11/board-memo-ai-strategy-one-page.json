@@ -1,0 +1,221 @@
+{
+  "schema": 1,
+  "slug": "board-memo-ai-strategy-one-page",
+  "runId": "42455623481-1",
+  "generatedAt": "2026-11-08T06:43:13.618Z",
+  "claim": {
+    "title": "Board memo AI strategy one page",
+    "query": "board memo ai strategy one page",
+    "prompt": {
+      "number": 30,
+      "text": "board memo AI strategy one page"
+    },
+    "origin": "demand",
+    "catchUp": {
+      "slot": "06:00",
+      "lateMinutes": 40
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-08",
+      "windowStart": "2026-08-08",
+      "windowEnd": "2026-11-06",
+      "table": "Buyer prompts"
+    },
+    "row": {
+      "#": "30",
+      "Prompt": "board memo AI strategy one page",
+      "Must win": "`/services/ai-readiness-and-risk-assessment`",
+      "Impressions": "unproven",
+      "Position": "-",
+      "Carried by": "-"
+    }
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/board-memo-ai-strategy-one-page",
+    "path": "site/src/data/post/board-memo-ai-strategy-one-page.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_078768a02dd0082c016af0197ddfc487d1be678ae5b4a0d7ad",
+  "published": {
+    "callIndex": 0
+  },
+  "calls": [
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_078768a02dd0082c016af0197ddfc487d1be678ae5b4a0d7ad",
+      "requestDigest": "3efa820492fcb354aaeeee8c1746b18336748c265f3f796033d6a9fb8753fb7f",
+      "tokens": {
+        "input": 10370,
+        "output": 3371
+      },
+      "costUsd": 0.027225,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 10370,
+      "output": 3371
+    },
+    "costUsd": 0.027225
+  },
+  "ledger": "audits/autowriter/2026/11/board-memo-ai-strategy-one-page.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "34c5b26dc608dc02ab398c059addec3f54cf80a34625c639c185b3122ec8aeaf",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "42702fd9e59dee73ae64fba75624c834724b5b4e7598ab0adc1b48c1bfc9633c"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "06fe1a1a0baa9b35048ce8b9010c690a2bef59f89f3259d2f524c4c7b97aa0eb"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "3391cfbba421ae3e122272b5c2215633533bc3bed03a747ca25c6cb5e03d201e"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "edc1efe99b68b8e144da470fd3149b160db18e0948a8b3c37651b6a1a683f432"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "7b5bfb9d60dd44d2f625497afa22c991c7a1e27a1f6e46efec91d7334b530a36"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "70ec4173e205e974cbaafaf270f1a24aa674c0aeb29feb653f7953f9b9b656b8"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "f9e37c623c6cd481fc79489dba4061b4920647cc9a7429a1d256a3eb9e5fbb97"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "c2d911f3cc032f7f238e2b3a10ac040dcbb236839b9662b4abf56b72a9360ddb"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "df07e5ca1fced82881ab08e3849da19ec0de824e4be87b2719f174f0f73f33c2"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "eefa6eb6c74e43a4933b36493176aadd6608a95d",
+    "fingerprint": "448f24c1db27aff9da65951d455ed5a33df2f82e0d2d843b7711ccf62824e655"
+  },
+  "claimTable": [],
+  "band": {
+    "measuredOn": "2026-11-02",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 105,
+      "median": 15,
+      "shareBelowThreshold": 0.181,
+      "shareJustBelow": 0.1524,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/board-memo-ai-strategy-one-page.json",
+    "audits/autowriter/claims/2026/11/board-memo-ai-strategy-one-page.json",
+    "audits/autowriter/generations/2026/11/board-memo-ai-strategy-one-page.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-ai-readiness-scorecard-five-drivers.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-board-memo-ai-strategy-one-page.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-build-vs-buy-ai-3-year-tco.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-fractional-caio-pricing.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/board-memo-ai-strategy-one-page.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}
