@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "slug": "how-to-prevent-customer-data-from-entering-public-ai-tools",
+  "title": "How to prevent customer data from entering public AI tools",
+  "format": "article",
+  "query": "how to prevent customer data from entering public ai tools",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "origin": "category",
+  "category": "governance",
+  "catchUp": {
+    "slot": "15:00",
+    "lateMinutes": 222
+  },
+  "runId": "42676188427-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-09T18:42:47.174Z",
+  "expiresAt": "2026-11-23T18:42:47.174Z"
+}
