@@ -6,23 +6,41 @@
   "attempts": [],
   "spend": {
     "tokens": {
-      "input": 1934,
-      "output": 357
+      "input": 25656,
+      "output": 7467
     },
-    "costUsd": 0.003719
+    "costUsd": 0.062991
   },
   "verdict": {
-    "state": "open",
-    "reason": null,
-    "decidedAt": null
+    "state": "escalated",
+    "reason": "Write daily stopped while writing how-to-prevent-customer-data-from-entering-public-ai-tools (build)",
+    "decidedAt": "2026-11-09T18:45:49.416Z"
   },
-  "escalations": [],
+  "escalations": [
+    {
+      "id": "esc-1",
+      "kind": "hard-stop",
+      "title": "Write daily stopped while writing how-to-prevent-customer-data-from-entering-public-ai-tools (build)",
+      "detail": "npm run write:entry failed with kind build: npm run gate:editorial exited with status 1:\neditorial ledger: 2380 rows across 124 routes { rewritten: 2131, verified: 247, unreviewed: 2 }\nshipped text tracing to no source row: 0\nsource copy no page ships: 10 (14 declared state-conditional, 0 unexplained, 4 that the build now ships: reported, not gated)\ndispositions: 452 declared, 0 stale, 0 naming a missing file, 29 on files with no copy rows (reported, not gated)\nfindings: 2\n  unreviewed copy (2):\n    /blog/tag/ai-governance/page/2 | AI governance posts, page 2 — meshin.co\n    /blog/tag/ai-governance/page/2 | AI governance posts, page 2. Spend recorded so far: 0.062991 USD. The claim for how-to-prevent-customer-data-from-entering-public-ai-tools is marked abandoned and keeps its slug, so the next catch-up run of the day writes a different topic.",
+      "raisedAt": "2026-11-09T18:45:48.925Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-09T18:45:48.926Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 129,
+          "error": null
+        }
+      ]
+    }
+  ],
   "generation": {
     "tokens": {
-      "input": 1934,
-      "output": 357
+      "input": 25656,
+      "output": 7467
     },
-    "costUsd": 0.003719
+    "costUsd": 0.062991
   },
   "refusals": [
     {
