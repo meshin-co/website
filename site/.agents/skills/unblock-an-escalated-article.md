@@ -18,9 +18,10 @@ revisit one. The branch waits for a person. Dispatching Watch PR again will not 
    spend report and the records, so both read differently from the run that produced them.
 4. **Measure.** The branch carries a new article, so `.githooks/pre-push` refuses it until
    `npm run build`, `GATE_PHASE=<bucket> npm run gate:lh` and `npm run lh:record` have measured that tree (L59).
-5. **Merge, then confirm the article is live.** `curl -s -o /dev/null -w "%{http_code}" https://meshin.co/blog/<slug>`.
-   A green merge is not publication: `publish-live.yml` runs only when the `ci` run on `main` concluded
-   `success`, and a failed run reads `cancelled` because `cancel-on-failure` ends it.
+5. **Merge, then confirm the article is live.** Ask the production origin for the slug, the way
+   `npm run smoke:prod` does, and read the status code. A green merge is not publication:
+   `publish-live.yml` runs only when the `ci` run on `main` concluded `success`, and a failed run reads
+   `cancelled`, because `cancel-on-failure` ends it.
 
 ## Never put the fix on the article branch
 
