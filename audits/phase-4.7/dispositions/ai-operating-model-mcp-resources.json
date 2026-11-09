@@ -409,15 +409,15 @@
     "target": "/blog/multi-agent-reference-architecture-in-production",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-roll-back-an-ai-agent-deployment (generation record audits/autowriter/generations/2026/11/how-to-roll-back-an-ai-agent-deployment.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "b83a89573925"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-trace-ai-agent-tool-calls-in-production (generation record audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "e7b5e19f475a"
   },
   {
     "target": "/blog/multi-agent-reference-architecture-in-production",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-roll-back-an-ai-agent-deployment (generation record audits/autowriter/generations/2026/11/how-to-roll-back-an-ai-agent-deployment.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "b83a89573925"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-trace-ai-agent-tool-calls-in-production (generation record audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "e7b5e19f475a"
   },
   {
     "target": "/blog/handing-over-ai-leadership-to-an-internal-owner",

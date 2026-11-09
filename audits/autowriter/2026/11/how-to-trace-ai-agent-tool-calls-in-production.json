@@ -6,23 +6,58 @@
   "attempts": [],
   "spend": {
     "tokens": {
-      "input": 1856,
-      "output": 152
+      "input": 12147,
+      "output": 3395
     },
-    "costUsd": 0.002616
+    "costUsd": 0.029122
   },
   "verdict": {
-    "state": "open",
-    "reason": null,
-    "decidedAt": null
+    "state": "escalated",
+    "reason": "Autowriter pull request #120: the head commit has no check runs",
+    "decidedAt": "2026-11-09T10:08:35.622Z"
   },
-  "escalations": [],
+  "escalations": [
+    {
+      "id": "esc-1",
+      "kind": "unrepairable",
+      "title": "Autowriter pull request #120: a job that is not a content gate failed, so the loop may not repair it",
+      "detail": "The watcher judged head 73bdad9100993e6500bc912d2e295787730ed3a5: escalate, not-a-content-gate.\nFailing: types-and-units.\nPull request: https://github.com/meshin-co/website/pull/120",
+      "raisedAt": "2026-11-09T07:17:51.869Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-09T07:17:51.869Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 121,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "esc-2",
+      "kind": "hard-stop",
+      "title": "Autowriter pull request #120: the head commit has no check runs",
+      "detail": "The watcher judged head aa5f99069946e30b3184f131fd2a30129642a56b: escalate, no-checks.\nPull request: https://github.com/meshin-co/website/pull/120",
+      "raisedAt": "2026-11-09T10:08:35.201Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-09T10:08:35.201Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 123,
+          "error": null
+        }
+      ]
+    }
+  ],
   "generation": {
     "tokens": {
-      "input": 1856,
-      "output": 152
+      "input": 12147,
+      "output": 3395
     },
-    "costUsd": 0.002616
+    "costUsd": 0.029122
   },
   "refusals": [
     {
@@ -186,6 +221,16 @@
       "reason": "register-owner",
       "against": "/glossary/ai-governance",
       "detail": "the query \"ai governance\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+    }
+  ],
+  "resumes": [
+    {
+      "at": "2026-11-09T10:05:16.190Z",
+      "by": "main-change",
+      "mainSha": "8a63cbc6a207722054d8156ba9f5057bff70168c",
+      "failedJobs": [
+        "types-and-units"
+      ]
     }
   ]
 }

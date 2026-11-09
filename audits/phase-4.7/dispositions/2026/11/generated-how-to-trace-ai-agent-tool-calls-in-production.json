@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/how-to-trace-ai-agent-tool-calls-in-production.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json on 2026-11-09. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json.",
+    "digest": "6beac7b9d83b"
+  },
+  {
+    "target": "/blog/how-to-trace-ai-agent-tool-calls-in-production",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json on 2026-11-09. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json.",
+    "digest": "fc8a10af708b"
+  }
+]
