@@ -1,0 +1,246 @@
+{
+  "schema": 1,
+  "slug": "how-to-trace-ai-agent-tool-calls-in-production",
+  "runId": "42577304656-1",
+  "generatedAt": "2026-11-09T07:11:10.445Z",
+  "claim": {
+    "title": "How to trace AI agent tool calls in production",
+    "query": "how to trace ai agent tool calls in production",
+    "origin": "category",
+    "category": "agentic-architecture",
+    "catchUp": {
+      "slot": "06:00",
+      "lateMinutes": 69
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-09",
+      "windowStart": "2026-08-09",
+      "windowEnd": "2026-11-07",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/how-to-trace-ai-agent-tool-calls-in-production",
+    "path": "site/src/data/post/how-to-trace-ai-agent-tool-calls-in-production.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_05c955ac6940488a016af171a1755c87d09b8b9e4ddef8e661",
+  "published": {
+    "callIndex": 2
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_03ada9763b353cf5016af17198a79087d09fc86b2289128845",
+      "requestDigest": "3f740da38e2b045de141c9c4bfcb832106251e583d4c08070e4f51f512d846f8",
+      "tokens": {
+        "input": 897,
+        "output": 73
+      },
+      "costUsd": 0.001262,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0f794cbc200b620b016af1719b8ebc87d0a34345617c643fb5",
+      "requestDigest": "2940713d4db67ae0c39125565f705d7ca75f28872cd524639de69df7f1dbd230",
+      "tokens": {
+        "input": 959,
+        "output": 79
+      },
+      "costUsd": 0.001354,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_05c955ac6940488a016af171a1755c87d09b8b9e4ddef8e661",
+      "requestDigest": "9f14022055acc3f0e618fc6b1bc9711228b823092978dc6927141e0f604dc2e7",
+      "tokens": {
+        "input": 10291,
+        "output": 3243
+      },
+      "costUsd": 0.026506,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 12147,
+      "output": 3395
+    },
+    "costUsd": 0.029122
+  },
+  "ledger": "audits/autowriter/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "99abab900ac2765dec6b04f9ea77bdcfe93b78ed30cef5db1ce932e16e0df4f0",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "42702fd9e59dee73ae64fba75624c834724b5b4e7598ab0adc1b48c1bfc9633c"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "06fe1a1a0baa9b35048ce8b9010c690a2bef59f89f3259d2f524c4c7b97aa0eb"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "3391cfbba421ae3e122272b5c2215633533bc3bed03a747ca25c6cb5e03d201e"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "529363db3a765e888e85847e6640e7693712030d32d1d7929c3b909965dc0965"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "e6b8fbf0253cd6ca21a0c1892e3269cd13479e798fb72634a6cdddbed798a698"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "70ec4173e205e974cbaafaf270f1a24aa674c0aeb29feb653f7953f9b9b656b8"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "f9e37c623c6cd481fc79489dba4061b4920647cc9a7429a1d256a3eb9e5fbb97"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "17608b5cbb648940b40e7a8936181824461caf901dd50712190cdbacd8a957b1"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "df07e5ca1fced82881ab08e3849da19ec0de824e4be87b2719f174f0f73f33c2"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "c8bd18c2eb1db4506e160418aa9cb0b9cadc1608",
+    "fingerprint": "8e8b22128ab03ab2e2da114b1b20a6be8174575e88bfbe0b8a8ce239357ec70a"
+  },
+  "claimTable": [],
+  "band": {
+    "measuredOn": "2026-11-02",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 128,
+      "median": 14,
+      "shareBelowThreshold": 0.25,
+      "shareJustBelow": 0.211,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json",
+    "audits/autowriter/claims/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json",
+    "audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-trace-ai-agent-tool-calls-in-production.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/how-to-trace-ai-agent-tool-calls-in-production.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}
