@@ -94,6 +94,12 @@ jobs:
         with:
           node-version-file: site/.nvmrc
 
+      - name: record which cron entry fired, because the run list alone cannot say
+        run: |
+          echo "cron: ${SCHEDULE:-none, this run was not scheduled}" >> "$GITHUB_STEP_SUMMARY"
+        env:
+          SCHEDULE: ${{ github.event.schedule }}
+
       - name: stop a scheduled run when the day already holds an article for every slot that has passed
         id: slot
         run: node scripts/slot-due.mjs --event "$GITHUB_EVENT_NAME"

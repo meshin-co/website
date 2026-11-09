@@ -500,3 +500,16 @@ for (const lead of [0, 1, 59, 440, 1439]) {
     }
   });
 }
+
+test('the due job records which cron entry fired, because the run list cannot say', () => {
+  const steps = parse(COMMITTED).jobs.due.steps;
+  const step = steps.find(({ run }) => typeof run === 'string' && run.includes('GITHUB_STEP_SUMMARY'));
+  assert.ok(step, 'no step in the due job writes to the step summary');
+  assert.equal(step.env.SCHEDULE, '${{ github.event.schedule }}');
+  assert.match(step.run, /cron:/);
+  assert.ok(!step.run.includes('${{'), 'the value reaches the shell through env, never interpolated into the script');
+  assert.ok(
+    steps.indexOf(step) < steps.findIndex(({ id }) => id === 'slot'),
+    'the cron is recorded before the run may stop'
+  );
+});
