@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "slug": "how-to-set-up-an-ai-launch-approval-process",
+  "title": "How to set up an AI launch approval process",
+  "format": "article",
+  "query": "how to set up an ai launch approval process",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "origin": "category",
+  "category": "operating-model",
+  "catchUp": {
+    "slot": "15:00",
+    "lateMinutes": 169
+  },
+  "runId": "42668015345-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-09T17:49:16.574Z",
+  "expiresAt": "2026-11-23T17:49:16.574Z"
+}
