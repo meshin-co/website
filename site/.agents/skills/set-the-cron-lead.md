@@ -22,6 +22,24 @@ evening, so the run at 10:58 is the 03:17 entry's. The last row is the lateness 
 `the 03:17 slot is 417 minutes late`. All four are for the 03:17 cron. The shifted crons fire at other times of day, where
 the delay has not been measured, so the band below is a model of the lag and the first runs after a change are its test.
 
+## What the first days under the lead showed
+
+Three arrivals can be attributed with confidence, because each wrote a slot and the claim records the lateness:
+
+| Date       | Slot  | Run started UTC | `lateMinutes` |
+| ---------- | ----- | --------------- | ------------- |
+| 2026-11-08 | 06:00 | 06:39:10        | 40            |
+| 2026-11-08 | 15:00 | 15:01:51        | 2             |
+| 2026-11-09 | 06:00 | 07:07:35        | 69            |
+
+Every one is late, none early, and the afternoon entry lands within two minutes. The lead is not moved on this: three
+points cannot separate a lead 40 minutes short from a queue that varies by that much.
+
+The nights also carried runs at 01:47, 02:22, 01:56 and 02:36 UTC, hours before the 06:00 slot, which wrote nothing and
+ended green. Those cannot be attributed: the API never says which entry fired a run, and with eight entries, guessing by
+nearest preceding entry puts two runs on one entry and none on another. The `due` job therefore records
+`github.event.schedule` in the step summary before anything can stop the run. Read that line, not the clock.
+
 ## What the lead changes
 
 `cronPlan` in `scripts/schedule-workflow.mjs` subtracts the lead from the time of every cron entry, the catch-up entries
