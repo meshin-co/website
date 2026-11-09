@@ -2,7 +2,7 @@
 
 Generated from raw check output by `scripts/report.mjs`. Do not hand-edit.
 
-Generated-from: 3a31cc7
+Generated-from: c8bd18c
 
 Asserted: lighthouse scores, lighthouse metric budgets, byte budgets
 
@@ -80,29 +80,30 @@ Result: PASS
 | `/about` | 1108 | 13059 | 27087 | 64868 |
 | `/ai-policy` | 1108 | 13059 | 27383 | 64868 |
 | `/approach` | 1108 | 13059 | 27623 | 64868 |
-| `/blog` | 1108 | 13059 | 28589 | 64868 |
+| `/blog` | 1108 | 13059 | 28569 | 64868 |
 | `/blog/adoption-telemetry-measuring-if-ai-is-actually-used` | 1108 | 13059 | 41653 | 64868 |
 | `/blog/ai-acceptable-use-policy-for-a-50-person-company` | 1108 | 13059 | 34796 | 64868 |
 | `/blog/ai-readiness-assessment-template-for-smb` | 1108 | 13059 | 34653 | 64868 |
-| `/blog/ai-readiness-scorecard-five-drivers` | 1108 | 13059 | 34582 | 64868 |
+| `/blog/ai-readiness-scorecard-five-drivers` | 1108 | 13059 | 34573 | 64868 |
 | `/blog/ai-vendor-assessment-questionnaire-template` | 1108 | 13059 | 34803 | 64868 |
-| `/blog/build-vs-buy-ai-3-year-tco` | 1108 | 13059 | 35043 | 64868 |
+| `/blog/board-memo-ai-strategy-one-page` | 1108 | 13059 | 34116 | 64868 |
+| `/blog/build-vs-buy-ai-3-year-tco` | 1108 | 13059 | 35068 | 64868 |
 | `/blog/category/agentic-architecture` | 1108 | 13059 | 27891 | 64868 |
-| `/blog/category/executive` | 1108 | 13059 | 27929 | 64868 |
+| `/blog/category/executive` | 1108 | 13059 | 28055 | 64868 |
 | `/blog/category/governance` | 1108 | 13059 | 28187 | 64868 |
 | `/blog/category/operating-model` | 1108 | 13059 | 28226 | 64868 |
 | `/blog/evals-in-ci-for-llm-agents` | 1108 | 13059 | 35032 | 64868 |
 | `/blog/fractional-caio-pricing` | 1108 | 13059 | 34240 | 64868 |
-| `/blog/handing-over-ai-leadership-to-an-internal-owner` | 1108 | 13059 | 39242 | 64868 |
+| `/blog/handing-over-ai-leadership-to-an-internal-owner` | 1108 | 13059 | 39290 | 64868 |
 | `/blog/how-to-build-an-ai-system-register-in-a-week` | 1108 | 13059 | 33726 | 64868 |
 | `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company` | 1108 | 13059 | 41658 | 64868 |
 | `/blog/multi-agent-reference-architecture-in-production` | 1108 | 13059 | 43429 | 64868 |
 | `/blog/named-person-responsible-for-ai-risk-in-vendor-procurement` | 1108 | 13059 | 35151 | 64868 |
-| `/blog/page/2` | 1108 | 13059 | 26855 | 64868 |
+| `/blog/page/2` | 1108 | 13059 | 26992 | 64868 |
 | `/blog/tag/acceptable-use-policy` | 1108 | 13059 | 26654 | 64868 |
 | `/blog/tag/agentic-architecture` | 1108 | 13059 | 26798 | 64868 |
-| `/blog/tag/ai-governance` | 1108 | 13059 | 28220 | 64868 |
-| `/blog/tag/ai-pilots` | 1108 | 13059 | 27145 | 64868 |
+| `/blog/tag/ai-governance` | 1108 | 13059 | 28352 | 64868 |
+| `/blog/tag/ai-pilots` | 1108 | 13059 | 27287 | 64868 |
 | `/blog/tag/ai-register` | 1108 | 13059 | 26982 | 64868 |
 | `/blog/tag/eu-ai-act` | 1108 | 13059 | 26983 | 64868 |
 | `/blog/tag/evals-in-ci` | 1108 | 13059 | 26995 | 64868 |
@@ -111,7 +112,7 @@ Result: PASS
 | `/blog/tag/production-readiness` | 1108 | 13059 | 27610 | 64868 |
 | `/blog/tag/security-review` | 1108 | 13059 | 26971 | 64868 |
 | `/blog/tag/shadow-ai` | 1108 | 13059 | 26878 | 64868 |
-| `/blog/tags` | 1108 | 13059 | 26735 | 64868 |
+| `/blog/tags` | 1108 | 13059 | 26734 | 64868 |
 | `/blog/why-your-ai-pilot-never-reached-production` | 1108 | 13059 | 34478 | 64868 |
 | `/case-studies` | 1108 | 13059 | 26210 | 64868 |
 | `/contact` | 1108 | 13059 | 26716 | 64868 |
@@ -204,4 +205,4 @@ One leaf per repeated template family (heaviest by built bytes) plus every uniqu
 
 ## Derived route list (all gates)
 
-`/`, `/404`, `/about`, `/ai-policy`, `/approach`, `/blog`, `/blog/adoption-telemetry-measuring-if-ai-is-actually-used`, `/blog/ai-acceptable-use-policy-for-a-50-person-company`, `/blog/ai-readiness-assessment-template-for-smb`, `/blog/ai-readiness-scorecard-five-drivers`, `/blog/ai-vendor-assessment-questionnaire-template`, `/blog/build-vs-buy-ai-3-year-tco`, `/blog/category/agentic-architecture`, `/blog/category/executive`, `/blog/category/governance`, `/blog/category/operating-model`, `/blog/evals-in-ci-for-llm-agents`, `/blog/fractional-caio-pricing`, `/blog/handing-over-ai-leadership-to-an-internal-owner`, `/blog/how-to-build-an-ai-system-register-in-a-week`, `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company`, `/blog/multi-agent-reference-architecture-in-production`, `/blog/named-person-responsible-for-ai-risk-in-vendor-procurement`, `/blog/page/2`, `/blog/tag/acceptable-use-policy`, `/blog/tag/agentic-architecture`, `/blog/tag/ai-governance`, `/blog/tag/ai-pilots`, `/blog/tag/ai-register`, `/blog/tag/eu-ai-act`, `/blog/tag/evals-in-ci`, `/blog/tag/llm-as-judge`, `/blog/tag/policy-enforcement`, `/blog/tag/production-readiness`, `/blog/tag/security-review`, `/blog/tag/shadow-ai`, `/blog/tags`, `/blog/why-your-ai-pilot-never-reached-production`, `/case-studies`, `/contact`, `/faq`, `/faq/are-models-trained-on-our-customer-data`, `/faq/can-you-get-us-iso-iec-42001-certified-or-just-a-working-system`, `/faq/can-you-work-with-our-existing-ai-vendor-or-platform`, `/faq/how-do-you-charge-for-the-work`, `/faq/how-does-ai-risk-get-recorded-and-who-signs-it-off`, `/faq/how-does-the-retainer-end`, `/faq/how-is-a-prompt-or-model-change-stopped-from-shipping-unnoticed`, `/faq/how-is-cost-per-outcome-measured`, `/faq/how-quickly-can-you-start-and-how-does-availability-work-for-a-remote-officer`, `/faq/is-my-company-too-small-or-too-early-for-a-fractional-chief-ai-officer`, `/faq/what-counts-as-in-production-for-the-90-day-sprint`, `/faq/what-do-nist-ai-rmf-iso-iec-42001-and-the-eu-ai-act-require`, `/faq/what-do-we-do-about-tools-staff-are-already-using-without-approval`, `/faq/what-does-a-fractional-chief-ai-officer-actually-do`, `/faq/what-does-the-two-week-assessment-produce-and-is-the-fee-credited-if-we-continue`, `/faq/what-happens-if-the-evals-say-a-workflow-isnt-good-enough`, `/faq/what-happens-on-a-fit-call-and-does-it-cost-anything`, `/faq/what-if-the-ai-we-are-building-goes-into-a-product-we-sell`, `/faq/what-if-we-already-have-a-data-science-team-or-an-internal-ai-lead`, `/faq/what-size-of-company-do-you-actually-work-with`, `/faq/whats-the-difference-between-the-assessment-the-sprint-and-the-retainer`, `/faq/who-answers-customer-security-questionnaires`, `/faq/who-owns-the-code-and-the-data`, `/faq/who-owns-the-frameworks-templates-and-playbooks-built-during-the-engagement`, `/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai`, `/glossary`, `/glossary/agentic-workflow`, `/glossary/ai-governance`, `/glossary/ai-impact-assessment`, `/glossary/ai-management-system`, `/glossary/ai-operating-model`, `/glossary/ai-register`, `/glossary/conformity-assessment`, `/glossary/data-classification`, `/glossary/dpia`, `/glossary/eu-ai-act`, `/glossary/evals`, `/glossary/guardrails`, `/glossary/hallucination-rate`, `/glossary/high-risk-ai-system`, `/glossary/human-in-the-loop`, `/glossary/human-oversight`, `/glossary/iso-iec-42001`, `/glossary/llm-gateway`, `/glossary/mcp`, `/glossary/model-card`, `/glossary/model-provenance`, `/glossary/nist-ai-rmf`, `/glossary/observability`, `/glossary/post-market-monitoring`, `/glossary/prompt-injection`, `/glossary/provider-vs-deployer`, `/glossary/red-teaming`, `/glossary/retrieval-augmented-generation`, `/glossary/serious-incident-reporting`, `/glossary/shadow-ai`, `/glossary/sub-processor`, `/glossary/technical-documentation`, `/imprint`, `/now`, `/pricing`, `/privacy`, `/resources`, `/resources/adoption-telemetry-dashboard-template`, `/resources/agent-evals-ci-starter`, `/resources/ai-governance-starter-kit`, `/resources/ai-readiness-scorecard`, `/resources/build-vs-buy-ai-kit`, `/resources/handover-playbook`, `/resources/llm-gateway-governance-config`, `/search`, `/security`, `/services`, `/services/90-day-production-sprint`, `/services/ai-readiness-and-risk-assessment`, `/services/fractional-caio-retainer`, `/styleguide`, `/terms`
+`/`, `/404`, `/about`, `/ai-policy`, `/approach`, `/blog`, `/blog/adoption-telemetry-measuring-if-ai-is-actually-used`, `/blog/ai-acceptable-use-policy-for-a-50-person-company`, `/blog/ai-readiness-assessment-template-for-smb`, `/blog/ai-readiness-scorecard-five-drivers`, `/blog/ai-vendor-assessment-questionnaire-template`, `/blog/board-memo-ai-strategy-one-page`, `/blog/build-vs-buy-ai-3-year-tco`, `/blog/category/agentic-architecture`, `/blog/category/executive`, `/blog/category/governance`, `/blog/category/operating-model`, `/blog/evals-in-ci-for-llm-agents`, `/blog/fractional-caio-pricing`, `/blog/handing-over-ai-leadership-to-an-internal-owner`, `/blog/how-to-build-an-ai-system-register-in-a-week`, `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company`, `/blog/multi-agent-reference-architecture-in-production`, `/blog/named-person-responsible-for-ai-risk-in-vendor-procurement`, `/blog/page/2`, `/blog/tag/acceptable-use-policy`, `/blog/tag/agentic-architecture`, `/blog/tag/ai-governance`, `/blog/tag/ai-pilots`, `/blog/tag/ai-register`, `/blog/tag/eu-ai-act`, `/blog/tag/evals-in-ci`, `/blog/tag/llm-as-judge`, `/blog/tag/policy-enforcement`, `/blog/tag/production-readiness`, `/blog/tag/security-review`, `/blog/tag/shadow-ai`, `/blog/tags`, `/blog/why-your-ai-pilot-never-reached-production`, `/case-studies`, `/contact`, `/faq`, `/faq/are-models-trained-on-our-customer-data`, `/faq/can-you-get-us-iso-iec-42001-certified-or-just-a-working-system`, `/faq/can-you-work-with-our-existing-ai-vendor-or-platform`, `/faq/how-do-you-charge-for-the-work`, `/faq/how-does-ai-risk-get-recorded-and-who-signs-it-off`, `/faq/how-does-the-retainer-end`, `/faq/how-is-a-prompt-or-model-change-stopped-from-shipping-unnoticed`, `/faq/how-is-cost-per-outcome-measured`, `/faq/how-quickly-can-you-start-and-how-does-availability-work-for-a-remote-officer`, `/faq/is-my-company-too-small-or-too-early-for-a-fractional-chief-ai-officer`, `/faq/what-counts-as-in-production-for-the-90-day-sprint`, `/faq/what-do-nist-ai-rmf-iso-iec-42001-and-the-eu-ai-act-require`, `/faq/what-do-we-do-about-tools-staff-are-already-using-without-approval`, `/faq/what-does-a-fractional-chief-ai-officer-actually-do`, `/faq/what-does-the-two-week-assessment-produce-and-is-the-fee-credited-if-we-continue`, `/faq/what-happens-if-the-evals-say-a-workflow-isnt-good-enough`, `/faq/what-happens-on-a-fit-call-and-does-it-cost-anything`, `/faq/what-if-the-ai-we-are-building-goes-into-a-product-we-sell`, `/faq/what-if-we-already-have-a-data-science-team-or-an-internal-ai-lead`, `/faq/what-size-of-company-do-you-actually-work-with`, `/faq/whats-the-difference-between-the-assessment-the-sprint-and-the-retainer`, `/faq/who-answers-customer-security-questionnaires`, `/faq/who-owns-the-code-and-the-data`, `/faq/who-owns-the-frameworks-templates-and-playbooks-built-during-the-engagement`, `/faq/why-hire-a-fractional-officer-instead-of-a-full-time-head-of-ai`, `/glossary`, `/glossary/agentic-workflow`, `/glossary/ai-governance`, `/glossary/ai-impact-assessment`, `/glossary/ai-management-system`, `/glossary/ai-operating-model`, `/glossary/ai-register`, `/glossary/conformity-assessment`, `/glossary/data-classification`, `/glossary/dpia`, `/glossary/eu-ai-act`, `/glossary/evals`, `/glossary/guardrails`, `/glossary/hallucination-rate`, `/glossary/high-risk-ai-system`, `/glossary/human-in-the-loop`, `/glossary/human-oversight`, `/glossary/iso-iec-42001`, `/glossary/llm-gateway`, `/glossary/mcp`, `/glossary/model-card`, `/glossary/model-provenance`, `/glossary/nist-ai-rmf`, `/glossary/observability`, `/glossary/post-market-monitoring`, `/glossary/prompt-injection`, `/glossary/provider-vs-deployer`, `/glossary/red-teaming`, `/glossary/retrieval-augmented-generation`, `/glossary/serious-incident-reporting`, `/glossary/shadow-ai`, `/glossary/sub-processor`, `/glossary/technical-documentation`, `/imprint`, `/now`, `/pricing`, `/privacy`, `/resources`, `/resources/adoption-telemetry-dashboard-template`, `/resources/agent-evals-ci-starter`, `/resources/ai-governance-starter-kit`, `/resources/ai-readiness-scorecard`, `/resources/build-vs-buy-ai-kit`, `/resources/handover-playbook`, `/resources/llm-gateway-governance-config`, `/search`, `/security`, `/services`, `/services/90-day-production-sprint`, `/services/ai-readiness-and-risk-assessment`, `/services/fractional-caio-retainer`, `/styleguide`, `/terms`
