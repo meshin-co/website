@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "slug": "how-to-trace-ai-agent-tool-calls-in-production",
+  "title": "How to trace AI agent tool calls in production",
+  "format": "article",
+  "query": "how to trace ai agent tool calls in production",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "origin": "category",
+  "category": "agentic-architecture",
+  "catchUp": {
+    "slot": "06:00",
+    "lateMinutes": 69
+  },
+  "runId": "42577304656-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-09T07:09:10.871Z",
+  "expiresAt": "2026-11-23T07:09:10.871Z"
+}
