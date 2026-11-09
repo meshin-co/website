@@ -12,6 +12,7 @@ import {
   MODEL_VARIABLE,
   RESOLVED_MODEL,
   categoryInput,
+  keywordInput,
   orderedPromptInput,
   orderedTitleInput,
   recordInput,
@@ -341,6 +342,7 @@ test('a model with a shutdown date is recorded with a note that names the variab
 });
 
 const weakBase = buildRecord(weakDemandInput());
+const keywordBase = buildRecord(keywordInput());
 const categoryBase = buildRecord(categoryInput());
 const orderedPromptBase = buildRecord(orderedPromptInput());
 const orderedTitleBase = buildRecord(orderedTitleInput());
@@ -483,6 +485,40 @@ const ORIGIN_DEFECTS = [
       r.band.measured.format = 'term';
     }),
     ['entry.format must be article when origin is ordered'],
+  ],
+  [
+    'a prompt on a keyword entry',
+    changed(keywordBase, (r) => (r.claim.prompt = PROMPT)),
+    ['claim.prompt must be absent when origin is keyword'],
+  ],
+  [
+    'a category on a keyword entry',
+    changed(keywordBase, (r) => (r.claim.category = 'governance')),
+    ['claim.category must be absent when origin is keyword'],
+  ],
+  [
+    'a weakness on a keyword entry',
+    changed(keywordBase, (r) => (r.claim.weakness = ['no-buyer-prompt'])),
+    ['claim.weakness must be absent when origin is keyword'],
+  ],
+  [
+    'a keyword entry that was never measured',
+    changed(keywordBase, (r) => Object.assign(r.demand, { impressions: 0, position: null })),
+    ['demand.impressions must be at least 1 when origin is keyword'],
+  ],
+  [
+    'a keyword entry with a position',
+    changed(keywordBase, (r) => Object.assign(r.demand, { impressions: 803, position: 12.5 })),
+    ['demand.position must be null when origin is keyword'],
+  ],
+  [
+    'a keyword entry that is a term',
+    changed(keywordBase, (r) => {
+      r.entry.format = 'term';
+      r.band.limits.format = 'term';
+      r.band.measured.format = 'term';
+    }),
+    ['entry.format must be article when origin is keyword'],
   ],
 ];
 

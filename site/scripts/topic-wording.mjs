@@ -46,6 +46,9 @@ export const categoryChoice = (standing) =>
   `Choice: category ${standing.category}, ${standingText(standing)}; ` +
   'no unproven prompt or weak query survived, so the rotation chose it';
 
+export const keywordChoice = ({ phrase, exact, measured }) =>
+  `Choice: keyword, "${phrase}", ${plural(exact, 'exact impression')} on Bing, measured ${measured}`;
+
 export const strengthens = (choice, route) => `${choice}; strengthens ${route}`;
 
 const windowText = ({ impressions, position }, { windowStart, windowEnd }) =>
@@ -59,6 +62,10 @@ export const promptReason = ({ number }, detail) => `prompt ${number} is unprove
 
 export const termReason = (row, window, detail) =>
   `${detail}; the query "${row.query}" has ${windowText(row, window)}: strengthen that route and add no page`;
+
+export const keywordReason = ({ exact, measured }, detail) =>
+  `${detail}; the phrase has ${plural(exact, 'exact impression')} on Bing, measured ${measured}: ` +
+  'strengthen that route and add no page';
 
 const OUTCOME_LABELS = [
   ['retired', 'retired prompt'],

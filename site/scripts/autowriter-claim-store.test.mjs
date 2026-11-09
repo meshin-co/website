@@ -174,6 +174,14 @@ const asWeak = () =>
     origin: 'weak-demand',
     weakness: ['no-buyer-prompt', 'impressions-at-floor'],
   });
+const asKeyword = () =>
+  newClaim({
+    ...BASIS,
+    slug: 'a-keyword-claim',
+    query: 'ai governance framework',
+    demand: { impressions: 803, position: null },
+    origin: 'keyword',
+  });
 const asCategory = () =>
   newClaim({
     ...BASIS,
@@ -203,10 +211,11 @@ const TAIL = ['runId', 'status', 'claimedAt', 'expiresAt'];
 test('a new claim keeps the origin fields it is given, after the demand, and invents no other key', () => {
   assert.deepEqual(Object.keys(asDemand()), [...KEYS, 'prompt', 'origin', ...TAIL]);
   assert.deepEqual(Object.keys(asWeak()), [...KEYS, 'origin', 'weakness', ...TAIL]);
+  assert.deepEqual(Object.keys(asKeyword()), [...KEYS, 'origin', ...TAIL]);
   assert.deepEqual(Object.keys(asCategory()), [...KEYS, 'origin', 'category', ...TAIL]);
   assert.deepEqual(Object.keys(asOrderedByPrompt()), [...KEYS, 'prompt', 'origin', ...TAIL]);
   assert.deepEqual(Object.keys(asOrderedByTitle()), [...KEYS, 'origin', ...TAIL]);
-  for (const made of [asDemand(), asWeak(), asCategory(), asOrderedByPrompt(), asOrderedByTitle()])
+  for (const made of [asDemand(), asWeak(), asKeyword(), asCategory(), asOrderedByPrompt(), asOrderedByTitle()])
     assert.deepEqual(validateClaim(made), []);
 });
 
@@ -233,6 +242,7 @@ test('a claim of each origin is written and read back equal, and a claim with no
     for (const [claimed, holdsPrompt] of [
       [asDemand(), true],
       [asWeak(), false],
+      [asKeyword(), false],
       [asCategory(), false],
       [asOrderedByPrompt(), true],
       [asOrderedByTitle(), false],

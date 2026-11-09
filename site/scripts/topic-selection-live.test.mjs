@@ -14,6 +14,7 @@ import { casedForms, casingTexts } from './topic-casing.mjs';
 import { CATEGORY_ROTATION, readPublishedPosts } from './topic-categories.mjs';
 import { readPromptSources } from './topic-core.mjs';
 import { buildRun } from './topic-entries.mjs';
+import { readKeywords } from './topic-keywords.mjs';
 import { readConceptRegister, routeOf } from './topic-owners.mjs';
 import { existingArticles, repeatRefusal } from './topic-repeat.mjs';
 import { selectTopic } from './topic-selection.mjs';
@@ -28,6 +29,7 @@ function liveInputs() {
   const core = read('docs/SEMANTIC-CORE.md');
   return {
     report: readDemandReport(read(REPORT_PATH)),
+    keywords: readKeywords(fileURLToPath(root)),
     concepts: readConceptRegister(core),
     generated: generatedTitles(core),
     promptSources: readPromptSources(core),
@@ -53,7 +55,7 @@ function assertEntryIsUsable(entry, { claims, ledgerPaths, generated, promptSour
   if (prompt) {
     assert.notEqual(promptSources.get(prompt.number)?.retired, true, 'prompt ' + prompt.number + ' is retired');
   }
-  if (origin === 'weak-demand') {
+  if (origin === 'weak-demand' || origin === 'keyword') {
     assert.equal(repeatRefusal({ topic, existing: existingArticles({ posts, claims, now: NOW }) }), null, topic.title);
   }
   assert.equal(heldSlugs.includes(topic.slug), false, 'slug held by a claim: ' + topic.slug);

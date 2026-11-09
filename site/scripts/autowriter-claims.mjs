@@ -31,6 +31,10 @@ const DEMAND_RULES = {
     ['impressions', (value) => value >= 1, 'must be at least 1'],
     ['position', (value) => typeof value === 'number', 'must be a number'],
   ],
+  keyword: [
+    ['impressions', (value) => value >= 1, 'must be at least 1'],
+    ['position', (value) => value === null, 'must be null'],
+  ],
   category: [
     ['impressions', (value) => value === 0, 'must be 0'],
     ['position', (value) => value === null, 'must be null'],
@@ -57,7 +61,7 @@ const demandRuleProblems = (origin, demand) =>
     .filter(([key, holds]) => !holds(demand?.[key]))
     .map(([key, , wants]) => problem(`$.demand.${key}`, `${wants} when origin is ${origin}`));
 
-const ARTICLE_ONLY = ['weak-demand', 'category', 'ordered'];
+const ARTICLE_ONLY = ['weak-demand', 'keyword', 'category', 'ordered'];
 
 const formatProblems = ({ format }, origin, at) =>
   ARTICLE_ONLY.includes(origin) && format !== 'article'
@@ -79,8 +83,9 @@ function expiryProblems({ claimedAt, expiresAt }) {
   return Date.parse(expiresAt) > Date.parse(claimedAt) ? [] : [problem('$.expiresAt', 'must be later than claimedAt')];
 }
 
-function demandProblems({ demand }) {
-  if (demand.impressions > 0 && demand.position === null)
+function demandProblems(claim) {
+  const { demand } = claim;
+  if (demand.impressions > 0 && demand.position === null && originOf(claim) !== 'keyword')
     return [problem('$.demand.position', 'must be a number when impressions is above 0')];
   if (demand.impressions === 0 && demand.position !== null)
     return [problem('$.demand.position', 'must be null when impressions is 0')];

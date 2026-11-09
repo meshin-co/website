@@ -152,6 +152,7 @@ function ledgerFor({ ledger, calls }) {
 
 const ORIGIN_DETAIL = {
   category: ({ category }) => `Category: ${category}`,
+  keyword: ({ query }) => `Keyword: ${query}`,
   'weak-demand': ({ weakness }) => `Weak query: ${weakness.join(', ')}`,
   ordered: () => 'Ordered by hand',
 };

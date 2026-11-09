@@ -7,7 +7,9 @@ it touches only the routes the new content creates or changes.
 
 1. **Choose the article.** `choose-the-next-article.md`. Run `npm run gate:demand` first: a stale
    report is refreshed with `npm run audit:demand`. Take the signal and its number from
-   `audits/search-demand.md`, before any entry or string exists, and put both in the commit message.
+   `audits/search-demand.md`, before any entry or string exists, and put both in the commit message. When it holds no
+   lead, a phrase of `audits/keyword-demand.md` that has an exact Bing impression and no route may be the choice,
+   most impressions first, ahead of a category (L69).
 2. **Add the entry.** `add-collection-entry.md` for each new article or resource. Zod refuses an
    entry without `shortAnswer`, `updatedDate` and a source, so the build is the first gate.
 3. **Write the copy.** `write-copy.md` before any string exists, `place-a-new-text.md` before a

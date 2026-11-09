@@ -1,7 +1,9 @@
 import './fixtures/no-network.mjs';
 import assert from 'node:assert/strict';
 import { randomBytes } from 'node:crypto';
-import { readFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { test } from 'node:test';
 
 import { ORIGINS, WEAKNESS_REASONS, validateClaim } from './autowriter-claims.mjs';
@@ -16,13 +18,14 @@ import {
   TERM_SLUG,
   callOf,
   categoryInput,
+  keywordInput,
   orderedPromptInput,
   orderedTitleInput,
   recordInput,
   termInput,
   weakDemandInput,
 } from './fixtures/generation-input.mjs';
-import { buildRecord, callRecord, callTotals, validateRecord } from './generation-record.mjs';
+import { buildRecord, callRecord, callTotals, readRecord, validateRecord, writeRecord } from './generation-record.mjs';
 import { recordDirectory, recordPath } from './record-layout.mjs';
 
 const base = buildRecord(recordInput());
@@ -41,6 +44,7 @@ test('the claims of the fixtures are claims the claim store would accept', () =>
   assert.deepEqual(validateClaim(recordInput().claim), []);
   assert.deepEqual(validateClaim(termInput().claim), []);
   assert.deepEqual(validateClaim(weakDemandInput().claim), []);
+  assert.deepEqual(validateClaim(keywordInput().claim), []);
   assert.deepEqual(validateClaim(categoryInput().claim), []);
   assert.deepEqual(validateClaim(orderedPromptInput().claim), []);
   assert.deepEqual(validateClaim(orderedTitleInput().claim), []);
@@ -266,7 +270,14 @@ test('the claim block lists the origin fields beside the prompt, with the origin
 });
 
 test('every claim field the schema lists reaches the record, and no other claim field does', () => {
-  for (const input of [recordInput(), weakDemandInput(), categoryInput(), orderedPromptInput(), orderedTitleInput()]) {
+  for (const input of [
+    recordInput(),
+    weakDemandInput(),
+    keywordInput(),
+    categoryInput(),
+    orderedPromptInput(),
+    orderedTitleInput(),
+  ]) {
     const record = buildRecord({ ...input, claim: { ...input.claim, stray: 'x' } });
     const expected = CLAIM_KEYS.filter((key) => input.claim[key] !== undefined);
     assert.deepEqual(Object.keys(record.claim), expected, input.claim.slug);
@@ -308,6 +319,34 @@ test('a category record names the origin and the category and holds no prompt, n
   assert.equal(record.demand.row, null);
   assert.equal(record.demand.report.table, null);
   assert.deepEqual([record.demand.impressions, record.demand.position], [0, null]);
+});
+
+test('a keyword record names the origin and the exact impressions and holds no prompt, no report row and no report table', () => {
+  const input = keywordInput();
+  const record = buildRecord(input);
+  assert.deepEqual(validateRecord(record), []);
+  assert.deepEqual(record.claim, {
+    title: input.claim.title,
+    query: 'ai governance framework',
+    origin: 'keyword',
+  });
+  assert.equal(Object.hasOwn(record.claim, 'prompt'), false);
+  assert.equal(record.demand.row, null);
+  assert.equal(record.demand.report.table, null);
+  assert.deepEqual([record.demand.impressions, record.demand.position], [803, null]);
+});
+
+test('a keyword record is written whole and read back unchanged, and its file holds no prompt key', () => {
+  const root = mkdtempSync(join(tmpdir(), 'keyword-record-'));
+  try {
+    const record = buildRecord(keywordInput());
+    const path = join(root, `${record.slug}.json`);
+    writeRecord(path, record);
+    assert.deepEqual(readRecord(path), record);
+    assert.equal(Object.hasOwn(JSON.parse(readFileSync(path, 'utf8')).claim, 'prompt'), false);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });
 
 test('an ordered record of a prompt names the origin, keeps the prompt and keeps the row of that prompt', () => {

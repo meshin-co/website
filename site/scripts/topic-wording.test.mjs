@@ -3,6 +3,8 @@ import { test } from 'node:test';
 
 import {
   categoryChoice,
+  keywordChoice,
+  keywordReason,
   measuredChoice,
   measuredReason,
   noSuchPrompt,
@@ -178,6 +180,30 @@ test('the choice line of a category names it, how many articles it has and the n
   assert.equal(
     categoryChoice({ category: 'operating-model', articles: 0, newest: null }),
     `Choice: category operating-model, no article yet; ${why}`
+  );
+});
+
+test('the choice line of a keyword names the phrase, its exact impressions on Bing and the day the report was measured', () => {
+  assert.equal(
+    keywordChoice({ phrase: 'ai governance framework', exact: 803, measured: '2026-11-09' }),
+    'Choice: keyword, "ai governance framework", 803 exact impressions on Bing, measured 2026-11-09'
+  );
+  assert.equal(
+    keywordChoice({ phrase: 'dpia template', exact: 1, measured: '2026-11-09' }),
+    'Choice: keyword, "dpia template", 1 exact impression on Bing, measured 2026-11-09'
+  );
+});
+
+test('the reason of a keyword advisory gives the cause, then the exact impressions and the day, and says to strengthen the route', () => {
+  const detail =
+    'the query "dpia template" names the concept "DPIA", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/dpia';
+  assert.equal(
+    keywordReason({ exact: 78, measured: '2026-11-09' }, detail),
+    `${detail}; the phrase has 78 exact impressions on Bing, measured 2026-11-09: strengthen that route and add no page`
+  );
+  assert.equal(
+    keywordReason({ exact: 1, measured: '2026-11-09' }, detail),
+    `${detail}; the phrase has 1 exact impression on Bing, measured 2026-11-09: strengthen that route and add no page`
   );
 });
 

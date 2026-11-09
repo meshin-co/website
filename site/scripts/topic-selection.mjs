@@ -1,8 +1,9 @@
 import { categoryStandings, rotationOrder } from './topic-categories.mjs';
 import { proposalCandidates, strengthenCandidates } from './topic-demand.mjs';
-import { examineQuery, walkOrdered, walkPosts, walkTerms, walkWeak } from './topic-walk.mjs';
+import { examineQuery, walkKeywords, walkOrdered, walkPosts, walkTerms, walkWeak } from './topic-walk.mjs';
 import {
   categoryChoice,
+  keywordChoice,
   measuredChoice,
   measuredReason,
   noneReason,
@@ -27,6 +28,9 @@ function requireWiring(inputs) {
     if (!Array.isArray(inputs[name])) {
       throw new TypeError(`inputs.${name} must be an array, read with ${source} of topic-categories.mjs`);
     }
+  }
+  if (!Array.isArray(inputs.keywords?.candidates)) {
+    throw new TypeError('inputs.keywords must be a keyword report, read with readKeywords of topic-keywords.mjs');
   }
   if (!isOrder(inputs.order)) {
     throw new TypeError(`inputs.order must be ${ORDER_SHAPE}, read from the order flags of pick-a-topic.mjs`);
@@ -71,6 +75,17 @@ const weakEntry = ({ candidate, topic }, report) => ({
   weakness: candidate.weakness,
 });
 
+const keywordEntry = ({ candidate, topic }) => ({
+  format: 'article',
+  topic,
+  demand: { impressions: candidate.exact, position: null },
+  table: null,
+  row: null,
+  choice: keywordChoice(candidate),
+  origin: 'keyword',
+  phrase: candidate.phrase,
+});
+
 const orderedByPrompt = ({ candidate, topic }) => ({
   format: 'article',
   topic,
@@ -95,6 +110,7 @@ const orderedByTitle = ({ candidate, topic }) => ({
 const LEAD_ENTRIES = {
   post: postEntry,
   weak: weakEntry,
+  keyword: keywordEntry,
   ordered: (lead) => (lead.candidate.order.kind === 'prompt' ? orderedByPrompt(lead) : orderedByTitle(lead)),
 };
 
@@ -193,20 +209,24 @@ function selectOrdered(inputs) {
   return noneDecision(orderedReason(inputs.order, ordered.trail[0]), { ...shared, fallback: null });
 }
 
+const unwalked = () => ({ chosen: null, trail: [], refusals: [], advisories: [] });
+
 export function selectTopic(inputs) {
   requireWiring(inputs);
   if (inputs.order !== null) return selectOrdered(inputs);
   const { report } = inputs;
   const posts = walkPosts(inputs);
-  const weak = posts.chosen ? { chosen: null, trail: [], refusals: [] } : walkWeak(inputs);
-  const lead = posts.chosen ?? weak.chosen;
+  const weak = posts.chosen ? unwalked() : walkWeak(inputs);
+  const searchConsoleLead = posts.chosen ?? weak.chosen;
+  const keywords = searchConsoleLead ? unwalked() : walkKeywords(inputs);
+  const lead = searchConsoleLead ?? keywords.chosen;
   const terms = walkTerms(inputs, lead);
   const measured = strengthenCandidates(report).map((row) => measuredAdvisory(row, report));
-  const advisories = [...measured, ...posts.advisories, ...terms.advisories];
+  const advisories = [...measured, ...posts.advisories, ...terms.advisories, ...keywords.advisories];
   const shared = {
-    refusals: [...posts.refusals, ...weak.refusals, ...terms.refusals],
+    refusals: [...posts.refusals, ...weak.refusals, ...keywords.refusals, ...terms.refusals],
     proposals: proposalCandidates(report),
-    trail: [...posts.trail, ...weak.trail, ...terms.trail],
+    trail: [...posts.trail, ...weak.trail, ...keywords.trail, ...terms.trail],
   };
   if (lead) return writeDecision({ inputs, lead, survivors: terms.survivors, advisories, shared });
   const unwritten = { ...shared, fallback: categoryFallback(inputs) };

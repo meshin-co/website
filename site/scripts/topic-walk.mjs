@@ -3,9 +3,12 @@ import { restoreCase } from './topic-casing.mjs';
 import { claimRefusal } from './topic-claims.mjs';
 import { promptCandidates, termCandidates, weakCandidates } from './topic-demand.mjs';
 import { topicFrom } from './topic-format.mjs';
+import { keywordCandidates } from './topic-keywords.mjs';
 import { ownerRefusal } from './topic-owners.mjs';
 import { existingArticles, repeatRefusal } from './topic-repeat.mjs';
 import {
+  keywordChoice,
+  keywordReason,
   noSuchPrompt,
   postChoice,
   promptReason,
@@ -56,6 +59,20 @@ const termAdvisory = (candidate, owned, report) => ({
   reason: termReason(candidate, report, owned.detail),
   choice: strengthens(termChoice(candidate, report), owned.route),
 });
+
+const keywordAdvisory = (candidate, { outcome, detail, refusal }) => ({
+  source: outcome,
+  route: refusal.against,
+  query: candidate.phrase,
+  number: null,
+  impressions: candidate.exact,
+  position: null,
+  reason: keywordReason(candidate, detail),
+  choice: strengthens(keywordChoice(candidate), refusal.against),
+});
+
+const keywordRecord = (candidate, result) =>
+  POST_ADVISED.has(result.outcome) ? { ...result, advisory: keywordAdvisory(candidate, result) } : result;
 
 function examinePrompt(candidate, context) {
   const source = context.promptSources.get(candidate.number);
@@ -162,6 +179,20 @@ export function walkWeak(context) {
     const result = examineQuery(candidate.query, context);
     walk.trail.push(stepOf('weak', { query: candidate.query }, result));
     if (result.refusal) walk.refusals.push(result.refusal);
+    if (result.outcome === 'chosen') {
+      walk.chosen = { candidate, topic: result.topic };
+      break;
+    }
+  }
+  return walk;
+}
+
+export function walkKeywords(context) {
+  const walk = { chosen: null, trail: [], refusals: [], advisories: [] };
+  for (const candidate of keywordCandidates(context.keywords)) {
+    const result = examineQuery(candidate.phrase, context);
+    walk.trail.push(stepOf('keyword', { query: candidate.phrase }, result));
+    record(walk, keywordRecord(candidate, result));
     if (result.outcome === 'chosen') {
       walk.chosen = { candidate, topic: result.topic };
       break;
