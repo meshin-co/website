@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { resolve } from 'node:path';
 import { test } from 'node:test';
 
-import { LEGACY_UNREGISTERED, historyReport, judgeCommit, judgeSurface } from './autowriter-refusal-rules.mjs';
+import { LEGACY_EXCEPTIONS, historyReport, judgeCommit, judgeSurface } from './autowriter-refusal-rules.mjs';
 import { SHARED_DERIVED } from './derived-files.mjs';
 
 const RULE = 'unregistered-path-committed';
@@ -63,7 +63,7 @@ test('a refused path is reported once, by its own rule, and not again as an unre
 
 test('the one legacy commit keeps its screenshot baselines, and no other commit may have them', () => {
   const baseline = 'site/tests/__screenshots__/linux/blog.png';
-  const [legacy] = LEGACY_UNREGISTERED;
+  const [legacy] = LEGACY_EXCEPTIONS;
 
   assert.deepEqual(judgeSurface(commitOf([baseline], legacy.sha)), []);
   assert.equal(judgeSurface(commitOf([baseline])).length, 1);
@@ -77,4 +77,38 @@ test('the history of this repository holds no pipeline commit with an unregister
     findings.filter(({ rule }) => rule === RULE),
     []
   );
+});
+
+test('every exception names one commit, described one way, with no path left to a prefix guess', () => {
+  for (const { sha, prefix, paths } of LEGACY_EXCEPTIONS) {
+    assert.match(sha, /^[0-9a-f]{40}$/);
+    assert.ok(
+      (prefix === undefined) !== (paths === undefined),
+      `${sha} is described both by a prefix and by a path list, and one commit is described one way`
+    );
+    if (paths !== undefined) assert.ok(paths.length > 0 && paths.every((path) => !path.endsWith('/')));
+  }
+});
+
+test('an excepted commit is forgiven the paths it names and judged on every other one', () => {
+  const { sha, paths } = LEGACY_EXCEPTIONS.find(({ paths: named }) => named !== undefined);
+  const excepted = commitOf(paths, sha);
+  assert.deepEqual([...judgeCommit(excepted, () => '[]'), ...judgeSurface(excepted)], []);
+
+  const alsoRefused = judgeCommit(commitOf([...paths, 'audits/sentence-band.json'], sha), () => '[]');
+  assert.deepEqual(
+    alsoRefused.map(({ rule }) => rule),
+    ['refused-path-committed']
+  );
+  assert.match(alsoRefused[0].detail, /audits\/sentence-band\.json/);
+});
+
+test('the same paths in any other commit are refused, so the exception is one commit wide', () => {
+  const { paths } = LEGACY_EXCEPTIONS.find(({ paths: named }) => named !== undefined);
+  const commit = commitOf(paths);
+  const elsewhere = [...judgeCommit(commit, () => '[]'), ...judgeSurface(commit)];
+  assert.deepEqual([...new Set(elsewhere.map(({ rule }) => rule))].sort(), [
+    'refused-path-committed',
+    'unregistered-path-committed',
+  ]);
 });

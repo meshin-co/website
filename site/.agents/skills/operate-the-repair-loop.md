@@ -72,6 +72,7 @@ read. Three modules sit under it:
   failed after it spent is an attempt on the ledger, so it counts and raises no warning.
 - `scripts/spend-notice.mjs` keeps the notice ledger `audits/autowriter/<year>/<month>/spend-ceiling-<year>-<month>.json`. It says
   whether a month was announced, and raises the `spend-ceiling` escalation once for that month.
+- An escalated pull request waits for a person: `site/.agents/skills/unblock-an-escalated-article.md`.
 
 ## Add one
 
