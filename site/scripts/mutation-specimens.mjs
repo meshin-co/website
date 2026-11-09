@@ -12,6 +12,7 @@ import { engineSpecimens } from './engine-specimens.mjs';
 import { paritySpecimens } from './parity-specimens.mjs';
 import { evidenceSpecimens } from './evidence-specimens.mjs';
 import { jsonldSpecimens } from './jsonld-specimens.mjs';
+import { keywordSpecimens } from './keyword-specimens.mjs';
 import { linkRotSpecimens } from './link-rot-specimens.mjs';
 import { partitionSpecimens } from './partition-specimens.mjs';
 import { pressSpecimens } from './press-specimens.mjs';
@@ -641,6 +642,7 @@ export const SPECIMENS = {
   ...unattendedSpecimens({ editFile, removeFile }),
   ...paritySpecimens({ editFile, removeFile }),
   ...scheduleSpecimens({ editFile }),
+  ...keywordSpecimens({ editFile }),
   ...linkRotSpecimens({ addUntrackedFile }),
   ...pressSpecimens(),
   ...SPEC_SPECIMENS,

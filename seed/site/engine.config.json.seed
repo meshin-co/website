@@ -101,5 +101,12 @@
       "min": 8,
       "max": 30
     }
+  },
+  "keywords": {
+    "country": "us",
+    "language": "en-US",
+    "requestGapMs": 700,
+    "maxAgeDays": 35,
+    "templates": ["{title}", "{concept}", "what is {concept}", "{concept} examples", "{concept} template"]
   }
 }

@@ -1,12 +1,9 @@
-import { table } from './markdown-table.mjs';
+import { cellText, code, codes, table } from './markdown-table.mjs';
 
 const UNPROVEN = 'unproven';
 
 const percent = (ratio) => `${(ratio * 100).toFixed(1)}%`;
 const place = (position) => (position === null ? 'n/a' : position.toFixed(1));
-const code = (route) => `\`${route}\``;
-const codes = (routes) => (routes.length === 0 ? '-' : routes.map(code).join(', '));
-const text = (value) => String(value).replaceAll('|', '\\|');
 
 const DEFINITION = [
   'Each row joins one buyer prompt from `docs/SEMANTIC-CORE.md` to what was measured.',
@@ -62,7 +59,7 @@ function queriesSection({ queries, totals, withheld }) {
       ? `all ${totals.impressions} impressions.`
       : `${totals.impressions - withheld} of the ${totals.impressions} impressions. ${rare}; the other ${withheld} impressions belong to such queries.`;
   const rows = queries.map((query) => [
-    text(query.query),
+    cellText(query.query),
     String(query.impressions),
     String(query.clicks),
     place(query.position),
@@ -121,7 +118,7 @@ function promptsSection({ prompts }) {
   const proven = prompts.filter(({ impressions }) => impressions > 0).length;
   const rows = prompts.map(({ number, prompt, mustWin, impressions, position, carriedBy }) => [
     String(number),
-    text(prompt),
+    cellText(prompt),
     mustWin ? code(mustWin) : '-',
     impressions === 0 ? UNPROVEN : String(impressions),
     impressions === 0 ? '-' : place(position),

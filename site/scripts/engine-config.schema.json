@@ -4,7 +4,7 @@
   "description": "Everything the unattended writing engine knows about the site it runs on. Every field is required and none has a default.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema", "diff", "routeFamilies", "content", "loop", "demand"],
+  "required": ["schema", "diff", "routeFamilies", "content", "loop", "demand", "keywords"],
   "properties": {
     "schema": { "const": 1, "description": "The version of this file's shape, 1." },
     "diff": {
@@ -239,6 +239,44 @@
             }
           },
           "description": "Average positions between which a page already ranks, so the query strengthens that page and is not a reason for a new one."
+        }
+      }
+    },
+    "keywords": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["country", "language", "requestGapMs", "maxAgeDays", "templates"],
+      "properties": {
+        "country": {
+          "type": "string",
+          "pattern": "^[a-z]{2}$",
+          "description": "The market whose searches Bing counts, as a lower-case two-letter country code. Bing refuses an upper-case code with a message that names the parameter."
+        },
+        "language": {
+          "type": "string",
+          "pattern": "^[a-z]{2}-[A-Z]{2}$",
+          "description": "The language of those searches, as a language tag whose region is upper case, for example en-US. Bing refuses en-us."
+        },
+        "requestGapMs": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Milliseconds the keyword audit waits between two requests to Bing, which throttles a key that asks too fast."
+        },
+        "maxAgeDays": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Days after which the committed keyword report is too old to trust."
+        },
+        "templates": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[^{}]*\\{(?:concept|title)\\}[^{}]*$",
+            "description": "A phrase shape with exactly one placeholder: {concept} stands for each concept of the register in docs/SEMANTIC-CORE.md, {title} for each glossary title without the site name."
+          },
+          "description": "The phrase shapes the keyword audit prices, so a second site changes these and nothing else. Each shape is filled once per concept or per title; no model is asked and no phrase is proposed that no shape builds."
         }
       }
     }

@@ -6,24 +6,18 @@ import { discoverDocs, isRecord, mayBeRecord } from './docs-gate.mjs';
 import { parsePrompts } from './geo-baseline.mjs';
 import { readEngineConfig } from './engine-config.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
+import { tablesIn } from './markdown-table.mjs';
+import { ageInDays, measuredDate, staleFindings as staleFindingsFor } from './report-freshness.mjs';
 import { wonClaims } from './search-demand-claims.mjs';
 
 const REPORT = 'audits/search-demand.md';
 const CORE = 'docs/SEMANTIC-CORE.md';
 const REFRESH = 'npm run audit:demand';
 const ARCHIVE = 'openspec/changes/archive/';
-const DAY_MS = 86_400_000;
-const MAX_CLOCK_SKEW_DAYS = 1;
 export const MAX_AGE_DAYS = readEngineConfig().demand.maxAgeDays;
 
 const PROMPT_COLUMNS = ['#', 'Prompt', 'Impressions'];
 const listed = (names) => `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`;
-const MEASURED = /^[*_]*Measured:[*_]*\s*(\d{4}-\d{2}-\d{2})\b/m;
-
-const dayStart = (iso) => Date.parse(`${iso}T00:00:00Z`);
-const isCalendarDate = (iso) => Number.isFinite(dayStart(iso)) && new Date(dayStart(iso)).toISOString().startsWith(iso);
-
-export const ageInDays = (from, to) => (dayStart(to) - dayStart(from)) / DAY_MS;
 
 const plain = (text) =>
   text
@@ -33,38 +27,12 @@ const plain = (text) =>
     .trim()
     .toLowerCase();
 
-const cellsOf = (line) =>
-  line
-    .trim()
-    .replace(/^\|/, '')
-    .replace(/(?<!\\)\|$/, '')
-    .split(/(?<!\\)\|/)
-    .map((cell) => cell.replaceAll('\\|', '|').trim());
-
-const isDelimiterRow = (line) => cellsOf(line).every((cell) => /^:?-+:?$/.test(cell));
-const startsRow = (line) => line?.trimStart().startsWith('|');
-
-export function tablesIn(markdown) {
-  const lines = markdown.split('\n');
-  const tables = [];
-  for (let at = 0; at < lines.length - 1; at += 1) {
-    if (!startsRow(lines[at]) || !startsRow(lines[at + 1]) || !isDelimiterRow(lines[at + 1])) continue;
-    const rows = [];
-    let end = at + 2;
-    while (startsRow(lines[end])) rows.push(cellsOf(lines[end++]));
-    tables.push({ header: cellsOf(lines[at]), rows });
-    at = end - 1;
-  }
-  return tables;
-}
-
 function impressionsOf(cell) {
   if (/^unproven$/i.test(cell)) return 0;
   return /^\d+$/.test(cell) ? Number(cell) : null;
 }
 
 export function parseDemandReport(markdown) {
-  const stated = MEASURED.exec(markdown)?.[1];
   const table = tablesIn(markdown).find(({ header }) => PROMPT_COLUMNS.every((name) => header.includes(name)));
   const [numberAt, promptAt, impressionsAt] = PROMPT_COLUMNS.map((name) => table?.header.indexOf(name));
   const rows = (table?.rows ?? [])
@@ -74,39 +42,13 @@ export function parseDemandReport(markdown) {
       prompt: cells[promptAt] ?? '',
       impressions: impressionsOf(cells[impressionsAt] ?? ''),
     }));
-  return { measured: stated && isCalendarDate(stated) ? stated : null, rows };
+  return { measured: measuredDate(markdown), rows };
 }
 
 const finding = (rule, path, detail, line) => ({ rule, path, detail, ...(line ? { line } : {}) });
 
-export function staleFindings(measured, today) {
-  if (measured === null)
-    return [
-      finding(
-        'report-stale',
-        REPORT,
-        `no "Measured: YYYY-MM-DD" line with a real date, so its age cannot be shown; make it with ${REFRESH}`
-      ),
-    ];
-  const age = ageInDays(measured, today);
-  if (age > MAX_AGE_DAYS)
-    return [
-      finding(
-        'report-stale',
-        REPORT,
-        `measured ${measured}; refresh with ${REFRESH} (${age} days old, limit ${MAX_AGE_DAYS})`
-      ),
-    ];
-  if (age < -MAX_CLOCK_SKEW_DAYS)
-    return [
-      finding(
-        'report-stale',
-        REPORT,
-        `measured ${measured}, ${-age} days after today ${today}; a date in the future cannot show it fresh, so re-measure with ${REFRESH}`
-      ),
-    ];
-  return [];
-}
+export const staleFindings = (measured, today) =>
+  staleFindingsFor({ measured, today, report: REPORT, refresh: REFRESH, maxAgeDays: MAX_AGE_DAYS });
 
 const rowFor = (prompt, rows) =>
   rows.find(

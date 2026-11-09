@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
-import { FUNCTION_WORDS, buildDemand, routeOf, sameDemand } from './search-demand-rows.mjs';
+import { FUNCTION_WORDS, buildDemand, routeOf, sameDemand, within, wordsOf } from './search-demand-rows.mjs';
 
 const {
   window: WINDOW,
@@ -42,6 +42,13 @@ test('the function words the matcher ignores are exported, so the repeat guard i
       .sort()
   );
   assert.equal(FUNCTION_WORDS.size, 29);
+});
+
+test('the words of a text are exported without the function words, so a caller can ask whether a text holds every word of another', () => {
+  assert.deepEqual([...wordsOf('What is Shadow AI? — a guide')].sort(), ['ai', 'guide', 'shadow']);
+  assert.equal(within(wordsOf('shadow ai'), wordsOf('What is shadow AI?')), true);
+  assert.equal(within(wordsOf('shadow ai policy'), wordsOf('What is shadow AI?')), false);
+  assert.equal(within(wordsOf('what is shadow ai'), wordsOf('shadow ai')), true);
 });
 
 test('a query and a prompt are the same demand when one is inside the other, at any length', () => {

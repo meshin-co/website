@@ -1,0 +1,84 @@
+name: Measure keywords
+
+run-name: Measure keywords (${{ github.event_name }})
+
+on:
+  schedule:
+    - cron: '17 5 * * 1'
+  workflow_dispatch:
+
+concurrency:
+  group: measure-keywords
+  cancel-in-progress: false
+
+defaults:
+  run:
+    working-directory: site
+
+jobs:
+  configured:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      ready: ${{ steps.secrets.outputs.ready }}
+    steps:
+      - id: secrets
+        working-directory: .
+        env:
+          MISSING: >-
+            ${{ secrets.AUTOWRITER_PAT == '' && 'AUTOWRITER_PAT ' || '' }}${{
+            secrets.BING_WEBMASTER_API_KEY == '' && 'BING_WEBMASTER_API_KEY' || '' }}
+        run: |
+          missing=$(echo "$MISSING" | xargs)
+          if [ -z "$missing" ]; then
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo 'ready=false' >> "$GITHUB_OUTPUT"
+          {
+            echo '### The keyword measurement is not configured yet'
+            echo
+            echo "This run stopped before it spent a request. The repository is missing \`$missing\`."
+            echo
+            echo 'The Bing key comes from Bing Webmaster Tools, Settings, API access. Add it under'
+            echo 'Settings, Secrets and variables, Actions. Until then this workflow reports green and'
+            echo 'measures nothing, rather than failing every week.'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  measure:
+    needs: configured
+    if: github.ref == 'refs/heads/main' && needs.configured.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.AUTOWRITER_PAT }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: site/.nvmrc
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - run: npm ci
+
+      - name: price every phrase Bing has not priced recently, and keep whatever this run reaches
+        env:
+          BING_WEBMASTER_API_KEY: ${{ secrets.BING_WEBMASTER_API_KEY }}
+        run: |
+          set -o pipefail
+          npm run audit:keywords -- --key-source secret | tee "$RUNNER_TEMP/keywords.txt"
+          { echo '### Keyword measurement'; echo; tail -n 1 "$RUNNER_TEMP/keywords.txt"; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: commit the report, so the next run reads it as its cache
+        env:
+          AUTOWRITER_PAT: ${{ secrets.AUTOWRITER_PAT }}
+        run: |
+          node scripts/commit-to-main.mjs --message "chore(keywords): refresh the Bing keyword report" --path audits/keyword-demand.md

@@ -27,7 +27,7 @@ has no default. `scripts/engine-config.mjs` loads it and checks it against
 - `routeFamilies`: route prefix to title family and content-gate profile, longest prefix first.
 - `content`: the data directory, the term, article and resource collections, their route prefixes, the author.
 - `loop`: attempt cap, the `correctionRounds` the writer gets to fix its own draft before a run stops, the `stoppedRunRetriesPerDay` a day forgives so a stopped run leaves its slot owed, quarantine hours, monthly spend ceiling, claim lifetime, hold label, the UTC `writeTimesUtc` an article is wanted at, the `catchUpAfterMinutes` it tries a dropped slot again at and the `cronLeadMinutes` before each of those times that its cron entry is set, because GitHub starts a scheduled run late (`npm run assets:schedule` writes all three into `write-daily.yml`; start a new site at `0` until its own scheduled runs have been measured, `set-the-cron-lead.md`; `schedule-the-unattended-writer.md`) and the `categoryRotation` it writes on when demand is empty (`write-on-a-category.md`).
-- `demand`: Search Console window, data lag, maximum report age, impression floor, position band.
+- `demand`: Search Console window, data lag, maximum report age, impression floor, position band. `keywords`, the second demand instrument (S52 to S56, `measure-demand-the-site-has-not-reached.md`): the Bing market, the pause between requests, the maximum report age and the phrase `templates`; it needs `BING_WEBMASTER_API_KEY` in `site/.env` and as a repository secret, then `npm run audit:keywords`.
 
 ## 3. Create the anchor files
 

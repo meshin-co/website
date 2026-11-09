@@ -1,5 +1,6 @@
 import { createSign } from 'node:crypto';
 
+import { DETAIL_LIMIT, credentialError, credentialWording } from './audit-command.mjs';
 import { readEngineConfig } from './engine-config.mjs';
 
 const KEY_VARIABLE = 'GSC_SERVICE_ACCOUNT_JSON';
@@ -15,24 +16,8 @@ const {
 } = readEngineConfig().demand;
 const ASSERTION_SECONDS = 3600;
 const DAY_MS = 86_400_000;
-const DETAIL_LIMIT = 300;
 
-export const CREDENTIAL_EXIT_CODE = 3;
-
-const WORDING = {
-  file: {
-    home: () => 'site/.env',
-    keyGuide: '; site/.env.example says where to get it',
-    again: 'Then run npm run audit:demand again.',
-  },
-  secret: {
-    home: (name) => `the repository secret ${name}`,
-    keyGuide: '',
-    again: 'Then run the Write daily workflow again.',
-  },
-};
-
-const credentialError = (message) => Object.assign(new Error(message), { credential: true });
+const WORDING = credentialWording('audit:demand');
 
 const keyError = (problem, source) => {
   const { home, keyGuide, again } = WORDING[source];
