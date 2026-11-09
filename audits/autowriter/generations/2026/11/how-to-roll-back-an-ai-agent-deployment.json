@@ -1,0 +1,293 @@
+{
+  "schema": 1,
+  "slug": "how-to-roll-back-an-ai-agent-deployment",
+  "runId": "42492698960-1",
+  "generatedAt": "2026-11-08T15:07:20.941Z",
+  "claim": {
+    "title": "How to roll back an AI agent deployment",
+    "query": "how to roll back an ai agent deployment",
+    "origin": "category",
+    "category": "agentic-architecture"
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-08",
+      "windowStart": "2026-08-08",
+      "windowEnd": "2026-11-06",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/how-to-roll-back-an-ai-agent-deployment",
+    "path": "site/src/data/post/how-to-roll-back-an-ai-agent-deployment.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_012146671a3b6990016af08fac246487d29c4acad026a88b0e",
+  "published": {
+    "callIndex": 4
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_05272631bac8a60a016af08f543d7487d29f29dd6c74c90b4b",
+      "requestDigest": "a8f843a85eb3fae524e3663c926173951c6c755895d7f8b62f5c84d3a8aa17f2",
+      "tokens": {
+        "input": 879,
+        "output": 73
+      },
+      "costUsd": 0.001244,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_07ccef209583c201016af08f56373887d2948f739aca9afd00",
+      "requestDigest": "f02249a58716961b13cfbfb687985eec76b2ffcd543d15e44ed9d18133a59772",
+      "tokens": {
+        "input": 937,
+        "output": 74
+      },
+      "costUsd": 0.001307,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_08ebf47712ca73d1016af08f5b127487d284be675d4af030e8",
+      "requestDigest": "99996f726f48c4e33a639a317f60d13ad40e1e4c1f61e51dce5817aa6513cd83",
+      "tokens": {
+        "input": 10270,
+        "output": 3378
+      },
+      "costUsd": 0.02716,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_06b1adb5a2ee52d9016af08f8a5ad487d287f7a3957c5c992c",
+      "requestDigest": "cf0f31368dfb03ad6c8a60f1229e6e3fa6e41491fc5e7deae22f5f91831e4936",
+      "tokens": {
+        "input": 13040,
+        "output": 2964
+      },
+      "costUsd": 0.02786,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_012146671a3b6990016af08fac246487d29c4acad026a88b0e",
+      "requestDigest": "9b3270fff85d80066d7f727fc890e0f91fc8152bc232ed28b60a5afb7541676d",
+      "tokens": {
+        "input": 15862,
+        "output": 2699
+      },
+      "costUsd": 0.029357,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 40988,
+      "output": 9188
+    },
+    "costUsd": 0.086928
+  },
+  "ledger": "audits/autowriter/2026/11/how-to-roll-back-an-ai-agent-deployment.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "0e2ea04c81eeee0e1b3269adb5e0dd3f13a96b8b0edfb88c8a1e25e5941efe20",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "42702fd9e59dee73ae64fba75624c834724b5b4e7598ab0adc1b48c1bfc9633c"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "06fe1a1a0baa9b35048ce8b9010c690a2bef59f89f3259d2f524c4c7b97aa0eb"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "3391cfbba421ae3e122272b5c2215633533bc3bed03a747ca25c6cb5e03d201e"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "edc1efe99b68b8e144da470fd3149b160db18e0948a8b3c37651b6a1a683f432"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "7b5bfb9d60dd44d2f625497afa22c991c7a1e27a1f6e46efec91d7334b530a36"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "70ec4173e205e974cbaafaf270f1a24aa674c0aeb29feb653f7953f9b9b656b8"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "f9e37c623c6cd481fc79489dba4061b4920647cc9a7429a1d256a3eb9e5fbb97"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "c2d911f3cc032f7f238e2b3a10ac040dcbb236839b9662b4abf56b72a9360ddb"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "df07e5ca1fced82881ab08e3849da19ec0de824e4be87b2719f174f0f73f33c2"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "5655af6373cb13e213524468ced527d0d09e1618",
+    "fingerprint": "8422a35f14052206e779e51939243d36fbe8f7e30292885a2a9d82d3d39ec422"
+  },
+  "claimTable": [
+    {
+      "sentence": "How to roll back an AI agent deployment: stop new tasks and block risky actions, then restore a known release with its matching configuration.",
+      "marker": "own-reading",
+      "source": null,
+      "span": null
+    },
+    {
+      "sentence": "If no known release is safe, leave the agent paused and send urgent work to a manual queue.",
+      "marker": "own-reading",
+      "source": null,
+      "span": null
+    }
+  ],
+  "band": {
+    "measuredOn": "2026-11-02",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 120,
+      "median": 14,
+      "shareBelowThreshold": 0.25,
+      "shareJustBelow": 0.2334,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/how-to-roll-back-an-ai-agent-deployment.json",
+    "audits/autowriter/claims/2026/11/how-to-roll-back-an-ai-agent-deployment.json",
+    "audits/autowriter/generations/2026/11/how-to-roll-back-an-ai-agent-deployment.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-roll-back-an-ai-agent-deployment.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/how-to-roll-back-an-ai-agent-deployment.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}

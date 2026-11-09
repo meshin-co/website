@@ -408,16 +408,16 @@
   {
     "target": "/blog/multi-agent-reference-architecture-in-production",
     "location": "head.title",
-    "status": "verified",
-    "reason": "Checked 2026-10-03 against dist/blog/multi-agent-reference-architecture-in-production.html. The built <title> reads “Multi-agent reference architecture in production — meshin.co”, 60 characters including the “ — meshin.co” suffix (counted from the built file), inside the 70-character limit. The h1 reads “Multi-agent reference architecture in production”, and the last breadcrumb item, the BlogPosting headline in the JSON-LD, the og:title and the twitter:title carry the same words, so the title text, h1 and breadcrumb agree. The title states no figure, date, attribution or absence, and no owner question from the checklist attached to it at that check. Re-read on 2026-10-08: the <title> in the current build is unchanged (“Multi-agent reference architecture in production — meshin.co”, 60 characters), and the h1, the last breadcrumb item and the BlogPosting headline still carry the same words. No answer in COPY-CHECKLIST section 15 touches it.",
-    "digest": "65b057976c32"
+    "status": "rewritten",
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-roll-back-an-ai-agent-deployment (generation record audits/autowriter/generations/2026/11/how-to-roll-back-an-ai-agent-deployment.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "b83a89573925"
   },
   {
     "target": "/blog/multi-agent-reference-architecture-in-production",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/blog/multi-agent-reference-architecture-in-production.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [body.p] now \"Published 2 October 2026 · Updated 25 October 2026\";  [body.p] now \"Yes, to five controls. The approach page names evals in CI, tracing, cost per outcome, a rollback path and a named owner. The 90-Day Production Sprint delivers all five o…\" (was \"Yes, to five controls. The approach page names evals in CI, tracing, cost per outcome, a rollback path and a named owner. In my reading, the sources above back them uneve…\"); The date line follows updatedDate in the source file, which change 18 set to 2026-10-25 where it changed prose or links (write-copy.md: bump updatedDate when you change prose); publishDate is unchanged. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand.",
-    "digest": "65b057976c32"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-roll-back-an-ai-agent-deployment (generation record audits/autowriter/generations/2026/11/how-to-roll-back-an-ai-agent-deployment.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "b83a89573925"
   },
   {
     "target": "/blog/handing-over-ai-leadership-to-an-internal-owner",

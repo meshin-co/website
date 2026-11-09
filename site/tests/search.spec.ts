@@ -59,7 +59,7 @@ test('a query in the url is answered on load, and a nonsense query says so', asy
   await expect(page.locator('[data-search-summary]')).toContainText(/match/);
   expect(await page.locator('[data-search-results] li').count()).toBeGreaterThan(0);
 
-  await page.fill('#search-query', 'kubernetes');
+  await page.fill('#search-query', 'zqxjvwkfhb');
   await page.click('form[data-search] button[type="submit"]');
 
   await expect(page.locator('[data-search-summary]')).toContainText('No pages match');
