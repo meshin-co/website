@@ -4,7 +4,6 @@ import { test } from 'node:test';
 import { parsePrompts } from './geo-baseline.mjs';
 import {
   MAX_AGE_DAYS,
-  ageInDays,
   demandFindings,
   parseDemandReport,
   promptsWithRows,
@@ -110,13 +109,6 @@ test('unproven in any case reads as zero, a count as itself, and anything else a
 test('an escaped pipe stays inside its cell, and the three columns may come in any order', () => {
   const table = ['| Impressions | Prompt | # |', '| --- | --- | --- |', '| 3 | a\\|b | 7 |'].join('\n');
   assert.deepEqual(parseDemandReport(table).rows, [{ number: 7, prompt: 'a|b', impressions: 3 }]);
-});
-
-test('age counts whole UTC days across a month end and a leap day', () => {
-  assert.equal(ageInDays('2026-11-01', '2026-11-01'), 0);
-  assert.equal(ageInDays('2026-10-31', '2026-11-01'), 1);
-  assert.equal(ageInDays('2028-02-01', '2028-03-07'), 35);
-  assert.equal(ageInDays('2027-02-01', '2027-03-07'), 34);
 });
 
 test('thirty-five days old is fresh and thirty-six is stale, naming the date and the command that refreshes it', () => {

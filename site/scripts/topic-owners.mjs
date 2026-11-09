@@ -1,5 +1,6 @@
 import { readEngineConfig } from './engine-config.mjs';
-import { tablesIn } from './search-demand-gate.mjs';
+import { tablesIn } from './markdown-table.mjs';
+import { unticked } from './report-reading.mjs';
 import { familyFor } from './semantic-core.mjs';
 
 const { formats } = readEngineConfig().content;
@@ -7,8 +8,6 @@ const { formats } = readEngineConfig().content;
 export const ROUTE_PREFIX = { term: formats.term.routePrefix, article: formats.article.routePrefix };
 
 export const routeOf = (format, slug) => `${ROUTE_PREFIX[format]}${slug}`;
-
-const unticked = (cell) => cell.replaceAll('`', '').trim();
 
 export function readConceptRegister(coreDoc) {
   const table = tablesIn(typeof coreDoc === 'string' ? coreDoc : '').find(

@@ -41,7 +41,7 @@ export function routeOf(page) {
   }
 }
 
-const wordsOf = (text) =>
+export const wordsOf = (text) =>
   new Set(
     text
       .toLowerCase()
@@ -49,7 +49,7 @@ const wordsOf = (text) =>
       .filter((word) => word !== '' && !FUNCTION_WORDS.has(word))
   );
 
-const within = (inner, outer) => [...inner].every((word) => outer.has(word));
+export const within = (inner, outer) => [...inner].every((word) => outer.has(word));
 const fits = (a, b) => a.size > 0 && b.size > 0 && (within(a, b) || within(b, a));
 
 export const sameDemand = (query, prompt) => fits(wordsOf(query), wordsOf(prompt));

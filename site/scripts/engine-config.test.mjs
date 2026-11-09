@@ -40,7 +40,7 @@ const leafPaths = (node, prefix = '') =>
 
 test('the real configuration loads, and what it returns cannot be changed by a consumer', () => {
   const config = readEngineConfig();
-  assert.deepEqual(Object.keys(config), ['schema', 'diff', 'routeFamilies', 'content', 'loop', 'demand']);
+  assert.deepEqual(Object.keys(config), ['schema', 'diff', 'routeFamilies', 'content', 'loop', 'demand', 'keywords']);
   assert.throws(() => {
     config.loop.attemptCap = 99;
   }, TypeError);
@@ -56,6 +56,15 @@ test('the real configuration loads, and what it returns cannot be changed by a c
   ]);
   assert.throws(() => config.loop.writeTimesUtc.push('01:01'), TypeError);
   assert.throws(() => config.loop.categoryRotation.push('legal'), TypeError);
+});
+
+test('the keywords section holds the market, the request gap and the age limit that Bing was measured with', () => {
+  const { keywords } = readEngineConfig();
+  assert.equal(keywords.country, 'us');
+  assert.equal(keywords.language, 'en-US');
+  assert.equal(keywords.requestGapMs, 700);
+  assert.equal(keywords.maxAgeDays, 35);
+  assert.throws(() => keywords.templates.push('{concept} zz'), TypeError);
 });
 
 test('the file is found from the module, so the working directory never decides', () => {
@@ -166,6 +175,19 @@ const MALFORMED = [
   ['loop.categoryRotation', 'governance', 'must be of type array'],
   ['loop.categoryRotation', ['Governance'], 'must match pattern'],
   ['loop.categoryRotation', [7], 'must be of type string'],
+  ['keywords.country', 'US', 'must match pattern'],
+  ['keywords.country', 'usa', 'must match pattern'],
+  ['keywords.language', 'en-us', 'must match pattern'],
+  ['keywords.language', 'en', 'must match pattern'],
+  ['keywords.requestGapMs', -1, 'must be >= 0'],
+  ['keywords.requestGapMs', 0.5, 'must be of type integer'],
+  ['keywords.maxAgeDays', 0, 'must be >= 1'],
+  ['keywords.templates', [], 'must have at least 1 items'],
+  ['keywords.templates', '{concept}', 'must be of type array'],
+  ['keywords.templates', ['{concept}', '{concept}'], 'must have unique items'],
+  ['keywords.templates', ['what is it'], 'must match pattern'],
+  ['keywords.templates', ['{subject}'], 'must match pattern'],
+  ['keywords.templates', ['{concept} {title}'], 'must match pattern'],
 ];
 
 for (const [field, value, problem] of MALFORMED) {

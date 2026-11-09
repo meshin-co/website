@@ -2,13 +2,8 @@ import assert from 'node:assert/strict';
 import { generateKeyPairSync } from 'node:crypto';
 import test from 'node:test';
 
-import {
-  CREDENTIAL_EXIT_CODE,
-  credentialsFrom,
-  queryRejection,
-  signAssertion,
-  tokenRejection,
-} from './search-demand.mjs';
+import { CREDENTIAL_EXIT_CODE } from './audit-command.mjs';
+import { credentialsFrom, queryRejection, signAssertion, tokenRejection } from './search-demand.mjs';
 
 const { privateKey } = generateKeyPairSync('rsa', {
   modulusLength: 2048,
