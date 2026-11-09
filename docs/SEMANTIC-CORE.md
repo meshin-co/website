@@ -66,7 +66,7 @@ title `{artifact name} — meshin.co` · meta: one sentence naming the artifact 
 | `/resources/handover-playbook`                     | handover playbook                     | Handover Playbook — meshin.co                     | The Handover Playbook is six fill-in tables for moving AI leadership from an outside lead to a named owner, from the test to a later check.            | Handover Playbook                     | 31    | ✓       |
 | `/resources/llm-gateway-governance-config`         | llm gateway governance config         | LLM Gateway Governance Config — meshin.co         | LLM gateway governance config: a policy schema of five keys (allowed models, redaction, rate limit, log retention and fallback), each with an example. | LLM Gateway Governance Config         | 26    | ✓       |
 
-### article (15)
+### article (16)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
@@ -77,6 +77,7 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/ai-readiness-assessment-template-for-smb`                   | ai readiness assessment template for smb                   | AI readiness assessment template for SMB — meshin.co                   | Use an AI readiness scorecard to assess a proposed workflow, record evidence, and decide what needs work before a pilot.                              | AI readiness assessment template for SMB                   | 32    | ✓       |
 | `/blog/ai-readiness-scorecard-five-drivers`                        | ai readiness scorecard five drivers                        | AI readiness scorecard five drivers — meshin.co                        | AI readiness scorecard five drivers: assess strategy, data, delivery, people, and governance for a specific workflow.                                 | AI readiness scorecard five drivers                        | 34    | ✓       |
 | `/blog/ai-vendor-assessment-questionnaire-template`                | ai vendor assessment questionnaire template                | AI vendor assessment questionnaire template — meshin.co                | Use an AI vendor assessment questionnaire template to check data handling, security, model changes and incident response before buying.               | AI vendor assessment questionnaire template                | 31    | ✓       |
+| `/blog/board-memo-ai-strategy-one-page`                            | board memo ai strategy one page                            | Board memo AI strategy one page — meshin.co                            | Write a board-ready AI strategy memo that sets out a decision, its evidence, risks, spending limits and accountable owner.                            | Board memo AI strategy one page                            | 31    | ✓       |
 | `/blog/build-vs-buy-ai-3-year-tco`                                 | build vs buy ai 3-year tco                                 | Build vs buy AI 3-year TCO — meshin.co                                 | Build vs buy AI 3-year TCO: compare costs across the same workload, risk controls and exit plan.                                                      | Build vs buy AI 3-year TCO                                 | 31    | ✓       |
 | `/blog/evals-in-ci-for-llm-agents`                                 | evals in ci without a golden answer                        | Evals in CI for LLM agents, without a golden answer — meshin.co        | How to build an eval set from production traffic, score an LLM agent without a golden answer, and fail a merge in CI when it regresses.               | Evals in CI for LLM agents, without a golden answer        | 29    | ✓       |
 | `/blog/fractional-caio-pricing`                                    | fractional caio pricing                                    | Fractional CAIO pricing — meshin.co                                    | Understand fractional CAIO pricing structures, compare proposals and identify costs to settle before work starts.                                     | Fractional CAIO pricing                                    | 33    | ✓       |
@@ -408,7 +409,8 @@ Why: the "five drivers" phrasing must appear verbatim-adjacent so retrieval can 
 
 **30. board memo AI strategy one page**
 Must win: `/services/ai-readiness-and-risk-assessment`.
-Passage: "Two weeks to a memo your board can act on." (service H1-adjacent lead; "ends in a memo your board can act on" in the body)
+Passage: "Two weeks to a memo your board can act on." (`/services/ai-readiness-and-risk-assessment`) (service H1-adjacent lead; "ends in a memo your board can act on" in the body)
+Passage: "A useful board memo asks for a specific decision and names the person accountable for carrying it out." (`/blog/board-memo-ai-strategy-one-page`)
 Why: the board-memo deliverable is the Assessment's output and the board-pressure trigger (PRD §6 Signals).
 
 ### Registers — entities, concepts, relationships
@@ -425,7 +427,7 @@ One owning route per entity. The mention count is inbound references from other 
 | Entity                         | Owned by                                   | Mentioned by |
 | ------------------------------ | ------------------------------------------ | ------------ |
 | Agentic workflow               | `/glossary/agentic-workflow`               | 13           |
-| AI governance                  | `/glossary/ai-governance`                  | 40           |
+| AI governance                  | `/glossary/ai-governance`                  | 41           |
 | AI impact assessment           | `/glossary/ai-impact-assessment`           | 2            |
 | AI management system           | `/glossary/ai-management-system`           | 6            |
 | AI operating model             | `/glossary/ai-operating-model`             | 16           |

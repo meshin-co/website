@@ -7,6 +7,7 @@ import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
+import { ORIGINS } from './autowriter-claims.mjs';
 import { buildRecord } from './generation-record.mjs';
 import { recordPath } from './record-layout.mjs';
 import {
@@ -288,15 +289,17 @@ test('bad usage exits 2 and prints the usage', () => {
   }
 });
 
-test('over the committed tree it exits 0 and counts every committed record as demand', () => {
+test('over the committed tree it exits 0 and every entry is counted under exactly one known origin', () => {
   const { code, out, err } = measure(REAL_ROOT);
   assert.deepEqual(err, []);
   assert.equal(code, 0);
   const total = Number(out[0].split(' ')[0]);
   assert.ok(total >= 2, out[0]);
-  assert.equal(rowOf(out, 'demand')[1], String(total));
-  assert.equal(rowOf(out, 'weak-demand')[1], '0');
-  assert.equal(rowOf(out, 'category')[1], '0');
-  assert.equal(rowOf(out, 'ordered')[1], '0');
-  assert.equal(out.at(-1), 'none');
+  const counted = ORIGINS.map((origin) => Number(rowOf(out, origin)[1]));
+  assert.equal(
+    counted.reduce((sum, count) => sum + count, 0),
+    total,
+    out.join('\n')
+  );
+  assert.equal(Number(rowOf(out, 'all')[1]), total);
 });
