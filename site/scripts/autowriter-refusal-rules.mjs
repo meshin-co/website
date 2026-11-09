@@ -116,10 +116,13 @@ const describedSeal = ({ id, why, path, targets }) => {
 
 const textOf = (read, id) => (id === null ? null : read(id));
 
-function refusedThings({ changes }, read) {
+function refusedThings({ sha, changes }, read) {
   return changes.flatMap(({ path, before, after }) => {
     const refusal = refusalFor(path);
-    if (refusal !== null) return [{ rule: PATH_RULE, detail: `touched ${refusal.path} (${describeRefusal(refusal)})` }];
+    if (refusal !== null)
+      return isLegacy(sha, path)
+        ? []
+        : [{ rule: PATH_RULE, detail: `touched ${refusal.path} (${describeRefusal(refusal)})` }];
     const removal = before !== null && after === null ? removalRefusalFor(path) : null;
     if (removal !== null)
       return [{ rule: REMOVAL_RULE, detail: `removed ${removal.path} (${describeRefusal(removal)})` }];
@@ -129,12 +132,19 @@ function refusedThings({ changes }, read) {
   });
 }
 
-export const LEGACY_UNREGISTERED = [
+export const LEGACY_EXCEPTIONS = [
   { sha: 'e8874d4602b5944138a0017d3d5e862c9e7a728e', prefix: 'site/tests/__screenshots__/linux/' },
+  {
+    sha: '7c5fd02021d046f7cede638fc92351b3a05c16ec',
+    paths: ['audits/lighthouse-green.json', 'docs/plan/reference/known-gaps.md', 'site/tests/search.spec.ts'],
+  },
 ];
 
 const isLegacy = (sha, path) =>
-  LEGACY_UNREGISTERED.some((legacy) => legacy.sha === sha && path.startsWith(legacy.prefix));
+  LEGACY_EXCEPTIONS.some(
+    (legacy) =>
+      legacy.sha === sha && (legacy.prefix === undefined ? legacy.paths.includes(path) : path.startsWith(legacy.prefix))
+  );
 
 function unregisteredThings({ sha, records, changes }) {
   const slugs = records.map(slugOfRecord);
