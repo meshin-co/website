@@ -121,6 +121,13 @@ const orderedClaimWithWeakness = () => ({
   weakness: ['no-buyer-prompt'],
 });
 
+const keywordClaimWithPrompt = () => ({
+  ...claimOn('A planted keyword specimen'),
+  format: 'article',
+  demand: { impressions: 803, position: null },
+  origin: 'keyword',
+});
+
 const planLedger = (addUntrackedFile, build) => (copySite) =>
   addUntrackedFile(join(copySite, '..', LEDGER_PATH), asJson(build()));
 
@@ -155,6 +162,11 @@ export const autowriterSpecimens = ({ addUntrackedFile, editFile, removeFile }) 
     gate: GATE,
     token: `claim-schema ${CLAIM_PATH}: weakness must be absent when origin is ordered`,
     plant: (copySite) => addUntrackedFile(join(copySite, '..', CLAIM_PATH), asJson(orderedClaimWithWeakness())),
+  },
+  autowriterKeywordClaimOffItsRules: {
+    gate: GATE,
+    token: `claim-schema ${CLAIM_PATH}: prompt must be absent when origin is keyword`,
+    plant: (copySite) => addUntrackedFile(join(copySite, '..', CLAIM_PATH), asJson(keywordClaimWithPrompt())),
   },
   autowriterEscalationFailed: {
     gate: GATE,

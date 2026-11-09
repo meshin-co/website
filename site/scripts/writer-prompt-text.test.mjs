@@ -73,7 +73,12 @@ const CATEGORY = withoutPrompt({
   demand: { impressions: 0, position: null },
 });
 const ORDERED = withoutPrompt({ origin: 'ordered', demand: { impressions: 0, position: null } });
-const PROMPTLESS = { 'weak-demand': WEAK, category: CATEGORY, ordered: ORDERED };
+const KEYWORD = withoutPrompt({
+  origin: 'keyword',
+  query: 'ai governance framework',
+  demand: { impressions: 803, position: null },
+});
+const PROMPTLESS = { 'weak-demand': WEAK, keyword: KEYWORD, category: CATEGORY, ordered: ORDERED };
 
 const hereRoot = makeRepo();
 after(() => removeRepo(hereRoot));
@@ -168,6 +173,18 @@ test('weak-demand: the entry is said to rest on a measured query with its impres
   assert.ok(origin.includes('average position 14.8'));
   assert.ok(origin.includes('no buyer prompt backs it'));
   assert.ok(origin.includes(WEAK.query));
+});
+
+test('keyword: the entry is said to rest on a phrase Bing measured with its exact impressions, with no route and no buyer prompt behind it', () => {
+  const { user } = build(KEYWORD);
+  const [origin] = linesOf(user, '- Origin:');
+  assert.ok(origin.startsWith('- Origin: keyword.'));
+  assert.ok(origin.includes('Bing'));
+  assert.ok(origin.includes('803 exact impressions'));
+  assert.ok(origin.includes(`"${KEYWORD.query}"`));
+  assert.ok(origin.includes('no route of this site serves it'));
+  assert.ok(origin.includes('No buyer prompt backs it'));
+  assert.ok(origin.includes('docs/SEMANTIC-CORE.md'));
 });
 
 test('category: the entry is said to cover the named category with the target query and no measured demand', () => {

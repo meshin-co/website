@@ -13,6 +13,7 @@ import { recordPath } from './record-layout.mjs';
 import {
   callOf,
   categoryInput,
+  keywordInput,
   orderedPromptInput,
   orderedTitleInput,
   recordInput,
@@ -27,6 +28,7 @@ const SCRIPT = join(HERE, 'measure-origins.mjs');
 const INPUTS = {
   demand: recordInput,
   'weak-demand': weakDemandInput,
+  keyword: keywordInput,
   category: categoryInput,
   ordered: orderedPromptInput,
 };
@@ -213,8 +215,8 @@ test('an ordered entry counts in the ordered row, whether it was ordered by prom
     assert.equal(code, 0);
     assert.equal(out[0], '6 entries');
     assert.deepEqual(
-      out.slice(2, 8).map((line) => cellsOf(line)[0]),
-      ['origin', 'demand', 'weak-demand', 'category', 'ordered', 'all']
+      out.slice(2, 4 + ORIGINS.length).map((line) => cellsOf(line)[0]),
+      ['origin', ...ORIGINS, 'all']
     );
     assert.deepEqual(rowOf(out, 'ordered'), [
       ...['ordered', '2', '4', '60000'],
@@ -234,6 +236,30 @@ test('the rewrite list holds an ordered entry only when it was ordered by title,
       ['slug', 'origin', 'category or weakness', 'date'],
       ['a-category-entry', 'category', 'governance', '2026-11-03'],
       ['an-ordered-title-entry', 'ordered', '2026-11-04'],
+      ['a-weak-entry', 'weak-demand', 'no-buyer-prompt', '2026-11-05'],
+    ]);
+  });
+});
+
+test('a keyword entry counts in its own row and appears in the rewrite list with no category or weakness', () => {
+  withRoot((root) => {
+    mixedTree(root);
+    plant(root, recordOf({ origin: 'keyword', slug: 'a-keyword-entry', at: '2026-11-04T07:00:00.000Z' }));
+    const { code, out, err } = measure(root);
+    assert.deepEqual(err, []);
+    assert.equal(code, 0);
+    assert.equal(out[0], '5 entries');
+    assert.deepEqual(rowOf(out, 'keyword'), [
+      ...['keyword', '1', '2', '30000'],
+      ...['0.0000', '0.0500', '0.0000', '0.0500', '0.0500'],
+    ]);
+    assert.equal(rowOf(out, 'demand')[1], '2');
+    assert.equal(rowOf(out, 'category')[1], '1');
+    const start = out.findIndex((line) => line.startsWith('written without a buyer prompt'));
+    assert.deepEqual(out.slice(start + 1).map(cellsOf), [
+      ['slug', 'origin', 'category or weakness', 'date'],
+      ['a-category-entry', 'category', 'governance', '2026-11-03'],
+      ['a-keyword-entry', 'keyword', '2026-11-04'],
       ['a-weak-entry', 'weak-demand', 'no-buyer-prompt', '2026-11-05'],
     ]);
   });

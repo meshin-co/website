@@ -82,6 +82,20 @@ export const reportText = ({ prompts = [], queries = [] } = {}) =>
     '',
   ].join('\n');
 
+export const keywordReportText = ({ candidates = [], measured = '2026-11-09' } = {}) =>
+  [
+    '# Keyword demand: what Bing measured',
+    '',
+    `Measured: ${measured} (window 2026-05-16 to 2026-11-07)`,
+    '',
+    '## Candidates',
+    '',
+    candidates.length === 0
+      ? 'No phrase with an exact impression lacks a route that serves it.'
+      : table(['Phrase', 'Exact', 'Broad'], candidates),
+    '',
+  ].join('\n');
+
 export const postSource = ({ title, category, publishDate }) => {
   const head = ['---', `title: '${title}'`, `category: ${category}`, `publishDate: ${publishDate}`, '---'];
   return [...head, '', 'Body.', ''].join('\n');
@@ -133,13 +147,17 @@ function sceneOf(root) {
   };
 }
 
-export async function withPickRepo({ report = reportText(), posts = {}, core = EMPTY_CORE } = {}, body) {
+export async function withPickRepo(
+  { report = reportText(), keywords = null, posts = {}, core = EMPTY_CORE } = {},
+  body
+) {
   const root = mkdtempSync(join(tmpdir(), 'pick-scene-'));
   try {
     mkdirSync(join(root, POSTS), { recursive: true });
     mkdirSync(join(root, 'docs'), { recursive: true });
     put(root, 'docs/SEMANTIC-CORE.md', core);
     put(root, 'audits/search-demand.md', report);
+    if (keywords !== null) put(root, 'audits/keyword-demand.md', keywords);
     put(root, 'site/src/config.yaml', `site:\n  name: ${BRAND}\n`);
     put(root, 'site/content-facts.json', '{}\n');
     for (const [slug, frontmatter] of Object.entries(posts)) put(root, `${POSTS}/${slug}.md`, postSource(frontmatter));

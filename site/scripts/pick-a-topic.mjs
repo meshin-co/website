@@ -16,6 +16,7 @@ import { readPromptSources } from './topic-core.mjs';
 import { buildRun } from './topic-entries.mjs';
 import { CATCH_UP_AFTER_MINUTES, STOPPED_RUN_RETRIES_PER_DAY, WRITE_TIMES_UTC } from './schedule-workflow.mjs';
 import { slotStanding } from './slot-standing.mjs';
+import { readKeywords } from './topic-keywords.mjs';
 import { readConceptRegister, routeOf } from './topic-owners.mjs';
 import { proposalLines, proposeTopic, wantsProposal } from './topic-proposal.mjs';
 import { selectTopic } from './topic-selection.mjs';
@@ -144,6 +145,7 @@ function gatherInputs({ repoRoot, settings, now, rotation, order }) {
   const suffix = readInput(repoRoot, CONFIG_PATH, (text) => titleSuffix(readBrand(text)));
   return {
     report,
+    keywords: readKeywords(repoRoot),
     concepts: readConceptRegister(core),
     generated: generatedTitles(core),
     promptSources: readPromptSources(core),

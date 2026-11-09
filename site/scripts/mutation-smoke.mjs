@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+import { KEYWORD_CHECKS, runKeywordCheck } from './keyword-guard-checks.mjs';
 import { proveRecordRefusal } from './lh-record-family.mjs';
 import { ORDER_CHECKS, runOrderCheck } from './order-guard-checks.mjs';
 import { REPAIR_CHECKS, runRepairCheck } from './repair-guard-checks.mjs';
@@ -17,7 +18,7 @@ const REPO = resolve(SITE, '..');
 const FIXTURES = join(SITE, 'tests', 'guard-mutations', 'fixtures');
 const LIVE_POST_TARGET = 13;
 const GATES = ['budget', 'jsonld', 'jsonld-properties', 'content-gate', 'docs', 'external'];
-const CHECKS = ['semantic-title', ...Object.keys(REPAIR_CHECKS), ...Object.keys(ORDER_CHECKS)];
+const CHECKS = ['semantic-title', ...Object.keys({ ...REPAIR_CHECKS, ...ORDER_CHECKS, ...KEYWORD_CHECKS })];
 const SCOPES = ['category', 'tag'];
 
 export const FAMILIES = [
@@ -139,6 +140,12 @@ export const FAMILIES = [
     id: 'autowriter-ordered-claim-contradicts-its-origin',
     kind: 'specimen',
     specimen: 'autowriterOrderedClaimOffItsRules',
+  },
+  { id: 'keyword-rung-breaks-the-ladder', kind: 'pure', proves: 'pick:topic', check: 'keyword-rung-in-the-ladder' },
+  {
+    id: 'autowriter-keyword-claim-contradicts-its-origin',
+    kind: 'specimen',
+    specimen: 'autowriterKeywordClaimOffItsRules',
   },
   { id: 'agents-content-signal', kind: 'specimen', specimen: 'agents' },
   { id: 'agents-openapi-drift', kind: 'specimen', specimen: 'agents-openapi-drift' },
@@ -773,9 +780,9 @@ const EXECUTORS = {
   gate: (copySite, entry, work) => runGateFamily(copySite, entry, work),
   pure: (copySite, entry) => {
     if (entry.check === 'semantic-title') return runPureFamily(copySite);
-    return Object.hasOwn(ORDER_CHECKS, entry.check)
-      ? runOrderCheck(entry.check, copySite)
-      : runRepairCheck(entry.check, copySite);
+    if (Object.hasOwn(ORDER_CHECKS, entry.check)) return runOrderCheck(entry.check, copySite);
+    if (Object.hasOwn(KEYWORD_CHECKS, entry.check)) return runKeywordCheck(entry.check, copySite);
+    return runRepairCheck(entry.check, copySite);
   },
   pagination: (copySite, entry) => runPaginationFamily(copySite, entry),
   specimen: async (copySite, entry, work) => {

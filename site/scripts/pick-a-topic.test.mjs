@@ -16,7 +16,7 @@ import { BAND_FILE } from './sentence-band.mjs';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPORT = 'audits/search-demand.md';
 const INPUT_KEYS =
-  'claims concepts forms generated ledgerPaths now order posts promptSources report rotation settings suffix'.split(
+  'claims concepts forms generated keywords ledgerPaths now order posts promptSources report rotation settings suffix'.split(
     ' '
   );
 const NOW = new Date('2026-11-02T04:00:00.000Z');
@@ -316,6 +316,7 @@ test('the selection receives every input, the settings and the instant', async (
     assert.deepEqual(inputs.settings, { termArm: false, termCap: 3 });
     assert.equal(inputs.now.toISOString(), NOW.toISOString());
     assert.equal(inputs.report.measured, '2026-11-01');
+    assert.deepEqual(inputs.keywords.candidates, []);
     assert.ok(inputs.concepts.length > 0 && inputs.generated.length > 0 && inputs.promptSources.size > 0);
   });
 });

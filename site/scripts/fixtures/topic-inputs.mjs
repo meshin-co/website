@@ -55,6 +55,21 @@ export const reportOf = (prompts, queries = []) => ({
   prompts,
 });
 
+export const keywordRow = (phrase, exact, broad = exact) => ({ phrase, exact, broad });
+
+export const keywordsOf = (candidates = [], extra = {}) => ({
+  measured: '2026-11-09',
+  windowStart: '2026-05-16',
+  windowEnd: '2026-11-07',
+  market: 'country us, language en-US',
+  generatedFrom: 'b5d0639',
+  run: null,
+  phrases: [],
+  candidates,
+  unmeasured: [],
+  ...extra,
+});
+
 export const sourcesOf = (byNumber) =>
   new Map(
     Object.entries(byNumber).map(([number, source]) => [Number(number), { routes: [], retired: false, ...source }])
@@ -73,6 +88,7 @@ export const GENERATED = [
 
 export const inputsFor = (report, extra = {}) => ({
   report,
+  keywords: keywordsOf(),
   concepts: CONCEPTS,
   generated: GENERATED,
   promptSources: new Map(),

@@ -53,6 +53,12 @@ const PROPOSAL_CALL = {
 };
 const CATEGORY_SHAPES = { [CATEGORY_POST.slug]: { row: null, table: null, proposal: { calls: [PROPOSAL_CALL] } } };
 const WEAK_SHAPES = { [WEAK_POST.slug]: { row: QUERIES_ROW, table: 'Queries' } };
+const KEYWORD_POST = {
+  ...withoutPrompt(POST),
+  demand: { impressions: 803, position: null },
+  origin: 'keyword',
+};
+const KEYWORD_SHAPES = { [KEYWORD_POST.slug]: { row: null, table: null } };
 const ORDERED_TITLE_POST = { ...withoutPrompt(POST), demand: { impressions: 0, position: null }, origin: 'ordered' };
 const ORDERED_PROMPT_POST = { ...POST, origin: 'ordered' };
 const ORDERED_TITLE_SHAPES = { [ORDERED_TITLE_POST.slug]: { row: null, table: null } };
@@ -551,6 +557,31 @@ test('a weak-demand entry is written with its row and weakness, no prompt and no
   const { message } = run.commitCalls[0];
   assert.match(message, /^Origin: weak-demand$/m);
   assert.match(message, /^Weak query: no-buyer-prompt, impressions-at-floor$/m);
+  assert.doesNotMatch(message, /Serves buyer prompt|^Category:/m);
+});
+
+test('a keyword entry is written with its exact impressions, no prompt, no report row and no report table, and the message names the keyword', async () => {
+  const run = await drive({
+    claims: [KEYWORD_POST],
+    shapes: KEYWORD_SHAPES,
+    steps: [answer(1, cleanDraft('article'))],
+  });
+  assert.ifError(run.error);
+  const { record } = savedOf(run, KEYWORD_POST);
+  assert.deepEqual(validateRecord(record), []);
+  assert.deepEqual(record.claim, {
+    title: KEYWORD_POST.title,
+    query: KEYWORD_POST.query,
+    origin: 'keyword',
+  });
+  assert.deepEqual(
+    [record.demand.impressions, record.demand.position, record.demand.row, record.demand.report.table],
+    [803, null, null, null]
+  );
+  assert.deepEqual(record.published, { callIndex: 0 });
+  const { message } = run.commitCalls[0];
+  assert.match(message, /^Origin: keyword$/m);
+  assert.match(message, new RegExp(`^Keyword: ${KEYWORD_POST.query}$`, 'm'));
   assert.doesNotMatch(message, /Serves buyer prompt|^Category:/m);
 });
 

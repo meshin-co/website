@@ -15,7 +15,7 @@ npm run pick:topic -- [--write --output <file>] [--run-id <id>] [--now <ISO date
 - With no flag it previews: it prints the decision and writes nothing. `--now` fixes the clock.
 - `--write` writes each claim, the ledger and, to `--output`, the decision file. Exit 0 for every decision, 1 for an
   unreadable input, a failed write or a failed proposal (last stdout line `{"ok":false,"kind":...}`), 2 for a bad flag or setting.
-- `--summary` appends a Markdown summary; `--run-id` tags claims and ledger. A preview calls no model; `--write` calls one only on rung 3 (`write-on-a-category.md`).
+- `--summary` appends a Markdown summary; `--run-id` tags claims and ledger. A preview calls no model; `--write` calls one only on the category rung (`write-on-a-category.md`).
 - `--order-prompt <number>` or `--order-title <text>` orders a topic by hand. It wins over every rung below, is checked like the post arm and never falls back: a refused order ends in `none` (`order-a-topic-by-hand.md`).
 
 ## The post arm
@@ -50,13 +50,10 @@ a repeat of the post's concept is skipped. `WRITING_TERM_CAP` (unset means 1) bo
 
 ## Strengthen reports and proposals
 
-A measured query at a position from 8 to 30 (`scripts/topic-demand.mjs`) is never a new page: it is a
-strengthen report naming its route, query and number, for a human. When no rung gives a topic, the first
-report is the decision `strengthen`: no claim, and no spend unless proposals were made. The report in
-`audits/search-demand.md` is the evidence for the band; read it before moving the band. Below 8 the page is
-already on page one and above 30 it is not one step away. A measured query no prompt names, with no answering page
-and a question or procedure cue, is a proposal for a new buyer prompt, and with no unproven prompt left the best one is written as a `weak-demand` post (rung 2). The owner adopts a prompt; the machine
-never does.
+A measured query at a position from 8 to 30 (`scripts/topic-demand.mjs`) is never a new page: it is a strengthen report naming its route, query and number, for a human. When no rung gives a topic, the first report is the decision `strengthen`: no claim, and no spend unless proposals were made. The report in `audits/search-demand.md` is the evidence for the band; read it before moving the band. Below 8 the page is
+already on page one and above 30 it is not one step away. A measured query no prompt names, with no answering page and a question or procedure cue, is a proposal for a new buyer prompt, and with no unproven prompt left the best one is written as a `weak-demand` post (rung 2). The owner adopts a prompt; the machine never does.
+
+With no such lead, the picker walks the candidates of `audits/keyword-demand.md` (`scripts/topic-keywords.mjs`, L69), most exact impressions first, through `examineQuery` unchanged. An unowned concept is a `write` decision of origin `keyword` with `fallback: null`, so no model is called. A concept the register owns becomes a strengthen advisory for its route and the walk goes on; any other refusal is skipped into the trail. When none survives, the category rotation (rung 4) takes over. `scripts/keyword-guard-checks.mjs` proves in `npm run test:smoke` that the rung sits before the rotation, loses to a Search Console lead, skips an occupied candidate, advises and never writes a register-owned one, and treats a missing report as no error.
 
 ## The claim, before the Writer's model
 
@@ -69,12 +66,8 @@ when a run dies; `scripts/escalate-run.mjs` reports a failed step. A claim carri
 ## The decision file
 
 `schema`, `decision`, `ledgerPath`, `entries` (the post first; each has `claimPath`, `claim`, `row`,
-`table`, `choice`, and for a category entry `proposal`, the `{calls}` of the pick, with `row` and `table` null), `report` (path, measured date, window, property) and `refusals`; `buildRun` in
-`scripts/topic-entries.mjs` builds it. The Writer reads only this file. A `strengthen` or `none` file
-holds `decision`, the choice or reason, and `advisories`.
+`table`, `choice`, and for a category entry `proposal`, the `{calls}` of the pick, with `row` and `table` null), `report` (path, measured date, window, property) and `refusals`; `buildRun` in `scripts/topic-entries.mjs` builds it. The Writer reads only this file. A `strengthen` or `none` file holds `decision`, the choice or reason, and `advisories`.
 
 ## Limits
 
-Signal 3 creates a post only on rung 2 (`write-on-a-category.md`), with no prompt and no passage; a measured query
-no prompt names stays a proposal. The machine cannot judge whether a page answers a query; the register
-and the route lists decide, and a wrong owner row gives a wrong refusal. Impressions are not wins.
+Signal 3 creates a post only on rung 2, with no prompt and no passage; a measured query no prompt names stays a proposal. The machine cannot judge whether a page answers a query; the register and the route lists decide, and a wrong owner row gives a wrong refusal. Impressions are not wins.

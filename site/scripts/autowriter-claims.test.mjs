@@ -314,6 +314,14 @@ const categoryClaim = (extra = {}) => ({
   category: 'governance',
   ...extra,
 });
+const keywordClaim = (extra = {}) => ({
+  ...without(claim(), 'prompt'),
+  query: 'ai governance framework',
+  format: 'article',
+  demand: { impressions: 803, position: null },
+  origin: 'keyword',
+  ...extra,
+});
 const orderedByPrompt = (extra = {}) => claim({ format: 'article', origin: 'ordered', ...extra });
 const orderedByTitle = (extra = {}) => ({
   ...without(claim(), 'prompt'),
@@ -324,8 +332,8 @@ const orderedByTitle = (extra = {}) => ({
 });
 const quoted = (values) => values.map((value) => JSON.stringify(value)).join(', ');
 
-test('the origins are the three rungs of the picker and the topic a person ordered, and the weakness reasons are the three things a weak query lacks', () => {
-  assert.deepEqual(ORIGINS, ['demand', 'weak-demand', 'category', 'ordered']);
+test('the origins are the rungs of the picker and the topic a person ordered, and the weakness reasons are the three things a weak query lacks', () => {
+  assert.deepEqual(ORIGINS, ['demand', 'weak-demand', 'keyword', 'category', 'ordered']);
   assert.deepEqual(WEAKNESS_REASONS, ['no-buyer-prompt', 'impressions-at-floor', 'position-beyond-strengthen-band']);
 });
 
@@ -342,6 +350,8 @@ test('a well-formed claim of every origin has no problems, and so has a claim wr
   assert.deepEqual(validateClaim(weakClaim()), []);
   assert.deepEqual(validateClaim(weakClaim({ weakness: [...WEAKNESS_REASONS] })), []);
   for (const category of CATEGORIES) assert.deepEqual(validateClaim(categoryClaim({ category })), [], category);
+  assert.deepEqual(validateClaim(keywordClaim()), []);
+  assert.deepEqual(validateClaim(keywordClaim({ demand: { impressions: 1, position: null } })), []);
   assert.deepEqual(validateClaim(orderedByPrompt()), []);
   assert.deepEqual(validateClaim(orderedByPrompt({ demand: { impressions: 0, position: null } })), []);
   assert.deepEqual(validateClaim(orderedByTitle()), []);
@@ -484,6 +494,49 @@ const ORIGIN_DEFECTS = [
     orderedByPrompt({ demand: { impressions: 4, position: null } }),
     ['demand.position must be a number when impressions is above 0'],
   ],
+  [
+    'a weak-demand claim with the impressions of a keyword claim',
+    weakClaim({ demand: { impressions: 803, position: null } }),
+    [
+      'demand.position must be a number when impressions is above 0',
+      'demand.position must be a number when origin is weak-demand',
+    ],
+  ],
+  [
+    'a keyword claim that carries a prompt',
+    keywordClaim({ prompt: { number: 7, text: 'x' } }),
+    ['prompt must be absent when origin is keyword'],
+  ],
+  [
+    'a keyword claim that names a category',
+    keywordClaim({ category: 'governance' }),
+    ['category must be absent when origin is keyword'],
+  ],
+  [
+    'a keyword claim that names a weakness',
+    keywordClaim({ weakness: ['no-buyer-prompt'] }),
+    ['weakness must be absent when origin is keyword'],
+  ],
+  [
+    'a keyword claim with no impressions',
+    keywordClaim({ demand: { impressions: 0, position: null } }),
+    ['demand.impressions must be at least 1 when origin is keyword'],
+  ],
+  [
+    'a keyword claim with a position',
+    keywordClaim({ demand: { impressions: 803, position: 12.5 } }),
+    ['demand.position must be null when origin is keyword'],
+  ],
+  [
+    'a keyword claim with a position and no impressions',
+    keywordClaim({ demand: { impressions: 0, position: 12 } }),
+    [
+      'demand.position must be null when impressions is 0',
+      'demand.impressions must be at least 1 when origin is keyword',
+      'demand.position must be null when origin is keyword',
+    ],
+  ],
+  ['a keyword claim for a term', keywordClaim({ format: 'term' }), ['format must be article when origin is keyword']],
 ];
 
 for (const [name, value, expected] of ORIGIN_DEFECTS) {
@@ -552,9 +605,9 @@ test('originProblems refuses an unknown origin instead of letting it pass every 
   ]);
 });
 
-test('an unknown origin is refused with the four origins listed in the order of the schema', () => {
+test('an unknown origin is refused with the five origins listed in the order of the schema', () => {
   assert.deepEqual(originProblems({ origin: 'video' }), [
-    { path: '$.origin', problem: 'must be one of "demand", "weak-demand", "category", "ordered"' },
+    { path: '$.origin', problem: 'must be one of "demand", "weak-demand", "keyword", "category", "ordered"' },
   ]);
 });
 

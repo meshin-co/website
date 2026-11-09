@@ -104,6 +104,7 @@ test('the specimen module names every failure mode of the gate, each against gat
     'autowriterGenerationOriginMismatch',
     'autowriterGenerationWithoutBand',
     'autowriterJobOutsideAggregate',
+    'autowriterKeywordClaimOffItsRules',
     'autowriterLedgerOffSchema',
     'autowriterLengthRecordCorpusDrifted',
     'autowriterLengthRecordFedByTheEntry',
@@ -369,6 +370,25 @@ test('the ordered claim specimen is an article claim ordered by title that holds
     assert.equal(Object.hasOwn(claim, 'category'), false);
     assert.ok(Array.isArray(claim.weakness) && claim.weakness.length > 0);
     assert.deepEqual(lines, [`AUTOWRITER claim-schema ${CLAIM}: weakness must be absent when origin is ordered`]);
+  });
+});
+
+test('the keyword claim specimen is a measured article claim that still holds a buyer prompt, and the gate names that one rule', async () => {
+  await inTempRepo(async (root) => {
+    const restore = await planted('autowriterKeywordClaimOffItsRules', root);
+    const claim = JSON.parse(readFileSync(join(root, CLAIM), 'utf8'));
+    const lines = gate(root)
+      .stderr.trim()
+      .split('\n')
+      .filter((text) => text.includes(CLAIM));
+    await restore();
+    assert.equal(claim.origin, 'keyword');
+    assert.equal(claim.format, 'article');
+    assert.deepEqual(claim.demand, { impressions: 803, position: null });
+    assert.equal(typeof claim.prompt, 'object');
+    assert.equal(Object.hasOwn(claim, 'category'), false);
+    assert.equal(Object.hasOwn(claim, 'weakness'), false);
+    assert.deepEqual(lines, [`AUTOWRITER claim-schema ${CLAIM}: prompt must be absent when origin is keyword`]);
   });
 });
 

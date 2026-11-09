@@ -166,6 +166,8 @@ const demandText = ({ impressions, position }, row) =>
 const ORIGIN_FACTS = {
   category: (claim) =>
     `Origin: category. This entry is written to cover the category ${claim.category}, with the target query "${claim.query}", and no measured demand exists for it yet. It must still answer exactly one question and define no concept that the concept register of docs/SEMANTIC-CORE.md assigns elsewhere. Set the category field of the entry to "${claim.category}".`,
+  keyword: (claim) =>
+    `Origin: keyword. The target query "${claim.query}" is a phrase Bing measured with ${claim.demand.impressions} exact impressions, and no route of this site serves it. No buyer prompt backs it. It must still answer exactly one question and define no concept that the concept register of docs/SEMANTIC-CORE.md assigns elsewhere.`,
   'weak-demand': (claim) =>
     `Origin: weak-demand. The target query "${claim.query}" was measured in Search Console with ${claim.demand.impressions} impressions and ${positionText(claim.demand.position)}, and no buyer prompt backs it. It must still answer exactly one question.`,
   ordered: (claim) =>

@@ -229,6 +229,20 @@ export function categoryInput() {
   };
 }
 
+export function keywordInput() {
+  const input = recordInput();
+  return {
+    ...input,
+    claim: {
+      ...withoutPrompt(input.claim),
+      query: 'ai governance framework',
+      demand: { impressions: 803, position: null },
+      origin: 'keyword',
+    },
+    decision: { ...input.decision, row: null, report: { ...input.decision.report, table: null } },
+  };
+}
+
 export function orderedPromptInput() {
   const input = recordInput();
   return { ...input, claim: { ...input.claim, origin: 'ordered' } };
