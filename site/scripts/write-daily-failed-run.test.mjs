@@ -70,3 +70,14 @@ test('a ledger committed alone leaves the committed report stale, and the regene
   );
   assert.deepEqual(spendReportFindings({ ...landed, committed: reportText(landed, REVISION, GENERATED_AT) }), []);
 });
+
+test('the claim commit holds the report beside the ledger, because the ledger it commits already records spend', () => {
+  const step = STEPS.find(({ id }) => id === 'claim');
+  assert.ok(step, 'no step commits the claims');
+  assert.match(step.run, /spend-report\.mjs/);
+  assert.ok(step.run.includes(`--path ${REPORT_PATH}`), step.run);
+  assert.ok(
+    step.run.indexOf('spend-report.mjs') < step.run.indexOf('commit-to-main.mjs'),
+    'the report is regenerated before it is committed'
+  );
+});

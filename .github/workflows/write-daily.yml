@@ -251,7 +251,8 @@ jobs:
           if [ -n "$terms" ]; then message="$message"$'\n\n'"$terms"; fi
           paths=()
           while IFS= read -r path; do paths+=(--path "$path"); done < <(jq -r '.entries[].claimPath, .ledgerPath' "$DECISION_FILE")
-          outcome="$(node scripts/commit-to-main.mjs --message "$message" "${paths[@]}")"
+          node scripts/spend-report.mjs
+          outcome="$(node scripts/commit-to-main.mjs --message "$message" "${paths[@]}" --path audits/spend-report.md)"
           echo "$outcome"
           case "$outcome" in
             committed\ *) ;;
