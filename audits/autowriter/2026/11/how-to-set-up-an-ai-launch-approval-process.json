@@ -6,23 +6,41 @@
   "attempts": [],
   "spend": {
     "tokens": {
-      "input": 1940,
-      "output": 198
+      "input": 25615,
+      "output": 7120
     },
-    "costUsd": 0.00293
+    "costUsd": 0.061215
   },
   "verdict": {
-    "state": "open",
-    "reason": null,
-    "decidedAt": null
+    "state": "escalated",
+    "reason": "Write daily stopped while writing how-to-set-up-an-ai-launch-approval-process (build)",
+    "decidedAt": "2026-11-09T17:52:52.863Z"
   },
-  "escalations": [],
+  "escalations": [
+    {
+      "id": "esc-1",
+      "kind": "hard-stop",
+      "title": "Write daily stopped while writing how-to-set-up-an-ai-launch-approval-process (build)",
+      "detail": "npm run write:entry failed with kind build: npm run gate:editorial exited with status 1:\neditorial ledger: 2383 rows across 124 routes { rewritten: 2132, verified: 249, unreviewed: 2 }\nshipped text tracing to no source row: 0\nsource copy no page ships: 10 (14 declared state-conditional, 0 unexplained, 4 that the build now ships: reported, not gated)\ndispositions: 452 declared, 0 stale, 0 naming a missing file, 29 on files with no copy rows (reported, not gated)\nfindings: 2\n  unreviewed copy (2):\n    /blog/tag/ai-governance/page/2 | AI governance posts, page 2 — meshin.co\n    /blog/tag/ai-governance/page/2 | AI governance posts, page 2. Spend recorded so far: 0.061215 USD. The claim for how-to-set-up-an-ai-launch-approval-process is marked abandoned and keeps its slug, so the next catch-up run of the day writes a different topic.",
+      "raisedAt": "2026-11-09T17:52:52.322Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-09T17:52:52.322Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 127,
+          "error": null
+        }
+      ]
+    }
+  ],
   "generation": {
     "tokens": {
-      "input": 1940,
-      "output": 198
+      "input": 25615,
+      "output": 7120
     },
-    "costUsd": 0.00293
+    "costUsd": 0.061215
   },
   "refusals": [
     {
