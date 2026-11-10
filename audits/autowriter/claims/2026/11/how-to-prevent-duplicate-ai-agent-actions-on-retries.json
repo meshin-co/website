@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "slug": "how-to-prevent-duplicate-ai-agent-actions-on-retries",
+  "title": "How to prevent duplicate AI agent actions on retries",
+  "format": "article",
+  "query": "how to prevent duplicate ai agent actions on retries",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "origin": "category",
+  "category": "agentic-architecture",
+  "catchUp": {
+    "slot": "06:00",
+    "lateMinutes": 104
+  },
+  "runId": "42777182248-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-10T07:44:29.271Z",
+  "expiresAt": "2026-11-24T07:44:29.271Z"
+}
