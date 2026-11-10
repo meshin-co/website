@@ -102,8 +102,9 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
   `/feed.json`, `/rss.xml` plus six per-collection feeds, `/og/*.png`, the search index in
   `/search-index/`, sitemap, `/openapi.json`, `/.well-known/api-catalog`,
   `/.well-known/ai-catalog.json`) are build outputs.
-  Verify them in `dist/`, not in source. The agent-facing half — the `Content-Signal` and
-  `Agentmap` directives, the OpenAPI document, the linkset and the capability manifest — is held
+  Verify them in `dist/`, not in source. The agent-facing half — the `Content-Signal` policy, stated in all
+  23 `robots.txt` groups and in the response header from one definition, the `<link rel="ai-catalog">`
+  the catalogue is discovered through, the OpenAPI document, the linkset and the capability manifest — is held
   together by `npm run gate:agents`; the procedure is `site/.agents/skills/agent-interfaces.md`,
   and `site/.agents/skills/ai-agent-readiness/` covers the twenty protocols and the rule that a
   card is published only when the service behind it is real.
@@ -160,7 +161,10 @@ not kept for the count.
 - **Fast** — the unit tests (run `npm test` for the current count) run in about four seconds
   together. A test that needs a build or a browser belongs in Playwright, not `node:test`.
 - **Independent** — no shared mutable state, no ordering assumption. Each mutation family
-  synthesises its own fixture tree; no test mutates the real `src/`.
+  synthesises its own fixture tree; no test mutates the real `src/`. No test reads a file an export
+  leaves behind (`docs/SEMANTIC-CORE.md`, anything under `audits/`): it builds the corpus it needs
+  (`site/scripts/fixtures/semantic-core-scene.mjs` holds a core), or it asserts a fact of this site
+  and is named `*.site.test.mjs`, which the export does not carry.
 - **Repeatable** — same result on any machine. Visual baselines are per platform for this reason,
   and an emulated container is never evidence about a runner (`visual-baselines.md`).
 - **Self-validating** — the test asserts; it never prints for a human to read. A guard is only

@@ -22,7 +22,6 @@ import {
 import { run } from './measure-origins.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const REAL_ROOT = join(HERE, '..', '..');
 const SCRIPT = join(HERE, 'measure-origins.mjs');
 
 const INPUTS = {
@@ -315,17 +314,25 @@ test('bad usage exits 2 and prints the usage', () => {
   }
 });
 
-test('over the committed tree it exits 0 and every entry is counted under exactly one known origin', () => {
-  const { code, out, err } = measure(REAL_ROOT);
-  assert.deepEqual(err, []);
-  assert.equal(code, 0);
-  const total = Number(out[0].split(' ')[0]);
-  assert.ok(total >= 2, out[0]);
-  const counted = ORIGINS.map((origin) => Number(rowOf(out, origin)[1]));
-  assert.equal(
-    counted.reduce((sum, count) => sum + count, 0),
-    total,
-    out.join('\n')
-  );
-  assert.equal(Number(rowOf(out, 'all')[1]), total);
+test('over a tree holding an entry of every origin and one with no origin, it exits 0 and every entry is counted under exactly one known origin', () => {
+  withRoot((root) => {
+    orderedTree(root);
+    plant(root, recordOf({ origin: 'keyword', slug: 'a-keyword-entry', at: '2026-11-04T09:00:00.000Z' }));
+    const { code, out, err } = measure(root);
+    assert.deepEqual(err, []);
+    assert.equal(code, 0);
+    const total = Number(out[0].split(' ')[0]);
+    assert.equal(total, 7, out[0]);
+    const counted = ORIGINS.map((origin) => Number(rowOf(out, origin)[1]));
+    assert.ok(
+      counted.every((count) => count >= 1),
+      out.join('\n')
+    );
+    assert.equal(
+      counted.reduce((sum, count) => sum + count, 0),
+      total,
+      out.join('\n')
+    );
+    assert.equal(Number(rowOf(out, 'all')[1]), total);
+  });
 });

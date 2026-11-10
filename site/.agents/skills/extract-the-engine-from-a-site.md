@@ -13,7 +13,7 @@ Every tracked file is `engine`, `site` or `evidence`. The first entry of `RULES`
 `scripts/engine-partition.mjs` that fits a file decides. Each rule reads a property the file has: where it
 lives, whether a script reads it, whether it names a collection entry, whether a generator writes it. No
 rule reads a list of paths. `--list` prints every file with its class and rule; `--root <dir>` reads another
-tree. The last line gives the three counts and the findings; the exit code is 1 while any remain.
+tree. The last line gives the three counts and the findings; the exit code is 1 while any remain. `scripts/tracked-files.mjs` lists the files git tracks; in a copy that is not yet a repository the gate prints `not-a-repository` (run `git init && git add -A`) or `nothing-tracked` (run `git add -A`) and exits 1.
 `npm run gate:partition` runs in CI. When `site/package.json` carries `--allow site-bound=N`, up to N engine
 files that name this site print as `ALLOWED` and the next one fails with all listed; lower N as files are fixed. `scripts/partition-specimens.mjs` plants failures.
 
@@ -26,7 +26,7 @@ the collections from `site/src/content.config.ts`, the script directories and `a
 - **engine:** scripts, tests, workflows, skills, specs, shipped source, page templates, endpoints and the
   starters under `seed/`.
 - **site:** collection entries, the vocabulary beside them, static pages with copy, served assets, files a
-  generator writes, prose no script names, and every file a seed replaces.
+  generator writes, prose no script or skill names, and every file a seed replaces.
 - **evidence:** `audits/`, `investigation/`, `openspec/changes/`, screenshots and the captures of external documents. They
   record one site and never travel.
 
@@ -55,7 +55,7 @@ before an export goes out and after a change to `seed/` or the content schema. `
 
 ## 5. Defaults that decide a file nobody named
 
-- A document under `docs/` is engine only when a script, workflow, hook or rule names its path and it names no site; every other document is site prose.
+- A document under `docs/` is engine only when a script, workflow, hook, rule or skill (one not marked `.site`) names its path and it names no site; every other document is site prose.
 - A static page missing from `NOINDEX_STATIC_PAGES` is site copy, even when it is a collection hub; its catalogue entry is in `site/src/data/static-pages.mjs`, which the export seeds.
 - A skill that cites a site or evidence path dangles in a copy, and `gate:skills` reports it. Cite the command
   that writes a record instead of the record, or seed the file the skill needs.

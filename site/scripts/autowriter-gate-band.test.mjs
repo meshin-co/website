@@ -15,7 +15,9 @@ import {
   bandSceneFiles,
   recordWith,
 } from './fixtures/record-rules-scene.mjs';
+import { SCENE_CORE } from './fixtures/semantic-core-scene.mjs';
 import { plantSpendReport } from './fixtures/spend-report-plant.mjs';
+import { siteBrand } from './site-brand.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
 const REPO = resolve(SITE, '..');
@@ -26,8 +28,8 @@ function inTempRepo(plant, check) {
   const root = mkdtempSync(join(tmpdir(), 'autowriter-gate-band-'));
   try {
     for (const [path, text] of Object.entries({
-      'site/src/config.yaml': 'site:\n  name: meshin.co\n',
-      'docs/SEMANTIC-CORE.md': readFileSync(join(REPO, 'docs/SEMANTIC-CORE.md'), 'utf8'),
+      'site/src/config.yaml': `site:\n  name: ${siteBrand().name}\n`,
+      'docs/SEMANTIC-CORE.md': SCENE_CORE,
       '.github/workflows/ci.yml': readFileSync(join(REPO, '.github/workflows/ci.yml'), 'utf8'),
       ...bandSceneFiles(),
       ...plant,

@@ -13,7 +13,7 @@ import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { TAGS, tagArchive } from '~/data/tags.mjs';
 import { breadcrumbNode, collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
-import { paginate, paginationLinks } from '~/utils/paginate.mjs';
+import { pageHeading, paginate, paginationLinks } from '~/utils/paginate.mjs';
 import { readingTime } from '~/utils/reading-time.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 import { isPublished } from '~/utils/feeds.mjs';
@@ -44,8 +44,9 @@ const archivePath = `/blog/tag/${tag.slug}`;
 const basePath = `${archivePath}/page/${pageNumber}`;
 
 const archive = tagArchive(tag);
+const heading = pageHeading(archive.title, pageNumber);
 const metadata = {
-  title: `${archive.title}, page ${pageNumber}`,
+  title: heading,
   description: archive.description,
   robots: { index: false, follow: true },
 };
@@ -77,13 +78,7 @@ const nodes = [
 
   <Breadcrumbs crumbs={crumbs} />
 
-  <Section
-    bordered={false}
-    headingLevel={1}
-    eyebrow="Tag"
-    title={`${archive.title}, page ${pageNumber}`}
-    lead={archive.description}
-  />
+  <Section bordered={false} headingLevel={1} eyebrow="Tag" title={heading} lead={archive.description} />
 
   <Section title="Articles">
     <CardGrid columns={2}>

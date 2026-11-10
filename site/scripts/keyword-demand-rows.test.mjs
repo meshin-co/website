@@ -1,14 +1,14 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
-import { brandFromDisk, titleSuffix } from '../src/utils/brand.mjs';
+import { titleSuffix } from '../src/utils/brand.mjs';
 import { readEngineConfig } from './engine-config.mjs';
+import { SCENE_CORE } from './fixtures/semantic-core-scene.mjs';
 import { buildKeywords, expandPhrases, readRouteFacts, servedBy, termTitles } from './keyword-demand-rows.mjs';
+import { siteBrand } from './site-brand.mjs';
 import { readConceptRegister } from './topic-owners.mjs';
 
 const SUFFIX = ' — example.test';
-const CORE = readFileSync(new URL('../../docs/SEMANTIC-CORE.md', import.meta.url), 'utf8');
 
 const coreWith = (...tables) => ['# Core', '', ...tables].join('\n');
 const familyTable = (rows) =>
@@ -230,12 +230,12 @@ test('a candidate has an exact impression and no route serving it, and keeps the
   ]);
 });
 
-test('the real register, routes and shapes build a list of distinct phrases, and no glossary title keeps the site name', () => {
-  const suffix = titleSuffix(brandFromDisk());
+test('the register, routes and shapes of a core build a list of distinct phrases, and no glossary title keeps the site name', () => {
+  const suffix = titleSuffix(siteBrand());
   const { keywords, content } = readEngineConfig();
-  const routes = readRouteFacts(CORE, suffix);
+  const routes = readRouteFacts(SCENE_CORE, suffix);
   const titles = termTitles(routes, content.formats.term.routePrefix);
-  const concepts = readConceptRegister(CORE).map(({ concept }) => concept);
+  const concepts = readConceptRegister(SCENE_CORE).map(({ concept }) => concept);
   const phrases = expandPhrases({ concepts, titles, templates: keywords.templates });
 
   assert.ok(routes.length > 0, `${routes.length} routes`);

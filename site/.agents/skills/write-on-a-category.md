@@ -47,12 +47,12 @@ The first query that survives is the entry. A `vendor` or `output` failure costs
 ## The repeat guard
 
 `scripts/topic-repeat.mjs` reduces a title and a query to word stems and refuses at a containment of 0.5 against every
-published article and every unexpired article claim. On the real 10 posts (`scripts/topic-repeat.site.test.mjs`) two
-distinct articles reach at most 0.20, 17 hand-made rewordings reach 0.60 to 1.00, and 10 fresh topics reach at most
-0.40. Both limits are pinned. It refuses a fresh topic that shares generic words (0.57 against the operating-model
-article for a pilot-pricing question), which costs one call. A paraphrase that shares no topical stem passes (0.00
-against the pilot article). The other two layers are the register and the model, which sees every title. All three can
-miss, and the Calibration Gate reads the first entry of each category for that.
+published article and every unexpired article claim. On this site's real 10 posts, pinned by `topic-repeat.site.test.mjs`
+(an export leaves it behind; a new site pins its own corpus), two distinct articles reach at most 0.20, 17 rewordings
+reach 0.60 to 1.00, and 10 fresh topics reach at most 0.40; both limits are pinned. It refuses a fresh topic that shares
+generic words (0.57 against the operating-model article for a pilot-pricing question), which costs one call. A
+paraphrase that shares no topical stem passes (0.00 against the pilot article). The other two layers are the register
+and the model, which sees every title. All three can miss, and the Calibration Gate reads each category's first entry.
 
 ## Blind entries
 

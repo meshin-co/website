@@ -6,19 +6,22 @@ import { tmpdir } from 'node:os';
 import { basename, dirname, join, resolve } from 'node:path';
 import { test } from 'node:test';
 
+import { titleSuffix } from '../src/utils/brand.mjs';
+
 import { autowriterReport, summaryLine } from './autowriter-gate.mjs';
 import { newLedger } from './autowriter-ledger.mjs';
 import { ENTRY_PATH, SLUG, asJson, entryText, bandSceneFiles, recordWith } from './fixtures/record-rules-scene.mjs';
+import { SCENE_CORE } from './fixtures/semantic-core-scene.mjs';
 import { plantSpendReport } from './fixtures/spend-report-plant.mjs';
 import { RECORD_FAMILIES, recordDirectory, recordPath } from './record-layout.mjs';
+import { siteBrand } from './site-brand.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
 const REPO = resolve(SITE, '..');
-const SUFFIX = ' — meshin.co';
+const SUFFIX = titleSuffix(siteBrand());
 const NOW = new Date('2026-11-02T07:00:00.000Z');
 const CLAIMED = '2026-11-01T07:00:00.000Z';
 const BAND_PATH = 'audits/sentence-band.json';
-const CORE = readFileSync(join(REPO, 'docs/SEMANTIC-CORE.md'), 'utf8');
 const WORKFLOW = readFileSync(join(REPO, '.github/workflows/ci.yml'), 'utf8');
 const CI_FILE = { path: '.github/workflows/ci.yml', text: WORKFLOW };
 
@@ -48,7 +51,15 @@ const FILED_SCRATCH = { path: recordPath('claim', SLUG, CLAIMED), text: JSON.str
 const generationAt = (path) => ({ path, text: asJson(recordWith({ band: realBand() })) });
 const readsEntry = () => ({ readEntry: (path) => (path === ENTRY_PATH ? entryText() : null), band: realBand() });
 const report = (extra = {}) =>
-  autowriterReport({ ledgers: [], claims: [], core: CORE, workflows: [CI_FILE], suffix: SUFFIX, now: NOW, ...extra });
+  autowriterReport({
+    ledgers: [],
+    claims: [],
+    core: SCENE_CORE,
+    workflows: [CI_FILE],
+    suffix: SUFFIX,
+    now: NOW,
+    ...extra,
+  });
 const findings = (extra) => report(extra).findings;
 const one = (extra) => {
   const found = findings(extra);
@@ -187,8 +198,8 @@ function inTempRepo(plant, check) {
   const root = mkdtempSync(join(tmpdir(), 'autowriter-gate-layout-'));
   try {
     for (const [path, text] of Object.entries({
-      'site/src/config.yaml': 'site:\n  name: meshin.co\n',
-      'docs/SEMANTIC-CORE.md': CORE,
+      'site/src/config.yaml': `site:\n  name: ${siteBrand().name}\n`,
+      'docs/SEMANTIC-CORE.md': SCENE_CORE,
       '.github/workflows/ci.yml': WORKFLOW,
       ...bandSceneFiles(),
       ...plant,

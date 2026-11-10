@@ -1,17 +1,22 @@
-import { cpSync, existsSync, mkdirSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 
 import { EXPORT_MANIFEST, isSeed, seedTarget } from './engine-partition.mjs';
+import { EngineConfigError, readEngineConfig } from './engine-config.mjs';
 import { PartitionFactsError } from './engine-partition-facts.mjs';
 import { partitionReport } from './engine-partition-gate.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
-import { readerOf, trackedFiles } from './run-partition-gate.mjs';
+import { readerOf } from './run-partition-gate.mjs';
+import { WRITE_DAILY_PATH, withLoopSchedule } from './schedule-workflow.mjs';
+import { TreeUnreadableError, trackedFiles } from './tracked-files.mjs';
 
 const REPOSITORY_ROOT = resolve(import.meta.dirname, '..', '..');
 const USAGE = 'usage: node scripts/export-engine.mjs [--root <repository>] <empty directory>';
 const BLOCKING_RULES = new Set(['unclassified', 'anchor-unserved']);
 const DEFAULT_IO = { out: (line) => console.log(line), err: (line) => console.error(line) };
+
+const CONFIG_PATH = 'site/engine.config.json';
 
 const refused = (refusals) => ({ refusals, written: [], manifest: null });
 
@@ -41,21 +46,47 @@ function planOf({ rows, counts, findings }) {
   };
   return { copies, manifest };
 }
+function listTracked(root) {
+  try {
+    return { files: trackedFiles(root) };
+  } catch (error) {
+    if (!(error instanceof TreeUnreadableError)) throw error;
+    return { refusal: `${error.rule} ${root}: ${error.message}` };
+  }
+}
 
-export function exportEngine({ root, target, files = trackedFiles(root) }) {
+function scheduledWorkflow(root, copies) {
+  const destinations = copies.map(({ to }) => to);
+  if (!destinations.includes(WRITE_DAILY_PATH) || !destinations.includes(CONFIG_PATH)) return null;
+  const source = (path) => join(root, copies.find(({ to }) => to === path).from);
+  const { loop } = readEngineConfig(source(CONFIG_PATH));
+  return withLoopSchedule(readFileSync(source(WRITE_DAILY_PATH), 'utf8'), loop);
+}
+
+export function exportEngine({ root, target, files }) {
   const blocked = targetRefusal(target);
   if (blocked !== null) return refused([blocked]);
-  const { report, refusals } = readReport(root, files);
+  const listed = files === undefined ? listTracked(root) : { files };
+  if (listed.refusal) return refused([listed.refusal]);
+  const { report, refusals } = readReport(root, listed.files);
   if (refusals) return refused(refusals);
   const blocking = report.findings.filter(({ rule }) => BLOCKING_RULES.has(rule));
   if (blocking.length > 0) return refused(blocking.map(({ rule, where, detail }) => `${rule} ${where}: ${detail}`));
 
   const { copies, manifest } = planOf(report);
+  let scheduled;
+  try {
+    scheduled = scheduledWorkflow(root, copies);
+  } catch (error) {
+    if (!(error instanceof EngineConfigError)) throw error;
+    return refused([`config-invalid ${CONFIG_PATH}: ${error.message}`]);
+  }
   mkdirSync(target, { recursive: true });
   for (const { from, to } of copies) {
     mkdirSync(dirname(join(target, to)), { recursive: true });
     cpSync(join(root, from), join(target, to));
   }
+  if (scheduled !== null) writeFileSync(join(target, WRITE_DAILY_PATH), scheduled);
   writeFileSync(join(target, EXPORT_MANIFEST), `${JSON.stringify(manifest, null, 2)}\n`);
   return { refusals: [], written: copies.map(({ to }) => to), manifest };
 }

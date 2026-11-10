@@ -154,7 +154,6 @@ test('a claim lapses at the instant its fourteen days end, across a month and a 
   assert.equal(made(new Date('2026-12-25T10:00:00.000Z')).expiresAt, '2027-01-08T10:00:00.000Z');
 });
 
-const REPOSITORY_ROOT = join(import.meta.dirname, '..', '..');
 const PROMPT = { number: 7, text: 'what is a model card' };
 const BASIS = {
   slug: 'what-is-a-model-card',
@@ -281,8 +280,30 @@ test('an ordered claim that names a weakness or a category is refused before a b
   });
 });
 
-test('every claim committed under audits stays valid, so the origin can stay optional', () => {
-  const found = readClaims(REPOSITORY_ROOT);
-  assert.ok(found.length >= 1, 'the scan found no claim to read');
-  for (const { path, claim: read } of found) assert.deepEqual(validateClaim(read), [], path);
+test('a scan reads a claim of every origin and one with no origin as valid, and stops by name at a claim that breaks the schema', () => {
+  inTemp((root) => {
+    const claims = [
+      claim({ slug: 'a-claim-with-no-origin' }),
+      asDemand(),
+      asWeak(),
+      asKeyword(),
+      asCategory(),
+      asOrderedByPrompt(),
+      asOrderedByTitle(),
+    ];
+    for (const filed of claims) writeClaim(join(root, filedAt(filed.slug)), filed);
+
+    const found = readClaims(root);
+    assert.equal(found.length, claims.length);
+    for (const { path, claim: read } of found) assert.deepEqual(validateClaim(read), [], path);
+
+    writeFileSync(
+      join(root, filedAt('a-broken-claim')),
+      JSON.stringify(claim({ slug: 'a-broken-claim', origin: 'guess' }))
+    );
+    assert.throws(
+      () => readClaims(root),
+      /claims\/2026\/11\/a-broken-claim\.json does not match the claim schema: origin must be one of/
+    );
+  });
 });

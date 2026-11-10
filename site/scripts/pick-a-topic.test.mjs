@@ -7,14 +7,18 @@ import { basename, dirname, join, relative } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
+import { titleSuffix } from '../src/utils/brand.mjs';
 import { newClaim, readClaim, writeClaim } from './autowriter-claim-store.mjs';
 import { newLedger, readLedger } from './autowriter-ledger.mjs';
+import { SCENE_CORE } from './fixtures/semantic-core-scene.mjs';
 import { printedLines, runCli, runIdFor, summaryMarkdown } from './pick-a-topic.mjs';
 import { recordDirectory, recordPath } from './record-layout.mjs';
 import { BAND_FILE } from './sentence-band.mjs';
+import { siteBrand } from './site-brand.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPORT = 'audits/search-demand.md';
+const BRAND = siteBrand();
 const INPUT_KEYS =
   'claims concepts forms generated keywords ledgerPaths now order posts promptSources report rotation settings suffix'.split(
     ' '
@@ -34,8 +38,8 @@ async function inRepo(check) {
     for (const directory of ['audits', 'docs', 'site/src/data/post'])
       mkdirSync(join(root, directory), { recursive: true });
     cpSync(join(HERE, 'fixtures', 'search-demand-2026-11-01.md'), join(root, REPORT));
-    cpSync(join(HERE, '..', '..', 'docs', 'SEMANTIC-CORE.md'), join(root, 'docs', 'SEMANTIC-CORE.md'));
-    writeFileSync(join(root, 'site', 'src', 'config.yaml'), 'site:\n  name: meshin.co\n');
+    writeFileSync(join(root, 'docs', 'SEMANTIC-CORE.md'), SCENE_CORE);
+    writeFileSync(join(root, 'site', 'src', 'config.yaml'), `site:\n  name: ${BRAND.name}\n`);
     writeFileSync(join(root, 'site', 'content-facts.json'), '{}\n');
     return await check(root);
   } finally {
@@ -312,7 +316,7 @@ test('the selection receives every input, the settings and the instant', async (
     assert.deepEqual(Object.keys(inputs).sort(), INPUT_KEYS);
     assert.deepEqual(inputs.ledgerPaths, [older]);
     assert.deepEqual(inputs.claims, [{ path: held.claimPath, claim: held.claim }]);
-    assert.equal(inputs.suffix, ' — meshin.co');
+    assert.equal(inputs.suffix, titleSuffix(BRAND));
     assert.deepEqual(inputs.settings, { termArm: false, termCap: 3 });
     assert.equal(inputs.now.toISOString(), NOW.toISOString());
     assert.equal(inputs.report.measured, '2026-11-01');
@@ -415,7 +419,7 @@ test('--summary appends to the file and never overwrites what is there', async (
   }
 });
 
-test('end to end, the frozen report and the live semantic core give a decision that obeys the invariants', async () => {
+test('end to end, the frozen report and the scene semantic core give a decision that obeys the invariants', async () => {
   await inRepo(async (root) => {
     const before = snapshot(root);
     const out = [];

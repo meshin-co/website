@@ -152,8 +152,10 @@ test('the classifier specimen replaces the call in the changes job with a shell 
   assert.equal(planted.includes('run-classify-diff.mjs'), false);
 });
 
-test('the real tree is green when the check runs from the repository root', async () => {
-  const result = await run('node', ['site/scripts/check-engine.mjs'], REAL_ROOT);
+test('the scene is green when the check runs from its root', async () => {
+  const { root } = await world();
+
+  const result = await run('node', [join(REAL_SITE, 'scripts/check-engine.mjs'), '--root', root], root);
 
   assert.equal(result.code, 0, result.output);
   assert.match(result.output, /^engine: 0 findings/m);

@@ -16,6 +16,9 @@ import { test } from 'node:test';
 import { exportEngine, main } from './export-engine.mjs';
 import { gitAt } from './fixtures/diff-repo.mjs';
 import { writeScene } from './fixtures/export-scene.mjs';
+import { SCENE_TEXT } from './fixtures/partition-scene.mjs';
+import { readEngineConfig } from './engine-config.mjs';
+import { WRITE_DAILY_PATH, scheduleFindings } from './schedule-workflow.mjs';
 
 const FONT = 'site/src/assets/fonts/Face.ttf';
 const HOOK = '.githooks/pre-push';
@@ -27,9 +30,21 @@ const scratch = (t) => {
   return dir;
 };
 
+const { diff, content } = JSON.parse(SCENE_TEXT['site/engine.config.json']);
+const seedConfig = JSON.parse(
+  readFileSync(join(import.meta.dirname, '..', 'engine.config.json'), 'utf8').replaceAll('example', 'sample')
+);
+const SEED_CONFIG = JSON.stringify({
+  ...seedConfig,
+  diff: { ...seedConfig.diff, ...diff },
+  content: { ...seedConfig.content, ...content },
+});
+const SOURCE_WORKFLOW = "name: Write daily\non:\n  schedule:\n    - cron: '59 5 * * *'\n  workflow_dispatch:\n";
+
 function repository(t, options = {}) {
   const root = scratch(t);
-  return { root, files: writeScene(root, { ...options, bytes: { [FONT]: FONT_BYTES } }) };
+  const extra = { 'site/engine.config.json': SEED_CONFIG, [WRITE_DAILY_PATH]: SOURCE_WORKFLOW, ...options.extra };
+  return { root, files: writeScene(root, { ...options, extra, bytes: { [FONT]: FONT_BYTES } }) };
 }
 
 const treeOf = (dir, prefix = '') =>
@@ -187,4 +202,34 @@ test('the command exits 2 and prints the usage when it is not given exactly one 
     assert.equal(main(argv, io), 2);
     assert.match(lines.err.join('\n'), /usage: node scripts\/export-engine\.mjs/);
   }
+});
+
+test('the command exits 1 and names git init when the source is not a git repository', (t) => {
+  const root = scratch(t);
+  writeFileSync(join(root, 'a.txt'), 'a\n');
+  const target = join(scratch(t), 'copy');
+  const { lines, io } = capture();
+  assert.equal(main(['--root', root, target], io), 1);
+  assert.match(lines.err.join('\n'), /export: refused: not-a-repository .*git init && git add -A/);
+  assert.equal(existsSync(target), false);
+});
+
+test('the exported workflow holds the schedule its exported config generates, whatever schedule the source workflow held', (t) => {
+  const { target, result } = exported(t, {
+    extra: { [WRITE_DAILY_PATH]: SOURCE_WORKFLOW },
+  });
+  assert.deepEqual(result.refusals, []);
+  const { writeTimesUtc, catchUpAfterMinutes, cronLeadMinutes } = readEngineConfig(
+    join(target, 'site/engine.config.json')
+  ).loop;
+  const workflow = readFileSync(join(target, WRITE_DAILY_PATH), 'utf8');
+  assert.deepEqual(scheduleFindings(workflow, writeTimesUtc, catchUpAfterMinutes, cronLeadMinutes), []);
+});
+
+test('a config the schedule cannot be read from refuses the export before anything is written', (t) => {
+  const { root, files } = repository(t, { extra: { 'site/engine.config.json': JSON.stringify({ diff, content }) } });
+  const target = join(scratch(t), 'copy');
+  const { refusals } = exportEngine({ root, target, files });
+  assert.match(refusals.join('\n'), /^config-invalid site\/engine\.config\.json/);
+  assert.equal(existsSync(target), false);
 });

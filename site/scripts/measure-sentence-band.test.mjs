@@ -26,7 +26,6 @@ import {
 } from './sentence-band.mjs';
 
 const SCRIPT = fileURLToPath(new URL('./measure-sentence-band.mjs', import.meta.url));
-const REPO = fileURLToPath(new URL('../../', import.meta.url));
 const TODAY = '2026-11-02';
 const FILED = '2026-11-02T07:00:00.000Z';
 const DATA = 'site/src/data';
@@ -419,20 +418,28 @@ test('a failure that is not a band failure is thrown, not reported as one', (t) 
   assert.throws(() => runIn(root), { code: 'ENOENT' });
 });
 
-const committed = () => {
-  const record = readBandRecord(REPO);
-  assert.notEqual(record, null, `${BAND_FILE} must exist: run node scripts/measure-sentence-band.mjs --write`);
-  return record;
+const LOW_MEDIAN = [11, 11, 11, 11, 11, 30, 30, 30];
+const LOOSE_LENGTHS = [...Array(2).fill(LOW_MEDIAN), ...Array(18).fill(repeat(20, 8))];
+const looseFiles = (collection, field) =>
+  Object.fromEntries(
+    LOOSE_LENGTHS.map((lengths, index) => [`${DATA}/${collection}/entry-${index}.md`, entryFile(field, lengths)])
+  );
+const LOOSE = { ...looseFiles('glossary', 'definition'), ...looseFiles('post', 'fullAnswer') };
+
+const writtenRecord = (t) => {
+  const root = repoWith(t, LOOSE);
+  assert.equal(runIn(root, { write: true }).status, 0);
+  return readBandRecord(root);
 };
 
-test('the committed record was measured against the threshold the content gate enforces now', () => {
-  const record = committed();
+test('the record the script writes was measured against the threshold the content gate enforces now', (t) => {
+  const record = writtenRecord(t);
   assert.equal(record.threshold, DUPLICATE_MINIMUM_WORDS);
   for (const format of FORMATS) assert.equal(bandFor(record, format).threshold, DUPLICATE_MINIMUM_WORDS);
 });
 
-test('each committed band is the one its own recorded distribution derives, so a hand edit shows', () => {
-  const record = committed();
+test('each band the script writes is the one its own recorded distribution derives, so a hand edit shows', (t) => {
+  const record = writtenRecord(t);
   assert.equal(record.schema, 1);
   assert.match(record.measuredOn, /^\d{4}-\d{2}-\d{2}$/);
   const { threshold, minimumSentences, corpus, distribution } = record;
@@ -440,8 +447,8 @@ test('each committed band is the one its own recorded distribution derives, so a
   assert.deepEqual(bandSummary(record, 'term'), { measuredOn: record.measuredOn, threshold, band: record.bands.term });
 });
 
-test('an entry of eleven-word sentences fails the committed band of either format, at every size', () => {
-  const record = committed();
+test('an entry of eleven-word sentences fails the band the script writes for either format, at every size', (t) => {
+  const record = writtenRecord(t);
   for (const format of FORMATS) {
     const band = bandFor(record, format);
     for (let size = 1; size <= 40; size += 1) {

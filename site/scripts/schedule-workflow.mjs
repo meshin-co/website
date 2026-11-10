@@ -87,6 +87,9 @@ export function withSchedule(text, times, catchUpMinutes = [], leadMinutes = 0) 
   return lines.join('\n');
 }
 
+export const withLoopSchedule = (text, { writeTimesUtc, catchUpAfterMinutes, cronLeadMinutes }) =>
+  withSchedule(text, writeTimesUtc, catchUpAfterMinutes, cronLeadMinutes);
+
 const finding = (rule, detail) => ({
   rule,
   detail: `${detail}; run ${REGENERATE_COMMAND} to write it again from loop.writeTimesUtc`,

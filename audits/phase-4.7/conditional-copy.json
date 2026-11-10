@@ -54,5 +54,9 @@
   {
     "text": "Nothing published in this category yet.",
     "reason": "src/pages/blog/category/[category].astro renders it only for a category with no posts; every one of the categories carries at least one"
+  },
+  {
+    "text": "{heading}, page {number}",
+    "reason": "the wording of a numbered tag or category page, src/utils/paginate.mjs. A page ships its expansion ('AI governance posts, page 2'), never the format itself, so no page can ship this text. At 12 posts per page no tag or category has a second page yet; when one does, its title and heading derive from this row and the reviewed heading of its first page"
   }
 ]

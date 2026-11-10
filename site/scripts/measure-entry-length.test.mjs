@@ -22,7 +22,6 @@ import { generatedSlugs } from './measure-sentence-band.mjs';
 import { loadCorpus } from './sentence-band.mjs';
 
 const SCRIPT = fileURLToPath(new URL('./measure-entry-length.mjs', import.meta.url));
-const REPO = fileURLToPath(new URL('../../', import.meta.url));
 const TODAY = '2026-11-02';
 
 const runIn = (root, options = {}) => {
@@ -178,37 +177,48 @@ test('a failure that is not a length failure is thrown, not reported as one', (t
   assert.throws(() => runIn(root, { exclude: [] }), { code: 'ENOENT' });
 });
 
-const committed = () => {
-  const record = readLengthRecord(REPO);
-  assert.notEqual(record, null, LENGTH_FILE + ' must exist: run node scripts/measure-entry-length.mjs --write');
-  return record;
+const handWritten = (root) => loadCorpus(root, { exclude: generatedSlugs(root) });
+
+const WIDE_CORPUS = {
+  ...STEADY,
+  [`${DATA}/post/tall.md`]: entryFile([400, 410, 420, 430]),
+  [`${DATA}/post/tallest.md`]: entryFile([500, 510, 520, 530, 540]),
+  [`${DATA}/glossary/gamma.md`]: entryFile([90, 100]),
+  [`${DATA}/glossary/delta.md`]: entryFile([110, 120]),
+  [`${DATA}/glossary/epsilon.md`]: entryFile([130, 140]),
 };
 
-const handWritten = () => loadCorpus(REPO, { exclude: generatedSlugs(REPO) });
+const measuredRepository = (t) => {
+  const root = repoWith(t, { ...WIDE_CORPUS, ...machineWrittenEntries, ...GENERATION_RECORDS });
+  assert.equal(runIn(root, { write: true }).status, 0);
+  return { root, record: readLengthRecord(root) };
+};
 
-test('the committed limits are the ones the committed distribution derives, so a hand edit shows', () => {
-  const record = committed();
+test('the limits the script writes are the ones its recorded distribution derives, so a hand edit shows', (t) => {
+  const { record } = measuredRepository(t);
   assert.equal(record.schema, 1);
   assert.match(record.measuredOn, /^\d{4}-\d{2}-\d{2}$/);
   assert.deepEqual(record.limits, deriveLimits({ corpus: record.corpus, distribution: record.distribution }));
 });
 
-test('every hand-written entry of the real corpus clears the committed limits of its format', () => {
-  const record = committed();
-  for (const { id, collection, body } of handWritten()) {
+test('every hand-written entry of a corpus clears the limits the script writes for its format', (t) => {
+  const { root, record } = measuredRepository(t);
+  const entries = handWritten(root);
+  assert.equal(entries.length, Object.keys(WIDE_CORPUS).length);
+  for (const { id, collection, body } of entries) {
     const format = collection === 'post' ? 'article' : 'term';
     assert.deepEqual(lengthProblems({ collection, body, limits: lengthFor(record, format) }), [], id);
   }
 });
 
-test('the committed floor is the length of the shortest hand-written entry of each format', () => {
-  const record = committed();
+test('the floor the script writes is the length of the shortest hand-written entry of each format', (t) => {
+  const { root, record } = measuredRepository(t);
   for (const [format, collection] of [
     ['article', 'post'],
     ['term', 'glossary'],
   ]) {
     const shortest = Math.min(
-      ...handWritten()
+      ...handWritten(root)
         .filter((entry) => entry.collection === collection)
         .map((entry) => bodyProfile(entry).words)
     );

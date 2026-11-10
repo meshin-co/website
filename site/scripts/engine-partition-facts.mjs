@@ -1,6 +1,6 @@
 import { posix } from 'node:path';
 
-import { EXPORT_MANIFEST, isSeed, seedTarget } from './engine-partition.mjs';
+import { EXPORT_MANIFEST, IDENTITY_EXEMPT_RULES, classify, isSeed, isSkill, seedTarget } from './engine-partition.mjs';
 
 export const ENGINE_CONFIG_PATH = 'site/engine.config.json';
 export const CONTENT_SCHEMA_PATH = 'site/src/content.config.ts';
@@ -9,6 +9,7 @@ export const ROUTE_EXCEPTIONS_PATH = 'site/src/utils/route-exceptions.mjs';
 export const SITE_CONFIG_PATH = 'site/src/config.yaml';
 export const SITE_ROOT = 'site/';
 export const MIN_IDENTITY_TERM = 4;
+export const VOCABULARY_FILES = 12;
 
 const IMAGE_EXTENSIONS = new Set(['.png', '.svg', '.ico', '.jpg', '.jpeg', '.webp', '.gif', '.avif']);
 const SCRIPT_TOKEN = /(?:^|[\s&;|(])((?:[\w.-]+\/)*[\w.-]+\.(?:mjs|cjs|js|ts))(?=$|[\s&;|)])/g;
@@ -169,9 +170,20 @@ function authorTerms(read, config) {
   return [slug, ...words(name)];
 }
 
-export function identityOf(read) {
+const termsOf = (candidates) => [
+  ...new Set(
+    candidates
+      .filter(Boolean)
+      .map((term) => term.toLowerCase())
+      .filter((term) => term.length >= MIN_IDENTITY_TERM)
+  ),
+];
+
+const filesNaming = (term, checkedTexts) => checkedTexts.filter((text) => text.includes(term)).length;
+
+export function identityOf(read, checkedTexts = []) {
   const yaml = read(SITE_CONFIG_PATH);
-  if (!yaml) return { terms: [] };
+  if (!yaml) return { terms: [], vocabulary: [] };
   const config = parseJson(required(read, ENGINE_CONFIG_PATH, 'the author slug lives there'), ENGINE_CONFIG_PATH);
   const name = /^\s{2}name:\s*(.+)$/m
     .exec(yaml)?.[1]
@@ -179,11 +191,12 @@ export function identityOf(read) {
     .replace(/^['"]|['"]$/g, '');
   const url = /^\s{2}site:\s*['"]?(https?:\/\/[^'"\s]+)/m.exec(yaml)?.[1];
   const host = url ? new URL(url).host.toLowerCase().replace(/^www\./, '') : null;
-  const terms = [name?.toLowerCase(), host, host?.split('.')[0], ...authorTerms(read, config)]
-    .filter(Boolean)
-    .map((term) => term.toLowerCase())
-    .filter((term) => term.length >= MIN_IDENTITY_TERM);
-  return { terms: [...new Set(terms)] };
+  const names = termsOf([name, host]);
+  const fragments = termsOf([host?.split('.')[0], ...authorTerms(read, config)]).filter(
+    (term) => !names.includes(term)
+  );
+  const vocabulary = fragments.filter((term) => filesNaming(term, checkedTexts) >= VOCABULARY_FILES);
+  return { terms: [...names, ...fragments.filter((term) => !vocabulary.includes(term))], vocabulary };
 }
 
 export const identityTermIn = (text, identity) => {
@@ -193,16 +206,17 @@ export const identityTermIn = (text, identity) => {
 
 const RULES_ROOT = '.omp/rules/';
 
-const isCodeReader = (file, scriptRoots, config) =>
+const isProcedureReader = (file, scriptRoots, config) =>
   (scriptRoots.some((root) => file.startsWith(root)) &&
     !config.testFile.test(file) &&
     !config.testDirectory.test(file)) ||
   config.automationDirectories.some((directory) => file.startsWith(directory)) ||
   file === PACKAGE_PATH ||
-  file.startsWith(RULES_ROOT);
+  file.startsWith(RULES_ROOT) ||
+  isSkill(file);
 
 function engineDocumentsOf({ files, read, seeded, scriptRoots, config, identity }) {
-  const readers = files.filter((file) => isCodeReader(file, scriptRoots, config));
+  const readers = files.filter((file) => isProcedureReader(file, scriptRoots, config));
   const readerText = readers.map((file) => read(file) ?? '').join('\n');
   return new Set(
     files.filter((file) => {
@@ -213,12 +227,19 @@ function engineDocumentsOf({ files, read, seeded, scriptRoots, config, identity 
   );
 }
 
+const BINARY = /\.(?:png|ico|ttf|woff2?|jpe?g|webp|avif|gif|pdf)$/;
+
+export const isIdentityChecked = ({ class: name, rule, file }) =>
+  name === 'engine' && !IDENTITY_EXEMPT_RULES.includes(rule) && !BINARY.test(file);
+
+const checkedTextsOf = ({ files, read, facts }) =>
+  files.filter((file) => isIdentityChecked(classify(file, facts))).map((file) => (read(file) ?? '').toLowerCase());
+
 export function readPartitionFacts({ files, read }) {
   const { config, ...layout } = configFacts(read);
   const seeded = new Set([...files.filter(isSeed).map(seedTarget), ...manifestSeedsOf({ files, read })]);
   const scriptRoots = scriptRootsOf(read);
-  const identity = identityOf(read);
-  return {
+  const facts = {
     ...layout,
     config,
     collections: collectionsOf(read),
@@ -227,6 +248,11 @@ export function readPartitionFacts({ files, read }) {
     seeded,
     siteAssetDirectories: siteAssetDirectoriesOf(files, layout.shippedDirectories),
     generatedOutputs: generatedOutputsOf({ files, read }),
+  };
+  const checkedTexts = checkedTextsOf({ files, read, facts: { ...facts, engineDocuments: new Set() } });
+  const identity = identityOf(read, checkedTexts);
+  return {
+    ...facts,
     engineDocuments: engineDocumentsOf({ files, read, seeded, scriptRoots, config: layout, identity }),
     identity,
   };

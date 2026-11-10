@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
@@ -7,9 +7,8 @@ import { test } from 'node:test';
 import { newLedger, readLedger, validateLedger, writeLedger } from './autowriter-ledger.mjs';
 import { describeProblem } from './autowriter-records.mjs';
 import { capture } from './fixtures/resume-world.mjs';
-import { recordFiles } from './record-layout.mjs';
+import { recordFiles, recordPath } from './record-layout.mjs';
 
-const REPOSITORY_ROOT = join(import.meta.dirname, '..', '..');
 const MAIN_SHA = 'c'.repeat(40);
 const DECIDED_AT = '2026-11-03T11:09:44.265Z';
 const RESUMED_AT = '2026-11-03T12:30:00.000Z';
@@ -55,13 +54,32 @@ test('the ledger of pull request 84 as GitHub served it stays valid, and so does
   assert.deepEqual(problemsOf({ ...ledger, resumes: [resume({ at: '2026-11-04T09:00:00.000Z' })] }), []);
 });
 
-test('every ledger committed under audits stays valid, so resumes can stay optional', () => {
-  const files = recordFiles(REPOSITORY_ROOT, 'ledger');
+const filedLedger = (slug) => recordPath('ledger', slug, DECIDED_AT);
+const problemsFiled = (root) =>
+  recordFiles(root, 'ledger').map((file) => [file, problemsOf(JSON.parse(readFileSync(join(root, file), 'utf8')))]);
 
-  assert.ok(files.length >= 1, 'the scan found no ledger to read');
-  for (const file of files) {
-    const ledger = JSON.parse(readFileSync(join(REPOSITORY_ROOT, file), 'utf8'));
-    assert.deepEqual(problemsOf(ledger), [], file);
+test('a scan finds the ledgers filed in a tree, reads one resumed and one never resumed as valid, and names the file with a bad resume', () => {
+  const root = mkdtempSync(join(tmpdir(), 'ledger-resumes-'));
+  try {
+    const never = { ...escalated(), slug: 'a-never-resumed-slug' };
+    const resumed = { ...withResumes(resume()), slug: 'a-resumed-slug' };
+    for (const ledger of [never, resumed]) writeLedger(join(root, filedLedger(ledger.slug)), ledger);
+
+    assert.deepEqual(problemsFiled(root), [
+      [filedLedger(never.slug), []],
+      [filedLedger(resumed.slug), []],
+    ]);
+
+    const bad = { ...withResumes(resume({ by: 'schedule' })), slug: 'a-bad-resume-slug' };
+    writeFileSync(join(root, filedLedger(bad.slug)), JSON.stringify(bad));
+
+    assert.deepEqual(problemsFiled(root), [
+      [filedLedger(bad.slug), ['resumes[0].by must be one of "main-change", "approval-held", "owner"']],
+      [filedLedger(never.slug), []],
+      [filedLedger(resumed.slug), []],
+    ]);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
   }
 });
 

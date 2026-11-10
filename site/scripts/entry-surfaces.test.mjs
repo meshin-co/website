@@ -1,17 +1,16 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 
+import { readEngineConfig } from './engine-config.mjs';
 import { surfacesOf } from './entry-surfaces.mjs';
 import { BOUNDED_INLINE_COLLECTIONS } from './machine.mjs';
-import { ROUTE_LEDGER } from './route-ledger.mjs';
 import { OWED, SURFACES } from './route-parity.mjs';
-import { corpusFiles } from './spend-report.mjs';
-import { corpusOf, reportModel } from './spend-report-model.mjs';
+import { collectRoutes } from './routes-gate.mjs';
 
 const ORIGIN = 'https://site.test';
-const REPOSITORY_ROOT = resolve(import.meta.dirname, '..', '..');
 const POST = { format: 'article', slug: 'a-post', origin: ORIGIN };
 const TERM = { format: 'term', slug: 'a-term', origin: ORIGIN };
 
@@ -159,12 +158,30 @@ test('a format the writer does not write is refused, so no surface is guessed fo
   );
 });
 
-test('the page address of every entry the writer committed is a route of the committed route ledger, so its form is the one the build serves', () => {
-  const { rows } = reportModel(corpusOf(corpusFiles(REPOSITORY_ROOT)), { at: '2026-11-03T09:00:00.000Z' });
-  const ledger = new Set(JSON.parse(readFileSync(resolve(REPOSITORY_ROOT, ROUTE_LEDGER), 'utf8')));
-  assert.ok(rows.length >= 1);
-  for (const { format, slug } of rows) {
-    const [page] = surfacesOf({ format, slug, origin: ORIGIN });
-    assert.equal(ledger.has(new URL(page.url).pathname), true, page.url);
+const WRITTEN_SLUG = 'a-written-entry';
+
+function routesBuiltAt(prefixes) {
+  const dist = mkdtempSync(join(tmpdir(), 'entry-surfaces-'));
+  try {
+    for (const prefix of prefixes) {
+      const file = join(dist, `${prefix}${WRITTEN_SLUG}.html`);
+      mkdirSync(dirname(file), { recursive: true });
+      writeFileSync(file, '<!doctype html>');
+    }
+    return collectRoutes(dist);
+  } finally {
+    rmSync(dist, { recursive: true, force: true });
+  }
+}
+
+test('the page address of an entry of each format the writer writes is its configured route prefix and its slug, and a route of the ledger a build of that form writes', () => {
+  const { formats } = readEngineConfig().content;
+  const ledger = new Set(routesBuiltAt(Object.values(formats).map(({ routePrefix }) => routePrefix)));
+  assert.equal(ledger.size, Object.keys(formats).length);
+  for (const [format, { routePrefix }] of Object.entries(formats)) {
+    const [page] = surfacesOf({ format, slug: WRITTEN_SLUG, origin: ORIGIN });
+    const { pathname } = new URL(page.url);
+    assert.equal(pathname, `${routePrefix}${WRITTEN_SLUG}`);
+    assert.equal(ledger.has(pathname), true, page.url);
   }
 });

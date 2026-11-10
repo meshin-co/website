@@ -110,3 +110,12 @@ test('the command prints one line per finding with the end of the output under i
   assert.match(text, /EXPORT step-failed astro build: exit 1/);
   assert.match(text, / {2}no such file/);
 });
+
+test('the command exits 1 and names git init when the source is not a git repository, and keeps no copy', (t) => {
+  const root = scratch(t);
+  const { lines, io } = capture();
+  assert.equal(main(['--root', root, '--keep'], io, [step('ok', 'process.exit(0)')]), 1);
+  const text = lines.err.join('\n');
+  assert.match(text, /EXPORT not-a-repository .*git init && git add -A/);
+  assert.doesNotMatch(text, /was kept at/);
+});

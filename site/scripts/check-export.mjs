@@ -6,7 +6,7 @@ import { parseArgs } from 'node:util';
 
 import { exportEngine } from './export-engine.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
-import { trackedFiles } from './run-partition-gate.mjs';
+import { TreeUnreadableError, trackedFiles } from './tracked-files.mjs';
 
 const REPOSITORY_ROOT = resolve(import.meta.dirname, '..', '..');
 const OUTPUT_LINES = 15;
@@ -59,11 +59,22 @@ function buildCopy({ root, files, steps, target }) {
   return { findings: [], steps: ran };
 }
 
-export function checkExport({ root, files = trackedFiles(root), steps = BUILD_STEPS, keep = false }) {
+function listTracked(root) {
+  try {
+    return { files: trackedFiles(root) };
+  } catch (error) {
+    if (!(error instanceof TreeUnreadableError)) throw error;
+    return { finding: { rule: error.rule, where: root, detail: error.message } };
+  }
+}
+
+export function checkExport({ root, files, steps = BUILD_STEPS, keep = false }) {
+  const listed = files === undefined ? listTracked(root) : { files };
+  if (listed.finding) return { target: null, steps: [], findings: [listed.finding] };
   const workspace = mkdtempSync(join(tmpdir(), 'export-check-'));
   const target = join(workspace, 'copy');
   try {
-    return { target, ...buildCopy({ root, files, steps, target }) };
+    return { target, ...buildCopy({ root, files: listed.files, steps, target }) };
   } finally {
     if (!keep) rmSync(workspace, { recursive: true, force: true });
   }
@@ -92,7 +103,7 @@ export function main(argv, io = DEFAULT_IO, steps = BUILD_STEPS) {
       io.err(`EXPORT ${rule} ${where}: ${detail}`);
       for (const line of output) io.err(`  ${line}`);
     }
-    if (parsed.keep) io.err(`export check: the copy was kept at ${result.target}`);
+    if (parsed.keep && result.target !== null) io.err(`export check: the copy was kept at ${result.target}`);
     return 1;
   }
   const total = result.steps.reduce((sum, { seconds }) => sum + seconds, 0);

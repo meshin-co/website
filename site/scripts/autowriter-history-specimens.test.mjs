@@ -11,10 +11,12 @@ import { sealSignature } from './autowriter-refusals.mjs';
 import { autowriterSpecimens } from './autowriter-specimens.mjs';
 import { BOT, HUMAN, commitAs, gitIn, initRepo, removeRepos, shallowClone } from './fixtures/history-repo.mjs';
 import { bandSceneFiles } from './fixtures/record-rules-scene.mjs';
+import { SCENE_CORE } from './fixtures/semantic-core-scene.mjs';
 import { plantSpendReport } from './fixtures/spend-report-plant.mjs';
 import { FAMILIES, manifestFamilies } from './mutation-smoke.mjs';
 import { SPECIMENS, flatten, proveWithSpecimen } from './mutation-specimens.mjs';
 import { recordDirectory, recordPath } from './record-layout.mjs';
+import { siteBrand } from './site-brand.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
 const REPO = resolve(SITE, '..');
@@ -89,8 +91,8 @@ const entry = (target, digest) => ({
 });
 const dispositions = [entry('src/data/post/a.md', 'a1b2c3d4e5f6'), entry('src/data/post/b.md', '0123456789ab')];
 const FILES = {
-  'site/src/config.yaml': 'site:\n  name: meshin.co\n',
-  'docs/SEMANTIC-CORE.md': readFileSync(join(REPO, 'docs/SEMANTIC-CORE.md'), 'utf8'),
+  'site/src/config.yaml': `site:\n  name: ${siteBrand().name}\n`,
+  'docs/SEMANTIC-CORE.md': SCENE_CORE,
   '.github/workflows/ci.yml': readFileSync(join(REPO, '.github/workflows/ci.yml'), 'utf8'),
   ...bandSceneFiles(),
   [DISPOSITIONS]: `${JSON.stringify(dispositions, null, 2)}\n`,
