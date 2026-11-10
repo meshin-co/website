@@ -12,11 +12,29 @@ const REPOSITORY_ROOT = resolve(import.meta.dirname, '..', '..');
 const OUTPUT_LINES = 15;
 const DEFAULT_IO = { out: (line) => console.log(line), err: (line) => console.error(line) };
 
+const npmRun = (script) => ({ name: script, command: 'npm', args: ['run', script] });
+const git = (name, ...args) => ({ name, command: 'git', args: ['-C', '..', ...args] });
+
 export const BUILD_STEPS = [
-  { name: 'assets:logo', command: 'npm', args: ['run', 'assets:logo'] },
-  { name: 'assets:og-default', command: 'npm', args: ['run', 'assets:og-default'] },
-  { name: 'assets:robots', command: 'npm', args: ['run', 'assets:robots'] },
-  { name: 'astro build', command: 'npx', args: ['astro', 'build'] },
+  npmRun('assets:logo'),
+  npmRun('assets:og-default'),
+  npmRun('assets:robots'),
+  npmRun('build'),
+  git('git init', 'init', '--quiet'),
+  git('git add', 'add', '--all'),
+  git(
+    'git commit',
+    '-c',
+    'user.name=export check',
+    '-c',
+    'user.email=export-check@invalid',
+    'commit',
+    '--quiet',
+    '--message',
+    'the exported copy'
+  ),
+  ...['gate:plan', 'gate:docs', 'gate:skills', 'gate:spec', 'gate:schedule', 'gate:partition'].map(npmRun),
+  { name: 'npm test', command: 'npm', args: ['test'] },
 ];
 
 const lastLines = (text) =>
@@ -76,7 +94,7 @@ export function checkExport({ root, files, steps = BUILD_STEPS, keep = false }) 
   try {
     return { target, ...buildCopy({ root, files: listed.files, steps, target }) };
   } finally {
-    if (!keep) rmSync(workspace, { recursive: true, force: true });
+    if (!keep) rmSync(workspace, { recursive: true, force: true, maxRetries: 5 });
   }
 }
 
@@ -108,7 +126,9 @@ export function main(argv, io = DEFAULT_IO, steps = BUILD_STEPS) {
   }
   const total = result.steps.reduce((sum, { seconds }) => sum + seconds, 0);
   const timings = result.steps.map(({ name, seconds }) => `${name} ${seconds.toFixed(1)}s`).join(', ');
-  io.out(`export check: the exported copy built in ${total.toFixed(1)}s (${timings})`);
+  io.out(
+    `export check: the exported copy built, committed and passed its own gates and suite in ${total.toFixed(1)}s (${timings})`
+  );
   return 0;
 }
 

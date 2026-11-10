@@ -24,10 +24,22 @@ function repository(t, options) {
 const step = (name, source) => ({ name, command: process.execPath, args: ['-e', source] });
 
 test('the generators a copy needs run before the build, because the build hook reads the crawler register they write', () => {
-  assert.deepEqual(
-    BUILD_STEPS.map(({ name }) => name),
-    ['assets:logo', 'assets:og-default', 'assets:robots', 'astro build']
-  );
+  const names = BUILD_STEPS.map(({ name }) => name);
+  for (const generator of ['assets:logo', 'assets:og-default', 'assets:robots']) {
+    assert.ok(names.indexOf(generator) < names.indexOf('build'), `${generator} runs after the build`);
+  }
+});
+
+test('a copy is proven green, not only built: it is committed, then its own gates and its own suite run', () => {
+  const names = BUILD_STEPS.map(({ name }) => name);
+  const committed = names.indexOf('git commit');
+  assert.ok(committed > names.indexOf('git init'), 'the copy is committed without first being a repository');
+  const proofs = ['gate:plan', 'gate:docs', 'gate:skills', 'gate:spec', 'gate:schedule', 'gate:partition', 'npm test'];
+  for (const proof of proofs) {
+    assert.ok(names.includes(proof), `the copy is never checked with ${proof}`);
+    assert.ok(names.indexOf(proof) > names.indexOf('build'), `${proof} runs before the copy is built`);
+    assert.ok(names.indexOf(proof) > committed, `${proof} runs before the copy is a committed repository`);
+  }
 });
 
 test('every step runs inside the exported copy, which borrows the source dependencies and is gone afterwards', (t) => {
@@ -94,11 +106,11 @@ const capture = () => {
   return { lines, io: { out: (line) => lines.out.push(line), err: (line) => lines.err.push(line) } };
 };
 
-test('the command exits 0 and says how long the copy took to build', (t) => {
+test('the command exits 0 and says the copy passed its own gates and suite, and how long it took', (t) => {
   const root = gitRepository(t);
   const { lines, io } = capture();
   assert.equal(main(['--root', root], io, [step('ok', 'process.exit(0)')]), 0);
-  assert.match(lines.out.join('\n'), /export check: the exported copy built in [0-9.]+s \(ok [0-9.]+s\)/);
+  assert.match(lines.out.join('\n'), /passed its own gates and suite in [0-9.]+s \(ok [0-9.]+s\)/);
   assert.deepEqual(lines.err, []);
 });
 
