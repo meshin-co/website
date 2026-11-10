@@ -6,17 +6,35 @@ import { parseArgs } from 'node:util';
 
 import { exportEngine } from './export-engine.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
-import { trackedFiles } from './run-partition-gate.mjs';
+import { TreeUnreadableError, trackedFiles } from './tracked-files.mjs';
 
 const REPOSITORY_ROOT = resolve(import.meta.dirname, '..', '..');
 const OUTPUT_LINES = 15;
 const DEFAULT_IO = { out: (line) => console.log(line), err: (line) => console.error(line) };
 
+const npmRun = (script) => ({ name: script, command: 'npm', args: ['run', script] });
+const git = (name, ...args) => ({ name, command: 'git', args: ['-C', '..', ...args] });
+
 export const BUILD_STEPS = [
-  { name: 'assets:logo', command: 'npm', args: ['run', 'assets:logo'] },
-  { name: 'assets:og-default', command: 'npm', args: ['run', 'assets:og-default'] },
-  { name: 'assets:robots', command: 'npm', args: ['run', 'assets:robots'] },
-  { name: 'astro build', command: 'npx', args: ['astro', 'build'] },
+  npmRun('assets:logo'),
+  npmRun('assets:og-default'),
+  npmRun('assets:robots'),
+  npmRun('build'),
+  git('git init', 'init', '--quiet'),
+  git('git add', 'add', '--all'),
+  git(
+    'git commit',
+    '-c',
+    'user.name=export check',
+    '-c',
+    'user.email=export-check@invalid',
+    'commit',
+    '--quiet',
+    '--message',
+    'the exported copy'
+  ),
+  ...['gate:plan', 'gate:docs', 'gate:skills', 'gate:spec', 'gate:schedule', 'gate:partition'].map(npmRun),
+  { name: 'npm test', command: 'npm', args: ['test'] },
 ];
 
 const lastLines = (text) =>
@@ -59,13 +77,24 @@ function buildCopy({ root, files, steps, target }) {
   return { findings: [], steps: ran };
 }
 
-export function checkExport({ root, files = trackedFiles(root), steps = BUILD_STEPS, keep = false }) {
+function listTracked(root) {
+  try {
+    return { files: trackedFiles(root) };
+  } catch (error) {
+    if (!(error instanceof TreeUnreadableError)) throw error;
+    return { finding: { rule: error.rule, where: root, detail: error.message } };
+  }
+}
+
+export function checkExport({ root, files, steps = BUILD_STEPS, keep = false }) {
+  const listed = files === undefined ? listTracked(root) : { files };
+  if (listed.finding) return { target: null, steps: [], findings: [listed.finding] };
   const workspace = mkdtempSync(join(tmpdir(), 'export-check-'));
   const target = join(workspace, 'copy');
   try {
-    return { target, ...buildCopy({ root, files, steps, target }) };
+    return { target, ...buildCopy({ root, files: listed.files, steps, target }) };
   } finally {
-    if (!keep) rmSync(workspace, { recursive: true, force: true });
+    if (!keep) rmSync(workspace, { recursive: true, force: true, maxRetries: 5 });
   }
 }
 
@@ -92,12 +121,14 @@ export function main(argv, io = DEFAULT_IO, steps = BUILD_STEPS) {
       io.err(`EXPORT ${rule} ${where}: ${detail}`);
       for (const line of output) io.err(`  ${line}`);
     }
-    if (parsed.keep) io.err(`export check: the copy was kept at ${result.target}`);
+    if (parsed.keep && result.target !== null) io.err(`export check: the copy was kept at ${result.target}`);
     return 1;
   }
   const total = result.steps.reduce((sum, { seconds }) => sum + seconds, 0);
   const timings = result.steps.map(({ name, seconds }) => `${name} ${seconds.toFixed(1)}s`).join(', ');
-  io.out(`export check: the exported copy built in ${total.toFixed(1)}s (${timings})`);
+  io.out(
+    `export check: the exported copy built, committed and passed its own gates and suite in ${total.toFixed(1)}s (${timings})`
+  );
   return 0;
 }
 

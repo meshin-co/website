@@ -262,8 +262,13 @@ export function sealDispositions(dist) {
 
 if (invokedDirectly(import.meta.filename, process.argv[1])) {
   const dist = resolve(SITE, process.argv[3] ?? 'dist');
-  if (process.argv.includes('--seal')) {
-    exitWhenUnattended('re-seal the dispositions');
-    sealDispositions(dist);
-  } else report(dist, { write: !process.argv.includes('--check') });
+  const seal = process.argv.includes('--seal');
+  if (seal) exitWhenUnattended('re-seal the dispositions');
+  if (!existsSync(join(dist, 'gate-routes.json'))) {
+    console.log(
+      `EDITORIAL no-build ${dist}: the gate reads the built site and none is there; run "npm run build", then run it again`
+    );
+    process.exitCode = 1;
+  } else if (seal) sealDispositions(dist);
+  else report(dist, { write: !process.argv.includes('--check') });
 }

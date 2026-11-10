@@ -1,8 +1,15 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { PartitionFactsError, readPartitionFacts } from './engine-partition-facts.mjs';
-import { SCENE_FILES, sceneReader } from './fixtures/partition-scene.mjs';
+import { classify } from './engine-partition.mjs';
+import {
+  PartitionFactsError,
+  VOCABULARY_FILES,
+  identityTermIn,
+  readPartitionFacts,
+} from './engine-partition-facts.mjs';
+import { partitionReport } from './engine-partition-gate.mjs';
+import { SCENE_CONFIG, SCENE_FILES, sceneReader } from './fixtures/partition-scene.mjs';
 
 const facts = (overrides = {}, files = SCENE_FILES) => readPartitionFacts({ files, read: sceneReader(overrides) });
 
@@ -61,9 +68,43 @@ test('a document is an engine document when code or a rule names it and it names
   ]);
 });
 
-test('a skill that cites a document does not make it an engine document', () => {
-  const found = facts({ 'site/.agents/skills/run-the-gate.md': 'Read docs/PRD.md first.\n' });
-  assert.equal(found.engineDocuments.has('docs/PRD.md'), false);
+const CREDENTIALS = 'docs/plan/reference/search-credentials.md';
+const CREDENTIALS_TEXT = 'Where each credential comes from, and where it is stored.\n';
+
+const withASkillNaming = (skill, documentText = CREDENTIALS_TEXT) =>
+  facts({ [skill]: `Where the key comes from: ${CREDENTIALS}\n`, [CREDENTIALS]: documentText }, [
+    ...SCENE_FILES,
+    skill,
+    CREDENTIALS,
+  ]);
+
+const classified = (class_, rule) => ({ file: CREDENTIALS, class: class_, rule });
+
+test('a document that only an engine skill names is classified engine, because the skill sends the next owner to it', () => {
+  for (const skill of ['site/.agents/skills/measure-demand.md', 'site/.agents/skills/ai-agent-readiness/webmcp.md']) {
+    assert.deepEqual(classify(CREDENTIALS, withASkillNaming(skill)), classified('engine', 'engine-document'), skill);
+  }
+});
+
+test('a document that no engine file names at all stays site, however neutral it reads', () => {
+  const unnamed = facts({ [CREDENTIALS]: CREDENTIALS_TEXT }, [...SCENE_FILES, CREDENTIALS]);
+  assert.deepEqual(classify(CREDENTIALS, unnamed), classified('site', 'unread-prose'));
+  assert.deepEqual(classify('docs/PRD.md', facts()), { file: 'docs/PRD.md', class: 'site', rule: 'unread-prose' });
+});
+
+test('a document that only a site-marked skill names stays site, because its author kept that skill with one site', () => {
+  const found = withASkillNaming('site/.agents/skills/navigate-the-plan.site.md');
+  assert.deepEqual(classify(CREDENTIALS, found), classified('site', 'unread-prose'));
+});
+
+test('a skill that names a document which names the site leaves that document with the site', () => {
+  const found = withASkillNaming('site/.agents/skills/measure-demand.md', 'The credentials of example.test.\n');
+  assert.deepEqual(classify(CREDENTIALS, found), classified('site', 'unread-prose'));
+});
+
+test('a test file that names a document does not carry it, because a test names documents as data', () => {
+  const found = withASkillNaming('site/scripts/measure-demand.test.mjs');
+  assert.deepEqual(classify(CREDENTIALS, found), classified('site', 'unread-prose'));
 });
 
 test('a document that names the site is not an engine document, however many files name it', () => {
@@ -135,4 +176,110 @@ test('an export manifest that is not valid, or lists no seeds, is a fact the gat
       (error) => error instanceof PartitionFactsError && /engine-export\.json/.test(error.message)
     );
   }
+});
+
+const ownedBy = (slug, name) => ({
+  'site/engine.config.json': JSON.stringify({
+    ...SCENE_CONFIG,
+    content: {
+      ...SCENE_CONFIG.content,
+      formats: {
+        ...SCENE_CONFIG.content.formats,
+        article: { ...SCENE_CONFIG.content.formats.article, author: slug },
+      },
+    },
+  }),
+  [`site/src/data/author/${slug}.md`]: `---\nname: ${name}\n---\n`,
+});
+
+const hostedAt = (name, host) => ({ 'site/src/config.yaml': `site:\n  name: ${name}\n  site: 'https://${host}'\n` });
+
+const naming = (word, count, { directory = 'site/scripts/', extension = '.mjs' } = {}) => {
+  const files = Array.from({ length: count }, (_, index) => `${directory}names-${index}${extension}`);
+  return { files, text: Object.fromEntries(files.map((file) => [file, `export const note = 'the ${word} of it';\n`])) };
+};
+
+const treeOf = (overrides, ...crowds) => ({
+  files: [...SCENE_FILES, 'seed/site/engine.config.json.seed', ...crowds.flatMap(({ files }) => files)],
+  overrides: Object.assign({}, overrides, ...crowds.map(({ text }) => text)),
+});
+
+const identityIn = (overrides, ...crowds) => {
+  const { files, overrides: texts } = treeOf(overrides, ...crowds);
+  return facts(texts, files).identity;
+};
+
+const siteBoundIn = (overrides, ...crowds) => {
+  const { files, overrides: texts } = treeOf(overrides, ...crowds);
+  return partitionReport({ files, read: sceneReader(texts) }).findings.filter(({ rule }) => rule === 'site-bound');
+};
+
+test('a word of the owner name that a dozen engine files use is vocabulary, not an identity term', () => {
+  const identity = identityIn(ownedBy('ada', 'Ada Lovelace Quill'), naming('quill', VOCABULARY_FILES));
+  assert.deepEqual(identity.terms, ['example.test', 'example', 'lovelace']);
+  assert.deepEqual(identity.vocabulary, ['quill']);
+});
+
+test('the same word one file short of the count is still an identity term, so the count is measured and no word list decides it', () => {
+  const identity = identityIn(ownedBy('ada', 'Ada Lovelace Quill'), naming('quill', VOCABULARY_FILES - 1));
+  assert.deepEqual(identity.terms, ['example.test', 'example', 'lovelace', 'quill']);
+  assert.deepEqual(identity.vocabulary, []);
+});
+
+test('an owner called Page gets the brand, the host and the stem, and no finding for a word the engine uses everywhere', () => {
+  const crowd = naming('page', 40);
+  const identity = identityIn(ownedBy('page', 'Page'), crowd);
+  assert.deepEqual(identity.terms, ['example.test', 'example']);
+  assert.deepEqual(identity.vocabulary, ['page']);
+  assert.deepEqual(siteBoundIn(ownedBy('page', 'Page'), crowd), []);
+});
+
+test('a distinctive owner name still identifies the site beside a vocabulary word, and a file that names the owner is still found', () => {
+  const owner = ownedBy('ada', 'Ada Lovelace Page');
+  const crowd = naming('page', VOCABULARY_FILES);
+  const identity = identityIn(owner, crowd);
+  assert.equal(identityTermIn('Written by Lovelace.', identity), 'lovelace');
+  assert.equal(identityTermIn('The page of the thing.', identity), null);
+  const named = {
+    files: ['site/scripts/names-the-owner.mjs'],
+    text: { 'site/scripts/names-the-owner.mjs': '// Lovelace\n' },
+  };
+  const findings = siteBoundIn(owner, crowd, named);
+  assert.deepEqual(
+    findings.map(({ where, detail }) => [where, /names "lovelace"/.test(detail)]),
+    [['site/scripts/names-the-owner.mjs', true]]
+  );
+});
+
+test('a freshly exported copy, whose author is Example Author, finds nothing site-bound in files that say example and author', () => {
+  const copy = { ...ownedBy('example-author', 'Example Author'), ...hostedAt('new-site.example', 'new-site.example') };
+  const crowds = [naming('example', 50), naming('author', 50, { directory: 'site/src/utils/' })];
+  const identity = identityIn(copy, ...crowds);
+  assert.deepEqual(identity.terms, ['new-site.example', 'new-site', 'example-author']);
+  assert.deepEqual(identity.vocabulary, ['example', 'author']);
+  assert.deepEqual(siteBoundIn(copy, ...crowds), []);
+});
+
+test('files the site-bound check never reads do not make a name vocabulary: tests, and prose that stays with the site', () => {
+  const crowds = [
+    naming('lovelace', VOCABULARY_FILES, { extension: '.test.mjs' }),
+    naming('lovelace', VOCABULARY_FILES, { directory: 'docs/notes/', extension: '.md' }),
+  ];
+  const identity = identityIn({}, ...crowds);
+  assert.deepEqual(identity.terms, ['example.test', 'example', 'lovelace']);
+  assert.deepEqual(identity.vocabulary, []);
+});
+
+test('the brand and the host are never set aside, however many files name them, so a brand spread through the engine is still found', () => {
+  const site = hostedAt('Index Labs', 'index-labs.example');
+  const crowd = naming('index labs', 40);
+  const identity = identityIn(site, crowd, naming('index-labs.example', 40, { directory: 'site/src/utils/' }));
+  assert.deepEqual(identity.terms.slice(0, 2), ['index labs', 'index-labs.example']);
+  assert.equal(siteBoundIn(site, crowd).length, 40);
+});
+
+test('the stem of the host is a word too, and is set aside when the engine uses it everywhere', () => {
+  const identity = identityIn(hostedAt('page.example', 'page.example'), naming('page', 40));
+  assert.deepEqual(identity.terms, ['page.example', 'lovelace']);
+  assert.deepEqual(identity.vocabulary, ['page']);
 });

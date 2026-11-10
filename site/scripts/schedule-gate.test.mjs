@@ -19,7 +19,7 @@ const GENERATOR = join(SCRIPTS, 'generate-schedule.mjs');
 const CONFIG = JSON.parse(readFileSync(join(SITE, 'engine.config.json'), 'utf8'));
 const TIMES = ['03:17', '15:17'];
 const DELAYS = CONFIG.loop.catchUpAfterMinutes;
-const ENTRY_COUNT = CONFIG.loop.writeTimesUtc.length * (DELAYS.length + 1);
+const ENTRY_COUNT = 2 * (DELAYS.length + 1);
 
 function withFirstTwoEntriesSwapped(workflow) {
   const lines = workflow.split('\n');
@@ -55,12 +55,15 @@ const findingsOf = ({ stderr }) => stderr.split('\n').filter(Boolean);
 
 test('the schedule of this repository is the one its configuration generates, and the gate prints no finding', () => {
   const configured = CONFIG.loop.writeTimesUtc.join(', ');
+  const { cronLeadMinutes: lead } = CONFIG.loop;
+  const leadClause =
+    lead === 0 ? '' : `, with every cron entry set ${lead} minutes before its time, the lead of loop.cronLeadMinutes`;
   const result = gate();
   assert.equal(result.status, 0, result.stderr);
   assert.equal(result.stderr, '');
   assert.equal(
     result.stdout,
-    `schedule: 0 findings (${WRITE_DAILY_PATH} starts the writer for ${configured} UTC, the times of loop.writeTimesUtc, and tries each slot again ${DELAYS.join(', ')} minutes later, the delays of loop.catchUpAfterMinutes, with every cron entry set ${CONFIG.loop.cronLeadMinutes} minutes before its time, the lead of loop.cronLeadMinutes)\n`
+    `schedule: 0 findings (${WRITE_DAILY_PATH} starts the writer for ${configured} UTC, the times of loop.writeTimesUtc, and tries each slot again ${DELAYS.join(', ')} minutes later, the delays of loop.catchUpAfterMinutes${leadClause})\n`
   );
 });
 

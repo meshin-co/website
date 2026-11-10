@@ -14,6 +14,7 @@ import { evidenceSpecimens } from './evidence-specimens.mjs';
 import { jsonldSpecimens } from './jsonld-specimens.mjs';
 import { keywordSpecimens } from './keyword-specimens.mjs';
 import { linkRotSpecimens } from './link-rot-specimens.mjs';
+import { paginatedCopySpecimens } from './paginated-copy-specimens.mjs';
 import { partitionSpecimens } from './partition-specimens.mjs';
 import { pressSpecimens } from './press-specimens.mjs';
 import { REGISTERS_BEGIN } from './registers.mjs';
@@ -638,6 +639,7 @@ export const SPECIMENS = {
   ...evidenceSpecimens({ addUntrackedFile }),
   ...engineSpecimens({ editFile, removeFile }),
   ...jsonldSpecimens({ editFile, moveAside }),
+  ...paginatedCopySpecimens({ addUntrackedFile, editFile }),
   ...partitionSpecimens({ editFile, removeFile, addFile }),
   ...unattendedSpecimens({ editFile, removeFile }),
   ...paritySpecimens({ editFile, removeFile }),

@@ -12,3 +12,6 @@ if [ -n "$base" ]; then
     (cd site && npm run --silent test:smoke)
   fi
 fi
+
+echo "pre-push: proving a fresh copy of the engine is green"
+(cd site && npm run --silent gate:export)

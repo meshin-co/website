@@ -76,10 +76,14 @@ test('a tags file with no slug is refused, naming the file', () => {
   configRefusal(() => tagSlugs(root), 'site/src/data/tags.mjs');
 });
 
-test('routeList returns the routes of audits/routes.json and equals the live file', () => {
+test('routeList returns the routes of audits/routes.json', () => {
   const root = treeWith({ 'audits/routes.json': JSON.stringify(['/', '/faq']) });
   assert.deepEqual(routeList(root), ['/', '/faq']);
-  assert.deepEqual(routeList(REPO), JSON.parse(readFileSync(join(REPO, 'audits/routes.json'), 'utf8')));
+});
+
+test('routeList returns the list the file holds as it is written, whatever its order', () => {
+  const root = treeWith({ 'audits/routes.json': JSON.stringify(['/glossary/zeta', '/', '/blog/alpha', '/faq']) });
+  assert.deepEqual(routeList(root), JSON.parse(readFileSync(join(root, 'audits/routes.json'), 'utf8')));
 });
 
 test('a route file that is not a list of strings is refused, naming the file', () => {

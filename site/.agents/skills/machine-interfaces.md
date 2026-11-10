@@ -72,9 +72,9 @@ the generator. The sitemap's `namespaces: { news: false, image: false, video: fa
 three unused Google extensions; `xhtml` stays on since nothing rules it out, and nothing populates `image`, `video` or
 `news`.
 
-`public/robots.txt` is generated, never hand-edited: `npm run assets:robots` (`scripts/gen-robots.mjs`) after changing
-`TRAINING_AGENTS`, `RETRIEVAL_AGENTS` or `SEARCH_AGENTS`, then commit the regenerated file; `gen-robots.test.mjs` fails
-the build if the committed file and the generator output diverge. Every group repeats the `*` group's disallows
-verbatim; the register makes silence about a named crawler impossible, it does not differentiate policy per agent.
-`gen-robots.test.mjs` pins the exact ordered agent list as a fixture: add a new agent to the right category array and to
-that fixture's list in the same change.
+The site's `robots.txt` is generated, never hand-edited: `npm run assets:robots` (`scripts/gen-robots.mjs`) after changing
+`TRAINING_AGENTS`, `RETRIEVAL_AGENTS` or `SEARCH_AGENTS`, then commit it. Its `Sitemap:` line carries the brand origin, so
+an export leaves it behind: a new site runs the command once, before `gen-robots.test.mjs` compares the committed file
+with the generator output. Every group repeats the `*` disallows verbatim; the register makes silence about a named
+crawler impossible, it does not differentiate policy per agent. `gen-robots.test.mjs` pins the ordered agent list as a
+fixture: add a new agent to the right category array and to that fixture's list in the same change.

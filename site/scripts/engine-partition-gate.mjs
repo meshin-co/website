@@ -1,9 +1,7 @@
 import { anchorsFor } from './engine-anchors.mjs';
 import { recordProducer } from './engine-records.mjs';
-import { IDENTITY_EXEMPT_RULES, isSeed, partition, seedTarget } from './engine-partition.mjs';
-import { identityTermIn, readPartitionFacts } from './engine-partition-facts.mjs';
-
-const BINARY = /\.(?:png|ico|ttf|woff2?|jpe?g|webp|avif|gif|pdf)$/;
+import { isSeed, partition, seedTarget } from './engine-partition.mjs';
+import { identityTermIn, isIdentityChecked, readPartitionFacts } from './engine-partition-facts.mjs';
 
 const finding = (rule, where, detail) => ({ rule, where, detail });
 
@@ -18,20 +16,18 @@ function unclassifiedFindings(unclassified) {
 }
 
 function siteBoundFindings({ rows, read, identity }) {
-  return rows
-    .filter((row) => row.class === 'engine' && !IDENTITY_EXEMPT_RULES.includes(row.rule) && !BINARY.test(row.file))
-    .flatMap(({ file, rule }) => {
-      const term = identityTermIn(read(file) ?? '', identity);
-      return term === null
-        ? []
-        : [
-            finding(
-              'site-bound',
-              file,
-              `${rule} names "${term}", so it belongs to this site: move the fact into the site config or data, or seed the file`
-            ),
-          ];
-    });
+  return rows.filter(isIdentityChecked).flatMap(({ file, rule }) => {
+    const term = identityTermIn(read(file) ?? '', identity);
+    return term === null
+      ? []
+      : [
+          finding(
+            'site-bound',
+            file,
+            `${rule} names "${term}", so it belongs to this site: move the fact into the site config or data, or seed the file`
+          ),
+        ];
+  });
 }
 
 function serverOf(anchor, { files, classOf, facts }) {

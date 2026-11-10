@@ -12,7 +12,6 @@ import { readSources } from './writer-prompt-read.mjs';
 
 const FACTS_FILE = 'site/content-facts.json';
 const LIST_KINDS = ['json', 'routes', 'tags', 'slugs'];
-const REPOSITORY = join(import.meta.dirname, '..', '..');
 const DECLARED_KEYS = PROMPT_SOURCES.flatMap(({ take }) => take.filter(({ key }) => key).map(({ key }) => key)).sort();
 
 const roots = [];
@@ -110,11 +109,12 @@ for (const [path, empty] of Object.entries(EMPTIED)) {
 }
 
 for (const format of ['term', 'article']) {
-  test(`the ${format} walk resolves every anchor of every source against the committed tree of the repository`, () => {
-    const [prompt] = parseBuyerPrompts(readFileSync(join(REPOSITORY, 'docs/SEMANTIC-CORE.md'), 'utf8'));
-    assert.ok(prompt, 'the committed core holds no buyer prompt');
+  test(`the ${format} walk resolves every anchor of every source against the tree of a repository it builds`, () => {
+    const root = freshRoot();
+    const [prompt] = parseBuyerPrompts(readFileSync(join(root, 'docs/SEMANTIC-CORE.md'), 'utf8'));
+    assert.ok(prompt, 'the built core holds no buyer prompt');
     const claim = claimFor(format, { prompt: { number: prompt.number, text: 'the first buyer prompt' } });
-    const { texts, data } = readSources({ repoRoot: REPOSITORY, claim, sources: PROMPT_SOURCES });
+    const { texts, data } = readSources({ repoRoot: root, claim, sources: PROMPT_SOURCES });
     assert.ok(texts.every(({ blocks }) => blocks.length > 0));
     assert.deepEqual(Object.keys(data).sort(), DECLARED_KEYS);
   });

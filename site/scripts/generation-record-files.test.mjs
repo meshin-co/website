@@ -5,11 +5,18 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
 
-import { ARTICLE_SLUG, CLAIMED_AT, categoryInput, recordInput, weakDemandInput } from './fixtures/generation-input.mjs';
+import {
+  ARTICLE_SLUG,
+  CLAIMED_AT,
+  categoryInput,
+  keywordInput,
+  orderedPromptInput,
+  orderedTitleInput,
+  recordInput,
+  weakDemandInput,
+} from './fixtures/generation-input.mjs';
 import { RecordError, buildRecord, readRecord, writeRecord } from './generation-record.mjs';
 import { recordFiles, recordPath } from './record-layout.mjs';
-
-const REPOSITORY_ROOT = join(import.meta.dirname, '..', '..');
 
 const base = buildRecord(recordInput());
 const withTotal = (costUsd) => ({ ...base, totals: { ...base.totals, costUsd } });
@@ -145,8 +152,40 @@ test('a record that breaks an origin rule is refused with the rule named, and no
   assert.equal(existsSync(join(root, 'audits')), false);
 });
 
-test('every record committed under audits stays valid, so the origin and the null row can stay optional', () => {
-  const files = recordFiles(REPOSITORY_ROOT, 'generation');
-  assert.ok(files.length >= 1, 'the scan found no generation record to read');
-  for (const file of files) assert.doesNotThrow(() => readRecord(join(REPOSITORY_ROOT, file)), file);
+const INPUT_OF_KIND = {
+  'a-record-with-no-origin': recordInput,
+  'a-weak-demand-record': weakDemandInput,
+  'a-keyword-record': keywordInput,
+  'a-category-record': categoryInput,
+  'an-ordered-by-prompt-record': orderedPromptInput,
+  'an-ordered-by-title-record': orderedTitleInput,
+};
+
+function slugged(input, slug) {
+  const entryPath = input.entryPath.replace(input.claim.slug, slug);
+  return {
+    ...input,
+    claim: { ...input.claim, slug },
+    route: input.route.replace(input.claim.slug, slug),
+    entryPath,
+    files: [entryPath, filed(slug)],
+  };
+}
+
+test('a scan reads a record of every origin, the null row and one with no origin as valid, and stops by name at a record that breaks the schema', (t) => {
+  const root = scratch(t);
+  for (const [slug, input] of Object.entries(INPUT_OF_KIND))
+    writeRecord(join(root, filed(slug)), buildRecord(slugged(input(), slug)));
+
+  const files = recordFiles(root, 'generation');
+  assert.equal(files.length, Object.keys(INPUT_OF_KIND).length);
+  for (const file of files) assert.doesNotThrow(() => readRecord(join(root, file)), file);
+
+  const balanced = buildRecord(slugged(recordInput(), 'a-record-with-a-wrong-total'));
+  const unbalanced = { ...balanced, totals: { ...balanced.totals, costUsd: 9 } };
+  writeFileSync(join(root, filed(unbalanced.slug)), JSON.stringify(unbalanced));
+  assert.throws(
+    () => recordFiles(root, 'generation').forEach((file) => readRecord(join(root, file))),
+    /generations\/2026\/11\/a-record-with-a-wrong-total\.json does not match the generation record schema: totals\.costUsd is 9/
+  );
 });

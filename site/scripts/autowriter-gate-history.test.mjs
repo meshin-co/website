@@ -6,6 +6,8 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { test } from 'node:test';
 
+import { titleSuffix } from '../src/utils/brand.mjs';
+
 import { autowriterReport, summaryLine } from './autowriter-gate.mjs';
 import { BOT, HUMAN, commitAs, initRepo, removeRepos, shallowClone } from './fixtures/history-repo.mjs';
 import {
@@ -16,7 +18,9 @@ import {
   bandSceneFiles,
   recordWith,
 } from './fixtures/record-rules-scene.mjs';
+import { SCENE_CORE } from './fixtures/semantic-core-scene.mjs';
 import { plantSpendReport, spendReportFiles } from './fixtures/spend-report-plant.mjs';
+import { siteBrand } from './site-brand.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
 const REPO = resolve(SITE, '..');
@@ -43,9 +47,9 @@ test('the summary line says how many pipeline commits were judged, and that none
 const inputs = () => ({
   ledgers: [],
   claims: [],
-  core: readFileSync(join(REPO, 'docs/SEMANTIC-CORE.md'), 'utf8'),
+  core: SCENE_CORE,
   workflows: [{ path: '.github/workflows/ci.yml', text: readFileSync(join(REPO, '.github/workflows/ci.yml'), 'utf8') }],
-  suffix: ' — meshin.co',
+  suffix: titleSuffix(siteBrand()),
   now: new Date('2026-11-02T07:00:00.000Z'),
 });
 
@@ -63,7 +67,7 @@ function inTempRepo(check) {
   const root = mkdtempSync(join(tmpdir(), 'autowriter-gate-history-'));
   try {
     for (const [path, text] of Object.entries({
-      'site/src/config.yaml': 'site:\n  name: meshin.co\n',
+      'site/src/config.yaml': `site:\n  name: ${siteBrand().name}\n`,
       'docs/SEMANTIC-CORE.md': inputs().core,
       '.github/workflows/ci.yml': inputs().workflows[0].text,
       ...bandSceneFiles(),

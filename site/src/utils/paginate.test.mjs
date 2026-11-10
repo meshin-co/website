@@ -1,7 +1,16 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { PAGE_SIZE, firstPage, pageCount, pagePath, paginate, paginationLinks } from './paginate.mjs';
+import {
+  PAGE_HEADING_FORMAT,
+  PAGE_SIZE,
+  firstPage,
+  pageCount,
+  pageHeading,
+  pagePath,
+  paginate,
+  paginationLinks,
+} from './paginate.mjs';
 
 const entries = (count) => Array.from({ length: count }, (_, index) => index);
 
@@ -50,4 +59,20 @@ test('page counts round up from the remainder', () => {
   assert.equal(pageCount(entries(1)), 1);
   assert.equal(pageCount(entries(12)), 1);
   assert.equal(pageCount(entries(13)), 2);
+});
+
+test('a numbered page is headed by the heading of its first page, a comma, the word page and its own number', () => {
+  assert.equal(pageHeading('AI governance posts', 2), 'AI governance posts, page 2');
+  assert.equal(pageHeading('AI governance articles', 11), 'AI governance articles, page 11');
+});
+
+test('the wording is one string that names the heading and the number once each, so the editorial ledger can read it as a row', () => {
+  assert.equal(PAGE_HEADING_FORMAT.match(/\{heading\}/g)?.length, 1);
+  assert.equal(PAGE_HEADING_FORMAT.match(/\{number\}/g)?.length, 1);
+  assert.equal(pageHeading('A', 2), PAGE_HEADING_FORMAT.replace('{heading}', 'A').replace('{number}', '2'));
+});
+
+test('a heading that holds a placeholder or a replacement pattern is printed as written, never expanded again', () => {
+  assert.equal(pageHeading('Use {number} wisely', 3), 'Use {number} wisely, page 3');
+  assert.equal(pageHeading('Cost $& benefit', 2), 'Cost $& benefit, page 2');
 });

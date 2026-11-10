@@ -5,6 +5,7 @@ import { join, resolve } from 'node:path';
 import { test } from 'node:test';
 
 import { FIXED_ANCHORS, anchorsFor } from './engine-anchors.mjs';
+import { measureScriptFor } from './engine-records.mjs';
 import { LENGTH_FILE } from './entry-length.mjs';
 import { readEngineConfig } from './engine-config.mjs';
 import { BAND_FILE } from './sentence-band.mjs';
@@ -27,11 +28,15 @@ test('every anchor has a unique path, a kind and a role that says what reads it'
   }
 });
 
-test('every anchor exists in this repository, so the list describes the real engine', () => {
+test('every anchor exists in this repository, or is a record whose measure script exists', () => {
   for (const { path, kind } of anchors) {
     const target = join(REPOSITORY, path);
-    assert.ok(existsSync(target), `${path} is listed and absent`);
-    assert.equal(statSync(target).isDirectory(), kind === 'directory', path);
+    if (existsSync(target)) assert.equal(statSync(target).isDirectory(), kind === 'directory', path);
+    else
+      assert.ok(
+        existsSync(join(REPOSITORY, measureScriptFor(path))),
+        `${path} is listed, absent and no measure script produces it`
+      );
   }
 });
 

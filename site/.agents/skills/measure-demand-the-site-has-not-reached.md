@@ -6,8 +6,8 @@ The topic picker does not read its report yet: today it is evidence for a person
 
 ## What each instrument sees
 
-- **Search Console:** queries the site was shown for. Replaying all 13 versions of `audits/search-demand.md` through
-  the picker's own modules gave 0 candidates on every one (`investigation/09-what-the-demand-instruments-see.md`).
+- **Search Console:** queries the site was shown for. On the first site this engine ran, replaying all 13 versions of
+  `audits/search-demand.md` through the picker's own modules gave 0 candidates on every one.
 - **Bing `GetKeywordStats`:** up to 24 weekly rows for a phrase you name. It proposes nothing: `GetRelatedKeywords`
   answered zero rows for every phrase, "seo" included. The audit therefore builds the list itself.
 - **Where the volume is,** measured 2026-11-09 over 312 phrases: 47 carry an exact impression, 7 of them unserved.

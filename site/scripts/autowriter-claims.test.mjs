@@ -1,8 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
-
-import { titleSuffix } from '../src/utils/brand.mjs';
 
 import {
   CLAIM_FORMATS,
@@ -23,9 +20,8 @@ import {
 import { describeProblem } from './autowriter-records.mjs';
 import { CATEGORIES } from './entry-limits.mjs';
 import { recordDirectory, recordPath } from './record-layout.mjs';
-import { siteBrand } from './site-brand.mjs';
 
-const SUFFIX = ' — meshin.co';
+const SUFFIX = ' — example.test';
 const NOW = new Date('2026-11-02T07:00:00.000Z');
 const CLAIMED = '2026-11-01T07:00:00.000Z';
 const LIVE = '2026-11-15T07:00:00.000Z';
@@ -56,19 +52,19 @@ const CORE = [
   '<!-- semantic-core:begin generated -->',
   '### static (2)',
   '',
-  'title `{page name} — meshin.co`',
+  'title `{page name} — example.test`',
   '',
   '| Route    | Query | Title                                | Description |',
   '| -------- | ----- | ------------------------------------ | ----------- |',
-  '| `/`      | home  | Fractional Chief AI Officer — meshin.co | text |',
-  '| `/about` | about | About Dmitri Meshin — meshin.co      | text |',
+  '| `/`      | home  | An invented home — example.test      | text |',
+  '| `/about` | about | About the invented studio — example.test | text |',
   '',
   '### term (2)',
   '',
   '| Route                  | Query          | Title                                  | Description | H1 |',
   '| ---------------------- | -------------- | -------------------------------------- | ----------- | -- |',
-  '| `/glossary/ai-system`  | ai system      | What is an AI system? — meshin.co      | text | AI system |',
-  "| `/glossary/bias`       | bias           | What's algorithmic bias? — meshin.co   | text | Bias |",
+  '| `/glossary/ai-system`  | ai system      | What is an AI system? — example.test  | text | AI system |',
+  "| `/glossary/bias`       | bias           | What's algorithmic bias? — example.test | text | Bias |",
   '<!-- semantic-core:end generated -->',
   'outro',
 ].join('\n');
@@ -153,7 +149,7 @@ test('a title compares equal after case folding, accents, apostrophes, punctuati
     'What is an AI system?',
     'what is an ai system',
     'WHAT IS AN AI SYSTEM!!',
-    'What is an AI system? — meshin.co',
+    'What is an AI system? — example.test',
     '  What  is an  AI-system ',
   ];
   for (const title of same) assert.equal(normaliseTitle(title, SUFFIX), 'what is an ai system', title);
@@ -165,12 +161,12 @@ test('a title compares equal after case folding, accents, apostrophes, punctuati
 
 test('the generated layer yields every row title with its route and family, and nothing outside the markers', () => {
   assert.deepEqual(generatedTitles(CORE), [
-    { family: 'static', route: '/', title: 'Fractional Chief AI Officer — meshin.co' },
-    { family: 'static', route: '/about', title: 'About Dmitri Meshin — meshin.co' },
-    { family: 'term', route: '/glossary/ai-system', title: 'What is an AI system? — meshin.co' },
-    { family: 'term', route: '/glossary/bias', title: "What's algorithmic bias? — meshin.co" },
+    { family: 'static', route: '/', title: 'An invented home — example.test' },
+    { family: 'static', route: '/about', title: 'About the invented studio — example.test' },
+    { family: 'term', route: '/glossary/ai-system', title: 'What is an AI system? — example.test' },
+    { family: 'term', route: '/glossary/bias', title: "What's algorithmic bias? — example.test" },
   ]);
-  const outside = CORE.replace('outro', '| `/outside` | q | Outside the markers — meshin.co | d |');
+  const outside = CORE.replace('outro', '| `/outside` | q | Outside the markers — example.test | d |');
   assert.equal(
     generatedTitles(outside).some(({ route }) => route === '/outside'),
     false
@@ -198,13 +194,13 @@ test('an open claim whose title is already a title in the generated layer is ref
     {
       path: recordPath('claim', 'what-is-an-ai-system', CLAIMED),
       detail:
-        'title "what is an AI system" is already the title of /glossary/ai-system in the generated layer of docs/SEMANTIC-CORE.md ("What is an AI system? — meshin.co")',
+        'title "what is an AI system" is already the title of /glossary/ai-system in the generated layer of docs/SEMANTIC-CORE.md ("What is an AI system? — example.test")',
     },
   ]);
 });
 
 test('a title is checked in every family of the layer, not only the one the claim names', () => {
-  const found = collide([filed('about', { title: 'About Dmitri Meshin', format: 'term' })]);
+  const found = collide([filed('about', { title: 'About the invented studio', format: 'term' })]);
   assert.equal(found.length, 1);
   assert.match(found[0].detail, /already the title of \/about in the generated layer/);
 });
@@ -271,23 +267,41 @@ test('no claims, or claims on new titles, are no collisions', () => {
   assert.deepEqual(collide([filed('what-is-a-model-card')]), []);
 });
 
-test('the real generated layer is read whole: one title per route row, in every family the core names', () => {
-  const doc = readFileSync(new URL('../../docs/SEMANTIC-CORE.md', import.meta.url), 'utf8');
+const layerRow = (family, number) => ({
+  family,
+  route: `/${family}/row-${number}`,
+  query: `${family} query ${number}`,
+  title: `A ${family} title ${number}${SUFFIX}`,
+  description: `The ${family} description ${number}.`,
+  h1: `The ${family} heading ${number}`,
+  links: 12,
+  opening: '✓',
+});
+
+test('the layer the generator writes is read whole: one title per route row, in every family the generator knows', async () => {
+  const { FAMILY_GRAMMAR, renderFamilies, spliceGenerated } = await import('./semantic-core.mjs');
+  const families = Object.keys(FAMILY_GRAMMAR);
+  const rows = families.flatMap((family, at) =>
+    Array.from({ length: (at % 3) + 1 }, (_, number) => layerRow(family, number + 1))
+  );
+  const doc = spliceGenerated(`${GENERATED_BEGIN}\n${GENERATED_END}`, renderFamilies(rows));
   const block = doc.slice(doc.indexOf(GENERATED_BEGIN), doc.indexOf(GENERATED_END));
   const routeRows = block.split('\n').filter((line) => line.startsWith('| `'));
   const named = [...block.matchAll(/^### ([a-z-]+) \((\d+)\)/gm)].map(([, family, count]) => [family, Number(count)]);
-  const rows = generatedTitles(doc);
-  const suffix = titleSuffix(siteBrand());
-  assert.equal(rows.length, routeRows.length);
-  assert.ok(rows.length > 0, 'no title was read');
-  assert.ok(
-    rows.every(({ title }) => title.endsWith(suffix)),
-    'a title lost its brand suffix'
-  );
-  assert.ok(named.length > 0, 'the core names no family');
+  const read = generatedTitles(doc);
+  assert.ok(rows.length > 0, 'the generator knows no family');
+  assert.equal(routeRows.length, rows.length, 'the layer lost a row before it was read');
+  assert.equal(read.length, routeRows.length);
+  assert.deepEqual(named.map(([family]) => family).sort(), [...families].sort());
   for (const [family, count] of named) {
-    assert.equal(rows.filter((row) => row.family === family).length, count, `${family} titles read`);
+    assert.equal(read.filter((row) => row.family === family).length, count, `${family} titles read`);
   }
+  assert.deepEqual(
+    read,
+    named.flatMap(([family]) =>
+      rows.filter((row) => row.family === family).map(({ route, title }) => ({ family, route, title }))
+    )
+  );
 });
 
 test('the markers are the ones semantic-core.mjs writes, so the two files cannot drift apart', async () => {

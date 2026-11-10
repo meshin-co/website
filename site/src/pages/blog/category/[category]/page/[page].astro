@@ -11,9 +11,9 @@ import PostCard from '~/components/site/PostCard.astro';
 import CtaBlock from '~/components/site/CtaBlock.astro';
 import Section from '~/components/site/Section.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import { categoryPillars } from '~/data/categories.mjs';
+import { archiveTitleOf, categoryPillars } from '~/data/categories.mjs';
 import { breadcrumbNode, collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
-import { paginate, paginationLinks } from '~/utils/paginate.mjs';
+import { pageHeading, paginate, paginationLinks } from '~/utils/paginate.mjs';
 import { readingTime } from '~/utils/reading-time.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
 import { isPublished } from '~/utils/feeds.mjs';
@@ -47,8 +47,9 @@ const { category, pillar, pageNumber, entries, all } = Astro.props;
 const site = import.meta.env.SITE.replace(/\/$/, '');
 const basePath = `/blog/category/${category}/page/${pageNumber}`;
 
+const heading = pageHeading(archiveTitleOf(pillar), pageNumber);
 const metadata = {
-  title: `${pillar.title}, page ${pageNumber}`,
+  title: heading,
   description: pillar.description,
   robots: { index: false, follow: true },
 };
@@ -79,13 +80,7 @@ const nodes = [
 
   <Breadcrumbs crumbs={crumbs} />
 
-  <Section
-    bordered={false}
-    headingLevel={1}
-    eyebrow="Category"
-    title={`${pillar.title}, page ${pageNumber}`}
-    lead={pillar.description}
-  />
+  <Section bordered={false} headingLevel={1} eyebrow="Category" title={heading} lead={pillar.description} />
 
   <Section title="Articles in this category">
     <CardGrid columns={2}>
