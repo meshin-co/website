@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "measuredOn": "2026-11-02",
+  "measuredOn": "2026-11-10",
   "corpus": {
     "article": {
       "entries": 8
@@ -36,16 +36,16 @@
     "term": {
       "words": {
         "min": 98,
-        "p25": 137,
-        "p50": 146,
-        "p75": 151,
-        "max": 422
+        "p25": 139,
+        "p50": 148,
+        "p75": 347,
+        "max": 904
       },
       "sections": {
         "min": 2,
         "p25": 2,
         "p50": 2,
-        "p75": 2,
+        "p75": 3,
         "max": 6
       },
       "thinnestSection": {
@@ -69,8 +69,8 @@
     "term": {
       "format": "term",
       "wordsFloor": 98,
-      "targetFrom": 137,
-      "targetTo": 151,
+      "targetFrom": 139,
+      "targetTo": 347,
       "sectionsFloor": 2,
       "sectionWordsFloor": 21
     }

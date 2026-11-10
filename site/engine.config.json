@@ -64,10 +64,10 @@
       "{concept} policy",
       "{concept} template",
       "{concept} examples",
-      "{concept} checklist",
-      "{concept} risks",
+      "{concept} guidelines",
+      "{concept} playbook",
       "{concept} framework",
-      "{concept} requirements"
+      "{concept} best practices"
     ]
   }
 }

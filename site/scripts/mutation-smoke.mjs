@@ -142,6 +142,7 @@ export const FAMILIES = [
     specimen: 'autowriterOrderedClaimOffItsRules',
   },
   { id: 'keyword-rung-breaks-the-ladder', kind: 'pure', proves: 'pick:topic', check: 'keyword-rung-in-the-ladder' },
+  { id: 'keyword-handled-row-without-a-reason', kind: 'specimen', specimen: 'keywordHandledRowWithoutReason' },
   {
     id: 'autowriter-keyword-claim-contradicts-its-origin',
     kind: 'specimen',

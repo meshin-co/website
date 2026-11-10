@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "measuredOn": "2026-11-02",
+  "measuredOn": "2026-11-10",
   "threshold": 12,
   "minimumSentences": 8,
   "corpus": {
@@ -12,7 +12,7 @@
     "term": {
       "entries": 32,
       "measured": 32,
-      "sentences": 717
+      "sentences": 830
     }
   },
   "distribution": {
@@ -79,26 +79,26 @@
       "pooled": {
         "sentenceWords": {
           "p5": 7,
-          "p25": 12,
+          "p25": 11,
           "p50": 16,
           "p75": 20,
           "p90": 23,
           "p95": 25,
-          "p99": 28,
+          "p99": 29,
           "max": 33
         },
-        "shareBelowThreshold": 0.2469,
-        "shareJustBelow": 0.18,
-        "shareOneBelow": 0.0503
+        "shareBelowThreshold": 0.2543,
+        "shareJustBelow": 0.1723,
+        "shareOneBelow": 0.0434
       },
       "perEntry": {
         "sentences": {
           "p5": 17,
           "p25": 20,
           "p50": 21,
-          "p75": 23,
-          "p90": 26,
-          "p95": 36,
+          "p75": 31,
+          "p90": 46,
+          "p95": 49,
           "p99": 51,
           "max": 51
         },
@@ -113,21 +113,21 @@
           "max": 19
         },
         "shareBelowThreshold": {
-          "p5": 0.091,
+          "p5": 0.1177,
           "p25": 0.1579,
           "p50": 0.25,
           "p75": 0.2858,
           "p90": 0.3334,
-          "p95": 0.381,
+          "p95": 0.3674,
           "p99": 0.5099,
           "max": 0.5099
         },
         "shareJustBelow": {
-          "p5": 0.0455,
+          "p5": 0.0625,
           "p25": 0.1177,
-          "p50": 0.1819,
-          "p75": 0.2223,
-          "p90": 0.2858,
+          "p50": 0.1633,
+          "p75": 0.2174,
+          "p90": 0.25,
           "p95": 0.2942,
           "p99": 0.3334,
           "max": 0.3334
@@ -153,7 +153,7 @@
       "minimumSentences": 8,
       "medianFloor": 13,
       "medianCeiling": 19,
-      "belowThresholdCap": 0.381,
+      "belowThresholdCap": 0.3674,
       "justBelowCap": 0.2942
     }
   }

@@ -3,6 +3,7 @@ import { restoreCase } from './topic-casing.mjs';
 import { claimRefusal } from './topic-claims.mjs';
 import { promptCandidates, termCandidates, weakCandidates } from './topic-demand.mjs';
 import { topicFrom } from './topic-format.mjs';
+import { isHandled } from './keyword-handled.mjs';
 import { keywordCandidates } from './topic-keywords.mjs';
 import { ownerRefusal } from './topic-owners.mjs';
 import { existingArticles, repeatRefusal } from './topic-repeat.mjs';
@@ -71,8 +72,12 @@ const keywordAdvisory = (candidate, { outcome, detail, refusal }) => ({
   choice: strengthens(keywordChoice(candidate), refusal.against),
 });
 
-const keywordRecord = (candidate, result) =>
-  POST_ADVISED.has(result.outcome) ? { ...result, advisory: keywordAdvisory(candidate, result) } : result;
+const isAdvised = (candidate, { outcome, refusal }, handled) =>
+  POST_ADVISED.has(outcome) &&
+  !isHandled(handled, { phrase: candidate.phrase, route: refusal.against, exact: candidate.exact });
+
+const keywordRecord = (candidate, result, handled) =>
+  isAdvised(candidate, result, handled) ? { ...result, advisory: keywordAdvisory(candidate, result) } : result;
 
 function examinePrompt(candidate, context) {
   const source = context.promptSources.get(candidate.number);
@@ -189,10 +194,11 @@ export function walkWeak(context) {
 
 export function walkKeywords(context) {
   const walk = { chosen: null, trail: [], refusals: [], advisories: [] };
+  const { handled = [] } = context.keywords;
   for (const candidate of keywordCandidates(context.keywords)) {
     const result = examineQuery(candidate.phrase, context);
     walk.trail.push(stepOf('keyword', { query: candidate.phrase }, result));
-    record(walk, keywordRecord(candidate, result));
+    record(walk, keywordRecord(candidate, result, handled));
     if (result.outcome === 'chosen') {
       walk.chosen = { candidate, topic: result.topic };
       break;

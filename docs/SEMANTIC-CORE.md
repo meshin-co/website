@@ -135,14 +135,14 @@ title `What is {term}? — meshin.co` · meta: the definition sentence · body i
 | Route                                      | Query                          | Title                                                                 | Description                                                                                                                                             | H1                             | Links | Opening |
 | ------------------------------------------ | ------------------------------ | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ | ----- | ------- |
 | `/glossary/agentic-workflow`               | agentic workflow               | What is an agentic workflow? — meshin.co                              | An agentic workflow is a task where one or more AI agents plan steps, call tools and choose the next move without a person's approval.                  | Agentic workflow               | 22    | ✓       |
-| `/glossary/ai-governance`                  | ai governance                  | What is AI governance? — meshin.co                                    | AI governance is the decisions, roles and controls a company uses to manage the risk of the AI systems it builds or buys.                               | AI governance                  | 22    | ✓       |
+| `/glossary/ai-governance`                  | ai governance                  | What is AI governance? — meshin.co                                    | AI governance is the decisions, roles and controls a company uses to manage the risk of the AI systems it builds or buys.                               | AI governance                  | 40    | ✓       |
 | `/glossary/ai-impact-assessment`           | ai impact assessment           | What is an AI impact assessment? — meshin.co                          | An AI impact assessment is a written check, before a high-risk system goes live, of who it affects and whether they can challenge its decision.         | AI impact assessment           | 24    | ✓       |
 | `/glossary/ai-management-system`           | ai management system           | What is an AI management system? — meshin.co                          | An AI management system is the recurring set of policies, roles and reviews a company runs to govern its AI, not a one-off risk assessment.             | AI management system           | 23    | ✓       |
 | `/glossary/ai-operating-model`             | ai operating model             | What is an AI operating model? — meshin.co                            | An AI operating model names who chooses, reviews and runs a company's AI work. What it covers has no standard definition, so check which one is in use. | AI operating model             | 23    | ✓       |
 | `/glossary/ai-register`                    | ai register                    | What is an AI register? — meshin.co                                   | An AI register is a company's own inventory of every AI system it builds, buys or uses, naming its owner and how risky it is.                           | AI register                    | 22    | ✓       |
 | `/glossary/conformity-assessment`          | conformity assessment          | What is a conformity assessment? — meshin.co                          | A conformity assessment proves a high-risk AI system meets the EU AI Act before sale. Either the provider or an outside body runs it.                   | Conformity assessment          | 23    | ✓       |
-| `/glossary/data-classification`            | data classification            | What is data classification? — meshin.co                              | Data classification is labelling data by sensitivity, such as public, internal or restricted, before deciding what may reach an AI tool.                | Data classification            | 23    | ✓       |
-| `/glossary/dpia`                           | dpia                           | What is a DPIA? — meshin.co                                           | A DPIA, or data protection impact assessment, is a written GDPR check of privacy risk before high-risk personal-data processing begins.                 | DPIA                           | 23    | ✓       |
+| `/glossary/data-classification`            | data classification            | What is data classification? — meshin.co                              | Data classification is labelling data by sensitivity, such as public, internal or restricted, before deciding what may reach an AI tool.                | Data classification            | 29    | ✓       |
+| `/glossary/dpia`                           | dpia                           | What is a DPIA? — meshin.co                                           | A DPIA, or data protection impact assessment, is a written GDPR check of privacy risk before high-risk personal-data processing begins.                 | DPIA                           | 31    | ✓       |
 | `/glossary/eu-ai-act`                      | eu ai act                      | What is the EU AI Act? — meshin.co                                    | The EU AI Act is an EU regulation that sorts AI systems into risk tiers and sets legal obligations, heaviest for high-risk systems.                     | EU AI Act                      | 22    | ✓       |
 | `/glossary/evals`                          | evals                          | What are evals? — meshin.co                                           | Evals are repeatable tests that score an AI system's output against fixed examples, run before release and after every change.                          | Evals                          | 22    | ✓       |
 | `/glossary/guardrails`                     | guardrails                     | What are guardrails in an AI system? — meshin.co                      | Guardrails are code checks on what a model responds to, what it can say and what it can do, not rules typed into a prompt.                              | Guardrails                     | 23    | ✓       |
@@ -155,17 +155,17 @@ title `What is {term}? — meshin.co` · meta: the definition sentence · body i
 | `/glossary/mcp`                            | model context protocol         | What is the Model Context Protocol (MCP)? — meshin.co                 | The Model Context Protocol (MCP) connects AI agents to tools and data, but cannot enforce consent, data privacy or tool safety at the protocol level.   | Model Context Protocol         | 30    | ✓       |
 | `/glossary/model-card`                     | model card                     | What is a model card? — meshin.co                                     | A model card is a short document that a model's maker publishes about the model's intended use, its performance and where not to use it.                | Model card                     | 23    | ✓       |
 | `/glossary/model-provenance`               | model provenance               | What is model provenance? — meshin.co                                 | Model provenance is a traceable record of where a model comes from - its base model, its training data, and the licence covering both.                  | Model provenance               | 24    | ✓       |
-| `/glossary/nist-ai-rmf`                    | nist ai rmf                    | What is the NIST AI RMF? — meshin.co                                  | The NIST AI Risk Management Framework (AI RMF) is a voluntary US framework for managing AI risk across a system's whole lifecycle.                      | NIST AI RMF                    | 22    | ✓       |
+| `/glossary/nist-ai-rmf`                    | nist ai rmf                    | What is the NIST AI RMF? — meshin.co                                  | The NIST AI Risk Management Framework (AI RMF) is a voluntary US framework for managing AI risk across a system's whole lifecycle.                      | NIST AI RMF                    | 30    | ✓       |
 | `/glossary/observability`                  | observability                  | What is observability for an AI system? — meshin.co                   | Observability means seeing exactly what a user asked a live AI system, what it did and what it answered, for any one case.                              | Observability                  | 24    | ✓       |
 | `/glossary/post-market-monitoring`         | post-market monitoring         | What is post-market monitoring under the EU AI Act? — meshin.co       | Post-market monitoring is the EU AI Act duty to keep collecting real-world data on a high-risk system after it ships, not just before.                  | Post-market monitoring         | 23    | ✓       |
-| `/glossary/prompt-injection`               | prompt injection               | What is prompt injection? — meshin.co                                 | Prompt injection is text, typed directly or hidden in a document a model reads, that gets the model to follow it as an instruction.                     | Prompt injection               | 23    | ✓       |
+| `/glossary/prompt-injection`               | prompt injection               | What is prompt injection? — meshin.co                                 | Prompt injection is text, typed directly or hidden in a document a model reads, that gets the model to follow it as an instruction.                     | Prompt injection               | 30    | ✓       |
 | `/glossary/provider-vs-deployer`           | provider vs deployer           | What is the difference between a provider and a deployer? — meshin.co | Provider and deployer are EU AI Act roles - a provider builds or brands a system, a deployer uses it, and the two owe different duties.                 | Provider vs deployer           | 27    | ✓       |
 | `/glossary/red-teaming`                    | red teaming                    | What is red teaming for an AI system? — meshin.co                     | Red teaming is deliberately trying to break an AI system the way an attacker would, before they do, to find the failure nobody tested.                  | Red teaming                    | 23    | ✓       |
 | `/glossary/retrieval-augmented-generation` | retrieval augmented generation | What is retrieval augmented generation? — meshin.co                   | Retrieval augmented generation, or RAG, has a model look up relevant passages at answer time instead of relying only on its training.                   | Retrieval augmented generation | 23    | ✓       |
 | `/glossary/serious-incident-reporting`     | serious incident reporting     | What is serious incident reporting under the EU AI Act? — meshin.co   | Serious incident reporting is the EU AI Act duty to tell a regulator, fast, when a high-risk system causes real harm or a rights breach.                | Serious incident reporting     | 23    | ✓       |
 | `/glossary/shadow-ai`                      | shadow ai                      | What is shadow AI? — meshin.co                                        | Shadow AI is any AI tool staff use for company work without IT or security's knowledge, from an app to a browser extension.                             | Shadow AI                      | 22    | ✓       |
 | `/glossary/sub-processor`                  | sub-processor                  | What is a sub-processor? — meshin.co                                  | A sub-processor is a vendor an AI provider uses behind the scenes to handle a company's data, and GDPR requires permission before it does.              | Sub-processor                  | 23    | ✓       |
-| `/glossary/technical-documentation`        | technical documentation        | What is technical documentation under the EU AI Act? — meshin.co      | Technical documentation is the dossier a provider keeps on a high-risk AI system - its purpose, design, data, performance and monitoring plan.          | Technical documentation        | 24    | ✓       |
+| `/glossary/technical-documentation`        | technical documentation        | What is technical documentation under the EU AI Act? — meshin.co      | Technical documentation is the dossier a provider keeps on a high-risk AI system - its purpose, design, data, performance and monitoring plan.          | Technical documentation        | 30    | ✓       |
 
 ### faq-answer (25)
 
@@ -429,34 +429,34 @@ One owning route per entity. The mention count is inbound references from other 
 | ------------------------------ | ------------------------------------------ | ------------ |
 | Agentic workflow               | `/glossary/agentic-workflow`               | 13           |
 | AI governance                  | `/glossary/ai-governance`                  | 41           |
-| AI impact assessment           | `/glossary/ai-impact-assessment`           | 2            |
-| AI management system           | `/glossary/ai-management-system`           | 6            |
+| AI impact assessment           | `/glossary/ai-impact-assessment`           | 3            |
+| AI management system           | `/glossary/ai-management-system`           | 7            |
 | AI operating model             | `/glossary/ai-operating-model`             | 16           |
-| AI register                    | `/glossary/ai-register`                    | 37           |
+| AI register                    | `/glossary/ai-register`                    | 39           |
 | Conformity assessment          | `/glossary/conformity-assessment`          | 5            |
-| Data classification            | `/glossary/data-classification`            | 15           |
-| DPIA                           | `/glossary/dpia`                           | 5            |
-| EU AI Act                      | `/glossary/eu-ai-act`                      | 41           |
+| Data classification            | `/glossary/data-classification`            | 16           |
+| DPIA                           | `/glossary/dpia`                           | 6            |
+| EU AI Act                      | `/glossary/eu-ai-act`                      | 42           |
 | Evals                          | `/glossary/evals`                          | 39           |
 | Guardrails                     | `/glossary/guardrails`                     | 7            |
 | Hallucination rate             | `/glossary/hallucination-rate`             | 4            |
 | High-risk AI system            | `/glossary/high-risk-ai-system`            | 10           |
-| Human oversight                | `/glossary/human-oversight`                | 11           |
-| Human-in-the-loop              | `/glossary/human-in-the-loop`              | 5            |
+| Human oversight                | `/glossary/human-oversight`                | 15           |
+| Human-in-the-loop              | `/glossary/human-in-the-loop`              | 6            |
 | ISO/IEC 42001                  | `/glossary/iso-iec-42001`                  | 29           |
-| LLM gateway                    | `/glossary/llm-gateway`                    | 11           |
+| LLM gateway                    | `/glossary/llm-gateway`                    | 12           |
 | Model card                     | `/glossary/model-card`                     | 3            |
 | Model Context Protocol         | `/glossary/mcp`                            | 2            |
 | Model provenance               | `/glossary/model-provenance`               | 3            |
 | NIST AI RMF                    | `/glossary/nist-ai-rmf`                    | 24           |
 | Observability                  | `/glossary/observability`                  | 5            |
-| Post-market monitoring         | `/glossary/post-market-monitoring`         | 5            |
+| Post-market monitoring         | `/glossary/post-market-monitoring`         | 7            |
 | Prompt injection               | `/glossary/prompt-injection`               | 7            |
 | Provider vs deployer           | `/glossary/provider-vs-deployer`           | 3            |
 | Red teaming                    | `/glossary/red-teaming`                    | 4            |
 | Retrieval augmented generation | `/glossary/retrieval-augmented-generation` | 4            |
 | Serious incident reporting     | `/glossary/serious-incident-reporting`     | 3            |
-| Shadow AI                      | `/glossary/shadow-ai`                      | 9            |
+| Shadow AI                      | `/glossary/shadow-ai`                      | 11           |
 | Sub-processor                  | `/glossary/sub-processor`                  | 7            |
 | Technical documentation        | `/glossary/technical-documentation`        | 8            |
 

@@ -131,6 +131,38 @@ test('the check fails when the register-owned candidate leaves no advisory behin
   failing(withSelect(unadvised), /no advisory names \/glossary\/evals with the 1200 exact impressions/);
 });
 
+const handledWith =
+  (impressions) =>
+  ({ keywords }) => ({
+    keywords: { ...keywords, handled: (keywords.handled ?? []).map((row) => ({ ...row, impressions })) },
+  });
+const forgetsTheLedger = ({ keywords }) => ({ keywords: { ...keywords, handled: [] } });
+
+test('the check fails when a pair the ledger records as handled is advised again', () => {
+  failing(
+    withSelect(changing(forgetsTheLedger)),
+    /a pair recorded as handled was advised again: \/glossary\/evals for "evals checklist"/
+  );
+});
+
+test('the check fails when a handled pair whose impressions grew stays quiet', () => {
+  failing(
+    withSelect(changing(handledWith(1200))),
+    /a handled pair whose exact impressions grew from 100 to 1200 was not advised again/
+  );
+});
+
+test('the check fails when handling one pair silences a pair that was never recorded', () => {
+  const silencesAll = (inputs) => {
+    const decision = real(inputs);
+    return (inputs.keywords.handled ?? []).length === 0 ? decision : { ...decision, strengthen: null, advisories: [] };
+  };
+  failing(
+    withSelect(silencesAll),
+    /handling one pair silenced \/glossary\/ai-register, which was never recorded as handled/
+  );
+});
+
 test('the check fails when a missing keyword report is an error', () => {
   failing(
     withReader(() => {

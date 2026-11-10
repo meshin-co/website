@@ -115,3 +115,50 @@ test('a specimen that finds nothing to change refuses to plant, so it cannot pas
     await assert.rejects(Promise.resolve(SPECIMENS[name].plant(join(repo, 'site'))), /specimen edit changed nothing/);
   }
 });
+
+const LEDGER = 'audits/keyword-handled.json';
+const LEDGER_ROW = {
+  phrase: 'shadow ai',
+  route: '/glossary/shadow-ai',
+  impressions: 12,
+  handledOn: '2026-11-08',
+  reason: 'Added a section.',
+};
+const ledgerFindings = (handled) =>
+  keywordFindings({ report: REPORT, today: TODAY, handled }).map(
+    ({ rule, path, detail }) => `${rule} ${path}: ${detail}`
+  );
+
+async function plantLedger(name, text) {
+  const repo = mkdtempSync(join(tmpdir(), 'keyword-specimens-'));
+  scratches.push(repo);
+  mkdirSync(join(repo, 'site'));
+  mkdirSync(join(repo, 'audits'));
+  writeFileSync(join(repo, LEDGER), text);
+  const restore = await SPECIMENS[name].plant(join(repo, 'site'));
+  const planted = readFileSync(join(repo, LEDGER), 'utf8');
+  await restore();
+  return { planted, restored: readFileSync(join(repo, LEDGER), 'utf8') };
+}
+
+test('the handled-row specimen appends a row with no reason to the ledger and the gate prints exactly the token it names', async () => {
+  for (const text of ['[]\n', `${JSON.stringify([LEDGER_ROW])}\n`, '']) {
+    const { planted, restored } = await plantLedger('keywordHandledRowWithoutReason', text);
+
+    assert.equal(SPECIMENS.keywordHandledRowWithoutReason.gate, 'gate:keywords');
+    assert.deepEqual(ledgerFindings(text), []);
+    assert.equal(ledgerFindings(planted).length, 1, planted);
+    assert.ok(
+      ledgerFindings(planted)[0].includes(SPECIMENS.keywordHandledRowWithoutReason.token),
+      ledgerFindings(planted)[0]
+    );
+    assert.equal(restored, text);
+  }
+});
+
+test('the handled-row specimen refuses to plant into a tree with no ledger, so it cannot pass by planting nothing', async () => {
+  const repo = mkdtempSync(join(tmpdir(), 'keyword-specimens-'));
+  scratches.push(repo);
+  mkdirSync(join(repo, 'site'));
+  await assert.rejects(Promise.resolve(SPECIMENS.keywordHandledRowWithoutReason.plant(join(repo, 'site'))));
+});

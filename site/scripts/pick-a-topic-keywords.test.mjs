@@ -149,3 +149,87 @@ test('candidates a published article already covers are set aside, and the run f
     posts
   );
 });
+
+const HANDLED_PATH = 'audits/keyword-handled.json';
+const handledRow = (phrase, route, impressions) => ({
+  phrase,
+  route,
+  impressions,
+  handledOn: '2026-11-10',
+  reason: 'Added a section that answers the phrase.',
+});
+const strengthenLines = (stdout) => stdout.filter((line) => line.startsWith('Strengthen:'));
+
+test('a pair recorded as handled is no longer printed as a Strengthen advisory, and the pair that is not recorded still is', async () => {
+  await withKeywordReport(OWNED, async (repo) => {
+    const before = await repo.run([], { rotation: ROTATION });
+    assert.equal(strengthenLines(before.stdout).length, 2, before.stdout.join('\n'));
+    repo.put(HANDLED_PATH, [handledRow('evals checklist', '/glossary/evals', 1200)]);
+    const { exit, stdout, stderr } = await repo.run([], { rotation: ROTATION });
+    assert.equal(exit, 0, stderr.join('\n'));
+    const lines = strengthenLines(stdout);
+    assert.equal(lines.length, 1, stdout.join('\n'));
+    assert.ok(lines[0].startsWith(advisoryLine('/glossary/ai-register', 'ai register template', 500)), lines[0]);
+  });
+});
+
+test('a handled pair whose exact impressions reached double and 50 more is printed again, and one just short of double is not', async () => {
+  await withKeywordReport(OWNED, async (repo) => {
+    repo.put(HANDLED_PATH, [handledRow('evals checklist', '/glossary/evals', 600)]);
+    const grown = await repo.run([], { rotation: ROTATION });
+    assert.equal(strengthenLines(grown.stdout).length, 2, grown.stdout.join('\n'));
+    repo.put(HANDLED_PATH, [handledRow('evals checklist', '/glossary/evals', 601)]);
+    const level = await repo.run([], { rotation: ROTATION });
+    assert.equal(strengthenLines(level.stdout).length, 1, level.stdout.join('\n'));
+  });
+});
+
+test('every candidate handled leaves no advisory and no error, and the run falls to the category rotation', async () => {
+  await withKeywordReport(OWNED, async (repo) => {
+    repo.put(HANDLED_PATH, [
+      handledRow('evals checklist', '/glossary/evals', 1200),
+      handledRow('ai register template', '/glossary/ai-register', 500),
+    ]);
+    const { exit, stdout, stderr } = await repo.run([], { rotation: ROTATION });
+    assert.equal(exit, 0, stderr.join('\n'));
+    assert.deepEqual(strengthenLines(stdout), []);
+    assert.ok(
+      stdout.some((line) => line.startsWith('Category rotation:')),
+      stdout.join('\n')
+    );
+  });
+});
+
+for (const [name, text] of [
+  ['an empty ledger', ''],
+  ['an empty list', '[]\n'],
+  ['a ledger that is not JSON', '{ nope'],
+]) {
+  test(`with ${name} nothing is handled and the run is no different from one with no ledger`, async () => {
+    await withKeywordReport(OWNED, async (repo) => {
+      repo.put(HANDLED_PATH, text);
+      const { exit, stdout, stderr } = await repo.run([], { rotation: ROTATION });
+      assert.equal(exit, 0, stderr.join('\n'));
+      assert.deepEqual(stderr, []);
+      assert.equal(strengthenLines(stdout).length, 2, stdout.join('\n'));
+    });
+  });
+}
+
+test('a handled pair leaves the ledger refusal of the run as it was, so only the advice is quiet', async () => {
+  const vendor = vendorAnswering(answerWith(QUERY_ACCEPTED));
+  await withKeywordReport(OWNED, async (repo) => {
+    repo.put(HANDLED_PATH, [handledRow('evals checklist', '/glossary/evals', 1200)]);
+    const { exit, stderr } = await written(repo, [], { vendor, rotation: ROTATION });
+    assert.equal(exit, 0, stderr.join('\n'));
+    const file = repo.json('out/decision.json');
+    const ledger = readLedger(join(repo.root, file.ledgerPath));
+    assert.deepEqual(
+      ledger.refusals.map(({ reason, against }) => [reason, against]),
+      [
+        ['register-owner', '/glossary/evals'],
+        ['register-owner', '/glossary/ai-register'],
+      ]
+    );
+  });
+});

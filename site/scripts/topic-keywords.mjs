@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { readHandled } from './keyword-handled.mjs';
 import { readKeywordReport } from './keyword-report.mjs';
 
 export const KEYWORD_REPORT_PATH = 'audits/keyword-demand.md';
@@ -16,7 +17,10 @@ function reportText(repoRoot) {
   }
 }
 
-export const readKeywords = (repoRoot) => readKeywordReport(reportText(repoRoot));
+export const readKeywords = (repoRoot) => ({
+  ...readKeywordReport(reportText(repoRoot)),
+  handled: readHandled(repoRoot),
+});
 
 export function keywordCandidates({ measured, candidates }) {
   if (measured === null) return [];

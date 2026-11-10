@@ -178,3 +178,49 @@ test('walking twice from the same inputs gives the same result and leaves the in
   assert.deepEqual(walkKeywords(inputs), first);
   assert.deepEqual(inputs, before);
 });
+
+const handledPair = (phrase, route, impressions) => ({
+  phrase,
+  route,
+  impressions,
+  handledOn: '2026-11-10',
+  reason: 'Added a section that answers the phrase.',
+});
+const walkWithHandled = (rows, handled) =>
+  walkKeywords(inputsFor(reportOf([]), { keywords: keywordsOf(rows, { handled }) }));
+const advised = ({ advisories }) => advisories.map(({ query }) => query);
+
+test('a register-owned candidate whose phrase and route are recorded as handled is no advisory, and its step and ledger refusal stay', () => {
+  const result = walkWithHandled([CHECKLIST, POLICY], [handledPair('evals checklist', '/glossary/evals', 120)]);
+  assert.deepEqual(advised(result), []);
+  assert.deepEqual(steps(result), [
+    ['evals checklist', 'register-owner'],
+    ['ai governance policy', 'chosen'],
+  ]);
+  assert.deepEqual(
+    result.refusals.map(({ reason, against }) => [reason, against]),
+    [['register-owner', '/glossary/evals']]
+  );
+});
+
+test('a register-owned candidate that is not recorded as handled is still advised, beside one that is', () => {
+  const handled = [handledPair('evals checklist', '/glossary/evals', 120)];
+  const guardrails = keywordRow('guardrails policy', 90);
+  assert.deepEqual(advised(walkWithHandled([CHECKLIST, guardrails], handled)), ['guardrails policy']);
+  assert.deepEqual(advised(walkWithHandled([CHECKLIST, guardrails], [])), ['evals checklist', 'guardrails policy']);
+});
+
+test('a phrase recorded against a route other than the one that owns its concept is still advised', () => {
+  const elsewhere = [handledPair('evals checklist', '/glossary/ai-register', 120)];
+  assert.deepEqual(advised(walkWithHandled([CHECKLIST], elsewhere)), ['evals checklist']);
+});
+
+test('a handled pair whose exact impressions grew past double and 50 more is advised again, and one that grew less is not', () => {
+  const recorded = [handledPair('evals checklist', '/glossary/evals', 60)];
+  assert.deepEqual(advised(walkWithHandled([keywordRow('evals checklist', 119)], recorded)), []);
+  assert.deepEqual(advised(walkWithHandled([keywordRow('evals checklist', 120)], recorded)), ['evals checklist']);
+});
+
+test('a report read with no handled field advises as it did before the ledger', () => {
+  assert.deepEqual(advised(walk([CHECKLIST])), ['evals checklist']);
+});
