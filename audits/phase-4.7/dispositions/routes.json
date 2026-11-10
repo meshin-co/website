@@ -33,15 +33,15 @@
     "target": "/blog",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-trace-ai-agent-tool-calls-in-production (generation record audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "07452f851759"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "e91544b755b5"
   },
   {
     "target": "/blog",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-trace-ai-agent-tool-calls-in-production (generation record audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "07452f851759"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "e91544b755b5"
   },
   {
     "target": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
@@ -53,15 +53,15 @@
     "target": "/blog/category/agentic-architecture",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-trace-ai-agent-tool-calls-in-production (generation record audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "efb49874c93f"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "497cab5a4571"
   },
   {
     "target": "/blog/category/agentic-architecture",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-trace-ai-agent-tool-calls-in-production (generation record audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "efb49874c93f"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "497cab5a4571"
   },
   {
     "target": "/blog/category/executive",
@@ -101,15 +101,15 @@
     "target": "/blog/evals-in-ci-for-llm-agents",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-trace-ai-agent-tool-calls-in-production (generation record audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "3a1e6b2bccbd"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "fa396eb6ba65"
   },
   {
     "target": "/blog/evals-in-ci-for-llm-agents",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-trace-ai-agent-tool-calls-in-production (generation record audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "3a1e6b2bccbd"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "fa396eb6ba65"
   },
   {
     "target": "/blog/how-to-build-an-ai-system-register-in-a-week",
@@ -127,22 +127,22 @@
     "target": "/blog/tag/agentic-architecture",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-trace-ai-agent-tool-calls-in-production (generation record audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "a3eeab18b8cc"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "e29318e6d267"
   },
   {
     "target": "/blog/tag/agentic-architecture",
     "location": "body.h1",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-trace-ai-agent-tool-calls-in-production (generation record audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "a3eeab18b8cc"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "e29318e6d267"
   },
   {
     "target": "/blog/tag/agentic-architecture",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-trace-ai-agent-tool-calls-in-production (generation record audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "a3eeab18b8cc"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "e29318e6d267"
   },
   {
     "target": "/blog/tag/ai-governance",
@@ -232,22 +232,22 @@
     "target": "/blog/tag/evals-in-ci",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-roll-back-an-ai-agent-deployment (generation record audits/autowriter/generations/2026/11/how-to-roll-back-an-ai-agent-deployment.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "92099a81a6e8"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "10f04d3be99f"
   },
   {
     "target": "/blog/tag/evals-in-ci",
     "location": "body.h1",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-roll-back-an-ai-agent-deployment (generation record audits/autowriter/generations/2026/11/how-to-roll-back-an-ai-agent-deployment.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "92099a81a6e8"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "10f04d3be99f"
   },
   {
     "target": "/blog/tag/evals-in-ci",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-roll-back-an-ai-agent-deployment (generation record audits/autowriter/generations/2026/11/how-to-roll-back-an-ai-agent-deployment.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "92099a81a6e8"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "10f04d3be99f"
   },
   {
     "target": "/blog/tag/llm-as-judge",
@@ -265,22 +265,22 @@
     "target": "/blog/tag/production-readiness",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-trace-ai-agent-tool-calls-in-production (generation record audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "826a712eb07a"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "4021abd9556e"
   },
   {
     "target": "/blog/tag/production-readiness",
     "location": "body.h1",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-trace-ai-agent-tool-calls-in-production (generation record audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "826a712eb07a"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "4021abd9556e"
   },
   {
     "target": "/blog/tag/production-readiness",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-trace-ai-agent-tool-calls-in-production (generation record audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "826a712eb07a"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "4021abd9556e"
   },
   {
     "target": "/blog/tag/security-review",
