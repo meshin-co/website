@@ -12,11 +12,29 @@
     "costUsd": 0.061075
   },
   "verdict": {
-    "state": "open",
-    "reason": null,
-    "decidedAt": null
+    "state": "escalated",
+    "reason": "Autowriter pull request #133: the head commit has no check runs",
+    "decidedAt": "2026-11-10T15:55:01.556Z"
   },
-  "escalations": [],
+  "escalations": [
+    {
+      "id": "esc-1",
+      "kind": "hard-stop",
+      "title": "Autowriter pull request #133: the head commit has no check runs",
+      "detail": "The watcher judged head a60aa1c3cf5184e9f9101516a0daefb14df283bd: escalate, no-checks.\nPull request: https://github.com/meshin-co/website/pull/133",
+      "raisedAt": "2026-11-10T15:55:00.975Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-10T15:55:00.976Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 134,
+          "error": null
+        }
+      ]
+    }
+  ],
   "generation": {
     "tokens": {
       "input": 24305,
