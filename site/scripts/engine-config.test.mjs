@@ -46,14 +46,9 @@ test('the real configuration loads, and what it returns cannot be changed by a c
   }, TypeError);
   assert.throws(() => (config.content.formats.article.author = 'x'), TypeError);
   assert.equal(config.loop.attemptCap, 3);
-  assert.deepEqual(config.loop.writeTimesUtc, ['06:00', '15:00']);
-  assert.equal(config.loop.cronLeadMinutes, 440);
-  assert.deepEqual(config.loop.categoryRotation, [
-    'governance',
-    'agentic-architecture',
-    'operating-model',
-    'executive',
-  ]);
+  assert.deepEqual(config.loop.writeTimesUtc, JSON.parse(REAL_TEXT).loop.writeTimesUtc);
+  assert.equal(config.loop.cronLeadMinutes, JSON.parse(REAL_TEXT).loop.cronLeadMinutes);
+  assert.deepEqual(config.loop.categoryRotation, JSON.parse(REAL_TEXT).loop.categoryRotation);
   assert.throws(() => config.loop.writeTimesUtc.push('01:01'), TypeError);
   assert.throws(() => config.loop.categoryRotation.push('legal'), TypeError);
 });

@@ -28,7 +28,10 @@ test('the request is a GET that follows redirects and says who is asking, never 
   assert.equal(call.method, 'GET');
   assert.equal(call.redirect, 'follow');
   assert.equal(call.headers['user-agent'], probeUserAgent());
-  assert.equal(probeUserAgent(), 'Mozilla/5.0 (compatible; meshin-link-check; +https://meshin.co)');
+  assert.equal(
+    probeUserAgent({ name: 'field-notes.example' }),
+    'Mozilla/5.0 (compatible; field-notes-link-check; +https://field-notes.example)'
+  );
   assert.ok(call.signal instanceof AbortSignal);
 });
 

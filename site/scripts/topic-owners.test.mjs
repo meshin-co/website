@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
+import { REGISTERS_BEGIN, REGISTERS_END, renderRegisters, spliceRegisters } from './registers.mjs';
 import { familyFor } from './semantic-core.mjs';
 import { ROUTE_PREFIX, ownerRefusal, readConceptRegister, registerOwner, routeOf, servedBy } from './topic-owners.mjs';
 
@@ -54,12 +54,28 @@ test('a document with no concept register reads as an empty one, and so does a n
   assert.deepEqual(readConceptRegister(undefined), []);
 });
 
-test('the committed semantic core carries a concept register this reader finds', () => {
-  const core = readFileSync(new URL('../../docs/SEMANTIC-CORE.md', import.meta.url), 'utf8');
+test('a concept register the generator writes is one this reader finds, with as many concepts as its heading declares', () => {
+  const written = [
+    { concept: 'Scene term', definedBy: '/glossary/scene-term', definition: 'A word that only a scene defines.' },
+    { concept: 'Scene/register', definedBy: '/glossary/scene-register', definition: 'Every scene term, listed.' },
+    { concept: 'Low-risk scene', definedBy: '/glossary/low-risk-scene', definition: 'A scene that needs no review.' },
+  ];
+  const core = spliceRegisters(
+    ['# Semantic core', '', REGISTERS_BEGIN, REGISTERS_END, ''].join('\n'),
+    renderRegisters({
+      entities: [{ entity: 'Scene term', ownedBy: '/glossary/scene-term', mentionedBy: ['/blog/stage-a-scene'] }],
+      concepts: written,
+      relationships: [{ from: 'Scene term', kind: 'related-concept', to: 'Scene/register' }],
+    })
+  );
   const declared = Number(/^#### Concept register \((\d+)\)$/m.exec(core)?.[1]);
-  const real = readConceptRegister(core);
-  assert.ok(declared > 0, 'the committed core declares no concept register');
-  assert.equal(real.length, declared, 'concepts read: ' + real.length);
+  const found = readConceptRegister(core);
+  assert.ok(declared > 0, 'the generator wrote no concept register');
+  assert.equal(found.length, declared, 'concepts read: ' + found.length);
+  assert.deepEqual(
+    found,
+    written.map(({ concept, definedBy }) => ({ concept, route: definedBy }))
+  );
 });
 
 const owner = (text) => registerOwner(concepts, text)?.concept ?? null;
@@ -126,8 +142,8 @@ test('a prompt with no route, or only a null one, is served by nothing', () => {
 });
 
 const generated = [
-  { family: 'article', route: '/blog/why-do-ai-pilots-fail', title: 'Why do AI pilots fail? — meshin.co' },
-  { family: 'term', route: '/glossary/ai-register', title: 'What is an AI register? — meshin.co' },
+  { family: 'article', route: '/blog/why-do-ai-pilots-fail', title: 'Why do AI pilots fail? — example.test' },
+  { family: 'term', route: '/glossary/ai-register', title: 'What is an AI register? — example.test' },
 ];
 
 const refusal = (topic, routes = []) => ownerRefusal({ topic, concepts, promptRoutes: routes, generated });

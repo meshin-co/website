@@ -108,8 +108,9 @@ export function discoverDocs(viaGit, viaWalk) {
   try {
     paths = viaGit();
   } catch {
-    paths = viaWalk();
+    paths = [];
   }
+  if (paths.length === 0) paths = viaWalk();
   return paths.filter((path) => !isIgnoredRoot(path));
 }
 

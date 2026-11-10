@@ -2,9 +2,7 @@ import './fixtures/no-network.mjs';
 
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { fileURLToPath } from 'node:url';
 
-import { DUPLICATE_MINIMUM_WORDS } from './content-gate.mjs';
 import { proseBlocks, proseSentences } from './entry-prose.mjs';
 import {
   BandError,
@@ -14,11 +12,8 @@ import {
   deriveBand,
   deriveBands,
   entryStats,
-  loadCorpus,
   measureCorpus,
 } from './sentence-band.mjs';
-
-const REPO = fileURLToPath(new URL('../../', import.meta.url));
 
 const ARTICLE_BAND = {
   format: 'article',
@@ -384,21 +379,29 @@ test('bandSummary names the date, the threshold and the band of the format', () 
   assert.deepEqual(bandSummary(RECORD, 'article').band.format, 'article');
 });
 
-const LIVE_ENTRIES = loadCorpus(REPO, { exclude: [] });
-const LIVE = measureCorpus(LIVE_ENTRIES, { threshold: DUPLICATE_MINIMUM_WORDS });
+const handWrittenLengths = (index) => [
+  ...repeat(7 + (index % 5), 1 + (index % 6)),
+  ...Array.from({ length: 11 - (index % 6) }, (_, slot) => 13 + ((index * 3 + slot * 7) % 10)),
+];
 
-test('each format band passes a typical hand-written entry of its format and at least four in five of them', () => {
-  const bands = deriveBands(LIVE);
+const handWrittenOf = (collection, firstIndex) =>
+  Array.from({ length: 40 }, (_, offset) =>
+    entry(`${collection}/hand-${offset}`, collection, handWrittenLengths(firstIndex + offset))
+  );
+const HAND_WRITTEN = [...handWrittenOf('post', 0), ...handWrittenOf('glossary', 7)];
+
+test('each format band passes a typical entry of a corpus of its format and at least four in five of them', () => {
+  const bands = deriveBands(measure(HAND_WRITTEN));
   for (const { format, collection } of FORMATS) {
     const band = bands[format];
-    const measured = LIVE_ENTRIES.filter((live) => live.collection === collection)
-      .map((live) => {
-        const sentences = proseSentences(proseBlocks(live));
-        return { id: live.id, sentences, median: entryStats({ sentences, band }).median };
+    const measured = HAND_WRITTEN.filter((written) => written.collection === collection)
+      .map((written) => {
+        const sentences = proseSentences(proseBlocks(written));
+        return { id: written.id, sentences, median: entryStats({ sentences, band }).median };
       })
       .filter(({ sentences }) => sentences.length >= band.minimumSentences)
       .sort((a, b) => a.median - b.median || a.id.localeCompare(b.id));
-    assert.ok(measured.length > 0, `the live corpus has ${format} entries long enough to measure`);
+    assert.ok(measured.length > 0, `the corpus has ${format} entries long enough to measure`);
     const typical = measured[Math.floor(measured.length / 2)];
     assert.deepEqual(bandProblems({ sentences: typical.sentences, band }), [], typical.id);
     const passing = measured.filter(({ sentences }) => bandProblems({ sentences, band }).length === 0);

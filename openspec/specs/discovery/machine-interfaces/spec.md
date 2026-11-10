@@ -464,7 +464,7 @@ Every public collection SHALL have a feed base, and its feed `/<base>/rss.xml` S
 
 ### Requirement: The collection files carry each entry's full text and llms-full.txt carries none
 
-`renderLlmsCollection` and `renderLlmsShard` in `site/src/utils/machine-text.mjs` SHALL write each entry as its `# ` title, its ISO date when dated, its URL as a link, its summary and its whole body with markdown stripped, with `---` between entries. `renderLlmsFull` SHALL write no entry, because `/llms-full.txt` is an index of the collection files (locked row L25). Guarded by `site/src/utils/machine-text.test.mjs` under `npm run test`.
+`renderLlmsCollection` and `renderLlmsShard` in `site/src/utils/machine-text.mjs` SHALL write each entry as its `# ` title, its ISO date when dated, its URL as a link, its summary and its whole body with markdown stripped, with `---` between entries. `renderLlmsFull` SHALL write no entry, because `/llms-full.txt` is an index of the collection files, so an agent reads one collection without downloading every other. Guarded by `site/src/utils/machine-text.test.mjs` under `npm run test`.
 
 #### Scenario: A collection file carries links without bodies
 

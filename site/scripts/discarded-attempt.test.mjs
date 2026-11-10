@@ -5,22 +5,25 @@ import { readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { test } from 'node:test';
 
+import { titleSuffix } from '../src/utils/brand.mjs';
+
 import { autowriterReport } from './autowriter-gate.mjs';
 import { isHolding } from './autowriter-claims.mjs';
-import { validateLedger } from './autowriter-ledger.mjs';
+import { MONTHLY_SPEND_CEILING_USD, validateLedger } from './autowriter-ledger.mjs';
 import { describeProblem } from './autowriter-records.mjs';
+import { SCENE_CORE } from './fixtures/semantic-core-scene.mjs';
 import { GENERATED_AT, filesOf } from './fixtures/spend-report-corpus.mjs';
 import { harness, withScene } from './fixtures/spend-run.mjs';
 import { ledgerOf } from './fixtures/spend-scene.mjs';
 import { recordPath } from './record-layout.mjs';
+import { siteBrand } from './site-brand.mjs';
 import { ceilingStatus } from './spend-ceiling.mjs';
 import { corpusOf, reportModel } from './spend-report-model.mjs';
 import { claimRefusal } from './topic-claims.mjs';
 
 const REPO = resolve(import.meta.dirname, '..', '..');
-const CORE = readFileSync(join(REPO, 'docs/SEMANTIC-CORE.md'), 'utf8');
 const WORKFLOW = readFileSync(join(REPO, '.github/workflows/ci.yml'), 'utf8');
-const SUFFIX = ' — meshin.co';
+const SUFFIX = titleSuffix(siteBrand());
 const SLUG = 'discarded-post';
 const CLAIMED_AT = '2026-11-02T20:27:43.937Z';
 const DECIDED_AT = '2026-11-02T22:36:46.000Z';
@@ -92,7 +95,17 @@ test(
     assert.equal(await run.run(), 0);
     assert.deepEqual(
       run.out.map((line) => JSON.parse(line)),
-      [{ month: '2026-11', spentUsd: COST_USD, ceilingUsd: 25, reached: false, notice: 'none', ledgers: 1, records: 0 }]
+      [
+        {
+          month: '2026-11',
+          spentUsd: COST_USD,
+          ceilingUsd: MONTHLY_SPEND_CEILING_USD,
+          reached: false,
+          notice: 'none',
+          ledgers: 1,
+          records: 0,
+        },
+      ]
     );
     assert.deepEqual(run.err, []);
   })
@@ -112,7 +125,7 @@ test('the gate finds nothing in a discarded attempt and the claim whose hold end
   const { findings, counts } = autowriterReport({
     ledgers: [filed('ledger', discarded())],
     claims: [filed('claim', lapsed)],
-    core: CORE,
+    core: SCENE_CORE,
     workflows: [{ path: '.github/workflows/ci.yml', text: WORKFLOW }],
     suffix: SUFFIX,
     now: new Date('2026-11-03T00:00:00.000Z'),

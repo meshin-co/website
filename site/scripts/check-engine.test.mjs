@@ -77,8 +77,8 @@ test('the repository root is found from the script, never from the working direc
   assert.equal(REPOSITORY_ROOT, REPOSITORY);
 });
 
-test('this repository has no finding', () => {
-  const found = engineFindings(REPOSITORY);
+test('a scene with every anchor, the configuration, the workflows and an interview that names every value has no finding', () => {
+  const found = engineFindings(scene());
   assert.deepEqual(found.findings, []);
   assert.ok(found.values >= 25 && found.anchors >= 20, JSON.stringify(found));
 });
@@ -207,12 +207,24 @@ test('a workflow added later that reads a secret the interview never mentions is
 
 const run = (args, cwd) => spawnSync(process.execPath, [SCRIPT, ...args], { cwd, encoding: 'utf8' });
 
-test('the command passes on this repository from the repository root, from site and from anywhere', () => {
-  for (const cwd of [REPOSITORY, join(REPOSITORY, 'site'), tmpdir()]) {
-    const found = run([], cwd);
+test('the command passes on a clean scene from its root, from its site directory and from anywhere', () => {
+  const root = scene();
+  const outputs = [root, join(root, 'site'), tmpdir()].map((cwd) => {
+    const found = run(['--root', root], cwd);
     assert.equal(found.status, 0, `from ${cwd}: ${found.stdout}${found.stderr}`);
     assert.match(found.stdout, /^engine: 0 findings /m);
     assert.match(found.stdout, /the interview must name every value, secret and variable\)$/m);
+    return found.stdout;
+  });
+  assert.equal(new Set(outputs).size, 1);
+});
+
+test('the command given no root reads the repository it sits in, from any working directory', () => {
+  const explicit = run(['--root', REPOSITORY], tmpdir());
+  assert.match(explicit.stdout, /^engine: \d+ findings? \(/m);
+  for (const cwd of [REPOSITORY, join(REPOSITORY, 'site'), tmpdir()]) {
+    const found = run([], cwd);
+    assert.deepEqual([found.status, found.stdout], [explicit.status, explicit.stdout], `from ${cwd}`);
   }
 });
 
@@ -259,6 +271,7 @@ test('a run with findings points at the interview that answers them, and a clean
     failing.stdout,
     /^engine: the questions that set these values and create these files are in docs\/plan\/reference\/new-site-interview\.md$/m
   );
-  const clean = run([], REPOSITORY);
+  const clean = run(['--root', scene()], tmpdir());
+  assert.equal(clean.status, 0, clean.stdout);
   assert.doesNotMatch(clean.stdout, /new-site-interview/);
 });

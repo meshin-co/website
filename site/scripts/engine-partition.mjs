@@ -11,6 +11,7 @@ const PAGES_ROOT = 'site/src/pages/';
 const PUBLIC_ROOT = 'site/public/';
 const CLIENT_CODE_ROOT = 'site/public/search/';
 const EDITOR_ROOT = 'site/.vscode/';
+const AGENTS_ROOT = 'site/.agents/';
 const AGENT_FILES = new Set(['AGENTS.md', 'CLAUDE.md']);
 const LICENCE_FILES = new Set(['LICENSE', 'LICENSE.md']);
 const FIXTURE_NAME = /\.fixture\.[a-z]+$/;
@@ -26,6 +27,8 @@ const isSource = (file) => SOURCE_EXTENSIONS.has(extensionOf(file));
 
 export const seedTarget = (file) => file.slice(SEED_ROOT.length, -SEED_SUFFIX.length);
 export const isSeed = (file) => file.startsWith(SEED_ROOT) && file.endsWith(SEED_SUFFIX);
+const isSiteMarked = (file) => SITE_MARK.test(posix.basename(file));
+export const isSkill = (file) => file.startsWith(AGENTS_ROOT) && !isSiteMarked(file);
 
 export function routeOfPage(file) {
   const route = file
@@ -144,7 +147,7 @@ export const RULES = Object.freeze([
     id: 'site-marked',
     class: 'site',
     why: 'its name carries the .site marker before its extension: its author declared it belongs to one site, so it stays with that site and is never exported',
-    test: (file) => SITE_MARK.test(posix.basename(file)),
+    test: isSiteMarked,
   },
   {
     id: 'test',
@@ -192,7 +195,7 @@ export const RULES = Object.freeze([
     id: 'skill',
     class: 'engine',
     why: 'it is a skill an agent reads to run the engine',
-    test: under('site/.agents/'),
+    test: isSkill,
   },
   {
     id: 'specification',
@@ -245,7 +248,7 @@ export const RULES = Object.freeze([
   {
     id: 'engine-document',
     class: 'engine',
-    why: 'an engine file names it as the procedure to follow, and it names no site',
+    why: 'a script, workflow, hook, rule or skill the engine carries names it as the procedure to follow, and it names no site',
     test: (file, { engineDocuments }) => engineDocuments.has(file),
   },
   {

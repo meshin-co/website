@@ -1,4 +1,3 @@
-import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
@@ -6,18 +5,13 @@ import { parseArgs } from 'node:util';
 import { partitionReport, summaryLine } from './engine-partition-gate.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 import { PartitionFactsError } from './engine-partition-facts.mjs';
+import { TreeUnreadableError, trackedFiles } from './tracked-files.mjs';
 
 const REPOSITORY_ROOT = resolve(import.meta.dirname, '..', '..');
 const USAGE =
   'usage: node scripts/run-partition-gate.mjs [--root <repository>] [--list] [--allow site-bound=<number of files>]';
 const ALLOWABLE = 'site-bound';
 const CEILING = /^site-bound=(\d+)$/;
-
-export function trackedFiles(root) {
-  return execFileSync('git', ['ls-files', '-z'], { cwd: root, encoding: 'utf8', maxBuffer: 1 << 28 })
-    .split('\0')
-    .filter((file) => file !== '' && existsSync(join(root, file)));
-}
 
 export const readerOf = (root) => (path) => {
   const file = join(root, path);
@@ -87,8 +81,13 @@ export function main(argv) {
     console.log(`${summaryLine({ ...report, findings: enforced })}${suffix}`);
     process.exitCode = enforced.length === 0 ? 0 : 1;
   } catch (error) {
-    if (!(error instanceof PartitionFactsError)) throw error;
-    console.log(`PARTITION facts-unreadable ${parsed.root}: ${error.message}`);
+    if (error instanceof PartitionFactsError) {
+      console.log(`PARTITION facts-unreadable ${parsed.root}: ${error.message}`);
+    } else if (error instanceof TreeUnreadableError) {
+      console.log(`PARTITION ${error.rule} ${parsed.root}: ${error.message}`);
+    } else {
+      throw error;
+    }
     console.log('partition: 0 engine, 0 site, 0 evidence files; 1 finding');
     process.exitCode = 1;
   }

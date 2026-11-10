@@ -24,7 +24,7 @@ query-string form with `[key]` before any message is written.
 
 **What it answers.** Which queries already send impressions and clicks to pages the site has, at which
 average position. It never reports a query the site does not already rank for, so it cannot find demand the
-site has not reached. That limit is measured and written down in `investigation/09-what-the-demand-instruments-see.md`.
+site has not reached. On the first site this engine ran, 13 successive reports held no query outside that limit.
 
 **How to get it.**
 

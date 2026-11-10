@@ -129,10 +129,11 @@ test('run as a script it does not mention a lead of 0, so the text is the one it
 });
 
 test('a change of the lead alone rewrites the cron entries, so the workflow follows the configuration', () => {
-  const { root, text } = scene({ times: CURRENT_TIMES, lead: 0 });
+  const otherLead = CURRENT_LEAD === 0 ? 95 : 0;
+  const { root, text } = scene({ times: CURRENT_TIMES, lead: otherLead });
   const result = generateSchedule(root);
-  assert.deepEqual([result.changed, result.cronLeadMinutes], [true, 0]);
-  assert.deepEqual(scheduleFindings(text(), CURRENT_TIMES, DELAYS, 0), []);
+  assert.deepEqual([result.changed, result.cronLeadMinutes], [true, otherLead]);
+  assert.deepEqual(scheduleFindings(text(), CURRENT_TIMES, DELAYS, otherLead), []);
   assert.equal(withSchedule(text(), CURRENT_TIMES, DELAYS, CURRENT_LEAD), CURRENT);
 });
 

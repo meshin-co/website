@@ -10,13 +10,13 @@ import { titleSuffix } from '../src/utils/brand.mjs';
 
 import { autowriterReport } from './autowriter-gate.mjs';
 import { bandSceneFiles } from './fixtures/record-rules-scene.mjs';
+import { SCENE_CORE } from './fixtures/semantic-core-scene.mjs';
 import { plantSpendReport } from './fixtures/spend-report-plant.mjs';
 import { siteBrand } from './site-brand.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
 const REPO = resolve(SITE, '..');
 const CI_PATH = '.github/workflows/ci.yml';
-const CORE = readFileSync(join(REPO, 'docs/SEMANTIC-CORE.md'), 'utf8');
 const WORKFLOW = readFileSync(join(REPO, CI_PATH), 'utf8');
 const CI_FILE = { path: CI_PATH, text: WORKFLOW };
 
@@ -41,7 +41,7 @@ const findings = (...workflows) =>
   autowriterReport({
     ledgers: [],
     claims: [],
-    core: CORE,
+    core: SCENE_CORE,
     workflows,
     suffix: titleSuffix(siteBrand()),
     now: new Date('2026-11-02T07:00:00.000Z'),
@@ -52,7 +52,7 @@ function inTempRepo(plant, check) {
   try {
     for (const [path, text] of Object.entries({
       'site/src/config.yaml': `site:\n  name: ${siteBrand().name}\n`,
-      'docs/SEMANTIC-CORE.md': CORE,
+      'docs/SEMANTIC-CORE.md': SCENE_CORE,
       [CI_PATH]: WORKFLOW,
       ...bandSceneFiles(),
       ...plant,

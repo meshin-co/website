@@ -25,12 +25,12 @@ A `pagination` family takes an optional `scope` (`category` or `tag`; none build
 pure functions in `scripts/pagination-markup.mjs`, so its test plants each defect without a build.
 
 A `specimen` family names an entry in `SPECIMENS` (`scripts/mutation-specimens.mjs`, which spreads in the entries of
-`scripts/spec-specimens.mjs`, `scripts/evidence-specimens.mjs`, `scripts/press-specimens.mjs`, `scripts/schedule-specimens.mjs`, `scripts/keyword-specimens.mjs` and `scripts/autowriter-specimens.mjs`). Each entry holds
+`scripts/spec-specimens.mjs`, `scripts/evidence-specimens.mjs`, `scripts/press-specimens.mjs`, `scripts/schedule-specimens.mjs`, `scripts/keyword-specimens.mjs`, `scripts/paginated-copy-specimens.mjs` and `scripts/autowriter-specimens.mjs`). Each entry holds
 the gate, the token that proves the right rule fired, and a `plant(copySite)` that makes the change and returns its undo.
 `proveWithSpecimen()` runs the npm command CI runs and requires four things: the gate is green on the pristine copy,
 the pristine output does not already contain the token, the planted run is red, and the planted output contains the
-token. The undo runs in a `finally`. An entry may also carry `env` (variables for the npm run) and `args` (passed to
-the tool after `--`). Prefer this kind for any new gate: it runs the command CI runs, not a function beside it.
+token. The undo runs in a `finally`. An entry may also carry `env` (variables for the npm run), `args` (passed to the tool after `--`) and `scene({ copySite, work })`, which runs before the pristine run and returns the site to prove on, so the pristine copy already holds the state the specimen plants against.
+Prefer this kind for any new gate: it runs the command CI runs, not a function beside it.
 
 There is no kind that runs nothing. A `unit-covered` kind used to return a pass without executing
 anything, so a family that could not fail was counted as proven; it was removed.

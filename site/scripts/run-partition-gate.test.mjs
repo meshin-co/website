@@ -64,6 +64,33 @@ test('an unknown option exits 2 with the usage line', () => {
   assert.match(result.stderr, /usage: node scripts\/run-partition-gate\.mjs/);
 });
 
+const bareDirectory = () => {
+  const root = mkdtempSync(join(tmpdir(), 'partition-bare-'));
+  roots.push(root);
+  writeFileSync(join(root, 'a.txt'), 'a\n');
+  return root;
+};
+
+test('a directory that is not a repository is refused with the sentence that names git init, and no stack trace', () => {
+  const root = bareDirectory();
+  const result = run('--root', root);
+  assert.equal(result.status, 1);
+  assert.match(result.stdout, new RegExp(`^PARTITION not-a-repository ${root}: .*git init && git add -A`, 'm'));
+  assert.match(result.stdout, /^partition: 0 engine, 0 site, 0 evidence files; 1 finding$/m);
+  assert.equal(result.stderr, '');
+  assert.doesNotMatch(result.stdout + result.stderr, /\n\s+at |Command failed/);
+});
+
+test('a repository where nothing is staged is refused with the sentence that names git add, not judged as 22 unserved anchors', () => {
+  const root = bareDirectory();
+  spawnSync('git', ['init', '-q'], { cwd: root });
+  const result = run('--root', root);
+  assert.equal(result.status, 1);
+  assert.match(result.stdout, new RegExp(`^PARTITION nothing-tracked ${root}: .*git add -A`, 'm'));
+  assert.doesNotMatch(result.stdout, /anchor-unserved/);
+  assert.equal(result.stderr, '');
+});
+
 const NAMES_THE_SITE = { 'site/.agents/skills/names-the-site.md': '# Skill\n\nAsk the owner of example.test.\n' };
 const ALSO_NAMES_THE_SITE = { 'site/.agents/skills/also-names-the-site.md': '# Skill\n\nWrite to example.test.\n' };
 

@@ -92,6 +92,14 @@ test('markdown discovery falls back to a walk when git is unavailable, because t
   assert.deepEqual(discoverDocs(viaGit, viaWalk), ['docs/a.md']);
 });
 
+test('a repository where git lists no markdown yet is walked like a directory with no repository', () => {
+  const viaWalk = () => ['docs/a.md', 'node_modules/x/b.md'];
+  assert.deepEqual(
+    discoverDocs(() => [], viaWalk),
+    ['docs/a.md']
+  );
+});
+
 test('git discovery wins when it works, and still drops generated evidence', () => {
   const viaGit = () => ['AGENTS.md', 'audits/phase-1/REPORT.md', 'docs/b.md'];
   assert.deepEqual(

@@ -12,6 +12,7 @@ import { historySpecimens } from './autowriter-history-specimens.mjs';
 import { autowriterSpecimens } from './autowriter-specimens.mjs';
 import { GENERATED_AT } from './fixtures/spend-report-corpus.mjs';
 import { ENTRY_PATH, FACT, RECORD_PATH, SENTENCES, bandSceneFiles } from './fixtures/record-rules-scene.mjs';
+import { SCENE_CORE } from './fixtures/semantic-core-scene.mjs';
 import { run } from './measure-entry-length.mjs';
 import { FAMILIES, manifestFamilies } from './mutation-smoke.mjs';
 import { addUntrackedFile, editFile, flatten, SPECIMENS } from './mutation-specimens.mjs';
@@ -23,7 +24,7 @@ const SITE = resolve(import.meta.dirname, '..');
 const REPO = resolve(SITE, '..');
 const FILES = {
   'site/src/config.yaml': `site:\n  name: ${siteBrand().name}\n`,
-  'docs/SEMANTIC-CORE.md': readFileSync(join(REPO, 'docs/SEMANTIC-CORE.md'), 'utf8'),
+  'docs/SEMANTIC-CORE.md': SCENE_CORE,
   '.github/workflows/ci.yml': readFileSync(join(REPO, '.github/workflows/ci.yml'), 'utf8'),
   ...bandSceneFiles(),
 };

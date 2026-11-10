@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { CLASSES, RULES, classify, isSeed, partition, routeOfPage, seedTarget } from './engine-partition.mjs';
+import { CLASSES, RULES, classify, isSeed, isSkill, partition, routeOfPage, seedTarget } from './engine-partition.mjs';
 import { partitionFacts } from './fixtures/partition-facts.mjs';
 
 const facts = partitionFacts();
@@ -182,4 +182,12 @@ test('a file named with the .site marker belongs to one site and is never export
   assert.equal(ruleOf('site/scripts/topic-core.test.mjs'), 'test');
   assert.equal(ruleOf('site/.agents/skills/navigate-the-plan.md'), 'skill');
   assert.equal(classOf('site/src/utils/pipeline.site.test.mjs'), 'site');
+});
+
+test('a skill is a file under the agents directory that its author did not mark as belonging to one site, at any depth', () => {
+  assert.equal(isSkill('site/.agents/skills/run-the-gate.md'), true);
+  assert.equal(isSkill('site/.agents/skills/ai-agent-readiness/webmcp.md'), true);
+  assert.equal(isSkill('site/.agents/skills/navigate-the-plan.site.md'), false);
+  assert.equal(isSkill('site/.agents-old/skills/run-the-gate.md'), false);
+  assert.equal(isSkill('docs/skills/run-the-gate.md'), false);
 });

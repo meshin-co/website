@@ -2,7 +2,12 @@ import { readFileSync } from 'node:fs';
 
 import { BOT_EMAIL, BOT_NAME } from '../pr-classify.mjs';
 
-export const capture = (name) => JSON.parse(readFileSync(new URL(`./pr-resume/${name}.json`, import.meta.url), 'utf8'));
+const MAILBOX_OF_THE_BOT = new RegExp(`${BOT_NAME}@[^"\\s]+`, 'g');
+
+export const rehomed = (text, botEmail) => text.replace(MAILBOX_OF_THE_BOT, botEmail);
+
+export const capture = (name) =>
+  JSON.parse(rehomed(readFileSync(new URL(`./pr-resume/${name}.json`, import.meta.url), 'utf8'), BOT_EMAIL));
 
 export const SLUG = 'named-person-responsible-for-ai-risk-in-vendor-procurement';
 export const LEDGER_PATH = `audits/autowriter/2026/11/${SLUG}.json`;

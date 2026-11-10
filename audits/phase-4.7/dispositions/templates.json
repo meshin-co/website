@@ -167,5 +167,11 @@
     "status": "verified",
     "reason": "Read 2026-10-02. No prose: 'Fraunces' and 'IBM Plex Sans' are font-family names in inline style objects, the colours are hex values, title, eyebrow and footer are passed in by the caller, and the brand text is read from src/config.yaml through brand.mjs. The extractor now produces no row for this file, which is correct; the earlier suggestion that 'IBM Plex Sans' was an extractor false positive is closed. The text this template lays out appears only inside the /og/*.png images.",
     "digest": "e3b0c44298fc"
+  },
+  {
+    "target": "src/utils/paginate.mjs",
+    "status": "verified",
+    "reason": "One string: the wording of a numbered archive heading, '{heading}, page {number}'. A tag archive prints 'AI governance posts, page 2', the same words its template built inline before the wording was extracted here. A category archive prints the heading of its own first page with the number, 'AI governance articles, page 2'; its inline template used the shorter category title ('AI governance, page 2'), which no first page shows, so the numbered heading now follows the first page. Numbered pages are noindex. The blog hub keeps its own 'Writing, page' pair. The wording is plain, names no brand and makes no claim. Every numbered tag and category page takes its title and heading from this row and from the reviewed heading of its own first page (inheritPaginatedStatus in scripts/dispositions.mjs), so a new page needs no review of its own. Editing this string makes this disposition stale and sends every numbered page back to unreviewed until a person reads the new wording.",
+    "digest": "d10a94768a2b"
   }
 ]

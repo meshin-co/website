@@ -1,4 +1,4 @@
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
@@ -62,6 +62,20 @@ function fixtureRoot(dispositions, others = {}) {
 
   return { root, site };
 }
+
+test('a site that was never built is refused with the build command, not with a stack trace', () => {
+  const { root, site } = fixtureRoot([]);
+
+  try {
+    rmSync(join(site, 'dist'), { recursive: true, force: true });
+    const result = spawnSync('node', [SCRIPT, site, 'dist', '--check'], { encoding: 'utf8' });
+    assert.equal(result.status, 1);
+    assert.match(result.stdout, /^EDITORIAL no-build .*dist: .*npm run build/m);
+    assert.equal(result.stderr, '');
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
 
 test('--check is read-only: it reports without writing the ledger or findings files CI would then have to commit', () => {
   const { root, site } = fixtureRoot([{ target: '/some-route-with-no-rows', status: 'verified' }]);
@@ -210,6 +224,100 @@ test('the seal re-seals a flat file, a file under its month and one deeper in pl
       assert.deepEqual(JSON.parse(text), [{ ...row(target), digest: sealed }], name);
       assert.equal(text, `${JSON.stringify(JSON.parse(text), null, 2)}\n`, name);
     }
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+const FIRST_PAGE = '/blog/tag/ai-governance';
+const SECOND_PAGE = `${FIRST_PAGE}/page/2`;
+const WORDING_FILE = 'src/utils/paginate.mjs';
+const wordingSource = (format) => `export const PAGE_HEADING_FORMAT = '${format}';\n`;
+const archivePage = (heading, extra = '') =>
+  `<html><head><title>${heading}</title><meta name="description" content="All posts tagged AI governance, newest first."></head><body><main><h1>${heading}</h1>${extra}</main></body></html>`;
+
+function placePage(site, route, html) {
+  const file = join(site, 'dist', `${route.slice(1)}.html`);
+  mkdirSync(dirname(file), { recursive: true });
+  writeFileSync(file, html);
+  const routesFile = join(site, 'dist/gate-routes.json');
+  const { routes } = JSON.parse(readFileSync(routesFile, 'utf8'));
+  writeFileSync(routesFile, JSON.stringify({ routes: [...new Set([...routes, route])] }));
+}
+
+function sealedArchive() {
+  const { root, site } = fixtureRoot(
+    [
+      { target: FIRST_PAGE, status: 'rewritten', reason: 'Read by the owner.', digest: '' },
+      { target: WORDING_FILE, status: 'verified', reason: 'The wording of every numbered page.', digest: '' },
+    ],
+    { '../conditional-copy.json': [{ text: '{heading}, page {number}', reason: 'a format, shipped as its headings' }] }
+  );
+  mkdirSync(join(site, 'src/utils'), { recursive: true });
+  writeFileSync(join(site, WORDING_FILE), wordingSource('{heading}, page {number}'));
+  placePage(site, FIRST_PAGE, archivePage('AI governance posts'));
+  execFileSync('node', [SCRIPT, site, 'dist', '--seal'], { encoding: 'utf8', env: withoutMarker() });
+  return { root, site, dispositions: join(root, 'audits/phase-4.7/dispositions/a.json') };
+}
+
+const check = (site) => {
+  const result = spawnSync('node', [SCRIPT, site, 'dist', '--check'], { encoding: 'utf8' });
+  return { status: result.status, output: `${result.stdout}${result.stderr}` };
+};
+
+test('a numbered archive route appearing is not a finding, and the seal needs no new row and changes no digest', () => {
+  const { root, site, dispositions } = sealedArchive();
+
+  try {
+    assert.equal(check(site).status, 0);
+    const sealed = readFileSync(dispositions, 'utf8');
+
+    placePage(site, SECOND_PAGE, archivePage('AI governance posts, page 2'));
+    const afterGrowth = check(site);
+    assert.equal(afterGrowth.status, 0, afterGrowth.output);
+    assert.doesNotMatch(afterGrowth.output, /findings:/);
+
+    execFileSync('node', [SCRIPT, site, 'dist', '--seal'], { encoding: 'utf8', env: withoutMarker() });
+    assert.equal(readFileSync(dispositions, 'utf8'), sealed);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('a sentence a person wrote on a numbered archive route is still reported unreviewed, and only that sentence is', () => {
+  const { root, site } = sealedArchive();
+
+  try {
+    placePage(
+      site,
+      SECOND_PAGE,
+      archivePage('AI governance posts, page 2', '<p>Our editors added this sentence by hand on page two.</p>')
+    );
+    const { status, output } = check(site);
+    assert.equal(status, 1, output);
+    assert.match(output, /unreviewed copy \(1\):/);
+    assert.match(
+      output,
+      /\/blog\/tag\/ai-governance\/page\/2 \| Our editors added this sentence by hand on page two\./
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('editing the pagination wording stops the gate on the wording and on every numbered route until a person reads it again', () => {
+  const { root, site } = sealedArchive();
+
+  try {
+    placePage(site, SECOND_PAGE, archivePage('AI governance posts, page 2'));
+    assert.equal(check(site).status, 0);
+
+    writeFileSync(join(site, WORDING_FILE), wordingSource('{heading} — page {number}'));
+    placePage(site, SECOND_PAGE, archivePage('AI governance posts — page 2'));
+    const { status, output } = check(site);
+    assert.equal(status, 1, output);
+    assert.match(output, /dispositions: \d+ declared, 1 stale/);
+    assert.match(output, /\/blog\/tag\/ai-governance\/page\/2 \| AI governance posts — page 2/);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

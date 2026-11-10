@@ -5,6 +5,7 @@ import { searchFallbackUrl } from '../src/utils/archive-url.mjs';
 import { REPOSITORY, startGitHub } from './fixtures/github-host.mjs';
 import { makeLinkRotRepo } from './fixtures/link-rot-repo.mjs';
 import { EMPTY_ADDRESS, GLOSSARY, NIST, TITLE, TODAY, archive, citing, probes } from './fixtures/link-repair-world.mjs';
+import { BOT_EMAIL, BOT_NAME } from './pr-classify.mjs';
 import { repairLinks, runCli } from './repair-links.mjs';
 
 const realFetch = globalThis.fetch;
@@ -86,7 +87,7 @@ test('the commit is the bot’s alone, holds the entry and the register and noth
     ['audits/link-rot.json', GLOSSARY]
   );
   assert.deepEqual(repo.git('log', '--format=%an <%ae> | %cn <%ce>', 'main..origin/' + BRANCH).split('\n'), [
-    'autowriter-bot <autowriter-bot@meshin.co> | autowriter-bot <autowriter-bot@meshin.co>',
+    `${BOT_NAME} <${BOT_EMAIL}> | ${BOT_NAME} <${BOT_EMAIL}>`,
   ]);
 });
 

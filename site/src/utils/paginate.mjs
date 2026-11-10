@@ -1,3 +1,8 @@
+export const PAGE_HEADING_FORMAT = '{heading}, page {number}';
+
+export const pageHeading = (heading, number) =>
+  PAGE_HEADING_FORMAT.replace(/\{(heading|number)\}/g, (_, name) => (name === 'heading' ? heading : String(number)));
+
 export const PAGE_SIZE = 12;
 
 export function pageCount(entries, pageSize = PAGE_SIZE) {

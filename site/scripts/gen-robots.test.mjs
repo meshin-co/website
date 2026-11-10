@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { existsSync } from 'node:fs';
 import { mkdtemp, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
@@ -142,7 +143,12 @@ test('disallowedPaths picks up an api directory only when one exists', async () 
 });
 
 test('the committed robots.txt equals the generator output for the real pages directory', async () => {
-  const committed = await readFile(join(SITE_ROOT, 'public', 'robots.txt'), 'utf8');
+  const file = join(SITE_ROOT, 'public', 'robots.txt');
+  assert.ok(
+    existsSync(file),
+    'public/robots.txt is absent: run `npm run assets:robots`, the adoption step that writes it before the tests'
+  );
+  const committed = await readFile(file, 'utf8');
   const generated = renderRobots(disallowedPaths(join(SITE_ROOT, 'src', 'pages')));
 
   assert.equal(committed, generated);

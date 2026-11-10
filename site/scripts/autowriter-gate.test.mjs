@@ -18,6 +18,7 @@ import {
   bandSceneFiles,
   recordWith,
 } from './fixtures/record-rules-scene.mjs';
+import { SCENE_CORE } from './fixtures/semantic-core-scene.mjs';
 import { recordPath } from './record-layout.mjs';
 import { GENERATED_AT } from './fixtures/spend-report-corpus.mjs';
 import { spendReportFile } from './spend-report.mjs';
@@ -31,10 +32,9 @@ const NOW = new Date('2026-11-02T07:00:00.000Z');
 const T0 = '2026-11-02T07:00:00.000Z';
 const CLAIMED = '2026-11-01T07:00:00.000Z';
 const HASH = 'b'.repeat(40);
-const CORE = readFileSync(join(REPO, 'docs/SEMANTIC-CORE.md'), 'utf8');
 const WORKFLOW = readFileSync(join(REPO, '.github/workflows/ci.yml'), 'utf8');
 const CI_FILE = { path: '.github/workflows/ci.yml', text: WORKFLOW };
-const ROUTE_ROWS = CORE.slice(CORE.indexOf(GENERATED_BEGIN), CORE.indexOf(GENERATED_END))
+const ROUTE_ROWS = SCENE_CORE.slice(SCENE_CORE.indexOf(GENERATED_BEGIN), SCENE_CORE.indexOf(GENERATED_END))
   .split('\n')
   .filter((line) => line.startsWith('| `')).length;
 const HELD_SLUG = 'a-title-the-layer-holds';
@@ -98,7 +98,15 @@ const claimPath = (name) => recordPath('claim', name, CLAIMED);
 const ledgerAt = (name, value) => ({ path: ledgerPath(name), text: JSON.stringify(value) });
 const claimAt = (name, value) => ({ path: recordPath('claim', name, value.claimedAt), text: JSON.stringify(value) });
 const report = (extra = {}) =>
-  autowriterReport({ ledgers: [], claims: [], core: CORE, workflows: [CI_FILE], suffix: SUFFIX, now: NOW, ...extra });
+  autowriterReport({
+    ledgers: [],
+    claims: [],
+    core: SCENE_CORE,
+    workflows: [CI_FILE],
+    suffix: SUFFIX,
+    now: NOW,
+    ...extra,
+  });
 const findings = (extra) => report(extra).findings;
 const one = (extra) => {
   const found = findings(extra);
@@ -106,14 +114,17 @@ const one = (extra) => {
   return found[0];
 };
 
-function heldTitle() {
-  const [row] = generatedTitles(CORE);
-  assert.ok(row, 'the generated layer of docs/SEMANTIC-CORE.md holds no title for a claim to collide with');
+function heldTitle(index = 0) {
+  const row = generatedTitles(SCENE_CORE)[index];
+  assert.ok(
+    row,
+    `the generated layer of the scene core holds no title at position ${index} for a claim to collide with`
+  );
   const bare = row.title.endsWith(SUFFIX) ? row.title.slice(0, -SUFFIX.length) : row.title;
   return { bare, layerTitle: row.title, route: row.route };
 }
 
-test('the repository as committed has nothing for the gate to find, and the report says what it read', () => {
+test('the scene core and the ci.yml workflow have nothing for the gate to find, and the report says what it read', () => {
   const { findings: found, counts } = report();
   assert.deepEqual(found, []);
   assert.equal(counts.ledgers, 0);
@@ -270,14 +281,14 @@ test('two open claims on one title are both named', () => {
 
 test('a lapsed claim and a written claim never collide, and the report counts the lapsed one', () => {
   const lapsed = claim({
-    slug: 'what-is-an-ai-management-system',
-    title: 'What is an AI management system?',
+    slug: 'a-lapsed-claim-on-a-held-title',
+    title: heldTitle(0).bare,
     expiresAt: '2026-10-20T07:00:00.000Z',
     claimedAt: '2026-10-01T07:00:00.000Z',
   });
-  const written = claim({ slug: 'what-is-an-eu-ai-act', title: 'What is the EU AI Act?', status: 'written' });
+  const written = claim({ slug: 'a-written-claim-on-a-held-title', title: heldTitle(1).bare, status: 'written' });
   const { findings: found, counts } = report({
-    claims: [claimAt('what-is-an-ai-management-system', lapsed), claimAt('what-is-an-eu-ai-act', written)],
+    claims: [claimAt('a-lapsed-claim-on-a-held-title', lapsed), claimAt('a-written-claim-on-a-held-title', written)],
   });
   assert.deepEqual(found, []);
   assert.equal(counts.claims, 2);
@@ -285,13 +296,9 @@ test('a lapsed claim and a written claim never collide, and the report counts th
 });
 
 test('a claim that failed its own schema is not compared on title, so one mistake is one finding', () => {
-  const broken = claim({
-    slug: 'what-is-an-ai-management-system',
-    title: 'What is an AI management system?',
-    format: 'video',
-  });
+  const broken = claim({ slug: HELD_SLUG, title: heldTitle().bare, format: 'video' });
   assert.deepEqual(
-    findings({ claims: [claimAt('what-is-an-ai-management-system', broken)] }).map(({ rule }) => rule),
+    findings({ claims: [claimAt(HELD_SLUG, broken)] }).map(({ rule }) => rule),
     ['claim-schema']
   );
 });
@@ -360,7 +367,7 @@ function inTempRepo(plant, check) {
   try {
     for (const [path, text] of Object.entries({
       'site/src/config.yaml': `site:\n  name: ${siteBrand().name}\n`,
-      'docs/SEMANTIC-CORE.md': CORE,
+      'docs/SEMANTIC-CORE.md': SCENE_CORE,
       '.github/workflows/ci.yml': WORKFLOW,
       ...bandSceneFiles(),
       ...plant,
@@ -471,12 +478,6 @@ test('the command names the file and the rule of a corrupted record and of a sta
       assert.match(run.stdout, /, 1 generation records, 0 dispositions, 2 findings$/m);
     }
   );
-});
-
-test('the command run against the real repository finds nothing, which is what CI runs', () => {
-  const run = gate(REPO);
-  assert.equal(run.status, 0, run.stderr);
-  assert.match(run.stdout, /, 0 findings$/m);
 });
 
 test('the command refuses a spend report that disagrees with the records, and names the line', () =>
