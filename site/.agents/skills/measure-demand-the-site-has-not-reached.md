@@ -2,17 +2,18 @@
 
 Search Console reports only queries the site was already shown for, so it cannot name an opportunity.
 `npm run audit:keywords` asks Bing Webmaster Tools how often people search a phrase the site has never ranked for.
-The topic picker does not read its report yet: today the report is evidence for a person.
+The topic picker does not read its report yet: today it is evidence for a person.
 
 ## What each instrument sees
 
-- **Search Console:** queries the site was shown for. Replaying all 13 versions of `audits/search-demand.md`
-  through the picker's own modules gave 0 candidates on every one
-  (`investigation/09-what-the-demand-instruments-see.md`).
+- **Search Console:** queries the site was shown for. Replaying all 13 versions of `audits/search-demand.md` through
+  the picker's own modules gave 0 candidates on every one (`investigation/09-what-the-demand-instruments-see.md`).
 - **Bing `GetKeywordStats`:** up to 24 weekly rows for a phrase you name. It proposes nothing: `GetRelatedKeywords`
   answered zero rows for every phrase, "seo" included. The audit therefore builds the list itself.
-- **Where the volume is,** measured 2026-11-09 over 312 phrases: 47 carry an exact impression and 7 of those no
-  route serves. The buyer prompts are sentences and price at 0; the short glossary question forms carry volume.
+- **Where the volume is,** measured 2026-11-09 over 312 phrases: 47 carry an exact impression, 7 of them unserved.
+  Phrases with volume per shape: `{concept}` 25 of 38, `what is` 15 of 52, `framework` 2 of 32, `examples` 1,
+  `policy` 2, `template` 2, `risks`, `requirements`, `checklist` 0. Shapes that earn name an artefact a reader copies.
+  Hypothesis: `guidelines`, `playbook`, `best practices` replaced the dead three on 2026-11-10 (G85); 2026-11-16 settles it.
 
 ## How the audit builds its phrases
 
@@ -26,9 +27,8 @@ report and `scripts/keyword-report.mjs` reads one back. `scripts/audit-command.m
 and `scripts/report-freshness.mjs` are shared with the Search Console command.
 
 Each phrase priced is one request of about a second: 312 phrases took 404 seconds. A phrase measured within
-`keywords.maxAgeDays` (35) days of the run is then carried from the previous report with its figures and its own
-`Measured` day and costs no request, so a template that earns no volume costs those seconds only when its phrases
-fall due: read the `Phrases` table and drop it.
+`keywords.maxAgeDays` (35) days is carried from the previous report with its own `Measured` day and costs no
+request, so a shape that earns nothing costs its seconds only when its phrases fall due: drop it.
 
 ## Which route serves a phrase
 

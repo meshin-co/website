@@ -112,3 +112,28 @@ test('a report whose candidates section is empty reads as no candidates', () => 
     assert.deepEqual(keywordCandidates(readKeywords(root)), []);
   });
 });
+
+const HANDLED_ROW = {
+  phrase: 'ai governance framework',
+  route: '/glossary/ai-governance',
+  impressions: 803,
+  handledOn: '2026-11-10',
+  reason: 'Added a framework section.',
+};
+
+test('the report read from a repository carries the handled pairs of audits/keyword-handled.json', () => {
+  inRepo((root) => {
+    putReport(root, keywordReportText({ candidates: [['ai governance framework', 803, 1051]] }));
+    mkdirSync(join(root, 'audits'), { recursive: true });
+    writeFileSync(join(root, 'audits', 'keyword-handled.json'), JSON.stringify([HANDLED_ROW]));
+    assert.deepEqual(readKeywords(root).handled, [HANDLED_ROW]);
+  });
+});
+
+test('a repository with no ledger, or no report, reads as nothing handled and no error', () => {
+  inRepo((root) => {
+    assert.deepEqual(readKeywords(root).handled, []);
+    putReport(root, keywordReportText({ candidates: [['ai governance framework', 803, 1051]] }));
+    assert.deepEqual(readKeywords(root).handled, []);
+  });
+});

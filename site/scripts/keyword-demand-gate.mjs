@@ -3,6 +3,7 @@ import { join, resolve } from 'node:path';
 
 import { readEngineConfig } from './engine-config.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
+import { HANDLED_PATH, handledFindings } from './keyword-handled.mjs';
 import { readKeywordReport } from './keyword-report.mjs';
 import { ageInDays, measuredDate, staleFindings as staleFindingsFor } from './report-freshness.mjs';
 
@@ -82,7 +83,7 @@ function accountingFindings({ phrases, run, unmeasured }) {
       );
 }
 
-export function keywordFindings({ report, today }) {
+export function keywordFindings({ report, today, handled = '' }) {
   const read = readKeywordReport(report);
   const reportDate = measuredDate(report);
   return [
@@ -90,6 +91,7 @@ export function keywordFindings({ report, today }) {
     ...unreadableFindings(read.phrases),
     ...phraseAgeFindings(read.phrases, reportDate),
     ...accountingFindings(read),
+    ...handledFindings(handled),
   ];
 }
 
@@ -106,9 +108,10 @@ const readIfPresent = (path) => (existsSync(path) ? readFileSync(path, 'utf8') :
 function main(repoArg) {
   const repo = resolve(repoArg ?? '..');
   const report = readIfPresent(join(repo, REPORT));
+  const handled = readIfPresent(join(repo, HANDLED_PATH));
   const today = new Date().toISOString().slice(0, 10);
 
-  const findings = keywordFindings({ report, today });
+  const findings = keywordFindings({ report, today, handled });
   const { phrases, candidates } = readKeywordReport(report);
 
   for (const { rule, path, detail } of findings) console.error(`KEYWORDS ${rule} ${path}: ${detail}`);

@@ -2,6 +2,7 @@ import { join } from 'node:path';
 
 const GATE = 'gate:keywords';
 const REPORT = '../audits/keyword-demand.md';
+const HANDLED = '../audits/keyword-handled.json';
 const MEASURED_DAY = /^([*_]*Measured:[*_]*\s*)\d{4}-\d{2}-\d{2}/m;
 const PHRASE_HEADER_CELL = /^(\|\s*)Phrase(\s*\|)/m;
 const PHRASE_MEASURED_CELL = /(\|\s*)\d{4}-\d{2}-\d{2}(\s*\|)/;
@@ -15,6 +16,16 @@ const withFirstPhraseMeasuredLongAgo = (report) =>
   report.replace(PHRASE_MEASURED_CELL, (_, open, close) => `${open}2020-01-01${close}`);
 
 const withFirstPhraseRowDropped = (report) => report.replace(FIRST_PHRASE_ROW, '$1');
+
+const PLANTED_ROW = {
+  phrase: 'planted phrase',
+  route: '/glossary/planted',
+  impressions: 5,
+  handledOn: '2026-11-10',
+};
+
+const withRowWithoutReason = (ledger) =>
+  `${JSON.stringify([...(ledger.trim() === '' ? [] : JSON.parse(ledger)), PLANTED_ROW], null, 2)}\n`;
 
 export const keywordSpecimens = ({ editFile }) => ({
   keywordReportStale: {
@@ -33,6 +44,11 @@ export const keywordSpecimens = ({ editFile }) => ({
     token:
       'phrase-stale audits/keyword-demand.md: phrases older than the cache window: 1, the oldest measured 2020-01-01',
     plant: (copySite) => editFile(join(copySite, REPORT), withFirstPhraseMeasuredLongAgo),
+  },
+  keywordHandledRowWithoutReason: {
+    gate: GATE,
+    token: 'handled-invalid audits/keyword-handled.json: "planted phrase": reason must say what was done to the route',
+    plant: (copySite) => editFile(join(copySite, HANDLED), withRowWithoutReason),
   },
   keywordPhraseDropped: {
     gate: GATE,

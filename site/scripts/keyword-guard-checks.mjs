@@ -16,17 +16,19 @@ const TOP = {
 };
 const NEXT = { phrase: 'ai governance policy', exact: 32, slug: 'ai-governance-policy', held: 'Yet another title' };
 const OWNED = { phrase: 'evals checklist', exact: 1200, route: '/glossary/evals' };
+const ALSO_OWNED = { phrase: 'ai register template', exact: 900, route: '/glossary/ai-register' };
+const RECORDED_AT = 100;
 
 const pass = (reason) => ({ ok: true, reason });
 const fail = (reason) => ({ ok: false, reason });
 const writtenBy = ({ entries }) => entries.map(({ topic }) => JSON.stringify(topic.title)).join(', ') || 'nothing';
 const holding = (scene, { slug, held }) => scene.claimed(slug, held);
 
-function sceneInputs({ scene, limits }, { rows, prompts = [], claims = [] }) {
+function sceneInputs({ scene, limits }, { rows, prompts = [], claims = [], handled = [] }) {
   const keywords = rows.map(({ phrase, exact }) => scene.keywordRow(phrase, exact));
   return scene.inputsFor(scene.reportOf(prompts), {
     rotation: limits.CATEGORIES.slice(0, 2),
-    keywords: scene.keywordsOf(keywords),
+    keywords: scene.keywordsOf(keywords, { handled }),
     claims,
   });
 }
@@ -91,6 +93,33 @@ function advisesWhatTheRegisterOwns(modules) {
   return null;
 }
 
+const recorded = ({ phrase, route }, impressions) => ({
+  phrase,
+  route,
+  impressions,
+  handledOn: '2026-11-10',
+  reason: 'Added a section that answers the phrase.',
+});
+
+const advisedFor = (decision, { route, phrase }) =>
+  [decision.strengthen, ...decision.advisories].some((row) => row?.route === route && row.query === phrase);
+
+function quietsWhatIsHandled(modules) {
+  const rows = [OWNED, ALSO_OWNED, TOP];
+  const handled = select(modules, { rows, handled: [recorded(OWNED, OWNED.exact)] });
+  if (advisedFor(handled, OWNED)) {
+    return `a pair recorded as handled was advised again: ${OWNED.route} for ${JSON.stringify(OWNED.phrase)}`;
+  }
+  if (!advisedFor(handled, ALSO_OWNED)) {
+    return `handling one pair silenced ${ALSO_OWNED.route}, which was never recorded as handled`;
+  }
+  const grown = select(modules, { rows, handled: [recorded(OWNED, RECORDED_AT)] });
+  if (!advisedFor(grown, OWNED)) {
+    return `a handled pair whose exact impressions grew from ${RECORDED_AT} to ${OWNED.exact} was not advised again`;
+  }
+  return null;
+}
+
 function toleratesNoReport(modules) {
   const { keywords } = modules;
   let report;
@@ -112,6 +141,7 @@ const PROBLEMS = [
   yieldsToSearchConsole,
   skipsWhatIsOccupied,
   advisesWhatTheRegisterOwns,
+  quietsWhatIsHandled,
   toleratesNoReport,
 ];
 
@@ -124,7 +154,7 @@ export function keywordRungCheck(modules) {
     `with no Search Console lead the keyword with the most exact impressions (${JSON.stringify(TOP.phrase)}, ${TOP.exact}) ` +
       'is the only entry written, marked keyword, with no model call; a Search Console lead still wins; ' +
       'a candidate a claim holds is skipped and, when all are held, the category rotation takes over with every step kept; ' +
-      `${JSON.stringify(OWNED.phrase)} is advised against ${OWNED.route}, not written; ` +
+      `${JSON.stringify(OWNED.phrase)} is advised against ${OWNED.route}, not written, until a ledger row records it as handled, and then again once its exact impressions double; ` +
       'a missing report is no candidates and no error'
   );
 }

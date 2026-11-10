@@ -1,0 +1,51 @@
+[
+  {
+    "phrase": "ai governance framework",
+    "route": "/glossary/ai-governance",
+    "impressions": 803,
+    "handledOn": "2026-11-10",
+    "reason": "Added the section \"AI governance framework: the parts and where standards ask for each\": a nine-row table of governance parts mapped to the passages of NIST AI 100-1 and the consolidated EU AI Act that ask for each."
+  },
+  {
+    "phrase": "nist ai rmf framework",
+    "route": "/glossary/nist-ai-rmf",
+    "impressions": 481,
+    "handledOn": "2026-11-10",
+    "reason": "Added the section \"NIST AI RMF framework: the four functions and what each asks for\": the four functions with their 19 categories and 72 subcategories counted from the NIST tables, and the evidence each asks for."
+  },
+  {
+    "phrase": "prompt injection examples",
+    "route": "/glossary/prompt-injection",
+    "impressions": 303,
+    "handledOn": "2026-11-10",
+    "reason": "Added the section \"Prompt injection examples: ten cases and what each one does\": ten named cases from the OWASP LLM Top 10 2026 scenarios plus EmailGPT, EchoLeak and a poisoned GitHub issue, each paired with the OWASP control."
+  },
+  {
+    "phrase": "data classification policy",
+    "route": "/glossary/data-classification",
+    "impressions": 166,
+    "handledOn": "2026-11-10",
+    "reason": "Added the section \"Data classification policy: what it contains and who signs it\": an eight-item policy outline, an example tier table and the sign-off chain."
+  },
+  {
+    "phrase": "dpia template",
+    "route": "/glossary/dpia",
+    "impressions": 78,
+    "handledOn": "2026-11-10",
+    "reason": "Added the section \"DPIA template: the headings and fields to copy\": the seven sections of the EDPB template written out with their fields, the ICO sign-off block and three additions specific to AI."
+  },
+  {
+    "phrase": "technical documentation template",
+    "route": "/glossary/technical-documentation",
+    "impressions": 32,
+    "handledOn": "2026-11-10",
+    "reason": "Added the section \"Technical documentation template: the nine Annex IV headings and their fields\": the Annex IV headings of the EU AI Act with the fields each one asks for."
+  },
+  {
+    "phrase": "ai governance policy",
+    "route": "/glossary/ai-governance",
+    "impressions": 32,
+    "handledOn": "2026-11-10",
+    "reason": "Added the section \"AI governance policy: what goes in it and who signs it\": an eleven-line policy outline with who signs each part."
+  }
+]

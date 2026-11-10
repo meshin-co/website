@@ -249,3 +249,34 @@ test('the phrase rules wait for a readable phrase table and a real date, so a br
     ['report-stale']
   );
 });
+
+const handledRow = (extra = {}) => ({
+  phrase: 'shadow ai risks',
+  route: '/glossary/shadow-ai',
+  impressions: 70,
+  handledOn: '2026-11-08',
+  reason: 'Added a section on the risks of shadow AI.',
+  ...extra,
+});
+const withHandled = (rows) => keywordFindings({ report: reportMeasured(TODAY), today: TODAY, handled: rows });
+
+test('a handled ledger with every field of every row has no finding, and no ledger has none', () => {
+  assert.deepEqual(withHandled(JSON.stringify([handledRow()])), []);
+  assert.deepEqual(withHandled(''), []);
+  assert.deepEqual(withHandled('[]'), []);
+  assert.deepEqual(findingsFor(reportMeasured(TODAY)), []);
+});
+
+test('a handled row with no reason is a finding that names the ledger and the phrase, and the report is still read', () => {
+  const found = withHandled(JSON.stringify([handledRow({ reason: undefined })]));
+  assert.equal(found.length, 1);
+  assert.equal(found[0].rule, 'handled-invalid');
+  assert.equal(found[0].path, 'audits/keyword-handled.json');
+  assert.ok(found[0].detail.includes('"shadow ai risks": reason must say what was done to the route'), found[0].detail);
+});
+
+test('a handled ledger that is not JSON is a finding, not a crash', () => {
+  const [found] = withHandled('{ nope');
+  assert.equal(found.rule, 'handled-invalid');
+  assert.match(found.detail, /is not JSON/);
+});

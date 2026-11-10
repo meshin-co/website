@@ -43,9 +43,9 @@ prompt, else from a keyword candidate (below), else on a configured category (`w
 (`npm run audit:keywords`, gated by `npm run gate:keywords`). Its Candidates section lists phrases with an exact
 Bing impression that no route serves. When no signal above yields a lead, the picker walks them, most exact impressions first (`scripts/topic-keywords.mjs`), before the category rotation (L69).
 A phrase whose concept the register already owns is no new page (L51): it becomes a strengthen advisory for the owning route. Only an unowned concept is written, with no model call. Any other
-refusal skips it, and a missing or empty report is no candidates, not an error. The shipped templates are `{concept}` and `{title}`, so most phrases name a register concept: on the first
-report 7 of 7 did, giving 7 advisories and 0 pages, and the run went on to the rotation. Bing's index is smaller than Google's, so a zero is weak evidence, never a veto, and exact
-impressions show a phrase was searched, not that a page wins it.
+refusal skips it, and a missing or empty report is no candidates, not an error. A zero on Bing is weak evidence, never a veto, and exact impressions show a phrase was searched, not that a page wins it.
+
+An advisory repeats every run until the pair is recorded. After strengthening the route, add one row to `audits/keyword-handled.json` (`gate:keywords` refuses a malformed row): `phrase`, `route`, the exact `impressions` now, `handledOn` (a day) and a `reason` that says what changed on the page. The picker stops advising that pair until its exact impressions reach double the recorded number and 50 more: a row at 32 returns at 82, one at 803 at 1606. Then change the same row in place. After each `npm run audit:keywords`, `node scripts/keyword-handled.mjs` lists rows whose phrase left Candidates (served now, or no impression), and `--prune` deletes them.
 
 ## Record the choice
 
