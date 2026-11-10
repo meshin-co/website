@@ -66,7 +66,7 @@ title `{artifact name} — meshin.co` · meta: one sentence naming the artifact 
 | `/resources/handover-playbook`                     | handover playbook                     | Handover Playbook — meshin.co                     | The Handover Playbook is six fill-in tables for moving AI leadership from an outside lead to a named owner, from the test to a later check.            | Handover Playbook                     | 31    | ✓       |
 | `/resources/llm-gateway-governance-config`         | llm gateway governance config         | LLM Gateway Governance Config — meshin.co         | LLM gateway governance config: a policy schema of five keys (allowed models, redaction, rate limit, log retention and fallback), each with an example. | LLM Gateway Governance Config         | 26    | ✓       |
 
-### article (17)
+### article (18)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
@@ -88,6 +88,7 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/how-to-trace-ai-agent-tool-calls-in-production`             | how to trace ai agent tool calls in production             | How to trace AI agent tool calls in production — meshin.co             | Trace AI agent tool calls in production with linked spans, safe fields, retry handling and checks for missing evidence.                               | How to trace AI agent tool calls in production             | 31    | ✓       |
 | `/blog/multi-agent-reference-architecture-in-production`           | multi-agent reference architecture production              | Multi-agent reference architecture in production — meshin.co           | What the sources say about multi-agent systems in production: where vendors agree, where they split, and what the research did not find.              | Multi-agent reference architecture in production           | 40    | ✓       |
 | `/blog/named-person-responsible-for-ai-risk-in-vendor-procurement` | named person responsible for ai risk in vendor procurement | Named person responsible for AI risk in vendor procurement — meshin.co | How a named AI risk owner coordinates vendor review, records decisions, and answers customer procurement questions.                                   | Named person responsible for AI risk in vendor procurement | 34    | ✓       |
+| `/blog/what-should-a-board-request-in-a-quarterly-ai-risk-report`  | what should a board request in a quarterly ai risk report  | What should a board request in a quarterly AI risk report? — meshin.co | What boards should request in a quarterly AI risk report, from material exposures and control evidence to incidents and decisions.                    | What should a board request in a quarterly AI risk report? | 30    | ✓       |
 | `/blog/why-your-ai-pilot-never-reached-production`                 | ai pilot never reached production                          | Why your AI pilot never reached production — meshin.co                 | Most AI pilots stall on ownership, data rules and a missing outcome metric, not the model. Here is what has to be true before one reaches production. | Why your AI pilot never reached production                 | 31    | ✓       |
 
 ### blog-category (4)
@@ -117,7 +118,7 @@ title `{tag name} posts — meshin.co` · meta: all posts tagged {tag}, newest f
 | --------------------------------- | --------------------------- | --------------------------------------- | ----------------------------------------------------- | --------------------------- | ----- | ------- |
 | `/blog/tag/acceptable-use-policy` | acceptable use policy posts | Acceptable use policy posts — meshin.co | All posts tagged Acceptable use policy, newest first. | Acceptable use policy posts | 23    | ✓       |
 | `/blog/tag/agentic-architecture`  | agentic architecture posts  | Agentic architecture posts — meshin.co  | All posts tagged Agentic architecture, newest first.  | Agentic architecture posts  | 23    | ✓       |
-| `/blog/tag/ai-governance`         | ai governance posts         | AI governance posts — meshin.co         | All posts tagged AI governance, newest first.         | AI governance posts         | 23    | ✓       |
+| `/blog/tag/ai-governance`         | ai governance posts         | AI governance posts — meshin.co         | All posts tagged AI governance, newest first.         | AI governance posts         | 24    | ✓       |
 | `/blog/tag/ai-pilots`             | ai pilots posts             | AI pilots posts — meshin.co             | All posts tagged AI pilots, newest first.             | AI pilots posts             | 23    | ✓       |
 | `/blog/tag/ai-register`           | ai register posts           | AI register posts — meshin.co           | All posts tagged AI register, newest first.           | AI register posts           | 23    | ✓       |
 | `/blog/tag/eu-ai-act`             | eu ai act posts             | EU AI Act posts — meshin.co             | All posts tagged EU AI Act, newest first.             | EU AI Act posts             | 23    | ✓       |
@@ -428,11 +429,11 @@ One owning route per entity. The mention count is inbound references from other 
 | Entity                         | Owned by                                   | Mentioned by |
 | ------------------------------ | ------------------------------------------ | ------------ |
 | Agentic workflow               | `/glossary/agentic-workflow`               | 13           |
-| AI governance                  | `/glossary/ai-governance`                  | 41           |
+| AI governance                  | `/glossary/ai-governance`                  | 43           |
 | AI impact assessment           | `/glossary/ai-impact-assessment`           | 3            |
 | AI management system           | `/glossary/ai-management-system`           | 7            |
-| AI operating model             | `/glossary/ai-operating-model`             | 16           |
-| AI register                    | `/glossary/ai-register`                    | 39           |
+| AI operating model             | `/glossary/ai-operating-model`             | 17           |
+| AI register                    | `/glossary/ai-register`                    | 40           |
 | Conformity assessment          | `/glossary/conformity-assessment`          | 5            |
 | Data classification            | `/glossary/data-classification`            | 16           |
 | DPIA                           | `/glossary/dpia`                           | 6            |
