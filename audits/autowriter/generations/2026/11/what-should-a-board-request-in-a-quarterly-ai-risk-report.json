@@ -1,0 +1,250 @@
+{
+  "schema": 1,
+  "slug": "what-should-a-board-request-in-a-quarterly-ai-risk-report",
+  "runId": "42847771716-1",
+  "generatedAt": "2026-11-10T15:51:31.151Z",
+  "claim": {
+    "title": "What should a board request in a quarterly AI risk report?",
+    "query": "what should a board request in a quarterly ai risk report",
+    "origin": "category",
+    "category": "executive",
+    "catchUp": {
+      "slot": "15:00",
+      "lateMinutes": 47
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-10",
+      "windowStart": "2026-08-10",
+      "windowEnd": "2026-11-08",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/what-should-a-board-request-in-a-quarterly-ai-risk-report",
+    "path": "site/src/data/post/what-should-a-board-request-in-a-quarterly-ai-risk-report.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_046dcd21dfb36ca0016af33d00953c87d0be20b4e0ac8bafdc",
+  "published": {
+    "callIndex": 2
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0523993b73282da6016af33ca7bf8887d0948de9516de03a73",
+      "requestDigest": "376966d2145f1f17c65a8d2f5b03e58e3892c1d31dda07d5e68ffafea57fff33",
+      "tokens": {
+        "input": 966,
+        "output": 85
+      },
+      "costUsd": 0.001391,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_06530b9a0eaccbf4016af33caf259c87d0a36b291796576789",
+      "requestDigest": "09faeba4abbda957294a2a0971b05bb18d6ea699aa965c11c1fae088b49171ac",
+      "tokens": {
+        "input": 10327,
+        "output": 4185
+      },
+      "costUsd": 0.031252,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_046dcd21dfb36ca0016af33d00953c87d0be20b4e0ac8bafdc",
+      "requestDigest": "8cf4b643b8629201f807c429d4335062d13c9a040cf7163354b898275d06a786",
+      "tokens": {
+        "input": 13012,
+        "output": 3084
+      },
+      "costUsd": 0.028432,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 24305,
+      "output": 7354
+    },
+    "costUsd": 0.061075
+  },
+  "ledger": "audits/autowriter/2026/11/what-should-a-board-request-in-a-quarterly-ai-risk-report.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "1543a336adab6d0f16ea51112864c66a0a0295122f8f1e177a39732425b4f4f5",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "ee42ba20a668dcb1565399d693bad27c7e8bd11cc61cbd94ce24c79628add80a"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "06fe1a1a0baa9b35048ce8b9010c690a2bef59f89f3259d2f524c4c7b97aa0eb"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "3391cfbba421ae3e122272b5c2215633533bc3bed03a747ca25c6cb5e03d201e"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "7d9f244ffd0286465d348a9cda36dc9ba993015dc27de1313d5de0f848746cf0"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "fce2b806446ef709485c0472167006e073360ce8e2626e4a338c32fbcbebba5f"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "35db2c4b63db90c8ae10dd72d87719d9a8502fc4f0614c41b948517e1c200567"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "df07e5ca1fced82881ab08e3849da19ec0de824e4be87b2719f174f0f73f33c2"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "cc91a67194a56cb5935c59e47272e6e2c42ffcaa",
+    "fingerprint": "2b1e370000ab105a363bfa7e31bfba466fe83b36a1691c90c93758d9ce2faa45"
+  },
+  "claimTable": [],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 142,
+      "median": 12,
+      "shareBelowThreshold": 0.2747,
+      "shareJustBelow": 0.2747,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/what-should-a-board-request-in-a-quarterly-ai-risk-report.json",
+    "audits/autowriter/claims/2026/11/what-should-a-board-request-in-a-quarterly-ai-risk-report.json",
+    "audits/autowriter/generations/2026/11/what-should-a-board-request-in-a-quarterly-ai-risk-report.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-ai-readiness-scorecard-five-drivers.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-board-memo-ai-strategy-one-page.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-build-vs-buy-ai-3-year-tco.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-fractional-caio-pricing.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-what-should-a-board-request-in-a-quarterly-ai-risk-report.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/what-should-a-board-request-in-a-quarterly-ai-risk-report.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}
