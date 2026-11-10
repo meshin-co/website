@@ -11,9 +11,7 @@ if [ -n "$base" ]; then
     echo "pre-push: the guards changed, proving every family can still fail"
     (cd site && npm run --silent test:smoke)
   fi
-  engine=$(git diff --name-only "$base...HEAD" -- site/scripts site/seed site/src site/.agents site/package.json site/engine.config.json docs openspec .github/workflows)
-  if [ -n "$engine" ]; then
-    echo "pre-push: the engine changed, proving a fresh copy of it is green"
-    (cd site && npm run --silent gate:export)
-  fi
 fi
+
+echo "pre-push: proving a fresh copy of the engine is green"
+(cd site && npm run --silent gate:export)

@@ -35,18 +35,20 @@ test('the smoke run is declared local-only with a reason, so gate:plan does not 
   assert.match(localOnlyGates['test:smoke'], /pre-push/);
 });
 
-test('the hook proves a fresh copy of the engine green, because a copy broke on prose no CI job reads', () => {
+test('the hook proves a fresh copy of the engine green on every push, with no path list to get wrong', () => {
   const text = hook();
+  const proof = text.indexOf('npm run --silent gate:export');
 
-  assert.match(text, /npm run --silent gate:export/);
-  for (const path of ['site/seed', 'site/.agents', 'docs', 'openspec', 'site/scripts', 'site/engine.config.json']) {
-    assert.ok(text.includes(path), `a change under ${path} can break a copy and the hook does not watch it`);
-  }
-  assert.ok(text.indexOf('run-lh-evidence.mjs check') < text.indexOf('gate:export'), 'the cheap refusal runs first');
+  assert.ok(proof > 0, 'the hook never proves a copy');
+  assert.ok(text.indexOf('run-lh-evidence.mjs check') < proof, 'the cheap refusal runs first');
+  const conditions = [...text.matchAll(/^fi$/gm)].map(({ index }) => index);
+  assert.ok(conditions.length > 0, 'the hook holds no condition, so this proves nothing');
+  assert.ok(Math.max(...conditions) < proof, 'the proof sits inside a condition, so some pushes skip it');
 });
 
-test('the export proof is declared local-only with a reason that names the hook', () => {
+test('the export proof is declared local-only with a reason that names the hook as what runs it', () => {
   const { localOnlyGates } = JSON.parse(readFileSync(PACKAGE, 'utf8'));
 
-  assert.match(localOnlyGates['gate:export'], /\.githooks\/pre-push runs it/);
+  assert.match(localOnlyGates['gate:export'], /\.githooks\/pre-push runs it on every push/);
+  assert.ok(!/run by hand/.test(localOnlyGates['gate:export']), 'the reason still says a person starts it');
 });

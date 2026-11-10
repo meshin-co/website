@@ -69,6 +69,10 @@ async function fixture({ runs = 3, score = 1, stamped = true } = {}) {
   );
   await writeFile(join(root, 'docs/PRD.md'), 'prose');
   await writeFile(join(root, '.gitignore'), 'site/.lh-run/\n');
+  await writeFile(
+    join(root, 'site/package.json'),
+    JSON.stringify({ name: 'lh-evidence-fixture', scripts: { 'gate:export': 'true', 'test:smoke': 'true' } })
+  );
 
   for (const factor of ['mobile', 'desktop']) {
     const dir = join(root, 'audits/phase-test', `lh-${factor}`);
@@ -223,7 +227,7 @@ test('a prose commit after the recorded run still pushes', async () => {
   assert.equal(code, 0, out);
 });
 
-test('git itself runs the hook: a real push of an unmeasured tree is refused', async () => {
+test('git itself runs the hook: a real push of an unmeasured tree is refused, before any slower proof', async () => {
   const root = await fixture();
   const remote = await mkdtemp(join(tmpdir(), 'lh-remote-'));
   await run('git', ['init', '-q', '--bare'], { cwd: remote });

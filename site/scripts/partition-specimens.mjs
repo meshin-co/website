@@ -93,7 +93,7 @@ export const partitionSpecimens = ({ editFile, removeFile, addFile }) => ({
   },
   exportBuildBroken: {
     gate: EXPORT_GATE,
-    token: 'EXPORT step-failed astro build: exit 1',
+    token: 'EXPORT step-failed build: exit 1',
     plant: (copySite) =>
       editFile(join(copySite, STYLEGUIDE_PAGE), (text) => text.replace('---\n', `---\n${MISSING_IMPORT}\n`)),
   },
