@@ -196,4 +196,7 @@ by hand is `LHCI_FORM_FACTOR=mobile LH_SHARD_INDEX=1 LH_SHARD_TOTAL=4 npm run ga
 `npm run test:smoke` needs a build and three browsers, about twelve minutes of every CI run, on
 work that cannot change between a local push and the same commit, so the same hook runs it when
 the push touches `site/scripts`, `site/tests/guard-mutations`, `site/package.json` or
-`.github/workflows` (L67). Install the hooks once: `git config core.hooksPath .githooks`.
+`.github/workflows` (L67). It also runs `npm run gate:export`, about 93 s, when a push touches the
+engine or its prose: the copy is exported, built, committed, and must pass its own gates and its whole
+`npm test`, because a copy once failed 196 of its own tests while the source read green.
+Install the hooks once: `git config core.hooksPath .githooks`.

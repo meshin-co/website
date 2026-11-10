@@ -34,3 +34,19 @@ test('the smoke run is declared local-only with a reason, so gate:plan does not 
   assert.ok(localOnlyGates['test:smoke'], 'test:smoke has no localOnlyGates entry');
   assert.match(localOnlyGates['test:smoke'], /pre-push/);
 });
+
+test('the hook proves a fresh copy of the engine green, because a copy broke on prose no CI job reads', () => {
+  const text = hook();
+
+  assert.match(text, /npm run --silent gate:export/);
+  for (const path of ['site/seed', 'site/.agents', 'docs', 'openspec', 'site/scripts', 'site/engine.config.json']) {
+    assert.ok(text.includes(path), `a change under ${path} can break a copy and the hook does not watch it`);
+  }
+  assert.ok(text.indexOf('run-lh-evidence.mjs check') < text.indexOf('gate:export'), 'the cheap refusal runs first');
+});
+
+test('the export proof is declared local-only with a reason that names the hook', () => {
+  const { localOnlyGates } = JSON.parse(readFileSync(PACKAGE, 'utf8'));
+
+  assert.match(localOnlyGates['gate:export'], /\.githooks\/pre-push runs it/);
+});

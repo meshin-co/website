@@ -50,8 +50,7 @@ A seed names no site and holds no measured record. A file under `seed/` without 
 `npm run export:engine -- <empty directory>` copies every engine file, writes each seed at its target path and
 `engine-export.json` (counts, seeds, carried `site-bound` files). It refuses a non-empty target, an `unclassified`
 file and an `anchor-unserved` anchor. The copy needs `npm install`, then `npm run assets:logo`, `assets:og-default` and `assets:robots`
-before it builds: the build hook reads the crawler register the last one writes, and an absent file ships empty. `npm run gate:export` exports to a temporary directory and builds it (about a minute), on demand: run it
-before an export goes out and after a change to `seed/` or the content schema. `localOnlyGates` records why.
+before it builds: the build hook reads the crawler register the last one writes, and an absent file ships empty. `npm run gate:export` exports to a temporary directory, builds and commits the copy, and runs its own gates and `npm test` (93 s); `.githooks/pre-push` runs it, and `localOnlyGates` records why.
 
 ## 5. Defaults that decide a file nobody named
 
