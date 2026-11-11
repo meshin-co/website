@@ -4,8 +4,9 @@ Written 2026-11-11 for the owner's review. **Nothing described here is built.** 
 `https://github.com/meshin-co/evals-baseline` answered 404 and the organisation page answered 200 when probed on
 2026-11-11 (L76 records the same for the seven slugs). `@meshin/evals-baseline` is not registered on npm (404 at
 17:11 UTC the same day), and neither is the unscoped `evals-baseline` (404). The versioned specification page does not
-exist either: `https://meshin.co/specs/evals-baseline/1.0.0/` and `https://meshin.co/resources/evals-baseline/` both
-answered 404, while `https://meshin.co/resources/agent-evals-ci-starter/` answered 200.
+exist either: the settled address is `https://meshin.co/spec/evals-baseline/1.0/`, and the two candidates probed
+before it was settled, `https://meshin.co/specs/evals-baseline/1.0.0/` and `https://meshin.co/resources/evals-baseline/`,
+both answered 404, while `https://meshin.co/resources/agent-evals-ci-starter/` answered 200.
 
 This file is the design the first repository is built from and the text the versioned page is written from. It
 decides what `docs/plan/reference/resource-publication-sequence.md` left open: what the baseline file holds, what the
@@ -29,19 +30,19 @@ the specification half contains, how the guards are proven, and what the reposit
 
 ## 1. What is settled, and what the evidence supports
 
-| Settled item                                                                                                                                                                             | Source                                                 |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
-| Name `evals-baseline`, chosen over `eval-regression-gate` and over keeping `agent-evals-ci-starter`. The site entry keeps its own slug; the repository and the package do not inherit it | `docs/plan/reference/resource-publication-sequence.md` |
-| Three surfaces, one source: an npm package under the scope `@meshin` (the owner's own npm username, not `@meshin-co`), a GitHub Action, a dependency-free copyable file                  | the same file                                          |
-| The package is the source. The Action and the file are generated from it. The Action ships with its own commit pinned and its README says to pin a SHA                                   | the same file                                          |
-| Two input formats at launch, promptfoo and DeepEval. No neutral format of our own yet                                                                                                    | the same file                                          |
-| A specification and an implementation. A versioned document at a meshin.co address defines what a regression in an agent evaluation is; the repository is its reference implementation   | the same file                                          |
-| The four comparison rules (section 2)                                                                                                                                                    | the same file                                          |
-| Warn by default, strict stop opt-in; nothing exits non-zero on a clock                                                                                                                   | L71                                                    |
-| Every check binds to a referent inside the consumer's repository; the pattern is `digestFor` in `site/scripts/dispositions.mjs`                                                          | L72                                                    |
-| A published repository ships a refusal list in its contributing file and an artefact count that will not grow                                                                            | L73                                                    |
-| Nothing is announced; code is MIT and text is CC BY 4.0; no page promises a repository that does not exist                                                                               | L74, L75, L76                                          |
-| The red-build fixture is two committed JSON files; a key is needed only to regenerate a baseline, never to watch the gate refuse                                                         | `docs/plan/reference/resource-publication-sequence.md` |
+| Settled item                                                                                                                                                                                               | Source                                                 |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| Name `evals-baseline`, chosen over `eval-regression-gate` and over keeping `agent-evals-ci-starter`. The site entry keeps its own slug; the repository and the package do not inherit it                   | `docs/plan/reference/resource-publication-sequence.md` |
+| Three surfaces, one source: an npm package under the scope `@meshin` (the owner's own npm username, not `@meshin-co`), a GitHub Action, a dependency-free copyable file                                    | the same file                                          |
+| The package is the source. The Action and the file are generated from it. The Action ships an immutable commit and a moving `v1` tag, the README naming the commit first, and its README says to pin a SHA | the same file                                          |
+| Two input formats at launch, promptfoo and DeepEval. No neutral format of our own yet                                                                                                                      | the same file                                          |
+| A specification and an implementation. A versioned document at a meshin.co address defines what a regression in an agent evaluation is; the repository is its reference implementation                     | the same file                                          |
+| The four comparison rules (section 2)                                                                                                                                                                      | the same file                                          |
+| Warn by default, strict stop opt-in; nothing exits non-zero on a clock                                                                                                                                     | L71                                                    |
+| Every check binds to a referent inside the consumer's repository; the pattern is `digestFor` in `site/scripts/dispositions.mjs`                                                                            | L72                                                    |
+| A published repository ships a refusal list in its contributing file and an artefact count that will not grow                                                                                              | L73                                                    |
+| Nothing is announced; code is MIT and text is CC BY 4.0; no page promises a repository that does not exist                                                                                                 | L74, L75, L76                                          |
+| The red-build fixture is two committed JSON files; a key is needed only to regenerate a baseline, never to watch the gate refuse                                                                           | `docs/plan/reference/resource-publication-sequence.md` |
 
 What the evidence supports, and how far. All figures are from `investigation/10-what-exists-for-the-seven-resources.md`,
 section 2, read from the GitHub API and the npm and PyPI download APIs on 2026-11-10:
@@ -216,7 +217,7 @@ evidence in git is the generated report, never the raw run.
 
 ```json
 {
-  "spec": "1.0.0",
+  "spec": "1.0",
   "source": {
     "tool": "promptfoo",
     "toolVersion": "0.125.1",
@@ -376,20 +377,20 @@ injected so the dated lines are the same every time. First a clean run, then the
 
 ```text
 $ evals-baseline check run-good.json
-evals-baseline 1.0.0 (specification 1.0.0) check evals-baseline.json: promptfoo 0.125.1, 2 metrics, 4 cases
+evals-baseline 1.0.0 (specification 1.0) check evals-baseline.json: promptfoo 0.125.1, 2 metrics, 4 cases
 date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11
 evals-baseline: no findings
 (exit 0)
 
 $ evals-baseline check run-worse.json
-evals-baseline 1.0.0 (specification 1.0.0) check evals-baseline.json: promptfoo 0.125.1, 2 metrics, 4 cases
+evals-baseline 1.0.0 (specification 1.0) check evals-baseline.json: promptfoo 0.125.1, 2 metrics, 4 cases
 date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11
 below-baseline agent :: accuracy: 0.75 is below the baseline 1 by 0.25, more than the tolerance 0
 evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)
 (exit 0)
 
 $ evals-baseline check run-worse.json --strict
-evals-baseline 1.0.0 (specification 1.0.0) check evals-baseline.json: promptfoo 0.125.1, 2 metrics, 4 cases
+evals-baseline 1.0.0 (specification 1.0) check evals-baseline.json: promptfoo 0.125.1, 2 metrics, 4 cases
 date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11
 below-baseline agent :: accuracy: 0.75 is below the baseline 1 by 0.25, more than the tolerance 0
 evals-baseline: 1 finding; exit 1 (--strict)
@@ -431,7 +432,7 @@ prints them.) Inputs that are not a run or a baseline, and a usage error:
 
 ```text
 $ evals-baseline check run-good.json --baseline does-not-exist.json
-evals-baseline 1.0.0 (specification 1.0.0) check does-not-exist.json
+evals-baseline 1.0.0 (specification 1.0) check does-not-exist.json
 no-baseline: no baseline at does-not-exist.json; nothing was compared; record one with: evals-baseline record <run-file>
 evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)
 (exit 0)
@@ -449,19 +450,19 @@ And `record`: unchanged, refused twice, and replacing a baseline the new run reg
 
 ```text
 $ evals-baseline record run-good-again.json
-evals-baseline 1.0.0 (specification 1.0.0) record: unchanged: evals-baseline.json already holds these values; not rewritten (recorded 2026-09-02)
+evals-baseline 1.0.0 (specification 1.0) record: unchanged: evals-baseline.json already holds these values; not rewritten (recorded 2026-09-02)
 (exit 0)
 
 $ evals-baseline record run-error-one.json
-evals-baseline 1.0.0 (specification 1.0.0) record: refused: the run has errored samples (agent: 1 errored test(s) in this run (promptfoo testErrorCount)); fix them and run the suite again; nothing written
+evals-baseline 1.0.0 (specification 1.0) record: refused: the run has errored samples (agent: 1 errored test(s) in this run (promptfoo testErrorCount)); fix them and run the suite again; nothing written
 (exit 1)
 
 $ evals-baseline record run-unnamed.json
-evals-baseline 1.0.0 (specification 1.0.0) record: refused: no named metric in this run; add "metric: <name>" to the assertions you want guarded; nothing written
+evals-baseline 1.0.0 (specification 1.0) record: refused: no named metric in this run; add "metric: <name>" to the assertions you want guarded; nothing written
 (exit 1)
 
 $ evals-baseline record run-worse.json --baseline rr.json
-evals-baseline 1.0.0 (specification 1.0.0) record: wrote rr.json (2 metrics, 4 cases, promptfoo 0.125.1)
+evals-baseline 1.0.0 (specification 1.0) record: wrote rr.json (2 metrics, 4 cases, promptfoo 0.125.1)
 replaced: the previous baseline would have reported 1 finding against this run:
   below-baseline agent :: accuracy: 0.75 is below the baseline 1 by 0.25, more than the tolerance 0
 (exit 0)
@@ -644,18 +645,23 @@ and newline in a message, plus `:` and `,` in a property; `escapeData` and `esca
 `command.ts`), after the printing rule of 5.4. It takes no token, uses no network, and the README tells the reader to
 grant it `contents: read` and nothing else.
 
-| Alternative beaten                   | Why it lost                                                                                                                                                                                                                |
-| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| A composite Action that runs `npx`   | It fetches code from the registry at run time, so pinning the Action's SHA no longer pins the code that runs. The owner's condition is that the Action ships with its own commit pinned                                    |
-| A composite Action with a shell step | GitHub's secure-use guidance recommends a JavaScript action that receives context values as arguments, because it cannot be used for script injection through a shell line                                                 |
-| A Docker Action                      | Slower to start, needs a registry, and adds an image to pin                                                                                                                                                                |
-| Moving tags (a major tag)            | The sequence file names it: a mutable major tag from a one-person organisation is code execution inside a buyer's CI. GitHub's page says a full-length commit SHA is the only way to use an action as an immutable release |
+| Alternative beaten                   | Why it lost                                                                                                                                                                             |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A composite Action that runs `npx`   | It fetches code from the registry at run time, so pinning the Action's SHA no longer pins the code that runs. The owner's condition is that the Action ships with its own commit pinned |
+| A composite Action with a shell step | GitHub's secure-use guidance recommends a JavaScript action that receives context values as arguments, because it cannot be used for script injection through a shell line              |
+| A Docker Action                      | Slower to start, needs a registry, and adds an image to pin                                                                                                                             |
+| A SHA only, with no major tag        | The owner decided on 2026-11-11 to ship both: the lower entry cost of one stable line in a workflow beats the risk he accepted knowingly                                                |
 
-The repository MUST NOT create a moving tag. Releases carry a version tag for people, and the README example uses the
-full-length SHA of the commit that holds the generated files. Writing that SHA into the README is the last step of a
-release and changes no generated file. `[INFERENCE]` for the runtime value in `action.yml`: the Node runtime that
-GitHub's metadata syntax page lists as current on the release day is used. I fetched that page on 2026-11-11 and did
-not keep the list, so no version is asserted here.
+The repository publishes a moving `v1` tag alongside the immutable commit, and the README names the commit first. The
+evidence runs the other way and is recorded so the decision stays legible: a mutable major tag from a one-person
+publisher is code execution inside a consumer's CI under a name its author can rewrite, GitHub's own page says a
+full-length commit SHA is the only way to use an action as an immutable release, and a company running a SHA-pinning
+policy refuses the tag outright — which is the audience that hires the practice. What the owner takes on in exchange
+is a standing promise never to break `v1`: a consumer on that tag upgrades with no change of their own, so a breaking
+release that moves it breaks their build and names this artefact as the cause. Moving the tag is therefore the last
+step of a release and only of a release that no consumer of `v1` can fail on. `[INFERENCE]` for the runtime value in
+`action.yml`: the Node runtime that GitHub's metadata syntax page lists as current on the release day is used. I
+fetched that page on 2026-11-11 and did not keep the list, so no version is asserted here.
 
 ### 7.3 The copyable file
 
@@ -748,8 +754,8 @@ Three forms, all naming the version and none naming a repository (L76):
   against regression as defined by the [evals-baseline specification 1.0](https://meshin.co/spec/evals-baseline/1.0/)."
   Keep a Changelog ships its own pre-formatted, versioned citation block, and the research calls that the most
   transferable finding and one that costs nothing.
-- **In a file:** `"spec": "1.0.0"` in the baseline (3.1). A baseline states which version of the definition it
-  follows.
+- **In a file:** `"spec": "1.0"` in the baseline (3.1). A baseline states which version of the definition it follows,
+  and that is the specification's two-number version, never the tool's.
 
 The address is `https://meshin.co/spec/evals-baseline/1.0/`, settled in section 12. The version in the path is two numbers rather than three: a patch to a specification is either editorial, which changes no citation, or normative, which is a new minor.
 
@@ -861,7 +867,7 @@ one binding check, and the finding ids of sections 2.2 to 2.5.
 | JSON, SARIF or JUnit output of the report                                                    | Each format is another contract to keep. The report is line-oriented so `grep` and the exit code are the interface, and the baseline is JSON for anyone who needs structure               |
 | More than one run or suite in a baseline, merging baselines, per-branch baselines            | One baseline holds one run of one suite, so each has one `source` and one `cases` digest                                                                                                  |
 | Saying which case regressed                                                                  | It needs per-case data the reduced baseline does not keep (3.3)                                                                                                                           |
-| A moving tag for the Action, or any alias that follows the latest release                    | 7.2                                                                                                                                                                                       |
+| A second moving alias for the Action beyond `v1`, such as `latest` or a floating minor       | 7.2                                                                                                                                                                                       |
 | A `--ci`, `--fail`, `--exit-code` or similar flag that makes failure the default             | L71. The strict flag is the only one                                                                                                                                                      |
 
 The answer to any of these, as one line for the contributing file: this is on the refusal list, which the specification
@@ -992,7 +998,7 @@ bad-run: ../pf/run-good.json: the baseline was recorded from deepeval (deepeval-
 evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)
 
 $ evals-baseline record run-score-only.json --baseline sc.json
-evals-baseline 1.0.0 (specification 1.0.0) record: refused: the run has errored samples (Brevity: 4 sample(s) DeepEval counted as errors, because the metric raised an error or returned no verdict (success is null)); fix them and run the suite again; nothing written
+evals-baseline 1.0.0 (specification 1.0) record: refused: the run has errored samples (Brevity: 4 sample(s) DeepEval counted as errors, because the metric raised an error or returned no verdict (success is null)); fix them and run the suite again; nothing written
 (exit 1)
 ```
 
@@ -1001,7 +1007,7 @@ rule 3:
 
 ```text
 $ evals-baseline show run-inverted.json
-evals-baseline 1.0.0 (specification 1.0.0) show run-inverted.json: deepeval version unknown (deepeval-test-run), 2 metrics, 4 cases (digest c8663ee8bc8a)
+evals-baseline 1.0.0 (specification 1.0) show run-inverted.json: deepeval version unknown (deepeval-test-run), 2 metrics, 4 cases (digest c8663ee8bc8a)
 Accuracy  1  4 samples
 Format  1  4 samples
 note: Failure rate cannot be read: DeepEval's own verdicts contradict higher-is-better in 4 sample(s) (success=true, score=0, threshold=0.5); this implementation reads higher-is-better metrics only

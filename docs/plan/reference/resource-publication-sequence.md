@@ -46,9 +46,11 @@ and the package do not inherit it.
 `@meshin`, which is his own npm username, as the thing a download counter can count; a GitHub Action wrapping
 it, because one line in a workflow is the lowest entry cost there is; and a dependency-free file anyone can
 copy, for a consumer whose policy forbids both. The package is the source and the other two are generated
-from it, so the three cannot disagree. The Action is a liability as well as a convenience — a mutable major
-tag from a one-person organisation is code execution inside a buyer's CI — so it is published with its own
-commit pinned and its README says to pin a SHA.
+from it, so the three cannot disagree. The Action is a liability as well as a convenience, so it ships an immutable commit and a moving `v1` tag with
+the README naming the commit first. The owner chose the tag on 2026-11-11 against the evidence, which L78
+records: a mutable major tag from a one-person publisher is code execution inside a buyer's CI under a name
+its author can rewrite, and the companies that hire the practice are the ones whose policy refuses it. What
+he takes on with it is a standing promise never to break `v1`.
 
 **It reads two formats at launch: promptfoo and DeepEval.** Together about 6.7 million installs a month.
 Inventing a neutral format instead was rejected for the same reason the governance kit went second: a format
