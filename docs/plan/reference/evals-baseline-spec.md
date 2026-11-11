@@ -16,7 +16,7 @@ the specification half contains, how the guards are proven, and what the reposit
 
 - **Settled** means the owner decided it on 2026-11-11, and this document does not reopen it (section 1).
 - **Decided here** means this document chose it. Every such decision carries its reason and the alternative it beat.
-- **Open** means the owner must decide (section 12). Nothing in sections 2 to 11 depends on the answer to A or C. B changes them, and says how.
+- **Settled** means the owner decided it on 2026-11-11 (section 12), and the decision with its cost is recorded there.
 - `[INFERENCE]` marks a claim nobody verified, with what would confirm it. "I could not find X, having looked at A, B
   and C" is reported as a finding. Section 13 collects every `[INFERENCE]`.
 - Every number carries its source in the sentence that uses it, or in the evidence log in appendix A.
@@ -730,7 +730,7 @@ the corpus is cited by its repository URL. The counter-signal is also there: aft
 an unversioned page for the artefact that lists every version, names the current one and holds no normative text, and
 the versioned pages are the only ones cited.
 
-### 8.3 The address is the owner's decision (open, section 12)
+### 8.3 The address (settled, section 12)
 
 The requirements, from the evidence and from L53 and L76: the address is on meshin.co and never a repository path; it
 holds the full version; each published version has one page; the artefact has one unversioned page that lists the
@@ -743,15 +743,15 @@ candidate addresses on 2026-11-11 and both answer 404; neither is promised anywh
 
 Three forms, all naming the version and none naming a repository (L76):
 
-- **Prose:** `evals-baseline specification 1.0.0, https://meshin.co/<address>/1.0.0/`.
+- **Prose:** `evals-baseline specification 1.0, https://meshin.co/spec/evals-baseline/1.0/`.
 - **Paste-ready, shipped in the README and at the head of the page:** "This project guards its agent evaluations
-  against regression as defined by the [evals-baseline specification 1.0.0](https://meshin.co/<address>/1.0.0/)."
+  against regression as defined by the [evals-baseline specification 1.0](https://meshin.co/spec/evals-baseline/1.0/)."
   Keep a Changelog ships its own pre-formatted, versioned citation block, and the research calls that the most
   transferable finding and one that costs nothing.
 - **In a file:** `"spec": "1.0.0"` in the baseline (3.1). A baseline states which version of the definition it
   follows.
 
-The placeholder `<address>` stays a placeholder until the owner decides section 12.
+The address is `https://meshin.co/spec/evals-baseline/1.0/`, settled in section 12. The version in the path is two numbers rather than three: a patch to a specification is either editorial, which changes no citation, or normative, which is a new minor.
 
 ## 9. How the guards are proven
 
@@ -873,27 +873,37 @@ specification text CC BY 4.0. L75 names three defects on the site that block lic
 in parallel with the first repository. I did not check whether they are fixed. `[INFERENCE]`: what would confirm it is
 reading `site/LICENSE.md`, the terms page and `licenseHasText` after the work L75 describes.
 
-## 12. Open for the owner
+## 12. Settled by the owner on 2026-11-11
 
-Options, with a recommendation, in the order the owner has preferred.
+The four questions this document opened are answered. Each answer carries what it costs, because an answer
+with its price recorded is the only kind a later reader can re-open honestly.
 
-**A. The address of the versioned specification page.** Requirements are in 8.3. Candidates:
+**A. The address is `https://meshin.co/spec/evals-baseline/1.0/`.** A new top-level family, chosen over
+nesting the page under the resource entry. The citation is short enough to be quoted whole, which matters
+because a long address gets shortened to a repository link, and that is the one form no artefact in the
+research is cited at. It also has room for the second specification, since the governance artefact follows.
+The cost is real: the route families were fixed, so this needs a locked row amending L53, a template, and
+the per-route obligations every family carries — a markdown sidecar, a sitemap entry, a search entry, a
+social card and a place in the collection's machine files. The version sits in the path so a later revision
+publishes beside the first rather than rewriting what people already cited.
 
-| Option                                                                                                                                                                                                                                                                  | For                                                                                                                                                                  | Against                                                                                                                                                                                                                                                                                                                                                                                 |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **1. Under the resource family, in the final name:** an index of versions at one address and one immutable page per version beneath it, for example `https://meshin.co/resources/evals-baseline/` and `https://meshin.co/resources/evals-baseline/1.0.0/` (recommended) | Joins a fixed family, so L53's rule that a new text joins an existing family holds. The citation carries the name that survives the tool. The version is in the path | It is new routes in a frozen route set (L53), needing a phase that says so and the per-entry obligations. The old entry owns the same intent, so the placement procedure says to extend it, and the entry would link to the new page and not repeat the definition. `[INFERENCE]` that nested versioned routes count as the resource family; the owner's placement decision confirms it |
-| 2. Beneath the existing entry, for example under `https://meshin.co/resources/agent-evals-ci-starter/`                                                                                                                                                                  | No new family; no second page on the topic                                                                                                                           | Every citation carries the old working name for good, which the owner decided against for the repository and the package                                                                                                                                                                                                                                                                |
-| 3. A new top-level family for specifications                                                                                                                                                                                                                            | Reads like SemVer's path                                                                                                                                             | The route families are fixed and the placement procedure says a text that fits none means the idea is wrong for this site                                                                                                                                                                                                                                                               |
-| 4. A different domain                                                                                                                                                                                                                                                   | None the research supports                                                                                                                                           | The owner chose a meshin.co address, and the winners are cited at their own project domains                                                                                                                                                                                                                                                                                             |
+**B. The binding check of 2.4 ships in 1.0, as a warning only.** It prints that the baseline was recorded
+against a different set of cases, and it never fails the run, not even under `--strict`. That is the middle
+path: the signal exists and the penalty does not. It catches the cheapest false green the four rules leave —
+ten hard cases swapped for ten easy ones keeps the count equal and raises the score — and it does not punish
+the person who legitimately added a case and has not re-recorded yet. It does not catch a scorer weakened in
+place, and the page says so rather than implying the binding makes a green trustworthy.
 
-**B. Whether the binding check (2.4) is in 1.0.** Recommended: yes. It is the `digestFor` pattern that L72 names, it
-closes the cheapest false green the four rules leave, and it costs one baseline field, one finding id and a few lines
-per reader. Against: it adds a finding the owner's four rules do not contain, and it fires on a harmless edit to a case
-input, so the person must re-record. If dropped, remove `cases` from 3.1, `cases-changed` from 2.5, section 2.4, S5, and the `cases` digest named in the third row of section 10, and say in the page that same-count swaps pass.
+**C. The npm username `meshin` is the owner's own account**, confirmed by him on 2026-11-11. The registry's
+scope search returned zero packages for `scope:meshin`, which shows no public package and says nothing about
+the account.
 
-**C. Preconditions the registry cannot confirm.** That the npm username `meshin` exists and the owner can publish under
-it: the registry's scope search returned zero packages for `scope:meshin` on 2026-11-11, which shows no public package
-and does not show the account `[INFERENCE]`. That the L75 licence defects are fixed (section 11).
+**D. The repository is `meshin-co` and the package is `@meshin`.** Two names for one artefact, chosen
+knowingly. The Action publishes an immutable commit and a moving `v1` tag, and the README names the commit
+first. The research is against the moving tag — a mutable major tag from a one-person publisher is code
+execution inside the consumer's CI under a name its author can rewrite, and a company that runs a
+SHA-pinning policy refuses it — and the owner accepted that in exchange for the lower entry cost. What he
+takes on with it is a standing promise never to break `v1`.
 
 ## 13. What was not verified
 
@@ -913,7 +923,7 @@ Each item is `[INFERENCE]` with what would confirm it.
 8. The Node runtime for the Action and the minimum Node for the package and the file (7.2).
 9. SemVer's clause 3 wording, recalled (8.2).
 10. That the figures of section 1 still hold. They are the record's, from 2026-11-10, and were not re-measured.
-11. That a nested versioned route counts as the resource family (12A).
+11. That a new top-level `/spec/` family can carry the per-route obligations every family carries, which is a build question nobody has answered yet (12A).
 12. How the specification text is copied between the new repository and the site without drift, and how a published
     page is held frozen. Not designed here; a content digest in the site's own checks is the obvious shape.
 13. The prototype and its fixtures are in a temporary directory, not a repository.
