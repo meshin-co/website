@@ -2,11 +2,12 @@
 title: Handover Playbook
 description: 'The Handover Playbook is six fill-in tables for moving AI leadership from an outside lead to a named owner, from the test to a later check.'
 publishDate: 2026-10-02
-updatedDate: 2026-10-25
+updatedDate: 2026-11-11
 name: Handover Playbook
 type: template
 version: '0.1'
-status: Available as a page on this site. A repository copy is not published yet.
+license: CC-BY-4.0
+status: Available as a page on this site. There is no repository copy.
 whatInside:
   - 'Six tables to fill in: the owner and the test, what moves, who signs what, access, help after the last day and a check after handover'
   - A reason for each item in the table of what moves, and a source for each item that has one, so you can drop a row you disagree with

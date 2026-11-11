@@ -118,6 +118,14 @@ export const FAMILIES = [
     tokens: ['license: needs its text'],
   },
   {
+    id: 'resource-license-undeclared',
+    kind: 'build',
+    proves: 'build',
+    fixture: 'resource-license-undeclared.md',
+    plant: 'src/data/resource',
+    tokens: ['license: Required'],
+  },
+  {
     id: 'source-original-must-match-its-stand-in',
     kind: 'build',
     proves: 'build',

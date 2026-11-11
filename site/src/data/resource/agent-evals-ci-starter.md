@@ -4,9 +4,10 @@ name: Agent Evals CI Starter
 type: kit
 description: 'Agent evals CI starter: a four-field eval case format and a description of the pull-request gate that blocks a merge below a pass-rate floor you set.'
 publishDate: 2026-09-08
-updatedDate: 2026-10-25
+updatedDate: 2026-11-11
 version: '0.1'
-status: Available as a page on this site. A repository copy is not published yet.
+license: CC-BY-4.0
+status: Available as a page on this site. There is no repository copy.
 whatInside:
   - A description of the workflow that runs on every pull request touching a prompt, a tool definition or a model version
   - An eval case format — an id, an input, an expected outcome and a tag, in a plain YAML file

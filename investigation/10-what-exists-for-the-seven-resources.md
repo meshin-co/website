@@ -6,11 +6,16 @@ record: true
 
 Date: 2026-11-10. Read-only reconnaissance by five parallel research agents, no change to the site.
 
-Every one of the seven `/resources/*` pages links to `https://github.com/meshin-co/<slug>`, and every one of
-those links is a 404. Before writing any of them, this record establishes what a practitioner can already get
-today, from whom, under what licence, and what is genuinely missing. The full agent reports are the evidence
-behind the summaries here; the figures were read from the GitHub API, the npm and PyPI download APIs, OpenAlex
-and the primary documents, on 2026-11-10 unless a different date is given.
+The seven `/resources/*` pages each promise an artefact that `https://github.com/meshin-co/<slug>` would
+hold, and none of those repositories exists. The premise this record opened with — that the pages still carry
+those links — was wrong, and is corrected here rather than quietly dropped: commit `ce6ee10` on 2026-10-02
+removed the `repoUrl` field from the five entries that had one, and two never carried it. Verified in the
+built output on 2026-11-11: `grep -rl 'github.com/meshin-co/' site/dist` returns nothing. What remained dead
+was the prose, a `status` line promising a repository copy, and that is now rewritten. Before writing any of
+the artefacts, this record establishes what a practitioner can already get today, from whom, under what
+licence, and what is genuinely missing. The full agent reports are the evidence behind the summaries here;
+the figures were read from the GitHub API, the npm and PyPI download APIs, OpenAlex and the primary
+documents, on 2026-11-10 unless a different date is given.
 
 A claim here is either **verified**, meaning an agent read it from the source named, or marked
 `[INFERENCE]`. Nothing in this record is a plan. The decisions it feeds are taken elsewhere. The five raw
@@ -46,8 +51,9 @@ Three further results from the same research, each with a number behind it:
   zero requests for it, and AI retrieval bots accounted for 1.1% of requests, 233 in total. Google's own
   guidance says it does not use them, structured data is not required and chunking is unnecessary.
 - **Winners are cited at versioned project paths, never at a repository URL** — `keepachangelog.com/en/1.1.0/`,
-  not a GitHub link. Seven `github.com/meshin-co/<slug>` links are therefore seven liabilities in their
-  current form.
+  not a GitHub link. The seven planned `github.com/meshin-co/<slug>` addresses would therefore have been
+  seven liabilities had the pages still carried them; they no longer do, as the opening of this record now
+  records.
 
 Cold start, in every case studied, was one borrowed audience on one day: Keep a Changelog through The
 Changelog podcast #127 on 2014-08-08, ten weeks after launch; the 12-Factor App through Hacker News in
@@ -135,6 +141,24 @@ returned `total_count: 0`. DeepEval's own guide to regression testing in CI cont
 to 0.55 passes that. The only public gate comparing a run against a committed score is
 `BrickerP/inspect-eval-gate-lab`, at 0 stars, 0 forks, self-labelled "not production". **Every tool that can
 detect a regression stores the baseline in its own database.**
+
+**The gap was re-checked directly on 2026-11-10, because the sequence rests on it.** A first attempt used a
+single `OR` query against the issue search API and returned `total_count: 0`, which was a false zero from a
+malformed query. The check that stands enumerated every issue and pull request the repository has ever had —
+1,035 of them — and matched their titles against base, compar, regress, diff and threshold. Four matched, and
+none is a comparator: `#870` and `#865`, both closed in March 2026, add `repeat-min-pass` and
+`repeat-fail-on-threshold` inputs, which are absolute thresholds rather than a comparison against a recorded
+run; `#122` is a 2024 report about unstaged files; `#102` is a logging flag. A separate search for the word
+`baseline` returns seven hits, all dependency bumps. The five most recent commits are dependency updates
+dated 2026-09-29.
+
+**What that check does and does not establish.** It read titles, not bodies, so a comparator proposed inside
+the text of a pull request would not have been seen. Eight pull requests opened on 2026-07-08 are still open
+and sit in the adjacent subject of change detection — `#988` detects removed monitored prompts, others track
+file-backed tests and provider file dependencies — so the repository is not dormant in that area, and `#865`
+and `#870` show that feature work does land. The honest statement is therefore narrower than the one this
+record first carried: **no comparator appears in any title, and adjacent change-detection work is open.** The
+ordering decision rests on that, not on a claim that nobody is working nearby.
 
 **Trajectory support is real but split.** promptfoo ships `trajectory:tool-sequence`,
 `trajectory:tool-args-match`, `trajectory:goal-success` and `tool-call-f1` with tunable partial credit,

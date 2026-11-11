@@ -13,4 +13,5 @@ export function licenseTextShips(license, root) {
   }
 }
 
-export const licenseHasText = (entry, root) => entry.license === undefined || licenseTextShips(entry.license, root);
+export const licenseHasText = (entry, root) =>
+  typeof entry.license === 'string' && licenseTextShips(entry.license, root);

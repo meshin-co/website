@@ -19,12 +19,14 @@ function siteRoot(licenses = {}) {
   return root;
 }
 
-test('an entry that declares no license needs no text', (t) => {
-  const root = siteRoot();
+test('an entry that declares no license fails the check, whatever text ships', (t) => {
+  const root = siteRoot({ MIT: 'MIT License\n', undefined: 'text', null: 'text' });
   t.after(() => rmSync(root, { recursive: true, force: true }));
 
-  assert.equal(licenseHasText({}, root), true);
-  assert.equal(licenseHasText({ license: undefined }, root), true);
+  assert.equal(licenseHasText({}, root), false);
+  assert.equal(licenseHasText({ license: undefined }, root), false);
+  assert.equal(licenseHasText({ license: null }, root), false);
+  assert.equal(licenseHasText({ license: '' }, root), false);
 });
 
 test('a declared license is backed by a file under public/licenses with readable text in it, and by nothing else', (t) => {

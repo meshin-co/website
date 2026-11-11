@@ -2,35 +2,11 @@
   "untraceable": [],
   "dead": [
     {
-      "location": "attribute.aria-label",
-      "text": "Previous page",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/site/PaginationLinks.astro"
-      ]
-    },
-    {
-      "location": "attribute.aria-label",
-      "text": "Next page",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/site/PaginationLinks.astro"
-      ]
-    },
-    {
       "location": "text",
       "text": "Nothing published in this category yet.",
       "status": "unreviewed",
       "usedIn": [
         "src/pages/blog/category/[category].astro"
-      ]
-    },
-    {
-      "location": "attribute.lead",
-      "text": "Older articles, continuing from the first page.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/blog/page/[page].astro"
       ]
     },
     {
@@ -66,14 +42,6 @@
       ]
     },
     {
-      "location": "attribute.label",
-      "text": "See the offer",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/case-studies/[id].astro"
-      ]
-    },
-    {
       "location": "text",
       "text": "Open the repository",
       "status": "unreviewed",
@@ -87,6 +55,14 @@
       "status": "unreviewed",
       "usedIn": [
         "src/utils/content-rules.mjs"
+      ]
+    },
+    {
+      "location": "constant.PAGE_HEADING_FORMAT",
+      "text": "{heading}, page {number}",
+      "status": "unreviewed",
+      "usedIn": [
+        "src/utils/paginate.mjs"
       ]
     },
     {
@@ -106,11 +82,11 @@
       ]
     },
     {
-      "location": "constant.title",
-      "text": "Writing, page",
+      "location": "constant.label",
+      "text": "See the offer",
       "status": "unreviewed",
       "usedIn": [
-        "src/pages/blog/page/[page].astro"
+        "src/pages/case-studies/[id].astro"
       ]
     }
   ],
@@ -277,6 +253,13 @@
       "status": "verified",
       "reason": "Read 2026-10-02. No prose: the file holds formatting and trimming functions (firstSentence, teaser, clauseTrim, pageTitle, faqDescription, faqMetadata), numeric limits (140-character teaser, 12-word floor, 70-character title, 120 to 160 character description) and regular expressions. It has no ' — meshin.co' literal: the title suffix comes from titleSuffix(brandFromDisk()) in src/utils/brand.mjs, which reads site.name from src/config.yaml. The strings it builds are rows on the /faq routes, not here.",
       "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "src/pages/case-studies/index.astro",
+      "location": "frontmatter.cta.label",
+      "status": "verified",
+      "reason": "No row matches this entry any more, and the sentence it recorded is no longer true. Until change 18 the closing call to action of src/pages/case-studies/index.astro passed the label \"Book a 30-min fit call\" and the href https://cal.com/meshin as props, and this entry reviewed that label. Change 18 removed both props, so the page takes the shared defaults: the label \"Book a 30-min fit call\" and the href https://cal.com/meshin/30min (BOOKING_URL in src/utils/booking.mjs), which returned 200 on 2026-10-31 with the title \"30 min meeting | Dmitri Meshin | Cal.com\". The button no longer links https://cal.com/meshin. The label and the band are dispositioned at src/utils/booking.mjs and src/components/site/CtaBlock.astro. COPY-CHECKLIST 3.9 (\"Fit call: free, thirty minutes, booked at cal.com/meshin\", answer yes) still covers the claim. The entry is kept as a record that the review applied to the old props, and is reported by the gate as naming no rows.",
+      "digest": "5c2fc782143d"
     },
     {
       "target": "src/utils/og-template.mjs",
@@ -447,6 +430,13 @@
       "status": "verified",
       "reason": "Read 2026-10-02. No prose: the file holds formatting and trimming functions (firstSentence, teaser, clauseTrim, pageTitle, faqDescription, faqMetadata), numeric limits (140-character teaser, 12-word floor, 70-character title, 120 to 160 character description) and regular expressions. It has no ' — meshin.co' literal: the title suffix comes from titleSuffix(brandFromDisk()) in src/utils/brand.mjs, which reads site.name from src/config.yaml. The strings it builds are rows on the /faq routes, not here.",
       "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "src/pages/case-studies/index.astro",
+      "location": "frontmatter.cta.label",
+      "status": "verified",
+      "reason": "No row matches this entry any more, and the sentence it recorded is no longer true. Until change 18 the closing call to action of src/pages/case-studies/index.astro passed the label \"Book a 30-min fit call\" and the href https://cal.com/meshin as props, and this entry reviewed that label. Change 18 removed both props, so the page takes the shared defaults: the label \"Book a 30-min fit call\" and the href https://cal.com/meshin/30min (BOOKING_URL in src/utils/booking.mjs), which returned 200 on 2026-10-31 with the title \"30 min meeting | Dmitri Meshin | Cal.com\". The button no longer links https://cal.com/meshin. The label and the band are dispositioned at src/utils/booking.mjs and src/components/site/CtaBlock.astro. COPY-CHECKLIST 3.9 (\"Fit call: free, thirty minutes, booked at cal.com/meshin\", answer yes) still covers the claim. The entry is kept as a record that the review applied to the old props, and is reported by the gate as naming no rows.",
+      "digest": "5c2fc782143d"
     },
     {
       "target": "src/utils/og-template.mjs",
