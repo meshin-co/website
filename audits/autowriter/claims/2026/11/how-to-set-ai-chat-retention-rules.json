@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "slug": "how-to-set-ai-chat-retention-rules",
+  "title": "How to set AI chat retention rules",
+  "format": "article",
+  "query": "how to set ai chat retention rules",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "origin": "category",
+  "category": "governance",
+  "catchUp": {
+    "slot": "06:00",
+    "lateMinutes": 232
+  },
+  "runId": "42998510930-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-11T09:52:06.807Z",
+  "expiresAt": "2026-11-25T09:52:06.807Z"
+}
