@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/how-to-allocate-shared-ai-tool-costs-across-departments.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-allocate-shared-ai-tool-costs-across-departments.json on 2026-11-11. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-allocate-shared-ai-tool-costs-across-departments.json.",
+    "digest": "21347ed0bba7"
+  },
+  {
+    "target": "/blog/how-to-allocate-shared-ai-tool-costs-across-departments",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-allocate-shared-ai-tool-costs-across-departments.json on 2026-11-11. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-allocate-shared-ai-tool-costs-across-departments.json.",
+    "digest": "fd4e8f608620"
+  }
+]
