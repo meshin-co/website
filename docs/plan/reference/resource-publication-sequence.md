@@ -37,7 +37,31 @@ gate; it is an indefinite hold that lets whoever enters the empty lane next deci
 
 ## What the first repository contains
 
-A committed-baseline comparator for agent evaluations. Four comparison rules:
+**Name: `evals-baseline`.** Decided by the owner on 2026-11-11 over `eval-regression-gate` and over keeping
+`agent-evals-ci-starter`. It names the missing thing rather than the kit, it is short enough to be typed from
+memory, and it survives the tool it reads being replaced. The site entry keeps its own slug; the repository
+and the package do not inherit it.
+
+**Three surfaces, one source.** The owner chose all three on 2026-11-11: an npm package under the scope
+`@meshin`, which is his own npm username, as the thing a download counter can count; a GitHub Action wrapping
+it, because one line in a workflow is the lowest entry cost there is; and a dependency-free file anyone can
+copy, for a consumer whose policy forbids both. The package is the source and the other two are generated
+from it, so the three cannot disagree. The Action is a liability as well as a convenience — a mutable major
+tag from a one-person organisation is code execution inside a buyer's CI — so it is published with its own
+commit pinned and its README says to pin a SHA.
+
+**It reads two formats at launch: promptfoo and DeepEval.** Together about 6.7 million installs a month.
+Inventing a neutral format instead was rejected for the same reason the governance kit went second: a format
+nobody writes has a corpus of zero files, and the whole ordering rule is that the consumer must already exist.
+A neutral shape may be declared later, once two real ones have been read in anger and their differences are
+known rather than guessed.
+
+**Both a specification and an implementation.** The versioned specification lives at a meshin.co address and
+defines what a regression in an agent evaluation is; the repository is its reference implementation. This is
+the shape SemVer has, and it is the only shape in the studied corpus that produced both installs and
+citations. The specification is the part that is cited; the implementation is the part that is installed.
+
+Four comparison rules:
 
 1. A metric the baseline names and the current run lacks fails.
 2. A value below the baseline, beyond a stated numeric tolerance, fails.

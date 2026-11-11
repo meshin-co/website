@@ -26,8 +26,8 @@ change is unparked.
 
 - [ ] 3.1 The Content section of `site/src/pages/terms.astro` grants the writing under CC BY 4.0, states the credit
       the licence asks for and names the text at `/licenses/CC-BY-4.0.txt`
-- [ ] 3.2 The Engagements section of the same page leaves background material out of what the client owns, in wording
-      the owner has not answered: G91
+- [ ] 3.2 The Engagements section of the same page says only the working method travels between engagements and
+      points at the FAQ for where that line falls, rather than restating the boundary: G91
 - [ ] 3.3 `site/LICENSE.md` grants the code in the name of the site's author, keeps the notice of the theme above
       the permission text and points the writing at its licence text, and `seed/site/LICENSE.md.seed` carries the
       same structure with the holder left for the owner of the copy
@@ -65,7 +65,7 @@ change is unparked.
 - [ ] 6.1 `docs/plan/reference/known-gaps.md` holds G86, the window this change opens, G87, the `status` of an entry
       that nothing relates to its `repoUrl` and a repository that nothing checks, G88, the licence the checklist of
       the owner still records for a page-only artefact, G89, the licence that the structured data names by its bare
-      id, G90, the grant of `/terms` that nothing reads, and G91, the exception for background material that no
+      id, G90, the grant of `/terms` that nothing reads, and G91, the boundary on ownership that no
       answer of the owner backs
 
 ## 7. Calibration Gate

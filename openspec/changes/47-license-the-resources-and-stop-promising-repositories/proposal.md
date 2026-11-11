@@ -52,9 +52,12 @@ the licence asks for and names the text at `/licenses/CC-BY-4.0.txt`. `site/LICE
 is MIT, in the name of the site's author and with the notice of the theme it came from kept above the permission
 text, and the writing is CC BY 4.0. Its seed for a copy of the engine leaves the holder to the owner of the copy.
 
-The Engagements section of `/terms` now leaves background material out of what the client owns. That wording is a
-draft and not a decision: no locked row and no answer of the owner records the exception, and two published answers
-on ownership draw the line in other words (G91).
+The Engagements section of `/terms` now says only the working method travels between engagements and points at the
+FAQ for where that line falls. Two earlier drafts were refused. One reserved background material including
+templates, which contradicts the published answer that everything written for the client's business belongs to
+them; the next copied that answer verbatim onto the page and `gate:content` refused it as a duplicate sentence
+under L53. The page now carries the pointer and the FAQ keeps the definition, so the only thing still resting on
+no owner answer is the FAQ's own wording (G91).
 
 The pages promise no repository. The `status` of each of the 7 entries reads "Available as a page on this site.
 There is no repository copy.", and none sets `repoUrl`. The field stays optional: the page draws the "Open the
@@ -83,7 +86,7 @@ public repository show that no public copy exists, never that no private one doe
 declared and that its text ships. None proves that the licence suits an artefact, and nothing checks the `status` of
 an entry against its `repoUrl`, or that a `repoUrl` answers: G87. The structured data names the licence by its bare
 id, and schema.org types that property as a URL or a CreativeWork: G89. Nothing reads what `/terms` grants: G90. The
-exception for background material rests on no answer of the owner: G91. `site/public/licenses/` holds no MIT text
+boundary on ownership rests on no answer of the owner: G91. `site/public/licenses/` holds no MIT text
 because no entry declares MIT. The first that does must add it, and the build says so.
 
 ## Why this change is parked
