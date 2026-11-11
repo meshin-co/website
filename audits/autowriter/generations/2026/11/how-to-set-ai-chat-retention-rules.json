@@ -1,0 +1,277 @@
+{
+  "schema": 1,
+  "slug": "how-to-set-ai-chat-retention-rules",
+  "runId": "42998510930-1",
+  "generatedAt": "2026-11-11T09:56:11.065Z",
+  "claim": {
+    "title": "How to set AI chat retention rules",
+    "query": "how to set ai chat retention rules",
+    "origin": "category",
+    "category": "governance",
+    "catchUp": {
+      "slot": "06:00",
+      "lateMinutes": 232
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-11",
+      "windowStart": "2026-08-11",
+      "windowEnd": "2026-11-09",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/how-to-set-ai-chat-retention-rules",
+    "path": "site/src/data/post/how-to-set-ai-chat-retention-rules.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_0915a08f107d84d0016af43b1f393c87d1a6982f0096c8ece0",
+  "published": {
+    "callIndex": 3
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0d8cfa5b801d0f6d016af43ac850a487d1b8fc396beeda5a07",
+      "requestDigest": "36138c8b6b7a8e8345bc10df27276eb909171174f4c5bc97472437a8bc851771",
+      "tokens": {
+        "input": 986,
+        "output": 105
+      },
+      "costUsd": 0.001511,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_07dcd199b7c9c6e2016af43acbf42487d1abe655040f146693",
+      "requestDigest": "926eeba725acaed3cdeeaa1db0f5e963e98215196beb1ad115a18f1c65c0e8d9",
+      "tokens": {
+        "input": 1044,
+        "output": 121
+      },
+      "costUsd": 0.001649,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0709f356bc3a684d016af43ad2887c87d190f13553fbbae33c",
+      "requestDigest": "db61fae11b21dc1baceb6161bef37fba5b9ba6c08b569d418631dee312139fd2",
+      "tokens": {
+        "input": 10309,
+        "output": 4603
+      },
+      "costUsd": 0.033324,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0915a08f107d84d0016af43b1f393c87d1a6982f0096c8ece0",
+      "requestDigest": "b5fd767984d5f0b5fe27b74dd4a13d195e5486bbb5a29eb98c772b79d3a17407",
+      "tokens": {
+        "input": 13673,
+        "output": 3561
+      },
+      "costUsd": 0.031478,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 26012,
+      "output": 8390
+    },
+    "costUsd": 0.067962
+  },
+  "ledger": "audits/autowriter/2026/11/how-to-set-ai-chat-retention-rules.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "b8242c67adab4510aa91e27db42b3c03e9cf8b559801238d4264c32a07cca5f3",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "ee42ba20a668dcb1565399d693bad27c7e8bd11cc61cbd94ce24c79628add80a"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "06fe1a1a0baa9b35048ce8b9010c690a2bef59f89f3259d2f524c4c7b97aa0eb"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "3391cfbba421ae3e122272b5c2215633533bc3bed03a747ca25c6cb5e03d201e"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "3dfa3279df52c111c26938bd0e3f545bad3a201b804fac6815d90969925bf0e5"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "3c178cf8a501c98df8f6ba971243f7aaf1c611bbb0ac16689d39340a6a078c35"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "8176cf5802ad0b8f97a5619a94bb99123853893d3c5c8f9aa409b44ae916fcec"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "df07e5ca1fced82881ab08e3849da19ec0de824e4be87b2719f174f0f73f33c2"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "95e0cfa47beb9e778d01cb5e17a75789d38eabe0",
+    "fingerprint": "0cc84ee7071c1a36514a921d439f2bb1f83f03f89e368bcdce7a787006f5fe90"
+  },
+  "claimTable": [
+    {
+      "sentence": "The GDPR sets a purpose-based limit on how long personal data may be kept in identifiable form.",
+      "marker": "sourced",
+      "source": {
+        "id": "gdpr",
+        "title": "Regulation (EU) 2016/679 of the European Parliament and of the Council",
+        "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+      },
+      "span": "kept in a form which permits identification of data subjects for no longer than is necessary for the purposes for which the personal data are processed"
+    }
+  ],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 155,
+      "median": 13,
+      "shareBelowThreshold": 0.2581,
+      "shareJustBelow": 0.2323,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/how-to-set-ai-chat-retention-rules.json",
+    "audits/autowriter/claims/2026/11/how-to-set-ai-chat-retention-rules.json",
+    "audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-ai-vendor-assessment-questionnaire-template.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-set-ai-chat-retention-rules.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-named-person-responsible-for-ai-risk-in-vendor-procurement.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/how-to-set-ai-chat-retention-rules.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}

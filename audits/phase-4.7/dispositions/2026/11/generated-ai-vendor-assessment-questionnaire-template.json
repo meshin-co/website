@@ -8,7 +8,7 @@
   {
     "target": "/blog/ai-vendor-assessment-questionnaire-template",
     "status": "rewritten",
-    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/ai-vendor-assessment-questionnaire-template.json on 2026-11-05. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/ai-vendor-assessment-questionnaire-template.json.",
-    "digest": "5e59c8a28558"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-ai-chat-retention-rules (generation record audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "31150aba56ad"
   }
 ]

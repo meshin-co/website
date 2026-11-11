@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/how-to-set-ai-chat-retention-rules.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-set-ai-chat-retention-rules.json on 2026-11-11. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json.",
+    "digest": "3750831c33ad"
+  },
+  {
+    "target": "/blog/how-to-set-ai-chat-retention-rules",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-set-ai-chat-retention-rules.json on 2026-11-11. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json.",
+    "digest": "1c4a46dbe693"
+  }
+]
