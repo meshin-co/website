@@ -33,21 +33,21 @@
     "target": "/blog",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "e91544b755b5"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-ai-chat-retention-rules (generation record audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "8322692e1ddd"
   },
   {
     "target": "/blog",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "e91544b755b5"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-ai-chat-retention-rules (generation record audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "8322692e1ddd"
   },
   {
     "target": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-vendor-assessment-questionnaire-template (generation record audits/autowriter/generations/2026/11/ai-vendor-assessment-questionnaire-template.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "f4bd6d3430bf"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-ai-chat-retention-rules (generation record audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "1dba7cf74d81"
   },
   {
     "target": "/blog/category/agentic-architecture",
@@ -80,8 +80,8 @@
   {
     "target": "/blog/category/governance",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-vendor-assessment-questionnaire-template (generation record audits/autowriter/generations/2026/11/ai-vendor-assessment-questionnaire-template.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "96f514aceacd"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-ai-chat-retention-rules (generation record audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "c33ca2d92963"
   },
   {
     "target": "/blog/category/operating-model",
@@ -114,8 +114,8 @@
   {
     "target": "/blog/how-to-build-an-ai-system-register-in-a-week",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-vendor-assessment-questionnaire-template (generation record audits/autowriter/generations/2026/11/ai-vendor-assessment-questionnaire-template.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "2eb1d648faed"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-ai-chat-retention-rules (generation record audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "3e0f0c4554d5"
   },
   {
     "target": "/blog/tag/acceptable-use-policy",
@@ -148,22 +148,22 @@
     "target": "/blog/tag/ai-governance",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/board-memo-ai-strategy-one-page (generation record audits/autowriter/generations/2026/11/board-memo-ai-strategy-one-page.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "89f3c763176f"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-ai-chat-retention-rules (generation record audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "b9bf3deba9b8"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "body.h1",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/board-memo-ai-strategy-one-page (generation record audits/autowriter/generations/2026/11/board-memo-ai-strategy-one-page.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "89f3c763176f"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-ai-chat-retention-rules (generation record audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "b9bf3deba9b8"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/board-memo-ai-strategy-one-page (generation record audits/autowriter/generations/2026/11/board-memo-ai-strategy-one-page.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "89f3c763176f"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-ai-chat-retention-rules (generation record audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "b9bf3deba9b8"
   },
   {
     "target": "/blog/tag/ai-pilots",
@@ -258,8 +258,8 @@
   {
     "target": "/blog/tag/policy-enforcement",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/blog/tag/policy-enforcement.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [constant.body] now \"Bring the process you want in production and who owns it today. You leave knowing whether an Assessment, a Sprint or neither is the next step.\" (source row: chrome.json#24); The closing booking band is the shared CtaBlock default (task 2.1: the band renders on every template a buyer can land on). Its body restates two sentences of the reviewed FAQ \"What happens on a fit call, and does it cost anything?\" and adds no price, duration or promise; it is dispositioned at chrome.json#24, and the 30-minute event it links returned 200 on 2026-10-31. Earlier review, still true of the unchanged rows: Title, H1 and lead now follow the tag template change: \"Policy enforcement posts\" and \"All posts tagged Policy enforcement, newest first.\"; query updated to \"policy enforcement posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list.",
-    "digest": "f1815dd22b8f"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-ai-chat-retention-rules (generation record audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "5217a313e15e"
   },
   {
     "target": "/blog/tag/production-readiness",
@@ -285,8 +285,8 @@
   {
     "target": "/blog/tag/security-review",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-trace-ai-agent-tool-calls-in-production (generation record audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "a5ca82f77315"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-ai-chat-retention-rules (generation record audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "ccaef54a998c"
   },
   {
     "target": "/blog/tag/shadow-ai",
