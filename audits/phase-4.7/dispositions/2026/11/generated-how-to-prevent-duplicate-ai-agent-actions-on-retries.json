@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/how-to-prevent-duplicate-ai-agent-actions-on-retries.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json on 2026-11-10. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json.",
+    "digest": "3ad9f34fb5d0"
+  },
+  {
+    "target": "/blog/how-to-prevent-duplicate-ai-agent-actions-on-retries",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json on 2026-11-10. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json. Re-read 2026-11-11 after this branch merged main. The page changed only in the shared resource status line, which every page carrying a resource card renders: it read \"Available as a page on this site. A repository copy is not published yet.\" and now reads \"Available as a page on this site. There is no repository copy.\" under L76, because the promise of a copy was a promise for an artefact that in one case will never exist. The article body is the model-written text the row already describes and no human has read it.",
+    "digest": "587d61d0ec14"
+  }
+]

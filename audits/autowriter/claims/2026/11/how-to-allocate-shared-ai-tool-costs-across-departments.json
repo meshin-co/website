@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "slug": "how-to-allocate-shared-ai-tool-costs-across-departments",
+  "title": "How to allocate shared AI tool costs across departments",
+  "format": "article",
+  "query": "how to allocate shared ai tool costs across departments",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "origin": "category",
+  "category": "operating-model",
+  "catchUp": {
+    "slot": "15:00",
+    "lateMinutes": 66
+  },
+  "runId": "43054630341-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-11T16:06:15.617Z",
+  "expiresAt": "2026-11-25T16:06:15.617Z"
+}

@@ -409,15 +409,15 @@
     "target": "/blog/multi-agent-reference-architecture-in-production",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-trace-ai-agent-tool-calls-in-production (generation record audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "0599603dd802"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-trace-ai-agent-tool-calls-in-production (generation record audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file. Re-read 2026-11-11 after this branch merged main. The page changed only in the shared resource status line, which every page carrying a resource card renders: it read \"Available as a page on this site. A repository copy is not published yet.\" and now reads \"Available as a page on this site. There is no repository copy.\" under L76, because the promise of a copy was a promise for an artefact that in one case will never exist. The article body is the model-written text the row already describes and no human has read it.",
+    "digest": "3d495411529a"
   },
   {
     "target": "/blog/multi-agent-reference-architecture-in-production",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-trace-ai-agent-tool-calls-in-production (generation record audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "0599603dd802"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-trace-ai-agent-tool-calls-in-production (generation record audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file. Re-read 2026-11-11 after this branch merged main. The page changed only in the shared resource status line, which every page carrying a resource card renders: it read \"Available as a page on this site. A repository copy is not published yet.\" and now reads \"Available as a page on this site. There is no repository copy.\" under L76, because the promise of a copy was a promise for an artefact that in one case will never exist. The article body is the model-written text the row already describes and no human has read it.",
+    "digest": "3d495411529a"
   },
   {
     "target": "/blog/handing-over-ai-leadership-to-an-internal-owner",
