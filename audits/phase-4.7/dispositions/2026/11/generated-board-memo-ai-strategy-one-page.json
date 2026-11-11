@@ -8,7 +8,7 @@
   {
     "target": "/blog/board-memo-ai-strategy-one-page",
     "status": "rewritten",
-    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/board-memo-ai-strategy-one-page.json on 2026-11-08. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/board-memo-ai-strategy-one-page.json.",
-    "digest": "f124485d52a4"
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/board-memo-ai-strategy-one-page.json on 2026-11-08. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/board-memo-ai-strategy-one-page.json. On 2026-11-11 the shared resource status line this route shows changed from \"Available as a page on this site. A repository copy is not published yet.\" to \"Available as a page on this site. There is no repository copy.\" (owner decision of 2026-11-10); a person read that one line in dist/blog/board-memo-ai-strategy-one-page.html and it states what is true today without promising a repository or a date. The rest of this text is still unread by a person.",
+    "digest": "babf9bf3348d"
   }
 ]

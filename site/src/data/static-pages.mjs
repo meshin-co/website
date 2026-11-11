@@ -83,7 +83,7 @@ export const STATIC_PAGE_CATALOG = [
   {
     path: '/terms',
     title: 'Terms',
-    updatedDate: '2026-10-25',
+    updatedDate: '2026-11-11',
     description: 'What this site is, why no price appears on it, and which terms actually govern an engagement.',
   },
   {

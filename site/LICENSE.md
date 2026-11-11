@@ -1,4 +1,12 @@
+# Licence
+
+This directory is under two licences. The code is MIT. The writing is CC BY 4.0.
+
+## Code
+
 MIT License
+
+Copyright (c) 2026 Dmitri Meshin, trading as meshin.co
 
 Copyright (c) 2023 onWidget
 
@@ -19,3 +27,13 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+The 2023 onWidget line is the notice of AstroWind, the template this site was scaffolded from. MIT requires that notice and the permission text above to stay with every copy or substantial portion of that template, so neither may be removed.
+
+## Writing
+
+The prose the site publishes, which is its content entries and its page copy, is licensed under Creative Commons Attribution 4.0 International (CC BY 4.0). The licence text is `public/licenses/CC-BY-4.0.txt`, and the `/terms` page of the site states the grant in plain words. The MIT licence above does not apply to it.
+
+## Other files
+
+A file that carries its own licence keeps it. The fonts under `src/assets/fonts/` are one case, covered by `src/assets/fonts/LICENSE.md`.

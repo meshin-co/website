@@ -66,7 +66,7 @@ const datesInOrder = <T extends { publishDate: Date; updatedDate: Date }>(entry:
 const datesInOrderMessage = { message: 'updatedDate must not be before publishDate', path: ['updatedDate'] };
 
 const licenseTextMessage = {
-  message: 'needs its text. Add public/licenses/<license>.txt, or remove the field',
+  message: 'needs its text. Add public/licenses/<license>.txt',
   path: ['license'],
 };
 
@@ -129,7 +129,7 @@ const resourceCollection = defineCollection({
       name: z.string(),
       type: z.enum(['template', 'kit', 'scorecard', 'repo', 'checklist']),
       version: z.string(),
-      license: z.string().regex(LICENSE_ID, licenseIdMessage).optional(),
+      license: z.string().regex(LICENSE_ID, licenseIdMessage),
       status: z.string(),
       repoUrl: z.url().optional(),
       whatInside: z.array(z.string()).min(1),
