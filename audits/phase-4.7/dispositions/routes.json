@@ -33,21 +33,21 @@
     "target": "/blog",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "e91544b755b5"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-decide-which-employee-data-can-be-used-in-ai-tools (generation record audits/autowriter/generations/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "86c99cbb0f48"
   },
   {
     "target": "/blog",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "e91544b755b5"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-decide-which-employee-data-can-be-used-in-ai-tools (generation record audits/autowriter/generations/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "86c99cbb0f48"
   },
   {
     "target": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-vendor-assessment-questionnaire-template (generation record audits/autowriter/generations/2026/11/ai-vendor-assessment-questionnaire-template.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file. Re-read 2026-11-11 in dist/blog/ai-acceptable-use-policy-for-a-50-person-company.html (clean build of the working tree). The shared status line changed from \"Available as a page on this site. A repository copy is not published yet.\" to \"Available as a page on this site. There is no repository copy.\" (owner decision of 2026-11-10: no link to a repository that does not exist, and no promise of one or of a date). The new line states what is true today, an on-site page and no repository copy, and carries no promise. No other row of this target changed.",
-    "digest": "feba59c55d21"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-decide-which-employee-data-can-be-used-in-ai-tools (generation record audits/autowriter/generations/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "894c62f6ab15"
   },
   {
     "target": "/blog/category/agentic-architecture",
@@ -80,8 +80,8 @@
   {
     "target": "/blog/category/governance",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-vendor-assessment-questionnaire-template (generation record audits/autowriter/generations/2026/11/ai-vendor-assessment-questionnaire-template.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "96f514aceacd"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-decide-which-employee-data-can-be-used-in-ai-tools (generation record audits/autowriter/generations/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "3b5e931b51e5"
   },
   {
     "target": "/blog/category/operating-model",
@@ -114,14 +114,14 @@
   {
     "target": "/blog/how-to-build-an-ai-system-register-in-a-week",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-vendor-assessment-questionnaire-template (generation record audits/autowriter/generations/2026/11/ai-vendor-assessment-questionnaire-template.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file. Re-read 2026-11-11 in dist/blog/how-to-build-an-ai-system-register-in-a-week.html (clean build of the working tree). The shared status line changed from \"Available as a page on this site. A repository copy is not published yet.\" to \"Available as a page on this site. There is no repository copy.\" (owner decision of 2026-11-10: no link to a repository that does not exist, and no promise of one or of a date). The new line states what is true today, an on-site page and no repository copy, and carries no promise. No other row of this target changed.",
-    "digest": "50cab9125a10"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-decide-which-employee-data-can-be-used-in-ai-tools (generation record audits/autowriter/generations/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "d0e98f72d4bf"
   },
   {
     "target": "/blog/tag/acceptable-use-policy",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/blog/tag/acceptable-use-policy.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [constant.body] now \"Bring the process you want in production and who owns it today. You leave knowing whether an Assessment, a Sprint or neither is the next step.\" (source row: chrome.json#24); The closing booking band is the shared CtaBlock default (task 2.1: the band renders on every template a buyer can land on). Its body restates two sentences of the reviewed FAQ \"What happens on a fit call, and does it cost anything?\" and adds no price, duration or promise; it is dispositioned at chrome.json#24, and the 30-minute event it links returned 200 on 2026-10-31. Earlier review, still true of the unchanged rows: Title, H1 and lead now follow the tag template change: \"Acceptable use policy posts\" and \"All posts tagged Acceptable use policy, newest first.\"; query updated to \"acceptable use policy posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list.",
-    "digest": "62a4c7729028"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-decide-which-employee-data-can-be-used-in-ai-tools (generation record audits/autowriter/generations/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "7bc5511d9f6f"
   },
   {
     "target": "/blog/tag/agentic-architecture",
@@ -148,22 +148,22 @@
     "target": "/blog/tag/ai-governance",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/board-memo-ai-strategy-one-page (generation record audits/autowriter/generations/2026/11/board-memo-ai-strategy-one-page.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "89f3c763176f"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-decide-which-employee-data-can-be-used-in-ai-tools (generation record audits/autowriter/generations/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "2c5784ae869c"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "body.h1",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/board-memo-ai-strategy-one-page (generation record audits/autowriter/generations/2026/11/board-memo-ai-strategy-one-page.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "89f3c763176f"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-decide-which-employee-data-can-be-used-in-ai-tools (generation record audits/autowriter/generations/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "2c5784ae869c"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/board-memo-ai-strategy-one-page (generation record audits/autowriter/generations/2026/11/board-memo-ai-strategy-one-page.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "89f3c763176f"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-decide-which-employee-data-can-be-used-in-ai-tools (generation record audits/autowriter/generations/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "2c5784ae869c"
   },
   {
     "target": "/blog/tag/ai-pilots",
@@ -285,8 +285,8 @@
   {
     "target": "/blog/tag/security-review",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-trace-ai-agent-tool-calls-in-production (generation record audits/autowriter/generations/2026/11/how-to-trace-ai-agent-tool-calls-in-production.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "a5ca82f77315"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-decide-which-employee-data-can-be-used-in-ai-tools (generation record audits/autowriter/generations/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "0a5fce36d8b3"
   },
   {
     "target": "/blog/tag/shadow-ai",
