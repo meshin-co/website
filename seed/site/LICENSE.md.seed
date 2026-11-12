@@ -1,6 +1,6 @@
 # Licence
 
-This directory is under two licences. The code is MIT. The writing is CC BY 4.0.
+This directory is under two licences. The code is MIT. The resources are CC BY 4.0.
 
 ## Code
 
@@ -32,9 +32,13 @@ SOFTWARE.
 
 The 2023 onWidget line is the notice of AstroWind, the template this site was scaffolded from. MIT requires that notice and the permission text above to stay with every copy or substantial portion of that template, so neither may be removed.
 
-## Writing
+## Resources
 
-The prose the site publishes, which is its content entries and its page copy, is licensed under Creative Commons Attribution 4.0 International (CC BY 4.0). The licence text is `public/licenses/CC-BY-4.0.txt`. The MIT licence above does not apply to it.
+The resource entries under `src/data/resource/` each declare their licence in the `license` field, and the licence is the one named there. Where it is Creative Commons Attribution 4.0 International (CC BY 4.0), the licence text is `public/licenses/CC-BY-4.0.txt`. The MIT licence above does not apply to the resources.
+
+## The rest of the writing
+
+This file licenses no other prose the site publishes, which is the rest of its content entries and its page copy. The MIT licence above does not apply to it.
 
 ## Other files
 
