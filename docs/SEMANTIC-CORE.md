@@ -66,7 +66,7 @@ title `{artifact name} — meshin.co` · meta: one sentence naming the artifact 
 | `/resources/handover-playbook`                     | handover playbook                     | Handover Playbook — meshin.co                     | The Handover Playbook is six fill-in tables for moving AI leadership from an outside lead to a named owner, from the test to a later check.            | Handover Playbook                     | 31    | ✓       |
 | `/resources/llm-gateway-governance-config`         | llm gateway governance config         | LLM Gateway Governance Config — meshin.co         | LLM gateway governance config: a policy schema of five keys (allowed models, redaction, rate limit, log retention and fallback), each with an example. | LLM Gateway Governance Config         | 26    | ✓       |
 
-### article (18)
+### article (19)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
@@ -82,6 +82,7 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/evals-in-ci-for-llm-agents`                                 | evals in ci without a golden answer                        | Evals in CI for LLM agents, without a golden answer — meshin.co        | How to build an eval set from production traffic, score an LLM agent without a golden answer, and fail a merge in CI when it regresses.               | Evals in CI for LLM agents, without a golden answer        | 29    | ✓       |
 | `/blog/fractional-caio-pricing`                                    | fractional caio pricing                                    | Fractional CAIO pricing — meshin.co                                    | Understand fractional CAIO pricing structures, compare proposals and identify costs to settle before work starts.                                     | Fractional CAIO pricing                                    | 33    | ✓       |
 | `/blog/handing-over-ai-leadership-to-an-internal-owner`            | how to hand over ai leadership to internal owner           | How to hand over AI leadership to an internal owner — meshin.co        | How to hand over AI leadership in steps that end in a test: what moves, who takes the role and how to tell it worked.                                 | How to hand over AI leadership to an internal owner        | 40    | ✓       |
+| `/blog/how-can-boards-verify-ai-cost-savings`                      | how can boards verify ai cost savings                      | How can boards verify AI cost savings? — meshin.co                     | How boards can test AI cost savings against finance records, delivery costs, work quality and a credible baseline.                                    | How can boards verify AI cost savings?                     | 28    | ✓       |
 | `/blog/how-to-build-an-ai-system-register-in-a-week`               | ai system register                                         | How to build an AI system register in a week — meshin.co               | A step-by-step way to build an AI system register in a week without buying a tool, so a security reviewer gets the document they ask for first.       | How to build an AI system register in a week               | 33    | ✓       |
 | `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company` | ai operating model for mid-size company                    | How to choose an AI operating model for a mid-size company — meshin.co | How to choose an operating model for AI work in a mid-size company, starting from what the law requires and what the evidence supports.               | How to choose an AI operating model for a mid-size company | 40    | ✓       |
 | `/blog/how-to-prevent-duplicate-ai-agent-actions-on-retries`       | how to prevent duplicate ai agent actions on retries       | How to prevent duplicate AI agent actions on retries — meshin.co       | Learn how to prevent duplicate AI agent actions on retries with stable operation keys, durable records, and checks for uncertain outcomes.            | How to prevent duplicate AI agent actions on retries       | 28    | ✓       |
@@ -118,7 +119,7 @@ title `{tag name} posts — meshin.co` · meta: all posts tagged {tag}, newest f
 | --------------------------------- | --------------------------- | --------------------------------------- | ----------------------------------------------------- | --------------------------- | ----- | ------- |
 | `/blog/tag/acceptable-use-policy` | acceptable use policy posts | Acceptable use policy posts — meshin.co | All posts tagged Acceptable use policy, newest first. | Acceptable use policy posts | 23    | ✓       |
 | `/blog/tag/agentic-architecture`  | agentic architecture posts  | Agentic architecture posts — meshin.co  | All posts tagged Agentic architecture, newest first.  | Agentic architecture posts  | 23    | ✓       |
-| `/blog/tag/ai-governance`         | ai governance posts         | AI governance posts — meshin.co         | All posts tagged AI governance, newest first.         | AI governance posts         | 23    | ✓       |
+| `/blog/tag/ai-governance`         | ai governance posts         | AI governance posts — meshin.co         | All posts tagged AI governance, newest first.         | AI governance posts         | 24    | ✓       |
 | `/blog/tag/ai-pilots`             | ai pilots posts             | AI pilots posts — meshin.co             | All posts tagged AI pilots, newest first.             | AI pilots posts             | 23    | ✓       |
 | `/blog/tag/ai-register`           | ai register posts           | AI register posts — meshin.co           | All posts tagged AI register, newest first.           | AI register posts           | 23    | ✓       |
 | `/blog/tag/eu-ai-act`             | eu ai act posts             | EU AI Act posts — meshin.co             | All posts tagged EU AI Act, newest first.             | EU AI Act posts             | 23    | ✓       |
@@ -429,10 +430,10 @@ One owning route per entity. The mention count is inbound references from other 
 | Entity                         | Owned by                                   | Mentioned by |
 | ------------------------------ | ------------------------------------------ | ------------ |
 | Agentic workflow               | `/glossary/agentic-workflow`               | 13           |
-| AI governance                  | `/glossary/ai-governance`                  | 41           |
+| AI governance                  | `/glossary/ai-governance`                  | 43           |
 | AI impact assessment           | `/glossary/ai-impact-assessment`           | 3            |
 | AI management system           | `/glossary/ai-management-system`           | 7            |
-| AI operating model             | `/glossary/ai-operating-model`             | 16           |
+| AI operating model             | `/glossary/ai-operating-model`             | 17           |
 | AI register                    | `/glossary/ai-register`                    | 39           |
 | Conformity assessment          | `/glossary/conformity-assessment`          | 5            |
 | Data classification            | `/glossary/data-classification`            | 16           |
