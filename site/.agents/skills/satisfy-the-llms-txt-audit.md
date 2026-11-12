@@ -34,8 +34,9 @@ npm run gate:agents
 ```
 
 The first line starts with `# `, the byte count is 50 or more, the last count is at least 1. Then the
-live file: `curl -s https://meshin.co/llms.txt` returns the same bytes under any `Accept` header,
-`text/markdown` included. To see the audit itself, serve the build and run Lighthouse on one category:
+live file: take the address from `site.site` in `src/config.yaml` and fetch `/llms.txt` from it.
+The same bytes must come back under any `Accept` header, `text/markdown` included. To see the audit
+itself, serve the build and run Lighthouse on one category:
 
 ```
 GATE_SERVER_PORT=4791 node scripts/gate-server.mjs dist
