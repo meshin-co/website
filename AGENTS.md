@@ -88,6 +88,15 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
   least one source. Zod enforces it and the build fails otherwise.
 - Never invent an owner fact, a client name, a metric, a testimonial or a credential. Unknown
   facts become `TODO(owner)` and go on the copy checklist.
+- Reserved to the owner: four items stay untouched unless he raises them, by his standing instruction
+  of 2026-10-03, which no file recorded before 2026-11-12. They are the template licence (row 6.3 of
+  `docs/COPY-CHECKLIST.md`), whether the Assessment page
+  (`site/src/data/service/ai-readiness-and-risk-assessment.md`) lists an MCP deliverable, the
+  rollback-rehearsal wording of `site/src/data/post/why-your-ai-pilot-never-reached-production.md`,
+  and a rewrite of the git history, which was offered to him and which he has not approved. Edit
+  none of them, and ship nothing that acts as though one were answered; no locked row, plan or gap
+  row answers one for him. A change that needs one stops there and puts the question to him in
+  `docs/plan/reference/known-gaps.md`. L75 and G88 record the one time this was passed through.
 - Copy tone: direct and engineering. Numbers and dates instead of adjectives. No "leading",
   "expert", "passionate".
 - Design lane: "engineering brief" — Fraunces (600) and IBM Plex Sans (400, 500): 2 families,
