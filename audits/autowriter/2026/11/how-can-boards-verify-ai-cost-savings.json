@@ -1,0 +1,239 @@
+{
+  "schema": 1,
+  "slug": "how-can-boards-verify-ai-cost-savings",
+  "runId": "43256164012-1",
+  "pullRequest": null,
+  "attempts": [],
+  "spend": {
+    "tokens": {
+      "input": 4214,
+      "output": 374
+    },
+    "costUsd": 0.006084
+  },
+  "verdict": {
+    "state": "open",
+    "reason": null,
+    "decidedAt": null
+  },
+  "escalations": [],
+  "generation": {
+    "tokens": {
+      "input": 4214,
+      "output": 374
+    },
+    "costUsd": 0.006084
+  },
+  "refusals": [
+    {
+      "title": "Fractional CAIO vs full-time CAIO cost",
+      "reason": "slug-held",
+      "against": "audits/autowriter/2026/11/fractional-caio-vs-full-time-caio-cost.json",
+      "detail": "slug \"fractional-caio-vs-full-time-caio-cost\" already has the ledger audits/autowriter/2026/11/fractional-caio-vs-full-time-caio-cost.json, so an earlier run owns it and the topic cannot be tried again yet; no procedure frees a slug safely, and removing the ledger is not one, because it records spend that the monthly spend ceiling counts"
+    },
+    {
+      "title": "AI readiness assessment template for SMB",
+      "reason": "family-served",
+      "against": "/blog/ai-readiness-assessment-template-for-smb",
+      "detail": "the prompt already lists /blog/ai-readiness-assessment-template-for-smb among its routes and that route is in the article family, so another article would answer the same prompt twice"
+    },
+    {
+      "title": "AI governance consultant ISO 42001 small company",
+      "reason": "register-owner",
+      "against": "/glossary/ai-governance",
+      "detail": "the query \"ai governance consultant iso 42001 small company\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+    },
+    {
+      "title": "Named person responsible for AI risk in vendor procurement",
+      "reason": "family-served",
+      "against": "/blog/named-person-responsible-for-ai-risk-in-vendor-procurement",
+      "detail": "the prompt already lists /blog/named-person-responsible-for-ai-risk-in-vendor-procurement among its routes and that route is in the article family, so another article would answer the same prompt twice"
+    },
+    {
+      "title": "AI acceptable use policy template",
+      "reason": "family-served",
+      "against": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
+      "detail": "the prompt already lists /blog/ai-acceptable-use-policy-for-a-50-person-company among its routes and that route is in the article family, so another article would answer the same prompt twice"
+    },
+    {
+      "title": "Why do AI pilots fail to reach production?",
+      "reason": "family-served",
+      "against": "/blog/why-your-ai-pilot-never-reached-production",
+      "detail": "the prompt already lists /blog/why-your-ai-pilot-never-reached-production among its routes and that route is in the article family, so another article would answer the same prompt twice"
+    },
+    {
+      "title": "LLM gateway for governance and audit",
+      "reason": "register-owner",
+      "against": "/glossary/llm-gateway",
+      "detail": "the query \"llm gateway for governance and audit\" names the concept \"LLM gateway\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/llm-gateway"
+    },
+    {
+      "title": "How to put evals for AI agents into CI",
+      "reason": "register-owner",
+      "against": "/glossary/evals",
+      "detail": "the query \"how to put evals for ai agents into ci\" names the concept \"Evals\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/evals"
+    },
+    {
+      "title": "AI vendor assessment questionnaire template",
+      "reason": "family-served",
+      "against": "/blog/ai-vendor-assessment-questionnaire-template",
+      "detail": "the prompt already lists /blog/ai-vendor-assessment-questionnaire-template among its routes and that route is in the article family, so another article would answer the same prompt twice"
+    },
+    {
+      "title": "Build vs buy AI 3-year TCO",
+      "reason": "family-served",
+      "against": "/blog/build-vs-buy-ai-3-year-tco",
+      "detail": "the prompt already lists /blog/build-vs-buy-ai-3-year-tco among its routes and that route is in the article family, so another article would answer the same prompt twice"
+    },
+    {
+      "title": "AI operating model for mid-size company",
+      "reason": "register-owner",
+      "against": "/glossary/ai-operating-model",
+      "detail": "the query \"ai operating model for mid-size company\" names the concept \"AI operating model\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-operating-model"
+    },
+    {
+      "title": "How to hand over AI leadership to internal team",
+      "reason": "family-served",
+      "against": "/blog/handing-over-ai-leadership-to-an-internal-owner",
+      "detail": "the prompt already lists /blog/handing-over-ai-leadership-to-an-internal-owner among its routes and that route is in the article family, so another article would answer the same prompt twice"
+    },
+    {
+      "title": "Agentic automation consultant for B2B",
+      "reason": "title-collision",
+      "against": "Agentic automation consultant for B2B",
+      "detail": "title \"Agentic automation consultant for B2B\" is also claimed by audits/autowriter/claims/2026/11/agentic-automation-consultant-for-b2b.json"
+    },
+    {
+      "title": "MCP security best practices",
+      "reason": "register-owner",
+      "against": "/glossary/mcp",
+      "detail": "the query \"mcp security best practices\" names the concept \"Model Context Protocol\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/mcp"
+    },
+    {
+      "title": "Multi-agent reference architecture production",
+      "reason": "family-served",
+      "against": "/blog/multi-agent-reference-architecture-in-production",
+      "detail": "the prompt already lists /blog/multi-agent-reference-architecture-in-production among its routes and that route is in the article family, so another article would answer the same prompt twice"
+    },
+    {
+      "title": "Adoption telemetry for AI tools",
+      "reason": "family-served",
+      "against": "/blog/adoption-telemetry-measuring-if-ai-is-actually-used",
+      "detail": "the prompt already lists /blog/adoption-telemetry-measuring-if-ai-is-actually-used among its routes and that route is in the article family, so another article would answer the same prompt twice"
+    },
+    {
+      "title": "AI incident response plan template",
+      "reason": "title-collision",
+      "against": "AI incident response plan template",
+      "detail": "title \"AI incident response plan template\" is also claimed by audits/autowriter/claims/2026/11/ai-incident-response-plan-template.json"
+    },
+    {
+      "title": "Data classification for LLM usage",
+      "reason": "register-owner",
+      "against": "/glossary/data-classification",
+      "detail": "the query \"data classification for llm usage\" names the concept \"Data classification\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/data-classification"
+    },
+    {
+      "title": "ISO 42001 gap assessment",
+      "reason": "title-collision",
+      "against": "ISO 42001 gap assessment",
+      "detail": "title \"ISO 42001 gap assessment\" is also claimed by audits/autowriter/claims/2026/11/iso-42001-gap-assessment.json"
+    },
+    {
+      "title": "NIST AI RMF for small companies",
+      "reason": "register-owner",
+      "against": "/glossary/nist-ai-rmf",
+      "detail": "the query \"nist ai rmf for small companies\" names the concept \"NIST AI RMF\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/nist-ai-rmf"
+    },
+    {
+      "title": "Fractional CAIO pricing",
+      "reason": "family-served",
+      "against": "/blog/fractional-caio-pricing",
+      "detail": "the prompt already lists /blog/fractional-caio-pricing among its routes and that route is in the article family, so another article would answer the same prompt twice"
+    },
+    {
+      "title": "What does a chief AI officer do in a 50 person company?",
+      "reason": "title-collision",
+      "against": "What does a chief AI officer do in a 50 person company?",
+      "detail": "title \"What does a chief AI officer do in a 50 person company?\" is also claimed by audits/autowriter/claims/2026/11/what-does-a-chief-ai-officer-do-in-a-50-person-company.json"
+    },
+    {
+      "title": "AI governance starter kit open source",
+      "reason": "register-owner",
+      "against": "/glossary/ai-governance",
+      "detail": "the query \"ai governance starter kit open source\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+    },
+    {
+      "title": "AI readiness scorecard five drivers",
+      "reason": "family-served",
+      "against": "/blog/ai-readiness-scorecard-five-drivers",
+      "detail": "the prompt already lists /blog/ai-readiness-scorecard-five-drivers among its routes and that route is in the article family, so another article would answer the same prompt twice"
+    },
+    {
+      "title": "Board memo AI strategy one page",
+      "reason": "family-served",
+      "against": "/blog/board-memo-ai-strategy-one-page",
+      "detail": "the prompt already lists /blog/board-memo-ai-strategy-one-page among its routes and that route is in the article family, so another article would answer the same prompt twice"
+    },
+    {
+      "title": "AI governance framework",
+      "reason": "register-owner",
+      "against": "/glossary/ai-governance",
+      "detail": "the query \"ai governance framework\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+    },
+    {
+      "title": "NIST AI RMF framework",
+      "reason": "register-owner",
+      "against": "/glossary/nist-ai-rmf",
+      "detail": "the query \"nist ai rmf framework\" names the concept \"NIST AI RMF\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/nist-ai-rmf"
+    },
+    {
+      "title": "Prompt injection examples",
+      "reason": "register-owner",
+      "against": "/glossary/prompt-injection",
+      "detail": "the query \"prompt injection examples\" names the concept \"Prompt injection\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/prompt-injection"
+    },
+    {
+      "title": "Data classification policy",
+      "reason": "register-owner",
+      "against": "/glossary/data-classification",
+      "detail": "the query \"data classification policy\" names the concept \"Data classification\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/data-classification"
+    },
+    {
+      "title": "DPIA template",
+      "reason": "register-owner",
+      "against": "/glossary/dpia",
+      "detail": "the query \"dpia template\" names the concept \"DPIA\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/dpia"
+    },
+    {
+      "title": "Technical documentation template",
+      "reason": "register-owner",
+      "against": "/glossary/technical-documentation",
+      "detail": "the query \"technical documentation template\" names the concept \"Technical documentation\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/technical-documentation"
+    },
+    {
+      "title": "AI governance policy",
+      "reason": "register-owner",
+      "against": "/glossary/ai-governance",
+      "detail": "the query \"ai governance policy\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+    },
+    {
+      "title": "What is AI governance?",
+      "reason": "register-owner",
+      "against": "/glossary/ai-governance",
+      "detail": "the query \"ai governance\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+    },
+    {
+      "title": "What is AI governance?",
+      "reason": "register-owner",
+      "against": "/glossary/ai-governance",
+      "detail": "the query \"ai governance\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+    },
+    {
+      "title": "How to limit AI agent tool permissions",
+      "reason": "same-subject",
+      "against": "/blog/how-to-trace-ai-agent-tool-calls-in-production",
+      "detail": "the topic \"How to limit AI agent tool permissions\" repeats /blog/how-to-trace-ai-agent-tool-calls-in-production (\"How to trace AI agent tool calls in production\"): its subject shares agent, ai, tool, 3 of the 5 stems of the smaller one, a containment of 0.60 against the threshold of 0.5"
+    }
+  ]
+}
