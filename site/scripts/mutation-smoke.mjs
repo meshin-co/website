@@ -17,7 +17,7 @@ const SITE = resolve(HERE, '..');
 const REPO = resolve(SITE, '..');
 const FIXTURES = join(SITE, 'tests', 'guard-mutations', 'fixtures');
 const LIVE_POST_TARGET = 13;
-const GATES = ['budget', 'jsonld', 'jsonld-properties', 'content-gate', 'docs', 'external'];
+const GATES = ['budget', 'jsonld', 'jsonld-properties', 'content-gate', 'docs', 'external', 'agents-llms'];
 const CHECKS = ['semantic-title', ...Object.keys({ ...REPAIR_CHECKS, ...ORDER_CHECKS, ...KEYWORD_CHECKS })];
 const SCOPES = ['category', 'tag'];
 
@@ -170,6 +170,30 @@ export const FAMILIES = [
   { id: 'agents-link-header-leaks', kind: 'specimen', specimen: 'agents-link-header-leaks' },
   { id: 'agents-head-link-drifts', kind: 'specimen', specimen: 'agents-head-link-drifts' },
   { id: 'agents-markdown-handler-gone', kind: 'specimen', specimen: 'agents-markdown-handler-gone' },
+  {
+    id: 'agents-llms-summary-without-an-h1',
+    kind: 'gate',
+    proves: 'gate:agents',
+    gate: 'agents-llms',
+    fixture: 'llms-shard-without-h1.txt',
+    tokens: ['llms/llms-shard-without-h1.txt: the first non-empty line is not an H1 heading'],
+  },
+  {
+    id: 'agents-llms-summary-under-the-floor',
+    kind: 'gate',
+    proves: 'gate:agents',
+    gate: 'agents-llms',
+    fixture: 'llms-shard-too-short.txt',
+    tokens: ['llms/llms-shard-too-short.txt: 15 bytes, under the 50-byte minimum'],
+  },
+  {
+    id: 'agents-llms-summary-with-only-a-bare-url',
+    kind: 'gate',
+    proves: 'gate:agents',
+    gate: 'agents-llms',
+    fixture: 'llms-shard-bare-url.txt',
+    tokens: ['llms/llms-shard-bare-url.txt: no Markdown link [text](url); 1 bare URL does not count'],
+  },
   { id: 'machine-feed-coverage', kind: 'specimen', specimen: 'machine' },
   { id: 'canonical-names-a-built-file', kind: 'specimen', specimen: 'canonical' },
   { id: 'gate-wiring-removed-from-ci', kind: 'specimen', specimen: 'wiringRemoved' },
@@ -462,6 +486,8 @@ export function manifestFamilies(manifest) {
     }
     if ('gate' in entry && !GATES.includes(entry.gate))
       throw new Error(`mutation smoke: family ${id} has unknown gate ${entry.gate}`);
+    if (entry.gate === 'agents-llms' && invalid('fixture', entry.fixture))
+      throw new Error(`mutation smoke: family ${id} (gate agents-llms) is missing fixture`);
     if ('check' in entry && !CHECKS.includes(entry.check))
       throw new Error(`mutation smoke: family ${id} has unknown check ${entry.check}`);
     if ('scope' in entry && !SCOPES.includes(entry.scope))
@@ -531,7 +557,26 @@ async function runPlantedFamily(copySite, entry, gated) {
   }
 }
 
+async function runAgentsLlmsFamily(copySite, entry, work) {
+  await restoreDist(copySite, work);
+  const gate = () => run('node', ['scripts/agent-interfaces-gate.mjs', 'dist'], copySite);
+  const pristine = await gate();
+  if (pristine.code !== 0)
+    return {
+      ok: false,
+      reason: `gate:agents is not green on the pristine copy: ${flatten(pristine.output).slice(-300)}`,
+    };
+  const planted = join(copySite, 'dist/llms', entry.fixture);
+  await copyFile(join(FIXTURES, entry.fixture), planted);
+  try {
+    return expectedFailure(await gate(), entry.tokens);
+  } finally {
+    await rm(planted, { force: true });
+  }
+}
+
 async function runGateFamily(copySite, entry, work) {
+  if (entry.gate === 'agents-llms') return runAgentsLlmsFamily(copySite, entry, work);
   if (entry.gate === 'external') {
     const dist = join(work, 'external-dist');
     await mkdir(dist, { recursive: true });

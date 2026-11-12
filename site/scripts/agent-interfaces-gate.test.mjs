@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -13,6 +13,7 @@ import {
   linkHeaderGaps,
   linksetShapeGaps,
   linksetTargets,
+  llmsSummaryGaps,
   manifestEntryGaps,
   manifestRoute,
   markdownNegotiationGaps,
@@ -184,6 +185,97 @@ test('an identifier reused by two entries is named once', () => {
   ]);
 });
 
+const GOOD_SUMMARY = '# Example\n\n- [Home](https://example.com/): the home page\n';
+
+test('a summary with an H1, enough text and a Markdown link has no gap', () => {
+  assert.deepEqual(llmsSummaryGaps('llms.txt', GOOD_SUMMARY), []);
+});
+
+test('a summary whose first non-empty line is not an H1 is named with that line', () => {
+  const text = 'Example site\n\n# Example\n\n- [Home](https://example.com/): the home page\n';
+
+  assert.deepEqual(llmsSummaryGaps('llms.txt', text), [
+    'llms.txt: the first non-empty line is not an H1 heading: "Example site"',
+  ]);
+});
+
+test('an H2, an H1 without text and a hash with no space are not an H1 heading', () => {
+  const rest = '\n\n- [Home](https://example.com/): the home page and more\n';
+
+  for (const first of ['## Example', '#', '#Example']) {
+    assert.equal(llmsSummaryGaps('llms/post.txt', `${first}${rest}`).length, 1, first);
+  }
+});
+
+test('leading blank lines do not hide an H1, so the first non-empty line is what counts', () => {
+  assert.deepEqual(llmsSummaryGaps('llms.txt', `\n\n${GOOD_SUMMARY}`), []);
+});
+
+test('a summary under 50 bytes is named with its size', () => {
+  const text = '# Tiny\n[a](https://e.co/)\n';
+
+  assert.deepEqual(llmsSummaryGaps('llms/post.txt', text), [
+    `llms/post.txt: ${Buffer.byteLength(text)} bytes, under the 50-byte minimum`,
+  ]);
+});
+
+test('exactly 50 bytes is long enough', () => {
+  const head = '# T\n[a](https://e.co/x)';
+  const text = `${head}${'.'.repeat(50 - head.length)}`;
+
+  assert.equal(Buffer.byteLength(text), 50);
+  assert.deepEqual(llmsSummaryGaps('llms.txt', text), []);
+});
+
+test('size counts bytes, so multi-byte text is not short by character count', () => {
+  const text = `# Ы\n[${'ы'.repeat(15)}](https://e.co/)`;
+
+  assert.ok(text.length < 50 && Buffer.byteLength(text) >= 50);
+  assert.deepEqual(llmsSummaryGaps('llms.txt', text), []);
+});
+
+test('a bare URL is not a link, and the finding says how many bare URLs were seen', () => {
+  const text = '# Example\n\nSee https://example.com/ and https://example.com/about for the pages.\n';
+
+  assert.deepEqual(llmsSummaryGaps('llms.txt', text), [
+    'llms.txt: no Markdown link [text](url); 2 bare URLs do not count',
+  ]);
+});
+
+test('a file with no URL at all is named without a bare-URL count', () => {
+  assert.deepEqual(llmsSummaryGaps('llms.txt', '# Example\n\nA site about agents and nothing else to show.\n'), [
+    'llms.txt: no Markdown link [text](url)',
+  ]);
+});
+
+test('an image, an empty link text and a link inside a code fence are not links', () => {
+  const base = '# Example\n\nText long enough to clear the floor on its own.\n';
+
+  for (const body of ['![alt](https://e.co/a.png)', '[](https://e.co/)', '```\n[a](https://e.co/)\n```']) {
+    assert.equal(llmsSummaryGaps('llms.txt', `${base}${body}\n`).length, 1, body);
+  }
+});
+
+test('a relative inline link among prose counts', () => {
+  assert.deepEqual(llmsSummaryGaps('llms.txt', '# Example\n\nRead [the about page](/about) for more detail.\n'), []);
+});
+
+test('every condition that fails is named, one finding each', () => {
+  assert.deepEqual(llmsSummaryGaps('llms/x.txt', 'x'), [
+    'llms/x.txt: the first non-empty line is not an H1 heading: "x"',
+    'llms/x.txt: 1 bytes, under the 50-byte minimum',
+    'llms/x.txt: no Markdown link [text](url)',
+  ]);
+});
+
+test('an empty file is named for all three conditions without a crash', () => {
+  assert.deepEqual(llmsSummaryGaps('llms.txt', ''), [
+    'llms.txt: the first non-empty line is not an H1 heading: ""',
+    'llms.txt: 0 bytes, under the 50-byte minimum',
+    'llms.txt: no Markdown link [text](url)',
+  ]);
+});
+
 async function buildTree(overrides = {}) {
   const dist = await mkdtemp(join(tmpdir(), 'agent-interfaces-'));
   const files = {
@@ -194,7 +286,8 @@ async function buildTree(overrides = {}) {
     'feed.json': '{}',
     '_worker.js': 'export default {};',
     'index.md': '# Home',
-    'llms.txt': 'index',
+    'llms.txt': GOOD_SUMMARY,
+    'llms-full.txt': GOOD_SUMMARY,
     'sitemap-index.xml': '<urlset />',
     '.well-known/api-catalog': JSON.stringify(catalog),
     '.well-known/ai-catalog.json': JSON.stringify(manifest()),
@@ -209,6 +302,35 @@ async function buildTree(overrides = {}) {
 
 test('a built tree that satisfies every rule produces no findings', async () => {
   assert.deepEqual(await agentInterfaceFindings(await buildTree()), []);
+});
+
+test('the built tree is checked: llms.txt, llms-full.txt and every llms shard', async () => {
+  const dist = await buildTree({
+    'llms.txt': 'Example\n',
+    'llms-full.txt': '# Example full text with no link in it at all, only prose\n',
+    'llms/post.txt': '# P\n',
+    'llms/faq.txt': GOOD_SUMMARY,
+  });
+
+  assert.deepEqual(await agentInterfaceFindings(dist), [
+    'llms.txt: the first non-empty line is not an H1 heading: "Example"',
+    'llms.txt: 8 bytes, under the 50-byte minimum',
+    'llms.txt: no Markdown link [text](url)',
+    'llms-full.txt: no Markdown link [text](url)',
+    'llms/post.txt: 4 bytes, under the 50-byte minimum',
+    'llms/post.txt: no Markdown link [text](url)',
+  ]);
+});
+
+test('a tree with no llms.txt or llms-full.txt is named, not a crash', async () => {
+  const dist = await buildTree();
+  await rm(join(dist, 'llms.txt'));
+  await rm(join(dist, 'llms-full.txt'));
+
+  const findings = await agentInterfaceFindings(dist);
+
+  assert.ok(findings.includes('llms.txt: not shipped'));
+  assert.ok(findings.includes('llms-full.txt: not shipped'));
 });
 
 test('a head link naming a manifest the build never wrote is a finding, not a crash', async () => {

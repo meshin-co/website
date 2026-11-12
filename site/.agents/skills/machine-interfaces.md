@@ -24,6 +24,7 @@ the built output, never in source. The gate is `npm run gate:machine` (`scripts/
   nothing reads a clock: `npm run build` is the only regeneration step and a second build is byte-identical
   (`npm run test:llms`). A new entry changes only the last shard and the index, unless it overflows that shard; a
   back-dated entry shifts every later shard. `scripts/llms-corpus.mjs` checks the rest.
+- Every `llms*.txt` file opens with an H1, holds 50 bytes and a Markdown link: `satisfy-the-llms-txt-audit.md`.
 - .md sidecars per page, from `src/pages/[...slug].md.ts`.
 - OG images rendered by satori at `src/pages/og/[...slug].png.ts`; template in `src/utils/og-template.mjs`; hash-keyed
   render cache in `src/utils/og-cache.mjs`.
@@ -69,8 +70,7 @@ read too; never `git log` or `fs.mtime`, a shallow clone corrupts both; a page n
 zero live backing content (an unused category) gets no key in this chain, and `scripts/machine.mjs` does not require
 one: it calls the same `siteLastmods()` to decide which routes must carry a `<lastmod>`, so the gate cannot drift from
 the generator. The sitemap's `namespaces: { news: false, image: false, video: false }` in `astro.config.ts` drops the
-three unused Google extensions; `xhtml` stays on since nothing rules it out, and nothing populates `image`, `video` or
-`news`.
+three unused Google extensions; `xhtml` stays on.
 
 The site's `robots.txt` is generated, never hand-edited: `npm run assets:robots` (`scripts/gen-robots.mjs`) after changing
 `TRAINING_AGENTS`, `RETRIEVAL_AGENTS` or `SEARCH_AGENTS`, then commit it. Its `Sitemap:` line carries the brand origin, so

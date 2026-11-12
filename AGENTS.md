@@ -9,7 +9,7 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
    directory per change, and `openspec list --sort name` is the board. Read the one change in
    flight, its `proposal.md` and `tasks.md`, and nothing more until you need it; a change parked
    by a `blocked.md` is not in flight. Closed changes are archived under
-   `openspec/changes/archive/`. The locked decisions L1–L78 live in
+   `openspec/changes/archive/`. The locked decisions L1–L80 live in
    `docs/plan/reference/locked-decisions.md`; the gate procedure in
    `docs/plan/reference/calibration-gate.md`. `npm run gate:spec` refuses the mistakes, among them
    a spec the validator rejects, an index that differs from a regeneration and a second change in
@@ -26,7 +26,7 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
    are what the build actually locked; a `D` row marked superseded has an `L` row that answers
    instead.
 4. `site/.agents/skills/` — one procedure per file, each named for the job it does: the design
-   lane, snippet grammar, structured data, the search index, machine interfaces, agent interfaces,
+   lane, snippet grammar, structured data, the search index, machine interfaces, agent interfaces, the llms.txt audit,
    running the gate, the content gate, the judge panel, adding a collection entry, restoring a
    collection, visual baselines, extending the mutation smoke, explaining a route removal,
    coordinating parallel agents, clearing dead weight, verifying in the built output, keeping the
@@ -107,7 +107,9 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
   the catalogue is discovered through, the OpenAPI document, the linkset and the capability manifest — is held
   together by `npm run gate:agents`; the procedure is `site/.agents/skills/agent-interfaces.md`,
   and `site/.agents/skills/ai-agent-readiness/` covers the twenty protocols and the rule that a
-  card is published only when the service behind it is real.
+  card is published only when the service behind it is real. Every `llms*.txt` file opens with an H1,
+  runs 50 bytes or more and holds a Markdown link, because Lighthouse's Agentic Browsing audit fails the
+  file otherwise (L79); `npm run gate:agents` refuses a build that breaks it. WebMCP is refused (L80).
 - Verify a claim about the site in the built output — `dist/`, a response from the gate server, or
   a command's real stdout. Never in source, never in a doc. When a doc and the build disagree, the
   doc is wrong. Procedure: `site/.agents/skills/verify-in-the-built-output.md`.

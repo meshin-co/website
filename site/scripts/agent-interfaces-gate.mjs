@@ -9,6 +9,40 @@ const REQUIRED_RELATIONS = ['api-catalog', 'service-desc', 'describedby'];
 const LINK_VALUE = /^<([^>]+)>;\s*rel="([^"]+)"(?:;.*)?$/;
 const AI_CATALOG_LINK = /<link\b[^>]*\brel="ai-catalog"[^>]*>/i;
 const HREF = /\bhref="([^"]+)"/i;
+const LLMS_MIN_BYTES = 50;
+const H1_LINE = /^#[ \t]+\S/;
+const FENCE = /^ {0,3}(`{3,}|~{3,})/;
+const INLINE_CODE = /`[^`\n]*`/g;
+const MARKDOWN_LINK = /(?<!!)\[[^\]\n]+\]\([^)\s][^)\n]*\)/;
+const BARE_URL = /https?:\/\/[^\s<>)\]]+/g;
+const LLMS_SHARD = /^\/llms\/[^/]+\.txt$/;
+
+function proseOutsideCode(text) {
+  let fence = null;
+  const prose = [];
+  for (const line of text.split('\n')) {
+    const opening = FENCE.exec(line);
+    if (fence === null && opening) fence = opening[1][0];
+    else if (fence !== null && opening?.[1][0] === fence) fence = null;
+    else if (fence === null) prose.push(line.replace(INLINE_CODE, ''));
+  }
+  return prose.join('\n');
+}
+
+export function llmsSummaryGaps(file, text) {
+  const gaps = [];
+  const first = text.split('\n').find((line) => line.trim() !== '') ?? '';
+  if (!H1_LINE.test(first)) gaps.push(`${file}: the first non-empty line is not an H1 heading: "${first.trim()}"`);
+  const bytes = Buffer.byteLength(text, 'utf8');
+  if (bytes < LLMS_MIN_BYTES) gaps.push(`${file}: ${bytes} bytes, under the ${LLMS_MIN_BYTES}-byte minimum`);
+  const prose = proseOutsideCode(text);
+  if (!MARKDOWN_LINK.test(prose)) {
+    const bare = prose.match(BARE_URL)?.length ?? 0;
+    const note = bare === 0 ? '' : `; ${bare} bare URL${bare === 1 ? ' does' : 's do'} not count`;
+    gaps.push(`${file}: no Markdown link [text](url)${note}`);
+  }
+  return gaps;
+}
 
 function sectionFor(headersText, pattern) {
   return headersText.split('\n\n').find((block) => block.startsWith(`${pattern}\n`));
@@ -153,6 +187,17 @@ async function shippedRoutes(distDir) {
     .map((entry) => `/${relative(distDir, join(entry.parentPath, entry.name)).split(sep).join('/')}`);
 }
 
+async function llmsSummaryFindings(distDir, shipped) {
+  const files = ['/llms.txt', '/llms-full.txt', ...shipped.filter((route) => LLMS_SHARD.test(route)).sort()];
+  const findings = [];
+  for (const route of files) {
+    const file = route.slice(1);
+    if (shipped.includes(route)) findings.push(...llmsSummaryGaps(file, await readFile(join(distDir, file), 'utf8')));
+    else findings.push(`${file}: not shipped`);
+  }
+  return findings;
+}
+
 export async function agentInterfaceFindings(distDir) {
   const read = (route) => readFile(join(distDir, route), 'utf8');
   const readJson = async (route) => JSON.parse(await read(route));
@@ -176,6 +221,7 @@ export async function agentInterfaceFindings(distDir) {
     ...(reachable ? manifestEntryGaps(await readJson(route.slice(1)), shipped) : []),
     ...linkHeaderGaps(headersText, shipped),
     ...markdownNegotiationGaps(shipped),
+    ...(await llmsSummaryFindings(distDir, shipped)),
   ];
 }
 

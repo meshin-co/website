@@ -16,9 +16,8 @@ headers on `/` and the media type for the extensionless catalog. `CommonMeta.ast
 
 The signal is stated twice: as a response header and as a directive in every `robots.txt` group.
 Both read `CONTENT_SIGNAL` from the headers generator, so they cannot be typed apart, and the gate
-fails when they differ. Lighthouse rejected the directive as unknown until 13.1.0 added
-`content-signal` to its safelist; the gate pins 13.5.0 through an `overrides` entry, because
-`@lhci/cli@0.15.1` is the newest release and still depends on 12.6.1.
+fails when they differ. Lighthouse rejected the directive until 13.1.0 safelisted it; the gate pins
+13.5.0 through an `overrides` entry, because `@lhci/cli@0.15.1` still depends on 12.6.1.
 
 ## Everything here is derived
 
@@ -48,10 +47,12 @@ files, not interfaces, so `/search-index/manifest.json` alone is listed. Exclude
 - a head link naming a manifest the build does not ship, or no head link at all
 - a build with no `_worker.js`, or one whose home sidecar is missing, which would leave the
   markdown negotiation dead on the one route agents probe
+- an `llms*.txt` file that is missing, has no H1, is under 50 bytes or holds no Markdown link
+  (`satisfy-the-llms-txt-audit.md`)
 
-Six specimen families in `scripts/mutation-specimens.mjs` prove it can fail: `agents`,
-`agents-openapi-drift`, `agents-manifest-dangles`, `agents-link-header-leaks`,
-`agents-head-link-drifts`, `agents-markdown-handler-gone`.
+Nine specimen families prove it can fail: six in `scripts/mutation-specimens.mjs`, `agents`,
+`agents-openapi-drift`, `agents-manifest-dangles`, `agents-link-header-leaks`, `agents-head-link-drifts`
+and `agents-markdown-handler-gone`, and three `agents-llms-*` in `scripts/mutation-smoke.mjs`.
 
 The negotiation itself is not observable here: the gate server serves files, it does not run the
 edge handler. `npm run smoke:prod` asks the live home page for markdown, which is the only proof
@@ -64,11 +65,10 @@ code Pages runs is the code the tests drive.
 
 ## Before adding a fifth interface
 
-Read the matching file in `.agents/skills/ai-agent-readiness/`, which covers twenty protocols and
-is written to be copied into another project unchanged. Its rule governs here: publish a card only
-when the service behind it is real. This site has no accounts, no agent, no MCP server and nothing
-to sell, so it publishes none of those cards, and the proposal of the change `15-agent-readiness`
-records each refusal with its reason.
+Read the matching file in `.agents/skills/ai-agent-readiness/`, which covers twenty protocols and is
+written to be copied into another project unchanged. Its rule governs here: publish a card only when
+the service behind it is real. This site has no accounts, no agent, no MCP server and nothing to sell,
+so it publishes none of those cards; change `15-agent-readiness` records each refusal, and L80 WebMCP.
 
 ## Two switches that outrank the build
 
