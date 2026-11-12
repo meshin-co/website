@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "slug": "how-to-decide-which-employee-data-can-be-used-in-ai-tools",
+  "title": "How to decide which employee data can be used in AI tools",
+  "format": "article",
+  "query": "how to decide which employee data can be used in ai tools",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "origin": "category",
+  "category": "governance",
+  "catchUp": {
+    "slot": "06:00",
+    "lateMinutes": 102
+  },
+  "runId": "43176963411-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-12T07:42:03.659Z",
+  "expiresAt": "2026-11-26T07:42:03.659Z"
+}
