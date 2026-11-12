@@ -1,5 +1,4 @@
 import { BOOKING_URL } from '~/utils/booking.mjs';
-import { yearsShipping } from '~/utils/experience.mjs';
 
 export const hero = {
   title: 'A Fractional Chief AI Officer',
@@ -59,7 +58,7 @@ export const cta = {
 };
 
 export const figures = [
-  { value: `${yearsShipping(Date.now())}+`, label: 'years building and shipping software' },
+  { value: '15+', label: 'years building and shipping software' },
   { value: '1,000+', label: 'person fraud-detection company, my day job as a platform engineer' },
   { value: '3', label: 'frameworks I map you against: NIST AI RMF, ISO 42001, EU AI Act' },
   { value: '2 wks', label: 'from kickoff to a memo you can hand to your board' },

@@ -99,6 +99,7 @@ const KEYWORD_ASSERTIONS = {
       assertSchema(value, `${schemaPath}/additionalProperties`, root);
     }
   },
+  minProperties: countCheck('minProperties'),
   items: (value, schemaPath, root) => assertSchema(value, `${schemaPath}/items`, root),
   minItems: countCheck('minItems'),
   maxItems: countCheck('maxItems'),
@@ -196,6 +197,9 @@ function validateObject(schema, value, path, root) {
     if (!hasOwn(value, key)) {
       problems.push(problem(`${path}.${key}`, 'is required'));
     }
+  }
+  if (hasOwn(schema, 'minProperties') && Object.keys(value).length < schema.minProperties) {
+    problems.push(problem(path, `must have at least ${schema.minProperties} properties`));
   }
   const properties = schema.properties ?? {};
   for (const [key, child] of Object.entries(value)) {

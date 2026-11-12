@@ -41,18 +41,18 @@ files, not interfaces, so `/search-index/manifest.json` alone is listed. Exclude
   repeat word for word
 - an OpenAPI path that is not shipped, or a shipped JSON route the document omits
 - a linkset with no anchor or a missing service link, or any link target not shipped
-- a manifest with no entries, a repeated identifier, or an entry URL not shipped
+- a manifest with no entries, a repeated identifier, an entry URL not shipped or an ARD validator error
 - a `Link` rule that is not on `/` exactly, a malformed `Link` value, a missing relation, or a
   target not shipped
 - a head link naming a manifest the build does not ship, or no head link at all
 - a build with no `_worker.js`, or one whose home sidecar is missing, which would leave the
   markdown negotiation dead on the one route agents probe
-- an `llms*.txt` file that is missing, has no H1, is under 50 bytes or holds no Markdown link
-  (`satisfy-the-llms-txt-audit.md`)
+- an `llms*.txt` file missing, with no H1, under 50 characters or with no Markdown link (`satisfy-the-llms-txt-audit.md`)
+- a specification page or sidecar whose digests or file list differ from the served files (`spec-artefacts-check.mjs`)
 
-Nine specimen families prove it can fail: six in `scripts/mutation-specimens.mjs`, `agents`,
-`agents-openapi-drift`, `agents-manifest-dangles`, `agents-link-header-leaks`, `agents-head-link-drifts`
-and `agents-markdown-handler-gone`, and three `agents-llms-*` in `scripts/mutation-smoke.mjs`.
+Fourteen specimen families in `scripts/mutation-specimens.mjs` prove it can fail: `agents`, `agents-openapi-drift`,
+`agents-manifest-dangles`, `agents-link-header-leaks`, `agents-head-link-drifts`, `agents-markdown-handler-gone`, the three
+`agents-llms-summary-*`, `agents-catalog-fails-the-ard-validator` and four `agents-spec-*` that edit the built specification.
 
 The negotiation itself is not observable here: the gate server serves files, it does not run the
 edge handler. `npm run smoke:prod` asks the live home page for markdown, which is the only proof

@@ -466,7 +466,7 @@ These values are the owner's risk appetite for a machine that writes and merges 
 - **C. 4 attempts:** Cost: more spend on an article that keeps failing.
 - **Recommended:** B, because each attempt is another paid call on an article that has already failed, and the same rule failing twice on the same path escalates at once anyway (L62), unless early runs show repairs succeeding only on a later attempt.
   **Lands in:** `site/engine.config.json` key `loop.attemptCap`; row L62 of `docs/plan/reference/locked-decisions.md`; the prose in `site/.agents/skills/guard-the-unattended-writer.md` and `watch-an-unattended-pull-request.md`.
-  **If wrong:** `npm run gate:autowriter` prints `AUTOWRITER attempt-cap audits/autowriter/<slug>.json: <n> attempts recorded, the cap is <cap>`. After any change `npm test` fails: `site/scripts/autowriter-ledger.test.mjs` asserts the shipped bound under the title "the bounds are the ones the owner set", and `site/scripts/engine-config.test.mjs` asserts the shipped cap. Update both tests and L62 in the same commit.
+  **If wrong:** `npm run gate:autowriter` prints `AUTOWRITER attempt-cap audits/autowriter/<slug>.json: <n> attempts recorded, the cap is <cap>`. After any change `npm test` fails: `site/scripts/autowriter-ledger.test.mjs` asserts the shipped bounds under the title "the ledger exports the shipped bounds, twelve hours, three attempts and twenty-five dollars, and files a ledger by year and month", and `site/scripts/engine-config.test.mjs` asserts the shipped cap. Update both tests and L62 in the same commit.
   **Needs:** S2
 
 #### S32. Quarantine

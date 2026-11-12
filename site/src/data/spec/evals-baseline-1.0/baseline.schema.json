@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://meshin.co/spec/evals-baseline/1.0/baseline.schema.json",
+  "title": "evals-baseline baseline file, specification 1.0",
+  "description": "The shape of the evals-baseline.json file that evals-baseline specification 1.0 defines. A schema checks shape only. The specification decides what a schema cannot say: that recordedAt names a day that exists, that no key appears twice in one object, and that the metric keys are in sorted order.",
+  "type": "object",
+  "required": ["spec", "source", "recordedAt", "cases", "metrics"],
+  "additionalProperties": false,
+  "properties": {
+    "spec": {
+      "const": "1.0",
+      "description": "The specification version the file follows, written MAJOR.MINOR. A reader of version 1.0 reads a file of major 1 and minor 0 or older, which is this value alone."
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "recordedAt": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}Z$",
+      "description": "An ISO 8601 UTC time to the millisecond, the only clock in the file. This pattern checks the form. A day that does not exist, such as 2026-02-30, passes the pattern and is still not a time."
+    },
+    "cases": {
+      "$ref": "#/$defs/cases"
+    },
+    "metrics": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/metric"
+      },
+      "description": "One entry per metric, keyed by the metric key of its tool. A baseline that names no metric guards nothing, so at least one is required."
+    }
+  },
+  "$defs": {
+    "source": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/promptfooSource"
+        },
+        {
+          "$ref": "#/$defs/deepevalSource"
+        }
+      ]
+    },
+    "promptfooSource": {
+      "type": "object",
+      "required": ["tool", "toolVersion", "shape"],
+      "additionalProperties": false,
+      "properties": {
+        "tool": {
+          "const": "promptfoo"
+        },
+        "toolVersion": {
+          "type": ["string", "null"],
+          "description": "The version string the tool wrote into its own output, or null when the output carries none."
+        },
+        "shape": {
+          "const": "promptfoo-results-3"
+        }
+      }
+    },
+    "deepevalSource": {
+      "type": "object",
+      "required": ["tool", "toolVersion", "shape"],
+      "additionalProperties": false,
+      "properties": {
+        "tool": {
+          "const": "deepeval"
+        },
+        "toolVersion": {
+          "type": ["string", "null"],
+          "description": "The version string the tool wrote into its own output, or null when the output carries none. DeepEval's output carries none."
+        },
+        "shape": {
+          "const": "deepeval-test-run"
+        }
+      }
+    },
+    "cases": {
+      "type": "object",
+      "required": ["count", "digest"],
+      "additionalProperties": false,
+      "properties": {
+        "count": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "The number of cases in the run."
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{12}$",
+          "description": "The first 12 hexadecimal characters of the SHA-256 that the binding check defines, in lowercase."
+        }
+      }
+    },
+    "metric": {
+      "type": "object",
+      "required": ["value", "samples", "tolerance"],
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": "number",
+          "minimum": -4000000000,
+          "maximum": 4000000000,
+          "description": "The mean of the metric's samples, on the tool's own scale, rounded to 6 decimals. A reader refuses a value whose size is more than 4000000000."
+        },
+        "samples": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "The sample count, a positive integer."
+        },
+        "tolerance": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 4000000000,
+          "description": "The absolute tolerance, a number from 0 to 4000000000, in the metric's own units."
+        }
+      }
+    }
+  }
+}

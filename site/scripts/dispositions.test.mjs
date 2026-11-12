@@ -111,6 +111,24 @@ test('a rendered row inherits the disposition of the reviewed source text it ren
   assert.equal(rendered.derivedFrom, 'src/data/faq/a.md');
 });
 
+const LONG_TEXT = 'A sentence that is long enough to repeat. '.repeat(2000).trim();
+
+test('a source text too long for one regular expression still hands its disposition to the numbered page built from it', () => {
+  const inherited = inheritDerivedStatus(
+    [
+      { location: 'text', text: LONG_TEXT, status: 'rewritten', reason: 'read in full', usedIn: ['src/data/long.md'] },
+      { location: 'head.title', text: `${LONG_TEXT} 2`, status: 'unreviewed', usedIn: ['/long-a'] },
+      { location: 'head.title', text: `${LONG_TEXT} 3 · meshin.co`, status: 'unreviewed', usedIn: ['/long-b'] },
+      { location: 'head.title', text: `${LONG_TEXT} two`, status: 'unreviewed', usedIn: ['/long-c'] },
+    ],
+    { titleSuffix: ' · meshin.co' }
+  );
+  const statusOf = (route) => inherited.find((row) => row.usedIn.includes(route)).status;
+  assert.equal(statusOf('/long-a'), 'rewritten');
+  assert.equal(statusOf('/long-b'), 'rewritten');
+  assert.equal(statusOf('/long-c'), 'unreviewed');
+});
+
 test('a paginated title inherits the template string it is built from, for page 2 and for every page after it', () => {
   const inherited = inheritDerivedStatus(
     [

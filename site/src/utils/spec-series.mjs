@@ -24,10 +24,18 @@ const earliest = (stamps) => stamps.reduce((a, b) => (a < b ? a : b));
 
 const latest = (stamps) => stamps.reduce((a, b) => (a > b ? a : b));
 
+const holderLabel = (entry) => entry.file ?? entry.filePath ?? entry.id;
+
+const addressOf = ({ data }) => `${data.name}/${data.version}`;
+
 export function groupSeries(entries) {
   const duplicated = duplicateSpecAddresses(entries);
   if (duplicated.length > 0) {
-    throw new Error(`a specification address is held by more than one entry: ${duplicated.join(', ')}`);
+    const refused = duplicated.map((address) => {
+      const holders = entries.filter((entry) => addressOf(entry) === address).map(holderLabel);
+      return `${address} (${holders.sort().join(', ')})`;
+    });
+    throw new Error(`a specification address is held by more than one entry: ${refused.join('; ')}`);
   }
   return [...Map.groupBy(entries.filter(isListed), ({ data }) => data.name)]
     .map(([name, group]) => {
@@ -46,7 +54,7 @@ export function groupSeries(entries) {
 export function duplicateSpecAddresses(entries) {
   const seen = new Map();
   for (const { data } of entries) {
-    const address = `${data.name}/${data.version}`;
+    const address = addressOf({ data });
     seen.set(address, (seen.get(address) ?? 0) + 1);
   }
   return [...seen]

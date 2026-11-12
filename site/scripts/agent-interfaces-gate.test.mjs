@@ -1,4 +1,5 @@
 import test from 'node:test';
+import { createHash } from 'node:crypto';
 import assert from 'node:assert/strict';
 import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -16,11 +17,13 @@ import {
   llmsSummaryGaps,
   manifestEntryGaps,
   manifestRoute,
+  manifestSchemaGaps,
   markdownNegotiationGaps,
   openApiCoverageGaps,
   robotsSignalGaps,
   shippedGaps,
 } from './agent-interfaces-gate.mjs';
+import { renderAiCatalog } from './gen-agent-catalog.mjs';
 
 const ORIGIN = 'https://example.com';
 const SIGNAL = 'search=yes, ai-input=yes, ai-train=yes';
@@ -38,9 +41,18 @@ const headers = (
     '\n\n'
   );
 
-const manifest = (urls = ['/llms.txt', '/feed.json']) => ({
-  entries: urls.map((url, index) => ({ identifier: `urn:air:example.com:machine:${index}`, url: `${ORIGIN}${url}` })),
-});
+const manifest = (paths = ['/llms.txt', '/feed.json']) =>
+  renderAiCatalog({
+    origin: ORIGIN,
+    entries: paths.map((path, index) => ({
+      path,
+      namespace: 'machine',
+      name: String(index),
+      displayName: `Entry ${index}`,
+      type: 'text/plain',
+      description: 'A machine entry point of the example site.',
+    })),
+  });
 
 const catalog = {
   linkset: [
@@ -185,7 +197,38 @@ test('an identifier reused by two entries is named once', () => {
   ]);
 });
 
+test('the manifest the generator writes passes the validator the installed audit uses', () => {
+  assert.deepEqual(manifestSchemaGaps(JSON.stringify(manifest())), []);
+});
+
+test('a manifest missing a member the validator requires is refused, whichever member it is', () => {
+  const without = {
+    specVersion: (document) => delete document.specVersion,
+    type: (document) => document.entries.forEach((entry) => delete entry.type),
+    displayName: (document) => document.entries.forEach((entry) => delete entry.displayName),
+  };
+
+  for (const [member, remove] of Object.entries(without)) {
+    const document = manifest();
+    remove(document);
+    const gaps = manifestSchemaGaps(JSON.stringify(document));
+
+    assert.ok(gaps.length > 0, `${member} removed, and no finding`);
+    assert.ok(
+      gaps.every((gap) => gap.startsWith('ai-catalog.json: ')),
+      member
+    );
+    assert.ok(
+      gaps.some((gap) => gap.includes(member)),
+      member
+    );
+  }
+});
+
 const GOOD_SUMMARY = '# Example\n\n- [Home](https://example.com/): the home page\n';
+
+const RULES = { h1: /H1 heading/, floor: /minimum/, link: /Markdown link/ };
+const rulesOf = (gaps) => gaps.map((gap) => Object.keys(RULES).find((rule) => RULES[rule].test(gap)));
 
 test('a summary with an H1, enough text and a Markdown link has no gap', () => {
   assert.deepEqual(llmsSummaryGaps('llms.txt', GOOD_SUMMARY), []);
@@ -202,7 +245,7 @@ test('a summary whose first non-empty line is not an H1 is named with that line'
 test('an H2, an H1 without text and a hash with no space are not an H1 heading', () => {
   const rest = '\n\n- [Home](https://example.com/): the home page and more\n';
 
-  for (const first of ['## Example', '#', '#Example']) {
+  for (const first of ['## Example', '#', '# ', '#Example']) {
     assert.equal(llmsSummaryGaps('llms/post.txt', `${first}${rest}`).length, 1, first);
   }
 });
@@ -211,27 +254,37 @@ test('leading blank lines do not hide an H1, so the first non-empty line is what
   assert.deepEqual(llmsSummaryGaps('llms.txt', `\n\n${GOOD_SUMMARY}`), []);
 });
 
-test('a summary under 50 bytes is named with its size', () => {
+test('a summary under 50 characters is named with its size', () => {
   const text = '# Tiny\n[a](https://e.co/)\n';
 
   assert.deepEqual(llmsSummaryGaps('llms/post.txt', text), [
-    `llms/post.txt: ${Buffer.byteLength(text)} bytes, under the 50-byte minimum`,
+    `llms/post.txt: ${text.length} characters, under the 50-character minimum`,
   ]);
 });
 
-test('exactly 50 bytes is long enough', () => {
+test('exactly 50 characters is long enough and 49 is not', () => {
   const head = '# T\n[a](https://e.co/x)';
-  const text = `${head}${'.'.repeat(50 - head.length)}`;
+  const fifty = `${head}${'.'.repeat(50 - head.length)}`;
+  const fortyNine = `${head}${'.'.repeat(49 - head.length)}`;
 
-  assert.equal(Buffer.byteLength(text), 50);
-  assert.deepEqual(llmsSummaryGaps('llms.txt', text), []);
+  assert.deepEqual(llmsSummaryGaps('llms.txt', fifty), []);
+  assert.deepEqual(rulesOf(llmsSummaryGaps('llms.txt', fortyNine)), ['floor']);
 });
 
-test('size counts bytes, so multi-byte text is not short by character count', () => {
+test('size counts characters, as the audit does, so multi-byte text past 50 bytes is still short', () => {
   const text = `# Ы\n[${'ы'.repeat(15)}](https://e.co/)`;
 
   assert.ok(text.length < 50 && Buffer.byteLength(text) >= 50);
-  assert.deepEqual(llmsSummaryGaps('llms.txt', text), []);
+  assert.deepEqual(rulesOf(llmsSummaryGaps('llms.txt', text)), ['floor']);
+});
+
+test('a leading byte order mark is not counted, because one of the two ways Lighthouse reads the file drops it', () => {
+  const head = '\uFEFF\n# T\n[a](https://e.co/x)';
+  const fifty = head.padEnd(50, '.');
+
+  assert.equal(fifty.length, 50);
+  assert.deepEqual(rulesOf(llmsSummaryGaps('llms.txt', fifty)), ['floor']);
+  assert.deepEqual(llmsSummaryGaps('llms.txt', `${fifty}.`), []);
 });
 
 test('a bare URL is not a link, and the finding says how many bare URLs were seen', () => {
@@ -248,10 +301,18 @@ test('a file with no URL at all is named without a bare-URL count', () => {
   ]);
 });
 
-test('an image, an empty link text and a link inside a code fence are not links', () => {
+test('an image, an empty text, an empty target, and a link in a code fence or inline code are not links', () => {
   const base = '# Example\n\nText long enough to clear the floor on its own.\n';
+  const bodies = [
+    '![alt](https://e.co/a.png)',
+    '[](https://e.co/)',
+    '[a]()',
+    '```\n[a](https://e.co/)\n```',
+    '~~~\n[a](https://e.co/)\n~~~',
+    '`[a](https://e.co/)`',
+  ];
 
-  for (const body of ['![alt](https://e.co/a.png)', '[](https://e.co/)', '```\n[a](https://e.co/)\n```']) {
+  for (const body of bodies) {
     assert.equal(llmsSummaryGaps('llms.txt', `${base}${body}\n`).length, 1, body);
   }
 });
@@ -260,20 +321,43 @@ test('a relative inline link among prose counts', () => {
   assert.deepEqual(llmsSummaryGaps('llms.txt', '# Example\n\nRead [the about page](/about) for more detail.\n'), []);
 });
 
-test('every condition that fails is named, one finding each', () => {
-  assert.deepEqual(llmsSummaryGaps('llms/x.txt', 'x'), [
-    'llms/x.txt: the first non-empty line is not an H1 heading: "x"',
-    'llms/x.txt: 1 bytes, under the 50-byte minimum',
-    'llms/x.txt: no Markdown link [text](url)',
-  ]);
+test('a link whose text is inline code is a link', () => {
+  assert.deepEqual(llmsSummaryGaps('llms.txt', '# Example\n\nRead [`npm run build`](/docs) for more detail.\n'), []);
+});
+
+test('removing inline code never joins a closing bracket to an opening parenthesis into a link', () => {
+  const text = '# Example\n\nA site about agents: [a]`x`(b) and nothing more to read.\n';
+
+  assert.deepEqual(rulesOf(llmsSummaryGaps('llms.txt', text)), ['link']);
+});
+
+test('a line break of any kind inside a link ends it, because the audit reads no link across one', () => {
+  for (const separator of ['\r', '\u2028', '\u2029']) {
+    const bodies = [
+      `Read [the${separator}about page](/about) for more detail.`,
+      `Read [the about page](/ab${separator}out) for more detail.`,
+      `Read [the \`a${separator}b\` page](/about) for more detail.`,
+    ];
+    for (const body of bodies) {
+      assert.deepEqual(rulesOf(llmsSummaryGaps('llms.txt', `# Example\n\n${body}\n`)), ['link'], JSON.stringify(body));
+    }
+  }
+});
+
+test('carriage-return line endings do not break an H1 or a link', () => {
+  assert.deepEqual(llmsSummaryGaps('llms.txt', GOOD_SUMMARY.replaceAll('\n', '\r\n')), []);
+  assert.deepEqual(llmsSummaryGaps('llms.txt', GOOD_SUMMARY.replaceAll('\n', '\r')), []);
+});
+
+test('every condition that fails is named, one finding each, each starting with the file', () => {
+  const gaps = llmsSummaryGaps('llms/x.txt', 'x');
+
+  assert.deepEqual(rulesOf(gaps), ['h1', 'floor', 'link']);
+  assert.ok(gaps.every((gap) => gap.startsWith('llms/x.txt: ')));
 });
 
 test('an empty file is named for all three conditions without a crash', () => {
-  assert.deepEqual(llmsSummaryGaps('llms.txt', ''), [
-    'llms.txt: the first non-empty line is not an H1 heading: ""',
-    'llms.txt: 0 bytes, under the 50-byte minimum',
-    'llms.txt: no Markdown link [text](url)',
-  ]);
+  assert.deepEqual(rulesOf(llmsSummaryGaps('llms.txt', '')), ['h1', 'floor', 'link']);
 });
 
 async function buildTree(overrides = {}) {
@@ -304,6 +388,46 @@ test('a built tree that satisfies every rule produces no findings', async () => 
   assert.deepEqual(await agentInterfaceFindings(await buildTree()), []);
 });
 
+test('a built tree whose manifest the validator refuses is named, not passed', async () => {
+  const document = manifest();
+  delete document.specVersion;
+
+  const findings = await agentInterfaceFindings(
+    await buildTree({ '.well-known/ai-catalog.json': JSON.stringify(document) })
+  );
+
+  assert.ok(findings.length > 0);
+  assert.ok(findings.every((finding) => finding.startsWith('ai-catalog.json: ')));
+});
+
+const VECTORS = '{"cases":[]}\n';
+const sha256 = (text) => createHash('sha256').update(text).digest('hex');
+
+const specTree = ({ page = sha256(VECTORS), sidecar = sha256(VECTORS) } = {}) => ({
+  'openapi.json': JSON.stringify({ paths: { '/feed.json': {}, '/spec/zz/1.0/vectors.json': {} } }),
+  'spec/zz/1.0/vectors.json': VECTORS,
+  'spec/zz/1.0.html': `<ul><li data-artefact="/spec/zz/1.0/vectors.json"><code data-artefact-digest>${page}</code></li></ul>`,
+  'spec/zz/1.0.md': `- [vectors.json](${ORIGIN}/spec/zz/1.0/vectors.json): SHA-256 \`${sidecar}\``,
+});
+
+test('a published specification whose page and sidecar show the digest of the served file is passed', async () => {
+  assert.deepEqual(await agentInterfaceFindings(await buildTree(specTree())), []);
+});
+
+test('a published specification whose page shows another digest than the served file is named, not passed', async () => {
+  const findings = await agentInterfaceFindings(await buildTree(specTree({ page: sha256('other') })));
+
+  assert.ok(findings.length > 0);
+  assert.ok(findings.every((finding) => finding.includes('spec/zz/1.0.html')));
+});
+
+test('a published specification whose sidecar shows another digest than the served file is named, not passed', async () => {
+  const findings = await agentInterfaceFindings(await buildTree(specTree({ sidecar: sha256('other') })));
+
+  assert.ok(findings.length > 0);
+  assert.ok(findings.every((finding) => finding.includes('spec/zz/1.0.md')));
+});
+
 test('the built tree is checked: llms.txt, llms-full.txt and every llms shard', async () => {
   const dist = await buildTree({
     'llms.txt': 'Example\n',
@@ -311,15 +435,14 @@ test('the built tree is checked: llms.txt, llms-full.txt and every llms shard', 
     'llms/post.txt': '# P\n',
     'llms/faq.txt': GOOD_SUMMARY,
   });
+  const byFile = Object.groupBy(await agentInterfaceFindings(dist), (finding) =>
+    finding.slice(0, finding.indexOf(': '))
+  );
 
-  assert.deepEqual(await agentInterfaceFindings(dist), [
-    'llms.txt: the first non-empty line is not an H1 heading: "Example"',
-    'llms.txt: 8 bytes, under the 50-byte minimum',
-    'llms.txt: no Markdown link [text](url)',
-    'llms-full.txt: no Markdown link [text](url)',
-    'llms/post.txt: 4 bytes, under the 50-byte minimum',
-    'llms/post.txt: no Markdown link [text](url)',
-  ]);
+  assert.deepEqual(Object.keys(byFile).sort(), ['llms-full.txt', 'llms.txt', 'llms/post.txt']);
+  assert.deepEqual(rulesOf(byFile['llms.txt']), ['h1', 'floor', 'link']);
+  assert.deepEqual(rulesOf(byFile['llms-full.txt']), ['link']);
+  assert.deepEqual(rulesOf(byFile['llms/post.txt']), ['floor', 'link']);
 });
 
 test('a tree with no llms.txt or llms-full.txt is named, not a crash', async () => {

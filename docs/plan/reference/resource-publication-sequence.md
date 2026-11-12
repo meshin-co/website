@@ -23,7 +23,7 @@ Both of the criteria this rule replaced were tried and failed on inspection:
 
 | #   | Resource                                         | Why here                                                                                                                                                                     | Gate before it starts                  |
 | --- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| 1   | `agent-evals-ci-starter`                         | The only one whose consumer is installed: four million installs a month already write the file the check reads. Licence-clean throughout. No incumbent.                      | None. It starts now.                   |
+| 1   | The only one whose consumer is installed: promptfoo (4.1M npm downloads a month) writes the file the check reads with `--output`. Licence-clean throughout. No incumbent.    | The only one whose consumer is installed: promptfoo (4.1M npm downloads a month) writes the file the check reads with `--output`. Licence-clean throughout. No incumbent.                      | None. It starts now.                   |
 | 2   | `ai-governance-starter-kit`, re-scoped           | Largest measured demand, and the buyer is the person the practice sells to. Waits because its format has no installed corpus and must arrive after a consuming habit exists. | A dated review, never an inbound link. |
 | 3   | `llm-gateway-governance-config`                  | A 63,049-star gateway ships a test rig as its only worked configuration. Narrow, and the same shape as 1.                                                                    | 2 published.                           |
 | 4   | `handover-playbook`                              | No living incumbent: the 947-star checklist has been dormant since 2021-11-22 and the other is archived. Cheap to write.                                                     | 3 published.                           |
@@ -52,7 +52,7 @@ records: a mutable major tag from a one-person publisher is code execution insid
 its author can rewrite, and the companies that hire the practice are the ones whose policy refuses it. What
 he takes on with it is a standing promise never to break `v1`.
 
-**It reads two formats at launch: promptfoo and DeepEval.** Together about 6.7 million installs a month.
+**It reads two formats at launch: promptfoo and DeepEval.** Together about 6.7 million downloads a month, from npm and PyPI, which counts downloads and not installs.
 Inventing a neutral format instead was rejected for the same reason the governance kit went second: a format
 nobody writes has a corpus of zero files, and the whole ordering rule is that the consumer must already exist.
 A neutral shape may be declared later, once two real ones have been read in anger and their differences are
@@ -109,9 +109,11 @@ against being asked, politely and repeatedly, to build the thing that cannot be 
 Nothing is announced. The owner chose on 2026-11-10 that the resources are found rather than published at an
 audience.
 
-The cost of that choice is recorded here so it is not mistaken for an oversight. The same channel has already
-run for nine weeks from the first resource publication on 2026-09-08 and produced zero clicks, zero article
-impressions, and `status: absent` on 120 of 120 AI-engine prompts with retrieval confirmed on 52 of them. No
+The cost of that choice is recorded here so it is not mistaken for an oversight. In the nine weeks from the first
+resource commit on 2026-09-08 to the decision, the same channel produced zero clicks and 105 impressions, none of them
+on a blog article (`audits/search-demand.md`), although the apex was attached only on 2026-10-17. An AI-engine probe
+(`audits/geo-probe.json`), committed on 2026-09-16, eight days after the first resource commit, found `status: absent`
+on 120 of 120 prompt-and-engine rows with retrieval on in 62 of them. No
 artefact in the studied corpus became canonical without one borrowed audience on one day. The sequence above
 is therefore built so that the distribution that remains is mechanical rather than social: a redistribution-
 permitting licence, and an artefact a program consumes.

@@ -341,6 +341,74 @@ export const SPECIMENS = {
         html.replace('href="/.well-known/ai-catalog.json"', 'href="/.well-known/ai-catalog-v2.json"')
       ),
   },
+  agentsLlmsWithoutAnH1: {
+    gate: 'gate:agents',
+    token: 'llms/zz-specimen-without-an-h1.txt: the first non-empty line is not an H1 heading',
+    plant: (copySite) =>
+      addUntrackedFile(
+        join(copySite, 'dist/llms/zz-specimen-without-an-h1.txt'),
+        `Specimen shard\n\n# Specimen\n\n- [Home](${ORIGIN}/): the home page of the specimen\n`
+      ),
+  },
+  agentsLlmsUnderTheFloor: {
+    gate: 'gate:agents',
+    token: 'llms/zz-specimen-under-the-floor.txt: 36 characters, under the 50-character minimum',
+    plant: (copySite) =>
+      addUntrackedFile(
+        join(copySite, 'dist/llms/zz-specimen-under-the-floor.txt'),
+        `# Ы\n[${'ы'.repeat(15)}](https://e.co/)`
+      ),
+  },
+  agentsLlmsWithOnlyABareUrl: {
+    gate: 'gate:agents',
+    token: 'llms/zz-specimen-with-only-a-bare-url.txt: no Markdown link [text](url); 1 bare URL does not count',
+    plant: (copySite) =>
+      addUntrackedFile(
+        join(copySite, 'dist/llms/zz-specimen-with-only-a-bare-url.txt'),
+        `# Specimen\n\nSee ${ORIGIN}/about for the specimen and its page.\n`
+      ),
+  },
+  agentsCatalogFailsTheArdValidator: {
+    gate: 'gate:agents',
+    token: "Missing required 'specVersion' root property.",
+    plant: (copySite) =>
+      editFile(join(copySite, 'dist/.well-known/ai-catalog.json'), (text) => {
+        const document = JSON.parse(text);
+        delete document.specVersion;
+        return JSON.stringify(document);
+      }),
+  },
+  agentsSpecPageDigestDrifts: {
+    gate: 'gate:agents',
+    token: 'spec/evals-baseline/1.0.html shows SHA-256',
+    plant: (copySite) =>
+      editFile(join(copySite, 'dist/spec/evals-baseline/1.0.html'), (html) =>
+        html.replace(/(data-artefact-digest>)([0-9a-f])/, (_, head, first) => `${head}${first === '0' ? '1' : '0'}`)
+      ),
+  },
+  agentsSpecServedFileDrifts: {
+    gate: 'gate:agents',
+    token: 'spec/evals-baseline/1.0.md shows SHA-256',
+    plant: (copySite) => editFile(join(copySite, 'dist/spec/evals-baseline/1.0/vectors.json'), (text) => `${text} `),
+  },
+  agentsSpecSidecarDigestDrifts: {
+    gate: 'gate:agents',
+    token: 'spec/evals-baseline/1.0.md shows SHA-256',
+    plant: (copySite) =>
+      editFile(join(copySite, 'dist/spec/evals-baseline/1.0.md'), (text) =>
+        text.replace(/(SHA-256 `)([0-9a-f])/, (_, head, first) => `${head}${first === '0' ? '1' : '0'}`)
+      ),
+  },
+  agentsSpecArtefactUnlisted: {
+    gate: 'gate:agents',
+    token: 'spec/evals-baseline/1.0.html does not list /spec/evals-baseline/1.0/baseline.schema.json',
+    plant: (copySite) =>
+      editFile(join(copySite, 'dist/spec/evals-baseline/1.0.html'), (html) => {
+        const mark = html.indexOf('data-artefact="/spec/evals-baseline/1.0/baseline.schema.json"');
+        if (mark === -1) return html;
+        return html.slice(0, html.lastIndexOf('<li', mark)) + html.slice(html.indexOf('</li>', mark) + '</li>'.length);
+      }),
+  },
   machine: {
     gate: 'gate:machine',
     token: 'feed.json does not mirror rss.xml item-for-item',

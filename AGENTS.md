@@ -108,8 +108,10 @@ Astro 7 static site for a Fractional Chief AI Officer practice. The Astro app is
   together by `npm run gate:agents`; the procedure is `site/.agents/skills/agent-interfaces.md`,
   and `site/.agents/skills/ai-agent-readiness/` covers the twenty protocols and the rule that a
   card is published only when the service behind it is real. Every `llms*.txt` file opens with an H1,
-  runs 50 bytes or more and holds a Markdown link, because Lighthouse's Agentic Browsing audit fails the
-  file otherwise (L79); `npm run gate:agents` refuses a build that breaks it. WebMCP is refused (L80).
+  runs 50 characters or more and holds a Markdown link, because Lighthouse's Agentic Browsing audit fails the
+  file otherwise (L79); `npm run gate:agents` refuses a build that breaks it, and
+  `site/scripts/llms-audit-differential.test.mjs` fails when it passes a file the installed audit refuses.
+  WebMCP is refused (L80).
 - Verify a claim about the site in the built output — `dist/`, a response from the gate server, or
   a command's real stdout. Never in source, never in a doc. When a doc and the build disagree, the
   doc is wrong. Procedure: `site/.agents/skills/verify-in-the-built-output.md`.

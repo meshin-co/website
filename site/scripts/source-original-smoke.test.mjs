@@ -24,6 +24,7 @@ test('the smoke plants the source specimen in the glossary and expects the build
       kind: 'build',
       proves: 'build',
       fixture: 'source-original-mismatch.md',
+      control: ['source-original-mismatch-control.md'],
       plant: 'src/data/glossary',
       tokens: [TOKEN],
       slow: undefined,

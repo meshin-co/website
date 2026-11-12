@@ -1,6 +1,9 @@
 import { readdir, readFile } from 'node:fs/promises';
 import { join, relative, sep } from 'node:path';
 
+import { ConformanceTester } from 'lighthouse/third-party/ard/ard.js';
+
+import { specArtefactFindings } from '../src/utils/spec-artefacts-check.mjs';
 import { publicJsonRoutes } from './gen-openapi.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 
@@ -9,35 +12,41 @@ const REQUIRED_RELATIONS = ['api-catalog', 'service-desc', 'describedby'];
 const LINK_VALUE = /^<([^>]+)>;\s*rel="([^"]+)"(?:;.*)?$/;
 const AI_CATALOG_LINK = /<link\b[^>]*\brel="ai-catalog"[^>]*>/i;
 const HREF = /\bhref="([^"]+)"/i;
-const LLMS_MIN_BYTES = 50;
+const LLMS_MIN_CHARACTERS = 50;
+const LEADING_BYTE_ORDER_MARK = /^\uFEFF/;
+const LINE_BREAK = /[\n\r\u2028\u2029]/;
 const H1_LINE = /^#[ \t]+\S/;
 const FENCE = /^ {0,3}(`{3,}|~{3,})/;
-const INLINE_CODE = /`[^`\n]*`/g;
-const MARKDOWN_LINK = /(?<!!)\[[^\]\n]+\]\([^)\s][^)\n]*\)/;
+const INLINE_CODE = /`[^`]*`/g;
+const MARKDOWN_LINK = /(?<!!)\[[^\]]+\]\([^)\s][^)]*\)/;
 const BARE_URL = /https?:\/\/[^\s<>)\]]+/g;
 const LLMS_SHARD = /^\/llms\/[^/]+\.txt$/;
 
-function proseOutsideCode(text) {
+function proseOutsideCode(lines) {
   let fence = null;
   const prose = [];
-  for (const line of text.split('\n')) {
+  for (const line of lines) {
     const opening = FENCE.exec(line);
     if (fence === null && opening) fence = opening[1][0];
     else if (fence !== null && opening?.[1][0] === fence) fence = null;
-    else if (fence === null) prose.push(line.replace(INLINE_CODE, ''));
+    else if (fence === null) prose.push(line.replace(INLINE_CODE, ' '));
   }
-  return prose.join('\n');
+  return prose;
 }
 
 export function llmsSummaryGaps(file, text) {
   const gaps = [];
-  const first = text.split('\n').find((line) => line.trim() !== '') ?? '';
+  const lines = text.split(LINE_BREAK);
+  const first = lines.find((line) => line.trim() !== '') ?? '';
   if (!H1_LINE.test(first)) gaps.push(`${file}: the first non-empty line is not an H1 heading: "${first.trim()}"`);
-  const bytes = Buffer.byteLength(text, 'utf8');
-  if (bytes < LLMS_MIN_BYTES) gaps.push(`${file}: ${bytes} bytes, under the ${LLMS_MIN_BYTES}-byte minimum`);
-  const prose = proseOutsideCode(text);
-  if (!MARKDOWN_LINK.test(prose)) {
-    const bare = prose.match(BARE_URL)?.length ?? 0;
+  const characters = text.replace(LEADING_BYTE_ORDER_MARK, '').length;
+  if (characters < LLMS_MIN_CHARACTERS) {
+    const unit = characters === 1 ? 'character' : 'characters';
+    gaps.push(`${file}: ${characters} ${unit}, under the ${LLMS_MIN_CHARACTERS}-character minimum`);
+  }
+  const prose = proseOutsideCode(lines);
+  if (!prose.some((line) => MARKDOWN_LINK.test(line))) {
+    const bare = prose.join('\n').match(BARE_URL)?.length ?? 0;
     const note = bare === 0 ? '' : `; ${bare} bare URL${bare === 1 ? ' does' : 's do'} not count`;
     gaps.push(`${file}: no Markdown link [text](url)${note}`);
   }
@@ -180,6 +189,17 @@ export function manifestEntryGaps(manifest, shipped) {
   ];
 }
 
+export function manifestSchemaGaps(manifestText) {
+  const validator = new ConformanceTester();
+  validator.validate_manifest(manifestText, 'ai-catalog.json');
+  return validator.errors.map(({ element, message }) => `ai-catalog.json: ${element}: ${message}`);
+}
+
+const manifestGaps = (manifestText, shipped) => [
+  ...manifestEntryGaps(JSON.parse(manifestText), shipped),
+  ...manifestSchemaGaps(manifestText),
+];
+
 async function shippedRoutes(distDir) {
   const entries = await readdir(distDir, { withFileTypes: true, recursive: true });
   return entries
@@ -207,6 +227,7 @@ export async function agentInterfaceFindings(distDir) {
   const catalog = await readJson('.well-known/api-catalog');
   const route = manifestRoute(homeHtml);
   const reachable = route !== undefined && shipped.includes(route);
+  const manifestText = reachable ? await read(route.slice(1)) : undefined;
   return [
     ...contentSignalGaps(headersText),
     ...robotsSignalGaps(await read('robots.txt'), headersText),
@@ -218,10 +239,11 @@ export async function agentInterfaceFindings(distDir) {
       shipped
     ),
     ...headLinkGaps(homeHtml, shipped),
-    ...(reachable ? manifestEntryGaps(await readJson(route.slice(1)), shipped) : []),
+    ...(reachable ? manifestGaps(manifestText, shipped) : []),
     ...linkHeaderGaps(headersText, shipped),
     ...markdownNegotiationGaps(shipped),
     ...(await llmsSummaryFindings(distDir, shipped)),
+    ...(await specArtefactFindings(distDir)),
   ];
 }
 

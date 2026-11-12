@@ -17,7 +17,6 @@ const SITE = resolve(HERE, '..');
 const REPO = resolve(SITE, '..');
 const FIXTURES = join(SITE, 'tests', 'guard-mutations', 'fixtures');
 const LIVE_POST_TARGET = 13;
-const GATES = ['budget', 'jsonld', 'jsonld-properties', 'content-gate', 'docs', 'external', 'agents-llms'];
 const CHECKS = ['semantic-title', ...Object.keys({ ...REPAIR_CHECKS, ...ORDER_CHECKS, ...KEYWORD_CHECKS })];
 const SCOPES = ['category', 'tag'];
 
@@ -27,6 +26,7 @@ export const FAMILIES = [
     kind: 'build',
     proves: 'build',
     fixture: 'faq-question-too-long.md',
+    control: ['faq-question-too-long-control.md'],
     plant: 'src/data/faq',
     tokens: ['question: must be 98 characters or fewer'],
   },
@@ -35,6 +35,7 @@ export const FAMILIES = [
     kind: 'build',
     proves: 'build',
     fixture: 'post-title-too-long.md',
+    control: ['post-title-too-long-control.md'],
     plant: 'src/data/post',
     tokens: ['title: must be 98 characters or fewer'],
   },
@@ -43,6 +44,7 @@ export const FAMILIES = [
     kind: 'build',
     proves: 'build',
     fixture: 'faq-missing-updated-date.md',
+    control: ['faq-missing-updated-date-control.md'],
     plant: 'src/data/faq',
     tokens: ['updatedDate: Required'],
   },
@@ -51,6 +53,7 @@ export const FAMILIES = [
     kind: 'build',
     proves: 'build',
     fixture: 'post-unknown-tag.md',
+    control: ['post-unknown-tag-control.md'],
     plant: 'src/data/post',
     tokens: ['tags.0: Invalid option'],
   },
@@ -59,6 +62,7 @@ export const FAMILIES = [
     kind: 'build-then-gate',
     proves: 'gate:content',
     fixture: 'post-banned-phrase.md',
+    control: ['post-banned-phrase-control.md'],
     plant: 'src/data/post',
     gate: 'content-gate',
     tokens: ['banned-phrase [leverage]'],
@@ -106,6 +110,7 @@ export const FAMILIES = [
     kind: 'build',
     proves: 'build',
     fixture: 'faq-description-too-short.md',
+    control: ['faq-description-too-short-control.md'],
     plant: 'src/data/faq',
     tokens: ['description: must be 120 characters or more'],
   },
@@ -114,6 +119,7 @@ export const FAMILIES = [
     kind: 'build',
     proves: 'build',
     fixture: 'resource-license-without-text.md',
+    control: ['resource-license-without-text-control.md'],
     plant: 'src/data/resource',
     tokens: ['license: needs its text'],
   },
@@ -122,6 +128,7 @@ export const FAMILIES = [
     kind: 'build',
     proves: 'build',
     fixture: 'resource-license-undeclared.md',
+    control: ['resource-license-undeclared-control.md'],
     plant: 'src/data/resource',
     tokens: ['license: Required'],
   },
@@ -129,15 +136,19 @@ export const FAMILIES = [
     id: 'spec-address-duplicated',
     kind: 'build',
     proves: 'build',
-    fixture: 'spec-address-duplicated.md',
+    fixture: ['spec-address-duplicated-first.md', 'spec-address-duplicated-second.md'],
+    control: ['spec-address-duplicated-first-control.md', 'spec-address-duplicated-second-control.md'],
     plant: 'src/data/spec',
-    tokens: ['a specification address is held by more than one entry: evals-baseline/1.0'],
+    tokens: [
+      'a specification address is held by more than one entry: zz-specimen/1.0 (spec/spec-address-duplicated-first.md, spec/spec-address-duplicated-second.md)',
+    ],
   },
   {
     id: 'source-original-must-match-its-stand-in',
     kind: 'build',
     proves: 'build',
     fixture: 'source-original-mismatch.md',
+    control: ['source-original-mismatch-control.md'],
     plant: 'src/data/glossary',
     tokens: ['sources.0.original: must be the address that url stands in for'],
   },
@@ -170,30 +181,14 @@ export const FAMILIES = [
   { id: 'agents-link-header-leaks', kind: 'specimen', specimen: 'agents-link-header-leaks' },
   { id: 'agents-head-link-drifts', kind: 'specimen', specimen: 'agents-head-link-drifts' },
   { id: 'agents-markdown-handler-gone', kind: 'specimen', specimen: 'agents-markdown-handler-gone' },
-  {
-    id: 'agents-llms-summary-without-an-h1',
-    kind: 'gate',
-    proves: 'gate:agents',
-    gate: 'agents-llms',
-    fixture: 'llms-shard-without-h1.txt',
-    tokens: ['llms/llms-shard-without-h1.txt: the first non-empty line is not an H1 heading'],
-  },
-  {
-    id: 'agents-llms-summary-under-the-floor',
-    kind: 'gate',
-    proves: 'gate:agents',
-    gate: 'agents-llms',
-    fixture: 'llms-shard-too-short.txt',
-    tokens: ['llms/llms-shard-too-short.txt: 15 bytes, under the 50-byte minimum'],
-  },
-  {
-    id: 'agents-llms-summary-with-only-a-bare-url',
-    kind: 'gate',
-    proves: 'gate:agents',
-    gate: 'agents-llms',
-    fixture: 'llms-shard-bare-url.txt',
-    tokens: ['llms/llms-shard-bare-url.txt: no Markdown link [text](url); 1 bare URL does not count'],
-  },
+  { id: 'agents-llms-summary-without-an-h1', kind: 'specimen', specimen: 'agentsLlmsWithoutAnH1' },
+  { id: 'agents-llms-summary-under-the-floor', kind: 'specimen', specimen: 'agentsLlmsUnderTheFloor' },
+  { id: 'agents-llms-summary-with-only-a-bare-url', kind: 'specimen', specimen: 'agentsLlmsWithOnlyABareUrl' },
+  { id: 'agents-catalog-fails-the-ard-validator', kind: 'specimen', specimen: 'agentsCatalogFailsTheArdValidator' },
+  { id: 'agents-spec-page-digest-drifts', kind: 'specimen', specimen: 'agentsSpecPageDigestDrifts' },
+  { id: 'agents-spec-served-file-drifts', kind: 'specimen', specimen: 'agentsSpecServedFileDrifts' },
+  { id: 'agents-spec-sidecar-digest-drifts', kind: 'specimen', specimen: 'agentsSpecSidecarDigestDrifts' },
+  { id: 'agents-spec-artefact-unlisted', kind: 'specimen', specimen: 'agentsSpecArtefactUnlisted' },
   { id: 'machine-feed-coverage', kind: 'specimen', specimen: 'machine' },
   { id: 'canonical-names-a-built-file', kind: 'specimen', specimen: 'canonical' },
   { id: 'gate-wiring-removed-from-ci', kind: 'specimen', specimen: 'wiringRemoved' },
@@ -437,9 +432,10 @@ export const FAMILIES = [
 ];
 
 const KINDS = ['build', 'build-then-gate', 'gate', 'pure', 'pagination', 'specimen', 'lh-record'];
+const PLANTING_KINDS = ['build', 'build-then-gate'];
 const REQUIREMENTS = {
-  build: ['proves', 'fixture', 'plant', 'tokens'],
-  'build-then-gate': ['proves', 'fixture', 'plant', 'tokens', 'gate'],
+  build: ['proves', 'fixture', 'plant', 'tokens', 'control'],
+  'build-then-gate': ['proves', 'fixture', 'plant', 'tokens', 'gate', 'control'],
   gate: ['proves', 'gate', 'tokens'],
   pure: ['proves', 'check'],
   pagination: ['proves', 'fixture'],
@@ -466,10 +462,14 @@ export function stalePending(scripts, families, pending) {
     .sort();
 }
 
-const invalid = (field, value) =>
-  field === 'tokens'
-    ? !Array.isArray(value) || value.length === 0 || value.some((token) => typeof token !== 'string')
-    : typeof value !== 'string' || value.length === 0;
+const isName = (value) => typeof value === 'string' && value.length > 0;
+const isNameList = (value) => Array.isArray(value) && value.length > 0 && value.every(isName);
+
+const invalid = (field, value, kind) => {
+  if (field === 'tokens' || field === 'control') return !isNameList(value);
+  if (field === 'fixture' && PLANTING_KINDS.includes(kind)) return !isName(value) && !isNameList(value);
+  return !isName(value);
+};
 
 export function manifestFamilies(manifest) {
   if (!Array.isArray(manifest) || manifest.length === 0) throw new Error('mutation smoke: empty family manifest');
@@ -481,13 +481,11 @@ export function manifestFamilies(manifest) {
     seen.add(id);
     if (!KINDS.includes(entry.kind)) throw new Error(`mutation smoke: family ${id} has unknown kind ${entry.kind}`);
     for (const field of REQUIREMENTS[entry.kind]) {
-      if (invalid(field, entry[field]))
+      if (invalid(field, entry[field], entry.kind))
         throw new Error(`mutation smoke: family ${id} (${entry.kind}) is missing ${field}`);
     }
-    if ('gate' in entry && !GATES.includes(entry.gate))
+    if (entry.kind in GATE_TABLES && !Object.hasOwn(GATE_TABLES[entry.kind], entry.gate))
       throw new Error(`mutation smoke: family ${id} has unknown gate ${entry.gate}`);
-    if (entry.gate === 'agents-llms' && invalid('fixture', entry.fixture))
-      throw new Error(`mutation smoke: family ${id} (gate agents-llms) is missing fixture`);
     if ('check' in entry && !CHECKS.includes(entry.check))
       throw new Error(`mutation smoke: family ${id} has unknown check ${entry.check}`);
     if ('scope' in entry && !SCOPES.includes(entry.scope))
@@ -538,120 +536,174 @@ const snapshotDist = (copySite, work) =>
 const restoreDist = (copySite, work) =>
   run('rsync', ['-a', '--delete', pristineDist(work), `${join(copySite, 'dist')}/`]);
 
-async function plantFixture(copySite, entry) {
-  const target = join(copySite, entry.plant, entry.fixture);
-  await copyFile(join(FIXTURES, entry.fixture), target);
-  return target;
+const tail = (output) => flatten(output).slice(-300);
+
+function compliantProblem(guard, compliant, tokens) {
+  if (compliant.code !== 0) return `${guard} was red on compliant input: ${tail(compliant.output)}`;
+  const carried = tokens.find((token) => flatten(compliant.output).includes(token));
+  if (carried === undefined) return null;
+  return `${guard} already prints "${carried}" on compliant input, so the token proves nothing`;
 }
 
-async function runPlantedFamily(copySite, entry, gated) {
-  const planted = await plantFixture(copySite, entry);
+async function proveRefusal({ guard, compliant, planted, tokens }) {
+  const problem = compliantProblem(guard, compliant, tokens);
+  if (problem !== null) return { ok: false, reason: problem };
+  const verdict = expectedFailure(await planted(), tokens);
+  return verdict.ok ? { ...verdict, reason: `${verdict.reason}, green on compliant input` } : verdict;
+}
+
+const fixturesOf = (value) => [value].flat();
+const copiesOf = (copySite, entry, names) => names.map((name) => ({ name, target: join(copySite, entry.plant, name) }));
+const plantedCopies = (copySite, entry) => copiesOf(copySite, entry, fixturesOf(entry.fixture));
+
+async function withCopies(copies, action) {
   try {
-    const built = await build(copySite);
-    if (!gated) return expectedFailure(built, entry.tokens);
-    if (built.code !== 0)
-      return { ok: false, reason: `planted specimen failed the build itself: ${built.output.slice(-400)}` };
-    return expectedFailure(await run('node', ['scripts/content-gate.mjs', 'dist'], copySite), entry.tokens);
+    for (const { name, target } of copies) await copyFile(join(FIXTURES, name), target);
+    return await action();
   } finally {
-    await rm(planted, { force: true });
+    await Promise.all(copies.map(({ target }) => rm(target, { force: true })));
   }
 }
 
-async function runAgentsLlmsFamily(copySite, entry, work) {
+const runScript = (copySite, script, args) => run('node', [`scripts/${script}`, ...args], copySite);
+
+const GATE_RUNS = {
+  external: {
+    script: 'run-external-links.mjs',
+    real: ['dist'],
+    scene: async (work) => {
+      const dist = join(work, 'external-dist');
+      await mkdir(dist, { recursive: true });
+      await writeFile(
+        join(dist, 'index.html'),
+        '<!doctype html><html><body><a href="https://iso.org/standard/42001" rel="noopener">ISO</a></body></html>'
+      );
+      return [dist];
+    },
+  },
+  docs: {
+    script: 'run-docs-gate.mjs',
+    real: ['..'],
+    scene: async (work) => {
+      const repo = join(work, 'docs-repo');
+      await mkdir(join(repo, 'docs/plan/reference'), { recursive: true });
+      await mkdir(join(repo, 'site/.agents/skills'), { recursive: true });
+      await writeFile(
+        join(repo, 'AGENTS.md'),
+        'The build reads `docs/this-file-does-not-exist.md` before anything else.\n'
+      );
+      await writeFile(join(repo, 'docs/plan/reference/locked-decisions.md'), '| L1 | Row | Decision |\n');
+      await writeFile(join(repo, 'site/package.json'), `${JSON.stringify({ scripts: {} }, null, 2)}\n`);
+      return [repo];
+    },
+  },
+  budget: {
+    script: 'gate.mjs',
+    real: ['dist', 'budgets.json'],
+    scene: async (work) => {
+      const dist = join(work, 'budget-dist');
+      await mkdir(dist, { recursive: true });
+      await writeFile(
+        join(dist, 'index.html'),
+        '<!doctype html><html><head></head><body>mutation smoke budget specimen</body></html>'
+      );
+      const budgets = join(work, 'budgets.json');
+      await writeFile(budgets, `${JSON.stringify({ js: 10240, css: 20480, page: 1 }, null, 2)}\n`);
+      return [dist, budgets];
+    },
+  },
+  'jsonld-properties': {
+    script: 'jsonld-gate.mjs',
+    real: ['dist'],
+    scene: async (work) => {
+      const dist = join(work, 'jsonld-properties-dist');
+      await mkdir(dist, { recursive: true });
+      const graph = {
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'Organization',
+            '@id': 'https://example.com/#org',
+            name: 'Test',
+            url: 'https://example.com/',
+            sameAs: [],
+            contactPoint: {},
+          },
+          {
+            '@type': 'Person',
+            '@id': 'https://example.com/#person',
+            name: 'Test',
+            jobTitle: 'x',
+            url: 'https://example.com/about',
+            sameAs: [],
+            knowsAbout: [],
+          },
+          {
+            '@type': 'WebSite',
+            '@id': 'https://example.com/#website',
+            url: 'https://example.com/',
+            name: 'Test',
+            publisher: {},
+            potentialAction: {},
+          },
+        ],
+      };
+      await writeFile(
+        join(dist, 'index.html'),
+        `<!doctype html><html><head><script type="application/ld+json">${JSON.stringify(graph)}</script></head><body>x</body></html>`
+      );
+      return [dist];
+    },
+  },
+  jsonld: {
+    script: 'jsonld-gate.mjs',
+    real: ['dist'],
+    scene: async (work) => {
+      const dist = join(work, 'jsonld-dist');
+      await mkdir(dist, { recursive: true });
+      await writeFile(join(dist, 'unknown-route.html'), '<!doctype html><html><head></head><body>x</body></html>');
+      return [dist];
+    },
+  },
+};
+
+const BUILT_GATES = { 'content-gate': { script: 'content-gate.mjs', real: ['dist'] } };
+const GATE_TABLES = { gate: GATE_RUNS, 'build-then-gate': BUILT_GATES };
+
+const runBuildFamily = (copySite, entry, baseline) =>
+  proveRefusal({
+    guard: 'the build',
+    compliant: baseline,
+    tokens: entry.tokens,
+    planted: () => withCopies(plantedCopies(copySite, entry), () => build(copySite)),
+  });
+
+async function runBuildThenGateFamily(copySite, entry, work) {
+  const { script, real } = BUILT_GATES[entry.gate];
   await restoreDist(copySite, work);
-  const gate = () => run('node', ['scripts/agent-interfaces-gate.mjs', 'dist'], copySite);
-  const pristine = await gate();
-  if (pristine.code !== 0)
-    return {
-      ok: false,
-      reason: `gate:agents is not green on the pristine copy: ${flatten(pristine.output).slice(-300)}`,
-    };
-  const planted = join(copySite, 'dist/llms', entry.fixture);
-  await copyFile(join(FIXTURES, entry.fixture), planted);
-  try {
-    return expectedFailure(await gate(), entry.tokens);
-  } finally {
-    await rm(planted, { force: true });
-  }
+  const gate = () => runScript(copySite, script, real);
+  return proveRefusal({
+    guard: `scripts/${script}`,
+    compliant: await gate(),
+    tokens: entry.tokens,
+    planted: () =>
+      withCopies(plantedCopies(copySite, entry), async () => {
+        const built = await build(copySite);
+        if (built.code === 0) return gate();
+        return { code: 1, output: `planted specimen failed the build itself: ${built.output.slice(-400)}` };
+      }),
+  });
 }
 
 async function runGateFamily(copySite, entry, work) {
-  if (entry.gate === 'agents-llms') return runAgentsLlmsFamily(copySite, entry, work);
-  if (entry.gate === 'external') {
-    const dist = join(work, 'external-dist');
-    await mkdir(dist, { recursive: true });
-    await writeFile(
-      join(dist, 'index.html'),
-      '<!doctype html><html><body><a href="https://iso.org/standard/42001" rel="noopener">ISO</a></body></html>'
-    );
-    return expectedFailure(await run('node', ['scripts/run-external-links.mjs', dist], copySite), entry.tokens);
-  }
-  if (entry.gate === 'docs') {
-    const repo = join(work, 'docs-repo');
-    await mkdir(join(repo, 'docs/plan/reference'), { recursive: true });
-    await mkdir(join(repo, 'site/.agents/skills'), { recursive: true });
-    await writeFile(
-      join(repo, 'AGENTS.md'),
-      'The build reads `docs/this-file-does-not-exist.md` before anything else.\n'
-    );
-    await writeFile(join(repo, 'docs/plan/reference/locked-decisions.md'), '| L1 | Row | Decision |\n');
-    await writeFile(join(repo, 'site/package.json'), `${JSON.stringify({ scripts: {} }, null, 2)}\n`);
-    return expectedFailure(await run('node', ['scripts/run-docs-gate.mjs', repo], copySite), entry.tokens);
-  }
-  if (entry.gate === 'budget') {
-    const dist = join(work, 'budget-dist');
-    await mkdir(dist, { recursive: true });
-    await writeFile(
-      join(dist, 'index.html'),
-      '<!doctype html><html><head></head><body>mutation smoke budget specimen</body></html>'
-    );
-    const budgets = join(work, 'budgets.json');
-    await writeFile(budgets, `${JSON.stringify({ js: 10240, css: 20480, page: 1 }, null, 2)}\n`);
-    return expectedFailure(await run('node', ['scripts/gate.mjs', dist, budgets], copySite), entry.tokens);
-  }
-  if (entry.gate === 'jsonld-properties') {
-    const dist = join(work, 'jsonld-properties-dist');
-    await mkdir(dist, { recursive: true });
-    const graph = {
-      '@context': 'https://schema.org',
-      '@graph': [
-        {
-          '@type': 'Organization',
-          '@id': 'https://example.com/#org',
-          name: 'Test',
-          url: 'https://example.com/',
-          sameAs: [],
-          contactPoint: {},
-        },
-        {
-          '@type': 'Person',
-          '@id': 'https://example.com/#person',
-          name: 'Test',
-          jobTitle: 'x',
-          url: 'https://example.com/about',
-          sameAs: [],
-          knowsAbout: [],
-        },
-        {
-          '@type': 'WebSite',
-          '@id': 'https://example.com/#website',
-          url: 'https://example.com/',
-          name: 'Test',
-          publisher: {},
-          potentialAction: {},
-        },
-      ],
-    };
-    await writeFile(
-      join(dist, 'index.html'),
-      `<!doctype html><html><head><script type="application/ld+json">${JSON.stringify(graph)}</script></head><body>x</body></html>`
-    );
-    return expectedFailure(await run('node', ['scripts/jsonld-gate.mjs', dist], copySite), entry.tokens);
-  }
-  const dist = join(work, 'jsonld-dist');
-  await mkdir(dist, { recursive: true });
-  await writeFile(join(dist, 'unknown-route.html'), '<!doctype html><html><head></head><body>x</body></html>');
-  return expectedFailure(await run('node', ['scripts/jsonld-gate.mjs', dist], copySite), entry.tokens);
+  const { script, real, scene } = GATE_RUNS[entry.gate];
+  await restoreDist(copySite, work);
+  return proveRefusal({
+    guard: `scripts/${script}`,
+    compliant: await runScript(copySite, script, real),
+    tokens: entry.tokens,
+    planted: async () => runScript(copySite, script, await scene(work)),
+  });
 }
 
 async function runPureFamily(copySite) {
@@ -853,9 +905,9 @@ async function prepareCopy(work) {
   return copySite;
 }
 
-const EXECUTORS = {
-  build: (copySite, entry) => runPlantedFamily(copySite, entry, false),
-  'build-then-gate': (copySite, entry) => runPlantedFamily(copySite, entry, true),
+export const EXECUTORS = {
+  build: (copySite, entry, _work, baseline) => runBuildFamily(copySite, entry, baseline),
+  'build-then-gate': (copySite, entry, work) => runBuildThenGateFamily(copySite, entry, work),
   gate: (copySite, entry, work) => runGateFamily(copySite, entry, work),
   pure: (copySite, entry) => {
     if (entry.check === 'semantic-title') return runPureFamily(copySite);
@@ -873,24 +925,68 @@ const EXECUTORS = {
   'lh-record': (copySite, _entry, work) => proveRecordRefusal({ copySite, work, run }),
 };
 
+const BASELINE_ROW = 'baseline-green-copy';
+const TWINS_ROW = 'compliant-twins-green';
+const SYNTHETIC_ROWS = [BASELINE_ROW, TWINS_ROW];
+
+export async function proveCompliantTwins(copySite, work, families) {
+  const planting = families.filter((entry) => PLANTING_KINDS.includes(entry.kind));
+  const copies = planting.flatMap((entry) => copiesOf(copySite, entry, entry.control));
+  try {
+    const built = await withCopies(copies, () => build(copySite));
+    const problem = compliantProblem(
+      'the build with every compliant twin planted',
+      built,
+      planting.flatMap((entry) => entry.tokens)
+    );
+    return {
+      id: TWINS_ROW,
+      ok: problem === null,
+      reason: problem ?? `${copies.length} compliant twins built together, green, naming no family token`,
+    };
+  } finally {
+    await restoreDist(copySite, work);
+  }
+}
+
+export async function runSmoke({ copySite, work, fast, families, results }) {
+  const baseline = await build(copySite);
+  const green = baseline.code === 0;
+  results.push({
+    id: BASELINE_ROW,
+    ok: green,
+    reason: green ? 'pristine copy builds green' : baseline.output.slice(-400),
+  });
+  if (!green) return;
+  await snapshotDist(copySite, work);
+  results.push(await proveCompliantTwins(copySite, work, families));
+  for (const entry of families) {
+    const started = Date.now();
+    const outcome =
+      fast && entry.slow
+        ? { skipped: true, reason: 'skipped: --fast (needs a full build or a browser)' }
+        : await EXECUTORS[entry.kind](copySite, entry, work, baseline);
+    results.push({ id: entry.id, ...outcome, seconds: Math.round((Date.now() - started) / 1000) });
+  }
+}
+
 export function label(result) {
   if (result.skipped) return 'skip';
   return result.ok ? 'ok  ' : 'FAIL';
 }
 
 export function exitCodeFor(results) {
-  const families = results.filter((result) => result.id !== 'baseline-green-copy');
-  if (families.some((result) => !result.ok && !result.skipped)) return 1;
-  return families.some((result) => result.skipped) ? 2 : 0;
+  if (results.some((result) => !result.ok && !result.skipped)) return 1;
+  return results.some((result) => result.skipped) ? 2 : 0;
 }
 
 export function tally(results, familyCount, seconds) {
-  const families = results.filter((result) => result.id !== 'baseline-green-copy');
+  const families = results.filter((result) => !SYNTHETIC_ROWS.includes(result.id));
   const proven = families.filter((result) => result.ok && !result.skipped).length;
   const skipped = families.filter((result) => result.skipped).length;
   const parts = [`mutation smoke: ${proven}/${familyCount} families proven`];
   if (skipped > 0) parts.push(`${skipped} skipped`);
-  const failedCount = families.filter((result) => !result.ok && !result.skipped).length;
+  const failedCount = results.filter((result) => !result.ok && !result.skipped).length;
   if (failedCount > 0) parts.push(`${failedCount} FAILED`);
   return `${parts.join(', ')} in ${seconds}s`;
 }
@@ -902,24 +998,9 @@ async function main() {
   const started = Date.now();
 
   try {
+    const families = manifestFamilies(FAMILIES);
     const copySite = await prepareCopy(work);
-    const baseline = await build(copySite);
-    results.push({
-      id: 'baseline-green-copy',
-      ok: baseline.code === 0,
-      reason: baseline.code === 0 ? 'pristine copy builds green' : baseline.output.slice(-400),
-    });
-    if (baseline.code === 0) {
-      await snapshotDist(copySite, work);
-      for (const entry of manifestFamilies(FAMILIES)) {
-        const familyStart = Date.now();
-        let outcome;
-        if (fast && entry.slow)
-          outcome = { skipped: true, reason: 'skipped: --fast (needs a full build or a browser)' };
-        else outcome = await EXECUTORS[entry.kind](copySite, entry, work);
-        results.push({ id: entry.id, ...outcome, seconds: Math.round((Date.now() - familyStart) / 1000) });
-      }
-    }
+    await runSmoke({ copySite, work, fast, families, results });
   } catch (error) {
     results.push({ id: 'smoke-harness', ok: false, reason: error.message });
   }

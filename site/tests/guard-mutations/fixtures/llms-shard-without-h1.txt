@@ -1,5 +1,0 @@
-Specimen shard
-
-# Specimen
-
-- [Home](https://meshin.co/): the home page of the specimen

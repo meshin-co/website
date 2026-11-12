@@ -41,9 +41,9 @@ unparked.
       `site/src/utils/spec-address.test.mjs` covers the duplicate, the several-versions case and the sorted report
 - [ ] 5.2 `site/scripts/mutation-smoke.mjs` carries `spec-address-duplicated` with a planted entry under
       `site/tests/guard-mutations/fixtures/`, and `npm run build` fails naming the address
-- [ ] 5.3 `site/src/data/spec-vector-table.site.test.mjs` parses the published coverage table and fails on an
-      inflated row, a stated total that is not the sum, a row claiming more vectors than exist, and verb counts that
-      do not add up
+- [ ] 5.3 `site/src/data/spec-vectors.site.test.mjs` recomputes the counts in the published coverage table and
+      in the prose from the vectors file and fails on an inflated row, a stated total that is not the sum, a row
+      claiming more vectors than exist, and verb counts that do not add up
 
 ## 6. What the change leaves open is written down
 
@@ -51,6 +51,9 @@ unparked.
       implementation is unpublished, and G93, the absence of any check relating the page to that implementation
 - [ ] 6.2 Row L77 of `docs/plan/reference/locked-decisions.md` records that the address carries no trailing slash,
       against the form section 12 of `docs/plan/reference/evals-baseline-spec.md` settled on 2026-11-11
+- [ ] 6.3 `docs/plan/reference/known-gaps.md` holds G96, the three schema refusals of a specification entry (a version
+      that is not two numbers, no licence, a citation without `{spec}`) that no specimen proves, so the delta states only
+      the address rule, which one does
 
 ## 7. Calibration Gate
 

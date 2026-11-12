@@ -7,10 +7,10 @@ the built output, never in source. The gate is `npm run gate:machine` (`scripts/
 
 - /rss.xml — merged full-text feed: the newest `MERGED_FEED_WINDOW` (50) entries by max(publishDate, updatedDate), with
   a per-kind floor of 5. Mirrored at /feed.json.
-- Six per-collection feeds — /blog/rss.xml, /glossary/rss.xml, /resources/rss.xml, /case-studies/rss.xml, /faq/rss.xml,
-  /services/rss.xml — each carrying the newest `FEED_WINDOW` (15) live entries of its collection from
-  `src/pages/<base>/rss.xml.ts`. A collection with no live entry is withheld from every output here
-  (`scripts/collection-gate.mjs`).
+- Per-collection feeds, one per collection with a live entry, from `src/pages/<base>/rss.xml.ts`, each carrying the
+  newest `FEED_WINDOW` (15) entries. `find dist -name rss.xml` lists what a build ships, the merged /rss.xml among them:
+  on 2026-11-12 /blog, /faq, /glossary, /resources, /services and /spec; /case-studies ships none because its collection
+  is declared empty. An empty collection is withheld from every output here (`scripts/collection-gate.mjs`).
 - /llms.txt — the index, at most `LLMS_TXT_MAX_BYTES` (8 KiB): offers, pages, hubs and feeds inline, one line per
   collection (name, entry count, link to its file). Pages link it from `CommonMeta.astro`.
 - /llms-full.txt — an index of the collection files, one line each and no entry, `src/pages/llms-full.txt.ts`, at most
@@ -24,7 +24,7 @@ the built output, never in source. The gate is `npm run gate:machine` (`scripts/
   nothing reads a clock: `npm run build` is the only regeneration step and a second build is byte-identical
   (`npm run test:llms`). A new entry changes only the last shard and the index, unless it overflows that shard; a
   back-dated entry shifts every later shard. `scripts/llms-corpus.mjs` checks the rest.
-- Every `llms*.txt` file opens with an H1, holds 50 bytes and a Markdown link: `satisfy-the-llms-txt-audit.md`.
+- Every `llms*.txt` file opens with an H1, holds 50 characters and a Markdown link: `satisfy-the-llms-txt-audit.md`.
 - .md sidecars per page, from `src/pages/[...slug].md.ts`.
 - OG images rendered by satori at `src/pages/og/[...slug].png.ts`; template in `src/utils/og-template.mjs`; hash-keyed
   render cache in `src/utils/og-cache.mjs`.

@@ -11,16 +11,24 @@ was broken when it was written; it guards the next change to the generators.
 ## What the gate holds
 
 `npm run gate:agents` (`scripts/agent-interfaces-gate.mjs`) reads `dist/llms.txt`, `dist/llms-full.txt`
-and every file under `dist/llms/`, and refuses a build that lacks either of the first two. It reads
-stricter than the audit, so that passing it implies passing the audit:
+and every file under `dist/llms/`, and refuses a build that lacks either of the first two. A file it
+passes scores 1 under the installed audit. It is stricter than the audit and never less strict:
 
-- the H1 is the first non-empty line, where the audit accepts one anywhere
-- the size is counted in UTF-8 bytes, where the audit counts characters
+- the H1 is the first non-empty line, at the left margin with its text on that line, where the audit accepts one anywhere
+- the size is counted in characters, as the audit counts them, after a leading byte order mark is dropped
 - a link inside a code fence or inline code, and an image, do not count
 
-Each finding starts with the file's path. Three specimen families prove it can fail, in
-`scripts/mutation-smoke.mjs`: `agents-llms-summary-without-an-h1`, `agents-llms-summary-under-the-floor`
-and `agents-llms-summary-with-only-a-bare-url`. The fixtures are in `tests/guard-mutations/fixtures/`.
+`scripts/llms-audit-differential.test.mjs` holds that claim. It imports the installed audit and fails when
+the gate passes a file the audit scores below 1, over eight named files and 60,000 generated ones. It is a
+sample, and it reads the text of a file, not the response of the live site. A Lighthouse upgrade that
+changes what the audit refuses turns it red.
+
+The same gate runs `dist/.well-known/ai-catalog.json` through Lighthouse's own ARD validator and reports
+each error as `ai-catalog.json: <element>: <message>`. The validator's warnings are G94 and are not findings.
+
+Each finding starts with the file's path. Four specimen families prove it can fail, in
+`scripts/mutation-specimens.mjs`: `agents-llms-summary-without-an-h1`, `agents-llms-summary-under-the-floor`,
+`agents-llms-summary-with-only-a-bare-url` and `agents-catalog-fails-the-ard-validator`.
 
 ## Verify in dist, not in the generator
 
@@ -28,12 +36,12 @@ After `npm run build`:
 
 ```
 head -n 1 dist/llms.txt
-wc -c dist/llms.txt
+node -p "require('fs').readFileSync('dist/llms.txt', 'utf8').length"
 grep -c ']([^)]' dist/llms.txt
 npm run gate:agents
 ```
 
-The first line starts with `# `, the byte count is 50 or more, the last count is at least 1. Then the
+The first line starts with `# `, the character count is 50 or more, the last count is at least 1. Then the
 live file: take the address from `site.site` in `src/config.yaml` and fetch `/llms.txt` from it.
 The same bytes must come back under any `Accept` header, `text/markdown` included. To see the audit
 itself, serve the build and run Lighthouse on one category:

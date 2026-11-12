@@ -1,7 +1,7 @@
 # Guard the Unattended Writer
 
 Change `20-write-without-a-human` lets a machine judge, repair and merge its own article under
-bounds the owner set (locked row L62). Phase one calls no model: it only watches a pull request and
+the bounds of locked row L62. Phase one calls no model: it only watches a pull request and
 escalates. Everything the machine writes about a run lives in a ledger, one file per article at
 `audits/autowriter/<year>/<month>/<slug>.json`, and every topic it holds lives in a claim at
 `audits/autowriter/claims/<year>/<month>/<slug>.json`. Both have a JSON Schema beside the scripts, and both are strict:

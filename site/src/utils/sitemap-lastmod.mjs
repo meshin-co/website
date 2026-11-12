@@ -1,6 +1,7 @@
 import { readFile, readdir } from 'node:fs/promises';
-import { join } from 'node:path';
-import yaml from 'js-yaml';
+import { basename, join } from 'node:path';
+
+import { parseFrontmatter } from 'astro/markdown';
 
 import { FEED_BASES, HUB_BASES, SERIES_COLLECTIONS, emptyHubRoutes, entryIdOf } from './feeds.mjs';
 import { lastmod } from './lastmod.mjs';
@@ -10,13 +11,25 @@ import { groupSeries } from './spec-series.mjs';
 async function frontmatterEntries(dir) {
   const files = (await readdir(dir).catch(() => [])).filter((file) => /\.mdx?$/.test(file));
   const entries = [];
-  for (const file of files) {
-    const text = await readFile(join(dir, file), 'utf8');
-    const raw = /^---\r?\n([\s\S]*?)\r?\n---/.exec(text)?.[1];
-    if (!raw) continue;
-    entries.push({ slug: file.replace(/\.mdx?$/, ''), data: yaml.load(raw) });
+  for (const fileName of files) {
+    const file = join(basename(dir), fileName);
+    const text = await readFile(join(dir, fileName), 'utf8');
+    try {
+      entries.push({ slug: fileName.replace(/\.mdx?$/, ''), file, data: parseFrontmatter(text).frontmatter });
+    } catch (error) {
+      throw new Error(`${file}: ${error.message}`, { cause: error });
+    }
   }
   return entries;
+}
+
+const isText = (value) => typeof value === 'string' && value !== '';
+
+function assertAddressable({ file, data }) {
+  const missing = ['name', 'version'].filter((key) => !isText(data[key]));
+  if (missing.length > 0) {
+    throw new Error(`${file}: a specification needs a text ${missing.join(' and a text ')} in its frontmatter`);
+  }
 }
 
 const isLiveFrontmatter = (data) => !data?.draft && !data?.noindex;
@@ -51,7 +64,9 @@ export async function hubLastmods(dataDir) {
 export async function seriesLastmods(dataDir) {
   const lastmods = {};
   for (const kind of SERIES_COLLECTIONS) {
-    for (const { name, updated } of groupSeries(await frontmatterEntries(join(dataDir, kind)))) {
+    const entries = await frontmatterEntries(join(dataDir, kind));
+    entries.forEach(assertAddressable);
+    for (const { name, updated } of groupSeries(entries)) {
       lastmods[`/${FEED_BASES[kind]}/${name}`] = updated;
     }
   }

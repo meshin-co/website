@@ -25,6 +25,7 @@ import {
 import { lastmod } from '~/utils/lastmod.mjs';
 import { articleMetadata } from '~/utils/machine-links.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+import { PUBLISHED_FILES, publishedArtefacts } from '~/utils/spec-artefacts.mjs';
 import { CITATION_FORMS, CITATION_HEADING, seriesLabel, specCitation } from '~/utils/spec-series.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -39,6 +40,11 @@ interface Props {
 const { spec } = Astro.props;
 const { data } = spec;
 const { Content, headings } = await render(spec);
+const artefacts = publishedArtefacts(spec);
+const contents =
+  artefacts.length > 0
+    ? [...headings, { depth: 2, slug: PUBLISHED_FILES.id, text: PUBLISHED_FILES.heading }]
+    : headings;
 const site = import.meta.env.SITE.replace(/\/$/, '');
 const path = `/spec/${spec.id}`;
 
@@ -128,9 +134,36 @@ const longDate = (date: Date) => date.toLocaleDateString('en-GB', { day: 'numeri
       <div class="grid gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)] lg:gap-16">
         <div class="prose-brief prose-brief-headings min-w-0 max-w-[68ch]">
           <Content />
+          {
+            artefacts.length > 0 && (
+              <>
+                <h2 id={PUBLISHED_FILES.id}>
+                  {PUBLISHED_FILES.heading}
+                  <a href={`#${PUBLISHED_FILES.id}`} class="heading-anchor" aria-hidden="true" tabindex="-1" />
+                </h2>
+                <p>{PUBLISHED_FILES.intro}</p>
+                <ul>
+                  {artefacts.map((artefact) => (
+                    <li data-artefact={artefact.path}>
+                      <a href={artefact.path}>{artefact.file}</a>
+                      <span class="block text-sm">
+                        {artefact.mediaType}, {artefact.size.toLocaleString('en-GB')} bytes
+                      </span>
+                      <span class="block text-sm">
+                        SHA-256{' '}
+                        <code class="break-all" data-artefact-digest>
+                          {artefact.sha256}
+                        </code>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )
+          }
         </div>
         <div class="lg:sticky lg:top-24 lg:self-start">
-          <TableOfContents headings={headings} />
+          <TableOfContents headings={contents} />
         </div>
       </div>
     </Section>

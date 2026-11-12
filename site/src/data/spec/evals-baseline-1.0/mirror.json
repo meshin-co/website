@@ -1,0 +1,3 @@
+{
+  "vectors.json": { "checkout": "../../evals-baseline", "path": "fixtures/vectors.json" }
+}

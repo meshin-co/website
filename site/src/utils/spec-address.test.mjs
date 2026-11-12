@@ -50,3 +50,38 @@ test('a series forms when every address is held once', () => {
     ['evals-baseline']
   );
 });
+
+const held = (file, extra = {}) => ({
+  file,
+  ...entry('evals-baseline', '1.0'),
+  data: { ...entry('evals-baseline', '1.0').data, ...extra },
+});
+
+for (const [label, extra] of [
+  ['draft', { draft: true }],
+  ['noindex', { noindex: true }],
+]) {
+  test(`a series cannot be formed when a ${label} entry holds the address of a published one, and every holder file is named`, () => {
+    assert.throws(
+      () => groupSeries([held('spec/evals-baseline-1.0.md'), held('spec/twin.md', extra)]),
+      (error) =>
+        error.message.includes('evals-baseline/1.0') &&
+        error.message.includes('spec/evals-baseline-1.0.md') &&
+        error.message.includes('spec/twin.md')
+    );
+  });
+}
+
+test('every duplicated address is refused in one message, each with its own holders', () => {
+  assert.throws(
+    () =>
+      groupSeries([
+        { file: 'spec/a-1.md', ...entry('alpha', '1.0') },
+        { file: 'spec/a-2.md', ...entry('alpha', '1.0') },
+        { file: 'spec/z-1.md', ...entry('zed', '2.0') },
+        { file: 'spec/z-2.md', ...entry('zed', '2.0') },
+      ]),
+    (error) =>
+      /alpha\/1\.0 \(spec\/a-1\.md, spec\/a-2\.md\); zed\/2\.0 \(spec\/z-1\.md, spec\/z-2\.md\)/.test(error.message)
+  );
+});

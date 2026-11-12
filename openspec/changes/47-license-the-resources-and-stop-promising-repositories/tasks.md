@@ -72,7 +72,7 @@ change is unparked.
 
 - [ ] 7.1 `npm test` and `npm run check` pass on the tree
 - [ ] 7.2 `npm run test:smoke` proves every family, `resource-license-undeclared` included
-- [ ] 7.3 `npm run build`, then `GATE_PHASE=47-license-the-resources-and-stop-promising-repositories npm run gate:lh`
+- [ ] 7.3 `npm run build`, then `GATE_PHASE=47-license-the-resources npm run gate:lh`
       reading 100 on both form factors for every audited route, then `npm run lh:record`
-- [ ] 7.4 `node scripts/report.mjs 47-license-the-resources-and-stop-promising-repositories ../audits/phase-47-license-the-resources-and-stop-promising-repositories`
+- [ ] 7.4 `node scripts/report.mjs 47-license-the-resources ../audits/phase-47-license-the-resources`
       generates the report, and it reads `Result: PASS`

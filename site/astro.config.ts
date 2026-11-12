@@ -40,6 +40,7 @@ const NOINDEX_ROUTES = new Set([
 
 export default defineConfig({
   output: 'static',
+  prerenderConflictBehavior: 'error',
   trailingSlash: 'never',
 
   build: {
@@ -115,6 +116,7 @@ export default defineConfig({
         },
       },
       Image: false,
+      JSON: false,
       JavaScript: true,
       SVG: false,
       Logger: 1,

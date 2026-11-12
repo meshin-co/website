@@ -70,7 +70,7 @@ const withReceipts = (...receipts) => withEscalations(escalation({ receipts }));
 const problemsText = (ledger) => validateLedger(ledger).map(describeProblem);
 const deliveryText = (ledger) => deliveryProblems(ledger).map(describeProblem);
 
-test('the bounds are the ones the owner set: twelve hours, three attempts, twenty-five dollars', () => {
+test('the ledger exports the shipped bounds, twelve hours, three attempts and twenty-five dollars, and files a ledger by year and month', () => {
   assert.equal(QUARANTINE_HOURS, 12);
   assert.equal(ATTEMPT_CAP, 3);
   assert.equal(MONTHLY_SPEND_CEILING_USD, 25);

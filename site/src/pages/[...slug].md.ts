@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 
 import { teaser } from '~/utils/faq-meta.mjs';
 import { absoluteUrl, renderSidecar } from '~/utils/machine-text.mjs';
+import { publishedArtefacts, publishedFilesMarkdown } from '~/utils/spec-artefacts.mjs';
 import {
   citationMarkdown,
   groupSeries,
@@ -35,13 +36,16 @@ export const getStaticPaths: GetStaticPaths = async () => {
     const entries = await getCollection(collection as keyof typeof BASES, isLive);
     for (const entry of entries) {
       const cited = 'citeAs' in entry.data ? `${citationMarkdown(specCitation({ ...entry.data, site }))}\n` : '';
+      const published =
+        collection === 'spec' ? publishedFilesMarkdown({ site, artefacts: publishedArtefacts(entry) }) : '';
+      const body = 'answer' in entry.data ? entry.data.answer : `${cited}${entry.body ?? ''}`;
       paths.push({
         params: { slug: `${base}/${entry.id}` },
         props: {
           title: 'question' in entry.data ? entry.data.question : entry.data.title,
           description: 'answer' in entry.data ? teaser(entry.data.answer) : entry.data.description,
           updated: entry.data.updatedDate ?? entry.data.publishDate,
-          body: 'answer' in entry.data ? entry.data.answer : `${cited}${entry.body ?? ''}`,
+          body: published === '' ? body : `${body.trimEnd()}\n\n${published}`,
           path: `/${base}/${entry.id}`,
         },
       });
