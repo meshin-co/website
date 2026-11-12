@@ -1,6 +1,7 @@
 import { standInKind } from './archive-url.mjs';
 import { ogImagePath } from './machine-links.mjs';
 import { brandFromDisk, contactEmail } from './brand.mjs';
+import { seriesLabel } from './spec-series.mjs';
 
 const BRAND = brandFromDisk();
 const PERSON_NAME = 'Dmitri Meshin';
@@ -250,6 +251,40 @@ export function resourceNode(site, resource, options = {}) {
     ...(image ? { primaryImageOfPage: image } : {}),
     citation: citationOf(resource.sources),
     ...entityGraphLinks(site, { about, mentions }),
+  };
+}
+
+const specSeriesId = (site, name) => `${site}/spec/${name}#page`;
+
+/** @param {string} site @param {any} spec @param {{ image?: unknown }} [options] */
+export function specNode(site, spec, { image } = {}) {
+  const path = `/spec/${spec.id}`;
+  return {
+    '@type': 'TechArticle',
+    '@id': `${site}${path}#spec`,
+    url: `${site}${path}`,
+    headline: spec.title,
+    description: spec.description,
+    datePublished: isoInstant(spec.publishDate),
+    dateModified: isoInstant(spec.updatedDate),
+    version: spec.version,
+    inLanguage: LANGUAGE,
+    image: image ?? `${site}${ogImagePath('spec', spec.id)}`,
+    mainEntityOfPage: { '@id': webPageId(site, path) },
+    author: { '@id': `${site}/#person` },
+    publisher: { '@id': `${site}/#org` },
+    license: spec.license,
+    isPartOf: { '@id': specSeriesId(site, spec.name) },
+  };
+}
+
+export function specSeriesStub(site, name) {
+  return {
+    '@type': 'CollectionPage',
+    '@id': specSeriesId(site, name),
+    url: `${site}/spec/${name}`,
+    name: seriesLabel(name),
+    isPartOf: { '@id': `${site}/#website` },
   };
 }
 

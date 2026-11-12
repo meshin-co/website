@@ -1,7 +1,8 @@
 import { lastmod } from './lastmod.mjs';
 import { teaser } from './faq-meta.mjs';
-import { FEED_WINDOW, MERGED_FEED_WINDOW } from './feeds.mjs';
+import { FEED_WINDOW, MERGED_FEED_WINDOW, SERIES_COLLECTIONS } from './feeds.mjs';
 import { absoluteUrl, entryCount, renderLlmsCollection, renderLlmsIndex, renderLlmsShard } from './machine-text.mjs';
+import { seriesDescription, seriesLabel } from './spec-series.mjs';
 
 export const LLMS_COLLECTIONS = [
   { name: 'service', base: '/services', title: 'Offers', file: '/llms/service.txt' },
@@ -10,7 +11,10 @@ export const LLMS_COLLECTIONS = [
   { name: 'glossary', base: '/glossary', title: 'Glossary', file: '/llms/glossary.txt' },
   { name: 'case', base: '/case-studies', title: 'Case studies', file: '/llms/case.txt' },
   { name: 'faq', base: '/faq', title: 'Questions and answers', file: '/llms/faq.txt' },
+  { name: 'spec', base: '/spec', title: 'Specifications', file: '/llms/spec.txt' },
 ];
+
+export const HUB_COLLECTIONS = LLMS_COLLECTIONS.filter(({ name }) => !SERIES_COLLECTIONS.has(name));
 
 export function toLlmsEntry() {
   return (entry) => {
@@ -68,6 +72,14 @@ export function llmsFullTextPointers(counts) {
     ...llmsCollectionPointers(counts),
   ];
 }
+
+export const llmsSeriesHubs = (base, series) =>
+  series.map(({ name, updated }) => ({
+    title: seriesLabel(name),
+    description: seriesDescription(name),
+    updated,
+    url: `${base}/${name}`,
+  }));
 
 export const LLMS_FILE_MAX_BYTES = 100_000;
 

@@ -14,6 +14,7 @@ import {
 } from '~/utils/faq-meta.mjs';
 import { LICENSE_ID, licenseHasText } from '~/utils/resource-license.mjs';
 import { collectionPattern } from '~/utils/visual-corpus.mjs';
+import { CITE_TOKEN, SPEC_NAME, SPEC_VERSION, specId } from '~/utils/spec-series.mjs';
 
 const CATEGORIES = ['governance', 'agentic-architecture', 'operating-model', 'executive'] as const;
 
@@ -141,6 +142,27 @@ const resourceCollection = defineCollection({
     .refine((entry) => licenseHasText(entry), licenseTextMessage),
 });
 
+const specCollection = defineCollection({
+  loader: glob({
+    pattern: collectionPattern('spec', { mode: import.meta.env.MODE }),
+    base: 'src/data/spec',
+    generateId: ({ data }) => specId(data as { name: string; version: string }),
+  }),
+  schema: z
+    .object({
+      ...publishable,
+      name: z.string().regex(SPEC_NAME, 'must be lower-case words joined by single hyphens, starting with a letter'),
+      version: z.string().regex(SPEC_VERSION, 'must be two numbers joined by a dot, such as 1.0, with no leading zero'),
+      license: z.string().regex(LICENSE_ID, licenseIdMessage),
+      citeAs: z.string().refine((text) => text.includes(CITE_TOKEN), {
+        message: `must contain ${CITE_TOKEN}, the place the link to this version goes`,
+      }),
+      citeKey: z.string().min(1),
+    })
+    .refine(datesInOrder, datesInOrderMessage)
+    .refine((entry) => licenseHasText(entry), licenseTextMessage),
+});
+
 const caseCollection = defineCollection({
   loader: entries('case'),
   schema: z
@@ -228,6 +250,7 @@ export const collections = {
   post: postCollection,
   service: serviceCollection,
   resource: resourceCollection,
+  spec: specCollection,
   case: caseCollection,
   glossary: glossaryCollection,
   faq: faqCollection,

@@ -5,8 +5,9 @@ import { archiveTitleOf, categoryPillars } from '~/data/categories.mjs';
 import { artifactIds, drivers, hero, shift, signals } from '~/data/home';
 import { TAGS, tagArchive } from '~/data/tags.mjs';
 import { FEED_BASES, emptyHubRoutes, isLive, isPublished } from '~/utils/feeds.mjs';
-import { LLMS_COLLECTIONS } from '~/utils/llms-collections.mjs';
+import { HUB_COLLECTIONS } from '~/utils/llms-collections.mjs';
 import { collectionHubs, publicIndexableStaticPages } from '~/utils/machine-text.mjs';
+import { groupSeries, seriesSearchRecord } from '~/utils/spec-series.mjs';
 import { buildShardEntry, KINDS, words } from '../../public/search/shards.mjs';
 import engineConfig from '../../engine.config.json';
 
@@ -97,6 +98,20 @@ const entryBuilders: Record<string, () => Promise<SearchEntry[]>> = {
         answer: entry.data.answer,
       })
     ),
+  spec: async () => {
+    const entries = await getCollection('spec', isLive);
+    return [
+      ...entries.map((entry) =>
+        buildShardEntry('spec', {
+          href: `/${FEED_BASES.spec}/${entry.id}`,
+          title: entry.data.title,
+          description: entry.data.description,
+          body: entry.body ?? '',
+        })
+      ),
+      ...groupSeries(entries).map((series) => buildShardEntry('spec', seriesSearchRecord(FEED_BASES.spec, series))),
+    ];
+  },
   page: async () => {
     const [author, posts, faqEntries, serviceEntries, resourceEntries] = await Promise.all([
       getEntry('author', ARTICLE_AUTHOR),
@@ -147,7 +162,7 @@ const entryBuilders: Record<string, () => Promise<SearchEntry[]>> = {
     );
 
     const hubEntries = collectionHubs({
-      collections: LLMS_COLLECTIONS,
+      collections: HUB_COLLECTIONS,
       staticPaths: staticPages.map((page) => page.path),
       withheld: await emptyHubRoutes((kind: keyof typeof FEED_BASES) => getCollection(kind, isLive)),
     }).map(({ base }: { base: string }) =>

@@ -58,5 +58,9 @@
   {
     "text": "{heading}, page {number}",
     "reason": "the wording of a numbered tag or category page, src/utils/paginate.mjs. A page ships its expansion ('AI governance posts, page 2'), never the format itself, so no page can ship this text. At 12 posts per page no tag or category has a second page yet; when one does, its title and heading derive from this row and the reviewed heading of its first page"
+  },
+  {
+    "text": "This project guards its agent evaluations against regression as defined by the {spec}.",
+    "reason": "the citeAs template of src/data/spec/evals-baseline-1.0.md, the paste-ready sentence of design section 8.4. The page ships its expansion with {spec} replaced by the markdown link to the cited address, inside a code block the ledger does not read (dist/spec/evals-baseline/1.0.html, the second pre block, and the same sentence in dist/spec/evals-baseline/1.0.md), never the template itself. Change the wording and the expansion together"
   }
 ]

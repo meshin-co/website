@@ -96,6 +96,8 @@
     "/resources/build-vs-buy-ai-kit": "build vs buy ai kit",
     "/resources/handover-playbook": "handover playbook",
     "/resources/adoption-telemetry-dashboard-template": "adoption telemetry dashboard template",
+    "/spec/evals-baseline": "evals-baseline specification",
+    "/spec/evals-baseline/1.0": "evals-baseline specification 1.0",
     "/blog/tags": "tags",
     "/blog/ai-readiness-assessment-template-for-smb": "ai readiness assessment template for smb",
     "/blog/named-person-responsible-for-ai-risk-in-vendor-procurement": "named person responsible for ai risk in vendor procurement",
@@ -162,6 +164,12 @@
     "4",
     "9",
     "26",
-    "4.0"
+    "4.0",
+    "1.0",
+    "2119",
+    "108",
+    "88",
+    "43",
+    "5"
   ]
 }

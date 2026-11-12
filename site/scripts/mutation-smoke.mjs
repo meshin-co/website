@@ -126,6 +126,14 @@ export const FAMILIES = [
     tokens: ['license: Required'],
   },
   {
+    id: 'spec-address-duplicated',
+    kind: 'build',
+    proves: 'build',
+    fixture: 'spec-address-duplicated.md',
+    plant: 'src/data/spec',
+    tokens: ['a specification address is held by more than one entry: evals-baseline/1.0'],
+  },
+  {
     id: 'source-original-must-match-its-stand-in',
     kind: 'build',
     proves: 'build',

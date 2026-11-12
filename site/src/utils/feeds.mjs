@@ -1,5 +1,6 @@
 import { absoluteUrl } from './machine-text.mjs';
 import { teaser } from './faq-meta.mjs';
+import { specId } from './spec-series.mjs';
 
 export const FEED_BASES = {
   post: 'blog',
@@ -8,7 +9,16 @@ export const FEED_BASES = {
   glossary: 'glossary',
   case: 'case-studies',
   faq: 'faq',
+  spec: 'spec',
 };
+
+export const SERIES_COLLECTIONS = new Set(['spec']);
+
+export const entryIdOf = (kind, slug, data) => (SERIES_COLLECTIONS.has(kind) ? specId(data) : slug);
+
+export const HUB_BASES = Object.fromEntries(
+  Object.entries(FEED_BASES).filter(([kind]) => !SERIES_COLLECTIONS.has(kind))
+);
 
 export const FEED_WINDOW = 15;
 
@@ -27,7 +37,7 @@ export const isPublished = ({ data }) => !data.draft;
 export async function emptyHubRoutes(loadLive) {
   /** @type {string[]} */
   const routes = [];
-  for (const [kind, base] of Object.entries(FEED_BASES)) {
+  for (const [kind, base] of Object.entries(HUB_BASES)) {
     if ((await loadLive(kind)).length === 0) routes.push(`/${base}`);
   }
   return routes;

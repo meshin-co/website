@@ -9,7 +9,7 @@ import { manifestPath } from '../src/utils/search-index.mjs';
 
 const PNG_SIGNATURE = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
 const PAGE_SHARD = 'page';
-const KIND_ORDER = ['entry', 'hub', 'page', 'tag-index', 'archive', 'pagination', 'exception', 'withheld'];
+const KIND_ORDER = ['entry', 'series', 'hub', 'page', 'tag-index', 'archive', 'pagination', 'exception', 'withheld'];
 const PAGE_SURFACES = ['sitemap', 'sidecar', 'llms-index', 'search-shard', 'og-image'];
 
 export const OWED = {
@@ -23,6 +23,7 @@ export const OWED = {
     'search-shard',
     'og-image',
   ],
+  series: ['sitemap', 'sidecar', 'sidecar-link', 'search-shard', 'og-image'],
   hub: ['sitemap', 'sidecar', 'sidecar-link', 'llms-index', 'feed-link', 'search-shard', 'og-image'],
   page: PAGE_SURFACES,
   'tag-index': PAGE_SURFACES,
@@ -123,7 +124,8 @@ function ogAbsence({ route }, ctx, { site, htmlByRoute, imageHeads }) {
   return defect === null ? null : `its og:image ${url.pathname} ${defect}`;
 }
 
-const shardKind = ({ kind, collection }) => (kind === 'entry' ? collection : PAGE_SHARD);
+const COLLECTION_SHARDED = new Set(['entry', 'series']);
+const shardKind = ({ kind, collection }) => (COLLECTION_SHARDED.has(kind) ? collection : PAGE_SHARD);
 
 export const SURFACES = {
   sitemap: {

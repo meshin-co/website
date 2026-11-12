@@ -63,6 +63,35 @@ test('a request already aimed at markdown or at an asset is left alone', () => {
   assert.equal(markdownSidecar('/og/home.png'), undefined);
 });
 
+test('a version address of two numbers is a page route with a sidecar, not a file', () => {
+  assert.equal(markdownSidecar('/spec/evals-baseline/1.0'), '/spec/evals-baseline/1.0.md');
+  assert.equal(markdownSidecar('/spec/evals-baseline/1.0/'), '/spec/evals-baseline/1.0.md');
+  assert.equal(markdownSidecar('/spec/evals-baseline/1.0.md'), undefined);
+  assert.equal(markdownSidecar('/spec/evals-baseline/1.0.0'), undefined);
+  assert.equal(markdownSidecar('/llms.txt'), undefined);
+  assert.equal(markdownSidecar('/x.css'), undefined);
+});
+
+const SPEC = {
+  '/spec/evals-baseline/1.0': '<html>spec</html>',
+  '/spec/evals-baseline/1.0.md': '# Spec',
+};
+
+test('an agent asking for a version page gets its sidecar and a browser gets the page', async () => {
+  const agent = await worker.fetch(get('/spec/evals-baseline/1.0', 'text/markdown'), { ASSETS: assets(SPEC) });
+  assert.equal(agent.status, 200);
+  assert.equal(agent.headers.get('content-type'), 'text/markdown; charset=utf-8');
+  assert.equal(agent.headers.get('content-location'), '/spec/evals-baseline/1.0.md');
+  assert.equal(await agent.text(), '# Spec');
+
+  const browser = await worker.fetch(get('/spec/evals-baseline/1.0', 'text/html,*/*;q=0.8'), {
+    ASSETS: assets(SPEC),
+  });
+  assert.equal(browser.headers.get('content-type'), 'text/html');
+  assert.match(browser.headers.get('vary') ?? '', /(^|,)\s*Accept\s*(,|$)/i);
+  assert.equal(await browser.text(), '<html>spec</html>');
+});
+
 test('the same URL answers markdown when an agent asks for it', async () => {
   const response = await worker.fetch(get('/', 'text/markdown'), { ASSETS: assets(SITE) });
 

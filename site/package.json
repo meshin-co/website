@@ -100,7 +100,6 @@
     "@astrojs/sitemap": "^3.7.3",
     "@resvg/resvg-js": "^2.6.2",
     "astro": "^7.3.1",
-    "astro-expressive-code": "^0.44.2",
     "astro-icon": "^1.1.5",
     "astro-seo": "^1.2.0",
     "github-slugger": "^2.0.0",

@@ -1,13 +1,14 @@
 const NEGOTIABLE = new Set(['GET', 'HEAD']);
 const MARKDOWN_REQUESTED = /(^|,)\s*text\/markdown\s*(;|$|,)/i;
 const HAS_EXTENSION = /\.[^/]+$/;
+const VERSION_SEGMENT = /\/\d+\.\d+$/;
 
 export function wantsMarkdown(accept) {
   return MARKDOWN_REQUESTED.test(accept ?? '');
 }
 
 export function markdownSidecar(pathname) {
-  if (HAS_EXTENSION.test(pathname)) return undefined;
+  if (HAS_EXTENSION.test(pathname) && !VERSION_SEGMENT.test(pathname)) return undefined;
   const route = pathname.replace(/\/+$/, '');
   return `${route === '' ? '/index' : route}.md`;
 }

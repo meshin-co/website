@@ -23,10 +23,13 @@ const TYPES = {
 
 const COMPRESSIBLE = new Set(['.html', '.css', '.js', '.mjs', '.json', '.txt', '.xml', '.svg']);
 
+const VERSION_SEGMENT = /(^|\/)\d+\.\d+$/;
+
 const fileFor = (relativePath) => {
   if (relativePath === '') return 'index.html';
   if (relativePath.endsWith('/')) return `${relativePath.slice(0, -1)}.html`;
-  return extname(relativePath) === '' ? `${relativePath}.html` : relativePath;
+  const isPage = extname(relativePath) === '' || VERSION_SEGMENT.test(relativePath);
+  return isPage ? `${relativePath}.html` : relativePath;
 };
 
 const canonicalPathOf = (file) => {

@@ -111,6 +111,7 @@ test('the scene packs its posts by bytes into two shards of three and a third of
     'post.txt',
     'resource.txt',
     'service.txt',
+    'spec.txt',
   ]);
   assert.equal(entryLines(readText(scene.distFile('llms/post.txt'))).length, 0);
   const held = [1, 2, 3].map((part) => entryLines(readText(scene.distFile(`llms/post-${part}.txt`))).length);
@@ -147,4 +148,33 @@ test('a collection over the feed window ships a feed of its newest entries only,
 test('the oldest entry of the scene faq sorts first by route, so a window cut by route and not by lastmod would owe it', () => {
   const [oldest] = [...LIVE.faq].sort((a, b) => (a.updated < b.updated ? -1 : 1));
   assert.equal(oldest.slug, LIVE.faq.map(({ slug }) => slug).sort()[0]);
+});
+
+const SERIES_PAGE = '/spec/evals-baseline';
+const VERSION_PAGE = '/spec/evals-baseline/1.0';
+
+test('the scene holds one series collection: a series page and a version page, each with a sidecar and a sitemap line, and no hub', async () => {
+  const scene = await sceneOf();
+  const sitemap = readText(scene.distFile('sitemap-0.xml'));
+
+  for (const route of [SERIES_PAGE, VERSION_PAGE]) {
+    assert.ok(existsSync(scene.distFile(`${route.slice(1)}.html`)), `${route} page`);
+    assert.ok(existsSync(scene.distFile(`${route.slice(1)}.md`)), `${route} sidecar`);
+    assert.ok(sitemap.includes(`<loc>${ORIGIN}${route}</loc>`), `${route} sitemap line`);
+  }
+  assert.ok(!existsSync(scene.distFile('spec.html')));
+});
+
+test('the scene lists the version page in its llms collection file and its feeds, and the series page in llms.txt only', async () => {
+  const scene = await sceneOf();
+  const [version, series] = [VERSION_PAGE, SERIES_PAGE].map((route) => `${ORIGIN}${route}`);
+  const llmsTxt = readText(scene.distFile('llms.txt'));
+  const mergedGuids = guidsOf(readText(scene.distFile('rss.xml')));
+
+  assert.ok(readText(scene.distFile('llms/spec.txt')).includes(version));
+  assert.deepEqual(guidsOf(readText(scene.distFile('spec/rss.xml'))), [version]);
+  assert.ok(mergedGuids.includes(version));
+  assert.ok(!mergedGuids.includes(series));
+  assert.ok(llmsTxt.includes(`(${series})`));
+  assert.ok(!llmsTxt.includes(`(${version})`));
 });

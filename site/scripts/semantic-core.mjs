@@ -36,6 +36,11 @@ export const FAMILY_GRAMMAR = {
     meta: 'one sentence naming the artifact and what you do with it',
     intent: 'what it is → what is inside → how to use it',
   },
+  spec: {
+    pattern: `{spec name} specification {version}${TITLE_SUFFIX}`,
+    meta: 'what the version defines, in one sentence',
+    intent: 'cite it, then terms and rules, then conformance',
+  },
   'case-study': {
     pattern: `{client} — {engagement}${TITLE_SUFFIX}`,
     meta: 'how the system went from demo to production',
@@ -77,6 +82,7 @@ const FAMILY_ORDER = [
   'static',
   'service',
   'resource',
+  'spec',
   'case-study',
   'article',
   'blog-category',

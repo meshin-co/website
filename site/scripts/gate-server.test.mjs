@@ -65,6 +65,17 @@ test('a directory build is not served: about/index.html answers neither /about n
   assert.deepEqual(directoryBuild('/about/'), { status: 404 });
 });
 
+test('a final segment of two numbers is a page route, not a file: the version page answers slashless and its sidecar answers as itself', () => {
+  const built = new Set(['spec/evals-baseline/1.0.html', 'spec/evals-baseline/1.0.md']);
+  const specAnswer = (url) => resolveRequest(url, (file) => built.has(file));
+  assert.deepEqual(specAnswer('/spec/evals-baseline/1.0'), { status: 200, file: 'spec/evals-baseline/1.0.html' });
+  assert.deepEqual(specAnswer('/spec/evals-baseline/1.0/'), { status: 308, location: '/spec/evals-baseline/1.0' });
+  assert.deepEqual(specAnswer('/spec/evals-baseline/1.0.html'), { status: 308, location: '/spec/evals-baseline/1.0' });
+  assert.deepEqual(specAnswer('/spec/evals-baseline/1.0.md'), { status: 200, file: 'spec/evals-baseline/1.0.md' });
+  assert.deepEqual(specAnswer('/spec/evals-baseline/1.0.md/'), { status: 404 });
+  assert.deepEqual(specAnswer('/spec/evals-baseline/2.0'), { status: 404 });
+});
+
 test('leading double slashes collapse before the lookup', () => {
   assert.deepEqual(answerFor('//about'), { status: 200, file: 'about.html' });
 });

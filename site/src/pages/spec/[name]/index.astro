@@ -1,0 +1,96 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
+import Section from '~/components/site/Section.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { isPublished } from '~/utils/feeds.mjs';
+import { breadcrumbNode, collectionNode, orgNode, personNode, websiteNode } from '~/utils/jsonld.mjs';
+import { articleMetadata } from '~/utils/machine-links.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+import { groupSeries, seriesDescription, seriesLabel, specLabel } from '~/utils/spec-series.mjs';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const series = groupSeries(await getCollection('spec', isPublished));
+  return series.map((one) => ({ params: { name: one.name }, props: { series: one } }));
+};
+
+interface Props {
+  series: ReturnType<typeof groupSeries>[number];
+}
+
+const { series } = Astro.props;
+const site = import.meta.env.SITE.replace(/\/$/, '');
+const path = `/spec/${series.name}`;
+const label = seriesLabel(series.name);
+const description = seriesDescription(series.name);
+
+const metadata = articleMetadata(site, { title: label, description, collection: 'spec', id: series.name });
+
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: label, path },
+];
+
+const nodes = [
+  orgNode(site, { logoPath: ogDefaultPath }),
+  personNode(site),
+  websiteNode(site),
+  collectionNode(site, {
+    path,
+    name: label,
+    description,
+    items: series.versions.map(({ data }) => ({ url: `${path}/${data.version}` })),
+  }),
+  breadcrumbNode(site, crumbs),
+];
+
+const day = (date: Date) => date.toISOString().slice(0, 10);
+const longDate = (date: Date) => date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+  <MarkdownAlternate path={path} slot="head" />
+
+  <Breadcrumbs crumbs={crumbs} />
+
+  <Section bordered={false} headingLevel={1} eyebrow="Specification" title={label} lead={description} />
+
+  <Section title="Versions">
+    <dl class="grid border-t border-line">
+      {
+        series.versions.map(({ data }) => (
+          <div class="grid gap-2 border-b border-line py-6 sm:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] sm:gap-8">
+            <dt class="eyebrow">
+              <time datetime={day(data.publishDate)}>{longDate(data.publishDate)}</time>
+            </dt>
+            <dd class="max-w-[68ch] min-w-0 text-muted">
+              <a
+                class="text-link underline decoration-2 underline-offset-4 hover:decoration-primary"
+                href={`${path}/${data.version}`}
+              >
+                {specLabel({ name: series.name, version: data.version })}
+              </a>
+              {data.version === series.current.data.version && ' · current'}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+    <p class="mt-8 max-w-[68ch] text-muted">
+      The address of a version never changes, and it is the only address to cite.
+    </p>
+  </Section>
+
+  <Section title="Next step">
+    <CtaBlock
+      title="Questions about adopting it?"
+      body="Book a fit call and bring the agents you run. We talk through which version applies to them."
+    />
+  </Section>
+</Layout>

@@ -8,6 +8,7 @@ import { test, before, after } from 'node:test';
 import {
   collectionLastmods,
   hubLastmods,
+  seriesLastmods,
   taxonomyLastmods,
   staticPageLastmods,
   siteLastmods,
@@ -225,4 +226,90 @@ test('the real site dates every public static page, from a collection or from th
   const lastmods = await siteLastmods({ dataDir: fileURLToPath(new URL('../data', import.meta.url)), staticPages });
 
   for (const { path } of staticPages) assert.ok(lastmods[path], `${path} has no lastmod`);
+});
+
+const specFile = ({ name = 'evals-baseline', version, publishDate, updatedDate = publishDate, extra = '' }) =>
+  `---\ntitle: ${name} specification ${version}\nname: ${name}\nversion: '${version}'\npublishDate: ${publishDate}\nupdatedDate: ${updatedDate}\n${extra}---\n\nBody.\n`;
+
+async function withSpecs(files, run) {
+  const dir = await mkdtemp(join(tmpdir(), 'sitemap-lastmod-spec-'));
+  await mkdir(join(dir, 'spec'));
+  try {
+    for (const [file, text] of Object.entries(files)) await writeFile(join(dir, 'spec', file), text);
+    return await run(dir);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+}
+
+const TWO_VERSIONS = {
+  'evals-baseline-1.0.md': specFile({ version: '1.0', publishDate: '2026-11-12', updatedDate: '2026-11-14' }),
+  'evals-baseline-1.1.md': specFile({ version: '1.1', publishDate: '2026-12-01', updatedDate: '2026-12-02' }),
+};
+
+test('collectionLastmods dates a specification version at its name and version, not at its file name', async () => {
+  await withSpecs(TWO_VERSIONS, async (dir) => {
+    assert.deepEqual(await collectionLastmods(dir), {
+      '/spec/evals-baseline/1.0': '2026-11-14T00:00:00.000Z',
+      '/spec/evals-baseline/1.1': '2026-12-02T00:00:00.000Z',
+    });
+  });
+});
+
+test('seriesLastmods dates a series at its newest live version, past a draft and a noindex version that are newer still', async () => {
+  await withSpecs(
+    {
+      ...TWO_VERSIONS,
+      'evals-baseline-1.2.md': specFile({ version: '1.2', publishDate: '2027-01-01', extra: 'draft: true\n' }),
+      'evals-baseline-2.0.md': specFile({ version: '2.0', publishDate: '2027-02-01', extra: 'noindex: true\n' }),
+      'other-1.0.md': specFile({ name: 'other', version: '1.0', publishDate: '2026-10-01' }),
+    },
+    async (dir) => {
+      assert.deepEqual(await seriesLastmods(dir), {
+        '/spec/evals-baseline': '2026-12-02T00:00:00.000Z',
+        '/spec/other': '2026-10-01T00:00:00.000Z',
+      });
+    }
+  );
+});
+
+test('seriesLastmods gives a name with no live version no route, and a data directory with no specification folder none at all', async () => {
+  await withSpecs(
+    { 'evals-baseline-1.0.md': specFile({ version: '1.0', publishDate: '2026-11-12', extra: 'draft: true\n' }) },
+    async (dir) => assert.deepEqual(await seriesLastmods(dir), {})
+  );
+  assert.deepEqual(await seriesLastmods(join(root, 'does-not-exist')), {});
+});
+
+test('a specification series has no hub: hubLastmods and noindexHubRoutes name none for it, with or without a live version', async () => {
+  await withSpecs(TWO_VERSIONS, async (dir) => {
+    assert.equal('/spec' in (await hubLastmods(dir)), false);
+    assert.equal((await noindexHubRoutes(dir)).includes('/spec'), false);
+  });
+  await withSpecs({}, async (dir) => assert.equal((await noindexHubRoutes(dir)).includes('/spec'), false));
+});
+
+test('noindexEntryRoutes names a noindex specification version by its address and never a draft one', async () => {
+  await withSpecs(
+    {
+      'evals-baseline-1.0.md': specFile({ version: '1.0', publishDate: '2026-11-12' }),
+      'evals-baseline-1.1.md': specFile({ version: '1.1', publishDate: '2026-12-01', extra: 'noindex: true\n' }),
+      'evals-baseline-1.2.md': specFile({
+        version: '1.2',
+        publishDate: '2027-01-01',
+        extra: 'draft: true\nnoindex: true\n',
+      }),
+    },
+    async (dir) => assert.deepEqual(await noindexEntryRoutes(dir), ['/spec/evals-baseline/1.1'])
+  );
+});
+
+test('siteLastmods dates the version pages and the series page of a specification, and no spec hub', async () => {
+  await withSpecs(TWO_VERSIONS, async (dir) => {
+    assert.deepEqual(await siteLastmods({ dataDir: dir, staticPages: [] }), {
+      '/spec/evals-baseline/1.0': '2026-11-14T00:00:00.000Z',
+      '/spec/evals-baseline/1.1': '2026-12-02T00:00:00.000Z',
+      '/spec/evals-baseline': '2026-12-02T00:00:00.000Z',
+    });
+  });
 });

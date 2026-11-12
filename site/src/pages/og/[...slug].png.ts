@@ -11,10 +11,12 @@ import { Resvg } from '@resvg/resvg-js';
 import { findOgCacheDir, ogCacheKey, readOgImage, writeOgImage } from '~/utils/og-cache.mjs';
 import { pickFontFile, readFontNames } from '~/utils/font-file.mjs';
 import { buildOgTree } from '~/utils/og-template.mjs';
+import { groupSeries, seriesDescription, seriesLabel } from '~/utils/spec-series.mjs';
 
 type OgProps = { title: string; eyebrow?: string; footer?: string; cacheKey: string };
 
-const COLLECTIONS = ['post', 'service', 'resource', 'glossary', 'case'] as const;
+const COLLECTIONS = ['post', 'service', 'resource', 'glossary', 'case', 'spec'] as const;
+const EYEBROWS: Partial<Record<(typeof COLLECTIONS)[number], string>> = { spec: 'specification' };
 const FONT_DIRS = ['src/assets/fonts', 'node_modules/.astro/fonts', '.astro/fonts'];
 
 function loadFontFiles() {
@@ -58,7 +60,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
         params: { slug: `${collection}/${entry.id}` },
         props: {
           title: entry.data.title,
-          eyebrow: collection,
+          eyebrow: EYEBROWS[collection] ?? collection,
           footer: entry.data.description,
           cacheKey: ogCacheKey({
             collection,
@@ -69,6 +71,22 @@ export const getStaticPaths: GetStaticPaths = async () => {
         },
       });
     }
+  }
+  for (const series of groupSeries(await getCollection('spec', ({ data }) => !data.draft && !data.noindex))) {
+    paths.push({
+      params: { slug: `spec/${series.name}` },
+      props: {
+        title: seriesLabel(series.name),
+        eyebrow: EYEBROWS.spec,
+        footer: seriesDescription(series.name),
+        cacheKey: ogCacheKey({
+          collection: 'spec',
+          id: series.name,
+          title: seriesLabel(series.name),
+          updatedDate: series.updated,
+        }),
+      },
+    });
   }
   return paths;
 };

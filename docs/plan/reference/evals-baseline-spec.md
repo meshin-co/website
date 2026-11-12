@@ -4,7 +4,7 @@ Written 2026-11-11 for the owner's review. **Nothing described here is built.** 
 `https://github.com/meshin-co/evals-baseline` answered 404 and the organisation page answered 200 when probed on
 2026-11-11 (L76 records the same for the seven slugs). `@meshin/evals-baseline` is not registered on npm (404 at
 17:11 UTC the same day), and neither is the unscoped `evals-baseline` (404). The versioned specification page does not
-exist either: the settled address is `https://meshin.co/spec/evals-baseline/1.0/`, and the two candidates probed
+exist either: the settled address is `https://meshin.co/spec/evals-baseline/1.0`, and the two candidates probed
 before it was settled, `https://meshin.co/specs/evals-baseline/1.0.0/` and `https://meshin.co/resources/evals-baseline/`,
 both answered 404, while `https://meshin.co/resources/agent-evals-ci-starter/` answered 200.
 
@@ -153,9 +153,12 @@ a referent in the consumer's tree, with `digestFor` as the pattern. `digestFor` 
 goes stale when the text moves (`site/scripts/dispositions.mjs`, lines 16 to 21 and 40 to 41).
 
 **Decided: the baseline records a digest of the case inputs, and `check` reports `cases-changed` when the run's digest
-differs.** It is a finding, so it warns by default and fails under `--strict`. It is not a regression: it says the
-baseline no longer describes this suite, so the rule findings beside it may be meaningless. The page keeps the two
-classes apart.
+differs.** It is a finding, so it is printed and counted, and it is the one finding that never changes an exit code:
+the owner settled on 2026-11-11 (section 12, answer B) that the digest warns and nothing more, even under `--strict`.
+It is not a regression: it says the baseline no longer describes this suite, so the rule findings beside it may be
+meaningless. The page keeps the two classes apart. The reason the owner recorded in 12B is the middle path: the
+signal exists and the penalty does not, so it does not punish the person who legitimately added a case and has not
+re-recorded yet.
 
 - The digest is the first 12 hexadecimal characters of the SHA-256 of the case identities, each in canonical form
   (object keys sorted at every depth, arrays in order, scalars as `JSON.stringify` writes them, no whitespace), sorted,
@@ -185,14 +188,14 @@ would confirm it is a year of use in which none of them is reported as the way a
 
 ### 2.5 Findings that are not regressions
 
-| Id                  | When                                                                                                              | Counts as a finding |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------- |
-| `no-baseline`       | the baseline path does not exist; nothing was compared                                                            | yes                 |
-| `bad-baseline`      | the baseline cannot be read: not JSON, an unknown or missing key, a bad value, a specification it does not read   | yes                 |
-| `bad-run`           | the run file cannot be read, or is from a different tool than the baseline                                        | yes                 |
-| `unreadable-metric` | the baseline names a metric the reader refuses (section 6.4)                                                      | yes                 |
-| `cases-changed`     | section 2.4                                                                                                       | yes                 |
-| `internal-error`    | the reader or the comparison threw something that is not a refusal; the text is the error's message (section 5.2) | yes                 |
+| Id                  | When                                                                                                              | Counts as a finding                 |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| `no-baseline`       | the baseline path does not exist; nothing was compared                                                            | yes                                 |
+| `bad-baseline`      | the baseline cannot be read: not JSON, an unknown or missing key, a bad value, a specification it does not read   | yes                                 |
+| `bad-run`           | the run file cannot be read, or is from a different tool than the baseline                                        | yes                                 |
+| `unreadable-metric` | the baseline names a metric the reader refuses (section 6.4)                                                      | yes                                 |
+| `cases-changed`     | section 2.4                                                                                                       | yes, and never changes an exit code |
+| `internal-error`    | the reader or the comparison threw something that is not a refusal; the text is the error's message (section 5.2) | yes                                 |
 
 A check that compared nothing MUST NOT print `no findings`. These ids make that impossible: a missing or unreadable
 input is itself a finding, and under the default it warns and exits 0 (section 5).
@@ -418,7 +421,7 @@ evals-baseline: 3 findings; warning only, exit 0 (pass --strict to exit 1)
 
 $ evals-baseline check run-swapped.json
 cases-changed: the baseline was recorded from 4 cases (digest e6c6ecf167ab); this run holds 4 cases (digest 8090f0ab85ad); re-record if the change is intended
-evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)
+evals-baseline: 1 finding; warning only, exit 0 (cases-changed never fails --strict)
 
 $ evals-baseline check run-error-one.json
 sample-count agent :: accuracy: the baseline holds 4 samples and this run holds 3
@@ -482,8 +485,11 @@ names.
    digits. A newline in data therefore cannot start a line, so data cannot begin a GitHub workflow command or forge a
    finding. The tool prints no escape sequence of its own.
 2. Every finding line starts with its id, and every note line with `note: `, so `grep` selects either class.
-3. The summary line is the last line, and is one of three: `evals-baseline: no findings`, `evals-baseline: <n>
-finding(s); warning only, exit 0 (pass --strict to exit 1)` or `evals-baseline: <n> finding(s); exit 1 (--strict)`.
+3. The summary line is the last line, and is one of four: `evals-baseline: no findings`, `evals-baseline: <n>
+finding(s); warning only, exit 0 (pass --strict to exit 1)`, `evals-baseline: <n> finding(s); exit 1 (--strict)`, or,
+   when every finding is `cases-changed` and so no finding can change the exit code, `evals-baseline: <n> finding(s);
+warning only, exit 0 (cases-changed never fails --strict)`. The fourth form exists because the third would be a lie
+   and the second would invite a reader to pass `--strict` and get the same exit 0 (12B).
 
 ## 6. Reading promptfoo and DeepEval
 
@@ -708,8 +714,11 @@ format; the definitions of value, sample count and metric key for each tool shap
 make two implementations produce the same number; the three non-negotiable properties as conformance requirements; the
 permanent refusals; the versioning policy; a changelog; and the conformance vectors. The vectors are the committed
 fixtures, each a baseline and a run file with the exact expected report. An implementation conforms to a version when
-it reproduces the expected findings, notes and exit codes on that version's vectors, and a vector pair exists for each
-of rules 1 to 4, the binding check and each refusal. Conformance is the thing the README cannot give.
+it reproduces that version's vectors, and a vector exists for each of rules 1 to 4, the binding check and each
+refusal. Amended on 2026-11-12 from "the expected findings, notes and exit codes": the 108 vectors built for 1.0
+record every printed line and the exit code, because the summary line and the notes are part of what a second
+implementation has to get right, and a definition narrower than the file would leave the difference unsettled.
+Conformance is the thing the README cannot give.
 
 The README holds: the three one-line ways to install or copy it, the pin-a-SHA warning, how to produce a run file with
 each tool and to record, a pointer to the specification, and the citation block.
@@ -749,15 +758,15 @@ candidate addresses on 2026-11-11 and both answer 404; neither is promised anywh
 
 Three forms, all naming the version and none naming a repository (L76):
 
-- **Prose:** `evals-baseline specification 1.0, https://meshin.co/spec/evals-baseline/1.0/`.
+- **Prose:** `evals-baseline specification 1.0, https://meshin.co/spec/evals-baseline/1.0`.
 - **Paste-ready, shipped in the README and at the head of the page:** "This project guards its agent evaluations
-  against regression as defined by the [evals-baseline specification 1.0](https://meshin.co/spec/evals-baseline/1.0/)."
+  against regression as defined by the [evals-baseline specification 1.0](https://meshin.co/spec/evals-baseline/1.0)."
   Keep a Changelog ships its own pre-formatted, versioned citation block, and the research calls that the most
   transferable finding and one that costs nothing.
 - **In a file:** `"spec": "1.0"` in the baseline (3.1). A baseline states which version of the definition it follows,
   and that is the specification's two-number version, never the tool's.
 
-The address is `https://meshin.co/spec/evals-baseline/1.0/`, settled in section 12. The version in the path is two numbers rather than three: a patch to a specification is either editorial, which changes no citation, or normative, which is a new minor.
+The address is `https://meshin.co/spec/evals-baseline/1.0`, settled in section 12. The version in the path is two numbers rather than three: a patch to a specification is either editorial, which changes no citation, or normative, which is a new minor.
 
 ## 9. How the guards are proven
 
@@ -782,7 +791,7 @@ marked `not run`.
 | S2b | Rule 2, the boundary  | baseline 0.92, tolerance 0.02, runs 0.9, 0.900001, 0.899999, and one above the baseline                                                                                                                                                                                                                                                       | only 0.899999 is a finding (table in 2.2)                                                                                                                                                                                                          | plain subtraction turns 0.9 into a finding; `>=` does too                                 |
 | S3  | Rule 3                | a metric the baseline does not name, added (both tools)                                                                                                                                                                                                                                                                                       | no finding and one note; exit 0 and 0                                                                                                                                                                                                              | make the comparison walk the union of the keys                                            |
 | S4  | Rule 4                | the suite cut to three cases (both tools), and a provider error on one case (promptfoo) or a metric error (DeepEval)                                                                                                                                                                                                                          | `sample-count` for each metric, and `cases-changed` for the cut; exit 0 and 1                                                                                                                                                                      | delete the count comparison                                                               |
-| S5  | The binding check     | one case swapped for another, count unchanged (both tools)                                                                                                                                                                                                                                                                                    | `cases-changed` and nothing else; exit 0 and 1. Twin: the same suite twice gives the same digest (measured)                                                                                                                                        | delete the digest comparison                                                              |
+| S5  | The binding check     | one case swapped for another, count unchanged (both tools)                                                                                                                                                                                                                                                                                    | `cases-changed` and nothing else; exit 0 and 0, because the digest never fails `--strict` (12B). Twin: the same suite twice gives the same digest (measured)                                                                                       | delete the digest comparison                                                              |
 | S6  | Warn by default       | every violation above                                                                                                                                                                                                                                                                                                                         | exit 0 without `--strict`, and 1 with it                                                                                                                                                                                                           | make the default exit 1                                                                   |
 | S7  | No clock              | the same baseline and run rendered with dates a year apart (2026-11-11 and 2027-11-11)                                                                                                                                                                                                                                                        | the same exit code and identical lines except `date:` (70 days against 435), which ran. The source of the comparison function names no `Date`, `Math.random`, `process` or `performance`, checked on the prototype                                 | add a clock read to `compare` or to the exit code, and the source guard fails (`not run`) |
 | S8  | Input problems        | no baseline; a hand-written run; promptfoo results version 4; a file matching both shapes; a file that is not JSON; a missing run file; the DeepEval wrapper file; a run of the other tool; a baseline with a misspelt key; a baseline missing `cases`; a baseline of a newer minor; a baseline of another major; a baseline naming no metric | exactly one finding of the right id (`no-baseline`, `bad-baseline` or `bad-run`) and never `no findings`; exit 0 without strict. All ran on the prototype; the strict exit is S6's                                                                 | make an unreadable input print `no findings` (`not run`)                                  |
@@ -875,16 +884,22 @@ fixes; changing it is a new major version of the specification, not a pull reque
 
 Per L73 the fixtures and the specification carry nothing upstream: the cases are our own questions, and the run files
 are tool outputs of those, so the repository holds no text it has no right to republish. Licences are per L75: code MIT,
-specification text CC BY 4.0. L75 names three defects on the site that block licensing today and says they are fixed
-in parallel with the first repository. I did not check whether they are fixed. `[INFERENCE]`: what would confirm it is
-reading `site/LICENSE.md`, the terms page and `licenseHasText` after the work L75 describes.
+specification text CC BY 4.0. L75 named three defects on the site that blocked licensing, and all three were fixed and
+merged on 2026-11-11 in pull request 139: `site/LICENSE.md` now grants the code in the name of the site's author and
+keeps the notice of the theme above the permission text, `/terms` grants the writing under CC BY 4.0 and names the text
+at `/licenses/CC-BY-4.0.txt`, and `licenseHasText` in `site/src/utils/resource-license.mjs` refuses an entry whose
+licence has no text, proven by the planted specimen `resource-license-undeclared`. So nothing on the site blocks the
+licence this repository declares.
 
 ## 12. Settled by the owner on 2026-11-11
 
 The four questions this document opened are answered. Each answer carries what it costs, because an answer
 with its price recorded is the only kind a later reader can re-open honestly.
 
-**A. The address is `https://meshin.co/spec/evals-baseline/1.0/`.** A new top-level family, chosen over
+**A. The address is `https://meshin.co/spec/evals-baseline/1.0`.** Settled with a trailing slash on 2026-11-11 and
+published without one on 2026-11-12: the site is built with `trailingSlash: 'never'`, so the slash form answers with
+a 308 to the slashless one, and the whole point of a short address is that it is quoted exactly as it resolves. The
+choice of family and of a version in the path is unchanged. A new top-level family, chosen over
 nesting the page under the resource entry. The citation is short enough to be quoted whole, which matters
 because a long address gets shortened to a repository link, and that is the one form no artefact in the
 research is cited at. It also has room for the second specification, since the governance artefact follows.
@@ -980,7 +995,7 @@ evals-baseline: 3 findings; warning only, exit 0 (pass --strict to exit 1)
 
 $ evals-baseline check run-swap.json
 cases-changed: the baseline was recorded from 4 cases (digest c8663ee8bc8a); this run holds 4 cases (digest 6189a6f3c54e); re-record if the change is intended
-evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)
+evals-baseline: 1 finding; warning only, exit 0 (cases-changed never fails --strict)
 
 $ evals-baseline check run-error-one.json
 sample-count Accuracy: the baseline holds 4 samples and this run holds 3

@@ -628,6 +628,7 @@ test('the ledger counts every kind, owed cell and declaration, so the summary is
   assert.equal(ledger.routes, 13);
   assert.deepEqual(ledger.kinds, {
     entry: 3,
+    series: 0,
     hub: 2,
     page: 2,
     'tag-index': 1,
@@ -652,7 +653,7 @@ test('the summary lines name the declared exceptions and empty collections with 
   const lines = parityLines(routeParity(buildWorld()).ledger);
 
   assert.equal(lines.length, 2);
-  assert.match(lines[0], /^machine: route parity derived 13 routes \(3 entry, 2 hub, 2 page,/);
+  assert.match(lines[0], /^machine: route parity derived 13 routes \(3 entry, 0 series, 2 hub, 2 page,/);
   assert.match(lines[0], /checked \d+ owed cells across 10 surfaces, \d+ present/);
   assert.equal(lines[1], 'machine: route parity declares 2 exceptions (/404, /search) and 1 empty collection (case)');
 });

@@ -120,6 +120,8 @@
   "/services/90-day-production-sprint",
   "/services/ai-readiness-and-risk-assessment",
   "/services/fractional-caio-retainer",
+  "/spec/evals-baseline",
+  "/spec/evals-baseline/1.0",
   "/styleguide",
   "/terms"
 ]

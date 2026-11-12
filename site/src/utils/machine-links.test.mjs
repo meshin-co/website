@@ -13,6 +13,20 @@ test('a markdown sidecar path is the page path with a .md suffix', () => {
   assert.equal(markdownPath('/glossary/evals'), '/glossary/evals.md');
 });
 
+test('a specification version keeps its slash and its dot in the og image, sidecar and route paths', () => {
+  assert.equal(ogImagePath('spec', 'evals-baseline/1.0'), '/og/spec/evals-baseline/1.0.png');
+  assert.equal(markdownPath('/spec/evals-baseline/1.0'), '/spec/evals-baseline/1.0.md');
+  assert.equal(routeOfPathname('/spec/evals-baseline/1.0.html'), '/spec/evals-baseline/1.0');
+  const { openGraph } = articleMetadata('https://meshin.co', {
+    title: 'evals-baseline specification 1.0',
+    description: 'What the baseline file holds.',
+    collection: 'spec',
+    id: 'evals-baseline/1.0',
+    publishDate: new Date('2026-11-12T00:00:00Z'),
+  });
+  assert.equal(openGraph.images[0].url, 'https://meshin.co/og/spec/evals-baseline/1.0.png');
+});
+
 test('article metadata carries the absolute og image and the article dates', () => {
   const metadata = articleMetadata('https://meshin.co', {
     title: 'A post',
