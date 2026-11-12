@@ -40,8 +40,6 @@ Separately, Cloudflare can return 403 at the edge to those crawlers (AI Crawl Co
 
 Do not publish `ai-train=yes` or `ai-input=yes` unless the owner of the content has decided to allow that use. Signals are a public statement agents act on. Do not publish maximum visibility while Cloudflare blocks the same crawlers at the edge: the file then promises access the edge refuses.
 
-This site ships `search=yes, ai-input=yes, ai-train=yes`. It follows the owner's recorded goal of maximum visibility and his recorded switching off of Cloudflare's `ai-train=no` block, and no answer of his to S17 in `docs/plan/reference/new-site-interview.md`; `G97` in `docs/plan/reference/known-gaps.md` asks him the one letter. Read the shipped value out of `dist/robots.txt` and `dist/_headers`, never out of this file.
-
 ## Verify
 
 ```
