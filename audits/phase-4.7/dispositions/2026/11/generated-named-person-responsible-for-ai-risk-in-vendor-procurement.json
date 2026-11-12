@@ -8,7 +8,7 @@
   {
     "target": "/blog/named-person-responsible-for-ai-risk-in-vendor-procurement",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-vendor-assessment-questionnaire-template (generation record audits/autowriter/generations/2026/11/ai-vendor-assessment-questionnaire-template.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file. On 2026-11-11 the shared resource status line this route shows changed from \"Available as a page on this site. A repository copy is not published yet.\" to \"Available as a page on this site. There is no repository copy.\" (owner decision of 2026-11-10); a person read that one line in dist/blog/named-person-responsible-for-ai-risk-in-vendor-procurement.html and it states what is true today without promising a repository or a date. The rest of this text is still unread by a person.",
-    "digest": "bbdc7d22cabc"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-decide-which-employee-data-can-be-used-in-ai-tools (generation record audits/autowriter/generations/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "739110dd6300"
   }
 ]
