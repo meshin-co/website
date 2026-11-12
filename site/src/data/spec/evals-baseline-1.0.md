@@ -357,7 +357,11 @@ Version 1.0 has 108 vectors. 88 run `check`, 12 run `record`, 2 run `show`, 1 as
 | `unreadable-metric`                         | 2       | 1              |
 | `internal-error`                            | 2       | 1              |
 
-One vector covers more than one row when a run breaks more than one rule, so the rows total more than the vectors that produce them.
+A vector appears in a row for each finding its report names, so the rows do not partition the 108.
+
+Four vectors name two findings and stand in two rows. Twenty-one name none: those are the runs that must stay silent, such as the same suite recorded and checked twice, and a value exactly at its tolerance.
+
+The rows therefore total 74. A row counts the vectors that prove it, not the vectors it exhausts.
 
 Four of the 108 are marked reference-only and no implementation is asked to reproduce them. Two print the message a runtime raised, which is not this specification's text. Two print the reason line before a usage error, which this specification does not fix.
 
