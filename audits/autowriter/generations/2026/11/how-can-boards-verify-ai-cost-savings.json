@@ -1,0 +1,295 @@
+{
+  "schema": 1,
+  "slug": "how-can-boards-verify-ai-cost-savings",
+  "runId": "43256164012-1",
+  "generatedAt": "2026-11-12T16:17:57.319Z",
+  "claim": {
+    "title": "How can boards verify AI cost savings?",
+    "query": "how can boards verify ai cost savings",
+    "origin": "category",
+    "category": "executive",
+    "catchUp": {
+      "slot": "15:00",
+      "lateMinutes": 74
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-12",
+      "windowStart": "2026-08-12",
+      "windowEnd": "2026-11-10",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/how-can-boards-verify-ai-cost-savings",
+    "path": "site/src/data/post/how-can-boards-verify-ai-cost-savings.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_099d0ddfdbb5e06e016af5e610fc2887d1b59f664fd76f6bca",
+  "published": {
+    "callIndex": 4
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_00c0682003e5326c016af5e5ffc1e887d1a709b0e8801c2866",
+      "requestDigest": "7615215950c1e04e1a2ea5c5fb093518fbbe1c5f2fedc2eefa71df12ee2dbdf3",
+      "tokens": {
+        "input": 1021,
+        "output": 79
+      },
+      "costUsd": 0.001416,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_06b0b162205e59e0016af5e602a21c87d19e67b669d432b62d",
+      "requestDigest": "cb055479712c69bdd829bedf5741e8180823123bbda03cbb5fbb1748645b995e",
+      "tokens": {
+        "input": 1079,
+        "output": 77
+      },
+      "costUsd": 0.001464,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0de2082b2ff50aa7016af5e606816c87d19055f301d24e7868",
+      "requestDigest": "3278bdce43328545edd3c882ac141d29f2809b7862541098b88eda63873e5131",
+      "tokens": {
+        "input": 1024,
+        "output": 98
+      },
+      "costUsd": 0.001514,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_06376e5369c6fa94016af5e6097c5c87d1a1f8343185ed44dd",
+      "requestDigest": "8d14ae2f9ff67ecf26e1eb6efd5d1b37a0e744c7b0d19ed571f1b3783875e2d8",
+      "tokens": {
+        "input": 1090,
+        "output": 120
+      },
+      "costUsd": 0.00169,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_099d0ddfdbb5e06e016af5e610fc2887d1b59f664fd76f6bca",
+      "requestDigest": "21368b11c09bd84bf725690d30656d184ec4b981c95409b40ade84b8d8999a0e",
+      "tokens": {
+        "input": 10354,
+        "output": 3777
+      },
+      "costUsd": 0.029239,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 14568,
+      "output": 4151
+    },
+    "costUsd": 0.035323
+  },
+  "ledger": "audits/autowriter/2026/11/how-can-boards-verify-ai-cost-savings.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "c0b8b9c50f4b1abf83dc5a7ccf2ec0e8085d39fe823c69006a5efd258727e91f",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "ff2fc22c860396d15bc1e93478be8f5bf68a02969a0619724033c6569f2a7df5"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "1e291e4336807e99144f2a63cfd94220707c1c99d9084f960e26799cbf12fde8"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "89ba34fa19f9d87e2d9ef361aac8724b2d2124ecde1b442950d6cdf9ed24fb0e"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "3dfa3279df52c111c26938bd0e3f545bad3a201b804fac6815d90969925bf0e5"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "a8e5fbcf56f4c5ab2fc4c41fa5f900192d1af7b22b6e22b6e7658b4793e690f0"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "8176cf5802ad0b8f97a5619a94bb99123853893d3c5c8f9aa409b44ae916fcec"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "df07e5ca1fced82881ab08e3849da19ec0de824e4be87b2719f174f0f73f33c2"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "e32108df5d9bbf93421fbdc5eef34712c49f894b",
+    "fingerprint": "d8a1fea6119615b4010dd0eb7cab2a7234db9ee0eb4d4922bb03c95260341440"
+  },
+  "claimTable": [
+    {
+      "sentence": "Time saved counts as cash savings only when spending actually falls.",
+      "marker": "own-reading",
+      "source": null,
+      "span": null
+    }
+  ],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 118,
+      "median": 15,
+      "shareBelowThreshold": 0.1611,
+      "shareJustBelow": 0.0933,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/how-can-boards-verify-ai-cost-savings.json",
+    "audits/autowriter/claims/2026/11/how-can-boards-verify-ai-cost-savings.json",
+    "audits/autowriter/generations/2026/11/how-can-boards-verify-ai-cost-savings.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-ai-readiness-scorecard-five-drivers.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-board-memo-ai-strategy-one-page.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-build-vs-buy-ai-3-year-tco.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-fractional-caio-pricing.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-can-boards-verify-ai-cost-savings.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/how-can-boards-verify-ai-cost-savings.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}

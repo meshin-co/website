@@ -423,14 +423,14 @@
     "target": "/blog/handing-over-ai-leadership-to-an-internal-owner",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/board-memo-ai-strategy-one-page (generation record audits/autowriter/generations/2026/11/board-memo-ai-strategy-one-page.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "808b87463b52"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-can-boards-verify-ai-cost-savings (generation record audits/autowriter/generations/2026/11/how-can-boards-verify-ai-cost-savings.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "94f150b2310a"
   },
   {
     "target": "/blog/handing-over-ai-leadership-to-an-internal-owner",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/board-memo-ai-strategy-one-page (generation record audits/autowriter/generations/2026/11/board-memo-ai-strategy-one-page.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "808b87463b52"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-can-boards-verify-ai-cost-savings (generation record audits/autowriter/generations/2026/11/how-can-boards-verify-ai-cost-savings.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "94f150b2310a"
   }
 ]
