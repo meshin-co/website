@@ -1,0 +1,381 @@
+{
+  "schema": 1,
+  "slug": "how-to-review-ai-vendor-model-updates-after-deployment",
+  "runId": "43454991066-1",
+  "generatedAt": "2026-11-13T15:46:23.162Z",
+  "claim": {
+    "title": "How to review AI vendor model updates after deployment",
+    "query": "how to review ai vendor model updates after deployment",
+    "origin": "category",
+    "category": "operating-model",
+    "catchUp": {
+      "slot": "15:00",
+      "lateMinutes": 42
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-13",
+      "windowStart": "2026-08-13",
+      "windowEnd": "2026-11-11",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/how-to-review-ai-vendor-model-updates-after-deployment",
+    "path": "site/src/data/post/how-to-review-ai-vendor-model-updates-after-deployment.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_02922558596f5749016af7304def5487d1b6b1e13a57d445ff",
+  "published": {
+    "callIndex": 9
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_00bd648f3312344a016af72fe9cc4487d1b4bc471348ac991a",
+      "requestDigest": "d8b1a7526c32017d099b143ec85e4a6849031787927d0b64f9b12e7430cd6c9a",
+      "tokens": {
+        "input": 1062,
+        "output": 72
+      },
+      "costUsd": 0.001422,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0a0782096792131c016af72fec494087d19f6ebe5ff379ee68",
+      "requestDigest": "e4411643219f76951f63fd522d0aa634630f7cb1495251e46538c2547c3441c9",
+      "tokens": {
+        "input": 1120,
+        "output": 193
+      },
+      "costUsd": 0.002085,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0c8ecb78c3763900016af72ff1673087d19bc9b68f7f40b724",
+      "requestDigest": "ab190de81bf504b1d15ca44a20321aa04926b58a3465a8ee8b8b3cb97224ef58",
+      "tokens": {
+        "input": 1061,
+        "output": 99
+      },
+      "costUsd": 0.001556,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0625e4038587ff11016af72ff44e6087d1af60f89aef6310ca",
+      "requestDigest": "dc04abf983e64314f28ec7727d665f545de202a43bd6c7421ce0e9891a196b0b",
+      "tokens": {
+        "input": 1117,
+        "output": 82
+      },
+      "costUsd": 0.001527,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0c7d96ae048a07de016af72ff69a8087d1b5afb342cf045733",
+      "requestDigest": "883acd5201bd0d81f4193f596a9b49a538a539761299e162e67ea6a71b758633",
+      "tokens": {
+        "input": 1065,
+        "output": 162
+      },
+      "costUsd": 0.001875,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0dcaf3d368dea3bc016af72ffb8ad487d18c806a72033d4b2f",
+      "requestDigest": "218872f5bb92cbbf420c885629349a96e692cc4c2e0b30c0f41fee384d4c8959",
+      "tokens": {
+        "input": 1119,
+        "output": 95
+      },
+      "costUsd": 0.001594,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_03cd0134345d0155016af72fff233087d19407cfcdaf1dd72d",
+      "requestDigest": "362999579a3e3de23f00ccafc2a8acf0591068c2e61beddbd86b03b0708de954",
+      "tokens": {
+        "input": 1069,
+        "output": 78
+      },
+      "costUsd": 0.001459,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0f302bc9c2f2fee0016af73001cb2087d1878451f6aab857c2",
+      "requestDigest": "7aecafca9b64a2711f5de8fb1ca466f09072ef818ea06c73ef7ec7f7d65d8b71",
+      "tokens": {
+        "input": 1131,
+        "output": 94
+      },
+      "costUsd": 0.001601,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0340da73f2aaa966016af73008045887d184c953b0e84c0900",
+      "requestDigest": "19f854fe84681b744161326dbfd2d2d60b9703444eb2816597cdec89f0d3de09",
+      "tokens": {
+        "input": 10395,
+        "output": 3814
+      },
+      "costUsd": 0.029465,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_02922558596f5749016af7304def5487d1b6b1e13a57d445ff",
+      "requestDigest": "631e1dc0798e32b5a49e1fad9f8a5e9575779a8ef59358ec46e0358d3e4e77bd",
+      "tokens": {
+        "input": 13453,
+        "output": 3265
+      },
+      "costUsd": 0.029778,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 32592,
+      "output": 7954
+    },
+    "costUsd": 0.072362
+  },
+  "ledger": "audits/autowriter/2026/11/how-to-review-ai-vendor-model-updates-after-deployment.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "d78c034d6a854ebb808d73bcab8da151c69a95345c634d302aa4a47d7a1f3960",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "ff2fc22c860396d15bc1e93478be8f5bf68a02969a0619724033c6569f2a7df5"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "1e291e4336807e99144f2a63cfd94220707c1c99d9084f960e26799cbf12fde8"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "89ba34fa19f9d87e2d9ef361aac8724b2d2124ecde1b442950d6cdf9ed24fb0e"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "4569b69159d88d3f28a3a8e261c298699b8cb625b6424585cee5d2833ee97f41"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "336f4b2ca9fee2ae2806706dab40bf8154c9bbf02a9574679501c29de35a0456"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "781e985bc20dcb0bdd733843decbb0f9a481fbc1957d15364876cc4d00cc8f85"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "df07e5ca1fced82881ab08e3849da19ec0de824e4be87b2719f174f0f73f33c2"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "7ce9bdb9f08f788f5aa3e1239ea1f03f190326fe",
+    "fingerprint": "5d88b17796b168ada0e6d945acae139b362492546857ca1e8c0aaf93d9001f3e"
+  },
+  "claimTable": [],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 142,
+      "median": 14,
+      "shareBelowThreshold": 0.1972,
+      "shareJustBelow": 0.1972,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/how-to-review-ai-vendor-model-updates-after-deployment.json",
+    "audits/autowriter/claims/2026/11/how-to-review-ai-vendor-model-updates-after-deployment.json",
+    "audits/autowriter/generations/2026/11/how-to-review-ai-vendor-model-updates-after-deployment.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-ai-readiness-assessment-template-for-smb.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-review-ai-vendor-model-updates-after-deployment.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/articles-telemetry.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/how-to-review-ai-vendor-model-updates-after-deployment.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}
