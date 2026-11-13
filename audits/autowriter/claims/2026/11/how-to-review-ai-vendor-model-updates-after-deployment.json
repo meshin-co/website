@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "slug": "how-to-review-ai-vendor-model-updates-after-deployment",
+  "title": "How to review AI vendor model updates after deployment",
+  "format": "article",
+  "query": "how to review ai vendor model updates after deployment",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "origin": "category",
+  "category": "operating-model",
+  "catchUp": {
+    "slot": "15:00",
+    "lateMinutes": 42
+  },
+  "runId": "43454991066-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-13T15:42:31.944Z",
+  "expiresAt": "2026-11-27T15:42:31.944Z"
+}
