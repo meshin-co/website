@@ -6,23 +6,41 @@
   "attempts": [],
   "spend": {
     "tokens": {
-      "input": 4290,
-      "output": 348
+      "input": 44844,
+      "output": 11159
     },
-    "costUsd": 0.00603
+    "costUsd": 0.100639
   },
   "verdict": {
-    "state": "open",
-    "reason": null,
-    "decidedAt": null
+    "state": "escalated",
+    "reason": "Write daily stopped while writing who-owns-an-ai-system-after-launch-it-or-the-business (output)",
+    "decidedAt": "2026-11-13T07:17:16.658Z"
   },
-  "escalations": [],
+  "escalations": [
+    {
+      "id": "esc-1",
+      "kind": "hard-stop",
+      "title": "Write daily stopped while writing who-owns-an-ai-system-after-launch-it-or-the-business (output)",
+      "detail": "npm run write:entry failed with kind output: no draft of who-owns-an-ai-system-after-launch-it-or-the-business passed the writer's own checks after 2 corrections: query-opening. Spend recorded so far: 0.100639 USD. The claim for who-owns-an-ai-system-after-launch-it-or-the-business is marked abandoned and keeps its slug, so the next catch-up run of the day writes a different topic.",
+      "raisedAt": "2026-11-13T07:17:15.959Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-13T07:17:15.959Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 144,
+          "error": null
+        }
+      ]
+    }
+  ],
   "generation": {
     "tokens": {
-      "input": 4290,
-      "output": 348
+      "input": 44844,
+      "output": 11159
     },
-    "costUsd": 0.00603
+    "costUsd": 0.100639
   },
   "refusals": [
     {
