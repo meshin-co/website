@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/how-to-sandbox-ai-agent-code-execution.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-sandbox-ai-agent-code-execution.json on 2026-11-13. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-sandbox-ai-agent-code-execution.json.",
+    "digest": "8149fe4b8c2c"
+  },
+  {
+    "target": "/blog/how-to-sandbox-ai-agent-code-execution",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-sandbox-ai-agent-code-execution.json on 2026-11-13. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-sandbox-ai-agent-code-execution.json.",
+    "digest": "6da1444cd1ab"
+  }
+]
