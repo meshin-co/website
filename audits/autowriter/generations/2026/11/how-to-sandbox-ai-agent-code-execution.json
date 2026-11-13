@@ -1,0 +1,268 @@
+{
+  "schema": 1,
+  "slug": "how-to-sandbox-ai-agent-code-execution",
+  "runId": "43405333127-1",
+  "generatedAt": "2026-11-13T10:02:48.593Z",
+  "claim": {
+    "title": "How to sandbox AI agent code execution",
+    "query": "how to sandbox ai agent code execution",
+    "origin": "category",
+    "category": "agentic-architecture",
+    "catchUp": {
+      "slot": "06:00",
+      "lateMinutes": 239
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-13",
+      "windowStart": "2026-08-13",
+      "windowEnd": "2026-11-11",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/how-to-sandbox-ai-agent-code-execution",
+    "path": "site/src/data/post/how-to-sandbox-ai-agent-code-execution.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_0466d1dc0b05f46d016af6dfafc85c87d1b5a36c56bc44872c",
+  "published": {
+    "callIndex": 3
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0c89d525331f5f82016af6df6be35087d1b72d9c033faeb5c9",
+      "requestDigest": "c0a91cc96074cb44d132f098c96119aa5fd27267bab1c261c629102cceb4c86e",
+      "tokens": {
+        "input": 1053,
+        "output": 78
+      },
+      "costUsd": 0.001443,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_09cb54bddf4d9866016af6df6e5e6487d18e1823f4ea5e1fd9",
+      "requestDigest": "2c05f99ee6b3171579cb6e5ffecaf1198c96bdca98fb613f2618f1ed494a63bd",
+      "tokens": {
+        "input": 1113,
+        "output": 60
+      },
+      "costUsd": 0.001413,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_08afe6a093beed80016af6df73df7887d1a9451efacc033d9f",
+      "requestDigest": "1c8dd96d10472174f9430a77750e5d25d3dad5867a3a83bda66e6d03a794f2a1",
+      "tokens": {
+        "input": 10380,
+        "output": 3300
+      },
+      "costUsd": 0.02688,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0466d1dc0b05f46d016af6dfafc85c87d1b5a36c56bc44872c",
+      "requestDigest": "4d41f958254c4695f38450ace67112af3d751b23c4df3d1c1a57d70e66dabb88",
+      "tokens": {
+        "input": 13078,
+        "output": 2966
+      },
+      "costUsd": 0.027908,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 25624,
+      "output": 6404
+    },
+    "costUsd": 0.057644
+  },
+  "ledger": "audits/autowriter/2026/11/how-to-sandbox-ai-agent-code-execution.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "20770ac1b355521aaf1459890f9e52be1815834fab3384a65c7e26246b8520eb",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "ff2fc22c860396d15bc1e93478be8f5bf68a02969a0619724033c6569f2a7df5"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "1e291e4336807e99144f2a63cfd94220707c1c99d9084f960e26799cbf12fde8"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "89ba34fa19f9d87e2d9ef361aac8724b2d2124ecde1b442950d6cdf9ed24fb0e"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "4569b69159d88d3f28a3a8e261c298699b8cb625b6424585cee5d2833ee97f41"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "336f4b2ca9fee2ae2806706dab40bf8154c9bbf02a9574679501c29de35a0456"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "781e985bc20dcb0bdd733843decbb0f9a481fbc1957d15364876cc4d00cc8f85"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "df07e5ca1fced82881ab08e3849da19ec0de824e4be87b2719f174f0f73f33c2"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "86077d9e51699ab6e5a21939399a2553b50d30bf",
+    "fingerprint": "5d88b17796b168ada0e6d945acae139b362492546857ca1e8c0aaf93d9001f3e"
+  },
+  "claimTable": [],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 124,
+      "median": 14,
+      "shareBelowThreshold": 0.25,
+      "shareJustBelow": 0.1936,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/how-to-sandbox-ai-agent-code-execution.json",
+    "audits/autowriter/claims/2026/11/how-to-sandbox-ai-agent-code-execution.json",
+    "audits/autowriter/generations/2026/11/how-to-sandbox-ai-agent-code-execution.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-prevent-duplicate-ai-agent-actions-on-retries.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-roll-back-an-ai-agent-deployment.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-sandbox-ai-agent-code-execution.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-trace-ai-agent-tool-calls-in-production.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/how-to-sandbox-ai-agent-code-execution.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}

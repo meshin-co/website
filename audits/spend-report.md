@@ -1,21 +1,21 @@
 # Spend report: what writing each entry cost
 
-Generated-from: 5c41f44
-Generated-at: 2026-11-13T09:59:12.849Z
+Generated-from: 86077d9e51699ab6e5a21939399a2553b50d30bf
+Generated-at: 2026-11-13T10:02:48.599Z
 
 ## This month
 
-2026-11 so far: 1.090013 USD spent of the 25.00 USD monthly ceiling, 23.909987 USD left.
+2026-11 so far: 1.144801 USD spent of the 25.00 USD monthly ceiling, 23.855199 USD left.
 
-The figure is the spend of the UTC calendar month of 2026-11-13T09:59:12.849Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
+The figure is the spend of the UTC calendar month of 2026-11-13T10:02:48.599Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
 
 | What was paid for               | Cost (USD) |
 | ------------------------------- | ---------- |
-| Writing calls of entries        | 0.538988   |
+| Writing calls of entries        | 0.596632   |
 | Repair calls                    | 0.00       |
 | Runs that ended with no entry   | 0.533207   |
-| Spend with no generation record | 0.017818   |
-| Everything paid for             | 1.090013   |
+| Spend with no generation record | 0.014962   |
+| Everything paid for             | 1.144801   |
 
 ## About this file
 
@@ -25,37 +25,37 @@ Cost means the cost of the writing calls of an entry: its draft and its correcti
 
 ## This entry
 
-The newest run: the run of the newest record, which was generated at 2026-11-12T16:17:57.319Z. A run that wrote an article and a term lists both.
+The newest run: the run of the newest record, which was generated at 2026-11-13T10:02:48.593Z. A run that wrote an article and a term lists both.
 
-| Generated (UTC)          | Format  | Slug                                  | Input tokens | Output tokens | Cost (USD) | Repair (USD) |
-| ------------------------ | ------- | ------------------------------------- | ------------ | ------------- | ---------- | ------------ |
-| 2026-11-12T16:17:57.319Z | article | how-can-boards-verify-ai-cost-savings | 14,568       | 4,151         | 0.035323   | 0.00         |
+| Generated (UTC)          | Format  | Slug                                   | Input tokens | Output tokens | Cost (USD) | Repair (USD) |
+| ------------------------ | ------- | -------------------------------------- | ------------ | ------------- | ---------- | ------------ |
+| 2026-11-13T10:02:48.593Z | article | how-to-sandbox-ai-agent-code-execution | 25,624       | 6,404         | 0.057644   | 0.00         |
 
 ## Last 30 days
 
-The 30 days of 24 hours each that end at the newest record: after 2026-10-13T16:17:57.319Z and through 2026-11-12T16:17:57.319Z. The start is excluded and the end is included, so an entry generated exactly at the start is outside the window. The window ends at the newest record and not at the clock, so this file does not change at midnight. Read long after the last run, it still describes the 30 days before that run. These 30 days are not the UTC calendar month of the monthly spend ceiling in `site/engine.config.json`: that ceiling counts calendar months and counts every call the machine paid for, not only the writing calls of entries. This table counts the writing calls of entries only.
+The 30 days of 24 hours each that end at the newest record: after 2026-10-14T10:02:48.593Z and through 2026-11-13T10:02:48.593Z. The start is excluded and the end is included, so an entry generated exactly at the start is outside the window. The window ends at the newest record and not at the clock, so this file does not change at midnight. Read long after the last run, it still describes the 30 days before that run. These 30 days are not the UTC calendar month of the monthly spend ceiling in `site/engine.config.json`: that ceiling counts calendar months and counts every call the machine paid for, not only the writing calls of entries. This table counts the writing calls of entries only.
 
 | Format  | Entries | Input tokens | Output tokens | Cost (USD) |
 | ------- | ------- | ------------ | ------------- | ---------- |
-| all     | 11      | 219,313      | 63,935        | 0.538988   |
-| article | 11      | 219,313      | 63,935        | 0.538988   |
+| all     | 12      | 244,937      | 70,339        | 0.596632   |
+| article | 12      | 244,937      | 70,339        | 0.596632   |
 
 ## All time
 
-Every entry recorded: from 2026-11-03T05:36:35.954Z, the oldest record, through 2026-11-12T16:17:57.319Z, the newest. The first table counts the writing calls of entries only. The second table adds every other call the machine paid for, so its last row is the whole spend the ledgers and records show.
+Every entry recorded: from 2026-11-03T05:36:35.954Z, the oldest record, through 2026-11-13T10:02:48.593Z, the newest. The first table counts the writing calls of entries only. The second table adds every other call the machine paid for, so its last row is the whole spend the ledgers and records show.
 
 | Format  | Entries | Input tokens | Output tokens | Cost (USD) |
 | ------- | ------- | ------------ | ------------- | ---------- |
-| all     | 11      | 219,313      | 63,935        | 0.538988   |
-| article | 11      | 219,313      | 63,935        | 0.538988   |
+| all     | 12      | 244,937      | 70,339        | 0.596632   |
+| article | 12      | 244,937      | 70,339        | 0.596632   |
 
 | What was paid for               | Cost (USD) |
 | ------------------------------- | ---------- |
-| Writing calls of entries        | 0.538988   |
+| Writing calls of entries        | 0.596632   |
 | Repair calls                    | 0.00       |
 | Runs that ended with no entry   | 0.533207   |
-| Spend with no generation record | 0.017818   |
-| Everything paid for             | 1.090013   |
+| Spend with no generation record | 0.014962   |
+| Everything paid for             | 1.144801   |
 
 ## Every entry
 
@@ -63,6 +63,7 @@ One row per generation record, newest first. The cost is the cost of its writing
 
 | Generated (UTC)          | Format  | Slug                                                       | Input tokens | Output tokens | Cost (USD) | Repair (USD) |
 | ------------------------ | ------- | ---------------------------------------------------------- | ------------ | ------------- | ---------- | ------------ |
+| 2026-11-13T10:02:48.593Z | article | how-to-sandbox-ai-agent-code-execution                     | 25,624       | 6,404         | 0.057644   | 0.00         |
 | 2026-11-12T16:17:57.319Z | article | how-can-boards-verify-ai-cost-savings                      | 14,568       | 4,151         | 0.035323   | 0.00         |
 | 2026-11-10T07:47:36.707Z | article | how-to-prevent-duplicate-ai-agent-actions-on-retries       | 25,588       | 6,612         | 0.058648   | 0.00         |
 | 2026-11-09T07:11:10.445Z | article | how-to-trace-ai-agent-tool-calls-in-production             | 12,147       | 3,395         | 0.029122   | 0.00         |
@@ -81,15 +82,14 @@ The model and the two rates, in USD per million tokens, that each cost was compu
 
 | Model         | Input USD per million tokens | Output USD per million tokens | Entries | First                    | Last                     |
 | ------------- | ---------------------------- | ----------------------------- | ------- | ------------------------ | ------------------------ |
-| gpt-6.1-terra | 1                            | 5                             | 11      | 2026-11-03T05:36:35.954Z | 2026-11-12T16:17:57.319Z |
+| gpt-6.1-terra | 1                            | 5                             | 12      | 2026-11-03T05:36:35.954Z | 2026-11-13T10:02:48.593Z |
 
 ## Warnings
 
-Each line below needs a person to look at it: it says what could not be counted or checked, or what does not add up. Every entry that can be counted is still counted above. The ledgers below that no generation record names are counted in the paid tables, under Spend with no generation record: 0.017818 USD together.
+Each line below needs a person to look at it: it says what could not be counted or checked, or what does not add up. Every entry that can be counted is still counted above. The ledgers below that no generation record names are counted in the paid tables, under Spend with no generation record: 0.014962 USD together.
 
 - how-to-allocate-shared-ai-tool-costs-across-departments: its ledger records a generation of 0.002838 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it
 - how-to-decide-which-employee-data-can-be-used-in-ai-tools: its ledger records a generation of 0.007573 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it
-- how-to-sandbox-ai-agent-code-execution: its ledger records a generation of 0.002856 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it
 - how-to-set-ai-chat-retention-rules: its ledger records a generation of 0.00316 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it
 - what-should-a-board-request-in-a-quarterly-ai-risk-report: its ledger records a generation of 0.001391 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it
 
