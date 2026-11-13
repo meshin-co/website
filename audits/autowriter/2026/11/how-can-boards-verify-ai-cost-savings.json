@@ -12,9 +12,9 @@
     "costUsd": 0.035323
   },
   "verdict": {
-    "state": "open",
+    "state": "merged",
     "reason": null,
-    "decidedAt": null
+    "decidedAt": "2026-11-13T04:18:59.895Z"
   },
   "escalations": [],
   "generation": {
@@ -235,5 +235,11 @@
       "against": "/blog/how-to-trace-ai-agent-tool-calls-in-production",
       "detail": "the topic \"How to limit AI agent tool permissions\" repeats /blog/how-to-trace-ai-agent-tool-calls-in-production (\"How to trace AI agent tool calls in production\"): its subject shares agent, ai, tool, 3 of the 5 stems of the smaller one, a containment of 0.60 against the threshold of 0.5"
     }
-  ]
+  ],
+  "measurementDebt": {
+    "mergedCommit": "9d5b74c8d7bda7468fef0911ea63753d2d67eaee",
+    "fingerprint": "5d88b17796b168ada0e6d945acae139b362492546857ca1e8c0aaf93d9001f3e",
+    "recordedAt": "2026-11-13T04:18:59.895Z",
+    "clear": "cd site && GATE_PHASE=<bucket> npm run gate:lh && GATE_PHASE=<bucket> npm run lh:record"
+  }
 }
