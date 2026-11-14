@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "slug": "how-to-review-ai-generated-customer-support-replies",
+  "title": "How to review AI-generated customer support replies",
+  "format": "article",
+  "query": "how to review ai-generated customer support replies",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "origin": "category",
+  "category": "operating-model",
+  "catchUp": {
+    "slot": "06:00",
+    "lateMinutes": 59
+  },
+  "runId": "43568840408-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-14T06:59:58.547Z",
+  "expiresAt": "2026-11-28T06:59:58.547Z"
+}
