@@ -1,0 +1,394 @@
+{
+  "schema": 1,
+  "slug": "how-to-review-ai-generated-customer-support-replies",
+  "runId": "43568840408-1",
+  "generatedAt": "2026-11-14T07:03:07.699Z",
+  "claim": {
+    "title": "How to review AI-generated customer support replies",
+    "query": "how to review ai-generated customer support replies",
+    "origin": "category",
+    "category": "operating-model",
+    "catchUp": {
+      "slot": "06:00",
+      "lateMinutes": 59
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-14",
+      "windowStart": "2026-08-14",
+      "windowEnd": "2026-11-12",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/how-to-review-ai-generated-customer-support-replies",
+    "path": "site/src/data/post/how-to-review-ai-generated-customer-support-replies.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_01af0acbb62c28c7016af8073c287c87d18ca9b7c1a1950251",
+  "published": {
+    "callIndex": 9
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0d7ba15312a2f090016af806f0bde087d1b94e8cd5eacb7f67",
+      "requestDigest": "1e5c66ff11da45af346ce612b7b8136ca303c32b075e21396da8da0d0d3ee6c8",
+      "tokens": {
+        "input": 1073,
+        "output": 68
+      },
+      "costUsd": 0.001413,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_004e1db91b7f1b70016af806f2f85c87d1871ff2417bafd650",
+      "requestDigest": "36f759c7ff2003d1583ddbde593cf74376c29c41bdb8e9ac59e707bdc31c44af",
+      "tokens": {
+        "input": 1131,
+        "output": 118
+      },
+      "costUsd": 0.001721,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0e0d8feb010442f8016af806f59f1487d1b07fc9dccb5f5315",
+      "requestDigest": "275b027feb5147eabe3685edae813b322dbe0e7d71fdb8d4dd902aa2efc76e76",
+      "tokens": {
+        "input": 1072,
+        "output": 80
+      },
+      "costUsd": 0.001472,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_02a6256c1e01783c016af806f7f82c87d1bc7ff220a0bfdbe5",
+      "requestDigest": "33bfdb8a579c497041ca30295a82db03089e1b3128311f39b3fcc8dc40b44895",
+      "tokens": {
+        "input": 1132,
+        "output": 91
+      },
+      "costUsd": 0.001587,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_01c8c77d158ce14b016af806fadd1887d19419dc8859320a21",
+      "requestDigest": "78613c6785c58e987d5661061e3e3814aab7cdb3562a85d27fc9966d57a007fd",
+      "tokens": {
+        "input": 1076,
+        "output": 125
+      },
+      "costUsd": 0.001701,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0212f51fd65dd809016af806fe0fb487d1a15b9b28efce7b32",
+      "requestDigest": "f1d8e452db85e23b56b892c4394a92b4ba6a7314633de26a6162c99bf74df47f",
+      "tokens": {
+        "input": 1132,
+        "output": 157
+      },
+      "costUsd": 0.001917,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_02684cb524219c35016af807011f8887d1b89b4a886d29298b",
+      "requestDigest": "56331ccd73f7fbf89f7760471a93982d7f72593d202e01255ced5ea816e16364",
+      "tokens": {
+        "input": 1080,
+        "output": 78
+      },
+      "costUsd": 0.00147,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_06b703ae61add1e0016af8070368dc87d1b9d16423a9aa6fae",
+      "requestDigest": "1a6ea50e53b5c4058959b27f9375e24afce69ca788011b455b99b774708b1589",
+      "tokens": {
+        "input": 1138,
+        "output": 144
+      },
+      "costUsd": 0.001858,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_045c66c2306c72cc016af80709432487d1bc71141c92bd50b1",
+      "requestDigest": "7a74d6e9261dd66725f67445f40cf8d7908f92c2eb2931a8ff12634b1ddf51fe",
+      "tokens": {
+        "input": 10385,
+        "output": 3903
+      },
+      "costUsd": 0.0299,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_01af0acbb62c28c7016af8073c287c87d18ca9b7c1a1950251",
+      "requestDigest": "ca22f9c9e7186edf79abc6f410eebd59bcfd2c7b646c429cf0f94c2a1e0cfdff",
+      "tokens": {
+        "input": 13507,
+        "output": 3116
+      },
+      "costUsd": 0.029087,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 32726,
+      "output": 7880
+    },
+    "costUsd": 0.072126
+  },
+  "ledger": "audits/autowriter/2026/11/how-to-review-ai-generated-customer-support-replies.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "c2b6532203e332b63186bec625fd7a56be9b3f134f9ac07daa686aaa8af2a4e7",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "ff2fc22c860396d15bc1e93478be8f5bf68a02969a0619724033c6569f2a7df5"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "1e291e4336807e99144f2a63cfd94220707c1c99d9084f960e26799cbf12fde8"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "89ba34fa19f9d87e2d9ef361aac8724b2d2124ecde1b442950d6cdf9ed24fb0e"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "4569b69159d88d3f28a3a8e261c298699b8cb625b6424585cee5d2833ee97f41"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "336f4b2ca9fee2ae2806706dab40bf8154c9bbf02a9574679501c29de35a0456"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "781e985bc20dcb0bdd733843decbb0f9a481fbc1957d15364876cc4d00cc8f85"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "df07e5ca1fced82881ab08e3849da19ec0de824e4be87b2719f174f0f73f33c2"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "b982b04519b5b3438b2b1de89ded9f1e4d1d7fb3",
+    "fingerprint": "5d88b17796b168ada0e6d945acae139b362492546857ca1e8c0aaf93d9001f3e"
+  },
+  "claimTable": [
+    {
+      "sentence": "A polite tone cannot repair a wrong account detail or an invented promise.",
+      "marker": "own-reading",
+      "source": null,
+      "span": null
+    },
+    {
+      "sentence": "Editing a few words is a poor repair when the underlying answer is wrong.",
+      "marker": "own-reading",
+      "source": null,
+      "span": null
+    }
+  ],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 124,
+      "median": 15,
+      "shareBelowThreshold": 0.2097,
+      "shareJustBelow": 0.2097,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/how-to-review-ai-generated-customer-support-replies.json",
+    "audits/autowriter/claims/2026/11/how-to-review-ai-generated-customer-support-replies.json",
+    "audits/autowriter/generations/2026/11/how-to-review-ai-generated-customer-support-replies.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-ai-readiness-assessment-template-for-smb.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-review-ai-generated-customer-support-replies.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/articles-telemetry.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/how-to-review-ai-generated-customer-support-replies.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}

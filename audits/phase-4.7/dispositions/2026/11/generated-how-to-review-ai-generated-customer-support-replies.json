@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/how-to-review-ai-generated-customer-support-replies.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-review-ai-generated-customer-support-replies.json on 2026-11-14. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-review-ai-generated-customer-support-replies.json.",
+    "digest": "ba2ca1f4f060"
+  },
+  {
+    "target": "/blog/how-to-review-ai-generated-customer-support-replies",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-review-ai-generated-customer-support-replies.json on 2026-11-14. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-review-ai-generated-customer-support-replies.json.",
+    "digest": "67dc0134aaf2"
+  }
+]
