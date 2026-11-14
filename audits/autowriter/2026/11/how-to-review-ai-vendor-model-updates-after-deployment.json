@@ -265,5 +265,15 @@
       "against": "audits/autowriter/claims/2026/11/what-should-a-board-request-in-a-quarterly-ai-risk-report.json",
       "detail": "the topic \"How should boards set AI risk limits?\" repeats audits/autowriter/claims/2026/11/what-should-a-board-request-in-a-quarterly-ai-risk-report.json (\"What should a board request in a quarterly AI risk report?\"): its subject shares ai, board, risk, should, 4 of the 6 stems of the smaller one, a containment of 0.67 against the threshold of 0.5"
     }
+  ],
+  "resumes": [
+    {
+      "at": "2026-11-14T19:05:39.416Z",
+      "by": "main-change",
+      "mainSha": "60392bf67ad9c8503efbcde93e14f3deab6e72e8",
+      "failedJobs": [
+        "deploy-preview"
+      ]
+    }
   ]
 }
