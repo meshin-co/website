@@ -8,7 +8,7 @@
   {
     "target": "/blog/ai-readiness-assessment-template-for-smb",
     "status": "rewritten",
-    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/ai-readiness-assessment-template-for-smb.json on 2026-11-03. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json. On 2026-11-11 the shared resource status line this route shows changed from \"Available as a page on this site. A repository copy is not published yet.\" to \"Available as a page on this site. There is no repository copy.\" (owner decision of 2026-11-10); a person read that one line in dist/blog/ai-readiness-assessment-template-for-smb.html and it states what is true today without promising a repository or a date. The rest of this text is still unread by a person.",
-    "digest": "d16d91544a8e"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-generated-customer-support-replies (generation record audits/autowriter/generations/2026/11/how-to-review-ai-generated-customer-support-replies.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "fbc94205464d"
   }
 ]
