@@ -42,8 +42,8 @@ gate; it is an indefinite hold that lets whoever enters the empty lane next deci
 memory, and it survives the tool it reads being replaced. The site entry keeps its own slug; the repository
 and the package do not inherit it.
 
-**Three surfaces, one source.** The owner chose all three on 2026-11-11: an npm package under the scope
-`@meshin`, which is his own npm username, as the thing a download counter can count; a GitHub Action wrapping
+**Three surfaces, one source.** The owner chose all three on 2026-11-11: an npm package, as the thing a download counter can count (first chosen under the scope
+`@meshin`, his own npm username, and made unscoped as `evals-baseline` on 2026-11-15, which L78 records); a GitHub Action wrapping
 it, because one line in a workflow is the lowest entry cost there is; and a dependency-free file anyone can
 copy, for a consumer whose policy forbids both. The package is the source and the other two are generated
 from it, so the three cannot disagree. The Action is a liability as well as a convenience, so it ships an immutable commit and a moving `v1` tag with

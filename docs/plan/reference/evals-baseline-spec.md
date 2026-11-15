@@ -2,8 +2,8 @@
 
 Written 2026-11-11 for the owner's review. **Nothing described here is built.** The repository does not exist:
 `https://github.com/meshin-co/evals-baseline` answered 404 and the organisation page answered 200 when probed on
-2026-11-11 (L76 records the same for the seven slugs). `@meshin/evals-baseline` is not registered on npm (404 at
-17:11 UTC the same day), and neither is the unscoped `evals-baseline` (404). The versioned specification page does not
+2026-11-11 (L76 records the same for the seven slugs). The unscoped `evals-baseline` is not registered on npm (404 at
+17:11 UTC the same day; the scoped form probed in the same minute was dropped by L78 on 2026-11-15). The versioned specification page does not
 exist either: the settled address is `https://meshin.co/spec/evals-baseline/1.0`, and the two candidates probed
 before it was settled, `https://meshin.co/specs/evals-baseline/1.0.0/` and `https://meshin.co/resources/evals-baseline/`,
 both answered 404, while `https://meshin.co/resources/agent-evals-ci-starter/` answered 200.
@@ -33,7 +33,7 @@ the specification half contains, how the guards are proven, and what the reposit
 | Settled item                                                                                                                                                                                               | Source                                                 |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
 | Name `evals-baseline`, chosen over `eval-regression-gate` and over keeping `agent-evals-ci-starter`. The site entry keeps its own slug; the repository and the package do not inherit it                   | `docs/plan/reference/resource-publication-sequence.md` |
-| Three surfaces, one source: an npm package under the scope `@meshin` (the owner's own npm username, not `@meshin-co`), a GitHub Action, a dependency-free copyable file                                    | the same file                                          |
+| Three surfaces, one source: an npm package named `evals-baseline` (first chosen under the owner's own npm scope `@meshin` on 2026-11-11, and made unscoped by L78 on 2026-11-15), a GitHub Action, a dependency-free copyable file                                    | the same file                                          |
 | The package is the source. The Action and the file are generated from it. The Action ships an immutable commit and a moving `v1` tag, the README naming the commit first, and its README says to pin a SHA | the same file                                          |
 | Two input formats at launch, promptfoo and DeepEval. No neutral format of our own yet                                                                                                                      | the same file                                          |
 | A specification and an implementation. A versioned document at a meshin.co address defines what a regression in an agent evaluation is; the repository is its reference implementation                     | the same file                                          |
@@ -615,7 +615,7 @@ not, so only promptfoo can print a version note. The specification does not pret
 
 ### 7.1 The package
 
-**Decided: the package is `@meshin/evals-baseline`, it has no runtime dependency, and its source imports only built-in
+**Decided: the package is `evals-baseline` (scoped under `@meshin` until L78 made it unscoped on 2026-11-15), it has no runtime dependency, and its source imports only built-in
 `node:` modules.** The second half is what makes the copyable file a concatenation instead of a bundle with a resolver
 inside it.
 
@@ -919,7 +919,7 @@ place, and the page says so rather than implying the binding makes a green trust
 scope search returned zero packages for `scope:meshin`, which shows no public package and says nothing about
 the account.
 
-**D. The repository is `meshin-co` and the package is `@meshin`.** Two names for one artefact, chosen
+**D. The repository is `meshin-co` and the package is `@meshin`.** *Amended on 2026-11-15 by L78: the package is the unscoped `evals-baseline`, so the two names are one word; what follows is the decision of 2026-11-11 as it stood.* Two names for one artefact, chosen
 knowingly. The Action publishes an immutable commit and a moving `v1` tag, and the README names the commit
 first. The research is against the moving tag — a mutable major tag from a one-person publisher is code
 execution inside the consumer's CI under a name its author can rewrite, and a company that runs a
