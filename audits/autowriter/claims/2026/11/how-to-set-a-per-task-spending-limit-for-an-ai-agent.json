@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "slug": "how-to-set-a-per-task-spending-limit-for-an-ai-agent",
+  "title": "How to set a per-task spending limit for an AI agent",
+  "format": "article",
+  "query": "how to set a per-task spending limit for an ai agent",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "origin": "category",
+  "category": "agentic-architecture",
+  "catchUp": {
+    "slot": "06:00",
+    "lateMinutes": 69
+  },
+  "runId": "43688524363-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-15T07:09:39.139Z",
+  "expiresAt": "2026-11-29T07:09:39.139Z"
+}
