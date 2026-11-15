@@ -1,12 +1,14 @@
 import type { APIRoute, GetStaticPaths } from 'astro';
-import { getCollection } from 'astro:content';
+import { type CollectionEntry, getCollection } from 'astro:content';
 
 import { teaser } from '~/utils/faq-meta.mjs';
 import { absoluteUrl, renderSidecar } from '~/utils/machine-text.mjs';
 import { publishedArtefacts, publishedFilesMarkdown } from '~/utils/spec-artefacts.mjs';
+import { changelogMarkdown, changelogRows } from '~/utils/spec-changelog.mjs';
 import {
   citationMarkdown,
   groupSeries,
+  licenceMarkdown,
   seriesDescription,
   seriesLabel,
   seriesSidecarBody,
@@ -35,9 +37,17 @@ export const getStaticPaths: GetStaticPaths = async () => {
   for (const [collection, base] of Object.entries(BASES)) {
     const entries = await getCollection(collection as keyof typeof BASES, isLive);
     for (const entry of entries) {
-      const cited = 'citeAs' in entry.data ? `${citationMarkdown(specCitation({ ...entry.data, site }))}\n` : '';
-      const published =
-        collection === 'spec' ? publishedFilesMarkdown({ site, artefacts: publishedArtefacts(entry) }) : '';
+      const cited =
+        'citeAs' in entry.data
+          ? `${citationMarkdown(specCitation({ ...entry.data, site }))}\n${licenceMarkdown({ site, license: entry.data.license })}\n`
+          : '';
+      const spec = collection === 'spec' ? (entry as CollectionEntry<'spec'>) : null;
+      const appended = spec
+        ? [
+            publishedFilesMarkdown({ site, artefacts: publishedArtefacts(spec) }),
+            changelogMarkdown(changelogRows(spec.data)),
+          ]
+        : [];
       const body = 'answer' in entry.data ? entry.data.answer : `${cited}${entry.body ?? ''}`;
       paths.push({
         params: { slug: `${base}/${entry.id}` },
@@ -45,7 +55,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
           title: 'question' in entry.data ? entry.data.question : entry.data.title,
           description: 'answer' in entry.data ? teaser(entry.data.answer) : entry.data.description,
           updated: entry.data.updatedDate ?? entry.data.publishDate,
-          body: published === '' ? body : `${body.trimEnd()}\n\n${published}`,
+          body: spec ? `${[body.trimEnd(), ...appended.map((part) => part.trimEnd())].join('\n\n')}\n` : body,
           path: `/${base}/${entry.id}`,
         },
       });

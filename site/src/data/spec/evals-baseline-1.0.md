@@ -1,7 +1,7 @@
 ---
 title: evals-baseline specification 1.0
 description: The evals-baseline specification 1.0 says what a regression in an agent evaluation is, and defines the baseline file, the findings and the exit codes.
-publishDate: 2026-11-12
+publishDate: 2026-11-15
 updatedDate: 2026-11-15
 name: evals-baseline
 version: '1.0'
@@ -378,12 +378,6 @@ Each version has one page, at an address that holds both numbers, such as `https
 That address carries no trailing slash. This site answers the slash form with a redirect, and an address that redirects is one step from being rewritten by whoever quotes it.
 
 Only versioned pages are cited. The [evals-baseline series page](/spec/evals-baseline) lists every published version, names the current one and holds no normative text. The version sits in the address so that a later version publishes beside the first and never rewrites what people already cited.
-
-## Changelog
-
-| Version | Date       | Change            |
-| ------- | ---------- | ----------------- |
-| 1.0     | 2026-11-12 | First publication |
 
 ## Conformance vectors
 

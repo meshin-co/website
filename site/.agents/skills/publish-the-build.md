@@ -70,8 +70,8 @@ than undoes. Reverting means reverting on `main`, gating and publishing it (row 
 npm run smoke:prod <url>
 ```
 
-17 live requests against any origin — status, headers, the per-route verdict — plus 2 `www` 301 checks
-on the apex. Only a live response can confirm the headers of `dist/_headers`; a green local gate cannot.
+31 live requests against any origin — status, headers, the per-route verdict, the markdown negotiation — plus 2 `www` 301
+checks on the apex. Only a live response can confirm the headers of `dist/_headers`; a green local gate cannot.
 
 **Publish Live** then runs `node scripts/live-entry.mjs --dist dist --state .live-entries.json`.
 `scripts/live-announce.mjs` asks `site.site`, not `pages.dev`, for the page of every entry no message announced

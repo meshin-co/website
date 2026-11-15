@@ -185,7 +185,7 @@ npm run check      # astro check, eslint, prettier
 npm run preview    # serve dist for local gate runs
 npm run gate:lh    # both form factors, all audited routes, ~30 min
 npm run gate:docs  # every path, command and locked-row range a document cites; a path git ignores fails; records exempt
-npm run smoke:prod # 17 live requests against any origin, plus 2 www checks on the apex, 21 checks
+npm run smoke:prod # 31 live requests against any origin, plus 2 www checks on the apex, 33 checks
 npm run test:smoke # every guard family proven able to fail, ~5 min, run by .githooks/pre-push
 ```
 

@@ -1,6 +1,7 @@
 import { standInKind } from './archive-url.mjs';
 import { ogImagePath } from './machine-links.mjs';
 import { brandFromDisk, contactEmail } from './brand.mjs';
+import { licenseTextUrl } from './resource-license.mjs';
 import { seriesLabel } from './spec-series.mjs';
 
 const BRAND = brandFromDisk();
@@ -241,7 +242,7 @@ export function resourceNode(site, resource, options = {}) {
     description: resource.description,
     ...(resource.publishDate ? { datePublished: isoInstant(resource.publishDate) } : {}),
     ...(resource.updatedDate ? { dateModified: isoInstant(resource.updatedDate) } : {}),
-    ...(resource.license ? { license: resource.license } : {}),
+    ...(resource.license ? { license: licenseTextUrl(site, resource.license) } : {}),
     version: resource.version,
     author: { '@id': `${site}/#person` },
     inLanguage: LANGUAGE,
@@ -273,7 +274,7 @@ export function specNode(site, spec, { image } = {}) {
     mainEntityOfPage: { '@id': webPageId(site, path) },
     author: { '@id': `${site}/#person` },
     publisher: { '@id': `${site}/#org` },
-    license: spec.license,
+    license: licenseTextUrl(site, spec.license),
     isPartOf: { '@id': specSeriesId(site, spec.name) },
   };
 }

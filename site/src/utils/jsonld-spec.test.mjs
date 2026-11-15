@@ -33,13 +33,20 @@ test('a specification version is a TechArticle at its own address, carrying its 
     mainEntityOfPage: { '@id': `${SITE}/spec/evals-baseline/1.0#webpage` },
     author: { '@id': `${SITE}/#person` },
     publisher: { '@id': `${SITE}/#org` },
-    license: 'CC-BY-4.0',
+    license: `${SITE}/licenses/CC-BY-4.0.txt`,
     isPartOf: { '@id': `${SITE}/spec/evals-baseline#page` },
   });
 });
 
 test('a specification given no image falls back to its own card', () => {
   assert.equal(specNode(SITE, SPEC).image, `${SITE}/og/spec/evals-baseline/1.0.png`);
+});
+
+test('the licence is the address of its text on this site, never the bare identifier', () => {
+  const { license } = specNode(SITE, { ...SPEC, license: 'Apache-2.0' });
+
+  assert.equal(license, `${SITE}/licenses/Apache-2.0.txt`);
+  assert.ok(URL.canParse(license), license);
 });
 
 test('the series stub is the page a version points at, and declares no more than that', () => {

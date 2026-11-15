@@ -1,4 +1,5 @@
 import { lastmod } from './lastmod.mjs';
+import { licenseTextUrl } from './resource-license.mjs';
 
 export const SPEC_NAME = /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/;
 
@@ -101,6 +102,13 @@ export function citationMarkdown(citation) {
   const forms = CITATION_FORMS.map(({ key, label }) => `${label}:\n\n\`\`\`text\n${citation[key]}\n\`\`\``);
   return `## ${CITATION_HEADING}\n\n${forms.join('\n\n')}\n`;
 }
+
+export const LICENCE_LABEL = 'Licence';
+
+export const LICENCE_SCOPE = 'It covers this page and the files it publishes.';
+
+export const licenceMarkdown = ({ site, license }) =>
+  `${LICENCE_LABEL}: [${license}](${licenseTextUrl(site, license)}). ${LICENCE_SCOPE}\n`;
 
 const dayOf = (stamp) => new Date(stamp).toISOString().slice(0, 10);
 

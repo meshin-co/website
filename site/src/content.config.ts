@@ -15,6 +15,7 @@ import {
 import { LICENSE_ID, licenseHasText } from '~/utils/resource-license.mjs';
 import { collectionPattern } from '~/utils/visual-corpus.mjs';
 import { CITE_TOKEN, SPEC_NAME, SPEC_VERSION, specId } from '~/utils/spec-series.mjs';
+import { correctionsMatchDates } from '~/utils/spec-changelog.mjs';
 
 const CATEGORIES = ['governance', 'agentic-architecture', 'operating-model', 'executive'] as const;
 
@@ -65,6 +66,12 @@ const datesInOrder = <T extends { publishDate: Date; updatedDate: Date }>(entry:
   isNotBeforePublish(entry.publishDate, entry.updatedDate);
 
 const datesInOrderMessage = { message: 'updatedDate must not be before publishDate', path: ['updatedDate'] };
+
+const correctionsMatchDatesMessage = {
+  message:
+    'updatedDate must be the date of the last correction, or publishDate when nothing was corrected, and corrections must be in date order from publishDate',
+  path: ['updatedDate'],
+};
 
 const licenseTextMessage = {
   message: 'needs its text. Add public/licenses/<license>.txt',
@@ -158,8 +165,9 @@ const specCollection = defineCollection({
         message: `must contain ${CITE_TOKEN}, the place the link to this version goes`,
       }),
       citeKey: z.string().min(1),
+      corrections: z.array(z.object({ date: z.date(), change: z.string().min(1) })).default([]),
     })
-    .refine(datesInOrder, datesInOrderMessage)
+    .refine(correctionsMatchDates, correctionsMatchDatesMessage)
     .refine((entry) => licenseHasText(entry), licenseTextMessage),
 });
 

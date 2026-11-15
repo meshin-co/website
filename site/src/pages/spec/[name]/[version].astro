@@ -25,8 +25,17 @@ import {
 import { lastmod } from '~/utils/lastmod.mjs';
 import { articleMetadata } from '~/utils/machine-links.mjs';
 import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+import { licenseTextUrl } from '~/utils/resource-license.mjs';
 import { PUBLISHED_FILES, publishedArtefacts } from '~/utils/spec-artefacts.mjs';
-import { CITATION_FORMS, CITATION_HEADING, seriesLabel, specCitation } from '~/utils/spec-series.mjs';
+import { CHANGELOG, changelogRows } from '~/utils/spec-changelog.mjs';
+import {
+  CITATION_FORMS,
+  CITATION_HEADING,
+  LICENCE_LABEL,
+  LICENCE_SCOPE,
+  seriesLabel,
+  specCitation,
+} from '~/utils/spec-series.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const specs = await getCollection('spec', isPublished);
@@ -41,10 +50,12 @@ const { spec } = Astro.props;
 const { data } = spec;
 const { Content, headings } = await render(spec);
 const artefacts = publishedArtefacts(spec);
-const contents =
-  artefacts.length > 0
-    ? [...headings, { depth: 2, slug: PUBLISHED_FILES.id, text: PUBLISHED_FILES.heading }]
-    : headings;
+const changelog = changelogRows(data);
+const contents = [
+  ...headings,
+  ...(artefacts.length > 0 ? [{ depth: 2, slug: PUBLISHED_FILES.id, text: PUBLISHED_FILES.heading }] : []),
+  { depth: 2, slug: CHANGELOG.id, text: CHANGELOG.heading },
+];
 const site = import.meta.env.SITE.replace(/\/$/, '');
 const path = `/spec/${spec.id}`;
 
@@ -108,10 +119,16 @@ const longDate = (date: Date) => date.toLocaleDateString('en-GB', { day: 'numeri
   <article>
     <Section bordered={false} headingLevel={1} eyebrow="Specification" title={data.title} lead={data.description}>
       <p class="mt-6 font-mono text-xs text-muted" data-gate-ignore>
-        Published{' '}
+        Version {data.version}{' · Published '}
         <time datetime={day(data.publishDate)}>{longDate(data.publishDate)}</time>
-        {' · Updated '}
-        <time datetime={day(data.updatedDate)}>{longDate(data.updatedDate)}</time>
+        {
+          data.corrections.length > 0 && (
+            <>
+              {' · Updated '}
+              <time datetime={day(data.updatedDate)}>{longDate(data.updatedDate)}</time>
+            </>
+          )
+        }
       </p>
     </Section>
 
@@ -121,13 +138,20 @@ const longDate = (date: Date) => date.toLocaleDateString('en-GB', { day: 'numeri
           CITATION_FORMS.map(({ key, label }) => (
             <div>
               <h3 class="font-mono text-xs text-muted">{label}</h3>
-              <pre class="mt-3 border border-line bg-page px-5 py-4 font-mono text-sm break-words whitespace-pre-wrap text-heading">
-                <code>{citation[key as keyof typeof citation]}</code>
-              </pre>
+              <pre
+                class="mt-3 border border-line bg-page px-5 py-4 font-mono text-sm break-words whitespace-pre-wrap text-heading"
+                set:text={citation[key as keyof typeof citation]}
+              />
             </div>
           ))
         }
       </div>
+      <p class="mt-8 max-w-[68ch] text-sm text-muted">
+        {LICENCE_LABEL}: <a
+          href={licenseTextUrl(site, data.license)}
+          class="text-link underline decoration-2 underline-offset-4 hover:decoration-primary">{data.license}</a
+        >. {LICENCE_SCOPE}
+      </p>
     </Section>
 
     <Section eyebrow="Detail" title="The full text">
@@ -161,6 +185,30 @@ const longDate = (date: Date) => date.toLocaleDateString('en-GB', { day: 'numeri
               </>
             )
           }
+          <h2 id={CHANGELOG.id}>
+            {CHANGELOG.heading}
+            <a href={`#${CHANGELOG.id}`} class="heading-anchor" aria-hidden="true" tabindex="-1"></a>
+          </h2>
+          <div class="table-scroll" tabindex="0">
+            <table>
+              <thead>
+                <tr>
+                  {CHANGELOG.columns.map((column) => <th>{column}</th>)}
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  changelog.map(({ version, date, change }) => (
+                    <tr>
+                      <td>{version}</td>
+                      <td>{date}</td>
+                      <td>{change}</td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
         <div class="lg:sticky lg:top-24 lg:self-start">
           <TableOfContents headings={contents} />

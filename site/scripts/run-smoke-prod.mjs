@@ -3,11 +3,16 @@ import { join } from 'node:path';
 
 import { generatorRevision } from './report.mjs';
 import {
+  ACCEPT_PROBES,
+  PATH_SHAPES,
+  acceptVerdict,
   canonicalHostVerdict,
   checkHeaders,
   checkNoindex,
   markdownNegotiationVerdict,
+  pathAgreementVerdict,
   renderSmoke,
+  varyVerdict,
   verdictFor,
 } from './smoke-prod.mjs';
 import { brandFromDisk } from '../src/utils/brand.mjs';
@@ -36,6 +41,16 @@ const MACHINE = [
   '/.well-known/security.txt',
 ];
 
+async function observe(path, accept) {
+  const response = await fetch(`${origin}${path}`, { headers: { accept }, redirect: 'manual' });
+  await response.body?.cancel();
+  return {
+    status: response.status,
+    location: response.headers.get('location') ?? undefined,
+    contentLocation: response.headers.get('content-location') ?? undefined,
+  };
+}
+
 const rows = [];
 
 const home = await fetch(`${origin}/`, { redirect: 'manual' });
@@ -51,6 +66,20 @@ rows.push(
     contentType: asMarkdown.headers.get('content-type') ?? '',
   })
 );
+rows.push(varyVerdict('html', headers.vary ?? null));
+rows.push(varyVerdict('markdown', asMarkdown.headers.get('vary')));
+
+for (const probe of ACCEPT_PROBES) {
+  const response = await fetch(`${origin}/`, { headers: { accept: probe.accept }, redirect: 'manual' });
+  const contentType = response.headers.get('content-type') ?? '';
+  rows.push(acceptVerdict(probe, { status: response.status, contentType }));
+}
+
+for (const path of PATH_SHAPES) {
+  const html = await observe(path, 'text/html');
+  const markdown = await observe(path, 'text/markdown');
+  rows.push(pathAgreementVerdict(path, { html, markdown }));
+}
 
 for (const route of CANONICAL.slice(1)) {
   const response = await fetch(`${origin}${route}`, { redirect: 'manual' });

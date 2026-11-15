@@ -1,12 +1,14 @@
 import { readdir, readFile } from 'node:fs/promises';
-import { join, relative, sep } from 'node:path';
+import { join, relative, resolve, sep } from 'node:path';
 
 import { ConformanceTester } from 'lighthouse/third-party/ard/ard.js';
 
 import { specArtefactFindings } from '../src/utils/spec-artefacts-check.mjs';
+import { mirrorSummary, specMirrors } from '../src/utils/spec-artefacts.mjs';
 import { publicJsonRoutes } from './gen-openapi.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 
+const SITE_ROOT = resolve(import.meta.dirname, '..');
 const REQUIRED_SIGNALS = ['search', 'ai-train', 'ai-input'];
 const REQUIRED_RELATIONS = ['api-catalog', 'service-desc', 'describedby'];
 const LINK_VALUE = /^<([^>]+)>;\s*rel="([^"]+)"(?:;.*)?$/;
@@ -247,11 +249,22 @@ export async function agentInterfaceFindings(distDir) {
   ];
 }
 
+export function gateReport(distFindings, mirrors) {
+  const findings = [...distFindings, ...mirrors.problems];
+  return {
+    failed: findings.length > 0,
+    lines: [
+      ...findings.map((finding) => `  ${finding}`),
+      ...mirrorSummary(mirrors).map((line) => `  ${line}`),
+      `agents: ${findings.length} findings`,
+    ],
+  };
+}
+
 async function main(distDir) {
-  const findings = await agentInterfaceFindings(distDir);
-  for (const finding of findings) console.log(`  ${finding}`);
-  console.log(`agents: ${findings.length} findings`);
-  if (findings.length > 0) process.exitCode = 1;
+  const { failed, lines } = gateReport(await agentInterfaceFindings(distDir), specMirrors({ root: SITE_ROOT }));
+  for (const line of lines) console.log(line);
+  if (failed) process.exitCode = 1;
 }
 
 if (invokedDirectly(import.meta.filename, process.argv[1])) {

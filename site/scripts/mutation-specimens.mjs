@@ -409,6 +409,14 @@ export const SPECIMENS = {
         return html.slice(0, html.lastIndexOf('<li', mark)) + html.slice(html.indexOf('</li>', mark) + '</li>'.length);
       }),
   },
+  agentsSpecMirrorLayoutMoves: {
+    gate: 'gate:agents',
+    token: 'the layout of that checkout moved',
+    plant: (copySite) =>
+      editFile(join(copySite, 'src/data/spec/evals-baseline-1.0/mirror.json'), () =>
+        JSON.stringify({ 'vectors.json': { checkout: '.', path: 'fixtures/vector.json' } })
+      ),
+  },
   machine: {
     gate: 'gate:machine',
     token: 'feed.json does not mirror rss.xml item-for-item',

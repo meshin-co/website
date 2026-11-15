@@ -13,6 +13,7 @@ export const PUBLISHED_FILES = Object.freeze({
 
 const MEDIA_TYPES = Object.freeze({ '.json': 'application/json' });
 const ENTRY_EXTENSION = /\.mdx?$/;
+const SPEC_DATA = 'src/data/spec';
 
 export const sha256Hex = (bytes) => createHash('sha256').update(bytes).digest('hex');
 
@@ -66,33 +67,83 @@ function readDeclaration(path) {
   return { problems, sources };
 }
 
-function mirrorProblem({ folder, root, file, source }) {
+function compareMirror({ folder, root, file, source }) {
   const copy = join(folder, file);
   if (!existsSync(copy)) {
-    return [`${MIRROR_FILE} declares ${file}, which is not in the folder ${relative(root, folder)}`];
+    return { problems: [`${MIRROR_FILE} declares ${file}, which is not in the folder ${relative(root, folder)}`] };
   }
   const checkout = resolve(root, source.checkout);
-  if (!existsSync(checkout)) return [];
+  if (!existsSync(checkout)) {
+    return { skipped: `no checkout at ${checkout}, which ${MIRROR_FILE} declares as ${source.checkout}` };
+  }
   const upstream = join(checkout, source.path);
   if (!existsSync(upstream)) {
-    return [
-      `${checkout} holds no ${source.path}, so ${file} cannot be compared with it: the layout of that checkout moved`,
-    ];
+    return {
+      problems: [
+        `${checkout} holds no ${source.path}, so ${file} cannot be compared with it: the layout of that checkout moved`,
+      ],
+    };
   }
   const stored = readFileSync(copy);
   const current = readFileSync(upstream);
-  if (stored.equals(current)) return [];
-  return [
-    `${file} is not the upstream file. The stored copy is ${sha256Hex(stored)} (${stored.length} bytes) and the upstream file is ${sha256Hex(current)} (${current.length} bytes). Refresh the copy with: cp ${upstream} ${copy}`,
-  ];
+  if (stored.equals(current)) return { compared: true };
+  return {
+    compared: true,
+    problems: [
+      `${file} is not the upstream file. The stored copy is ${sha256Hex(stored)} (${stored.length} bytes) and the upstream file is ${sha256Hex(current)} (${current.length} bytes). Refresh the copy with: cp ${upstream} ${copy}`,
+    ],
+  };
 }
 
-export function mirrorProblems(entry, { root = process.cwd() } = {}) {
-  const folder = folderOf(entry, root);
+function folderAccount({ folder, root }) {
   const declarationPath = join(folder, MIRROR_FILE);
-  if (!existsSync(declarationPath)) return [];
+  if (!existsSync(declarationPath)) return { declared: 0, compared: 0, skipped: [], problems: [] };
   const { problems, sources = [] } = readDeclaration(declarationPath);
-  return [...problems, ...sources.flatMap(([file, source]) => mirrorProblem({ folder, root, file, source }))];
+  const outcomes = sources.map(([file, source]) => ({ file, ...compareMirror({ folder, root, file, source }) }));
+  return {
+    declared: sources.length,
+    compared: outcomes.filter(({ compared }) => compared).length,
+    skipped: outcomes.filter(({ skipped }) => skipped).map(({ file, skipped }) => ({ file, reason: skipped })),
+    problems: [...problems, ...outcomes.flatMap((outcome) => outcome.problems ?? [])],
+  };
+}
+
+export function mirrorAccount(entry, { root = process.cwd() } = {}) {
+  return folderAccount({ folder: folderOf(entry, root), root });
+}
+
+export function mirrorProblems(entry, options) {
+  return mirrorAccount(entry, options).problems;
+}
+
+const sum = (accounts, key) => accounts.reduce((total, account) => total + account[key], 0);
+
+export function specMirrors({ root = process.cwd() } = {}) {
+  const base = join(root, SPEC_DATA);
+  const names = existsSync(base)
+    ? readdirSync(base, { withFileTypes: true })
+        .filter((item) => item.isDirectory() && existsSync(join(base, item.name, MIRROR_FILE)))
+        .sort(byName)
+        .map((item) => item.name)
+    : [];
+  const accounts = names.map((name) => ({ name, ...folderAccount({ folder: join(base, name), root }) }));
+  return {
+    declared: sum(accounts, 'declared'),
+    compared: sum(accounts, 'compared'),
+    skipped: accounts.flatMap(({ name, skipped }) =>
+      skipped.map(({ file, reason }) => ({ file: `${SPEC_DATA}/${name}/${file}`, reason }))
+    ),
+    problems: accounts.flatMap(({ name, problems }) => problems.map((problem) => `${SPEC_DATA}/${name}: ${problem}`)),
+  };
+}
+
+export function mirrorSummary({ declared, compared, skipped }) {
+  if (declared === 0) return ['mirrors: none declared'];
+  const counts = `mirrors: ${declared} declared, ${compared} compared, ${declared - compared} not compared`;
+  return [
+    compared === 0 ? `${counts}; nothing was compared with an upstream file` : counts,
+    ...skipped.map(({ file, reason }) => `not compared: ${file}: ${reason}`),
+  ];
 }
 
 export function publishedArtefacts(entry, options) {

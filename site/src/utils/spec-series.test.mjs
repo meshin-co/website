@@ -5,11 +5,14 @@ import {
   CITATION_FORMS,
   CITATION_HEADING,
   CITE_TOKEN,
+  LICENCE_LABEL,
+  LICENCE_SCOPE,
   SPEC_NAME,
   SPEC_VERSION,
   citationMarkdown,
   compareVersions,
   groupSeries,
+  licenceMarkdown,
   seriesDescription,
   seriesLabel,
   seriesSearchRecord,
@@ -209,6 +212,15 @@ test('the citation as markdown is a heading and each form under its label in a c
       '```',
       '',
     ].join('\n')
+  );
+});
+
+test('the licence statement names the licence, links the text this site ships for it, and says what it covers', () => {
+  assert.equal(LICENCE_LABEL, 'Licence');
+  assert.equal(LICENCE_SCOPE, 'It covers this page and the files it publishes.');
+  assert.equal(
+    licenceMarkdown({ site: SITE, license: 'CC-BY-4.0' }),
+    'Licence: [CC-BY-4.0](https://meshin.co/licenses/CC-BY-4.0.txt). It covers this page and the files it publishes.\n'
   );
 });
 

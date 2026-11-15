@@ -189,6 +189,7 @@ export const FAMILIES = [
   { id: 'agents-spec-served-file-drifts', kind: 'specimen', specimen: 'agentsSpecServedFileDrifts' },
   { id: 'agents-spec-sidecar-digest-drifts', kind: 'specimen', specimen: 'agentsSpecSidecarDigestDrifts' },
   { id: 'agents-spec-artefact-unlisted', kind: 'specimen', specimen: 'agentsSpecArtefactUnlisted' },
+  { id: 'agents-spec-mirror-layout-moves', kind: 'specimen', specimen: 'agentsSpecMirrorLayoutMoves' },
   { id: 'machine-feed-coverage', kind: 'specimen', specimen: 'machine' },
   { id: 'canonical-names-a-built-file', kind: 'specimen', specimen: 'canonical' },
   { id: 'gate-wiring-removed-from-ci', kind: 'specimen', specimen: 'wiringRemoved' },

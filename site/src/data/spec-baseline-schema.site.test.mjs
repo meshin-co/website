@@ -33,6 +33,16 @@ test('the schema names the address it is served at', () => {
   );
 });
 
+test('the schema states the licence its page declares, with the identifier and the address of the text', () => {
+  const license = page.match(/^license: (\S+)$/m)?.[1];
+  assert.ok(license, 'the page declares no licence');
+  assert.ok(schema.$comment?.includes(`SPDX-License-Identifier: ${license}`), 'the schema names no licence identifier');
+  assert.ok(
+    schema.$comment.includes(`https://meshin.co/licenses/${license}.txt`),
+    'the schema names no address for the licence text'
+  );
+});
+
 test('every keyword the schema uses is one the repository validator enforces', () => {
   assert.doesNotThrow(() => problemsOf(example));
 });

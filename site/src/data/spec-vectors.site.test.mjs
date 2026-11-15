@@ -205,11 +205,11 @@ test('every vector that is not a check run names no finding, so the other runs t
 
 const siteRoot = fileURLToPath(new URL('../../', import.meta.url));
 const mirror = JSON.parse(readFileSync(new URL('mirror.json', folder), 'utf8'))['vectors.json'];
-const reference = resolve(siteRoot, mirror.checkout, mirror.path);
+const checkout = resolve(siteRoot, mirror.checkout);
 
 test(
   'the vendored vectors are byte for byte the implementation file they were copied from',
-  { skip: !existsSync(reference) && 'the implementation checkout is not on this machine, so nothing was compared' },
+  { skip: !existsSync(checkout) && 'the implementation checkout is not on this machine, so nothing was compared' },
   () => {
     assert.deepEqual(mirrorProblems({ filePath: 'src/data/spec/evals-baseline-1.0.md' }, { root: siteRoot }), []);
   }

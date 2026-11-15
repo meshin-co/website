@@ -1,6 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://meshin.co/spec/evals-baseline/1.0/baseline.schema.json",
+  "$comment": "SPDX-License-Identifier: CC-BY-4.0. Copyright (c) 2026 Dmitri Meshin. Licensed under the Creative Commons Attribution 4.0 International licence, whose text is at https://meshin.co/licenses/CC-BY-4.0.txt. This file belongs to the evals-baseline specification 1.0 at https://meshin.co/spec/evals-baseline/1.0.",
   "title": "evals-baseline baseline file, specification 1.0",
   "description": "The shape of the evals-baseline.json file that evals-baseline specification 1.0 defines. A schema checks shape only. The specification decides what a schema cannot say: that recordedAt names a day that exists, that no key appears twice in one object, and that the metric keys are in sorted order.",
   "type": "object",
@@ -16,6 +17,8 @@
     },
     "recordedAt": {
       "type": "string",
+      "minLength": 24,
+      "maxLength": 24,
       "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}Z$",
       "description": "An ISO 8601 UTC time to the millisecond, the only clock in the file. This pattern checks the form. A day that does not exist, such as 2026-02-30, passes the pattern and is still not a time."
     },
@@ -88,6 +91,8 @@
         },
         "digest": {
           "type": "string",
+          "minLength": 12,
+          "maxLength": 12,
           "pattern": "^[0-9a-f]{12}$",
           "description": "The first 12 hexadecimal characters of the SHA-256 that the binding check defines, in lowercase."
         }
