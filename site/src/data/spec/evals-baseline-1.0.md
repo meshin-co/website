@@ -2,7 +2,7 @@
 title: evals-baseline specification 1.0
 description: The evals-baseline specification 1.0 says what a regression in an agent evaluation is, and defines the baseline file, the findings and the exit codes.
 publishDate: 2026-11-12
-updatedDate: 2026-11-12
+updatedDate: 2026-11-15
 name: evals-baseline
 version: '1.0'
 license: CC-BY-4.0
@@ -10,7 +10,7 @@ citeAs: This project guards its agent evaluations against regression as defined 
 citeKey: spec
 ---
 
-In the evals-baseline specification 1.0, a regression is a difference between a baseline and a later run of the same suite. It takes one of three forms: a metric has gone missing, a value has dropped beyond its tolerance, or a sample count has changed.
+In the evals-baseline specification 1.0, a regression is a difference between a baseline and a later run of the same suite. It takes one of three forms: a metric has gone missing, a value has dropped beyond its tolerance, or a sample count has fallen.
 
 A baseline is a reduced record of one run. A check compares it with a later run, and prints a finding for each regression and for each input it cannot read. By default a finding only warns, and the check still passes. Strict mode is the only way for a finding to make the check fail.
 
@@ -39,19 +39,19 @@ The published vectors are the normative annex for exact text: every line a comma
 
 ## Four comparison rules
 
-A finding of a rule is one line of the form `<id> <key>: <text>`. The table gives the finding id and the form of the message text of each rule. A rule that fails produces a finding, and the exit codes say whether a finding stops the run. The clauses that follow state the rules exactly.
+A finding of a rule is one line of the form `<id> "<key>": <text>`. The quotes belong to the line, and the key is written as Printed lines, below, requires. The table gives the finding id and the form of the message text of each rule. A rule that fails produces a finding, and the exit codes say whether a finding stops the run. The clauses that follow state the rules exactly.
 
-| #   | Rule                                                | Compares                                                   | Finding id       | Message text                                                                                        |
-| --- | --------------------------------------------------- | ---------------------------------------------------------- | ---------------- | --------------------------------------------------------------------------------------------------- |
-| 1   | A metric the baseline names and the run lacks fails | the set of keys in the baseline against the run            | `missing-metric` | `the baseline names it (<value> over <n> samples) and this run has no such metric`                  |
-| 2   | A value under the baseline, beyond tolerance, fails | baseline value against run value, per key                  | `below-baseline` | `<run value> is below the baseline <baseline value> by <drop>, more than the tolerance <tolerance>` |
-| 3   | Metrics present only on the run are ignored         | nothing; the keys are listed in one note                   | none             | `note: <n> metric(s) only in this run, not compared (rule 3): <keys>`                               |
-| 4   | Unequal sample counts fail                          | baseline `samples` against the run's sample count, per key | `sample-count`   | `the baseline holds <b> samples and this run holds <r>`                                             |
+| #   | Rule                                                | Compares                                                   | Finding id       | Message text                                                                                                                          |
+| --- | --------------------------------------------------- | ---------------------------------------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | A metric the baseline names and the run lacks fails | the set of keys in the baseline against the run            | `missing-metric` | `the baseline names it (<value> over <n> samples) and this run has no such metric`                                                    |
+| 2   | A value under the baseline, beyond tolerance, fails | baseline value against run value, per key                  | `below-baseline` | `<run value> over <r> samples is below the baseline <baseline value> over <b> samples by <drop>, more than the tolerance <tolerance>` |
+| 3   | Metrics present only on the run are ignored         | nothing; the keys are listed in one note                   | none             | `note: <n> metric(s) only in this run, not compared (rule 3): <keys>`                                                                 |
+| 4   | A smaller sample count fails                        | baseline `samples` against the run's sample count, per key | `sample-count`   | `the baseline holds <b> samples and this run holds <r>`                                                                               |
 
 1. For every key in the baseline, a run that holds no samples for that key MUST produce `missing-metric`. If the run holds that metric but the reader refuses it, the finding is `unreadable-metric` instead, and the reader's reason is its text. Rules 2 and 4 are not evaluated for a key that rule 1 reported.
-2. For every key present in both, let the drop be the baseline value minus the run value. Let `q(x)` be `floor(x * 1,000,000 + 0.5)`, in IEEE 754 double-precision arithmetic. The check MUST report `below-baseline` when `q(baseline) - q(run) > q(tolerance)`, and MUST NOT otherwise. A value higher than the baseline is never a finding. The message prints the drop to six decimals with trailing zeros removed. Whole numbers are compared because plain subtraction of 64-bit floats can fail a run that sits exactly on its tolerance. For example, 0.92 - 0.9 is 0.020000000000000018, which is more than 0.02.
-3. A key present in the run and absent from the baseline MUST NOT produce a finding. The check lists at most ten such keys in one note, in sorted order, then `, and <n> more`.
-4. For every key present in both, a sample count different from the baseline's `samples` MUST produce `sample-count`, whichever direction it differs in. Rules 2 and 4 are independent, so one key can produce both.
+2. For every key present in both, let the drop be the baseline value minus the run value. Let `q(x)` be `floor(x * 1,000,000 + 0.5)`, in IEEE 754 double-precision arithmetic. The check MUST report `below-baseline` when `q(baseline) - q(run) > q(tolerance)`, and MUST NOT otherwise. A value higher than the baseline is never a finding. The message prints the drop to six decimals with trailing zeros removed. It gives the sample count of the run and of the baseline beside their values. It does not say how many cases the drop is, because a value is a mean on the tool's own scale. Whole numbers are compared because plain subtraction of 64-bit floats can fail a run that sits exactly on its tolerance. For example, 0.92 - 0.9 is 0.020000000000000018, which is more than 0.02.
+3. A key present in the run and absent from the baseline MUST NOT produce a finding. The check lists at most ten such keys in one note, in sorted order. Each key is quoted, and a comma and a space separate the keys. When more keys are left out, `, and <n> more` follows the tenth, with `<n>` the number left out.
+4. For every key present in both, a sample count smaller than the baseline's `samples` MUST produce `sample-count`. A larger count MUST NOT produce a finding, and the check prints a note for it. Rules 2 and 4 are independent, so one key can produce both.
 
 A run exactly at its tolerance passes, and a run one millionth beyond it fails. The table gives a worked example.
 
@@ -101,15 +101,23 @@ A check that compared nothing MUST NOT print `no findings`. These ids make that 
 A note is printed as `note: <text>` and never counts as a finding. Notes exist for these cases:
 
 - a metric that appears only in the run, as given in the table of rules
+- a metric whose sample count is larger in the run than in the baseline, one note for each, sorted by key, as `"<key>": the baseline holds <b> samples and this run holds <r>; more samples than the baseline are never a finding`
 - samples the tool itself counted as errors
-- a metric that the reader refuses and the baseline does not name
-- a tool version that differs from the baseline's, as `the baseline was recorded by <tool> <version>; this run was written by <version>`
+- a metric that the reader refuses and the baseline does not name, as `"<key>" cannot be read: <reason>`
+- a tool version that differs from the baseline's, as `the baseline was recorded by <tool> "<version>"; this run was written by "<version>"`
 
 Only promptfoo writes its version into its output, so only a promptfoo run can raise the version note.
 
 ### Printed lines
 
-1. Text that came from a file MUST be printed with some characters replaced. These are U+0000 to U+001F, U+007F to U+009F, U+061C, U+200E and U+200F, U+2028 and U+2029, U+202A to U+202E, and U+2066 to U+2069. A `[` that directly follows `##` is replaced too. Each becomes `\u` followed by four lowercase hexadecimal digits, so a newline becomes `\u000a`. This covers a metric key, a tool name, a path and a reader's reason. Data therefore cannot start a line, begin a CI workflow command, send a control sequence to a terminal or forge a finding. An implementation prints no escape sequence of its own.
+1. Text that came from a file or from the command line MUST be printed between double quotes, and some of its characters MUST be replaced.
+   - Inside the quotes, a backslash is written as two backslashes, and a double quote is written as `\u0022`.
+   - A character is printed as it is only if it is a space, U+0020, or it has the General_Category L, M, N, P or S and does not have the Default_Ignorable_Code_Point property. Every other character is replaced. That covers controls, format characters, variation selectors, the Tags block, surrogates, private-use and unassigned code points, and every separator except the space.
+   - A `[` that directly follows `##` is replaced too.
+   - A code point up to U+FFFF becomes `\u` and four lowercase hexadecimal digits, so a newline becomes `\u000a`. A code point above U+FFFF becomes `\u{`, five or six lowercase hexadecimal digits and `}`, so U+E0069 becomes `\u{e0069}`. A surrogate with no partner is one character.
+   - An implementation MUST take General_Category and Default_Ignorable_Code_Point from Unicode 15.1 or a later edition. That is the edition that Node.js 22.0.0 carries, and Node.js 22.0.0 is the oldest runtime that the implementation behind the vectors supports. An edition that has not assigned a character replaces it, and a later edition that has assigned it may print it as it is. The vectors hold no such character, so they cannot tell the editions apart.
+   - This covers a metric key, a tool version, a path, a flag, an exception message, and the parts of a reader's reason that came from a file. A tool name is one of the two words `promptfoo` and `deepeval`, so it is printed as it is. Data therefore cannot start a line, begin a CI workflow command, send a control sequence to a terminal, forge a finding or hide a sentence in invisible characters. An implementation prints no escape sequence of its own.
+   - Escaping and quoting do not make text safe to obey. A metric name that holds an instruction in plain letters is printed as it is, between the quotes.
 2. Every finding line starts with its id, apart from the two spaces that indent a finding under `replaced:`. Every note line starts with `note:` and a space, and every metric line of `show` starts with `metric` and a space. So `grep` selects each class, and no line starts with text from a file.
 3. The `date:` line comes before every finding line, and `cases-changed` comes before the other findings. Finding lines are sorted by key, and for one key they follow the order of rules 1, 2 and 4. The note lines come after the finding lines.
 4. The last line of a `check` is its summary, and it is one of four. In the three that count findings, `<findings>` is `1 finding` for one and `<n> findings` for two or more.
@@ -128,6 +136,8 @@ Only promptfoo writes its version into its output, so only a promptfoo run can r
 ## The baseline file
 
 A baseline holds one run of one suite from one tool. It is a JSON file with two-space indentation and a final newline. The metric keys are in sorted order, so recording a run that changes nothing produces no diff. A number is written as `JSON.stringify` writes it, so a whole value is `1` and never `1.0`.
+
+A string in the file is written as `JSON.stringify` writes it. A character that the printed lines replace, and that `JSON.stringify` leaves as it is, is then written as `\u` and four lowercase hexadecimal digits for each of its UTF-16 code units. The file does not replace a `[` that follows `##`.
 
 A JSON Schema for this file is published at [/spec/evals-baseline/1.0/baseline.schema.json](/spec/evals-baseline/1.0/baseline.schema.json). It checks the shape of the file only; the rules on this page decide the rest.
 
@@ -195,7 +205,9 @@ The verb `record` MUST do the following:
 - refuse a run that it cannot read, a run that holds errored samples, a run that holds no case and a run that holds no metric, and write nothing when it refuses
 - refuse to record over a baseline that exists and that it cannot read, because the tolerances in it cannot be kept, and write nothing
 - leave out a metric that the reader refuses, and say so in a note
-- keep the tolerance that the previous baseline holds for a key of the same tool, and give any other key the tolerance from its `--tolerance` argument, or 0 when there is none
+- keep the tolerance that the previous baseline holds for a key of the same tool, and give any other key the tolerance from `--tolerance`
+- refuse and write nothing when a key has no held tolerance and no `--tolerance` is given, because a tolerance of 0 must be asked for as `--tolerance 0`, and say how many metrics lack a tolerance
+- refuse and write nothing when the number given to `--tolerance` and a tolerance held for a key of the same tool differ under `q`, and say so in a note for each such key, in sorted order, as `"<key>": the baseline holds the tolerance <tolerance>`
 - write nothing when everything except `recordedAt` and `source.toolVersion` equals what the file already holds, so that `recordedAt` stays the date on which the numbers last changed
 - print under `replaced:`, before it writes, the findings that the baseline it replaces would have reported against the new run
 
@@ -381,14 +393,14 @@ The vectors are published as one file, [/spec/evals-baseline/1.0/vectors.json](/
 
 The [baseline schema](/spec/evals-baseline/1.0/baseline.schema.json) at `/spec/evals-baseline/1.0/baseline.schema.json` describes the shape of a baseline file. Published files, below, gives the digest of both files.
 
-Version 1.0 has 165 vectors. 116 run `check`, 21 run `record`, 22 run `show`, 1 asks for the version, and 5 are usage errors that exit 2. The 116 check vectors are drawn from 57 distinct pairs of a baseline and a run.
+Version 1.0 has 190 vectors. 125 run `check`, 34 run `record`, 25 run `show`, 1 asks for the version, and 5 are usage errors that exit 2. The 125 check vectors are drawn from 62 distinct pairs of a baseline and a run.
 
 | Covered                                     | Vectors | Distinct pairs | To reproduce |
 | ------------------------------------------- | ------- | -------------- | ------------ |
 | Rule 1, `missing-metric`                    | 8       | 4              | 8            |
-| Rule 2, `below-baseline`                    | 10      | 4              | 10           |
-| Rule 3, the note for a metric only in a run | 8       | 4              | 8            |
-| Rule 4, `sample-count`                      | 8       | 4              | 8            |
+| Rule 2, `below-baseline`                    | 14      | 6              | 14           |
+| Rule 3, the note for a metric only in a run | 9       | 5              | 9            |
+| Rule 4, `sample-count`                      | 12      | 6              | 12           |
 | The binding check, `cases-changed`          | 8       | 4              | 8            |
 | `no-baseline`                               | 2       | 1              | 2            |
 | `bad-baseline`                              | 26      | 13             | 26           |
@@ -396,14 +408,14 @@ Version 1.0 has 165 vectors. 116 run `check`, 21 run `record`, 22 run `show`, 1 
 | `unreadable-metric`                         | 2       | 1              | 2            |
 | `internal-error`                            | 2       | 1              | 0            |
 
-A vector appears in a row for each finding its report names, so the rows do not partition the 165.
+A vector appears in a row for each finding its report names, so the rows do not partition the 190.
 
-Vectors that name two findings stand in two rows, and there are 4 of them. Of the 165, 67 name no finding and stand in no row.
+Vectors that name two findings stand in two rows, and there are 8 of them. Of the 190, 87 name no finding and stand in no row.
 
-Of those 67, 18 are `check` runs that must stay silent. The other 49 run `record` or `show`, ask for the version, or are usage errors, and none of them reports a finding. The silent checks include the same suite recorded and checked twice, and a value exactly at its tolerance.
+Of those 87, 22 are `check` runs that must stay silent. The other 65 run `record` or `show`, ask for the version, or are usage errors, and none of them reports a finding. The silent checks include the same suite recorded and checked twice, a value exactly at its tolerance, and a run with more samples than the baseline, which prints a note and no finding.
 
-The rows therefore total 102. A row counts the vectors that prove it, not the vectors it exhausts. The last column counts the vectors of a row that an implementation must reproduce. The row for `internal-error` has none, because this specification defines no input that must raise an internal error.
+The rows therefore total 111. A row counts the vectors that prove it, not the vectors it exhausts. The last column counts the vectors of a row that an implementation must reproduce. The row for `internal-error` has none, because this specification defines no input that must raise an internal error.
 
-No implementation is asked to reproduce the reference-only vectors, which number 4 of the 165. Of those 4, 2 print the message a runtime raised, which is not this specification's text. The other 2 print the reason line before a usage error, which this specification does not fix.
+No implementation is asked to reproduce the reference-only vectors, which number 4 of the 190. Of those 4, 2 print the message a runtime raised, which is not this specification's text. The other 2 print the reason line before a usage error, which this specification does not fix.
 
 Three things an implementation sets for itself. Its own package version, which the banner line carries and which this specification never fixes. The clock, which each vector pins, so an implementation that cannot set its clock compares every line except the one beginning `date:`. The order in which it reads files, which changes nothing a vector records.

@@ -144,6 +144,20 @@ test('the prose states the counts of the vectors file', () => {
   }
 });
 
+test('the page names a check with more samples than the baseline as silent, and the vectors print a note and no finding for it', () => {
+  const rises = suite.vectors.filter(
+    (vector) =>
+      verbOf(vector) === 'check' &&
+      vector.stdout.some((line) => line.endsWith('more samples than the baseline are never a finding'))
+  );
+  assert.ok(rises.length >= 2, 'no vector shows a rise in a sample count');
+  for (const vector of rises) {
+    assert.deepEqual(vector.covers, [], vector.id);
+    assert.equal(vector.stdout.at(-1), 'evals-baseline: no findings', vector.id);
+  }
+  assert.ok(normal(section).includes('a run with more samples than the baseline, which prints a note and no finding'));
+});
+
 test('the page says the vectors file carries the input files exactly when it does', () => {
   assert.equal(/under the key `files`/i.test(section), suite.files !== undefined);
   assert.equal(/not contain them/.test(section), suite.files === undefined);

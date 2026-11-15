@@ -16,7 +16,7 @@ const q = (x) => Math.floor(x * MICRO + 0.5);
 
 function printedValues(id) {
   const lines = vector(id).stdout.flatMap((line) => {
-    const found = /^metric (.+?) {2}(\S+) {2}\d+ samples?$/.exec(line);
+    const found = /^metric "(.+?)" {2}(\S+) {2}\d+ samples?$/.exec(line);
     return found ? [[found[1], found[2]]] : [];
   });
   return new Map(lines);
