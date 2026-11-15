@@ -66,7 +66,7 @@ title `{artifact name} — meshin.co` · meta: one sentence naming the artifact 
 | `/resources/handover-playbook`                     | handover playbook                     | Handover Playbook — meshin.co                     | The Handover Playbook is six fill-in tables for moving AI leadership from an outside lead to a named owner, from the test to a later check.            | Handover Playbook                     | 31    | ✓       |
 | `/resources/llm-gateway-governance-config`         | llm gateway governance config         | LLM Gateway Governance Config — meshin.co         | LLM gateway governance config: a policy schema of five keys (allowed models, redaction, rate limit, log retention and fallback), each with an example. | LLM Gateway Governance Config         | 26    | ✓       |
 
-### article (20)
+### article (21)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
@@ -85,9 +85,10 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/how-can-boards-verify-ai-cost-savings`                      | how can boards verify ai cost savings                      | How can boards verify AI cost savings? — meshin.co                     | How boards can test AI cost savings against finance records, delivery costs, work quality and a credible baseline.                                    | How can boards verify AI cost savings?                     | 28    | ✓       |
 | `/blog/how-to-build-an-ai-system-register-in-a-week`               | ai system register                                         | How to build an AI system register in a week — meshin.co               | A step-by-step way to build an AI system register in a week without buying a tool, so a security reviewer gets the document they ask for first.       | How to build an AI system register in a week               | 33    | ✓       |
 | `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company` | ai operating model for mid-size company                    | How to choose an AI operating model for a mid-size company — meshin.co | How to choose an operating model for AI work in a mid-size company, starting from what the law requires and what the evidence supports.               | How to choose an AI operating model for a mid-size company | 40    | ✓       |
-| `/blog/how-to-prevent-duplicate-ai-agent-actions-on-retries`       | how to prevent duplicate ai agent actions on retries       | How to prevent duplicate AI agent actions on retries — meshin.co       | Learn how to prevent duplicate AI agent actions on retries with stable operation keys, durable records, and checks for uncertain outcomes.            | How to prevent duplicate AI agent actions on retries       | 28    | ✓       |
+| `/blog/how-to-prevent-duplicate-ai-agent-actions-on-retries`       | how to prevent duplicate ai agent actions on retries       | How to prevent duplicate AI agent actions on retries — meshin.co       | Learn how to prevent duplicate AI agent actions on retries with stable operation keys, durable records, and checks for uncertain outcomes.            | How to prevent duplicate AI agent actions on retries       | 29    | ✓       |
 | `/blog/how-to-review-ai-generated-customer-support-replies`        | how to review ai-generated customer support replies        | How to review AI-generated customer support replies — meshin.co        | Set a practical review process for AI-generated support replies, from checking account facts to handling risky drafts and improving future reviews.   | How to review AI-generated customer support replies        | 31    | ✓       |
 | `/blog/how-to-roll-back-an-ai-agent-deployment`                    | how to roll back an ai agent deployment                    | How to roll back an AI agent deployment — meshin.co                    | How to roll back an AI agent deployment: stop actions, restore a known release and check in-flight work before resuming.                              | How to roll back an AI agent deployment                    | 28    | ✓       |
+| `/blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent`       | how to set a per-task spending limit for an ai agent       | How to set a per-task spending limit for an AI agent — meshin.co       | Set and enforce an AI agent's task budget with cost reservations, shared limits, clear failure rules, and reconciliation.                             | How to set a per-task spending limit for an AI agent       | 30    | ✓       |
 | `/blog/how-to-trace-ai-agent-tool-calls-in-production`             | how to trace ai agent tool calls in production             | How to trace AI agent tool calls in production — meshin.co             | Trace AI agent tool calls in production with linked spans, safe fields, retry handling and checks for missing evidence.                               | How to trace AI agent tool calls in production             | 31    | ✓       |
 | `/blog/multi-agent-reference-architecture-in-production`           | multi-agent reference architecture production              | Multi-agent reference architecture in production — meshin.co           | What the sources say about multi-agent systems in production: where vendors agree, where they split, and what the research did not find.              | Multi-agent reference architecture in production           | 40    | ✓       |
 | `/blog/named-person-responsible-for-ai-risk-in-vendor-procurement` | named person responsible for ai risk in vendor procurement | Named person responsible for AI risk in vendor procurement — meshin.co | How a named AI risk owner coordinates vendor review, records decisions, and answers customer procurement questions.                                   | Named person responsible for AI risk in vendor procurement | 34    | ✓       |
@@ -430,7 +431,7 @@ One owning route per entity. The mention count is inbound references from other 
 
 | Entity                         | Owned by                                   | Mentioned by |
 | ------------------------------ | ------------------------------------------ | ------------ |
-| Agentic workflow               | `/glossary/agentic-workflow`               | 13           |
+| Agentic workflow               | `/glossary/agentic-workflow`               | 14           |
 | AI governance                  | `/glossary/ai-governance`                  | 44           |
 | AI impact assessment           | `/glossary/ai-impact-assessment`           | 3            |
 | AI management system           | `/glossary/ai-management-system`           | 7            |
@@ -440,14 +441,14 @@ One owning route per entity. The mention count is inbound references from other 
 | Data classification            | `/glossary/data-classification`            | 17           |
 | DPIA                           | `/glossary/dpia`                           | 6            |
 | EU AI Act                      | `/glossary/eu-ai-act`                      | 42           |
-| Evals                          | `/glossary/evals`                          | 41           |
+| Evals                          | `/glossary/evals`                          | 42           |
 | Guardrails                     | `/glossary/guardrails`                     | 7            |
 | Hallucination rate             | `/glossary/hallucination-rate`             | 4            |
 | High-risk AI system            | `/glossary/high-risk-ai-system`            | 10           |
 | Human oversight                | `/glossary/human-oversight`                | 16           |
 | Human-in-the-loop              | `/glossary/human-in-the-loop`              | 6            |
 | ISO/IEC 42001                  | `/glossary/iso-iec-42001`                  | 29           |
-| LLM gateway                    | `/glossary/llm-gateway`                    | 12           |
+| LLM gateway                    | `/glossary/llm-gateway`                    | 13           |
 | Model card                     | `/glossary/model-card`                     | 3            |
 | Model Context Protocol         | `/glossary/mcp`                            | 2            |
 | Model provenance               | `/glossary/model-provenance`               | 3            |
