@@ -214,17 +214,22 @@ jobs:
           [ -n "$url" ] || { echo "DEPLOY the deploy printed no address"; exit 1; }
           echo "url=$url" >> "$GITHUB_OUTPUT"
 
-      - name: wait for the certificate on a host Cloudflare has not served before
+      - name: wait until the preview serves content, not just a certificate
         shell: bash
         run: |
+          probe=$(cd site/dist && ls *.html | grep -v '^404\.html$' | sort | tail -1 | sed 's/\.html$//')
+          [ -n "$probe" ] || { echo "DEPLOY the build holds no probe route"; exit 1; }
+          echo "probing / and /$probe and /$probe.md"
           for attempt in $(seq 1 20); do
-            if curl -sSf -o /dev/null --max-time 15 "${{ steps.preview.outputs.url }}/"; then
-              echo "reachable after $attempt attempt(s)"
+            if curl -sSf -o /dev/null --max-time 15 "${{ steps.preview.outputs.url }}/" \
+              && curl -sSf -o /dev/null --max-time 15 "${{ steps.preview.outputs.url }}/$probe" \
+              && curl -sSf -o /dev/null --max-time 15 "${{ steps.preview.outputs.url }}/$probe.md"; then
+              echo "serving content after $attempt attempt(s)"
               exit 0
             fi
             sleep 15
           done
-          echo "DEPLOY ${{ steps.preview.outputs.url }} never answered"
+          echo "DEPLOY ${{ steps.preview.outputs.url }} never served /$probe"
           exit 1
 
       - name: smoke the preview origin, because only a live response proves the headers
