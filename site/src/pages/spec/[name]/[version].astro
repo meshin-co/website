@@ -5,6 +5,7 @@ import { getCollection, render } from 'astro:content';
 import { SITE } from 'astrowind:config';
 
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import CodeBlock from '~/components/site/CodeBlock.astro';
 import CtaBlock from '~/components/site/CtaBlock.astro';
 import JsonLd from '~/components/common/JsonLd.astro';
 import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
@@ -85,6 +86,8 @@ const citation = specCitation({
   citeKey: data.citeKey,
 });
 
+const citationLanguages: Partial<Record<string, string>> = { markdown: 'markdown', file: 'json' };
+
 const image = imageObject(metadata.openGraph.images[0]);
 
 const nodes = [
@@ -138,10 +141,7 @@ const longDate = (date: Date) => date.toLocaleDateString('en-GB', { day: 'numeri
           CITATION_FORMS.map(({ key, label }) => (
             <div>
               <h3 class="font-mono text-xs text-muted">{label}</h3>
-              <pre
-                class="mt-3 border border-line bg-page px-5 py-4 font-mono text-sm break-words whitespace-pre-wrap text-heading"
-                set:text={citation[key as keyof typeof citation]}
-              />
+              <CodeBlock class="mt-3" text={citation[key as keyof typeof citation]} language={citationLanguages[key]} />
             </div>
           ))
         }

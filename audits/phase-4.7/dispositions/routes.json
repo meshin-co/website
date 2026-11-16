@@ -3,7 +3,7 @@
     "target": "/",
     "status": "rewritten",
     "reason": "Re-read 2026-10-31 in dist/index.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [frontmatter.description] now \"Agent evals CI starter: a four-field eval case format and a description of the pull-request gate that blocks a merge below a pass-rate floor you set.\" (source row: service-resource.json#3);  [frontmatter.description] now \"AI governance starter kit: a table of who signs each document a security review asks for, six vendor questionnaire topics and an incident call order.\" (was \"AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire.\") (source row: service-resource.json#4);  [body.p] now \"kit · v0.1\" (was \"kit · v0.1 · MIT\");  [body.p] now \"scorecard · v0.1\" (was \"scorecard · v0.1 · MIT\");  [frontmatter.description] no longer rendered: \"A starter CI pipeline for agent evals. It runs on every pull request and blocks a bad merge before it ships, using a plain YAML case format.\"; The card type lines lost their licence label (\"kit · v0.1 · MIT\" became \"kit · v0.1\"): change 18 withdrew \"MIT\" because no licence exists on any public page of the kit (all seven github.com/meshin-co/<slug> URLs return 404 and the organisation's one repository has \"license\": null on api.github.com, checked 2026-10-31). The owner's recorded licence answers on COPY-CHECKLIST 6.3 and 16.8 are untouched. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand. Re-read 2026-11-11 in dist/index.html (clean build of the working tree). The shared status line changed from \"Available as a page on this site. A repository copy is not published yet.\" to \"Available as a page on this site. There is no repository copy.\" (owner decision of 2026-11-10: no link to a repository that does not exist, and no promise of one or of a date). The new line states what is true today, an on-site page and no repository copy, and carries no promise. No other row of this target changed. Re-read 2026-11-11 in dist/index.html (clean build of the working tree). Change 47 (locked decision L75: text is CC BY 4.0, code is MIT) gave every resource entry a license field, and the two card type lines on this route regained a licence label: [body.p] now \"kit · v0.1 · CC-BY-4.0\" (was \"kit · v0.1\") and [body.p] now \"scorecard · v0.1 · CC-BY-4.0\" (was \"scorecard · v0.1\"). The label is true and resolves. All seven entries are prose and tables and ship no code, so CC BY 4.0 is the licence of what each card offers; the Content section of /terms states that grant; and the text ships at dist/licenses/CC-BY-4.0.txt, which the build requires of every declared licence. Change 18 withdrew the label because no licence existed on any public page of the kit; one now does. COPY-CHECKLIST 6.3 (\"MIT assumed\") and 16.8 (\"Page-only, MIT, v0.1\") still read MIT; they are the owner's rows and are not edited here. No other row of this target changed.",
-    "digest": "7db54027f79b"
+    "digest": "e91da5146d83"
   },
   {
     "target": "/404",
@@ -102,14 +102,14 @@
     "location": "head.title",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent (generation record audits/autowriter/generations/2026/11/how-to-set-a-per-task-spending-limit-for-an-ai-agent.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "50fd0ef45f9c"
+    "digest": "2a8675443090"
   },
   {
     "target": "/blog/evals-in-ci-for-llm-agents",
     "location": "body.p",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent (generation record audits/autowriter/generations/2026/11/how-to-set-a-per-task-spending-limit-for-an-ai-agent.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "50fd0ef45f9c"
+    "digest": "2a8675443090"
   },
   {
     "target": "/blog/how-to-build-an-ai-system-register-in-a-week",
@@ -320,14 +320,14 @@
     "location": "head.title",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-generated-customer-support-replies (generation record audits/autowriter/generations/2026/11/how-to-review-ai-generated-customer-support-replies.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "e564be61db54"
+    "digest": "97cea228b94c"
   },
   {
     "target": "/blog/why-your-ai-pilot-never-reached-production",
     "location": "body.p",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-generated-customer-support-replies (generation record audits/autowriter/generations/2026/11/how-to-review-ai-generated-customer-support-replies.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "e564be61db54"
+    "digest": "97cea228b94c"
   },
   {
     "target": "/case-studies",
@@ -814,7 +814,7 @@
     "target": "/styleguide",
     "status": "rewritten",
     "reason": "Re-read 2026-10-31 in dist/styleguide.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [frontmatter.description] now \"AI governance starter kit: a table of who signs each document a security review asks for, six vendor questionnaire topics and an incident call order.\" (was \"AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire.\") (source row: service-resource.json#4);  [body.p] now \"kit · v0.1\" (was \"kit · v0.1 · MIT\");  [body.p] now \"scorecard · v0.1\" (was \"scorecard · v0.1 · MIT\"); The card type lines lost their licence label (\"kit · v0.1 · MIT\" became \"kit · v0.1\"): change 18 withdrew \"MIT\" because no licence exists on any public page of the kit (all seven github.com/meshin-co/<slug> URLs return 404 and the organisation's one repository has \"license\": null on api.github.com, checked 2026-10-31). The owner's recorded licence answers on COPY-CHECKLIST 6.3 and 16.8 are untouched. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand. Re-read 2026-11-11 in dist/styleguide.html (clean build of the working tree). The shared status line changed from \"Available as a page on this site. A repository copy is not published yet.\" to \"Available as a page on this site. There is no repository copy.\" (owner decision of 2026-11-10: no link to a repository that does not exist, and no promise of one or of a date). The new line states what is true today, an on-site page and no repository copy, and carries no promise. No other row of this target changed. Re-read 2026-11-11 in dist/styleguide.html (clean build of the working tree). Change 47 (locked decision L75: text is CC BY 4.0, code is MIT) gave every resource entry a license field, and the two card type lines in the styleguide regained a licence label: [body.p] now \"kit · v0.1 · CC-BY-4.0\" (was \"kit · v0.1\") and [body.p] now \"scorecard · v0.1 · CC-BY-4.0\" (was \"scorecard · v0.1\"). The label is true and resolves. All seven entries are prose and tables and ship no code, so CC BY 4.0 is the licence of what each card offers; the Content section of /terms states that grant; and the text ships at dist/licenses/CC-BY-4.0.txt, which the build requires of every declared licence. Change 18 withdrew the label because no licence existed on any public page of the kit; one now does. COPY-CHECKLIST 6.3 (\"MIT assumed\") and 16.8 (\"Page-only, MIT, v0.1\") still read MIT; they are the owner's rows and are not edited here. No other row of this target changed.",
-    "digest": "5b17b85f58bf"
+    "digest": "b4283ec37eec"
   },
   {
     "target": "/terms",

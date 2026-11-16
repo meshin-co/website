@@ -134,7 +134,7 @@ const isActive = (href?: string) => typeof href === 'string' && `/${trimSlash(hr
                   <>
                     <button
                       type="button"
-                      class="hover:text-link dark:hover:text-(--aw-color-ink-dark) px-4 py-3 flex items-center whitespace-nowrap"
+                      class="hover:text-link dark:hover:text-(--aw-color-ink-dark) px-4 lg:px-3 xl:px-4 py-3 flex items-center whitespace-nowrap"
                     >
                       {text}{' '}
                       <Icon
@@ -161,7 +161,7 @@ const isActive = (href?: string) => typeof href === 'string' && `/${trimSlash(hr
                 ) : (
                   <a
                     class:list={[
-                      'hover:text-link dark:hover:text-(--aw-color-ink-dark) px-4 py-3 flex items-center whitespace-nowrap',
+                      'hover:text-link dark:hover:text-(--aw-color-ink-dark) px-4 lg:px-3 xl:px-4 py-3 flex items-center whitespace-nowrap',
                       { 'aw-link-active': isActive(href) },
                     ]}
                     href={href}

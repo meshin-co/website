@@ -1,0 +1,30 @@
+<script>
+  const clipboard = navigator.clipboard;
+
+  if (clipboard) {
+    for (const button of document.querySelectorAll<HTMLButtonElement>('.code-copy')) {
+      const block = button.parentElement!;
+      const status = block.querySelector('[role="status"]')!;
+      const label = button.textContent;
+      let reset: number | undefined;
+
+      button.hidden = false;
+      button.addEventListener('click', async () => {
+        const source = block.querySelector('pre')!.textContent!.trimEnd();
+        const message =
+          (await clipboard.writeText(source).then(
+            () => button.dataset.done,
+            () => button.dataset.failed
+          )) ?? '';
+
+        button.textContent = message;
+        status.textContent = message;
+        clearTimeout(reset);
+        reset = window.setTimeout(() => {
+          button.textContent = label;
+          status.textContent = '';
+        }, 2000);
+      });
+    }
+  }
+</script>
