@@ -13,10 +13,10 @@
     "counts is computed from the vectors. The reference implementation's test suite regenerates this file with node fixtures/suites/derive-vectors.mjs and fails when the committed file differs."
   ],
   "counts": {
-    "vectors": 190,
+    "vectors": 192,
     "referenceOnly": 4,
     "pairs": 62,
-    "byVerb": {"check": 125, "record": 34, "show": 25, "version": 1, "usage": 5},
+    "byVerb": {"check": 125, "record": 36, "show": 25, "version": 1, "usage": 5},
     "covers": {
       "rule-1": {"vectors": 8, "pairs": 4, "portableVectors": 8},
       "rule-2": {"vectors": 14, "pairs": 6, "portableVectors": 14},
@@ -1036,7 +1036,7 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"does-not-exist.json\"",
         "no-baseline: no baseline at \"does-not-exist.json\"; nothing was compared; record one with: evals-baseline record <run-file>",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -1053,10 +1053,10 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"does-not-exist.json\"",
         "no-baseline: no baseline at \"does-not-exist.json\"; nothing was compared; record one with: evals-baseline record <run-file>",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -1071,7 +1071,7 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": promptfoo \"0.125.1\", 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"planted/run-hand-written.json\": neither a promptfoo results file nor a DeepEval test run; top-level keys: \"accuracy\"",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -1089,10 +1089,10 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": promptfoo \"0.125.1\", 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"planted/run-hand-written.json\": neither a promptfoo results file nor a DeepEval test run; top-level keys: \"accuracy\"",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -1107,7 +1107,7 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": promptfoo \"0.125.1\", 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"planted/run-version-4.json\": promptfoo results version 4 is not read; this implementation reads version 3",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -1125,10 +1125,10 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": promptfoo \"0.125.1\", 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"planted/run-version-4.json\": promptfoo results version 4 is not read; this implementation reads version 3",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -1143,7 +1143,7 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": promptfoo \"0.125.1\", 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"planted/run-both-shapes.json\": matches both a promptfoo results file and a DeepEval test run; top-level keys: \"config\", \"evalId\", \"metadata\", \"metricsScores\", \"results\", \"runtimeOptions\", \"shareableUrl\", \"testCases\", \"vars\"",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -1161,10 +1161,10 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": promptfoo \"0.125.1\", 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"planted/run-both-shapes.json\": matches both a promptfoo results file and a DeepEval test run; top-level keys: \"config\", \"evalId\", \"metadata\", \"metricsScores\", \"results\", \"runtimeOptions\", \"shareableUrl\", \"testCases\", \"vars\"",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -1179,7 +1179,7 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": promptfoo \"0.125.1\", 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"planted/run-not-json.json\": not JSON",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -1197,10 +1197,10 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": promptfoo \"0.125.1\", 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"planted/run-not-json.json\": not JSON",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -1215,7 +1215,7 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": promptfoo \"0.125.1\", 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: cannot read \"no-such-run.json\": not found",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -1233,10 +1233,10 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": promptfoo \"0.125.1\", 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: cannot read \"no-such-run.json\": not found",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -1251,7 +1251,7 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": deepeval version unknown, 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"wrapped.json\": this is DeepEval .latest_test_run.json, which wraps the run in testRunData; read .latest_run_full.json or a test_run_*.json file",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -1269,10 +1269,10 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": deepeval version unknown, 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"wrapped.json\": this is DeepEval .latest_test_run.json, which wraps the run in testRunData; read .latest_run_full.json or a test_run_*.json file",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -1287,7 +1287,7 @@
         "evals-baseline <package version> (specification 1.0) check \"deepeval/evals-baseline.json\": deepeval version unknown, 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"promptfoo/run-good.json\": the baseline was recorded from deepeval (deepeval-test-run) and this file is promptfoo (promptfoo-results-3)",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -1305,10 +1305,10 @@
         "evals-baseline <package version> (specification 1.0) check \"deepeval/evals-baseline.json\": deepeval version unknown, 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"promptfoo/run-good.json\": the baseline was recorded from deepeval (deepeval-test-run) and this file is promptfoo (promptfoo-results-3)",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -1323,7 +1323,7 @@
         "evals-baseline <package version> (specification 1.0) check \"promptfoo/evals-baseline.json\": promptfoo \"0.125.1\", 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"deepeval/run-good.json\": the baseline was recorded from promptfoo (promptfoo-results-3) and this file is deepeval (deepeval-test-run)",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -1341,10 +1341,10 @@
         "evals-baseline <package version> (specification 1.0) check \"promptfoo/evals-baseline.json\": promptfoo \"0.125.1\", 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"deepeval/run-good.json\": the baseline was recorded from promptfoo (promptfoo-results-3) and this file is deepeval (deepeval-test-run)",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -1358,7 +1358,7 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-misspelt-key.json\"",
         "bad-baseline: \"planted/baseline-misspelt-key.json\": unknown key \"tolerence\" in metrics[\"agent :: accuracy\"]",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -1375,10 +1375,10 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-misspelt-key.json\"",
         "bad-baseline: \"planted/baseline-misspelt-key.json\": unknown key \"tolerence\" in metrics[\"agent :: accuracy\"]",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -1392,7 +1392,7 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-no-cases.json\"",
         "bad-baseline: \"planted/baseline-no-cases.json\": missing key \"cases\" in the baseline",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -1409,10 +1409,10 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-no-cases.json\"",
         "bad-baseline: \"planted/baseline-no-cases.json\": missing key \"cases\" in the baseline",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -1426,7 +1426,7 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-newer-minor.json\"",
         "bad-baseline: \"planted/baseline-newer-minor.json\": specification 1.1 is newer than 1.0, the newest this implementation reads",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -1443,10 +1443,10 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-newer-minor.json\"",
         "bad-baseline: \"planted/baseline-newer-minor.json\": specification 1.1 is newer than 1.0, the newest this implementation reads",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -1460,7 +1460,7 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-other-major.json\"",
         "bad-baseline: \"planted/baseline-other-major.json\": specification 2.0 is not read by this implementation, which reads 1.x up to 1.0",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -1477,10 +1477,10 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-other-major.json\"",
         "bad-baseline: \"planted/baseline-other-major.json\": specification 2.0 is not read by this implementation, which reads 1.x up to 1.0",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -1494,7 +1494,7 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-no-metric.json\"",
         "bad-baseline: \"planted/baseline-no-metric.json\": metrics names no metric, so the baseline guards nothing",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -1511,10 +1511,10 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-no-metric.json\"",
         "bad-baseline: \"planted/baseline-no-metric.json\": metrics names no metric, so the baseline guards nothing",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -1604,7 +1604,7 @@
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-names-failure-rate.json\": deepeval version unknown, 3 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "unreadable-metric \"Failure rate\": DeepEval's own verdicts contradict higher-is-better in 4 sample(s) (success=true, score=0, threshold=0.5); this implementation reads higher-is-better metrics only",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -1622,10 +1622,10 @@
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-names-failure-rate.json\": deepeval version unknown, 3 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "unreadable-metric \"Failure rate\": DeepEval's own verdicts contradict higher-is-better in 4 sample(s) (success=true, score=0, threshold=0.5); this implementation reads higher-is-better metrics only",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -1640,7 +1640,7 @@
         "evals-baseline <package version> (specification 1.0) record: refused: the run has errored samples (\"Brevity\": 4 sample(s) DeepEval counted as errors, because the metric raised an error or returned no verdict (success is null)); fix them and run the suite again; nothing written"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -1655,7 +1655,7 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": deepeval version unknown, 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"planted/run-conversational.json\": conversationalTestCases is not empty; this implementation does not read multi-turn runs",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -1673,10 +1673,10 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": deepeval version unknown, 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"planted/run-conversational.json\": conversationalTestCases is not empty; this implementation does not read multi-turn runs",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -1691,7 +1691,7 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": deepeval version unknown, 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"planted/run-sqlite-like.db\": not JSON",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -1709,10 +1709,10 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": deepeval version unknown, 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"planted/run-sqlite-like.db\": not JSON",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -1817,7 +1817,7 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": promptfoo \"0.125.1\", 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "internal-error: \"Maximum call stack size exceeded\"",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -1836,10 +1836,10 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": promptfoo \"0.125.1\", 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "internal-error: \"Maximum call stack size exceeded\"",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": [],
       "referenceOnly": "The text of an internal-error finding is the message of the exception the runtime threw (the \"Exit codes\" section of the specification), and runtimes word that message differently, so another implementation cannot be expected to reproduce this report."
     },
@@ -1855,7 +1855,7 @@
         "evals-baseline <package version> (specification 1.0) record: refused: the run has errored samples (\"agent\": 1 errored test(s) in this run (promptfoo testErrorCount)); fix them and run the suite again; nothing written"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -1874,9 +1874,25 @@
       "writes": []
     },
     {
-      "id": "S13-promptfoo-record-over-regression",
+      "id": "S13-promptfoo-record-refused-over-regression",
       "dir": "fixtures/promptfoo",
       "argv": ["record", "run-worse.json"],
+      "now": "2026-11-11T12:00:00.000Z",
+      "baseline": "fixtures/promptfoo/evals-baseline.json",
+      "run": "fixtures/promptfoo/run-worse.json",
+      "covers": [],
+      "stdout": [
+        "evals-baseline <package version> (specification 1.0) record: refused: \"evals-baseline.json\" already holds a baseline of 2 metrics and 4 cases, recorded 2026-09-02; this run would replace it with a baseline of 2 metrics and 4 cases; pass --replace to replace it; nothing written",
+        "note: \"agent :: accuracy\": would fall by 0.25, from 1 over 4 samples to 0.75 over 4 samples"
+      ],
+      "stderr": [],
+      "code": 3,
+      "writes": []
+    },
+    {
+      "id": "S13-promptfoo-record-over-regression",
+      "dir": "fixtures/promptfoo",
+      "argv": ["record", "run-worse.json", "--replace"],
       "now": "2026-11-11T12:00:00.000Z",
       "baseline": "fixtures/promptfoo/evals-baseline.json",
       "run": "fixtures/promptfoo/run-worse.json",
@@ -1922,7 +1938,7 @@
         "evals-baseline <package version> (specification 1.0) record: refused: the run has errored samples (\"Accuracy\": 1 sample(s) DeepEval counted as errors, because the metric raised an error or returned no verdict (success is null); \"Format\": 1 sample(s) DeepEval counted as errors, because the metric raised an error or returned no verdict (success is null)); fix them and run the suite again; nothing written"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -1941,9 +1957,25 @@
       "writes": []
     },
     {
-      "id": "S13-deepeval-record-over-regression",
+      "id": "S13-deepeval-record-refused-over-regression",
       "dir": "fixtures/deepeval",
       "argv": ["record", "run-worse.json"],
+      "now": "2026-11-11T12:00:00.000Z",
+      "baseline": "fixtures/deepeval/evals-baseline.json",
+      "run": "fixtures/deepeval/run-worse.json",
+      "covers": [],
+      "stdout": [
+        "evals-baseline <package version> (specification 1.0) record: refused: \"evals-baseline.json\" already holds a baseline of 2 metrics and 4 cases, recorded 2026-09-02; this run would replace it with a baseline of 2 metrics and 4 cases; pass --replace to replace it; nothing written",
+        "note: \"Accuracy\": would fall by 0.25, from 1 over 4 samples to 0.75 over 4 samples"
+      ],
+      "stderr": [],
+      "code": 3,
+      "writes": []
+    },
+    {
+      "id": "S13-deepeval-record-over-regression",
+      "dir": "fixtures/deepeval",
+      "argv": ["record", "run-worse.json", "--replace"],
       "now": "2026-11-11T12:00:00.000Z",
       "baseline": "fixtures/deepeval/evals-baseline.json",
       "run": "fixtures/deepeval/run-worse.json",
@@ -1989,7 +2021,7 @@
         "evals-baseline <package version> (specification 1.0) record: refused: \"planted/run-hand-written.json\": neither a promptfoo results file nor a DeepEval test run; top-level keys: \"accuracy\"; nothing written"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -2004,7 +2036,7 @@
         "evals-baseline <package version> (specification 1.0) record: refused: no named metric in this run; add \"metric: <name>\" to the assertions you want guarded; nothing written"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -2019,7 +2051,7 @@
         "evals-baseline <package version> (specification 1.0) record: refused: \"planted/baseline-misspelt-key.json\": unknown key \"tolerence\" in metrics[\"agent :: accuracy\"]; the existing baseline cannot be read, so recording over it would discard its tolerances; fix it or delete it, then record again; nothing written"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -2034,7 +2066,7 @@
         "evals-baseline <package version> (specification 1.0) record: refused: \"planted/baseline-other-major.json\": specification 2.0 is not read by this implementation, which reads 1.x up to 1.0; the existing baseline cannot be read, so recording over it would discard its tolerances; fix it or delete it, then record again; nothing written"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -2064,7 +2096,7 @@
         "evals-baseline <package version> (specification 1.0) record: refused: the run holds no cases, so a baseline of it would guard nothing; nothing written"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -2079,7 +2111,7 @@
         "evals-baseline <package version> (specification 1.0) record: refused: the run holds no cases, so a baseline of it would guard nothing; nothing written"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -2114,7 +2146,7 @@
         "evals-baseline <package version> (specification 1.0) record: refused: no tolerance was given for 2 metrics, and a tolerance of 0 reports a fall of any size; pass --tolerance <n> to set one, or --tolerance 0 to accept 0; nothing written"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -2158,7 +2190,7 @@
         "note: \"agent :: format\": the baseline holds the tolerance 0.02"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -2195,7 +2227,7 @@
         "evals-baseline <package version> (specification 1.0) record: refused: no tolerance was given for 1 metric, and a tolerance of 0 reports a fall of any size; pass --tolerance <n> to set one, or --tolerance 0 to accept 0; nothing written"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -2207,7 +2239,8 @@
         "--baseline",
         "planted/baseline-tolerance-0.02.json",
         "--tolerance",
-        "0.02"
+        "0.02",
+        "--replace"
       ],
       "now": "2026-11-11T12:00:00.000Z",
       "baseline": "fixtures/promptfoo/planted/baseline-tolerance-0.02.json",
@@ -2237,7 +2270,7 @@
         "evals-baseline <package version> (specification 1.0) record: refused: no tolerance was given for 2 metrics, and a tolerance of 0 reports a fall of any size; pass --tolerance <n> to set one, or --tolerance 0 to accept 0; nothing written"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -2281,7 +2314,7 @@
         "note: \"Format\": the baseline holds the tolerance 0.02"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -2318,7 +2351,7 @@
         "evals-baseline <package version> (specification 1.0) record: refused: no tolerance was given for 2 metrics, and a tolerance of 0 reports a fall of any size; pass --tolerance <n> to set one, or --tolerance 0 to accept 0; nothing written"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -2330,7 +2363,8 @@
         "--baseline",
         "planted/baseline-tolerance-0.02.json",
         "--tolerance",
-        "0.02"
+        "0.02",
+        "--replace"
       ],
       "now": "2026-11-11T12:00:00.000Z",
       "baseline": "fixtures/deepeval/planted/baseline-tolerance-0.02.json",
@@ -2681,7 +2715,7 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-spec-1.0.0.json\"",
         "bad-baseline: \"planted/baseline-spec-1.0.0.json\": spec must be MAJOR.MINOR with no third number and no leading zeros, such as \"1.0\", got \"1.0.0\"",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -2698,10 +2732,10 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-spec-1.0.0.json\"",
         "bad-baseline: \"planted/baseline-spec-1.0.0.json\": spec must be MAJOR.MINOR with no third number and no leading zeros, such as \"1.0\", got \"1.0.0\"",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -2715,7 +2749,7 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-spec-1.0.7.json\"",
         "bad-baseline: \"planted/baseline-spec-1.0.7.json\": spec must be MAJOR.MINOR with no third number and no leading zeros, such as \"1.0\", got \"1.0.7\"",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -2732,10 +2766,10 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-spec-1.0.7.json\"",
         "bad-baseline: \"planted/baseline-spec-1.0.7.json\": spec must be MAJOR.MINOR with no third number and no leading zeros, such as \"1.0\", got \"1.0.7\"",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -2749,7 +2783,7 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-spec-01.00.json\"",
         "bad-baseline: \"planted/baseline-spec-01.00.json\": spec must be MAJOR.MINOR with no third number and no leading zeros, such as \"1.0\", got \"01.00\"",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -2766,10 +2800,10 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-spec-01.00.json\"",
         "bad-baseline: \"planted/baseline-spec-01.00.json\": spec must be MAJOR.MINOR with no third number and no leading zeros, such as \"1.0\", got \"01.00\"",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -2783,7 +2817,7 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-spec-1.00.json\"",
         "bad-baseline: \"planted/baseline-spec-1.00.json\": spec must be MAJOR.MINOR with no third number and no leading zeros, such as \"1.0\", got \"1.00\"",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -2800,10 +2834,10 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-spec-1.00.json\"",
         "bad-baseline: \"planted/baseline-spec-1.00.json\": spec must be MAJOR.MINOR with no third number and no leading zeros, such as \"1.0\", got \"1.00\"",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -2817,7 +2851,7 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-spec-1.10.json\"",
         "bad-baseline: \"planted/baseline-spec-1.10.json\": specification 1.10 is newer than 1.0, the newest this implementation reads",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -2834,10 +2868,10 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-spec-1.10.json\"",
         "bad-baseline: \"planted/baseline-spec-1.10.json\": specification 1.10 is newer than 1.0, the newest this implementation reads",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -2851,7 +2885,7 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-spec-0.9.json\"",
         "bad-baseline: \"planted/baseline-spec-0.9.json\": specification 0.9 is not read by this implementation, which reads 1.x up to 1.0",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -2868,10 +2902,10 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-spec-0.9.json\"",
         "bad-baseline: \"planted/baseline-spec-0.9.json\": specification 0.9 is not read by this implementation, which reads 1.x up to 1.0",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -2885,7 +2919,7 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-duplicate-metric.json\"",
         "bad-baseline: \"planted/baseline-duplicate-metric.json\": the key \"agent :: accuracy\" appears twice in one object",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -2902,10 +2936,10 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-duplicate-metric.json\"",
         "bad-baseline: \"planted/baseline-duplicate-metric.json\": the key \"agent :: accuracy\" appears twice in one object",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -2919,7 +2953,7 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-value-4000000001.json\"",
         "bad-baseline: \"planted/baseline-value-4000000001.json\": metrics[\"agent :: accuracy\"].value must be a number between -4000000000 and 4000000000",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -2936,10 +2970,10 @@
       "stdout": [
         "evals-baseline <package version> (specification 1.0) check \"planted/baseline-value-4000000001.json\"",
         "bad-baseline: \"planted/baseline-value-4000000001.json\": metrics[\"agent :: accuracy\"].value must be a number between -4000000000 and 4000000000",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -2954,7 +2988,7 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": promptfoo \"0.125.1\", 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"planted/run-duplicate-key.json\": the key \"accuracy\" appears twice in one object",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -2972,10 +3006,10 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": promptfoo \"0.125.1\", 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"planted/run-duplicate-key.json\": the key \"accuracy\" appears twice in one object",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -2990,7 +3024,7 @@
         "evals-baseline <package version> (specification 1.0) show: refused: \"planted/run-duplicate-key.json\": the key \"accuracy\" appears twice in one object"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -3022,7 +3056,7 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": promptfoo \"0.125.1\", 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"planted/run-value-4000000001.json\": the value of \"agent :: accuracy\" is out of range",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -3040,10 +3074,10 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": promptfoo \"0.125.1\", 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"planted/run-value-4000000001.json\": the value of \"agent :: accuracy\" is out of range",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -3058,7 +3092,7 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": deepeval version unknown, 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"planted/run-duplicate-key.json\": the key \"scores\" appears twice in one object",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -3076,10 +3110,10 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": deepeval version unknown, 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"planted/run-duplicate-key.json\": the key \"scores\" appears twice in one object",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -3094,7 +3128,7 @@
         "evals-baseline <package version> (specification 1.0) show: refused: \"planted/run-duplicate-key.json\": the key \"scores\" appears twice in one object"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -3126,7 +3160,7 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": deepeval version unknown, 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"planted/run-value-4000000001.json\": the value of \"Accuracy\" is out of range",
-        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)"
+        "evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 3)"
       ],
       "stderr": [],
       "code": 0,
@@ -3144,10 +3178,10 @@
         "evals-baseline <package version> (specification 1.0) check \"evals-baseline.json\": deepeval version unknown, 2 metrics, 4 cases",
         "date: baseline recorded 2026-09-02, 70 days before this check on 2026-11-11",
         "bad-run: \"planted/run-value-4000000001.json\": the value of \"Accuracy\" is out of range",
-        "evals-baseline: 1 finding; exit 1 (--strict)"
+        "evals-baseline: 1 finding; exit 3 (--strict)"
       ],
       "stderr": [],
-      "code": 1,
+      "code": 3,
       "writes": []
     },
     {
@@ -3265,7 +3299,7 @@
       "covers": [],
       "stdout": [],
       "stderr": [
-        "usage: evals-baseline <check|record|show> <run-file> [--baseline <path>] [--strict] [--tolerance <n>]"
+        "usage: evals-baseline <check|record|show> <run-file> [--baseline <path>] [--strict] [--tolerance <n>] [--replace]"
       ],
       "code": 2,
       "writes": []
@@ -3280,7 +3314,7 @@
       "covers": [],
       "stdout": [],
       "stderr": [
-        "usage: evals-baseline <check|record|show> <run-file> [--baseline <path>] [--strict] [--tolerance <n>]"
+        "usage: evals-baseline <check|record|show> <run-file> [--baseline <path>] [--strict] [--tolerance <n>] [--replace]"
       ],
       "code": 2,
       "writes": []
@@ -3295,7 +3329,7 @@
       "covers": [],
       "stdout": [],
       "stderr": [
-        "usage: evals-baseline <check|record|show> <run-file> [--baseline <path>] [--strict] [--tolerance <n>]"
+        "usage: evals-baseline <check|record|show> <run-file> [--baseline <path>] [--strict] [--tolerance <n>] [--replace]"
       ],
       "code": 2,
       "writes": []
@@ -3459,7 +3493,7 @@
       "stdout": [],
       "stderr": [
         "evals-baseline: unknown flag \"--frobnicate\"",
-        "usage: evals-baseline <check|record|show> <run-file> [--baseline <path>] [--strict] [--tolerance <n>]"
+        "usage: evals-baseline <check|record|show> <run-file> [--baseline <path>] [--strict] [--tolerance <n>] [--replace]"
       ],
       "code": 2,
       "writes": [],
@@ -3476,7 +3510,7 @@
       "stdout": [],
       "stderr": [
         "evals-baseline: --tolerance needs a number of at least 0, got \"abc\"",
-        "usage: evals-baseline <check|record|show> <run-file> [--baseline <path>] [--strict] [--tolerance <n>]"
+        "usage: evals-baseline <check|record|show> <run-file> [--baseline <path>] [--strict] [--tolerance <n>] [--replace]"
       ],
       "code": 2,
       "writes": [],

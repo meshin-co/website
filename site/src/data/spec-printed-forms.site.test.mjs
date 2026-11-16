@@ -16,7 +16,9 @@ const escapeRegExp = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const spans = (pattern) => [...section.matchAll(pattern)].map((found) => found[1]);
 
 const FINDINGS = '(?:1 finding|(?:[2-9]|[1-9]\\d+) findings)';
-const summaryOf = (template) => new RegExp(`^${escapeRegExp(template).replace('<findings>', FINDINGS)}$`);
+const summaryOf = (template) =>
+  new RegExp(`^${escapeRegExp(template).replace('<findings>', FINDINGS).replace('<code>', '[13]')}$`);
+const NO_INK = /[\u2800\ufffc\u{13441}\u{13442}\u{16fe4}\u{11d45}\u{11d97}]/u;
 
 test('every summary line the vectors print is one of the four forms the page gives, and each form is printed', () => {
   const templates = spans(/`(evals-baseline: [^`]+)`/g);
@@ -83,7 +85,6 @@ function printedRule() {
   assert.ok(clause, 'the page has no first clause under Printed lines');
   const categories = /General_Category ([LMNPS](?:, [LMNPS])* or [LMNPS])/.exec(clause)?.[1];
   assert.ok(categories, 'the page names no General_Category allow list');
-  assert.match(clause, /only if it is a space, U\+0020, or .* does not have the Default_Ignorable_Code_Point property/);
   assert.doesNotMatch(
     clause,
     /U\+[0-9A-F]{4,6}(?: to | and )U\+[0-9A-F]{4,6}/,
@@ -91,7 +92,7 @@ function printedRule() {
   );
   const classes = [...categories.matchAll(/[LMNPS]/g)].map(([category]) => `\\p{${category}}`).join('');
   const printedAsIs = new RegExp(`^(?: |(?!\\p{Default_Ignorable_Code_Point})[${classes}])$`, 'u');
-  return { clause, isPrintedAsIs: (character) => printedAsIs.test(character) };
+  return { clause, isPrintedAsIs: (character) => !NO_INK.test(character) && printedAsIs.test(character) };
 }
 
 function printedForm(text, isPrintedAsIs) {
@@ -292,6 +293,8 @@ test('the page names every form of spec that the vectors refuse for a third numb
   for (const value of refused) assert.ok(page.includes(`\`${value}\``), value);
 });
 
-test('the page names the vectors as the normative annex for exact text', () => {
-  assert.match(page, /The published vectors are the normative annex for exact text/);
+test('the page names the vectors as the annex for exact text, and the clauses as what decides', () => {
+  assert.match(page, /The published vectors are the annex for exact text/);
+  assert.doesNotMatch(page, /normative annex/);
+  assert.match(page, /Where this page gives only the form of a message, the vector gives its words/);
 });

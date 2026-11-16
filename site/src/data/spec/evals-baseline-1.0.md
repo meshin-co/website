@@ -1,8 +1,8 @@
 ---
 title: evals-baseline specification 1.0
 description: The evals-baseline specification 1.0 says what a regression in an agent evaluation is, and defines the baseline file, the findings and the exit codes.
-publishDate: 2026-11-15
-updatedDate: 2026-11-15
+publishDate: 2026-11-16
+updatedDate: 2026-11-16
 name: evals-baseline
 version: '1.0'
 license: CC-BY-4.0
@@ -18,9 +18,15 @@ An implementation in any language, or a person who reads a pull request, can use
 
 ## How to read this specification
 
-The words MUST, MUST NOT and SHOULD in a clause carry the meaning that [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) gives them. Everywhere else the words are plain English. In a message text, a word in angle brackets stands for a value that the implementation fills in. An implementation conforms to a version when it reproduces that version's conformance vectors.
+The words MUST, MUST NOT and SHOULD in a clause carry the meaning that [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) gives them. Everywhere else the words are plain English. In a message text, a word in angle brackets stands for a value that the implementation fills in.
 
-The published vectors are the normative annex for exact text: every line a command prints and every file `record` writes. This page gives the form of each message, and a vector gives its words. Where the two differ, the vector decides. A vector marked reference-only is not part of the annex.
+The clauses on this page are the specification, and they decide what is right. An implementation conforms to a version when it does what every clause of that version requires. The conformance vectors of that version are tests of the clauses and not a second definition.
+
+An implementation that fails a vector that is not marked reference-only does not conform, unless the vector contradicts a clause. An implementation that passes every vector and breaks a clause does not conform.
+
+The published vectors are the annex for exact text: every line a command prints and every file `record` writes. Where this page gives only the form of a message, the vector gives its words, and an implementation prints those words. A vector marked reference-only is not part of the annex. The vectors were made by running one implementation, so a vector can carry a mistake of that implementation.
+
+When this page and a vector disagree, follow this page. The vector is the mistake, so do not copy it. Say, beside your claim to conform, which vector you fail and why, and [report the disagreement](/contact). When a clause can be read two ways and the vectors do not choose, passing every vector does not show that you read it right. Say which reading you took, and report the clause as a gap.
 
 ## Terms
 
@@ -112,19 +118,21 @@ Only promptfoo writes its version into its output, so only a promptfoo run can r
 
 1. Text that came from a file or from the command line MUST be printed between double quotes, and some of its characters MUST be replaced.
    - Inside the quotes, a backslash is written as two backslashes, and a double quote is written as `\u0022`.
-   - A character is printed as it is only if it is a space, U+0020, or it has the General_Category L, M, N, P or S and does not have the Default_Ignorable_Code_Point property. Every other character is replaced. That covers controls, format characters, variation selectors, the Tags block, surrogates, private-use and unassigned code points, and every separator except the space.
+   - A character is printed as it is only if it is in the printed set, and every other character is replaced. The printed set is U+0020 and each code point to which Unicode 15.1 gives the General_Category L, M, N, P or S and does not give the Default_Ignorable_Code_Point property, except the seven code points named below. So the replaced characters include controls, format characters, variation selectors, the Tags block, surrogates, private-use code points, every separator except the space, the seven, and every code point that Unicode 15.1 has not assigned.
    - A `[` that directly follows `##` is replaced too.
    - A code point up to U+FFFF becomes `\u` and four lowercase hexadecimal digits, so a newline becomes `\u000a`. A code point above U+FFFF becomes `\u{`, five or six lowercase hexadecimal digits and `}`, so U+E0069 becomes `\u{e0069}`. A surrogate with no partner is one character.
-   - An implementation MUST take General_Category and Default_Ignorable_Code_Point from Unicode 15.1 or a later edition. That is the edition that Node.js 22.0.0 carries, and Node.js 22.0.0 is the oldest runtime that the implementation behind the vectors supports. An edition that has not assigned a character replaces it, and a later edition that has assigned it may print it as it is. The vectors hold no such character, so they cannot tell the editions apart.
+   - The printed set is fixed to Unicode 15.1, and it does not grow with a later edition. A code point that a later edition assigns is replaced, as an unassigned code point is. An implementation MUST print exactly this set, whatever edition of Unicode its language or library carries. A runtime that carries another edition gives another set, so an implementation cannot read the set from it. It carries the set itself, built from the files `UnicodeData.txt` and `DerivedCoreProperties.txt` of Unicode 15.1.0. As a check, the set holds 149,351 code points, in 721 runs of consecutive code points. The vectors hold no code point that Unicode 15.1 leaves unassigned and none of the seven, so a vector cannot show that an implementation follows this bullet.
+   - The seven code points are U+2800 BRAILLE PATTERN BLANK, U+FFFC OBJECT REPLACEMENT CHARACTER, U+13441 EGYPTIAN HIEROGLYPH FULL BLANK, U+13442 EGYPTIAN HIEROGLYPH HALF BLANK, U+16FE4 KHITAN SMALL SCRIPT FILLER, U+11D45 MASARAM GONDI VIRAMA and U+11D97 GUNJALA GONDI VIRAMA. Each is a letter, a mark or a symbol that Unicode 15.1 does not call default ignorable, so the rule above would print it. Each is replaced anyway, because it can draw no ink, and a name made of such characters would look empty to a reader.
    - This covers a metric key, a tool version, a path, a flag, an exception message, and the parts of a reader's reason that came from a file. A tool name is one of the two words `promptfoo` and `deepeval`, so it is printed as it is. Data therefore cannot start a line, begin a CI workflow command, send a control sequence to a terminal, forge a finding or hide a sentence in invisible characters. An implementation prints no escape sequence of its own.
    - Escaping and quoting do not make text safe to obey. A metric name that holds an instruction in plain letters is printed as it is, between the quotes.
 2. Every finding line starts with its id, apart from the two spaces that indent a finding under `replaced:`. Every note line starts with `note:` and a space, and every metric line of `show` starts with `metric` and a space. So `grep` selects each class, and no line starts with text from a file.
 3. The `date:` line comes before every finding line, and `cases-changed` comes before the other findings. Finding lines are sorted by key, and for one key they follow the order of rules 1, 2 and 4. The note lines come after the finding lines.
 4. The last line of a `check` is its summary, and it is one of four. In the three that count findings, `<findings>` is `1 finding` for one and `<n> findings` for two or more.
    - `evals-baseline: no findings` when there is none.
-   - `evals-baseline: <findings>; warning only, exit 0 (pass --strict to exit 1)` in default mode, when at least one finding is not `cases-changed`.
-   - `evals-baseline: <findings>; exit 1 (--strict)` in strict mode, under the same condition.
-   - `evals-baseline: <findings>; warning only, exit 0 (cases-changed never fails --strict)` in either mode, when every finding is `cases-changed`. The third form would name an exit code the check did not use. The second would invite a reader to pass `--strict` and get exit 0 again.
+   - `evals-baseline: <findings>; warning only, exit 0 (pass --strict to exit <code>)` in default mode, when at least one finding is not `cases-changed`.
+   - `evals-baseline: <findings>; exit <code> (--strict)` in strict mode, under the same condition.
+   - `evals-baseline: <findings>; warning only, exit 0 (cases-changed never fails --strict)` in either mode, when every finding is `cases-changed`. That finding never changes the exit code, so the second form would invite a reader to pass `--strict` and get exit 0 again.
+   - In the second and third forms, `<code>` is the exit code that strict mode gives for the findings. It is 1 when at least one finding is a regression, and 3 when none is, as Exit codes defines it.
 5. The first line of a report is the banner, `evals-baseline <package version> (specification <MAJOR.MINOR>)`, followed by the verb and a description that the vectors show. `--version` prints the banner alone. An implementation prints its own package version where the vectors show `<package version>`.
 6. A count takes the plural of its noun unless it is 1, as in `1 finding`, `2 findings`, `1 sample` and `4 samples`. Four texts print `(s)` as written, whatever the count:
    - the note of rule 3, `<n> metric(s) only in this run`
@@ -208,10 +216,31 @@ The verb `record` MUST do the following:
 - keep the tolerance that the previous baseline holds for a key of the same tool, and give any other key the tolerance from `--tolerance`
 - refuse and write nothing when a key has no held tolerance and no `--tolerance` is given, because a tolerance of 0 must be asked for as `--tolerance 0`, and say how many metrics lack a tolerance
 - refuse and write nothing when the number given to `--tolerance` and a tolerance held for a key of the same tool differ under `q`, and say so in a note for each such key, in sorted order, as `"<key>": the baseline holds the tolerance <tolerance>`
-- write nothing when everything except `recordedAt` and `source.toolVersion` equals what the file already holds, so that `recordedAt` stays the date on which the numbers last changed
+- write nothing when everything except `recordedAt` and `source.toolVersion` equals what the file already holds, so that `recordedAt` stays the date on which the numbers last changed. This is not a refusal, and it needs no `--replace`
+- refuse and write nothing to record over a baseline that exists and that the run would change, unless `--replace` is given. The refusal says what the baseline holds, what the run would put in its place and that `--replace` replaces it, and a note follows for each difference
 - print under `replaced:`, before it writes, the findings that the baseline it replaces would have reported against the new run
 
-Recording over a regression is allowed, and it is never silent.
+Recording over a regression is allowed with `--replace`, and it is never silent.
+
+The refusal over a baseline prints the first line below, and its notes follow it. Both lines come from a vector.
+
+    evals-baseline <package version> (specification 1.0) record: refused: "evals-baseline.json" already holds a baseline of 2 metrics and 4 cases, recorded 2026-09-02; this run would replace it with a baseline of 2 metrics and 4 cases; pass --replace to replace it; nothing written
+    note: "agent :: accuracy": would fall by 0.25, from 1 over 4 samples to 0.75 over 4 samples
+
+The date is the day of the `recordedAt` that the baseline holds. The note for the tool and the note for the cases come first, in that order, when they apply. The notes of metrics follow, one for each metric that would move, in sorted order of the key. A metric that would not move has no note.
+
+Every number is written as Printed lines requires. `<drop>` is the size of the difference of the two values, rounded with `q`.
+
+| Difference                                                        | Note                                                                                                     |
+| ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| the tool of the run is not the tool of the baseline               | `the tool would change from <baseline tool> to <run tool>, so no tolerance would be carried over`        |
+| the digest of the cases is not the same                           | `the cases would change from <b> cases (digest <baseline digest>) to <r> cases (digest <run digest>)`    |
+| a metric of both has values that differ under `q`                 | `"<key>": would fall by <drop>, from <baseline value> over <b> samples to <run value> over <r> samples`  |
+| a metric of both has the same value and sample counts that differ | `"<key>": would keep the value <value> and go from <b> samples to <r> samples`                           |
+| a metric is in the baseline and not in the run                    | `"<key>": would be removed; the baseline holds <value> over <b> samples, with the tolerance <tolerance>` |
+| a metric is in the run and not in the baseline                    | `"<key>": would be added, at <value> over <r> samples`                                                   |
+
+The note of a metric whose value goes up reads `would rise by` in place of `would fall by`.
 
 ## Values, sample counts and metric keys
 
@@ -224,14 +253,25 @@ The comparison of values and the comparison of sample counts each take one numbe
 
 The sample count is the metric's own count, never the number of cases. Counting cases would hide a sample lost to an error.
 
-- For promptfoo it is `namedScoresCount[m]`, the number the value was averaged over. A test with two assertions on one metric contributes two, and a test with none contributes nothing. So deleting an assertion changes the count even when the number of tests does not.
+- For promptfoo it is `namedScoresCount[m]`, the number of assertions that contributed a score. The weight total never replaces it. A test with two assertions on one metric contributes two, and a test with none contributes nothing. So deleting an assertion changes the count even when the number of tests does not.
 - For DeepEval it is the length of the metric's `scores` array, which DeepEval builds from samples that have both a score and a verdict.
 
 Errors are handled twice. They lower the sample count, so a check reports them as `sample-count` findings. They also make `record` refuse the run, so a run that lost samples can never become the baseline.
 
 The value is on the tool's own scale, and it is from -4000000000 to 4000000000. A run's mean is rounded to six decimals before it is held to that range. Inside the range, every value scaled by one million, and the difference of two of them, is a whole number that a double holds exactly. A run with a value outside it is `bad-run`, and a baseline with one is `bad-baseline`.
 
-A metric whose scores the tool reports as weighted, as promptfoo does with `namedScoreWeights`, has a weighted mean as its value. A weight total that is not a finite number above zero makes the reader refuse the metric, and a baseline that names it gets `unreadable-metric`.
+A promptfoo metric is weighted when `namedScoreWeights` holds an entry with the metric's name. Its value is `namedScores` divided by that entry, which is the weight total of its assertions, and not by the sample count. A metric with no such entry is divided by its sample count, whether the run has no `namedScoreWeights` or the object lacks the name.
+
+The two divisors are equal only when the weights of the metric add up to its number of assertions. The table gives four cases. The sample count stays `namedScoresCount` in every case.
+
+| `namedScores` | `namedScoresCount` | Entry in `namedScoreWeights` | Value                 | Sample count |
+| ------------- | ------------------ | ---------------------------- | --------------------- | ------------ |
+| 4             | 4                  | 6                            | 0.666667              | 4            |
+| 3             | 4                  | 3                            | 1                     | 4            |
+| 3             | 4                  | none                         | 0.75                  | 4            |
+| 4             | 4                  | 0                            | the metric is refused | none         |
+
+A weight total that is not a finite number above zero makes the reader refuse the metric, and a baseline that names it gets `unreadable-metric`. Zero is refused and never falls back to the sample count. A `namedScoreWeights` that is present and not an object makes the run `bad-run`.
 
 A value is computed in double-precision arithmetic, in this order:
 
@@ -258,51 +298,126 @@ A file that matches both or neither is `bad-run`, and the text names the top-lev
 
 In these rows, `metrics` means `results.prompts[i].metrics` for the same `i`.
 
-| Need                | Field read                                                                                                | Note                                                                                                 |
-| ------------------- | --------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Shape               | `results.version`                                                                                         | must be 3, and any other number is `bad-run`                                                         |
-| Columns             | `results.prompts[i].provider`                                                                             | the provider label; a label that repeats is `bad-run`, so this version reads one prompt per provider |
-| Value of metric `m` | `metrics.namedScores[m]` divided by `metrics.namedScoreWeights[m]` when present, else by the sample count | `namedScores` is the sum of the scores of the assertions that carry `metric: m`                      |
-| Sample count of `m` | `metrics.namedScoresCount[m]`                                                                             | the number of assertions that contributed                                                            |
-| Errors              | `metrics.testErrorCount`                                                                                  | a value greater than 0 is a note, and makes `record` refuse                                          |
-| Case identity       | `results.results[j].testIdx` and `.testCase.vars`                                                         | the digest of the binding check                                                                      |
-| Tool version        | `metadata.promptfooVersion`                                                                               | stored as `source.toolVersion`, and `null` when absent                                               |
+| Need                | Field read                                                                                                   | Note                                                                                                 |
+| ------------------- | ------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| Shape               | `results.version`                                                                                            | must be 3, and any other number is `bad-run`                                                         |
+| Columns             | `results.prompts[i].provider`                                                                                | the provider label; a label that repeats is `bad-run`, so this version reads one prompt per provider |
+| Value of metric `m` | `metrics.namedScores[m]` divided by `metrics.namedScoreWeights[m]` when present, else by the sample count    | `namedScores` is the sum of the scores of the assertions that carry `metric: m`                      |
+| Sample count of `m` | `metrics.namedScoresCount[m]`                                                                                | the number of assertions that contributed                                                            |
+| Errors              | `metrics.testErrorCount`                                                                                     | a value greater than 0 is a note, and makes `record` refuse                                          |
+| Case identity       | `results.results[j].testIdx` and `.testCase.vars`                                                            | the digest of the binding check                                                                      |
+| Tool version        | `metadata.promptfooVersion`                                                                                  | stored as `source.toolVersion`, and `null` when absent                                               |
+| Direction           | `results.results[j].gradingResult.componentResults[k].assertion`: `metric`, `type`, `threshold` and `assert` | read by the polarity rules of promptfoo metrics                                                      |
 
 The metric key is `<provider label> :: <metric name>`, for example `agent :: accuracy`. Only assertions that carry a `metric` produce a named score, so a suite with none has nothing to guard, and `record` refuses it. A metric name that appears in `namedScores` with no entry in `namedScoresCount` is a derived metric. It has no sample count, and the reader skips it.
 
 ### DeepEval run files
 
-| Need                | Field read                                                                      | Note                                                                                                                                        |
-| ------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| Shape               | `testCases` and `metricsScores`, both arrays                                    | the file carries no schema-version field                                                                                                    |
-| Value of metric `m` | the mean of `metricsScores[i].scores` for the entry whose `metric` is `m`       |                                                                                                                                             |
-| Sample count of `m` | the length of that `scores` array                                               | DeepEval counts a sample into `scores` only when it has both a score and a verdict (`success`), and otherwise adds it to `errors`           |
-| Errors              | `metricsScores[i].errors`                                                       | a value greater than 0 is a note and makes `record` refuse; a metric with no threshold has no verdicts, so it has no samples and all errors |
-| Case identity       | each `testCases[j]`'s `input` and `expectedOutput`                              | the digest of the binding check                                                                                                             |
-| Polarity witness    | each `testCases[j].metricsData[k]`'s `name`, `score`, `threshold` and `success` | read by the polarity witness                                                                                                                |
-| Tool version        | none                                                                            | `source.toolVersion` is `null`                                                                                                              |
+| Need                | Field read                                                                                    | Note                                                                                                                                        |
+| ------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Shape               | `testCases` and `metricsScores`, both arrays                                                  | the file carries no schema-version field                                                                                                    |
+| Value of metric `m` | the mean of `metricsScores[i].scores` for the entry whose `metric` is `m`                     |                                                                                                                                             |
+| Sample count of `m` | the length of that `scores` array                                                             | DeepEval counts a sample into `scores` only when it has both a score and a verdict (`success`), and otherwise adds it to `errors`           |
+| Errors              | `metricsScores[i].errors`                                                                     | a value greater than 0 is a note and makes `record` refuse; a metric with no threshold has no verdicts, so it has no samples and all errors |
+| Case identity       | each `testCases[j]`'s `input` and `expectedOutput`                                            | the digest of the binding check                                                                                                             |
+| Polarity witness    | each `testCases[j].metricsData[k]`'s `name`, `score`, `threshold`, `success` and `strictMode` | read by the polarity rules                                                                                                                  |
+| Tool version        | none                                                                                          | `source.toolVersion` is `null`                                                                                                              |
 
 The metric key is the metric name, for example `Accuracy`. A run in which `conversationalTestCases` is not empty is `bad-run`, because this version reads no multi-turn run. A SQLite file is not JSON and is `bad-run` too.
 
 ### Polarity of DeepEval metrics
 
-The comparison treats a lower value as worse, but DeepEval metrics are not all higher-is-better. The reader therefore uses DeepEval's own verdicts as a witness. For each sample with a numeric `score`, a numeric `threshold` and a boolean `success`, `success` MUST equal `score >= threshold`.
+The comparison treats a lower value as worse, but DeepEval metrics are not all higher-is-better, and a DeepEval file does not say which way its scores run. The reader therefore uses DeepEval's own verdicts as a witness.
 
-A metric with at least one sample that breaks this rule is refused. The reader leaves it out, and a baseline that names it gets `unreadable-metric` with the text `DeepEval's own verdicts contradict higher-is-better in <n> sample(s) (success=<s>, score=<x>, threshold=<t>); this implementation reads higher-is-better metrics only`.
+A verdict is an entry of `metricsData` that has a string `name`, a numeric `score`, a numeric `threshold` and a boolean `success`, and it speaks for the metric whose key is its `name`. For each verdict, `success` MUST equal `score >= threshold`.
 
-The verbs `show` and `record` print the same text as a note. So a lower-is-better metric cannot be guarded in this major version. The witness proves a contradiction, never a polarity. A metric whose verdicts never contradict the reading, because every sample passed whichever way, is read as higher-is-better and could be wrong.
+A metric with at least one verdict that breaks this rule is refused. The reader leaves it out, and a baseline that names it gets `unreadable-metric` with the text `DeepEval's own verdicts contradict higher-is-better in <n> sample(s) (success=<s>, score=<x>, threshold=<t>); this implementation reads higher-is-better metrics only`.
+
+The verbs `show` and `record` print the same text as a note. So a lower-is-better metric cannot be guarded in this major version. This rule proves a contradiction, never a polarity. A metric whose verdicts never contradict the reading, because every sample passed whichever way, is read as higher-is-better and could be wrong. The next rule closes that gap for the four metrics that DeepEval is known to have reversed.
+
+DeepEval 4.2.0 reversed the direction of `Bias`, `Hallucination`, `Misuse` and `Toxicity`. Before 4.2.0 each of them passed when its score was at or below its threshold, and its strict mode set the threshold to zero. From 4.2.0 a higher score is better for each of them, as for the other DeepEval metrics, and its strict mode sets the threshold to one.
+
+A DeepEval file carries no version, so a file that holds one of the four can come from either side of the change.
+
+A verdict shows higher-is-better when its `score` is not its `threshold` and `success` is true exactly when `score > threshold`.
+
+A verdict whose `score` equals its `threshold` shows it only when `strictMode` is `true`, `threshold` is 1 and `success` is `true`. Only DeepEval 4.2.0 or later sets the threshold of one of the four to 1 in strict mode. At any other equal pair a pass is the same for a higher-is-better metric and for a lower-is-better one, so it shows nothing.
+
+The four are matched by their exact names. The reader reads one of the four only when at least one verdict shows higher-is-better for it.
+
+The reader refuses each of the four that has no such verdict. Its text is `DeepEval 4.2.0 reversed this metric's score, and no verdict in this file shows which way it runs; run it again on DeepEval 4.2.0 or later with strict mode off and the default threshold`.
+
+A metric with a contradicting verdict gets the text of the rule above, because the reader judges contradiction first. The verbs `show` and `record` print this text as a note too.
+
+### Polarity of promptfoo metrics
+
+promptfoo does not say which way an assertion scores, and it has assertions whose score runs against a pass, such as a raw measurement. It also adds assertion types. So this specification gives a rule and no list of types. The reader reads a promptfoo metric only when it knows, for every assertion that feeds the metric, that a higher score goes with a pass.
+
+The assertions that feed a metric are found in this order. Take `results.results`. In each of its entries, take `gradingResult`. In that, take `componentResults`. In each of its entries, take `assertion`. An assertion with a string `metric` feeds the metric of that name.
+
+When its `type` is `assert-set` and its `assert` is an array, it stands for the objects in that array, and for the objects in any `assert-set` among them, to any depth. A `metric` inside an `assert-set` is not read. An assertion with no string `type` feeds nothing.
+
+The kind of an assertion is its `type`. The one exception is a `cost` assertion, with `not-` before it or without, that has no numeric `threshold`. Its score is the cost itself and not a pass or a fail, so its kind is `cost with no threshold`.
+
+An implementation sorts every kind into one of three classes: its score runs with pass, its score runs against pass, or it is not checked.
+
+It MUST put a kind in the first class only after it has checked what promptfoo does for that kind. A kind that is new to the implementation is not checked until it has been. This specification lists no kind in any class, because promptfoo changes its types, and a list here would be wrong the day it did.
+
+The reader refuses a metric for the first of these reasons that holds, and a baseline that names it gets `unreadable-metric` with its text. `<kinds>` is each kind, quoted as rule 1 of Printed lines requires, in sorted order, separated by a comma and a space.
+
+| Reason                                                                | Text                                                                                                                                                                                                                                                              |
+| --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| the file holds a result, and no assertion in it has a string `metric` | `the file lists no assertion for any metric, so which way its scores run cannot be established; this implementation reads higher-is-better metrics only`                                                                                                          |
+| a kind that is not checked feeds it                                   | `promptfoo assertion type "<kind>" feeds it, and this implementation has not checked which way that score runs; update evals-baseline, or use an assertion type it knows`, with the first such kind in sorted order                                               |
+| kinds of both of the other classes feed it                            | `promptfoo feeds it from assertions that disagree on which way a score runs (<kinds>); give each kind its own metric name`, with every kind that feeds it                                                                                                         |
+| only kinds that run against pass feed it                              | `promptfoo scores it as lower-is-better (<kinds>); this implementation reads higher-is-better metrics only`, followed by `. To compare cost, give the cost assertion a threshold so that it scores pass or fail` when `cost with no threshold` is among the kinds |
+
+A metric that no assertion feeds is read when an assertion feeds another metric of the file. The reader checks the weight total before it checks direction, so a bad weight total gives its own text. The verbs `show` and `record` print these texts as notes.
+
+## The command line
+
+A command is a verb, one run file and the flags of that verb. The verbs are `check`, `record` and `show`, in lower case. The one command with no verb is `--version`, and it takes no other argument.
+
+| Verb     | Flags it takes                                      |
+| -------- | --------------------------------------------------- |
+| `check`  | `--baseline <path>`, `--strict`                     |
+| `record` | `--baseline <path>`, `--tolerance <n>`, `--replace` |
+| `show`   | none                                                |
+
+- An argument that starts with `-` is a flag. A lone `-` and a lone `--` are flags, and `--baseline=<path>` is one flag with a name that no verb takes.
+- A flag that the table shows with a value takes the next argument as its value, and that argument does not start with `-`. The other flags take no value.
+- Every argument that is neither a flag nor the value of a flag is a run file. It may come before, between or after the flags.
+- `--baseline` names the baseline that `check` compares with and that `record` writes. When it is not given, the baseline is `evals-baseline.json`. A path is relative to the working directory.
+- `--replace` lets `record` write over a baseline that exists and that the run would change. It takes no value.
+
+### Usage errors
+
+A command line is a usage error when any one of these holds:
+
+1. The first argument is not `check`, `record` or `show`, and the arguments are not exactly `--version`. That covers no argument, a verb in capital letters, `--help`, and `--version` beside another argument.
+2. A flag has a name that is in no row of the table. That covers `-`, `--`, `--baseline=<path>`, `--Strict` and a flag of another tool. Flag names are case-sensitive.
+3. A flag appears that the verb does not take, as its row of the table gives. The verb `show` takes none.
+4. A flag appears twice, whether or not its two values are the same.
+5. A flag that takes a value is the last argument, or the next argument starts with `-`.
+6. There is no run file, or more than one. The value of a flag is never a run file.
+7. The value of `--tolerance` is not a number from 0 to 4000000000, written as ASCII digits with at most one decimal point and at least one digit. The number is the double that the text gives. So `0`, `007`, `.5`, `5.` and `4000000000` are accepted. An empty value, `.`, `+5`, `1e3` and `1.2.3` are not, and neither is a value above 4000000000.
+
+An implementation finds a usage error before it reads or writes any file, so a usage error outranks an unreadable run file. It exits with code 2 and writes no file. The last line of its standard error is the usage line, in the words that the vectors show. A line before it may say which condition held, and this specification does not fix the words of that line.
 
 ## Exit codes
 
-A command ends with one of three exit codes.
+A command ends with one of four exit codes.
 
-| Code | When                                                                                                                                                                                                                                                                                                |
-| ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 0    | The command ran and the arguments parsed. `check` exits 0 whatever it found, unless `--strict` is given                                                                                                                                                                                             |
-| 1    | `check --strict` printed at least one finding other than `cases-changed`, `record` refused and wrote nothing, or `show` could not read its run                                                                                                                                                      |
-| 2    | A usage error: an unknown verb, an unknown flag, a flag that the verb does not take, a flag given twice, a flag without its value, not exactly one run file, or a `--tolerance` that is not a number from 0 to 4000000000 written as digits with an optional decimal point. The text goes to stderr |
+| Code | When                                                                                                                                                                                                                                                            |
+| ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0    | The command ran and the arguments parsed. `check` exits 0 whatever it found, unless `--strict` is given. Under `--strict` it also exits 0 when every finding is `cases-changed`                                                                                 |
+| 1    | A regression: `check --strict` printed at least one of the findings `missing-metric`, `below-baseline` and `sample-count`                                                                                                                                       |
+| 2    | A usage error, as The command line defines it. The text goes to stderr                                                                                                                                                                                          |
+| 3    | The command could not evaluate its input: `check --strict` printed a finding that is `unreadable-metric`, `no-baseline`, `bad-baseline`, `bad-run` or `internal-error`, and no regression, `record` refused and wrote nothing, or `show` could not read its run |
 
-Every line of a report goes to standard output, whatever the exit code. A command that exits 1 prints its refusal there and leaves standard error empty. Only a usage error writes to standard error, and it writes nothing to standard output.
+When a strict check holds a regression and a finding that could not be evaluated, the code is 1. A regression is a result about the suite, and an input that could not be read does not take it back. The finding `cases-changed` is in neither kind and never changes the exit code. The summary line of a check names the code that strict mode gives.
+
+Every line of a report goes to standard output, whatever the exit code. A command that exits 1 or 3 prints its report or its refusal there and leaves standard error empty. Only a usage error writes to standard error, and it writes nothing to standard output.
 
 `check` MUST NOT throw. An exception inside reading or comparing is reported as the finding `internal-error`, with its message. The exit code then follows the rules for any other finding. A bug in an implementation must not turn a build red on a day nothing in the repository changed. This specification defines no input that must raise an internal error, so its vectors are reference-only.
 
@@ -314,7 +429,7 @@ An implementation MUST keep all three properties. Each has a limit, and the limi
 
 The default is a printed, dated finding.
 
-- Unless it is given `--strict`, `check` MUST exit 0 whatever it finds. Strict mode is the only way for `check` to exit 1.
+- Unless it is given `--strict`, `check` MUST exit 0 whatever it finds. Strict mode is the only way for `check` to exit 1 or 3.
 - A check that read a baseline MUST print a line that starts with `date:`. The line states when the baseline was recorded and how old it is, so an ignored finding stays visible.
 
 The owner of a suite can delete the step that runs the check. An implementation cannot stop that and does not pretend to, because the visibility is the point.
@@ -353,7 +468,7 @@ These refusals are permanent. An entry leaves the list only through a new major 
 | Telemetry, an update check, any outbound request                                                                                 | A request is a failure that depends on a network and a day                                                                                                                         |
 | Pull-request comments, bots, chat messages, badges, status APIs                                                                  | Each needs a token and a service                                                                                                                                                   |
 | Failing on a date, on baseline age, or on expiry                                                                                 | Nothing exits non-zero on a clock                                                                                                                                                  |
-| Lower-is-better metrics, or a per-metric polarity setting, in major version 1                                                    | The reader reads higher-is-better only, and it refuses a metric whose verdicts contradict that                                                                                     |
+| Lower-is-better metrics, or a per-metric polarity setting, in major version 1                                                    | The reader reads higher-is-better only, and it refuses a metric that it cannot show to be higher-is-better                                                                         |
 | A configuration file or environment variables                                                                                    | The baseline is the only configuration, and a second place is a second place for implementations to disagree                                                                       |
 | JSON, SARIF or JUnit output of the report                                                                                        | Each format is another contract to keep. The report is line-oriented so that `grep` and the exit code are the interface, and the baseline is JSON for anyone who needs structure   |
 | More than one run or suite in a baseline, merging baselines, per-branch baselines                                                | One baseline holds one run of one suite, so each has one `source` and one `cases` digest                                                                                           |
@@ -369,7 +484,9 @@ A version of this specification has two numbers, MAJOR and MINOR, written MAJOR.
 | MAJOR  | a rule, the baseline schema, a finding id, an exit code or the metric key of a shape changes so that an older baseline or an older reading gives a different answer |
 | MINOR  | an output shape is added (a newer promptfoo results version, say), so older baselines are still read and nothing already readable changes meaning                   |
 
-A published version never changes its behaviour. Its page changes only by an editorial correction, which covers wording, examples and added vectors. An editorial correction changes no behaviour and no citation, it leaves the version number alone, and the changelog records it with its date. Any change of behaviour is a new version, published at its own address beside the old one.
+A published version never changes its behaviour. Its page changes only by an editorial correction, which covers wording, examples, and vectors that are added or corrected to agree with a clause. An editorial correction changes no behaviour and no citation, it leaves the version number alone, and the changelog records it with its date. Any change of behaviour is a new version, published at its own address beside the old one.
+
+A version counts as published from the day its page is first served at its address. Before that day its page may change in any way, and the changelog starts with that day.
 
 A baseline names the version it follows in its `spec` field. An implementation reads a baseline of its own major and an older or equal minor.
 
@@ -381,13 +498,13 @@ Only versioned pages are cited. The [evals-baseline series page](/spec/evals-bas
 
 ## Conformance vectors
 
-A conformance vector is one run of the command. It names the arguments, a pinned instant, and the baseline file and the run file that the command reads. It holds the exact lines the command prints, its exit code and the text of any file `record` writes. An implementation conforms to this version when it reproduces every vector that is not marked reference-only.
+A conformance vector is one run of the command. It names the arguments, a pinned instant, and the baseline file and the run file that the command reads. It holds the exact lines the command prints, its exit code and the text of any file `record` writes. A vector tests a clause, and How to read this specification says what to do when the two disagree.
 
 The vectors are published as one file, [/spec/evals-baseline/1.0/vectors.json](/spec/evals-baseline/1.0/vectors.json). Under the key `files` it carries the exact text of every baseline file and run file that a vector names and that exists. A path that is not a key of `files` names a file that does not exist. The file alone is enough to run every vector.
 
 The [baseline schema](/spec/evals-baseline/1.0/baseline.schema.json) at `/spec/evals-baseline/1.0/baseline.schema.json` describes the shape of a baseline file. Published files, below, gives the digest of both files.
 
-Version 1.0 has 190 vectors. 125 run `check`, 34 run `record`, 25 run `show`, 1 asks for the version, and 5 are usage errors that exit 2. The 125 check vectors are drawn from 62 distinct pairs of a baseline and a run.
+Version 1.0 has 192 vectors. 125 run `check`, 36 run `record`, 25 run `show`, 1 asks for the version, and 5 are usage errors that exit 2. The 125 check vectors are drawn from 62 distinct pairs of a baseline and a run.
 
 | Covered                                     | Vectors | Distinct pairs | To reproduce |
 | ------------------------------------------- | ------- | -------------- | ------------ |
@@ -402,14 +519,20 @@ Version 1.0 has 190 vectors. 125 run `check`, 34 run `record`, 25 run `show`, 1 
 | `unreadable-metric`                         | 2       | 1              | 2            |
 | `internal-error`                            | 2       | 1              | 0            |
 
-A vector appears in a row for each finding its report names, so the rows do not partition the 190.
+A vector appears in a row for each finding its report names, so the rows do not partition the 192.
 
-Vectors that name two findings stand in two rows, and there are 8 of them. Of the 190, 87 name no finding and stand in no row.
+Vectors that name two findings stand in two rows, and there are 8 of them. Of the 192, 89 name no finding and stand in no row.
 
-Of those 87, 22 are `check` runs that must stay silent. The other 65 run `record` or `show`, ask for the version, or are usage errors, and none of them reports a finding. The silent checks include the same suite recorded and checked twice, a value exactly at its tolerance, and a run with more samples than the baseline, which prints a note and no finding.
+Of those 89, 22 are `check` runs that must stay silent. The other 67 run `record` or `show`, ask for the version, or are usage errors, and none of them reports a finding. The silent checks include the same suite recorded and checked twice, a value exactly at its tolerance, and a run with more samples than the baseline, which prints a note and no finding.
 
 The rows therefore total 111. A row counts the vectors that prove it, not the vectors it exhausts. The last column counts the vectors of a row that an implementation must reproduce. The row for `internal-error` has none, because this specification defines no input that must raise an internal error.
 
-No implementation is asked to reproduce the reference-only vectors, which number 4 of the 190. Of those 4, 2 print the message a runtime raised, which is not this specification's text. The other 2 print the reason line before a usage error, which this specification does not fix.
+No implementation is asked to reproduce the reference-only vectors, which number 4 of the 192. Of those 4, 2 print the message a runtime raised, which is not this specification's text. The other 2 print the reason line before a usage error, which this specification does not fix.
+
+The vectors leave three clauses untested. No vector holds a code point that Unicode 15.1 leaves unassigned, or one of the seven code points.
+
+No vector holds a DeepEval metric named `Bias`, `Hallucination`, `Misuse` or `Toxicity`, and none refuses a promptfoo metric because of the kind of its assertions. No vector holds a regression and a finding that could not be evaluated in one strict check.
+
+Passing every vector does not show that an implementation follows those clauses.
 
 Three things an implementation sets for itself. Its own package version, which the banner line carries and which this specification never fixes. The clock, which each vector pins, so an implementation that cannot set its clock compares every line except the one beginning `date:`. The order in which it reads files, which changes nothing a vector records.

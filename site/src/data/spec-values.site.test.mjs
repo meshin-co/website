@@ -124,3 +124,58 @@ test('the vectors fix sorting by UTF-16 code unit, which gives another digest th
   assert.notEqual(digestOf(identity, byCodePoint), printed);
   assert.match(page, /UTF-16 code-unit order/);
 });
+
+function metricsOfAPromptfooRun(run) {
+  return run.results.prompts.flatMap((prompt) => {
+    const { namedScores, namedScoresCount, namedScoreWeights = {} } = prompt.metrics;
+    return Object.entries(namedScoresCount)
+      .filter(([, samples]) => samples > 0)
+      .map(([name, samples]) => ({
+        key: `${prompt.provider} :: ${name}`,
+        sum: namedScores[name],
+        samples,
+        weighted: Object.hasOwn(namedScoreWeights, name),
+        weight: namedScoreWeights[name],
+      }));
+  });
+}
+
+function valueByThePage({ sum, samples, weighted, weight }) {
+  if (!weighted) return q(sum / samples) / MICRO;
+  return Number.isFinite(weight) && weight > 0 ? q(sum / weight) / MICRO : null;
+}
+
+const PLAIN_KEY = /^[ -~]+$/;
+const showsAPromptfooMetric = (entry) =>
+  entry.argv[0] === 'show' && printedValues(entry.id).size > 0 && 'results' in runOf(entry.id);
+
+test('the mean that the page states for a promptfoo metric is the value the vectors print for it', () => {
+  let compared = 0;
+  for (const entry of suite.vectors.filter(showsAPromptfooMetric)) {
+    const printed = printedValues(entry.id);
+    for (const metric of metricsOfAPromptfooRun(runOf(entry.id)).filter(
+      ({ key }) => PLAIN_KEY.test(key) && !/["\\]/.test(key)
+    )) {
+      const expected = valueByThePage(metric);
+      if (expected === null) assert.equal(printed.has(metric.key), false, `${entry.id} ${metric.key}`);
+      else assert.equal(Number(printed.get(metric.key)), expected, `${entry.id} ${metric.key}`);
+      compared += 1;
+    }
+  }
+  assert.ok(compared >= 25, `only ${compared} metrics were compared`);
+});
+
+test('the four cases that the page tabulates for a weighted metric are what its rule gives', () => {
+  const rows = tableRows('`namedScores`');
+  assert.equal(rows.length, 4);
+  for (const [sum, samples, entry, value, count] of rows) {
+    const metric = { sum: Number(sum), samples: Number(samples), weighted: entry !== 'none', weight: Number(entry) };
+    const expected = valueByThePage(metric);
+    if (expected === null) assert.deepEqual([value, count], ['the metric is refused', 'none']);
+    else assert.deepEqual([Number(value), Number(count)], [expected, metric.samples]);
+  }
+  const [sum, samples, entry] = rows[0].map(Number);
+  const heavy = { sum, samples, weighted: true, weight: entry };
+  assert.ok(entry > samples);
+  assert.notEqual(valueByThePage({ ...heavy, weighted: false }), valueByThePage(heavy));
+});

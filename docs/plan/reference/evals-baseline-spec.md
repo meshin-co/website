@@ -1,6 +1,8 @@
 # evals-baseline: the specification and its reference implementation, as designed
 
-Written 2026-11-11 for the owner's review. **Nothing described here is built.** The repository does not exist:
+Written 2026-11-11 for the owner's review, when nothing described here was built. It has been built since, in
+`../../../../evals-baseline/evals-baseline/`, and the repository below is still not the one it was given. At the time
+of writing the repository did not exist:
 `https://github.com/meshin-co/evals-baseline` answered 404 and the organisation page answered 200 when probed on
 2026-11-11 (L76 records the same for the seven slugs). The unscoped `evals-baseline` is not registered on npm (404 at
 17:11 UTC the same day; the scoped form probed in the same minute was dropped by L78 on 2026-11-15). The versioned specification page does not
@@ -8,10 +10,18 @@ exist either: the settled address is `https://meshin.co/spec/evals-baseline/1.0`
 before it was settled, `https://meshin.co/specs/evals-baseline/1.0.0/` and `https://meshin.co/resources/evals-baseline/`,
 both answered 404, while `https://meshin.co/resources/agent-evals-ci-starter/` answered 200.
 
-This file is the design the first repository is built from and the text the versioned page is written from. It
+This file is the design the first repository was built from and the text the versioned page was first written from. It
 decides what `docs/plan/reference/resource-publication-sequence.md` left open: what the baseline file holds, what the
 four rules say exactly, what the commands print, how the two tools are read, how three surfaces stay one source, what
 the specification half contains, how the guards are proven, and what the repository will never do.
+
+**Superseded in four places on 2026-11-16, and kept as the record of the design as it stood.** The page at
+`site/src/data/spec/evals-baseline-1.0.md` is what the tool now does, and it wins over this file wherever the two
+disagree. Section 5.2 here gives three exit codes and sends a `record` or `show` refusal to exit 1; the tool has four
+and sends both to 3. Section 2 here lets a later Unicode edition print a code point this one replaces; the tool is
+pinned to 15.1 and replaces seven code points that draw no ink. `record` now refuses over a baseline its run would
+change, which this file does not describe. The two readers now refuse a metric whose score direction the file does not
+prove, which this file does not describe either.
 
 ## How to read this document
 
@@ -714,11 +724,15 @@ format; the definitions of value, sample count and metric key for each tool shap
 make two implementations produce the same number; the three non-negotiable properties as conformance requirements; the
 permanent refusals; the versioning policy; a changelog; and the conformance vectors. The vectors are the committed
 fixtures, each a baseline and a run file with the exact expected report. An implementation conforms to a version when
-it reproduces that version's vectors, and a vector exists for each of rules 1 to 4, the binding check and each
-refusal. Amended on 2026-11-12 from "the expected findings, notes and exit codes": the 108 vectors built for 1.0
-record every printed line and the exit code, because the summary line and the notes are part of what a second
-implementation has to get right, and a definition narrower than the file would leave the difference unsettled.
-Conformance is the thing the README cannot give.
+it does what every clause of the page requires, and the vectors test that: a vector exists for each of rules 1 to 4,
+the binding check and each refusal. Amended on 2026-11-12 from "the expected findings, notes and exit codes": the 108
+vectors built for 1.0 record every printed line and the exit code, because the summary line and the notes are part of
+what a second implementation has to get right, and a definition narrower than the file would leave the difference
+unsettled. Amended on 2026-11-16 from "when it reproduces that version's vectors": the vectors are made by running the
+implementation they test, so a definition that stopped at reproducing them let an implementation conform while a clause
+called it wrong, and three sentences of the page gave three precedences. The clauses decide, a vector that contradicts a
+clause is the mistake, and a vector gives the words of a line only where the page gives the form and no more. The page
+says what a reader does when the two disagree. Conformance is the thing the README cannot give.
 
 The README holds: the three one-line ways to install or copy it, the pin-a-SHA warning, how to produce a run file with
 each tool and to record, a pointer to the specification, and the citation block.
