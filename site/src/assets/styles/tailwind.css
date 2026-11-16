@@ -366,6 +366,12 @@
 .prose :where(code):not(:where(pre *))::after {
   content: none;
 }
+.prose-brief pre:not(.astro-code),
+.prose-brief pre:not(.astro-code) code {
+  overflow-x: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
 .prose :where(pre.astro-code) {
   border: 1px solid color-mix(in oklab, var(--aw-color-text-default) 12%, transparent);
 }

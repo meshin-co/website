@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { RESERVED_LEAF_SLUGS, deriveRouteKinds, routeShape } from './route-kinds.mjs';
+import { RESERVED_LEAF_SLUGS, SERIES_BASES, deriveRouteKinds, routeShape } from './route-kinds.mjs';
 import { COLLECTIONS, buildWorld } from './fixtures/parity-world.mjs';
 
 const BASES = new Set(COLLECTIONS.map(({ base }) => base));
@@ -39,6 +39,137 @@ test('the reserved leaf slugs are the four the archives and pagination use', () 
 test('an entry shape names its collection base and its id', () => {
   assert.deepEqual(routeShape('/blog/first', BASES), { shape: 'entry', base: 'blog', id: 'first' });
   assert.deepEqual(routeShape('/blog', BASES), { shape: 'hub', base: 'blog' });
+});
+
+const SPEC_BASES = new Set([...BASES, 'spec']);
+
+const SERIES_SHAPES = [
+  ['/spec', { shape: 'hub', base: 'spec' }],
+  ['/spec/evals-baseline', { shape: 'series', base: 'spec', id: 'evals-baseline' }],
+  ['/spec/evals-baseline/1.0', { shape: 'entry', base: 'spec', id: 'evals-baseline/1.0' }],
+  ['/spec/evals-baseline/1.0/extra', { shape: 'page' }],
+];
+
+test('the series bases are the URL bases of the collections that publish versioned series', () => {
+  assert.deepEqual([...SERIES_BASES], ['spec']);
+});
+
+test('under a series base one segment is a hub, two a series, three an entry named by series and version, deeper a page', () => {
+  for (const [route, expected] of SERIES_SHAPES) assert.deepEqual(routeShape(route, SPEC_BASES), expected, route);
+});
+
+test('the series bases are a parameter: given none, a series base reads like any other base', () => {
+  assert.deepEqual(routeShape('/spec/evals-baseline', SPEC_BASES, new Set()), {
+    shape: 'entry',
+    base: 'spec',
+    id: 'evals-baseline',
+  });
+  assert.deepEqual(routeShape('/spec/evals-baseline/1.0', SPEC_BASES, new Set()), { shape: 'page' });
+});
+
+test('a base that is not a series base never reads three segments as an entry', () => {
+  assert.deepEqual(routeShape('/blog/evals-baseline/1.0', SPEC_BASES), { shape: 'page' });
+  assert.deepEqual(routeShape('/blog/first', SPEC_BASES), { shape: 'entry', base: 'blog', id: 'first' });
+});
+
+const NO_DECLARATIONS = { exceptions: [], noindexRoutes: new Set(), emptyCollections: [] };
+const SERIES_PAGE = '/spec/evals-baseline';
+const FIRST_VERSION = '/spec/evals-baseline/1.0';
+const SECOND_VERSION = '/spec/evals-baseline/1.1';
+
+function seriesWorld({
+  routes = [SERIES_PAGE, FIRST_VERSION, SECOND_VERSION],
+  collections = [{ kind: 'spec', base: 'spec' }],
+  noindex = [],
+  declaredNoindex = [],
+} = {}) {
+  const head = (route) => `<html><head>${noindex.includes(route) ? NOINDEX : ''}</head></html>`;
+  return {
+    routes,
+    htmlByRoute: Object.fromEntries(routes.map((route) => [route, head(route)])),
+    collections,
+    declared: { ...NO_DECLARATIONS, noindexRoutes: new Set(declaredNoindex) },
+  };
+}
+
+test('a series collection derives its series page as a series and each version page as an entry, with no list of paths', () => {
+  const derived = derive(seriesWorld());
+  const described = [...derived.routes.values()].map(({ route, kind, shape, base, id, collection }) => ({
+    route,
+    kind,
+    shape,
+    base,
+    id,
+    collection,
+  }));
+
+  assert.deepEqual(derived.findings, []);
+  assert.deepEqual(described, [
+    { route: SERIES_PAGE, kind: 'series', shape: 'series', base: 'spec', id: 'evals-baseline', collection: 'spec' },
+    { route: FIRST_VERSION, kind: 'entry', shape: 'entry', base: 'spec', id: 'evals-baseline/1.0', collection: 'spec' },
+    {
+      route: SECOND_VERSION,
+      kind: 'entry',
+      shape: 'entry',
+      base: 'spec',
+      id: 'evals-baseline/1.1',
+      collection: 'spec',
+    },
+  ]);
+});
+
+test('the live entries of a series collection are its version pages, and the series page is never one of them', () => {
+  assert.deepEqual(derive(seriesWorld()).liveEntries, { spec: [FIRST_VERSION, SECOND_VERSION] });
+});
+
+test('a series page alone does not make its collection live', () => {
+  const derived = derive(seriesWorld({ routes: [SERIES_PAGE] }));
+
+  assert.deepEqual(derived.liveEntries, { spec: [] });
+  assert.deepEqual(rulesOf(derived), ['collection-empty-undeclared']);
+  assert.equal(kindOf(derived, SERIES_PAGE), 'series');
+});
+
+test('a noindex series page is an undeclared noindex and is withheld, and no entry frontmatter can declare it', () => {
+  for (const declaredNoindex of [[], [SERIES_PAGE]]) {
+    const derived = derive(seriesWorld({ noindex: [SERIES_PAGE], declaredNoindex }));
+
+    assert.deepEqual(rulesOf(derived), ['route-noindex-undeclared']);
+    assert.equal(derived.findings[0].subjects[0], SERIES_PAGE);
+    assert.equal(kindOf(derived, SERIES_PAGE), 'withheld');
+    assert.deepEqual(derived.liveEntries.spec, [FIRST_VERSION, SECOND_VERSION]);
+  }
+});
+
+test('a version page whose frontmatter says noindex is withheld without a finding, and its series page stays a series', () => {
+  const derived = derive(seriesWorld({ noindex: [SECOND_VERSION], declaredNoindex: [SECOND_VERSION] }));
+
+  assert.deepEqual(derived.findings, []);
+  assert.equal(kindOf(derived, SECOND_VERSION), 'withheld');
+  assert.equal(kindOf(derived, SERIES_PAGE), 'series');
+  assert.deepEqual(derived.liveEntries.spec, [FIRST_VERSION]);
+});
+
+test('a version page declared noindex by its frontmatter whose built page is indexable is a finding', () => {
+  const derived = derive(seriesWorld({ declaredNoindex: [FIRST_VERSION] }));
+
+  assert.deepEqual(rulesOf(derived), ['route-noindex-missing']);
+  assert.equal(derived.findings[0].subjects[0], FIRST_VERSION);
+});
+
+test('the series bases are read from the collections the derivation receives, by kind and not by the base in use', () => {
+  const routes = ['/specs/evals-baseline', '/specs/evals-baseline/1.0', '/talks/keynote', '/talks/keynote/2'];
+  const collections = [
+    { kind: 'spec', base: 'specs' },
+    { kind: 'talk', base: 'talks' },
+  ];
+  const derived = derive(seriesWorld({ routes, collections }));
+
+  assert.deepEqual(
+    routes.map((route) => kindOf(derived, route)),
+    ['series', 'entry', 'entry', 'page']
+  );
+  assert.deepEqual(derived.liveEntries, { spec: ['/specs/evals-baseline/1.0'], talk: ['/talks/keynote'] });
 });
 
 test('the baseline world derives every built route to one kind and raises no finding', () => {

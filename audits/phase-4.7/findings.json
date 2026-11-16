@@ -2,6 +2,14 @@
   "untraceable": [],
   "dead": [
     {
+      "location": "frontmatter.citeAs",
+      "text": "This project guards its agent evaluations against regression as defined by the {spec}.",
+      "status": "unreviewed",
+      "usedIn": [
+        "src/data/spec/evals-baseline-1.0.md"
+      ]
+    },
+    {
       "location": "text",
       "text": "Nothing published in this category yet.",
       "status": "unreviewed",
@@ -63,6 +71,22 @@
       "status": "unreviewed",
       "usedIn": [
         "src/utils/paginate.mjs"
+      ]
+    },
+    {
+      "location": "constant.skipped",
+      "text": "no checkout at",
+      "status": "unreviewed",
+      "usedIn": [
+        "src/utils/spec-artefacts.mjs"
+      ]
+    },
+    {
+      "location": "constant.skipped",
+      "text": "declares as",
+      "status": "unreviewed",
+      "usedIn": [
+        "src/utils/spec-artefacts.mjs"
       ]
     },
     {

@@ -10,7 +10,6 @@ import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 import icon from 'astro-icon';
 import compress from 'astro-compress';
-import expressiveCode from 'astro-expressive-code';
 
 import astrowind from './vendor/integration';
 
@@ -41,6 +40,7 @@ const NOINDEX_ROUTES = new Set([
 
 export default defineConfig({
   output: 'static',
+  prerenderConflictBehavior: 'error',
   trailingSlash: 'never',
 
   build: {
@@ -94,10 +94,6 @@ export default defineConfig({
         return modified ? ({ ...item, lastmod: new Date(modified) } as unknown as typeof item) : item;
       },
     }),
-    expressiveCode({
-      themes: ['github-light', 'github-dark'],
-      styleOverrides: { borderRadius: '0', frames: { shadowColor: 'transparent' } },
-    }),
     mdx(),
     icon({
       iconDir: 'src/assets/icons',
@@ -120,6 +116,7 @@ export default defineConfig({
         },
       },
       Image: false,
+      JSON: false,
       JavaScript: true,
       SVG: false,
       Logger: 1,
@@ -139,9 +136,7 @@ export default defineConfig({
       remarkPlugins: [readingTimeRemarkPlugin],
       rehypePlugins: [rehypeScrollableTables, rehypeHeadingAnchors, rehypeExternalLinks],
     }),
-    shikiConfig: {
-      themes: { light: 'github-light', dark: 'github-dark' },
-    },
+    syntaxHighlight: false,
   },
 
   vite: {
