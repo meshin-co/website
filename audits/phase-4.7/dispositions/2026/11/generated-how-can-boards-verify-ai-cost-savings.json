@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/how-can-boards-verify-ai-cost-savings.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-can-boards-verify-ai-cost-savings.json on 2026-11-12. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-can-boards-verify-ai-cost-savings.json.",
+    "digest": "74f993a333b7"
+  },
+  {
+    "target": "/blog/how-can-boards-verify-ai-cost-savings",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-can-boards-verify-ai-cost-savings.json on 2026-11-12. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-can-boards-verify-ai-cost-savings.json.",
+    "digest": "44a14e5ebb21"
+  }
+]

@@ -22,14 +22,15 @@ change is unparked.
 - [ ] 2.4 `seed/site/src/data/resource/short-answer-checklist.md.seed` declares a `license` and
       `seed/site/public/licenses/CC-BY-4.0.txt.seed` ships its text, so a copy of the engine has a licence to declare
 
-## 3. The site grants what the decision says
+## 3. The site grants no more than the decision
 
-- [ ] 3.1 The Content section of `site/src/pages/terms.astro` grants the writing under CC BY 4.0, states the credit
-      the licence asks for and names the text at `/licenses/CC-BY-4.0.txt`
+- [ ] 3.1 The Content section of `site/src/pages/terms.astro` grants the writing quotation with a link, says each
+      resource names its own licence next to its version, grants copying, sharing and adapting of a resource whose
+      licence is CC BY 4.0, states the credit the licence asks for and names the text at `/licenses/CC-BY-4.0.txt`
 - [ ] 3.2 The Engagements section of the same page says only the working method travels between engagements and
       points at the FAQ for where that line falls, rather than restating the boundary: G91
 - [ ] 3.3 `site/LICENSE.md` grants the code in the name of the site's author, keeps the notice of the theme above
-      the permission text and points the writing at its licence text, and `seed/site/LICENSE.md.seed` carries the
+      the permission text and points the resources at their licence text, and `seed/site/LICENSE.md.seed` carries the
       same structure with the holder left for the owner of the copy
 - [ ] 3.4 `/terms` carries the date of the change in `site/src/data/static-pages.mjs`, and `site/content-facts.json`
       allows the number 4.0 that the page now holds
@@ -58,14 +59,14 @@ change is unparked.
       `resource-license-without-text`, each with a planted entry under `site/tests/guard-mutations/fixtures/`
 - [ ] 5.3 `site/src/utils/resource-license.site.test.mjs` plants a changed `site/LICENSE.md` for each defect the
       check exists to catch: the holder missing, the notice of the theme gone or below the permission text, the
-      permission text gone, and the writing not pointed at its licence text
+      permission text gone, and the resources not pointed at their licence text
 
 ## 6. What no guard covers is written down
 
 - [ ] 6.1 `docs/plan/reference/known-gaps.md` holds G86, the window this change opens, G87, the `status` of an entry
-      that nothing relates to its `repoUrl` and a repository that nothing checks, G88, the licence the checklist of
-      the owner still records for a page-only artefact, G89, the licence that the structured data names by its bare
-      id, G90, the grant of `/terms` that nothing reads, and G91, the boundary on ownership that no
+      that nothing relates to its `repoUrl` and a repository that nothing checks, G88, the licence over the resources
+      and the writing, which no answer of the owner chooses, G89, the licence that the structured data names by its
+      bare id, G90, the grant that nothing refuses past the decision, and G91, the boundary on ownership that no
       answer of the owner backs
 
 ## 7. Calibration Gate

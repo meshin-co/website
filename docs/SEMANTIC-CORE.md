@@ -75,7 +75,7 @@ title `{spec name} specification {version} — meshin.co` · meta: what the vers
 | `/spec/evals-baseline`     | evals-baseline specification     | evals-baseline specification — meshin.co     | Every published version of the evals-baseline specification, and the address to cite for each.                                                         | evals-baseline specification     | 23    | ✓       |
 | `/spec/evals-baseline/1.0` | evals-baseline specification 1.0 | evals-baseline specification 1.0 — meshin.co | The evals-baseline specification 1.0 says what a regression in an agent evaluation is, and defines the baseline file, the findings and the exit codes. | evals-baseline specification 1.0 | 25    | ✓       |
 
-### article (18)
+### article (21)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
@@ -91,10 +91,13 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/evals-in-ci-for-llm-agents`                                 | evals in ci without a golden answer                        | Evals in CI for LLM agents, without a golden answer — meshin.co        | How to build an eval set from production traffic, score an LLM agent without a golden answer, and fail a merge in CI when it regresses.               | Evals in CI for LLM agents, without a golden answer        | 29    | ✓       |
 | `/blog/fractional-caio-pricing`                                    | fractional caio pricing                                    | Fractional CAIO pricing — meshin.co                                    | Understand fractional CAIO pricing structures, compare proposals and identify costs to settle before work starts.                                     | Fractional CAIO pricing                                    | 33    | ✓       |
 | `/blog/handing-over-ai-leadership-to-an-internal-owner`            | how to hand over ai leadership to internal owner           | How to hand over AI leadership to an internal owner — meshin.co        | How to hand over AI leadership in steps that end in a test: what moves, who takes the role and how to tell it worked.                                 | How to hand over AI leadership to an internal owner        | 40    | ✓       |
+| `/blog/how-can-boards-verify-ai-cost-savings`                      | how can boards verify ai cost savings                      | How can boards verify AI cost savings? — meshin.co                     | How boards can test AI cost savings against finance records, delivery costs, work quality and a credible baseline.                                    | How can boards verify AI cost savings?                     | 28    | ✓       |
 | `/blog/how-to-build-an-ai-system-register-in-a-week`               | ai system register                                         | How to build an AI system register in a week — meshin.co               | A step-by-step way to build an AI system register in a week without buying a tool, so a security reviewer gets the document they ask for first.       | How to build an AI system register in a week               | 33    | ✓       |
 | `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company` | ai operating model for mid-size company                    | How to choose an AI operating model for a mid-size company — meshin.co | How to choose an operating model for AI work in a mid-size company, starting from what the law requires and what the evidence supports.               | How to choose an AI operating model for a mid-size company | 40    | ✓       |
-| `/blog/how-to-prevent-duplicate-ai-agent-actions-on-retries`       | how to prevent duplicate ai agent actions on retries       | How to prevent duplicate AI agent actions on retries — meshin.co       | Learn how to prevent duplicate AI agent actions on retries with stable operation keys, durable records, and checks for uncertain outcomes.            | How to prevent duplicate AI agent actions on retries       | 28    | ✓       |
+| `/blog/how-to-prevent-duplicate-ai-agent-actions-on-retries`       | how to prevent duplicate ai agent actions on retries       | How to prevent duplicate AI agent actions on retries — meshin.co       | Learn how to prevent duplicate AI agent actions on retries with stable operation keys, durable records, and checks for uncertain outcomes.            | How to prevent duplicate AI agent actions on retries       | 29    | ✓       |
+| `/blog/how-to-review-ai-generated-customer-support-replies`        | how to review ai-generated customer support replies        | How to review AI-generated customer support replies — meshin.co        | Set a practical review process for AI-generated support replies, from checking account facts to handling risky drafts and improving future reviews.   | How to review AI-generated customer support replies        | 31    | ✓       |
 | `/blog/how-to-roll-back-an-ai-agent-deployment`                    | how to roll back an ai agent deployment                    | How to roll back an AI agent deployment — meshin.co                    | How to roll back an AI agent deployment: stop actions, restore a known release and check in-flight work before resuming.                              | How to roll back an AI agent deployment                    | 28    | ✓       |
+| `/blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent`       | how to set a per-task spending limit for an ai agent       | How to set a per-task spending limit for an AI agent — meshin.co       | Set and enforce an AI agent's task budget with cost reservations, shared limits, clear failure rules, and reconciliation.                             | How to set a per-task spending limit for an AI agent       | 30    | ✓       |
 | `/blog/how-to-trace-ai-agent-tool-calls-in-production`             | how to trace ai agent tool calls in production             | How to trace AI agent tool calls in production — meshin.co             | Trace AI agent tool calls in production with linked spans, safe fields, retry handling and checks for missing evidence.                               | How to trace AI agent tool calls in production             | 31    | ✓       |
 | `/blog/multi-agent-reference-architecture-in-production`           | multi-agent reference architecture production              | Multi-agent reference architecture in production — meshin.co           | What the sources say about multi-agent systems in production: where vendors agree, where they split, and what the research did not find.              | Multi-agent reference architecture in production           | 40    | ✓       |
 | `/blog/named-person-responsible-for-ai-risk-in-vendor-procurement` | named person responsible for ai risk in vendor procurement | Named person responsible for AI risk in vendor procurement — meshin.co | How a named AI risk owner coordinates vendor review, records decisions, and answers customer procurement questions.                                   | Named person responsible for AI risk in vendor procurement | 34    | ✓       |
@@ -127,7 +130,7 @@ title `{tag name} posts — meshin.co` · meta: all posts tagged {tag}, newest f
 | --------------------------------- | --------------------------- | --------------------------------------- | ----------------------------------------------------- | --------------------------- | ----- | ------- |
 | `/blog/tag/acceptable-use-policy` | acceptable use policy posts | Acceptable use policy posts — meshin.co | All posts tagged Acceptable use policy, newest first. | Acceptable use policy posts | 23    | ✓       |
 | `/blog/tag/agentic-architecture`  | agentic architecture posts  | Agentic architecture posts — meshin.co  | All posts tagged Agentic architecture, newest first.  | Agentic architecture posts  | 23    | ✓       |
-| `/blog/tag/ai-governance`         | ai governance posts         | AI governance posts — meshin.co         | All posts tagged AI governance, newest first.         | AI governance posts         | 23    | ✓       |
+| `/blog/tag/ai-governance`         | ai governance posts         | AI governance posts — meshin.co         | All posts tagged AI governance, newest first.         | AI governance posts         | 24    | ✓       |
 | `/blog/tag/ai-pilots`             | ai pilots posts             | AI pilots posts — meshin.co             | All posts tagged AI pilots, newest first.             | AI pilots posts             | 23    | ✓       |
 | `/blog/tag/ai-register`           | ai register posts           | AI register posts — meshin.co           | All posts tagged AI register, newest first.           | AI register posts           | 23    | ✓       |
 | `/blog/tag/eu-ai-act`             | eu ai act posts             | EU AI Act posts — meshin.co             | All posts tagged EU AI Act, newest first.             | EU AI Act posts             | 23    | ✓       |
@@ -437,31 +440,31 @@ One owning route per entity. The mention count is inbound references from other 
 
 | Entity                         | Owned by                                   | Mentioned by |
 | ------------------------------ | ------------------------------------------ | ------------ |
-| Agentic workflow               | `/glossary/agentic-workflow`               | 13           |
-| AI governance                  | `/glossary/ai-governance`                  | 41           |
+| Agentic workflow               | `/glossary/agentic-workflow`               | 14           |
+| AI governance                  | `/glossary/ai-governance`                  | 44           |
 | AI impact assessment           | `/glossary/ai-impact-assessment`           | 3            |
 | AI management system           | `/glossary/ai-management-system`           | 7            |
-| AI operating model             | `/glossary/ai-operating-model`             | 16           |
+| AI operating model             | `/glossary/ai-operating-model`             | 18           |
 | AI register                    | `/glossary/ai-register`                    | 39           |
 | Conformity assessment          | `/glossary/conformity-assessment`          | 5            |
-| Data classification            | `/glossary/data-classification`            | 16           |
+| Data classification            | `/glossary/data-classification`            | 17           |
 | DPIA                           | `/glossary/dpia`                           | 6            |
 | EU AI Act                      | `/glossary/eu-ai-act`                      | 42           |
-| Evals                          | `/glossary/evals`                          | 40           |
+| Evals                          | `/glossary/evals`                          | 42           |
 | Guardrails                     | `/glossary/guardrails`                     | 7            |
 | Hallucination rate             | `/glossary/hallucination-rate`             | 4            |
 | High-risk AI system            | `/glossary/high-risk-ai-system`            | 10           |
-| Human oversight                | `/glossary/human-oversight`                | 15           |
+| Human oversight                | `/glossary/human-oversight`                | 16           |
 | Human-in-the-loop              | `/glossary/human-in-the-loop`              | 6            |
 | ISO/IEC 42001                  | `/glossary/iso-iec-42001`                  | 29           |
-| LLM gateway                    | `/glossary/llm-gateway`                    | 12           |
+| LLM gateway                    | `/glossary/llm-gateway`                    | 13           |
 | Model card                     | `/glossary/model-card`                     | 3            |
 | Model Context Protocol         | `/glossary/mcp`                            | 2            |
 | Model provenance               | `/glossary/model-provenance`               | 3            |
 | NIST AI RMF                    | `/glossary/nist-ai-rmf`                    | 24           |
 | Observability                  | `/glossary/observability`                  | 5            |
 | Post-market monitoring         | `/glossary/post-market-monitoring`         | 7            |
-| Prompt injection               | `/glossary/prompt-injection`               | 7            |
+| Prompt injection               | `/glossary/prompt-injection`               | 8            |
 | Provider vs deployer           | `/glossary/provider-vs-deployer`           | 3            |
 | Red teaming                    | `/glossary/red-teaming`                    | 4            |
 | Retrieval augmented generation | `/glossary/retrieval-augmented-generation` | 4            |

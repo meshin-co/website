@@ -74,6 +74,22 @@
       ]
     },
     {
+      "location": "constant.skipped",
+      "text": "no checkout at",
+      "status": "unreviewed",
+      "usedIn": [
+        "src/utils/spec-artefacts.mjs"
+      ]
+    },
+    {
+      "location": "constant.skipped",
+      "text": "declares as",
+      "status": "unreviewed",
+      "usedIn": [
+        "src/utils/spec-artefacts.mjs"
+      ]
+    },
+    {
       "location": "constant.textContent",
       "text": "Search is unavailable right now. The FAQ, writing and glossary pages list everything.",
       "status": "unreviewed",

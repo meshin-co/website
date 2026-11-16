@@ -65,11 +65,11 @@ function grantProblems(text) {
     ...(upstream !== -1 && permission !== -1 && upstream > permission
       ? ['the upstream notice sits below the permission text']
       : []),
-    ...(text.includes(CC_BY_TEXT_PATH) ? [] : ['the writing is not pointed at its licence text']),
+    ...(text.includes(CC_BY_TEXT_PATH) ? [] : ['the resources are not pointed at their licence text']),
   ];
 }
 
-test('site/LICENSE.md grants the code in the name of the site author and keeps the upstream notice above the permission text', () => {
+test('site/LICENSE.md grants the code in the name of the site author, keeps the upstream notice above the permission text and points the resources at their licence text', () => {
   assert.deepEqual(grantProblems(grant), []);
 });
 
@@ -82,12 +82,12 @@ test('the grant check names each defect it exists to catch, the theme grant stan
   const planted = [
     [
       `MIT License\n\n${UPSTREAM_NOTICE}\n\n${permissionText}`,
-      ['the holder is not named', 'the writing is not pointed at its licence text'],
+      ['the holder is not named', 'the resources are not pointed at their licence text'],
     ],
     [withoutUpstream, ['the upstream notice is gone']],
     [grant.replace(PERMISSION_START, 'Anyone may do anything'), ['the permission text is gone']],
     [`${withoutUpstream}\n${UPSTREAM_NOTICE}\n`, ['the upstream notice sits below the permission text']],
-    [grant.replaceAll(CC_BY_TEXT_PATH, 'elsewhere'), ['the writing is not pointed at its licence text']],
+    [grant.replaceAll(CC_BY_TEXT_PATH, 'elsewhere'), ['the resources are not pointed at their licence text']],
   ];
   for (const [text, problems] of planted) {
     assert.notEqual(text, grant);
