@@ -76,7 +76,7 @@ test('the page fixes the printed set to Unicode 15.1 and lets no later edition c
   assert.match(section, /The printed set is fixed to Unicode 15\.1, and it does not grow with a later edition\./);
   assert.match(
     section,
-    /The printed set is U\+0020 and each code point to which Unicode 15\.1 gives the General_Category [LMNPS](?:, [LMNPS])* or [LMNPS] and does not give the Default_Ignorable_Code_Point property, except the seven code points named below\./
+    /The printed set holds each code point to which Unicode 15\.1 gives the General_Category [LMNPS](?:, [LMNPS])* or [LMNPS], and U\+0020\. It holds no code point to which Unicode 15\.1 gives the Default_Ignorable_Code_Point property, and none of the seven code points named below\./
   );
   assert.match(section, /A code point that a later edition assigns is replaced, as an unassigned code point is\./);
   assert.match(
@@ -92,9 +92,9 @@ test('the page fixes the printed set to Unicode 15.1 and lets no later edition c
 });
 
 test('the page names the seven code points that draw no ink, each by the name Unicode 15.1 gives it', () => {
-  const sentence = /The seven code points are (.+?)\. Each is/.exec(section)?.[1];
-  assert.ok(sentence, 'the page has no sentence that names the seven code points');
-  const named = [...sentence.matchAll(/U\+([0-9A-F]{4,6}) ([A-Z][A-Z ]*?)(?=,| and U\+|$)/g)].map(([, point, name]) => [
+  const list = /^ {3}- The seven code points are:\n((?: {5}- .+\n)+)/m.exec(section)?.[1];
+  assert.ok(list, 'the page has no list that names the seven code points');
+  const named = [...list.matchAll(/^ {5}- U\+([0-9A-F]{4,6}) ([A-Z][A-Z ]*)$/gm)].map(([, point, name]) => [
     parseInt(point, 16),
     name,
   ]);

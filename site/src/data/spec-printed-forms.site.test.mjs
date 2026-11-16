@@ -18,7 +18,7 @@ const spans = (pattern) => [...section.matchAll(pattern)].map((found) => found[1
 const FINDINGS = '(?:1 finding|(?:[2-9]|[1-9]\\d+) findings)';
 const summaryOf = (template) =>
   new RegExp(`^${escapeRegExp(template).replace('<findings>', FINDINGS).replace('<code>', '[13]')}$`);
-const NO_INK = /[\u2800\ufffc\u{13441}\u{13442}\u{16fe4}\u{11d45}\u{11d97}]/u;
+const NO_INK = new Set([0x2800, 0xfffc, 0x13441, 0x13442, 0x16fe4, 0x11d45, 0x11d97]);
 
 test('every summary line the vectors print is one of the four forms the page gives, and each form is printed', () => {
   const templates = spans(/`(evals-baseline: [^`]+)`/g);
@@ -92,7 +92,7 @@ function printedRule() {
   );
   const classes = [...categories.matchAll(/[LMNPS]/g)].map(([category]) => `\\p{${category}}`).join('');
   const printedAsIs = new RegExp(`^(?: |(?!\\p{Default_Ignorable_Code_Point})[${classes}])$`, 'u');
-  return { clause, isPrintedAsIs: (character) => !NO_INK.test(character) && printedAsIs.test(character) };
+  return { clause, isPrintedAsIs: (character) => !NO_INK.has(character.codePointAt(0)) && printedAsIs.test(character) };
 }
 
 function printedForm(text, isPrintedAsIs) {
@@ -159,7 +159,7 @@ test('the page shows each escape form it names, and the vectors print it', () =>
 });
 
 const WRITTEN_FILE_RULE =
-  /A character that the printed lines replace, and that `JSON\.stringify` leaves as it is, is then written as `\\u` and four lowercase hexadecimal digits for each of its UTF-16 code units\. The file does not replace a `\[` that follows `##`\./;
+  /A character that the printed lines replace and that `JSON\.stringify` leaves as it is needs one more step\. It is then written as `\\u` and four lowercase hexadecimal digits for each of its UTF-16 code units\. The file does not replace a `\[` that follows `##`\./;
 
 test('a baseline that record writes keeps no replaced character raw, and spells each UTF-16 code unit of one', () => {
   const { isPrintedAsIs } = printedRule();

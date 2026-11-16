@@ -28,7 +28,7 @@ function verbsOfThePage() {
 }
 
 function toleranceBoundOfThePage() {
-  const bound = /a number from 0 to (\d+), written as ASCII digits/.exec(sectionOf('Usage errors', '###'))?.[1];
+  const bound = /Or the number it gives is not from 0 to (\d+)\./.exec(sectionOf('Usage errors', '###'))?.[1];
   assert.ok(bound, 'the usage errors name no tolerance bound');
   return Number(bound);
 }

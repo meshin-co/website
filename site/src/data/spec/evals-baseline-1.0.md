@@ -118,12 +118,20 @@ Only promptfoo writes its version into its output, so only a promptfoo run can r
 
 1. Text that came from a file or from the command line MUST be printed between double quotes, and some of its characters MUST be replaced.
    - Inside the quotes, a backslash is written as two backslashes, and a double quote is written as `\u0022`.
-   - A character is printed as it is only if it is in the printed set, and every other character is replaced. The printed set is U+0020 and each code point to which Unicode 15.1 gives the General_Category L, M, N, P or S and does not give the Default_Ignorable_Code_Point property, except the seven code points named below. So the replaced characters include controls, format characters, variation selectors, the Tags block, surrogates, private-use code points, every separator except the space, the seven, and every code point that Unicode 15.1 has not assigned.
+   - A character is printed as it is only if it is in the printed set, and every other character is replaced. The printed set holds each code point to which Unicode 15.1 gives the General_Category L, M, N, P or S, and U+0020. It holds no code point to which Unicode 15.1 gives the Default_Ignorable_Code_Point property, and none of the seven code points named below. So the replaced characters include controls, format characters, variation selectors, the Tags block, surrogates and private-use code points. They also include every separator except the space, the seven, and every code point that Unicode 15.1 has not assigned.
    - A `[` that directly follows `##` is replaced too.
    - A code point up to U+FFFF becomes `\u` and four lowercase hexadecimal digits, so a newline becomes `\u000a`. A code point above U+FFFF becomes `\u{`, five or six lowercase hexadecimal digits and `}`, so U+E0069 becomes `\u{e0069}`. A surrogate with no partner is one character.
-   - The printed set is fixed to Unicode 15.1, and it does not grow with a later edition. A code point that a later edition assigns is replaced, as an unassigned code point is. An implementation MUST print exactly this set, whatever edition of Unicode its language or library carries. A runtime that carries another edition gives another set, so an implementation cannot read the set from it. It carries the set itself, built from the files `UnicodeData.txt` and `DerivedCoreProperties.txt` of Unicode 15.1.0. As a check, the set holds 149,351 code points, in 721 runs of consecutive code points. The vectors hold no code point that Unicode 15.1 leaves unassigned and none of the seven, so a vector cannot show that an implementation follows this bullet.
-   - The seven code points are U+2800 BRAILLE PATTERN BLANK, U+FFFC OBJECT REPLACEMENT CHARACTER, U+13441 EGYPTIAN HIEROGLYPH FULL BLANK, U+13442 EGYPTIAN HIEROGLYPH HALF BLANK, U+16FE4 KHITAN SMALL SCRIPT FILLER, U+11D45 MASARAM GONDI VIRAMA and U+11D97 GUNJALA GONDI VIRAMA. Each is a letter, a mark or a symbol that Unicode 15.1 does not call default ignorable, so the rule above would print it. Each is replaced anyway, because it can draw no ink, and a name made of such characters would look empty to a reader.
-   - This covers a metric key, a tool version, a path, a flag, an exception message, and the parts of a reader's reason that came from a file. A tool name is one of the two words `promptfoo` and `deepeval`, so it is printed as it is. Data therefore cannot start a line, begin a CI workflow command, send a control sequence to a terminal, forge a finding or hide a sentence in invisible characters. An implementation prints no escape sequence of its own.
+   - The printed set is fixed to Unicode 15.1, and it does not grow with a later edition. A code point that a later edition assigns is replaced, as an unassigned code point is. An implementation MUST print exactly this set, whatever edition of Unicode its language or library carries. A runtime that carries another edition gives another set, so an implementation cannot read the set from it. It carries the set itself, built from the files `UnicodeData.txt` and `DerivedCoreProperties.txt` of Unicode 15.1.0. As a check, the set holds 149,351 code points, in 721 runs of consecutive code points. The vectors hold no code point that Unicode 15.1 leaves unassigned and none of the seven. So a vector cannot show that an implementation follows this bullet.
+   - The seven code points are:
+     - U+2800 BRAILLE PATTERN BLANK
+     - U+FFFC OBJECT REPLACEMENT CHARACTER
+     - U+13441 EGYPTIAN HIEROGLYPH FULL BLANK
+     - U+13442 EGYPTIAN HIEROGLYPH HALF BLANK
+     - U+16FE4 KHITAN SMALL SCRIPT FILLER
+     - U+11D45 MASARAM GONDI VIRAMA
+     - U+11D97 GUNJALA GONDI VIRAMA
+   - Each is a letter, a mark or a symbol that Unicode 15.1 does not call default ignorable, so the rule above would print it. Each is replaced anyway, because it can draw no ink, and a name made of such characters would look empty to a reader.
+   - This covers a metric key, a tool version, a path, a flag and an exception message. It also covers the parts of a reader's reason that came from a file. A tool name is one of the two words `promptfoo` and `deepeval`, so it is printed as it is. Data therefore cannot start a line or begin a CI workflow command. It cannot send a control sequence to a terminal, forge a finding or hide a sentence in invisible characters. An implementation prints no escape sequence of its own.
    - Escaping and quoting do not make text safe to obey. A metric name that holds an instruction in plain letters is printed as it is, between the quotes.
 2. Every finding line starts with its id, apart from the two spaces that indent a finding under `replaced:`. Every note line starts with `note:` and a space, and every metric line of `show` starts with `metric` and a space. So `grep` selects each class, and no line starts with text from a file.
 3. The `date:` line comes before every finding line, and `cases-changed` comes before the other findings. Finding lines are sorted by key, and for one key they follow the order of rules 1, 2 and 4. The note lines come after the finding lines.
@@ -145,7 +153,7 @@ Only promptfoo writes its version into its output, so only a promptfoo run can r
 
 A baseline holds one run of one suite from one tool. It is a JSON file with two-space indentation and a final newline. The metric keys are in sorted order, so recording a run that changes nothing produces no diff. A number is written as `JSON.stringify` writes it, so a whole value is `1` and never `1.0`.
 
-A string in the file is written as `JSON.stringify` writes it. A character that the printed lines replace, and that `JSON.stringify` leaves as it is, is then written as `\u` and four lowercase hexadecimal digits for each of its UTF-16 code units. The file does not replace a `[` that follows `##`.
+A string in the file is written as `JSON.stringify` writes it. A character that the printed lines replace and that `JSON.stringify` leaves as it is needs one more step. It is then written as `\u` and four lowercase hexadecimal digits for each of its UTF-16 code units. The file does not replace a `[` that follows `##`.
 
 A JSON Schema for this file is published at [/spec/evals-baseline/1.0/baseline.schema.json](/spec/evals-baseline/1.0/baseline.schema.json). It checks the shape of the file only; the rules on this page decide the rest.
 
@@ -327,15 +335,15 @@ The metric key is the metric name, for example `Accuracy`. A run in which `conve
 
 ### Polarity of DeepEval metrics
 
-The comparison treats a lower value as worse, but DeepEval metrics are not all higher-is-better, and a DeepEval file does not say which way its scores run. The reader therefore uses DeepEval's own verdicts as a witness.
+The comparison treats a lower value as worse. But DeepEval metrics are not all higher-is-better, and a DeepEval file does not say which way its scores run. The reader therefore uses DeepEval's own verdicts as a witness.
 
-A verdict is an entry of `metricsData` that has a string `name`, a numeric `score`, a numeric `threshold` and a boolean `success`, and it speaks for the metric whose key is its `name`. For each verdict, `success` MUST equal `score >= threshold`.
+A verdict is an entry of `metricsData` that has a string `name`, a numeric `score`, a numeric `threshold` and a boolean `success`. It speaks for the metric whose key is its `name`. For each verdict, `success` MUST equal `score >= threshold`.
 
-A metric with at least one verdict that breaks this rule is refused. The reader leaves it out, and a baseline that names it gets `unreadable-metric` with the text `DeepEval's own verdicts contradict higher-is-better in <n> sample(s) (success=<s>, score=<x>, threshold=<t>); this implementation reads higher-is-better metrics only`.
+A metric with at least one verdict that breaks this rule is refused. The reader leaves it out. A baseline that names it gets `unreadable-metric`. Its text is `DeepEval's own verdicts contradict higher-is-better in <n> sample(s) (success=<s>, score=<x>, threshold=<t>); this implementation reads higher-is-better metrics only`.
 
 The verbs `show` and `record` print the same text as a note. So a lower-is-better metric cannot be guarded in this major version. This rule proves a contradiction, never a polarity. A metric whose verdicts never contradict the reading, because every sample passed whichever way, is read as higher-is-better and could be wrong. The next rule closes that gap for the four metrics that DeepEval is known to have reversed.
 
-DeepEval 4.2.0 reversed the direction of `Bias`, `Hallucination`, `Misuse` and `Toxicity`. Before 4.2.0 each of them passed when its score was at or below its threshold, and its strict mode set the threshold to zero. From 4.2.0 a higher score is better for each of them, as for the other DeepEval metrics, and its strict mode sets the threshold to one.
+DeepEval 4.2.0 reversed the direction of `Bias`, `Hallucination`, `Misuse` and `Toxicity`. Before 4.2.0 each of them passed when its score was at or below its threshold, and its strict mode set the threshold to zero. From 4.2.0 a higher score is better for each of them, as for the other DeepEval metrics. From the same version, each of them sets the threshold to one in strict mode.
 
 A DeepEval file carries no version, so a file that holds one of the four can come from either side of the change.
 
@@ -345,7 +353,9 @@ A verdict whose `score` equals its `threshold` shows it only when `strictMode` i
 
 The four are matched by their exact names. The reader reads one of the four only when at least one verdict shows higher-is-better for it.
 
-The reader refuses each of the four that has no such verdict. Its text is `DeepEval 4.2.0 reversed this metric's score, and no verdict in this file shows which way it runs; run it again on DeepEval 4.2.0 or later with strict mode off and the default threshold`.
+The reader refuses each of the four that has no such verdict. Its text is:
+
+    DeepEval 4.2.0 reversed this metric's score, and no verdict in this file shows which way it runs; run it again on DeepEval 4.2.0 or later with strict mode off and the default threshold
 
 A metric with a contradicting verdict gets the text of the rule above, because the reader judges contradiction first. The verbs `show` and `record` print this text as a note too.
 
@@ -355,7 +365,7 @@ promptfoo does not say which way an assertion scores, and it has assertions whos
 
 The assertions that feed a metric are found in this order. Take `results.results`. In each of its entries, take `gradingResult`. In that, take `componentResults`. In each of its entries, take `assertion`. An assertion with a string `metric` feeds the metric of that name.
 
-When its `type` is `assert-set` and its `assert` is an array, it stands for the objects in that array, and for the objects in any `assert-set` among them, to any depth. A `metric` inside an `assert-set` is not read. An assertion with no string `type` feeds nothing.
+When its `type` is `assert-set` and its `assert` is an array, it stands for the objects in that array. It also stands for the objects in any `assert-set` among them, to any depth. A `metric` inside an `assert-set` is not read. An assertion with no string `type` feeds nothing.
 
 The kind of an assertion is its `type`. The one exception is a `cost` assertion, with `not-` before it or without, that has no numeric `threshold`. Its score is the cost itself and not a pass or a fail, so its kind is `cost with no threshold`.
 
@@ -400,7 +410,7 @@ A command line is a usage error when any one of these holds:
 4. A flag appears twice, whether or not its two values are the same.
 5. A flag that takes a value is the last argument, or the next argument starts with `-`.
 6. There is no run file, or more than one. The value of a flag is never a run file.
-7. The value of `--tolerance` is not a number from 0 to 4000000000, written as ASCII digits with at most one decimal point and at least one digit. The number is the double that the text gives. So `0`, `007`, `.5`, `5.` and `4000000000` are accepted. An empty value, `.`, `+5`, `1e3` and `1.2.3` are not, and neither is a value above 4000000000.
+7. The value of `--tolerance` is not written as ASCII digits with at most one decimal point and at least one digit. Or the number it gives is not from 0 to 4000000000. The number is the double that the text gives. So `0`, `007`, `.5`, `5.` and `4000000000` are accepted. An empty value, `.`, `+5`, `1e3` and `1.2.3` are not, and neither is a value above 4000000000.
 
 An implementation finds a usage error before it reads or writes any file, so a usage error outranks an unreadable run file. It exits with code 2 and writes no file. The last line of its standard error is the usage line, in the words that the vectors show. A line before it may say which condition held, and this specification does not fix the words of that line.
 
@@ -523,7 +533,11 @@ A vector appears in a row for each finding its report names, so the rows do not 
 
 Vectors that name two findings stand in two rows, and there are 8 of them. Of the 192, 89 name no finding and stand in no row.
 
-Of those 89, 22 are `check` runs that must stay silent. The other 67 run `record` or `show`, ask for the version, or are usage errors, and none of them reports a finding. The silent checks include the same suite recorded and checked twice, a value exactly at its tolerance, and a run with more samples than the baseline, which prints a note and no finding.
+Of those 89, 22 are `check` runs that must stay silent. The other 67 run `record` or `show`, ask for the version, or are usage errors, and none of them reports a finding. The silent checks include these:
+
+- the same suite recorded and checked twice
+- a value exactly at its tolerance
+- a run with more samples than the baseline, which prints a note and no finding
 
 The rows therefore total 111. A row counts the vectors that prove it, not the vectors it exhausts. The last column counts the vectors of a row that an implementation must reproduce. The row for `internal-error` has none, because this specification defines no input that must raise an internal error.
 
