@@ -51,7 +51,7 @@ prove, which this file does not describe either.
 | Warn by default, strict stop opt-in; nothing exits non-zero on a clock                                                                                                                                     | L71                                                    |
 | Every check binds to a referent inside the consumer's repository; the pattern is `digestFor` in `site/scripts/dispositions.mjs`                                                                            | L72                                                    |
 | A published repository ships a refusal list in its contributing file and an artefact count that will not grow                                                                                              | L73                                                    |
-| Nothing is announced; code is MIT and text is CC BY 4.0; no page promises a repository that does not exist                                                                                                 | L74, L75, L76                                          |
+| Nothing is announced; specification text is CC BY 4.0 by the owner's decision, code is MIT as an agent's proposal | L74, L75, L86                                          |
 | The red-build fixture is two committed JSON files; a key is needed only to regenerate a baseline, never to watch the gate refuse                                                                           | `docs/plan/reference/resource-publication-sequence.md` |
 
 What the evidence supports, and how far. All figures are from `investigation/10-what-exists-for-the-seven-resources.md`,
@@ -897,13 +897,13 @@ The answer to any of these, as one line for the contributing file: this is on th
 fixes; changing it is a new major version of the specification, not a pull request.
 
 Per L73 the fixtures and the specification carry nothing upstream: the cases are our own questions, and the run files
-are tool outputs of those, so the repository holds no text it has no right to republish. Licences are per L75: code MIT,
-specification text CC BY 4.0. L75 named three defects on the site that blocked licensing, and all three were fixed and
-merged on 2026-11-11 in pull request 139: `site/LICENSE.md` now grants the code in the name of the site's author and
-keeps the notice of the theme above the permission text, `/terms` grants the writing under CC BY 4.0 and names the text
-at `/licenses/CC-BY-4.0.txt`, and `licenseHasText` in `site/src/utils/resource-license.mjs` refuses an entry whose
-licence has no text, proven by the planted specimen `resource-license-undeclared`. So nothing on the site blocks the
-licence this repository declares.
+are tool outputs of those, so the repository holds no text it has no right to republish. The
+specification text is CC BY 4.0, decided by the owner on 2026-11-16 and recorded as L86; the code
+is MIT under L75, which is still an agent's proposal awaiting G88. The paragraph that stood here
+until 2026-11-16 said that L75 named three defects, that all three were fixed in pull request 139,
+and that nothing on the site blocks the licence. That was true when written on 2026-11-11 and false
+from 2026-11-12, when L75 was amended to withdraw a grant published in the owner's name without his
+decision. Two defects are open, and `/terms` grants quotation with a link rather than CC BY 4.0.
 
 ## 12. Settled by the owner on 2026-11-11
 
