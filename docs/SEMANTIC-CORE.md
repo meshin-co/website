@@ -75,7 +75,7 @@ title `{spec name} specification {version} — meshin.co` · meta: what the vers
 | `/spec/evals-baseline`     | evals-baseline specification     | evals-baseline specification — meshin.co     | Every published version of the evals-baseline specification, and the address to cite for each.                                                         | evals-baseline specification     | 23    | ✓       |
 | `/spec/evals-baseline/1.0` | evals-baseline specification 1.0 | evals-baseline specification 1.0 — meshin.co | The evals-baseline specification 1.0 says what a regression in an agent evaluation is, and defines the baseline file, the findings and the exit codes. | evals-baseline specification 1.0 | 26    | ✓       |
 
-### article (22)
+### article (23)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
@@ -96,6 +96,7 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company` | ai operating model for mid-size company                    | How to choose an AI operating model for a mid-size company — meshin.co | How to choose an operating model for AI work in a mid-size company, starting from what the law requires and what the evidence supports.               | How to choose an AI operating model for a mid-size company | 41    | ✓       |
 | `/blog/how-to-prevent-duplicate-ai-agent-actions-on-retries`       | how to prevent duplicate ai agent actions on retries       | How to prevent duplicate AI agent actions on retries — meshin.co       | Learn how to prevent duplicate AI agent actions on retries with stable operation keys, durable records, and checks for uncertain outcomes.            | How to prevent duplicate AI agent actions on retries       | 30    | ✓       |
 | `/blog/how-to-review-ai-generated-customer-support-replies`        | how to review ai-generated customer support replies        | How to review AI-generated customer support replies — meshin.co        | Set a practical review process for AI-generated support replies, from checking account facts to handling risky drafts and improving future reviews.   | How to review AI-generated customer support replies        | 32    | ✓       |
+| `/blog/how-to-review-ai-vendor-model-updates-after-deployment`     | how to review ai vendor model updates after deployment     | How to review AI vendor model updates after deployment — meshin.co     | Learn how to review AI vendor model updates after deployment with paired tests, release decisions and a fallback plan.                                | How to review AI vendor model updates after deployment     | 33    | ✓       |
 | `/blog/how-to-roll-back-an-ai-agent-deployment`                    | how to roll back an ai agent deployment                    | How to roll back an AI agent deployment — meshin.co                    | How to roll back an AI agent deployment: stop actions, restore a known release and check in-flight work before resuming.                              | How to roll back an AI agent deployment                    | 29    | ✓       |
 | `/blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent`       | how to set a per-task spending limit for an ai agent       | How to set a per-task spending limit for an AI agent — meshin.co       | Set and enforce an AI agent's task budget with cost reservations, shared limits, clear failure rules, and reconciliation.                             | How to set a per-task spending limit for an AI agent       | 31    | ✓       |
 | `/blog/how-to-trace-ai-agent-tool-calls-in-production`             | how to trace ai agent tool calls in production             | How to trace AI agent tool calls in production — meshin.co             | Trace AI agent tool calls in production with linked spans, safe fields, retry handling and checks for missing evidence.                               | How to trace AI agent tool calls in production             | 32    | ✓       |
@@ -138,7 +139,7 @@ title `{tag name} posts — meshin.co` · meta: all posts tagged {tag}, newest f
 | `/blog/tag/evals-in-ci`           | evals in ci posts           | Evals in CI posts — meshin.co           | All posts tagged Evals in CI, newest first.           | Evals in CI posts           | 24    | ✓       |
 | `/blog/tag/llm-as-judge`          | llm as judge posts          | LLM as judge posts — meshin.co          | All posts tagged LLM as judge, newest first.          | LLM as judge posts          | 24    | ✓       |
 | `/blog/tag/policy-enforcement`    | policy enforcement posts    | Policy enforcement posts — meshin.co    | All posts tagged Policy enforcement, newest first.    | Policy enforcement posts    | 24    | ✓       |
-| `/blog/tag/production-readiness`  | production readiness posts  | Production readiness posts — meshin.co  | All posts tagged Production readiness, newest first.  | Production readiness posts  | 24    | ✓       |
+| `/blog/tag/production-readiness`  | production readiness posts  | Production readiness posts — meshin.co  | All posts tagged Production readiness, newest first.  | Production readiness posts  | 25    | ✓       |
 | `/blog/tag/security-review`       | security review posts       | Security review posts — meshin.co       | All posts tagged Security review, newest first.       | Security review posts       | 24    | ✓       |
 | `/blog/tag/shadow-ai`             | shadow ai posts             | Shadow AI posts — meshin.co             | All posts tagged Shadow AI, newest first.             | Shadow AI posts             | 24    | ✓       |
 
@@ -442,16 +443,16 @@ One owning route per entity. The mention count is inbound references from other 
 | Entity                         | Owned by                                   | Mentioned by |
 | ------------------------------ | ------------------------------------------ | ------------ |
 | Agentic workflow               | `/glossary/agentic-workflow`               | 14           |
-| AI governance                  | `/glossary/ai-governance`                  | 45           |
+| AI governance                  | `/glossary/ai-governance`                  | 46           |
 | AI impact assessment           | `/glossary/ai-impact-assessment`           | 3            |
 | AI management system           | `/glossary/ai-management-system`           | 7            |
-| AI operating model             | `/glossary/ai-operating-model`             | 18           |
-| AI register                    | `/glossary/ai-register`                    | 40           |
+| AI operating model             | `/glossary/ai-operating-model`             | 21           |
+| AI register                    | `/glossary/ai-register`                    | 41           |
 | Conformity assessment          | `/glossary/conformity-assessment`          | 5            |
 | Data classification            | `/glossary/data-classification`            | 17           |
 | DPIA                           | `/glossary/dpia`                           | 6            |
 | EU AI Act                      | `/glossary/eu-ai-act`                      | 42           |
-| Evals                          | `/glossary/evals`                          | 42           |
+| Evals                          | `/glossary/evals`                          | 43           |
 | Guardrails                     | `/glossary/guardrails`                     | 7            |
 | Hallucination rate             | `/glossary/hallucination-rate`             | 4            |
 | High-risk AI system            | `/glossary/high-risk-ai-system`            | 10           |
