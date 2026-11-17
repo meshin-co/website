@@ -5,6 +5,8 @@ export const LICENSE_ID = /^[A-Za-z0-9][A-Za-z0-9.+-]*$/;
 
 export const licenseTextPath = (license, root = process.cwd()) => join(root, 'public', 'licenses', `${license}.txt`);
 
+export const licenseTextUrl = (site, license) => `${site}/licenses/${license}.txt`;
+
 export function licenseTextShips(license, root) {
   try {
     return readFileSync(licenseTextPath(license, root), 'utf8').trim().length > 0;
@@ -13,4 +15,5 @@ export function licenseTextShips(license, root) {
   }
 }
 
-export const licenseHasText = (entry, root) => entry.license === undefined || licenseTextShips(entry.license, root);
+export const licenseHasText = (entry, root) =>
+  typeof entry.license === 'string' && licenseTextShips(entry.license, root);

@@ -134,6 +134,33 @@ test('a route matching no family yields no requirements instead of an empty pass
   assert.equal(requiredTypesFor('/freshly-invented-route'), undefined);
 });
 
+test('a series page is required to carry the collection node and a version page the article node', () => {
+  assert.deepEqual(requiredTypesFor('/spec/evals-baseline'), ['CollectionPage', 'BreadcrumbList']);
+  assert.deepEqual(requiredTypesFor('/spec/evals-baseline/1.0'), ['TechArticle', 'BreadcrumbList']);
+  assert.equal(requiredTypesFor('/spec'), undefined);
+  assert.equal(requiredTypesFor('/spec/evals-baseline/1.0/extra'), undefined);
+});
+
+const ARTICLE_PROPERTIES =
+  'url headline description datePublished dateModified version inLanguage image mainEntityOfPage author publisher license';
+const VERSION_ID = 'https://x/spec/evals-baseline/1.0#spec';
+const techArticle = () => ({
+  '@type': 'TechArticle',
+  '@id': VERSION_ID,
+  ...Object.fromEntries(REQUIRED_PROPERTIES.TechArticle.map((prop) => [prop, 'x'])),
+});
+
+test('the article node of a version page is held to twelve properties, each reported by name when absent', () => {
+  const missing = (node) => missingProperties([{ '@graph': [node] }], '/spec/evals-baseline/1.0');
+
+  assert.deepEqual(REQUIRED_PROPERTIES.TechArticle, ARTICLE_PROPERTIES.split(' '));
+  assert.deepEqual(missing(techArticle()), []);
+  for (const prop of REQUIRED_PROPERTIES.TechArticle) {
+    const node = Object.fromEntries(Object.entries(techArticle()).filter(([key]) => key !== prop));
+    assert.deepEqual(missing(node), [`TechArticle node ${VERSION_ID} is missing required property ${prop}`], prop);
+  }
+});
+
 const quiet = async (run) => {
   const log = console.log;
   const error = console.error;
@@ -506,4 +533,42 @@ test('the summary line prints a bare zero when no exempt route is in the dist', 
     }),
   });
   assert.deepEqual(out, ['jsonld: 2 of 2 routes carry a graph, 2 scripts and 3 nodes read, 0 exempt']);
+});
+
+const specBreadcrumb = (route) => breadcrumbNode(`https://x${route}#breadcrumb`);
+const seriesGraph = graphPage(
+  {
+    '@type': 'CollectionPage',
+    '@id': 'https://x/spec/evals-baseline#page',
+    url: 'https://x/spec/evals-baseline',
+    name: 'evals-baseline specification',
+    isPartOf: { '@id': 'https://x/#website' },
+  },
+  { '@type': 'WebSite', '@id': 'https://x/#website' },
+  specBreadcrumb('/spec/evals-baseline')
+);
+const versionGraph = () => graphPage(techArticle(), specBreadcrumb('/spec/evals-baseline/1.0'));
+
+test('a series page and a version page that satisfy their families pass the gate', async () => {
+  const { exitCode, err, out } = await runGate({
+    '/spec/evals-baseline': seriesGraph,
+    '/spec/evals-baseline/1.0': versionGraph(),
+  });
+
+  assert.deepEqual(err, []);
+  assert.equal(exitCode, undefined);
+  assert.deepEqual(out, ['jsonld: 2 of 2 routes carry a graph, 2 scripts and 5 nodes read, 0 exempt']);
+});
+
+test('a series page without its collection node and a version page without its article node fail the gate', async () => {
+  const { exitCode, err } = await runGate({
+    '/spec/evals-baseline': graphPage(specBreadcrumb('/spec/evals-baseline')),
+    '/spec/evals-baseline/1.0': graphPage(specBreadcrumb('/spec/evals-baseline/1.0')),
+  });
+
+  assert.equal(exitCode, 1);
+  assert.deepEqual(err, [
+    'JSONLD /spec/evals-baseline has no CollectionPage node',
+    'JSONLD /spec/evals-baseline/1.0 has no TechArticle node',
+  ]);
 });

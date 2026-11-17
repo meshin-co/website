@@ -260,8 +260,14 @@
   {
     "target": "site/src/data/tags.mjs",
     "status": "rewritten",
-    "reason": "Tag names unchanged and still 12 short names with no prose. New tagArchive(tag) supplies the archive title \"{name} posts\" and lead \"All posts tagged {name}, newest first.\", replacing \"Every article tagged {name}, newest first.\" so page, llms.txt and search index read one string. Plain, no banned phrasing, no fact claimed.",
-    "digest": "544f764d900f"
+    "reason": "Tag names unchanged and still 12 short names with no prose. New tagArchive(tag) supplies the archive title \"{name} posts\" and lead \"All posts tagged {name}, newest first.\", replacing \"Every article tagged {name}, newest first.\" so page, llms.txt and search index read one string. Plain, no banned phrasing, no fact claimed. Reading-polish change: the evals-in-ci tag now carries a reference, the sentence \"A regression in an agent evaluation has a public definition.\" (ten words, so one line can close five articles without repeating a long sentence) and the link label \"Read the evals-baseline specification 1.0\", which names the page it opens. It restates what the description of /spec/evals-baseline/1.0 says and adds no claim; read in dist/blog/evals-in-ci-for-llm-agents.html.",
+    "digest": "4467218dcff1"
+  },
+  {
+    "target": "site/src/utils/code-blocks.mjs",
+    "status": "verified",
+    "reason": "Four control strings for the code block copy button: the visible label \"Copy\", the accessible name \"Copy code\" (it contains the visible word), and the two confirmations \"Copied\" and \"Failed\". Each label is six letters or fewer so the fixed-width button never changes size. One common word each, and the status region announces the same word the button shows. Read in dist/spec/evals-baseline/1.0.html and in a browser, not in source.",
+    "digest": "ba0e6ad604cd"
   },
   {
     "target": "site/src/components/site/PaginationLinks.astro",

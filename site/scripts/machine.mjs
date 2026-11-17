@@ -6,6 +6,7 @@ import {
   COLLECTION_FEED_MAX_BYTES,
   FEED_BASES,
   FEED_WINDOW,
+  HUB_BASES,
   MERGED_FEED_MAX_BYTES,
   MERGED_FEED_WINDOW,
 } from '../src/utils/feeds.mjs';
@@ -27,7 +28,7 @@ import { invokedDirectly } from './invoked-directly.mjs';
 import { LLMS_COLLECTIONS, LLMS_FILE_MAX_BYTES, LLMS_FULL_MAX_BYTES } from '../src/utils/llms-collections.mjs';
 import { llmsCollectionText, llmsCorpusGaps } from './llms-corpus.mjs';
 import { createFailureLog } from './machine-failures.mjs';
-import { collectionEmptinessFindings } from './route-kinds.mjs';
+import { RESERVED_LEAF_SLUGS, SERIES_BASES, collectionEmptinessFindings, routeShape } from './route-kinds.mjs';
 import { EMPTY_COLLECTIONS } from '../src/utils/route-exceptions.mjs';
 
 const NON_PUBLIC = new Set(['author', 'speaking']);
@@ -120,14 +121,13 @@ function noindexStaticListings(text) {
   return [...NOINDEX_STATIC_PAGES].filter((path) => text.includes(`(${path})`));
 }
 
-const RESERVED_LEAF_SLUGS = new Set(['tags', 'tag', 'page', 'category']);
+const COLLECTION_BASE_SET = new Set(Object.values(COLLECTION_BASES));
+const SIDECAR_SHAPES = new Set(['entry', 'series']);
+
+const shapeOf = (route) => routeShape(route, COLLECTION_BASE_SET);
 
 export function sidecarCandidateRoutes(routes) {
-  const bases = new Set(Object.values(COLLECTION_BASES));
-  const collectionLeaves = routes.filter((route) => {
-    const parts = route.split('/').filter(Boolean);
-    return parts.length === 2 && bases.has(parts[0]) && !RESERVED_LEAF_SLUGS.has(parts[1] ?? '');
-  });
+  const collectionLeaves = routes.filter((route) => SIDECAR_SHAPES.has(shapeOf(route).shape));
   const staticAndHubs = sidecarRoutes()
     .map((page) => page.path)
     .filter((path) => routes.includes(path));
@@ -176,6 +176,10 @@ const LINK_TAG = /<link\b[^>]*>/gi;
 function hasCollectionFeedLink(html, base) {
   const href = `href="${base}/rss.xml"`;
   return [...html.matchAll(LINK_TAG)].some((tag) => /rel=["']alternate["']/.test(tag[0]) && tag[0].includes(href));
+}
+
+export function collectionHubRoutes(withheld) {
+  return [...new Set(Object.values(HUB_BASES))].map((base) => `/${base}`).filter((route) => !withheld.includes(route));
 }
 
 export function hubFeedLinkGaps(hubRoutes, htmlByRoute) {
@@ -311,17 +315,16 @@ async function noindexRoutesOf(distDir, routes) {
   return noindex;
 }
 
-async function liveRoutesByKind(distDir, collections, routes) {
+const isEntryOf = (base) => (route) => {
+  const found = shapeOf(route);
+  return found.shape === 'entry' && found.base === base;
+};
+
+export async function liveRoutesByKind(distDir, collections, routes) {
   const byKind = {};
   for (const collection of collections) {
-    const base = COLLECTION_BASES[collection];
-    const reserved = new Set(['tags', 'tag', 'page', 'category']);
-    const candidates = routes.filter((route) => {
-      const parts = route.split('/').filter(Boolean);
-      return parts.length === 2 && parts[0] === base && !reserved.has(parts[1] ?? '');
-    });
     const live = [];
-    for (const route of candidates) {
+    for (const route of routes.filter(isEntryOf(COLLECTION_BASES[collection]))) {
       if (!isNoindex(await routeHtml(distDir, route))) live.push(route);
     }
     byKind[collection] = live;
@@ -461,9 +464,7 @@ async function main(distDir) {
     await collectionGateFailures(distDir, { kinds: emptyKinds, routes, htmlByRoute, site: SITE_ORIGIN })
   );
 
-  const hubRoutes = [...new Set(Object.values(COLLECTION_BASES))]
-    .map((base) => `/${base}`)
-    .filter((route) => !withheldHubs.includes(route));
+  const hubRoutes = collectionHubRoutes(withheldHubs);
   const hubHtml = {};
   for (const route of hubRoutes) hubHtml[route] = await routeHtml(distDir, route);
   for (const gap of hubFeedLinkGaps(hubRoutes, hubHtml)) {
@@ -637,6 +638,6 @@ export function llmsInlinedRoutes(llmsText, liveRoutesByKind, boundedCollections
 }
 
 export function isTaxonomyRoute(route) {
-  const [, second] = route.split('/').filter(Boolean);
-  return RESERVED_LEAF_SLUGS.has(second ?? '');
+  const [base, second] = route.split('/').filter(Boolean);
+  return !SERIES_BASES.has(base) && RESERVED_LEAF_SLUGS.has(second ?? '');
 }

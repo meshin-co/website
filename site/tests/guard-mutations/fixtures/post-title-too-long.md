@@ -1,6 +1,6 @@
 ---
 title: 'Why a fractional chief AI officer engagement fails without a written acceptable use policy and evals wired into continuous integration'
-description: 'A schema-valid specimen post carrying one deliberate violation: a title past the OG title cap, planted in a throwaway copy so the build must fail and name it.'
+description: 'A schema-valid specimen post carrying one deliberate violation: a title past the OG title cap, planted in a throwaway copy so the build must name it.'
 publishDate: 2026-09-12
 updatedDate: 2026-09-12
 shortAnswer: 'This planted specimen proves the OG title guard actually protects the field satori reads. Every other field here is schema-valid, so the only reason the astro build can fail is the title exceeding the character cap, and the error must name the title field, not the question field.'

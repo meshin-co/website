@@ -97,6 +97,18 @@ test('additionalProperties as a schema validates every undeclared value', () => 
   assertRejectedOnce(schema, { a: 'x', b: 1, c: 'y' }, '$.c', 'must be of type integer');
 });
 
+test('minProperties rejects an object with fewer keys', () => {
+  assertRejectedOnce({ minProperties: 1 }, {}, '$', 'at least 1 properties');
+});
+
+test('minProperties accepts an object at the boundary', () => {
+  assertAccepted({ minProperties: 1 }, { a: null });
+});
+
+test('minProperties ignores an array', () => {
+  assertAccepted({ minProperties: 1 }, []);
+});
+
 test('items rejects a bad element at its index', () => {
   assertRejectedOnce({ items: { type: 'string' } }, ['a', 2], '$[1]', 'must be of type string');
 });

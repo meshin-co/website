@@ -5,20 +5,38 @@ import {
   COLLECTION_FEED_MAX_BYTES,
   FEED_BASES,
   FEED_WINDOW,
+  HUB_BASES,
   LARGEST_MEASURED_FEED_ITEM_BYTES,
   MERGED_FEED_MAX_BYTES,
   MERGED_FEED_WINDOW,
+  SERIES_COLLECTIONS,
   emptyHubRoutes,
+  entryIdOf,
   isPublished,
   toFeedSource,
 } from './feeds.mjs';
 
 const ORIGIN = 'https://meshin.co';
 
-test('FEED_BASES covers exactly the six public collections with their URL bases', () => {
-  assert.deepEqual(Object.keys(FEED_BASES), ['post', 'service', 'resource', 'glossary', 'case', 'faq']);
+test('FEED_BASES covers exactly the seven public collections with their URL bases', () => {
+  assert.deepEqual(Object.keys(FEED_BASES), ['post', 'service', 'resource', 'glossary', 'case', 'faq', 'spec']);
   assert.deepEqual(FEED_BASES.faq, 'faq');
   assert.deepEqual(FEED_BASES.case, 'case-studies');
+  assert.deepEqual(FEED_BASES.spec, 'spec');
+});
+
+test('only the specification collection numbers its entries under a series, and it is a public collection', () => {
+  assert.deepEqual([...SERIES_COLLECTIONS], ['spec']);
+  for (const kind of SERIES_COLLECTIONS) assert.ok(kind in FEED_BASES, kind);
+});
+
+test('an entry of an ordinary collection is addressed by its file name, an entry of a series by its name and version', () => {
+  assert.equal(entryIdOf('glossary', 'evals', {}), 'evals');
+  assert.equal(entryIdOf('post', 'a-post', { name: 'ignored', version: '9.9' }), 'a-post');
+  assert.equal(
+    entryIdOf('spec', 'evals-baseline-1.0', { name: 'evals-baseline', version: '1.0' }),
+    'evals-baseline/1.0'
+  );
 });
 
 test('the feed windows and byte budgets are 15, 50, 28821, 432315 and 1441050', () => {
@@ -122,15 +140,31 @@ test('emptyHubRoutes names nothing while every collection holds a live entry', a
   assert.deepEqual(await emptyHubRoutes(livePerKind()), []);
 });
 
-test('emptyHubRoutes asks about every collection in FEED_BASES, so a collection added later is covered without an edit', async () => {
+test('emptyHubRoutes asks about every collection that has a hub, so a collection added later is covered without an edit', async () => {
   const asked = [];
   const routes = await emptyHubRoutes(async (kind) => {
     asked.push(kind);
     return [];
   });
-  assert.deepEqual(asked, Object.keys(FEED_BASES));
+  assert.deepEqual(asked, Object.keys(HUB_BASES));
   assert.deepEqual(
     routes,
-    Object.values(FEED_BASES).map((base) => `/${base}`)
+    Object.values(HUB_BASES).map((base) => `/${base}`)
   );
+});
+
+test('a collection numbered under a series has no hub, so no hub is asked about or withheld for it', async () => {
+  assert.deepEqual(Object.keys(HUB_BASES), ['post', 'service', 'resource', 'glossary', 'case', 'faq']);
+  assert.deepEqual(
+    Object.keys(FEED_BASES).filter((kind) => !(kind in HUB_BASES)),
+    [...SERIES_COLLECTIONS]
+  );
+  const asked = [];
+  const routes = await emptyHubRoutes(async (kind) => {
+    asked.push(kind);
+    return [];
+  });
+  assert.ok(!asked.includes('spec'));
+  assert.ok(!routes.includes('/spec'));
+  assert.deepEqual(await emptyHubRoutes(livePerKind({ spec: [] })), []);
 });

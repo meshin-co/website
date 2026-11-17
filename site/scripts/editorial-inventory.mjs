@@ -22,7 +22,7 @@ const DESIGN_TOKEN =
   /^(IBM Plex|Fraunces|SFMono|ui-(sans|serif|monospace)|system-ui)\b|(^|,\s)(sans-serif|serif|monospace)$/;
 
 const CODE_FRAGMENT =
-  /(&&|\|\||!==|===|=>|\?\?|\?\.|\$\{|\breturn\b|\bnew [A-Z]\w*\(|Array<|\.\w+\(|\)\s*,?\s*\]|---\s*$|\/\^|^\s*[;.!]|\);|\w:\s*\w+\s*$)/;
+  /(&&|\|\||!==|===|=>|\?\?|\?\.|\$\{|(^|[;{})])\s*return(\s+[^\s;]+)?\s*;|\bnew [A-Z]\w*\(|Array<|\.\w+\(|\)\s*,?\s*\]|---\s*$|\/\^|^\s*[;.!]|\);|\w:\s*\w+\s*$)/;
 
 const digitHeavy = (value) => value.replace(/[^0-9]/g, '').length / value.length > 0.2;
 

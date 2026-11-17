@@ -6,6 +6,7 @@ description: 'The short answer checklist has four checks: length, subject, resul
 publishDate: 2026-11-03
 updatedDate: 2026-11-03
 version: '0.1'
+license: CC-BY-4.0
 status: Available as a page on this site.
 whatInside:
   - Four checks, each with what a pass and a failure look like

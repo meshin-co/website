@@ -47,6 +47,25 @@ test('a written image is read back by slug and key, and misses when either chang
   }
 });
 
+test('a series and its version are cached under their own slugs, the version slug holding a slash and a dot', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'og-cache-'));
+  try {
+    writeOgImage(dir, 'spec/evals-baseline', 'series-key', Buffer.from('series'));
+    writeOgImage(dir, 'spec/evals-baseline/1.0', 'version-key', Buffer.from('version'));
+    assert.equal(readOgImage(dir, 'spec/evals-baseline', 'series-key')?.toString(), 'series');
+    assert.equal(readOgImage(dir, 'spec/evals-baseline/1.0', 'version-key')?.toString(), 'version');
+    assert.equal(readOgImage(dir, 'spec/evals-baseline/1.0', 'series-key'), null);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('the key of a specification version differs from the key of its series', () => {
+  const series = { collection: 'spec', id: 'evals-baseline', title: 'evals-baseline specification' };
+  const version = { collection: 'spec', id: 'evals-baseline/1.0', title: 'evals-baseline specification' };
+  assert.notEqual(ogCacheKey(series), ogCacheKey(version));
+});
+
 test('a missing manifest, a deleted file and a corrupt manifest all miss gracefully', () => {
   const dir = mkdtempSync(join(tmpdir(), 'og-cache-'));
   try {
