@@ -92,6 +92,12 @@ export const nudge = {
   href: BOOKING_URL,
 };
 
+export const specification = {
+  text: 'The rules for what counts as a regression in an agent evaluation are published as a specification.',
+  label: 'Read the evals-baseline specification 1.0',
+  href: '/spec/evals-baseline/1.0',
+};
+
 export const heroOffers = [
   {
     label: 'Start here',

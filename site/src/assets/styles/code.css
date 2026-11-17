@@ -1,0 +1,101 @@
+.code-block {
+  position: relative;
+}
+
+.code-block > pre {
+  border: 1px solid var(--aw-color-line);
+  border-radius: 0;
+  background-color: var(--aw-color-surface);
+  padding: 1rem 1.25rem;
+  color: var(--aw-color-text-heading);
+  font-family: var(--aw-font-mono);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  overflow-x: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.bg-surface .code-block > pre {
+  background-color: var(--aw-color-bg-page);
+}
+
+.code-copy {
+  position: absolute;
+  top: -0.8125rem;
+  right: 1rem;
+  width: 4.5rem;
+  border: 1px solid var(--aw-color-line);
+  background-color: var(--aw-color-bg-page);
+  padding: 0.125rem 0;
+  color: var(--aw-color-text-muted);
+  font-family: var(--aw-font-mono);
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+  cursor: pointer;
+}
+
+.code-copy:hover {
+  border-color: var(--aw-color-primary);
+  color: var(--aw-color-text-heading);
+}
+
+.pl-c {
+  color: var(--aw-color-code-comment);
+}
+
+.pl-k {
+  color: var(--aw-color-code-keyword);
+}
+
+.pl-s,
+.pl-sr,
+.pl-mi1 {
+  color: var(--aw-color-code-string);
+}
+
+.pl-c1,
+.pl-s .pl-v,
+.pl-mh,
+.pl-mh .pl-en,
+.pl-ms {
+  color: var(--aw-color-code-constant);
+}
+
+.pl-e,
+.pl-en,
+.pl-mc,
+.pl-mdr {
+  color: var(--aw-color-code-entity);
+}
+
+.pl-ent {
+  color: var(--aw-color-code-tag);
+}
+
+.pl-v,
+.pl-smw {
+  color: var(--aw-color-code-variable);
+}
+
+.pl-md,
+.pl-ii,
+.pl-bu {
+  color: var(--aw-color-code-deleted);
+}
+
+.pl-s .pl-s1 {
+  color: var(--aw-color-text-heading);
+}
+
+.pl-mh,
+.pl-ms,
+.pl-mb,
+.pl-mdr,
+.pl-sr .pl-cce {
+  font-weight: 700;
+}
+
+.pl-mi {
+  font-style: italic;
+}
