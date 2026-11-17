@@ -5,7 +5,7 @@ import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { brandFromDisk } from '../../src/utils/brand.mjs';
-import { FEED_BASES, FEED_WINDOW } from '../../src/utils/feeds.mjs';
+import { FEED_BASES, FEED_WINDOW, HUB_BASES, SERIES_COLLECTIONS, entryIdOf } from '../../src/utils/feeds.mjs';
 import {
   LLMS_COLLECTIONS,
   LLMS_FILE_MAX_BYTES,
@@ -20,6 +20,7 @@ import {
   sidecarFileForRoute,
 } from '../../src/utils/machine-text.mjs';
 import { siteLastmods } from '../../src/utils/sitemap-lastmod.mjs';
+import { seriesLabel } from '../../src/utils/spec-series.mjs';
 import { GATE_FINDINGS_VARIABLE } from '../gate-findings.mjs';
 import { SCENE_HUBS, SCENE_PAGES } from './machine-scene-catalog.mjs';
 
@@ -91,6 +92,16 @@ export const LIVE = {
   service: [{ slug: 'sprint', title: 'Sprint', published: '2026-09-01', updated: '2026-10-01' }],
   glossary: [{ slug: 'evals', title: 'Evals', published: '2026-09-02', updated: '2026-09-20' }],
   resource: [{ slug: 'checklist', title: 'Checklist', published: '2026-09-03', updated: '2026-09-21' }],
+  spec: [
+    {
+      slug: 'evals-baseline-1.0',
+      name: 'evals-baseline',
+      version: '1.0',
+      title: 'evals-baseline specification 1.0',
+      published: '2026-09-05',
+      updated: '2026-10-09',
+    },
+  ],
   faq: QUESTIONS,
 };
 
@@ -100,12 +111,13 @@ const HEAVY_POST_BODY = 'x'.repeat(Math.floor(LLMS_FILE_MAX_BYTES / (POSTS_PER_S
 const KINDS = Object.keys(FEED_BASES);
 const LIVE_KINDS = Object.keys(LIVE);
 const EMPTY_KINDS = KINDS.filter((kind) => !LIVE_KINDS.includes(kind));
-const HUB_ROUTES = KINDS.map((kind) => `/${FEED_BASES[kind]}`);
-const EMPTY_HUBS = EMPTY_KINDS.map((kind) => `/${FEED_BASES[kind]}`);
+const SERIES_KINDS = LIVE_KINDS.filter((kind) => SERIES_COLLECTIONS.has(kind));
+const HUB_ROUTES = Object.values(HUB_BASES).map((base) => `/${base}`);
+const EMPTY_HUBS = EMPTY_KINDS.filter((kind) => kind in HUB_BASES).map((kind) => `/${FEED_BASES[kind]}`);
 
 const instantOf = (day) => `${day}T00:00:00.000Z`;
 const urlOf = (route) => (route === '/' ? ORIGIN : `${ORIGIN}${route}`);
-const routeOf = (kind, entry) => `/${FEED_BASES[kind]}/${entry.slug}`;
+const routeOf = (kind, entry) => `/${FEED_BASES[kind]}/${entryIdOf(kind, entry.slug, entry)}`;
 const liveRoutes = (kind) => LIVE[kind].map((entry) => routeOf(kind, entry));
 const titleOfKind = (kind) => LLMS_COLLECTIONS.find(({ name }) => name === kind).title;
 const isNoindex = ({ route }) => NOINDEX_STATIC_PAGES.has(route) || EMPTY_HUBS.includes(route);
@@ -121,6 +133,16 @@ function catalogPages() {
   return [...byRoute.values()];
 }
 
+function seriesPages() {
+  return SERIES_KINDS.flatMap((kind) =>
+    [...new Set(LIVE[kind].map(({ name }) => name))].map((name) => ({
+      route: `/${FEED_BASES[kind]}/${name}`,
+      title: seriesLabel(name),
+      description: NOTE,
+    }))
+  );
+}
+
 function entryPages() {
   const pages = [];
   for (const kind of LIVE_KINDS) {
@@ -128,7 +150,7 @@ function entryPages() {
       pages.push({ route: routeOf(kind, entry), title: entry.title, description: NOTE });
     }
   }
-  return pages;
+  return [...pages, ...seriesPages()];
 }
 
 function jsonLd(page) {
@@ -178,7 +200,7 @@ const llmsBodyOf = (kind, entry) => {
 
 const llmsEntries = (kind) =>
   LIVE[kind].map((entry) => ({
-    id: entry.slug,
+    id: entryIdOf(kind, entry.slug, entry),
     title: entry.title,
     url: urlOf(routeOf(kind, entry)),
     summary: NOTE,
@@ -206,7 +228,7 @@ function llmsTxt(indexable) {
   const sections = [
     ['Offers', LIVE.service.map((entry) => bullet(entry.title, routeOf('service', entry)))],
     ['Pages', pagesOf(indexable.filter((page) => !isHub(page)))],
-    ['Hubs', pagesOf(indexable.filter(isHub))],
+    ['Hubs', pagesOf([...indexable.filter(isHub), ...seriesPages()])],
     [
       'Full text',
       [
@@ -248,7 +270,9 @@ function contentConfig() {
 }
 
 function frontmatter(entry) {
-  const lines = ['---', `title: ${entry.title}`, `publishDate: ${entry.published}`, `updatedDate: ${entry.updated}`];
+  const series = entry.name === undefined ? [] : [`name: ${entry.name}`, `version: '${entry.version}'`];
+  const lines = ['---', `title: ${entry.title}`, ...series, `publishDate: ${entry.published}`];
+  lines.push(`updatedDate: ${entry.updated}`);
   return [...lines, '---', '', `The text of ${entry.title}.`, ''].join('\n');
 }
 

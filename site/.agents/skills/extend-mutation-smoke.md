@@ -8,17 +8,17 @@ Add a family here whenever a new guard ships; a guard with no entry is unproven.
 ## The kinds
 
 `FAMILIES` entries declare a `kind`; each kind has its own required fields and executor. `proves` names
-what the family is evidence for: `build`, or the `gate:*` script that the family exercises.
+what the family is evidence for: `build`, or the `gate:*` script that the family exercises. A `build` or `build-then-gate` family also names a `control`; what counts as proof, the controls, the two rows that are not families and the exit code are in `judge-a-mutation-smoke-run.md`.
 
-| kind              | required fields                                | proves                                                                                       |
-| ----------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `build`           | `proves`, `fixture`, `plant`, `tokens`         | a zod refinement fails `npm run build`                                                       |
-| `build-then-gate` | `proves`, `fixture`, `plant`, `tokens`, `gate` | the specimen builds clean, then a named gate (`budget`, `jsonld`, `content-gate`) catches it |
-| `gate`            | `proves`, `gate`, `tokens`                     | a gate fails against a synthetic bad `dist`, no build needed                                 |
-| `pure`            | `proves`, `check`                              | a named pure function (`semantic-title`) rejects a bad input and accepts a good one          |
-| `pagination`      | `proves`, `fixture`                            | pagination behavior at a real 13th live post                                                 |
-| `specimen`        | `specimen`                                     | the real `gate:*` npm script is green on the copy, red on the planted specimen, green again  |
-| `lh-record`       | `proves`                                       | `lh:record` refuses reports another tree measured, in its own repo (`lh-record-family.mjs`)  |
+| kind              | required fields                                           | proves                                                                                                  |
+| ----------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `build`           | `proves`, `fixture`, `plant`, `tokens`, `control`         | a zod refinement fails `npm run build`, and the repaired twin builds green                              |
+| `build-then-gate` | `proves`, `fixture`, `plant`, `tokens`, `gate`, `control` | the specimen builds clean, then `content-gate` catches it, and the gate is green on the pristine `dist` |
+| `gate`            | `proves`, `gate`, `tokens`                                | the real gate command is green on the real `dist` and red on a synthetic bad input                      |
+| `pure`            | `proves`, `check`                                         | a named pure function (`semantic-title`) rejects a bad input and accepts a good one                     |
+| `pagination`      | `proves`, `fixture`                                       | pagination behavior at a real 13th live post                                                            |
+| `specimen`        | `specimen`                                                | the real `gate:*` npm script is green on the copy, red on the planted specimen, green again             |
+| `lh-record`       | `proves`                                                  | `lh:record` refuses reports another tree measured, in its own repo (`lh-record-family.mjs`)             |
 
 A `pagination` family takes an optional `scope` (`category` or `tag`; none builds the blog hub), and
 `manifestFamilies()` throws on any other value. The tag family's head, control and sitemap checks are
@@ -30,14 +30,14 @@ the gate, the token that proves the right rule fired, and a `plant(copySite)` th
 `proveWithSpecimen()` runs the npm command CI runs and requires four things: the gate is green on the pristine copy,
 the pristine output does not already contain the token, the planted run is red, and the planted output contains the
 token. The undo runs in a `finally`. An entry may also carry `env` (variables for the npm run), `args` (passed to the tool after `--`) and `scene({ copySite, work })`, which runs before the pristine run and returns the site to prove on, so the pristine copy already holds the state the specimen plants against.
-Prefer this kind for any new gate: it runs the command CI runs, not a function beside it.
+Prefer this kind for any new gate: it runs the command CI runs, not a function beside it. The llms summary and catalogue families of `gate:agents` are specimens too, defined in `scripts/mutation-specimens.mjs` itself (`agentsLlmsWithoutAnH1`, `agentsLlmsUnderTheFloor`, `agentsLlmsWithOnlyABareUrl`, `agentsCatalogFailsTheArdValidator`): each plants one `zz-specimen-*.txt` in `dist/llms/` or edits the catalogue, with its text inline.
 
 There is no kind that runs nothing. A `unit-covered` kind used to return a pass without executing
 anything, so a family that could not fail was counted as proven; it was removed.
 
-`manifestFamilies()` throws at collection time on an unknown `kind`, a missing required field, an
-unknown `gate` (`budget`, `jsonld`, `content-gate`), an unknown `check` (`semantic-title`) or an
-unknown `specimen` — a malformed entry fails loud, never silently skips.
+`manifestFamilies()` throws at collection time on an unknown `kind`, a missing required field (`control` included, for `build`
+and `build-then-gate`), a `gate` its kind cannot run (`budget`, `jsonld`, `jsonld-properties`, `docs` or `external` for `gate`;
+`content-gate` for `build-then-gate`), an unknown `check` (`semantic-title`) or an unknown `specimen` — a malformed entry fails loud, never silently skips.
 
 ## Every gate is covered, or owed
 
@@ -49,18 +49,18 @@ that now has a family, or for a script that no longer exists, is stale and must 
 
 ## Plant-and-restore contract
 
-`build` and `build-then-gate` families copy `tests/guard-mutations/fixtures/<fixture>` into
-`entry.plant` inside the disposable copy, run the pipeline, and `rm` the planted file in a
+`build` and `build-then-gate` families copy each file of `fixture` from `tests/guard-mutations/fixtures/` into
+`entry.plant` inside the disposable copy, run the pipeline, and `rm` the planted files in a
 `finally` block whether the run passed or threw. The specimen never survives past its own
-family; the next family always starts from the pristine baseline copy. `specimen` families restore
+family; the next family always starts from the pristine baseline copy. `gate`, `build-then-gate` and `specimen` families restore
 `dist` from a snapshot of the baseline build before they run, so an earlier family's failed build cannot
 poison them, and the copy keeps its `.git` because `gate:docs`, `gate:machine` and the plant helper need it.
 
 ## Proving RED
 
 1. Write the guard (zod refinement, gate check, or pure function).
-2. For a build guard, add a `tests/guard-mutations/fixtures/<name>.md` (or reuse an existing fixture)
-   that violates only the new rule. For a `gate:*` script, add an entry to `SPECIMENS` instead.
+2. For a build guard, add a `tests/guard-mutations/fixtures/<name>.md` that violates only the new rule, and `<name>-control.md`,
+   the same file with that rule repaired (or reuse both). For a `gate:*` script, add an entry to `SPECIMENS` instead.
 3. Add a `FAMILIES` entry with the right `kind` and the exact failure-message token(s) the guard
    prints — `expectedFailure()` fails the family if the guard's output does not contain every
    token, or if the guard exited zero.

@@ -1,7 +1,7 @@
 # The agent interfaces this build ships
 
-Four machine files exist so that an AI agent arriving at the site can find what it can call, and
-on what terms. They are build outputs: verify them in `dist/`, never in source.
+Four machine files exist so that an AI agent arriving at the site can find what it can call, and on what terms. They
+are build outputs: verify them in `dist/`, never in source.
 
 | Route                          | Written by                      | What it says                                                                      |
 | ------------------------------ | ------------------------------- | --------------------------------------------------------------------------------- |
@@ -10,71 +10,71 @@ on what terms. They are build outputs: verify them in `dist/`, never in source.
 | `/.well-known/api-catalog`     | `scripts/gen-agent-catalog.mjs` | An RFC 9727 linkset: `service-desc` to the document, `service-doc` to `/llms.txt` |
 | `/.well-known/ai-catalog.json` | `scripts/gen-agent-catalog.mjs` | The ARD capability manifest, one entry per machine entry point                    |
 
-`dist/_headers` carries the `Content-Signal` response header on every response, the three `Link`
-headers on `/` and the media type for the extensionless catalog. `CommonMeta.astro` carries
-`<link rel="ai-catalog">`, which is how an agent finds the capability manifest.
+`dist/_headers` carries the `Content-Signal` response header on every response, the three `Link` headers on `/` and the
+media type for the extensionless catalog. `CommonMeta.astro` carries `<link rel="ai-catalog">`, which is how an agent
+finds the capability manifest.
 
-The signal is stated twice: as a response header and as a directive in every `robots.txt` group.
-Both read `CONTENT_SIGNAL` from the headers generator, so they cannot be typed apart, and the gate
-fails when they differ. Lighthouse rejected the directive as unknown until 13.1.0 added
-`content-signal` to its safelist; the gate pins 13.5.0 through an `overrides` entry, because
-`@lhci/cli@0.15.1` is the newest release and still depends on 12.6.1.
+The signal is stated twice: as a response header and as a directive in every `robots.txt` group. Both read
+`CONTENT_SIGNAL` from the headers generator, so they cannot be typed apart, and the gate fails when they differ.
+Lighthouse rejected the directive until 13.1.0 safelisted it; the gate pins 13.5.0 through an `overrides` entry,
+because `@lhci/cli@0.15.1` still depends on 12.6.1.
 
 ## Everything here is derived
 
-No list of routes is typed out. `publicJsonRoutes()` walks the built output; the capability
-manifest lists a file only when that file is in `dist`; the content signal is emitted per group by
-the same loop that emits the groups. A hand-kept array would drift from the build within one
-change, and the gate exists because that drift is invisible to a human reader. The manifest lists
-`/llms.txt`, `/llms-full.txt` (an index, no entry) and each `/llms/{collection}.txt`, never a shard.
-
-`gate-routes.json` and the files under `/search-index/<ten hex characters>/` are excluded from the OpenAPI document by
-`GATE_HARNESS_ARTIFACT` and `SEARCH_INDEX_IMPLEMENTATION_FILE` in `scripts/gen-openapi.mjs`: harness and implementation
-files, not interfaces, so `/search-index/manifest.json` alone is listed. Exclude another one in a constant that says why.
+No list of routes is typed out. `publicJsonRoutes()` walks the built output; the capability manifest lists a file only
+when that file is in `dist`; the content signal is emitted per group by the same loop that emits the groups. A
+hand-kept array would drift from the build within one change, and the gate exists because that drift is invisible to a
+human reader. The manifest lists `/llms.txt`, `/llms-full.txt` (an index, no entry) and each
+`/llms/{collection}.txt`, never a shard. `gate-routes.json` and the files under `/search-index/<ten hex characters>/`
+are excluded from the OpenAPI document by `GATE_HARNESS_ARTIFACT` and `SEARCH_INDEX_IMPLEMENTATION_FILE` in
+`scripts/gen-openapi.mjs`: harness and implementation files, not interfaces, so `/search-index/manifest.json` alone is
+listed. Exclude another one in a constant that says why.
 
 ## The gate
 
 `npm run gate:agents` (`scripts/agent-interfaces-gate.mjs`) reads `dist/` and fails on:
 
-- a build whose responses declare no `Content-Signal`, declare two, or leave `search`, `ai-train`
-  or `ai-input` unsaid
-- a `robots.txt` group with no directive, with more than one, or with a value the header does not
-  repeat word for word
+- a build whose responses declare no `Content-Signal`, declare two, or leave `search`, `ai-train` or `ai-input` unsaid
+- a `robots.txt` group with no directive, with more than one, or with a value the header does not repeat word for word
 - an OpenAPI path that is not shipped, or a shipped JSON route the document omits
 - a linkset with no anchor or a missing service link, or any link target not shipped
-- a manifest with no entries, a repeated identifier, or an entry URL not shipped
-- a `Link` rule that is not on `/` exactly, a malformed `Link` value, a missing relation, or a
-  target not shipped
+- a manifest with no entries, a repeated identifier, an entry URL not shipped or an ARD validator error
+- a `Link` rule that is not on `/` exactly, a malformed `Link` value, a missing relation, or a target not shipped
 - a head link naming a manifest the build does not ship, or no head link at all
-- a build with no `_worker.js`, or one whose home sidecar is missing, which would leave the
-  markdown negotiation dead on the one route agents probe
+- a build with no `_worker.js`, or one whose home sidecar is missing, which would leave the markdown negotiation dead
+  on the one route agents probe
+- an `llms*.txt` file missing, with no H1, under 50 characters or with no Markdown link (`satisfy-the-llms-txt-audit.md`)
+- a specification page or sidecar whose digests or file list differ from the served files (`spec-artefacts-check.mjs`)
+- a mirror whose checkout is on this machine and either does not hold the declared file or holds a different one
+  (`spec-artefacts.mjs`, read from the `mirror.json` of each specification folder)
 
-Six specimen families in `scripts/mutation-specimens.mjs` prove it can fail: `agents`,
-`agents-openapi-drift`, `agents-manifest-dangles`, `agents-link-header-leaks`,
-`agents-head-link-drifts`, `agents-markdown-handler-gone`.
+Before the verdict it prints one `mirrors:` line: declared, compared with their upstream file, not compared. An absent
+checkout is not a failure, because every CI runner and the exported engine lack one, so the line adds `nothing was
+compared with an upstream file` and one `not compared:` line naming the path and the `mirror.json` value.
 
-The negotiation itself is not observable here: the gate server serves files, it does not run the
-edge handler. `npm run smoke:prod` asks the live home page for markdown, which is the only proof
-that exists, and it is check 21 of 21.
+Fifteen specimen families in `scripts/mutation-specimens.mjs` prove it can fail: `agents`, `agents-openapi-drift`,
+`agents-manifest-dangles`, `agents-link-header-leaks`, `agents-head-link-drifts`, `agents-markdown-handler-gone`, the
+three `agents-llms-summary-*`, `agents-catalog-fails-the-ard-validator`, four `agents-spec-*` that edit the built
+specification and `agents-spec-mirror-layout-moves`, pointing a mirror at a checkout that does not hold its file.
 
-`HEAD` negotiates with `GET`: a `HEAD` that answers `text/html` while its own `GET` answers
-markdown misinforms the client, and the live site did exactly that until it was fixed. The handler
-is `scripts/markdown-negotiation.mjs`, copied verbatim by `scripts/gen-edge-worker.mjs` so that the
-code Pages runs is the code the tests drive.
+The negotiation is not observable here: the gate server runs no edge handler. `npm run smoke:prod` asks the live origin
+for markdown, the only proof that exists, and `wrangler pages dev` runs `dist/_worker.js` to rehearse it. Markdown is
+served only where the page itself answers. `HEAD` negotiates with `GET`: a `HEAD` that answers `text/html` while its
+own `GET` answers markdown misinforms the client, and the live site did exactly that until it was fixed. The handler
+is `scripts/markdown-negotiation.mjs`, copied verbatim by `scripts/gen-edge-worker.mjs` so that the code Pages runs is
+the code the tests drive.
 
 ## Before adding a fifth interface
 
-Read the matching file in `.agents/skills/ai-agent-readiness/`, which covers twenty protocols and
-is written to be copied into another project unchanged. Its rule governs here: publish a card only
-when the service behind it is real. This site has no accounts, no agent, no MCP server and nothing
-to sell, so it publishes none of those cards, and the proposal of the change `15-agent-readiness`
-records each refusal with its reason.
+Read the matching file in `.agents/skills/ai-agent-readiness/`, which covers twenty protocols and is written to be
+copied into another project unchanged. Its rule governs here: publish a card only when the service behind it is real.
+This site has no accounts, no agent, no MCP server and nothing to sell, so it publishes none of those cards; change
+`15-agent-readiness` records each refusal, and L80 WebMCP.
 
 ## Two switches that outrank the build
 
-A platform can rewrite `robots.txt` and can refuse a crawler before any file is read. Measured
-2026-10-24 on Cloudflare: Bot Preference Sync had been prepending 128 lines carrying `ai-train=no`
-and `Disallow: /`, and `ai_bots_protection` in the zone's bot settings was `block`, which answered
-403 to nine crawlers before any file was read. Both are off now, and all 22 crawlers in the
-register answer 200. Compare the live file against `dist/robots.txt` byte for byte before
-concluding anything about what agents see.
+A platform can rewrite `robots.txt` and can refuse a crawler before any file is read. Measured 2026-10-24 on
+Cloudflare: Bot Preference Sync had been prepending 128 lines carrying `ai-train=no` and `Disallow: /`, and
+`ai_bots_protection` in the zone's bot settings was `block`, which answered 403 to nine crawlers before any file was
+read. Both are off now, and all 22 crawlers in the register answer 200. Compare the live file against
+`dist/robots.txt` byte for byte before concluding anything about what agents see.

@@ -11,6 +11,7 @@ import ApplyColorMode from '~/components/common/ApplyColorMode.astro';
 import Metadata from '~/components/common/Metadata.astro';
 import SiteVerification from '~/components/common/SiteVerification.astro';
 import Analytics from '~/components/common/Analytics.astro';
+import CodeCopy from '~/components/common/CodeCopy.astro';
 
 import type { MetaData as MetaDataType } from '~/types';
 
@@ -46,5 +47,6 @@ const { language, textDirection } = I18N;
       href="#main">Skip to content</a
     >
     <slot />
+    <CodeCopy />
   </body>
 </html>
