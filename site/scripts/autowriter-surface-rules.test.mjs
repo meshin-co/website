@@ -4,7 +4,13 @@ import assert from 'node:assert/strict';
 import { resolve } from 'node:path';
 import { test } from 'node:test';
 
-import { LEGACY_EXCEPTIONS, historyReport, judgeCommit, judgeSurface } from './autowriter-refusal-rules.mjs';
+import {
+  LEGACY_EXCEPTIONS,
+  SQUASH_OF_133,
+  historyReport,
+  judgeCommit,
+  judgeSurface,
+} from './autowriter-refusal-rules.mjs';
 import { SHARED_DERIVED } from './derived-files.mjs';
 
 const RULE = 'unregistered-path-committed';
@@ -90,25 +96,51 @@ test('every exception names one commit, described one way, with no path left to 
   }
 });
 
-test('an excepted commit is forgiven the paths it names and judged on every other one', () => {
-  const { sha, paths } = LEGACY_EXCEPTIONS.find(({ paths: named }) => named !== undefined);
-  const excepted = commitOf(paths, sha);
-  assert.deepEqual([...judgeCommit(excepted, () => '[]'), ...judgeSurface(excepted)], []);
+const PATH_EXCEPTIONS = LEGACY_EXCEPTIONS.filter(({ paths }) => paths !== undefined);
 
-  const alsoRefused = judgeCommit(commitOf([...paths, 'audits/sentence-band.json'], sha), () => '[]');
-  assert.deepEqual(
-    alsoRefused.map(({ rule }) => rule),
-    ['refused-path-committed']
-  );
-  assert.match(alsoRefused[0].detail, /audits\/sentence-band\.json/);
-});
-
-test('the same paths in any other commit are refused, so the exception is one commit wide', () => {
-  const { paths } = LEGACY_EXCEPTIONS.find(({ paths: named }) => named !== undefined);
-  const commit = commitOf(paths);
-  const elsewhere = [...judgeCommit(commit, () => '[]'), ...judgeSurface(commit)];
-  assert.deepEqual([...new Set(elsewhere.map(({ rule }) => rule))].sort(), [
-    'refused-path-committed',
-    'unregistered-path-committed',
+test('the squash of #133 is forgiven as one commit and exactly the two paths it fused, and its entry says why in one sentence', () => {
+  assert.equal(SQUASH_OF_133.sha, '4f79f6a4982197af328a9b679af8113daa804d76');
+  assert.deepEqual(SQUASH_OF_133.paths, [
+    'audits/lighthouse-green.json',
+    'site/src/data/post/named-person-responsible-for-ai-risk-in-vendor-procurement.md',
   ]);
+  assert.equal(SQUASH_OF_133.prefix, undefined);
+  assert.deepEqual(
+    LEGACY_EXCEPTIONS.filter(({ sha }) => sha === SQUASH_OF_133.sha),
+    [SQUASH_OF_133]
+  );
+  assert.match(SQUASH_OF_133.why, /^[^.]+\.$/);
+  assert.match(SQUASH_OF_133.why, /squash of #133/);
 });
+
+for (const { sha, paths } of PATH_EXCEPTIONS) {
+  const named = sha.slice(0, 12);
+
+  test(`${named} is forgiven the paths it names and judged on every other one, by whichever rule reads the path`, () => {
+    const excepted = commitOf(paths, sha);
+    assert.deepEqual([...judgeCommit(excepted, () => '[]'), ...judgeSurface(excepted)], []);
+
+    const alsoRefused = judgeCommit(commitOf([...paths, 'audits/sentence-band.json'], sha), () => '[]');
+    assert.deepEqual(
+      alsoRefused.map(({ rule }) => rule),
+      ['refused-path-committed']
+    );
+    assert.match(alsoRefused[0].detail, /audits\/sentence-band\.json/);
+
+    const alsoUnregistered = judgeSurface(commitOf([...paths, 'audits/new-derived-index.json'], sha));
+    assert.deepEqual(
+      alsoUnregistered.map(({ rule }) => rule),
+      [RULE]
+    );
+    assert.match(alsoUnregistered[0].detail, /audits\/new-derived-index\.json/);
+  });
+
+  test(`the paths of ${named} in any other commit are each refused once, so the exception is one commit wide`, () => {
+    const commit = commitOf(paths);
+    const elsewhere = [...judgeCommit(commit, () => '[]'), ...judgeSurface(commit)];
+    assert.deepEqual(
+      elsewhere.map(({ detail }) => paths.find((path) => detail.includes(path))).sort(),
+      [...paths].sort()
+    );
+  });
+}

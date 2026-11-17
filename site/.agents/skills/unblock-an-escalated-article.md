@@ -32,10 +32,17 @@ any path no catch-up can heal.
 
 Nothing catches this before the merge, because the commit the gate judges does not exist until the squash
 writes it. The only remedy afterwards is an entry in `LEGACY_EXCEPTIONS`, because `main` is protected and a
-revert leaves the judged commit in place while removing a generation record on top of it. G84 records the one
+revert leaves the judged commit in place while removing a generation record on top of it. G84 records the first
 commit this was learned on and the three paths it is forgiven.
 
-So: land the fix on `main`, then catch the branch up, and let step 4 carry only the Lighthouse record.
+The second is the squash of #133, `4f79f6a`. It fused the Lighthouse record that step 4 puts on the branch, and
+the link that cleared `gate:orphans`, with the generation record. `SQUASH_OF_133` in
+`scripts/autowriter-refusal-rules.mjs` forgives that commit for those two paths and no others, and
+`scripts/autowriter-legacy-specimens.mjs` plants the proof that it stays one commit and two paths wide.
+
+So: land the fix on `main`, then catch the branch up, let step 4 carry only the Lighthouse record, and merge
+with `gh pr merge --merge`, never `--squash`. A merge commit keeps the Lighthouse record in a commit of its own,
+which no rule reads as a pipeline commit.
 
 ## Close the escalations
 

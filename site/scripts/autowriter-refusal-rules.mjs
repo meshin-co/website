@@ -132,12 +132,22 @@ function refusedThings({ sha, changes }, read) {
   });
 }
 
+export const SQUASH_OF_133 = {
+  sha: '4f79f6a4982197af328a9b679af8113daa804d76',
+  paths: [
+    'audits/lighthouse-green.json',
+    'site/src/data/post/named-person-responsible-for-ai-risk-in-vendor-procurement.md',
+  ],
+  why: 'The squash of #133 fused its generation record with the Lighthouse record its push needed and with the link from an older post that cleared gate:orphans.',
+};
+
 export const LEGACY_EXCEPTIONS = [
   { sha: 'e8874d4602b5944138a0017d3d5e862c9e7a728e', prefix: 'site/tests/__screenshots__/linux/' },
   {
     sha: '7c5fd02021d046f7cede638fc92351b3a05c16ec',
     paths: ['audits/lighthouse-green.json', 'docs/plan/reference/known-gaps.md', 'site/tests/search.spec.ts'],
   },
+  SQUASH_OF_133,
 ];
 
 const isLegacy = (sha, path) =>
