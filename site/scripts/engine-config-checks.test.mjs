@@ -44,7 +44,7 @@ const SEMANTIC = [
   [
     'a prefix listed twice',
     (config) => config.routeFamilies.rules.push({ ...config.routeFamilies.rules[0] }),
-    '$.routeFamilies.rules[9].prefix',
+    (config) => `$.routeFamilies.rules[${config.routeFamilies.rules.length - 1}].prefix`,
     /unreachable/,
   ],
   [
@@ -149,8 +149,9 @@ for (const [label, plant, path, pattern] of SEMANTIC) {
   test(`${label} is named at its field`, () => {
     const config = clone();
     plant(config);
-    const found = consistencyProblems(config).find((problem) => problem.path === path);
-    assert.ok(found, `no problem at ${path}`);
+    const expected = typeof path === 'function' ? path(config) : path;
+    const found = consistencyProblems(config).find((problem) => problem.path === expected);
+    assert.ok(found, `no problem at ${expected}`);
     assert.match(found.problem, pattern);
   });
 }

@@ -7,3 +7,4 @@ test-results
 node_modules
 tests/__screenshots__
 scripts/fixtures/wayback/
+src/data/spec/*/vectors.json

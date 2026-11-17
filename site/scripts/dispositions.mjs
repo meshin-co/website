@@ -60,10 +60,14 @@ const comparable = (text) =>
     .toLowerCase()
     .replace(/[\u2018\u2019\u201c\u201d'"]/g, '');
 
-const escapeForPattern = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const BARE_COUNTER = /^\d+$/;
+const COUNTER_BEFORE_SUFFIX = /^\d+\s*$/;
 
-const numberedPage = (source, suffix) =>
-  new RegExp(`^${escapeForPattern(source)} \\d+${suffix === '' ? '' : `\\s*${escapeForPattern(suffix)}`}$`);
+const isNumberedPage = (source, rendered, suffix) => {
+  if (!rendered.startsWith(source) || rendered[source.length] !== ' ' || !rendered.endsWith(suffix)) return false;
+  const counter = rendered.slice(source.length + 1, rendered.length - suffix.length);
+  return (suffix === '' ? BARE_COUNTER : COUNTER_BEFORE_SUFFIX).test(counter);
+};
 
 const isRendered = (row) => row.usedIn.every((used) => used.startsWith('/'));
 
@@ -76,8 +80,8 @@ function inheritSourceStatus(rows, suffix) {
       const text = comparable(candidate.text);
       return (
         text.includes(rendered) ||
-        numberedPage(text, '').test(rendered) ||
-        (suffix !== '' && numberedPage(text, suffix).test(rendered))
+        isNumberedPage(text, rendered, '') ||
+        (suffix !== '' && isNumberedPage(text, rendered, suffix))
       );
     });
     return source
