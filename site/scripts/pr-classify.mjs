@@ -12,6 +12,7 @@ export const BRANCH_PREFIX = 'autowriter/';
 export const HOLD_LABEL = readEngineConfig().loop.holdLabel;
 export const CHAIN_LIMIT_HOURS = QUARANTINE_HOURS + 24;
 export const CATCH_UP_CAP = 3;
+export const NO_CHECKS_CATCH_UP_CAP = 1;
 export const VERDICTS = ['unsettled', 'merge', 'catch-up', 'repairable', 'escalate', 'blocked-by-human', 'done'];
 
 const HOUR_MS = 3_600_000;
@@ -71,6 +72,14 @@ function overtakenByMain({ commits, drift, evidence }) {
   return verdict('catch-up', 'main-moved', moved);
 }
 
+function resumedAfterNoChecks({ checks, commits, drift, evidence }) {
+  if (checks.reason !== 'no-checks') return null;
+  if (catchUpsIn(commits) >= NO_CHECKS_CATCH_UP_CAP)
+    return { ...verdict('escalate', 'no-checks-catch-up-cap', evidence), kind: 'hard-stop' };
+  if (drift.behindBy === 0) return null;
+  return verdict('catch-up', 'no-checks', { ...evidence, behindBy: drift.behindBy });
+}
+
 function settle({ checks, pullRequest, commits, drift, now, base }) {
   const evidence = { ...base, ...checks.evidence };
   const opened = Date.parse(pullRequest.created_at);
@@ -83,6 +92,10 @@ function settle({ checks, pullRequest, commits, drift, now, base }) {
   }
   if (checks.verdict === 'unsettled' && now - opened > CHAIN_LIMIT_HOURS * HOUR_MS) {
     return { ...verdict('escalate', 'chain-too-old', evidence), kind: 'no-convergence' };
+  }
+  if (checks.verdict === 'escalate') {
+    const resumed = resumedAfterNoChecks({ checks, commits, drift, evidence });
+    if (resumed) return resumed;
   }
   return { ...checks, evidence };
 }

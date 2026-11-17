@@ -22,12 +22,15 @@ dependency, so the job needs no `npm ci` while it holds a token that can merge.
 - **catch-up:** the merge case, but `main` changed a derived file since the branch left it. The repair job
   merges `origin/main` in and regenerates the derived set (`scripts/catch-up.mjs`, run by `npm run catch-up:entry`,
   the files named in `scripts/derived-files.mjs`), then pushes a fast-forward; 3 spent is `no-convergence`.
+  The same catch-up resumes a head with zero check runs once, when `main` is ahead of the branch: the push is
+  made with `AUTOWRITER_PAT`, so it starts CI. A second sight of zero check runs after a catch-up is the
+  `hard-stop` `no-checks-catch-up-cap`.
 - **unsettled:** a job still running, a head that moved since the checks were read, a quarantine not over,
   or the first sight of a cancellation. The runner starts a successor.
 - **repairable:** only `cheap-gates` or `build` failed, in a step that is not setup. Phase one repairs
   nothing, so the runner escalates it as `unrepairable`.
-- **escalate:** `hard-stop` (zero check runs, a head with checks but no `pull_request` run, a skipped,
-  missing or neutral required job, an absent or red aggregate, a run that needs approval or has no job,
+- **escalate:** `hard-stop` (zero check runs on a branch that `main` has not moved past, or after the one
+  catch-up, a head with checks but no `pull_request` run, a skipped, missing or neutral required job, an absent or red aggregate, a run that needs approval or has no job,
   a merge GitHub refuses, a second cancellation), `unrepairable` (a failing job that is not a
   content gate, or a failure in setup) or `no-convergence` (3 attempts spent, or a chain older than 36
   hours). Each opens one issue; `no-convergence` also posts to Slack, the rest wait for the digest.
