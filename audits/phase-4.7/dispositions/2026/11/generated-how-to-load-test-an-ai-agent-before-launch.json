@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/how-to-load-test-an-ai-agent-before-launch.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-load-test-an-ai-agent-before-launch.json on 2026-11-17. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-load-test-an-ai-agent-before-launch.json.",
+    "digest": "fda3c58adfdb"
+  },
+  {
+    "target": "/blog/how-to-load-test-an-ai-agent-before-launch",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-load-test-an-ai-agent-before-launch.json on 2026-11-17. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-load-test-an-ai-agent-before-launch.json.",
+    "digest": "d8af6ed8bec6"
+  }
+]
