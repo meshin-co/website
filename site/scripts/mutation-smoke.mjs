@@ -321,6 +321,12 @@ export const FAMILIES = [
   },
   { id: 'autowriter-commit-seals-dispositions', kind: 'specimen', specimen: 'autowriterCommitSealsDispositions' },
   { id: 'autowriter-commit-an-unregistered-path', kind: 'specimen', specimen: 'autowriterCommitAnUnregisteredPath' },
+  { id: 'autowriter-commit-reuses-a-forgiven-path', kind: 'specimen', specimen: 'autowriterCommitReusesAForgivenPath' },
+  {
+    id: 'autowriter-excepted-commit-touches-a-third-path',
+    kind: 'specimen',
+    specimen: 'autowriterExceptedCommitTouchesAThirdPath',
+  },
   {
     id: 'autowriter-merged-ledger-without-its-measurement-debt',
     kind: 'specimen',
