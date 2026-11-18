@@ -6,10 +6,10 @@
   "attempts": [],
   "spend": {
     "tokens": {
-      "input": 2522,
-      "output": 198
+      "input": 26914,
+      "output": 7493
     },
-    "costUsd": 0.003512
+    "costUsd": 0.064379
   },
   "verdict": {
     "state": "open",
@@ -19,10 +19,10 @@
   "escalations": [],
   "generation": {
     "tokens": {
-      "input": 2522,
-      "output": 198
+      "input": 26914,
+      "output": 7493
     },
-    "costUsd": 0.003512
+    "costUsd": 0.064379
   },
   "refusals": [
     {
