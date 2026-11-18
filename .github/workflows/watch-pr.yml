@@ -74,7 +74,7 @@ jobs:
       checks: read
       actions: read
     outputs:
-      outcome: ${{ steps.rewrite.outputs.outcome || steps.catchup.outputs.outcome }}
+      outcome: ${{ steps.rewrite.outputs.outcome || steps.catchup.outputs.outcome || steps.refresh.outputs.outcome }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -90,6 +90,21 @@ jobs:
 
       - name: install the site dependencies, with no push credential on disk
         run: npm ci
+
+      - name: install what main holds, which the merge will leave, scripts off and still no push credential on disk
+        id: refresh
+        if: needs.watch.outputs.kind == 'catch-up'
+        run: |
+          if git diff --quiet HEAD origin/main -- package.json package-lock.json; then
+            echo "the branch holds the dependency files main holds"
+            exit 0
+          fi
+          git checkout origin/main -- package.json package-lock.json
+          status=0
+          npm ci --ignore-scripts || status=$?
+          git checkout HEAD -- package.json package-lock.json
+          echo "npm ci --ignore-scripts exited with status $status"
+          [ "$status" -eq 0 ] || echo "outcome=failed" >> "$GITHUB_OUTPUT"
 
       - name: repair the entry on a local commit, which this step never pushes
         id: rewrite
@@ -119,7 +134,7 @@ jobs:
 
       - name: catch the branch up on main on a local merge commit, which this step never pushes and which holds no secret
         id: catchup
-        if: needs.watch.outputs.kind == 'catch-up'
+        if: needs.watch.outputs.kind == 'catch-up' && steps.refresh.outputs.outcome == ''
         env:
           HEAD_SHA: ${{ needs.watch.outputs.head }}
         run: |

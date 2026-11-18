@@ -7,6 +7,28 @@ const REQUIRED_HEADERS = [
   'cross-origin-opener-policy',
 ];
 
+export const CANONICAL = [
+  '/',
+  '/services',
+  '/pricing',
+  '/approach',
+  '/about',
+  '/contact',
+  '/faq',
+  '/blog',
+  '/glossary',
+  '/resources',
+];
+
+export const MACHINE = [
+  '/robots.txt',
+  '/sitemap-index.xml',
+  '/llms.txt',
+  '/rss.xml',
+  '/feed.json',
+  '/.well-known/security.txt',
+];
+
 const finding = (check, status, detail) => ({ check, status, detail });
 
 export function checkHeaders(headers) {
