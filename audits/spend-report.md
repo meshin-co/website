@@ -1,21 +1,21 @@
 # Spend report: what writing each entry cost
 
-Generated-from: 7cda9ab
-Generated-at: 2026-11-18T07:56:04.745Z
+Generated-from: dd6245b
+Generated-at: 2026-11-18T17:13:53.271Z
 
 ## This month
 
-2026-11 so far: 1.504232 USD spent of the 25.00 USD monthly ceiling, 23.495768 USD left.
+2026-11 so far: 1.515246 USD spent of the 25.00 USD monthly ceiling, 23.484754 USD left.
 
-The figure is the spend of the UTC calendar month of 2026-11-18T07:56:04.745Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
+The figure is the spend of the UTC calendar month of 2026-11-18T17:13:53.271Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
 
 | What was paid for               | Cost (USD) |
 | ------------------------------- | ---------- |
 | Writing calls of entries        | 0.944239   |
 | Repair calls                    | 0.00       |
 | Runs that ended with no entry   | 0.533207   |
-| Spend with no generation record | 0.026786   |
-| Everything paid for             | 1.504232   |
+| Spend with no generation record | 0.0378     |
+| Everything paid for             | 1.515246   |
 
 ## About this file
 
@@ -54,8 +54,8 @@ Every entry recorded: from 2026-11-03T05:36:35.954Z, the oldest record, through 
 | Writing calls of entries        | 0.944239   |
 | Repair calls                    | 0.00       |
 | Runs that ended with no entry   | 0.533207   |
-| Spend with no generation record | 0.026786   |
-| Everything paid for             | 1.504232   |
+| Spend with no generation record | 0.0378     |
+| Everything paid for             | 1.515246   |
 
 ## Every entry
 
@@ -92,7 +92,7 @@ The model and the two rates, in USD per million tokens, that each cost was compu
 
 ## Warnings
 
-Each line below needs a person to look at it: it says what could not be counted or checked, or what does not add up. Every entry that can be counted is still counted above. The ledgers below that no generation record names are counted in the paid tables, under Spend with no generation record: 0.026786 USD together.
+Each line below needs a person to look at it: it says what could not be counted or checked, or what does not add up. Every entry that can be counted is still counted above. The ledgers below that no generation record names are counted in the paid tables, under Spend with no generation record: 0.0378 USD together.
 
 - how-should-boards-divide-ai-oversight-among-committees: its ledger records a generation of 0.003373 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it
 - how-to-allocate-shared-ai-tool-costs-across-departments: its ledger records a generation of 0.002838 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it
@@ -101,6 +101,7 @@ Each line below needs a person to look at it: it says what could not be counted 
 - how-to-run-a-quarterly-ai-tool-access-review: its ledger records a generation of 0.003474 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it
 - how-to-sandbox-ai-agent-code-execution: its ledger records a generation of 0.002856 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it
 - how-to-set-ai-chat-retention-rules: its ledger records a generation of 0.00316 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it
+- when-should-a-business-disclose-ai-use-to-customers: its ledger records a generation of 0.011014 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it
 
 ## Notes
 
