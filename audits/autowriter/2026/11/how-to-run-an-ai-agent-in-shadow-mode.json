@@ -12,9 +12,9 @@
     "costUsd": 0.071265
   },
   "verdict": {
-    "state": "open",
+    "state": "merged",
     "reason": null,
-    "decidedAt": null
+    "decidedAt": "2026-11-18T05:33:37.417Z"
   },
   "escalations": [],
   "generation": {
@@ -241,5 +241,11 @@
       "against": "/blog/adoption-telemetry-measuring-if-ai-is-actually-used",
       "detail": "the topic \"How to retire an AI tool safely\" repeats /blog/adoption-telemetry-measuring-if-ai-is-actually-used (\"Adoption telemetry for AI tools: what a trial found\"): its subject shares ai, tool, 2 of the 4 stems of the smaller one, a containment of 0.50 against the threshold of 0.5"
     }
-  ]
+  ],
+  "measurementDebt": {
+    "mergedCommit": "70cba2d7e5fcdd5ba39eb2ac89909beb222ef04f",
+    "fingerprint": "b056ea69f76166f464576d642afafb9ce1a4562dccefc8a347d163fa76f271dc",
+    "recordedAt": "2026-11-18T05:33:37.417Z",
+    "clear": "cd site && GATE_PHASE=<bucket> npm run gate:lh && GATE_PHASE=<bucket> npm run lh:record"
+  }
 }
