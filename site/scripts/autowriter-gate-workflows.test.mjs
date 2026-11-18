@@ -30,6 +30,16 @@ const PUSH_WITH_DEFAULT_TOKEN = [
   '        run: git push origin HEAD',
   '',
 ].join('\n');
+const COMMIT_STATE_WITHOUT_CHECKOUT = [
+  'jobs:',
+  '  record:',
+  '    runs-on: ubuntu-latest',
+  '    steps:',
+  '      - uses: actions/checkout@v4',
+  '      - name: record the claim',
+  '        run: node scripts/commit-state.mjs --message x --path state/claims/2026/11/a.json',
+  '',
+].join('\n');
 const LAST_PUSH_ONLY = WORKFLOW.replace(
   'BEFORE: ${{ github.event.pull_request.base.sha || github.event.before }}',
   'BEFORE: ${{ github.event.before }}'
@@ -78,6 +88,18 @@ test('a step that pushes with the default token is named with its workflow file,
   assert.equal(found.rule, 'bot-push-token');
   assert.equal(found.path, planted.path);
   assert.match(found.detail, PUBLISH_FINDING);
+});
+
+test('a step that runs commit-state with no checkout of the state branch is named with its workflow file, its job and its step', () => {
+  const planted = publishFile(COMMIT_STATE_WITHOUT_CHECKOUT, '.github/workflows/record.yml');
+  const [found, ...others] = findings(CI_FILE, planted);
+  assert.deepEqual(others, []);
+  assert.equal(found.rule, 'state-checkout');
+  assert.equal(found.path, planted.path);
+  assert.match(
+    found.detail,
+    /^job record, step "record the claim": its job has no checkout of autowriter-state at state\//
+  );
 });
 
 test('a changes job that judges a pull request by its last push is named with the workflow it is in', () => {

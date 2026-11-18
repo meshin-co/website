@@ -101,6 +101,7 @@ test('the specimen module names every failure mode of the gate, each against gat
     'autowriterCommitWritesLighthouseRecord',
     'autowriterCommitWritesLighthouseReport',
     'autowriterCommitWritesLighthouseStamp',
+    'autowriterCommitWritesStateRecord',
     'autowriterEscalationFailed',
     'autowriterEscalationUnreceipted',
     'autowriterExceptedCommitTouchesAThirdPath',
@@ -124,6 +125,7 @@ test('the specimen module names every failure mode of the gate, each against gat
     'autowriterSpendReportEdited',
     'autowriterSpendReportStale',
     'autowriterSpendReportUnstamped',
+    'autowriterStateCommittedWithoutCheckout',
   ]);
   const tokens = NAMES.map((name) => SPECIMENS[name].token);
   assert.equal(new Set(tokens).size, tokens.length, 'two specimens share a token');
@@ -426,6 +428,7 @@ const WORKFLOW_MESSAGES = [
     'AUTOWRITER classifier-judges-last-push ' + WORKFLOW + ': ',
     'github.event.pull_request.base.sha',
   ],
+  ['autowriterStateCommittedWithoutCheckout', 'AUTOWRITER state-checkout ' + WORKFLOW + ': ', 'autowriter-state'],
 ];
 
 for (const [name, start, mention] of WORKFLOW_MESSAGES) {

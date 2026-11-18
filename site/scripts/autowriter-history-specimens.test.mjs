@@ -55,6 +55,12 @@ const REFUSED = [
     id: 'lighthouse-report',
   },
   {
+    name: 'autowriterCommitWritesStateRecord',
+    family: 'autowriter-commit-writes-a-state-record',
+    path: 'state/ledger/2026/11/zz-specimen.json',
+    id: 'state-record',
+  },
+  {
     name: 'autowriterCommitAnUnregisteredPath',
     family: 'autowriter-commit-an-unregistered-path',
     path: 'audits/zz-specimen-derived.json',

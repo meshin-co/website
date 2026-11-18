@@ -1,12 +1,13 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
-import { commitAndPush, runGit } from './commit-to-main.mjs';
+import { commitToBranch } from './commit-branch.mjs';
 import { variable } from './escalate-channels.mjs';
 import { BRANCH_PREFIX, branchFor, commitMessage, pullRequestBody, pullRequestTitle } from './link-repair-report.mjs';
 import { BOT_IDENTITY } from './pr-classify.mjs';
 import { createApi, dispatchSuccessor } from './pr-github.mjs';
 import { WORKFLOW } from './pr-watch.mjs';
+import { runGit } from './run-git.mjs';
 
 export const SECRET = 'AUTOWRITER_PAT';
 export const BASE_BRANCH = 'main';
@@ -68,7 +69,7 @@ export async function publishRepair({
   today,
   env,
   run = runGit,
-  commit = commitAndPush,
+  commit = commitToBranch,
   settle = noSettle,
 }) {
   const step = gitStep(run, repoRoot);
