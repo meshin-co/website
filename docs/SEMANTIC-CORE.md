@@ -75,7 +75,7 @@ title `{spec name} specification {version} — meshin.co` · meta: what the vers
 | `/spec/evals-baseline`     | evals-baseline specification     | evals-baseline specification — meshin.co     | Every published version of the evals-baseline specification, and the address to cite for each.                                                         | evals-baseline specification     | 23    | ✓       |
 | `/spec/evals-baseline/1.0` | evals-baseline specification 1.0 | evals-baseline specification 1.0 — meshin.co | The evals-baseline specification 1.0 says what a regression in an agent evaluation is, and defines the baseline file, the findings and the exit codes. | evals-baseline specification 1.0 | 26    | ✓       |
 
-### article (26)
+### article (27)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
@@ -106,6 +106,7 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/multi-agent-reference-architecture-in-production`           | multi-agent reference architecture production              | Multi-agent reference architecture in production — meshin.co           | What the sources say about multi-agent systems in production: where vendors agree, where they split, and what the research did not find.              | Multi-agent reference architecture in production           | 41    | ✓       |
 | `/blog/named-person-responsible-for-ai-risk-in-vendor-procurement` | named person responsible for ai risk in vendor procurement | Named person responsible for AI risk in vendor procurement — meshin.co | How a named AI risk owner coordinates vendor review, records decisions, and answers customer procurement questions.                                   | Named person responsible for AI risk in vendor procurement | 36    | ✓       |
 | `/blog/what-should-a-board-request-in-a-quarterly-ai-risk-report`  | what should a board request in a quarterly ai risk report  | What should a board request in a quarterly AI risk report? — meshin.co | What boards should request in a quarterly AI risk report, from material exposures and control evidence to incidents and decisions.                    | What should a board request in a quarterly AI risk report? | 31    | ✓       |
+| `/blog/when-should-a-business-disclose-ai-use-to-customers`        | when should a business disclose ai use to customers        | When should a business disclose AI use to customers? — meshin.co       | Decide when to tell customers about AI use, where to place the notice, and how to keep it accurate.                                                   | When should a business disclose AI use to customers?       | 31    | ✓       |
 | `/blog/why-your-ai-pilot-never-reached-production`                 | ai pilot never reached production                          | Why your AI pilot never reached production — meshin.co                 | Most AI pilots stall on ownership, data rules and a missing outcome metric, not the model. Here is what has to be true before one reaches production. | Why your AI pilot never reached production                 | 32    | ✓       |
 
 ### blog-category (4)
@@ -446,15 +447,15 @@ One owning route per entity. The mention count is inbound references from other 
 | Entity                         | Owned by                                   | Mentioned by |
 | ------------------------------ | ------------------------------------------ | ------------ |
 | Agentic workflow               | `/glossary/agentic-workflow`               | 15           |
-| AI governance                  | `/glossary/ai-governance`                  | 47           |
+| AI governance                  | `/glossary/ai-governance`                  | 48           |
 | AI impact assessment           | `/glossary/ai-impact-assessment`           | 3            |
 | AI management system           | `/glossary/ai-management-system`           | 7            |
 | AI operating model             | `/glossary/ai-operating-model`             | 22           |
-| AI register                    | `/glossary/ai-register`                    | 41           |
+| AI register                    | `/glossary/ai-register`                    | 42           |
 | Conformity assessment          | `/glossary/conformity-assessment`          | 5            |
 | Data classification            | `/glossary/data-classification`            | 17           |
 | DPIA                           | `/glossary/dpia`                           | 6            |
-| EU AI Act                      | `/glossary/eu-ai-act`                      | 42           |
+| EU AI Act                      | `/glossary/eu-ai-act`                      | 43           |
 | Evals                          | `/glossary/evals`                          | 46           |
 | Guardrails                     | `/glossary/guardrails`                     | 7            |
 | Hallucination rate             | `/glossary/hallucination-rate`             | 4            |
