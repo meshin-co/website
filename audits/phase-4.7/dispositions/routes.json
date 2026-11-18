@@ -34,14 +34,14 @@
     "location": "head.title",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "2bd584a4253b"
+    "digest": "5d1ccd69a402"
   },
   {
     "target": "/blog",
     "location": "body.p",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "2bd584a4253b"
+    "digest": "5d1ccd69a402"
   },
   {
     "target": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
@@ -54,14 +54,14 @@
     "location": "head.title",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "00aa674bb6fc"
+    "digest": "9d271bb9f764"
   },
   {
     "target": "/blog/category/agentic-architecture",
     "location": "body.p",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "00aa674bb6fc"
+    "digest": "9d271bb9f764"
   },
   {
     "target": "/blog/category/executive",
@@ -102,14 +102,14 @@
     "location": "head.title",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "ea871f430046"
+    "digest": "2fc233adb431"
   },
   {
     "target": "/blog/evals-in-ci-for-llm-agents",
     "location": "body.p",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "ea871f430046"
+    "digest": "2fc233adb431"
   },
   {
     "target": "/blog/how-to-build-an-ai-system-register-in-a-week",
@@ -128,21 +128,21 @@
     "location": "head.title",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "3e9a34359a46"
+    "digest": "ede255fd607e"
   },
   {
     "target": "/blog/tag/agentic-architecture",
     "location": "body.h1",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "3e9a34359a46"
+    "digest": "ede255fd607e"
   },
   {
     "target": "/blog/tag/agentic-architecture",
     "location": "body.p",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "3e9a34359a46"
+    "digest": "ede255fd607e"
   },
   {
     "target": "/blog/tag/ai-governance",
@@ -266,21 +266,21 @@
     "location": "head.title",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "04d01a6abc0e"
+    "digest": "c33b16879856"
   },
   {
     "target": "/blog/tag/production-readiness",
     "location": "body.h1",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "04d01a6abc0e"
+    "digest": "c33b16879856"
   },
   {
     "target": "/blog/tag/production-readiness",
     "location": "body.p",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "04d01a6abc0e"
+    "digest": "c33b16879856"
   },
   {
     "target": "/blog/tag/security-review",
