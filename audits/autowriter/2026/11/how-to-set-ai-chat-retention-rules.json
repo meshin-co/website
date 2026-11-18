@@ -13,8 +13,8 @@
   },
   "verdict": {
     "state": "escalated",
-    "reason": "Autowriter pull request #137: the repair job failed before it could finish",
-    "decidedAt": "2026-11-18T08:02:12.191Z"
+    "reason": "Autowriter pull request #137: the watcher has been waiting longer than a pull request may take to settle",
+    "decidedAt": "2026-11-18T13:09:07.025Z"
   },
   "escalations": [
     {
@@ -30,6 +30,31 @@
           "delivered": true,
           "status": 201,
           "issue": 162,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "esc-2",
+      "kind": "no-convergence",
+      "title": "Autowriter pull request #137: the watcher has been waiting longer than a pull request may take to settle",
+      "detail": "The watcher judged head b20b2a0d02a7fde4288107ca0bdec6ba0d14dd79: escalate, chain-too-old.\nPull request: https://github.com/meshin-co/website/pull/137",
+      "raisedAt": "2026-11-18T13:09:06.468Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-18T13:09:06.468Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 164,
+          "error": null
+        },
+        {
+          "channel": "slack",
+          "attemptedAt": "2026-11-18T13:09:06.933Z",
+          "delivered": true,
+          "status": 200,
+          "issue": null,
           "error": null
         }
       ]
