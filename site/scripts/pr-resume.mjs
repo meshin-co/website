@@ -1,5 +1,6 @@
 import { ledgerText, ledgerWithResume, verdictInForce } from './autowriter-ledger.mjs';
 import { needsFullGraph } from './build-surface.mjs';
+import { createChains } from './pr-chains.mjs';
 import { BOT_IDENTITY, HOLD_LABEL, foreignCommit, isOwnBranch, slugOfBranch } from './pr-classify.mjs';
 import {
   GitHubError,
@@ -7,15 +8,18 @@ import {
   commentOnIssue,
   createApi,
   dispatchSuccessor,
+  listIssueComments,
   listOpenIssues,
   listOpenPullRequests,
   listRecentCommits,
+  listWatcherRuns,
   putLedger,
   readBranchCommits,
   readCommitFiles,
   readLedgerAt,
   readPullRequest,
 } from './pr-github.mjs';
+import { isRepairFailure, repairFailureResumeSpent } from './pr-resume-repair-failed.mjs';
 import { WORKFLOW } from './pr-watch.mjs';
 
 export const RESUME_CAP = 2;
@@ -24,6 +28,7 @@ export const RESUME_REASONS = [
   'not-escalated',
   'not-resumable-kind',
   'cap-reached',
+  'resume-spent',
   'no-main-change-since-decision',
   'human-touched',
   'already-resumed',
@@ -33,9 +38,11 @@ export const GITHUB = {
   closeIssue,
   commentOnIssue,
   dispatchSuccessor,
+  listIssueComments,
   listOpenIssues,
   listOpenPullRequests,
   listRecentCommits,
+  listWatcherRuns,
   putLedger,
   readBranchCommits,
   readCommitFiles,
@@ -49,6 +56,7 @@ const FAILING_LINE = /^Failing: (.+)\.$/m;
 const GATE_SUFFIX = / \(gate:[a-z0-9:-]+\)$/;
 const ESCALATION_ISSUE_TITLE = /^Autowriter pull request #(\d+): /;
 const ESCALATION_ISSUE_AUTHOR = 'github-actions[bot]';
+const SPENT_NOTE = 'not resumed: the one resume a failed repair gets was already spent';
 const SHORT_SHA = 7;
 
 const stop = (reason) => ({ resume: false, reason });
@@ -58,6 +66,7 @@ const heldRunResumed = (ledger) => resumes(ledger).some(({ by }) => by === 'appr
 
 export function resumableReasonOf({ escalations }) {
   const last = escalations.at(-1);
+  if (last !== undefined && isRepairFailure(last)) return 'repair-failed';
   const reason = WATCHER_JUDGEMENT.exec(last?.detail ?? '')?.[1];
   return reason !== undefined && KIND_OF_RESUMABLE_REASON[reason] === last.kind ? reason : null;
 }
@@ -90,6 +99,7 @@ export function resumeDecision({ ledger, commitsOnBranch, mainChanges, forced = 
   if (automaticResumes(ledger) >= RESUME_CAP) return stop('cap-reached');
   if (forced) return { resume: true, by: 'owner' };
   if (reason === 'approval-required' && !heldRunResumed(ledger)) return { resume: true, by: 'approval-held' };
+  if (reason === 'repair-failed' && repairFailureResumeSpent(ledger)) return stop('resume-spent');
   if (mainChangeSince(ledger, mainChanges, now) === null) return stop('no-main-change-since-decision');
   return { resume: true, by: 'main-change' };
 }
@@ -100,10 +110,14 @@ const heldByPerson = ({ draft, labels }) => draft === true || labels.some(({ nam
 const isEscalationIssue = ({ user, title }) =>
   user.login === ESCALATION_ISSUE_AUTHOR && ESCALATION_ISSUE_TITLE.test(title);
 const awaitsMain = (ledger) => ledger !== null && ledger.verdict.state === 'escalated' && verdictInForce(ledger);
+const awaitsWatcher = (ledger) =>
+  ledger !== null &&
+  (ledger.verdict.state === 'open' || (ledger.verdict.state === 'escalated' && !verdictInForce(ledger)));
 const escalationIssueOf = ({ escalations }) =>
   escalations.at(-1)?.receipts.find(({ channel, delivered }) => channel === 'issue' && delivered)?.issue ?? null;
 const resumeComment = ({ by, mainSha }) => `resumed: ${by}${mainSha === null ? '' : `, main ${shortSha(mainSha)}`}`;
 const failure = (subject, error, extra = {}) => ({ kind: 'failed', subject, message: error.message, ...extra });
+const left = (pull, reason) => ({ kind: 'left', pullRequest: pull.number, reason });
 
 async function attempted(what, action, remedy = '') {
   try {
@@ -133,6 +147,7 @@ async function asItems(subject, action) {
 export function createResumeSweep({ io = GITHUB, reader, writer, ref, now = () => new Date() }) {
   const filesOfCommit = new Map();
   let recentCommits;
+  let chains;
 
   const filesOf = (sha) => {
     if (!filesOfCommit.has(sha)) filesOfCommit.set(sha, io.readCommitFiles(reader, sha));
@@ -145,6 +160,15 @@ export function createResumeSweep({ io = GITHUB, reader, writer, ref, now = () =
     const after = mainCommitsAfterVerdict(ledger, await recent(), now());
     if (after.length > MAIN_COMMIT_LIMIT) return after.map((commit) => ({ ...commit, files: null }));
     return Promise.all(after.map(async (commit) => ({ ...commit, files: await filesOf(commit.sha) })));
+  }
+
+  async function startWatcher(pull) {
+    await chains.began(pull.number);
+    return attempted(
+      'the watcher was not dispatched',
+      () => io.dispatchSuccessor(writer, { workflow: WORKFLOW, ref, inputs: { pr: String(pull.number) } }),
+      `; start it with: gh workflow run ${WORKFLOW} -f pr=${pull.number}`
+    );
   }
 
   async function resume({ pull, record, slug, by, change }) {
@@ -164,28 +188,39 @@ export function createResumeSweep({ io = GITHUB, reader, writer, ref, now = () =
       identity: BOT_IDENTITY,
     });
     const issue = escalationIssueOf(ledger);
-    const steps = [
-      ...(issue === null
-        ? []
-        : [
-            [
-              `the escalation issue #${issue} was not told`,
-              () => io.commentOnIssue(reader, { number: issue, body: resumeComment(entry) }),
-              '',
-            ],
-          ]),
-      [
-        'the watcher was not dispatched',
-        () => io.dispatchSuccessor(writer, { workflow: WORKFLOW, ref, inputs: { pr: String(pull.number) } }),
-        `; start it with: gh workflow run ${WORKFLOW} -f pr=${pull.number}`,
-      ],
-    ];
-    const problems = [];
-    for (const [what, action, remedy] of steps) {
-      const problem = await attempted(what, action, remedy);
-      if (problem !== null) problems.push(problem);
-    }
+    const told =
+      issue === null
+        ? null
+        : await attempted(`the escalation issue #${issue} was not told`, () =>
+            io.commentOnIssue(reader, { number: issue, body: resumeComment(entry) })
+          );
+    const problems = [told, await startWatcher(pull)].filter((problem) => problem !== null);
     return { kind: 'resumed', pullRequest: pull.number, by, mainSha: entry.mainSha, problems };
+  }
+
+  async function tellSpent(ledger) {
+    const issue = escalationIssueOf(ledger);
+    if (issue === null) return;
+    const comments = await io.listIssueComments(reader, { number: issue });
+    if (!comments.some(({ body }) => body === SPENT_NOTE))
+      await io.commentOnIssue(reader, { number: issue, body: SPENT_NOTE });
+  }
+
+  async function keepWatched(pull, commitsOnBranch) {
+    if (heldByPerson(pull) || foreignCommit(commitsOnBranch) !== undefined) return left(pull, 'human-touched');
+    const refusal = await chains.refusal(pull.number, false);
+    if (refusal !== null) return left(pull, refusal);
+    const problem = await startWatcher(pull);
+    if (problem !== null) return failure(`#${pull.number}`, new Error(problem), { pullRequest: pull.number });
+    return { kind: 'started', pullRequest: pull.number };
+  }
+
+  async function leftAsIs({ pull, ledger, commitsOnBranch, reason, forced }) {
+    if (!forced && awaitsWatcher(ledger)) return keepWatched(pull, commitsOnBranch);
+    if (reason !== 'resume-spent') return left(pull, reason);
+    if (heldByPerson(pull)) return left(pull, 'human-touched');
+    await tellSpent(ledger);
+    return left(pull, reason);
   }
 
   async function consider(pull, { forced }) {
@@ -195,8 +230,10 @@ export function createResumeSweep({ io = GITHUB, reader, writer, ref, now = () =
     const commitsOnBranch = await io.readBranchCommits(reader, pull.number);
     const mainChanges = !forced && awaitsMain(ledger) ? await mainChangesFor(ledger) : [];
     const decision = resumeDecision({ ledger, commitsOnBranch, mainChanges, forced, now: now() });
-    if (!decision.resume) return { kind: 'left', pullRequest: pull.number, reason: decision.reason };
-    if (!forced && heldByPerson(pull)) return { kind: 'left', pullRequest: pull.number, reason: 'human-touched' };
+    if (!decision.resume) return leftAsIs({ pull, ledger, commitsOnBranch, reason: decision.reason, forced });
+    if (!forced && heldByPerson(pull)) return left(pull, 'human-touched');
+    const refusal = await chains.refusal(pull.number, forced);
+    if (refusal !== null) return left(pull, refusal);
     const change = decision.by === 'main-change' ? mainChangeSince(ledger, mainChanges, now()) : null;
     return resume({ pull, record, slug, by: decision.by, change });
   }
@@ -206,7 +243,8 @@ export function createResumeSweep({ io = GITHUB, reader, writer, ref, now = () =
 
   async function resumeOpenPullRequests() {
     const items = [];
-    for (const pull of (await io.listOpenPullRequests(reader)).filter(isOwnBranch))
+    const open = (await io.listOpenPullRequests(reader)).filter(isOwnBranch);
+    for (const pull of open.sort((first, second) => first.number - second.number))
       items.push(await considered(pull, { forced: false }));
     return items;
   }
@@ -245,6 +283,7 @@ export function createResumeSweep({ io = GITHUB, reader, writer, ref, now = () =
   }
 
   async function run({ pullRequest = null } = {}) {
+    chains = createChains(() => io.listWatcherRuns(reader, { workflow: WORKFLOW }));
     if (pullRequest !== null) return [await resumeNamed(pullRequest)];
     return [
       ...(await asItems('the open pull requests', resumeOpenPullRequests)),
