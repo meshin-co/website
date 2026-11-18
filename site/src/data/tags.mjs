@@ -6,7 +6,15 @@ export const TAGS = [
   { slug: 'ai-governance', name: 'AI governance' },
   { slug: 'ai-pilots', name: 'AI pilots' },
   { slug: 'ai-register', name: 'AI register' },
-  { slug: 'evals-in-ci', name: 'Evals in CI' },
+  {
+    slug: 'evals-in-ci',
+    name: 'Evals in CI',
+    reference: {
+      text: 'A regression in an agent evaluation has a public definition.',
+      label: 'Read the evals-baseline specification 1.0',
+      href: '/spec/evals-baseline/1.0',
+    },
+  },
   { slug: 'eu-ai-act', name: 'EU AI Act' },
   { slug: 'llm-as-judge', name: 'LLM as judge' },
   { slug: 'policy-enforcement', name: 'Policy enforcement' },

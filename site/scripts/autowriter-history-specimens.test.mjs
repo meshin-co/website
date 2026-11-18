@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join, relative, resolve } from 'node:path';
 import { test } from 'node:test';
 
-import { historySpecimens } from './autowriter-history-specimens.mjs';
+import { FORGIVEN_POST, historySpecimens } from './autowriter-history-specimens.mjs';
 import { sealSignature } from './autowriter-refusals.mjs';
 import { autowriterSpecimens } from './autowriter-specimens.mjs';
 import { BOT, HUMAN, commitAs, gitIn, initRepo, removeRepos, shallowClone } from './fixtures/history-repo.mjs';
@@ -60,6 +60,13 @@ const REFUSED = [
     path: 'audits/zz-specimen-derived.json',
     id: 'unregistered-path',
     token: `unregistered-path-committed ${RECORD}: touched audits/zz-specimen-derived.json, which is not this run's own`,
+  },
+  {
+    name: 'autowriterCommitReusesAForgivenPath',
+    family: 'autowriter-commit-reuses-a-forgiven-path',
+    path: FORGIVEN_POST,
+    id: 'unregistered-path',
+    token: `unregistered-path-committed ${RECORD}: touched ${FORGIVEN_POST}, which is not this run's own`,
   },
 ];
 const SEAL = { name: 'autowriterCommitSealsDispositions', family: 'autowriter-commit-seals-dispositions' };

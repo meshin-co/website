@@ -2,8 +2,8 @@
   {
     "target": "/",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/index.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [frontmatter.description] now \"Agent evals CI starter: a four-field eval case format and a description of the pull-request gate that blocks a merge below a pass-rate floor you set.\" (source row: service-resource.json#3);  [frontmatter.description] now \"AI governance starter kit: a table of who signs each document a security review asks for, six vendor questionnaire topics and an incident call order.\" (was \"AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire.\") (source row: service-resource.json#4);  [body.p] now \"kit · v0.1\" (was \"kit · v0.1 · MIT\");  [body.p] now \"scorecard · v0.1\" (was \"scorecard · v0.1 · MIT\");  [frontmatter.description] no longer rendered: \"A starter CI pipeline for agent evals. It runs on every pull request and blocks a bad merge before it ships, using a plain YAML case format.\"; The card type lines lost their licence label (\"kit · v0.1 · MIT\" became \"kit · v0.1\"): change 18 withdrew \"MIT\" because no licence exists on any public page of the kit (all seven github.com/meshin-co/<slug> URLs return 404 and the organisation's one repository has \"license\": null on api.github.com, checked 2026-10-31). The owner's recorded licence answers on COPY-CHECKLIST 6.3 and 16.8 are untouched. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand.",
-    "digest": "feeebb1a22e0"
+    "reason": "Re-read 2026-10-31 in dist/index.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [frontmatter.description] now \"Agent evals CI starter: a four-field eval case format and a description of the pull-request gate that blocks a merge below a pass-rate floor you set.\" (source row: service-resource.json#3);  [frontmatter.description] now \"AI governance starter kit: a table of who signs each document a security review asks for, six vendor questionnaire topics and an incident call order.\" (was \"AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire.\") (source row: service-resource.json#4);  [body.p] now \"kit · v0.1\" (was \"kit · v0.1 · MIT\");  [body.p] now \"scorecard · v0.1\" (was \"scorecard · v0.1 · MIT\");  [frontmatter.description] no longer rendered: \"A starter CI pipeline for agent evals. It runs on every pull request and blocks a bad merge before it ships, using a plain YAML case format.\"; The card type lines lost their licence label (\"kit · v0.1 · MIT\" became \"kit · v0.1\"): change 18 withdrew \"MIT\" because no licence exists on any public page of the kit (all seven github.com/meshin-co/<slug> URLs return 404 and the organisation's one repository has \"license\": null on api.github.com, checked 2026-10-31). The owner's recorded licence answers on COPY-CHECKLIST 6.3 and 16.8 are untouched. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand. Re-read 2026-11-11 in dist/index.html (clean build of the working tree). The shared status line changed from \"Available as a page on this site. A repository copy is not published yet.\" to \"Available as a page on this site. There is no repository copy.\" (owner decision of 2026-11-10: no link to a repository that does not exist, and no promise of one or of a date). The new line states what is true today, an on-site page and no repository copy, and carries no promise. No other row of this target changed. Re-read 2026-11-11 in dist/index.html (clean build of the working tree). Change 47 (locked decision L75: text is CC BY 4.0, code is MIT) gave every resource entry a license field, and the two card type lines on this route regained a licence label: [body.p] now \"kit · v0.1 · CC-BY-4.0\" (was \"kit · v0.1\") and [body.p] now \"scorecard · v0.1 · CC-BY-4.0\" (was \"scorecard · v0.1\"). The label is true and resolves. All seven entries are prose and tables and ship no code, so CC BY 4.0 is the licence of what each card offers; the Content section of /terms states that grant; and the text ships at dist/licenses/CC-BY-4.0.txt, which the build requires of every declared licence. Change 18 withdrew the label because no licence existed on any public page of the kit; one now does. COPY-CHECKLIST 6.3 (\"MIT assumed\") and 16.8 (\"Page-only, MIT, v0.1\") still read MIT; they are the owner's rows and are not edited here. No other row of this target changed.",
+    "digest": "e91da5146d83"
   },
   {
     "target": "/404",
@@ -34,48 +34,48 @@
     "location": "head.title",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-ai-chat-retention-rules (generation record audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "8322692e1ddd"
+    "digest": "76e70f9beed6"
   },
   {
     "target": "/blog",
     "location": "body.p",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-ai-chat-retention-rules (generation record audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "8322692e1ddd"
+    "digest": "76e70f9beed6"
   },
   {
     "target": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-ai-chat-retention-rules (generation record audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "1dba7cf74d81"
+    "digest": "61b9b23f8f9f"
   },
   {
     "target": "/blog/category/agentic-architecture",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "497cab5a4571"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "9d271bb9f764"
   },
   {
     "target": "/blog/category/agentic-architecture",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "497cab5a4571"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "9d271bb9f764"
   },
   {
     "target": "/blog/category/executive",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/board-memo-ai-strategy-one-page (generation record audits/autowriter/generations/2026/11/board-memo-ai-strategy-one-page.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "ba0fb512882d"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-can-boards-verify-ai-cost-savings and /blog/what-should-a-board-request-in-a-quarterly-ai-risk-report (generation records audits/autowriter/generations/2026/11/how-can-boards-verify-ai-cost-savings.json and audits/autowriter/generations/2026/11/what-should-a-board-request-in-a-quarterly-ai-risk-report.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "bee0ea8c7574"
   },
   {
     "target": "/blog/category/executive",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/board-memo-ai-strategy-one-page (generation record audits/autowriter/generations/2026/11/board-memo-ai-strategy-one-page.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "ba0fb512882d"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-can-boards-verify-ai-cost-savings and /blog/what-should-a-board-request-in-a-quarterly-ai-risk-report (generation records audits/autowriter/generations/2026/11/how-can-boards-verify-ai-cost-savings.json and audits/autowriter/generations/2026/11/what-should-a-board-request-in-a-quarterly-ai-risk-report.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "bee0ea8c7574"
   },
   {
     "target": "/blog/category/governance",
@@ -87,35 +87,35 @@
     "target": "/blog/category/operating-model",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-readiness-assessment-template-for-smb (generation record audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "058652818f6a"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-generated-customer-support-replies and /blog/how-to-review-ai-vendor-model-updates-after-deployment (generation records audits/autowriter/generations/2026/11/how-to-review-ai-generated-customer-support-replies.json and audits/autowriter/generations/2026/11/how-to-review-ai-vendor-model-updates-after-deployment.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "28776f0ea711"
   },
   {
     "target": "/blog/category/operating-model",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-readiness-assessment-template-for-smb (generation record audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "058652818f6a"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-generated-customer-support-replies and /blog/how-to-review-ai-vendor-model-updates-after-deployment (generation records audits/autowriter/generations/2026/11/how-to-review-ai-generated-customer-support-replies.json and audits/autowriter/generations/2026/11/how-to-review-ai-vendor-model-updates-after-deployment.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "28776f0ea711"
   },
   {
     "target": "/blog/evals-in-ci-for-llm-agents",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "fa396eb6ba65"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "2fc233adb431"
   },
   {
     "target": "/blog/evals-in-ci-for-llm-agents",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "fa396eb6ba65"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "2fc233adb431"
   },
   {
     "target": "/blog/how-to-build-an-ai-system-register-in-a-week",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-ai-chat-retention-rules (generation record audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "3e0f0c4554d5"
+    "digest": "3077c022849c"
   },
   {
     "target": "/blog/tag/acceptable-use-policy",
@@ -127,85 +127,85 @@
     "target": "/blog/tag/agentic-architecture",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "e29318e6d267"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "ede255fd607e"
   },
   {
     "target": "/blog/tag/agentic-architecture",
     "location": "body.h1",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "e29318e6d267"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "ede255fd607e"
   },
   {
     "target": "/blog/tag/agentic-architecture",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "e29318e6d267"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "ede255fd607e"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "head.title",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-ai-chat-retention-rules (generation record audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "b9bf3deba9b8"
+    "digest": "75fcb365548f"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "body.h1",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-ai-chat-retention-rules (generation record audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "b9bf3deba9b8"
+    "digest": "75fcb365548f"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "body.p",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-ai-chat-retention-rules (generation record audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "b9bf3deba9b8"
+    "digest": "75fcb365548f"
   },
   {
     "target": "/blog/tag/ai-pilots",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/board-memo-ai-strategy-one-page (generation record audits/autowriter/generations/2026/11/board-memo-ai-strategy-one-page.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "36d8332efd98"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-can-boards-verify-ai-cost-savings (generation record audits/autowriter/generations/2026/11/how-can-boards-verify-ai-cost-savings.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "049a40f95e36"
   },
   {
     "target": "/blog/tag/ai-pilots",
     "location": "body.h1",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/board-memo-ai-strategy-one-page (generation record audits/autowriter/generations/2026/11/board-memo-ai-strategy-one-page.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "36d8332efd98"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-can-boards-verify-ai-cost-savings (generation record audits/autowriter/generations/2026/11/how-can-boards-verify-ai-cost-savings.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "049a40f95e36"
   },
   {
     "target": "/blog/tag/ai-pilots",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/board-memo-ai-strategy-one-page (generation record audits/autowriter/generations/2026/11/board-memo-ai-strategy-one-page.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "36d8332efd98"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-can-boards-verify-ai-cost-savings (generation record audits/autowriter/generations/2026/11/how-can-boards-verify-ai-cost-savings.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "049a40f95e36"
   },
   {
     "target": "/blog/tag/ai-register",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/named-person-responsible-for-ai-risk-in-vendor-procurement (generation record audits/autowriter/generations/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "c5349f0f9341"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/what-should-a-board-request-in-a-quarterly-ai-risk-report (generation record audits/autowriter/generations/2026/11/what-should-a-board-request-in-a-quarterly-ai-risk-report.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "a0566160d14e"
   },
   {
     "target": "/blog/tag/ai-register",
     "location": "body.h1",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/named-person-responsible-for-ai-risk-in-vendor-procurement (generation record audits/autowriter/generations/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "c5349f0f9341"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/what-should-a-board-request-in-a-quarterly-ai-risk-report (generation record audits/autowriter/generations/2026/11/what-should-a-board-request-in-a-quarterly-ai-risk-report.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "a0566160d14e"
   },
   {
     "target": "/blog/tag/ai-register",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/named-person-responsible-for-ai-risk-in-vendor-procurement (generation record audits/autowriter/generations/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "c5349f0f9341"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/what-should-a-board-request-in-a-quarterly-ai-risk-report (generation record audits/autowriter/generations/2026/11/what-should-a-board-request-in-a-quarterly-ai-risk-report.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "a0566160d14e"
   },
   {
     "target": "/blog/tag/eu-ai-act",
@@ -232,22 +232,22 @@
     "target": "/blog/tag/evals-in-ci",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "10f04d3be99f"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-vendor-model-updates-after-deployment and /blog/how-to-stop-ai-agents-getting-stuck-in-loops (generation records audits/autowriter/generations/2026/11/how-to-review-ai-vendor-model-updates-after-deployment.json and audits/autowriter/generations/2026/11/how-to-stop-ai-agents-getting-stuck-in-loops.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "5787b511c47c"
   },
   {
     "target": "/blog/tag/evals-in-ci",
     "location": "body.h1",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "10f04d3be99f"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-vendor-model-updates-after-deployment and /blog/how-to-stop-ai-agents-getting-stuck-in-loops (generation records audits/autowriter/generations/2026/11/how-to-review-ai-vendor-model-updates-after-deployment.json and audits/autowriter/generations/2026/11/how-to-stop-ai-agents-getting-stuck-in-loops.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "5787b511c47c"
   },
   {
     "target": "/blog/tag/evals-in-ci",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "10f04d3be99f"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-vendor-model-updates-after-deployment and /blog/how-to-stop-ai-agents-getting-stuck-in-loops (generation records audits/autowriter/generations/2026/11/how-to-review-ai-vendor-model-updates-after-deployment.json and audits/autowriter/generations/2026/11/how-to-stop-ai-agents-getting-stuck-in-loops.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "5787b511c47c"
   },
   {
     "target": "/blog/tag/llm-as-judge",
@@ -259,34 +259,34 @@
     "target": "/blog/tag/policy-enforcement",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-ai-chat-retention-rules (generation record audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "5217a313e15e"
+    "digest": "75afef915e4b"
   },
   {
     "target": "/blog/tag/production-readiness",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "4021abd9556e"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "c33b16879856"
   },
   {
     "target": "/blog/tag/production-readiness",
     "location": "body.h1",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "4021abd9556e"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "c33b16879856"
   },
   {
     "target": "/blog/tag/production-readiness",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "4021abd9556e"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "c33b16879856"
   },
   {
     "target": "/blog/tag/security-review",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-ai-chat-retention-rules (generation record audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "ccaef54a998c"
+    "digest": "315502f6b362"
   },
   {
     "target": "/blog/tag/shadow-ai",
@@ -319,15 +319,15 @@
     "target": "/blog/why-your-ai-pilot-never-reached-production",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-readiness-assessment-template-for-smb (generation record audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "bd80559437c5"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-generated-customer-support-replies and /blog/how-to-review-ai-vendor-model-updates-after-deployment (generation records audits/autowriter/generations/2026/11/how-to-review-ai-generated-customer-support-replies.json and audits/autowriter/generations/2026/11/how-to-review-ai-vendor-model-updates-after-deployment.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "186c8eaf0f2c"
   },
   {
     "target": "/blog/why-your-ai-pilot-never-reached-production",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-readiness-assessment-template-for-smb (generation record audits/autowriter/generations/2026/11/ai-readiness-assessment-template-for-smb.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "bd80559437c5"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-generated-customer-support-replies and /blog/how-to-review-ai-vendor-model-updates-after-deployment (generation records audits/autowriter/generations/2026/11/how-to-review-ai-generated-customer-support-replies.json and audits/autowriter/generations/2026/11/how-to-review-ai-vendor-model-updates-after-deployment.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "186c8eaf0f2c"
   },
   {
     "target": "/case-studies",
@@ -728,51 +728,51 @@
     "location": "head.title",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/resources.html. Row head.title is 'AI governance templates and checklists — meshin.co': the metadata title plus the site suffix, unchanged since the last seal and not touched by the interview answers. The meta description lists the governance kit's contents, not the seven cards (reported earlier, still true). The lead, the H1 and the call to action are rows of src/pages/resources/index.astro, and the card summaries and status lines are rows of the resource files; they are dispositioned there, and the lead is also re-read in the attribute.lead entry of this route.",
-    "digest": "a975bf098d7e"
+    "digest": "3e482751cccd"
   },
   {
     "target": "/resources",
     "location": "attribute.lead",
     "status": "verified",
     "reason": "Re-read 2026-10-08 against dist/resources.html. Row attribute.lead is the lead 'AI governance templates, each described on its own page. Copy one into your own wiki: no tool, no subscription, no email required. Each page says where its content comes from.' It is unchanged since the last seal; it was reworded on 2026-10-03 (commit 4a759a5). The practice claim that the templates are the ones used in engagements, which the 2026-10-02 reason reported as unconfirmed, is no longer on the page: the lead asserts no practice of the owner's, only what the pages offer. Checked 2026-10-08: all seven resource pages carry a Sources section, so the last sentence holds. The H1 and the call to action are rows of src/pages/resources/index.astro.",
-    "digest": "a975bf098d7e"
+    "digest": "3e482751cccd"
   },
   {
     "target": "/resources",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 against dist/resources.html (clean build of the working tree). Row body.p now holds the three card type lines \"kit · v0.1\", \"scorecard · v0.1\" and \"template · v0.1\". Before change 18 they read \"kit · v0.1 · MIT\", \"scorecard · v0.1 · MIT\" and \"template · v0.1 · MIT\", built from type, version and licence, and this entry was owner-blocked on the licence for the cards (COPY-CHECKLIST 6.3). Change 18 (task 1.1: every claim resolves or goes) removed the licence label from the cards and, per its proposal, from the resource pages and their JSON-LD until a licence exists: on 2026-10-31 all seven https://github.com/meshin-co/<slug> URLs returned 404 and the organisation's one repository answered \"license\": null on api.github.com. With the label gone, no word in these rows depends on the licence answer, so the rows are no longer blocked on it and the status moves from owner-blocked to rewritten. The type words and the version \"v0.1\" are unchanged and rest on the owner's recorded answers (16.8, 17.9, 17.10). The licence question itself stays open on COPY-CHECKLIST 6.3, and the owner's answer 16.8 (\"Page-only, MIT, v0.1\") is not acted on here: if the owner publishes a licence, the label returns to the cards and these rows go back to review. This entry is the only owner-blocked disposition the change released, so it is listed in the report for the owner.",
-    "digest": "a975bf098d7e"
+    "reason": "Re-read 2026-10-31 against dist/resources.html (clean build of the working tree). Row body.p now holds the three card type lines \"kit · v0.1\", \"scorecard · v0.1\" and \"template · v0.1\". Before change 18 they read \"kit · v0.1 · MIT\", \"scorecard · v0.1 · MIT\" and \"template · v0.1 · MIT\", built from type, version and licence, and this entry was owner-blocked on the licence for the cards (COPY-CHECKLIST 6.3). Change 18 (task 1.1: every claim resolves or goes) removed the licence label from the cards and, per its proposal, from the resource pages and their JSON-LD until a licence exists: on 2026-10-31 all seven https://github.com/meshin-co/<slug> URLs returned 404 and the organisation's one repository answered \"license\": null on api.github.com. With the label gone, no word in these rows depends on the licence answer, so the rows are no longer blocked on it and the status moves from owner-blocked to rewritten. The type words and the version \"v0.1\" are unchanged and rest on the owner's recorded answers (16.8, 17.9, 17.10). The licence question itself stays open on COPY-CHECKLIST 6.3, and the owner's answer 16.8 (\"Page-only, MIT, v0.1\") is not acted on here: if the owner publishes a licence, the label returns to the cards and these rows go back to review. This entry is the only owner-blocked disposition the change released, so it is listed in the report for the owner. Re-read 2026-11-11 against dist/resources.html (clean build of the working tree). Row body.p now holds \"kit · v0.1 · CC-BY-4.0\", \"scorecard · v0.1 · CC-BY-4.0\" and \"template · v0.1 · CC-BY-4.0\" (were \"kit · v0.1\", \"scorecard · v0.1\" and \"template · v0.1\"). Change 47 (locked decision L75: text is CC BY 4.0, code is MIT) gave every resource entry license: CC-BY-4.0, which is the condition the 2026-10-31 text above names for the label to return. The licence is the owner's decision, so the rows are not blocked and the status stays rewritten. All seven entries are prose and tables and ship no code, so CC BY 4.0 is the licence of what each card offers; the Content section of /terms states the grant; and the text ships at dist/licenses/CC-BY-4.0.txt, which the build requires of every declared licence. COPY-CHECKLIST 6.3 (\"MIT assumed\") and 16.8 (\"Page-only, MIT, v0.1\") still read MIT and are not edited here: they are the owner's rows, and the cards now follow L75 rather than those rows. No other row of this target changed.",
+    "digest": "3e482751cccd"
   },
   {
     "target": "/resources/agent-evals-ci-starter",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/resources/agent-evals-ci-starter.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [frontmatter.description] now \"Agent evals CI starter: a four-field eval case format and a description of the pull-request gate that blocks a merge below a pass-rate floor you set.\" (source row: service-resource.json#3);  [body.p] now \"Published 8 September 2026 · Updated 25 October 2026\";  [frontmatter.description] no longer rendered: \"A starter CI pipeline for agent evals. It runs on every pull request and blocks a bad merge before it ships, using a plain YAML case format.\"; The date line follows updatedDate in the source file, which change 18 set to 2026-10-25 where it changed prose or links (write-copy.md: bump updatedDate when you change prose); publishDate is unchanged. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand.",
-    "digest": "5368925e0532"
+    "reason": "Re-read 2026-10-31 in dist/resources/agent-evals-ci-starter.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [frontmatter.description] now \"Agent evals CI starter: a four-field eval case format and a description of the pull-request gate that blocks a merge below a pass-rate floor you set.\" (source row: service-resource.json#3);  [body.p] now \"Published 8 September 2026 · Updated 25 October 2026\";  [frontmatter.description] no longer rendered: \"A starter CI pipeline for agent evals. It runs on every pull request and blocks a bad merge before it ships, using a plain YAML case format.\"; The date line follows updatedDate in the source file, which change 18 set to 2026-10-25 where it changed prose or links (write-copy.md: bump updatedDate when you change prose); publishDate is unchanged. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand. Re-read 2026-11-11 in dist/resources/agent-evals-ci-starter.html (clean build of the working tree). The shared status line changed from \"Available as a page on this site. A repository copy is not published yet.\" to \"Available as a page on this site. There is no repository copy.\" (owner decision of 2026-11-10: no link to a repository that does not exist, and no promise of one or of a date). The new line states what is true today, an on-site page and no repository copy, and carries no promise. No other row of this target changed. Re-read 2026-11-12 in dist/resources/agent-evals-ci-starter.html (build of the working tree at 10:37). A competitive review of the published evals-baseline specification found two questions this page did not answer: why not the pass-rate threshold you already have, and why the baseline should be a file you own. The page now answers both, and links the specification at /spec/evals-baseline/1.0 for the first time from a human page. Rows of this target that are new or changed, as rendered: [body.p] \"Published 8 September 2026 · Updated 12 November 2026\" (updatedDate moved from 2026-11-11 to 2026-11-12 with the body); [body.p] \"A pass-rate threshold cannot see a metric fall while the suite stays above it. The floor in the gate above is a threshold of this kind. The baseline in the evals-baseline specification reports every fall beyond that metric’s tolerance. Three differences can be checked.\"; [body.p] \"The README of promptfoo’s GitHub Action disagrees with promptfoo’s documentation page about whether the action compares a pull request with its base. The README says: “The action evaluates only the current checkout; it does not run separate base and head evaluations.” The documentation page says: “On every pull request that modifies a prompt, the action will automatically run a full comparison”.\"; [body.p] \"A baseline kept in someone else’s evals service lasts as long as that service allows. Three vendors state their limits on their own pages, each read on 12 November 2026.\"; [body.p] \"The specification requires the baseline to be a file committed to your repository, and a check to read it without a network or a database. No evaluation vendor’s plan, retention period or shutdown date applies to it.\"; and four source lines, \"promptfoo · retrieved 2026-11-12\" (four promptfoo pages render one row), \"OpenAI · retrieved 2026-11-12\", \"Braintrust · retrieved 2026-11-12\" and \"Confident AI · retrieved 2026-11-12\". The two new headings and the six list items are not rows of this target; they are inside the body row of site/src/data/resource/agent-evals-ci-starter.md, which has its own entry. Basis, each read 2026-11-12 from the page linked beside it: every statement about a vendor is that vendor’s own sentence in quotation marks, with its page linked, and no limitation of a competitor is stated in the site’s words. Quotes checked character for character against the live pages the same day: promptfoo command-line reference (\"Set a minimum pass rate threshold (as a percentage)\" for PROMPTFOO_PASS_RATE_THRESHOLD); the promptfoo-action README at commit 6a8612f15670b4d5a4d43e0d6fb221d84ab389d8, the head of main that day (\"Required suite pass percentage from 0 to 100\" for fail-on-threshold, and the sentence quoted in full); promptfoo CI/CD guide (the custom threshold check fails the build when $PASS_RATE < 95, and ends in exit 1); promptfoo GitHub Actions page (the sentence quoted, on a page that names promptfoo/promptfoo-action@v1, the action the README belongs to); OpenAI evals guide (the October 31 and November 30, 2026 sentence, quoted in full); Braintrust pricing page (the Starter plan, $0 a month, lists \"14-day retention\"); Confident AI pricing page (the Free Forever plan lists \"5 test runs per week\" and \"additional test runs are locked\"). Worked example, run 2026-11-12 through the local reference implementation (evals-baseline 1.0.0, specification 1.0) on a promptfoo run file with a baseline recorded at accuracy 0.98 and tolerance 0: a run at 0.81 passes a threshold of 0.80, and `check` prints \"below-baseline agent :: accuracy: 0.81 is below the baseline 0.98 by 0.17, more than the tolerance 0\", ends \"evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)\" and exits 0; with --strict it ends \"evals-baseline: 1 finding; exit 1 (--strict)\" and exits 1; every check prints a \"date: baseline recorded 2026-11-12\" line. The specification page states the same in rule 2, in its exit-code table and in its date-line clause. 0.98 - 0.81 = 0.17; 0.80 is the example’s threshold, not a claim about a product. No fact about the owner, a client, a metric or a credential is stated. No other row of this target changed.",
+    "digest": "e19e2b7bc59f"
   },
   {
     "target": "/resources/ai-governance-starter-kit",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/resources/ai-governance-starter-kit.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [frontmatter.description] now \"AI governance starter kit: a table of who signs each document a security review asks for, six vendor questionnaire topics and an incident call order.\" (was \"AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire.\") (source row: service-resource.json#4);  [body.p] now \"Published 8 September 2026 · Updated 25 October 2026\"; The date line follows updatedDate in the source file, which change 18 set to 2026-10-25 where it changed prose or links (write-copy.md: bump updatedDate when you change prose); publishDate is unchanged. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand.",
-    "digest": "cb2641e82ffe"
+    "reason": "Re-read 2026-10-31 in dist/resources/ai-governance-starter-kit.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [frontmatter.description] now \"AI governance starter kit: a table of who signs each document a security review asks for, six vendor questionnaire topics and an incident call order.\" (was \"AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire.\") (source row: service-resource.json#4);  [body.p] now \"Published 8 September 2026 · Updated 25 October 2026\"; The date line follows updatedDate in the source file, which change 18 set to 2026-10-25 where it changed prose or links (write-copy.md: bump updatedDate when you change prose); publishDate is unchanged. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand. Re-read 2026-11-11 in dist/resources/ai-governance-starter-kit.html (clean build of the working tree). The shared status line changed from \"Available as a page on this site. A repository copy is not published yet.\" to \"Available as a page on this site. There is no repository copy.\" (owner decision of 2026-11-10: no link to a repository that does not exist, and no promise of one or of a date). The new line states what is true today, an on-site page and no repository copy, and carries no promise. No other row of this target changed.",
+    "digest": "6c88f632811f"
   },
   {
     "target": "/resources/ai-readiness-scorecard",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/resources/ai-readiness-scorecard.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [body.p] now \"Published 8 September 2026 · Updated 25 October 2026\"; The date line follows updatedDate in the source file, which change 18 set to 2026-10-25 where it changed prose or links (write-copy.md: bump updatedDate when you change prose); publishDate is unchanged. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand.",
-    "digest": "01ea89f764b2"
+    "reason": "Re-read 2026-10-31 in dist/resources/ai-readiness-scorecard.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [body.p] now \"Published 8 September 2026 · Updated 25 October 2026\"; The date line follows updatedDate in the source file, which change 18 set to 2026-10-25 where it changed prose or links (write-copy.md: bump updatedDate when you change prose); publishDate is unchanged. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand. Re-read 2026-11-11 in dist/resources/ai-readiness-scorecard.html (clean build of the working tree). The shared status line changed from \"Available as a page on this site. A repository copy is not published yet.\" to \"Available as a page on this site. There is no repository copy.\" (owner decision of 2026-11-10: no link to a repository that does not exist, and no promise of one or of a date). The new line states what is true today, an on-site page and no repository copy, and carries no promise. No other row of this target changed.",
+    "digest": "7224e2369c6b"
   },
   {
     "target": "/resources/build-vs-buy-ai-kit",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/resources/build-vs-buy-ai-kit.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [frontmatter.description] now \"The build vs buy AI kit: six criteria I work through before recommending either path, and a total cost of ownership table you fill in for both sides.\" (was \"The build vs buy AI kit: a one-page worksheet of the six criteria I work through before recommending either path, and how to score them.\") (source row: service-resource.json#6);  [body.p] now \"Published 8 September 2026 · Updated 25 October 2026\"; The date line follows updatedDate in the source file, which change 18 set to 2026-10-25 where it changed prose or links (write-copy.md: bump updatedDate when you change prose); publishDate is unchanged. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand.",
-    "digest": "86447656821e"
+    "reason": "Re-read 2026-10-31 in dist/resources/build-vs-buy-ai-kit.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [frontmatter.description] now \"The build vs buy AI kit: six criteria I work through before recommending either path, and a total cost of ownership table you fill in for both sides.\" (was \"The build vs buy AI kit: a one-page worksheet of the six criteria I work through before recommending either path, and how to score them.\") (source row: service-resource.json#6);  [body.p] now \"Published 8 September 2026 · Updated 25 October 2026\"; The date line follows updatedDate in the source file, which change 18 set to 2026-10-25 where it changed prose or links (write-copy.md: bump updatedDate when you change prose); publishDate is unchanged. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand. Re-read 2026-11-11 in dist/resources/build-vs-buy-ai-kit.html (clean build of the working tree). The shared status line changed from \"Available as a page on this site. A repository copy is not published yet.\" to \"Available as a page on this site. There is no repository copy.\" (owner decision of 2026-11-10: no link to a repository that does not exist, and no promise of one or of a date). The new line states what is true today, an on-site page and no repository copy, and carries no promise. No other row of this target changed.",
+    "digest": "ee7ba7c1a74b"
   },
   {
     "target": "/resources/llm-gateway-governance-config",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/resources/llm-gateway-governance-config.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [frontmatter.description] now \"LLM gateway governance config: a policy schema of five keys (allowed models, redaction, rate limit, log retention and fallback), each with an example.\" (was \"A governance config for an LLM gateway. It decides who may call which model, what gets redacted, how long logs are kept and the rate and fallback rules.\") (source row: service-resource.json#7);  [body.p] now \"Published 8 September 2026 · Updated 25 October 2026\"; The date line follows updatedDate in the source file, which change 18 set to 2026-10-25 where it changed prose or links (write-copy.md: bump updatedDate when you change prose); publishDate is unchanged. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand.",
-    "digest": "443ee6f24f95"
+    "reason": "Re-read 2026-10-31 in dist/resources/llm-gateway-governance-config.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [frontmatter.description] now \"LLM gateway governance config: a policy schema of five keys (allowed models, redaction, rate limit, log retention and fallback), each with an example.\" (was \"A governance config for an LLM gateway. It decides who may call which model, what gets redacted, how long logs are kept and the rate and fallback rules.\") (source row: service-resource.json#7);  [body.p] now \"Published 8 September 2026 · Updated 25 October 2026\"; The date line follows updatedDate in the source file, which change 18 set to 2026-10-25 where it changed prose or links (write-copy.md: bump updatedDate when you change prose); publishDate is unchanged. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand. Re-read 2026-11-11 in dist/resources/llm-gateway-governance-config.html (clean build of the working tree). The shared status line changed from \"Available as a page on this site. A repository copy is not published yet.\" to \"Available as a page on this site. There is no repository copy.\" (owner decision of 2026-11-10: no link to a repository that does not exist, and no promise of one or of a date). The new line states what is true today, an on-site page and no repository copy, and carries no promise. No other row of this target changed.",
+    "digest": "b0bf63bdfb6f"
   },
   {
     "target": "/search",
@@ -813,13 +813,13 @@
   {
     "target": "/styleguide",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/styleguide.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [frontmatter.description] now \"AI governance starter kit: a table of who signs each document a security review asks for, six vendor questionnaire topics and an incident call order.\" (was \"AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire.\") (source row: service-resource.json#4);  [body.p] now \"kit · v0.1\" (was \"kit · v0.1 · MIT\");  [body.p] now \"scorecard · v0.1\" (was \"scorecard · v0.1 · MIT\"); The card type lines lost their licence label (\"kit · v0.1 · MIT\" became \"kit · v0.1\"): change 18 withdrew \"MIT\" because no licence exists on any public page of the kit (all seven github.com/meshin-co/<slug> URLs return 404 and the organisation's one repository has \"license\": null on api.github.com, checked 2026-10-31). The owner's recorded licence answers on COPY-CHECKLIST 6.3 and 16.8 are untouched. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand.",
-    "digest": "6c1bd56b8491"
+    "reason": "Re-read 2026-10-31 in dist/styleguide.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [frontmatter.description] now \"AI governance starter kit: a table of who signs each document a security review asks for, six vendor questionnaire topics and an incident call order.\" (was \"AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire.\") (source row: service-resource.json#4);  [body.p] now \"kit · v0.1\" (was \"kit · v0.1 · MIT\");  [body.p] now \"scorecard · v0.1\" (was \"scorecard · v0.1 · MIT\"); The card type lines lost their licence label (\"kit · v0.1 · MIT\" became \"kit · v0.1\"): change 18 withdrew \"MIT\" because no licence exists on any public page of the kit (all seven github.com/meshin-co/<slug> URLs return 404 and the organisation's one repository has \"license\": null on api.github.com, checked 2026-10-31). The owner's recorded licence answers on COPY-CHECKLIST 6.3 and 16.8 are untouched. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand. Re-read 2026-11-11 in dist/styleguide.html (clean build of the working tree). The shared status line changed from \"Available as a page on this site. A repository copy is not published yet.\" to \"Available as a page on this site. There is no repository copy.\" (owner decision of 2026-11-10: no link to a repository that does not exist, and no promise of one or of a date). The new line states what is true today, an on-site page and no repository copy, and carries no promise. No other row of this target changed. Re-read 2026-11-11 in dist/styleguide.html (clean build of the working tree). Change 47 (locked decision L75: text is CC BY 4.0, code is MIT) gave every resource entry a license field, and the two card type lines in the styleguide regained a licence label: [body.p] now \"kit · v0.1 · CC-BY-4.0\" (was \"kit · v0.1\") and [body.p] now \"scorecard · v0.1 · CC-BY-4.0\" (was \"scorecard · v0.1\"). The label is true and resolves. All seven entries are prose and tables and ship no code, so CC BY 4.0 is the licence of what each card offers; the Content section of /terms states that grant; and the text ships at dist/licenses/CC-BY-4.0.txt, which the build requires of every declared licence. Change 18 withdrew the label because no licence existed on any public page of the kit; one now does. COPY-CHECKLIST 6.3 (\"MIT assumed\") and 16.8 (\"Page-only, MIT, v0.1\") still read MIT; they are the owner's rows and are not edited here. No other row of this target changed.",
+    "digest": "b4283ec37eec"
   },
   {
     "target": "/terms",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/terms.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [constant.body] now \"The writing on this site is mine and you may quote it with a link.\" (was \"The writing on this site is mine and you may quote it with a link. Templates in the Resources section carry their own licence, stated on each entry, and that licence gove…\") (source row: static-pages.json#10);  [constant.body] now \"Bring the process you want in production and who owns it today. You leave knowing whether an Assessment, a Sprint or neither is the next step.\" (source row: chrome.json#24); The closing booking band is the shared CtaBlock default (task 2.1: the band renders on every template a buyer can land on). Its body restates two sentences of the reviewed FAQ \"What happens on a fit call, and does it cost anything?\" and adds no price, duration or promise; it is dispositioned at chrome.json#24, and the 30-minute event it links returned 200 on 2026-10-31. Earlier review, still true of the unchanged rows: head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page.",
-    "digest": "5a958810dd5a"
+    "reason": "Re-read 2026-10-31 in dist/terms.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [constant.body] now \"The writing on this site is mine and you may quote it with a link.\" (was \"The writing on this site is mine and you may quote it with a link. Templates in the Resources section carry their own licence, stated on each entry, and that licence gove…\") (source row: static-pages.json#10);  [constant.body] now \"Bring the process you want in production and who owns it today. You leave knowing whether an Assessment, a Sprint or neither is the next step.\" (source row: chrome.json#24); The closing booking band is the shared CtaBlock default (task 2.1: the band renders on every template a buyer can land on). Its body restates two sentences of the reviewed FAQ \"What happens on a fit call, and does it cost anything?\" and adds no price, duration or promise; it is dispositioned at chrome.json#24, and the 30-minute event it links returned 200 on 2026-10-31. Earlier review, still true of the unchanged rows: head.title/body.h1 checked against docs/SEMANTIC-CORE.md's generated per-family grammar (exact match or explained by documented ungated-utility-route/stale-cache exception); body.p composed strings (excerpts, tag/category joins, dated metadata lines) read as coherent whole sentences with no truncation, duplication, or missing-space artifacts against the built site/dist page. Re-read 2026-11-11 in dist/terms.html (clean build of the working tree). Change 47 (locked decision L75: text is CC BY 4.0, code is MIT) rewrote two body rows; every other row of this target is as sealed above. The Content row quoted above (\"The writing on this site is mine and you may quote it with a link.\") is superseded. It now reads \"The writing on this site is mine, and I license it under CC BY 4.0. You may copy, share and adapt it, including for commercial use, if you credit meshin.co as the author, link to the page and to the licence, and say if you changed it. The licence text is at /licenses/CC-BY-4.0.txt and governs where this summary differs from it.\" It is one body.p row of this route and two constant.body rows of src/pages/terms.astro, because the site name is interpolated. Checked against dist/licenses/CC-BY-4.0.txt, the Creative Commons legal code at 18,657 bytes: the licence allows copying, sharing, adapting and commercial use on three conditions, which are credit, a link to the licence and an indication of changes, and those are the three the paragraph asks for. The paragraph says the licence text governs where the two differ, and the path resolves in dist. The Engagements row now ends \"You own the deliverables and the code produced for you, except background material. Background material is what I made before the engagement began, and what is generic enough to reuse for another client, such as templates, methods and tooling. That material stays mine.\" (was \"You own the deliverables and the code produced for you.\"). It reserves what pre-dates an engagement and what any client could reuse, and the paragraph's first two sentences still send the detail to the signed agreement, which overrides this page. The reservation was added on the report that this section carried none. No locked row, COPY-CHECKLIST row or answer of the owner records it, and two published FAQ answers draw the line in other words (who-owns-the-code-and-the-data says nothing about the engagement moves ownership of the code or the data to the practice, and who-owns-the-frameworks-templates-and-playbooks-built-during-the-engagement says everything written for the client is the client's and only the method stays the practice's), so these two sentences are a draft that the owner decides (known-gaps G91), and the first edit to this page's IP clause.\n\nRe-read 2026-11-11 in dist/terms.html after the L75 rewrite. The Content section now grants CC BY 4.0 with its three conditions and points at /licenses/CC-BY-4.0.txt, replacing \"you may quote it with a link\", because the resource entries declare a licence again and the site grant has to agree with it. The Engagements section gained a half-sentence saying only my working method travels between engagements and pointing at the FAQ for where that line falls. Two earlier drafts were wrong and are recorded here so the reasoning is not repeated: one claimed background material including templates stays mine, which contradicts the published \"everything written for your business belongs to you\"; the next copied the FAQ answer verbatim, which the duplicate-sentence guard refused under L53, one concept on exactly one page. The page now carries the pointer and the FAQ keeps the definition. A fourth draft split the CC BY 4.0 sentence: the first version put the licence conditions in one 38-word sentence and `gate:human` refused the page at 3 of 14 sentences over 25 words against a limit of 2. The conditions now stand as their own sentence introduced by \"Three things are asked in return\". A fifth draft dropped the `${SITE.name}` interpolation. The body had been a template literal, and `constantRows` in `site/scripts/editorial-inventory.mjs` reads single-quoted strings only, so the shipped paragraph traced to no source row. The brand name cannot be typed either, because `gate:brand` refuses a typed literal of it, so the credit line now reads \"credit this site as the author\" and the body is an ordinary string again. The unused `SITE` import went with it. A sixth draft replaced \"asked in return\" with \"asked of you\": CODE_FRAGMENT in `site/scripts/editorial-inventory.mjs` matches the bare word `return`, so the extractor read the whole body as code and the shipped paragraph traced to no source row.\n\nRe-read 2026-11-12 in dist/terms.html (clean build of the working tree), after the Content section was narrowed. The 2026-11-11 paragraphs above record that Change 47 gave the page a CC BY 4.0 grant over all the writing under locked row L75. That no longer holds: no answer of the owner chooses a licence for the writing, so the page grants the writing quotation with a link again, as it did from 2026-09-08, and states CC BY 4.0 only for the resources that declare it (L75 as amended 2026-11-12, G88). The Content row of this route is now body.p \"The writing on this site is mine and you may quote it with a link. Each resource under /resources names its own licence next to its version. Where that licence is CC BY 4.0, you may copy, share and adapt the resource, including for commercial use. Credit this site, link to the page and the licence, and say if you changed it. The licence text is at /licenses/CC-BY-4.0.txt and governs where this summary differs.\" Read against dist/resources/*.html, where each of the seven pages prints \"CC-BY-4.0\" beside its version, and against dist/licenses/CC-BY-4.0.txt, whose Section 3(a) asks for credit, a link to the licence and an indication of changes, which are the things the paragraph asks for; the path resolves in dist. The date line reads \"Updated 2026-11-12\". Every other row of this target is as sealed above, including the Engagements row, which is still a draft the owner decides (G91).",
+    "digest": "5f8af0ea2e8e"
   }
 ]

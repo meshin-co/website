@@ -4,9 +4,10 @@ name: AI Readiness Scorecard
 type: scorecard
 description: 'A five-axis AI readiness scorecard you score yourself in an afternoon: strategy, data, delivery, people, and governance.'
 publishDate: 2026-09-08
-updatedDate: 2026-10-25
+updatedDate: 2026-11-11
 version: '0.1'
-status: Available as a page on this site. A repository copy is not published yet.
+license: CC-BY-4.0
+status: Available as a page on this site. There is no repository copy.
 whatInside:
   - Five scored axes, the same groupings as the paid Assessment — strategy, data, delivery, people and governance
   - A scoring table with a row for each axis, from nothing written down to reviewed on a fixed schedule

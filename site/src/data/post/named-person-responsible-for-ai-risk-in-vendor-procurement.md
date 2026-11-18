@@ -106,7 +106,7 @@ The [risk sign-off answer](/faq/how-does-ai-risk-get-recorded-and-who-signs-it-o
 
 When your company is the supplier, the question comes from the other direction. The customer wants to know who can explain your AI controls and stand behind the answers. The named owner gathers the response, checks its scope, and brings in the people who operate the service.
 
-The site's [customer questionnaire answer](/faq/who-answers-customer-security-questionnaires) states: “I do, as the named officer on record.” For the retainer, confirm the named contact, the work covered, and the decision rights in the engagement. The [fractional chief AI officer service](/services/fractional-caio-retainer) is the relevant route for that discussion.
+The site's [customer questionnaire answer](/faq/who-answers-customer-security-questionnaires) states: “I do, as the named officer on record.” For the retainer, confirm [the named contact, the work covered, and the decision rights](/blog/fractional-caio-pricing) in the engagement. The [fractional chief AI officer service](/services/fractional-caio-retainer) is the relevant route for that discussion.
 
 Before sending a response, compare it with the product the customer will receive. Ask engineering to check the deployment and data flows. Ask security and legal to review statements in their areas. If a control is planned or applies only to a different service, say so rather than presenting it as universal.
 

@@ -67,3 +67,8 @@ curl -sS https://example.com/ | grep -c 'registerTool'
 Expect a count of `1` or more for an inline script. For an external script, request that file and run the same `grep`. In Chrome with the origin trial enabled, open DevTools and confirm the tool appears in the page's WebMCP tool list.
 
 Scanner: `POST https://isitagentready.com/api/scan` with `{"url": "https://example.com"}`. The JSON path `checks.discovery.webMcp.status` must read `"pass"`.
+
+Lighthouse 13.5.0 reads the same thing with three audits in its `agentic-browsing` category,
+`webmcp-registered-tools`, `webmcp-form-coverage` and `webmcp-schema-validity`. Each is `notApplicable`
+when the browser has no WebMCP support, so a site that registers nothing loses nothing in the pass ratio;
+with support on, the form-coverage audit lists every form that carries no WebMCP annotation.

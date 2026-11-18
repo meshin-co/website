@@ -19,6 +19,32 @@ test('the crawl covers the build recursively and rewrites extensionless local UR
   assert.ok(args.includes('--url-rewrite-replace'));
 });
 
+test('the rewrite adds .html to a local page address, including one whose last segment is two numbers, and to nothing else', () => {
+  const args = linkArgs({ origin: 'https://example.test' });
+  const pattern = new RegExp(args[args.indexOf('--url-rewrite-search') + 1]);
+  const replace = args[args.indexOf('--url-rewrite-replace') + 1];
+  const rewrite = (url) => url.replace(pattern, replace);
+  const host = 'http://127.0.0.1:4321';
+  assert.equal(rewrite(`${host}/about`), `${host}/about.html`);
+  assert.equal(rewrite(`${host}/spec/evals-baseline/1.0`), `${host}/spec/evals-baseline/1.0.html`);
+  assert.equal(rewrite(`${host}/spec/evals-baseline/1.0?a=1`), `${host}/spec/evals-baseline/1.0.html?a=1`);
+  assert.equal(rewrite(`${host}/spec/evals-baseline/1.0#cite`), `${host}/spec/evals-baseline/1.0.html#cite`);
+  assert.equal(rewrite(`http://localhost:4321/spec/x/12.34`), `http://localhost:4321/spec/x/12.34.html`);
+  for (const untouched of [
+    '/x/1.0.md',
+    '/x/1.0.html',
+    '/llms.txt',
+    '/rss.xml',
+    '/_astro/app.css',
+    '/x/v1.0',
+    '/x/1.0.0',
+    '/x/1.',
+    '/x/.5',
+  ]) {
+    assert.equal(rewrite(`${host}${untouched}`), `${host}${untouched}`, untouched);
+  }
+});
+
 test('a host that bot-blocks or needs a session is skipped by name, and the list is pinned', () => {
   assert.deepEqual(THIRD_PARTY_HOSTS, [
     'static.cloudflareinsights.com',

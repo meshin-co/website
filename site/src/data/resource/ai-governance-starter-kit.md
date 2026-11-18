@@ -4,9 +4,10 @@ name: AI Governance Starter Kit
 type: kit
 description: 'AI governance starter kit: a table of who signs each document a security review asks for, six vendor questionnaire topics and an incident call order.'
 publishDate: 2026-09-08
-updatedDate: 2026-10-25
+updatedDate: 2026-11-11
 version: '0.1'
-status: Available as a page on this site. A repository copy is not published yet.
+license: CC-BY-4.0
+status: Available as a page on this site. There is no repository copy.
 whatInside:
   - 'A list of the documents a security review asks for: AI register, acceptable use policy, data classification table and vendor questionnaire.'
   - What each document is for.

@@ -1,0 +1,19 @@
+---
+import { COPY_BUTTON, COPY_LABEL, COPY_STATUS } from '~/utils/code-blocks.mjs';
+import { highlightedCode } from '~/utils/highlight.mjs';
+
+interface Props {
+  text: string;
+  language?: string;
+  class?: string;
+}
+
+const { text, language, class: className } = Astro.props;
+const code = language === undefined ? undefined : await highlightedCode(text, language);
+---
+
+<div class:list={['code-block', className]}>
+  {code === undefined ? <pre set:text={text} /> : <pre set:html={code} />}
+  <button {...COPY_BUTTON}>{COPY_LABEL}</button>
+  <span {...COPY_STATUS}></span>
+</div>

@@ -7,6 +7,28 @@ const REQUIRED_HEADERS = [
   'cross-origin-opener-policy',
 ];
 
+export const CANONICAL = [
+  '/',
+  '/services',
+  '/pricing',
+  '/approach',
+  '/about',
+  '/contact',
+  '/faq',
+  '/blog',
+  '/glossary',
+  '/resources',
+];
+
+export const MACHINE = [
+  '/robots.txt',
+  '/sitemap-index.xml',
+  '/llms.txt',
+  '/rss.xml',
+  '/feed.json',
+  '/.well-known/security.txt',
+];
+
 const finding = (check, status, detail) => ({ check, status, detail });
 
 export function checkHeaders(headers) {
@@ -34,12 +56,55 @@ export function verdictFor({ route, status }) {
     : finding(`route ${route}`, 'fail', `answered ${status}, expected 200`);
 }
 
-export function markdownNegotiationVerdict({ status, contentType }) {
-  const check = 'markdown negotiation /';
+function mediaTypeVerdict(check, expected, { status, contentType }) {
   if (status !== 200) return finding(check, 'fail', `answered ${status}, expected 200`);
-  return contentType.startsWith('text/markdown')
+  return contentType.startsWith(expected)
     ? finding(check, 'pass', contentType)
-    : finding(check, 'fail', `answered ${contentType}, expected text/markdown`);
+    : finding(check, 'fail', `answered ${contentType}, expected ${expected}`);
+}
+
+export function markdownNegotiationVerdict({ status, contentType }) {
+  return mediaTypeVerdict('markdown negotiation /', 'text/markdown', { status, contentType });
+}
+
+export const ACCEPT_PROBES = [
+  { accept: 'text/html, text/markdown;q=0', answers: 'text/html' },
+  { accept: 'text/html;q=0.9, text/markdown;q=0.1', answers: 'text/html' },
+  { accept: '*/*;q=0, text/markdown', answers: 'text/markdown' },
+  { accept: 'text/markdown;q=abc', answers: 'text/html' },
+  { accept: 'text/markdown;q=', answers: 'text/html' },
+  { accept: 'text/html;note="x, text/markdown, y"', answers: 'text/html' },
+];
+
+export function acceptVerdict(probe, observed) {
+  return mediaTypeVerdict(`accept ${probe.accept}`, probe.answers, observed);
+}
+
+export const PATH_SHAPES = ['/about/', '/index', '//about', '//x/about'];
+
+export function pathAgreementVerdict(path, { html, markdown }) {
+  const check = `markdown agrees with html ${path}`;
+  if (markdown.contentLocation?.startsWith('//')) {
+    return finding(check, 'fail', `content-location ${markdown.contentLocation} names a host`);
+  }
+  if (markdown.status !== html.status) {
+    return finding(check, 'fail', `html answered ${html.status}, markdown answered ${markdown.status}`);
+  }
+  if (markdown.location !== html.location) {
+    return finding(check, 'fail', `html redirected to ${html.location}, markdown to ${markdown.location}`);
+  }
+  return finding(
+    check,
+    'pass',
+    `both answered ${html.status}${html.location === undefined ? '' : ` to ${html.location}`}`
+  );
+}
+
+export function varyVerdict(representation, vary) {
+  const check = `vary / ${representation}`;
+  const names = (vary ?? '').split(',').map((name) => name.trim().toLowerCase());
+  if (names.includes('accept')) return finding(check, 'pass', `vary: ${vary}`);
+  return finding(check, 'fail', vary ? `vary: ${vary}, which omits Accept` : 'no vary header');
 }
 
 export function canonicalHostVerdict({ status, location }, origin, path) {
@@ -58,8 +123,8 @@ export function renderSmoke(origin, rows, revision) {
     '',
     `Generated-from: ${revision}`,
     '',
-    `Measured against \`${origin}\` by \`npm run smoke:prod\`. Every row is one request; nothing`,
-    'here is read from a config file.',
+    `Measured against \`${origin}\` by \`npm run smoke:prod\`. Every row is read from a live response, and a`,
+    'row that compares two answers asks twice; nothing here is read from a config file.',
     '',
     `failures: ${failures.length}`,
     '',

@@ -16,10 +16,17 @@ import {
 import { FEED_WINDOW, MERGED_FEED_WINDOW } from './feeds.mjs';
 import { entryCount, renderLlmsCollection, renderLlmsShard } from './machine-text.mjs';
 
-test('the llms surface covers exactly the six public collections', () => {
+test('the llms surface covers exactly the seven public collections', () => {
   assert.deepEqual(
     LLMS_COLLECTIONS.map((collection) => collection.name),
-    ['service', 'post', 'resource', 'glossary', 'case', 'faq']
+    ['service', 'post', 'resource', 'glossary', 'case', 'faq', 'spec']
+  );
+});
+
+test('the specification collection is listed under /spec with its own title and full-text file', () => {
+  assert.deepEqual(
+    LLMS_COLLECTIONS.find(({ name }) => name === 'spec'),
+    { name: 'spec', base: '/spec', title: 'Specifications', file: '/llms/spec.txt' }
   );
 });
 
@@ -100,6 +107,7 @@ test('llmsFeedPointers lists the merged feed first and one feed per collection',
     '/glossary/rss.xml',
     '/case-studies/rss.xml',
     '/faq/rss.xml',
+    '/spec/rss.xml',
   ]);
   for (const pointer of pointers) {
     assert.ok(pointer.title.length > 0);
@@ -152,15 +160,19 @@ test('llmsFullTextPointers describes the llms-full.txt line as the index of the 
 });
 
 test('llmsCollectionPointers gives the line llms.txt carries for each non-empty collection and no llms-full.txt line', () => {
-  const counts = { service: 3, post: 8, resource: 1, glossary: 0, case: 0, faq: 2 };
+  const counts = { service: 3, post: 8, resource: 1, glossary: 0, case: 0, faq: 2, spec: 1 };
   const pointers = llmsCollectionPointers(counts);
   assert.deepEqual(
     pointers.map((pointer) => pointer.url),
-    ['/llms/service.txt', '/llms/post.txt', '/llms/resource.txt', '/llms/faq.txt']
+    ['/llms/service.txt', '/llms/post.txt', '/llms/resource.txt', '/llms/faq.txt', '/llms/spec.txt']
   );
   assert.equal(
     pointers.find((pointer) => pointer.url === '/llms/post.txt').description,
     '8 entries, full body text of each.'
+  );
+  assert.deepEqual(
+    pointers.find((pointer) => pointer.url === '/llms/spec.txt'),
+    { url: '/llms/spec.txt', title: 'Specifications', description: '1 entry, full body text of each.' }
   );
   assert.deepEqual(llmsFullTextPointers(counts).slice(1), pointers);
 });

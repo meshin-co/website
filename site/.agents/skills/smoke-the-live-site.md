@@ -1,6 +1,6 @@
 # Smoke the Live Site
 
-`npm run smoke:prod <origin>` makes 18 real requests against a running origin and writes its report
+`npm run smoke:prod <origin>` makes 31 real requests against a running origin, 33 on the apex, and writes its report
 under `audits/phase-local/`, which git ignores, so an ad-hoc run leaves the tree clean. It is the
 scripted half of the Calibration Gate's edge checks, which were prose until 2026-09-15.
 
@@ -9,15 +9,18 @@ scripted half of the Calibration Gate's edge checks, which were prose until 2026
 Default origin is `https://` plus `site.name` from `site/src/config.yaml`. Any origin works, which is
 how the check is rehearsed:
 
-    GATE_SERVER_PORT=4340 node scripts/gate-server.mjs dist &
+    WRANGLER_SEND_METRICS=false npx wrangler pages dev dist --port 4340 --persist-to "$(mktemp -d)" &
     npm run smoke:prod http://127.0.0.1:4340
 
-The gate server answers the way Cloudflare Pages does for a flat build: `/about` is 200, while
-`/about/` and `/about.html` are a 308 to `/about`, and `/` is 200. Every canonical route here is
-emitted without the trailing slash and built as `<route>.html`, so the rehearsal passes 18 of 18
-and exits 0. A canonical route that answers 308 means the build went back to directory output
+`wrangler pages dev` runs `dist/_worker.js` and the real `_headers`, so the rehearsal passes 31 of 31
+and exits 0. Every canonical route here is emitted without the trailing slash and built as
+`<route>.html`, and a canonical route that answers 308 means the build went back to directory output
 (`build.format` in `site/astro.config.ts` must stay `'file'`) or a route is emitted in the wrong
 form.
+
+The gate server answers the way Pages does for a flat build, but it does not run the edge handler,
+so against it 27 of 31 pass and the four that fail are the ones that ask for markdown or for
+`Vary: Accept`. It prints at start what else it does not model.
 
 ## What it asserts
 
@@ -29,12 +32,20 @@ form.
   canonical route lands directly, and a redirect means the apex or the trailing-slash rule is
   wrong.
 - `www` answers 301 to the apex, for `/` and for `/about`, with the path kept. Only when the
-  origin is the real host: a rehearsal against `127.0.0.1` has no `www` to ask, so it reports 18
-  of 18 while production reports 20 of 20.
+  origin is the real host: a rehearsal against `127.0.0.1` has no `www` to ask, so it reports 31
+  of 31 while production reports 33 of 33.
+- The home page answers markdown to `Accept: text/markdown`, and both answers name `Accept` in
+  `Vary`, so a cache cannot hand one representation to a client that asked for the other.
+- Six `Accept` headers that a quality value decides: a refusal, a lower weight, a malformed or empty
+  weight and a type inside a quoted parameter must get the page, and `*/*;q=0, text/markdown` must
+  get markdown.
+- For four path shapes (`/about/`, `/index`, `//about`, `//x/about`) markdown and HTML answer the
+  same status and the same redirect, and no markdown answer carries a `content-location` that begins
+  with two slashes, which would name a host.
 
 ## Proven able to fail
 
-Serve `dist/` with a plain server that sends no headers and the gate reports 8 of 18, naming every
+Serve `dist/` with a plain server that sends no headers and the gate reports 17 of 31, naming every
 missing header, every 301 and every 404, because the plain server knows nothing of `<route>.html`.
 Run it that way after changing the checks; a smoke test that cannot fail is decoration.
 
@@ -44,6 +55,11 @@ to the wrong path.
 
     cd dist && python3 -m http.server 4344 --bind 127.0.0.1 &
     node scripts/run-smoke-prod.mjs http://127.0.0.1:4344 /tmp/planted.md
+
+The negotiation rows are proven in `scripts/run-smoke-prod-negotiation.test.mjs`: it runs the real
+runner against the real worker and every one passes, then plants five faults in the worker (a quality
+value read as a request, no `Vary`, a label naming a host, and the slash form and the `/index` form
+answered with markdown) and asserts that exactly the rows naming each fault fail.
 
 ## When the flip happens
 

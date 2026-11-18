@@ -2,19 +2,11 @@
   "untraceable": [],
   "dead": [
     {
-      "location": "attribute.aria-label",
-      "text": "Previous page",
+      "location": "frontmatter.citeAs",
+      "text": "This project guards its agent evaluations against regression as defined by the {spec}.",
       "status": "unreviewed",
       "usedIn": [
-        "src/components/site/PaginationLinks.astro"
-      ]
-    },
-    {
-      "location": "attribute.aria-label",
-      "text": "Next page",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/components/site/PaginationLinks.astro"
+        "src/data/spec/evals-baseline-1.0.md"
       ]
     },
     {
@@ -23,14 +15,6 @@
       "status": "unreviewed",
       "usedIn": [
         "src/pages/blog/category/[category].astro"
-      ]
-    },
-    {
-      "location": "attribute.lead",
-      "text": "Older articles, continuing from the first page.",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/blog/page/[page].astro"
       ]
     },
     {
@@ -66,14 +50,6 @@
       ]
     },
     {
-      "location": "attribute.label",
-      "text": "See the offer",
-      "status": "unreviewed",
-      "usedIn": [
-        "src/pages/case-studies/[id].astro"
-      ]
-    },
-    {
       "location": "text",
       "text": "Open the repository",
       "status": "unreviewed",
@@ -87,6 +63,30 @@
       "status": "unreviewed",
       "usedIn": [
         "src/utils/content-rules.mjs"
+      ]
+    },
+    {
+      "location": "constant.PAGE_HEADING_FORMAT",
+      "text": "{heading}, page {number}",
+      "status": "unreviewed",
+      "usedIn": [
+        "src/utils/paginate.mjs"
+      ]
+    },
+    {
+      "location": "constant.skipped",
+      "text": "no checkout at",
+      "status": "unreviewed",
+      "usedIn": [
+        "src/utils/spec-artefacts.mjs"
+      ]
+    },
+    {
+      "location": "constant.skipped",
+      "text": "declares as",
+      "status": "unreviewed",
+      "usedIn": [
+        "src/utils/spec-artefacts.mjs"
       ]
     },
     {
@@ -106,15 +106,120 @@
       ]
     },
     {
-      "location": "constant.title",
-      "text": "Writing, page",
+      "location": "constant.label",
+      "text": "See the offer",
       "status": "unreviewed",
       "usedIn": [
-        "src/pages/blog/page/[page].astro"
+        "src/pages/case-studies/[id].astro"
       ]
     }
   ],
-  "stale": [],
+  "stale": [
+    {
+      "target": "/blog/how-to-prevent-duplicate-ai-agent-actions-on-retries",
+      "status": "rewritten",
+      "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent (generation record audits/autowriter/generations/2026/11/how-to-set-a-per-task-spending-limit-for-an-ai-agent.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+      "digest": "58aecda4a386",
+      "why": "the text changed since it was dispositioned"
+    },
+    {
+      "target": "/blog/how-to-roll-back-an-ai-agent-deployment",
+      "status": "rewritten",
+      "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent (generation record audits/autowriter/generations/2026/11/how-to-set-a-per-task-spending-limit-for-an-ai-agent.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+      "digest": "51ea87240f4f",
+      "why": "the text changed since it was dispositioned"
+    },
+    {
+      "target": "/blog/multi-agent-reference-architecture-in-production",
+      "location": "head.title",
+      "status": "rewritten",
+      "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent (generation record audits/autowriter/generations/2026/11/how-to-set-a-per-task-spending-limit-for-an-ai-agent.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+      "digest": "37d74aa02288",
+      "why": "the text changed since it was dispositioned"
+    },
+    {
+      "target": "/blog/multi-agent-reference-architecture-in-production",
+      "location": "body.p",
+      "status": "rewritten",
+      "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent (generation record audits/autowriter/generations/2026/11/how-to-set-a-per-task-spending-limit-for-an-ai-agent.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+      "digest": "37d74aa02288",
+      "why": "the text changed since it was dispositioned"
+    },
+    {
+      "target": "site/src/data/tags.mjs",
+      "status": "rewritten",
+      "reason": "Tag names unchanged and still 12 short names with no prose. New tagArchive(tag) supplies the archive title \"{name} posts\" and lead \"All posts tagged {name}, newest first.\", replacing \"Every article tagged {name}, newest first.\" so page, llms.txt and search index read one string. Plain, no banned phrasing, no fact claimed.",
+      "digest": "544f764d900f",
+      "why": "the text changed since it was dispositioned"
+    },
+    {
+      "target": "src/pages/styleguide.astro",
+      "status": "rewritten",
+      "reason": "removed three dead duplicate Hero attributes that a second set of the same attributes overrode, so the literal demo strings never rendered Re-read 2026-09-22 after the mono specimen line dropped a price literal that locked row L8 forbids on every route; the sample now reads \"42 findings\" and carries no currency.",
+      "digest": "c867ac2d2807",
+      "why": "the text changed since it was dispositioned"
+    },
+    {
+      "target": "/",
+      "status": "rewritten",
+      "reason": "Re-read 2026-10-31 in dist/index.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [frontmatter.description] now \"Agent evals CI starter: a four-field eval case format and a description of the pull-request gate that blocks a merge below a pass-rate floor you set.\" (source row: service-resource.json#3);  [frontmatter.description] now \"AI governance starter kit: a table of who signs each document a security review asks for, six vendor questionnaire topics and an incident call order.\" (was \"AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire.\") (source row: service-resource.json#4);  [body.p] now \"kit · v0.1\" (was \"kit · v0.1 · MIT\");  [body.p] now \"scorecard · v0.1\" (was \"scorecard · v0.1 · MIT\");  [frontmatter.description] no longer rendered: \"A starter CI pipeline for agent evals. It runs on every pull request and blocks a bad merge before it ships, using a plain YAML case format.\"; The card type lines lost their licence label (\"kit · v0.1 · MIT\" became \"kit · v0.1\"): change 18 withdrew \"MIT\" because no licence exists on any public page of the kit (all seven github.com/meshin-co/<slug> URLs return 404 and the organisation's one repository has \"license\": null on api.github.com, checked 2026-10-31). The owner's recorded licence answers on COPY-CHECKLIST 6.3 and 16.8 are untouched. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand. Re-read 2026-11-11 in dist/index.html (clean build of the working tree). The shared status line changed from \"Available as a page on this site. A repository copy is not published yet.\" to \"Available as a page on this site. There is no repository copy.\" (owner decision of 2026-11-10: no link to a repository that does not exist, and no promise of one or of a date). The new line states what is true today, an on-site page and no repository copy, and carries no promise. No other row of this target changed. Re-read 2026-11-11 in dist/index.html (clean build of the working tree). Change 47 (locked decision L75: text is CC BY 4.0, code is MIT) gave every resource entry a license field, and the two card type lines on this route regained a licence label: [body.p] now \"kit · v0.1 · CC-BY-4.0\" (was \"kit · v0.1\") and [body.p] now \"scorecard · v0.1 · CC-BY-4.0\" (was \"scorecard · v0.1\"). The label is true and resolves. All seven entries are prose and tables and ship no code, so CC BY 4.0 is the licence of what each card offers; the Content section of /terms states that grant; and the text ships at dist/licenses/CC-BY-4.0.txt, which the build requires of every declared licence. Change 18 withdrew the label because no licence existed on any public page of the kit; one now does. COPY-CHECKLIST 6.3 (\"MIT assumed\") and 16.8 (\"Page-only, MIT, v0.1\") still read MIT; they are the owner's rows and are not edited here. No other row of this target changed.",
+      "digest": "7db54027f79b",
+      "why": "the text changed since it was dispositioned"
+    },
+    {
+      "target": "/blog/evals-in-ci-for-llm-agents",
+      "location": "head.title",
+      "status": "rewritten",
+      "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent (generation record audits/autowriter/generations/2026/11/how-to-set-a-per-task-spending-limit-for-an-ai-agent.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+      "digest": "50fd0ef45f9c",
+      "why": "the text changed since it was dispositioned"
+    },
+    {
+      "target": "/blog/evals-in-ci-for-llm-agents",
+      "location": "body.p",
+      "status": "rewritten",
+      "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent (generation record audits/autowriter/generations/2026/11/how-to-set-a-per-task-spending-limit-for-an-ai-agent.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+      "digest": "50fd0ef45f9c",
+      "why": "the text changed since it was dispositioned"
+    },
+    {
+      "target": "/blog/why-your-ai-pilot-never-reached-production",
+      "location": "head.title",
+      "status": "rewritten",
+      "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-generated-customer-support-replies (generation record audits/autowriter/generations/2026/11/how-to-review-ai-generated-customer-support-replies.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+      "digest": "e564be61db54",
+      "why": "the text changed since it was dispositioned"
+    },
+    {
+      "target": "/blog/why-your-ai-pilot-never-reached-production",
+      "location": "body.p",
+      "status": "rewritten",
+      "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-generated-customer-support-replies (generation record audits/autowriter/generations/2026/11/how-to-review-ai-generated-customer-support-replies.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+      "digest": "e564be61db54",
+      "why": "the text changed since it was dispositioned"
+    },
+    {
+      "target": "/styleguide",
+      "status": "rewritten",
+      "reason": "Re-read 2026-10-31 in dist/styleguide.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [frontmatter.description] now \"AI governance starter kit: a table of who signs each document a security review asks for, six vendor questionnaire topics and an incident call order.\" (was \"AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire.\") (source row: service-resource.json#4);  [body.p] now \"kit · v0.1\" (was \"kit · v0.1 · MIT\");  [body.p] now \"scorecard · v0.1\" (was \"scorecard · v0.1 · MIT\"); The card type lines lost their licence label (\"kit · v0.1 · MIT\" became \"kit · v0.1\"): change 18 withdrew \"MIT\" because no licence exists on any public page of the kit (all seven github.com/meshin-co/<slug> URLs return 404 and the organisation's one repository has \"license\": null on api.github.com, checked 2026-10-31). The owner's recorded licence answers on COPY-CHECKLIST 6.3 and 16.8 are untouched. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand. Re-read 2026-11-11 in dist/styleguide.html (clean build of the working tree). The shared status line changed from \"Available as a page on this site. A repository copy is not published yet.\" to \"Available as a page on this site. There is no repository copy.\" (owner decision of 2026-11-10: no link to a repository that does not exist, and no promise of one or of a date). The new line states what is true today, an on-site page and no repository copy, and carries no promise. No other row of this target changed. Re-read 2026-11-11 in dist/styleguide.html (clean build of the working tree). Change 47 (locked decision L75: text is CC BY 4.0, code is MIT) gave every resource entry a license field, and the two card type lines in the styleguide regained a licence label: [body.p] now \"kit · v0.1 · CC-BY-4.0\" (was \"kit · v0.1\") and [body.p] now \"scorecard · v0.1 · CC-BY-4.0\" (was \"scorecard · v0.1\"). The label is true and resolves. All seven entries are prose and tables and ship no code, so CC BY 4.0 is the licence of what each card offers; the Content section of /terms states that grant; and the text ships at dist/licenses/CC-BY-4.0.txt, which the build requires of every declared licence. Change 18 withdrew the label because no licence existed on any public page of the kit; one now does. COPY-CHECKLIST 6.3 (\"MIT assumed\") and 16.8 (\"Page-only, MIT, v0.1\") still read MIT; they are the owner's rows and are not edited here. No other row of this target changed.",
+      "digest": "5b17b85f58bf",
+      "why": "the text changed since it was dispositioned"
+    },
+    {
+      "target": "site/src/data/home.ts",
+      "status": "rewritten",
+      "reason": "Re-read 2026-10-31 in dist/index.html (clean build of the working tree). Change 18 (task 1.1: every claim resolves or goes) changed the proof chip \"Open-source AI Governance Starter Kit\" to \"AI Governance Starter Kit\" and added the constant ctaLabel \"Book a 30-min fit call\" (the existing label, now declared once here and in src/utils/booking.mjs). \"Open-source\" was withdrawn because nothing public stands behind it: on 2026-10-31, GET https://github.com/meshin-co/<slug> returned 404 for all seven resource slugs, and the organisation's one repository (website) answers \"license\": null on api.github.com. The chip now claims only that the kit exists, which the page /resources/ai-governance-starter-kit confirms. The second chip (\"ISO/IEC 42001 Lead Implementer course in progress\") and every other string of the file are unchanged since the earlier review below. Earlier review, still true of the text it describes and unchanged by the edits above: Normalized a stray U+2011 non-breaking hyphen to ASCII in cta.title (\"30-minute\"); removed the unconfirmed \"12–24 months\" retainer-handover track-record claim (COPY-CHECKLIST 3.7) from the Retainer deliverables list, replaced with a fact-preserving line with no timeframe. Hero title/sub left unchanged per L9a (conflict noted in report). Re-read 2026-10-01: the services and artifacts arrays were deleted because they duplicated src/data/service/*.md and src/data/resource/*.md; what remains is artifactIds, a list of three entry ids that carries no prose. Phase 5.2: two agentless passives (\"AI budget is being spent\" in the signs list, \"AI budget is spent\" in the before list) now name the reader as the actor (\"You are spending AI budget\", \"You have spent AI budget\"); the dropped word \"actually\" carried no claim.",
+      "digest": "4d8f5ec17989",
+      "why": "the text changed since it was dispositioned"
+    },
+    {
+      "target": "site/src/pages/styleguide.astro",
+      "status": "verified",
+      "reason": "Internal noindex dev-reference page; description is accurate and not buyer-facing copy, no changes needed.",
+      "digest": "c867ac2d2807",
+      "why": "the text changed since it was dispositioned"
+    }
+  ],
   "unmatched": [
     {
       "target": "site/src/components/Favicons.astro",
@@ -277,6 +382,13 @@
       "status": "verified",
       "reason": "Read 2026-10-02. No prose: the file holds formatting and trimming functions (firstSentence, teaser, clauseTrim, pageTitle, faqDescription, faqMetadata), numeric limits (140-character teaser, 12-word floor, 70-character title, 120 to 160 character description) and regular expressions. It has no ' — meshin.co' literal: the title suffix comes from titleSuffix(brandFromDisk()) in src/utils/brand.mjs, which reads site.name from src/config.yaml. The strings it builds are rows on the /faq routes, not here.",
       "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "src/pages/case-studies/index.astro",
+      "location": "frontmatter.cta.label",
+      "status": "verified",
+      "reason": "No row matches this entry any more, and the sentence it recorded is no longer true. Until change 18 the closing call to action of src/pages/case-studies/index.astro passed the label \"Book a 30-min fit call\" and the href https://cal.com/meshin as props, and this entry reviewed that label. Change 18 removed both props, so the page takes the shared defaults: the label \"Book a 30-min fit call\" and the href https://cal.com/meshin/30min (BOOKING_URL in src/utils/booking.mjs), which returned 200 on 2026-10-31 with the title \"30 min meeting | Dmitri Meshin | Cal.com\". The button no longer links https://cal.com/meshin. The label and the band are dispositioned at src/utils/booking.mjs and src/components/site/CtaBlock.astro. COPY-CHECKLIST 3.9 (\"Fit call: free, thirty minutes, booked at cal.com/meshin\", answer yes) still covers the claim. The entry is kept as a record that the review applied to the old props, and is reported by the gate as naming no rows.",
+      "digest": "5c2fc782143d"
     },
     {
       "target": "src/utils/og-template.mjs",
@@ -447,6 +559,13 @@
       "status": "verified",
       "reason": "Read 2026-10-02. No prose: the file holds formatting and trimming functions (firstSentence, teaser, clauseTrim, pageTitle, faqDescription, faqMetadata), numeric limits (140-character teaser, 12-word floor, 70-character title, 120 to 160 character description) and regular expressions. It has no ' — meshin.co' literal: the title suffix comes from titleSuffix(brandFromDisk()) in src/utils/brand.mjs, which reads site.name from src/config.yaml. The strings it builds are rows on the /faq routes, not here.",
       "digest": "e3b0c44298fc"
+    },
+    {
+      "target": "src/pages/case-studies/index.astro",
+      "location": "frontmatter.cta.label",
+      "status": "verified",
+      "reason": "No row matches this entry any more, and the sentence it recorded is no longer true. Until change 18 the closing call to action of src/pages/case-studies/index.astro passed the label \"Book a 30-min fit call\" and the href https://cal.com/meshin as props, and this entry reviewed that label. Change 18 removed both props, so the page takes the shared defaults: the label \"Book a 30-min fit call\" and the href https://cal.com/meshin/30min (BOOKING_URL in src/utils/booking.mjs), which returned 200 on 2026-10-31 with the title \"30 min meeting | Dmitri Meshin | Cal.com\". The button no longer links https://cal.com/meshin. The label and the band are dispositioned at src/utils/booking.mjs and src/components/site/CtaBlock.astro. COPY-CHECKLIST 3.9 (\"Fit call: free, thirty minutes, booked at cal.com/meshin\", answer yes) still covers the claim. The entry is kept as a record that the review applied to the old props, and is reported by the gate as naming no rows.",
+      "digest": "5c2fc782143d"
     },
     {
       "target": "src/utils/og-template.mjs",
