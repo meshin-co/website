@@ -23,6 +23,7 @@ dependency, so the job needs no `npm ci` while it holds a token that can merge.
   the files named in `scripts/derived-files.mjs`), then pushes a fast-forward; 3 spent is `no-convergence`.
   It also resumes a head with zero check runs once, when `main` is ahead: the push uses `AUTOWRITER_PAT`, so it
   starts CI. A second sight of zero checks after a catch-up is the `hard-stop` `no-checks-catch-up-cap`.
+  The job checks out the pull request, so a script fix reaches only later branches; `refresh` installs `main`'s dependencies.
 - **unsettled:** a job still running, a head that moved since the checks were read, a quarantine not over,
   or the first sight of a cancellation. The runner starts a successor.
 - **repairable:** only `cheap-gates` or `build` failed, in a step that is not setup. Phase one repairs
@@ -64,10 +65,9 @@ job as passed, so a skipped one is never green.
 
 ## Why each permission
 
-`contents: read` checks out `main` and reads the ledger from the branch. `pull-requests: read`,
-`checks: read` and `actions: read` read the pull request, the head's check runs and the run with its
-jobs. `issues: write` opens the escalation issue. Nothing else is granted: every other write uses the
-secret above, and the job runs only from `main`.
+`contents: read` checks out `main` and reads the ledger from the branch. `pull-requests: read`, `checks: read`
+and `actions: read` read the pull request, the head's check runs and its run. `issues: write` opens the escalation
+issue. Every other write uses the secret above, and the job runs only from `main`.
 
 ## Traps
 
