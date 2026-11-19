@@ -12,9 +12,9 @@
     "costUsd": 0.030682
   },
   "verdict": {
-    "state": "escalated",
-    "reason": "Autowriter pull request #138: the watcher has been waiting longer than a pull request may take to settle",
-    "decidedAt": "2026-11-19T18:05:19.535Z"
+    "state": "merged",
+    "reason": null,
+    "decidedAt": "2026-11-19T23:40:26.083Z"
   },
   "escalations": [
     {
@@ -263,5 +263,11 @@
       "mainSha": null,
       "failedJobs": []
     }
-  ]
+  ],
+  "measurementDebt": {
+    "mergedCommit": "0fdc3c1718a25daa444c0b380ceff574227125f1",
+    "fingerprint": "0a8501dd76ce8ce86cb329fcdf21cb89408d4895698fc6ab37f206180a6a54b8",
+    "recordedAt": "2026-11-19T23:40:26.083Z",
+    "clear": "cd site && GATE_PHASE=<bucket> npm run gate:lh && GATE_PHASE=<bucket> npm run lh:record"
+  }
 }
