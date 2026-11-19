@@ -32,8 +32,8 @@ dependency, so the job needs no `npm ci` while it holds a token that can merge.
   a head with checks but no `pull_request` run, a skipped, missing or neutral required job, an absent or red
   aggregate, a run that needs approval or has no job, a merge GitHub refuses, a second cancellation),
   `unrepairable` (a failing job that is not a content gate, or a failure in setup) or `no-convergence`
-  (3 attempts spent, or a chain older than 36 hours). Each opens one issue; `no-convergence` also posts to
-  Slack, the rest wait for the digest.
+  (3 attempts spent, or a head unsettled 36 hours after the later of its commit and the pull request's opening:
+  a push restarts that clock). Each opens one issue; `no-convergence` also posts to Slack, the rest wait for the digest.
 - **blocked-by-human:** closed, draft, label `autowriter-hold`, a branch that is not `autowriter/<slug>` from
   this repository, or any commit not made by the bot. The runner writes a summary and nothing else; a pull
   request closed on purpose is recorded by hand, as `report-what-the-writer-spends.md` says.

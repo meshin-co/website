@@ -34,20 +34,20 @@
     "location": "head.title",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/when-should-a-business-disclose-ai-use-to-customers (generation record audits/autowriter/generations/2026/11/when-should-a-business-disclose-ai-use-to-customers.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "ab6a717d236c"
+    "digest": "10c11ab40281"
   },
   {
     "target": "/blog",
     "location": "body.p",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/when-should-a-business-disclose-ai-use-to-customers (generation record audits/autowriter/generations/2026/11/when-should-a-business-disclose-ai-use-to-customers.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "ab6a717d236c"
+    "digest": "10c11ab40281"
   },
   {
     "target": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/when-should-a-business-disclose-ai-use-to-customers (generation record audits/autowriter/generations/2026/11/when-should-a-business-disclose-ai-use-to-customers.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "8f5ab11f404a"
+    "digest": "34bf2fac8d2b"
   },
   {
     "target": "/blog/category/agentic-architecture",
@@ -81,7 +81,7 @@
     "target": "/blog/category/governance",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/when-should-a-business-disclose-ai-use-to-customers (generation record audits/autowriter/generations/2026/11/when-should-a-business-disclose-ai-use-to-customers.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "3fb4480c5fe2"
+    "digest": "0be0f7a3c0d1"
   },
   {
     "target": "/blog/category/operating-model",
@@ -115,13 +115,13 @@
     "target": "/blog/how-to-build-an-ai-system-register-in-a-week",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/when-should-a-business-disclose-ai-use-to-customers (generation record audits/autowriter/generations/2026/11/when-should-a-business-disclose-ai-use-to-customers.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "57da444cf3c2"
+    "digest": "1c08a3bfc27c"
   },
   {
     "target": "/blog/tag/acceptable-use-policy",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/blog/tag/acceptable-use-policy.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [constant.body] now \"Bring the process you want in production and who owns it today. You leave knowing whether an Assessment, a Sprint or neither is the next step.\" (source row: chrome.json#24); The closing booking band is the shared CtaBlock default (task 2.1: the band renders on every template a buyer can land on). Its body restates two sentences of the reviewed FAQ \"What happens on a fit call, and does it cost anything?\" and adds no price, duration or promise; it is dispositioned at chrome.json#24, and the 30-minute event it links returned 200 on 2026-10-31. Earlier review, still true of the unchanged rows: Title, H1 and lead now follow the tag template change: \"Acceptable use policy posts\" and \"All posts tagged Acceptable use policy, newest first.\"; query updated to \"acceptable use policy posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list.",
-    "digest": "62a4c7729028"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-audit-employee-compliance-with-ai-usage-rules (generation record audits/autowriter/generations/2026/11/how-to-audit-employee-compliance-with-ai-usage-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "7414993a0bad"
   },
   {
     "target": "/blog/tag/agentic-architecture",
@@ -149,21 +149,21 @@
     "location": "head.title",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/when-should-a-business-disclose-ai-use-to-customers (generation record audits/autowriter/generations/2026/11/when-should-a-business-disclose-ai-use-to-customers.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "c2272d621b84"
+    "digest": "31372edc6baa"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "body.h1",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/when-should-a-business-disclose-ai-use-to-customers (generation record audits/autowriter/generations/2026/11/when-should-a-business-disclose-ai-use-to-customers.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "c2272d621b84"
+    "digest": "31372edc6baa"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "body.p",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/when-should-a-business-disclose-ai-use-to-customers (generation record audits/autowriter/generations/2026/11/when-should-a-business-disclose-ai-use-to-customers.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "c2272d621b84"
+    "digest": "31372edc6baa"
   },
   {
     "target": "/blog/tag/ai-pilots",
@@ -258,8 +258,8 @@
   {
     "target": "/blog/tag/policy-enforcement",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent (generation record audits/autowriter/generations/2026/11/how-to-set-a-per-task-spending-limit-for-an-ai-agent.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "d016b228f545"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-audit-employee-compliance-with-ai-usage-rules (generation record audits/autowriter/generations/2026/11/how-to-audit-employee-compliance-with-ai-usage-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "5421bae9d79e"
   },
   {
     "target": "/blog/tag/production-readiness",
@@ -285,29 +285,29 @@
   {
     "target": "/blog/tag/security-review",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/what-should-a-board-request-in-a-quarterly-ai-risk-report and /blog/how-to-review-ai-vendor-model-updates-after-deployment (generation records audits/autowriter/generations/2026/11/what-should-a-board-request-in-a-quarterly-ai-risk-report.json and audits/autowriter/generations/2026/11/how-to-review-ai-vendor-model-updates-after-deployment.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "e1db90881cd2"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-a-quarterly-ai-tool-access-review (generation record audits/autowriter/generations/2026/11/how-to-run-a-quarterly-ai-tool-access-review.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "d8fa35bff7eb"
   },
   {
     "target": "/blog/tag/shadow-ai",
     "location": "head.title",
-    "status": "verified",
-    "reason": "Re-read 2026-10-08 against dist/blog/tag/shadow-ai.html. Row head.title is 'Shadow AI posts — meshin.co': the tag archive title 'Shadow AI posts' from tagArchive in src/data/tags.mjs plus the site suffix. It is unchanged since the last seal and is not touched by the interview answers or by the removal of the only.help case study. It matches the docs/SEMANTIC-CORE.md row for this route (query 'shadow ai posts'). The meta, og and twitter descriptions are the lead sentence of the page, which names the tag and claims nothing beyond the tag list. Title, H1, lead and meta description were rewritten on 1 October from the bare tag name to 'Shadow AI posts', so the bare term 'shadow ai' belongs only to /glossary/shadow-ai.",
-    "digest": "a800fa35e7c5"
+    "status": "rewritten",
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-audit-employee-compliance-with-ai-usage-rules (generation record audits/autowriter/generations/2026/11/how-to-audit-employee-compliance-with-ai-usage-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "eb37fef36e08"
   },
   {
     "target": "/blog/tag/shadow-ai",
     "location": "body.h1",
-    "status": "verified",
-    "reason": "Re-read 2026-10-08 against dist/blog/tag/shadow-ai.html. Row body.h1 is 'Shadow AI posts': the tag name plus 'posts', composed by tagArchive in src/data/tags.mjs. It is unchanged since the last seal, equals the title row without the site suffix, and matches the heading column of the docs/SEMANTIC-CORE.md row for this route.",
-    "digest": "a800fa35e7c5"
+    "status": "rewritten",
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-audit-employee-compliance-with-ai-usage-rules (generation record audits/autowriter/generations/2026/11/how-to-audit-employee-compliance-with-ai-usage-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "eb37fef36e08"
   },
   {
     "target": "/blog/tag/shadow-ai",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/blog/tag/shadow-ai.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [body.p] no longer rendered: \"In METR&#39;s 2025 trial, 16 developers believed AI made them 20% faster. Tasks took 19% longer with AI allowed. METR now marks that result out of date.\"; The card excerpt is the post's description. Change 18 rewrote that description, and because the new text equals the post's description row exactly, the ledger now holds it as that row (frontmatter.description, used on this route), dispositioned at articles-telemetry.json#1; that entry also records that the new description drops the \"METR now marks that result out of date\" hedge, which the body keeps. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand.",
-    "digest": "a800fa35e7c5"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-audit-employee-compliance-with-ai-usage-rules (generation record audits/autowriter/generations/2026/11/how-to-audit-employee-compliance-with-ai-usage-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "eb37fef36e08"
   },
   {
     "target": "/blog/tags",
