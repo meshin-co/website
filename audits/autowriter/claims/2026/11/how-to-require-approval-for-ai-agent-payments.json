@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "slug": "how-to-require-approval-for-ai-agent-payments",
+  "title": "How to require approval for AI agent payments",
+  "format": "article",
+  "query": "how to require approval for ai agent payments",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "origin": "category",
+  "category": "agentic-architecture",
+  "catchUp": {
+    "slot": "06:00",
+    "lateMinutes": 114
+  },
+  "runId": "44483033160-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-19T07:54:54.067Z",
+  "expiresAt": "2026-12-03T07:54:54.067Z"
+}

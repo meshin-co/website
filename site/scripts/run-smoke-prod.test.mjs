@@ -1,26 +1,16 @@
 import assert from 'node:assert/strict';
 import { execFile, execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { createServer } from 'node:http';
-import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
 import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
 
+import { workspace } from './fixtures/smoke-workspace.mjs';
+
 const RUNNER = fileURLToPath(new URL('./run-smoke-prod.mjs', import.meta.url));
 const run = promisify(execFile);
-
-function workspace() {
-  const root = mkdtempSync(join(tmpdir(), 'smoke-prod-'));
-  const site = join(root, 'site');
-  const git = (...args) => execFileSync('git', args, { cwd: root, stdio: 'ignore' });
-  git('init', '-q');
-  git('-c', 'user.name=t', '-c', 'user.email=t@t', 'commit', '-q', '--allow-empty', '-m', 'x');
-  mkdirSync(join(site, 'src'), { recursive: true });
-  writeFileSync(join(site, 'src', 'config.yaml'), 'site:\n  name: example.test\n');
-  return { root, site };
-}
 
 async function smoke(site, ...args) {
   const server = createServer((request, response) => response.writeHead(404).end());

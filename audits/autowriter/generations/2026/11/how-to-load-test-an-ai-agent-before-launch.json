@@ -1,0 +1,251 @@
+{
+  "schema": 1,
+  "slug": "how-to-load-test-an-ai-agent-before-launch",
+  "runId": "44046717597-1",
+  "generatedAt": "2026-11-17T08:32:51.545Z",
+  "claim": {
+    "title": "How to load test an AI agent before launch",
+    "query": "how to load test an ai agent before launch",
+    "origin": "category",
+    "category": "agentic-architecture",
+    "catchUp": {
+      "slot": "06:00",
+      "lateMinutes": 148
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-17",
+      "windowStart": "2026-08-17",
+      "windowEnd": "2026-11-15",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/how-to-load-test-an-ai-agent-before-launch",
+    "path": "site/src/data/post/how-to-load-test-an-ai-agent-before-launch.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_06f8a758576016c4016afc10468d9087d1b8680c6ac2cac0f4",
+  "published": {
+    "callIndex": 2
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0a3a0ab2de31796d016afc103bf12487d1b32b422b43a91fe7",
+      "requestDigest": "3a90cd24841010522267742d9f4621bcdabee255c6e598059c0a9e37dfded44a",
+      "tokens": {
+        "input": 1188,
+        "output": 68
+      },
+      "costUsd": 0.001528,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0afcabe4931c2fdd016afc103eed8887d1af002275626d9ec4",
+      "requestDigest": "ea78056a3142a70c0a65d3001d0008f65db61f356159c4c7da6c024f2664c3b8",
+      "tokens": {
+        "input": 1244,
+        "output": 148
+      },
+      "costUsd": 0.001984,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_06f8a758576016c4016afc10468d9087d1b8680c6ac2cac0f4",
+      "requestDigest": "c87c0f0e7bd548d31c86cb861b7b58ce72de59e8d4753eb3a947410b463a076c",
+      "tokens": {
+        "input": 10600,
+        "output": 3886
+      },
+      "costUsd": 0.03003,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 13032,
+      "output": 4102
+    },
+    "costUsd": 0.033542
+  },
+  "ledger": "audits/autowriter/2026/11/how-to-load-test-an-ai-agent-before-launch.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "e3cc85aed03c3aa5b243d4fe1544a83b9f740c97efa1f803505f7b27923d5d10",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "7983e72318b2701ef667d48ce7fff71de6bc58227340fa77be86897b066bb2f5"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "1e291e4336807e99144f2a63cfd94220707c1c99d9084f960e26799cbf12fde8"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "bfb02303381d779e9551eb07526273d9ebecba36e6d2abda5692ac878241e479"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "14358cd9c6f58ac866a3980b6c9954c2bb492c74047ac25c2586448de300b325"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "ec6adb5e731533eca87f3460872e084f25e74e1b108d63d3cd536c7c8dff0fb4"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "d0c87b131f8d080a8bd1f0ad22b61d10befc87357269431da01a4a9751e27b34"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "f64e24db8dca1c487b003c3d3cac0b30d8f5290ec8ab26b658c8b3abf574a4cc"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "8fba11706fb1a0530fc79d097ada59ac50f137ce",
+    "fingerprint": "0ea71c3df9a37cb69762c5cac32c7de6dbd5b7059d0bdb7d48b7403fbdfc57c7"
+  },
+  "claimTable": [],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 117,
+      "median": 14,
+      "shareBelowThreshold": 0.2479,
+      "shareJustBelow": 0.2137,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/how-to-load-test-an-ai-agent-before-launch.json",
+    "audits/autowriter/claims/2026/11/how-to-load-test-an-ai-agent-before-launch.json",
+    "audits/autowriter/generations/2026/11/how-to-load-test-an-ai-agent-before-launch.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-load-test-an-ai-agent-before-launch.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-prevent-duplicate-ai-agent-actions-on-retries.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-roll-back-an-ai-agent-deployment.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-set-a-per-task-spending-limit-for-an-ai-agent.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-stop-ai-agents-getting-stuck-in-loops.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-trace-ai-agent-tool-calls-in-production.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/how-to-load-test-an-ai-agent-before-launch.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}

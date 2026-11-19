@@ -7,6 +7,7 @@ export const ENTRY_TEXT_CAPS = {
   service: 3072,
   case: 4096,
   faq: 1024,
+  spec: 16384,
   page: 4096,
 };
 
@@ -17,6 +18,7 @@ export const KINDS = {
   service: { label: 'Service', singular: 'service', plural: 'services' },
   case: { label: 'Case study', singular: 'case study', plural: 'case studies' },
   faq: { label: 'Answer', singular: 'answer', plural: 'answers' },
+  spec: { label: 'Specification', singular: 'specification', plural: 'specifications' },
   page: { label: 'Page', singular: 'page', plural: 'pages' },
 };
 
@@ -37,6 +39,7 @@ const textFor = {
   case: ({ problem = '', approach = '', outcome, body = '' }) =>
     words([problem, approach, outcomeMetrics(outcome), body]),
   faq: ({ question = '', answer = '' }) => words([question, answer]),
+  spec: ({ body = '' }) => words([body]),
   page: ({ body = '' }) => words([body]),
 };
 

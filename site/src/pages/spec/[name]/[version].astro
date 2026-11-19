@@ -1,0 +1,226 @@
+---
+import type { GetStaticPaths } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import { getCollection, render } from 'astro:content';
+import { SITE } from 'astrowind:config';
+
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import CodeBlock from '~/components/site/CodeBlock.astro';
+import CtaBlock from '~/components/site/CtaBlock.astro';
+import JsonLd from '~/components/common/JsonLd.astro';
+import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
+import Section from '~/components/site/Section.astro';
+import TableOfContents from '~/components/site/TableOfContents.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { isPublished } from '~/utils/feeds.mjs';
+import {
+  breadcrumbNode,
+  imageObject,
+  orgNode,
+  personNode,
+  specNode,
+  specSeriesStub,
+  webPageNode,
+  websiteNode,
+} from '~/utils/jsonld.mjs';
+import { lastmod } from '~/utils/lastmod.mjs';
+import { articleMetadata } from '~/utils/machine-links.mjs';
+import { src as ogDefaultPath } from '~/utils/og-default.mjs';
+import { licenseTextUrl } from '~/utils/resource-license.mjs';
+import { PUBLISHED_FILES, publishedArtefacts } from '~/utils/spec-artefacts.mjs';
+import { CHANGELOG, changelogRows } from '~/utils/spec-changelog.mjs';
+import {
+  CITATION_FORMS,
+  CITATION_HEADING,
+  LICENCE_LABEL,
+  LICENCE_SCOPE,
+  seriesLabel,
+  specCitation,
+} from '~/utils/spec-series.mjs';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const specs = await getCollection('spec', isPublished);
+  return specs.map((spec) => ({ params: { name: spec.data.name, version: spec.data.version }, props: { spec } }));
+};
+
+interface Props {
+  spec: CollectionEntry<'spec'>;
+}
+
+const { spec } = Astro.props;
+const { data } = spec;
+const { Content, headings } = await render(spec);
+const artefacts = publishedArtefacts(spec);
+const changelog = changelogRows(data);
+const contents = [
+  ...headings,
+  ...(artefacts.length > 0 ? [{ depth: 2, slug: PUBLISHED_FILES.id, text: PUBLISHED_FILES.heading }] : []),
+  { depth: 2, slug: CHANGELOG.id, text: CHANGELOG.heading },
+];
+const site = import.meta.env.SITE.replace(/\/$/, '');
+const path = `/spec/${spec.id}`;
+
+const metadata = articleMetadata(site, {
+  title: data.title,
+  description: data.description,
+  ogImage: data.ogImage,
+  canonical: data.canonical,
+  collection: 'spec',
+  id: spec.id,
+  publishDate: data.publishDate,
+  updatedDate: data.updatedDate,
+  noindex: data.noindex,
+});
+
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: seriesLabel(data.name), path: `/spec/${data.name}` },
+  { name: `Version ${data.version}`, path },
+];
+
+const citation = specCitation({
+  name: data.name,
+  version: data.version,
+  site,
+  citeAs: data.citeAs,
+  citeKey: data.citeKey,
+});
+
+const citationLanguages: Partial<Record<string, string>> = { markdown: 'markdown', file: 'json' };
+
+const image = imageObject(metadata.openGraph.images[0]);
+
+const nodes = [
+  orgNode(site, { logoPath: ogDefaultPath }),
+  personNode(site),
+  websiteNode(site),
+  specSeriesStub(site, data.name),
+  specNode(site, { id: spec.id, ...data }, { image }),
+  webPageNode(site, path, lastmod({ publishDate: data.publishDate, updatedDate: data.updatedDate }), data.title, {
+    image,
+  }),
+  breadcrumbNode(site, crumbs),
+];
+
+const day = (date: Date) => date.toISOString().slice(0, 10);
+const longDate = (date: Date) => date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+
+<Layout metadata={metadata}>
+  <JsonLd nodes={nodes} slot="head" />
+  <MarkdownAlternate path={path} slot="head" />
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title={`${SITE.name} — Specifications`}
+    href="/spec/rss.xml"
+    slot="head"
+  />
+
+  <Breadcrumbs crumbs={crumbs} />
+
+  <article>
+    <Section bordered={false} headingLevel={1} eyebrow="Specification" title={data.title} lead={data.description}>
+      <p class="mt-6 font-mono text-xs text-muted" data-gate-ignore>
+        Version {data.version}{' · Published '}
+        <time datetime={day(data.publishDate)}>{longDate(data.publishDate)}</time>
+        {
+          data.corrections.length > 0 && (
+            <>
+              {' · Updated '}
+              <time datetime={day(data.updatedDate)}>{longDate(data.updatedDate)}</time>
+            </>
+          )
+        }
+      </p>
+    </Section>
+
+    <Section eyebrow="Citation" title={CITATION_HEADING} tone="surface">
+      <div class="grid max-w-[68ch] gap-8">
+        {
+          CITATION_FORMS.map(({ key, label }) => (
+            <div>
+              <h3 class="font-mono text-xs text-muted">{label}</h3>
+              <CodeBlock class="mt-3" text={citation[key as keyof typeof citation]} language={citationLanguages[key]} />
+            </div>
+          ))
+        }
+      </div>
+      <p class="mt-8 max-w-[68ch] text-sm text-muted">
+        {LICENCE_LABEL}: <a
+          href={licenseTextUrl(site, data.license)}
+          class="text-link underline decoration-2 underline-offset-4 hover:decoration-primary">{data.license}</a
+        >. {LICENCE_SCOPE}
+      </p>
+    </Section>
+
+    <Section eyebrow="Detail" title="The full text">
+      <div class="grid gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)] lg:gap-16">
+        <div class="prose-brief prose-brief-headings min-w-0 max-w-[68ch]">
+          <Content />
+          {
+            artefacts.length > 0 && (
+              <>
+                <h2 id={PUBLISHED_FILES.id}>
+                  {PUBLISHED_FILES.heading}
+                  <a href={`#${PUBLISHED_FILES.id}`} class="heading-anchor" aria-hidden="true" tabindex="-1" />
+                </h2>
+                <p>{PUBLISHED_FILES.intro}</p>
+                <ul>
+                  {artefacts.map((artefact) => (
+                    <li data-artefact={artefact.path}>
+                      <a href={artefact.path}>{artefact.file}</a>
+                      <span class="block text-sm">
+                        {artefact.mediaType}, {artefact.size.toLocaleString('en-GB')} bytes
+                      </span>
+                      <span class="block text-sm">
+                        SHA-256{' '}
+                        <code class="break-all" data-artefact-digest>
+                          {artefact.sha256}
+                        </code>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )
+          }
+          <h2 id={CHANGELOG.id}>
+            {CHANGELOG.heading}
+            <a href={`#${CHANGELOG.id}`} class="heading-anchor" aria-hidden="true" tabindex="-1"></a>
+          </h2>
+          <div class="table-scroll" tabindex="0">
+            <table>
+              <thead>
+                <tr>
+                  {CHANGELOG.columns.map((column) => <th>{column}</th>)}
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  changelog.map(({ version, date, change }) => (
+                    <tr>
+                      <td>{version}</td>
+                      <td>{date}</td>
+                      <td>{change}</td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="lg:sticky lg:top-24 lg:self-start">
+          <TableOfContents headings={contents} />
+        </div>
+      </div>
+    </Section>
+  </article>
+
+  <Section title="Next step">
+    <CtaBlock
+      title="Questions about adopting it?"
+      body="Book a fit call and bring the agents you run. We talk through how this version applies to them."
+    />
+  </Section>
+</Layout>

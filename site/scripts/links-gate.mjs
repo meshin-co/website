@@ -20,7 +20,8 @@ export const skippedHosts = (origin) => [...THIRD_PARTY_HOSTS, `^${origin}`];
 
 const EXTERNAL = '^https?://(?!localhost|127\\.0\\.0\\.1)';
 
-const EXTENSIONLESS_LOCAL = '^(http://(?:localhost|127\\.0\\.0\\.1):\\d+/(?:[^/?#]+/)*[^/?#.]+)([?#].*)?$';
+const EXTENSIONLESS_LOCAL =
+  '^(http://(?:localhost|127\\.0\\.0\\.1):\\d+/(?:[^/?#]+/)*(?:[^/?#.]+|\\d+\\.\\d+))([?#].*)?$';
 
 export function linkArgs({ origin, json = false } = {}) {
   return [

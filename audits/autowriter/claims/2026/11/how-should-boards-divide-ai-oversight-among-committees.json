@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "slug": "how-should-boards-divide-ai-oversight-among-committees",
+  "title": "How should boards divide AI oversight among committees?",
+  "format": "article",
+  "query": "how should boards divide ai oversight among committees",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "origin": "category",
+  "category": "executive",
+  "catchUp": {
+    "slot": "15:00",
+    "lateMinutes": 205
+  },
+  "runId": "43928163988-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-16T18:25:17.584Z",
+  "expiresAt": "2026-11-30T18:25:17.584Z"
+}

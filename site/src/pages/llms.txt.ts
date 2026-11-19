@@ -1,15 +1,19 @@
 import { getCollection } from 'astro:content';
 
 import { SITE, METADATA } from 'astrowind:config';
+import { SERIES_COLLECTIONS } from '~/utils/feeds.mjs';
 import { absoluteUrl, collectionHubs, publicIndexableStaticPages, renderLlmsTxt } from '~/utils/machine-text.mjs';
 import {
+  HUB_COLLECTIONS,
   LLMS_COLLECTIONS,
   latestUpdated,
   llmsFeedPointers,
   llmsFullTextPointers,
+  llmsSeriesHubs,
   orderEntries,
   toLlmsEntry,
 } from '~/utils/llms-collections.mjs';
+import { groupSeries } from '~/utils/spec-series.mjs';
 
 export const prerender = true;
 
@@ -33,12 +37,14 @@ export const GET = async () => {
   const sections: { title: string; items: { url: string }[] }[] = [];
   const freshnessByName: Record<string, string | null> = {};
   const entryCounts: Record<string, number> = {};
+  const seriesHubs: { title: string; description: string; updated: string | null; url: string }[] = [];
 
   for (const { name, base, title } of LLMS_COLLECTIONS) {
     const entries = await getCollection(name as Parameters<typeof getCollection>[0], isLive);
     const mapped = entries.map(toLlmsEntry());
     freshnessByName[name] = latestUpdated(mapped);
     entryCounts[name] = mapped.length;
+    if (SERIES_COLLECTIONS.has(name)) seriesHubs.push(...llmsSeriesHubs(base, groupSeries(entries)));
     if (name !== INLINE_COLLECTION) continue;
     sections.push({
       title,
@@ -61,7 +67,7 @@ export const GET = async () => {
   });
 
   const staticPaths = publicIndexableStaticPages().map((page) => page.path);
-  const hubCandidates = LLMS_COLLECTIONS.filter(({ name }) => entryCounts[name] > 0).map(({ name, base, title }) => ({
+  const hubCandidates = HUB_COLLECTIONS.filter(({ name }) => entryCounts[name] > 0).map(({ name, base, title }) => ({
     name,
     base,
     title,
@@ -69,12 +75,15 @@ export const GET = async () => {
   }));
   sections.push({
     title: 'Hubs',
-    items: collectionHubs({ collections: hubCandidates, staticPaths }).map((hub: (typeof hubCandidates)[number]) => ({
-      title: hub.title,
-      description: HUB_DESCRIPTIONS[hub.name] ?? `${hub.title}, indexed on this site.`,
-      updated: hub.updated,
-      url: absoluteUrl(site, hub.base),
-    })),
+    items: [
+      ...collectionHubs({ collections: hubCandidates, staticPaths }).map((hub: (typeof hubCandidates)[number]) => ({
+        title: hub.title,
+        description: HUB_DESCRIPTIONS[hub.name] ?? `${hub.title}, indexed on this site.`,
+        updated: hub.updated,
+        url: absoluteUrl(site, hub.base),
+      })),
+      ...seriesHubs.map((hub) => ({ ...hub, url: absoluteUrl(site, hub.url) })),
+    ],
   });
 
   sections.push({

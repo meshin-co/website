@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { brandFromDisk } from '../src/utils/brand.mjs';
 import { FEED_BASES } from '../src/utils/feeds.mjs';
 import { EMPTY_COLLECTIONS, ROUTE_EXCEPTIONS } from '../src/utils/route-exceptions.mjs';
+import { noindexEntryRoutes } from '../src/utils/sitemap-lastmod.mjs';
 import { INDEX_DOCUMENT_FILE } from './collection-gate.mjs';
 import { discoverRoutes } from './gate.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
@@ -11,11 +12,6 @@ import { BOUNDED_INLINE_COLLECTIONS, publicCollections, sitemapLastmods } from '
 import { parityLines, routeParity } from './route-parity.mjs';
 
 const PNG_HEAD_BYTES = 24;
-const FRONTMATTER = /^---\n([\s\S]*?)\n---/;
-const NOINDEX_FLAG = /^noindex:\s*true\s*$/m;
-const ENTRY_FILE = /\.mdx?$/;
-
-const missingIsEmpty = (error) => (error.code === 'ENOENT' ? [] : Promise.reject(error));
 
 const slashed = (path) => path.split('\\').join('/');
 
@@ -34,19 +30,6 @@ async function pngHead(file) {
   } finally {
     await handle.close();
   }
-}
-
-async function frontmatterNoindexRoutes(collections) {
-  const routes = new Set();
-  for (const { kind, base } of collections) {
-    const files = await readdir(join('src', 'data', kind)).catch(missingIsEmpty);
-    for (const file of files.filter((name) => ENTRY_FILE.test(name))) {
-      const source = await readFile(join('src', 'data', kind, file), 'utf8');
-      if (NOINDEX_FLAG.test(FRONTMATTER.exec(source)?.[1] ?? ''))
-        routes.add('/' + base + '/' + file.replace(ENTRY_FILE, ''));
-    }
-  }
-  return routes;
 }
 
 export async function readWorld(distDir) {
@@ -88,7 +71,7 @@ export async function readWorld(distDir) {
     declared: {
       exceptions: ROUTE_EXCEPTIONS,
       emptyCollections: EMPTY_COLLECTIONS,
-      noindexRoutes: await frontmatterNoindexRoutes(collections),
+      noindexRoutes: new Set(await noindexEntryRoutes('src/data')),
     },
   };
 }

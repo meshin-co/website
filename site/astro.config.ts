@@ -10,11 +10,12 @@ import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 import icon from 'astro-icon';
 import compress from 'astro-compress';
-import expressiveCode from 'astro-expressive-code';
+import rehypeStarryNight from 'rehype-starry-night';
 
 import astrowind from './vendor/integration';
 
 import { readingTimeRemarkPlugin } from './src/utils/frontmatter';
+import { rehypeCodeBlocks, rehypeJsonBlocks } from './src/utils/code-blocks.mjs';
 import { rehypeExternalLinks, rehypeHeadingAnchors, rehypeScrollableTables } from './src/utils/pipeline.mjs';
 import {
   siteLastmods,
@@ -41,6 +42,7 @@ const NOINDEX_ROUTES = new Set([
 
 export default defineConfig({
   output: 'static',
+  prerenderConflictBehavior: 'error',
   trailingSlash: 'never',
 
   build: {
@@ -94,10 +96,6 @@ export default defineConfig({
         return modified ? ({ ...item, lastmod: new Date(modified) } as unknown as typeof item) : item;
       },
     }),
-    expressiveCode({
-      themes: ['github-light', 'github-dark'],
-      styleOverrides: { borderRadius: '0', frames: { shadowColor: 'transparent' } },
-    }),
     mdx(),
     icon({
       iconDir: 'src/assets/icons',
@@ -120,6 +118,7 @@ export default defineConfig({
         },
       },
       Image: false,
+      JSON: false,
       JavaScript: true,
       SVG: false,
       Logger: 1,
@@ -137,11 +136,16 @@ export default defineConfig({
   markdown: {
     processor: unified({
       remarkPlugins: [readingTimeRemarkPlugin],
-      rehypePlugins: [rehypeScrollableTables, rehypeHeadingAnchors, rehypeExternalLinks],
+      rehypePlugins: [
+        rehypeJsonBlocks,
+        rehypeStarryNight,
+        rehypeCodeBlocks,
+        rehypeScrollableTables,
+        rehypeHeadingAnchors,
+        rehypeExternalLinks,
+      ],
     }),
-    shikiConfig: {
-      themes: { light: 'github-light', dark: 'github-dark' },
-    },
+    syntaxHighlight: false,
   },
 
   vite: {

@@ -5,7 +5,9 @@ import { dirname, join } from 'node:path';
 import { after, before, test } from 'node:test';
 
 import {
+  NOT_MODELLED,
   acceptsGzip,
+  bannerFor,
   contentTypeFor,
   headerRulesFor,
   overPlainHttp,
@@ -65,6 +67,17 @@ test('a directory build is not served: about/index.html answers neither /about n
   assert.deepEqual(directoryBuild('/about/'), { status: 404 });
 });
 
+test('a final segment of two numbers is a page route, not a file: the version page answers slashless and its sidecar answers as itself', () => {
+  const built = new Set(['spec/evals-baseline/1.0.html', 'spec/evals-baseline/1.0.md']);
+  const specAnswer = (url) => resolveRequest(url, (file) => built.has(file));
+  assert.deepEqual(specAnswer('/spec/evals-baseline/1.0'), { status: 200, file: 'spec/evals-baseline/1.0.html' });
+  assert.deepEqual(specAnswer('/spec/evals-baseline/1.0/'), { status: 308, location: '/spec/evals-baseline/1.0' });
+  assert.deepEqual(specAnswer('/spec/evals-baseline/1.0.html'), { status: 308, location: '/spec/evals-baseline/1.0' });
+  assert.deepEqual(specAnswer('/spec/evals-baseline/1.0.md'), { status: 200, file: 'spec/evals-baseline/1.0.md' });
+  assert.deepEqual(specAnswer('/spec/evals-baseline/1.0.md/'), { status: 404 });
+  assert.deepEqual(specAnswer('/spec/evals-baseline/2.0'), { status: 404 });
+});
+
 test('leading double slashes collapse before the lookup', () => {
   assert.deepEqual(answerFor('//about'), { status: 200, file: 'about.html' });
 });
@@ -97,6 +110,7 @@ test('content types cover every artifact the gate fetches', () => {
   assert.equal(contentTypeFor('card.png'), 'image/png');
   assert.equal(contentTypeFor('body.woff2'), 'font/woff2');
   assert.equal(contentTypeFor('sitemap.xml'), 'application/xml; charset=utf-8');
+  assert.equal(contentTypeFor('about.md'), 'text/markdown; charset=utf-8');
 });
 
 test('the headers file drives the response headers, not a second hand-written list', () => {
@@ -110,8 +124,11 @@ test('the headers file drives the response headers, not a second hand-written li
 const PAGES = {
   'index.html': '<h1>home</h1>',
   'about.html': '<h1>about</h1>',
+  'about.md': '# About',
+  'blog/post.html': '<h1>post</h1>',
   '404.html': '<h1>missing</h1>',
   'rss.xml': '<rss/>',
+  '.well-known/api-catalog': '{}',
 };
 
 let dist;
@@ -136,7 +153,9 @@ after(async () => {
   await rm(dist, { recursive: true, force: true });
 });
 
-const get = (path) => fetch(`${origin}${path}`, { redirect: 'manual' });
+const get = (path, headers) => fetch(`${origin}${path}`, { redirect: 'manual', headers });
+const varyNames = (response) =>
+  (response.headers.get('vary') ?? '').split(',').map((name) => name.trim().toLowerCase());
 
 test('a flat page answers 200 at its slashless URL with the page', async () => {
   const response = await get('/about');
@@ -234,4 +253,84 @@ test('the served policy carries no upgrade-insecure-requests', async () => {
   assert.ok(policy, 'the fixture serves a policy');
   assert.ok(!policy.includes('upgrade-insecure-requests'), policy);
   assert.ok(policy.includes("default-src 'self'"), policy);
+});
+
+test('a markdown sidecar is served as markdown, as the edge serves it', async () => {
+  const response = await get('/about.md');
+
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get('content-type'), 'text/markdown; charset=utf-8');
+  assert.equal(await response.text(), '# About');
+});
+
+test('a path is matched in the case the build wrote it, as the edge matches it, on a filesystem that is not', async () => {
+  for (const path of ['/ABOUT', '/About', '/ABOUT.md', '/BLOG/post', '/blog/POST']) {
+    assert.equal((await get(path)).status, 404, path);
+  }
+  assert.equal((await get('/blog/post')).status, 200);
+});
+
+test('the server prints what it does not model after the line that says it is listening', () => {
+  const banner = bannerFor(4330);
+
+  assert.equal(banner[0], 'gate server listening on http://127.0.0.1:4330');
+  assert.match(banner[1], /not the edge/);
+  for (const difference of NOT_MODELLED) assert.ok(banner.join('\n').includes(difference), difference);
+});
+
+const STILL_DIFFERENT = [
+  [
+    /_worker\.js/,
+    async () => {
+      const asMarkdown = await get('/about', { accept: 'text/markdown' });
+      assert.equal(asMarkdown.headers.get('content-type'), 'text/html; charset=utf-8');
+      assert.equal(varyNames(asMarkdown).includes('accept'), false);
+    },
+  ],
+  [
+    /validators/,
+    async () => {
+      for (const path of ['/about', '/about.md']) {
+        const revalidated = await get(path, { 'if-none-match': '"x"' });
+        assert.equal(revalidated.status, 200, path);
+        assert.equal(revalidated.headers.get('etag'), null, path);
+      }
+    },
+  ],
+  [
+    /HEAD/,
+    async () => {
+      const head = await fetch(`${origin}/about`, { method: 'HEAD', headers: { 'accept-encoding': 'identity' } });
+      assert.equal(head.headers.get('content-length'), String('<h1>about</h1>'.length));
+    },
+  ],
+  [
+    /compression/,
+    async () => {
+      const brotli = await get('/about', { 'accept-encoding': 'br' });
+      assert.equal(brotli.headers.get('content-encoding'), null);
+    },
+  ],
+  [
+    /extension-less/,
+    async () => {
+      assert.equal((await get('/.well-known/api-catalog')).status, 404);
+    },
+  ],
+  [
+    /dot segments/,
+    async () => {
+      assert.deepEqual(answerFor('/about/../about'), { status: 404 });
+      assert.deepEqual(answerFor('/%2Fabout'), { status: 200, file: 'about.html' });
+    },
+  ],
+];
+
+test('every difference the server states is still a difference, so the statement cannot go stale', async () => {
+  for (const statement of NOT_MODELLED) {
+    const check = STILL_DIFFERENT.find(([says]) => says.test(statement));
+    assert.ok(check, `nothing backs the statement: ${statement}`);
+    await check[1]();
+  }
+  assert.equal(STILL_DIFFERENT.length, NOT_MODELLED.length, 'a check backs no statement');
 });

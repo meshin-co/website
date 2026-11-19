@@ -1,5 +1,5 @@
 import { KINDS } from '../../public/search/shards.mjs';
-import { FEED_WINDOW } from '../../src/utils/feeds.mjs';
+import { FEED_WINDOW, SERIES_COLLECTIONS } from '../../src/utils/feeds.mjs';
 import { markdownPath } from '../../src/utils/machine-links.mjs';
 import { buildSearchIndex } from '../../src/utils/search-index.mjs';
 
@@ -10,6 +10,8 @@ export const COLLECTIONS = [
   { kind: 'glossary', base: 'glossary' },
   { kind: 'case', base: 'case-studies' },
 ];
+
+const SERIES_COLLECTION = { kind: 'spec', base: 'spec' };
 
 const ENTRIES = { post: ['first', 'second'], glossary: ['evals'] };
 const PAGES = ['/', '/about'];
@@ -22,10 +24,31 @@ const LASTMOD = '2026-10-01T00:00:00.000Z';
 const DEFAULT_CARD = '/_astro/og-default.abc.jpg';
 
 export const urlOf = (route) => (route === '/' ? SITE : SITE + route);
-export const baseOf = (kind) => COLLECTIONS.find((collection) => collection.kind === kind).base;
+export const baseOf = (kind) => [...COLLECTIONS, SERIES_COLLECTION].find((collection) => collection.kind === kind).base;
 export const entryRoutes = (kind, entries = ENTRIES) =>
   (entries[kind] ?? []).map((id) => '/' + baseOf(kind) + '/' + id);
 export const allEntryRoutes = (entries = ENTRIES) => Object.keys(entries).flatMap((kind) => entryRoutes(kind, entries));
+
+const seriesOf = (entries) =>
+  Object.keys(entries)
+    .filter((kind) => SERIES_COLLECTIONS.has(kind))
+    .flatMap((kind) =>
+      [...new Set(entries[kind].map((id) => id.split('/')[0]))].map((name) => ({
+        kind,
+        name,
+        route: '/' + baseOf(kind) + '/' + name,
+      }))
+    );
+export const allSeriesRoutes = (entries = ENTRIES) => seriesOf(entries).map(({ route }) => route);
+const collectionsOf = (entries) => (entries.spec === undefined ? COLLECTIONS : [...COLLECTIONS, SERIES_COLLECTION]);
+const datedRoutes = (entries) => [
+  ...PAGES,
+  ...HUBS,
+  TAG_INDEX,
+  ...ARCHIVES,
+  ...allEntryRoutes(entries),
+  ...allSeriesRoutes(entries),
+];
 
 export function pngHead(width, height) {
   const head = new Uint8Array(24);
@@ -60,6 +83,9 @@ function htmlByRoute(entries) {
       const route = '/' + baseOf(kind) + '/' + id;
       html[route] = headOf(route, { markdown: true, feedBase: baseOf(kind), card: cardOf(kind, id) });
     }
+  }
+  for (const { kind, name, route } of seriesOf(entries)) {
+    html[route] = headOf(route, { markdown: true, card: cardOf(kind, name) });
   }
   return html;
 }
@@ -112,6 +138,7 @@ const searchEntry = (kind, route) => ({
 const searchEntries = (entries) => [
   ...[...PAGES, ...HUBS, TAG_INDEX, ...ARCHIVES].map((route) => searchEntry('page', route)),
   ...Object.keys(entries).flatMap((kind) => entryRoutes(kind, entries).map((route) => searchEntry(kind, route))),
+  ...seriesOf(entries).map(({ kind, route }) => searchEntry(kind, route)),
 ];
 
 const entriesText = (count) => count + (count === 1 ? ' entry' : ' entries');
@@ -147,7 +174,7 @@ function textsOf({ inlineKinds, entries, shardSize }) {
   const texts = {
     'sitemap-0.xml':
       '<urlset>' +
-      [...PAGES, ...HUBS, TAG_INDEX, ...ARCHIVES, ...allEntryRoutes(entries)]
+      datedRoutes(entries)
         .map((route) => '<url><loc>' + urlOf(route) + '</loc><lastmod>' + LASTMOD + '</lastmod></url>')
         .join('') +
       '</urlset>',
@@ -165,19 +192,20 @@ function textsOf({ inlineKinds, entries, shardSize }) {
 }
 
 function shippedFiles(entries) {
-  const sidecars = [...PAGES, ...HUBS, TAG_INDEX, ...allEntryRoutes(entries)].map((route) =>
-    route === '/' ? 'index.md' : route.slice(1) + '.md'
+  const sidecars = [...PAGES, ...HUBS, TAG_INDEX, ...allEntryRoutes(entries), ...allSeriesRoutes(entries)].map(
+    (route) => (route === '/' ? 'index.md' : route.slice(1) + '.md')
   );
-  const cards = Object.keys(entries).flatMap((kind) => entries[kind].map((id) => cardOf(kind, id).slice(1)));
+  const cards = [
+    ...Object.keys(entries).flatMap((kind) => entries[kind].map((id) => cardOf(kind, id).slice(1))),
+    ...seriesOf(entries).map(({ kind, name }) => cardOf(kind, name).slice(1)),
+  ];
   return [...sidecars, ...cards, DEFAULT_CARD.slice(1)];
 }
 
 export function buildWorld({ inlineKinds = [], entries: replaced = {}, shardSize } = {}) {
   const entries = { ...ENTRIES, ...replaced };
   const shipped = shippedFiles(entries);
-  const lastmods = new Map(
-    [...PAGES, ...HUBS, TAG_INDEX, ...ARCHIVES, ...allEntryRoutes(entries)].map((route) => [route, LASTMOD])
-  );
+  const lastmods = new Map(datedRoutes(entries).map((route) => [route, LASTMOD]));
   return {
     site: SITE,
     routes: [
@@ -188,9 +216,10 @@ export function buildWorld({ inlineKinds = [], entries: replaced = {}, shardSize
       TAG_INDEX,
       ...ARCHIVES,
       ...allEntryRoutes(entries),
+      ...allSeriesRoutes(entries),
     ].sort(),
     htmlByRoute: htmlByRoute(entries),
-    collections: COLLECTIONS,
+    collections: collectionsOf(entries),
     texts: textsOf({ inlineKinds, entries, shardSize }),
     shipped,
     imageHeads: Object.fromEntries(
