@@ -13,8 +13,8 @@
   },
   "verdict": {
     "state": "escalated",
-    "reason": "Autowriter pull request #171: the CI run was cancelled twice with no failed job to explain it",
-    "decidedAt": "2026-11-19T19:15:30.219Z"
+    "reason": "Autowriter pull request #171: the repair job failed before it could finish",
+    "decidedAt": "2026-11-19T23:41:45.592Z"
   },
   "escalations": [
     {
@@ -30,6 +30,23 @@
           "delivered": true,
           "status": 201,
           "issue": 174,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "esc-2",
+      "kind": "hard-stop",
+      "title": "Autowriter pull request #171: the repair job failed before it could finish",
+      "detail": "The repair of pull request #171 ended as failed: the repair job failed before it could finish.\nRepair run: https://github.com/meshin-co/website/actions/runs/44639114726\nPull request: https://github.com/meshin-co/website/pull/171",
+      "raisedAt": "2026-11-19T23:41:44.941Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-19T23:41:44.941Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 182,
           "error": null
         }
       ]
