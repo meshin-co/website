@@ -12,9 +12,9 @@
     "costUsd": 0.064379
   },
   "verdict": {
-    "state": "open",
+    "state": "merged",
     "reason": null,
-    "decidedAt": null
+    "decidedAt": "2026-11-19T19:36:43.283Z"
   },
   "escalations": [],
   "generation": {
@@ -235,5 +235,11 @@
       "against": "/glossary/ai-governance",
       "detail": "the query \"ai governance\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
     }
-  ]
+  ],
+  "measurementDebt": {
+    "mergedCommit": "c1333d92bd2e2596ff9c022a74b21ad0cf96b91f",
+    "fingerprint": "500de5555774577ab166e7ee37d1cf4fac5b672bdf5e9187a62c42c22a069ba1",
+    "recordedAt": "2026-11-19T19:36:43.283Z",
+    "clear": "cd site && GATE_PHASE=<bucket> npm run gate:lh && GATE_PHASE=<bucket> npm run lh:record"
+  }
 }
