@@ -12,9 +12,9 @@
     "costUsd": 0.075098
   },
   "verdict": {
-    "state": "open",
+    "state": "merged",
     "reason": null,
-    "decidedAt": null
+    "decidedAt": "2026-11-19T20:06:16.716Z"
   },
   "escalations": [],
   "generation": {
@@ -247,5 +247,11 @@
       "against": "audits/autowriter/claims/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json",
       "detail": "the topic \"How to train employees to use AI tools safely\" repeats audits/autowriter/claims/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json (\"How to decide which employee data can be used in AI tools\"): its subject shares ai, employe, tool, 3 of the 6 stems of the smaller one, a containment of 0.50 against the threshold of 0.5"
     }
-  ]
+  ],
+  "measurementDebt": {
+    "mergedCommit": "32da09efb53db2e727e8d5397fe9e7ef67550178",
+    "fingerprint": "dcc70fe9cab2aa717ba9e1220ae4b93ba54583adb6e188a3f48de4bc40167ce9",
+    "recordedAt": "2026-11-19T20:06:16.716Z",
+    "clear": "cd site && GATE_PHASE=<bucket> npm run gate:lh && GATE_PHASE=<bucket> npm run lh:record"
+  }
 }
