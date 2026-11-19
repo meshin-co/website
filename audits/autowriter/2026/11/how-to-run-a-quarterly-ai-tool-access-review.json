@@ -12,9 +12,9 @@
     "costUsd": 0.062124
   },
   "verdict": {
-    "state": "escalated",
-    "reason": "Autowriter pull request #152: the repair job failed before it could finish",
-    "decidedAt": "2026-11-16T20:01:55.679Z"
+    "state": "merged",
+    "reason": null,
+    "decidedAt": "2026-11-19T19:08:01.221Z"
   },
   "escalations": [
     {
@@ -255,5 +255,11 @@
       "mainSha": "55f469196a6427bd1d52f714f1209feb6cf009cc",
       "failedJobs": []
     }
-  ]
+  ],
+  "measurementDebt": {
+    "mergedCommit": "cd6607cb293559430fe7977967c190bc177433bb",
+    "fingerprint": "1e99945c7bacd27dacb339958b360c956263bab021b3342cfb2d5c9b9711ea29",
+    "recordedAt": "2026-11-19T19:08:01.221Z",
+    "clear": "cd site && GATE_PHASE=<bucket> npm run gate:lh && GATE_PHASE=<bucket> npm run lh:record"
+  }
 }
