@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { dirname, join, relative } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 import { resourceNode } from './jsonld.mjs';
-import { LICENSE_ID, licenseHasText, licenseTextPath, licenseTextShips } from './resource-license.mjs';
+import { LICENSE_ID, licenseHasText, licenseTextPath, licenseTextShips, licenseTextUrl } from './resource-license.mjs';
 
 const SITE = 'https://meshin.co';
 const SITE_ROOT = join(dirname(fileURLToPath(import.meta.url)), '../..');
@@ -19,12 +19,14 @@ function siteRoot(licenses = {}) {
   return root;
 }
 
-test('an entry that declares no license needs no text', (t) => {
-  const root = siteRoot();
+test('an entry that declares no license fails the check, whatever text ships', (t) => {
+  const root = siteRoot({ MIT: 'MIT License\n', undefined: 'text', null: 'text' });
   t.after(() => rmSync(root, { recursive: true, force: true }));
 
-  assert.equal(licenseHasText({}, root), true);
-  assert.equal(licenseHasText({ license: undefined }, root), true);
+  assert.equal(licenseHasText({}, root), false);
+  assert.equal(licenseHasText({ license: undefined }, root), false);
+  assert.equal(licenseHasText({ license: null }, root), false);
+  assert.equal(licenseHasText({ license: '' }, root), false);
 });
 
 test('a declared license is backed by a file under public/licenses with readable text in it, and by nothing else', (t) => {
@@ -69,9 +71,20 @@ test('the planted specimen declares a valid id that no text backs, and the same 
   assert.equal(licenseHasText({ license: id }, root), true);
 });
 
-test('a resource node carries license only when its entry declares one', () => {
+test('a resource node carries license only when its entry declares one, as the address of its text', () => {
   const base = { id: 'x', name: 'N', description: 'D.', version: '0.1' };
 
-  assert.equal(resourceNode(SITE, { ...base, license: 'MIT' }).license, 'MIT');
+  assert.equal(resourceNode(SITE, { ...base, license: 'MIT' }).license, `${SITE}/licenses/MIT.txt`);
   assert.equal(Object.hasOwn(resourceNode(SITE, base), 'license'), false);
+});
+
+test('the text address is the site, /licenses/, the id and .txt', () => {
+  assert.equal(licenseTextUrl(SITE, 'CC-BY-4.0'), 'https://meshin.co/licenses/CC-BY-4.0.txt');
+});
+
+test('the text address names the file the text path holds, so a shipped text is a served text', () => {
+  for (const id of ['CC-BY-4.0', 'MIT']) {
+    const served = relative(join(SITE_ROOT, 'public'), licenseTextPath(id, SITE_ROOT));
+    assert.equal(new URL(licenseTextUrl(SITE, id)).pathname, `/${served}`);
+  }
 });

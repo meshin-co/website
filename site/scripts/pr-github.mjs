@@ -242,6 +242,17 @@ export async function listOpenIssues(api) {
 
 export const commentOnIssue = (api, { number, body }) => api.post(`issues/${number}/comments`, { body });
 
+export async function listIssueComments(api, { number }) {
+  const comments = await api.get(`issues/${number}/comments?per_page=${PAGE_SIZE}`);
+  if (comments.length >= PAGE_SIZE) throw incomplete('issue comments');
+  return comments;
+}
+
+export async function listWatcherRuns(api, { workflow }) {
+  const { workflow_runs: runs } = await api.get(`actions/workflows/${workflow}/runs?per_page=${PAGE_SIZE}`);
+  return runs.map(({ status, display_title: title }) => ({ status, title }));
+}
+
 export const closeIssue = (api, { number, reason }) =>
   api.patch(`issues/${number}`, { state: 'closed', state_reason: reason });
 

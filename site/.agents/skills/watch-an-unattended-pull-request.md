@@ -1,8 +1,7 @@
 # Watch an Unattended Pull Request
 
-Change `20-write-without-a-human` lets a machine open an article pull request and merge it without a
-person. The watcher is the part that judges that pull request. Phase one calls no model: it reads
-GitHub, decides, and then merges, waits by starting its own successor, or escalates.
+Change `20-write-without-a-human` lets a machine open an article pull request and merge it without a person.
+The watcher judges it. Phase one calls no model: it reads GitHub, then merges, waits, or escalates.
 
 ```
 npm run watch:pr -- --pr <number> [--observed <token>]
@@ -22,21 +21,25 @@ dependency, so the job needs no `npm ci` while it holds a token that can merge.
 - **catch-up:** the merge case, but `main` changed a derived file since the branch left it. The repair job
   merges `origin/main` in and regenerates the derived set (`scripts/catch-up.mjs`, run by `npm run catch-up:entry`,
   the files named in `scripts/derived-files.mjs`), then pushes a fast-forward; 3 spent is `no-convergence`.
+  It also resumes a head with zero check runs once, when `main` is ahead: the push uses `AUTOWRITER_PAT`, so it
+  starts CI. A second sight of zero checks after a catch-up is the `hard-stop` `no-checks-catch-up-cap`.
+  The job checks out the pull request, so a script fix reaches only later branches; `refresh` installs `main`'s dependencies.
 - **unsettled:** a job still running, a head that moved since the checks were read, a quarantine not over,
   or the first sight of a cancellation. The runner starts a successor.
 - **repairable:** only `cheap-gates` or `build` failed, in a step that is not setup. Phase one repairs
   nothing, so the runner escalates it as `unrepairable`.
-- **escalate:** `hard-stop` (zero check runs, a head with checks but no `pull_request` run, a skipped,
-  missing or neutral required job, an absent or red aggregate, a run that needs approval or has no job,
-  a merge GitHub refuses, a second cancellation), `unrepairable` (a failing job that is not a
-  content gate, or a failure in setup) or `no-convergence` (3 attempts spent, or a chain older than 36
-  hours). Each opens one issue; `no-convergence` also posts to Slack, the rest wait for the digest.
-- **blocked-by-human:** closed, draft, label `autowriter-hold`, a branch that is not `autowriter/<slug>`
-  from this repository, or any commit not made by the bot. The runner writes a summary and nothing else; a pull request
-  closed on purpose is recorded by hand, as `report-what-the-writer-spends.md` says.
+- **escalate:** `hard-stop` (zero check runs on a branch `main` has not moved past, or after the one catch-up,
+  a head with checks but no `pull_request` run, a skipped, missing or neutral required job, an absent or red
+  aggregate, a run that needs approval or has no job, a merge GitHub refuses, a second cancellation),
+  `unrepairable` (a failing job that is not a content gate, or a failure in setup) or `no-convergence`
+  (3 attempts spent, or a head unsettled 36 hours after the later of its commit and the pull request's opening:
+  a push restarts that clock). Each opens one issue; `no-convergence` also posts to Slack, the rest wait for the digest.
+- **blocked-by-human:** closed, draft, label `autowriter-hold`, a branch that is not `autowriter/<slug>` from
+  this repository, or any commit not made by the bot. The runner writes a summary and nothing else; a pull
+  request closed on purpose is recorded by hand, as `report-what-the-writer-spends.md` says.
 - **done:** merged, or the ledger already says `escalated`, `stopped` or `discarded`, so nothing is raised twice.
 
-The exact order is in `scripts/pr-classify.mjs`; each rule has a test in `scripts/pr-classify.test.mjs`.
+The order is in `scripts/pr-classify.mjs`, each rule tested in `scripts/pr-classify.test.mjs` and the one resume of a head with no checks in `scripts/pr-no-checks-resume.test.mjs`.
 
 ## First look, second look
 
@@ -44,7 +47,6 @@ A cancelled job with no failure may be a cancelled run, so it is read twice. The
 `observe` token, `cancelled:<head>:<run id>:<attempt>`, and the runner passes it to its successor as the
 input `observed`; a look that finds the same token again is a hard stop. Zero check runs are not read
 twice: a push that starts no run is the 1.5 finding below. The classifier keeps no state of its own.
-
 Only the `pull_request` run of `ci.yml` counts: a `push` run beside it has the same job names and
 different results. `cancel-on-failure` makes one real failure show as one `failure` and several
 `cancelled` jobs, so cancelled siblings are ignored once a job failed. GitHub counts a skipped required
@@ -63,18 +65,16 @@ job as passed, so a skipped one is never green.
 
 ## Why each permission
 
-`contents: read` checks out `main` and reads the ledger from the branch. `pull-requests: read`,
-`checks: read` and `actions: read` read the pull request, the head's check runs and the run with its
-jobs. `issues: write` opens the escalation issue. Nothing else is granted: every other write uses the
-secret above, and the job runs only from `main`.
+`contents: read` checks out `main` and reads the ledger from the branch. `pull-requests: read`, `checks: read`
+and `actions: read` read the pull request, the head's check runs and its run. `issues: write` opens the escalation
+issue. Every other write uses the secret above, and the job runs only from `main`.
 
 ## Traps
 
 A push made with `GITHUB_TOKEN` starts no CI run, so the watcher never relies on one; the evidence is
 under "A push, and whether it starts CI" in `guard-the-unattended-writer.md`. The runner never pushes
 to a branch a person has touched. A new failure mode starts as a payload captured with `gh api`
-into `scripts/fixtures/pr-watch/<scenario>.json`, then a failing test, then the rule.
-
-A run that fails for any reason other than a verdict (an outage, a malformed ledger, a missing secret)
-ends its chain and nothing restarts it: read the log, fix the cause, start a chain again. The workflow
-can be dispatched only once it is on `main`. It reads the files `main` changed only to find a derived one.
+into `scripts/fixtures/pr-watch/<scenario>.json`, then a failing test, then the rule. A run that fails
+for any reason other than a verdict (an outage, a malformed ledger, a missing secret) ends its chain
+and nothing restarts it: read the log, fix the cause, start a chain again. The workflow can be
+dispatched only once it is on `main`. It reads the files `main` changed only to find a derived one.

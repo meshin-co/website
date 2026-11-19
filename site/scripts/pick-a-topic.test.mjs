@@ -11,6 +11,7 @@ import { titleSuffix } from '../src/utils/brand.mjs';
 import { newClaim, readClaim, writeClaim } from './autowriter-claim-store.mjs';
 import { newLedger, readLedger } from './autowriter-ledger.mjs';
 import { SCENE_CORE } from './fixtures/semantic-core-scene.mjs';
+import { checkOutState } from './fixtures/state-checkout.mjs';
 import { printedLines, runCli, runIdFor, summaryMarkdown } from './pick-a-topic.mjs';
 import { recordDirectory, recordPath } from './record-layout.mjs';
 import { BAND_FILE } from './sentence-band.mjs';
@@ -33,7 +34,7 @@ const STRENGTHEN_LINE =
   'Strengthen: /services/fractional-caio, "fractional caio", 12 impressions at position 14.5: it ranks at position 14.5';
 
 async function inRepo(check) {
-  const root = mkdtempSync(join(tmpdir(), 'pick-a-topic-'));
+  const root = checkOutState(mkdtempSync(join(tmpdir(), 'pick-a-topic-')));
   try {
     for (const directory of ['audits', 'docs', 'site/src/data/post'])
       mkdirSync(join(root, directory), { recursive: true });

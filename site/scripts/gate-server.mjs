@@ -1,4 +1,4 @@
-import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs';
+import { createReadStream, existsSync, readFileSync, realpathSync, statSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { extname, join, normalize, relative, resolve } from 'node:path';
 import { createGzip } from 'node:zlib';
@@ -19,14 +19,18 @@ const TYPES = {
   '.avif': 'image/avif',
   '.ico': 'image/x-icon',
   '.woff2': 'font/woff2',
+  '.md': 'text/markdown; charset=utf-8',
 };
 
 const COMPRESSIBLE = new Set(['.html', '.css', '.js', '.mjs', '.json', '.txt', '.xml', '.svg']);
 
+const VERSION_SEGMENT = /(^|\/)\d+\.\d+$/;
+
 const fileFor = (relativePath) => {
   if (relativePath === '') return 'index.html';
   if (relativePath.endsWith('/')) return `${relativePath.slice(0, -1)}.html`;
-  return extname(relativePath) === '' ? `${relativePath}.html` : relativePath;
+  const isPage = extname(relativePath) === '' || VERSION_SEGMENT.test(relativePath);
+  return isPage ? `${relativePath}.html` : relativePath;
 };
 
 const canonicalPathOf = (file) => {
@@ -96,13 +100,30 @@ export function overPlainHttp(name, value) {
     .join('; ');
 }
 
+export const NOT_MODELLED = [
+  'dist/_worker.js, so Accept: text/markdown is answered with the page and no response carries Vary: Accept',
+  'validators on static files, so no response carries an ETag and If-None-Match never earns the 304 the edge sends',
+  'HEAD, which is answered with a Content-Length the edge leaves out',
+  'compression, which is gzip only where the edge also sends br',
+  'extension-less files, so /.well-known/api-catalog answers 404 here and 200 at the edge',
+  'dot segments and encoded slashes: /about/../about is 200 at the edge and 404 here, /%2Fabout is 404 at the edge and 200 here',
+];
+
+export const bannerFor = (port) => [
+  `gate server listening on http://127.0.0.1:${port}`,
+  'not the edge. It does not model:',
+  ...NOT_MODELLED.map((difference) => `  ${difference}`),
+];
+
 export function startGateServer({ root, port = 0, headersPath }) {
   const rootDir = resolve(root);
+  const realRoot = existsSync(rootDir) ? realpathSync.native(rootDir) : rootDir;
   const rules = headersPath && existsSync(headersPath) ? headerRulesFor(readFileSync(headersPath, 'utf8')) : [];
 
   const isFile = (candidate) => {
     const target = join(rootDir, candidate);
-    return target.startsWith(rootDir) && existsSync(target) && statSync(target).isFile();
+    if (!target.startsWith(rootDir) || !existsSync(target) || !statSync(target).isFile()) return false;
+    return relative(realRoot, realpathSync.native(target)).normalize() === candidate.normalize();
   };
 
   const server = createServer((request, response) => {
@@ -156,5 +177,5 @@ if (invokedDirectly(import.meta.filename, process.argv[1])) {
     port,
     headersPath: join(process.argv[2] ?? 'dist', '_headers'),
   });
-  console.log(`gate server listening on http://127.0.0.1:${bound}`);
+  console.log(bannerFor(bound).join('\n'));
 }

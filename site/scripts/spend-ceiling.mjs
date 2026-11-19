@@ -2,9 +2,9 @@ import { appendFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import { MONTHLY_SPEND_CEILING_USD } from './autowriter-ledger.mjs';
-import { runGit } from './commit-to-main.mjs';
 import { variable } from './escalate-channels.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
+import { runGit } from './run-git.mjs';
 import { noticeFile, noticePosted, raiseNotice } from './spend-notice.mjs';
 import { monthLine } from './spend-report-text.mjs';
 import { readLedgers } from './spend-sources.mjs';

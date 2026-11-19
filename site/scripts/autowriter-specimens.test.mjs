@@ -9,10 +9,12 @@ import { titleSuffix } from '../src/utils/brand.mjs';
 
 import { ATTEMPT_CAP } from './autowriter-ledger.mjs';
 import { historySpecimens } from './autowriter-history-specimens.mjs';
+import { legacySpecimens } from './autowriter-legacy-specimens.mjs';
 import { autowriterSpecimens } from './autowriter-specimens.mjs';
 import { GENERATED_AT } from './fixtures/spend-report-corpus.mjs';
 import { ENTRY_PATH, FACT, RECORD_PATH, SENTENCES, bandSceneFiles } from './fixtures/record-rules-scene.mjs';
 import { SCENE_CORE } from './fixtures/semantic-core-scene.mjs';
+import { checkOutState } from './fixtures/state-checkout.mjs';
 import { run } from './measure-entry-length.mjs';
 import { FAMILIES, manifestFamilies } from './mutation-smoke.mjs';
 import { addUntrackedFile, editFile, flatten, SPECIMENS } from './mutation-specimens.mjs';
@@ -29,7 +31,9 @@ const FILES = {
   ...bandSceneFiles(),
 };
 const NAMES = Object.keys(autowriterSpecimens({})).sort();
-const PLAIN_NAMES = NAMES.filter((name) => !Object.hasOwn(historySpecimens(), name));
+const PLAIN_NAMES = NAMES.filter(
+  (name) => !Object.hasOwn(historySpecimens(), name) && !Object.hasOwn(legacySpecimens(), name)
+);
 const LEDGER_AT = '2026-11-02T07:00:00.000Z';
 const CLAIMED_AT = '2026-11-01T07:00:00.000Z';
 const LEDGER = recordPath('ledger', 'zz-specimen', LEDGER_AT);
@@ -48,7 +52,7 @@ const writeSpendReport = (root) => {
 const SUFFIX_PATTERN = titleSuffix(siteBrand()).replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 async function inTempRepo(check, extra = {}) {
-  const root = mkdtempSync(join(tmpdir(), 'autowriter-specimens-'));
+  const root = checkOutState(mkdtempSync(join(tmpdir(), 'autowriter-specimens-')));
   try {
     for (const [path, body] of Object.entries({ ...FILES, ...extra })) {
       mkdirSync(dirname(join(root, path)), { recursive: true });
@@ -93,12 +97,15 @@ test('the specimen module names every failure mode of the gate, each against gat
     'autowriterCommitMovesTheBand',
     'autowriterCommitMovesTheEntryLength',
     'autowriterCommitRemovesAGenerationRecord',
+    'autowriterCommitReusesAForgivenPath',
     'autowriterCommitSealsDispositions',
     'autowriterCommitWritesLighthouseRecord',
     'autowriterCommitWritesLighthouseReport',
     'autowriterCommitWritesLighthouseStamp',
+    'autowriterCommitWritesStateRecord',
     'autowriterEscalationFailed',
     'autowriterEscalationUnreceipted',
+    'autowriterExceptedCommitTouchesAThirdPath',
     'autowriterFactWithoutClaimRow',
     'autowriterGeneratedEntryUnderTheFloor',
     'autowriterGenerationOffSchema',
@@ -119,6 +126,7 @@ test('the specimen module names every failure mode of the gate, each against gat
     'autowriterSpendReportEdited',
     'autowriterSpendReportStale',
     'autowriterSpendReportUnstamped',
+    'autowriterStateCommittedWithoutCheckout',
   ]);
   const tokens = NAMES.map((name) => SPECIMENS[name].token);
   assert.equal(new Set(tokens).size, tokens.length, 'two specimens share a token');
@@ -421,6 +429,7 @@ const WORKFLOW_MESSAGES = [
     'AUTOWRITER classifier-judges-last-push ' + WORKFLOW + ': ',
     'github.event.pull_request.base.sha',
   ],
+  ['autowriterStateCommittedWithoutCheckout', 'AUTOWRITER state-checkout ' + WORKFLOW + ': ', 'autowriter-state'],
 ];
 
 for (const [name, start, mention] of WORKFLOW_MESSAGES) {

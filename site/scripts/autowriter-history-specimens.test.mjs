@@ -6,13 +6,14 @@ import { tmpdir } from 'node:os';
 import { dirname, join, relative, resolve } from 'node:path';
 import { test } from 'node:test';
 
-import { historySpecimens } from './autowriter-history-specimens.mjs';
+import { FORGIVEN_POST, historySpecimens } from './autowriter-history-specimens.mjs';
 import { sealSignature } from './autowriter-refusals.mjs';
 import { autowriterSpecimens } from './autowriter-specimens.mjs';
 import { BOT, HUMAN, commitAs, gitIn, initRepo, removeRepos, shallowClone } from './fixtures/history-repo.mjs';
 import { bandSceneFiles } from './fixtures/record-rules-scene.mjs';
 import { SCENE_CORE } from './fixtures/semantic-core-scene.mjs';
 import { plantSpendReport } from './fixtures/spend-report-plant.mjs';
+import { checkOutState } from './fixtures/state-checkout.mjs';
 import { FAMILIES, manifestFamilies } from './mutation-smoke.mjs';
 import { SPECIMENS, flatten, proveWithSpecimen } from './mutation-specimens.mjs';
 import { recordDirectory, recordPath } from './record-layout.mjs';
@@ -55,11 +56,24 @@ const REFUSED = [
     id: 'lighthouse-report',
   },
   {
+    name: 'autowriterCommitWritesStateRecord',
+    family: 'autowriter-commit-writes-a-state-record',
+    path: 'state/ledger/2026/11/zz-specimen.json',
+    id: 'state-record',
+  },
+  {
     name: 'autowriterCommitAnUnregisteredPath',
     family: 'autowriter-commit-an-unregistered-path',
     path: 'audits/zz-specimen-derived.json',
     id: 'unregistered-path',
     token: `unregistered-path-committed ${RECORD}: touched audits/zz-specimen-derived.json, which is not this run's own`,
+  },
+  {
+    name: 'autowriterCommitReusesAForgivenPath',
+    family: 'autowriter-commit-reuses-a-forgiven-path',
+    path: FORGIVEN_POST,
+    id: 'unregistered-path',
+    token: `unregistered-path-committed ${RECORD}: touched ${FORGIVEN_POST}, which is not this run's own`,
   },
 ];
 const SEAL = { name: 'autowriterCommitSealsDispositions', family: 'autowriter-commit-seals-dispositions' };
@@ -105,7 +119,7 @@ const PLACEMENTS = [
 ];
 
 async function inScene(check, files = FILES) {
-  const root = mkdtempSync(join(tmpdir(), 'autowriter-history-specimens-'));
+  const root = checkOutState(mkdtempSync(join(tmpdir(), 'autowriter-history-specimens-')));
   try {
     for (const [path, body] of Object.entries(files)) {
       mkdirSync(dirname(join(root, path)), { recursive: true });

@@ -130,13 +130,13 @@
     "location": "head.title",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-allocate-shared-ai-tool-costs-across-departments (generation record audits/autowriter/generations/2026/11/how-to-allocate-shared-ai-tool-costs-across-departments.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "eedb595aeec9"
+    "digest": "4adcf48abd39"
   },
   {
     "target": "/blog/adoption-telemetry-measuring-if-ai-is-actually-used",
     "location": "body.p",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-allocate-shared-ai-tool-costs-across-departments (generation record audits/autowriter/generations/2026/11/how-to-allocate-shared-ai-tool-costs-across-departments.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "eedb595aeec9"
+    "digest": "4adcf48abd39"
   }
 ]

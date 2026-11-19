@@ -12,6 +12,7 @@ export const BRANCH_PREFIX = 'autowriter/';
 export const HOLD_LABEL = readEngineConfig().loop.holdLabel;
 export const CHAIN_LIMIT_HOURS = QUARANTINE_HOURS + 24;
 export const CATCH_UP_CAP = 3;
+export const NO_CHECKS_CATCH_UP_CAP = 1;
 export const VERDICTS = ['unsettled', 'merge', 'catch-up', 'repairable', 'escalate', 'blocked-by-human', 'done'];
 
 const HOUR_MS = 3_600_000;
@@ -71,6 +72,21 @@ function overtakenByMain({ commits, drift, evidence }) {
   return verdict('catch-up', 'main-moved', moved);
 }
 
+function resumedAfterNoChecks({ checks, commits, drift, evidence }) {
+  if (checks.reason !== 'no-checks') return null;
+  if (catchUpsIn(commits) >= NO_CHECKS_CATCH_UP_CAP)
+    return { ...verdict('escalate', 'no-checks-catch-up-cap', evidence), kind: 'hard-stop' };
+  if (drift.behindBy === 0) return null;
+  return verdict('catch-up', 'no-checks', { ...evidence, behindBy: drift.behindBy });
+}
+
+const headCommittedAt = (commits) => Date.parse(commits.at(-1)?.commit.committer.date);
+
+function waitingSince(opened, commits) {
+  const committed = headCommittedAt(commits);
+  return Number.isNaN(committed) ? opened : Math.max(opened, committed);
+}
+
 function settle({ checks, pullRequest, commits, drift, now, base }) {
   const evidence = { ...base, ...checks.evidence };
   const opened = Date.parse(pullRequest.created_at);
@@ -81,8 +97,12 @@ function settle({ checks, pullRequest, commits, drift, now, base }) {
     if (movesDerivedFiles(drift)) return overtakenByMain({ commits, drift, evidence });
     return verdict('merge', 'green-after-quarantine', evidence);
   }
-  if (checks.verdict === 'unsettled' && now - opened > CHAIN_LIMIT_HOURS * HOUR_MS) {
+  if (checks.verdict === 'unsettled' && now - waitingSince(opened, commits) > CHAIN_LIMIT_HOURS * HOUR_MS) {
     return { ...verdict('escalate', 'chain-too-old', evidence), kind: 'no-convergence' };
+  }
+  if (checks.verdict === 'escalate') {
+    const resumed = resumedAfterNoChecks({ checks, commits, drift, evidence });
+    if (resumed) return resumed;
   }
   return { ...checks, evidence };
 }

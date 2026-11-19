@@ -19,8 +19,9 @@ templates. FAQ routes use the static default OG instead of a rendered one.
 - service: name, tagline, shortAnswer, feeShape, duration · forWhom, notForWhom, deliverables
   lists · process steps · schedule 3–5 stages · faq 3–8 · cta · sources min 1 · order.
 - resource: name · type enum (template, kit, scorecard, repo, checklist) · version, status ·
-  optional license, accepted only when its text ships (`site/src/utils/resource-license.mjs`) ·
-  whatInside min 1 · howToUse · sources min 1 · relatedPosts.
+  license, required: an id such as CC-BY-4.0 (writing) or MIT (code) whose text ships as
+  `site/public/licenses/<id>.txt` (`site/src/utils/resource-license.mjs`; the build names `license:` when
+  it is missing or has no text) · whatInside min 1 · howToUse · sources min 1 · relatedPosts.
 - case: client (industry and size always; a name only with a confirmed checklist row) ·
   problem · approach · outcome.metrics max 3, owner-confirmed numbers only · stack min 1 ·
   offer reference · anonymized.

@@ -50,7 +50,7 @@ The last stdout line is one JSON object: `ok`, `outcome`, `commit`, `reason`, th
 other outcome, 2 is a usage error. The seven outcomes are in `repair-outcome.mjs`; `pr-watch-repair.mjs` turns each into
 the watcher's next move. The step makes one local commit and the workflow pushes it.
 
-1. `repair-open.mjs` checks the tree is at the judged head and asks `pr-classify.mjs` again: a moved head is `stale`. It refuses an entry whose claim has no buyer prompt (origin `weak-demand` or `category`): no passage is registered to keep word for word, so the outcome is `failed`, escalated as `hard-stop`, and a person repairs it.
+1. `repair-open.mjs` checks the tree is at the judged head and asks `pr-classify.mjs` again, handing it the ledger the snapshot's file record holds, as the watcher does: a moved head is `stale`. It refuses an entry whose claim has no buyer prompt (origin `weak-demand` or `category`): no passage is registered to keep word for word, so the outcome is `failed`, escalated as `hard-stop`, and a person repairs it. It refuses a branch that holds no ledger at the path its claim's month names in the same way, because the attempt is written there.
 2. `repair-findings.mjs` reads the CI findings artifact (`repair-zip.mjs`, `gate-findings.mjs`).
 3. `repair-run.mjs` refuses before any spend: a repeated failure, the attempt cap, a finding `repair-kinds.mjs` refuses,
    a reached spend ceiling.

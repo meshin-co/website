@@ -7,12 +7,24 @@ import CtaBlock from '~/components/site/CtaBlock.astro';
 import FigureStrip from '~/components/site/FigureStrip.astro';
 import ShiftPanel from '~/components/site/ShiftPanel.astro';
 import Hero from '~/components/site/Hero.astro';
+import ReferenceLink from '~/components/site/ReferenceLink.astro';
 import ResourceCard from '~/components/site/ResourceCard.astro';
 import Section from '~/components/site/Section.astro';
 import ServiceCard from '~/components/site/ServiceCard.astro';
 import SignalList from '~/components/site/SignalList.astro';
 import StepList from '~/components/site/StepList.astro';
-import { artifactIds, cta, drivers, figures, hero, heroOffers, nudge, shift, signals } from '~/data/home';
+import {
+  artifactIds,
+  cta,
+  drivers,
+  figures,
+  hero,
+  heroOffers,
+  nudge,
+  shift,
+  signals,
+  specification,
+} from '~/data/home';
 import JsonLd from '~/components/common/JsonLd.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { isPublished } from '~/utils/feeds.mjs';
@@ -122,6 +134,7 @@ const resources = artifactIds.map((id) => resourcesById.get(id)).filter((entry) 
         ))
       }
     </CardGrid>
+    <ReferenceLink {...specification} />
   </Section>
 
   <Section>

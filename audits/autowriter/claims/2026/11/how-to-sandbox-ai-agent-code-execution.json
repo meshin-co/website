@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "slug": "how-to-sandbox-ai-agent-code-execution",
+  "title": "How to sandbox AI agent code execution",
+  "format": "article",
+  "query": "how to sandbox ai agent code execution",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "origin": "category",
+  "category": "agentic-architecture",
+  "catchUp": {
+    "slot": "06:00",
+    "lateMinutes": 239
+  },
+  "runId": "43405333127-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-13T09:59:06.359Z",
+  "expiresAt": "2026-11-27T09:59:06.359Z"
+}

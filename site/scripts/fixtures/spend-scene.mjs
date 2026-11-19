@@ -8,6 +8,7 @@ import { buildRecord } from '../generation-record.mjs';
 import { recordPath } from '../record-layout.mjs';
 import { callOf, recordInput } from './generation-input.mjs';
 import { filedAt } from './record-depths.mjs';
+import { checkOutState } from './state-checkout.mjs';
 
 export const GIT_ENVIRONMENT = {
   ...process.env,
@@ -64,9 +65,16 @@ export function recordOf({ slug, generatedAt, usd, ledgerSlug = slug, extraCalls
 }
 
 export function createScene() {
-  const root = mkdtempSync(join(tmpdir(), 'spend-scene-'));
-  const git = (...args) =>
-    execFileSync('git', [...IDENTITY, ...args], { cwd: root, env: GIT_ENVIRONMENT, encoding: 'utf8' }).trim();
+  const root = checkOutState(mkdtempSync(join(tmpdir(), 'spend-scene-')));
+  const git = (...args) => {
+    const output = execFileSync('git', [...IDENTITY, ...args], {
+      cwd: root,
+      env: GIT_ENVIRONMENT,
+      encoding: 'utf8',
+    }).trim();
+    if (args[0] === 'checkout') checkOutState(root);
+    return output;
+  };
   const put = (path, value) => {
     mkdirSync(dirname(join(root, path)), { recursive: true });
     writeFileSync(join(root, path), typeof value === 'string' ? value : `${JSON.stringify(value, null, 2)}\n`);

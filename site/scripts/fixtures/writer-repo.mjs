@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { LENGTH_FILE, deriveLimits, lengthRecord, measureLength } from '../entry-length.mjs';
 import { BAND_FILE } from '../sentence-band.mjs';
 import { REPO_FILES } from '../writer-tree.mjs';
+import { checkOutState } from './state-checkout.mjs';
 import { BAND, CORE, ENTRIES, FACTS, ROUTES, TAGS } from './writer-corpus.mjs';
 
 const REAL_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
@@ -53,7 +54,7 @@ function put(root, path, text) {
 }
 
 export function makeRepo({ band = true, length = true } = {}) {
-  const root = mkdtempSync(join(tmpdir(), 'writer-repo-'));
+  const root = checkOutState(mkdtempSync(join(tmpdir(), 'writer-repo-')));
   for (const path of ENGINE_FILES) copy(root, path);
   put(root, 'docs/SEMANTIC-CORE.md', CORE);
   put(root, REPO_FILES.routes, json(ROUTES));

@@ -106,8 +106,13 @@ test('there is one job, the sweep, and it keeps its guard, its limit and its wor
   assert.deepEqual(WORKFLOW.defaults, { run: { 'working-directory': 'site' } });
 });
 
-test('the job may read the repository and the pull requests, and write issues only: every other write is made with the bot token', () => {
-  assert.deepEqual(sweep.permissions, { contents: 'read', 'pull-requests': 'read', issues: 'write' });
+test('the job may read the repository, the pull requests and the runs of the watcher, and write issues only: every other write is made with the bot token', () => {
+  assert.deepEqual(sweep.permissions, {
+    actions: 'read',
+    contents: 'read',
+    'pull-requests': 'read',
+    issues: 'write',
+  });
   assert.equal(WORKFLOW.permissions, undefined);
 });
 

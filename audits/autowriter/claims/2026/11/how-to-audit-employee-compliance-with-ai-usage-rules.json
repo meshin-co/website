@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "slug": "how-to-audit-employee-compliance-with-ai-usage-rules",
+  "title": "How to audit employee compliance with AI usage rules",
+  "format": "article",
+  "query": "how to audit employee compliance with ai usage rules",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "origin": "category",
+  "category": "governance",
+  "catchUp": {
+    "slot": "06:00",
+    "lateMinutes": 115
+  },
+  "runId": "44262478620-1",
+  "status": "written",
+  "claimedAt": "2026-11-18T07:55:55.243Z",
+  "expiresAt": "2026-12-02T07:55:55.243Z"
+}

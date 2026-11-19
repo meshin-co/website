@@ -1,7 +1,7 @@
 import { existsSync, rmSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
-import { repositoryGit } from './autowriter-refusal-rules.mjs';
+import { SQUASH_OF_133, repositoryGit } from './autowriter-refusal-rules.mjs';
 import { isDispositionFile, sealSignature } from './autowriter-refusals.mjs';
 import { BOT_EMAIL, BOT_NAME } from './pr-classify.mjs';
 import { recordDirectory, recordPath } from './record-layout.mjs';
@@ -67,7 +67,7 @@ function commitOver({ repo, parent, files = {}, removals = [], message = MESSAGE
   }
 }
 
-function headOfHistory(copySite) {
+export function headOfHistory(copySite) {
   const repo = resolve(copySite, '..');
   if (!existsSync(join(repo, '.git')))
     throw new Error(`${repo} is not a git repository, so it has no history to plant in`);
@@ -104,12 +104,15 @@ const refusedFile = (path, id) => ({
   plant: planCommit(({ original }) => ({ [path]: markerOn(original) })),
 });
 
+export const FORGIVEN_POST = SQUASH_OF_133.paths.find((path) => path.startsWith('site/src/data/post/'));
+
 export const historySpecimens = () => ({
   autowriterCommitMovesTheBand: refusedFile('audits/sentence-band.json', 'sentence-band'),
   autowriterCommitMovesTheEntryLength: refusedFile('audits/entry-length.json', 'entry-length'),
   autowriterCommitWritesLighthouseRecord: refusedFile('audits/lighthouse-green.json', 'lighthouse-record'),
   autowriterCommitWritesLighthouseStamp: refusedFile('audits/phase-zz/lh-measured.json', 'lighthouse-stamp'),
   autowriterCommitWritesLighthouseReport: refusedFile('audits/phase-zz/lh-mobile/lhr-0.json', 'lighthouse-report'),
+  autowriterCommitWritesStateRecord: refusedFile('state/ledger/2026/11/zz-specimen.json', 'state-record'),
   autowriterCommitSealsDispositions: {
     gate: GATE,
     token: `disposition-seal-committed ${RECORD}: sealed`,
@@ -124,5 +127,10 @@ export const historySpecimens = () => ({
     gate: GATE,
     token: `unregistered-path-committed ${RECORD}: touched audits/zz-specimen-derived.json, which is not this run's own`,
     plant: planCommit(({ original }) => ({ 'audits/zz-specimen-derived.json': markerOn(original) })),
+  },
+  autowriterCommitReusesAForgivenPath: {
+    gate: GATE,
+    token: `unregistered-path-committed ${RECORD}: touched ${FORGIVEN_POST}, which is not this run's own`,
+    plant: planCommit(({ original }) => ({ [FORGIVEN_POST]: markerOn(original) })),
   },
 });

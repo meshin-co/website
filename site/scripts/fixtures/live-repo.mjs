@@ -4,6 +4,7 @@ import { dirname, join } from 'node:path';
 
 import { entryRoute } from '../entry-files.mjs';
 import { filesOf, ledgerOf, recordOf, writingCall } from './spend-report-corpus.mjs';
+import { checkOutState } from './state-checkout.mjs';
 
 export const NOW = new Date('2026-11-03T09:00:00.000Z');
 
@@ -42,6 +43,7 @@ export function liveRepo({ entries, built = entries.map(({ slug }) => slug) }) {
   const made = entries.map(entryFiles);
   const files = filesOf({ ledgers: made.map(({ ledger }) => ledger), records: made.map(({ record }) => record) });
   mkdirSync(root, { recursive: true });
+  checkOutState(root);
   mkdirSync(dist, { recursive: true });
   putAll(root, [...files.ledgers, ...files.records]);
   const pages = made
