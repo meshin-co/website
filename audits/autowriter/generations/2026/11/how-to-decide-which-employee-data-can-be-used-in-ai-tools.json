@@ -1,0 +1,323 @@
+{
+  "schema": 1,
+  "slug": "how-to-decide-which-employee-data-can-be-used-in-ai-tools",
+  "runId": "43176963411-1",
+  "generatedAt": "2026-11-12T07:45:04.214Z",
+  "claim": {
+    "title": "How to decide which employee data can be used in AI tools",
+    "query": "how to decide which employee data can be used in ai tools",
+    "origin": "category",
+    "category": "governance",
+    "catchUp": {
+      "slot": "06:00",
+      "lateMinutes": 102
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-12",
+      "windowStart": "2026-08-12",
+      "windowEnd": "2026-11-10",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/how-to-decide-which-employee-data-can-be-used-in-ai-tools",
+    "path": "site/src/data/post/how-to-decide-which-employee-data-can-be-used-in-ai-tools.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_079a68c8e02b504a016af56e19980887d0be3018ac979e9821",
+  "published": {
+    "callIndex": 6
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_05b39bfdee8472d7016af56dcd8ed487d09cac05cd8333f904",
+      "requestDigest": "eb24c276561d1884d74dd6717a8c15347f4ebda30d46bbfc5de7a772142f3dc6",
+      "tokens": {
+        "input": 1007,
+        "output": 71
+      },
+      "costUsd": 0.001362,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0002985c9ddc04e3016af56dd0385887d0a8d4d98da5d52e8d",
+      "requestDigest": "69e55c1f78826842d5263ccc81f0a9c4d3e6c9332eded8e8833d6647032faf4d",
+      "tokens": {
+        "input": 1065,
+        "output": 114
+      },
+      "costUsd": 0.001635,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0961c0061b85cc7d016af56dd385e087d08382d25e89537a30",
+      "requestDigest": "4a696600093f95e5e5472ba4891900a22166389acddb8d748814a18f21569b9a",
+      "tokens": {
+        "input": 1010,
+        "output": 103
+      },
+      "costUsd": 0.001525,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_04472378340a40ac016af56dd64f9487d0a4e128ec9ab563af",
+      "requestDigest": "bf9ab47a3f5934bcdb6a44b87af60205df282eb209831f3a0b4c9d91ca148079",
+      "tokens": {
+        "input": 1070,
+        "output": 104
+      },
+      "costUsd": 0.00159,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0dacf29b99082159016af56dd9dbf487d094799b929b10b7e5",
+      "requestDigest": "54fa60d375763187fcfcc57455f77ba7152271cb260fcc9f3e19f5a2ae3cabe5",
+      "tokens": {
+        "input": 1006,
+        "output": 91
+      },
+      "costUsd": 0.001461,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0bf51e76598b08b1016af56ddea9a087d084bd8b74b210f252",
+      "requestDigest": "56762b7699eba764e75fd55ff4d50f94729c6f1ed1bbeb8292bacad0df70d0c5",
+      "tokens": {
+        "input": 10395,
+        "output": 3758
+      },
+      "costUsd": 0.029185,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_079a68c8e02b504a016af56e19980887d0be3018ac979e9821",
+      "requestDigest": "eb9e8c6b5d5d35f080761e90580b032d4500e858db0d9a12cce092ee24995c98",
+      "tokens": {
+        "input": 13189,
+        "output": 2978
+      },
+      "costUsd": 0.028079,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 28742,
+      "output": 7219
+    },
+    "costUsd": 0.064837
+  },
+  "ledger": "audits/autowriter/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "e86b9aa543d225b749d6c0f6f8d576c8191a8a7fcc77fe7160bfef80d74012e0",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "8b482ad3fcbcf594664b6824e8b481ff1d685e90d011c90a6d4a3648d49e5f90"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "1e291e4336807e99144f2a63cfd94220707c1c99d9084f960e26799cbf12fde8"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "89ba34fa19f9d87e2d9ef361aac8724b2d2124ecde1b442950d6cdf9ed24fb0e"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "3dfa3279df52c111c26938bd0e3f545bad3a201b804fac6815d90969925bf0e5"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "a8e5fbcf56f4c5ab2fc4c41fa5f900192d1af7b22b6e22b6e7658b4793e690f0"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "8176cf5802ad0b8f97a5619a94bb99123853893d3c5c8f9aa409b44ae916fcec"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "df07e5ca1fced82881ab08e3849da19ec0de824e4be87b2719f174f0f73f33c2"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "6df5607949f75c688baa36969de58b99088216a2",
+    "fingerprint": "a68f58eea2325b7e6ecee4d1a34aba0849ceef77d9c812ee023f241a618f1e61"
+  },
+  "claimTable": [],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 117,
+      "median": 14,
+      "shareBelowThreshold": 0.265,
+      "shareJustBelow": 0.2052,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json",
+    "audits/autowriter/claims/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json",
+    "audits/autowriter/generations/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-ai-vendor-assessment-questionnaire-template.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-decide-which-employee-data-can-be-used-in-ai-tools.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-named-person-responsible-for-ai-risk-in-vendor-procurement.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/how-to-decide-which-employee-data-can-be-used-in-ai-tools.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}
