@@ -265,5 +265,13 @@
       "against": "/blog/how-to-build-an-ai-system-register-in-a-week",
       "detail": "the topic \"How to retire an AI system safely\" repeats /blog/how-to-build-an-ai-system-register-in-a-week (\"How to build an AI system register in a week\"): its subject shares ai, system, 2 of the 4 stems of the smaller one, a containment of 0.50 against the threshold of 0.5"
     }
+  ],
+  "resumes": [
+    {
+      "at": "2026-11-19T23:17:27.767Z",
+      "by": "owner",
+      "mainSha": null,
+      "failedJobs": []
+    }
   ]
 }
