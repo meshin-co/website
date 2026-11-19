@@ -34,20 +34,20 @@
     "location": "head.title",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-audit-employee-compliance-with-ai-usage-rules (generation record audits/autowriter/generations/2026/11/how-to-audit-employee-compliance-with-ai-usage-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "49f3da1908d3"
+    "digest": "f93daa7bb256"
   },
   {
     "target": "/blog",
     "location": "body.p",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-audit-employee-compliance-with-ai-usage-rules (generation record audits/autowriter/generations/2026/11/how-to-audit-employee-compliance-with-ai-usage-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "49f3da1908d3"
+    "digest": "f93daa7bb256"
   },
   {
     "target": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-audit-employee-compliance-with-ai-usage-rules (generation record audits/autowriter/generations/2026/11/how-to-audit-employee-compliance-with-ai-usage-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "21f0403fcd84"
+    "digest": "2a0f062e171a"
   },
   {
     "target": "/blog/category/agentic-architecture",
@@ -81,7 +81,7 @@
     "target": "/blog/category/governance",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-audit-employee-compliance-with-ai-usage-rules (generation record audits/autowriter/generations/2026/11/how-to-audit-employee-compliance-with-ai-usage-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "d0f6defbf32f"
+    "digest": "bfff04ed5764"
   },
   {
     "target": "/blog/category/operating-model",
@@ -115,7 +115,7 @@
     "target": "/blog/how-to-build-an-ai-system-register-in-a-week",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-audit-employee-compliance-with-ai-usage-rules (generation record audits/autowriter/generations/2026/11/how-to-audit-employee-compliance-with-ai-usage-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "2d53a923dcee"
+    "digest": "3eae08e69422"
   },
   {
     "target": "/blog/tag/acceptable-use-policy",
@@ -149,21 +149,21 @@
     "location": "head.title",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-audit-employee-compliance-with-ai-usage-rules (generation record audits/autowriter/generations/2026/11/how-to-audit-employee-compliance-with-ai-usage-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "eddea65be0c4"
+    "digest": "9a342f63ecdc"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "body.h1",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-audit-employee-compliance-with-ai-usage-rules (generation record audits/autowriter/generations/2026/11/how-to-audit-employee-compliance-with-ai-usage-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "eddea65be0c4"
+    "digest": "9a342f63ecdc"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "body.p",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-audit-employee-compliance-with-ai-usage-rules (generation record audits/autowriter/generations/2026/11/how-to-audit-employee-compliance-with-ai-usage-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "eddea65be0c4"
+    "digest": "9a342f63ecdc"
   },
   {
     "target": "/blog/tag/ai-pilots",
@@ -259,7 +259,7 @@
     "target": "/blog/tag/policy-enforcement",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-audit-employee-compliance-with-ai-usage-rules (generation record audits/autowriter/generations/2026/11/how-to-audit-employee-compliance-with-ai-usage-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "0c12de7e2b62"
+    "digest": "5421bae9d79e"
   },
   {
     "target": "/blog/tag/production-readiness",
@@ -285,8 +285,8 @@
   {
     "target": "/blog/tag/security-review",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-decide-which-employee-data-can-be-used-in-ai-tools (generation record audits/autowriter/generations/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "24e8a047b68d"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-a-quarterly-ai-tool-access-review (generation record audits/autowriter/generations/2026/11/how-to-run-a-quarterly-ai-tool-access-review.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "d8fa35bff7eb"
   },
   {
     "target": "/blog/tag/shadow-ai",

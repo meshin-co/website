@@ -75,7 +75,7 @@ title `{spec name} specification {version} — meshin.co` · meta: what the vers
 | `/spec/evals-baseline`     | evals-baseline specification     | evals-baseline specification — meshin.co     | Every published version of the evals-baseline specification, and the address to cite for each.                                                         | evals-baseline specification     | 23    | ✓       |
 | `/spec/evals-baseline/1.0` | evals-baseline specification 1.0 | evals-baseline specification 1.0 — meshin.co | The evals-baseline specification 1.0 says what a regression in an agent evaluation is, and defines the baseline file, the findings and the exit codes. | evals-baseline specification 1.0 | 26    | ✓       |
 
-### article (28)
+### article (29)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
@@ -101,6 +101,7 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/how-to-review-ai-generated-customer-support-replies`        | how to review ai-generated customer support replies        | How to review AI-generated customer support replies — meshin.co        | Set a practical review process for AI-generated support replies, from checking account facts to handling risky drafts and improving future reviews.   | How to review AI-generated customer support replies        | 32    | ✓       |
 | `/blog/how-to-review-ai-vendor-model-updates-after-deployment`     | how to review ai vendor model updates after deployment     | How to review AI vendor model updates after deployment — meshin.co     | Learn how to review AI vendor model updates after deployment with paired tests, release decisions and a fallback plan.                                | How to review AI vendor model updates after deployment     | 33    | ✓       |
 | `/blog/how-to-roll-back-an-ai-agent-deployment`                    | how to roll back an ai agent deployment                    | How to roll back an AI agent deployment — meshin.co                    | How to roll back an AI agent deployment: stop actions, restore a known release and check in-flight work before resuming.                              | How to roll back an AI agent deployment                    | 29    | ✓       |
+| `/blog/how-to-run-a-quarterly-ai-tool-access-review`               | how to run a quarterly ai tool access review               | How to run a quarterly AI tool access review — meshin.co               | Learn how to run a quarterly AI tool access review with clear owners, evidence, decisions and checks that changes take effect.                        | How to run a quarterly AI tool access review               | 32    | ✓       |
 | `/blog/how-to-run-an-ai-agent-in-shadow-mode`                      | how to run an ai agent in shadow mode                      | How to run an AI agent in shadow mode — meshin.co                      | Learn how to run an AI agent in shadow mode while blocking live actions and comparing proposals with workflow outcomes.                               | How to run an AI agent in shadow mode                      | 30    | ✓       |
 | `/blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent`       | how to set a per-task spending limit for an ai agent       | How to set a per-task spending limit for an AI agent — meshin.co       | Set and enforce an AI agent's task budget with cost reservations, shared limits, clear failure rules, and reconciliation.                             | How to set a per-task spending limit for an AI agent       | 31    | ✓       |
 | `/blog/how-to-stop-ai-agents-getting-stuck-in-loops`               | how to stop ai agents getting stuck in loops               | How to stop AI agents getting stuck in loops — meshin.co               | How to stop AI agents getting stuck in loops: enforce shared limits, check progress and use safe retries.                                             | How to stop AI agents getting stuck in loops               | 34    | ✓       |
@@ -448,13 +449,13 @@ One owning route per entity. The mention count is inbound references from other 
 | Entity                         | Owned by                                   | Mentioned by |
 | ------------------------------ | ------------------------------------------ | ------------ |
 | Agentic workflow               | `/glossary/agentic-workflow`               | 15           |
-| AI governance                  | `/glossary/ai-governance`                  | 49           |
+| AI governance                  | `/glossary/ai-governance`                  | 50           |
 | AI impact assessment           | `/glossary/ai-impact-assessment`           | 3            |
 | AI management system           | `/glossary/ai-management-system`           | 7            |
 | AI operating model             | `/glossary/ai-operating-model`             | 22           |
 | AI register                    | `/glossary/ai-register`                    | 42           |
 | Conformity assessment          | `/glossary/conformity-assessment`          | 5            |
-| Data classification            | `/glossary/data-classification`            | 18           |
+| Data classification            | `/glossary/data-classification`            | 19           |
 | DPIA                           | `/glossary/dpia`                           | 6            |
 | EU AI Act                      | `/glossary/eu-ai-act`                      | 42           |
 | Evals                          | `/glossary/evals`                          | 46           |
