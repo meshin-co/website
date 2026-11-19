@@ -253,5 +253,13 @@
       "against": "/glossary/ai-governance",
       "detail": "the query \"ai governance\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
     }
+  ],
+  "resumes": [
+    {
+      "at": "2026-11-19T18:28:44.189Z",
+      "by": "main-change",
+      "mainSha": "03d1da314a7b00070253740ccfef177192f419b5",
+      "failedJobs": []
+    }
   ]
 }
