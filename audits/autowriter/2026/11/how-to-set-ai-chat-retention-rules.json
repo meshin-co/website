@@ -14,7 +14,7 @@
   "verdict": {
     "state": "escalated",
     "reason": "Autowriter pull request #137: the head commit has no check runs, and the one catch-up that could have started CI was already pushed",
-    "decidedAt": "2026-11-19T23:19:27.934Z"
+    "decidedAt": "2026-11-19T23:31:43.874Z"
   },
   "escalations": [
     {
@@ -72,6 +72,23 @@
           "delivered": true,
           "status": 201,
           "issue": 178,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "esc-4",
+      "kind": "hard-stop",
+      "title": "Autowriter pull request #137: the head commit has no check runs, and the one catch-up that could have started CI was already pushed",
+      "detail": "The watcher judged head 6059e0ea240febe8b6bc87f2e3d4b72271bbd6ab: escalate, no-checks-catch-up-cap.\nPull request: https://github.com/meshin-co/website/pull/137",
+      "raisedAt": "2026-11-19T23:31:43.408Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-19T23:31:43.408Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 180,
           "error": null
         }
       ]
