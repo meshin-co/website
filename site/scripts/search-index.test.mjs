@@ -21,12 +21,31 @@ test('an index entry keeps only what search needs, with collapsed whitespace', (
   });
 });
 
-test('the index knows exactly seven kinds, each with a display label', () => {
-  assert.deepEqual(Object.keys(KINDS), ['post', 'glossary', 'resource', 'service', 'case', 'faq', 'page']);
+test('the index knows exactly eight kinds, each with a display label', () => {
+  assert.deepEqual(Object.keys(KINDS), ['post', 'glossary', 'resource', 'service', 'case', 'faq', 'spec', 'page']);
   assert.deepEqual(
     Object.values(KINDS).map(({ label }) => label),
-    ['Writing', 'Glossary', 'Resource', 'Service', 'Case study', 'Answer', 'Page']
+    ['Writing', 'Glossary', 'Resource', 'Service', 'Case study', 'Answer', 'Specification', 'Page']
   );
+});
+
+test('a specification entry indexes its title, description and body, and is cut at the cap of its own kind', () => {
+  const entry = buildShardEntry('spec', {
+    href: '/spec/evals-baseline/1.0',
+    title: 'evals-baseline specification 1.0',
+    description: 'What the baseline file holds.',
+    body: `Normative text. ${'word '.repeat(10_000)}`,
+  });
+
+  assert.equal(entry.href, '/spec/evals-baseline/1.0');
+  assert.equal(entry.kind, 'Specification');
+  assert.ok(entry.text.startsWith('Normative text.'));
+  assert.equal(entry.text.length, ENTRY_TEXT_CAPS.spec);
+});
+
+test('the summary line names specifications in the singular and the plural', () => {
+  assert.equal(summaryLine(['Specification'], 'baseline'), '1 specification matches “baseline”.');
+  assert.equal(summaryLine(['Specification', 'Specification'], 'baseline'), '2 specifications match “baseline”.');
 });
 
 test('every kind builds an entry of the shared shape with its display label', () => {

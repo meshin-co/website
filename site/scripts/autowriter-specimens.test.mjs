@@ -9,6 +9,7 @@ import { titleSuffix } from '../src/utils/brand.mjs';
 
 import { ATTEMPT_CAP } from './autowriter-ledger.mjs';
 import { historySpecimens } from './autowriter-history-specimens.mjs';
+import { legacySpecimens } from './autowriter-legacy-specimens.mjs';
 import { autowriterSpecimens } from './autowriter-specimens.mjs';
 import { GENERATED_AT } from './fixtures/spend-report-corpus.mjs';
 import { ENTRY_PATH, FACT, RECORD_PATH, SENTENCES, bandSceneFiles } from './fixtures/record-rules-scene.mjs';
@@ -29,7 +30,9 @@ const FILES = {
   ...bandSceneFiles(),
 };
 const NAMES = Object.keys(autowriterSpecimens({})).sort();
-const PLAIN_NAMES = NAMES.filter((name) => !Object.hasOwn(historySpecimens(), name));
+const PLAIN_NAMES = NAMES.filter(
+  (name) => !Object.hasOwn(historySpecimens(), name) && !Object.hasOwn(legacySpecimens(), name)
+);
 const LEDGER_AT = '2026-11-02T07:00:00.000Z';
 const CLAIMED_AT = '2026-11-01T07:00:00.000Z';
 const LEDGER = recordPath('ledger', 'zz-specimen', LEDGER_AT);
@@ -93,12 +96,14 @@ test('the specimen module names every failure mode of the gate, each against gat
     'autowriterCommitMovesTheBand',
     'autowriterCommitMovesTheEntryLength',
     'autowriterCommitRemovesAGenerationRecord',
+    'autowriterCommitReusesAForgivenPath',
     'autowriterCommitSealsDispositions',
     'autowriterCommitWritesLighthouseRecord',
     'autowriterCommitWritesLighthouseReport',
     'autowriterCommitWritesLighthouseStamp',
     'autowriterEscalationFailed',
     'autowriterEscalationUnreceipted',
+    'autowriterExceptedCommitTouchesAThirdPath',
     'autowriterFactWithoutClaimRow',
     'autowriterGeneratedEntryUnderTheFloor',
     'autowriterGenerationOffSchema',

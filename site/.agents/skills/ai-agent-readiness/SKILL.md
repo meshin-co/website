@@ -60,3 +60,21 @@ The response carries `level`, `levelName`, `nextLevel` with the requirements for
 `checks.<group>.<item>.status` reading `pass`, `fail` or `neutral`. Each file names its own key.
 Each check also carries an `evidence` array naming every probe the scanner ran, including the URLs
 it fetched — read that before believing a `fail`.
+
+## Lighthouse's Agentic Browsing category
+
+Lighthouse 13.5.0 scores the same ground in its `agentic-browsing` category: a pass ratio, not a score
+out of 100, which Chrome's page says needs Chrome 150 or later and rests on proposed standards. Its
+seven audits, listed in `agentic-browsing-config.js` of the `lighthouse` package, are
+`agent-accessibility-tree`, three WebMCP audits, `cumulative-layout-shift`, `llms-txt` and `ard-schema`.
+The WebMCP audits read `notApplicable` without WebMCP support, so skipping `webmcp.md` costs nothing.
+
+- `llms-txt` fails `/llms.txt` with no H1 line, under 50 characters, or no Markdown link
+  `[text](url)`; a bare address is not a link. It tests with regular expressions, not a parser.
+- `ard-schema` validates `/.well-known/ai-catalog.json` (`ard.md`): a media type outside its list of
+  discovery types or a missing `representativeQueries` is a low-severity warning, scored 0.9.
+
+Verify in the build, not the generator: serve the build, run
+`npx lighthouse <url> --only-categories=agentic-browsing` and read `audits.llms-txt` and
+`audits.ard-schema` in the JSON. Enforce the `llms.txt` conditions in a gate that reads the built
+file, with a planted specimen for each.

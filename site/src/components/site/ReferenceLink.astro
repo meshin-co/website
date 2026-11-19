@@ -1,0 +1,14 @@
+---
+interface Props {
+  text: string;
+  label: string;
+  href: string;
+}
+
+const { text, label, href } = Astro.props;
+---
+
+<div class="mt-10 flex max-w-[68ch] flex-wrap items-baseline justify-between gap-x-8 gap-y-3 border-t border-line pt-6">
+  <p class="max-w-[52ch] text-muted">{text}</p>
+  <a class="link-signature font-mono text-sm" href={href}>{label}</a>
+</div>

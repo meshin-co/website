@@ -15,11 +15,13 @@ and `site/public/licenses/`, the folder the check reads for the text, did not ex
 copy never labels an artefact with a licence no file states, in `openspec/specs/content/content-gate/spec.md`,
 passed on all 7 entries because none declared a licence, not because a file backed one.
 
-**`/terms` granted less than the decision.** Its Content section read "The writing on this site is mine and you
-may quote it with a link", which lets nobody copy, share or adapt a page. L75 sets the text of a resource at CC BY
-4.0 and the code at MIT, and names that section as one of three defects to fix before the first repository exists.
-The Engagements section is not in L75. It read "You own the deliverables and the code produced for you" and carried
-no exception for what the practice made before an engagement, such as the templates the resources are made of.
+**`/terms` was taken to grant less than the decision, and it did not.** Its Content section read "The writing on
+this site is mine and you may quote it with a link". This proposal first read that as one of the defects L75 names
+and widened it to a grant of CC BY 4.0 over all the writing. No decision of the owner covers the writing: L74 backs a
+redistribution-permitting licence for the resources and names none, and the one licence answer recorded is MIT (rows
+6.3 and 16.8 of `docs/COPY-CHECKLIST.md`). The widening was published on 2026-11-11 and narrowed on 2026-11-12 (L75,
+G88). The Engagements section is not in L75. It read "You own the deliverables and the code produced for you" and
+carried no exception for what the practice made before an engagement, such as the templates the resources are made of.
 
 **The pages promised a copy that for some of them will not exist.** The `status` of all 7 entries read "Available
 as a page on this site. A repository copy is not published yet."
@@ -47,10 +49,13 @@ served at `/licenses/CC-BY-4.0.txt`. `licenseHasText` returns false for an entry
 `"license":"CC-BY-4.0"` in its JSON-LD. The seeds of the engine export carry a `license` on their resource entry and
 the text of the licence, because the schema now requires one.
 
-The site grants what L75 says. The Content section of `/terms` grants the writing under CC BY 4.0, states the credit
-the licence asks for and names the text at `/licenses/CC-BY-4.0.txt`. `site/LICENSE.md` states two licences: the code
-is MIT, in the name of the site's author and with the notice of the theme it came from kept above the permission
-text, and the writing is CC BY 4.0. Its seed for a copy of the engine leaves the holder to the owner of the copy.
+The site grants the licence of the resources and nothing wider. The Content section of `/terms` grants the writing
+quotation with a link. It adds that each resource names its own licence next to its version and, where that licence
+is CC BY 4.0, grants copying, sharing and adapting of that resource, states the credit the licence asks for and names
+the text at `/licenses/CC-BY-4.0.txt`. `site/LICENSE.md` states two licences: the code is MIT, in the name of the
+site's author and with the notice of the theme it came from kept above the permission text, and the resources are
+CC BY 4.0. It licenses no other prose of the site. Its seed for a copy of the engine leaves the holder to the owner
+of the copy.
 
 The Engagements section of `/terms` now says only the working method travels between engagements and points at the
 FAQ for where that line falls. Two earlier drafts were refused. One reserved background material including
@@ -75,9 +80,9 @@ so the delta holds nothing about them: the guard of the first is named by task 5
 
 No repository is created. That is a separate job, in the order of L70. `gate:links` still reads the outbound
 addresses of the build and never fetches one (G38), and `THIRD_PARTY_HOSTS` in `site/scripts/links-gate.mjs` still
-lists the prefix `github.com/meshin-co`, which now skips only the organisation page. Rows 6.3 and 16.8 of
-`docs/COPY-CHECKLIST.md` still say MIT where L75 says CC BY 4.0 for text, because the owner answered them and decides
-whether that changes: G88.
+lists the prefix `github.com/meshin-co`, which now skips only the organisation page. Row 6.3 of
+`docs/COPY-CHECKLIST.md` has no answer and reads `MIT assumed`, and row 16.8, which the owner answered, reads
+`Page-only, MIT, v0.1`. The 7 entries declare CC-BY-4.0 against both, and the owner decides whether that changes: G88.
 
 ## The limits
 
@@ -85,8 +90,8 @@ A 404 from `github.com` is also what an anonymous client gets for a private repo
 public repository show that no public copy exists, never that no private one does. The guards prove that a licence is
 declared and that its text ships. None proves that the licence suits an artefact, and nothing checks the `status` of
 an entry against its `repoUrl`, or that a `repoUrl` answers: G87. The structured data names the licence by its bare
-id, and schema.org types that property as a URL or a CreativeWork: G89. Nothing reads what `/terms` grants: G90. The
-boundary on ownership rests on no answer of the owner: G91. `site/public/licenses/` holds no MIT text
+id, and schema.org types that property as a URL or a CreativeWork: G89. Nothing refuses a grant past the decision:
+G90. The boundary on ownership rests on no answer of the owner: G91. `site/public/licenses/` holds no MIT text
 because no entry declares MIT. The first that does must add it, and the build says so.
 
 ## Why this change is parked

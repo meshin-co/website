@@ -634,6 +634,7 @@ const FEED_ENDPOINTS = [
   'src/pages/case-studies/rss.xml.ts',
   'src/pages/faq/rss.xml.ts',
   'src/pages/services/rss.xml.ts',
+  'src/pages/spec/rss.xml.ts',
 ];
 
 test('the merged feed and one endpoint per public collection exist, so the gate has something to check', async () => {

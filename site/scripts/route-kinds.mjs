@@ -1,17 +1,27 @@
+import { FEED_BASES, SERIES_COLLECTIONS } from '../src/utils/feeds.mjs';
 import { isNoindex } from './gate.mjs';
 
 export const RESERVED_LEAF_SLUGS = new Set(['tags', 'tag', 'page', 'category']);
 
+export const SERIES_BASES = new Set([...SERIES_COLLECTIONS].map((kind) => FEED_BASES[kind]));
+
 const ARCHIVE_SLUGS = new Set(['tag', 'category']);
 const REGISTER = 'site/src/utils/route-exceptions.mjs';
 
-export function routeShape(route, bases) {
+function seriesShape(base, [name, version, ...deeper]) {
+  if (version === undefined) return { shape: 'series', base, id: name };
+  if (deeper.length > 0) return { shape: 'page' };
+  return { shape: 'entry', base, id: `${name}/${version}` };
+}
+
+export function routeShape(route, bases, seriesBases = SERIES_BASES) {
   const parts = route.split('/').filter(Boolean);
   if (parts.length >= 2 && parts.at(-2) === 'page' && /^\d+$/.test(parts.at(-1))) return { shape: 'pagination' };
 
   const [base, second] = parts;
   if (!bases.has(base)) return { shape: 'page' };
   if (parts.length === 1) return { shape: 'hub', base };
+  if (seriesBases.has(base)) return seriesShape(base, parts.slice(1));
   if (parts.length === 2 && second === 'tags') return { shape: 'tag-index', base };
   if (parts.length === 2 && !RESERVED_LEAF_SLUGS.has(second)) return { shape: 'entry', base, id: second };
   if (parts.length === 3 && ARCHIVE_SLUGS.has(second)) return { shape: 'archive', base };
@@ -129,11 +139,12 @@ function exceptionFindings({ routes, declared }) {
 
 export function deriveRouteKinds({ routes, htmlByRoute, collections, declared }) {
   const bases = new Set(collections.map(({ base }) => base));
+  const seriesBases = new Set(collections.filter(({ kind }) => SERIES_COLLECTIONS.has(kind)).map(({ base }) => base));
   const collectionOf = new Map(collections.map(({ kind, base }) => [base, kind]));
   const exceptionRoutes = new Set(declared.exceptions.map(({ route }) => route));
   const shaped = routes.map((route) => ({
     route,
-    ...routeShape(route, bases),
+    ...routeShape(route, bases, seriesBases),
     noindex: isNoindex(htmlByRoute[route] ?? ''),
   }));
 

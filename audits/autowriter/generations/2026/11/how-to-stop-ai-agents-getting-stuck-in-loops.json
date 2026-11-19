@@ -1,0 +1,344 @@
+{
+  "schema": 1,
+  "slug": "how-to-stop-ai-agents-getting-stuck-in-loops",
+  "runId": "43736140607-1",
+  "generatedAt": "2026-11-15T16:39:27.883Z",
+  "claim": {
+    "title": "How to stop AI agents getting stuck in loops",
+    "query": "how to stop ai agents getting stuck in loops",
+    "origin": "category",
+    "category": "agentic-architecture",
+    "catchUp": {
+      "slot": "15:00",
+      "lateMinutes": 95
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-15",
+      "windowStart": "2026-08-15",
+      "windowEnd": "2026-11-13",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/how-to-stop-ai-agents-getting-stuck-in-loops",
+    "path": "site/src/data/post/how-to-stop-ai-agents-getting-stuck-in-loops.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_076ef8adc09768f1016af9dfa090cc87d1bb86bc7a55795ae6",
+  "published": {
+    "callIndex": 7
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0fa2349567230f7d016af9df558de487d1b8d02c42bad2cfd3",
+      "requestDigest": "5a87100dc54cf4a4a75ddd0974a71d0bc0efe8135b5858fd79a9ddae4b8b4ef4",
+      "tokens": {
+        "input": 1106,
+        "output": 127
+      },
+      "costUsd": 0.001741,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_048e8e327a83778f016af9df592c2c87d186ba2ebf76f05704",
+      "requestDigest": "4e43c3a7332ac2633c3643640a49d66c616c1e93adc26c1e5c40518268779389",
+      "tokens": {
+        "input": 1166,
+        "output": 72
+      },
+      "costUsd": 0.001526,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_07cce4ff3dcffe01016af9df5b616c87d19878e1a5e2215487",
+      "requestDigest": "798dd2ca0d643211ba7fced01efb388e66bff8df499daaad3d5367cc374882eb",
+      "tokens": {
+        "input": 1110,
+        "output": 151
+      },
+      "costUsd": 0.001865,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0fa2d6e90a94e3c2016af9df5f00e887d1bc646e1aacbcc2d0",
+      "requestDigest": "36faff2bbfb8679b510732b0f0dccfa7b6b15290fe7eff987c006cb9f085ae7b",
+      "tokens": {
+        "input": 0,
+        "output": 0
+      },
+      "costUsd": 0,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "max_output_tokens"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0e7ed563296ee780016af9df634c7487d1a71d6b253152c9fa",
+      "requestDigest": "c0b391422e37776a311a7aa5b63a512979353dd0bc12c76ebaa0f639861d959a",
+      "tokens": {
+        "input": 1107,
+        "output": 70
+      },
+      "costUsd": 0.001457,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0cdf667b18cc89fa016af9df656b0087d1ade716c2a7443e60",
+      "requestDigest": "b1978c83c907587c4bf166837bfd2aae425b79f4c9093c219c62a74d58749840",
+      "tokens": {
+        "input": 1163,
+        "output": 68
+      },
+      "costUsd": 0.001503,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0b09e232aaf7ed5d016af9df6adbd087d1b7ad579495d2120c",
+      "requestDigest": "586616cd5b40529ddd834bcb6a2f2850e03c3119870e0ac8c107dd6ed42840d4",
+      "tokens": {
+        "input": 10412,
+        "output": 3555
+      },
+      "costUsd": 0.028187,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_076ef8adc09768f1016af9dfa090cc87d1bb86bc7a55795ae6",
+      "requestDigest": "bf236b4145e78ee942c6dc5f6dea10560e40972402404de16f9ed92269038a74",
+      "tokens": {
+        "input": 13374,
+        "output": 2996
+      },
+      "costUsd": 0.028354,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 29438,
+      "output": 7039
+    },
+    "costUsd": 0.064633
+  },
+  "ledger": "audits/autowriter/2026/11/how-to-stop-ai-agents-getting-stuck-in-loops.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "1117365605b496979e904cd8ba7947d7d59ab92022a097baa033f02cd5574a35",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "ff2fc22c860396d15bc1e93478be8f5bf68a02969a0619724033c6569f2a7df5"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "1e291e4336807e99144f2a63cfd94220707c1c99d9084f960e26799cbf12fde8"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "89ba34fa19f9d87e2d9ef361aac8724b2d2124ecde1b442950d6cdf9ed24fb0e"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "8bd0e05e679d17fc3ffc71293c0f5cdb902c5fb8994e2703d0c23eedbf388453"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "a30c8d64d203430894be932d11c426574c811fc7ad0c1d496a2ab8eb3e29c4e7"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "780d59252fa515f3cce16752f385b5784a713fd25e2abb0fac6a5a60a01ca472"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "df07e5ca1fced82881ab08e3849da19ec0de824e4be87b2719f174f0f73f33c2"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "2e01cd0090814cf4fe74df5a7eeed7164bd159b3",
+    "fingerprint": "9a7b432bd1011d69addb0ca3b33d357f384f88ec1890a0d1894b4cdf2cbfca01"
+  },
+  "claimTable": [],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 137,
+      "median": 13,
+      "shareBelowThreshold": 0.2993,
+      "shareJustBelow": 0.219,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/how-to-stop-ai-agents-getting-stuck-in-loops.json",
+    "audits/autowriter/claims/2026/11/how-to-stop-ai-agents-getting-stuck-in-loops.json",
+    "audits/autowriter/generations/2026/11/how-to-stop-ai-agents-getting-stuck-in-loops.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-prevent-duplicate-ai-agent-actions-on-retries.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-roll-back-an-ai-agent-deployment.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-stop-ai-agents-getting-stuck-in-loops.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-trace-ai-agent-tool-calls-in-production.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/how-to-stop-ai-agents-getting-stuck-in-loops.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}
