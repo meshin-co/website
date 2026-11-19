@@ -75,7 +75,7 @@ title `{spec name} specification {version} — meshin.co` · meta: what the vers
 | `/spec/evals-baseline`     | evals-baseline specification     | evals-baseline specification — meshin.co     | Every published version of the evals-baseline specification, and the address to cite for each.                                                         | evals-baseline specification     | 23    | ✓       |
 | `/spec/evals-baseline/1.0` | evals-baseline specification 1.0 | evals-baseline specification 1.0 — meshin.co | The evals-baseline specification 1.0 says what a regression in an agent evaluation is, and defines the baseline file, the findings and the exit codes. | evals-baseline specification 1.0 | 26    | ✓       |
 
-### article (30)
+### article (31)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
@@ -92,6 +92,7 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/fractional-caio-pricing`                                    | fractional caio pricing                                    | Fractional CAIO pricing — meshin.co                                    | Understand fractional CAIO pricing structures, compare proposals and identify costs to settle before work starts.                                     | Fractional CAIO pricing                                    | 34    | ✓       |
 | `/blog/handing-over-ai-leadership-to-an-internal-owner`            | how to hand over ai leadership to internal owner           | How to hand over AI leadership to an internal owner — meshin.co        | How to hand over AI leadership in steps that end in a test: what moves, who takes the role and how to tell it worked.                                 | How to hand over AI leadership to an internal owner        | 41    | ✓       |
 | `/blog/how-can-boards-verify-ai-cost-savings`                      | how can boards verify ai cost savings                      | How can boards verify AI cost savings? — meshin.co                     | How boards can test AI cost savings against finance records, delivery costs, work quality and a credible baseline.                                    | How can boards verify AI cost savings?                     | 30    | ✓       |
+| `/blog/how-to-allocate-shared-ai-tool-costs-across-departments`    | how to allocate shared ai tool costs across departments    | How to allocate shared AI tool costs across departments — meshin.co    | Allocate shared AI tool costs using direct charges, service-specific usage measures and a review process departments can inspect.                     | How to allocate shared AI tool costs across departments    | 31    | ✓       |
 | `/blog/how-to-audit-employee-compliance-with-ai-usage-rules`       | how to audit employee compliance with ai usage rules       | How to audit employee compliance with AI usage rules — meshin.co       | Audit employee AI use against workplace rules with a practical sampling plan, proportionate evidence and a clear process for fixing gaps.             | How to audit employee compliance with AI usage rules       | 34    | ✓       |
 | `/blog/how-to-build-an-ai-system-register-in-a-week`               | ai system register                                         | How to build an AI system register in a week — meshin.co               | A step-by-step way to build an AI system register in a week without buying a tool, so a security reviewer gets the document they ask for first.       | How to build an AI system register in a week               | 34    | ✓       |
 | `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company` | ai operating model for mid-size company                    | How to choose an AI operating model for a mid-size company — meshin.co | How to choose an operating model for AI work in a mid-size company, starting from what the law requires and what the evidence supports.               | How to choose an AI operating model for a mid-size company | 41    | ✓       |
@@ -450,11 +451,11 @@ One owning route per entity. The mention count is inbound references from other 
 | Entity                         | Owned by                                   | Mentioned by |
 | ------------------------------ | ------------------------------------------ | ------------ |
 | Agentic workflow               | `/glossary/agentic-workflow`               | 15           |
-| AI governance                  | `/glossary/ai-governance`                  | 51           |
+| AI governance                  | `/glossary/ai-governance`                  | 52           |
 | AI impact assessment           | `/glossary/ai-impact-assessment`           | 3            |
 | AI management system           | `/glossary/ai-management-system`           | 7            |
-| AI operating model             | `/glossary/ai-operating-model`             | 22           |
-| AI register                    | `/glossary/ai-register`                    | 43           |
+| AI operating model             | `/glossary/ai-operating-model`             | 23           |
+| AI register                    | `/glossary/ai-register`                    | 44           |
 | Conformity assessment          | `/glossary/conformity-assessment`          | 5            |
 | Data classification            | `/glossary/data-classification`            | 19           |
 | DPIA                           | `/glossary/dpia`                           | 6            |
