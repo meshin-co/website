@@ -12,6 +12,7 @@ import { autowriterReport } from './autowriter-gate.mjs';
 import { bandSceneFiles } from './fixtures/record-rules-scene.mjs';
 import { SCENE_CORE } from './fixtures/semantic-core-scene.mjs';
 import { plantSpendReport } from './fixtures/spend-report-plant.mjs';
+import { checkOutState } from './fixtures/state-checkout.mjs';
 import { siteBrand } from './site-brand.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
@@ -58,7 +59,7 @@ const findings = (...workflows) =>
   }).findings;
 
 function inTempRepo(plant, check) {
-  const root = mkdtempSync(join(tmpdir(), 'autowriter-gate-workflows-'));
+  const root = checkOutState(mkdtempSync(join(tmpdir(), 'autowriter-gate-workflows-')));
   try {
     for (const [path, text] of Object.entries({
       'site/src/config.yaml': `site:\n  name: ${siteBrand().name}\n`,

@@ -7,9 +7,10 @@ import { test } from 'node:test';
 import { REPORT_PATH, reportText } from '../spend-report-text.mjs';
 import { GENERATED_AT, filesOf, ledgerOf, recordOf, writingCall } from './spend-report-corpus.mjs';
 import { REVISION, plantSpendReport, spendReportFiles } from './spend-report-plant.mjs';
+import { checkOutState } from './state-checkout.mjs';
 
 function inEmptyRepo(body) {
-  const root = mkdtempSync(join(tmpdir(), 'spend-report-plant-'));
+  const root = checkOutState(mkdtempSync(join(tmpdir(), 'spend-report-plant-')));
   try {
     return body(root);
   } finally {
