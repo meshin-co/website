@@ -2,13 +2,13 @@
   {
     "target": "src/data/post/named-person-responsible-for-ai-risk-in-vendor-procurement.md",
     "status": "rewritten",
-    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json on 2026-11-03. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json.",
-    "digest": "16b9746bbd1f"
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json on 2026-11-03. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json. On 2026-11-17 one inline link was added to this text by an AI coding agent landing pull request #133, not by the unattended writer, and no word changed: in the paragraph under \"Who answers a customer's procurement questionnaire?\" the words \"the named contact, the work covered, and the decision rights\" now link to /blog/fractional-caio-pricing. No sentence on the site linked to that page, which the Related blocks of the executive category listed until a seventh post of that category pushed it out of them, and npm run gate:orphans refuses a page that only chrome and hub listings reach. The agent read that paragraph and the linked page. No human has read the rest of this text.",
+    "digest": "7beafd6b0323"
   },
   {
     "target": "/blog/named-person-responsible-for-ai-risk-in-vendor-procurement",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/ai-vendor-assessment-questionnaire-template (generation record audits/autowriter/generations/2026/11/ai-vendor-assessment-questionnaire-template.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file. On 2026-11-11 the shared resource status line this route shows changed from \"Available as a page on this site. A repository copy is not published yet.\" to \"Available as a page on this site. There is no repository copy.\" (owner decision of 2026-11-10); a person read that one line in dist/blog/named-person-responsible-for-ai-risk-in-vendor-procurement.html and it states what is true today without promising a repository or a date. The rest of this text is still unread by a person.",
-    "digest": "bbdc7d22cabc"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-decide-which-employee-data-can-be-used-in-ai-tools (generation record audits/autowriter/generations/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "739110dd6300"
   }
 ]

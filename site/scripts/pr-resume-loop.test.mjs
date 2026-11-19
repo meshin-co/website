@@ -73,13 +73,24 @@ for (const [name, options] of NEVER_RESUMABLE) {
   });
 }
 
-for (const outcome of OUTCOMES.filter((candidate) => !['repaired', 'stale'].includes(candidate))) {
+const RESUMABLE_REPAIR_ENDINGS = ['repaired', 'stale', 'failed'];
+
+for (const outcome of OUTCOMES.filter((candidate) => !RESUMABLE_REPAIR_ENDINGS.includes(candidate))) {
   test(`a repair that ended as ${outcome} files an escalation the resume never reads as resumable`, async () => {
     const { ledger } = await escalationOf({ bundle: green(), afterRepair: outcome });
 
     assert.equal(resumableReasonOf(ledger), null);
   });
 }
+
+test('a repair job that failed files an escalation the resume reads as resumable, once: the failed repair of pull requests 137, 152 and 153', async () => {
+  const { action, ledger } = await escalationOf({ bundle: green(), afterRepair: 'failed' });
+
+  assert.equal(action, 'escalated');
+  assert.equal(ledger.escalations.at(-1).kind, 'hard-stop');
+  assert.equal(resumableReasonOf(ledger), 'repair-failed');
+  assert.match(ledger.escalations.at(-1).title, /: the repair job failed before it could finish$/);
+});
 
 const bundle = scenario('dependency-failure');
 const pullRequest = asInput(bundle).pullRequest;

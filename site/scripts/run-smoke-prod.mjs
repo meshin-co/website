@@ -4,6 +4,8 @@ import { join } from 'node:path';
 import { generatorRevision } from './report.mjs';
 import {
   ACCEPT_PROBES,
+  CANONICAL,
+  MACHINE,
   PATH_SHAPES,
   acceptVerdict,
   canonicalHostVerdict,
@@ -19,27 +21,6 @@ import { brandFromDisk } from '../src/utils/brand.mjs';
 
 const origin = (process.argv[2] ?? `https://${brandFromDisk().name}`).replace(/\/$/, '');
 const out = process.argv[3] ?? '../audits/phase-local/smoke-prod.md';
-
-const CANONICAL = [
-  '/',
-  '/services',
-  '/pricing',
-  '/approach',
-  '/about',
-  '/contact',
-  '/faq',
-  '/blog',
-  '/glossary',
-  '/resources',
-];
-const MACHINE = [
-  '/robots.txt',
-  '/sitemap-index.xml',
-  '/llms.txt',
-  '/rss.xml',
-  '/feed.json',
-  '/.well-known/security.txt',
-];
 
 async function observe(path, accept) {
   const response = await fetch(`${origin}${path}`, { headers: { accept }, redirect: 'manual' });

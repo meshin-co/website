@@ -48,7 +48,7 @@ the command that clears it; measure the tree and commit `audits/lighthouse-green
 
 ## What CI does
 
-`deploy-preview` in `ci.yml` deploys every pull request to `pr-<number>`, smokes it and comments the URL.
+`deploy-preview` in `ci.yml` deploys every pull request to `pr-<number>`, waits, smokes it and comments the URL. Pages does not publish a deployment's files together: measured on 2026-11-18, a fresh upload answered 404 for most of its 133 routes for up to 8 s after wrangler printed "Deployment complete", routes answered 200 and then 404 again before the last one arrived, and the deployment record already read `deploy: success` throughout. So the wait is `run-wait-for-preview.mjs`, and `preview-wait.mjs` holds the rules: it probes every file `dist/` holds, not a sample, until two sweeps in a row answer them all, and it refuses at once a route the smoke checks that `dist/` never made, because waiting cannot create a file.
 Production is **Publish Live**, run by itself after a green `ci` push run on `main` or by dispatch: `run-publish-target.mjs` picks the run, `publish-target.mjs` holds the rules.
 
 ```mermaid

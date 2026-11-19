@@ -20,12 +20,15 @@ export function sweepWorld({
   main = [],
   issues = [],
   closed = {},
+  runs = [],
   failWith = {},
   now = NOW,
 } = {}) {
   const calls = [];
   const stored = new Map(ledgers.map((record) => [record.value.slug, record]));
   const known = new Map([...pulls, ...Object.values(closed)].map((pull) => [pull.number, pull]));
+  const comments = new Map();
+  const watcherRuns = [...runs];
   const fail = (name, args) => {
     const failure = failWith[name];
     const error = typeof failure === 'function' ? failure(args) : failure;
@@ -66,7 +69,18 @@ export function sweepWorld({
       record('listOpenIssues', api);
       return issues;
     },
-    commentOnIssue: async (api, args) => record('commentOnIssue', api, args),
+    listIssueComments: async (api, args) => {
+      record('listIssueComments', api, args);
+      return comments.get(args.number) ?? [];
+    },
+    commentOnIssue: async (api, args) => {
+      record('commentOnIssue', api, args);
+      comments.set(args.number, [...(comments.get(args.number) ?? []), { body: args.body }]);
+    },
+    listWatcherRuns: async (api, args) => {
+      record('listWatcherRuns', api, args);
+      return watcherRuns.map((run) => ({ ...run }));
+    },
     closeIssue: async (api, args) => record('closeIssue', api, args),
     putLedger: async (api, args) => {
       record('putLedger', api, args);
@@ -74,7 +88,10 @@ export function sweepWorld({
       stored.set(value.slug, { value, blobSha: `after-${calls.length}`, path: args.path });
       return { commit: 'e'.repeat(40) };
     },
-    dispatchSuccessor: async (api, args) => record('dispatchSuccessor', api, args),
+    dispatchSuccessor: async (api, args) => {
+      record('dispatchSuccessor', api, args);
+      watcherRuns.unshift({ status: 'queued', title: `Watch pull request #${args.inputs.pr}` });
+    },
   };
   const sweep = createResumeSweep({
     io,
@@ -83,5 +100,5 @@ export function sweepWorld({
     ref: 'main',
     now: () => now,
   });
-  return { sweep, calls, io, stored };
+  return { sweep, calls, io, stored, comments, watcherRuns };
 }

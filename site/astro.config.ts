@@ -10,10 +10,12 @@ import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 import icon from 'astro-icon';
 import compress from 'astro-compress';
+import rehypeStarryNight from 'rehype-starry-night';
 
 import astrowind from './vendor/integration';
 
 import { readingTimeRemarkPlugin } from './src/utils/frontmatter';
+import { rehypeCodeBlocks, rehypeJsonBlocks } from './src/utils/code-blocks.mjs';
 import { rehypeExternalLinks, rehypeHeadingAnchors, rehypeScrollableTables } from './src/utils/pipeline.mjs';
 import {
   siteLastmods,
@@ -134,7 +136,14 @@ export default defineConfig({
   markdown: {
     processor: unified({
       remarkPlugins: [readingTimeRemarkPlugin],
-      rehypePlugins: [rehypeScrollableTables, rehypeHeadingAnchors, rehypeExternalLinks],
+      rehypePlugins: [
+        rehypeJsonBlocks,
+        rehypeStarryNight,
+        rehypeCodeBlocks,
+        rehypeScrollableTables,
+        rehypeHeadingAnchors,
+        rehypeExternalLinks,
+      ],
     }),
     syntaxHighlight: false,
   },

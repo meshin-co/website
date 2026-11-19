@@ -61,6 +61,19 @@ test('the jobs are the watcher, the repair and the follow-up, in the order the w
   assert.deepEqual(Object.keys(WORKFLOW.jobs), ['watch', 'repair', 'follow']);
 });
 
+const titleOf = (runName, number) => runName.replace(expression('inputs.pr'), number);
+
+test('each run is titled with the number of the pull request it judges, because the resume sweep finds a chain by that title', () => {
+  assert.equal(titleOf(WORKFLOW['run-name'], '165'), 'Watch pull request #165');
+});
+
+test('the title check can fail: the line unquoted is read by YAML as a comment after the space and titles every run with no number', () => {
+  const unquoted = parse(`run-name: Watch pull request #${expression('inputs.pr')}\n`)['run-name'];
+
+  assert.equal(titleOf(unquoted, '165'), 'Watch pull request');
+  assert.match(TEXT, /^run-name: 'Watch pull request #/m);
+});
+
 test('the watch job keeps its guard, its tick environment, its limit and its permissions', () => {
   assert.equal(watch.if, "github.ref == 'refs/heads/main'");
   assert.equal(watch.environment, 'autowriter-tick');
@@ -89,10 +102,12 @@ test('the repair job may read the repository, the pull request, the checks and t
   assert.deepEqual(repair?.permissions, READ_ONLY);
 });
 
-test('the repair job hands the follow-up the outcome of the step that ran the repair', () => {
+test('the repair job hands the follow-up the outcome of the step that ran the repair, or of the install that stopped it', () => {
   found(rewrite, 'rewrite');
   assert.deepEqual(repair?.outputs, {
-    outcome: expression('steps.rewrite.outputs.outcome || steps.catchup.outputs.outcome'),
+    outcome: expression(
+      'steps.rewrite.outputs.outcome || steps.catchup.outputs.outcome || steps.refresh.outputs.outcome'
+    ),
   });
 });
 
@@ -140,7 +155,10 @@ test('layer three against two repairs: the push is a plain fast-forward, which a
 });
 
 test('the catch-up step runs for the kind of repair that is a catch-up, and the rewrite runs for every other kind', () => {
-  assert.equal(found(catchup, 'catchup').if, "needs.watch.outputs.kind == 'catch-up'");
+  assert.equal(
+    found(catchup, 'catchup').if,
+    "needs.watch.outputs.kind == 'catch-up' && steps.refresh.outputs.outcome == ''"
+  );
   assert.equal(found(rewrite, 'rewrite').if, "needs.watch.outputs.kind != 'catch-up'");
 });
 

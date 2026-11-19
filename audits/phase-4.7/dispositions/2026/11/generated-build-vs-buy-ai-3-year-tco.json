@@ -9,6 +9,6 @@
     "target": "/blog/build-vs-buy-ai-3-year-tco",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-should-boards-divide-ai-oversight-among-committees (generation record audits/autowriter/generations/2026/11/how-should-boards-divide-ai-oversight-among-committees.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "f84e2dc52e3c"
+    "digest": "10fa932c994f"
   }
 ]

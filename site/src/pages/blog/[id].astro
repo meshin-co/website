@@ -14,6 +14,7 @@ import JsonLd from '~/components/common/JsonLd.astro';
 import MarkdownAlternate from '~/components/common/MarkdownAlternate.astro';
 import KeyTakeaways from '~/components/site/KeyTakeaways.astro';
 import PostCard from '~/components/site/PostCard.astro';
+import ReferenceLink from '~/components/site/ReferenceLink.astro';
 import ResourceCard from '~/components/site/ResourceCard.astro';
 import Section from '~/components/site/Section.astro';
 import SourceList from '~/components/site/SourceList.astro';
@@ -113,6 +114,7 @@ const crumbs = [
 ];
 
 const hasFaq = data.faq.length > 0;
+const reference = data.tags.map((slug) => tagBySlug[slug]?.reference).find((entry) => entry !== undefined);
 
 const nodes = [
   orgNode(site, { logoPath: ogDefaultPath }),
@@ -185,6 +187,7 @@ const nodes = [
           <TableOfContents headings={headings} />
         </div>
       </div>
+      {reference && <ReferenceLink {...reference} />}
       {
         data.tags.length > 0 && (
           <nav aria-label="Tags" class="mt-12 flex flex-wrap gap-3 font-mono text-xs">
