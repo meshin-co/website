@@ -34,7 +34,7 @@ const GENERATED = filed('disposition');
 test('the list names what automation may never write, each row with one sentence that says why', () => {
   assert.deepEqual(
     REFUSED_PATHS.map(({ id }) => id),
-    ['sentence-band', 'entry-length', 'lighthouse-record', 'lighthouse-stamp', 'lighthouse-report']
+    ['sentence-band', 'entry-length', 'lighthouse-record', 'lighthouse-stamp', 'state-record', 'lighthouse-report']
   );
   for (const row of REFUSED_PATHS) {
     assert.equal(typeof row.covers, 'function', row.id);
@@ -49,6 +49,12 @@ const REFUSED = [
   ['audits/lighthouse-green.json', 'lighthouse-record'],
   ['audits/phase-4.7/lh-measured.json', 'lighthouse-stamp'],
   ['audits/phase-zz-specimen/lh-measured.json', 'lighthouse-stamp'],
+  ['state/ledger/2026/11/' + SLUG + '.json', 'state-record'],
+  ['state/claims/2026/11/' + SLUG + '.json', 'state-record'],
+  ['state/spend-report.md', 'state-record'],
+  ['state/search-demand.md', 'state-record'],
+  ['state/keyword-demand.md', 'state-record'],
+  ['state/README.md', 'state-record'],
   ['audits/phase-4.7/lh-mobile/lhr-0.json', 'lighthouse-report'],
   ['audits/phase-4.7/lh-desktop/lhr-2.json', 'lighthouse-report'],
   ['audits/phase-4.7/lh-mobile/deeper/still/lhr-0.json', 'lighthouse-report'],
@@ -70,6 +76,11 @@ const DISGUISED = [
   ['.\\audits\\lighthouse-green.json', 'audits/lighthouse-green.json', 'lighthouse-record'],
   ['audits/./phase-4.7/./lh-measured.json', 'audits/phase-4.7/lh-measured.json', 'lighthouse-stamp'],
   ['Audits/Sentence-Band.JSON', 'Audits/Sentence-Band.JSON', 'sentence-band'],
+  ['./state/spend-report.md', 'state/spend-report.md', 'state-record'],
+  ['state//ledger/2026/11/x.json', 'state/ledger/2026/11/x.json', 'state-record'],
+  ['state\\claims\\2026\\11\\x.json', 'state/claims/2026/11/x.json', 'state-record'],
+  ['STATE/Spend-Report.md', 'STATE/Spend-Report.md', 'state-record'],
+  ['audits/../state/ledger/2026/11/x.json', 'state/ledger/2026/11/x.json', 'state-record'],
   ['AUDITS/PHASE-4.7/LH-MOBILE/LHR-0.JSON', 'AUDITS/PHASE-4.7/LH-MOBILE/LHR-0.JSON', 'lighthouse-report'],
 ];
 
@@ -80,10 +91,14 @@ for (const [spelled, normalised, id] of DISGUISED) {
 }
 
 const ALLOWED = [
-  filed('ledger'),
   filed('generation'),
-  filed('claim'),
   GENERATED,
+  'audits/autowriter/2026/11/' + SLUG + '.json',
+  'audits/autowriter/claims/2026/11/' + SLUG + '.json',
+  'statement/ledger/2026/11/x.json',
+  'site/state/ledger/2026/11/x.json',
+  'docs/state/spend-report.md',
+  'state.md',
   'audits/sentence-band.json.bak',
   'audits/sentence-band.md',
   'audits/entry-length.json.bak',

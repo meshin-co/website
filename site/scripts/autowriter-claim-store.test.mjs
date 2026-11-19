@@ -6,6 +6,7 @@ import { test } from 'node:test';
 
 import { isHolding, validateClaim } from './autowriter-claims.mjs';
 import { CLAIM_LIFETIME_DAYS, newClaim, readClaim, readClaims, writeClaim } from './autowriter-claim-store.mjs';
+import { checkOutState } from './fixtures/state-checkout.mjs';
 import { recordDirectory, recordPath } from './record-layout.mjs';
 
 const NOW = new Date('2026-11-02T07:00:00.000Z');
@@ -29,7 +30,7 @@ const claim = (extra = {}) => ({
 const filedAt = (slug) => recordPath('claim', slug, CLAIMED);
 
 function inTemp(check) {
-  const root = mkdtempSync(join(tmpdir(), 'claims-'));
+  const root = checkOutState(mkdtempSync(join(tmpdir(), 'claims-')));
   try {
     return check(root);
   } finally {

@@ -72,6 +72,7 @@ when the watcher escalates again it writes a newer verdict and the pull request 
 the push holds the pull request's CI run for a click). It also fails a `changes` job whose `BEFORE` does not name
 `github.event.pull_request.base.sha` (`classifier-judges-last-push`), without which a pull request is judged by its last
 push and a ledger-only commit skips every gate.
+It also fails a step that runs `scripts/commit-state.mjs` in a job that did not check `autowriter-state` out at `state/` before the step with `AUTOWRITER_PAT` as the checkout's token (`state-checkout`, in `scripts/bot-push-token.mjs`).
 
 ## Trap
 

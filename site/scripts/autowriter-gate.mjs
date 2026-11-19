@@ -9,7 +9,7 @@ import { bandRecordFindings, committedBand, generationReport } from './autowrite
 import { describeProblem } from './autowriter-records.mjs';
 import { historyReport, skippedLine } from './autowriter-refusal-rules.mjs';
 import { spendReportFindings } from './autowriter-spend-rules.mjs';
-import { botPushFindings } from './bot-push-token.mjs';
+import { botPushFindings, commitStateFindings } from './bot-push-token.mjs';
 import { REQUIRED_JOBS } from './ci-aggregate.mjs';
 import { WORKFLOW_PATH, aggregateWiringFindings } from './ci-aggregate-wiring.mjs';
 import { classifierWiringFindings } from './classify-wiring.mjs';
@@ -86,7 +86,12 @@ const wiringFindings = (text) => [...aggregateWiringFindings(text), ...classifie
 function judgedWorkflow({ path, text }) {
   try {
     const wiring = path === WORKFLOW_PATH ? wiringFindings(text) : [];
-    return [...wiring.map(({ rule, detail }) => finding(rule, path, detail)), ...botPushFindings([{ path, text }])];
+    const workflow = [{ path, text }];
+    return [
+      ...wiring.map(({ rule, detail }) => finding(rule, path, detail)),
+      ...botPushFindings(workflow),
+      ...commitStateFindings(workflow),
+    ];
   } catch (error) {
     return [finding('workflow-unreadable', path, `not valid YAML: ${error.message}`)];
   }

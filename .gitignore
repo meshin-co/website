@@ -7,6 +7,7 @@ dist-visual/
 .env.*
 !.env.example
 .lighthouseci/
+/state/
 test-results/
 playwright-report/
 site/test-results/

@@ -75,7 +75,7 @@ title `{spec name} specification {version} — meshin.co` · meta: what the vers
 | `/spec/evals-baseline`     | evals-baseline specification     | evals-baseline specification — meshin.co     | Every published version of the evals-baseline specification, and the address to cite for each.                                                         | evals-baseline specification     | 23    | ✓       |
 | `/spec/evals-baseline/1.0` | evals-baseline specification 1.0 | evals-baseline specification 1.0 — meshin.co | The evals-baseline specification 1.0 says what a regression in an agent evaluation is, and defines the baseline file, the findings and the exit codes. | evals-baseline specification 1.0 | 26    | ✓       |
 
-### article (28)
+### article (31)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
@@ -92,6 +92,7 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/fractional-caio-pricing`                                    | fractional caio pricing                                    | Fractional CAIO pricing — meshin.co                                    | Understand fractional CAIO pricing structures, compare proposals and identify costs to settle before work starts.                                     | Fractional CAIO pricing                                    | 34    | ✓       |
 | `/blog/handing-over-ai-leadership-to-an-internal-owner`            | how to hand over ai leadership to internal owner           | How to hand over AI leadership to an internal owner — meshin.co        | How to hand over AI leadership in steps that end in a test: what moves, who takes the role and how to tell it worked.                                 | How to hand over AI leadership to an internal owner        | 41    | ✓       |
 | `/blog/how-can-boards-verify-ai-cost-savings`                      | how can boards verify ai cost savings                      | How can boards verify AI cost savings? — meshin.co                     | How boards can test AI cost savings against finance records, delivery costs, work quality and a credible baseline.                                    | How can boards verify AI cost savings?                     | 30    | ✓       |
+| `/blog/how-to-audit-employee-compliance-with-ai-usage-rules`       | how to audit employee compliance with ai usage rules       | How to audit employee compliance with AI usage rules — meshin.co       | Audit employee AI use against workplace rules with a practical sampling plan, proportionate evidence and a clear process for fixing gaps.             | How to audit employee compliance with AI usage rules       | 34    | ✓       |
 | `/blog/how-to-build-an-ai-system-register-in-a-week`               | ai system register                                         | How to build an AI system register in a week — meshin.co               | A step-by-step way to build an AI system register in a week without buying a tool, so a security reviewer gets the document they ask for first.       | How to build an AI system register in a week               | 34    | ✓       |
 | `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company` | ai operating model for mid-size company                    | How to choose an AI operating model for a mid-size company — meshin.co | How to choose an operating model for AI work in a mid-size company, starting from what the law requires and what the evidence supports.               | How to choose an AI operating model for a mid-size company | 41    | ✓       |
 | `/blog/how-to-decide-which-employee-data-can-be-used-in-ai-tools`  | how to decide which employee data can be used in ai tools  | How to decide which employee data can be used in AI tools — meshin.co  | How to decide which employee data can be used in AI tools depends on the task, the fields, vendor terms and approval controls.                        | How to decide which employee data can be used in AI tools  | 31    | ✓       |
@@ -101,6 +102,7 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/how-to-review-ai-generated-customer-support-replies`        | how to review ai-generated customer support replies        | How to review AI-generated customer support replies — meshin.co        | Set a practical review process for AI-generated support replies, from checking account facts to handling risky drafts and improving future reviews.   | How to review AI-generated customer support replies        | 32    | ✓       |
 | `/blog/how-to-review-ai-vendor-model-updates-after-deployment`     | how to review ai vendor model updates after deployment     | How to review AI vendor model updates after deployment — meshin.co     | Learn how to review AI vendor model updates after deployment with paired tests, release decisions and a fallback plan.                                | How to review AI vendor model updates after deployment     | 33    | ✓       |
 | `/blog/how-to-roll-back-an-ai-agent-deployment`                    | how to roll back an ai agent deployment                    | How to roll back an AI agent deployment — meshin.co                    | How to roll back an AI agent deployment: stop actions, restore a known release and check in-flight work before resuming.                              | How to roll back an AI agent deployment                    | 29    | ✓       |
+| `/blog/how-to-run-a-quarterly-ai-tool-access-review`               | how to run a quarterly ai tool access review               | How to run a quarterly AI tool access review — meshin.co               | Learn how to run a quarterly AI tool access review with clear owners, evidence, decisions and checks that changes take effect.                        | How to run a quarterly AI tool access review               | 32    | ✓       |
 | `/blog/how-to-run-an-ai-agent-in-shadow-mode`                      | how to run an ai agent in shadow mode                      | How to run an AI agent in shadow mode — meshin.co                      | Learn how to run an AI agent in shadow mode while blocking live actions and comparing proposals with workflow outcomes.                               | How to run an AI agent in shadow mode                      | 30    | ✓       |
 | `/blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent`       | how to set a per-task spending limit for an ai agent       | How to set a per-task spending limit for an AI agent — meshin.co       | Set and enforce an AI agent's task budget with cost reservations, shared limits, clear failure rules, and reconciliation.                             | How to set a per-task spending limit for an AI agent       | 31    | ✓       |
 | `/blog/how-to-stop-ai-agents-getting-stuck-in-loops`               | how to stop ai agents getting stuck in loops               | How to stop AI agents getting stuck in loops — meshin.co               | How to stop AI agents getting stuck in loops: enforce shared limits, check progress and use safe retries.                                             | How to stop AI agents getting stuck in loops               | 34    | ✓       |
@@ -108,6 +110,7 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/multi-agent-reference-architecture-in-production`           | multi-agent reference architecture production              | Multi-agent reference architecture in production — meshin.co           | What the sources say about multi-agent systems in production: where vendors agree, where they split, and what the research did not find.              | Multi-agent reference architecture in production           | 41    | ✓       |
 | `/blog/named-person-responsible-for-ai-risk-in-vendor-procurement` | named person responsible for ai risk in vendor procurement | Named person responsible for AI risk in vendor procurement — meshin.co | How a named AI risk owner coordinates vendor review, records decisions, and answers customer procurement questions.                                   | Named person responsible for AI risk in vendor procurement | 36    | ✓       |
 | `/blog/what-should-a-board-request-in-a-quarterly-ai-risk-report`  | what should a board request in a quarterly ai risk report  | What should a board request in a quarterly AI risk report? — meshin.co | What boards should request in a quarterly AI risk report, from material exposures and control evidence to incidents and decisions.                    | What should a board request in a quarterly AI risk report? | 31    | ✓       |
+| `/blog/when-should-a-business-disclose-ai-use-to-customers`        | when should a business disclose ai use to customers        | When should a business disclose AI use to customers? — meshin.co       | Decide when to tell customers about AI use, where to place the notice, and how to keep it accurate.                                                   | When should a business disclose AI use to customers?       | 32    | ✓       |
 | `/blog/why-your-ai-pilot-never-reached-production`                 | ai pilot never reached production                          | Why your AI pilot never reached production — meshin.co                 | Most AI pilots stall on ownership, data rules and a missing outcome metric, not the model. Here is what has to be true before one reaches production. | Why your AI pilot never reached production                 | 32    | ✓       |
 
 ### blog-category (4)
@@ -448,15 +451,15 @@ One owning route per entity. The mention count is inbound references from other 
 | Entity                         | Owned by                                   | Mentioned by |
 | ------------------------------ | ------------------------------------------ | ------------ |
 | Agentic workflow               | `/glossary/agentic-workflow`               | 15           |
-| AI governance                  | `/glossary/ai-governance`                  | 49           |
+| AI governance                  | `/glossary/ai-governance`                  | 52           |
 | AI impact assessment           | `/glossary/ai-impact-assessment`           | 3            |
 | AI management system           | `/glossary/ai-management-system`           | 7            |
 | AI operating model             | `/glossary/ai-operating-model`             | 22           |
-| AI register                    | `/glossary/ai-register`                    | 42           |
+| AI register                    | `/glossary/ai-register`                    | 44           |
 | Conformity assessment          | `/glossary/conformity-assessment`          | 5            |
-| Data classification            | `/glossary/data-classification`            | 18           |
+| Data classification            | `/glossary/data-classification`            | 19           |
 | DPIA                           | `/glossary/dpia`                           | 6            |
-| EU AI Act                      | `/glossary/eu-ai-act`                      | 42           |
+| EU AI Act                      | `/glossary/eu-ai-act`                      | 43           |
 | Evals                          | `/glossary/evals`                          | 46           |
 | Guardrails                     | `/glossary/guardrails`                     | 7            |
 | Hallucination rate             | `/glossary/hallucination-rate`             | 4            |
@@ -476,7 +479,7 @@ One owning route per entity. The mention count is inbound references from other 
 | Red teaming                    | `/glossary/red-teaming`                    | 4            |
 | Retrieval augmented generation | `/glossary/retrieval-augmented-generation` | 4            |
 | Serious incident reporting     | `/glossary/serious-incident-reporting`     | 3            |
-| Shadow AI                      | `/glossary/shadow-ai`                      | 11           |
+| Shadow AI                      | `/glossary/shadow-ai`                      | 12           |
 | Sub-processor                  | `/glossary/sub-processor`                  | 7            |
 | Technical documentation        | `/glossary/technical-documentation`        | 8            |
 

@@ -1,0 +1,277 @@
+{
+  "schema": 1,
+  "slug": "how-to-audit-employee-compliance-with-ai-usage-rules",
+  "runId": "44262478620-1",
+  "generatedAt": "2026-11-18T07:59:41.627Z",
+  "claim": {
+    "title": "How to audit employee compliance with AI usage rules",
+    "query": "how to audit employee compliance with ai usage rules",
+    "origin": "category",
+    "category": "governance",
+    "catchUp": {
+      "slot": "06:00",
+      "lateMinutes": 115
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-18",
+      "windowStart": "2026-08-18",
+      "windowEnd": "2026-11-16",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/how-to-audit-employee-compliance-with-ai-usage-rules",
+    "path": "site/src/data/post/how-to-audit-employee-compliance-with-ai-usage-rules.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_0b01ca01d8b0b7b3016afd5a668bbc87d1a0c188e136c61535",
+  "published": {
+    "callIndex": 3
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0152bbd6112461c0016afd5a0d4e6c87d187acc4ea95baa014",
+      "requestDigest": "6d0328f7045761be5fa182a87291d0172874c82c5c40137b73eb0fd23b36ae11",
+      "tokens": {
+        "input": 1231,
+        "output": 84
+      },
+      "costUsd": 0.001651,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_030316b0c32f49fa016afd5a10d85487d1a35759e563b88eec",
+      "requestDigest": "473358885cd3450a0ca881e44c8828f1954fb3257dba3891ef2441757b78d241",
+      "tokens": {
+        "input": 1291,
+        "output": 114
+      },
+      "costUsd": 0.001861,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0b8f858a1f454b56016afd5a173f1487d18e458e73369e49ff",
+      "requestDigest": "6b3ec45a65d02fe4a339d9c9fab6a1387ad74bf28c86286f5cedb6ae8fb967f8",
+      "tokens": {
+        "input": 10633,
+        "output": 4064
+      },
+      "costUsd": 0.030953,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0b01ca01d8b0b7b3016afd5a668bbc87d1a0c188e136c61535",
+      "requestDigest": "a50d9476875ffeb202022944b4698e6c042e55cac3a5b99ae2eee05b8cea2df4",
+      "tokens": {
+        "input": 13759,
+        "output": 3231
+      },
+      "costUsd": 0.029914,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 26914,
+      "output": 7493
+    },
+    "costUsd": 0.064379
+  },
+  "ledger": "audits/autowriter/2026/11/how-to-audit-employee-compliance-with-ai-usage-rules.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "7edfb0e56cf6282af4facb12f03f514b7643fcc07c22494dbbcce4ffd0d367d2",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "7983e72318b2701ef667d48ce7fff71de6bc58227340fa77be86897b066bb2f5"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "1e291e4336807e99144f2a63cfd94220707c1c99d9084f960e26799cbf12fde8"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "bfb02303381d779e9551eb07526273d9ebecba36e6d2abda5692ac878241e479"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "e5443616976a86a513c2ac26f191c9f5f8e9cd2abd69bf9e9c09d170dc2958b0"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "ada190f62c72e90f1f952319a6fab7e5d1c62c113e3006b95a8600409a42bf46"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "3ae981c69c52d9ac534dedf139d48429cdef1ac8f6531609c60e034072173fbf"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "f64e24db8dca1c487b003c3d3cac0b30d8f5290ec8ab26b658c8b3abf574a4cc"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "bbbe0acbc53719c37e88d9567f62933a26ad5f45",
+    "fingerprint": "b056ea69f76166f464576d642afafb9ce1a4562dccefc8a347d163fa76f271dc"
+  },
+  "claimTable": [
+    {
+      "sentence": "Where the GDPR applies, personal data must be adequate, relevant and limited to what is necessary for their purpose.",
+      "marker": "sourced",
+      "source": {
+        "id": "gdpr",
+        "title": "Regulation (EU) 2016/679",
+        "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+      },
+      "span": "adequate, relevant and limited to what is necessary in relation to the purposes for which they are processed"
+    }
+  ],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 129,
+      "median": 15,
+      "shareBelowThreshold": 0.1938,
+      "shareJustBelow": 0.1551,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/how-to-audit-employee-compliance-with-ai-usage-rules.json",
+    "audits/autowriter/claims/2026/11/how-to-audit-employee-compliance-with-ai-usage-rules.json",
+    "audits/autowriter/generations/2026/11/how-to-audit-employee-compliance-with-ai-usage-rules.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-ai-vendor-assessment-questionnaire-template.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-audit-employee-compliance-with-ai-usage-rules.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-named-person-responsible-for-ai-risk-in-vendor-procurement.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/how-to-audit-employee-compliance-with-ai-usage-rules.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}

@@ -1,4 +1,3 @@
-import { spawnSync } from 'node:child_process';
 import { resolve } from 'node:path';
 import {
   describeRefusal,
@@ -9,6 +8,7 @@ import {
 } from './autowriter-refusals.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 import { BOT_EMAIL, BOT_NAME } from './pr-classify.mjs';
+import { runGit } from './run-git.mjs';
 
 const USAGE =
   'Usage: node scripts/commit-to-main.mjs --message <text> --path <repo-relative> [--path ...] [--ref main]';
@@ -32,21 +32,6 @@ class UsageError extends Error {}
 const redact = (text) => String(text).replace(USERINFO, '://***@');
 
 const refusedMessage = (refusal) => `refused ${refusal.path}: ${describeRefusal(refusal)}`;
-
-export function runGit(args, { cwd }) {
-  const result = spawnSync('git', args, {
-    cwd,
-    encoding: 'utf8',
-    stdio: ['ignore', 'pipe', 'pipe'],
-    env: { ...process.env, GIT_TERMINAL_PROMPT: '0' },
-    maxBuffer: 64 * 1024 * 1024,
-  });
-  return {
-    status: result.status ?? 1,
-    stdout: result.stdout ?? '',
-    stderr: result.stderr || result.error?.message || '',
-  };
-}
 
 function isUnsafePath(path) {
   if (typeof path !== 'string' || path.trim() === '') return true;

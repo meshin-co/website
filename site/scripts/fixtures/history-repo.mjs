@@ -5,6 +5,7 @@ import { pathToFileURL } from 'node:url';
 
 import { repositoryGit } from '../autowriter-refusal-rules.mjs';
 import { BOT_EMAIL, BOT_NAME } from '../pr-classify.mjs';
+import { checkOutState } from './state-checkout.mjs';
 
 export const HUMAN = { name: 'Owner', email: 'owner@example.test' };
 export const BOT = { name: BOT_NAME, email: BOT_EMAIL };
@@ -54,7 +55,7 @@ export const mergeAs = (root, branch, who, message) =>
 export function shallowClone(root) {
   const clone = mkdtempSync(join(tmpdir(), 'autowriter-history-clone-'));
   gitIn(clone, ['clone', '--quiet', '--depth', '1', pathToFileURL(root).href, clone]);
-  return clone;
+  return checkOutState(clone);
 }
 
 export const removeRepos = (...roots) => roots.forEach((root) => rmSync(root, { recursive: true, force: true }));
