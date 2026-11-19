@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { readClaim } from './autowriter-claim-store.mjs';
@@ -26,7 +26,7 @@ async function repairableSnapshot({ api, number, head, now, snapshotOf, classify
   const snapshot = await snapshotOf(api, number);
   const { pullRequest } = snapshot;
   if (pullRequest.head.sha !== head) throw stale('the head moved from ' + head + ' to ' + pullRequest.head.sha);
-  const judged = classify({ ...snapshot, now });
+  const judged = classify({ ...snapshot, ledger: snapshot.ledger?.value ?? null, now });
   if (judged.verdict !== 'repairable')
     throw stale('the pull request is now judged ' + judged.verdict + ' (' + judged.reason + ')');
   const slug = slugOfBranch(pullRequest.head.ref);
@@ -41,6 +41,13 @@ function claimFileOf(repoRoot, slug) {
   return join(repoRoot, path);
 }
 
+function readLedgerOf({ repoRoot, slug, claim }) {
+  const path = recordPath('ledger', slug, claim.claimedAt);
+  if (!existsSync(join(repoRoot, path)))
+    throw new RepairStop('failed', 'no ledger at ' + path + ', and a repair records its attempt and its spend there');
+  return readLedger(join(repoRoot, path));
+}
+
 function readEntry({ repoRoot, slug }) {
   const claim = readClaim(claimFileOf(repoRoot, slug));
   if (!claim.prompt)
@@ -52,7 +59,7 @@ function readEntry({ repoRoot, slug }) {
         ' holds no passage for it and a repair has no passage to keep word for word; a person repairs it'
     );
   const record = readRecord(join(repoRoot, recordPath('generation', slug, claim.claimedAt)));
-  const ledger = readLedger(join(repoRoot, recordPath('ledger', slug, claim.claimedAt)));
+  const ledger = readLedgerOf({ repoRoot, slug, claim });
   const route = entryRoute(claim);
   const passage = passageOf(readText(repoRoot, SEMANTIC_CORE), { promptNumber: claim.prompt.number, route });
   if (passage === null) throw new RepairStop('failed', SEMANTIC_CORE + ' holds no passage for ' + route);

@@ -1,7 +1,7 @@
 import './fixtures/no-network.mjs';
 
 import assert from 'node:assert/strict';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
 import { after, test } from 'node:test';
 
@@ -11,7 +11,10 @@ import { resolveClaimTable } from './claim-sources.mjs';
 import { renderEntry } from './entry-files.mjs';
 import { buildRecord, writeRecord } from './generation-record.mjs';
 import { recordInput } from './fixtures/generation-input.mjs';
+import { apiAnswering, ledgerAt, serving } from './fixtures/github-fake.mjs';
+import { autowriterBranch, byBot, pullRequestRun, scenario } from './fixtures/pr-watch.mjs';
 import { PLACES, filedAt } from './fixtures/record-depths.mjs';
+import { AFTER_VERDICT, repairFailed, resumeEntry, withResumes } from './fixtures/resume-world.mjs';
 import { claimFor, cleanDraft } from './fixtures/writer-drafts.mjs';
 import { makeRepo, removeRepo } from './fixtures/writer-repo.mjs';
 import { recordPath } from './record-layout.mjs';
@@ -237,3 +240,42 @@ for (const [origin, fields] of Object.entries(PROMPTLESS)) {
     );
   });
 }
+
+const LEDGER_FILE = recordPath('ledger', claim.slug, claim.claimedAt);
+const failing = byBot(autowriterBranch(scenario('content-gate-failure'), claim.slug));
+const FAILING_HEAD = failing.pullRequest.head.sha;
+const escalated = { ...repairFailed(), slug: claim.slug };
+
+const openThroughGitHub = ({ ledger, tree = [LEDGER_FILE], ...changes }) =>
+  open({
+    api: apiAnswering(serving(failing, { tree, ledger: ledgerAt(LEDGER_FILE, ledger) })).api,
+    number: failing.pullRequest.number,
+    head: FAILING_HEAD,
+    run: checkedOut(FAILING_HEAD),
+    snapshotOf: undefined,
+    classify: undefined,
+    ...changes,
+  });
+
+test('a pull request whose escalated ledger was resumed opens through the snapshot reader and the classifier', async () => {
+  const resumed = withResumes(escalated, resumeEntry(AFTER_VERDICT));
+
+  const situation = await openThroughGitHub({ ledger: resumed });
+
+  assert.equal(situation.slug, claim.slug);
+  assert.deepEqual(situation.run, { id: pullRequestRun(failing).id, attempt: pullRequestRun(failing).run_attempt });
+});
+
+test('a pull request whose escalation still stands is stale as done, so the classifier judged the verdict the ledger holds', async () => {
+  await assert.rejects(openThroughGitHub({ ledger: escalated }), stale(/done.*ledger-decided/));
+});
+
+test('a pull request that holds no ledger stops the repair as failed, naming the ledger it looked for', async () => {
+  const repoRoot = repository();
+  rmSync(join(repoRoot, LEDGER_FILE));
+
+  await assert.rejects(
+    openThroughGitHub({ repoRoot, tree: [] }),
+    (error) => error instanceof RepairStop && error.outcome === 'failed' && error.message.includes(LEDGER_FILE)
+  );
+});
