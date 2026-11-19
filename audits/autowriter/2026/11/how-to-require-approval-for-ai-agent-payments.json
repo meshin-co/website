@@ -12,11 +12,29 @@
     "costUsd": 0.067564
   },
   "verdict": {
-    "state": "open",
-    "reason": null,
-    "decidedAt": null
+    "state": "escalated",
+    "reason": "Autowriter pull request #167: the repair job failed before it could finish",
+    "decidedAt": "2026-11-19T08:28:58.758Z"
   },
-  "escalations": [],
+  "escalations": [
+    {
+      "id": "esc-1",
+      "kind": "hard-stop",
+      "title": "Autowriter pull request #167: the repair job failed before it could finish",
+      "detail": "The repair of pull request #167 ended as failed: the repair job failed before it could finish.\nRepair run: https://github.com/meshin-co/website/actions/runs/44487184279\nPull request: https://github.com/meshin-co/website/pull/167",
+      "raisedAt": "2026-11-19T08:28:58.302Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-19T08:28:58.302Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 168,
+          "error": null
+        }
+      ]
+    }
+  ],
   "generation": {
     "tokens": {
       "input": 31834,
