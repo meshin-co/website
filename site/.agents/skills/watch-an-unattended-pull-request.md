@@ -23,6 +23,7 @@ dependency, so the job needs no `npm ci` while it holds a token that can merge.
   the files named in `scripts/derived-files.mjs`), then pushes a fast-forward; 3 spent is `no-convergence`.
   It also resumes a head with zero check runs once, when `main` is ahead: the push uses `AUTOWRITER_PAT`, so it
   starts CI. A second sight of zero checks after a catch-up is the `hard-stop` `no-checks-catch-up-cap`.
+  The job checks out the pull request, so a script fix reaches only later branches; `refresh` installs `main`'s dependencies.
 - **unsettled:** a job still running, a head that moved since the checks were read, a quarantine not over,
   or the first sight of a cancellation. The runner starts a successor.
 - **repairable:** only `cheap-gates` or `build` failed, in a step that is not setup. Phase one repairs
@@ -31,8 +32,8 @@ dependency, so the job needs no `npm ci` while it holds a token that can merge.
   a head with checks but no `pull_request` run, a skipped, missing or neutral required job, an absent or red
   aggregate, a run that needs approval or has no job, a merge GitHub refuses, a second cancellation),
   `unrepairable` (a failing job that is not a content gate, or a failure in setup) or `no-convergence`
-  (3 attempts spent, or a chain older than 36 hours). Each opens one issue; `no-convergence` also posts to
-  Slack, the rest wait for the digest.
+  (3 attempts spent, or a head unsettled 36 hours after the later of its commit and the pull request's opening:
+  a push restarts that clock). Each opens one issue; `no-convergence` also posts to Slack, the rest wait for the digest.
 - **blocked-by-human:** closed, draft, label `autowriter-hold`, a branch that is not `autowriter/<slug>` from
   this repository, or any commit not made by the bot. The runner writes a summary and nothing else; a pull
   request closed on purpose is recorded by hand, as `report-what-the-writer-spends.md` says.
@@ -64,10 +65,9 @@ job as passed, so a skipped one is never green.
 
 ## Why each permission
 
-`contents: read` checks out `main` and reads the ledger from the branch. `pull-requests: read`,
-`checks: read` and `actions: read` read the pull request, the head's check runs and the run with its
-jobs. `issues: write` opens the escalation issue. Nothing else is granted: every other write uses the
-secret above, and the job runs only from `main`.
+`contents: read` checks out `main` and reads the ledger from the branch. `pull-requests: read`, `checks: read`
+and `actions: read` read the pull request, the head's check runs and its run. `issues: write` opens the escalation
+issue. Every other write uses the secret above, and the job runs only from `main`.
 
 ## Traps
 

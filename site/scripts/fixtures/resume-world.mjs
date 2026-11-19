@@ -1,6 +1,9 @@
 import { readFileSync } from 'node:fs';
 
+import { newLedger } from '../autowriter-ledger.mjs';
 import { BOT_EMAIL, BOT_NAME } from '../pr-classify.mjs';
+import { repairFinding } from '../pr-watch-repair.mjs';
+import { ESCALATION_KIND } from '../repair-outcome.mjs';
 
 const MAILBOX_OF_THE_BOT = new RegExp(`${BOT_NAME}@[^"\\s]+`, 'g');
 
@@ -90,3 +93,37 @@ export const ledgerOf = (slug, number, issue, patch = {}) => {
   const receipts = escalation.receipts.map((receipt) => ({ ...receipt, issue }));
   return { ...ledger, slug, pullRequest: number, escalations: [{ ...escalation, receipts }], ...patch };
 };
+
+const REPAIR_RUN = 'https://github.com/meshin-co/website/actions/runs/43931342504';
+const PULL_REQUEST_PAGE = 'https://github.com/meshin-co/website/pull/84';
+export const FAILED_AGAIN_AT = '2026-11-04T10:00:00.000Z';
+export const SECOND_FAILURE_ISSUE = 91;
+
+export const repairEnding = (outcome, number = 84) =>
+  repairFinding(
+    { result: { reason: outcome, kind: ESCALATION_KIND[outcome] }, number },
+    { run: REPAIR_RUN, pullRequest: PULL_REQUEST_PAGE }
+  );
+
+export const repairEndedAs = (outcome) => withLastEscalation(realLedger(), repairEnding(outcome));
+export const repairFailed = () => repairEndedAs('failed');
+
+export const failedAgainAfter = (ledger, raisedAt = FAILED_AGAIN_AT) => {
+  const [first] = ledger.escalations;
+  const receipts = first.receipts.map((receipt) => ({ ...receipt, issue: SECOND_FAILURE_ISSUE }));
+  const again = { ...first, ...repairEnding('failed'), receipts, id: `esc-${ledger.escalations.length + 1}`, raisedAt };
+  return {
+    ...ledger,
+    verdict: { ...ledger.verdict, decidedAt: raisedAt },
+    escalations: [...ledger.escalations, again],
+  };
+};
+
+export const unjudgedSlug = (number) => `unjudged-${number}`;
+export const unjudged = (number) => ({
+  pull: pullOnBranch(unjudgedSlug(number), number),
+  record: ledgerRecord(
+    newLedger({ slug: unjudgedSlug(number), runId: String(number), pullRequest: number }),
+    `audits/autowriter/2026/11/${unjudgedSlug(number)}.json`
+  ),
+});

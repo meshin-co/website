@@ -80,6 +80,13 @@ function resumedAfterNoChecks({ checks, commits, drift, evidence }) {
   return verdict('catch-up', 'no-checks', { ...evidence, behindBy: drift.behindBy });
 }
 
+const headCommittedAt = (commits) => Date.parse(commits.at(-1)?.commit.committer.date);
+
+function waitingSince(opened, commits) {
+  const committed = headCommittedAt(commits);
+  return Number.isNaN(committed) ? opened : Math.max(opened, committed);
+}
+
 function settle({ checks, pullRequest, commits, drift, now, base }) {
   const evidence = { ...base, ...checks.evidence };
   const opened = Date.parse(pullRequest.created_at);
@@ -90,7 +97,7 @@ function settle({ checks, pullRequest, commits, drift, now, base }) {
     if (movesDerivedFiles(drift)) return overtakenByMain({ commits, drift, evidence });
     return verdict('merge', 'green-after-quarantine', evidence);
   }
-  if (checks.verdict === 'unsettled' && now - opened > CHAIN_LIMIT_HOURS * HOUR_MS) {
+  if (checks.verdict === 'unsettled' && now - waitingSince(opened, commits) > CHAIN_LIMIT_HOURS * HOUR_MS) {
     return { ...verdict('escalate', 'chain-too-old', evidence), kind: 'no-convergence' };
   }
   if (checks.verdict === 'escalate') {

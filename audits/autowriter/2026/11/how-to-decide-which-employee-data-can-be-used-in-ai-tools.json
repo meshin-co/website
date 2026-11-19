@@ -6,23 +6,23 @@
   "attempts": [],
   "spend": {
     "tokens": {
-      "input": 5158,
-      "output": 483
+      "input": 28742,
+      "output": 7219
     },
-    "costUsd": 0.007573
+    "costUsd": 0.064837
   },
   "verdict": {
-    "state": "open",
+    "state": "merged",
     "reason": null,
-    "decidedAt": null
+    "decidedAt": "2026-11-19T18:27:44.538Z"
   },
   "escalations": [],
   "generation": {
     "tokens": {
-      "input": 5158,
-      "output": 483
+      "input": 28742,
+      "output": 7219
     },
-    "costUsd": 0.007573
+    "costUsd": 0.064837
   },
   "refusals": [
     {
@@ -241,5 +241,11 @@
       "against": "audits/autowriter/claims/2026/11/what-should-a-board-request-in-a-quarterly-ai-risk-report.json",
       "detail": "the topic \"Which board committee should oversee AI risk?\" repeats audits/autowriter/claims/2026/11/what-should-a-board-request-in-a-quarterly-ai-risk-report.json (\"What should a board request in a quarterly AI risk report?\"): its subject shares ai, board, risk, should, 4 of the 6 stems of the smaller one, a containment of 0.67 against the threshold of 0.5"
     }
-  ]
+  ],
+  "measurementDebt": {
+    "mergedCommit": "6d00fc49350feef4f2585eb4307110a6f682a044",
+    "fingerprint": "633d32f383204ebc7901bbdfb09e3d697204b603672b3cae5af6b862760d557f",
+    "recordedAt": "2026-11-19T18:27:44.538Z",
+    "clear": "cd site && GATE_PHASE=<bucket> npm run gate:lh && GATE_PHASE=<bucket> npm run lh:record"
+  }
 }
