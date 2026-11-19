@@ -13,8 +13,8 @@
   },
   "verdict": {
     "state": "escalated",
-    "reason": "Autowriter pull request #145: the repair job failed before it could finish",
-    "decidedAt": "2026-11-19T18:34:06.583Z"
+    "reason": "Autowriter pull request #145: the head commit has no check runs, and the one catch-up that could have started CI was already pushed",
+    "decidedAt": "2026-11-19T19:11:56.521Z"
   },
   "escalations": [
     {
@@ -30,6 +30,23 @@
           "delivered": true,
           "status": 201,
           "issue": 170,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "esc-2",
+      "kind": "hard-stop",
+      "title": "Autowriter pull request #145: the head commit has no check runs, and the one catch-up that could have started CI was already pushed",
+      "detail": "The watcher judged head 85788b535485e780bddd4d87fcdbac0f5a9ac730: escalate, no-checks-catch-up-cap.\nPull request: https://github.com/meshin-co/website/pull/145",
+      "raisedAt": "2026-11-19T19:11:55.749Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-19T19:11:55.749Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 173,
           "error": null
         }
       ]
