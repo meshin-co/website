@@ -6,23 +6,23 @@
   "attempts": [],
   "spend": {
     "tokens": {
-      "input": 2432,
-      "output": 216
+      "input": 13032,
+      "output": 4102
     },
-    "costUsd": 0.003512
+    "costUsd": 0.033542
   },
   "verdict": {
-    "state": "open",
+    "state": "merged",
     "reason": null,
-    "decidedAt": null
+    "decidedAt": "2026-11-17T20:54:07.070Z"
   },
   "escalations": [],
   "generation": {
     "tokens": {
-      "input": 2432,
-      "output": 216
+      "input": 13032,
+      "output": 4102
     },
-    "costUsd": 0.003512
+    "costUsd": 0.033542
   },
   "refusals": [
     {
@@ -235,5 +235,11 @@
       "against": "/glossary/ai-governance",
       "detail": "the query \"ai governance\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
     }
-  ]
+  ],
+  "measurementDebt": {
+    "mergedCommit": "e098185680ccbf623dc33beee0bef54b88402e14",
+    "fingerprint": "83d692af4c32e3f49aeb9a50bcecbc69f3184049aa8dc38a429241c64ca4c774",
+    "recordedAt": "2026-11-17T20:54:07.070Z",
+    "clear": "cd site && GATE_PHASE=<bucket> npm run gate:lh && GATE_PHASE=<bucket> npm run lh:record"
+  }
 }

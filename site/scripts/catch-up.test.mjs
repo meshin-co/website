@@ -138,3 +138,21 @@ test('a conflict outside the derived set stops the catch-up and leaves the branc
   assert.equal(git(work, 'rev-parse', 'HEAD'), head);
   assert.equal(git(work, 'status', '--porcelain'), '');
 });
+
+test('a branch that changes a dependency file is refused as out of scope, so main holds the only dependencies a catch-up builds with', async () => {
+  const { remote, runs } = await day();
+  const [first, second] = runs;
+  landOnRemote(remote, first.branch, 'feat(autowriter): first (#1)');
+  const author = checkout(remote, second.branch);
+  writeFileSync(join(author, 'site/package.json'), '{"dependencies":{"left-pad":"1.3.0"}}\n');
+  git(author, 'add', '--', 'site/package.json');
+  git(author, ...IDENTITY, 'commit', '--quiet', '-m', 'a branch adds a dependency');
+  git(author, 'push', '--quiet', 'origin', `HEAD:${second.branch}`);
+
+  const { work, head, result } = await caughtUp(remote, second.branch);
+
+  assert.equal(result.outcome, 'out-of-scope');
+  assert.deepEqual(result.paths, ['site/package.json']);
+  assert.equal(git(work, 'rev-parse', 'HEAD'), head);
+  assert.equal(git(work, 'status', '--porcelain'), '');
+});
