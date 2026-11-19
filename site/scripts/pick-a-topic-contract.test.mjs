@@ -6,6 +6,7 @@ import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 import './fixtures/no-network.mjs';
+import { checkOutState } from './fixtures/state-checkout.mjs';
 import { runCli } from './pick-a-topic.mjs';
 import { recordPath } from './record-layout.mjs';
 import { openRun } from './write-open.mjs';
@@ -16,7 +17,7 @@ const POSTS = 'site/src/data/post';
 const FROZEN_REPORT = 'site/scripts/fixtures/search-demand-2026-11-01.md';
 
 function skeleton() {
-  const root = mkdtempSync(join(tmpdir(), 'pick-contract-'));
+  const root = checkOutState(mkdtempSync(join(tmpdir(), 'pick-contract-')));
   for (const file of INPUTS) {
     mkdirSync(dirname(join(root, file)), { recursive: true });
     cpSync(join(REPO, file), join(root, file));

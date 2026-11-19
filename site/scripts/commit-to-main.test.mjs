@@ -4,8 +4,9 @@ import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { after, test } from 'node:test';
-import { CommitError, commitAndPush, runCli, runGit } from './commit-to-main.mjs';
+import { CommitError, commitAndPush, runCli } from './commit-to-main.mjs';
 import { BOT_EMAIL, BOT_NAME } from './pr-classify.mjs';
+import { runGit } from './run-git.mjs';
 
 for (const variable of ['GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE']) delete process.env[variable];
 process.env.GIT_CONFIG_GLOBAL = '/dev/null';

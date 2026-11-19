@@ -33,6 +33,8 @@ The numbers (12-hour quarantine, 3 attempts, $25 a month) live in `scripts/autow
 a site that keeps a locked row for them pins it with a test of its own. The gate itself is
 `scripts/autowriter-gate.mjs`, over `scripts/autowriter-claims.mjs`, `scripts/autowriter-records.mjs`, `scripts/autowriter-record-rules.mjs` and `scripts/autowriter-length-rules.mjs`. The cron block of `write-daily.yml` is guarded by `gate:schedule` instead (`schedule-the-unattended-writer.md`).
 
+The writer commits through `scripts/run-git.mjs` and one of three scripts. `scripts/commit-to-main.mjs` commits the claims, the ledger and the reports to `main` and is the last script that may. `scripts/commit-branch.mjs` commits to any branch but `main` and `master`, which it refuses by name; the link repair uses it. `scripts/commit-state.mjs` commits paths under `state/` to the branch `autowriter-state` and nothing else; no workflow calls it yet. `scripts/main-write-scan.mjs` finds a push to `main` in a workflow or a script, and `scripts/autowriter-state-rules.mjs` finds an absent `state/` and a record filed in the old layout. `gate:autowriter` does not run these two until the records move (change `49-move-the-records-off-main`); until then a frozen list of this site's writers to `main` holds the line, failing on any workflow line that writes to `main` beyond the five that call `commit-to-main.mjs`.
+
 ## Escalate, and prove it arrived
 
 `scripts/escalate.mjs` (requests in `scripts/escalate-channels.mjs`; `scripts/pr-watch.mjs` passes the pull request number)

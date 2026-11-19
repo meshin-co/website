@@ -6,6 +6,7 @@ import { join } from 'node:path';
 import { after, test } from 'node:test';
 
 import { newClaim, writeClaim } from './autowriter-claim-store.mjs';
+import { checkOutState } from './fixtures/state-checkout.mjs';
 import { recordPath } from './record-layout.mjs';
 import { runCli } from './slot-due.mjs';
 
@@ -13,7 +14,7 @@ const roots = [];
 after(() => roots.forEach((root) => rmSync(root, { recursive: true, force: true })));
 
 function repoWith(...claimTimes) {
-  const root = mkdtempSync(join(tmpdir(), 'slot-due-'));
+  const root = checkOutState(mkdtempSync(join(tmpdir(), 'slot-due-')));
   roots.push(root);
   claimTimes.forEach((entry, index) => {
     const { at, status } = typeof entry === 'string' ? { at: entry, status: 'claimed' } : entry;

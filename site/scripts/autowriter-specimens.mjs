@@ -27,6 +27,8 @@ const BASELINES_STEP = 'name: Commit regenerated linux baselines\n        env:\n
 const BASELINES_PAT_ENV = BASELINES_STEP + 'AUTOWRITER_PAT: ${{ secrets.AUTOWRITER_PAT }}';
 const BASELINES_DEFAULT_ENV = BASELINES_STEP + 'GITHUB_TOKEN: ${{ github.token }}';
 const CLASSIFIER_BEFORE = 'BEFORE: ${{ github.event.pull_request.base.sha || github.event.before }}';
+const VISUAL_UPDATE_STEP = '      - run: npm run gate:visual -- --update-snapshots\n';
+const STATE_COMMIT_STEP = '      - run: node scripts/commit-state.mjs --message zz --path state/ledger/zz.json\n';
 const CLASSIFIER_LAST_PUSH = 'BEFORE: ${{ github.event.before }}';
 
 const attempt = (number, extra = {}) => ({
@@ -226,6 +228,11 @@ export const autowriterSpecimens = ({ addUntrackedFile, editFile, removeFile }) 
     gate: GATE,
     token: 'classifier-judges-last-push .github/workflows/ci.yml',
     plant: planWorkflowEdit(editFile, CLASSIFIER_BEFORE, CLASSIFIER_LAST_PUSH),
+  },
+  autowriterStateCommittedWithoutCheckout: {
+    gate: GATE,
+    token: 'state-checkout .github/workflows/ci.yml',
+    plant: planWorkflowEdit(editFile, VISUAL_UPDATE_STEP, VISUAL_UPDATE_STEP + STATE_COMMIT_STEP),
   },
   ...recordSpecimens({ addUntrackedFile, editFile }),
   ...spendSpecimens({ addUntrackedFile, editFile, removeFile }),

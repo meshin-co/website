@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 
+import { checkOutState } from './fixtures/state-checkout.mjs';
 import {
   RECORD_FAMILIES,
   familyOf,
@@ -35,7 +36,7 @@ const FLAT = {
 };
 
 function inTemp(check) {
-  const root = mkdtempSync(join(tmpdir(), 'record-layout-'));
+  const root = checkOutState(mkdtempSync(join(tmpdir(), 'record-layout-')));
   try {
     return check(root);
   } finally {
