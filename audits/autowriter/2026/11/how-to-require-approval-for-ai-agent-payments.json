@@ -259,5 +259,13 @@
       "against": "audits/autowriter/claims/2026/11/how-to-set-up-an-ai-launch-approval-process.json",
       "detail": "the topic \"How to set up an AI steering committee\" repeats audits/autowriter/claims/2026/11/how-to-set-up-an-ai-launch-approval-process.json (\"How to set up an AI launch approval process\"): its subject shares ai, set, up, 3 of the 5 stems of the smaller one, a containment of 0.60 against the threshold of 0.5"
     }
+  ],
+  "resumes": [
+    {
+      "at": "2026-11-19T19:37:12.668Z",
+      "by": "main-change",
+      "mainSha": "c1333d92bd2e2596ff9c022a74b21ad0cf96b91f",
+      "failedJobs": []
+    }
   ]
 }
