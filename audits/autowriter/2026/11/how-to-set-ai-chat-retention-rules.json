@@ -13,8 +13,8 @@
   },
   "verdict": {
     "state": "escalated",
-    "reason": "Autowriter pull request #137: the watcher has been waiting longer than a pull request may take to settle",
-    "decidedAt": "2026-11-18T13:09:07.025Z"
+    "reason": "Autowriter pull request #137: the head commit has no check runs, and the one catch-up that could have started CI was already pushed",
+    "decidedAt": "2026-11-19T23:19:27.934Z"
   },
   "escalations": [
     {
@@ -55,6 +55,23 @@
           "delivered": true,
           "status": 200,
           "issue": null,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "esc-3",
+      "kind": "hard-stop",
+      "title": "Autowriter pull request #137: the head commit has no check runs, and the one catch-up that could have started CI was already pushed",
+      "detail": "The watcher judged head a24664971e414a493532ae12b3cf13cf008eacc5: escalate, no-checks-catch-up-cap.\nPull request: https://github.com/meshin-co/website/pull/137",
+      "raisedAt": "2026-11-19T23:19:27.272Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-19T23:19:27.272Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 178,
           "error": null
         }
       ]
