@@ -12,11 +12,29 @@
     "costUsd": 0.066838
   },
   "verdict": {
-    "state": "open",
-    "reason": null,
-    "decidedAt": null
+    "state": "escalated",
+    "reason": "Autowriter pull request #171: the CI run was cancelled twice with no failed job to explain it",
+    "decidedAt": "2026-11-19T19:15:30.219Z"
   },
-  "escalations": [],
+  "escalations": [
+    {
+      "id": "esc-1",
+      "kind": "hard-stop",
+      "title": "Autowriter pull request #171: the CI run was cancelled twice with no failed job to explain it",
+      "detail": "The watcher judged head c20a4087a1c5fa98cb93840c6b76f18fdbc3a1a1: escalate, inconclusive-cancel.\nJobs: visual-and-axe (3).\nPull request: https://github.com/meshin-co/website/pull/171",
+      "raisedAt": "2026-11-19T19:15:29.713Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-19T19:15:29.714Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 174,
+          "error": null
+        }
+      ]
+    }
+  ],
   "generation": {
     "tokens": {
       "input": 31878,
