@@ -1,6 +1,6 @@
 name: Watch PR
 
-run-name: Watch pull request #${{ inputs.pr }}
+run-name: 'Watch pull request #${{ inputs.pr }}'
 
 on:
   workflow_dispatch:

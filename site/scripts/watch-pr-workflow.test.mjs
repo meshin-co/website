@@ -61,6 +61,19 @@ test('the jobs are the watcher, the repair and the follow-up, in the order the w
   assert.deepEqual(Object.keys(WORKFLOW.jobs), ['watch', 'repair', 'follow']);
 });
 
+const titleOf = (runName, number) => runName.replace(expression('inputs.pr'), number);
+
+test('each run is titled with the number of the pull request it judges, because the resume sweep finds a chain by that title', () => {
+  assert.equal(titleOf(WORKFLOW['run-name'], '165'), 'Watch pull request #165');
+});
+
+test('the title check can fail: the line unquoted is read by YAML as a comment after the space and titles every run with no number', () => {
+  const unquoted = parse(`run-name: Watch pull request #${expression('inputs.pr')}\n`)['run-name'];
+
+  assert.equal(titleOf(unquoted, '165'), 'Watch pull request');
+  assert.match(TEXT, /^run-name: 'Watch pull request #/m);
+});
+
 test('the watch job keeps its guard, its tick environment, its limit and its permissions', () => {
   assert.equal(watch.if, "github.ref == 'refs/heads/main'");
   assert.equal(watch.environment, 'autowriter-tick');
