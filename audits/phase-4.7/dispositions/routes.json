@@ -34,20 +34,20 @@
     "location": "head.title",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-a-quarterly-ai-tool-access-review (generation record audits/autowriter/generations/2026/11/how-to-run-a-quarterly-ai-tool-access-review.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "405e48c953bd"
+    "digest": "d3e609d47754"
   },
   {
     "target": "/blog",
     "location": "body.p",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-a-quarterly-ai-tool-access-review (generation record audits/autowriter/generations/2026/11/how-to-run-a-quarterly-ai-tool-access-review.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "405e48c953bd"
+    "digest": "d3e609d47754"
   },
   {
     "target": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-a-quarterly-ai-tool-access-review (generation record audits/autowriter/generations/2026/11/how-to-run-a-quarterly-ai-tool-access-review.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "9d83c40dc0c0"
+    "digest": "145f56c69ecb"
   },
   {
     "target": "/blog/category/agentic-architecture",
@@ -81,7 +81,7 @@
     "target": "/blog/category/governance",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-a-quarterly-ai-tool-access-review (generation record audits/autowriter/generations/2026/11/how-to-run-a-quarterly-ai-tool-access-review.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "1cc83fecfff9"
+    "digest": "a38511f99b63"
   },
   {
     "target": "/blog/category/operating-model",
@@ -115,13 +115,13 @@
     "target": "/blog/how-to-build-an-ai-system-register-in-a-week",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-a-quarterly-ai-tool-access-review (generation record audits/autowriter/generations/2026/11/how-to-run-a-quarterly-ai-tool-access-review.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "ae5479bcec0d"
+    "digest": "dad5ad665226"
   },
   {
     "target": "/blog/tag/acceptable-use-policy",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/blog/tag/acceptable-use-policy.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [constant.body] now \"Bring the process you want in production and who owns it today. You leave knowing whether an Assessment, a Sprint or neither is the next step.\" (source row: chrome.json#24); The closing booking band is the shared CtaBlock default (task 2.1: the band renders on every template a buyer can land on). Its body restates two sentences of the reviewed FAQ \"What happens on a fit call, and does it cost anything?\" and adds no price, duration or promise; it is dispositioned at chrome.json#24, and the 30-minute event it links returned 200 on 2026-10-31. Earlier review, still true of the unchanged rows: Title, H1 and lead now follow the tag template change: \"Acceptable use policy posts\" and \"All posts tagged Acceptable use policy, newest first.\"; query updated to \"acceptable use policy posts\" so the whole tag family declares one pattern. This route had no query conflict. No fact claimed beyond the tag list.",
-    "digest": "62a4c7729028"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-decide-which-employee-data-can-be-used-in-ai-tools (generation record audits/autowriter/generations/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "7bc5511d9f6f"
   },
   {
     "target": "/blog/tag/agentic-architecture",
@@ -149,21 +149,21 @@
     "location": "head.title",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-a-quarterly-ai-tool-access-review (generation record audits/autowriter/generations/2026/11/how-to-run-a-quarterly-ai-tool-access-review.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "f0c6b116675f"
+    "digest": "aa2635bf7558"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "body.h1",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-a-quarterly-ai-tool-access-review (generation record audits/autowriter/generations/2026/11/how-to-run-a-quarterly-ai-tool-access-review.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "f0c6b116675f"
+    "digest": "aa2635bf7558"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "body.p",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-a-quarterly-ai-tool-access-review (generation record audits/autowriter/generations/2026/11/how-to-run-a-quarterly-ai-tool-access-review.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "f0c6b116675f"
+    "digest": "aa2635bf7558"
   },
   {
     "target": "/blog/tag/ai-pilots",
@@ -286,7 +286,7 @@
     "target": "/blog/tag/security-review",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-a-quarterly-ai-tool-access-review (generation record audits/autowriter/generations/2026/11/how-to-run-a-quarterly-ai-tool-access-review.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "301a7735329c"
+    "digest": "d8fa35bff7eb"
   },
   {
     "target": "/blog/tag/shadow-ai",
