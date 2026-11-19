@@ -127,6 +127,13 @@ test('a required that is not an array throws', () => {
   assert.throws(() => validateJsonSchema({ required: 'a' }, {}), /json-schema.*"required"/);
 });
 
+test('a minProperties that is not a non-negative integer throws', () => {
+  assert.throws(
+    () => validateJsonSchema({ minProperties: -1 }, {}),
+    /json-schema: "minProperties" must be a non-negative integer/
+  );
+});
+
 test('a required array holding a non-string throws', () => {
   assert.throws(() => validateJsonSchema({ required: ['a', 1] }, {}), /json-schema.*"required"/);
 });

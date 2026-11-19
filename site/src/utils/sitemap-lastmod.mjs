@@ -1,34 +1,48 @@
 import { readFile, readdir } from 'node:fs/promises';
-import { join } from 'node:path';
-import yaml from 'js-yaml';
+import { basename, join } from 'node:path';
 
-import { FEED_BASES, emptyHubRoutes } from './feeds.mjs';
+import { parseFrontmatter } from 'astro/markdown';
+
+import { FEED_BASES, HUB_BASES, SERIES_COLLECTIONS, emptyHubRoutes, entryIdOf } from './feeds.mjs';
 import { lastmod } from './lastmod.mjs';
 import { liveTopicMap } from './machine-text.mjs';
+import { groupSeries } from './spec-series.mjs';
 
 async function frontmatterEntries(dir) {
   const files = (await readdir(dir).catch(() => [])).filter((file) => /\.mdx?$/.test(file));
   const entries = [];
-  for (const file of files) {
-    const text = await readFile(join(dir, file), 'utf8');
-    const raw = /^---\r?\n([\s\S]*?)\r?\n---/.exec(text)?.[1];
-    if (!raw) continue;
-    entries.push({ slug: file.replace(/\.mdx?$/, ''), data: yaml.load(raw) });
+  for (const fileName of files) {
+    const file = join(basename(dir), fileName);
+    const text = await readFile(join(dir, fileName), 'utf8');
+    try {
+      entries.push({ slug: fileName.replace(/\.mdx?$/, ''), file, data: parseFrontmatter(text).frontmatter });
+    } catch (error) {
+      throw new Error(`${file}: ${error.message}`, { cause: error });
+    }
   }
   return entries;
+}
+
+const isText = (value) => typeof value === 'string' && value !== '';
+
+function assertAddressable({ file, data }) {
+  const missing = ['name', 'version'].filter((key) => !isText(data[key]));
+  if (missing.length > 0) {
+    throw new Error(`${file}: a specification needs a text ${missing.join(' and a text ')} in its frontmatter`);
+  }
 }
 
 const isLiveFrontmatter = (data) => !data?.draft && !data?.noindex;
 
 const TAG_INDEX_ROUTE = '/blog/tags';
-const COLLECTION_OWNED_ROUTES = new Set([...Object.values(FEED_BASES).map((base) => `/${base}`), TAG_INDEX_ROUTE]);
+const COLLECTION_OWNED_ROUTES = new Set([...Object.values(HUB_BASES).map((base) => `/${base}`), TAG_INDEX_ROUTE]);
 
 export async function collectionLastmods(dataDir) {
   const lastmods = {};
   for (const [kind, base] of Object.entries(FEED_BASES)) {
     for (const { slug, data } of await frontmatterEntries(join(dataDir, kind))) {
       const modified = lastmod(data);
-      if (modified) lastmods[`/${base}/${slug}`] = modified;
+      if (modified) lastmods[`/${base}/${entryIdOf(kind, slug, data)}`] = modified;
     }
   }
   return lastmods;
@@ -36,7 +50,7 @@ export async function collectionLastmods(dataDir) {
 
 export async function hubLastmods(dataDir) {
   const hubs = {};
-  for (const [kind, base] of Object.entries(FEED_BASES)) {
+  for (const [kind, base] of Object.entries(HUB_BASES)) {
     const dates = (await frontmatterEntries(join(dataDir, kind)))
       .filter(({ data }) => isLiveFrontmatter(data))
       .map(({ data }) => lastmod(data))
@@ -45,6 +59,18 @@ export async function hubLastmods(dataDir) {
     if (dates.length > 0) hubs[`/${base}`] = dates.at(-1);
   }
   return hubs;
+}
+
+export async function seriesLastmods(dataDir) {
+  const lastmods = {};
+  for (const kind of SERIES_COLLECTIONS) {
+    const entries = await frontmatterEntries(join(dataDir, kind));
+    entries.forEach(assertAddressable);
+    for (const { name, updated } of groupSeries(entries)) {
+      lastmods[`/${FEED_BASES[kind]}/${name}`] = updated;
+    }
+  }
+  return lastmods;
 }
 
 export async function taxonomyLastmods(dataDir) {
@@ -70,7 +96,7 @@ export async function noindexEntryRoutes(dataDir) {
   const routes = [];
   for (const [kind, base] of Object.entries(FEED_BASES)) {
     for (const { slug, data } of await frontmatterEntries(join(dataDir, kind))) {
-      if (!data?.draft && data?.noindex) routes.push(`/${base}/${slug}`);
+      if (!data?.draft && data?.noindex) routes.push(`/${base}/${entryIdOf(kind, slug, data)}`);
     }
   }
   return routes;
@@ -105,5 +131,6 @@ export async function siteLastmods({ dataDir, staticPages }) {
     ...staticPageLastmods(pagesDatedByCatalog),
     ...(await hubLastmods(dataDir)),
     ...(await taxonomyLastmods(dataDir)),
+    ...(await seriesLastmods(dataDir)),
   };
 }

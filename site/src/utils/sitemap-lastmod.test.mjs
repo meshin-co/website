@@ -8,6 +8,7 @@ import { test, before, after } from 'node:test';
 import {
   collectionLastmods,
   hubLastmods,
+  seriesLastmods,
   taxonomyLastmods,
   staticPageLastmods,
   siteLastmods,
@@ -225,4 +226,183 @@ test('the real site dates every public static page, from a collection or from th
   const lastmods = await siteLastmods({ dataDir: fileURLToPath(new URL('../data', import.meta.url)), staticPages });
 
   for (const { path } of staticPages) assert.ok(lastmods[path], `${path} has no lastmod`);
+});
+
+const specFile = ({ name = 'evals-baseline', version, publishDate, updatedDate = publishDate, extra = '' }) =>
+  `---\ntitle: ${name} specification ${version}\nname: ${name}\nversion: '${version}'\npublishDate: ${publishDate}\nupdatedDate: ${updatedDate}\n${extra}---\n\nBody.\n`;
+
+async function withSpecs(files, run) {
+  const dir = await mkdtemp(join(tmpdir(), 'sitemap-lastmod-spec-'));
+  await mkdir(join(dir, 'spec'));
+  try {
+    for (const [file, text] of Object.entries(files)) await writeFile(join(dir, 'spec', file), text);
+    return await run(dir);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+}
+
+const TWO_VERSIONS = {
+  'evals-baseline-1.0.md': specFile({ version: '1.0', publishDate: '2026-11-12', updatedDate: '2026-11-14' }),
+  'evals-baseline-1.1.md': specFile({ version: '1.1', publishDate: '2026-12-01', updatedDate: '2026-12-02' }),
+};
+
+test('collectionLastmods dates a specification version at its name and version, not at its file name', async () => {
+  await withSpecs(TWO_VERSIONS, async (dir) => {
+    assert.deepEqual(await collectionLastmods(dir), {
+      '/spec/evals-baseline/1.0': '2026-11-14T00:00:00.000Z',
+      '/spec/evals-baseline/1.1': '2026-12-02T00:00:00.000Z',
+    });
+  });
+});
+
+test('seriesLastmods dates a series at its newest live version, past a draft and a noindex version that are newer still', async () => {
+  await withSpecs(
+    {
+      ...TWO_VERSIONS,
+      'evals-baseline-1.2.md': specFile({ version: '1.2', publishDate: '2027-01-01', extra: 'draft: true\n' }),
+      'evals-baseline-2.0.md': specFile({ version: '2.0', publishDate: '2027-02-01', extra: 'noindex: true\n' }),
+      'other-1.0.md': specFile({ name: 'other', version: '1.0', publishDate: '2026-10-01' }),
+    },
+    async (dir) => {
+      assert.deepEqual(await seriesLastmods(dir), {
+        '/spec/evals-baseline': '2026-12-02T00:00:00.000Z',
+        '/spec/other': '2026-10-01T00:00:00.000Z',
+      });
+    }
+  );
+});
+
+test('seriesLastmods gives a name with no live version no route, and a data directory with no specification folder none at all', async () => {
+  await withSpecs(
+    { 'evals-baseline-1.0.md': specFile({ version: '1.0', publishDate: '2026-11-12', extra: 'draft: true\n' }) },
+    async (dir) => assert.deepEqual(await seriesLastmods(dir), {})
+  );
+  assert.deepEqual(await seriesLastmods(join(root, 'does-not-exist')), {});
+});
+
+test('a specification series has no hub: hubLastmods and noindexHubRoutes name none for it, with or without a live version', async () => {
+  await withSpecs(TWO_VERSIONS, async (dir) => {
+    assert.equal('/spec' in (await hubLastmods(dir)), false);
+    assert.equal((await noindexHubRoutes(dir)).includes('/spec'), false);
+  });
+  await withSpecs({}, async (dir) => assert.equal((await noindexHubRoutes(dir)).includes('/spec'), false));
+});
+
+test('noindexEntryRoutes names a noindex specification version by its address and never a draft one', async () => {
+  await withSpecs(
+    {
+      'evals-baseline-1.0.md': specFile({ version: '1.0', publishDate: '2026-11-12' }),
+      'evals-baseline-1.1.md': specFile({ version: '1.1', publishDate: '2026-12-01', extra: 'noindex: true\n' }),
+      'evals-baseline-1.2.md': specFile({
+        version: '1.2',
+        publishDate: '2027-01-01',
+        extra: 'draft: true\nnoindex: true\n',
+      }),
+    },
+    async (dir) => assert.deepEqual(await noindexEntryRoutes(dir), ['/spec/evals-baseline/1.1'])
+  );
+});
+
+test('siteLastmods dates the version pages and the series page of a specification, and no spec hub', async () => {
+  await withSpecs(TWO_VERSIONS, async (dir) => {
+    assert.deepEqual(await siteLastmods({ dataDir: dir, staticPages: [] }), {
+      '/spec/evals-baseline/1.0': '2026-11-14T00:00:00.000Z',
+      '/spec/evals-baseline/1.1': '2026-12-02T00:00:00.000Z',
+      '/spec/evals-baseline': '2026-12-02T00:00:00.000Z',
+    });
+  });
+});
+
+const PUBLISHED_FILE = 'spec/evals-baseline-1.0.md';
+
+const publishedEntry = { 'evals-baseline-1.0.md': specFile({ version: '1.0', publishDate: '2026-11-12' }) };
+
+const twinText = (extra = '') => specFile({ version: '1.0', publishDate: '2026-11-13', extra });
+
+const TOML_TWIN =
+  '+++\ntitle = "twin"\nname = "evals-baseline"\nversion = "1.0"\npublishDate = 2026-11-13\n+++\n\nBody.\n';
+
+const TWINS = {
+  plain: { 'twin.md': twinText() },
+  CRLF: { 'twin.md': twinText().replace(/\n/g, '\r\n') },
+  'leading BOM': { 'twin.md': `\uFEFF${twinText()}` },
+  'blank line before the opening fence': { 'twin.md': `\n${twinText()}` },
+  'trailing space after the opening fence': { 'twin.md': twinText().replace('---\n', '--- \n') },
+  'TOML fence': { 'twin.md': TOML_TWIN },
+  '.mdx': { 'twin.mdx': twinText() },
+  draft: { 'twin.md': twinText('draft: true\n') },
+  noindex: { 'twin.md': twinText('noindex: true\n') },
+  'three-way': { 'twin.md': twinText(), 'twin-again.md': twinText() },
+};
+
+for (const [label, twins] of Object.entries(TWINS)) {
+  test(`seriesLastmods refuses a ${label} twin of a published specification, naming the address and every holder`, async () => {
+    await withSpecs({ ...publishedEntry, ...twins }, (dir) =>
+      assert.rejects(seriesLastmods(dir), (error) => {
+        const message = error.message;
+        assert.match(message, /evals-baseline\/1\.0/);
+        for (const file of [PUBLISHED_FILE, ...Object.keys(twins).map((name) => `spec/${name}`)]) {
+          assert.ok(message.includes(file), `${file} is not named in: ${message}`);
+        }
+        return true;
+      })
+    );
+  });
+}
+
+const refusesByFile = (file) => (error) => {
+  assert.ok(error instanceof Error && !(error instanceof TypeError), `refused by a ${error.constructor.name}`);
+  assert.ok(error.message.includes(file), `${file} is not named in: ${error.message}`);
+  return true;
+};
+
+const UNADDRESSABLE = {
+  'a comment-only frontmatter block': '---\n# note\n---\n\nBody.\n',
+  'no frontmatter': 'Body only.\n',
+  'a YAML syntax error': '---\ntitle: [unclosed\n---\n\nBody.\n',
+  'a TOML syntax error': '+++\ntitle =\n+++\n\nBody.\n',
+  'an unquoted numeric version': '---\nname: evals-baseline\nversion: 1.0\npublishDate: 2026-11-12\n---\n\nBody.\n',
+  'a name that is not text': '---\nname: 7\nversion: "1.0"\npublishDate: 2026-11-12\n---\n\nBody.\n',
+  'an empty name': '---\nname: ""\nversion: "1.0"\npublishDate: 2026-11-12\n---\n\nBody.\n',
+  'no version': '---\nname: evals-baseline\npublishDate: 2026-11-12\n---\n\nBody.\n',
+};
+
+for (const [label, text] of Object.entries(UNADDRESSABLE)) {
+  test(`seriesLastmods refuses a specification with ${label} by file name, never by a loader error`, async () => {
+    await withSpecs({ ...publishedEntry, 'broken.md': text }, (dir) =>
+      assert.rejects(seriesLastmods(dir), refusesByFile('spec/broken.md'))
+    );
+  });
+}
+
+test('seriesLastmods still builds a series from two versions of one name, and one from two names at one version', async () => {
+  await withSpecs(TWO_VERSIONS, async (dir) => {
+    assert.deepEqual(Object.keys(await seriesLastmods(dir)), ['/spec/evals-baseline']);
+  });
+  await withSpecs(
+    {
+      ...publishedEntry,
+      'other-1.0.md': specFile({ name: 'other', version: '1.0', publishDate: '2026-10-01' }),
+    },
+    async (dir) => {
+      assert.deepEqual(Object.keys(await seriesLastmods(dir)).sort(), ['/spec/evals-baseline', '/spec/other']);
+    }
+  );
+});
+
+test('an entry with no frontmatter names no route, no taxonomy and no noindex page in any other collection', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'sitemap-lastmod-bare-'));
+  try {
+    await mkdir(join(dir, 'post'));
+    await writeFile(join(dir, 'post', 'bare.md'), 'Body only.\n');
+    await writeFile(join(dir, 'post', 'comment.md'), '---\n# note\n---\n\nBody.\n');
+    assert.deepEqual(await collectionLastmods(dir), {});
+    assert.deepEqual(await hubLastmods(dir), {});
+    assert.deepEqual(await taxonomyLastmods(dir), {});
+    assert.deepEqual(await noindexEntryRoutes(dir), []);
+    assert.deepEqual(await noindexCategoryRoutes(dir, ['governance']), ['/blog/category/governance']);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
 });

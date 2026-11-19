@@ -9,6 +9,7 @@ export const headerData = {
     { text: 'Pricing', href: getPermalink('/pricing') },
     { text: 'Writing', href: getPermalink('/blog') },
     { text: 'Resources', href: getPermalink('/resources') },
+    { text: 'Spec', href: getPermalink('/spec/evals-baseline/1.0') },
     { text: 'About', href: getPermalink('/about') },
   ],
   actions: [{ text: 'Book a call', href: BOOKING_URL, target: '_blank', icon: 'tabler:calendar' }],

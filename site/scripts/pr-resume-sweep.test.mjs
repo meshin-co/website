@@ -86,12 +86,12 @@ test('every read of the pull request and of main is made with the read token, so
   for (const [name, token] of readers) assert.equal(token, READER, name);
 });
 
-test('a second sweep finds the resume newer than the verdict and does nothing, so a repeat is a no-op', async () => {
+test('a second sweep finds the chain the resume started and does nothing, so a repeat is a no-op', async () => {
   const { sweep, calls } = resumable();
   await sweep.run();
   const writesAfterOne = writes(calls).length;
 
-  assert.deepEqual(await sweep.run(), [left('already-resumed')]);
+  assert.deepEqual(await sweep.run(), [left('chain-alive')]);
   assert.equal(writes(calls).length, writesAfterOne);
   assert.equal(named(calls, 'putLedger').length, 1);
 });
@@ -276,14 +276,15 @@ test('a ledger that records no delivered issue has no issue to tell, and that is
   assert.equal(named(calls, 'dispatchSuccessor').length, 1);
 });
 
-test('when the dispatch fails after the ledger was written, it is reported with the command to start the watcher, and nothing is written twice', async () => {
+test('when the dispatch fails after the ledger was written, it is reported with the command to start the watcher, the ledger is not written twice, and the next sweep starts the watcher it did not get', async () => {
   const denied = refusal(
     'POST',
     'actions/workflows/watch-pr.yml/dispatches',
     403,
     'Resource not accessible by personal access token'
   );
-  const { sweep, calls } = resumable({ failWith: { dispatchSuccessor: denied } });
+  const failWith = { dispatchSuccessor: denied };
+  const { sweep, calls } = resumable({ failWith });
   const [item] = await sweep.run();
 
   assert.equal(item.kind, 'resumed');
@@ -294,9 +295,11 @@ test('when the dispatch fails after the ledger was written, it is reported with 
   );
   assert.match(item.problems[0], /gh workflow run watch-pr\.yml -f pr=84/);
   assert.equal(named(calls, 'putLedger').length, 1);
-  assert.deepEqual(await sweep.run(), [left('already-resumed')]);
+  failWith.dispatchSuccessor = undefined;
+
+  assert.deepEqual(await sweep.run(), [{ kind: 'started', pullRequest: 84 }]);
   assert.equal(named(calls, 'putLedger').length, 1);
-  assert.equal(named(calls, 'dispatchSuccessor').length, 1);
+  assert.equal(named(calls, 'dispatchSuccessor').length, 2);
 });
 
 test('when the comment fails, the watcher is still dispatched and the failure is reported', async () => {
@@ -347,12 +350,16 @@ test('pull requests that are not autowriter branches of this repository are not 
   assert.equal(named(calls, 'readLedgerAt').length, 1);
 });
 
-test('a pull request with no ledger on its branch, or an open verdict, is not escalated, and main is not read for it', async () => {
+test('a pull request with no ledger on its branch is not escalated and one with an open verdict is waiting for its watcher, and main is not read for either', async () => {
   const open = ledgerRecord({ ...realLedger(), verdict: { state: 'open', reason: null, decidedAt: null } });
+  const cases = [
+    [[], left('not-escalated')],
+    [[open], { kind: 'started', pullRequest: 84 }],
+  ];
 
-  for (const ledgers of [[], [open]]) {
+  for (const [ledgers, item] of cases) {
     const { sweep, calls } = sweepWorld({ ledgers, main: [codeCommitAfter()] });
-    assert.deepEqual(await sweep.run(), [left('not-escalated')]);
+    assert.deepEqual(await sweep.run(), [item]);
     assert.equal(named(calls, 'listRecentCommits').length, 0);
   }
 });

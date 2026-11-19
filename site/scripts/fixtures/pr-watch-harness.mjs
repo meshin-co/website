@@ -146,6 +146,7 @@ export async function harness({
   tree = TREE,
   mergedLedger = ledgerRecord(),
   commits = null,
+  drift = null,
   issueStatus = 201,
   slackStatuses = [],
 }) {
@@ -164,6 +165,7 @@ export async function harness({
     runs: input.runs,
     jobs: input.jobs,
     ledger,
+    ...(drift === null ? {} : { drift }),
   };
   const env = {
     GITHUB_REPOSITORY: 'meshin-co/website',

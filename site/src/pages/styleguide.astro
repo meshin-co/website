@@ -4,9 +4,11 @@ import { getCollection } from 'astro:content';
 import AnswerBlock from '~/components/site/AnswerBlock.astro';
 import AuthorBox from '~/components/site/AuthorBox.astro';
 import CaseMetrics from '~/components/site/CaseMetrics.astro';
+import CodeBlock from '~/components/site/CodeBlock.astro';
 import FaqList from '~/components/site/FaqList.astro';
 import KeyTakeaways from '~/components/site/KeyTakeaways.astro';
 import PostCard from '~/components/site/PostCard.astro';
+import ReferenceLink from '~/components/site/ReferenceLink.astro';
 import SourceList from '~/components/site/SourceList.astro';
 import TableOfContents from '~/components/site/TableOfContents.astro';
 import CardGrid from '~/components/site/CardGrid.astro';
@@ -202,6 +204,16 @@ const artifacts = artifactIds.map((id) => resourcesById.get(id)).filter((entry) 
           { question: 'A second entry, to show the divider', answer: 'Answers wrap at the same measure as body copy.' },
         ]}
       />
+    </div>
+  </Section>
+
+  <Section title="Code block">
+    <div class="grid max-w-[68ch] gap-8">
+      <CodeBlock
+        text={'evals-baseline check --strict\nnote: "agent :: accuracy": would fall by 0.25, from 1 to 0.75'}
+        language="shell"
+      />
+      <ReferenceLink text="A pointer sentence closes a page." label="Read the full reference" href="/styleguide" />
     </div>
   </Section>
 

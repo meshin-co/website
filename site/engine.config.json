@@ -19,7 +19,8 @@
       { "prefix": "/resources/", "family": "resource", "profile": "offer" },
       { "prefix": "/case-studies/", "family": "case-study", "profile": "offer" },
       { "prefix": "/glossary/", "family": "term", "profile": "term" },
-      { "prefix": "/faq/", "family": "faq-answer", "profile": "faq-answer" }
+      { "prefix": "/faq/", "family": "faq-answer", "profile": "faq-answer" },
+      { "prefix": "/spec/", "family": "spec", "profile": "page" }
     ],
     "fallback": { "family": "static", "profile": "page" }
   },

@@ -5,6 +5,7 @@ import { brandFromDisk, titleSuffix } from '../src/utils/brand.mjs';
 import { generatedTitles, normaliseTitle } from './autowriter-claims.mjs';
 import { historySpecimens } from './autowriter-history-specimens.mjs';
 import { ATTEMPT_CAP } from './autowriter-ledger.mjs';
+import { legacySpecimens } from './autowriter-legacy-specimens.mjs';
 import { recordSpecimens } from './autowriter-record-specimens.mjs';
 import { spendSpecimens } from './autowriter-spend-specimens.mjs';
 import { recordDirectory, recordPath } from './record-layout.mjs';
@@ -229,4 +230,5 @@ export const autowriterSpecimens = ({ addUntrackedFile, editFile, removeFile }) 
   ...recordSpecimens({ addUntrackedFile, editFile }),
   ...spendSpecimens({ addUntrackedFile, editFile, removeFile }),
   ...historySpecimens(),
+  ...legacySpecimens(),
 });

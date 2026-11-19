@@ -16,12 +16,18 @@ const entries = headings.filter((heading) => heading.depth === 2 || heading.dept
 
 {
   entries.length > 0 && (
-    <nav aria-label={label} class="border-t border-line pt-5">
+    <nav aria-label={label} class="border-t border-line pt-5" data-toc>
       <p class="eyebrow">{label}</p>
-      <ol class="mt-4 grid gap-2">
+      <ol class="mt-4 grid border-l border-line">
         {entries.map((heading) => (
-          <li class:list={[heading.depth === 3 && 'pl-5']}>
-            <a class="text-link text-sm" href={`#${heading.slug}`}>
+          <li>
+            <a
+              class:list={[
+                '-ml-px block border-l-2 border-transparent py-1 text-sm text-link aria-[current=location]:border-primary aria-[current=location]:text-heading',
+                heading.depth === 3 ? 'pl-8' : 'pl-4',
+              ]}
+              href={`#${heading.slug}`}
+            >
               {heading.text}
             </a>
           </li>
@@ -30,3 +36,27 @@ const entries = headings.filter((heading) => heading.depth === 2 || heading.dept
     </nav>
   )
 }
+
+<script>
+  const toc = document.querySelector('[data-toc]');
+
+  if (toc && 'IntersectionObserver' in window) {
+    const entries = [...toc.querySelectorAll('a')].flatMap((link) => {
+      const heading = document.getElementById(link.getAttribute('href')!.slice(1));
+      return heading ? [{ link, heading }] : [];
+    });
+
+    const mark = () => {
+      const line = window.innerHeight / 4;
+      const current = entries.filter(({ heading }) => heading.getBoundingClientRect().top <= line).pop();
+
+      for (const { link } of entries) {
+        if (link === current?.link) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      }
+    };
+
+    const observer = new IntersectionObserver(mark, { rootMargin: '0px 0px -75% 0px' });
+    for (const element of entries[0]?.heading.parentElement!.children ?? []) observer.observe(element);
+  }
+</script>

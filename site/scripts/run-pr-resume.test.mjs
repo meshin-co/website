@@ -100,7 +100,7 @@ test('a blank variable counts as missing, as it does for the watcher', async () 
 test('with nothing to do the command prints only the summary and exits 0', async () => {
   const { status, out, err } = await cli([], { pulls: [], ledgers: [] });
 
-  assert.deepEqual(out, ['pr-resume: 0 resumed, 0 left, 0 issues closed, 0 failed']);
+  assert.deepEqual(out, ['pr-resume: 0 resumed, 0 started, 0 left, 0 issues closed, 0 failed']);
   assert.deepEqual(err, []);
   assert.equal(status, 0);
 });
@@ -112,7 +112,7 @@ test('the open pull request and issues of 2026-11-03 print one line each, the pu
     '#84 left: no-main-change-since-decision',
     '#82 issue closed (pull request merged)',
     '#79 issue closed (pull request closed)',
-    'pr-resume: 0 resumed, 1 left, 2 issues closed, 0 failed',
+    'pr-resume: 0 resumed, 0 started, 1 left, 2 issues closed, 0 failed',
   ]);
   assert.equal(status, 0);
 });
@@ -122,7 +122,7 @@ test('a resumed pull request prints how and on which main commit, and the tokens
 
   assert.deepEqual(out, [
     '#84 resumed (main-change, main e8874d4)',
-    'pr-resume: 1 resumed, 0 left, 0 issues closed, 0 failed',
+    'pr-resume: 1 resumed, 0 started, 0 left, 0 issues closed, 0 failed',
   ]);
   assert.equal(status, 0);
   assert.equal(named(calls, 'putLedger')[0][1], WRITER);
@@ -134,7 +134,7 @@ test('a forced pull request prints as resumed by the owner, with no main commit,
   const world = { ledgers: [ledgerRecord(withLastEscalation(realLedger(), { kind: 'credential' }))], main: [] };
   const { status, out } = await cli(['--pr', '84'], world);
 
-  assert.deepEqual(out, ['#84 resumed (owner)', 'pr-resume: 1 resumed, 0 left, 0 issues closed, 0 failed']);
+  assert.deepEqual(out, ['#84 resumed (owner)', 'pr-resume: 1 resumed, 0 started, 0 left, 0 issues closed, 0 failed']);
   assert.equal(status, 0);
 });
 
@@ -148,7 +148,10 @@ test('a forced pull request that stays escalated makes the run fail, so a green 
   });
   const { status, out, err } = await cli(['--pr', '84'], { ledgers: [capped] });
 
-  assert.deepEqual(out, ['#84 left: cap-reached', 'pr-resume: 0 resumed, 1 left, 0 issues closed, 0 failed']);
+  assert.deepEqual(out, [
+    '#84 left: cap-reached',
+    'pr-resume: 0 resumed, 0 started, 1 left, 0 issues closed, 0 failed',
+  ]);
   assert.match(err.join('\n'), /pr-resume: pull request #84 was not resumed: cap-reached/);
   assert.equal(status, 1);
 });
@@ -182,7 +185,7 @@ test('a resume whose dispatch failed prints the problem on its own line and exit
     /^#84 resumed \(main-change, main e8874d4\), but the watcher was not dispatched: GitHub POST .* answered 403/
   );
   assert.match(out[0], /start it with: gh workflow run watch-pr\.yml -f pr=84$/);
-  assert.equal(out.at(-1), 'pr-resume: 1 resumed, 0 left, 0 issues closed, 1 failed');
+  assert.equal(out.at(-1), 'pr-resume: 1 resumed, 0 started, 0 left, 0 issues closed, 1 failed');
   assert.equal(status, 1);
 });
 
@@ -196,7 +199,7 @@ test('a failure on one pull request prints a failed line and exits 1, and the su
   });
 
   assert.match(out[0], /^#84 failed: GitHub PUT contents\/x\.json answered 409: the file changed$/);
-  assert.equal(out.at(-1), 'pr-resume: 0 resumed, 0 left, 2 issues closed, 1 failed');
+  assert.equal(out.at(-1), 'pr-resume: 0 resumed, 0 started, 0 left, 2 issues closed, 1 failed');
   assert.equal(status, 1);
 });
 
@@ -240,5 +243,5 @@ test('the summary counts a resume with a problem as resumed and as failed, and a
     { kind: 'failed', subject: '#87', message: 'boom' },
   ];
 
-  assert.equal(summarise(items), 'pr-resume: 2 resumed, 1 left, 1 issues closed, 2 failed');
+  assert.equal(summarise(items), 'pr-resume: 2 resumed, 0 started, 1 left, 1 issues closed, 2 failed');
 });

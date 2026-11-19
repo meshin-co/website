@@ -3,7 +3,7 @@
     "target": "/",
     "status": "rewritten",
     "reason": "Re-read 2026-10-31 in dist/index.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [frontmatter.description] now \"Agent evals CI starter: a four-field eval case format and a description of the pull-request gate that blocks a merge below a pass-rate floor you set.\" (source row: service-resource.json#3);  [frontmatter.description] now \"AI governance starter kit: a table of who signs each document a security review asks for, six vendor questionnaire topics and an incident call order.\" (was \"AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire.\") (source row: service-resource.json#4);  [body.p] now \"kit · v0.1\" (was \"kit · v0.1 · MIT\");  [body.p] now \"scorecard · v0.1\" (was \"scorecard · v0.1 · MIT\");  [frontmatter.description] no longer rendered: \"A starter CI pipeline for agent evals. It runs on every pull request and blocks a bad merge before it ships, using a plain YAML case format.\"; The card type lines lost their licence label (\"kit · v0.1 · MIT\" became \"kit · v0.1\"): change 18 withdrew \"MIT\" because no licence exists on any public page of the kit (all seven github.com/meshin-co/<slug> URLs return 404 and the organisation's one repository has \"license\": null on api.github.com, checked 2026-10-31). The owner's recorded licence answers on COPY-CHECKLIST 6.3 and 16.8 are untouched. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand. Re-read 2026-11-11 in dist/index.html (clean build of the working tree). The shared status line changed from \"Available as a page on this site. A repository copy is not published yet.\" to \"Available as a page on this site. There is no repository copy.\" (owner decision of 2026-11-10: no link to a repository that does not exist, and no promise of one or of a date). The new line states what is true today, an on-site page and no repository copy, and carries no promise. No other row of this target changed. Re-read 2026-11-11 in dist/index.html (clean build of the working tree). Change 47 (locked decision L75: text is CC BY 4.0, code is MIT) gave every resource entry a license field, and the two card type lines on this route regained a licence label: [body.p] now \"kit · v0.1 · CC-BY-4.0\" (was \"kit · v0.1\") and [body.p] now \"scorecard · v0.1 · CC-BY-4.0\" (was \"scorecard · v0.1\"). The label is true and resolves. All seven entries are prose and tables and ship no code, so CC BY 4.0 is the licence of what each card offers; the Content section of /terms states that grant; and the text ships at dist/licenses/CC-BY-4.0.txt, which the build requires of every declared licence. Change 18 withdrew the label because no licence existed on any public page of the kit; one now does. COPY-CHECKLIST 6.3 (\"MIT assumed\") and 16.8 (\"Page-only, MIT, v0.1\") still read MIT; they are the owner's rows and are not edited here. No other row of this target changed.",
-    "digest": "7db54027f79b"
+    "digest": "e91da5146d83"
   },
   {
     "target": "/404",
@@ -34,14 +34,14 @@
     "location": "head.title",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-a-quarterly-ai-tool-access-review (generation record audits/autowriter/generations/2026/11/how-to-run-a-quarterly-ai-tool-access-review.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "e9a79d33ea58"
+    "digest": "405e48c953bd"
   },
   {
     "target": "/blog",
     "location": "body.p",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-a-quarterly-ai-tool-access-review (generation record audits/autowriter/generations/2026/11/how-to-run-a-quarterly-ai-tool-access-review.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "e9a79d33ea58"
+    "digest": "405e48c953bd"
   },
   {
     "target": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
@@ -53,29 +53,29 @@
     "target": "/blog/category/agentic-architecture",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent (generation record audits/autowriter/generations/2026/11/how-to-set-a-per-task-spending-limit-for-an-ai-agent.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "bdd4a9d81f94"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "9d271bb9f764"
   },
   {
     "target": "/blog/category/agentic-architecture",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent (generation record audits/autowriter/generations/2026/11/how-to-set-a-per-task-spending-limit-for-an-ai-agent.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "bdd4a9d81f94"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "9d271bb9f764"
   },
   {
     "target": "/blog/category/executive",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-can-boards-verify-ai-cost-savings (generation record audits/autowriter/generations/2026/11/how-can-boards-verify-ai-cost-savings.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "b276b0e86499"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-can-boards-verify-ai-cost-savings and /blog/what-should-a-board-request-in-a-quarterly-ai-risk-report (generation records audits/autowriter/generations/2026/11/how-can-boards-verify-ai-cost-savings.json and audits/autowriter/generations/2026/11/what-should-a-board-request-in-a-quarterly-ai-risk-report.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "bee0ea8c7574"
   },
   {
     "target": "/blog/category/executive",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-can-boards-verify-ai-cost-savings (generation record audits/autowriter/generations/2026/11/how-can-boards-verify-ai-cost-savings.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "b276b0e86499"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-can-boards-verify-ai-cost-savings and /blog/what-should-a-board-request-in-a-quarterly-ai-risk-report (generation records audits/autowriter/generations/2026/11/how-can-boards-verify-ai-cost-savings.json and audits/autowriter/generations/2026/11/what-should-a-board-request-in-a-quarterly-ai-risk-report.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "bee0ea8c7574"
   },
   {
     "target": "/blog/category/governance",
@@ -87,29 +87,29 @@
     "target": "/blog/category/operating-model",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-generated-customer-support-replies (generation record audits/autowriter/generations/2026/11/how-to-review-ai-generated-customer-support-replies.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "35f8b8c9bdbc"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-generated-customer-support-replies and /blog/how-to-review-ai-vendor-model-updates-after-deployment (generation records audits/autowriter/generations/2026/11/how-to-review-ai-generated-customer-support-replies.json and audits/autowriter/generations/2026/11/how-to-review-ai-vendor-model-updates-after-deployment.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "28776f0ea711"
   },
   {
     "target": "/blog/category/operating-model",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-generated-customer-support-replies (generation record audits/autowriter/generations/2026/11/how-to-review-ai-generated-customer-support-replies.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "35f8b8c9bdbc"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-generated-customer-support-replies and /blog/how-to-review-ai-vendor-model-updates-after-deployment (generation records audits/autowriter/generations/2026/11/how-to-review-ai-generated-customer-support-replies.json and audits/autowriter/generations/2026/11/how-to-review-ai-vendor-model-updates-after-deployment.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "28776f0ea711"
   },
   {
     "target": "/blog/evals-in-ci-for-llm-agents",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent (generation record audits/autowriter/generations/2026/11/how-to-set-a-per-task-spending-limit-for-an-ai-agent.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "50fd0ef45f9c"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "2fc233adb431"
   },
   {
     "target": "/blog/evals-in-ci-for-llm-agents",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent (generation record audits/autowriter/generations/2026/11/how-to-set-a-per-task-spending-limit-for-an-ai-agent.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "50fd0ef45f9c"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "2fc233adb431"
   },
   {
     "target": "/blog/how-to-build-an-ai-system-register-in-a-week",
@@ -127,43 +127,43 @@
     "target": "/blog/tag/agentic-architecture",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent (generation record audits/autowriter/generations/2026/11/how-to-set-a-per-task-spending-limit-for-an-ai-agent.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "e920b7519f98"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "ede255fd607e"
   },
   {
     "target": "/blog/tag/agentic-architecture",
     "location": "body.h1",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent (generation record audits/autowriter/generations/2026/11/how-to-set-a-per-task-spending-limit-for-an-ai-agent.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "e920b7519f98"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "ede255fd607e"
   },
   {
     "target": "/blog/tag/agentic-architecture",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent (generation record audits/autowriter/generations/2026/11/how-to-set-a-per-task-spending-limit-for-an-ai-agent.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "e920b7519f98"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "ede255fd607e"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "head.title",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-a-quarterly-ai-tool-access-review (generation record audits/autowriter/generations/2026/11/how-to-run-a-quarterly-ai-tool-access-review.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "61cb92ffd5e8"
+    "digest": "f0c6b116675f"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "body.h1",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-a-quarterly-ai-tool-access-review (generation record audits/autowriter/generations/2026/11/how-to-run-a-quarterly-ai-tool-access-review.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "61cb92ffd5e8"
+    "digest": "f0c6b116675f"
   },
   {
     "target": "/blog/tag/ai-governance",
     "location": "body.p",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-a-quarterly-ai-tool-access-review (generation record audits/autowriter/generations/2026/11/how-to-run-a-quarterly-ai-tool-access-review.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "61cb92ffd5e8"
+    "digest": "f0c6b116675f"
   },
   {
     "target": "/blog/tag/ai-pilots",
@@ -190,22 +190,22 @@
     "target": "/blog/tag/ai-register",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/named-person-responsible-for-ai-risk-in-vendor-procurement (generation record audits/autowriter/generations/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "c5349f0f9341"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/what-should-a-board-request-in-a-quarterly-ai-risk-report (generation record audits/autowriter/generations/2026/11/what-should-a-board-request-in-a-quarterly-ai-risk-report.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "a0566160d14e"
   },
   {
     "target": "/blog/tag/ai-register",
     "location": "body.h1",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/named-person-responsible-for-ai-risk-in-vendor-procurement (generation record audits/autowriter/generations/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "c5349f0f9341"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/what-should-a-board-request-in-a-quarterly-ai-risk-report (generation record audits/autowriter/generations/2026/11/what-should-a-board-request-in-a-quarterly-ai-risk-report.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "a0566160d14e"
   },
   {
     "target": "/blog/tag/ai-register",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/named-person-responsible-for-ai-risk-in-vendor-procurement (generation record audits/autowriter/generations/2026/11/named-person-responsible-for-ai-risk-in-vendor-procurement.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "c5349f0f9341"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/what-should-a-board-request-in-a-quarterly-ai-risk-report (generation record audits/autowriter/generations/2026/11/what-should-a-board-request-in-a-quarterly-ai-risk-report.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "a0566160d14e"
   },
   {
     "target": "/blog/tag/eu-ai-act",
@@ -232,22 +232,22 @@
     "target": "/blog/tag/evals-in-ci",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "10f04d3be99f"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-vendor-model-updates-after-deployment and /blog/how-to-stop-ai-agents-getting-stuck-in-loops (generation records audits/autowriter/generations/2026/11/how-to-review-ai-vendor-model-updates-after-deployment.json and audits/autowriter/generations/2026/11/how-to-stop-ai-agents-getting-stuck-in-loops.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "5787b511c47c"
   },
   {
     "target": "/blog/tag/evals-in-ci",
     "location": "body.h1",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "10f04d3be99f"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-vendor-model-updates-after-deployment and /blog/how-to-stop-ai-agents-getting-stuck-in-loops (generation records audits/autowriter/generations/2026/11/how-to-review-ai-vendor-model-updates-after-deployment.json and audits/autowriter/generations/2026/11/how-to-stop-ai-agents-getting-stuck-in-loops.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "5787b511c47c"
   },
   {
     "target": "/blog/tag/evals-in-ci",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prevent-duplicate-ai-agent-actions-on-retries (generation record audits/autowriter/generations/2026/11/how-to-prevent-duplicate-ai-agent-actions-on-retries.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "10f04d3be99f"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-vendor-model-updates-after-deployment and /blog/how-to-stop-ai-agents-getting-stuck-in-loops (generation records audits/autowriter/generations/2026/11/how-to-review-ai-vendor-model-updates-after-deployment.json and audits/autowriter/generations/2026/11/how-to-stop-ai-agents-getting-stuck-in-loops.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "5787b511c47c"
   },
   {
     "target": "/blog/tag/llm-as-judge",
@@ -265,28 +265,28 @@
     "target": "/blog/tag/production-readiness",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent (generation record audits/autowriter/generations/2026/11/how-to-set-a-per-task-spending-limit-for-an-ai-agent.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "d855e6736b5c"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "c33b16879856"
   },
   {
     "target": "/blog/tag/production-readiness",
     "location": "body.h1",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent (generation record audits/autowriter/generations/2026/11/how-to-set-a-per-task-spending-limit-for-an-ai-agent.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "d855e6736b5c"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "c33b16879856"
   },
   {
     "target": "/blog/tag/production-readiness",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent (generation record audits/autowriter/generations/2026/11/how-to-set-a-per-task-spending-limit-for-an-ai-agent.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "d855e6736b5c"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "c33b16879856"
   },
   {
     "target": "/blog/tag/security-review",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-a-quarterly-ai-tool-access-review (generation record audits/autowriter/generations/2026/11/how-to-run-a-quarterly-ai-tool-access-review.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "cfacaa90555c"
+    "digest": "301a7735329c"
   },
   {
     "target": "/blog/tag/shadow-ai",
@@ -319,15 +319,15 @@
     "target": "/blog/why-your-ai-pilot-never-reached-production",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-generated-customer-support-replies (generation record audits/autowriter/generations/2026/11/how-to-review-ai-generated-customer-support-replies.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "e564be61db54"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-generated-customer-support-replies and /blog/how-to-review-ai-vendor-model-updates-after-deployment (generation records audits/autowriter/generations/2026/11/how-to-review-ai-generated-customer-support-replies.json and audits/autowriter/generations/2026/11/how-to-review-ai-vendor-model-updates-after-deployment.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "186c8eaf0f2c"
   },
   {
     "target": "/blog/why-your-ai-pilot-never-reached-production",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-generated-customer-support-replies (generation record audits/autowriter/generations/2026/11/how-to-review-ai-generated-customer-support-replies.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "e564be61db54"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-review-ai-generated-customer-support-replies and /blog/how-to-review-ai-vendor-model-updates-after-deployment (generation records audits/autowriter/generations/2026/11/how-to-review-ai-generated-customer-support-replies.json and audits/autowriter/generations/2026/11/how-to-review-ai-vendor-model-updates-after-deployment.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "186c8eaf0f2c"
   },
   {
     "target": "/case-studies",
@@ -747,8 +747,8 @@
   {
     "target": "/resources/agent-evals-ci-starter",
     "status": "rewritten",
-    "reason": "Re-read 2026-10-31 in dist/resources/agent-evals-ci-starter.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [frontmatter.description] now \"Agent evals CI starter: a four-field eval case format and a description of the pull-request gate that blocks a merge below a pass-rate floor you set.\" (source row: service-resource.json#3);  [body.p] now \"Published 8 September 2026 · Updated 25 October 2026\";  [frontmatter.description] no longer rendered: \"A starter CI pipeline for agent evals. It runs on every pull request and blocks a bad merge before it ships, using a plain YAML case format.\"; The date line follows updatedDate in the source file, which change 18 set to 2026-10-25 where it changed prose or links (write-copy.md: bump updatedDate when you change prose); publishDate is unchanged. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand. Re-read 2026-11-11 in dist/resources/agent-evals-ci-starter.html (clean build of the working tree). The shared status line changed from \"Available as a page on this site. A repository copy is not published yet.\" to \"Available as a page on this site. There is no repository copy.\" (owner decision of 2026-11-10: no link to a repository that does not exist, and no promise of one or of a date). The new line states what is true today, an on-site page and no repository copy, and carries no promise. No other row of this target changed.",
-    "digest": "0ff38fc9f2ea"
+    "reason": "Re-read 2026-10-31 in dist/resources/agent-evals-ci-starter.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [frontmatter.description] now \"Agent evals CI starter: a four-field eval case format and a description of the pull-request gate that blocks a merge below a pass-rate floor you set.\" (source row: service-resource.json#3);  [body.p] now \"Published 8 September 2026 · Updated 25 October 2026\";  [frontmatter.description] no longer rendered: \"A starter CI pipeline for agent evals. It runs on every pull request and blocks a bad merge before it ships, using a plain YAML case format.\"; The date line follows updatedDate in the source file, which change 18 set to 2026-10-25 where it changed prose or links (write-copy.md: bump updatedDate when you change prose); publishDate is unchanged. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand. Re-read 2026-11-11 in dist/resources/agent-evals-ci-starter.html (clean build of the working tree). The shared status line changed from \"Available as a page on this site. A repository copy is not published yet.\" to \"Available as a page on this site. There is no repository copy.\" (owner decision of 2026-11-10: no link to a repository that does not exist, and no promise of one or of a date). The new line states what is true today, an on-site page and no repository copy, and carries no promise. No other row of this target changed. Re-read 2026-11-12 in dist/resources/agent-evals-ci-starter.html (build of the working tree at 10:37). A competitive review of the published evals-baseline specification found two questions this page did not answer: why not the pass-rate threshold you already have, and why the baseline should be a file you own. The page now answers both, and links the specification at /spec/evals-baseline/1.0 for the first time from a human page. Rows of this target that are new or changed, as rendered: [body.p] \"Published 8 September 2026 · Updated 12 November 2026\" (updatedDate moved from 2026-11-11 to 2026-11-12 with the body); [body.p] \"A pass-rate threshold cannot see a metric fall while the suite stays above it. The floor in the gate above is a threshold of this kind. The baseline in the evals-baseline specification reports every fall beyond that metric’s tolerance. Three differences can be checked.\"; [body.p] \"The README of promptfoo’s GitHub Action disagrees with promptfoo’s documentation page about whether the action compares a pull request with its base. The README says: “The action evaluates only the current checkout; it does not run separate base and head evaluations.” The documentation page says: “On every pull request that modifies a prompt, the action will automatically run a full comparison”.\"; [body.p] \"A baseline kept in someone else’s evals service lasts as long as that service allows. Three vendors state their limits on their own pages, each read on 12 November 2026.\"; [body.p] \"The specification requires the baseline to be a file committed to your repository, and a check to read it without a network or a database. No evaluation vendor’s plan, retention period or shutdown date applies to it.\"; and four source lines, \"promptfoo · retrieved 2026-11-12\" (four promptfoo pages render one row), \"OpenAI · retrieved 2026-11-12\", \"Braintrust · retrieved 2026-11-12\" and \"Confident AI · retrieved 2026-11-12\". The two new headings and the six list items are not rows of this target; they are inside the body row of site/src/data/resource/agent-evals-ci-starter.md, which has its own entry. Basis, each read 2026-11-12 from the page linked beside it: every statement about a vendor is that vendor’s own sentence in quotation marks, with its page linked, and no limitation of a competitor is stated in the site’s words. Quotes checked character for character against the live pages the same day: promptfoo command-line reference (\"Set a minimum pass rate threshold (as a percentage)\" for PROMPTFOO_PASS_RATE_THRESHOLD); the promptfoo-action README at commit 6a8612f15670b4d5a4d43e0d6fb221d84ab389d8, the head of main that day (\"Required suite pass percentage from 0 to 100\" for fail-on-threshold, and the sentence quoted in full); promptfoo CI/CD guide (the custom threshold check fails the build when $PASS_RATE < 95, and ends in exit 1); promptfoo GitHub Actions page (the sentence quoted, on a page that names promptfoo/promptfoo-action@v1, the action the README belongs to); OpenAI evals guide (the October 31 and November 30, 2026 sentence, quoted in full); Braintrust pricing page (the Starter plan, $0 a month, lists \"14-day retention\"); Confident AI pricing page (the Free Forever plan lists \"5 test runs per week\" and \"additional test runs are locked\"). Worked example, run 2026-11-12 through the local reference implementation (evals-baseline 1.0.0, specification 1.0) on a promptfoo run file with a baseline recorded at accuracy 0.98 and tolerance 0: a run at 0.81 passes a threshold of 0.80, and `check` prints \"below-baseline agent :: accuracy: 0.81 is below the baseline 0.98 by 0.17, more than the tolerance 0\", ends \"evals-baseline: 1 finding; warning only, exit 0 (pass --strict to exit 1)\" and exits 0; with --strict it ends \"evals-baseline: 1 finding; exit 1 (--strict)\" and exits 1; every check prints a \"date: baseline recorded 2026-11-12\" line. The specification page states the same in rule 2, in its exit-code table and in its date-line clause. 0.98 - 0.81 = 0.17; 0.80 is the example’s threshold, not a claim about a product. No fact about the owner, a client, a metric or a credential is stated. No other row of this target changed.",
+    "digest": "e19e2b7bc59f"
   },
   {
     "target": "/resources/ai-governance-starter-kit",
@@ -814,7 +814,7 @@
     "target": "/styleguide",
     "status": "rewritten",
     "reason": "Re-read 2026-10-31 in dist/styleguide.html (clean build of the working tree). Rows of this entry that differ from the text last sealed before change 18:  [frontmatter.description] now \"AI governance starter kit: a table of who signs each document a security review asks for, six vendor questionnaire topics and an incident call order.\" (was \"AI governance starter kit: the paperwork a security review asks for — register, policy, data classification and a vendor questionnaire.\") (source row: service-resource.json#4);  [body.p] now \"kit · v0.1\" (was \"kit · v0.1 · MIT\");  [body.p] now \"scorecard · v0.1\" (was \"scorecard · v0.1 · MIT\"); The card type lines lost their licence label (\"kit · v0.1 · MIT\" became \"kit · v0.1\"): change 18 withdrew \"MIT\" because no licence exists on any public page of the kit (all seven github.com/meshin-co/<slug> URLs return 404 and the organisation's one repository has \"license\": null on api.github.com, checked 2026-10-31). The owner's recorded licence answers on COPY-CHECKLIST 6.3 and 16.8 are untouched. The earlier reason for this entry (commit 17eca8b, same file and position) quoted or described text that change 18 removed or reworded, so it is not repeated here. Every other row of this entry had its text in the ledger already when that reason was written, so the earlier conclusions on those rows stand. Re-read 2026-11-11 in dist/styleguide.html (clean build of the working tree). The shared status line changed from \"Available as a page on this site. A repository copy is not published yet.\" to \"Available as a page on this site. There is no repository copy.\" (owner decision of 2026-11-10: no link to a repository that does not exist, and no promise of one or of a date). The new line states what is true today, an on-site page and no repository copy, and carries no promise. No other row of this target changed. Re-read 2026-11-11 in dist/styleguide.html (clean build of the working tree). Change 47 (locked decision L75: text is CC BY 4.0, code is MIT) gave every resource entry a license field, and the two card type lines in the styleguide regained a licence label: [body.p] now \"kit · v0.1 · CC-BY-4.0\" (was \"kit · v0.1\") and [body.p] now \"scorecard · v0.1 · CC-BY-4.0\" (was \"scorecard · v0.1\"). The label is true and resolves. All seven entries are prose and tables and ship no code, so CC BY 4.0 is the licence of what each card offers; the Content section of /terms states that grant; and the text ships at dist/licenses/CC-BY-4.0.txt, which the build requires of every declared licence. Change 18 withdrew the label because no licence existed on any public page of the kit; one now does. COPY-CHECKLIST 6.3 (\"MIT assumed\") and 16.8 (\"Page-only, MIT, v0.1\") still read MIT; they are the owner's rows and are not edited here. No other row of this target changed.",
-    "digest": "5b17b85f58bf"
+    "digest": "b4283ec37eec"
   },
   {
     "target": "/terms",
