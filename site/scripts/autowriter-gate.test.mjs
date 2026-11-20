@@ -21,6 +21,7 @@ import {
 import { SCENE_CORE } from './fixtures/semantic-core-scene.mjs';
 import { recordPath } from './record-layout.mjs';
 import { GENERATED_AT } from './fixtures/spend-report-corpus.mjs';
+import { checkOutState } from './fixtures/state-checkout.mjs';
 import { spendReportFile } from './spend-report.mjs';
 import { REPORT_PATH, reportText } from './spend-report-text.mjs';
 import { siteBrand } from './site-brand.mjs';
@@ -359,7 +360,7 @@ test('the summary line says how many files were read, so a gate that read nothin
 });
 
 function inTempRepo(plant, check) {
-  const root = mkdtempSync(join(tmpdir(), 'autowriter-gate-'));
+  const root = checkOutState(mkdtempSync(join(tmpdir(), 'autowriter-gate-')));
   const put = (path, text) => {
     mkdirSync(dirname(join(root, path)), { recursive: true });
     writeFileSync(join(root, path), text);

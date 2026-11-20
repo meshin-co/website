@@ -25,10 +25,12 @@ import {
   botCommit,
   capture,
   codeCommitAfter,
+  failedAgainAfter,
   mainCommit,
   personCommit,
   proseCommitAfter,
   realLedger,
+  repairFailed,
   resumeEntry,
   watcherDetail,
   withLastEscalation,
@@ -170,6 +172,14 @@ const REASONS = [
     },
     'cap-reached',
   ],
+  [
+    'a failed repair after the one resume a failed repair gets',
+    {
+      ledger: failedAgainAfter(withResumes(repairFailed(), resumeEntry(AFTER_VERDICT))),
+      mainChanges: [codeCommitAfter(MAIN_SHA, '2026-11-04T10:30:00.000Z')],
+    },
+    'resume-spent',
+  ],
   ['no commit on main at all', { mainChanges: [] }, 'no-main-change-since-decision'],
   [
     'a main commit older than the verdict, even a code one',
@@ -195,11 +205,12 @@ for (const [name, input, reason] of REASONS) {
   });
 }
 
-test('every reason a decision can give is one of the six the design names, and each of the six is given somewhere above', () => {
+test('every reason a decision can give is one of the seven the design names, and each of the seven is given somewhere above', () => {
   assert.deepEqual(RESUME_REASONS, [
     'not-escalated',
     'not-resumable-kind',
     'cap-reached',
+    'resume-spent',
     'no-main-change-since-decision',
     'human-touched',
     'already-resumed',

@@ -1,0 +1,363 @@
+{
+  "schema": 1,
+  "slug": "when-should-a-business-disclose-ai-use-to-customers",
+  "runId": "44355709964-1",
+  "generatedAt": "2026-11-18T17:18:52.270Z",
+  "claim": {
+    "title": "When should a business disclose AI use to customers?",
+    "query": "when should a business disclose ai use to customers",
+    "origin": "category",
+    "category": "governance",
+    "catchUp": {
+      "slot": "15:00",
+      "lateMinutes": 132
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-18",
+      "windowStart": "2026-08-18",
+      "windowEnd": "2026-11-16",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/when-should-a-business-disclose-ai-use-to-customers",
+    "path": "site/src/data/post/when-should-a-business-disclose-ai-use-to-customers.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_05f024389c8bc533016afddd396b2887d2b1f72da1a48cd566",
+  "published": {
+    "callIndex": 7
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0e49d7ee8ea91b84016afddc9d2c9087d28605b14477b72884",
+      "requestDigest": "1244d193d7e0cf78af115f87741e4c11e285cddb14bb784f38201fb381dd864c",
+      "tokens": {
+        "input": 1246,
+        "output": 90
+      },
+      "costUsd": 0.001696,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_028e7c94178bf3cb016afddca4e98c87d28ed33a33143ae050",
+      "requestDigest": "33230966fa81337d2a88465af30fb0151656edff9fa548d97bb45393d3974b3e",
+      "tokens": {
+        "input": 1304,
+        "output": 140
+      },
+      "costUsd": 0.002004,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0cdc3faaac5dcfd0016afddcae9df487d2a8a60ead8e40c0b4",
+      "requestDigest": "ff736409fa491a60f6ccdc3a73ac8a3a159d6732accc3ca13a40a0260e64da44",
+      "tokens": {
+        "input": 1250,
+        "output": 71
+      },
+      "costUsd": 0.001605,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0aeb7f37432d6175016afddcb5c29c87d2b9b4fb2cffccd899",
+      "requestDigest": "86e184d463df6b06b046eae9dd7115db41b9c4f68a581b5b2a8d5320483e3f96",
+      "tokens": {
+        "input": 1308,
+        "output": 142
+      },
+      "costUsd": 0.002018,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_01d7e5781d02a76a016afddcbe968887d2b7910584084163fc",
+      "requestDigest": "818efbe6699409033bf9418f2a08f3970828daf0852c0504c058a5d3c8d90ba5",
+      "tokens": {
+        "input": 1242,
+        "output": 105
+      },
+      "costUsd": 0.001767,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0a208b1028d2b4d8016afddcc9b44887d28d0d1c5734fe0ff2",
+      "requestDigest": "1711ee094ab3a82c6373c8f06da1a710d9f3b0617a9f2c0ea11254d8e2a3d910",
+      "tokens": {
+        "input": 1304,
+        "output": 124
+      },
+      "costUsd": 0.001924,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0c7df4543c5847a0016afddcd41e5487d2a941d1e5cdeee699",
+      "requestDigest": "e73200ea0b118fe5d81e61d2f060f4dbbee5e5f412731b0fb1080822d7130f99",
+      "tokens": {
+        "input": 10630,
+        "output": 4561
+      },
+      "costUsd": 0.033435,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_05f024389c8bc533016afddd396b2887d2b1f72da1a48cd566",
+      "requestDigest": "c6b05a7c68a3f8b3cb3b96ff867ec4dc766281a33cf1d34685196adedc20a221",
+      "tokens": {
+        "input": 13909,
+        "output": 3348
+      },
+      "costUsd": 0.030649,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 32193,
+      "output": 8581
+    },
+    "costUsd": 0.075098
+  },
+  "ledger": "audits/autowriter/2026/11/when-should-a-business-disclose-ai-use-to-customers.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "26030c0c98084bd39d1d20a4f3545ca5676899208f8b84a02499d72fb015ac51",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "7983e72318b2701ef667d48ce7fff71de6bc58227340fa77be86897b066bb2f5"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "1e291e4336807e99144f2a63cfd94220707c1c99d9084f960e26799cbf12fde8"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "bfb02303381d779e9551eb07526273d9ebecba36e6d2abda5692ac878241e479"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "e5443616976a86a513c2ac26f191c9f5f8e9cd2abd69bf9e9c09d170dc2958b0"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "ada190f62c72e90f1f952319a6fab7e5d1c62c113e3006b95a8600409a42bf46"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "3ae981c69c52d9ac534dedf139d48429cdef1ac8f6531609c60e034072173fbf"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "f64e24db8dca1c487b003c3d3cac0b30d8f5290ec8ab26b658c8b3abf574a4cc"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "d7f7e9b1d57aa3701025ddf6ac39e3fc5f59a1ac",
+    "fingerprint": "3327935dfe58b48ff877841d5102d3668ee8041389cad0998db7a1d1a7ede36e"
+  },
+  "claimTable": [
+    {
+      "sentence": "Under the EU AI Act, providers must ensure people interacting directly with certain AI systems are informed, unless that is obvious in context.",
+      "marker": "sourced",
+      "source": {
+        "id": "ai-act",
+        "title": "Regulation (EU) 2024/1689 laying down harmonised rules on artificial intelligence",
+        "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+      },
+      "span": "Providers shall ensure that AI systems intended to interact directly with natural persons are designed and developed in such a way that the natural persons concerned are informed that they are interacting with an AI system, unless this is obvious from the point of view of a natural person who is reasonably well-informed, observant and circumspect, taking into account the circumstances and the context of use."
+    },
+    {
+      "sentence": "The GDPR requires certain privacy notices to mention automated decision-making and profiling covered by Article 22.",
+      "marker": "sourced",
+      "source": {
+        "id": "gdpr",
+        "title": "Regulation (EU) 2016/679 on the protection of natural persons concerning the processing of personal data",
+        "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+      },
+      "span": "the existence of automated decision-making, including profiling, referred to in Article 22(1) and (4)"
+    }
+  ],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 134,
+      "median": 14,
+      "shareBelowThreshold": 0.2986,
+      "shareJustBelow": 0.2538,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/when-should-a-business-disclose-ai-use-to-customers.json",
+    "audits/autowriter/claims/2026/11/when-should-a-business-disclose-ai-use-to-customers.json",
+    "audits/autowriter/generations/2026/11/when-should-a-business-disclose-ai-use-to-customers.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-ai-vendor-assessment-questionnaire-template.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-named-person-responsible-for-ai-risk-in-vendor-procurement.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-when-should-a-business-disclose-ai-use-to-customers.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/when-should-a-business-disclose-ai-use-to-customers.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}

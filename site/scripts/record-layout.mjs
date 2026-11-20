@@ -1,7 +1,22 @@
-import { readdirSync } from 'node:fs';
+import { readdirSync, statSync } from 'node:fs';
 import { basename, join, relative, sep } from 'node:path';
 
 import { isCalendarInstant } from './autowriter-records.mjs';
+
+export const STATE_BRANCH = 'autowriter-state';
+export const STATE_DIRECTORY = 'state';
+
+export const STATE_FILES = Object.freeze({
+  spendReport: `${STATE_DIRECTORY}/spend-report.md`,
+  searchDemand: `${STATE_DIRECTORY}/search-demand.md`,
+  keywordDemand: `${STATE_DIRECTORY}/keyword-demand.md`,
+});
+
+export const LEGACY_FILES = Object.freeze([
+  'audits/spend-report.md',
+  'audits/search-demand.md',
+  'audits/keyword-demand.md',
+]);
 
 const AUTOWRITER = 'audits/autowriter';
 
@@ -15,8 +30,40 @@ const FAMILIES = {
 const MOST_SPECIFIC_FIRST = ['claim', 'generation', 'ledger', 'disposition'];
 const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const MONTH_FILE = /^(\d{4})\/(0[1-9]|1[0-2])\/([^/]+)\.json$/;
+const UNSAFE_SEGMENT = /^(?:\.{0,2}|\.git|:.*)$/i;
 
 export const RECORD_FAMILIES = Object.freeze(Object.keys(FAMILIES));
+
+export class StateMissingError extends Error {
+  name = 'StateMissingError';
+
+  constructor() {
+    super(
+      `${STATE_DIRECTORY}/ is not a folder, so the ledger, the claims, the spend report and the two demand reports cannot be read; ` +
+        `an absent state is never read as an empty one. Check the branch ${STATE_BRANCH} out at ${STATE_DIRECTORY}/ ` +
+        `(git fetch origin ${STATE_BRANCH} && git worktree add ${STATE_DIRECTORY} ${STATE_BRANCH})`
+    );
+  }
+}
+
+export function hasState(repoRoot) {
+  try {
+    return statSync(join(repoRoot, STATE_DIRECTORY)).isDirectory();
+  } catch (error) {
+    if (error.code === 'ENOENT' || error.code === 'ENOTDIR') return false;
+    throw error;
+  }
+}
+
+export function requireState(repoRoot) {
+  if (!hasState(repoRoot)) throw new StateMissingError();
+}
+
+export const isStatePath = (path) =>
+  typeof path === 'string' &&
+  path.startsWith(`${STATE_DIRECTORY}/`) &&
+  !path.includes('\\') &&
+  !path.split('/').some((segment) => UNSAFE_SEGMENT.test(segment));
 
 function rule(family) {
   if (!Object.hasOwn(FAMILIES, family)) throw new Error(`unknown record family ${JSON.stringify(family)}`);
@@ -42,6 +89,15 @@ export function familyOf(path) {
   if (typeof path !== 'string' || !path.endsWith('.json')) return null;
   return MOST_SPECIFIC_FIRST.find((family) => path.startsWith(`${FAMILIES[family].directory}/`)) ?? null;
 }
+
+export function legacyFamilyOf(path) {
+  if (typeof path !== 'string' || !path.endsWith('.json')) return null;
+  if (path.startsWith(`${AUTOWRITER}/generations/`)) return null;
+  if (path.startsWith(`${AUTOWRITER}/claims/`)) return 'claim';
+  return path.startsWith(`${AUTOWRITER}/`) ? 'ledger' : null;
+}
+
+export const isLegacyRecord = (path) => legacyFamilyOf(path) !== null || LEGACY_FILES.includes(path);
 
 export function slugOfRecord(path) {
   const family = familyOf(path);

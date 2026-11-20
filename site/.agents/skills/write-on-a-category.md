@@ -61,7 +61,7 @@ and, oldest first, the entries written without a buyer prompt: slug, origin, cat
 arrives, a person rewrites those. Such an entry has no buyer prompt, so its prompt holds an `Origin:` line and names the
 query for length, `docs/SEMANTIC-CORE.md` gets no passage for it, and its commit says `Origin:` where it says `Serves`.
 A glossary term beside it is written only with a prompt of its own, else it is named with `no-prompt`. `repair-open.mjs`
-refuses it as `failed`, which escalates as `hard-stop`: an issue, then the digest, and a person repairs it.
+opens it with no passage, so the watcher repairs it like any other entry and the guard locks no sentence of it.
 
 ## A run with no entry
 

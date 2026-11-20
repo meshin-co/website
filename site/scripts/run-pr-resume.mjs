@@ -26,6 +26,7 @@ const LINES = {
   resumed: ({ pullRequest, by, mainSha, problems }) =>
     `#${pullRequest} resumed (${by}${mainSha === null ? '' : `, main ${shortSha(mainSha)}`})` +
     (problems.length === 0 ? '' : `, but ${problems.join('; ')}`),
+  started: ({ pullRequest }) => `#${pullRequest} watcher started`,
   left: ({ pullRequest, reason }) => `#${pullRequest} left: ${reason}`,
   'issue-closed': ({ issue, merged }) => `#${issue} issue closed (pull request ${merged ? 'merged' : 'closed'})`,
   'issue-left': ({ issue, pullRequest }) => `#${issue} issue left (pull request #${pullRequest} was not found)`,
@@ -50,6 +51,7 @@ export function summarise(items) {
   const counted = (kind) => items.filter((item) => item.kind === kind).length;
   const counts = [
     ['resumed', counted('resumed')],
+    ['started', counted('started')],
     ['left', counted('left')],
     ['issues closed', counted('issue-closed')],
     ['failed', items.filter(failed).length],

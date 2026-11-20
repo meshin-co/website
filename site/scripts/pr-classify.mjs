@@ -12,7 +12,6 @@ export const BRANCH_PREFIX = 'autowriter/';
 export const HOLD_LABEL = readEngineConfig().loop.holdLabel;
 export const CHAIN_LIMIT_HOURS = QUARANTINE_HOURS + 24;
 export const CATCH_UP_CAP = 3;
-export const NO_CHECKS_CATCH_UP_CAP = 1;
 export const VERDICTS = ['unsettled', 'merge', 'catch-up', 'repairable', 'escalate', 'blocked-by-human', 'done'];
 
 const HOUR_MS = 3_600_000;
@@ -65,19 +64,23 @@ const movesDerivedFiles = ({ behindBy, paths }) => behindBy > 0 && (paths === nu
 const catchUpsIn = (commits) =>
   commits.filter(({ commit, parents }) => parents?.length === 2 && commit.message.startsWith(CATCH_UP_SUBJECT)).length;
 
-function overtakenByMain({ commits, drift, evidence }) {
+function overtakenByMain({ reason, commits, drift, evidence }) {
   const moved = { ...evidence, behindBy: drift.behindBy };
   if (catchUpsIn(commits) >= CATCH_UP_CAP)
     return { ...verdict('escalate', 'catch-up-cap', moved), kind: 'no-convergence' };
-  return verdict('catch-up', 'main-moved', moved);
+  return verdict('catch-up', reason, moved);
 }
 
 function resumedAfterNoChecks({ checks, commits, drift, evidence }) {
-  if (checks.reason !== 'no-checks') return null;
-  if (catchUpsIn(commits) >= NO_CHECKS_CATCH_UP_CAP)
-    return { ...verdict('escalate', 'no-checks-catch-up-cap', evidence), kind: 'hard-stop' };
-  if (drift.behindBy === 0) return null;
-  return verdict('catch-up', 'no-checks', { ...evidence, behindBy: drift.behindBy });
+  if (checks.reason !== 'no-checks' || drift.behindBy === 0) return null;
+  return overtakenByMain({ reason: 'no-checks', commits, drift, evidence });
+}
+
+const headCommittedAt = (commits) => Date.parse(commits.at(-1)?.commit.committer.date);
+
+function waitingSince(opened, commits) {
+  const committed = headCommittedAt(commits);
+  return Number.isNaN(committed) ? opened : Math.max(opened, committed);
 }
 
 function settle({ checks, pullRequest, commits, drift, now, base }) {
@@ -87,10 +90,10 @@ function settle({ checks, pullRequest, commits, drift, now, base }) {
     const mergeableAt = new Date(opened + QUARANTINE_HOURS * HOUR_MS);
     if (now < mergeableAt)
       return verdict('unsettled', 'quarantine', { ...evidence, mergeableAt: mergeableAt.toISOString() });
-    if (movesDerivedFiles(drift)) return overtakenByMain({ commits, drift, evidence });
+    if (movesDerivedFiles(drift)) return overtakenByMain({ reason: 'main-moved', commits, drift, evidence });
     return verdict('merge', 'green-after-quarantine', evidence);
   }
-  if (checks.verdict === 'unsettled' && now - opened > CHAIN_LIMIT_HOURS * HOUR_MS) {
+  if (checks.verdict === 'unsettled' && now - waitingSince(opened, commits) > CHAIN_LIMIT_HOURS * HOUR_MS) {
     return { ...verdict('escalate', 'chain-too-old', evidence), kind: 'no-convergence' };
   }
   if (checks.verdict === 'escalate') {
