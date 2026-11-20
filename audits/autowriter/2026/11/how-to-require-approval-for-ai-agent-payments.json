@@ -12,9 +12,9 @@
     "costUsd": 0.067564
   },
   "verdict": {
-    "state": "escalated",
-    "reason": "Autowriter pull request #167: the CI run was cancelled twice with no failed job to explain it",
-    "decidedAt": "2026-11-20T11:44:27.016Z"
+    "state": "merged",
+    "reason": null,
+    "decidedAt": "2026-11-20T14:55:52.503Z"
   },
   "escalations": [
     {
@@ -313,5 +313,11 @@
       "mainSha": null,
       "failedJobs": []
     }
-  ]
+  ],
+  "measurementDebt": {
+    "mergedCommit": "2bf67da15a42831b646877326b177018de9b95aa",
+    "fingerprint": "452b8ae5e940e47f94f59d0e8c89380396ed35380098bf6da9abe044734a2113",
+    "recordedAt": "2026-11-20T14:55:52.503Z",
+    "clear": "cd site && GATE_PHASE=<bucket> npm run gate:lh && GATE_PHASE=<bucket> npm run lh:record"
+  }
 }
