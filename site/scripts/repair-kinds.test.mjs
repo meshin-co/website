@@ -7,22 +7,22 @@ import test from 'node:test';
 import { MAY } from './repair-guard.mjs';
 import { allowancesOf, classifyRule, knownRule, listRows, REASONS, RULES } from './repair-kinds.mjs';
 
-const GATES = ['gate:content', 'gate:editorial', 'gate:human', 'gate:machine', 'gate:registers'];
+const GATES = ['gate:content', 'gate:editorial', 'gate:human', 'gate:machine', 'gate:orphans', 'gate:registers'];
 const SCRIPTS = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).scripts;
 const NOT_CLASSIFIED = { repairable: false, how: null, may: [], why: 'not classified' };
 
 const countBy = (how) => listRows().filter((row) => row.how === how).length;
 
-test('the table covers the five gates that upload findings, and each one is an npm script', () => {
+test('the table covers the six gates that upload findings, and each one is an npm script', () => {
   assert.deepEqual(Object.keys(RULES).sort(), GATES);
   for (const gate of GATES) assert.ok(SCRIPTS[gate], `package.json has no script ${gate}`);
 });
 
-test('the table holds 83 kinds: 36 rewrites, 2 restates and 45 refusals', () => {
-  assert.equal(listRows().length, 83);
+test('the table holds 85 kinds: 36 rewrites, 2 restates and 47 refusals', () => {
+  assert.equal(listRows().length, 85);
   assert.equal(countBy('rewrite'), 36);
   assert.equal(countBy('restate'), 2);
-  assert.equal(countBy(null), 45);
+  assert.equal(countBy(null), 47);
 });
 
 test('each gate holds the number of kinds its gate can emit', () => {
@@ -32,6 +32,7 @@ test('each gate holds the number of kinds its gate can emit', () => {
     'gate:editorial': 6,
     'gate:human': 17,
     'gate:machine': 24,
+    'gate:orphans': 2,
     'gate:registers': 2,
   });
 });
@@ -45,7 +46,7 @@ test('every allowance a row grants is one the removal guard knows', () => {
   for (const row of listRows()) for (const name of row.may) assert.ok(MAY.includes(name), `${row.rule} grants ${name}`);
 });
 
-test('seven kinds grant an allowance, and the other 77 grant none', () => {
+test('seven kinds grant an allowance, and the other 78 grant none', () => {
   const granting = listRows()
     .filter((row) => row.may.length > 0)
     .map((row) => `${row.gate} ${row.rule}: ${row.may.join(',')}`);
