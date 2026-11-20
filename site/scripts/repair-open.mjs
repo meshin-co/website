@@ -48,21 +48,19 @@ function readLedgerOf({ repoRoot, slug, claim }) {
   return readLedger(join(repoRoot, path));
 }
 
+function registeredPassage({ repoRoot, claim, route }) {
+  if (!claim.prompt) return null;
+  const passage = passageOf(readText(repoRoot, SEMANTIC_CORE), { promptNumber: claim.prompt.number, route });
+  if (passage === null) throw new RepairStop('failed', SEMANTIC_CORE + ' holds no passage for ' + route);
+  return passage;
+}
+
 function readEntry({ repoRoot, slug }) {
   const claim = readClaim(claimFileOf(repoRoot, slug));
-  if (!claim.prompt)
-    throw new RepairStop(
-      'failed',
-      slug +
-        ' has no buyer prompt, so ' +
-        SEMANTIC_CORE +
-        ' holds no passage for it and a repair has no passage to keep word for word; a person repairs it'
-    );
   const record = readRecord(join(repoRoot, recordPath('generation', slug, claim.claimedAt)));
   const ledger = readLedgerOf({ repoRoot, slug, claim });
   const route = entryRoute(claim);
-  const passage = passageOf(readText(repoRoot, SEMANTIC_CORE), { promptNumber: claim.prompt.number, route });
-  if (passage === null) throw new RepairStop('failed', SEMANTIC_CORE + ' holds no passage for ' + route);
+  const passage = registeredPassage({ repoRoot, claim, route });
   const entryText = readText(repoRoot, entryPath(claim));
   const before = draftOfEntry({ claim, entryText, claimTable: record.claimTable, passage });
   return { claim, record, ledger, route, before, runDate: publishDateOf(entryText) };

@@ -6,6 +6,7 @@ import { basename, dirname, join } from 'node:path';
 import { after, test } from 'node:test';
 
 import { writeClaim } from './autowriter-claim-store.mjs';
+import { validateClaim } from './autowriter-claims.mjs';
 import { newLedger, writeLedger } from './autowriter-ledger.mjs';
 import { resolveClaimTable } from './claim-sources.mjs';
 import { renderEntry } from './entry-files.mjs';
@@ -14,6 +15,7 @@ import { recordInput } from './fixtures/generation-input.mjs';
 import { apiAnswering, ledgerAt, serving } from './fixtures/github-fake.mjs';
 import { autowriterBranch, byBot, pullRequestRun, scenario } from './fixtures/pr-watch.mjs';
 import { PLACES, filedAt } from './fixtures/record-depths.mjs';
+import { promptlessClaim, recordedClaim } from './fixtures/recorded-claim.mjs';
 import { AFTER_VERDICT, repairFailed, resumeEntry, withResumes } from './fixtures/resume-world.mjs';
 import { claimFor, cleanDraft } from './fixtures/writer-drafts.mjs';
 import { makeRepo, removeRepo } from './fixtures/writer-repo.mjs';
@@ -216,30 +218,61 @@ test('a record and a ledger filed in another month than the month of the claim a
 });
 
 const PROMPTLESS = {
-  'weak-demand': { origin: 'weak-demand', weakness: ['no-buyer-prompt'] },
-  category: { origin: 'category', category: 'governance', demand: { impressions: 0, position: null } },
-  ordered: { origin: 'ordered' },
+  category: {},
+  'weak-demand': {
+    origin: 'weak-demand',
+    category: undefined,
+    weakness: ['no-buyer-prompt'],
+    demand: { impressions: 3, position: 12 },
+  },
+  keyword: { origin: 'keyword', category: undefined, demand: { impressions: 5, position: null } },
+  ordered: { origin: 'ordered', category: undefined },
 };
 
-for (const [origin, fields] of Object.entries(PROMPTLESS)) {
-  test(`${origin}: an entry with no buyer prompt is refused as failed with the reason, never a TypeError`, async () => {
-    const repoRoot = repository();
-    const rest = Object.fromEntries(Object.entries(claim).filter(([key]) => key !== 'prompt'));
-    const claimFile = join(repoRoot, FILED.month('claim', claim.slug));
-    writeFileSync(claimFile, JSON.stringify({ ...rest, ...fields }, null, 2) + '\n');
+test('the recorded claim of pull request 171 is a valid claim that carries no buyer prompt', () => {
+  const recorded = recordedClaim();
 
-    await assert.rejects(
-      open({ repoRoot }),
-      (error) =>
-        error instanceof RepairStop &&
-        error.outcome === 'failed' &&
-        error.message.includes(claim.slug) &&
-        error.message.includes('no buyer prompt') &&
-        error.message.includes('no passage') &&
-        error.message.includes('a person repairs it')
-    );
+  assert.equal(recorded.origin, 'category');
+  assert.equal(recorded.prompt, undefined);
+  assert.deepEqual(validateClaim(recorded), []);
+});
+
+for (const [origin, fields] of Object.entries(PROMPTLESS)) {
+  test(`${origin}: an entry with no buyer prompt opens, and holds no passage because no document quotes one`, async () => {
+    const specimen = promptlessClaim(claim, fields);
+    assert.deepEqual(validateClaim(specimen), []);
+    assert.equal(specimen.prompt, undefined);
+    const repoRoot = repository();
+    writeFileSync(join(repoRoot, FILED.month('claim', claim.slug)), JSON.stringify(specimen, null, 2) + '\n');
+
+    const situation = await open({ repoRoot });
+
+    assert.equal(situation.claim.origin, origin);
+    assert.equal(situation.route, ROUTE);
+    assert.equal(situation.before.passage, null);
+    assert.ok(sameEntry(situation.before, { ...draft, passage: null }));
   });
 }
+
+const withoutPassageOf = (core, route) =>
+  core
+    .split('\n')
+    .filter((line) => !(line.startsWith('Passage:') && line.includes(`\`${route}\``)))
+    .join('\n');
+
+test('an entry with a buyer prompt whose passage the semantic core no longer holds is still refused as failed', async () => {
+  const repoRoot = repository();
+  const corePath = join(repoRoot, 'docs/SEMANTIC-CORE.md');
+  writeFileSync(corePath, withoutPassageOf(readFileSync(corePath, 'utf8'), ROUTE));
+
+  await assert.rejects(
+    open({ repoRoot }),
+    (error) =>
+      error instanceof RepairStop &&
+      error.outcome === 'failed' &&
+      error.message === `docs/SEMANTIC-CORE.md holds no passage for ${ROUTE}`
+  );
+});
 
 const LEDGER_FILE = recordPath('ledger', claim.slug, claim.claimedAt);
 const failing = byBot(autowriterBranch(scenario('content-gate-failure'), claim.slug));
