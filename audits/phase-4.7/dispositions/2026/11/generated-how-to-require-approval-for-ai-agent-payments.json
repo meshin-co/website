@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/how-to-require-approval-for-ai-agent-payments.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-require-approval-for-ai-agent-payments.json on 2026-11-19. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-require-approval-for-ai-agent-payments.json.",
+    "digest": "cd72ee44dde4"
+  },
+  {
+    "target": "/blog/how-to-require-approval-for-ai-agent-payments",
+    "status": "rewritten",
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-sandbox-ai-agent-code-execution (generation record audits/autowriter/generations/2026/11/how-to-sandbox-ai-agent-code-execution.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "f22fd3195a41"
+  }
+]
