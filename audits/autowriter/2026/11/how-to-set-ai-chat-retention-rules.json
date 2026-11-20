@@ -348,6 +348,12 @@
       "by": "main-change",
       "mainSha": "d84805bc7ba18bc22bb17a8e1ceab775ab18abaa",
       "failedJobs": []
+    },
+    {
+      "at": "2026-11-20T10:55:04.037Z",
+      "by": "owner",
+      "mainSha": null,
+      "failedJobs": []
     }
   ]
 }
