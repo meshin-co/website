@@ -50,7 +50,11 @@ export const GITHUB = {
   readPullRequest,
 };
 
-const KIND_OF_RESUMABLE_REASON = { 'not-a-content-gate': 'unrepairable', 'approval-required': 'hard-stop' };
+const KIND_OF_RESUMABLE_REASON = {
+  'not-a-content-gate': 'unrepairable',
+  'approval-required': 'hard-stop',
+  'no-checks-catch-up-cap': 'hard-stop',
+};
 const WATCHER_JUDGEMENT = /^The watcher judged head \S+: escalate, ([a-z-]+)\.$/m;
 const FAILING_LINE = /^Failing: (.+)\.$/m;
 const GATE_SUFFIX = / \(gate:[a-z0-9:-]+\)$/;
