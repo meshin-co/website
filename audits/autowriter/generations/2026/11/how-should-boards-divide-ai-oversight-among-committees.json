@@ -1,0 +1,277 @@
+{
+  "schema": 1,
+  "slug": "how-should-boards-divide-ai-oversight-among-committees",
+  "runId": "43928163988-1",
+  "generatedAt": "2026-11-16T18:29:44.351Z",
+  "claim": {
+    "title": "How should boards divide AI oversight among committees?",
+    "query": "how should boards divide ai oversight among committees",
+    "origin": "category",
+    "category": "executive",
+    "catchUp": {
+      "slot": "15:00",
+      "lateMinutes": 205
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-16",
+      "windowStart": "2026-08-16",
+      "windowEnd": "2026-11-14",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/how-should-boards-divide-ai-oversight-among-committees",
+    "path": "site/src/data/post/how-should-boards-divide-ai-oversight-among-committees.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_01f12726c17c019b016afb4ae58e3087d2b3bf37ef40ac253d",
+  "published": {
+    "callIndex": 3
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0a139f6cbee4c223016afb4a8f7ff087d28d7589b5b5c5e0a8",
+      "requestDigest": "d50c8e4e07c6b24231087248bbc961bded64fce87160431e6f599f69bfc3e6f7",
+      "tokens": {
+        "input": 1146,
+        "output": 99
+      },
+      "costUsd": 0.001641,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_054d6e9ab6ac0574016afb4a92acd887d2bbb212e998a29298",
+      "requestDigest": "4b1abf538bc175dbceaccddbfda2b7273e95315233e5043b035067ad00291c54",
+      "tokens": {
+        "input": 1202,
+        "output": 106
+      },
+      "costUsd": 0.001732,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0a41c9bda1e0eb2d016afb4a99683c87d2ab584c3120e70182",
+      "requestDigest": "d1646bd014285d583e68305c444b33d06f41b2ae1aea947609ff1f20221d5ade",
+      "tokens": {
+        "input": 10550,
+        "output": 3897
+      },
+      "costUsd": 0.030035,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_01f12726c17c019b016afb4ae58e3087d2b3bf37ef40ac253d",
+      "requestDigest": "d68c5a8db17b30d46be4f71a3623d6b43b73dc32012fc90a1f2ae686152f71da",
+      "tokens": {
+        "input": 13577,
+        "output": 3201
+      },
+      "costUsd": 0.029582,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 26475,
+      "output": 7303
+    },
+    "costUsd": 0.06299
+  },
+  "ledger": "audits/autowriter/2026/11/how-should-boards-divide-ai-oversight-among-committees.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "64b54d3b76d3c533fcd0014bed189a01d4fa8e0fe63a4877b2874d71de0770fb",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "b50b90b218ec1b988c2e3090a0f64389d9ae888e388f790fb0fbb15d410f57cd"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "1e291e4336807e99144f2a63cfd94220707c1c99d9084f960e26799cbf12fde8"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "bfb02303381d779e9551eb07526273d9ebecba36e6d2abda5692ac878241e479"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "e83bfaf35bd2c9929d1610eb846f757bfc50bbee1df966e93605ad0ebec5ce53"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "739a4f3dd9d59363b29a1a540bfb7a41c2f8d9afa8ac786e83b05af4862149c5"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "bf1e20b583857ed17a8340a2b3bdeda7b4def7ac09ee40fe5bcd63443723c099"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "df07e5ca1fced82881ab08e3849da19ec0de824e4be87b2719f174f0f73f33c2"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "d04c975f12d33585143705db1a24929e6af2e1b6",
+    "fingerprint": "a9c049b5e3d27f3fcb0772797158e08b689f8de30066118a0d235293c343b6c9"
+  },
+  "claimTable": [
+    {
+      "sentence": "Boards should divide AI oversight by decision, with a lead committee for each issue and a clear path to the full board.",
+      "marker": "own-reading",
+      "source": null,
+      "span": null
+    }
+  ],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 116,
+      "median": 15,
+      "shareBelowThreshold": 0.138,
+      "shareJustBelow": 0.1207,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/how-should-boards-divide-ai-oversight-among-committees.json",
+    "audits/autowriter/claims/2026/11/how-should-boards-divide-ai-oversight-among-committees.json",
+    "audits/autowriter/generations/2026/11/how-should-boards-divide-ai-oversight-among-committees.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-ai-readiness-scorecard-five-drivers.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-board-memo-ai-strategy-one-page.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-build-vs-buy-ai-3-year-tco.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-fractional-caio-pricing.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-can-boards-verify-ai-cost-savings.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-should-boards-divide-ai-oversight-among-committees.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/how-should-boards-divide-ai-oversight-among-committees.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}
