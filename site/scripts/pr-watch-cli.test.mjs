@@ -3,7 +3,8 @@ import './fixtures/no-network.mjs';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { SECRET, parseArguments, runCli } from './pr-watch.mjs';
+import { parseArguments } from './pr-watch-arguments.mjs';
+import { SECRET, runCli } from './pr-watch.mjs';
 import { green, harness } from './fixtures/pr-watch-harness.mjs';
 
 test('the arguments are a pull request number and an optional observation', () => {

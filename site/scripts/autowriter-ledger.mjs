@@ -243,7 +243,23 @@ export function ledgerWithAttempt(ledger, attempt) {
   return { ...ledger, attempts, spend: spendOf([...generation, ...attempts]) };
 }
 
-export const verdictInForce = ({ verdict, resumes = [] }) =>
-  verdict.decidedAt === null || !resumes.some(({ at }) => Date.parse(at) > Date.parse(verdict.decidedAt));
+export function verdictInForce({ verdict, resumes = [], remeasures = [] }) {
+  if (verdict.decidedAt === null) return true;
+  const decidedAt = Date.parse(verdict.decidedAt);
+  const lifts = [...resumes, ...remeasures.filter(({ result }) => result === 'clear')];
+  return !lifts.some(({ at }) => Date.parse(at) > decidedAt);
+}
 
 export const ledgerWithResume = (ledger, resume) => ({ ...ledger, resumes: [...(ledger.resumes ?? []), resume] });
+
+export const ledgerWithRemeasure = (ledger, entry) => ({
+  ...ledger,
+  remeasures: [...(ledger.remeasures ?? []), entry],
+});
+
+export function ledgerWithRemeasureResult(ledger, result) {
+  const remeasures = ledger.remeasures ?? [];
+  const waiting = remeasures.findLastIndex((entry) => entry.result === 'requested');
+  if (waiting === -1) throw new Error(`${ledger.slug} has no re-measure waiting for a result`);
+  return { ...ledger, remeasures: remeasures.map((entry, at) => (at === waiting ? { ...entry, result } : entry)) };
+}

@@ -1,0 +1,108 @@
+name: Re-measure a stale verdict
+
+run-name: 'Re-measure ${{ inputs.gate }} on pull request #${{ inputs.pr }}'
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: Number of the escalated autowriter pull request whose verdict may be stale.
+        required: true
+      head:
+        description: Head commit of the pull request branch, which this run catches up on main.
+        required: true
+      gate:
+        description: The one gate the verdict named, run again on the caught-up branch.
+        required: true
+
+concurrency:
+  group: remeasure-pr-${{ inputs.pr }}
+  cancel-in-progress: false
+
+env:
+  AUTOWRITER_UNATTENDED: '1'
+
+defaults:
+  run:
+    working-directory: site
+
+jobs:
+  measure:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    outputs:
+      result: ${{ steps.gate.outputs.result }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.head }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: site/.nvmrc
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - name: install the site dependencies, with no push credential on disk
+        run: npm ci
+
+      - name: catch the branch up on main on a local merge commit, which this job never pushes and which holds no secret
+        id: catchup
+        env:
+          HEAD_SHA: ${{ inputs.head }}
+        run: |
+          status=0
+          npm run --silent catch-up:entry -- --head "$HEAD_SHA" > "$RUNNER_TEMP/catch-up-output.txt" || status=$?
+          cat "$RUNNER_TEMP/catch-up-output.txt"
+          echo "catch-up:entry exited with status $status"
+          outcome="$(tail -n 1 "$RUNNER_TEMP/catch-up-output.txt" | jq -r '.outcome | strings' 2>/dev/null || true)"
+          case "$outcome" in repaired|stale) ;; *) echo "the branch could not be caught up: ${outcome:-no outcome}"; exit 1 ;; esac
+          git diff --quiet "$HEAD_SHA" HEAD -- package.json package-lock.json || npm ci
+
+      - name: build the caught-up tree, because the gates read the built site
+        run: npm run build
+
+      - name: run the one gate the verdict named and nothing else, and read its exit status
+        id: gate
+        env:
+          GATE: ${{ inputs.gate }}
+        run: |
+          case "$GATE" in gate:*) ;; *) echo "$GATE is not a gate"; exit 1 ;; esac
+          jq -e --arg gate "$GATE" '.scripts[$gate] | strings' package.json > /dev/null
+          status=0
+          npm run "$GATE" || status=$?
+          echo "$GATE exited with status $status"
+          if [ "$status" -eq 0 ]; then echo "result=clear" >> "$GITHUB_OUTPUT"; else echo "result=reproduced" >> "$GITHUB_OUTPUT"; fi
+
+  record:
+    needs: measure
+    if: needs.measure.outputs.result != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: site/.nvmrc
+
+      - name: record the result and start the watcher when it is clear, with no install because this job holds a token that can write to a branch
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          AUTOWRITER_PAT: ${{ secrets.AUTOWRITER_PAT }}
+          PULL_REQUEST: ${{ inputs.pr }}
+          RESULT: ${{ needs.measure.outputs.result }}
+        run: npm run --silent remeasure:record -- --pr "$PULL_REQUEST" --result "$RESULT"

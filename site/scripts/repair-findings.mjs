@@ -36,7 +36,9 @@ async function findArtifact(api, { id, attempt }) {
   const usable = named.find((artifact) => !artifact.expired);
   if (usable) return usable;
   const why = named.length > 0 ? 'it has expired' : 'the run has none';
-  throw new RepairStop('unrepairable', `run ${id} has no usable artifact ${name}: ${why}`);
+  throw new RepairStop('unrepairable', `run ${id} has no usable artifact ${name}: ${why}`, {
+    why: { stop: 'no-artifact' },
+  });
 }
 
 async function download(api, artifact) {
@@ -75,7 +77,9 @@ export async function readFindings({ api, run }) {
   }
   const found = [...documents.values()].filter(({ findings }) => findings.length > 0);
   if (found.length === 0)
-    throw new RepairStop('unrepairable', `the artifact ${artifact.name} holds no findings to repair`);
+    throw new RepairStop('unrepairable', `the artifact ${artifact.name} holds no findings to repair`, {
+      why: { stop: 'no-findings' },
+    });
   return found.sort((left, right) => (left.gate < right.gate ? -1 : 1));
 }
 
