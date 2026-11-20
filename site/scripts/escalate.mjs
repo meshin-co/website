@@ -106,6 +106,7 @@ export async function escalate({
   kind,
   title,
   detail,
+  why = {},
   pullRequest = null,
   env = process.env,
   fetch = globalThis.fetch,
@@ -120,6 +121,7 @@ export async function escalate({
     kind,
     title,
     detail,
+    ...why,
     raisedAt: now().toISOString(),
     receipts: [],
   };

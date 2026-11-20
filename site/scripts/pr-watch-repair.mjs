@@ -14,16 +14,23 @@ export const REPAIR_STATEMENTS = {
     'catching the branch up on main did not reach a fixed point, so regenerating the derived files after it still changed them or dropped a row',
 };
 
-export function repairFinding({ result, number }, links) {
+const stopLine = ({ stop, gate, rule, subject }) =>
+  [`Stop: ${stop}`, gate && `at ${gate}`, rule && `(${rule}${subject ? ` on ${subject}` : ''})`]
+    .filter(Boolean)
+    .join(' ');
+
+export function repairFinding({ result, number, report = {} }, links) {
   const statement = REPAIR_STATEMENTS[result.reason];
   return {
     kind: result.kind,
     title: `Autowriter pull request #${number}: ${statement}`,
     detail: [
       `The repair of pull request #${number} ended as ${result.reason}: ${statement}.`,
+      ...(report.stop === undefined ? [] : [stopLine(report)]),
       ...(links.run === null ? [] : [`Repair run: ${links.run}`]),
       `Pull request: ${links.pullRequest}`,
     ].join('\n'),
+    ...report,
   };
 }
 

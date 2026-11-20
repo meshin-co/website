@@ -1,6 +1,6 @@
 # Spend report: what writing each entry cost
 
-Generated-from: 25f828d61a230bb0793e6260c04f747831640db5
+Generated-from: b2f36a9c2130be42527c3df79b964eaef74e407c
 Generated-at: 2026-11-20T16:23:43.154Z
 
 ## This month
