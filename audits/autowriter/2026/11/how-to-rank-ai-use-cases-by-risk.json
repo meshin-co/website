@@ -6,23 +6,92 @@
   "attempts": [],
   "spend": {
     "tokens": {
-      "input": 7850,
-      "output": 732
+      "input": 31878,
+      "output": 6992
     },
-    "costUsd": 0.01151
+    "costUsd": 0.066838
   },
   "verdict": {
-    "state": "open",
-    "reason": null,
-    "decidedAt": null
+    "state": "escalated",
+    "reason": "Autowriter pull request #171: the gate's findings cannot be repaired by rewriting the entry, or the rewrite could not be made to pass the repair's own checks",
+    "decidedAt": "2026-11-20T08:09:06.280Z"
   },
-  "escalations": [],
+  "escalations": [
+    {
+      "id": "esc-1",
+      "kind": "hard-stop",
+      "title": "Autowriter pull request #171: the CI run was cancelled twice with no failed job to explain it",
+      "detail": "The watcher judged head c20a4087a1c5fa98cb93840c6b76f18fdbc3a1a1: escalate, inconclusive-cancel.\nJobs: visual-and-axe (3).\nPull request: https://github.com/meshin-co/website/pull/171",
+      "raisedAt": "2026-11-19T19:15:29.713Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-19T19:15:29.714Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 174,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "esc-2",
+      "kind": "hard-stop",
+      "title": "Autowriter pull request #171: the repair job failed before it could finish",
+      "detail": "The repair of pull request #171 ended as failed: the repair job failed before it could finish.\nRepair run: https://github.com/meshin-co/website/actions/runs/44639114726\nPull request: https://github.com/meshin-co/website/pull/171",
+      "raisedAt": "2026-11-19T23:41:44.941Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-19T23:41:44.941Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 182,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "esc-3",
+      "kind": "hard-stop",
+      "title": "Autowriter pull request #171: the head commit has no check runs, and the one catch-up that could have started CI was already pushed",
+      "detail": "The watcher judged head 4c71de580a334d12a5851dcbca3185a68e6ecbb9: escalate, no-checks-catch-up-cap.\nPull request: https://github.com/meshin-co/website/pull/171",
+      "raisedAt": "2026-11-20T02:00:54.462Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-20T02:00:54.462Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 184,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "esc-4",
+      "kind": "unrepairable",
+      "title": "Autowriter pull request #171: the gate's findings cannot be repaired by rewriting the entry, or the rewrite could not be made to pass the repair's own checks",
+      "detail": "The repair of pull request #171 ended as unrepairable: the gate's findings cannot be repaired by rewriting the entry, or the rewrite could not be made to pass the repair's own checks.\nRepair run: https://github.com/meshin-co/website/actions/runs/44699623819\nPull request: https://github.com/meshin-co/website/pull/171",
+      "raisedAt": "2026-11-20T08:09:05.857Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-20T08:09:05.857Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 190,
+          "error": null
+        }
+      ]
+    }
+  ],
   "generation": {
     "tokens": {
-      "input": 7850,
-      "output": 732
+      "input": 31878,
+      "output": 6992
     },
-    "costUsd": 0.01151
+    "costUsd": 0.066838
   },
   "refusals": [
     {
@@ -246,6 +315,26 @@
       "reason": "same-subject",
       "against": "/blog/how-to-build-an-ai-system-register-in-a-week",
       "detail": "the topic \"How to retire an AI system safely\" repeats /blog/how-to-build-an-ai-system-register-in-a-week (\"How to build an AI system register in a week\"): its subject shares ai, system, 2 of the 4 stems of the smaller one, a containment of 0.50 against the threshold of 0.5"
+    }
+  ],
+  "resumes": [
+    {
+      "at": "2026-11-19T23:17:27.767Z",
+      "by": "owner",
+      "mainSha": null,
+      "failedJobs": []
+    },
+    {
+      "at": "2026-11-20T01:57:19.740Z",
+      "by": "main-change",
+      "mainSha": "b0b50f5e340b7aebd4c7cd79c52bfe87e1ced9f4",
+      "failedJobs": []
+    },
+    {
+      "at": "2026-11-20T07:44:23.518Z",
+      "by": "main-change",
+      "mainSha": "d84805bc7ba18bc22bb17a8e1ceab775ab18abaa",
+      "failedJobs": []
     }
   ]
 }
