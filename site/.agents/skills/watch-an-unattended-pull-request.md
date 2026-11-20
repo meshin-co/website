@@ -30,9 +30,9 @@ dependency, so the job needs no `npm ci` while it holds a token that can merge.
   nothing, so the runner escalates it as `unrepairable`.
 - **escalate:** `hard-stop` (zero check runs on a branch `main` has not moved past,
   a head with checks but no `pull_request` run, a skipped, missing or neutral required job, an absent or red
-  aggregate, a run that needs approval or has no job, a merge GitHub refuses, a second cancellation),
+  aggregate, a run that needs approval or has no job, a merge GitHub refuses, a second cancellation no job explains),
   `unrepairable` (a failing job that is not a content gate, or a failure in setup) or `no-convergence`
-  (3 attempts spent, or a head unsettled 36 hours after the later of its commit and the pull request's opening:
+  (3 attempts spent, a second rerun of one run, or a head unsettled 36 hours after the later of its commit and the pull request's opening:
   a push restarts that clock). Each opens one issue; `no-convergence` also posts to Slack, the rest wait for the digest.
 - **blocked-by-human:** closed, draft, label `autowriter-hold`, a branch that is not `autowriter/<slug>` from
   this repository, or any commit not made by the bot. The runner writes a summary and nothing else; a pull
@@ -45,8 +45,8 @@ The order is in `scripts/pr-classify.mjs`, each rule tested in `scripts/pr-class
 
 A cancelled job with no failure may be a cancelled run, so it is read twice. The outcome carries an
 `observe` token, `cancelled:<head>:<run id>:<attempt>`, and the runner passes it to its successor as the
-input `observed`; a look that finds the same token again is a hard stop. Zero check runs are not read
-twice: with `main` ahead of the head it is a catch-up, otherwise a hard stop. The classifier keeps no state of its own.
+input `observed`; a look that finds the same token again is a `rerun` when the job died on its own and a hard stop
+when it did not (`rerun-a-job-that-died-on-its-own.md`). Zero check runs are not read twice: with `main` ahead of the head it is a catch-up, otherwise a hard stop. The classifier keeps no state of its own.
 Only the `pull_request` run of `ci.yml` counts: a `push` run beside it has the same job names and
 different results. `cancel-on-failure` makes one real failure show as one `failure` and several
 `cancelled` jobs, so cancelled siblings are ignored once a job failed. GitHub counts a skipped required

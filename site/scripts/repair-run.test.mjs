@@ -111,7 +111,15 @@ test('a finding the table refuses stops the loop before any model call, naming t
   const kinds = {
     judgeFindings: () => ({
       rewrite: [],
-      refused: [{ gate: 'gate:content', rule: 'inbound-links', subjects: [ENTRY], reason: 'outside-entry' }],
+      refused: [
+        {
+          gate: 'gate:content',
+          rule: 'inbound-links',
+          subjects: [ENTRY],
+          reason: 'outside-entry',
+          why: 'it names a page the entry does not own',
+        },
+      ],
     }),
     allowancesOf: () => [],
   };

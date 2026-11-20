@@ -9,6 +9,6 @@
     "target": "/blog/ai-readiness-scorecard-five-drivers",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-should-boards-divide-ai-oversight-among-committees (generation record audits/autowriter/generations/2026/11/how-should-boards-divide-ai-oversight-among-committees.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "e07ca82b4f78"
+    "digest": "9c5bd56a4238"
   }
 ]
