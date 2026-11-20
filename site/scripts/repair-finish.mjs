@@ -23,7 +23,10 @@ async function assembled({ assemble, input, calls }) {
     return await assemble(input);
   } catch (error) {
     if (error instanceof WriterError && error.kind === 'build')
-      throw new RepairStop('unrepairable', 'the rewrite broke the build: ' + firstLine(error.message), { calls });
+      throw new RepairStop('unrepairable', 'the rewrite broke the build: ' + firstLine(error.message), {
+        calls,
+        why: { stop: 'build-broke' },
+      });
     throw error;
   }
 }
@@ -148,7 +151,7 @@ export async function finishRepair({
     throw new RepairStop(
       'unrepairable',
       'the repair would touch files it may not: ' + outside.map(({ path, problem }) => path + ' ' + problem).join('; '),
-      { calls }
+      { calls, why: { stop: 'scope' } }
     );
   const message = messageOf({ slug, number, failures, gates: assembly.gates, generationPath });
   assertNoSecrets({ files, message }, secrets, 'the repair output');

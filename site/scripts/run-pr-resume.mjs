@@ -1,6 +1,7 @@
 import { variable } from './escalate-channels.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
-import { GITHUB, createResumeSweep, shortSha } from './pr-resume.mjs';
+import { shortSha } from './pr-resume-issues.mjs';
+import { GITHUB, createResumeSweep } from './pr-resume.mjs';
 import { SECRET } from './pr-watch.mjs';
 
 const USAGE = 'Usage: node scripts/run-pr-resume.mjs [--pr <number>]';
@@ -27,6 +28,9 @@ const LINES = {
     `#${pullRequest} resumed (${by}${mainSha === null ? '' : `, main ${shortSha(mainSha)}`})` +
     (problems.length === 0 ? '' : `, but ${problems.join('; ')}`),
   started: ({ pullRequest }) => `#${pullRequest} watcher started`,
+  remeasuring: ({ pullRequest, gate, mainSha, problems }) =>
+    `#${pullRequest} re-measuring ${gate} on main ${shortSha(mainSha)}` +
+    (problems.length === 0 ? '' : `, but ${problems.join('; ')}`),
   left: ({ pullRequest, reason }) => `#${pullRequest} left: ${reason}`,
   'issue-closed': ({ issue, merged }) => `#${issue} issue closed (pull request ${merged ? 'merged' : 'closed'})`,
   'issue-left': ({ issue, pullRequest }) => `#${issue} issue left (pull request #${pullRequest} was not found)`,
@@ -45,13 +49,15 @@ export function parseArguments(argv) {
 
 export const describeItem = (item) => LINES[item.kind](item);
 
-const failed = (item) => item.kind === 'failed' || (item.kind === 'resumed' && item.problems.length > 0);
+const withProblems = ['resumed', 'remeasuring'];
+const failed = (item) => item.kind === 'failed' || (withProblems.includes(item.kind) && item.problems.length > 0);
 
 export function summarise(items) {
   const counted = (kind) => items.filter((item) => item.kind === kind).length;
   const counts = [
     ['resumed', counted('resumed')],
     ['started', counted('started')],
+    ['re-measuring', counted('remeasuring')],
     ['left', counted('left')],
     ['issues closed', counted('issue-closed')],
     ['failed', items.filter(failed).length],
@@ -59,7 +65,7 @@ export function summarise(items) {
   return `pr-resume: ${counts.map(([label, count]) => `${count} ${label}`).join(', ')}`;
 }
 
-function connect({ env, fetch, io }) {
+export function connect({ env, fetch, io }) {
   const missing = REQUIRED_VARIABLES.filter(([name]) => variable(env, name) === '').map(([, hint]) => hint);
   if (missing.length > 0) throw new Error(missing.join('; '));
   const repo = variable(env, 'GITHUB_REPOSITORY');

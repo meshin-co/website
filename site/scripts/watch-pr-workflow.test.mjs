@@ -108,6 +108,7 @@ test('the repair job hands the follow-up the outcome of the step that ran the re
     outcome: expression(
       'steps.rewrite.outputs.outcome || steps.catchup.outputs.outcome || steps.refresh.outputs.outcome'
     ),
+    report: expression('steps.rewrite.outputs.report'),
   });
 });
 
@@ -273,7 +274,8 @@ test('the follow-up step gets the read token, the bot token and the webhook, and
   assert.equal(env.PULL_REQUEST, expression('inputs.pr'));
   assert.equal(env.REPAIR_RESULT, expression('needs.repair.result'));
   assert.equal(env.REPAIR_OUTCOME, expression('needs.repair.outputs.outcome'));
-  assert.match(run, /npm run watch:pr -- --pr "\$PULL_REQUEST" --after-repair "\$OUTCOME"/);
+  assert.equal(env.REPAIR_REPORT, expression('needs.repair.outputs.report'));
+  assert.match(run, /npm run watch:pr -- --pr "\$PULL_REQUEST" --after-repair "\$LINE"/);
 });
 
 test('no script of any job interpolates an expression, because an expression in a script is a command injection', () => {

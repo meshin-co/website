@@ -200,6 +200,6 @@ test('a chain that was started prints as started, counts as started, and a faile
   assert.equal(describeItem(startedItem(138)), '#138 watcher started');
   assert.equal(
     summarise([startedItem(138), { kind: 'failed', subject: '#141', pullRequest: 141, message: 'x' }]),
-    'pr-resume: 0 resumed, 1 started, 0 left, 0 issues closed, 1 failed'
+    'pr-resume: 0 resumed, 1 started, 0 re-measuring, 0 left, 0 issues closed, 1 failed'
   );
 });
