@@ -13,8 +13,8 @@
   },
   "verdict": {
     "state": "escalated",
-    "reason": "Autowriter pull request #167: the repair job failed before it could finish",
-    "decidedAt": "2026-11-19T20:02:30.092Z"
+    "reason": "Autowriter pull request #167: the CI run was cancelled twice with no failed job to explain it",
+    "decidedAt": "2026-11-20T11:44:27.016Z"
   },
   "escalations": [
     {
@@ -47,6 +47,23 @@
           "delivered": true,
           "status": 201,
           "issue": 175,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "esc-3",
+      "kind": "hard-stop",
+      "title": "Autowriter pull request #167: the CI run was cancelled twice with no failed job to explain it",
+      "detail": "The watcher judged head 369cb6af660e92925fcd529d2fc2e24cb713b205: escalate, inconclusive-cancel.\nJobs: visual-and-axe (3).\nPull request: https://github.com/meshin-co/website/pull/167",
+      "raisedAt": "2026-11-20T11:44:26.310Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-20T11:44:26.310Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 195,
           "error": null
         }
       ]
