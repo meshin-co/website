@@ -87,6 +87,29 @@ const REASONS = [
     'already-resumed',
   ],
   [
+    'a stale verdict whose one re-measure is already spent',
+    {
+      ledger: {
+        ...withLastEscalation(realLedger(), {
+          stop: 'no-artifact',
+          gate: 'gate:orphans',
+          measuredMain: 'd'.repeat(40),
+        }),
+        remeasures: [
+          {
+            at: AFTER_VERDICT,
+            gate: 'gate:orphans',
+            measuredMain: 'd'.repeat(40),
+            mainSha: MAIN_SHA,
+            result: 'reproduced',
+          },
+        ],
+      },
+      mainTip: MAIN_SHA,
+    },
+    'remeasure-spent',
+  ],
+  [
     'a spend ceiling escalation',
     { ledger: withLastEscalation(realLedger(), { kind: 'spend-ceiling' }), mainChanges: [codeCommitAfter()] },
     'not-resumable-kind',
@@ -205,12 +228,13 @@ for (const [name, input, reason] of REASONS) {
   });
 }
 
-test('every reason a decision can give is one of the seven the design names, and each of the seven is given somewhere above', () => {
+test('every reason a decision can give is one of the eight the design names, and each of the eight is given somewhere above', () => {
   assert.deepEqual(RESUME_REASONS, [
     'not-escalated',
     'not-resumable-kind',
     'cap-reached',
     'resume-spent',
+    'remeasure-spent',
     'no-main-change-since-decision',
     'human-touched',
     'already-resumed',

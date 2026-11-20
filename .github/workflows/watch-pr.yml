@@ -75,6 +75,7 @@ jobs:
       actions: read
     outputs:
       outcome: ${{ steps.rewrite.outputs.outcome || steps.catchup.outputs.outcome || steps.refresh.outputs.outcome }}
+      report: ${{ steps.rewrite.outputs.report }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -131,6 +132,8 @@ jobs:
           [ "${#commit}" -eq 40 ] || commit=
           echo "outcome=$outcome" >> "$GITHUB_OUTPUT"
           echo "commit=$commit" >> "$GITHUB_OUTPUT"
+          report="$(printf '%s' "$last" | jq -c 'select(type == "object")' 2>/dev/null || true)"
+          echo "report=$report" >> "$GITHUB_OUTPUT"
 
       - name: catch the branch up on main on a local merge commit, which this step never pushes and which holds no secret
         id: catchup
@@ -187,9 +190,12 @@ jobs:
           PULL_REQUEST: ${{ inputs.pr }}
           REPAIR_RESULT: ${{ needs.repair.result }}
           REPAIR_OUTCOME: ${{ needs.repair.outputs.outcome }}
+          REPAIR_REPORT: ${{ needs.repair.outputs.report }}
         run: |
           OUTCOME="$REPAIR_OUTCOME"
           if [ -z "$OUTCOME" ] || { [ "$OUTCOME" = repaired ] && [ "$REPAIR_RESULT" != success ]; }; then
             OUTCOME=failed
+            REPAIR_REPORT=
           fi
-          npm run watch:pr -- --pr "$PULL_REQUEST" --after-repair "$OUTCOME"
+          LINE="$(jq -nc --arg outcome "$OUTCOME" --arg report "$REPAIR_REPORT" '(($report | try fromjson catch {}) | if type == "object" then . else {} end) + {outcome: $outcome}')"
+          npm run watch:pr -- --pr "$PULL_REQUEST" --after-repair "$LINE"

@@ -1,0 +1,339 @@
+{
+  "source": {
+    "note": "PR 145 at its head 51d11af7: the ledger it held after the repair of run 44672959432 stopped as unrepairable, with the one line that repair printed and the three lines the gate printed in the CI run it judged, 44671747275. The gate wrote no findings file, so the repair found no artifact; ci.yml uploaded nothing and the ledger names only the outcome.",
+    "capturedAt": "2026-11-20",
+    "commands": [
+      "git show refs/pull/145/head:audits/autowriter/2026/11/how-to-sandbox-ai-agent-code-execution.json",
+      "gh run view 44672959432 --repo meshin-co/website --log | grep '\"outcome\":\"unrepairable\"'",
+      "gh api --allow-escape-sequences repos/meshin-co/website/actions/jobs/136076035373/logs | grep -A2 '^orphans: '"
+    ]
+  },
+  "ledger": {
+    "schema": 1,
+    "slug": "how-to-sandbox-ai-agent-code-execution",
+    "runId": "43405333127-1",
+    "pullRequest": null,
+    "attempts": [],
+    "spend": {
+      "tokens": {
+        "input": 25624,
+        "output": 6404
+      },
+      "costUsd": 0.057644
+    },
+    "verdict": {
+      "state": "escalated",
+      "reason": "Autowriter pull request #145: the gate's findings cannot be repaired by rewriting the entry, or the rewrite could not be made to pass the repair's own checks",
+      "decidedAt": "2026-11-20T04:18:33.079Z"
+    },
+    "escalations": [
+      {
+        "id": "esc-1",
+        "kind": "hard-stop",
+        "title": "Autowriter pull request #145: the repair job failed before it could finish",
+        "detail": "The repair of pull request #145 ended as failed: the repair job failed before it could finish.\nRepair run: https://github.com/meshin-co/website/actions/runs/44588160321\nPull request: https://github.com/meshin-co/website/pull/145",
+        "raisedAt": "2026-11-19T18:34:06.138Z",
+        "receipts": [
+          {
+            "channel": "issue",
+            "attemptedAt": "2026-11-19T18:34:06.139Z",
+            "delivered": true,
+            "status": 201,
+            "issue": 170,
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "esc-2",
+        "kind": "hard-stop",
+        "title": "Autowriter pull request #145: the head commit has no check runs, and the one catch-up that could have started CI was already pushed",
+        "detail": "The watcher judged head 85788b535485e780bddd4d87fcdbac0f5a9ac730: escalate, no-checks-catch-up-cap.\nPull request: https://github.com/meshin-co/website/pull/145",
+        "raisedAt": "2026-11-19T19:11:55.749Z",
+        "receipts": [
+          {
+            "channel": "issue",
+            "attemptedAt": "2026-11-19T19:11:55.749Z",
+            "delivered": true,
+            "status": 201,
+            "issue": 173,
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "esc-3",
+        "kind": "hard-stop",
+        "title": "Autowriter pull request #145: the head commit has no check runs, and the one catch-up that could have started CI was already pushed",
+        "detail": "The watcher judged head 82d931ede0c1e3ca2cc10407ffec535d072bcdb3: escalate, no-checks-catch-up-cap.\nPull request: https://github.com/meshin-co/website/pull/145",
+        "raisedAt": "2026-11-20T02:01:22.502Z",
+        "receipts": [
+          {
+            "channel": "issue",
+            "attemptedAt": "2026-11-20T02:01:22.502Z",
+            "delivered": true,
+            "status": 201,
+            "issue": 185,
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "esc-4",
+        "kind": "unrepairable",
+        "title": "Autowriter pull request #145: the gate's findings cannot be repaired by rewriting the entry, or the rewrite could not be made to pass the repair's own checks",
+        "detail": "The repair of pull request #145 ended as unrepairable: the gate's findings cannot be repaired by rewriting the entry, or the rewrite could not be made to pass the repair's own checks.\nRepair run: https://github.com/meshin-co/website/actions/runs/44672959432\nPull request: https://github.com/meshin-co/website/pull/145",
+        "raisedAt": "2026-11-20T04:18:32.628Z",
+        "receipts": [
+          {
+            "channel": "issue",
+            "attemptedAt": "2026-11-20T04:18:32.628Z",
+            "delivered": true,
+            "status": 201,
+            "issue": 188,
+            "error": null
+          }
+        ]
+      }
+    ],
+    "generation": {
+      "tokens": {
+        "input": 25624,
+        "output": 6404
+      },
+      "costUsd": 0.057644
+    },
+    "refusals": [
+      {
+        "title": "Fractional CAIO vs full-time CAIO cost",
+        "reason": "slug-held",
+        "against": "audits/autowriter/2026/11/fractional-caio-vs-full-time-caio-cost.json",
+        "detail": "slug \"fractional-caio-vs-full-time-caio-cost\" already has the ledger audits/autowriter/2026/11/fractional-caio-vs-full-time-caio-cost.json, so an earlier run owns it and the topic cannot be tried again yet; no procedure frees a slug safely, and removing the ledger is not one, because it records spend that the monthly spend ceiling counts"
+      },
+      {
+        "title": "AI readiness assessment template for SMB",
+        "reason": "family-served",
+        "against": "/blog/ai-readiness-assessment-template-for-smb",
+        "detail": "the prompt already lists /blog/ai-readiness-assessment-template-for-smb among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "AI governance consultant ISO 42001 small company",
+        "reason": "register-owner",
+        "against": "/glossary/ai-governance",
+        "detail": "the query \"ai governance consultant iso 42001 small company\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+      },
+      {
+        "title": "Named person responsible for AI risk in vendor procurement",
+        "reason": "family-served",
+        "against": "/blog/named-person-responsible-for-ai-risk-in-vendor-procurement",
+        "detail": "the prompt already lists /blog/named-person-responsible-for-ai-risk-in-vendor-procurement among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "AI acceptable use policy template",
+        "reason": "family-served",
+        "against": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
+        "detail": "the prompt already lists /blog/ai-acceptable-use-policy-for-a-50-person-company among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "Why do AI pilots fail to reach production?",
+        "reason": "family-served",
+        "against": "/blog/why-your-ai-pilot-never-reached-production",
+        "detail": "the prompt already lists /blog/why-your-ai-pilot-never-reached-production among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "LLM gateway for governance and audit",
+        "reason": "register-owner",
+        "against": "/glossary/llm-gateway",
+        "detail": "the query \"llm gateway for governance and audit\" names the concept \"LLM gateway\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/llm-gateway"
+      },
+      {
+        "title": "How to put evals for AI agents into CI",
+        "reason": "register-owner",
+        "against": "/glossary/evals",
+        "detail": "the query \"how to put evals for ai agents into ci\" names the concept \"Evals\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/evals"
+      },
+      {
+        "title": "AI vendor assessment questionnaire template",
+        "reason": "family-served",
+        "against": "/blog/ai-vendor-assessment-questionnaire-template",
+        "detail": "the prompt already lists /blog/ai-vendor-assessment-questionnaire-template among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "Build vs buy AI 3-year TCO",
+        "reason": "family-served",
+        "against": "/blog/build-vs-buy-ai-3-year-tco",
+        "detail": "the prompt already lists /blog/build-vs-buy-ai-3-year-tco among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "AI operating model for mid-size company",
+        "reason": "register-owner",
+        "against": "/glossary/ai-operating-model",
+        "detail": "the query \"ai operating model for mid-size company\" names the concept \"AI operating model\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-operating-model"
+      },
+      {
+        "title": "How to hand over AI leadership to internal team",
+        "reason": "family-served",
+        "against": "/blog/handing-over-ai-leadership-to-an-internal-owner",
+        "detail": "the prompt already lists /blog/handing-over-ai-leadership-to-an-internal-owner among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "Agentic automation consultant for B2B",
+        "reason": "title-collision",
+        "against": "Agentic automation consultant for B2B",
+        "detail": "title \"Agentic automation consultant for B2B\" is also claimed by audits/autowriter/claims/2026/11/agentic-automation-consultant-for-b2b.json"
+      },
+      {
+        "title": "MCP security best practices",
+        "reason": "register-owner",
+        "against": "/glossary/mcp",
+        "detail": "the query \"mcp security best practices\" names the concept \"Model Context Protocol\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/mcp"
+      },
+      {
+        "title": "Multi-agent reference architecture production",
+        "reason": "family-served",
+        "against": "/blog/multi-agent-reference-architecture-in-production",
+        "detail": "the prompt already lists /blog/multi-agent-reference-architecture-in-production among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "Adoption telemetry for AI tools",
+        "reason": "family-served",
+        "against": "/blog/adoption-telemetry-measuring-if-ai-is-actually-used",
+        "detail": "the prompt already lists /blog/adoption-telemetry-measuring-if-ai-is-actually-used among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "AI incident response plan template",
+        "reason": "title-collision",
+        "against": "AI incident response plan template",
+        "detail": "title \"AI incident response plan template\" is also claimed by audits/autowriter/claims/2026/11/ai-incident-response-plan-template.json"
+      },
+      {
+        "title": "Data classification for LLM usage",
+        "reason": "register-owner",
+        "against": "/glossary/data-classification",
+        "detail": "the query \"data classification for llm usage\" names the concept \"Data classification\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/data-classification"
+      },
+      {
+        "title": "ISO 42001 gap assessment",
+        "reason": "title-collision",
+        "against": "ISO 42001 gap assessment",
+        "detail": "title \"ISO 42001 gap assessment\" is also claimed by audits/autowriter/claims/2026/11/iso-42001-gap-assessment.json"
+      },
+      {
+        "title": "NIST AI RMF for small companies",
+        "reason": "register-owner",
+        "against": "/glossary/nist-ai-rmf",
+        "detail": "the query \"nist ai rmf for small companies\" names the concept \"NIST AI RMF\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/nist-ai-rmf"
+      },
+      {
+        "title": "Fractional CAIO pricing",
+        "reason": "family-served",
+        "against": "/blog/fractional-caio-pricing",
+        "detail": "the prompt already lists /blog/fractional-caio-pricing among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "What does a chief AI officer do in a 50 person company?",
+        "reason": "title-collision",
+        "against": "What does a chief AI officer do in a 50 person company?",
+        "detail": "title \"What does a chief AI officer do in a 50 person company?\" is also claimed by audits/autowriter/claims/2026/11/what-does-a-chief-ai-officer-do-in-a-50-person-company.json"
+      },
+      {
+        "title": "AI governance starter kit open source",
+        "reason": "register-owner",
+        "against": "/glossary/ai-governance",
+        "detail": "the query \"ai governance starter kit open source\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+      },
+      {
+        "title": "AI readiness scorecard five drivers",
+        "reason": "family-served",
+        "against": "/blog/ai-readiness-scorecard-five-drivers",
+        "detail": "the prompt already lists /blog/ai-readiness-scorecard-five-drivers among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "Board memo AI strategy one page",
+        "reason": "family-served",
+        "against": "/blog/board-memo-ai-strategy-one-page",
+        "detail": "the prompt already lists /blog/board-memo-ai-strategy-one-page among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "AI governance framework",
+        "reason": "register-owner",
+        "against": "/glossary/ai-governance",
+        "detail": "the query \"ai governance framework\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+      },
+      {
+        "title": "NIST AI RMF framework",
+        "reason": "register-owner",
+        "against": "/glossary/nist-ai-rmf",
+        "detail": "the query \"nist ai rmf framework\" names the concept \"NIST AI RMF\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/nist-ai-rmf"
+      },
+      {
+        "title": "Prompt injection examples",
+        "reason": "register-owner",
+        "against": "/glossary/prompt-injection",
+        "detail": "the query \"prompt injection examples\" names the concept \"Prompt injection\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/prompt-injection"
+      },
+      {
+        "title": "Data classification policy",
+        "reason": "register-owner",
+        "against": "/glossary/data-classification",
+        "detail": "the query \"data classification policy\" names the concept \"Data classification\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/data-classification"
+      },
+      {
+        "title": "DPIA template",
+        "reason": "register-owner",
+        "against": "/glossary/dpia",
+        "detail": "the query \"dpia template\" names the concept \"DPIA\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/dpia"
+      },
+      {
+        "title": "Technical documentation template",
+        "reason": "register-owner",
+        "against": "/glossary/technical-documentation",
+        "detail": "the query \"technical documentation template\" names the concept \"Technical documentation\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/technical-documentation"
+      },
+      {
+        "title": "AI governance policy",
+        "reason": "register-owner",
+        "against": "/glossary/ai-governance",
+        "detail": "the query \"ai governance policy\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+      },
+      {
+        "title": "What is AI governance?",
+        "reason": "register-owner",
+        "against": "/glossary/ai-governance",
+        "detail": "the query \"ai governance\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+      },
+      {
+        "title": "What is AI governance?",
+        "reason": "register-owner",
+        "against": "/glossary/ai-governance",
+        "detail": "the query \"ai governance\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+      }
+    ],
+    "resumes": [
+      {
+        "at": "2026-11-19T19:08:29.285Z",
+        "by": "main-change",
+        "mainSha": "cd6607cb293559430fe7977967c190bc177433bb",
+        "failedJobs": []
+      },
+      {
+        "at": "2026-11-20T01:57:49.720Z",
+        "by": "owner",
+        "mainSha": null,
+        "failedJobs": []
+      },
+      {
+        "at": "2026-11-20T03:54:32.738Z",
+        "by": "main-change",
+        "mainSha": "d84805bc7ba18bc22bb17a8e1ceab775ab18abaa",
+        "failedJobs": []
+      }
+    ]
+  },
+  "repairOutput": "{\"ok\":false,\"outcome\":\"unrepairable\",\"commit\":null,\"reason\":\"run 44671747275 has no usable artifact gate-findings-1: the run has none\",\"kind\":\"unrepairable\",\"variables\":[],\"spend\":null}",
+  "gateOutput": [
+    "orphans: 0 of 141 routes have zero inbound links",
+    "chrome-only: 1 of 106 routes that must earn a body link are linked only from header, footer, breadcrumb or hub listings",
+    "  /blog/how-to-sandbox-ai-agent-code-execution is linked only from hub listing /blog, /blog/category/agentic-architecture, /blog/tag/agentic-architecture and 2 more; the header, footer or breadcrumb of 2 pages"
+  ]
+}
