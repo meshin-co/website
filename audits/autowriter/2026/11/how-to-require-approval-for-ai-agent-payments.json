@@ -6,23 +6,75 @@
   "attempts": [],
   "spend": {
     "tokens": {
-      "input": 7726,
-      "output": 674
+      "input": 31834,
+      "output": 7146
     },
-    "costUsd": 0.011096
+    "costUsd": 0.067564
   },
   "verdict": {
-    "state": "open",
-    "reason": null,
-    "decidedAt": null
+    "state": "escalated",
+    "reason": "Autowriter pull request #167: the CI run was cancelled twice with no failed job to explain it",
+    "decidedAt": "2026-11-20T11:44:27.016Z"
   },
-  "escalations": [],
+  "escalations": [
+    {
+      "id": "esc-1",
+      "kind": "hard-stop",
+      "title": "Autowriter pull request #167: the repair job failed before it could finish",
+      "detail": "The repair of pull request #167 ended as failed: the repair job failed before it could finish.\nRepair run: https://github.com/meshin-co/website/actions/runs/44487184279\nPull request: https://github.com/meshin-co/website/pull/167",
+      "raisedAt": "2026-11-19T08:28:58.302Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-19T08:28:58.302Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 168,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "esc-2",
+      "kind": "hard-stop",
+      "title": "Autowriter pull request #167: the repair job failed before it could finish",
+      "detail": "The repair of pull request #167 ended as failed: the repair job failed before it could finish.\nRepair run: https://github.com/meshin-co/website/actions/runs/44603632762\nPull request: https://github.com/meshin-co/website/pull/167",
+      "raisedAt": "2026-11-19T20:02:29.601Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-19T20:02:29.601Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 175,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "esc-3",
+      "kind": "hard-stop",
+      "title": "Autowriter pull request #167: the CI run was cancelled twice with no failed job to explain it",
+      "detail": "The watcher judged head 369cb6af660e92925fcd529d2fc2e24cb713b205: escalate, inconclusive-cancel.\nJobs: visual-and-axe (3).\nPull request: https://github.com/meshin-co/website/pull/167",
+      "raisedAt": "2026-11-20T11:44:26.310Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-20T11:44:26.310Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 195,
+          "error": null
+        }
+      ]
+    }
+  ],
   "generation": {
     "tokens": {
-      "input": 7726,
-      "output": 674
+      "input": 31834,
+      "output": 7146
     },
-    "costUsd": 0.011096
+    "costUsd": 0.067564
   },
   "refusals": [
     {
@@ -240,6 +292,26 @@
       "reason": "same-subject",
       "against": "audits/autowriter/claims/2026/11/how-to-set-up-an-ai-launch-approval-process.json",
       "detail": "the topic \"How to set up an AI steering committee\" repeats audits/autowriter/claims/2026/11/how-to-set-up-an-ai-launch-approval-process.json (\"How to set up an AI launch approval process\"): its subject shares ai, set, up, 3 of the 5 stems of the smaller one, a containment of 0.60 against the threshold of 0.5"
+    }
+  ],
+  "resumes": [
+    {
+      "at": "2026-11-19T19:37:12.668Z",
+      "by": "main-change",
+      "mainSha": "c1333d92bd2e2596ff9c022a74b21ad0cf96b91f",
+      "failedJobs": []
+    },
+    {
+      "at": "2026-11-20T11:04:43.912Z",
+      "by": "owner",
+      "mainSha": null,
+      "failedJobs": []
+    },
+    {
+      "at": "2026-11-20T14:09:17.522Z",
+      "by": "owner",
+      "mainSha": null,
+      "failedJobs": []
     }
   ]
 }

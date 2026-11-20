@@ -33,15 +33,15 @@
     "target": "/blog",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-allocate-shared-ai-tool-costs-across-departments (generation record audits/autowriter/generations/2026/11/how-to-allocate-shared-ai-tool-costs-across-departments.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "756a7bfcff99"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-require-approval-for-ai-agent-payments (generation record audits/autowriter/generations/2026/11/how-to-require-approval-for-ai-agent-payments.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "05f2942e805b"
   },
   {
     "target": "/blog",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-allocate-shared-ai-tool-costs-across-departments (generation record audits/autowriter/generations/2026/11/how-to-allocate-shared-ai-tool-costs-across-departments.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "756a7bfcff99"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-require-approval-for-ai-agent-payments (generation record audits/autowriter/generations/2026/11/how-to-require-approval-for-ai-agent-payments.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "05f2942e805b"
   },
   {
     "target": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
@@ -53,15 +53,15 @@
     "target": "/blog/category/agentic-architecture",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "9d271bb9f764"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-require-approval-for-ai-agent-payments (generation record audits/autowriter/generations/2026/11/how-to-require-approval-for-ai-agent-payments.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "b815d609cee9"
   },
   {
     "target": "/blog/category/agentic-architecture",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "9d271bb9f764"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-require-approval-for-ai-agent-payments (generation record audits/autowriter/generations/2026/11/how-to-require-approval-for-ai-agent-payments.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "b815d609cee9"
   },
   {
     "target": "/blog/category/executive",
@@ -101,15 +101,15 @@
     "target": "/blog/evals-in-ci-for-llm-agents",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file. After that, the text of this target changed when the related block grew from the three newest posts of the category to the eight newest (RELATED_POSTS_LIMIT in site/src/utils/post-neighbors.mjs), so the Keep reading section lists up to five more cards. Each line the page gained is the date line or the description of another post of the category, and the site already ships that line in the same words on another route, where it carries its own disposition. No other text of this page changed and none was removed. No person has read this page in this form.",
-    "digest": "82dc2c95c484"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-require-approval-for-ai-agent-payments (generation record audits/autowriter/generations/2026/11/how-to-require-approval-for-ai-agent-payments.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "fb3b9d31c397"
   },
   {
     "target": "/blog/evals-in-ci-for-llm-agents",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file. After that, the text of this target changed when the related block grew from the three newest posts of the category to the eight newest (RELATED_POSTS_LIMIT in site/src/utils/post-neighbors.mjs), so the Keep reading section lists up to five more cards. Each line the page gained is the date line or the description of another post of the category, and the site already ships that line in the same words on another route, where it carries its own disposition. No other text of this page changed and none was removed. No person has read this page in this form.",
-    "digest": "82dc2c95c484"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-require-approval-for-ai-agent-payments (generation record audits/autowriter/generations/2026/11/how-to-require-approval-for-ai-agent-payments.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "fb3b9d31c397"
   },
   {
     "target": "/blog/how-to-build-an-ai-system-register-in-a-week",
@@ -127,22 +127,22 @@
     "target": "/blog/tag/agentic-architecture",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "ede255fd607e"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-require-approval-for-ai-agent-payments (generation record audits/autowriter/generations/2026/11/how-to-require-approval-for-ai-agent-payments.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "88a3274e1218"
   },
   {
     "target": "/blog/tag/agentic-architecture",
     "location": "body.h1",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "ede255fd607e"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-require-approval-for-ai-agent-payments (generation record audits/autowriter/generations/2026/11/how-to-require-approval-for-ai-agent-payments.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "88a3274e1218"
   },
   {
     "target": "/blog/tag/agentic-architecture",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "ede255fd607e"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-require-approval-for-ai-agent-payments (generation record audits/autowriter/generations/2026/11/how-to-require-approval-for-ai-agent-payments.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "88a3274e1218"
   },
   {
     "target": "/blog/tag/ai-governance",
@@ -258,8 +258,8 @@
   {
     "target": "/blog/tag/policy-enforcement",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-ai-chat-retention-rules (generation record audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "04fe7bde2a02"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-require-approval-for-ai-agent-payments (generation record audits/autowriter/generations/2026/11/how-to-require-approval-for-ai-agent-payments.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "f53067d74da2"
   },
   {
     "target": "/blog/tag/production-readiness",
@@ -285,8 +285,8 @@
   {
     "target": "/blog/tag/security-review",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-ai-chat-retention-rules (generation record audits/autowriter/generations/2026/11/how-to-set-ai-chat-retention-rules.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "55837c31f7b2"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-require-approval-for-ai-agent-payments (generation record audits/autowriter/generations/2026/11/how-to-require-approval-for-ai-agent-payments.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "a87a871a902d"
   },
   {
     "target": "/blog/tag/shadow-ai",
