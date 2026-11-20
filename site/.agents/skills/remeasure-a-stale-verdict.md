@@ -17,7 +17,7 @@ escalation it files, next to a `Stop:` line in its detail. All are optional, so 
 - `gate`, `rule` and `subject`: what the finding named. Only `refused` knows the rule and the subject.
 - `ciRun`: the CI run the verdict judged.
 - `measuredMain`: the `main` commit that run measured. `scripts/repair-judged-run.mjs` reads it from the merge commit
-  the run checked out, whose first parent is `main`; it reads the one failed `npm run gate:` step for `gate`. It writes
+  the run checked out, whose first parent is `main`; it reads the one failed gate step for `gate`. It writes
   what it can read and nothing else: two failed gates, or a run whose logs have expired, give no `gate` and no
   `measuredMain`, and such a stop is never re-measured.
 
