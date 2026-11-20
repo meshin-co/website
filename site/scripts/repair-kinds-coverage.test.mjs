@@ -25,6 +25,7 @@ const SOURCES = {
   'gate:human': [['human-gate.mjs', ['field']]],
   'gate:registers': [['registers.mjs', ['field']]],
   'gate:editorial': [['editorial-findings.mjs', ['record']]],
+  'gate:orphans': [['gate-records.mjs', ['field']]],
 };
 
 const DYNAMIC = [
@@ -96,6 +97,7 @@ const PLANTS = [
   ['gate:content', 'booking-cta.mjs', "rule: 'planted-rule',"],
   ['gate:human', 'human-gate.mjs', "findings.push({ rule: 'planted-rule', detail: 'x' });"],
   ['gate:registers', 'registers.mjs', "return [{ rule: 'planted-rule', detail: 'x' }];"],
+  ['gate:orphans', 'gate-records.mjs', "return [{ rule: 'planted-rule' }];"],
   ['gate:editorial', 'editorial-findings.mjs', "record('planted-rule', subjects, detail);"],
 ];
 

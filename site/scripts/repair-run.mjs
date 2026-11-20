@@ -8,8 +8,17 @@ import { RepairStop, outcomeOf } from './repair-outcome.mjs';
 import { rewriteEntry } from './repair-rewrite.mjs';
 import { ownPaths } from './repair-scope.mjs';
 
-const describeRefusals = (refused) =>
-  refused.map(({ gate, rule, reason }) => gate + ' ' + rule + ' (' + reason + ')').join('; ');
+const SHOWN_SUBJECTS = 3;
+
+const listed = (subjects) =>
+  subjects.length > SHOWN_SUBJECTS
+    ? subjects.slice(0, SHOWN_SUBJECTS).join(', ') + ' and ' + (subjects.length - SHOWN_SUBJECTS) + ' more'
+    : subjects.join(', ');
+
+const describeRefusal = ({ gate, rule, reason, subjects, why }) =>
+  gate + ' ' + rule + ' (' + reason + ')' + (subjects.length > 0 ? ' on ' + listed(subjects) : '') + ': ' + why;
+
+const describeRefusals = (refused) => refused.map(describeRefusal).join('; ');
 
 function refuseWhatCannotStart({ situation, documents, failures, kinds }) {
   const { slug, claim, ledger, route } = situation;

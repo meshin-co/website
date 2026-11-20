@@ -34,11 +34,15 @@ calls it. Each has a test beside it. Run one with `cd site && node --test script
 - `scripts/repair-zip.mjs` reads a zip artifact from memory, with caps on size and entries and a CRC check,
   and refuses zip64, an unknown method and an unsafe name. `scripts/repair-findings.mjs` calls it.
 - `scripts/gate-findings.mjs` writes and parses the findings file of a gate in the directory
-  `GATE_FINDINGS_DIR`. A local run, with the variable unset, writes nothing. Each content gate writes it.
+  `GATE_FINDINGS_DIR`. A local run, with the variable unset, writes nothing. Six gates of the `cheap-gates`
+  job write it: content, human, orphans, machine, editorial and registers. The other nine print their
+  failures and write nothing, and `scripts/cheap-gates-findings.test.mjs` lists them, so a new one cannot
+  join the job unnoticed. A run that fails in one of those nine reaches the repair as "the run has none",
+  which is true and tells a person nothing; the repair has no table for them, so none of them can be repaired.
 
 ## Which findings a repair may touch
 
-`scripts/repair-kinds.mjs` holds a closed table: every rule id the five content gates can emit, and whether
+`scripts/repair-kinds.mjs` holds a closed table: every rule id the six gates that write findings can emit, and whether
 a rewrite of the entry's prose and frontmatter can fix it. A rule the table does not know is never
 repairable. A finding that names a path outside the entry and its ledgers is never repairable.
 `judgeFindings` sorts the findings of one run into rewrite, restate and refused, with the reason for each
@@ -47,7 +51,9 @@ refusal. `allowancesOf` says what the removal guard may let the rewrite drop. Tw
 - `scripts/repair-rows.mjs` builds a row. A row is a rewrite, a shared rewrite, a restate or a refusal, and
   each one carries the sentence that says why.
 - `scripts/repair-kinds-content.mjs`, `scripts/repair-kinds-human.mjs`, `scripts/repair-kinds-ledger.mjs`
-  (editorial and registers) and `scripts/repair-kinds-machine.mjs` hold the rows, one table for each gate.
+  (editorial and registers), `scripts/repair-kinds-machine.mjs` and `scripts/repair-kinds-orphans.mjs` hold the
+  rows, one table for each gate. Both rows of `gate:orphans` are refusals: the only fix is a sentence on another
+  page that links to the stranded one, which is an edit outside the entry.
 
 Each gate stores its findings with a stable rule id. A test fails when a gate emits an id the table lacks.
 
