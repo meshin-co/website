@@ -1,0 +1,418 @@
+{
+  "schema": 1,
+  "slug": "how-to-configure-a-circuit-breaker-for-llm-api-failures",
+  "runId": "44719382861-1",
+  "generatedAt": "2026-11-20T10:34:11.471Z",
+  "claim": {
+    "title": "How to configure a circuit breaker for LLM API failures",
+    "query": "how to configure a circuit breaker for llm api failures",
+    "origin": "category",
+    "category": "agentic-architecture",
+    "catchUp": {
+      "slot": "06:00",
+      "lateMinutes": 269
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-20",
+      "windowStart": "2026-08-20",
+      "windowEnd": "2026-11-18",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/how-to-configure-a-circuit-breaker-for-llm-api-failures",
+    "path": "site/src/data/post/how-to-configure-a-circuit-breaker-for-llm-api-failures.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_0981646a46982dfb016b002185163087d1a9dc54b3ff3cb0a0",
+  "published": {
+    "callIndex": 10
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_02290f9f8acd090a016b0020faf75887d19d37643b003a3df4",
+      "requestDigest": "e8176930fc2b9b7dd7c9501ed95510e551250116bf800795c1d9255fc286181d",
+      "tokens": {
+        "input": 1335,
+        "output": 145
+      },
+      "costUsd": 0.00206,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0dc4c0df5037856d016b0020ff04b887d1a59f8d53e01e4108",
+      "requestDigest": "9dc2695bc1f6103fa61698b0167feff25b6924c97da07cfc3ad852bdf1ac45f1",
+      "tokens": {
+        "input": 1395,
+        "output": 122
+      },
+      "costUsd": 0.002005,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0898dc31d344c21e016b002102a60c87d187b74dec175e2e38",
+      "requestDigest": "78747abf8603a6e2d0ca3a90f6c1a97f8df4e0cd157a00e9704ea3b2d31341da",
+      "tokens": {
+        "input": 1339,
+        "output": 139
+      },
+      "costUsd": 0.002034,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0b84e2ce8320211c016b002106eb7487d19f3cb33c73576bca",
+      "requestDigest": "f2b01a8ccd4a926df08e72c5d70adb5a0275ab3f9b1f3b87e14f54f441c6dc8d",
+      "tokens": {
+        "input": 1397,
+        "output": 73
+      },
+      "costUsd": 0.001762,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_06234de88e2734c2016b002109678087d1a4cde06ee5b5ce0e",
+      "requestDigest": "93126a3155dfb02eabad1eef0f9ec728feef9571047c1654a99059d56079f66f",
+      "tokens": {
+        "input": 1331,
+        "output": 62
+      },
+      "costUsd": 0.001641,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_00609bc1ade23b4a016b00210bc02487d1aec0444381a87c96",
+      "requestDigest": "cf641a8917c1d8966d10d94b49f32ad5cdb189f05dc729c50f9745f478744b25",
+      "tokens": {
+        "input": 1438,
+        "output": 193
+      },
+      "costUsd": 0.002403,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_052be920054fe9e5016b002110fbd487d181063ba31bece1ad",
+      "requestDigest": "2b46209bd8355d1180635f6ef50e6cea7ac693735ae48df48eecbea3cef67220",
+      "tokens": {
+        "input": 1332,
+        "output": 66
+      },
+      "costUsd": 0.001662,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0db08153876ab380016b0021134c3c87d1a3b052239b0c19a6",
+      "requestDigest": "b70c997577b1caf144bcef1d3958a8affecab86e7183555d29c1767ec8a3b562",
+      "tokens": {
+        "input": 1442,
+        "output": 188
+      },
+      "costUsd": 0.002382,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0e21b71c854d3bc9016b00211bb9e087d18cc9540c66919015",
+      "requestDigest": "c533deb3ceb877acb8b12e2d226fb7066a5514c413c301d429758d1c42758495",
+      "tokens": {
+        "input": 10732,
+        "output": 3676
+      },
+      "costUsd": 0.029112,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_09f16d40ff1139d8016b002162444c87d18a97eaf700a5962e",
+      "requestDigest": "a816c8642e04e20e972d87107913eb4e8613c0fec192c28815d27a496211fcf9",
+      "tokens": {
+        "input": 13573,
+        "output": 3014
+      },
+      "costUsd": 0.028643,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0981646a46982dfb016b002185163087d1a9dc54b3ff3cb0a0",
+      "requestDigest": "22e0539ba753d5e2485b1172e3d6016aa64a23be6f74e06a35665a6e2de8ff4c",
+      "tokens": {
+        "input": 16419,
+        "output": 3002
+      },
+      "costUsd": 0.031429,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 51733,
+      "output": 10680
+    },
+    "costUsd": 0.105133
+  },
+  "ledger": "audits/autowriter/2026/11/how-to-configure-a-circuit-breaker-for-llm-api-failures.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "e6e74be1d95b0ab624a0abe22d2a283b75dc24b6c64734117f8c7fac392c87ee",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "7983e72318b2701ef667d48ce7fff71de6bc58227340fa77be86897b066bb2f5"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "1e291e4336807e99144f2a63cfd94220707c1c99d9084f960e26799cbf12fde8"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "bfb02303381d779e9551eb07526273d9ebecba36e6d2abda5692ac878241e479"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "f69fa09c56971cfe6ee5d01641cb0ffd46da551b9d8a5e5d141f97bcbd6cbcc1"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "87a51656a140c6d36688aa96f1a1a9cf5cbd43b5d35937d47f97483a3ed3689f"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "852bb70ec47688ec40358ed45fb733f93425a39225d0ca3aa566ff1b080dbf31"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "f64e24db8dca1c487b003c3d3cac0b30d8f5290ec8ab26b658c8b3abf574a4cc"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "dbb10400ee6a8ae6a8fc5a177bcd46c75dca455a",
+    "fingerprint": "e31369e60ca05f01572fe6222d9a8f0e2f149a9ef5e4b96fab35b19b115b71a8"
+  },
+  "claimTable": [
+    {
+      "sentence": "Each outbound attempt should ask the breaker for permission and report its own outcome.",
+      "marker": "own-reading",
+      "source": null,
+      "span": null
+    },
+    {
+      "sentence": "After the cooldown, allow a controlled probe rather than releasing the full backlog.",
+      "marker": "own-reading",
+      "source": null,
+      "span": null
+    }
+  ],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 119,
+      "median": 14,
+      "shareBelowThreshold": 0.269,
+      "shareJustBelow": 0.2017,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/how-to-configure-a-circuit-breaker-for-llm-api-failures.json",
+    "audits/autowriter/claims/2026/11/how-to-configure-a-circuit-breaker-for-llm-api-failures.json",
+    "audits/autowriter/generations/2026/11/how-to-configure-a-circuit-breaker-for-llm-api-failures.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-configure-a-circuit-breaker-for-llm-api-failures.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-load-test-an-ai-agent-before-launch.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-prevent-duplicate-ai-agent-actions-on-retries.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-roll-back-an-ai-agent-deployment.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-run-an-ai-agent-in-shadow-mode.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-set-a-per-task-spending-limit-for-an-ai-agent.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-stop-ai-agents-getting-stuck-in-loops.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-trace-ai-agent-tool-calls-in-production.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/how-to-configure-a-circuit-breaker-for-llm-api-failures.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}

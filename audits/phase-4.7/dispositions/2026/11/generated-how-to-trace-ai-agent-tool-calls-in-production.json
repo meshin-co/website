@@ -8,7 +8,7 @@
   {
     "target": "/blog/how-to-trace-ai-agent-tool-calls-in-production",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "7ac3fd139be8"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-configure-a-circuit-breaker-for-llm-api-failures (generation record audits/autowriter/generations/2026/11/how-to-configure-a-circuit-breaker-for-llm-api-failures.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "1fede47fe658"
   }
 ]

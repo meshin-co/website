@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/how-to-configure-a-circuit-breaker-for-llm-api-failures.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-configure-a-circuit-breaker-for-llm-api-failures.json on 2026-11-20. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-configure-a-circuit-breaker-for-llm-api-failures.json.",
+    "digest": "45b5b3279ae1"
+  },
+  {
+    "target": "/blog/how-to-configure-a-circuit-breaker-for-llm-api-failures",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-configure-a-circuit-breaker-for-llm-api-failures.json on 2026-11-20. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-configure-a-circuit-breaker-for-llm-api-failures.json.",
+    "digest": "70883d95a4f2"
+  }
+]
