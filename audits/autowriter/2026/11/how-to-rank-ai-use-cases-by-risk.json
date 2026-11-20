@@ -13,8 +13,8 @@
   },
   "verdict": {
     "state": "escalated",
-    "reason": "Autowriter pull request #171: the head commit has no check runs, and the one catch-up that could have started CI was already pushed",
-    "decidedAt": "2026-11-20T02:00:55.161Z"
+    "reason": "Autowriter pull request #171: the gate's findings cannot be repaired by rewriting the entry, or the rewrite could not be made to pass the repair's own checks",
+    "decidedAt": "2026-11-20T08:09:06.280Z"
   },
   "escalations": [
     {
@@ -64,6 +64,23 @@
           "delivered": true,
           "status": 201,
           "issue": 184,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "esc-4",
+      "kind": "unrepairable",
+      "title": "Autowriter pull request #171: the gate's findings cannot be repaired by rewriting the entry, or the rewrite could not be made to pass the repair's own checks",
+      "detail": "The repair of pull request #171 ended as unrepairable: the gate's findings cannot be repaired by rewriting the entry, or the rewrite could not be made to pass the repair's own checks.\nRepair run: https://github.com/meshin-co/website/actions/runs/44699623819\nPull request: https://github.com/meshin-co/website/pull/171",
+      "raisedAt": "2026-11-20T08:09:05.857Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-20T08:09:05.857Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 190,
           "error": null
         }
       ]
