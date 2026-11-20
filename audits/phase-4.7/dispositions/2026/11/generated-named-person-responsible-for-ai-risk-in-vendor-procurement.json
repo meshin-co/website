@@ -9,6 +9,6 @@
     "target": "/blog/named-person-responsible-for-ai-risk-in-vendor-procurement",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-rank-ai-use-cases-by-risk (generation record audits/autowriter/generations/2026/11/how-to-rank-ai-use-cases-by-risk.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "ffc54e659572"
+    "digest": "b08e63c31cac"
   }
 ]

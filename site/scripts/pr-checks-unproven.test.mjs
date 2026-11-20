@@ -26,8 +26,13 @@ test('cancelled jobs with no failure anywhere are unsettled on the first look an
   assert.match(outcome.observe, /^cancelled:[0-9a-f]{40}:41360101540:1$/);
 });
 
-test('the same cancellation seen again on the same run attempt is a hard stop', () => {
-  const cancelled = withConclusions(green(), { 'visual-and-axe (1)': 'cancelled', 'deploy-preview': 'skipped' });
+test('the same cancellation seen again on the same run attempt is a hard stop when the run was cancelled as a whole', () => {
+  const wholeRun = {
+    'visual-and-axe (1)': 'cancelled',
+    'deploy-preview': 'cancelled',
+    'cancel-on-failure': 'cancelled',
+  };
+  const cancelled = withConclusions(green(), wholeRun);
   const first = judge(cancelled);
   const second = judge(cancelled, { previous: first.observe });
 

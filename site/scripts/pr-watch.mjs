@@ -16,6 +16,7 @@ import {
   readLedgerAt,
   readSnapshot,
   readTree,
+  rerunFailedJobs,
   tickProblem,
 } from './pr-github.mjs';
 import { recordDebt } from './pr-watch-debt.mjs';
@@ -36,6 +37,7 @@ const GITHUB = {
   readSnapshot,
   mergePullRequest,
   dispatchSuccessor,
+  rerunFailedJobs,
   putLedger,
   tickProblem,
   readLedgerAt,
@@ -62,6 +64,7 @@ const STATEMENTS = {
   'not-a-content-gate': 'a job that is not a content gate failed, so the loop may not repair it',
   'attempt-cap': 'the attempt cap is spent and the checks are still red',
   'inconclusive-cancel': 'the CI run was cancelled twice with no failed job to explain it',
+  'rerun-cap': 'a CI job died on its own again after the one automatic rerun',
   'skipped-gate': 'a required job was skipped, and GitHub counts a skipped job as passed',
   'missing-check': 'a required check never appeared on the head commit',
   'unexpected-conclusion': 'a required job ended in a conclusion the watcher does not read as green',
@@ -218,6 +221,10 @@ async function merge(step) {
 const ACTIONS = {
   merge,
   unsettled: continueChain,
+  rerun: async (step) => {
+    await asBot(step, () => step.io.rerunFailedJobs(step.writer, { runId: step.result.evidence.run.id }));
+    return continueChain(step);
+  },
   repairable: async () => 'repair',
   'catch-up': async () => 'repair',
   escalate: (step) => raise(step, findingFor(step, step.result.kind)),
