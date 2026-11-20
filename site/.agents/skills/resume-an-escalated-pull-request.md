@@ -17,11 +17,11 @@ A pull request that waits for a watcher is the other case: `keep-every-pull-requ
 
 ## The brakes
 
-1. **Kind.** Only three escalations may re-enter. Two are read from the watcher's own line `The watcher judged head
+1. **Kind.** Only four escalations may re-enter. Three are read from the watcher's own line `The watcher judged head
 <sha>: escalate, <reason>.` in `detail`: kind `unrepairable` with reason `not-a-content-gate` (a job that is not a
-   content gate failed), and kind `hard-stop` with reason `approval-required` (the CI run waits for a person), once and
-   at once. `unrepairable` is also what the repair loop files when the article itself cannot be repaired, so the kind
-   alone is never enough. The third is a repair job that failed, once: `keep-every-pull-request-moving.md`.
+   content gate failed); kind `hard-stop` with reason `approval-required` (the CI run waits for a person), once and at
+   once; and kind `hard-stop` with reason `no-checks-catch-up-cap`, which the watcher filed until 2026-11-20 and files no
+   more, so only a ledger that already carries it re-enters. `unrepairable` is also what the repair loop files for an article it cannot repair, so the kind alone is never enough. The fourth is a failed repair job, once: `keep-every-pull-request-moving.md`.
 2. **An event.** A commit on `main` after the verdict whose files make `needsFullGraph` true in
    `scripts/build-surface.mjs`. Prose, audits and ledgers do not count. More than 30 commits since the verdict count.
 3. **A cap.** `RESUME_CAP` is 2 automatic resumes per pull request, for good. Resumes by the owner do not count.
@@ -40,7 +40,7 @@ setup. Running them again spends money to reach the same answer, so they stay wi
 ## What a resume does
 
 1. Appends one entry to the ledger `resumes` and writes the ledger to the pull request branch as `autowriter-bot` with
-   the PAT. A push made with that token starts the `pull_request` CI run unheld, as the default token does not.
+   the PAT. That push starts the `pull_request` CI run unheld, as the default token does not, unless the branch conflicts with `main`: then no push starts one, and the watcher's catch-up is what does.
 2. Comments `resumed: main-change, main e8874d4` on the escalation issue.
 3. Dispatches `watch-pr.yml` with `pr`. If the dispatch fails after the write, the line says so and names the command
    to start it by hand; the run fails and no second resume is written: the next sweep starts the watcher it missed.
