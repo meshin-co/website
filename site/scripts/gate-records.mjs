@@ -27,3 +27,8 @@ export const humanRecords = (findings) =>
   findings.map((finding) => record(finding, TREE_WIDE_RULES.has(finding.rule) ? [] : [finding.route]));
 
 export const registerRecords = (findings) => findings.map((finding) => record(finding, [SEMANTIC_CORE]));
+
+export const orphanRecords = ({ orphans, chromeOnly }) => [
+  ...orphans.map((route) => record({ rule: 'orphans', detail: 'no other page links to it' }, [route])),
+  ...chromeOnly.map(({ route, via }) => record({ rule: 'chrome-only', detail: `linked only from ${via}` }, [route])),
+];

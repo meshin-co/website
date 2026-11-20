@@ -1,21 +1,21 @@
 # Spend report: what writing each entry cost
 
-Generated-from: d84805bc7ba18bc22bb17a8e1ceab775ab18abaa
-Generated-at: 2026-11-19T18:39:40.292Z
+Generated-from: c7bd5c3fb4f8f84cd73eb25fac3599d9d13b4902
+Generated-at: 2026-11-20T10:29:45.195Z
 
 ## This month
 
-2026-11 so far: 1.871363 USD spent of the 25.00 USD monthly ceiling, 23.128637 USD left.
+2026-11 so far: 1.887312 USD spent of the 25.00 USD monthly ceiling, 23.112688 USD left.
 
-The figure is the spend of the UTC calendar month of 2026-11-19T18:39:40.292Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
+The figure is the spend of the UTC calendar month of 2026-11-20T10:29:45.195Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
 
 | What was paid for               | Cost (USD) |
 | ------------------------------- | ---------- |
 | Writing calls of entries        | 1.309321   |
 | Repair calls                    | 0.00       |
 | Runs that ended with no entry   | 0.533207   |
-| Spend with no generation record | 0.028835   |
-| Everything paid for             | 1.871363   |
+| Spend with no generation record | 0.044784   |
+| Everything paid for             | 1.887312   |
 
 ## About this file
 
@@ -54,8 +54,8 @@ Every entry recorded: from 2026-11-03T05:36:35.954Z, the oldest record, through 
 | Writing calls of entries        | 1.309321   |
 | Repair calls                    | 0.00       |
 | Runs that ended with no entry   | 0.533207   |
-| Spend with no generation record | 0.028835   |
-| Everything paid for             | 1.871363   |
+| Spend with no generation record | 0.044784   |
+| Everything paid for             | 1.887312   |
 
 ## Every entry
 
@@ -98,9 +98,10 @@ The model and the two rates, in USD per million tokens, that each cost was compu
 
 ## Warnings
 
-Each line below needs a person to look at it: it says what could not be counted or checked, or what does not add up. Every entry that can be counted is still counted above. The ledgers below that no generation record names are counted in the paid tables, under Spend with no generation record: 0.028835 USD together.
+Each line below needs a person to look at it: it says what could not be counted or checked, or what does not add up. Every entry that can be counted is still counted above. The ledgers below that no generation record names are counted in the paid tables, under Spend with no generation record: 0.044784 USD together.
 
 - how-should-boards-divide-ai-oversight-among-committees: its ledger records a generation of 0.003373 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it
+- how-to-configure-a-circuit-breaker-for-llm-api-failures: its ledger records a generation of 0.015949 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it
 - how-to-rank-ai-use-cases-by-risk: its ledger records a generation of 0.01151 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it
 - how-to-require-approval-for-ai-agent-payments: its ledger records a generation of 0.011096 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it
 - how-to-sandbox-ai-agent-code-execution: its ledger records a generation of 0.002856 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it

@@ -1,6 +1,8 @@
+const RELATED_POSTS_LIMIT = 8;
+
 const byId = (a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
 const byOldestFirst = (a, b) => a.data.publishDate.getTime() - b.data.publishDate.getTime() || byId(a, b);
-const byNewestFirst = (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime();
+const byNewestFirst = (a, b) => byOldestFirst(b, a);
 
 export function neighbourPosts(categoryPosts, id) {
   const ascending = [...categoryPosts].sort(byOldestFirst);
@@ -14,7 +16,7 @@ export function neighbourPosts(categoryPosts, id) {
   };
 }
 
-export function relatedPosts(categoryPosts, id, limit = 3) {
+export function relatedPosts(categoryPosts, id, limit = RELATED_POSTS_LIMIT) {
   return categoryPosts
     .filter((post) => post.id !== id)
     .sort(byNewestFirst)
