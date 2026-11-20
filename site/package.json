@@ -81,6 +81,7 @@
     "repair:entry": "node --env-file-if-exists=.env scripts/repair-entry.mjs",
     "catch-up:entry": "node scripts/catch-up-entry.mjs",
     "resume:pr": "node scripts/run-pr-resume.mjs",
+    "remeasure:record": "node scripts/remeasure-record.mjs",
     "pick:topic": "node scripts/pick-a-topic.mjs",
     "prepare": "[ -n \"$CI\" ] || (cd .. && git config core.hooksPath .githooks)",
     "preview": "astro preview",

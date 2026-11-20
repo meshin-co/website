@@ -3,10 +3,12 @@ import { verifiedModel } from './generation-facts.mjs';
 import { callTotals } from './generation-record.mjs';
 import { finishRepair, recordFailedSpend } from './repair-finish.mjs';
 import { earlierAttemptWithSameFailure, failuresOf, readFindings } from './repair-findings.mjs';
+import { readJudgedFacts } from './repair-judged-run.mjs';
 import { openRepair } from './repair-open.mjs';
 import { RepairStop, outcomeOf } from './repair-outcome.mjs';
 import { rewriteEntry } from './repair-rewrite.mjs';
 import { ownPaths } from './repair-scope.mjs';
+import { explained, refusedBecause } from './repair-why.mjs';
 
 const SHOWN_SUBJECTS = 3;
 
@@ -37,8 +39,11 @@ function refuseWhatCannotStart({ situation, documents, failures, kinds }) {
     },
   });
   if (verdict.refused.length > 0)
-    throw new RepairStop('unrepairable', 'a rewrite cannot answer ' + describeRefusals(verdict.refused));
-  if (verdict.rewrite.length === 0) throw new RepairStop('unrepairable', 'no finding asks for a rewrite');
+    throw new RepairStop('unrepairable', 'a rewrite cannot answer ' + describeRefusals(verdict.refused), {
+      why: refusedBecause(verdict.refused[0]),
+    });
+  if (verdict.rewrite.length === 0)
+    throw new RepairStop('unrepairable', 'no finding asks for a rewrite', { why: { stop: 'no-findings' } });
   return verdict.rewrite;
 }
 
@@ -60,8 +65,16 @@ async function keepSpend({ error, ...request }) {
 }
 
 export async function repairRun(io) {
-  const { repoRoot, now, run, api, adapter, kinds, secrets = [] } = io;
   const situation = await io.open();
+  try {
+    return await repairOpened(io, situation);
+  } catch (error) {
+    throw await explained(error, { run: situation.run, judged: io.judgedFacts });
+  }
+}
+
+async function repairOpened(io, situation) {
+  const { repoRoot, now, run, api, adapter, kinds, secrets = [] } = io;
   const documents = await io.findingsOf({ api, run: situation.run });
   const failures = failuresOf(documents);
   const rewrite = refuseWhatCannotStart({ situation, documents, failures, kinds });
@@ -128,6 +141,7 @@ export async function repairWithDefaults({ api, adapter, repoRoot, number, head,
     kinds,
     open: () => openRepair({ api, repoRoot, number, head, now, run }),
     findingsOf: readFindings,
+    judgedFacts: (judged) => readJudgedFacts({ api, run: judged }),
     ceiling: (options) => ceilingStatus(options),
     assemble: assembleRepair,
     commit: commitRepair,

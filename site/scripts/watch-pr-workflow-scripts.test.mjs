@@ -72,10 +72,12 @@ function runScript(script, { root, cwd = root, env = {}, stdout = '', status = 0
       ...env,
     },
   });
+  const written = readFileSync(join(root, 'github-output.txt'), 'utf8').split('\n');
   return {
     status: outcome.status,
     printed: outcome.stdout + outcome.stderr,
-    outputs: readFileSync(join(root, 'github-output.txt'), 'utf8'),
+    outputs: written.filter((line) => !line.startsWith('report=')).join('\n'),
+    report: written.find((line) => line.startsWith('report='))?.slice('report='.length),
     commands: readFileSync(join(root, 'npm.log'), 'utf8').trim().split('\n').filter(Boolean),
   };
 }
@@ -215,9 +217,36 @@ for (const [outcome, result, expected] of FOLLOWING) {
     const found = runScript(scriptOf(AFTER, 'follow-up'), { root: scene(), env });
 
     assert.equal(found.status, 0);
-    assert.deepEqual(found.commands, [`run watch:pr -- --pr 72 --after-repair ${expected}`]);
+    assert.deepEqual(found.commands, [
+      `run watch:pr -- --pr 72 --after-repair ${JSON.stringify({ outcome: expected })}`,
+    ]);
   });
 }
+
+test('the follow-up passes on the line the repair printed, with the outcome the workflow settled on', () => {
+  const report = { stop: 'no-artifact', gate: 'gate:orphans', ciRun: 44671747275, measuredMain: 'd'.repeat(40) };
+  const printed = JSON.stringify({ outcome: 'unrepairable', ...report });
+  const env = { REPAIR_OUTCOME: 'unrepairable', REPAIR_RESULT: 'success', REPAIR_REPORT: printed };
+  const found = runScript(scriptOf(AFTER, 'follow-up'), { root: scene(), env });
+
+  assert.deepEqual(JSON.parse(/--after-repair (.*)$/.exec(found.commands[0])[1]), JSON.parse(printed));
+});
+
+test('a repair job that did not pass drops what the repair printed, because the outcome is then the workflow own', () => {
+  const printed = JSON.stringify({ outcome: 'unrepairable', stop: 'scope' });
+  const env = { REPAIR_OUTCOME: 'repaired', REPAIR_RESULT: 'failure', REPAIR_REPORT: printed };
+  const found = runScript(scriptOf(AFTER, 'follow-up'), { root: scene(), env });
+
+  assert.deepEqual(found.commands, ['run watch:pr -- --pr 72 --after-repair {"outcome":"failed"}']);
+});
+
+test('the rewrite step hands the follow-up the line the repair printed, and only when that line is a JSON object', () => {
+  const printed = lastLine({ outcome: 'unrepairable', stop: 'no-artifact' });
+
+  assert.equal(rewriting(`${printed}\n`).report, printed);
+  for (const text of ['Error: boom\n', '', '[]\n', '5\n'])
+    assert.equal(rewriting(text).report, '', JSON.stringify(text));
+});
 
 test('the follow-up step fails when the watcher command fails, so the run is red and the pull request is not forgotten', () => {
   const env = { REPAIR_OUTCOME: 'stale', REPAIR_RESULT: 'success' };

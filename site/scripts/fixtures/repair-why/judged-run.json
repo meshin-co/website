@@ -1,0 +1,149 @@
+{
+  "source": {
+    "note": "Run 44671747275 of ci.yml, the pull_request run that pull request 145 was judged on at head 60c7334. Its jobs, with only the fields the repair reads, and five lines of the checkout step of its changes job: GitHub names the merge commit it built, and that commit names the head and the main it merged.",
+    "capturedAt": "2026-11-20",
+    "commands": [
+      "gh api repos/meshin-co/website/actions/runs/44671747275/jobs",
+      "gh api --allow-escape-sequences repos/meshin-co/website/actions/jobs/136074076947/logs | sed -n \"92,93p;139,140p;158p\"",
+      "gh api repos/meshin-co/website/commits/a726a8ce69d8a59757b31ba5be540c0f92060f88"
+    ]
+  },
+  "run": {
+    "id": 44671747275,
+    "attempt": 1
+  },
+  "head": "60c733462340f8b2fcc6e698c98854f61db66209",
+  "mergeCommit": {
+    "sha": "a726a8ce69d8a59757b31ba5be540c0f92060f88",
+    "parents": ["d84805bc7ba18bc22bb17a8e1ceab775ab18abaa", "60c733462340f8b2fcc6e698c98854f61db66209"]
+  },
+  "jobs": [
+    {
+      "id": 136074076947,
+      "name": "changes",
+      "run_id": 44671747275,
+      "run_attempt": 1,
+      "head_sha": "60c733462340f8b2fcc6e698c98854f61db66209",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": []
+    },
+    {
+      "id": 136074077188,
+      "name": "types-and-units",
+      "run_id": 44671747275,
+      "run_attempt": 1,
+      "head_sha": "60c733462340f8b2fcc6e698c98854f61db66209",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": []
+    },
+    {
+      "id": 136074079059,
+      "name": "regen-baselines",
+      "run_id": 44671747275,
+      "run_attempt": 1,
+      "head_sha": "60c733462340f8b2fcc6e698c98854f61db66209",
+      "status": "completed",
+      "conclusion": "skipped",
+      "steps": []
+    },
+    {
+      "id": 136074188132,
+      "name": "build",
+      "run_id": 44671747275,
+      "run_attempt": 1,
+      "head_sha": "60c733462340f8b2fcc6e698c98854f61db66209",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": []
+    },
+    {
+      "id": 136076035373,
+      "name": "cheap-gates",
+      "run_id": 44671747275,
+      "run_attempt": 1,
+      "head_sha": "60c733462340f8b2fcc6e698c98854f61db66209",
+      "status": "completed",
+      "conclusion": "failure",
+      "steps": [
+        {
+          "name": "Run npm run gate:orphans",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 136076035386,
+      "name": "visual-and-axe (3)",
+      "run_id": 44671747275,
+      "run_attempt": 1,
+      "head_sha": "60c733462340f8b2fcc6e698c98854f61db66209",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": []
+    },
+    {
+      "id": 136076035393,
+      "name": "visual-and-axe (2)",
+      "run_id": 44671747275,
+      "run_attempt": 1,
+      "head_sha": "60c733462340f8b2fcc6e698c98854f61db66209",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": []
+    },
+    {
+      "id": 136076035431,
+      "name": "visual-and-axe (1)",
+      "run_id": 44671747275,
+      "run_attempt": 1,
+      "head_sha": "60c733462340f8b2fcc6e698c98854f61db66209",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": []
+    },
+    {
+      "id": 136078267655,
+      "name": "cancel-on-failure",
+      "run_id": 44671747275,
+      "run_attempt": 1,
+      "head_sha": "60c733462340f8b2fcc6e698c98854f61db66209",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "steps": []
+    },
+    {
+      "id": 136078268224,
+      "name": "all required jobs passed",
+      "run_id": 44671747275,
+      "run_attempt": 1,
+      "head_sha": "60c733462340f8b2fcc6e698c98854f61db66209",
+      "status": "completed",
+      "conclusion": "failure",
+      "steps": [
+        {
+          "name": "decide from every dependency's own result, so a skip or a cancel cannot read as a pass",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 136078269455,
+      "name": "deploy-preview",
+      "run_id": 44671747275,
+      "run_attempt": 1,
+      "head_sha": "60c733462340f8b2fcc6e698c98854f61db66209",
+      "status": "completed",
+      "conclusion": "skipped",
+      "steps": []
+    }
+  ],
+  "changesLog": [
+    "2026-11-20T04:02:54.4208968Z ##[group]Fetching the repository",
+    "2026-11-20T04:02:54.4216236Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/* +a726a8ce69d8a59757b31ba5be540c0f92060f88:refs/remotes/pull/145/merge",
+    "2026-11-20T04:03:03.6054609Z ##[group]Checking out the ref",
+    "2026-11-20T04:03:03.6056010Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/145/merge",
+    "2026-11-20T04:03:04.4986971Z HEAD is now at a726a8c Merge 60c733462340f8b2fcc6e698c98854f61db66209 into d84805bc7ba18bc22bb17a8e1ceab775ab18abaa"
+  ]
+}

@@ -155,6 +155,7 @@ export function world({
       route: '/blog/' + claim.slug,
     }),
     findingsOf: async () => DOCUMENTS,
+    judgedFacts: async () => ({}),
     kinds,
     ceiling: () => {
       counts.ceiling += 1;

@@ -12,8 +12,8 @@ token and writes with the `AUTOWRITER_PAT` secret; `scripts/pr-resume.mjs` holds
 
 For each open pull request on an `autowriter/` branch of this repository it asks `resumeDecision`, and prints one line:
 `#84 resumed (main-change, main e8874d4)` or `#84 left: cap-reached`. The reasons are `not-escalated`,
-`not-resumable-kind`, `cap-reached`, `resume-spent`, `no-main-change-since-decision`, `human-touched`, `already-resumed`.
-A pull request that waits for a watcher is the other case: `keep-every-pull-request-moving.md`.
+`not-resumable-kind`, `cap-reached`, `resume-spent`, `remeasure-spent`, `no-main-change-since-decision`, `human-touched`,
+`already-resumed`. A stale verdict is re-measured instead: `remeasure-a-stale-verdict.md`. A pull request that waits for a watcher is the other case: `keep-every-pull-request-moving.md`.
 
 ## The brakes
 
@@ -55,8 +55,8 @@ gh workflow run resume-pr.yml -f pr=84
 ```
 
 The owner's dispatch skips the kind, the event and the person, and is recorded `by: owner`. It keeps the cap and the
-rest: a pull request that is not escalated, or already resumed, is refused and the run fails, so a green run always
-means the pull request re-entered the loop.
+rest, except that a stale verdict is answered after the cap is spent. A pull request that is not escalated, or already
+resumed, is refused and the run fails, so a green run always means the pull request re-entered the loop.
 
 ## Read `resumes`
 
@@ -76,5 +76,5 @@ It also fails a step that runs `scripts/commit-state.mjs` in a job that did not 
 
 ## Trap
 
-Never edit `resumes` by hand to buy another cycle: the cap is read from it. To go past the cap, fix the pull request
-on its branch, which makes it the person's, or discard it.
+Never edit `resumes` or `remeasures` by hand to buy another cycle: the cap and the one re-measure are read from them. To
+go past either, fix the pull request on its branch, which makes it the person's, or discard it.
