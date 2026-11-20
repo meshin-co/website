@@ -153,7 +153,7 @@ title `{tag name} posts — meshin.co` · meta: all posts tagged {tag}, newest f
 | `/blog/tag/llm-as-judge`          | llm as judge posts          | LLM as judge posts — meshin.co          | All posts tagged LLM as judge, newest first.          | LLM as judge posts          | 24    | ✓       |
 | `/blog/tag/policy-enforcement`    | policy enforcement posts    | Policy enforcement posts — meshin.co    | All posts tagged Policy enforcement, newest first.    | Policy enforcement posts    | 24    | ✓       |
 | `/blog/tag/production-readiness`  | production readiness posts  | Production readiness posts — meshin.co  | All posts tagged Production readiness, newest first.  | Production readiness posts  | 25    | ✓       |
-| `/blog/tag/security-review`       | security review posts       | Security review posts — meshin.co       | All posts tagged Security review, newest first.       | Security review posts       | 24    | ✓       |
+| `/blog/tag/security-review`       | security review posts       | Security review posts — meshin.co       | All posts tagged Security review, newest first.       | Security review posts       | 25    | ✓       |
 | `/blog/tag/shadow-ai`             | shadow ai posts             | Shadow AI posts — meshin.co             | All posts tagged Shadow AI, newest first.             | Shadow AI posts             | 24    | ✓       |
 
 ### term (32)
@@ -456,11 +456,11 @@ One owning route per entity. The mention count is inbound references from other 
 | Entity                         | Owned by                                   | Mentioned by |
 | ------------------------------ | ------------------------------------------ | ------------ |
 | Agentic workflow               | `/glossary/agentic-workflow`               | 15           |
-| AI governance                  | `/glossary/ai-governance`                  | 54           |
+| AI governance                  | `/glossary/ai-governance`                  | 56           |
 | AI impact assessment           | `/glossary/ai-impact-assessment`           | 3            |
 | AI management system           | `/glossary/ai-management-system`           | 7            |
 | AI operating model             | `/glossary/ai-operating-model`             | 23           |
-| AI register                    | `/glossary/ai-register`                    | 45           |
+| AI register                    | `/glossary/ai-register`                    | 46           |
 | Conformity assessment          | `/glossary/conformity-assessment`          | 5            |
 | Data classification            | `/glossary/data-classification`            | 20           |
 | DPIA                           | `/glossary/dpia`                           | 6            |
