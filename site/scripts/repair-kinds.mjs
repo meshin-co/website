@@ -3,12 +3,14 @@ import { CONTENT_KINDS } from './repair-kinds-content.mjs';
 import { HUMAN_KINDS } from './repair-kinds-human.mjs';
 import { EDITORIAL_KINDS, REGISTER_KINDS } from './repair-kinds-ledger.mjs';
 import { MACHINE_KINDS } from './repair-kinds-machine.mjs';
+import { ORPHAN_KINDS } from './repair-kinds-orphans.mjs';
 
 export const RULES = Object.freeze({
   'gate:content': CONTENT_KINDS,
   'gate:human': HUMAN_KINDS,
   'gate:editorial': EDITORIAL_KINDS,
   'gate:machine': MACHINE_KINDS,
+  'gate:orphans': ORPHAN_KINDS,
   'gate:registers': REGISTER_KINDS,
 });
 

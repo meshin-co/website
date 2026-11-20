@@ -3,6 +3,8 @@ import { join, relative, sep } from 'node:path';
 
 import { brandFromDisk } from '../src/utils/brand.mjs';
 import { contentRegion } from './content-html.mjs';
+import { recordGateFindings } from './gate-findings.mjs';
+import { orphanRecords } from './gate-records.mjs';
 import { isNoindex } from './gate.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
 import { extractGraphs } from './jsonld-gate.mjs';
@@ -185,6 +187,7 @@ async function main(distDir) {
   );
   for (const { route, via } of chromeOnly) console.log(`  ${route} is linked only from ${via}`);
 
+  recordGateFindings({ gate: 'gate:orphans', findings: orphanRecords({ orphans, chromeOnly }) });
   if (orphans.length > 0 || chromeOnly.length > 0) process.exitCode = 1;
 }
 
