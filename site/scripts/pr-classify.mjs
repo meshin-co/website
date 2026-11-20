@@ -12,7 +12,16 @@ export const BRANCH_PREFIX = 'autowriter/';
 export const HOLD_LABEL = readEngineConfig().loop.holdLabel;
 export const CHAIN_LIMIT_HOURS = QUARANTINE_HOURS + 24;
 export const CATCH_UP_CAP = 3;
-export const VERDICTS = ['unsettled', 'merge', 'catch-up', 'repairable', 'escalate', 'blocked-by-human', 'done'];
+export const VERDICTS = [
+  'unsettled',
+  'rerun',
+  'merge',
+  'catch-up',
+  'repairable',
+  'escalate',
+  'blocked-by-human',
+  'done',
+];
 
 const HOUR_MS = 3_600_000;
 const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;

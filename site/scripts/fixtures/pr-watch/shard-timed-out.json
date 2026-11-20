@@ -1,0 +1,1042 @@
+{
+  "source": {
+    "note": "PR 191, run 44713195235, attempt 1: visual-and-axe (2) ran to its 20 minute limit inside npx playwright install and was cancelled at 20m16s, cancel-on-failure was skipped, no job failed but the aggregate, which found 2 problems, and the run concluded cancelled. A person ran gh run rerun --failed and attempt 2 succeeded with no code change. Captured after that rerun, so the run and its jobs are the attempt-1 views GitHub keeps under /attempts/1, and the check runs are the 11 of filter=all that are jobs of attempt 1; the plain endpoints now answer attempt 2",
+    "capturedAt": "2026-11-20",
+    "commands": [
+      "gh api repos/meshin-co/website/pulls/191",
+      "gh api repos/meshin-co/website/pulls/191/commits?per_page=100",
+      "gh api repos/meshin-co/website/commits/5dd6fe7ade334417753724e7f231e7727bb9978b/check-runs?filter=all&per_page=100",
+      "gh api repos/meshin-co/website/actions/runs/44713195235/attempts/1",
+      "gh api repos/meshin-co/website/actions/runs/44713195235/attempts/1/jobs?per_page=100"
+    ]
+  },
+  "pullRequest": {
+    "number": 191,
+    "state": "closed",
+    "merged": true,
+    "draft": false,
+    "title": "Let the orphan gate hand the repair what it found",
+    "created_at": "2026-11-20T09:43:54Z",
+    "updated_at": "2026-11-20T10:25:22Z",
+    "merged_at": "2026-11-20T10:25:20Z",
+    "head": {
+      "ref": "fix/orphan-gate-writes-its-findings",
+      "sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+      "repo": {
+        "full_name": "meshin-co/website"
+      }
+    },
+    "base": {
+      "ref": "main",
+      "repo": {
+        "full_name": "meshin-co/website"
+      }
+    },
+    "labels": []
+  },
+  "commits": [
+    {
+      "sha": "848057a8c0cd47cebd3d7d6839e0f8072b34c41a",
+      "commit": {
+        "author": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-11-20T05:50:11Z"
+        },
+        "committer": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-11-20T05:50:11Z"
+        }
+      }
+    },
+    {
+      "sha": "7520a1e2f99c8de3b8c7c07a33e65422abfce859",
+      "commit": {
+        "author": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-11-20T05:59:40Z"
+        },
+        "committer": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-11-20T05:59:40Z"
+        }
+      }
+    },
+    {
+      "sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+      "commit": {
+        "author": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-11-20T07:35:42Z"
+        },
+        "committer": {
+          "name": "Owner",
+          "email": "owner@example.com",
+          "date": "2026-11-20T07:35:42Z"
+        }
+      }
+    }
+  ],
+  "checkRuns": {
+    "total_count": 11,
+    "check_runs": [
+      {
+        "id": 136222305445,
+        "name": "cancel-on-failure",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "started_at": "2026-11-20T10:09:44Z",
+        "completed_at": "2026-11-20T10:09:44Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/44713195235/job/136222305445",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 121026821205
+        }
+      },
+      {
+        "id": 136222304531,
+        "name": "deploy-preview",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "started_at": "2026-11-20T10:09:44Z",
+        "completed_at": "2026-11-20T10:09:44Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/44713195235/job/136222304531",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 121026821205
+        }
+      },
+      {
+        "id": 136222303427,
+        "name": "all required jobs passed",
+        "status": "completed",
+        "conclusion": "failure",
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "started_at": "2026-11-20T10:09:47Z",
+        "completed_at": "2026-11-20T10:10:02Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/44713195235/job/136222303427",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 121026821205
+        }
+      },
+      {
+        "id": 136212437439,
+        "name": "visual-and-axe (3)",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "started_at": "2026-11-20T09:49:28Z",
+        "completed_at": "2026-11-20T09:54:33Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/44713195235/job/136212437439",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 121026821205
+        }
+      },
+      {
+        "id": 136212437411,
+        "name": "cheap-gates",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "started_at": "2026-11-20T09:49:28Z",
+        "completed_at": "2026-11-20T09:51:23Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/44713195235/job/136212437411",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 121026821205
+        }
+      },
+      {
+        "id": 136212437362,
+        "name": "visual-and-axe (2)",
+        "status": "completed",
+        "conclusion": "cancelled",
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "started_at": "2026-11-20T09:49:28Z",
+        "completed_at": "2026-11-20T10:09:44Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/44713195235/job/136212437362",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 121026821205
+        }
+      },
+      {
+        "id": 136212437298,
+        "name": "visual-and-axe (1)",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "started_at": "2026-11-20T09:49:28Z",
+        "completed_at": "2026-11-20T09:55:30Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/44713195235/job/136212437298",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 121026821205
+        }
+      },
+      {
+        "id": 136209973618,
+        "name": "build",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "started_at": "2026-11-20T09:44:17Z",
+        "completed_at": "2026-11-20T09:45:52Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/44713195235/job/136209973618",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 121026821205
+        }
+      },
+      {
+        "id": 136209846784,
+        "name": "regen-baselines",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "started_at": "2026-11-20T09:43:58Z",
+        "completed_at": "2026-11-20T09:43:58Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/44713195235/job/136209846784",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 121026821205
+        }
+      },
+      {
+        "id": 136209844281,
+        "name": "types-and-units",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "started_at": "2026-11-20T09:44:01Z",
+        "completed_at": "2026-11-20T09:49:25Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/44713195235/job/136209844281",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 121026821205
+        }
+      },
+      {
+        "id": 136209844128,
+        "name": "changes",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "started_at": "2026-11-20T09:44:00Z",
+        "completed_at": "2026-11-20T09:44:14Z",
+        "details_url": "https://github.com/meshin-co/website/actions/runs/44713195235/job/136209844128",
+        "app": {
+          "slug": "github-actions"
+        },
+        "check_suite": {
+          "id": 121026821205
+        }
+      }
+    ]
+  },
+  "runs": {
+    "total_count": 1,
+    "workflow_runs": [
+      {
+        "id": 44713195235,
+        "name": "ci",
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "cancelled",
+        "run_attempt": 1,
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "head_branch": "fix/orphan-gate-writes-its-findings",
+        "path": ".github/workflows/ci.yml",
+        "check_suite_id": 121026821205,
+        "created_at": "2026-11-20T09:43:57Z",
+        "run_started_at": "2026-11-20T09:43:57Z",
+        "updated_at": "2026-11-20T10:10:03Z"
+      }
+    ]
+  },
+  "jobs": {
+    "total_count": 11,
+    "jobs": [
+      {
+        "id": 136209844128,
+        "run_id": 44713195235,
+        "run_attempt": 1,
+        "name": "changes",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "started_at": "2026-11-20T09:44:00Z",
+        "completed_at": "2026-11-20T09:44:14Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "classify the diff, so prose cannot spend a Lighthouse matrix",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          }
+        ]
+      },
+      {
+        "id": 136209844281,
+        "run_id": 44713195235,
+        "run_attempt": 1,
+        "name": "types-and-units",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "started_at": "2026-11-20T09:44:01Z",
+        "completed_at": "2026-11-20T09:49:25Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Run npm ci",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "fetch main, the base the spec gate falls back to on a new branch",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Run npm run check",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Run npm test",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          },
+          {
+            "name": "Run npm run gate:skills",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "Run npm run gate:plan",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Run npm run gate:docs",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10
+          },
+          {
+            "name": "Run npm run gate:evidence",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11
+          },
+          {
+            "name": "Run npm run gate:demand",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12
+          },
+          {
+            "name": "Run npm run gate:keywords",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13
+          },
+          {
+            "name": "Run npm run gate:autowriter",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 14
+          },
+          {
+            "name": "Run npm run gate:engine",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15
+          },
+          {
+            "name": "Run npm run gate:partition",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16
+          },
+          {
+            "name": "Run npm run gate:schedule",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17
+          },
+          {
+            "name": "Run npm run gate:spec",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 18
+          },
+          {
+            "name": "Run npm run gate:brand",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 19
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 37
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 38
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 39
+          }
+        ]
+      },
+      {
+        "id": 136209846784,
+        "run_id": 44713195235,
+        "run_attempt": 1,
+        "name": "regen-baselines",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "started_at": "2026-11-20T09:43:58Z",
+        "completed_at": "2026-11-20T09:43:58Z",
+        "steps": []
+      },
+      {
+        "id": 136209973618,
+        "run_id": 44713195235,
+        "run_attempt": 1,
+        "name": "build",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "started_at": "2026-11-20T09:44:17Z",
+        "completed_at": "2026-11-20T09:45:52Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Run npm ci",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "build, generate headers, measure budgets",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Run actions/upload-artifact@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13
+          }
+        ]
+      },
+      {
+        "id": 136212437298,
+        "run_id": 44713195235,
+        "run_attempt": 1,
+        "name": "visual-and-axe (1)",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "started_at": "2026-11-20T09:49:28Z",
+        "completed_at": "2026-11-20T09:55:30Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Run npm ci",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Run actions/download-artifact@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Run npx playwright install --with-deps chromium webkit firefox",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Run npm run gate:visual -- --shard=1/3",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          },
+          {
+            "name": "Run actions/upload-artifact@v4",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 8
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17
+          }
+        ]
+      },
+      {
+        "id": 136212437362,
+        "run_id": 44713195235,
+        "run_attempt": 1,
+        "name": "visual-and-axe (2)",
+        "status": "completed",
+        "conclusion": "cancelled",
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "started_at": "2026-11-20T09:49:28Z",
+        "completed_at": "2026-11-20T10:09:44Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Run npm ci",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Run actions/download-artifact@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Run npx playwright install --with-deps chromium webkit firefox",
+            "status": "completed",
+            "conclusion": "cancelled",
+            "number": 6
+          },
+          {
+            "name": "Run npm run gate:visual -- --shard=2/3",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 7
+          },
+          {
+            "name": "Run actions/upload-artifact@v4",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 8
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 15
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17
+          }
+        ]
+      },
+      {
+        "id": 136212437411,
+        "run_id": 44713195235,
+        "run_attempt": 1,
+        "name": "cheap-gates",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "started_at": "2026-11-20T09:49:28Z",
+        "completed_at": "2026-11-20T09:51:23Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Run npm ci",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Run actions/download-artifact@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Run npm run gate:html",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Run npm run gate:links",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          },
+          {
+            "name": "Run npm run gate:content",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "Run npm run gate:human",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Run npm run gate:orphans",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10
+          },
+          {
+            "name": "Run npm run gate:machine",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11
+          },
+          {
+            "name": "Run npm run gate:parity",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12
+          },
+          {
+            "name": "Run npm run gate:agents",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13
+          },
+          {
+            "name": "Run npm run gate:jsonld",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 14
+          },
+          {
+            "name": "Run npm run gate:external",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15
+          },
+          {
+            "name": "Run npm run gate:search",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16
+          },
+          {
+            "name": "Run npm run gate:editorial",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17
+          },
+          {
+            "name": "Run npm run gate:registers",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 18
+          },
+          {
+            "name": "route set never shrinks unexplained",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 19
+          },
+          {
+            "name": "nothing the site loads is a paid service",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 20
+          },
+          {
+            "name": "Upload gate findings",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 21
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 41
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 42
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 43
+          }
+        ]
+      },
+      {
+        "id": 136212437439,
+        "run_id": 44713195235,
+        "run_attempt": 1,
+        "name": "visual-and-axe (3)",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "started_at": "2026-11-20T09:49:28Z",
+        "completed_at": "2026-11-20T09:54:33Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Run npm ci",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Run actions/download-artifact@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Run npx playwright install --with-deps chromium webkit firefox",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Run npm run gate:visual -- --shard=3/3",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          },
+          {
+            "name": "Run actions/upload-artifact@v4",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 8
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17
+          }
+        ]
+      },
+      {
+        "id": 136222303427,
+        "run_id": 44713195235,
+        "run_attempt": 1,
+        "name": "all required jobs passed",
+        "status": "completed",
+        "conclusion": "failure",
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "started_at": "2026-11-20T10:09:47Z",
+        "completed_at": "2026-11-20T10:10:02Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "decide from every dependency's own result, so a skip or a cancel cannot read as a pass",
+            "status": "completed",
+            "conclusion": "failure",
+            "number": 4
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 7
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          }
+        ]
+      },
+      {
+        "id": 136222304531,
+        "run_id": 44713195235,
+        "run_attempt": 1,
+        "name": "deploy-preview",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "started_at": "2026-11-20T10:09:44Z",
+        "completed_at": "2026-11-20T10:09:44Z",
+        "steps": []
+      },
+      {
+        "id": 136222305445,
+        "run_id": 44713195235,
+        "run_attempt": 1,
+        "name": "cancel-on-failure",
+        "status": "completed",
+        "conclusion": "skipped",
+        "head_sha": "5dd6fe7ade334417753724e7f231e7727bb9978b",
+        "started_at": "2026-11-20T10:09:44Z",
+        "completed_at": "2026-11-20T10:09:44Z",
+        "steps": []
+      }
+    ]
+  }
+}

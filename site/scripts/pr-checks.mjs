@@ -1,6 +1,9 @@
 import { AGGREGATE_CHECK_NAME, REQUIRED_JOBS } from './ci-aggregate.mjs';
 
 export const CI_WORKFLOW_PATH = '.github/workflows/ci.yml';
+export const CANCEL_ON_FAILURE_JOB = 'cancel-on-failure';
+export const CANCEL_ON_FAILURE_NEEDS = ['build', 'types-and-units', 'cheap-gates', 'visual-and-axe'];
+export const RERUN_CAP = 1;
 
 const CONTENT_OWNED_JOBS = ['cheap-gates', 'build'];
 const SETUP_STEP = /^(Set up job|Complete job|Post |Run actions\/|Run npm ci$|Run npx playwright install)/;
@@ -19,7 +22,8 @@ export function pickPullRequestRun({ workflow_runs: runs }) {
   return candidates.toSorted((left, right) => right.id - left.id)[0] ?? null;
 }
 
-const instancesOf = (jobs, name) => jobs.filter((job) => job.name === name || job.name.startsWith(`${name} (`));
+const isInstanceOf = (jobName, name) => jobName === name || jobName.startsWith(`${name} (`);
+const instancesOf = (jobs, name) => jobs.filter((job) => isInstanceOf(job.name, name));
 
 function describeFailure(job) {
   const step = (job.steps ?? []).find(({ conclusion }) => conclusion === 'failure')?.name ?? null;
@@ -35,11 +39,17 @@ function judgeFailures({ frame, failing, attemptsUsed, attemptCap }) {
   return verdict('repairable', 'content-gate', null, evidence);
 }
 
-function judgeCancellation({ frame, run, cancelled, previous }) {
+const cancelledOnItsOwn = ({ jobs, cancelled }) =>
+  jobs.some(({ name, conclusion }) => name === CANCEL_ON_FAILURE_JOB && conclusion === 'skipped') &&
+  cancelled.every((name) => CANCEL_ON_FAILURE_NEEDS.some((need) => isInstanceOf(name, need)));
+
+function judgeCancellation({ frame, run, cancelled, previous, jobs = [] }) {
   const token = `cancelled:${frame.head}:${run.id}:${run.run_attempt}`;
   const evidence = { ...frame, jobs: cancelled };
-  if (previous === token) return escalation('inconclusive-cancel', 'hard-stop', evidence);
-  return unsettled('inconclusive-cancel', evidence, token);
+  if (previous !== token) return unsettled('inconclusive-cancel', evidence, token);
+  if (!cancelledOnItsOwn({ jobs, cancelled })) return escalation('inconclusive-cancel', 'hard-stop', evidence);
+  if (run.run_attempt > RERUN_CAP) return escalation('rerun-cap', 'no-convergence', evidence);
+  return verdict('rerun', 'self-cancelled', null, evidence);
 }
 
 function judgeRequiredJobs({ frame, jobs }) {
@@ -70,7 +80,7 @@ function judgeFinishedJobs({ frame, run, jobs, previous, attemptsUsed, attemptCa
     .sort(byJob);
   if (failing.length > 0) return judgeFailures({ frame, failing, attemptsUsed, attemptCap });
   const cancelled = names(jobs.filter(({ conclusion }) => conclusion === 'cancelled'));
-  if (cancelled.length > 0) return judgeCancellation({ frame, run, cancelled, previous });
+  if (cancelled.length > 0) return judgeCancellation({ frame, run, cancelled, previous, jobs });
   return judgeRequiredJobs({ frame, jobs });
 }
 

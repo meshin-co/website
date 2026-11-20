@@ -177,6 +177,10 @@ export async function dispatchSuccessor(api, { workflow, ref, inputs }) {
   await api.post(`actions/workflows/${workflow}/dispatches`, { ref, inputs });
 }
 
+export async function rerunFailedJobs(api, { runId }) {
+  await api.post(`actions/runs/${runId}/rerun-failed-jobs`);
+}
+
 export async function putLedger(api, { path, text, blobSha, branch, message, identity }) {
   const body = await api.put(`contents/${path}`, {
     message,
