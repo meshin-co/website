@@ -34,7 +34,7 @@ export const TREE_FINGERPRINT = fingerprint(
   TREE.filter(({ type }) => type !== 'tree').map(({ path, sha }) => [path, sha])
 );
 
-const WRITES = ['merge', 'dispatch', 'putLedger'];
+const WRITES = ['merge', 'dispatch', 'putLedger', 'rerun'];
 
 export const green = () => withAggregate(scenario('green'));
 export const queued = (bundle) => withJob(bundle, 'build', { status: 'queued', conclusion: null });
@@ -96,6 +96,10 @@ function recordingIo({ snapshot, merge, tick, failWith, calls, tree, mergedLedge
       calls.push(['dispatch', api.token, args]);
       failing('dispatch');
     },
+    rerunFailedJobs: async (api, args) => {
+      calls.push(['rerun', api.token, args]);
+      failing('rerun');
+    },
     putLedger: async (api, args) => {
       calls.push(['putLedger', api.token, args]);
       failing('putLedger');
@@ -143,6 +147,7 @@ export async function harness({
   failWith = null,
   slack = true,
   afterRepair = null,
+  observed = '',
   tree = TREE,
   mergedLedger = ledgerRecord(),
   commits = null,
@@ -181,7 +186,7 @@ export async function harness({
   const io = recordingIo({ snapshot, merge, tick, failWith, calls, tree, mergedLedger });
   const fetch = recordingFetch(requests, issueStatus, slackStatuses);
   const now = () => hoursAfterOpening(bundle, hours);
-  const run = () => watch({ number: 72, env, fetch, io, workdir, now, afterRepair });
+  const run = () => watch({ number: 72, observed, env, fetch, io, workdir, now, afterRepair });
   const ledgerPath = join(workdir, ledger?.path ?? recordPath('ledger', 'a-slug', now()));
   return { run, calls, requests, summary, outputs, env, io, fetch, now, workdir, ledgerPath };
 }

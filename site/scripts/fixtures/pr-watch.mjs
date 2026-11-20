@@ -55,6 +55,11 @@ export const withRun = (bundle, patch) => ({
   },
 });
 
+export const withAttempt = (bundle, number) => {
+  const rerun = withRun(bundle, { run_attempt: number });
+  return mapJobs(rerun, (jobs) => jobs.map((job) => ({ ...job, run_attempt: number })));
+};
+
 export const withoutPullRequestRun = (bundle) => ({
   ...bundle,
   runs: { ...bundle.runs, workflow_runs: bundle.runs.workflow_runs.filter(({ event }) => event !== 'pull_request') },
