@@ -1,21 +1,21 @@
 # Spend report: what writing each entry cost
 
-Generated-from: 4b4598659a64e33e5d8a090532c44b7d2649da90
-Generated-at: 2026-11-20T10:29:45.195Z
+Generated-from: 06623b0
+Generated-at: 2026-11-20T16:23:43.154Z
 
 ## This month
 
-2026-11 so far: 1.94378 USD spent of the 25.00 USD monthly ceiling, 23.05622 USD left.
+2026-11 so far: 1.954996 USD spent of the 25.00 USD monthly ceiling, 23.045004 USD left.
 
-The figure is the spend of the UTC calendar month of 2026-11-20T10:29:45.195Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
+The figure is the spend of the UTC calendar month of 2026-11-20T16:23:43.154Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
 
 | What was paid for               | Cost (USD) |
 | ------------------------------- | ---------- |
 | Writing calls of entries        | 1.376885   |
 | Repair calls                    | 0.00       |
 | Runs that ended with no entry   | 0.533207   |
-| Spend with no generation record | 0.033688   |
-| Everything paid for             | 1.94378    |
+| Spend with no generation record | 0.044904   |
+| Everything paid for             | 1.954996   |
 
 ## About this file
 
@@ -54,8 +54,8 @@ Every entry recorded: from 2026-11-03T05:36:35.954Z, the oldest record, through 
 | Writing calls of entries        | 1.376885   |
 | Repair calls                    | 0.00       |
 | Runs that ended with no entry   | 0.533207   |
-| Spend with no generation record | 0.033688   |
-| Everything paid for             | 1.94378    |
+| Spend with no generation record | 0.044904   |
+| Everything paid for             | 1.954996   |
 
 ## Every entry
 
@@ -99,10 +99,11 @@ The model and the two rates, in USD per million tokens, that each cost was compu
 
 ## Warnings
 
-Each line below needs a person to look at it: it says what could not be counted or checked, or what does not add up. Every entry that can be counted is still counted above. The ledgers below that no generation record names are counted in the paid tables, under Spend with no generation record: 0.033688 USD together.
+Each line below needs a person to look at it: it says what could not be counted or checked, or what does not add up. Every entry that can be counted is still counted above. The ledgers below that no generation record names are counted in the paid tables, under Spend with no generation record: 0.044904 USD together.
 
 - how-should-boards-divide-ai-oversight-among-committees: its ledger records a generation of 0.003373 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it
 - how-to-configure-a-circuit-breaker-for-llm-api-failures: its ledger records a generation of 0.015949 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it
+- how-to-let-customers-appeal-ai-assisted-decisions: its ledger records a generation of 0.011216 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it
 - how-to-rank-ai-use-cases-by-risk: its ledger records a generation of 0.01151 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it
 - how-to-sandbox-ai-agent-code-execution: its ledger records a generation of 0.002856 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it
 
