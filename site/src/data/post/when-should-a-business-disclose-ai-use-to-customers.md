@@ -34,7 +34,8 @@ sources:
     publisher: European Union
     retrieved: '2026-11-18'
   - title: Keep your AI claims in check
-    url: https://www.ftc.gov/business-guidance/blog/2023/02/keep-your-ai-claims-check
+    url: https://www.google.com/search?q=%22Keep+your+AI+claims+in+check%22+Federal+Trade+Commission
+    original: https://www.ftc.gov/business-guidance/blog/2023/02/keep-your-ai-claims-check
     publisher: Federal Trade Commission
     retrieved: '2026-11-18'
 author: dmitri
@@ -71,7 +72,7 @@ A chat notice might say: “You are chatting with an AI system. You can ask for 
 
 For a staff-reviewed reply, wording might say: “Our team uses AI to draft some replies. A team member reviews this reply before it is sent.” Confirm that the review covers the reply in question. If staff merely sample replies, say that instead of claiming each one is checked.
 
-Keep data details consistent with the privacy notice and the vendor's actual settings. For product claims, compare the draft with the [FTC's advice on AI claims](https://www.ftc.gov/business-guidance/blog/2023/02/keep-your-ai-claims-check). Ask support staff to test whether they can explain the wording without adding promises.
+Keep data details consistent with the privacy notice and the vendor's actual settings. For product claims, compare the draft with the [FTC's advice on AI claims](https://www.google.com/search?q=%22Keep+your+AI+claims+in+check%22+Federal+Trade+Commission). Ask support staff to test whether they can explain the wording without adding promises.
 
 ## What do legal and contract checks cover?
 

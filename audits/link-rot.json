@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "updatedOn": "2026-11-20",
+  "rows": [
+    {
+      "original": "https://www.ftc.gov/business-guidance/blog/2023/02/keep-your-ai-claims-check",
+      "entry": "site/src/data/post/when-should-a-business-disclose-ai-use-to-customers.md",
+      "outcome": "search",
+      "replacement": "https://www.google.com/search?q=%22Keep+your+AI+claims+in+check%22+Federal+Trade+Commission",
+      "citedOn": "2026-11-18",
+      "firstSeenDead": "2026-11-20",
+      "why": "no usable Internet Archive capture: the nearest snapshot was captured on 2025-03-17, 611 days from the citation date 2026-11-18; the limit is 180 days"
+    }
+  ],
+  "digest": "9dc5436e124a33e4c5724610bd0fcbb3d8462faf0032dddd0a904aa4fe716bcb"
+}
