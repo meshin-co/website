@@ -5,6 +5,7 @@ import { dirname, join, relative } from 'node:path';
 import { table } from '../markdown-table.mjs';
 import { runCli } from '../pick-a-topic.mjs';
 import { siteBrand } from '../site-brand.mjs';
+import { checkOutState } from './state-checkout.mjs';
 
 const BRAND = siteBrand().name;
 
@@ -151,7 +152,7 @@ export async function withPickRepo(
   { report = reportText(), keywords = null, posts = {}, core = EMPTY_CORE } = {},
   body
 ) {
-  const root = mkdtempSync(join(tmpdir(), 'pick-scene-'));
+  const root = checkOutState(mkdtempSync(join(tmpdir(), 'pick-scene-')));
   try {
     mkdirSync(join(root, POSTS), { recursive: true });
     mkdirSync(join(root, 'docs'), { recursive: true });

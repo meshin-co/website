@@ -197,6 +197,12 @@ test('the passage is the sentence a prompt is answered with, so a repair may not
   assert.deepEqual(rulesOf(removalProblems({ before: draft, after })), ['passage-changed']);
 });
 
+test('an entry with no registered passage may return any passage, since no document quotes one', () => {
+  const before = { ...article(), passage: null };
+  const after = { ...before, passage: 'Any one sentence of the repaired entry.' };
+  assert.deepEqual(removalProblems({ before, after }), []);
+});
+
 test('a term loses a definition sentence: refused in the glossary format as well', () => {
   const draft = term();
   const gone =

@@ -19,6 +19,7 @@ import {
   repairedRecord,
   writingCall,
 } from './fixtures/spend-report-corpus.mjs';
+import { checkOutState } from './fixtures/state-checkout.mjs';
 import { addUntrackedFile, editFile, removeFile } from './mutation-specimens.mjs';
 import { corpusFiles } from './spend-report.mjs';
 import { recordPath } from './record-layout.mjs';
@@ -84,7 +85,7 @@ const writeInto = (root, path, text) => {
 const committedReport = ({ parts, stamp }) => reportText(filesOf(parts), 'abc1234', stamp);
 
 async function inCopy(state, body) {
-  const root = mkdtempSync(join(tmpdir(), 'spend-specimens-'));
+  const root = checkOutState(mkdtempSync(join(tmpdir(), 'spend-specimens-')));
   try {
     mkdirSync(join(root, 'site'), { recursive: true });
     const files = filesOf(state.parts);

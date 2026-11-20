@@ -32,15 +32,26 @@ const problemsText = (record) => validateRecord(record).map(describeProblem);
 const hasProblem = (record, expected) => problemsText(record).some((text) => text.startsWith(expected));
 
 const LEDGER_PROBLEM = 'ledger must match pattern';
-const LEDGER_PATTERN = '^audits/autowriter/([0-9]{4}/(0[1-9]|1[0-2])/)?[a-z0-9]+(-[a-z0-9]+)*\\.json$';
-const MONTH_LEDGER = recordPath('ledger', ARTICLE_SLUG, CLAIMED_AT);
+const LEDGER_PATTERN =
+  '^(audits/autowriter/([0-9]{4}/(0[1-9]|1[0-2])/)?|state/ledger/[0-9]{4}/(0[1-9]|1[0-2])/)[a-z0-9]+(-[a-z0-9]+)*\\.json$';
+const MONTH_LEDGER = `audits/autowriter/2026/11/${ARTICLE_SLUG}.json`;
 const FLAT_LEDGER = `audits/autowriter/${ARTICLE_SLUG}.json`;
+const STATE_LEDGER = `state/ledger/2026/11/${ARTICLE_SLUG}.json`;
+const STATE_FLAT_LEDGER = `state/ledger/${ARTICLE_SLUG}.json`;
 const withLedger = (path) => mutated((r) => (r.ledger = path));
 
-test('the ledger field takes the month path of a ledger and the flat path of a record written before the layout changed', () => {
-  assert.equal(MONTH_LEDGER, `audits/autowriter/2026/11/${ARTICLE_SLUG}.json`);
+test('the ledger field takes the path the writer files a ledger at', () => {
+  assert.deepEqual(validateRecord(withLedger(recordPath('ledger', ARTICLE_SLUG, CLAIMED_AT))), []);
+});
+
+test('the ledger field takes the month path of a ledger on the state branch and of one filed before the ledgers moved', () => {
+  assert.deepEqual(validateRecord(withLedger(STATE_LEDGER)), []);
   assert.deepEqual(validateRecord(withLedger(MONTH_LEDGER)), []);
+});
+
+test('the ledger field takes the flat path of a record written before the layout changed, and never one on the state branch', () => {
   assert.deepEqual(validateRecord(withLedger(FLAT_LEDGER)), []);
+  assert.ok(hasProblem(withLedger(STATE_FLAT_LEDGER), LEDGER_PROBLEM), STATE_FLAT_LEDGER);
 });
 
 test('the ledger field refuses a file that is not a ledger, and the message names the pattern', () => {
@@ -55,14 +66,19 @@ test('the ledger field refuses a file that is not a ledger, and the message name
     'audits/autowriter/generations/2026/11/x.json',
     'audits/phase-4.7/dispositions/generated-x.json',
     'audits/phase-4.7/dispositions/2026/11/generated-x.json',
+    'state/claims/2026/11/x.json',
+    'state/ledgers/2026/11/x.json',
+    'state/spend-report.md',
+    'state/x.json',
     'site/audits/autowriter/x.json',
+    'site/state/ledger/2026/11/x.json',
     'audits/x.json',
   ])
     assert.ok(hasProblem(withLedger(other), LEDGER_PROBLEM), other);
 });
 
 test('the ledger field refuses a name that is not a slug, filed flat or in a month', () => {
-  for (const directory of ['audits/autowriter', 'audits/autowriter/2026/11'])
+  for (const directory of ['audits/autowriter', 'audits/autowriter/2026/11', 'state/ledger/2026/11'])
     for (const name of [
       'X.json',
       'x_y.json',
@@ -78,13 +94,15 @@ test('the ledger field refuses a name that is not a slug, filed flat or in a mon
 });
 
 test('the ledger field takes every month of the year and refuses the months that do not exist', () => {
-  for (let month = 1; month <= 12; month += 1) {
-    const path = `audits/autowriter/2026/${String(month).padStart(2, '0')}/x.json`;
-    assert.deepEqual(validateRecord(withLedger(path)), [], path);
-  }
-  for (const bad of ['00', '13', '1', '011', 'jan', '']) {
-    const path = `audits/autowriter/2026/${bad}/x.json`;
-    assert.ok(hasProblem(withLedger(path), LEDGER_PROBLEM), path);
+  for (const year of ['audits/autowriter/2026', 'state/ledger/2026']) {
+    for (let month = 1; month <= 12; month += 1) {
+      const path = `${year}/${String(month).padStart(2, '0')}/x.json`;
+      assert.deepEqual(validateRecord(withLedger(path)), [], path);
+    }
+    for (const bad of ['00', '13', '1', '011', 'jan', '']) {
+      const path = `${year}/${bad}/x.json`;
+      assert.ok(hasProblem(withLedger(path), LEDGER_PROBLEM), path);
+    }
   }
 });
 
@@ -95,6 +113,11 @@ test('the ledger field wants a four digit year and no directory between the mont
     'audits/autowriter/2026/11/extra/x.json',
     'audits/autowriter/2026/x.json',
     '/audits/autowriter/2026/11/x.json',
+    'state/ledger/26/11/x.json',
+    'state/ledger/20261/11/x.json',
+    'state/ledger/2026/11/extra/x.json',
+    'state/ledger/2026/x.json',
+    '/state/ledger/2026/11/x.json',
   ])
     assert.ok(hasProblem(withLedger(bad), LEDGER_PROBLEM), bad);
 });

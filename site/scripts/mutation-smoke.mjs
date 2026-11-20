@@ -261,6 +261,11 @@ export const FAMILIES = [
   { id: 'autowriter-aggregate-name-shared-with-push', kind: 'specimen', specimen: 'autowriterAggregateNameShadowed' },
   { id: 'autowriter-push-made-with-the-default-token', kind: 'specimen', specimen: 'autowriterPushWithDefaultToken' },
   {
+    id: 'autowriter-state-committed-without-checkout',
+    kind: 'specimen',
+    specimen: 'autowriterStateCommittedWithoutCheckout',
+  },
+  {
     id: 'autowriter-classifier-judges-the-last-push',
     kind: 'specimen',
     specimen: 'autowriterClassifierJudgesLastPush',
@@ -318,6 +323,11 @@ export const FAMILIES = [
     id: 'autowriter-commit-writes-a-lighthouse-report',
     kind: 'specimen',
     specimen: 'autowriterCommitWritesLighthouseReport',
+  },
+  {
+    id: 'autowriter-commit-writes-a-state-record',
+    kind: 'specimen',
+    specimen: 'autowriterCommitWritesStateRecord',
   },
   { id: 'autowriter-commit-seals-dispositions', kind: 'specimen', specimen: 'autowriterCommitSealsDispositions' },
   { id: 'autowriter-commit-an-unregistered-path', kind: 'specimen', specimen: 'autowriterCommitAnUnregisteredPath' },

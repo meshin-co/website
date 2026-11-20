@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 
 import { newLedger, writeLedger } from './autowriter-ledger.mjs';
+import { checkOutState } from './fixtures/state-checkout.mjs';
 import { fingerprint } from './lh-evidence.mjs';
 import { ledgerWithDebt } from './measurement-debt.mjs';
 import { recordPath } from './record-layout.mjs';
@@ -70,7 +71,7 @@ function mergeEntry(root) {
 }
 
 function workspace({ routes, pages = 'meshin', wranglerStatus = 0, silent = false, measured = true, owing = false }) {
-  const root = mkdtempSync(join(tmpdir(), 'deploy-'));
+  const root = checkOutState(mkdtempSync(join(tmpdir(), 'deploy-')));
   const site = join(root, 'site');
   mkdirSync(join(site, 'dist'), { recursive: true });
   mkdirSync(join(root, 'audits'), { recursive: true });

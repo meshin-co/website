@@ -25,11 +25,16 @@ const findingText = ({ gate, rule, subjects, detail, excerpt }, index) =>
     .filter(Boolean)
     .join('\n');
 
+const passageBullet = (passage) =>
+  passage === null
+    ? 'It has no registered passage: no document quotes a sentence of this entry, so no sentence is held word for word. The passage member shows null below; return in it one sentence of the repaired text.'
+    : `It leaves the passage exactly as it is, word for word: ${passage}`;
+
 const neverText = (before) =>
   bullets([
     'It never deletes. A sentence is reworded, never removed to make a finding go away, and the checks that run after you compare the words you return with the words the entry had and refuse a rewrite that lost any.',
     'It keeps every heading, FAQ item, key takeaway, source and claim row.',
-    `It leaves the passage exactly as it is, word for word: ${before.passage}`,
+    passageBullet(before.passage),
     'It adds no fact it cannot source.',
   ]);
 

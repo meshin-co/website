@@ -3,7 +3,7 @@ const REPO_PATH = /^[a-zA-Z0-9_.@-]+(?:\/[a-zA-Z0-9_.@[\]-]+)+\.[a-z]{2,4}$/;
 const PLACEHOLDER = /phase-N|<[^>]+>|\{[^}]+\}|\*/;
 const NPM_COMMAND = /npm run ([a-z][a-z0-9:-]*)/g;
 const ROW_RANGE = /\bL1[-–]L(\d+)\b/g;
-const EXTERNAL_ROOTS = ['.omp-perfect-coder/', '.perfect-coder/', 'extensions/', 'node_modules/'];
+const EXTERNAL_ROOTS = ['.omp-perfect-coder/', '.perfect-coder/', 'extensions/', 'node_modules/', 'state/'];
 
 export function citedPaths(text) {
   const found = [];
