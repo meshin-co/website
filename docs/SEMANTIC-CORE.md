@@ -75,7 +75,7 @@ title `{spec name} specification {version} — meshin.co` · meta: what the vers
 | `/spec/evals-baseline`     | evals-baseline specification     | evals-baseline specification — meshin.co     | Every published version of the evals-baseline specification, and the address to cite for each.                                                         | evals-baseline specification     | 23    | ✓       |
 | `/spec/evals-baseline/1.0` | evals-baseline specification 1.0 | evals-baseline specification 1.0 — meshin.co | The evals-baseline specification 1.0 says what a regression in an agent evaluation is, and defines the baseline file, the findings and the exit codes. | evals-baseline specification 1.0 | 26    | ✓       |
 
-### article (33)
+### article (34)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
@@ -97,6 +97,7 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/how-to-build-an-ai-system-register-in-a-week`               | ai system register                                         | How to build an AI system register in a week — meshin.co               | A step-by-step way to build an AI system register in a week without buying a tool, so a security reviewer gets the document they ask for first.       | How to build an AI system register in a week               | 34    | ✓       |
 | `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company` | ai operating model for mid-size company                    | How to choose an AI operating model for a mid-size company — meshin.co | How to choose an operating model for AI work in a mid-size company, starting from what the law requires and what the evidence supports.               | How to choose an AI operating model for a mid-size company | 41    | ✓       |
 | `/blog/how-to-decide-which-employee-data-can-be-used-in-ai-tools`  | how to decide which employee data can be used in ai tools  | How to decide which employee data can be used in AI tools — meshin.co  | How to decide which employee data can be used in AI tools depends on the task, the fields, vendor terms and approval controls.                        | How to decide which employee data can be used in AI tools  | 32    | ✓       |
+| `/blog/how-to-let-customers-appeal-ai-assisted-decisions`          | how to let customers appeal ai-assisted decisions          | How to let customers appeal AI-assisted decisions — meshin.co          | How to let customers appeal AI-assisted decisions with clear notices, fair review and effective corrections.                                          | How to let customers appeal AI-assisted decisions          | 30    | ✓       |
 | `/blog/how-to-load-test-an-ai-agent-before-launch`                 | how to load test an ai agent before launch                 | How to load test an AI agent before launch — meshin.co                 | Load test an AI agent with realistic tasks, controlled demand, safe tool calls, and clear launch limits.                                              | How to load test an AI agent before launch                 | 32    | ✓       |
 | `/blog/how-to-prevent-duplicate-ai-agent-actions-on-retries`       | how to prevent duplicate ai agent actions on retries       | How to prevent duplicate AI agent actions on retries — meshin.co       | Learn how to prevent duplicate AI agent actions on retries with stable operation keys, durable records, and checks for uncertain outcomes.            | How to prevent duplicate AI agent actions on retries       | 30    | ✓       |
 | `/blog/how-to-require-approval-for-ai-agent-payments`              | how to require approval for ai agent payments              | How to require approval for AI agent payments — meshin.co              | See how to require approval for AI agent payments with a human review gate before money is sent.                                                      | How to require approval for AI agent payments              | 32    | ✓       |
@@ -453,7 +454,7 @@ One owning route per entity. The mention count is inbound references from other 
 | Entity                         | Owned by                                   | Mentioned by |
 | ------------------------------ | ------------------------------------------ | ------------ |
 | Agentic workflow               | `/glossary/agentic-workflow`               | 15           |
-| AI governance                  | `/glossary/ai-governance`                  | 53           |
+| AI governance                  | `/glossary/ai-governance`                  | 54           |
 | AI impact assessment           | `/glossary/ai-impact-assessment`           | 3            |
 | AI management system           | `/glossary/ai-management-system`           | 7            |
 | AI operating model             | `/glossary/ai-operating-model`             | 23           |
@@ -466,7 +467,7 @@ One owning route per entity. The mention count is inbound references from other 
 | Guardrails                     | `/glossary/guardrails`                     | 7            |
 | Hallucination rate             | `/glossary/hallucination-rate`             | 4            |
 | High-risk AI system            | `/glossary/high-risk-ai-system`            | 10           |
-| Human oversight                | `/glossary/human-oversight`                | 16           |
+| Human oversight                | `/glossary/human-oversight`                | 17           |
 | Human-in-the-loop              | `/glossary/human-in-the-loop`              | 6            |
 | ISO/IEC 42001                  | `/glossary/iso-iec-42001`                  | 29           |
 | LLM gateway                    | `/glossary/llm-gateway`                    | 13           |
