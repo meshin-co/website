@@ -75,7 +75,7 @@ title `{spec name} specification {version} — meshin.co` · meta: what the vers
 | `/spec/evals-baseline`     | evals-baseline specification     | evals-baseline specification — meshin.co     | Every published version of the evals-baseline specification, and the address to cite for each.                                                         | evals-baseline specification     | 23    | ✓       |
 | `/spec/evals-baseline/1.0` | evals-baseline specification 1.0 | evals-baseline specification 1.0 — meshin.co | The evals-baseline specification 1.0 says what a regression in an agent evaluation is, and defines the baseline file, the findings and the exit codes. | evals-baseline specification 1.0 | 26    | ✓       |
 
-### article (34)
+### article (35)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 

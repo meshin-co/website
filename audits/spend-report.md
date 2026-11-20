@@ -1,13 +1,13 @@
 # Spend report: what writing each entry cost
 
-Generated-from: b2f36a9
-Generated-at: 2026-11-20T20:08:26.812Z
+Generated-from: 5dd6a8c
+Generated-at: 2026-11-20T20:34:50.878Z
 
 ## This month
 
 2026-11 so far: 2.069401 USD spent of the 25.00 USD monthly ceiling, 22.930599 USD left.
 
-The figure is the spend of the UTC calendar month of 2026-11-20T20:08:26.812Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
+The figure is the spend of the UTC calendar month of 2026-11-20T20:34:50.878Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
 
 | What was paid for               | Cost (USD) |
 | ------------------------------- | ---------- |
