@@ -11,9 +11,9 @@ calls it. Each has a test beside it. Run one with `cd site && node --test script
   (the seal), `scripts/lh-evidence.mjs`, `scripts/run-lh-evidence.mjs`, `scripts/run-lh-parallel.mjs` and
   `scripts/write-entry.mjs` call it.
 - `scripts/autowriter-refusals.mjs` is the one list of paths automation may never write: the sentence band,
-  the entry length record and the three Lighthouse records, each with the reason. It also spots a disposition seal by its
-  signature, a digest that moves while its reason and status stay. `scripts/commit-to-main.mjs` and
-  `scripts/entry-commit.mjs` refuse on it. A second list, `REMOVAL_REFUSALS`, holds what automation may never remove: a generation record, which the sentence band and the length record leave out. It judges the old path, so a rename out of the directory is a removal, and `scripts/commit-to-main.mjs` refuses it before it commits.
+  the entry length record, the three Lighthouse records and a file of the state, each with the reason. It also spots a disposition seal by its
+  signature, a digest that moves while its reason and status stay. `scripts/commit-to-main.mjs`, `scripts/commit-branch.mjs` and
+  `scripts/entry-commit.mjs` refuse on it. A second list, `REMOVAL_REFUSALS`, holds what automation may never remove: a generation record, which the sentence band and the length record leave out. It judges the old path, so a rename out of the directory is a removal, and `scripts/commit-to-main.mjs` and `scripts/commit-branch.mjs` refuse it before they commit.
 - `scripts/autowriter-refusal-rules.mjs` is the part of `gate:autowriter` that reads git history. A commit
   of the pipeline that changed a generation record may not have touched a refused path, and may not have removed one.
 - `scripts/unattended-specimens.mjs` makes an unattended process try the seal, the Lighthouse record and the

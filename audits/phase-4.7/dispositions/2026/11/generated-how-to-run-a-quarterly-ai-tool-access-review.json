@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/how-to-run-a-quarterly-ai-tool-access-review.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-run-a-quarterly-ai-tool-access-review.json on 2026-11-16. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-run-a-quarterly-ai-tool-access-review.json.",
+    "digest": "4ebadc2be95c"
+  },
+  {
+    "target": "/blog/how-to-run-a-quarterly-ai-tool-access-review",
+    "status": "rewritten",
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/when-should-a-business-disclose-ai-use-to-customers (generation record audits/autowriter/generations/2026/11/when-should-a-business-disclose-ai-use-to-customers.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "9c680064169f"
+  }
+]

@@ -69,8 +69,6 @@ const STATEMENTS = {
   'run-without-jobs': 'the CI run finished without creating a job',
   'no-pull-request-run': 'the head commit has checks, but none from the pull-request run',
   'no-checks': 'the head commit has no check runs',
-  'no-checks-catch-up-cap':
-    'the head commit has no check runs, and the one catch-up that could have started CI was already pushed',
   'chain-too-old': 'the watcher has been waiting longer than a pull request may take to settle',
   'catch-up-cap': 'the branch was caught up on main as many times as the cap allows and main moved again each time',
 };

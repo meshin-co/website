@@ -3,9 +3,9 @@ import { join } from 'node:path';
 
 import { fileStemProblem, validateLedger } from './autowriter-ledger.mjs';
 import { describeProblem } from './autowriter-records.mjs';
-import { runGit } from './commit-to-main.mjs';
 import { validateRecord } from './generation-record.mjs';
 import { familyOf, recordDirectory, recordFiles } from './record-layout.mjs';
+import { runGit } from './run-git.mjs';
 import { chooseVersions, ledgerStemOf, recordMicro, recordRepairMicro, spendItemsOf } from './spend-sum.mjs';
 
 export const WORKING_TREE = 'working tree';

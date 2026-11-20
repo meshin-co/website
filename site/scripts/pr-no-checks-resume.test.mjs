@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
 import { CATCH_UP_SUBJECT } from './derived-files.mjs';
-import { NO_CHECKS_CATCH_UP_CAP } from './pr-classify.mjs';
+import { CATCH_UP_CAP } from './pr-classify.mjs';
 import { repairOutputs } from './pr-watch-repair.mjs';
 import { harness, readJson, writtenNames } from './fixtures/pr-watch-harness.mjs';
 import { classify, green } from './fixtures/pr-classify-helpers.mjs';
@@ -40,31 +40,39 @@ test('a pull request whose head has no check runs and that main has moved past i
   );
 });
 
-test('the same pull request, once a catch-up is already on it, is not resumed again and the refusal names the cap', () => {
+test('a catch-up already on the branch does not stop the next one, until the catch-up cap is spent', () => {
   const bundle = noChecks();
-  const outcome = classify(bundle, { drift: BEHIND, commits: withCatchUps(bundle, NO_CHECKS_CATCH_UP_CAP) });
+  for (let caughtUp = 0; caughtUp < CATCH_UP_CAP; caughtUp += 1) {
+    const outcome = classify(bundle, { drift: BEHIND, commits: withCatchUps(bundle, caughtUp) });
 
-  assert.equal(outcome.verdict, 'escalate');
-  assert.equal(outcome.reason, 'no-checks-catch-up-cap');
-  assert.equal(outcome.kind, 'hard-stop');
-});
-
-test('the cap holds however far main has moved or whether it has moved at all', () => {
-  const bundle = noChecks();
-  for (const drift of [BEHIND, CURRENT, { behindBy: 1, paths: null }]) {
-    const outcome = classify(bundle, { drift, commits: withCatchUps(bundle, NO_CHECKS_CATCH_UP_CAP + 1) });
-
-    assert.equal(outcome.verdict, 'escalate', JSON.stringify(drift));
-    assert.equal(outcome.reason, 'no-checks-catch-up-cap', JSON.stringify(drift));
+    assert.equal(outcome.verdict, 'catch-up', `${caughtUp} catch-ups`);
+    assert.equal(outcome.reason, 'no-checks', `${caughtUp} catch-ups`);
   }
 });
 
-test('a branch that main has not moved past stays a hard stop, because a catch-up would push nothing to start CI', () => {
-  const outcome = classify(noChecks(), { drift: CURRENT });
+test('a branch main moved past again after as many catch-ups as the cap allows is no convergence, however far main moved', () => {
+  const bundle = noChecks();
+  for (const drift of [BEHIND, { behindBy: 1, paths: null }]) {
+    for (const caughtUp of [CATCH_UP_CAP, CATCH_UP_CAP + 1]) {
+      const outcome = classify(bundle, { drift, commits: withCatchUps(bundle, caughtUp) });
+      const named = `${caughtUp} catch-ups, ${JSON.stringify(drift)}`;
 
-  assert.equal(outcome.verdict, 'escalate');
-  assert.equal(outcome.reason, 'no-checks');
-  assert.equal(outcome.kind, 'hard-stop');
+      assert.equal(outcome.verdict, 'escalate', named);
+      assert.equal(outcome.reason, 'catch-up-cap', named);
+      assert.equal(outcome.kind, 'no-convergence', named);
+    }
+  }
+});
+
+test('a branch that main has not moved past stays a hard stop after any number of catch-ups, because another would push nothing to start CI', () => {
+  const bundle = noChecks();
+  for (const caughtUp of [0, 1, CATCH_UP_CAP]) {
+    const outcome = classify(bundle, { drift: CURRENT, commits: withCatchUps(bundle, caughtUp) });
+
+    assert.equal(outcome.verdict, 'escalate', `${caughtUp} catch-ups`);
+    assert.equal(outcome.reason, 'no-checks', `${caughtUp} catch-ups`);
+    assert.equal(outcome.kind, 'hard-stop', `${caughtUp} catch-ups`);
+  }
 });
 
 test('every other hard stop is still never resumed, however far main has moved and however few catch-ups there are', () => {
@@ -95,21 +103,20 @@ test('the watcher asks the workflow to repair a resumed pull request and raises 
   assert.match(readFileSync(outputs, 'utf8'), /^repair=true\n.*kind=catch-up\n/ms);
 });
 
-test('the watcher escalates a pull request that was resumed once, and the issue says why the loop stopped', async () => {
+test('the watcher escalates a branch main moved past after as many catch-ups as the cap allows, and the issue says why the loop stopped', async () => {
   const bundle = noChecks();
   const { run, requests, ledgerPath } = await harness({
     bundle,
     drift: BEHIND,
-    commits: withCatchUps(bundle, NO_CHECKS_CATCH_UP_CAP),
+    commits: withCatchUps(bundle, CATCH_UP_CAP),
   });
   const { action, result } = await run();
   const { title, body } = requests[0].body;
 
   assert.equal(action, 'escalated');
-  assert.equal(result.reason, 'no-checks-catch-up-cap');
+  assert.equal(result.reason, 'catch-up-cap');
   assert.match(title, /#72/);
-  assert.match(title, /catch-up/i);
-  assert.match(title, /no check runs/i);
-  assert.match(body, /no-checks-catch-up-cap/);
-  assert.equal(readJson(ledgerPath).escalations[0].kind, 'hard-stop');
+  assert.match(title, /caught up/i);
+  assert.match(body, /catch-up-cap/);
+  assert.equal(readJson(ledgerPath).escalations[0].kind, 'no-convergence');
 });

@@ -14,6 +14,7 @@ import { autowriterSpecimens } from './autowriter-specimens.mjs';
 import { GENERATED_AT } from './fixtures/spend-report-corpus.mjs';
 import { ENTRY_PATH, FACT, RECORD_PATH, SENTENCES, bandSceneFiles } from './fixtures/record-rules-scene.mjs';
 import { SCENE_CORE } from './fixtures/semantic-core-scene.mjs';
+import { checkOutState } from './fixtures/state-checkout.mjs';
 import { run } from './measure-entry-length.mjs';
 import { FAMILIES, manifestFamilies } from './mutation-smoke.mjs';
 import { addUntrackedFile, editFile, flatten, SPECIMENS } from './mutation-specimens.mjs';
@@ -51,7 +52,7 @@ const writeSpendReport = (root) => {
 const SUFFIX_PATTERN = titleSuffix(siteBrand()).replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 async function inTempRepo(check, extra = {}) {
-  const root = mkdtempSync(join(tmpdir(), 'autowriter-specimens-'));
+  const root = checkOutState(mkdtempSync(join(tmpdir(), 'autowriter-specimens-')));
   try {
     for (const [path, body] of Object.entries({ ...FILES, ...extra })) {
       mkdirSync(dirname(join(root, path)), { recursive: true });
@@ -101,6 +102,7 @@ test('the specimen module names every failure mode of the gate, each against gat
     'autowriterCommitWritesLighthouseRecord',
     'autowriterCommitWritesLighthouseReport',
     'autowriterCommitWritesLighthouseStamp',
+    'autowriterCommitWritesStateRecord',
     'autowriterEscalationFailed',
     'autowriterEscalationUnreceipted',
     'autowriterExceptedCommitTouchesAThirdPath',
@@ -124,6 +126,7 @@ test('the specimen module names every failure mode of the gate, each against gat
     'autowriterSpendReportEdited',
     'autowriterSpendReportStale',
     'autowriterSpendReportUnstamped',
+    'autowriterStateCommittedWithoutCheckout',
   ]);
   const tokens = NAMES.map((name) => SPECIMENS[name].token);
   assert.equal(new Set(tokens).size, tokens.length, 'two specimens share a token');
@@ -426,6 +429,7 @@ const WORKFLOW_MESSAGES = [
     'AUTOWRITER classifier-judges-last-push ' + WORKFLOW + ': ',
     'github.event.pull_request.base.sha',
   ],
+  ['autowriterStateCommittedWithoutCheckout', 'AUTOWRITER state-checkout ' + WORKFLOW + ': ', 'autowriter-state'],
 ];
 
 for (const [name, start, mention] of WORKFLOW_MESSAGES) {

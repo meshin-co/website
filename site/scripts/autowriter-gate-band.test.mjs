@@ -17,6 +17,7 @@ import {
 } from './fixtures/record-rules-scene.mjs';
 import { SCENE_CORE } from './fixtures/semantic-core-scene.mjs';
 import { plantSpendReport } from './fixtures/spend-report-plant.mjs';
+import { checkOutState } from './fixtures/state-checkout.mjs';
 import { siteBrand } from './site-brand.mjs';
 
 const SITE = resolve(import.meta.dirname, '..');
@@ -25,7 +26,7 @@ const BAND_PATH = 'audits/sentence-band.json';
 const sceneBand = () => JSON.parse(bandSceneFiles()[BAND_PATH]);
 
 function inTempRepo(plant, check) {
-  const root = mkdtempSync(join(tmpdir(), 'autowriter-gate-band-'));
+  const root = checkOutState(mkdtempSync(join(tmpdir(), 'autowriter-gate-band-')));
   try {
     for (const [path, text] of Object.entries({
       'site/src/config.yaml': `site:\n  name: ${siteBrand().name}\n`,

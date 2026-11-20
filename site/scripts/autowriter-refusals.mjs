@@ -1,6 +1,6 @@
 import { posix } from 'node:path';
 
-import { familyOf } from './record-layout.mjs';
+import { STATE_BRANCH, STATE_DIRECTORY, familyOf } from './record-layout.mjs';
 
 const PIPELINE_REASON_OPENINGS = [
   'The text of this target changed in the run in which the unattended writer added ',
@@ -13,6 +13,8 @@ const normalised = (path) =>
 const exactly = (file) => (path) => normalised(path).toLowerCase() === file;
 
 const matching = (pattern) => (path) => pattern.test(normalised(path));
+
+export const STATE_RECORD = 'state-record';
 
 export const REFUSED_PATHS = [
   {
@@ -34,6 +36,11 @@ export const REFUSED_PATHS = [
     id: 'lighthouse-stamp',
     why: 'The stamp that names the tree a Lighthouse run measured, which only the run that measured it may write.',
     covers: matching(/^audits\/[^/]+\/lh-measured\.json$/i),
+  },
+  {
+    id: STATE_RECORD,
+    why: `A file of the state, which lives on the branch ${STATE_BRANCH} and which only commit-state.mjs writes, so a commit that carries one puts back the shared record that made two pull requests collide.`,
+    covers: matching(new RegExp(`^${STATE_DIRECTORY}/`, 'i')),
   },
   {
     id: 'lighthouse-report',

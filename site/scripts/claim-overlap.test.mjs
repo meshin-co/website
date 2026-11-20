@@ -9,6 +9,7 @@ import { parse } from 'yaml';
 
 import { newClaim, readClaims, writeClaim } from './autowriter-claim-store.mjs';
 import { CommitError, commitAndPush } from './commit-to-main.mjs';
+import { checkOutState } from './fixtures/state-checkout.mjs';
 import { SUFFIX, inputsFor, prompt, reportOf } from './fixtures/topic-inputs.mjs';
 import { BOT_EMAIL, BOT_NAME } from './pr-classify.mjs';
 import { recordDirectory, recordFiles, recordPath } from './record-layout.mjs';
@@ -58,7 +59,7 @@ function makeWorld(seedFiles = {}) {
   const [first, second] = ['first-run', 'second-run'].map((name) => {
     const path = join(base, name);
     git(base, 'clone', remote, path);
-    return path;
+    return checkOutState(path);
   });
   return {
     first,

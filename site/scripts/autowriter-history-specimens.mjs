@@ -112,6 +112,7 @@ export const historySpecimens = () => ({
   autowriterCommitWritesLighthouseRecord: refusedFile('audits/lighthouse-green.json', 'lighthouse-record'),
   autowriterCommitWritesLighthouseStamp: refusedFile('audits/phase-zz/lh-measured.json', 'lighthouse-stamp'),
   autowriterCommitWritesLighthouseReport: refusedFile('audits/phase-zz/lh-mobile/lhr-0.json', 'lighthouse-report'),
+  autowriterCommitWritesStateRecord: refusedFile('state/ledger/2026/11/zz-specimen.json', 'state-record'),
   autowriterCommitSealsDispositions: {
     gate: GATE,
     token: `disposition-seal-committed ${RECORD}: sealed`,
