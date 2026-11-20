@@ -59,7 +59,7 @@ apps:
         index: true
 
     isRelatedPostsEnabled: true
-    relatedPostsCount: 3
+    relatedPostsCount: 8
 
 ui:
   theme: 'system'

@@ -46,8 +46,8 @@
   {
     "target": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/when-should-a-business-disclose-ai-use-to-customers (generation record audits/autowriter/generations/2026/11/when-should-a-business-disclose-ai-use-to-customers.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "34bf2fac8d2b"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/when-should-a-business-disclose-ai-use-to-customers (generation record audits/autowriter/generations/2026/11/when-should-a-business-disclose-ai-use-to-customers.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file. After that, the text of this target changed when the related block grew from the three newest posts of the category to the eight newest (RELATED_POSTS_LIMIT in site/src/utils/post-neighbors.mjs), so the Keep reading section lists up to five more cards. Each line the page gained is the date line or the description of another post of the category, and the site already ships that line in the same words on another route, where it carries its own disposition. No other text of this page changed and none was removed. No person has read this page in this form.",
+    "digest": "9e90cad1a629"
   },
   {
     "target": "/blog/category/agentic-architecture",
@@ -101,21 +101,21 @@
     "target": "/blog/evals-in-ci-for-llm-agents",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "2fc233adb431"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file. After that, the text of this target changed when the related block grew from the three newest posts of the category to the eight newest (RELATED_POSTS_LIMIT in site/src/utils/post-neighbors.mjs), so the Keep reading section lists up to five more cards. Each line the page gained is the date line or the description of another post of the category, and the site already ships that line in the same words on another route, where it carries its own disposition. No other text of this page changed and none was removed. No person has read this page in this form.",
+    "digest": "82dc2c95c484"
   },
   {
     "target": "/blog/evals-in-ci-for-llm-agents",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "2fc233adb431"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-run-an-ai-agent-in-shadow-mode (generation record audits/autowriter/generations/2026/11/how-to-run-an-ai-agent-in-shadow-mode.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file. After that, the text of this target changed when the related block grew from the three newest posts of the category to the eight newest (RELATED_POSTS_LIMIT in site/src/utils/post-neighbors.mjs), so the Keep reading section lists up to five more cards. Each line the page gained is the date line or the description of another post of the category, and the site already ships that line in the same words on another route, where it carries its own disposition. No other text of this page changed and none was removed. No person has read this page in this form.",
+    "digest": "82dc2c95c484"
   },
   {
     "target": "/blog/how-to-build-an-ai-system-register-in-a-week",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/when-should-a-business-disclose-ai-use-to-customers (generation record audits/autowriter/generations/2026/11/when-should-a-business-disclose-ai-use-to-customers.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "1c08a3bfc27c"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/when-should-a-business-disclose-ai-use-to-customers (generation record audits/autowriter/generations/2026/11/when-should-a-business-disclose-ai-use-to-customers.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file. After that, the text of this target changed when the related block grew from the three newest posts of the category to the eight newest (RELATED_POSTS_LIMIT in site/src/utils/post-neighbors.mjs), so the Keep reading section lists up to five more cards. Each line the page gained is the date line or the description of another post of the category, and the site already ships that line in the same words on another route, where it carries its own disposition. No other text of this page changed and none was removed. No person has read this page in this form.",
+    "digest": "85f0c4c54a76"
   },
   {
     "target": "/blog/tag/acceptable-use-policy",
@@ -319,15 +319,15 @@
     "target": "/blog/why-your-ai-pilot-never-reached-production",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-allocate-shared-ai-tool-costs-across-departments (generation record audits/autowriter/generations/2026/11/how-to-allocate-shared-ai-tool-costs-across-departments.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "babaf00f5707"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-allocate-shared-ai-tool-costs-across-departments (generation record audits/autowriter/generations/2026/11/how-to-allocate-shared-ai-tool-costs-across-departments.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file. After that, the text of this target changed when the related block grew from the three newest posts of the category to the eight newest (RELATED_POSTS_LIMIT in site/src/utils/post-neighbors.mjs), so the Keep reading section lists up to five more cards. Each line the page gained is the date line or the description of another post of the category, and the site already ships that line in the same words on another route, where it carries its own disposition. No other text of this page changed and none was removed. No person has read this page in this form.",
+    "digest": "cac41c577e62"
   },
   {
     "target": "/blog/why-your-ai-pilot-never-reached-production",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-allocate-shared-ai-tool-costs-across-departments (generation record audits/autowriter/generations/2026/11/how-to-allocate-shared-ai-tool-costs-across-departments.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "babaf00f5707"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-allocate-shared-ai-tool-costs-across-departments (generation record audits/autowriter/generations/2026/11/how-to-allocate-shared-ai-tool-costs-across-departments.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file. After that, the text of this target changed when the related block grew from the three newest posts of the category to the eight newest (RELATED_POSTS_LIMIT in site/src/utils/post-neighbors.mjs), so the Keep reading section lists up to five more cards. Each line the page gained is the date line or the description of another post of the category, and the site already ships that line in the same words on another route, where it carries its own disposition. No other text of this page changed and none was removed. No person has read this page in this form.",
+    "digest": "cac41c577e62"
   },
   {
     "target": "/case-studies",
