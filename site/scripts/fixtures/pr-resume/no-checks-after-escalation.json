@@ -1,0 +1,632 @@
+{
+  "source": {
+    "note": "PR 145, open and dirty (it conflicts with main): head c5a29c78 is the commit the bot pushed at 2026-11-20T02:01:23Z to record the escalation the watcher raised on run 44657370900, \"escalate (no-checks-catch-up-cap)\"; it is authored by the bot and has zero check runs and zero workflow runs, the branch holds one catch-up merge, and main is ahead of it",
+    "capturedAt": "2026-11-20",
+    "commands": [
+      "gh api repos/meshin-co/website/pulls/145",
+      "gh api repos/meshin-co/website/pulls/145/commits?per_page=100",
+      "gh api repos/meshin-co/website/commits/c5a29c782853e0967134e88c3342bb281c81830e/check-runs?per_page=100",
+      "gh api repos/meshin-co/website/actions/runs?head_sha=c5a29c782853e0967134e88c3342bb281c81830e&per_page=100",
+      "gh api repos/meshin-co/website/compare/c5a29c782853e0967134e88c3342bb281c81830e...main",
+      "git show c5a29c782853e0967134e88c3342bb281c81830e:audits/autowriter/2026/11/how-to-sandbox-ai-agent-code-execution.json"
+    ]
+  },
+  "pullRequest": {
+    "number": 145,
+    "state": "open",
+    "merged": false,
+    "draft": false,
+    "labels": [],
+    "created_at": "2026-11-13T10:02:51Z",
+    "mergeable": false,
+    "mergeable_state": "dirty",
+    "head": {
+      "sha": "c5a29c782853e0967134e88c3342bb281c81830e",
+      "ref": "autowriter/how-to-sandbox-ai-agent-code-execution",
+      "repo": {
+        "full_name": "meshin-co/website"
+      }
+    },
+    "base": {
+      "ref": "main",
+      "repo": {
+        "full_name": "meshin-co/website"
+      }
+    }
+  },
+  "commits": [
+    {
+      "sha": "bdb83aa94175f3666a29aaa238ba2541acb49b51",
+      "parents": [
+        {
+          "sha": "86077d9e51699ab6e5a21939399a2553b50d30bf"
+        }
+      ],
+      "commit": {
+        "author": {
+          "name": "autowriter-bot",
+          "email": "autowriter-bot@meshin.co",
+          "date": "2026-11-13T10:02:48Z"
+        },
+        "committer": {
+          "name": "autowriter-bot",
+          "email": "autowriter-bot@meshin.co",
+          "date": "2026-11-13T10:02:48Z"
+        },
+        "message": "feat(autowriter): write how-to-sandbox-ai-agent-code-execution\n\narticle how-to-sandbox-ai-agent-code-execution: How to sandbox AI agent code execution\nChoice: category agentic-architecture, 5 articles, newest 2026-11-10; no unproven prompt or weak query survived, so the rotation chose it\nOrigin: category\nCategory: agentic-architecture\nProvenance: audits/autowriter/generations/2026/11/how-to-sandbox-ai-agent-code-execution.json\n\nGates: semantic-core 0, gate:registers 0, gate:editorial 0, gate:content 0, gate:human 0, gate:machine 0"
+      }
+    },
+    {
+      "sha": "5a201c5fadf469dfe7915140b64dcb3c4c9fc1a2",
+      "parents": [
+        {
+          "sha": "bdb83aa94175f3666a29aaa238ba2541acb49b51"
+        },
+        {
+          "sha": "55f469196a6427bd1d52f714f1209feb6cf009cc"
+        }
+      ],
+      "commit": {
+        "author": {
+          "name": "autowriter-bot",
+          "email": "autowriter-bot@meshin.co",
+          "date": "2026-11-19T18:11:02Z"
+        },
+        "committer": {
+          "name": "autowriter-bot",
+          "email": "autowriter-bot@meshin.co",
+          "date": "2026-11-19T18:11:02Z"
+        },
+        "message": "chore(autowriter): catch up how-to-sandbox-ai-agent-code-execution on 55f4691"
+      }
+    },
+    {
+      "sha": "224bdb47a12ef2797ceba73f943ba134f6e2cd85",
+      "parents": [
+        {
+          "sha": "5a201c5fadf469dfe7915140b64dcb3c4c9fc1a2"
+        }
+      ],
+      "commit": {
+        "author": {
+          "name": "autowriter-bot",
+          "email": "autowriter-bot@meshin.co",
+          "date": "2026-11-19T18:34:06Z"
+        },
+        "committer": {
+          "name": "autowriter-bot",
+          "email": "autowriter-bot@meshin.co",
+          "date": "2026-11-19T18:34:06Z"
+        },
+        "message": "chore(autowriter): record the escalation of how-to-sandbox-ai-agent-code-execution"
+      }
+    },
+    {
+      "sha": "85788b535485e780bddd4d87fcdbac0f5a9ac730",
+      "parents": [
+        {
+          "sha": "224bdb47a12ef2797ceba73f943ba134f6e2cd85"
+        }
+      ],
+      "commit": {
+        "author": {
+          "name": "autowriter-bot",
+          "email": "autowriter-bot@meshin.co",
+          "date": "2026-11-19T19:08:29Z"
+        },
+        "committer": {
+          "name": "autowriter-bot",
+          "email": "autowriter-bot@meshin.co",
+          "date": "2026-11-19T19:08:29Z"
+        },
+        "message": "chore(autowriter): resume how-to-sandbox-ai-agent-code-execution (main-change)"
+      }
+    },
+    {
+      "sha": "b7aba46c21888d5873489166aac9c2e91e8ac1c3",
+      "parents": [
+        {
+          "sha": "85788b535485e780bddd4d87fcdbac0f5a9ac730"
+        }
+      ],
+      "commit": {
+        "author": {
+          "name": "autowriter-bot",
+          "email": "autowriter-bot@meshin.co",
+          "date": "2026-11-19T19:11:56Z"
+        },
+        "committer": {
+          "name": "autowriter-bot",
+          "email": "autowriter-bot@meshin.co",
+          "date": "2026-11-19T19:11:56Z"
+        },
+        "message": "chore(autowriter): record the escalation of how-to-sandbox-ai-agent-code-execution"
+      }
+    },
+    {
+      "sha": "82d931ede0c1e3ca2cc10407ffec535d072bcdb3",
+      "parents": [
+        {
+          "sha": "b7aba46c21888d5873489166aac9c2e91e8ac1c3"
+        }
+      ],
+      "commit": {
+        "author": {
+          "name": "autowriter-bot",
+          "email": "autowriter-bot@meshin.co",
+          "date": "2026-11-20T01:57:49Z"
+        },
+        "committer": {
+          "name": "autowriter-bot",
+          "email": "autowriter-bot@meshin.co",
+          "date": "2026-11-20T01:57:49Z"
+        },
+        "message": "chore(autowriter): resume how-to-sandbox-ai-agent-code-execution (owner)"
+      }
+    },
+    {
+      "sha": "c5a29c782853e0967134e88c3342bb281c81830e",
+      "parents": [
+        {
+          "sha": "82d931ede0c1e3ca2cc10407ffec535d072bcdb3"
+        }
+      ],
+      "commit": {
+        "author": {
+          "name": "autowriter-bot",
+          "email": "autowriter-bot@meshin.co",
+          "date": "2026-11-20T02:01:23Z"
+        },
+        "committer": {
+          "name": "autowriter-bot",
+          "email": "autowriter-bot@meshin.co",
+          "date": "2026-11-20T02:01:23Z"
+        },
+        "message": "chore(autowriter): record the escalation of how-to-sandbox-ai-agent-code-execution"
+      }
+    }
+  ],
+  "checkRuns": {
+    "total_count": 0,
+    "check_runs": []
+  },
+  "runs": {
+    "total_count": 0,
+    "workflow_runs": []
+  },
+  "jobs": {
+    "total_count": 0,
+    "jobs": []
+  },
+  "drift": {
+    "behindBy": 15,
+    "paths": [
+      ".gitignore",
+      "audits/autowriter/2026/11/how-to-allocate-shared-ai-tool-costs-across-departments.json",
+      "audits/autowriter/2026/11/how-to-audit-employee-compliance-with-ai-usage-rules.json",
+      "audits/autowriter/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json",
+      "audits/autowriter/2026/11/how-to-rank-ai-use-cases-by-risk.json",
+      "audits/autowriter/2026/11/how-to-run-a-quarterly-ai-tool-access-review.json",
+      "audits/autowriter/2026/11/when-should-a-business-disclose-ai-use-to-customers.json",
+      "audits/autowriter/claims/2026/11/how-to-allocate-shared-ai-tool-costs-across-departments.json",
+      "audits/autowriter/claims/2026/11/how-to-audit-employee-compliance-with-ai-usage-rules.json",
+      "audits/autowriter/claims/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json",
+      "audits/autowriter/claims/2026/11/how-to-rank-ai-use-cases-by-risk.json",
+      "audits/autowriter/claims/2026/11/how-to-run-a-quarterly-ai-tool-access-review.json",
+      "audits/autowriter/claims/2026/11/when-should-a-business-disclose-ai-use-to-customers.json",
+      "audits/autowriter/generations/2026/11/how-to-allocate-shared-ai-tool-costs-across-departments.json",
+      "audits/autowriter/generations/2026/11/how-to-audit-employee-compliance-with-ai-usage-rules.json",
+      "audits/autowriter/generations/2026/11/how-to-decide-which-employee-data-can-be-used-in-ai-tools.json",
+      "audits/autowriter/generations/2026/11/how-to-run-a-quarterly-ai-tool-access-review.json",
+      "audits/autowriter/generations/2026/11/when-should-a-business-disclose-ai-use-to-customers.json",
+      "audits/lighthouse-green.json",
+      "audits/phase-4.7/dispositions/2026/11/generated-ai-readiness-assessment-template-for-smb.json",
+      "audits/phase-4.7/dispositions/2026/11/generated-ai-vendor-assessment-questionnaire-template.json",
+      "audits/phase-4.7/dispositions/2026/11/generated-how-to-allocate-shared-ai-tool-costs-across-departments.json",
+      "audits/phase-4.7/dispositions/2026/11/generated-how-to-audit-employee-compliance-with-ai-usage-rules.json",
+      "audits/phase-4.7/dispositions/2026/11/generated-how-to-decide-which-employee-data-can-be-used-in-ai-tools.json",
+      "audits/phase-4.7/dispositions/2026/11/generated-how-to-review-ai-generated-customer-support-replies.json",
+      "audits/phase-4.7/dispositions/2026/11/generated-how-to-review-ai-vendor-model-updates-after-deployment.json",
+      "audits/phase-4.7/dispositions/2026/11/generated-how-to-run-a-quarterly-ai-tool-access-review.json",
+      "audits/phase-4.7/dispositions/2026/11/generated-named-person-responsible-for-ai-risk-in-vendor-procurement.json",
+      "audits/phase-4.7/dispositions/2026/11/generated-when-should-a-business-disclose-ai-use-to-customers.json",
+      "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+      "audits/phase-4.7/dispositions/articles-telemetry.json",
+      "audits/phase-4.7/dispositions/routes.json",
+      "audits/routes.json",
+      "audits/search-demand.md",
+      "audits/spend-report.md",
+      "docs/SEMANTIC-CORE.md",
+      "docs/plan/reference/known-gaps.md",
+      "openspec/changes/49-move-the-records-off-main/blocked.md",
+      "openspec/changes/49-move-the-records-off-main/proposal.md",
+      "openspec/changes/49-move-the-records-off-main/specs/governance/unattended-publishing/spec.md",
+      "openspec/changes/49-move-the-records-off-main/tasks.md",
+      "site/.agents/skills/guard-the-unattended-writer.md",
+      "site/.agents/skills/operate-the-repair-loop.md",
+      "site/.agents/skills/repair-a-dead-citation.md",
+      "site/.agents/skills/repair-an-unattended-entry.md",
+      "site/.agents/skills/resume-an-escalated-pull-request.md",
+      "site/.agents/skills/write-on-a-category.md",
+      "site/content-facts.json",
+      "site/scripts/README.md",
+      "site/scripts/autowriter-claim-store.test.mjs",
+      "site/scripts/autowriter-gate-band.test.mjs",
+      "site/scripts/autowriter-gate-history.test.mjs",
+      "site/scripts/autowriter-gate-length.test.mjs",
+      "site/scripts/autowriter-gate-workflows.test.mjs",
+      "site/scripts/autowriter-gate.mjs",
+      "site/scripts/autowriter-gate.test.mjs",
+      "site/scripts/autowriter-history-specimens.mjs",
+      "site/scripts/autowriter-history-specimens.test.mjs",
+      "site/scripts/autowriter-refusal-rules.test.mjs",
+      "site/scripts/autowriter-refusals.mjs",
+      "site/scripts/autowriter-refusals.test.mjs",
+      "site/scripts/autowriter-specimens.mjs",
+      "site/scripts/autowriter-specimens.test.mjs",
+      "site/scripts/autowriter-spend-specimens.test.mjs",
+      "site/scripts/autowriter-state-rules.mjs",
+      "site/scripts/autowriter-state-rules.test.mjs",
+      "site/scripts/bot-push-token.mjs",
+      "site/scripts/bot-push-token.test.mjs",
+      "site/scripts/claim-overlap.test.mjs",
+      "site/scripts/commit-branch-refusals.test.mjs",
+      "site/scripts/commit-branch-removals.test.mjs",
+      "site/scripts/commit-branch.mjs",
+      "site/scripts/commit-branch.test.mjs",
+      "site/scripts/commit-state-cli.test.mjs",
+      "site/scripts/commit-state-refusals.test.mjs",
+      "site/scripts/commit-state.mjs",
+      "site/scripts/commit-state.test.mjs",
+      "site/scripts/commit-to-main.mjs",
+      "site/scripts/commit-to-main.test.mjs",
+      "site/scripts/docs-gate.mjs",
+      "site/scripts/docs-gate.test.mjs",
+      "site/scripts/fixtures/commit-branch-world.mjs",
+      "site/scripts/fixtures/history-repo.mjs",
+      "site/scripts/fixtures/live-repo.mjs",
+      "site/scripts/fixtures/pick-scene.mjs",
+      "site/scripts/fixtures/recorded-claim-category.json",
+      "site/scripts/fixtures/recorded-claim.mjs",
+      "site/scripts/fixtures/spend-report-plant.test.mjs",
+      "site/scripts/fixtures/spend-scene.mjs",
+      "site/scripts/fixtures/state-checkout.mjs",
+      "site/scripts/fixtures/state-checkout.test.mjs",
+      "site/scripts/fixtures/state-world.mjs",
+      "site/scripts/fixtures/writer-repo.mjs",
+      "site/scripts/generation-record-defects.test.mjs",
+      "site/scripts/generation-record.schema.json",
+      "site/scripts/link-repair-publish.mjs",
+      "site/scripts/main-write-debt.site.test.mjs",
+      "site/scripts/main-write-scan-source.test.mjs",
+      "site/scripts/main-write-scan.mjs",
+      "site/scripts/main-write-scan.test.mjs",
+      "site/scripts/mutation-smoke.mjs",
+      "site/scripts/pick-a-topic-contract.test.mjs",
+      "site/scripts/pick-a-topic.test.mjs",
+      "site/scripts/press-specimens.mjs",
+      "site/scripts/record-layout-state.test.mjs",
+      "site/scripts/record-layout.mjs",
+      "site/scripts/record-layout.test.mjs",
+      "site/scripts/repair-guard.mjs",
+      "site/scripts/repair-guard.test.mjs",
+      "site/scripts/repair-open.mjs",
+      "site/scripts/repair-open.test.mjs",
+      "site/scripts/repair-run.test.mjs",
+      "site/scripts/run-deploy.test.mjs",
+      "site/scripts/run-git.mjs",
+      "site/scripts/run-git.test.mjs",
+      "site/scripts/slot-due.test.mjs",
+      "site/scripts/spend-ceiling.mjs",
+      "site/scripts/spend-report.test.mjs",
+      "site/scripts/spend-sources.mjs",
+      "site/scripts/spend-sources.test.mjs",
+      "site/scripts/writer-prompt-repair.mjs",
+      "site/scripts/writer-prompt-repair.test.mjs",
+      "site/src/data/post/how-to-allocate-shared-ai-tool-costs-across-departments.md",
+      "site/src/data/post/how-to-audit-employee-compliance-with-ai-usage-rules.md",
+      "site/src/data/post/how-to-decide-which-employee-data-can-be-used-in-ai-tools.md",
+      "site/src/data/post/how-to-run-a-quarterly-ai-tool-access-review.md",
+      "site/src/data/post/when-should-a-business-disclose-ai-use-to-customers.md"
+    ]
+  },
+  "ledger": {
+    "schema": 1,
+    "slug": "how-to-sandbox-ai-agent-code-execution",
+    "runId": "43405333127-1",
+    "pullRequest": null,
+    "attempts": [],
+    "spend": {
+      "tokens": {
+        "input": 25624,
+        "output": 6404
+      },
+      "costUsd": 0.057644
+    },
+    "verdict": {
+      "state": "escalated",
+      "reason": "Autowriter pull request #145: the head commit has no check runs, and the one catch-up that could have started CI was already pushed",
+      "decidedAt": "2026-11-20T02:01:22.990Z"
+    },
+    "escalations": [
+      {
+        "id": "esc-1",
+        "kind": "hard-stop",
+        "title": "Autowriter pull request #145: the repair job failed before it could finish",
+        "detail": "The repair of pull request #145 ended as failed: the repair job failed before it could finish.\nRepair run: https://github.com/meshin-co/website/actions/runs/44588160321\nPull request: https://github.com/meshin-co/website/pull/145",
+        "raisedAt": "2026-11-19T18:34:06.138Z",
+        "receipts": [
+          {
+            "channel": "issue",
+            "attemptedAt": "2026-11-19T18:34:06.139Z",
+            "delivered": true,
+            "status": 201,
+            "issue": 170,
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "esc-2",
+        "kind": "hard-stop",
+        "title": "Autowriter pull request #145: the head commit has no check runs, and the one catch-up that could have started CI was already pushed",
+        "detail": "The watcher judged head 85788b535485e780bddd4d87fcdbac0f5a9ac730: escalate, no-checks-catch-up-cap.\nPull request: https://github.com/meshin-co/website/pull/145",
+        "raisedAt": "2026-11-19T19:11:55.749Z",
+        "receipts": [
+          {
+            "channel": "issue",
+            "attemptedAt": "2026-11-19T19:11:55.749Z",
+            "delivered": true,
+            "status": 201,
+            "issue": 173,
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "esc-3",
+        "kind": "hard-stop",
+        "title": "Autowriter pull request #145: the head commit has no check runs, and the one catch-up that could have started CI was already pushed",
+        "detail": "The watcher judged head 82d931ede0c1e3ca2cc10407ffec535d072bcdb3: escalate, no-checks-catch-up-cap.\nPull request: https://github.com/meshin-co/website/pull/145",
+        "raisedAt": "2026-11-20T02:01:22.502Z",
+        "receipts": [
+          {
+            "channel": "issue",
+            "attemptedAt": "2026-11-20T02:01:22.502Z",
+            "delivered": true,
+            "status": 201,
+            "issue": 185,
+            "error": null
+          }
+        ]
+      }
+    ],
+    "generation": {
+      "tokens": {
+        "input": 25624,
+        "output": 6404
+      },
+      "costUsd": 0.057644
+    },
+    "refusals": [
+      {
+        "title": "Fractional CAIO vs full-time CAIO cost",
+        "reason": "slug-held",
+        "against": "audits/autowriter/2026/11/fractional-caio-vs-full-time-caio-cost.json",
+        "detail": "slug \"fractional-caio-vs-full-time-caio-cost\" already has the ledger audits/autowriter/2026/11/fractional-caio-vs-full-time-caio-cost.json, so an earlier run owns it and the topic cannot be tried again yet; no procedure frees a slug safely, and removing the ledger is not one, because it records spend that the monthly spend ceiling counts"
+      },
+      {
+        "title": "AI readiness assessment template for SMB",
+        "reason": "family-served",
+        "against": "/blog/ai-readiness-assessment-template-for-smb",
+        "detail": "the prompt already lists /blog/ai-readiness-assessment-template-for-smb among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "AI governance consultant ISO 42001 small company",
+        "reason": "register-owner",
+        "against": "/glossary/ai-governance",
+        "detail": "the query \"ai governance consultant iso 42001 small company\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+      },
+      {
+        "title": "Named person responsible for AI risk in vendor procurement",
+        "reason": "family-served",
+        "against": "/blog/named-person-responsible-for-ai-risk-in-vendor-procurement",
+        "detail": "the prompt already lists /blog/named-person-responsible-for-ai-risk-in-vendor-procurement among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "AI acceptable use policy template",
+        "reason": "family-served",
+        "against": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
+        "detail": "the prompt already lists /blog/ai-acceptable-use-policy-for-a-50-person-company among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "Why do AI pilots fail to reach production?",
+        "reason": "family-served",
+        "against": "/blog/why-your-ai-pilot-never-reached-production",
+        "detail": "the prompt already lists /blog/why-your-ai-pilot-never-reached-production among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "LLM gateway for governance and audit",
+        "reason": "register-owner",
+        "against": "/glossary/llm-gateway",
+        "detail": "the query \"llm gateway for governance and audit\" names the concept \"LLM gateway\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/llm-gateway"
+      },
+      {
+        "title": "How to put evals for AI agents into CI",
+        "reason": "register-owner",
+        "against": "/glossary/evals",
+        "detail": "the query \"how to put evals for ai agents into ci\" names the concept \"Evals\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/evals"
+      },
+      {
+        "title": "AI vendor assessment questionnaire template",
+        "reason": "family-served",
+        "against": "/blog/ai-vendor-assessment-questionnaire-template",
+        "detail": "the prompt already lists /blog/ai-vendor-assessment-questionnaire-template among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "Build vs buy AI 3-year TCO",
+        "reason": "family-served",
+        "against": "/blog/build-vs-buy-ai-3-year-tco",
+        "detail": "the prompt already lists /blog/build-vs-buy-ai-3-year-tco among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "AI operating model for mid-size company",
+        "reason": "register-owner",
+        "against": "/glossary/ai-operating-model",
+        "detail": "the query \"ai operating model for mid-size company\" names the concept \"AI operating model\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-operating-model"
+      },
+      {
+        "title": "How to hand over AI leadership to internal team",
+        "reason": "family-served",
+        "against": "/blog/handing-over-ai-leadership-to-an-internal-owner",
+        "detail": "the prompt already lists /blog/handing-over-ai-leadership-to-an-internal-owner among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "Agentic automation consultant for B2B",
+        "reason": "title-collision",
+        "against": "Agentic automation consultant for B2B",
+        "detail": "title \"Agentic automation consultant for B2B\" is also claimed by audits/autowriter/claims/2026/11/agentic-automation-consultant-for-b2b.json"
+      },
+      {
+        "title": "MCP security best practices",
+        "reason": "register-owner",
+        "against": "/glossary/mcp",
+        "detail": "the query \"mcp security best practices\" names the concept \"Model Context Protocol\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/mcp"
+      },
+      {
+        "title": "Multi-agent reference architecture production",
+        "reason": "family-served",
+        "against": "/blog/multi-agent-reference-architecture-in-production",
+        "detail": "the prompt already lists /blog/multi-agent-reference-architecture-in-production among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "Adoption telemetry for AI tools",
+        "reason": "family-served",
+        "against": "/blog/adoption-telemetry-measuring-if-ai-is-actually-used",
+        "detail": "the prompt already lists /blog/adoption-telemetry-measuring-if-ai-is-actually-used among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "AI incident response plan template",
+        "reason": "title-collision",
+        "against": "AI incident response plan template",
+        "detail": "title \"AI incident response plan template\" is also claimed by audits/autowriter/claims/2026/11/ai-incident-response-plan-template.json"
+      },
+      {
+        "title": "Data classification for LLM usage",
+        "reason": "register-owner",
+        "against": "/glossary/data-classification",
+        "detail": "the query \"data classification for llm usage\" names the concept \"Data classification\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/data-classification"
+      },
+      {
+        "title": "ISO 42001 gap assessment",
+        "reason": "title-collision",
+        "against": "ISO 42001 gap assessment",
+        "detail": "title \"ISO 42001 gap assessment\" is also claimed by audits/autowriter/claims/2026/11/iso-42001-gap-assessment.json"
+      },
+      {
+        "title": "NIST AI RMF for small companies",
+        "reason": "register-owner",
+        "against": "/glossary/nist-ai-rmf",
+        "detail": "the query \"nist ai rmf for small companies\" names the concept \"NIST AI RMF\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/nist-ai-rmf"
+      },
+      {
+        "title": "Fractional CAIO pricing",
+        "reason": "family-served",
+        "against": "/blog/fractional-caio-pricing",
+        "detail": "the prompt already lists /blog/fractional-caio-pricing among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "What does a chief AI officer do in a 50 person company?",
+        "reason": "title-collision",
+        "against": "What does a chief AI officer do in a 50 person company?",
+        "detail": "title \"What does a chief AI officer do in a 50 person company?\" is also claimed by audits/autowriter/claims/2026/11/what-does-a-chief-ai-officer-do-in-a-50-person-company.json"
+      },
+      {
+        "title": "AI governance starter kit open source",
+        "reason": "register-owner",
+        "against": "/glossary/ai-governance",
+        "detail": "the query \"ai governance starter kit open source\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+      },
+      {
+        "title": "AI readiness scorecard five drivers",
+        "reason": "family-served",
+        "against": "/blog/ai-readiness-scorecard-five-drivers",
+        "detail": "the prompt already lists /blog/ai-readiness-scorecard-five-drivers among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "Board memo AI strategy one page",
+        "reason": "family-served",
+        "against": "/blog/board-memo-ai-strategy-one-page",
+        "detail": "the prompt already lists /blog/board-memo-ai-strategy-one-page among its routes and that route is in the article family, so another article would answer the same prompt twice"
+      },
+      {
+        "title": "AI governance framework",
+        "reason": "register-owner",
+        "against": "/glossary/ai-governance",
+        "detail": "the query \"ai governance framework\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+      },
+      {
+        "title": "NIST AI RMF framework",
+        "reason": "register-owner",
+        "against": "/glossary/nist-ai-rmf",
+        "detail": "the query \"nist ai rmf framework\" names the concept \"NIST AI RMF\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/nist-ai-rmf"
+      },
+      {
+        "title": "Prompt injection examples",
+        "reason": "register-owner",
+        "against": "/glossary/prompt-injection",
+        "detail": "the query \"prompt injection examples\" names the concept \"Prompt injection\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/prompt-injection"
+      },
+      {
+        "title": "Data classification policy",
+        "reason": "register-owner",
+        "against": "/glossary/data-classification",
+        "detail": "the query \"data classification policy\" names the concept \"Data classification\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/data-classification"
+      },
+      {
+        "title": "DPIA template",
+        "reason": "register-owner",
+        "against": "/glossary/dpia",
+        "detail": "the query \"dpia template\" names the concept \"DPIA\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/dpia"
+      },
+      {
+        "title": "Technical documentation template",
+        "reason": "register-owner",
+        "against": "/glossary/technical-documentation",
+        "detail": "the query \"technical documentation template\" names the concept \"Technical documentation\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/technical-documentation"
+      },
+      {
+        "title": "AI governance policy",
+        "reason": "register-owner",
+        "against": "/glossary/ai-governance",
+        "detail": "the query \"ai governance policy\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+      },
+      {
+        "title": "What is AI governance?",
+        "reason": "register-owner",
+        "against": "/glossary/ai-governance",
+        "detail": "the query \"ai governance\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+      },
+      {
+        "title": "What is AI governance?",
+        "reason": "register-owner",
+        "against": "/glossary/ai-governance",
+        "detail": "the query \"ai governance\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+      }
+    ],
+    "resumes": [
+      {
+        "at": "2026-11-19T19:08:29.285Z",
+        "by": "main-change",
+        "mainSha": "cd6607cb293559430fe7977967c190bc177433bb",
+        "failedJobs": []
+      },
+      {
+        "at": "2026-11-20T01:57:49.720Z",
+        "by": "owner",
+        "mainSha": null,
+        "failedJobs": []
+      }
+    ]
+  }
+}

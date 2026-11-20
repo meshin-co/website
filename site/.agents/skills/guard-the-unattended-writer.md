@@ -65,9 +65,9 @@ can never shadow it. A new job in `ci.yml` goes into that job's `needs` and into
 A push made with the workflow's default `GITHUB_TOKEN` starts no CI run: the commit has no check run, and its
 one `pull_request` run ends `failure` with no job or waits as `action_required` until a person re-runs it.
 `regen-baselines` in `ci.yml` commits as `baseline-bot` with that token, so its commits take this form. A push
-made as a user does start CI. So the writer and the watcher push with the `AUTOWRITER_PAT` secret. The watcher
-reads a push that starts no run as `no-checks` on the second look and escalates, never as green. The dated
-evidence for each form is under `investigation/`.
+made as a user does start CI, so the writer and the watcher push with the `AUTOWRITER_PAT` secret; even that starts
+none on a pull request in conflict with `main`, which has no merge for GitHub to run on. The watcher catches such a
+head up and never reads it as green. Dated evidence: `investigation/`, and `scripts/fixtures/pr-resume/no-checks-after-escalation.json`.
 
 ## Add a failure mode
 
