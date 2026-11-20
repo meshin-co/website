@@ -12,9 +12,9 @@
     "costUsd": 0.067962
   },
   "verdict": {
-    "state": "escalated",
-    "reason": "Autowriter pull request #137: the gate's findings cannot be repaired by rewriting the entry, or the rewrite could not be made to pass the repair's own checks",
-    "decidedAt": "2026-11-20T04:18:00.761Z"
+    "state": "merged",
+    "reason": null,
+    "decidedAt": "2026-11-20T11:21:12.003Z"
   },
   "escalations": [
     {
@@ -355,5 +355,11 @@
       "mainSha": null,
       "failedJobs": []
     }
-  ]
+  ],
+  "measurementDebt": {
+    "mergedCommit": "4d8feaf4b24760fa20f7dd22e9e63d2e9fa42e10",
+    "fingerprint": "505bb4f4e5accecaad875abc8ac0f227bf1baf28aaeb3e3af3404e24c68ba199",
+    "recordedAt": "2026-11-20T11:21:12.003Z",
+    "clear": "cd site && GATE_PHASE=<bucket> npm run gate:lh && GATE_PHASE=<bucket> npm run lh:record"
+  }
 }
