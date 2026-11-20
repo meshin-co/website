@@ -10,6 +10,7 @@ import { refusalFor } from './autowriter-refusals.mjs';
 import { commitRepair } from './entry-commit.mjs';
 import { committedFiles, scene } from './fixtures/commit-scene.mjs';
 import { gitRun } from './fixtures/git-run.mjs';
+import { promptlessClaim } from './fixtures/recorded-claim.mjs';
 import {
   COMMIT,
   ENTRY,
@@ -18,6 +19,7 @@ import {
   LEDGER,
   NOW,
   RECORD,
+  before,
   claim,
   cleanup,
   ledgerAfter,
@@ -51,6 +53,22 @@ test('a repairable finding drives a rewrite through the build and into one commi
   assert.equal(assembled.length, 1);
   assert.deepEqual(assembled[0].draft, rewritten);
   assert.deepEqual(assembled[0].attempt, { number: 1, of: ATTEMPT_CAP });
+  assert.equal(committed.length, 1);
+});
+
+test('an entry that carries no buyer prompt is repaired: no passage is held, and the prompt says so', async () => {
+  const { io, adapter, assembled, committed } = world({ drafts: [reworded()] });
+  const opened = io.open;
+  io.open = async () => ({ ...(await opened()), claim: promptlessClaim(claim), before: { ...before, passage: null } });
+
+  const result = await repairRun(io);
+
+  assert.equal(result.outcome, 'repaired');
+  assert.equal(adapter.requests.length, 1);
+  const asked = adapter.requests[0].messages[0].content;
+  assert.match(asked, /no registered passage/);
+  assert.doesNotMatch(asked, /word for word: null/);
+  assert.equal(assembled.length, 1);
   assert.equal(committed.length, 1);
 });
 
@@ -93,7 +111,15 @@ test('a finding the table refuses stops the loop before any model call, naming t
   const kinds = {
     judgeFindings: () => ({
       rewrite: [],
-      refused: [{ gate: 'gate:content', rule: 'inbound-links', subjects: [ENTRY], reason: 'outside-entry' }],
+      refused: [
+        {
+          gate: 'gate:content',
+          rule: 'inbound-links',
+          subjects: [ENTRY],
+          reason: 'outside-entry',
+          why: 'it names a page the entry does not own',
+        },
+      ],
     }),
     allowancesOf: () => [],
   };

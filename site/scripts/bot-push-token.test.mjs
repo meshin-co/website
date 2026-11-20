@@ -5,7 +5,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import { test } from 'node:test';
 
-import { botPushFindings, pushingSteps } from './bot-push-token.mjs';
+import { botPushFindings, commitStateFindings, pushingSteps } from './bot-push-token.mjs';
 
 const WORKFLOWS = join(import.meta.dirname, '..', '..', '.github', 'workflows');
 const BOT_SECRET_EXPRESSION = 'secrets.AUTOWRITER_PAT';
@@ -157,4 +157,82 @@ test('a file with no jobs, an empty file, a list and a job that calls another wo
 
 test('a file that is not YAML throws, so the gate can name the file it could not read', () => {
   assert.throws(() => scan('jobs: [\n'));
+});
+
+const stateJob = ({ checkout = STATE_CHECKOUT, before = '', after = '' } = {}) => `
+jobs:
+  write:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+${before}${checkout}      - name: commit the claim
+        run: node scripts/commit-state.mjs --message x --path state/claims/2026/11/a.json
+${after}`;
+
+const STATE_CHECKOUT = `      - uses: actions/checkout@v4
+        with:
+          ref: autowriter-state
+          path: state
+          token: \${{ secrets.AUTOWRITER_PAT }}
+`;
+
+const stateScan = (text) => commitStateFindings([{ path: 'x.yml', text }]);
+
+test('no step of any workflow commits the state without a bot-token checkout of the state branch before it', () => {
+  assert.deepEqual(commitStateFindings(realWorkflows), []);
+});
+
+test('a job that checks the state branch out with the bot token before commit-state is accepted', () => {
+  assert.deepEqual(stateScan(stateJob()), []);
+});
+
+test('a job with no checkout of the state branch is refused by name', () => {
+  const found = stateScan(stateJob({ checkout: '' }));
+
+  assert.equal(found.length, 1);
+  assert.equal(found[0].rule, 'state-checkout');
+  assert.match(found[0].detail, /job write, step "commit the claim"/);
+  assert.match(found[0].detail, /no checkout of autowriter-state at state\//);
+});
+
+test('a checkout of the state branch at another path is not the state', () => {
+  const elsewhere = STATE_CHECKOUT.replace('path: state', 'path: elsewhere');
+
+  assert.equal(stateScan(stateJob({ checkout: elsewhere })).length, 1);
+});
+
+test('a checkout of another ref at state/ is not the state branch', () => {
+  const wrongRef = STATE_CHECKOUT.replace('ref: autowriter-state', 'ref: main');
+
+  assert.equal(stateScan(stateJob({ checkout: wrongRef })).length, 1);
+});
+
+test('a state checkout without the bot token cannot push as the bot', () => {
+  const noToken = STATE_CHECKOUT.replace(/ {10}token: .*\n/, '');
+  const found = stateScan(stateJob({ checkout: noToken }));
+
+  assert.equal(found.length, 1);
+  assert.match(found[0].detail, /does not carry secrets\.AUTOWRITER_PAT/);
+});
+
+test('a state checkout that comes after the step that commits is not there when the step runs', () => {
+  const found = stateScan(stateJob({ checkout: '', after: STATE_CHECKOUT }));
+
+  assert.equal(found.length, 1);
+  assert.match(found[0].detail, /comes after the step/);
+});
+
+test('a step that only names another script is not a commit of the state', () => {
+  const text = `
+jobs:
+  write:
+    runs-on: ubuntu-latest
+    steps:
+      - run: node scripts/commit-branch.mjs --message x --path y --ref link-repair/x
+      - run: echo commit-state.json
+`;
+
+  assert.deepEqual(stateScan(text), []);
 });

@@ -13,6 +13,7 @@ import { BOT, HUMAN, commitAs, gitIn, initRepo, removeRepos, shallowClone } from
 import { bandSceneFiles } from './fixtures/record-rules-scene.mjs';
 import { SCENE_CORE } from './fixtures/semantic-core-scene.mjs';
 import { plantSpendReport } from './fixtures/spend-report-plant.mjs';
+import { checkOutState } from './fixtures/state-checkout.mjs';
 import { FAMILIES, manifestFamilies } from './mutation-smoke.mjs';
 import { SPECIMENS, flatten, proveWithSpecimen } from './mutation-specimens.mjs';
 import { recordDirectory, recordPath } from './record-layout.mjs';
@@ -53,6 +54,12 @@ const REFUSED = [
     family: 'autowriter-commit-writes-a-lighthouse-report',
     path: 'audits/phase-zz/lh-mobile/lhr-0.json',
     id: 'lighthouse-report',
+  },
+  {
+    name: 'autowriterCommitWritesStateRecord',
+    family: 'autowriter-commit-writes-a-state-record',
+    path: 'state/ledger/2026/11/zz-specimen.json',
+    id: 'state-record',
   },
   {
     name: 'autowriterCommitAnUnregisteredPath',
@@ -112,7 +119,7 @@ const PLACEMENTS = [
 ];
 
 async function inScene(check, files = FILES) {
-  const root = mkdtempSync(join(tmpdir(), 'autowriter-history-specimens-'));
+  const root = checkOutState(mkdtempSync(join(tmpdir(), 'autowriter-history-specimens-')));
   try {
     for (const [path, body] of Object.entries(files)) {
       mkdirSync(dirname(join(root, path)), { recursive: true });

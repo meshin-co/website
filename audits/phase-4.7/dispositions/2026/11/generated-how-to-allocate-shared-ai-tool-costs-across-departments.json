@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/how-to-allocate-shared-ai-tool-costs-across-departments.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-allocate-shared-ai-tool-costs-across-departments.json on 2026-11-11. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-allocate-shared-ai-tool-costs-across-departments.json.",
+    "digest": "21347ed0bba7"
+  },
+  {
+    "target": "/blog/how-to-allocate-shared-ai-tool-costs-across-departments",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-allocate-shared-ai-tool-costs-across-departments.json on 2026-11-11. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-allocate-shared-ai-tool-costs-across-departments.json. After that, the text of this target changed when the related block grew from the three newest posts of the category to the eight newest (RELATED_POSTS_LIMIT in site/src/utils/post-neighbors.mjs), so the Keep reading section lists up to five more cards. Each line the page gained is the date line or the description of another post of the category, and the site already ships that line in the same words on another route, where it carries its own disposition. No other text of this page changed and none was removed. No person has read this page in this form.",
+    "digest": "8d2d66ae77ac"
+  }
+]

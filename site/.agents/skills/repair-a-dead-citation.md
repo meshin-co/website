@@ -19,7 +19,7 @@ another archive, for a rehearsal.
 - `scripts/link-repair-sweep.mjs` plans: the dead addresses, the cap, each citation's rung, the unplaced rows.
 - `scripts/link-repair-archive.mjs` is rung 2 for one address, with ten seconds between archive calls.
 - `scripts/link-repair-report.mjs` words the branch name, the commit message, the pull request and the summary line.
-- `scripts/link-repair-publish.mjs` makes the branch, the one commit through the commit sink and the pull request.
+- `scripts/link-repair-publish.mjs` makes the branch, the one commit through `scripts/commit-branch.mjs`, which refuses `main`, and the pull request.
 - `scripts/link-repair-settle.mjs` formats the entries, rebuilds, restates the stale dispositions and formats them.
 - `scripts/link-rot-register.mjs` is the register: its shape, its digest, the merge of a run's rows, the count it
   prints; `scripts/link-rot-specimens.mjs` plants the hand-edited register `gate:links` must refuse, in `test:smoke`.

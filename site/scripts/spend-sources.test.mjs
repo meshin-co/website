@@ -7,8 +7,8 @@ import { test } from 'node:test';
 
 import { PLACES } from './fixtures/record-depths.mjs';
 import { FILED_AT, createScene, ledgerOf, recordOf } from './fixtures/spend-scene.mjs';
-import { runGit } from './commit-to-main.mjs';
 import { recordPath } from './record-layout.mjs';
+import { runGit } from './run-git.mjs';
 import { SpendDataError, readLedgers } from './spend-sources.mjs';
 import { microOf, monthlySpend, spendWarnings } from './spend-sum.mjs';
 

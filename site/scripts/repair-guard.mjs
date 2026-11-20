@@ -127,7 +127,7 @@ function sourceProblems({ before, after, may }) {
 }
 
 const passageProblems = ({ before, after }) =>
-  before.passage === after.passage
+  before.passage === null || before.passage === after.passage
     ? []
     : [
         problem(

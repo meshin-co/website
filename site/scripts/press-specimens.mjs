@@ -5,6 +5,7 @@ import { dirname, join } from 'node:path';
 
 import { newLedger, writeLedger } from './autowriter-ledger.mjs';
 import { REQUIRED_ENV } from './deploy.mjs';
+import { checkOutState } from './fixtures/state-checkout.mjs';
 import { headFingerprint } from './lh-evidence.mjs';
 import { ledgerWithDebt } from './measurement-debt.mjs';
 import { recordPath } from './record-layout.mjs';
@@ -49,6 +50,7 @@ export async function pressScene({ copySite, work }) {
   await put(join(root, '.gitignore'), 'site/dist/\nsite/node_modules/\n');
   git(work, 'init', '-q', root);
   git(root, 'config', 'maintenance.auto', 'false');
+  checkOutState(root);
   commitAll(root, 'the tree the run measured');
 
   const fingerprint = await headFingerprint(root);

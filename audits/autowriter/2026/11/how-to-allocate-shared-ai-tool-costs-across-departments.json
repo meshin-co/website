@@ -6,23 +6,49 @@
   "attempts": [],
   "spend": {
     "tokens": {
-      "input": 2068,
-      "output": 154
+      "input": 12402,
+      "output": 3656
     },
-    "costUsd": 0.002838
+    "costUsd": 0.030682
   },
   "verdict": {
-    "state": "open",
+    "state": "merged",
     "reason": null,
-    "decidedAt": null
+    "decidedAt": "2026-11-19T23:40:26.083Z"
   },
-  "escalations": [],
+  "escalations": [
+    {
+      "id": "esc-1",
+      "kind": "no-convergence",
+      "title": "Autowriter pull request #138: the watcher has been waiting longer than a pull request may take to settle",
+      "detail": "The watcher judged head 1f8c633e2b31f9452f2a31158c3d965dd0a1b34a: escalate, chain-too-old.\nJobs: visual-and-axe (1), visual-and-axe (2), visual-and-axe (3).\nPull request: https://github.com/meshin-co/website/pull/138",
+      "raisedAt": "2026-11-19T18:05:18.763Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-19T18:05:18.763Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 169,
+          "error": null
+        },
+        {
+          "channel": "slack",
+          "attemptedAt": "2026-11-19T18:05:19.292Z",
+          "delivered": true,
+          "status": 200,
+          "issue": null,
+          "error": null
+        }
+      ]
+    }
+  ],
   "generation": {
     "tokens": {
-      "input": 2068,
-      "output": 154
+      "input": 12402,
+      "output": 3656
     },
-    "costUsd": 0.002838
+    "costUsd": 0.030682
   },
   "refusals": [
     {
@@ -229,5 +255,19 @@
       "against": "/glossary/ai-governance",
       "detail": "the query \"ai governance\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
     }
-  ]
+  ],
+  "resumes": [
+    {
+      "at": "2026-11-19T23:16:29.325Z",
+      "by": "owner",
+      "mainSha": null,
+      "failedJobs": []
+    }
+  ],
+  "measurementDebt": {
+    "mergedCommit": "0fdc3c1718a25daa444c0b380ceff574227125f1",
+    "fingerprint": "0a8501dd76ce8ce86cb329fcdf21cb89408d4895698fc6ab37f206180a6a54b8",
+    "recordedAt": "2026-11-19T23:40:26.083Z",
+    "clear": "cd site && GATE_PHASE=<bucket> npm run gate:lh && GATE_PHASE=<bucket> npm run lh:record"
+  }
 }

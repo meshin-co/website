@@ -15,6 +15,7 @@ import {
   recordOf,
   writingCall,
 } from './fixtures/spend-report-corpus.mjs';
+import { checkOutState } from './fixtures/state-checkout.mjs';
 import { siteOrigin } from './links-gate.mjs';
 import { SITE_CONFIG } from './site-brand.mjs';
 import { corpusFiles, runCli, spendReportFile } from './spend-report.mjs';
@@ -44,6 +45,7 @@ async function withRepo(body) {
   const base = mkdtempSync(join(tmpdir(), 'spend-report-'));
   const root = join(base, 'repo');
   mkdirSync(root);
+  checkOutState(root);
   const put = (files) => {
     for (const { path, text } of files) {
       mkdirSync(dirname(join(root, path)), { recursive: true });
@@ -238,13 +240,14 @@ test('write prints each warning on stderr and still writes the file', () =>
 
 test('an unknown flag, a stray word and a flag without a value are usage errors that exit 2 and change nothing', () =>
   withRepo(async (repo) => {
+    const before = repo.listing();
     for (const argv of [['--bogus', 'x'], ['publish'], ['--repo-root'], ['notify'], ['write', '--result', 'x']]) {
       const run = harness();
       assert.equal(await runCli(argv, run.io), 2, argv.join(' '));
       assert.match(run.err.join('\n'), /^spend report: .+\nUsage: /s, argv.join(' '));
       assert.deepEqual(run.requests, []);
     }
-    assert.deepEqual(repo.listing(), []);
+    assert.deepEqual(repo.listing(), before);
   }));
 
 const notify = (repo, result, options) => {

@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
 
+import { STATE_DIRECTORY } from './record-layout.mjs';
 import {
   citedCommands,
   discoverDocs,
@@ -64,6 +65,8 @@ test('a path is resolved against the citing document first, because an index lin
 test('a path inside another tool tree is external, because this repo never holds it', () => {
   assert.equal(isExternal('.omp-perfect-coder/config.yml'), true);
   assert.equal(isExternal('extensions/lib/test-existence.ts'), true);
+  assert.equal(isExternal(`${STATE_DIRECTORY}/spend-report.md`), true);
+  assert.equal(isExternal(`docs/${STATE_DIRECTORY}/spend-report.md`), false);
   assert.equal(isExternal('docs/PRD.md'), false);
 });
 

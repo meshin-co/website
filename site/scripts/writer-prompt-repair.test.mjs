@@ -3,6 +3,7 @@ import './fixtures/no-network.mjs';
 import assert from 'node:assert/strict';
 import { after, test } from 'node:test';
 
+import { promptlessClaim } from './fixtures/recorded-claim.mjs';
 import { claimFor, cleanDraft, RUN_DATE } from './fixtures/writer-drafts.mjs';
 import { makeRepo, removeRepo } from './fixtures/writer-repo.mjs';
 import { MAY } from './repair-guard.mjs';
@@ -126,6 +127,15 @@ test('a repair never deletes: the section says so and prints the passage to keep
   assert.match(never, /every heading, FAQ item, key takeaway, source and claim row/);
   assert.ok(never.includes(cleanDraft('article').passage));
   assert.match(never, /adds no fact/);
+});
+
+test('an entry with no registered passage is told so, and is never told to keep a passage word for word', () => {
+  const promptless = promptlessClaim(claimFor('article'));
+  const { user } = repair('article', { claim: promptless, before: { ...cleanDraft('article'), passage: null } });
+  const never = user.slice(user.indexOf('# What a repair never does'), user.indexOf('# The entry as it stands'));
+  assert.match(never, /no registered passage/);
+  assert.doesNotMatch(never, /exactly as it is, word for word/);
+  assert.doesNotMatch(user, /word for word: null/);
 });
 
 test('the allowances section lists each allowance asked for with its text, and is absent when none is', () => {

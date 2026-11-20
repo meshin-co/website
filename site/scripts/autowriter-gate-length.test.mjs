@@ -18,6 +18,7 @@ import {
 } from './fixtures/record-rules-scene.mjs';
 import { SCENE_CORE } from './fixtures/semantic-core-scene.mjs';
 import { GENERATED_AT } from './fixtures/spend-report-corpus.mjs';
+import { checkOutState } from './fixtures/state-checkout.mjs';
 import { siteBrand } from './site-brand.mjs';
 import { spendReportFile } from './spend-report.mjs';
 
@@ -38,7 +39,7 @@ const scene = (entry) => ({
 });
 
 function inTempRepo(plant, check) {
-  const root = mkdtempSync(join(tmpdir(), 'autowriter-gate-length-'));
+  const root = checkOutState(mkdtempSync(join(tmpdir(), 'autowriter-gate-length-')));
   try {
     for (const [path, text] of Object.entries({
       'site/src/config.yaml': `site:\n  name: ${siteBrand().name}\n`,

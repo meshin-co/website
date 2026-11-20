@@ -22,6 +22,7 @@ const REFUSED = [
   ['entry-length', LENGTH],
   ['lighthouse-record', 'audits/lighthouse-green.json'],
   ['lighthouse-stamp', 'audits/phase-7/lh-measured.json'],
+  ['state-record', 'state/ledger/2026/11/first-post.json'],
   ['lighthouse-report', 'audits/phase-7/lh-mobile/lhr-0.json'],
 ];
 
