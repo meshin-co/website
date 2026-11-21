@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/how-to-let-customers-appeal-ai-assisted-decisions.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-let-customers-appeal-ai-assisted-decisions.json on 2026-11-20. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-let-customers-appeal-ai-assisted-decisions.json.",
+    "digest": "fe275dbeca72"
+  },
+  {
+    "target": "/blog/how-to-let-customers-appeal-ai-assisted-decisions",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-let-customers-appeal-ai-assisted-decisions.json on 2026-11-20. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-let-customers-appeal-ai-assisted-decisions.json.",
+    "digest": "bc27759148ec"
+  }
+]

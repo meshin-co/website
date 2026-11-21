@@ -1,0 +1,358 @@
+{
+  "schema": 1,
+  "slug": "how-to-let-customers-appeal-ai-assisted-decisions",
+  "runId": "44772573671-1",
+  "generatedAt": "2026-11-20T16:28:04.204Z",
+  "claim": {
+    "title": "How to let customers appeal AI-assisted decisions",
+    "query": "how to let customers appeal ai-assisted decisions",
+    "origin": "category",
+    "category": "governance",
+    "catchUp": {
+      "slot": "15:00",
+      "lateMinutes": 83
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-20",
+      "windowStart": "2026-08-20",
+      "windowEnd": "2026-11-18",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/how-to-let-customers-appeal-ai-assisted-decisions",
+    "path": "site/src/data/post/how-to-let-customers-appeal-ai-assisted-decisions.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_098e9e5ba78ed785016b0074633ab887d18f37761709cccc34",
+  "published": {
+    "callIndex": 7
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_00532b047a1cc539016b0073fadf0087d188cb658ee77ca4ae",
+      "requestDigest": "04430890a9bb4eb0eb08cd5c132e1b6e9310a015aefd64185cc873d289463c8b",
+      "tokens": {
+        "input": 1342,
+        "output": 75
+      },
+      "costUsd": 0.001717,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_01403f54928572e4016b0073fe3ee487d1a17a724de8e12e40",
+      "requestDigest": "0807b47d18dd294aa187728c32105ab30d01deca5ca3ca9839d4cbc5e09cfa6c",
+      "tokens": {
+        "input": 1396,
+        "output": 100
+      },
+      "costUsd": 0.001896,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0d45aa273e0e5387016b007401875487d1909613d1d878423f",
+      "requestDigest": "aa677855372a26d0d78839463ec98357165772424fcc1089027ddad47f989161",
+      "tokens": {
+        "input": 1346,
+        "output": 88
+      },
+      "costUsd": 0.001786,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0a247a39e5f39e48016b007405074c87d190db607ba17f162f",
+      "requestDigest": "c55096ddfec948c0528992c0411dc2fb6de9b61ba503ab8ac4aba6bf5a030a96",
+      "tokens": {
+        "input": 1402,
+        "output": 100
+      },
+      "costUsd": 0.001902,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0be16f05ae200eed016b0074081e6c87d18ae5cc5893fdd88e",
+      "requestDigest": "95440983414747e301faaf55bec947ae4863e14ccf2fef92ca586a3ef7077a0c",
+      "tokens": {
+        "input": 1338,
+        "output": 100
+      },
+      "costUsd": 0.001838,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_07d9bba848092cce016b00740b3ae487d1aecb919055172b95",
+      "requestDigest": "580e114587b407083141f95fbb37fbe88ba78b1f9ea5a936ed3523adb0727f15",
+      "tokens": {
+        "input": 1402,
+        "output": 135
+      },
+      "costUsd": 0.002077,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0ac8d750c015fc30016b00741177e487d186074d48c32d8b94",
+      "requestDigest": "4a3dfcf53e27566152bde7280076a3c973c4ed0631ade5fe1753b89b640b7b04",
+      "tokens": {
+        "input": 10724,
+        "output": 4203
+      },
+      "costUsd": 0.031739,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_098e9e5ba78ed785016b0074633ab887d18f37761709cccc34",
+      "requestDigest": "204c43c9c1b4736b581a508dd93771146b743f02c38c58ef1ec204e633dd2e28",
+      "tokens": {
+        "input": 13773,
+        "output": 3000
+      },
+      "costUsd": 0.028773,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 32723,
+      "output": 7801
+    },
+    "costUsd": 0.071728
+  },
+  "ledger": "audits/autowriter/2026/11/how-to-let-customers-appeal-ai-assisted-decisions.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "acde69f811dc94d74c13a13d6bfb14b5d43c280552ad336edaaf9e962d1e4059",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "7983e72318b2701ef667d48ce7fff71de6bc58227340fa77be86897b066bb2f5"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "1e291e4336807e99144f2a63cfd94220707c1c99d9084f960e26799cbf12fde8"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "bfb02303381d779e9551eb07526273d9ebecba36e6d2abda5692ac878241e479"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "3f1f13c0001b4219742a0a1db6ff011d25f0f392259bae3987ea5a30ad05e020"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "9b993e79468c02e8aa871425da71f41905557b5f21def76b0d7c773bfb729cea"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "dea16c67cb90db1ca8467c9f95665277c3187f18f32808d3b534f857aeb42a64"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "f64e24db8dca1c487b003c3d3cac0b30d8f5290ec8ab26b658c8b3abf574a4cc"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "25f828d61a230bb0793e6260c04f747831640db5",
+    "fingerprint": "452b8ae5e940e47f94f59d0e8c89380396ed35380098bf6da9abe044734a2113"
+  },
+  "claimTable": [
+    {
+      "sentence": "For cases covered by Article 22(2)(a) or (c), the GDPR requires safeguards including human intervention and the ability to contest the decision.",
+      "marker": "sourced",
+      "source": {
+        "id": "gdpr",
+        "title": "Regulation (EU) 2016/679",
+        "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng"
+      },
+      "span": "In the cases referred to in points (a) and (c) of paragraph 2, the data controller shall implement suitable measures to safeguard the data subject's rights and freedoms and legitimate interests, at least the right to obtain human intervention on the part of the controller, to express his or her point of view and to contest the decision."
+    }
+  ],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 120,
+      "median": 14,
+      "shareBelowThreshold": 0.2334,
+      "shareJustBelow": 0.2084,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/how-to-let-customers-appeal-ai-assisted-decisions.json",
+    "audits/autowriter/claims/2026/11/how-to-let-customers-appeal-ai-assisted-decisions.json",
+    "audits/autowriter/generations/2026/11/how-to-let-customers-appeal-ai-assisted-decisions.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-ai-vendor-assessment-questionnaire-template.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-audit-employee-compliance-with-ai-usage-rules.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-decide-which-employee-data-can-be-used-in-ai-tools.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-let-customers-appeal-ai-assisted-decisions.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-run-a-quarterly-ai-tool-access-review.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-set-ai-chat-retention-rules.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-named-person-responsible-for-ai-risk-in-vendor-procurement.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-when-should-a-business-disclose-ai-use-to-customers.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/how-to-let-customers-appeal-ai-assisted-decisions.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}

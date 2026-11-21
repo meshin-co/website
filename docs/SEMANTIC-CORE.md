@@ -28,7 +28,7 @@ title `{page name} — meshin.co` · meta: value-proposition clause naming the o
 | `/about`        | dmitri meshin                          | About Dmitri Meshin — meshin.co                               | Dmitri Meshin is a platform engineer working as a Fractional Chief AI Officer for companies of 30 to 300 people. Remote worldwide.                            | Dmitri Meshin                                                | 23    | ✓       |
 | `/ai-policy`    | ai policy                              | AI acceptable use policy — meshin.co                          | My own acceptable use policy for AI systems: what data may reach a vendor, what may not, and who decides.                                                     | My AI acceptable use policy                                  | 23    | ✓       |
 | `/approach`     | how a fractional ai officer works      | How a Fractional AI Officer works — meshin.co                 | How a Fractional AI Officer works: the six things that decide whether an AI initiative reaches production, and the order I work through them.                 | How a Fractional AI Officer works with your team             | 23    | ✓       |
-| `/blog`         | ai governance writing                  | AI governance writing — meshin.co                             | AI governance writing: notes on getting AI systems past security review and into production, written for founders and boards.                                 | Writing on AI governance                                     | 26    | ✓       |
+| `/blog`         | ai governance writing                  | AI governance writing — meshin.co                             | AI governance writing: notes on getting AI systems past security review and into production, written for founders and boards.                                 | Writing on AI governance                                     | 27    | ✓       |
 | `/case-studies` | fractional chief ai officer case study | Fractional Chief AI Officer case study — meshin.co            | I have not published a Fractional Chief AI Officer case study yet. Client case studies appear here only once a client agrees in writing.                      | Fractional chief AI officer case study                       | 23    | ✓       |
 | `/contact`      | book an ai leadership call             | Contact: book an AI leadership call — meshin.co               | Book an AI leadership call: a 30-minute fit call, or email hello@meshin.co. Remote worldwide, on site when the trip is worth it.                              | Book an AI leadership call                                   | 24    | ✓       |
 | `/faq`          | fractional chief ai officer questions  | Fractional Chief AI Officer questions — meshin.co             | Fractional Chief AI Officer questions answered: what the role does, what each offer produces, and how AI risk gets recorded and signed off.                   | Fractional Chief AI Officer questions, answered              | 48    | ✓       |
@@ -75,7 +75,7 @@ title `{spec name} specification {version} — meshin.co` · meta: what the vers
 | `/spec/evals-baseline`     | evals-baseline specification     | evals-baseline specification — meshin.co     | Every published version of the evals-baseline specification, and the address to cite for each.                                                         | evals-baseline specification     | 23    | ✓       |
 | `/spec/evals-baseline/1.0` | evals-baseline specification 1.0 | evals-baseline specification 1.0 — meshin.co | The evals-baseline specification 1.0 says what a regression in an agent evaluation is, and defines the baseline file, the findings and the exit codes. | evals-baseline specification 1.0 | 26    | ✓       |
 
-### article (36)
+### article (37)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
@@ -98,6 +98,7 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/how-to-build-an-ai-system-register-in-a-week`               | ai system register                                         | How to build an AI system register in a week — meshin.co               | A step-by-step way to build an AI system register in a week without buying a tool, so a security reviewer gets the document they ask for first.       | How to build an AI system register in a week               | 34    | ✓       |
 | `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company` | ai operating model for mid-size company                    | How to choose an AI operating model for a mid-size company — meshin.co | How to choose an operating model for AI work in a mid-size company, starting from what the law requires and what the evidence supports.               | How to choose an AI operating model for a mid-size company | 41    | ✓       |
 | `/blog/how-to-decide-which-employee-data-can-be-used-in-ai-tools`  | how to decide which employee data can be used in ai tools  | How to decide which employee data can be used in AI tools — meshin.co  | How to decide which employee data can be used in AI tools depends on the task, the fields, vendor terms and approval controls.                        | How to decide which employee data can be used in AI tools  | 32    | ✓       |
+| `/blog/how-to-let-customers-appeal-ai-assisted-decisions`          | how to let customers appeal ai-assisted decisions          | How to let customers appeal AI-assisted decisions — meshin.co          | How to let customers appeal AI-assisted decisions with clear notices, fair review and effective corrections.                                          | How to let customers appeal AI-assisted decisions          | 31    | ✓       |
 | `/blog/how-to-load-test-an-ai-agent-before-launch`                 | how to load test an ai agent before launch                 | How to load test an AI agent before launch — meshin.co                 | Load test an AI agent with realistic tasks, controlled demand, safe tool calls, and clear launch limits.                                              | How to load test an AI agent before launch                 | 32    | ✓       |
 | `/blog/how-to-prevent-duplicate-ai-agent-actions-on-retries`       | how to prevent duplicate ai agent actions on retries       | How to prevent duplicate AI agent actions on retries — meshin.co       | Learn how to prevent duplicate AI agent actions on retries with stable operation keys, durable records, and checks for uncertain outcomes.            | How to prevent duplicate AI agent actions on retries       | 30    | ✓       |
 | `/blog/how-to-rank-ai-use-cases-by-risk`                           | how to rank ai use cases by risk                           | How to rank AI use cases by risk — meshin.co                           | How to rank AI use cases by risk using potential harm, likelihood, control evidence and uncertainty.                                                  | How to rank AI use cases by risk                           | 33    | ✓       |
@@ -456,10 +457,10 @@ One owning route per entity. The mention count is inbound references from other 
 | Entity                         | Owned by                                   | Mentioned by |
 | ------------------------------ | ------------------------------------------ | ------------ |
 | Agentic workflow               | `/glossary/agentic-workflow`               | 15           |
-| AI governance                  | `/glossary/ai-governance`                  | 56           |
+| AI governance                  | `/glossary/ai-governance`                  | 57           |
 | AI impact assessment           | `/glossary/ai-impact-assessment`           | 3            |
 | AI management system           | `/glossary/ai-management-system`           | 7            |
-| AI operating model             | `/glossary/ai-operating-model`             | 23           |
+| AI operating model             | `/glossary/ai-operating-model`             | 24           |
 | AI register                    | `/glossary/ai-register`                    | 46           |
 | Conformity assessment          | `/glossary/conformity-assessment`          | 5            |
 | Data classification            | `/glossary/data-classification`            | 20           |
@@ -469,7 +470,7 @@ One owning route per entity. The mention count is inbound references from other 
 | Guardrails                     | `/glossary/guardrails`                     | 7            |
 | Hallucination rate             | `/glossary/hallucination-rate`             | 4            |
 | High-risk AI system            | `/glossary/high-risk-ai-system`            | 10           |
-| Human oversight                | `/glossary/human-oversight`                | 16           |
+| Human oversight                | `/glossary/human-oversight`                | 17           |
 | Human-in-the-loop              | `/glossary/human-in-the-loop`              | 6            |
 | ISO/IEC 42001                  | `/glossary/iso-iec-42001`                  | 29           |
 | LLM gateway                    | `/glossary/llm-gateway`                    | 13           |
