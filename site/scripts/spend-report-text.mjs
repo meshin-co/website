@@ -31,7 +31,7 @@ const MEANING =
   'The paid tables count every call the ledgers and the records show, and each call is in exactly one row: ' +
   'the writing calls of entries; every repair call, including a repair that failed; ' +
   'the runs that ended with no entry, which the Notes name; ' +
-  'and the spend of a ledger that no generation record names, which the Warnings name. ' +
+  'and the spend of a ledger that no generation record names, which the Warnings or the Waiting for a record section names. ' +
   'The four rows add up to the last row.';
 
 const NOTHING_TO_SHOW =
@@ -141,17 +141,26 @@ const monthSection = ({ month, at, ceilingMicro, paid }) =>
     paidTable(paid)
   );
 
-function warningsSection(warnings, unmatchedMicro) {
+function warningsSection(warnings, warnedMicro) {
   if (warnings.length === 0) return [];
   const unmatched =
-    unmatchedMicro > 0
+    warnedMicro > 0
       ? ' The ledgers below that no generation record names are counted in the paid tables, ' +
-        `under Spend with no generation record: ${usdText(unmatchedMicro)} USD together.`
+        `under Spend with no generation record: ${usdText(warnedMicro)} USD together.`
       : '';
   const intro =
     'Each line below needs a person to look at it: it says what could not be counted or checked, or what does not add up. ' +
     `Every entry that can be counted is still counted above.${unmatched}`;
   return [section('Warnings', intro, warnings.map((sentence) => `- ${sentence}`).join('\n'))];
+}
+
+function waitingSection(waiting, waitingMicro) {
+  if (waiting.length === 0) return [];
+  const intro =
+    'These ledgers have no generation record yet, and a claim that is still in force says one is expected: the run that holds the topic has not merged its entry. ' +
+    `Together they cost ${usdText(waitingMicro)} USD, and the paid tables already count that spend under Spend with no generation record. ` +
+    'Nothing is wrong and no person has to act: a line leaves this list when its record reaches the tree, and moves to Warnings if its claim lapses first.';
+  return [section('Waiting for a record', intro, waiting.map((sentence) => `- ${sentence}`).join('\n'))];
 }
 
 function notesSection(notes, endedMicro) {
@@ -163,17 +172,29 @@ function notesSection(notes, endedMicro) {
   return [section('Notes', intro, notes.map((sentence) => `- ${sentence}`).join('\n'))];
 }
 
-function emptyReport({ warnings, notes, paidAllTime }) {
-  const nothingSaid = warnings.length === 0 && notes.length === 0;
+function emptyReport({ warnings, waiting, waitingMicro, notes, paidAllTime }) {
+  const nothingSaid = warnings.length === 0 && waiting.length === 0 && notes.length === 0;
   const reason = nothingSaid ? 'No entry has been generated,' : 'No generation record could be counted,';
   return [
     section('No entry yet', `${reason} ${NOTHING_TO_SHOW}`),
-    ...warningsSection(warnings, paidAllTime.unmatchedMicro),
+    ...warningsSection(warnings, paidAllTime.unmatchedMicro - waitingMicro),
+    ...waitingSection(waiting, waitingMicro),
     ...notesSection(notes, paidAllTime.endedMicro),
   ];
 }
 
-function populatedReport({ rows, newestRun, thirtyDays, allTime, rates, warnings, notes, paidAllTime }) {
+function populatedReport({
+  rows,
+  newestRun,
+  thirtyDays,
+  allTime,
+  rates,
+  warnings,
+  waiting,
+  waitingMicro,
+  notes,
+  paidAllTime,
+}) {
   return [
     section(
       'This entry',
@@ -212,7 +233,8 @@ function populatedReport({ rows, newestRun, thirtyDays, allTime, rates, warnings
         'First and Last are the instants of the first and the last entry priced at that rate.',
       table(RATE_HEADER, rates.map(rateRow))
     ),
-    ...warningsSection(warnings, paidAllTime.unmatchedMicro),
+    ...warningsSection(warnings, paidAllTime.unmatchedMicro - waitingMicro),
+    ...waitingSection(waiting, waitingMicro),
     ...notesSection(notes, paidAllTime.endedMicro),
   ];
 }

@@ -22,12 +22,12 @@ const jsonOf = (text) => {
   }
 };
 
-async function send({ fetch, url, headers, body }) {
+async function send({ fetch, url, headers, body, method = 'POST' }) {
   try {
     const response = await fetch(url, {
-      method: 'POST',
+      method,
       headers,
-      body: JSON.stringify(body),
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
     return { status: response.status, text: await response.text() };
@@ -48,21 +48,51 @@ function issueBody({ env, ledger, ledgerPath, escalation }) {
   return `${escalation.detail}\n\n---\n${context.join('\n')}`;
 }
 
+const githubHeaders = (env) => ({
+  Authorization: `Bearer ${variable(env, 'GITHUB_TOKEN')}`,
+  Accept: 'application/vnd.github+json',
+  'X-GitHub-Api-Version': '2022-11-28',
+  'Content-Type': 'application/json',
+  'User-Agent': autowriterAgent(),
+});
+
+const issuesUrl = (env) =>
+  `${variable(env, 'GITHUB_API_URL') || DEFAULT_API_URL}/repos/${variable(env, 'GITHUB_REPOSITORY')}/issues`;
+
+const earlierIssueNumbers = ({ ledger, escalation }) =>
+  (ledger.escalations ?? [])
+    .filter(({ id, title }) => id !== escalation.id && title === escalation.title)
+    .flatMap(({ receipts }) =>
+      receipts.filter(({ channel, delivered, issue }) => channel === 'issue' && delivered && issue !== null)
+    )
+    .map(({ issue }) => issue)
+    .toReversed();
+
+async function stillOpenIssue(context) {
+  const { env, fetch } = context;
+  for (const number of earlierIssueNumbers(context)) {
+    const result = await send({
+      fetch,
+      method: 'GET',
+      url: `${issuesUrl(env)}/${number}`,
+      headers: githubHeaders(env),
+    });
+    const found = accepted(result) ? jsonOf(result.text) : null;
+    if (found?.state === 'open') return { number, url: typeof found.html_url === 'string' ? found.html_url : null };
+  }
+  return null;
+}
+
 async function openIssue(context) {
   const { env, fetch, escalation, clean } = context;
   const absent = absentVariables(env, ['GITHUB_TOKEN', 'GITHUB_REPOSITORY']);
   if (absent.length > 0) return { error: absent.map((name) => NOT_SET[name]).join('; ') };
-  const apiUrl = variable(env, 'GITHUB_API_URL') || DEFAULT_API_URL;
+  const open = await stillOpenIssue(context);
+  if (open !== null) return { status: 200, issue: open };
   const result = await send({
     fetch,
-    url: `${apiUrl}/repos/${variable(env, 'GITHUB_REPOSITORY')}/issues`,
-    headers: {
-      Authorization: `Bearer ${variable(env, 'GITHUB_TOKEN')}`,
-      Accept: 'application/vnd.github+json',
-      'X-GitHub-Api-Version': '2022-11-28',
-      'Content-Type': 'application/json',
-      'User-Agent': autowriterAgent(),
-    },
+    url: issuesUrl(env),
+    headers: githubHeaders(env),
     body: { title: escalation.title, body: issueBody(context) },
   });
   if (result.failure !== undefined) return { error: `request failed: ${result.failure}` };

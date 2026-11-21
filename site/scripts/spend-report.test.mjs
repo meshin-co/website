@@ -94,7 +94,7 @@ function harness({ revision = 'abc1234', env = { SLACK_WEBHOOK_URL: WEBHOOK }, a
   };
 }
 
-test('the corpus is the json files of the ledger and the record families at any depth, sorted, with repository paths', () =>
+test('the corpus is the json files of the ledger, record and claim families at any depth, sorted, with repository paths', () =>
   withRepo((repo) => {
     repo.put([
       { path: 'audits/autowriter/b.json', text: '{}' },
@@ -120,11 +120,15 @@ test('the corpus is the json files of the ledger and the record families at any 
         { path: 'audits/autowriter/generations/y.json', text: '2' },
         { path: 'audits/autowriter/generations/z.json', text: '1' },
       ],
+      claims: [
+        { path: 'audits/autowriter/claims/2026/11/d.json', text: '{}' },
+        { path: 'audits/autowriter/claims/c.json', text: '{}' },
+      ],
     });
   }));
 
 test('with no folder at all the corpus is empty', () =>
-  withRepo((repo) => assert.deepEqual(corpusFiles(repo.root), { ledgers: [], records: [] })));
+  withRepo((repo) => assert.deepEqual(corpusFiles(repo.root), { ledgers: [], records: [], claims: [] })));
 
 test('with no record the report file says that no entry has been generated and holds no number outside the month', () =>
   withRepo((repo) => {

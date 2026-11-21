@@ -38,7 +38,7 @@ The writer commits through `scripts/run-git.mjs` and one of three scripts. `scri
 ## Escalate, and prove it arrived
 
 `scripts/escalate.mjs` (requests in `scripts/escalate-channels.mjs`; `scripts/pr-watch.mjs` passes the pull request number)
-opens a GitHub issue, posts to Slack and writes a receipt (instant, HTTP status, issue number or error) into the ledger:
+opens a GitHub issue, posts to Slack and writes a receipt (instant, HTTP status, issue number or error) into the ledger. When an earlier escalation of the same ledger has the same title and its issue is still open, no second issue is opened: the receipt carries status 200 and the number of that issue, and a lookup that fails opens the issue as usual:
 
 ```
 npm run escalate -- raise --ledger <path> --kind no-convergence --title <text> --detail <text>

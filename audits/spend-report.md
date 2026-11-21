@@ -1,13 +1,13 @@
 # Spend report: what writing each entry cost
 
-Generated-from: ee7fbb6
-Generated-at: 2026-11-21T07:41:29.812Z
+Generated-from: 5077cdf
+Generated-at: 2026-11-21T09:13:12.213Z
 
 ## This month
 
 2026-11 so far: 2.191014 USD spent of the 25.00 USD monthly ceiling, 22.808986 USD left.
 
-The figure is the spend of the UTC calendar month of 2026-11-21T07:41:29.812Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
+The figure is the spend of the UTC calendar month of 2026-11-21T09:13:12.213Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
 
 | What was paid for               | Cost (USD) |
 | ------------------------------- | ---------- |
@@ -21,7 +21,7 @@ The figure is the spend of the UTC calendar month of 2026-11-21T07:41:29.812Z, t
 
 This file is written by `npm run audit:spend` from the generation records and the ledgers under `audits/autowriter`. It is rewritten from them every time and never appended to. It reads no network. It reads the clock once, when it is written, and stamps that instant in Generated-at, so the same records and the same stamp give the same file. `npm run gate:autowriter` regenerates it with the stamp it finds and fails when this file differs.
 
-Cost means the cost of the writing calls of an entry: its draft and its correction, each as its record stored it, added in whole micro-dollars. Repair is the cost of the repair calls that the record of the entry holds, and is not part of Cost. A draft that a run wrote and then skipped, a run that stopped before any entry existed and an attempt that a person discarded have no entry, so no row holds them. The ledgers record that spend, and the monthly spend ceiling counts it. The paid tables count every call the ledgers and the records show, and each call is in exactly one row: the writing calls of entries; every repair call, including a repair that failed; the runs that ended with no entry, which the Notes name; and the spend of a ledger that no generation record names, which the Warnings name. The four rows add up to the last row.
+Cost means the cost of the writing calls of an entry: its draft and its correction, each as its record stored it, added in whole micro-dollars. Repair is the cost of the repair calls that the record of the entry holds, and is not part of Cost. A draft that a run wrote and then skipped, a run that stopped before any entry existed and an attempt that a person discarded have no entry, so no row holds them. The ledgers record that spend, and the monthly spend ceiling counts it. The paid tables count every call the ledgers and the records show, and each call is in exactly one row: the writing calls of entries; every repair call, including a repair that failed; the runs that ended with no entry, which the Notes name; and the spend of a ledger that no generation record names, which the Warnings or the Waiting for a record section names. The four rows add up to the last row.
 
 ## This entry
 
@@ -101,12 +101,12 @@ The model and the two rates, in USD per million tokens, that each cost was compu
 | ------------- | ---------------------------- | ----------------------------- | ------- | ------------------------ | ------------------------ |
 | gpt-6.1-terra | 1                            | 5                             | 29      | 2026-11-03T05:36:35.954Z | 2026-11-20T16:28:04.204Z |
 
-## Warnings
+## Waiting for a record
 
-Each line below needs a person to look at it: it says what could not be counted or checked, or what does not add up. Every entry that can be counted is still counted above. The ledgers below that no generation record names are counted in the paid tables, under Spend with no generation record: 0.021722 USD together.
+These ledgers have no generation record yet, and a claim that is still in force says one is expected: the run that holds the topic has not merged its entry. Together they cost 0.021722 USD, and the paid tables already count that spend under Spend with no generation record. Nothing is wrong and no person has to act: a line leaves this list when its record reaches the tree, and moves to Warnings if its claim lapses first.
 
-- how-to-assign-roles-and-escalation-paths-for-ai-incidents: its ledger records a generation of 0.005773 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it
-- how-to-configure-a-circuit-breaker-for-llm-api-failures: its ledger records a generation of 0.015949 USD (verdict: open) but no generation record names this ledger, so no entry is counted for it
+- how-to-assign-roles-and-escalation-paths-for-ai-incidents: its ledger records a generation of 0.005773 USD (verdict: open) and no generation record names it yet; its claim holds the topic until 2026-12-05T07:41:16.492Z, so the record is still expected
+- how-to-configure-a-circuit-breaker-for-llm-api-failures: its ledger records a generation of 0.015949 USD (verdict: open) and no generation record names it yet; its claim holds the topic until 2026-12-04T10:29:13.638Z, so the record is still expected
 
 ## Notes
 

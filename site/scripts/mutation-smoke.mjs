@@ -9,14 +9,23 @@ import { proveRecordRefusal } from './lh-record-family.mjs';
 import { ORDER_CHECKS, runOrderCheck } from './order-guard-checks.mjs';
 import { REPAIR_CHECKS, runRepairCheck } from './repair-guard-checks.mjs';
 import { SPECIMENS, assertStandaloneRepo, flatten, proveWithSpecimen } from './mutation-specimens.mjs';
-import { canonicalHref, robotsContent, robotsMeta, tagArchiveFindings } from './pagination-markup.mjs';
+import {
+  canonicalHref,
+  robotsContent,
+  robotsMeta,
+  tagArchiveFindings,
+  tagArchiveListingFindings,
+} from './pagination-markup.mjs';
+import { parseEntrySource } from './entry-prose.mjs';
 import { invokedDirectly } from './invoked-directly.mjs';
+import { isPublished } from '../src/utils/feeds.mjs';
+import { PAGE_SIZE } from '../src/utils/paginate.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SITE = resolve(HERE, '..');
 const REPO = resolve(SITE, '..');
 const FIXTURES = join(SITE, 'tests', 'guard-mutations', 'fixtures');
-const LIVE_POST_TARGET = 13;
+const LIVE_POST_TARGET = PAGE_SIZE + 1;
 const CHECKS = ['semantic-title', ...Object.keys({ ...REPAIR_CHECKS, ...ORDER_CHECKS, ...KEYWORD_CHECKS })];
 const SCOPES = ['category', 'tag'];
 
@@ -838,11 +847,26 @@ async function fixtureTag(entry) {
   return match[1];
 }
 
+async function taggedPostIds(copySite, tag) {
+  const dir = join(copySite, 'src/data/post');
+  const ids = [];
+  for (const name of await readdir(dir)) {
+    if (!/\.(md|mdx)$/.test(name)) continue;
+    const { frontmatter } = parseEntrySource(await readFile(join(dir, name), 'utf8'));
+    if (isPublished({ data: frontmatter }) && (frontmatter.tags ?? []).includes(tag)) {
+      ids.push(name.replace(/\.mdx?$/, ''));
+    }
+  }
+  return ids;
+}
+
 async function runTagPaginationFamily(copySite, entry) {
   const tag = await fixtureTag(entry);
   const route = `/blog/tag/${tag}`;
+  const live = (await taggedPostIds(copySite, tag)).length;
+  const clones = Math.max(0, LIVE_POST_TARGET - live);
   const planted = [];
-  for (let index = 1; index <= LIVE_POST_TARGET; index += 1) {
+  for (let index = 1; index <= clones; index += 1) {
     const target = join(copySite, 'src/data/post', `mutation-tag-post-${String(index).padStart(2, '0')}.md`);
     await copyFile(join(FIXTURES, entry.fixture), target);
     planted.push(target);
@@ -852,21 +876,27 @@ async function runTagPaginationFamily(copySite, entry) {
     if (built.code !== 0)
       return { ok: false, reason: `build with ${planted.length} tag clones failed: ${built.output.slice(-400)}` };
     const read = (file) => readFile(join(copySite, 'dist', file), 'utf8').catch(() => '');
+    const page1Html = await read(`${route}.html`);
     const page2Html = await read(`${route}/page/2.html`);
     const problems = [
       ...tagArchiveFindings({
         route,
-        page1Html: await read(`${route}.html`),
+        page1Html,
         page2Html,
         hasPage3: (await read(`${route}/page/3.html`)) !== '',
         sitemap: await read('sitemap-0.xml'),
       }),
-      ...(page2Html.includes('mutation-tag-post') ? [] : ['tag page 2 lists no planted live post']),
+      ...tagArchiveListingFindings({
+        page1Html,
+        page2Html,
+        tagged: await taggedPostIds(copySite, tag),
+        pageSize: PAGE_SIZE,
+      }),
     ];
     if (problems.length > 0) return { ok: false, reason: problems.join('; ') };
     return {
       ok: true,
-      reason: `${tag}: ${planted.length} clones; robots ${robotsContent(page2Html)}, canonical ${canonicalHref(page2Html)}`,
+      reason: `${tag}: ${live} live + ${clones} clones; robots ${robotsContent(page2Html)}, canonical ${canonicalHref(page2Html)}`,
     };
   } finally {
     await Promise.all(planted.map((path) => rm(path, { force: true })));
