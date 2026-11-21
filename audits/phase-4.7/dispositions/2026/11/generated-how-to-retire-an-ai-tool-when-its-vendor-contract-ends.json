@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/how-to-retire-an-ai-tool-when-its-vendor-contract-ends.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-retire-an-ai-tool-when-its-vendor-contract-ends.json on 2026-11-21. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-retire-an-ai-tool-when-its-vendor-contract-ends.json.",
+    "digest": "f3c3ff193553"
+  },
+  {
+    "target": "/blog/how-to-retire-an-ai-tool-when-its-vendor-contract-ends",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-retire-an-ai-tool-when-its-vendor-contract-ends.json on 2026-11-21. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-retire-an-ai-tool-when-its-vendor-contract-ends.json.",
+    "digest": "6d5cca9134d3"
+  }
+]

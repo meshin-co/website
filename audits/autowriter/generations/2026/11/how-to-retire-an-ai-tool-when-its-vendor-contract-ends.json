@@ -1,0 +1,319 @@
+{
+  "schema": 1,
+  "slug": "how-to-retire-an-ai-tool-when-its-vendor-contract-ends",
+  "runId": "44920059360-1",
+  "generatedAt": "2026-11-21T15:43:27.456Z",
+  "claim": {
+    "title": "How to retire an AI tool when its vendor contract ends",
+    "query": "how to retire an ai tool when its vendor contract ends",
+    "origin": "category",
+    "category": "operating-model",
+    "catchUp": {
+      "slot": "15:00",
+      "lateMinutes": 38
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-21",
+      "windowStart": "2026-08-21",
+      "windowEnd": "2026-11-19",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/how-to-retire-an-ai-tool-when-its-vendor-contract-ends",
+    "path": "site/src/data/post/how-to-retire-an-ai-tool-when-its-vendor-contract-ends.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_06573471c8cfa8e8016b01bb4cc2d487d18b5ff26c97093850",
+  "published": {
+    "callIndex": 5
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0357213c42ec7778016b01bae0ae5887d19a4271db14b52ebd",
+      "requestDigest": "61a89c679128ec35578093590a3e5e196d80a69fbce0dbf997b28f7f27e21f99",
+      "tokens": {
+        "input": 1388,
+        "output": 103
+      },
+      "costUsd": 0.001903,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0333e863fae10074016b01bae41ae087d1892b5abb48b0b408",
+      "requestDigest": "73f008d1373a1e6040d5e26ac53412a33dab14563bc50465a0f9e69472a0ce00",
+      "tokens": {
+        "input": 1446,
+        "output": 178
+      },
+      "costUsd": 0.002336,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_029e2ab124cf1a1c016b01bae8b06887d180bc4ad92fad3185",
+      "requestDigest": "1de83e6b092c9f2e05e0e461ebb300cdb411911207bdca9e82395c9a3f30a6ab",
+      "tokens": {
+        "input": 1392,
+        "output": 82
+      },
+      "costUsd": 0.001802,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_087242dd89d35fc2016b01baedf78087d1a1c276b74065460b",
+      "requestDigest": "d42f56ea9f12e8e2f8cb7d2ef32066d8c3d85072c4b597c3e8350540b5c75d4c",
+      "tokens": {
+        "input": 10820,
+        "output": 3820
+      },
+      "costUsd": 0.02992,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_085c7780fb8c9cc3016b01bb27c51487d1877ede7c16860d29",
+      "requestDigest": "d60113d183bcd0627e1cb80dafdc9f4d071bcb79d2b853ee4b611762a0f2a32e",
+      "tokens": {
+        "input": 13893,
+        "output": 3240
+      },
+      "costUsd": 0.030093,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_06573471c8cfa8e8016b01bb4cc2d487d18b5ff26c97093850",
+      "requestDigest": "3097293da64fddf8490c0f9b3497763624f5b101abc53e7345ff01ec5b3d2939",
+      "tokens": {
+        "input": 16982,
+        "output": 3153
+      },
+      "costUsd": 0.032747,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 45921,
+      "output": 10576
+    },
+    "costUsd": 0.098801
+  },
+  "ledger": "audits/autowriter/2026/11/how-to-retire-an-ai-tool-when-its-vendor-contract-ends.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "db78688f63c7deb8a3ea36c56dfe270948c29584839eab523ab34a501e5bcdaf",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "7983e72318b2701ef667d48ce7fff71de6bc58227340fa77be86897b066bb2f5"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "1e291e4336807e99144f2a63cfd94220707c1c99d9084f960e26799cbf12fde8"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "bfb02303381d779e9551eb07526273d9ebecba36e6d2abda5692ac878241e479"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "b2740c5c414d1fc04b74b7cacc9ee7c5fe91c47f49ac8c6d3b1f94e59cc08ad1"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "9644f95b64d14f28ecf05f2c71ae9f488f630f9d64c78f2a92fdea3549b69cab"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "7e1f4b685976a15204f9ef6525c5ff2efe86586f912949ff868cb2976463ef48"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "f64e24db8dca1c487b003c3d3cac0b30d8f5290ec8ab26b658c8b3abf574a4cc"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "d51652df83595749c331cb4a5692092dc43bf0da",
+    "fingerprint": "bae7e235d1870c9c8d5429488e65ef243eab82f0fcafc1d55025aa29bf2a9608"
+  },
+  "claimTable": [
+    {
+      "sentence": "Under GDPR, a processor must delete or return personal data after services end, at the controller's choice, unless law requires storage.",
+      "marker": "sourced",
+      "source": {
+        "id": "gdpr",
+        "title": "Regulation (EU) 2016/679 of the European Parliament and of the Council",
+        "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+      },
+      "span": "at the choice of the controller, deletes or returns all the personal data to the controller after the end of the provision of services relating to processing, and deletes existing copies unless Union or Member State law requires storage of the personal data"
+    }
+  ],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 123,
+      "median": 14,
+      "shareBelowThreshold": 0.2114,
+      "shareJustBelow": 0.187,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/how-to-retire-an-ai-tool-when-its-vendor-contract-ends.json",
+    "audits/autowriter/claims/2026/11/how-to-retire-an-ai-tool-when-its-vendor-contract-ends.json",
+    "audits/autowriter/generations/2026/11/how-to-retire-an-ai-tool-when-its-vendor-contract-ends.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-ai-readiness-assessment-template-for-smb.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-allocate-shared-ai-tool-costs-across-departments.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-retire-an-ai-tool-when-its-vendor-contract-ends.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-review-ai-generated-customer-support-replies.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-review-ai-vendor-model-updates-after-deployment.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/articles-telemetry.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/how-to-retire-an-ai-tool-when-its-vendor-contract-ends.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}
