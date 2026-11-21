@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/how-to-assign-roles-and-escalation-paths-for-ai-incidents.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-assign-roles-and-escalation-paths-for-ai-incidents.json on 2026-11-21. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-assign-roles-and-escalation-paths-for-ai-incidents.json.",
+    "digest": "6f6361a881e3"
+  },
+  {
+    "target": "/blog/how-to-assign-roles-and-escalation-paths-for-ai-incidents",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-assign-roles-and-escalation-paths-for-ai-incidents.json on 2026-11-21. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-assign-roles-and-escalation-paths-for-ai-incidents.json.",
+    "digest": "3395a8618e3d"
+  }
+]
