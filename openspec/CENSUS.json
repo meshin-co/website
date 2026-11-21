@@ -236,6 +236,7 @@
   "governance/spend-reporting": [
     "A block payload that Slack refuses is delivered as plain text",
     "A day that ends with no entry still posts to Slack",
+    "A ledger whose record is still expected is waiting, not a warning",
     "A line is a warning only when a person has something to do about it",
     "A missed live message never fails the publish",
     "A missed statistics message is a warning, and a missed escalation is still a failure",

@@ -32,12 +32,13 @@ const textFiles = (repoRoot, family) =>
 export const corpusFiles = (repoRoot) => ({
   ledgers: textFiles(repoRoot, 'ledger'),
   records: textFiles(repoRoot, 'generation'),
+  claims: textFiles(repoRoot, 'claim'),
 });
 
 const FOLDERS = { ledger: 'ledgers', generation: 'records' };
 
 function overlaid(corpus, written) {
-  const files = { ledgers: [...corpus.ledgers], records: [...corpus.records] };
+  const files = { ledgers: [...corpus.ledgers], records: [...corpus.records], claims: [...corpus.claims] };
   for (const file of written) {
     const folder = FOLDERS[familyOf(file.path)];
     if (folder !== undefined) files[folder] = [...files[folder].filter(({ path }) => path !== file.path), file];

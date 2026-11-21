@@ -1,3 +1,4 @@
+import { claimFileProblem, validateClaim } from './autowriter-claims.mjs';
 import { MONTHLY_SPEND_CEILING_USD, fileStemProblem, validateLedger } from './autowriter-ledger.mjs';
 import { describeProblem } from './autowriter-records.mjs';
 import { ENTRY_COST_ROLES, validateRecord, writingTotals } from './generation-record.mjs';
@@ -50,12 +51,24 @@ function readAll(files, validate) {
   return { values, problems };
 }
 
-export function corpusOf({ ledgers, records }) {
+function usableClaims(files) {
+  return files.flatMap(({ path, text }) => {
+    try {
+      const claim = JSON.parse(text);
+      return validateClaim(claim).length === 0 && claimFileProblem(path, claim) === null ? [claim] : [];
+    } catch {
+      return [];
+    }
+  });
+}
+
+export function corpusOf({ ledgers, records, claims = [] }) {
   const read = readAll(ledgers, validateLedger);
   const entries = readAll(records, validateRecord);
   return {
     ledgers: read.values,
     records: entries.values,
+    claims: usableClaims(claims),
     problems: [...read.problems, ...entries.problems].sort(),
   };
 }
@@ -157,7 +170,19 @@ const NOTE_SENTENCES = { stopped: endedSentence, escalated: endedSentence, disca
 
 const noteSentence = (ledger) => NOTE_SENTENCES[ledger.verdict.state](ledger);
 
-function ledgerSentences({ ledgers, records, items }) {
+const waitingSentence = (ledger, claim) =>
+  `${ledger.slug}: its ledger records ${recordedClause(ledger)} (verdict: ${ledger.verdict.state}) and no generation record names it yet; its claim holds the topic until ${claim.expiresAt}, so the record is still expected`;
+
+const holdsTheTopic = (claim, ledger, at) =>
+  claim.slug === ledger.slug &&
+  claim.runId === ledger.runId &&
+  claim.status === 'claimed' &&
+  Date.parse(claim.expiresAt) > Date.parse(at);
+
+const claimOfOpenRun = (ledger, claims, at) =>
+  ledger.verdict.state === 'open' ? claims.find((claim) => holdsTheTopic(claim, ledger, at)) : undefined;
+
+function ledgerSentences({ ledgers, records, claims, items, at }) {
   const ledgerBySlug = new Map(ledgers.map((ledger) => [ledger.slug, ledger]));
   const recordsByLedger = Map.groupBy(records, ({ ledger }) => stemOf(ledger));
   const checked = [...recordsByLedger].flatMap(([ledgerSlug, group]) => {
@@ -173,17 +198,26 @@ function ledgerSentences({ ledgers, records, items }) {
   const unrecorded = items
     .filter(({ ledger, record }) => ledger !== null && record === null && ledgerSpendMicro(ledger) > 0)
     .map(({ ledger }) => ledger);
+  const live = unrecorded
+    .filter((ledger) => !hasEnded(ledger))
+    .map((ledger) => ({ ledger, claim: claimOfOpenRun(ledger, claims, at) }));
+  const expected = live.filter(({ claim }) => claim !== undefined);
   return {
-    warnings: [...checked, ...unrecorded.filter((ledger) => !hasEnded(ledger)).map(missingRecordSentence)].sort(),
+    warnings: [
+      ...checked,
+      ...live.filter(({ claim }) => claim === undefined).map(({ ledger }) => missingRecordSentence(ledger)),
+    ].sort(),
+    waiting: expected.map(({ ledger, claim }) => waitingSentence(ledger, claim)).sort(),
+    waitingMicro: sum(expected.map(({ ledger }) => ledgerSpendMicro(ledger))),
     notes: unrecorded.filter(hasEnded).map(noteSentence).sort(),
   };
 }
 
-export function reportModel({ ledgers, records, problems }, { at } = {}) {
+export function reportModel({ ledgers, records, claims = [], problems }, { at } = {}) {
   if (!isUtcInstant(at)) throw instantError(at);
   const month = at.slice(0, 7);
   const items = spendItemsOf({ ledgers, records });
-  const found = ledgerSentences({ ledgers, records, items });
+  const found = ledgerSentences({ ledgers, records, claims, items, at });
   const warnings = [...problems, ...found.warnings];
   const spend = {
     thisMonth: {
@@ -194,7 +228,7 @@ export function reportModel({ ledgers, records, problems }, { at } = {}) {
     },
     paidAllTime: totalBreakdown({ ledgers: items }),
   };
-  const { notes } = found;
+  const { notes, waiting, waitingMicro } = found;
   if (records.length === 0)
     return {
       empty: true,
@@ -204,6 +238,8 @@ export function reportModel({ ledgers, records, problems }, { at } = {}) {
       allTime: null,
       rates: [],
       warnings,
+      waiting,
+      waitingMicro,
       notes,
       ...spend,
     };
@@ -218,6 +254,8 @@ export function reportModel({ ledgers, records, problems }, { at } = {}) {
     allTime: { since: rows.at(-1).generatedAt, through, totals: totalsOf(rows) },
     rates: ratesOf(records),
     warnings,
+    waiting,
+    waitingMicro,
     notes,
     ...spend,
   };

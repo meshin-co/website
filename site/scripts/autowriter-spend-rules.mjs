@@ -22,13 +22,13 @@ function firstDifference(committed, expected) {
   return 'the file must end in exactly one newline';
 }
 
-export function spendReportFindings({ ledgers, records, committed }) {
+export function spendReportFindings({ ledgers, records, claims, committed }) {
   if (committed === null)
     return [finding('spend-report-missing', 'the file does not exist; run npm run audit:spend to write it')];
   const at = stampedAt(committed);
   if (at === undefined)
     return [finding('spend-report-differs', `${NO_INSTANT}; run npm run audit:spend to regenerate it`)];
-  const expected = reportText({ ledgers, records }, provenanceOf(committed) ?? UNSTAMPED, at);
+  const expected = reportText({ ledgers, records, claims }, provenanceOf(committed) ?? UNSTAMPED, at);
   if (expected === committed) return [];
   return [
     finding(

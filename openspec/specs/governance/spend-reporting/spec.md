@@ -267,6 +267,23 @@ the form `spendWarnings` in `site/scripts/spend-sum.mjs` already uses for writin
 - **THEN** the report prints no warning and lists the run under Notes, because no entry was ever meant
   to exist
 
+### Requirement: A ledger whose record is still expected is waiting, not a warning
+
+The report SHALL list a ledger that spent, has no record and has the verdict `open` under Waiting for a record, not under Warnings, while a claim of the same run with the status `claimed` still holds the topic at the instant the file is stamped. `site/scripts/spend-report-model.mjs` decides it from the tree alone, and the spend stays under Spend with no generation record, so no total moves. With no such claim the line SHALL stay a warning.
+
+#### Scenario: A ledger on main whose record is on an open branch
+
+- **WHEN** the ledger and its claim are on main, the claim still holds, and the generation record exists only on
+  the pull request branch
+- **THEN** the report lists the ledger under Waiting for a record and prints no warning, the paid tables
+  count its spend under Spend with no generation record, and the Slack message says `Warnings: 0`
+
+#### Scenario: A ledger whose record exists nowhere
+
+- **WHEN** a ledger that spent has no record and its claim has lapsed, was abandoned, belongs to another run,
+  or does not exist
+- **THEN** the report lists it under Warnings, as before, and the Slack message counts it
+
 ### Requirement: A line is a warning only when a person has something to do about it
 
 The report SHALL list under Warnings only a line that a person can act on, and the Slack message SHALL

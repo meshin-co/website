@@ -21,13 +21,13 @@ same bytes, and a file that is already current is left alone, so a later day cha
   record, not at the clock. They are not the ceiling's calendar month.
 - The paid table, in `This month` and in `All time`, has four kinds of call, and each call is in exactly one: writing calls of
   entries (a category entry's `topic` call included), repair calls (the ledger's attempts, so a failed repair is in), runs that ended with no entry (the Notes) and spend
-  with no generation record (the Warnings), then everything paid for. Each section states the total of its row. Proposals of a pick that wrote no entry have no ledger and so no row: only its step summary holds them (`write-on-a-category.md`).
+  with no generation record (the Warnings or Waiting for a record), then everything paid for. Each section states the total of its row. Proposals of a pick that wrote no entry have no ledger and so no row: only its step summary holds them (`write-on-a-category.md`).
 - With no record the file says no entry was generated and holds no entry row, total or rate: no measurement, not zero. `This month` stays.
 
 ## Warnings and notes
 
 A warning is a line a person has something to do about, and every entry that can be counted is still counted. These are
-warnings: a ledger that spent and has no record while its verdict is `open` or `merged`, repair attempts alone included; a
+warnings: a ledger that spent and has no record while its verdict is `merged`, or is `open` with no claim that holds its topic (below), repair attempts alone included; a
 record whose ledger is not in the repository; a ledger that records less writing spend than its records cost (the sentence
 `spendWarnings` writes); a file that cannot be read or is off its schema.
 
@@ -37,6 +37,8 @@ with the verdict `stopped`, `escalated` or `discarded`, is a Note instead and is
 the ledgers a warning lists are the row Spend with no generation record, so a warned call is counted and never dropped.
 A failed write ends `escalated`, because `scripts/escalate-run.mjs` overwrites `stopped`.
 
+A ledger that spent, has no record and has the verdict `open` is waiting while a claim of the same run with the status `claimed` still holds the topic at the instant the file is stamped: the run is in flight and its record is on the pull request branch. The file lists it under Waiting for a record, which asks nothing of a person, and the Slack message counts it as no warning. Its spend stays in the row Spend with no generation record, so no total moves. `claimOfOpenRun` in `scripts/spend-report-model.mjs` is the one test, and it reads only the tree, because `npm run gate:autowriter` regenerates the file from the tree alone and a clone's branches differ from CI's. A claim that lapsed, was abandoned, belongs to another run or is absent leaves the line a warning, because nothing says a record is coming. Inside the hold the tree cannot tell a record pending on a pull request from a run that died after its claim; the end of the hold closes that gap.
+
 ## Where it is written and checked
 
 Every commit that changes a ledger or a record carries the file: the writer's one commit (`scripts/write-run.mjs`); a repair,
@@ -44,15 +46,11 @@ and the ledger-only commit of a repair that failed after it spent (`reportFiles`
 allowed by `scripts/repair-scope.mjs`); and the commit of a failed write, after its escalation (`write-daily.yml`). A hand
 change such as a discard needs `npm run audit:spend`. The gate reads back two lines, `Generated-from:` and `Generated-at:`.
 
-`npm run gate:autowriter` regenerates the file with the stamped instant and refuses `spend-report-missing` and `spend-report-differs`,
-naming the first differing line or the missing `Generated-at` (`scripts/autowriter-spend-rules.mjs`). The specimens
-(`scripts/autowriter-spend-specimens.mjs`) plant a record at the committed stamp that passes the ceiling, a forged spent figure, a deleted report and an unstamped one, and hold on any report. The fix is `npm run audit:spend`.
+`npm run gate:autowriter` regenerates the file with the stamped instant and refuses `spend-report-missing` and `spend-report-differs`, naming the first differing line or the missing `Generated-at` (`scripts/autowriter-spend-rules.mjs`). The specimens (`scripts/autowriter-spend-specimens.mjs`) plant a record at the committed stamp that passes the ceiling, a forged spent figure, a deleted report and an unstamped one, and hold on any report. The fix is `npm run audit:spend`.
 
 ## The message
 
-Every message is Block Kit `{ text, blocks }` (`scripts/slack-blocks.mjs`); `text` is the fallback a phone shows. Kinds: the entry
-message (`node scripts/spend-report.mjs notify`, `scripts/spend-slack.mjs`), the no-entry message (`scripts/spend-ended.mjs` with
-`ceiling`, `pick` or `write`; five steps of `write-daily.yml`; a failed pick posts none and escalates instead), the escalation message and the live-entry message.
+Every message is Block Kit `{ text, blocks }` (`scripts/slack-blocks.mjs`); `text` is the fallback a phone shows. Kinds: the entry message (`node scripts/spend-report.mjs notify`, `scripts/spend-slack.mjs`), the no-entry message (`scripts/spend-ended.mjs` with `ceiling`, `pick` or `write`; five steps of `write-daily.yml`; a failed pick posts none and escalates instead), the escalation message and the live-entry message.
 
 - Month first: header `<month> spend against the monthly ceiling`, the Spent, Ceiling and Left table, and `monthLineOf` as line 1 of `text`.
 - Compared numbers sit in code fences padded by `monoTable` (`scripts/slack-table.mjs`), no line over `PHONE_COLUMNS` = 34, our own limit.

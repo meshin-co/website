@@ -125,7 +125,31 @@ export const discardedLedger = (ledger) => ({
   verdict: { state: 'discarded', reason: 'the owner closed the pull request unmerged', decidedAt: DECIDED_AT },
 });
 
-export const filesOf = ({ ledgers = [], records = [] }) => ({
+export const claimPath = ({ slug, claimedAt }) => filedAt('claim', slug, claimedAt);
+
+export const claimOf = ({
+  slug,
+  status = 'claimed',
+  claimedAt = '2026-11-02T09:00:00.000Z',
+  expiresAt = '2026-11-16T09:00:00.000Z',
+  runId = 'run-1',
+}) => ({
+  schema: 1,
+  slug,
+  title: `Title of ${slug}`,
+  format: 'article',
+  query: slug.replaceAll('-', ' '),
+  demand: { impressions: 0, position: null },
+  origin: 'category',
+  category: 'agentic-architecture',
+  runId,
+  status,
+  claimedAt,
+  expiresAt,
+});
+
+export const filesOf = ({ ledgers = [], records = [], claims = [] }) => ({
   ledgers: ledgers.map((ledger) => ({ path: ledgerPath(ledger.slug), text: asText(ledger) })),
   records: records.map((record) => ({ path: recordPath(record.slug), text: asText(record) })),
+  claims: claims.map((claim) => ({ path: claimPath(claim), text: asText(claim) })),
 });

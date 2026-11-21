@@ -41,3 +41,7 @@ The run prints one row per family and two more:
 Neither row counts as a proven family. A failed row fails the run and counts in `FAILED`; when the baseline build is red no family runs and the
 exit code is still 1. The exit code is 1 when any row failed, 2 when none failed and a family was skipped (`--fast`), and 0 otherwise.
 `.githooks/pre-push` reads only that code.
+
+## A pagination family that is red on the real tree
+
+A `pagination` family that is green on a small corpus and red on the real one has been outgrown, not broken: its plant no longer lands where its check looks. Read the sizing rule, and the sizes at which each of the three stops proving what it claims, in `extend-mutation-smoke.md` before touching the plant or the number.
