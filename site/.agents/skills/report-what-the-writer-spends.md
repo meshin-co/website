@@ -46,15 +46,11 @@ and the ledger-only commit of a repair that failed after it spent (`reportFiles`
 allowed by `scripts/repair-scope.mjs`); and the commit of a failed write, after its escalation (`write-daily.yml`). A hand
 change such as a discard needs `npm run audit:spend`. The gate reads back two lines, `Generated-from:` and `Generated-at:`.
 
-`npm run gate:autowriter` regenerates the file with the stamped instant and refuses `spend-report-missing` and `spend-report-differs`,
-naming the first differing line or the missing `Generated-at` (`scripts/autowriter-spend-rules.mjs`). The specimens
-(`scripts/autowriter-spend-specimens.mjs`) plant a record at the committed stamp that passes the ceiling, a forged spent figure, a deleted report and an unstamped one, and hold on any report. The fix is `npm run audit:spend`.
+`npm run gate:autowriter` regenerates the file with the stamped instant and refuses `spend-report-missing` and `spend-report-differs`, naming the first differing line or the missing `Generated-at` (`scripts/autowriter-spend-rules.mjs`). The specimens (`scripts/autowriter-spend-specimens.mjs`) plant a record at the committed stamp that passes the ceiling, a forged spent figure, a deleted report and an unstamped one, and hold on any report. The fix is `npm run audit:spend`.
 
 ## The message
 
-Every message is Block Kit `{ text, blocks }` (`scripts/slack-blocks.mjs`); `text` is the fallback a phone shows. Kinds: the entry
-message (`node scripts/spend-report.mjs notify`, `scripts/spend-slack.mjs`), the no-entry message (`scripts/spend-ended.mjs` with
-`ceiling`, `pick` or `write`; five steps of `write-daily.yml`; a failed pick posts none and escalates instead), the escalation message and the live-entry message.
+Every message is Block Kit `{ text, blocks }` (`scripts/slack-blocks.mjs`); `text` is the fallback a phone shows. Kinds: the entry message (`node scripts/spend-report.mjs notify`, `scripts/spend-slack.mjs`), the no-entry message (`scripts/spend-ended.mjs` with `ceiling`, `pick` or `write`; five steps of `write-daily.yml`; a failed pick posts none and escalates instead), the escalation message and the live-entry message.
 
 - Month first: header `<month> spend against the monthly ceiling`, the Spent, Ceiling and Left table, and `monthLineOf` as line 1 of `text`.
 - Compared numbers sit in code fences padded by `monoTable` (`scripts/slack-table.mjs`), no line over `PHONE_COLUMNS` = 34, our own limit.

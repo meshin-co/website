@@ -3,10 +3,12 @@ import { test } from 'node:test';
 
 import {
   canonicalHref,
+  listedPosts,
   paginationControl,
   robotsContent,
   robotsMeta,
   tagArchiveFindings,
+  tagArchiveListingFindings,
 } from './pagination-markup.mjs';
 
 const ROUTE = '/blog/tag/ai-governance';
@@ -183,4 +185,107 @@ test('the head readers return an empty string rather than throwing when a tag is
   assert.equal(robotsContent('<head></head>'), undefined);
   assert.equal(canonicalHref('<link href="https://meshin.co/x" rel="canonical">'), 'https://meshin.co/x');
   assert.equal(robotsContent('<meta content="noindex, follow" name="robots">'), 'noindex, follow');
+});
+
+const LINK = 'relative decoration-2 hover:decoration-primary text-link underline underline-offset-4 z-[1]';
+
+const card = (id) =>
+  `<article class="relative border border-line flex flex-col focus-within:border-primary group h-full p-6" data-gate-ignore><p class="eyebrow"><time datetime="2026-11-20">20 Nov 2026</time> · 7 min read · <a class="${LINK}" href="/blog/category/governance">AI governance</a></p><h3 class="text-heading font-heading font-semibold mt-5 text-xl"><a class="text-link after:absolute after:content-[''] after:inset-0" href="/blog/${id}">${id}</a></h3><p class="text-muted mt-4 grow">An excerpt.</p><p class="text-muted mt-4 font-mono text-xs"><a class="${LINK}" href="/blog/tag/ai-governance">ai-governance</a> · <a class="${LINK}" href="/blog/tag/policy-enforcement">policy-enforcement</a></p></article>`;
+
+const listing = (ids) =>
+  `<html><body><a href="/blog/tags">Tags</a><a href="/blog/not-a-card">Elsewhere</a><main>${ids.map(card).join('')}</main></body></html>`;
+
+test('the posts a page lists are the ones its cards link to, in card order, and no other link on the page', () => {
+  assert.deepEqual(listedPosts(listing(['b', 'a', 'c'])), ['b', 'a', 'c']);
+  assert.deepEqual(listedPosts(listing([])), []);
+  assert.deepEqual(listedPosts(''), []);
+});
+
+test('a card that links to no post is listed as an empty id, so it can never pass for a post', () => {
+  const cardWithoutPost = '<article><h3>Title</h3><a href="/blog/tag/ai-governance">ai-governance</a></article>';
+  assert.deepEqual(listedPosts(`${card('a')}${cardWithoutPost}`), ['a', '']);
+});
+
+const CARRYING = ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7'];
+const PAGE_OF_THREE = 3;
+
+const listingFindings = (changes = {}) =>
+  tagArchiveListingFindings({
+    page1Html: listing(CARRYING.slice(0, 3)),
+    page2Html: listing(CARRYING.slice(3, 6)),
+    tagged: CARRYING,
+    pageSize: PAGE_OF_THREE,
+    ...changes,
+  });
+
+test('an archive that lists each page its share of the posts yields no findings, whichever posts land on page 2', () => {
+  assert.deepEqual(listingFindings(), []);
+  assert.deepEqual(
+    listingFindings({ page1Html: listing(['p7', 'p1', 'p2']), page2Html: listing(['p6', 'p4', 'p3']) }),
+    []
+  );
+});
+
+test('page 2 must list what the corpus leaves for it: a full page, or the remainder when the archive ends there', () => {
+  const remainder = [
+    [4, ['p4']],
+    [5, ['p4', 'p5']],
+    [6, ['p4', 'p5', 'p6']],
+    [9, ['p4', 'p5', 'p6']],
+  ];
+  for (const [total, onPageTwo] of remainder) {
+    const tagged = Array.from({ length: total }, (_, index) => `p${index + 1}`);
+    assert.deepEqual(
+      listingFindings({ tagged, page2Html: listing(onPageTwo) }),
+      [],
+      `${total} posts leave ${onPageTwo.length} for page 2`
+    );
+  }
+});
+
+test('every defect in what a page lists is caught on its own', () => {
+  const cases = [
+    ['page 2 lists nothing', { page2Html: listing([]) }, /page 2 posts listed: got 0, want 3/],
+    ['page 2 never built', { page2Html: '' }, /page 2 posts listed: got 0, want 3/],
+    ['page 2 lists one post too few', { page2Html: listing(['p4', 'p5']) }, /page 2 posts listed: got 2, want 3/],
+    ['page 2 lists one post too many', { page2Html: listing(CARRYING.slice(3)) }, /page 2 posts listed: got 4, want 3/],
+    [
+      'page 2 lists one post three times',
+      { page2Html: listing(['p4', 'p4', 'p4']) },
+      /page 2 posts listed: got 1, want 3/,
+    ],
+    [
+      'page 2 repeats a post of page 1',
+      { page2Html: listing(['p1', 'p5', 'p6']) },
+      /page 2 posts that page 1 lists too: got p1, want none/,
+    ],
+    [
+      'page 2 lists a post the tag does not carry',
+      { page2Html: listing(['p4', 'p5', 'x1']) },
+      /page 2 posts the tag does not carry: got x1, want none/,
+    ],
+    [
+      'page 1 lists a post the tag does not carry',
+      { page1Html: listing(['p1', 'p2', 'x1']) },
+      /page 1 posts the tag does not carry: got x1, want none/,
+    ],
+    [
+      'page 1 lists a card that links to no post',
+      { page1Html: `${listing(['p1', 'p2'])}<article><h3>Title</h3></article>` },
+      /page 1 posts the tag does not carry: got \(card without a post link\), want none/,
+    ],
+  ];
+  for (const [name, changes, expected] of cases) {
+    const result = listingFindings(changes);
+    assert.equal(result.length, 1, `${name}: ${result.join(' | ')}`);
+    assert.match(result[0], expected, name);
+  }
+});
+
+test('an archive that renders every post on page 1, as tag archives did before they paginated, is caught twice over', () => {
+  const result = listingFindings({ page1Html: listing(CARRYING), page2Html: listing(CARRYING.slice(3, 6)) });
+  assert.deepEqual(result, [
+    'tag page 1 posts listed: got 7, want 3',
+    'tag page 2 posts that page 1 lists too: got p4, p5, p6, want none',
+  ]);
 });
