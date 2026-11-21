@@ -3,7 +3,8 @@ import './fixtures/no-network.mjs';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { parseArguments, runCli } from './pr-watch.mjs';
+import { parseArguments } from './pr-watch-arguments.mjs';
+import { runCli } from './pr-watch.mjs';
 import { OUTCOMES } from './repair-outcome.mjs';
 import { green, harness, readJson } from './fixtures/pr-watch-harness.mjs';
 
@@ -14,12 +15,13 @@ const capture = () => {
 
 const options = ({ env, io, fetch, now, workdir }) => ({ env, io, fetch, now, workdir });
 
-test('the flag after-repair carries the outcome of the repair the workflow just ran, for each outcome there is', () => {
+test('the flag after-repair carries the line the repair printed, and its outcome is one of the outcomes there are', () => {
   for (const outcome of OUTCOMES) {
-    assert.deepEqual(parseArguments(['--pr', '72', '--after-repair', outcome]), {
+    assert.deepEqual(parseArguments(['--pr', '72', '--after-repair', JSON.stringify({ outcome })]), {
       number: 72,
       observed: '',
       afterRepair: outcome,
+      report: {},
     });
   }
 });
@@ -54,10 +56,12 @@ test('the flag without a word after it is a usage error', () => {
 });
 
 test('an observation beside an outcome is read and then left unused, because the successor judges the new head', () => {
-  assert.deepEqual(parseArguments(['--pr', '72', '--observed', 'x', '--after-repair', 'stale']), {
+  const line = JSON.stringify({ outcome: 'stale' });
+  assert.deepEqual(parseArguments(['--pr', '72', '--observed', 'x', '--after-repair', line]), {
     number: 72,
     observed: 'x',
     afterRepair: 'stale',
+    report: {},
   });
 });
 
@@ -74,7 +78,8 @@ test('the command line prints the verdict, the reason and the action after a rep
   const scene = await harness({ bundle: green() });
   const { lines, io } = capture();
 
-  assert.equal(await runCli(['--pr', '72', '--after-repair', 'repaired'], { ...io, ...options(scene) }), 0);
+  const line = JSON.stringify({ outcome: 'repaired' });
+  assert.equal(await runCli(['--pr', '72', '--after-repair', line], { ...io, ...options(scene) }), 0);
   assert.deepEqual(lines, ['pr-watch: pull request #72 unsettled (repaired), successor']);
 });
 
@@ -82,16 +87,39 @@ test('the command line prints the escalation after a repair that stopped, and ex
   const scene = await harness({ bundle: green() });
   const { lines, io } = capture();
 
-  assert.equal(await runCli(['--pr', '72', '--after-repair', 'no-convergence'], { ...io, ...options(scene) }), 0);
+  const line = JSON.stringify({ outcome: 'no-convergence' });
+  assert.equal(await runCli(['--pr', '72', '--after-repair', line], { ...io, ...options(scene) }), 0);
   assert.deepEqual(lines, ['pr-watch: pull request #72 escalate (no-convergence), escalated']);
   assert.equal(readJson(scene.ledgerPath).escalations[0].kind, 'no-convergence');
+});
+
+test('the escalation after an unrepairable stop carries why the repair gave up, so the ledger can tell a stale verdict from a live one', async () => {
+  const scene = await harness({ bundle: green() });
+  const { io } = capture();
+  const measuredMain = 'd'.repeat(40);
+  const line = JSON.stringify({
+    outcome: 'unrepairable',
+    stop: 'no-artifact',
+    gate: 'gate:orphans',
+    ciRun: 44671747275,
+    measuredMain,
+  });
+
+  assert.equal(await runCli(['--pr', '72', '--after-repair', line], { ...io, ...options(scene) }), 0);
+  const [escalation] = readJson(scene.ledgerPath).escalations;
+  assert.deepEqual(
+    { stop: escalation.stop, gate: escalation.gate, ciRun: escalation.ciRun, measuredMain: escalation.measuredMain },
+    { stop: 'no-artifact', gate: 'gate:orphans', ciRun: 44671747275, measuredMain }
+  );
+  assert.match(escalation.detail, /^Stop: no-artifact at gate:orphans$/m);
 });
 
 test('the command line exits 1 when the escalation after a repair was not delivered, and says so', async () => {
   const scene = await harness({ bundle: green(), slack: false });
   const { lines, io } = capture();
 
-  assert.equal(await runCli(['--pr', '72', '--after-repair', 'spend-ceiling'], { ...io, ...options(scene) }), 1);
+  const line = JSON.stringify({ outcome: 'spend-ceiling' });
+  assert.equal(await runCli(['--pr', '72', '--after-repair', line], { ...io, ...options(scene) }), 1);
   assert.ok(
     lines.some((line) => line.includes('was not delivered')),
     lines.join('\n')

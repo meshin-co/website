@@ -63,6 +63,7 @@ function stopOf(error, secrets) {
       kind,
       variables: failure.variables,
       spend: failure.spend,
+      ...(stopped ? error.details.why : undefined),
     },
   };
 }

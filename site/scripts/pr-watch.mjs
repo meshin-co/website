@@ -19,18 +19,17 @@ import {
   rerunFailedJobs,
   tickProblem,
 } from './pr-github.mjs';
+import { UsageError, parseArguments } from './pr-watch-arguments.mjs';
 import { recordDebt } from './pr-watch-debt.mjs';
 import { readEngineConfig } from './engine-config.mjs';
 import { repairFinding, repairOutputs, writeOutputs } from './pr-watch-repair.mjs';
 import { recordPath } from './record-layout.mjs';
-import { OUTCOMES, isOutcome } from './repair-outcome.mjs';
 
 export const SECRET = 'AUTOWRITER_PAT';
 export const TICK_ENVIRONMENT = 'autowriter-tick';
 export const TICK_MINUTES = readEngineConfig().loop.tickMinutes;
 export const WORKFLOW = 'watch-pr.yml';
 
-const USAGE = 'Usage: node scripts/pr-watch.mjs --pr <number> [--observed <token>] [--after-repair <outcome>]';
 const REPOSITORY_ROOT = resolve(import.meta.dirname, '..', '..');
 const GITHUB = {
   createApi,
@@ -43,13 +42,6 @@ const GITHUB = {
   readLedgerAt,
   readTree,
 };
-const FLAGS = new Map([
-  ['--pr', 'number'],
-  ['--observed', 'observed'],
-  ['--after-repair', 'afterRepair'],
-]);
-const PULL_REQUEST_NUMBER = /^[1-9][0-9]{0,8}$/;
-const OBSERVATION = /^[A-Za-z0-9:._-]{0,200}$/;
 
 const REQUIRED_VARIABLES = [
   ['GITHUB_REPOSITORY', 'GITHUB_REPOSITORY is not set; Actions sets it, and a run by hand passes owner/name'],
@@ -77,24 +69,6 @@ const STATEMENTS = {
 };
 
 export class WatchError extends Error {}
-
-class UsageError extends Error {}
-
-export function parseArguments(argv) {
-  const found = {};
-  for (let at = 0; at < argv.length; at += 2) {
-    if (!FLAGS.has(argv[at]) || at + 1 >= argv.length)
-      throw new UsageError(`${USAGE}\nunexpected argument ${argv[at]}`);
-    found[FLAGS.get(argv[at])] = argv[at + 1];
-  }
-  if (!PULL_REQUEST_NUMBER.test(found.number ?? '')) throw new UsageError(`${USAGE}\n--pr needs a whole number`);
-  const observed = found.observed ?? '';
-  if (!OBSERVATION.test(observed)) throw new UsageError(`${USAGE}\n--observed holds only letters, digits and : . _ -`);
-  const { afterRepair } = found;
-  if (afterRepair !== undefined && !isOutcome(afterRepair))
-    throw new UsageError(`${USAGE}\n--after-repair is one of ${OUTCOMES.join(', ')}`);
-  return { number: Number(found.number), observed, ...(afterRepair === undefined ? {} : { afterRepair }) };
-}
 
 function connect({ env, fetch, io }) {
   const missing = REQUIRED_VARIABLES.filter(([name]) => variable(env, name) === '').map(([, hint]) => hint);
@@ -156,9 +130,9 @@ function stageLedger({ snapshot, workdir, number, env, now }) {
   return { slug, path, ledgerPath };
 }
 
-async function deliver({ env, fetch, now, ledgerPath, number }, { kind, title, detail }) {
+async function deliver({ env, fetch, now, ledgerPath, number }, { kind, title, detail, ...why }) {
   try {
-    await escalate({ ledgerPath, kind, title, detail, pullRequest: number, env, fetch, now });
+    await escalate({ ledgerPath, kind, title, detail, why, pullRequest: number, env, fetch, now });
     return null;
   } catch (error) {
     if (error instanceof EscalationError) return error;
@@ -261,13 +235,14 @@ export async function watch({
   number,
   observed = '',
   afterRepair = null,
+  report = {},
   env = process.env,
   fetch = globalThis.fetch,
   io = GITHUB,
   workdir = REPOSITORY_ROOT,
   now = () => new Date(),
 }) {
-  const step = { number, env, fetch, io, workdir, now, ...connect({ env, fetch, io }) };
+  const step = { number, report, env, fetch, io, workdir, now, ...connect({ env, fetch, io }) };
   const snapshot = await io.readSnapshot(step.reader, number);
   const ledger = snapshot.ledger?.value ?? null;
   const result =
@@ -287,8 +262,8 @@ export async function watch({
 
 export async function runCli(argv, { stdout = console.log, stderr = console.error, ...options } = {}) {
   try {
-    const { number, observed, afterRepair } = parseArguments(argv);
-    const { result, action } = await watch({ number, observed, afterRepair, ...options });
+    const { number, observed, afterRepair, report } = parseArguments(argv);
+    const { result, action } = await watch({ number, observed, afterRepair, report, ...options });
     stdout(`pr-watch: pull request #${number} ${result.verdict} (${result.reason}), ${action}`);
     return 0;
   } catch (error) {

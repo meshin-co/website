@@ -6,23 +6,109 @@
   "attempts": [],
   "spend": {
     "tokens": {
-      "input": 2348,
-      "output": 205
+      "input": 26475,
+      "output": 7303
     },
-    "costUsd": 0.003373
+    "costUsd": 0.06299
   },
   "verdict": {
-    "state": "open",
-    "reason": null,
-    "decidedAt": null
+    "state": "escalated",
+    "reason": "Autowriter pull request #153: the gate's findings cannot be repaired by rewriting the entry, or the rewrite could not be made to pass the repair's own checks",
+    "decidedAt": "2026-11-20T04:19:15.856Z"
   },
-  "escalations": [],
+  "escalations": [
+    {
+      "id": "esc-1",
+      "kind": "hard-stop",
+      "title": "Autowriter pull request #153: the repair job failed before it could finish",
+      "detail": "The repair of pull request #153 ended as failed: the repair job failed before it could finish.\nRepair run: https://github.com/meshin-co/website/actions/runs/43931342504\nPull request: https://github.com/meshin-co/website/pull/153",
+      "raisedAt": "2026-11-16T18:45:39.480Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-16T18:45:39.480Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 154,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "esc-2",
+      "kind": "hard-stop",
+      "title": "Autowriter pull request #153: the repair job failed before it could finish",
+      "detail": "The repair of pull request #153 ended as failed: the repair job failed before it could finish.\nRepair run: https://github.com/meshin-co/website/actions/runs/44591611464\nPull request: https://github.com/meshin-co/website/pull/153",
+      "raisedAt": "2026-11-19T18:53:13.517Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-19T18:53:13.518Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 172,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "esc-3",
+      "kind": "hard-stop",
+      "title": "Autowriter pull request #153: the head commit has no check runs, and the one catch-up that could have started CI was already pushed",
+      "detail": "The watcher judged head 7c6cfc9df8f7212baf705173df11c0937fad4e8b: escalate, no-checks-catch-up-cap.\nPull request: https://github.com/meshin-co/website/pull/153",
+      "raisedAt": "2026-11-19T23:20:21.621Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-19T23:20:21.622Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 179,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "esc-4",
+      "kind": "hard-stop",
+      "title": "Autowriter pull request #153: the head commit has no check runs, and the one catch-up that could have started CI was already pushed",
+      "detail": "The watcher judged head e8bed8596af07fe0a8a17d911ae8c4d1e984c77d: escalate, no-checks-catch-up-cap.\nPull request: https://github.com/meshin-co/website/pull/153",
+      "raisedAt": "2026-11-19T23:32:22.760Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-19T23:32:22.761Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 181,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "esc-5",
+      "kind": "unrepairable",
+      "title": "Autowriter pull request #153: the gate's findings cannot be repaired by rewriting the entry, or the rewrite could not be made to pass the repair's own checks",
+      "detail": "The repair of pull request #153 ended as unrepairable: the gate's findings cannot be repaired by rewriting the entry, or the rewrite could not be made to pass the repair's own checks.\nRepair run: https://github.com/meshin-co/website/actions/runs/44673060737\nPull request: https://github.com/meshin-co/website/pull/153",
+      "raisedAt": "2026-11-20T04:19:15.457Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-20T04:19:15.457Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 189,
+          "error": null
+        }
+      ]
+    }
+  ],
   "generation": {
     "tokens": {
-      "input": 2348,
-      "output": 205
+      "input": 26475,
+      "output": 7303
     },
-    "costUsd": 0.003373
+    "costUsd": 0.06299
   },
   "refusals": [
     {
@@ -234,6 +320,32 @@
       "reason": "register-owner",
       "against": "/glossary/ai-governance",
       "detail": "the query \"ai governance\" names the concept \"AI governance\", which the concept register of docs/SEMANTIC-CORE.md assigns to /glossary/ai-governance"
+    }
+  ],
+  "resumes": [
+    {
+      "at": "2026-11-19T18:28:44.189Z",
+      "by": "main-change",
+      "mainSha": "03d1da314a7b00070253740ccfef177192f419b5",
+      "failedJobs": []
+    },
+    {
+      "at": "2026-11-19T23:16:56.427Z",
+      "by": "owner",
+      "mainSha": null,
+      "failedJobs": []
+    },
+    {
+      "at": "2026-11-19T23:28:53.158Z",
+      "by": "owner",
+      "mainSha": null,
+      "failedJobs": []
+    },
+    {
+      "at": "2026-11-20T03:54:36.004Z",
+      "by": "main-change",
+      "mainSha": "d84805bc7ba18bc22bb17a8e1ceab775ab18abaa",
+      "failedJobs": []
     }
   ]
 }

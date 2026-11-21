@@ -51,7 +51,12 @@ async function repairAfter(files) {
   const { api, calls } = theRunAsGitHubHoldsIt(whatTheJobUploads(files));
   const { io, adapter } = world({ kinds });
   const opened = await io.open();
-  Object.assign(io, { api, findingsOf: readFindings, open: async () => ({ ...opened, run: RUN }) });
+  Object.assign(io, {
+    api,
+    findingsOf: readFindings,
+    judgedFacts: async () => ({}),
+    open: async () => ({ ...opened, run: RUN }),
+  });
   try {
     await repairRun(io);
   } catch (error) {
