@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "slug": "how-to-retire-an-ai-tool-when-its-vendor-contract-ends",
+  "title": "How to retire an AI tool when its vendor contract ends",
+  "format": "article",
+  "query": "how to retire an ai tool when its vendor contract ends",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "origin": "category",
+  "category": "operating-model",
+  "catchUp": {
+    "slot": "15:00",
+    "lateMinutes": 38
+  },
+  "runId": "44920059360-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-21T15:38:07.066Z",
+  "expiresAt": "2026-12-05T15:38:07.066Z"
+}
