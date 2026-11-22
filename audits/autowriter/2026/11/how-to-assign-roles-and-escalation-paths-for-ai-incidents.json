@@ -259,5 +259,15 @@
       "against": "/blog/what-should-a-board-request-in-a-quarterly-ai-risk-report",
       "detail": "the topic \"How should a board set AI risk limits?\" repeats /blog/what-should-a-board-request-in-a-quarterly-ai-risk-report (\"What should a board request in a quarterly AI risk report?\"): its subject shares ai, board, risk, should, 4 of the 6 stems of the smaller one, a containment of 0.67 against the threshold of 0.5"
     }
+  ],
+  "resumes": [
+    {
+      "at": "2026-11-22T07:50:23.880Z",
+      "by": "main-change",
+      "mainSha": "95dfe8f42b29c7773ab244d4d74468ba7a58d02c",
+      "failedJobs": [
+        "types-and-units"
+      ]
+    }
   ]
 }
