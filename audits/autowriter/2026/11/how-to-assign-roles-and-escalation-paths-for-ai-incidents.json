@@ -12,9 +12,9 @@
     "costUsd": 0.064517
   },
   "verdict": {
-    "state": "escalated",
-    "reason": "Autowriter pull request #202: a job that is not a content gate failed, so the loop may not repair it",
-    "decidedAt": "2026-11-21T20:01:18.332Z"
+    "state": "merged",
+    "reason": null,
+    "decidedAt": "2026-11-22T08:16:46.584Z"
   },
   "escalations": [
     {
@@ -269,5 +269,11 @@
         "types-and-units"
       ]
     }
-  ]
+  ],
+  "measurementDebt": {
+    "mergedCommit": "1f3a4539adf4f3d6d0f9cf89255bcacec91ebd42",
+    "fingerprint": "e41175affd87028f0dfa0fde9bb0dc2c7aec0430a1c1687e892c5d09368be30b",
+    "recordedAt": "2026-11-22T08:16:46.584Z",
+    "clear": "cd site && GATE_PHASE=<bucket> npm run gate:lh && GATE_PHASE=<bucket> npm run lh:record"
+  }
 }
