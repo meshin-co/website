@@ -12,9 +12,9 @@
     "costUsd": 0.074677
   },
   "verdict": {
-    "state": "open",
+    "state": "merged",
     "reason": null,
-    "decidedAt": null
+    "decidedAt": "2026-11-22T19:57:32.981Z"
   },
   "escalations": [],
   "generation": {
@@ -247,5 +247,11 @@
       "against": "audits/autowriter/claims/2026/11/how-to-set-up-an-ai-launch-approval-process.json",
       "detail": "the topic \"How to set up an AI steering committee\" repeats audits/autowriter/claims/2026/11/how-to-set-up-an-ai-launch-approval-process.json (\"How to set up an AI launch approval process\"): its subject shares ai, set, up, 3 of the 5 stems of the smaller one, a containment of 0.60 against the threshold of 0.5"
     }
-  ]
+  ],
+  "measurementDebt": {
+    "mergedCommit": "1766ca09ff50f388d6422d99b7ec09703b5070dc",
+    "fingerprint": "1719068202225ac86dad7e5d77483a7dc3dfdc41e0958da6b37ded356be25aa6",
+    "recordedAt": "2026-11-22T19:57:32.981Z",
+    "clear": "cd site && GATE_PHASE=<bucket> npm run gate:lh && GATE_PHASE=<bucket> npm run lh:record"
+  }
 }
