@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "slug": "how-to-pause-and-resume-long-running-ai-agents",
+  "title": "How to pause and resume long-running AI agents",
+  "format": "article",
+  "query": "how to pause and resume long-running ai agents",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "origin": "category",
+  "category": "agentic-architecture",
+  "catchUp": {
+    "slot": "06:00",
+    "lateMinutes": 86
+  },
+  "runId": "44998081502-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-22T07:26:12.081Z",
+  "expiresAt": "2026-12-06T07:26:12.081Z"
+}
