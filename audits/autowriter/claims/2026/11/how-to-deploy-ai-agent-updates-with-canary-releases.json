@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "slug": "how-to-deploy-ai-agent-updates-with-canary-releases",
+  "title": "How to deploy AI agent updates with canary releases",
+  "format": "article",
+  "query": "how to deploy ai agent updates with canary releases",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "origin": "category",
+  "category": "agentic-architecture",
+  "catchUp": {
+    "slot": "15:00",
+    "lateMinutes": 41
+  },
+  "runId": "45039509507-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-22T15:41:01.487Z",
+  "expiresAt": "2026-12-06T15:41:01.487Z"
+}
