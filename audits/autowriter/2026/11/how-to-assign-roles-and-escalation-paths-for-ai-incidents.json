@@ -6,23 +6,41 @@
   "attempts": [],
   "spend": {
     "tokens": {
-      "input": 4243,
-      "output": 306
+      "input": 28807,
+      "output": 7142
     },
-    "costUsd": 0.005773
+    "costUsd": 0.064517
   },
   "verdict": {
-    "state": "open",
+    "state": "merged",
     "reason": null,
-    "decidedAt": null
+    "decidedAt": "2026-11-22T08:16:46.584Z"
   },
-  "escalations": [],
+  "escalations": [
+    {
+      "id": "esc-1",
+      "kind": "unrepairable",
+      "title": "Autowriter pull request #202: a job that is not a content gate failed, so the loop may not repair it",
+      "detail": "The watcher judged head 248064e6fd1e13c943c00d444a1c9c5fb37eeaf4: escalate, not-a-content-gate.\nFailing: types-and-units.\nPull request: https://github.com/meshin-co/website/pull/202",
+      "raisedAt": "2026-11-21T20:01:17.811Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-21T20:01:17.812Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 205,
+          "error": null
+        }
+      ]
+    }
+  ],
   "generation": {
     "tokens": {
-      "input": 4243,
-      "output": 306
+      "input": 28807,
+      "output": 7142
     },
-    "costUsd": 0.005773
+    "costUsd": 0.064517
   },
   "refusals": [
     {
@@ -241,5 +259,21 @@
       "against": "/blog/what-should-a-board-request-in-a-quarterly-ai-risk-report",
       "detail": "the topic \"How should a board set AI risk limits?\" repeats /blog/what-should-a-board-request-in-a-quarterly-ai-risk-report (\"What should a board request in a quarterly AI risk report?\"): its subject shares ai, board, risk, should, 4 of the 6 stems of the smaller one, a containment of 0.67 against the threshold of 0.5"
     }
-  ]
+  ],
+  "resumes": [
+    {
+      "at": "2026-11-22T07:50:23.880Z",
+      "by": "main-change",
+      "mainSha": "95dfe8f42b29c7773ab244d4d74468ba7a58d02c",
+      "failedJobs": [
+        "types-and-units"
+      ]
+    }
+  ],
+  "measurementDebt": {
+    "mergedCommit": "1f3a4539adf4f3d6d0f9cf89255bcacec91ebd42",
+    "fingerprint": "e41175affd87028f0dfa0fde9bb0dc2c7aec0430a1c1687e892c5d09368be30b",
+    "recordedAt": "2026-11-22T08:16:46.584Z",
+    "clear": "cd site && GATE_PHASE=<bucket> npm run gate:lh && GATE_PHASE=<bucket> npm run lh:record"
+  }
 }
