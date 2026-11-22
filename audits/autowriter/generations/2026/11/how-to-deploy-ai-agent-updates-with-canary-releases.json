@@ -1,0 +1,407 @@
+{
+  "schema": 1,
+  "slug": "how-to-deploy-ai-agent-updates-with-canary-releases",
+  "runId": "45039509507-1",
+  "generatedAt": "2026-11-22T15:45:19.079Z",
+  "claim": {
+    "title": "How to deploy AI agent updates with canary releases",
+    "query": "how to deploy ai agent updates with canary releases",
+    "origin": "category",
+    "category": "agentic-architecture",
+    "catchUp": {
+      "slot": "15:00",
+      "lateMinutes": 41
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-22",
+      "windowStart": "2026-08-22",
+      "windowEnd": "2026-11-20",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/how-to-deploy-ai-agent-updates-with-canary-releases",
+    "path": "site/src/data/post/how-to-deploy-ai-agent-updates-with-canary-releases.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_0bf449584e2a3dbd016b030d5a1a2087d0b36a55709e9ca963",
+  "published": {
+    "callIndex": 9
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0ee9e112e4a9019e016b030d0f538c87d0ac0316238f0e3db0",
+      "requestDigest": "1a0da17f5d5bd3d6fd7b64b59c977dde76fb5df9b46cb3a3766cebc2e1e82d77",
+      "tokens": {
+        "input": 1437,
+        "output": 79
+      },
+      "costUsd": 0.001832,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_00bde1a9756aded5016b030d122e4487d08e4022c40174051f",
+      "requestDigest": "d410b8f29ce936c8c6afdca87729bf485442792420098303b797ae3bbf3d65e7",
+      "tokens": {
+        "input": 1497,
+        "output": 133
+      },
+      "costUsd": 0.002162,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0ffc2aca3dde92a4016b030d166b9087d0bf3ab18b2fa5fd08",
+      "requestDigest": "d4dd6b83cfb0e6a915d94c2c20c1d6fd64cf7a866658e0bbb258bdb9a1ae0ce1",
+      "tokens": {
+        "input": 1441,
+        "output": 179
+      },
+      "costUsd": 0.002336,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0788e9575f9db8a2016b030d1ae7b487d0b4d22d30a79eecfe",
+      "requestDigest": "ea62433c37da3f991b29b72b6f6702173908a6b5fefe0809bd69c6b65e279cc8",
+      "tokens": {
+        "input": 1553,
+        "output": 200
+      },
+      "costUsd": 0.002553,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "max_output_tokens"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_030ac4c6ead8443a016b030d1f970487d0b902be07dfbb48f9",
+      "requestDigest": "59db0a36dc6f5f2cb227f1bc06476b79a8b3e131841ef4d3820027f6b8073668",
+      "tokens": {
+        "input": 1433,
+        "output": 149
+      },
+      "costUsd": 0.002178,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_02bca134e597e6fc016b030d230cb487d0b81cb7f2ed761144",
+      "requestDigest": "704f48489f5891a02a2fda56af8c739bcc345f2ba1ff508fc840ae4ac3c7e21e",
+      "tokens": {
+        "input": 1491,
+        "output": 77
+      },
+      "costUsd": 0.001876,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_006e530090afd5c8016b030d25937087d08a8eecf04c71c758",
+      "requestDigest": "700de2261fd38e696278a4321891a843616646889d5a4979a973eca8eabf2f26",
+      "tokens": {
+        "input": 1434,
+        "output": 89
+      },
+      "costUsd": 0.001879,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_002b51fc1139f4e7016b030d27aedc87d092dfd253333a2ee2",
+      "requestDigest": "8f19c7e43caa62786727b0d1edcf1ae83b62a539691e1c754c1fa3a5e84682d8",
+      "tokens": {
+        "input": 1500,
+        "output": 70
+      },
+      "costUsd": 0.00185,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0622bb305c4fd3b8016b030d2cb63c87d0b886d81ad8740221",
+      "requestDigest": "018ae9cd4fa808fd34d6a013f5cb7517328689f7d8bc0be46eff70f3a91af969",
+      "tokens": {
+        "input": 10858,
+        "output": 3125
+      },
+      "costUsd": 0.026483,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0bf449584e2a3dbd016b030d5a1a2087d0b36a55709e9ca963",
+      "requestDigest": "e49b4d61b8dcb6129ece047c2f1dbc07dc2611eda9a85c46e816dc655fb45451",
+      "tokens": {
+        "input": 13618,
+        "output": 2981
+      },
+      "costUsd": 0.028523,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 36262,
+      "output": 7082
+    },
+    "costUsd": 0.071672
+  },
+  "ledger": "audits/autowriter/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "1024e732f6f00cc50025e7f0b9a79c9f0858de6e52e8d729cf6f14f0cdbc0488",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "7983e72318b2701ef667d48ce7fff71de6bc58227340fa77be86897b066bb2f5"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "1e291e4336807e99144f2a63cfd94220707c1c99d9084f960e26799cbf12fde8"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "bfb02303381d779e9551eb07526273d9ebecba36e6d2abda5692ac878241e479"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "22d3896a6c628247fcbb41c72c34bc73d7e52a461c971e846c407b22ded39b17"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "1178470fc118cfa798043ccd2b70e4f94230e9eeaefd8c0433a88b5161c28f37"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "3ad652f7e80ef6c650c3ddbb9bc139beff4a9bd22370d60de6e61e26409d87ef"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "f64e24db8dca1c487b003c3d3cac0b30d8f5290ec8ab26b658c8b3abf574a4cc"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "eb261c42ab348b4a4121539b3faecc98578a0ea2",
+    "fingerprint": "e41175affd87028f0dfa0fde9bb0dc2c7aec0430a1c1687e892c5d09368be30b"
+  },
+  "claimTable": [
+    {
+      "sentence": "The comparison is useful only if the team can tell what each cohort ran.",
+      "marker": "own-reading",
+      "source": null,
+      "span": null
+    },
+    {
+      "sentence": "A quiet period with few matching tasks may tell the team little about the candidate.",
+      "marker": "own-reading",
+      "source": null,
+      "span": null
+    },
+    {
+      "sentence": "Changing the route cannot reverse a message already sent or a record already changed.",
+      "marker": "own-reading",
+      "source": null,
+      "span": null
+    }
+  ],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 112,
+      "median": 14,
+      "shareBelowThreshold": 0.2858,
+      "shareJustBelow": 0.25,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json",
+    "audits/autowriter/claims/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json",
+    "audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-deploy-ai-agent-updates-with-canary-releases.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-load-test-an-ai-agent-before-launch.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-prevent-duplicate-ai-agent-actions-on-retries.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-require-approval-for-ai-agent-payments.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-roll-back-an-ai-agent-deployment.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-run-an-ai-agent-in-shadow-mode.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-sandbox-ai-agent-code-execution.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-set-a-per-task-spending-limit-for-an-ai-agent.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-stop-ai-agents-getting-stuck-in-loops.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-trace-ai-agent-tool-calls-in-production.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/how-to-deploy-ai-agent-updates-with-canary-releases.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}

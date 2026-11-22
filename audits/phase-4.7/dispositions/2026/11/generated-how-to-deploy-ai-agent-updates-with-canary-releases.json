@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/how-to-deploy-ai-agent-updates-with-canary-releases.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json on 2026-11-22. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json.",
+    "digest": "dbcc338d174c"
+  },
+  {
+    "target": "/blog/how-to-deploy-ai-agent-updates-with-canary-releases",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json on 2026-11-22. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json.",
+    "digest": "f8264a71aabd"
+  }
+]
