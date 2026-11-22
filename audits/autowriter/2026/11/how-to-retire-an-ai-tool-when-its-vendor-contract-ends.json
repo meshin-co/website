@@ -12,9 +12,9 @@
     "costUsd": 0.098801
   },
   "verdict": {
-    "state": "open",
+    "state": "merged",
     "reason": null,
-    "decidedAt": null
+    "decidedAt": "2026-11-22T07:50:01.296Z"
   },
   "escalations": [],
   "generation": {
@@ -241,5 +241,11 @@
       "against": "/blog/how-can-boards-verify-ai-cost-savings",
       "detail": "the topic \"How can boards verify insurance covers AI-related losses?\" repeats /blog/how-can-boards-verify-ai-cost-savings (\"How can boards verify AI cost savings?\"): its subject shares ai, board, can, verify, 4 of the 6 stems of the smaller one, a containment of 0.67 against the threshold of 0.5"
     }
-  ]
+  ],
+  "measurementDebt": {
+    "mergedCommit": "95dfe8f42b29c7773ab244d4d74468ba7a58d02c",
+    "fingerprint": "ee40f8992f37be0c00bdcfe4754634720267a7e36117237a724ca865596a48c3",
+    "recordedAt": "2026-11-22T07:50:01.296Z",
+    "clear": "cd site && GATE_PHASE=<bucket> npm run gate:lh && GATE_PHASE=<bucket> npm run lh:record"
+  }
 }
