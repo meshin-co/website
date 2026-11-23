@@ -12,11 +12,29 @@
     "costUsd": 0.065471
   },
   "verdict": {
-    "state": "open",
-    "reason": null,
-    "decidedAt": null
+    "state": "escalated",
+    "reason": "Autowriter pull request #208: a job that is not a content gate failed, so the loop may not repair it",
+    "decidedAt": "2026-11-23T23:37:14.325Z"
   },
-  "escalations": [],
+  "escalations": [
+    {
+      "id": "esc-1",
+      "kind": "unrepairable",
+      "title": "Autowriter pull request #208: a job that is not a content gate failed, so the loop may not repair it",
+      "detail": "The watcher judged head c406e96aeb4e97e654ea2059b44000b6ffa1560e: escalate, not-a-content-gate.\nFailing: types-and-units.\nPull request: https://github.com/meshin-co/website/pull/208",
+      "raisedAt": "2026-11-23T23:37:13.671Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-23T23:37:13.671Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 210,
+          "error": null
+        }
+      ]
+    }
+  ],
   "generation": {
     "tokens": {
       "input": 30706,
