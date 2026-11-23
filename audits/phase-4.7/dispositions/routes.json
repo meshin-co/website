@@ -33,15 +33,15 @@
     "target": "/blog",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-pause-and-resume-long-running-ai-agents (generation record audits/autowriter/generations/2026/11/how-to-pause-and-resume-long-running-ai-agents.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "5510597d36b8"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-deploy-ai-agent-updates-with-canary-releases (generation record audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "38fb75f9c6d9"
   },
   {
     "target": "/blog",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-pause-and-resume-long-running-ai-agents (generation record audits/autowriter/generations/2026/11/how-to-pause-and-resume-long-running-ai-agents.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "5510597d36b8"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-deploy-ai-agent-updates-with-canary-releases (generation record audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "38fb75f9c6d9"
   },
   {
     "target": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
@@ -53,15 +53,15 @@
     "target": "/blog/category/agentic-architecture",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-pause-and-resume-long-running-ai-agents (generation record audits/autowriter/generations/2026/11/how-to-pause-and-resume-long-running-ai-agents.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "2896ec998fc0"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-deploy-ai-agent-updates-with-canary-releases (generation record audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "1003f1417eec"
   },
   {
     "target": "/blog/category/agentic-architecture",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-pause-and-resume-long-running-ai-agents (generation record audits/autowriter/generations/2026/11/how-to-pause-and-resume-long-running-ai-agents.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "2896ec998fc0"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-deploy-ai-agent-updates-with-canary-releases (generation record audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "1003f1417eec"
   },
   {
     "target": "/blog/category/executive",
@@ -101,15 +101,15 @@
     "target": "/blog/evals-in-ci-for-llm-agents",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-pause-and-resume-long-running-ai-agents (generation record audits/autowriter/generations/2026/11/how-to-pause-and-resume-long-running-ai-agents.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "ac4f33e6ac65"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-deploy-ai-agent-updates-with-canary-releases (generation record audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "b7df6717f77d"
   },
   {
     "target": "/blog/evals-in-ci-for-llm-agents",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-pause-and-resume-long-running-ai-agents (generation record audits/autowriter/generations/2026/11/how-to-pause-and-resume-long-running-ai-agents.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "ac4f33e6ac65"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-deploy-ai-agent-updates-with-canary-releases (generation record audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "b7df6717f77d"
   },
   {
     "target": "/blog/how-to-build-an-ai-system-register-in-a-week",
@@ -127,22 +127,22 @@
     "target": "/blog/tag/agentic-architecture",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-pause-and-resume-long-running-ai-agents (generation record audits/autowriter/generations/2026/11/how-to-pause-and-resume-long-running-ai-agents.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "0591e9a61216"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-deploy-ai-agent-updates-with-canary-releases (generation record audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "aa1282d625a8"
   },
   {
     "target": "/blog/tag/agentic-architecture",
     "location": "body.h1",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-pause-and-resume-long-running-ai-agents (generation record audits/autowriter/generations/2026/11/how-to-pause-and-resume-long-running-ai-agents.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "0591e9a61216"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-deploy-ai-agent-updates-with-canary-releases (generation record audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "aa1282d625a8"
   },
   {
     "target": "/blog/tag/agentic-architecture",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-pause-and-resume-long-running-ai-agents (generation record audits/autowriter/generations/2026/11/how-to-pause-and-resume-long-running-ai-agents.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "0591e9a61216"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-deploy-ai-agent-updates-with-canary-releases (generation record audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "aa1282d625a8"
   },
   {
     "target": "/blog/tag/ai-governance",
@@ -265,22 +265,22 @@
     "target": "/blog/tag/production-readiness",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-pause-and-resume-long-running-ai-agents (generation record audits/autowriter/generations/2026/11/how-to-pause-and-resume-long-running-ai-agents.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "b38bddeb9cc5"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-deploy-ai-agent-updates-with-canary-releases (generation record audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "9467950e3b3f"
   },
   {
     "target": "/blog/tag/production-readiness",
     "location": "body.h1",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-pause-and-resume-long-running-ai-agents (generation record audits/autowriter/generations/2026/11/how-to-pause-and-resume-long-running-ai-agents.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "b38bddeb9cc5"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-deploy-ai-agent-updates-with-canary-releases (generation record audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "9467950e3b3f"
   },
   {
     "target": "/blog/tag/production-readiness",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-pause-and-resume-long-running-ai-agents (generation record audits/autowriter/generations/2026/11/how-to-pause-and-resume-long-running-ai-agents.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "b38bddeb9cc5"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-deploy-ai-agent-updates-with-canary-releases (generation record audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "9467950e3b3f"
   },
   {
     "target": "/blog/tag/security-review",

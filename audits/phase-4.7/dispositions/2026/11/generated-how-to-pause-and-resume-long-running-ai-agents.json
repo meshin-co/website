@@ -8,7 +8,7 @@
   {
     "target": "/blog/how-to-pause-and-resume-long-running-ai-agents",
     "status": "rewritten",
-    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-pause-and-resume-long-running-ai-agents.json on 2026-11-22. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-pause-and-resume-long-running-ai-agents.json.",
-    "digest": "2d3714b831d2"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-deploy-ai-agent-updates-with-canary-releases (generation record audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "f824aa246851"
   }
 ]
