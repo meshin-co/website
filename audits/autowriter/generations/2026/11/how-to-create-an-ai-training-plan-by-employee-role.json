@@ -1,0 +1,355 @@
+{
+  "schema": 1,
+  "slug": "how-to-create-an-ai-training-plan-by-employee-role",
+  "runId": "45249393819-1",
+  "generatedAt": "2026-11-23T19:35:38.684Z",
+  "claim": {
+    "title": "How to create an AI training plan by employee role",
+    "query": "how to create an ai training plan by employee role",
+    "origin": "category",
+    "category": "operating-model",
+    "catchUp": {
+      "slot": "15:00",
+      "lateMinutes": 270
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-23",
+      "windowStart": "2026-08-23",
+      "windowEnd": "2026-11-21",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/how-to-create-an-ai-training-plan-by-employee-role",
+    "path": "site/src/data/post/how-to-create-an-ai-training-plan-by-employee-role.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_08a89de3f84b2f96016b0494ca642487d1aa3db3049f33dffc",
+  "published": {
+    "callIndex": 7
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_00529bf804582575016b049467d61887d1b17e4621877d11f7",
+      "requestDigest": "4b95d41970558c72965b24de5dd16abd5f720910c58d92a661eb2ae6a9a39787",
+      "tokens": {
+        "input": 1458,
+        "output": 97
+      },
+      "costUsd": 0.001943,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_04e1c33c84a1ca8a016b04946afe7087d1aea5154098ac6244",
+      "requestDigest": "0e048c12e5524463d3490b8d2c1413607e61059da7834b82e18d413a401d026d",
+      "tokens": {
+        "input": 1520,
+        "output": 123
+      },
+      "costUsd": 0.002135,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0d4f4904bbaabefe016b04946efe0087d18a28bf2a4d75d5fa",
+      "requestDigest": "1a056b2fb0accb937d2813414555de7042163f7e673b846234bf5d62e20b7829",
+      "tokens": {
+        "input": 1454,
+        "output": 115
+      },
+      "costUsd": 0.002029,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0c8a79b6e575c8d3016b049472729c87d19b0b0456416d6a5e",
+      "requestDigest": "ffcde5d89d98d468b0338df5f19afa7bc0cc5c61e1bfeffeb491d4989bf20ced",
+      "tokens": {
+        "input": 1561,
+        "output": 200
+      },
+      "costUsd": 0.002561,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "max_output_tokens"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0ee6d71b742c574c016b0494781d2087d1b732abe002c30581",
+      "requestDigest": "783bf920a41deccd01e73927454815cbd72a564205bb59374a153c4badf15aba",
+      "tokens": {
+        "input": 1462,
+        "output": 97
+      },
+      "costUsd": 0.001947,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_04bec16f89a26929016b04947b9c0487d1999c9bea82826318",
+      "requestDigest": "1d73a6e6227c06d426b6d84c3dcdb663b5b98b7361719112a55600124d50abe5",
+      "tokens": {
+        "input": 1530,
+        "output": 117
+      },
+      "costUsd": 0.002115,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0910bcc72c0d4ce5016b0494832b4887d1b8d1597813d68d4c",
+      "requestDigest": "9538db83f071c1709c3d03d6c03eb91036b9af4179a979bfc85078ac06c3b65c",
+      "tokens": {
+        "input": 10902,
+        "output": 3695
+      },
+      "costUsd": 0.029377,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_08a89de3f84b2f96016b0494ca642487d1aa3db3049f33dffc",
+      "requestDigest": "c5104d1a7fc9c121ff41f4e1da1af070683a944864d3978c5b79738b3aef6a06",
+      "tokens": {
+        "input": 13952,
+        "output": 3076
+      },
+      "costUsd": 0.029332,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 33839,
+      "output": 7520
+    },
+    "costUsd": 0.071439
+  },
+  "ledger": "audits/autowriter/2026/11/how-to-create-an-ai-training-plan-by-employee-role.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "12aaefc983cf903496bc874f432ff874383bdd0499efbb086b6a20949dbf8f88",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "7983e72318b2701ef667d48ce7fff71de6bc58227340fa77be86897b066bb2f5"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "1e291e4336807e99144f2a63cfd94220707c1c99d9084f960e26799cbf12fde8"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "bfb02303381d779e9551eb07526273d9ebecba36e6d2abda5692ac878241e479"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "986d4bdb249b3c1c3676d7c363ee2a451364919f0e11667214e91e1c6486625a"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "edf52ade25515725595150d9a7adecfed92f4ad3f18baa6ab25e9ebe4c2a8744"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "092633e72e99a0522e347669519f6621128bd93b2f8b789390d7bde734dca796"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "f64e24db8dca1c487b003c3d3cac0b30d8f5290ec8ab26b658c8b3abf574a4cc"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "ad8485401df5d988a2a903c71b9c292b14f02d41",
+    "fingerprint": "f49050a63c4b3458051ca4f5bc5d6051ceda5b2e57345c2f0c4f8cca3f70797b"
+  },
+  "claimTable": [
+    {
+      "sentence": "How to create an AI training plan by employee role: start with the work people do and the decisions they can make.",
+      "marker": "own-reading",
+      "source": null,
+      "span": null
+    }
+  ],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 134,
+      "median": 14,
+      "shareBelowThreshold": 0.2612,
+      "shareJustBelow": 0.2239,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/how-to-create-an-ai-training-plan-by-employee-role.json",
+    "audits/autowriter/claims/2026/11/how-to-create-an-ai-training-plan-by-employee-role.json",
+    "audits/autowriter/generations/2026/11/how-to-create-an-ai-training-plan-by-employee-role.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-ai-readiness-assessment-template-for-smb.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-allocate-shared-ai-tool-costs-across-departments.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-assign-roles-and-escalation-paths-for-ai-incidents.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-create-an-ai-training-plan-by-employee-role.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-retire-an-ai-tool-when-its-vendor-contract-ends.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-review-ai-generated-customer-support-replies.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-review-ai-vendor-model-updates-after-deployment.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/articles-telemetry.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/how-to-create-an-ai-training-plan-by-employee-role.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}
