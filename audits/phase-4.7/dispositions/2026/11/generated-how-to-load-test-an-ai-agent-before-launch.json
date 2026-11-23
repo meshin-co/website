@@ -9,6 +9,6 @@
     "target": "/blog/how-to-load-test-an-ai-agent-before-launch",
     "status": "rewritten",
     "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-deploy-ai-agent-updates-with-canary-releases (generation record audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "8f9a0448561c"
+    "digest": "141ac6bf7edf"
   }
 ]

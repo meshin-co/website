@@ -1,0 +1,388 @@
+{
+  "schema": 1,
+  "slug": "how-to-pause-and-resume-long-running-ai-agents",
+  "runId": "44998081502-1",
+  "generatedAt": "2026-11-22T07:30:59.132Z",
+  "claim": {
+    "title": "How to pause and resume long-running AI agents",
+    "query": "how to pause and resume long-running ai agents",
+    "origin": "category",
+    "category": "agentic-architecture",
+    "catchUp": {
+      "slot": "06:00",
+      "lateMinutes": 86
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-22",
+      "windowStart": "2026-08-22",
+      "windowEnd": "2026-11-20",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/how-to-pause-and-resume-long-running-ai-agents",
+    "path": "site/src/data/post/how-to-pause-and-resume-long-running-ai-agents.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_00ec95969659af2b016b029963c27887d28127c6ba7bf3ee1f",
+  "published": {
+    "callIndex": 9
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0cb66ccb3c534bcf016b0299157f1487d29fcd3f3f7c6501c5",
+      "requestDigest": "4b6285107a3200c3412c8b5919aa68780988f4ed024d8130a8a7da2258f150a4",
+      "tokens": {
+        "input": 1401,
+        "output": 102
+      },
+      "costUsd": 0.001911,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_03d953cda410b5a7016b02991896f087d2bb8a925e8a9b176f",
+      "requestDigest": "1cb6d25970f820ea53de3b8eaaef4e681fd03d435e029916d90efadedfa29e7e",
+      "tokens": {
+        "input": 1459,
+        "output": 85
+      },
+      "costUsd": 0.001884,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0b8c98102ffcf27b016b02991a7d8c87d2be5f9f2e94d7a204",
+      "requestDigest": "cfc4202907b653b92f3226eaa4337c8b4db17232cf728e65b929975955772ee1",
+      "tokens": {
+        "input": 1405,
+        "output": 111
+      },
+      "costUsd": 0.00196,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0fc8eeec3c37233c016b02991d141c87d2a78b26480b563ecc",
+      "requestDigest": "1315570551b5bcc2faefee1f3449cd96b3b392d57c1b433ad85c574f25a13bf7",
+      "tokens": {
+        "input": 1463,
+        "output": 134
+      },
+      "costUsd": 0.002133,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0c039eeb57ba58c2016b02992031c887d285f20bf1a95b11d6",
+      "requestDigest": "6e404ea18de3e33d8edec4230cf28139002cf6d3ebdb3c31bf4491a1788a0a47",
+      "tokens": {
+        "input": 1397,
+        "output": 151
+      },
+      "costUsd": 0.002152,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_056f43d8e4d99e74016b0299236fa487d29d9406d90f6d9991",
+      "requestDigest": "c1743ff491e1a6e9340d3e37c2563377329a42e3a3909b0b28e280bfcd60feec",
+      "tokens": {
+        "input": 1463,
+        "output": 154
+      },
+      "costUsd": 0.002233,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0e4ff888e0ab8607016b02992799b487d2b3adaf4b43e851bb",
+      "requestDigest": "fd7958d217cc041aa9c45aa4ddcb3a8e2fdc64ca97a922989dccd4e5df0b9355",
+      "tokens": {
+        "input": 1398,
+        "output": 84
+      },
+      "costUsd": 0.001818,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_04f5dcaceda98b06016b029929c25887d2b7a3ef35e5f41075",
+      "requestDigest": "6e4926f5d35da36c99bafe9b6aaf53c55ecd406ac634d846f0b6c6d9ca7dd969",
+      "tokens": {
+        "input": 1454,
+        "output": 65
+      },
+      "costUsd": 0.001779,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0f4896ae51c1bb1e016b02992e989887d2883062428d9e80be",
+      "requestDigest": "ee02d7979e12bab0cb3c6f67ef6d323028d1b8cbc9711c46ce11c0a4d2dd9d21",
+      "tokens": {
+        "input": 10803,
+        "output": 3803
+      },
+      "costUsd": 0.029818,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_00ec95969659af2b016b029963c27887d28127c6ba7bf3ee1f",
+      "requestDigest": "773b67e09b81328da178d5106ef5ab09f3f708e70f8583ebb024e425a256bb10",
+      "tokens": {
+        "input": 13804,
+        "output": 3037
+      },
+      "costUsd": 0.028989,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 36047,
+      "output": 7726
+    },
+    "costUsd": 0.074677
+  },
+  "ledger": "audits/autowriter/2026/11/how-to-pause-and-resume-long-running-ai-agents.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "28e33856bd516f5689ec7d7bd3ebafc4a33ab050d9b822215b5d6aaf5745bb4f",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "7983e72318b2701ef667d48ce7fff71de6bc58227340fa77be86897b066bb2f5"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "1e291e4336807e99144f2a63cfd94220707c1c99d9084f960e26799cbf12fde8"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "bfb02303381d779e9551eb07526273d9ebecba36e6d2abda5692ac878241e479"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "b2740c5c414d1fc04b74b7cacc9ee7c5fe91c47f49ac8c6d3b1f94e59cc08ad1"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "9644f95b64d14f28ecf05f2c71ae9f488f630f9d64c78f2a92fdea3549b69cab"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "7e1f4b685976a15204f9ef6525c5ff2efe86586f912949ff868cb2976463ef48"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "f64e24db8dca1c487b003c3d3cac0b30d8f5290ec8ab26b658c8b3abf574a4cc"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "c605712babb138d61c07bc043edda44984cd7887",
+    "fingerprint": "bae7e235d1870c9c8d5429488e65ef243eab82f0fcafc1d55025aa29bf2a9608"
+  },
+  "claimTable": [],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 136,
+      "median": 14,
+      "shareBelowThreshold": 0.2721,
+      "shareJustBelow": 0.1912,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/how-to-pause-and-resume-long-running-ai-agents.json",
+    "audits/autowriter/claims/2026/11/how-to-pause-and-resume-long-running-ai-agents.json",
+    "audits/autowriter/generations/2026/11/how-to-pause-and-resume-long-running-ai-agents.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-load-test-an-ai-agent-before-launch.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-pause-and-resume-long-running-ai-agents.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-prevent-duplicate-ai-agent-actions-on-retries.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-require-approval-for-ai-agent-payments.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-roll-back-an-ai-agent-deployment.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-run-an-ai-agent-in-shadow-mode.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-sandbox-ai-agent-code-execution.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-set-a-per-task-spending-limit-for-an-ai-agent.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-stop-ai-agents-getting-stuck-in-loops.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-trace-ai-agent-tool-calls-in-production.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/how-to-pause-and-resume-long-running-ai-agents.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}

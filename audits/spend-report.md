@@ -1,21 +1,21 @@
 # Spend report: what writing each entry cost
 
-Generated-from: eb261c42ab348b4a4121539b3faecc98578a0ea2
+Generated-from: 60b01c453c55381f8b7a34209a91c466ab1260da
 Generated-at: 2026-11-22T15:45:19.084Z
 
 ## This month
 
-2026-11 so far: 2.436101 USD spent of the 25.00 USD monthly ceiling, 22.563899 USD left.
+2026-11 so far: 2.494908 USD spent of the 25.00 USD monthly ceiling, 22.505092 USD left.
 
 The figure is the spend of the UTC calendar month of 2026-11-22T15:45:19.084Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
 
 | What was paid for               | Cost (USD) |
 | ------------------------------- | ---------- |
-| Writing calls of entries        | 1.871075   |
+| Writing calls of entries        | 1.945752   |
 | Repair calls                    | 0.00       |
 | Runs that ended with no entry   | 0.533207   |
-| Spend with no generation record | 0.031819   |
-| Everything paid for             | 2.436101   |
+| Spend with no generation record | 0.015949   |
+| Everything paid for             | 2.494908   |
 
 ## About this file
 
@@ -37,8 +37,8 @@ The 30 days of 24 hours each that end at the newest record: after 2026-10-23T15:
 
 | Format  | Entries | Input tokens | Output tokens | Cost (USD) |
 | ------- | ------- | ------------ | ------------- | ---------- |
-| all     | 32      | 808,845      | 212,446       | 1.871075   |
-| article | 32      | 808,845      | 212,446       | 1.871075   |
+| all     | 33      | 844,892      | 220,172       | 1.945752   |
+| article | 33      | 844,892      | 220,172       | 1.945752   |
 
 ## All time
 
@@ -46,16 +46,16 @@ Every entry recorded: from 2026-11-03T05:36:35.954Z, the oldest record, through 
 
 | Format  | Entries | Input tokens | Output tokens | Cost (USD) |
 | ------- | ------- | ------------ | ------------- | ---------- |
-| all     | 32      | 808,845      | 212,446       | 1.871075   |
-| article | 32      | 808,845      | 212,446       | 1.871075   |
+| all     | 33      | 844,892      | 220,172       | 1.945752   |
+| article | 33      | 844,892      | 220,172       | 1.945752   |
 
 | What was paid for               | Cost (USD) |
 | ------------------------------- | ---------- |
-| Writing calls of entries        | 1.871075   |
+| Writing calls of entries        | 1.945752   |
 | Repair calls                    | 0.00       |
 | Runs that ended with no entry   | 0.533207   |
-| Spend with no generation record | 0.031819   |
-| Everything paid for             | 2.436101   |
+| Spend with no generation record | 0.015949   |
+| Everything paid for             | 2.494908   |
 
 ## Every entry
 
@@ -64,6 +64,7 @@ One row per generation record, newest first. The cost is the cost of its writing
 | Generated (UTC)          | Format  | Slug                                                       | Input tokens | Output tokens | Cost (USD) | Repair (USD) |
 | ------------------------ | ------- | ---------------------------------------------------------- | ------------ | ------------- | ---------- | ------------ |
 | 2026-11-22T15:45:19.079Z | article | how-to-deploy-ai-agent-updates-with-canary-releases        | 36,262       | 7,082         | 0.071672   | 0.00         |
+| 2026-11-22T07:30:59.132Z | article | how-to-pause-and-resume-long-running-ai-agents             | 36,047       | 7,726         | 0.074677   | 0.00         |
 | 2026-11-21T15:43:27.456Z | article | how-to-retire-an-ai-tool-when-its-vendor-contract-ends     | 45,921       | 10,576        | 0.098801   | 0.00         |
 | 2026-11-21T07:45:46.404Z | article | how-to-assign-roles-and-escalation-paths-for-ai-incidents  | 28,807       | 7,142         | 0.064517   | 0.00         |
 | 2026-11-20T16:28:04.204Z | article | how-to-let-customers-appeal-ai-assisted-decisions          | 32,723       | 7,801         | 0.071728   | 0.00         |
@@ -102,14 +103,13 @@ The model and the two rates, in USD per million tokens, that each cost was compu
 
 | Model         | Input USD per million tokens | Output USD per million tokens | Entries | First                    | Last                     |
 | ------------- | ---------------------------- | ----------------------------- | ------- | ------------------------ | ------------------------ |
-| gpt-6.1-terra | 1                            | 5                             | 32      | 2026-11-03T05:36:35.954Z | 2026-11-22T15:45:19.079Z |
+| gpt-6.1-terra | 1                            | 5                             | 33      | 2026-11-03T05:36:35.954Z | 2026-11-22T15:45:19.079Z |
 
 ## Waiting for a record
 
-These ledgers have no generation record yet, and a claim that is still in force says one is expected: the run that holds the topic has not merged its entry. Together they cost 0.031819 USD, and the paid tables already count that spend under Spend with no generation record. Nothing is wrong and no person has to act: a line leaves this list when its record reaches the tree, and moves to Warnings if its claim lapses first.
+These ledgers have no generation record yet, and a claim that is still in force says one is expected: the run that holds the topic has not merged its entry. Together they cost 0.015949 USD, and the paid tables already count that spend under Spend with no generation record. Nothing is wrong and no person has to act: a line leaves this list when its record reaches the tree, and moves to Warnings if its claim lapses first.
 
 - how-to-configure-a-circuit-breaker-for-llm-api-failures: its ledger records a generation of 0.015949 USD (verdict: open) and no generation record names it yet; its claim holds the topic until 2026-12-04T10:29:13.638Z, so the record is still expected
-- how-to-pause-and-resume-long-running-ai-agents: its ledger records a generation of 0.01587 USD (verdict: open) and no generation record names it yet; its claim holds the topic until 2026-12-06T07:26:12.081Z, so the record is still expected
 
 ## Notes
 
