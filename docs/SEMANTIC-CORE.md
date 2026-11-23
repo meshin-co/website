@@ -75,7 +75,7 @@ title `{spec name} specification {version} — meshin.co` · meta: what the vers
 | `/spec/evals-baseline`     | evals-baseline specification     | evals-baseline specification — meshin.co     | Every published version of the evals-baseline specification, and the address to cite for each.                                                         | evals-baseline specification     | 23    | ✓       |
 | `/spec/evals-baseline/1.0` | evals-baseline specification 1.0 | evals-baseline specification 1.0 — meshin.co | The evals-baseline specification 1.0 says what a regression in an agent evaluation is, and defines the baseline file, the findings and the exit codes. | evals-baseline specification 1.0 | 26    | ✓       |
 
-### article (41)
+### article (42)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
@@ -104,6 +104,7 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/how-to-load-test-an-ai-agent-before-launch`                 | how to load test an ai agent before launch                 | How to load test an AI agent before launch — meshin.co                 | Load test an AI agent with realistic tasks, controlled demand, safe tool calls, and clear launch limits.                                              | How to load test an AI agent before launch                 | 32    | ✓       |
 | `/blog/how-to-pause-and-resume-long-running-ai-agents`             | how to pause and resume long-running ai agents             | How to pause and resume long-running AI agents — meshin.co             | Learn how to pause and resume long-running AI agents using durable checkpoints, approval checks, and recovery rules.                                  | How to pause and resume long-running AI agents             | 32    | ✓       |
 | `/blog/how-to-prevent-duplicate-ai-agent-actions-on-retries`       | how to prevent duplicate ai agent actions on retries       | How to prevent duplicate AI agent actions on retries — meshin.co       | Learn how to prevent duplicate AI agent actions on retries with stable operation keys, durable records, and checks for uncertain outcomes.            | How to prevent duplicate AI agent actions on retries       | 30    | ✓       |
+| `/blog/how-to-prioritize-competing-ai-project-requests`            | how to prioritize competing ai project requests            | How to prioritize competing AI project requests — meshin.co            | How to prioritize competing AI project requests using a common intake, risk checks and delivery capacity.                                             | How to prioritize competing AI project requests            | 32    | ✓       |
 | `/blog/how-to-rank-ai-use-cases-by-risk`                           | how to rank ai use cases by risk                           | How to rank AI use cases by risk — meshin.co                           | How to rank AI use cases by risk using potential harm, likelihood, control evidence and uncertainty.                                                  | How to rank AI use cases by risk                           | 33    | ✓       |
 | `/blog/how-to-require-approval-for-ai-agent-payments`              | how to require approval for ai agent payments              | How to require approval for AI agent payments — meshin.co              | See how to require approval for AI agent payments with a human review gate before money is sent.                                                      | How to require approval for AI agent payments              | 32    | ✓       |
 | `/blog/how-to-retire-an-ai-tool-when-its-vendor-contract-ends`     | how to retire an ai tool when its vendor contract ends     | How to retire an AI tool when its vendor contract ends — meshin.co     | Learn how to retire an AI tool when its vendor contract ends, from preserving records and planning the cutover to checking deletion.                  | How to retire an AI tool when its vendor contract ends     | 31    | ✓       |
@@ -464,7 +465,7 @@ One owning route per entity. The mention count is inbound references from other 
 | AI governance                  | `/glossary/ai-governance`                  | 61           |
 | AI impact assessment           | `/glossary/ai-impact-assessment`           | 3            |
 | AI management system           | `/glossary/ai-management-system`           | 7            |
-| AI operating model             | `/glossary/ai-operating-model`             | 27           |
+| AI operating model             | `/glossary/ai-operating-model`             | 28           |
 | AI register                    | `/glossary/ai-register`                    | 48           |
 | Conformity assessment          | `/glossary/conformity-assessment`          | 5            |
 | Data classification            | `/glossary/data-classification`            | 20           |

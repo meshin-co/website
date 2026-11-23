@@ -33,15 +33,15 @@
     "target": "/blog",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-deploy-ai-agent-updates-with-canary-releases (generation record audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "38fb75f9c6d9"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prioritize-competing-ai-project-requests (generation record audits/autowriter/generations/2026/11/how-to-prioritize-competing-ai-project-requests.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "ff342e6448a0"
   },
   {
     "target": "/blog",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-deploy-ai-agent-updates-with-canary-releases (generation record audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "38fb75f9c6d9"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prioritize-competing-ai-project-requests (generation record audits/autowriter/generations/2026/11/how-to-prioritize-competing-ai-project-requests.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "ff342e6448a0"
   },
   {
     "target": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
@@ -87,15 +87,15 @@
     "target": "/blog/category/operating-model",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-assign-roles-and-escalation-paths-for-ai-incidents (generation record audits/autowriter/generations/2026/11/how-to-assign-roles-and-escalation-paths-for-ai-incidents.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "96e8f601e4b2"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prioritize-competing-ai-project-requests (generation record audits/autowriter/generations/2026/11/how-to-prioritize-competing-ai-project-requests.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "451685ad2e58"
   },
   {
     "target": "/blog/category/operating-model",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-assign-roles-and-escalation-paths-for-ai-incidents (generation record audits/autowriter/generations/2026/11/how-to-assign-roles-and-escalation-paths-for-ai-incidents.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "96e8f601e4b2"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prioritize-competing-ai-project-requests (generation record audits/autowriter/generations/2026/11/how-to-prioritize-competing-ai-project-requests.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "451685ad2e58"
   },
   {
     "target": "/blog/evals-in-ci-for-llm-agents",
@@ -169,22 +169,22 @@
     "target": "/blog/tag/ai-pilots",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-can-boards-verify-ai-cost-savings (generation record audits/autowriter/generations/2026/11/how-can-boards-verify-ai-cost-savings.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "049a40f95e36"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prioritize-competing-ai-project-requests (generation record audits/autowriter/generations/2026/11/how-to-prioritize-competing-ai-project-requests.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "cb08ab7f30ea"
   },
   {
     "target": "/blog/tag/ai-pilots",
     "location": "body.h1",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-can-boards-verify-ai-cost-savings (generation record audits/autowriter/generations/2026/11/how-can-boards-verify-ai-cost-savings.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "049a40f95e36"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prioritize-competing-ai-project-requests (generation record audits/autowriter/generations/2026/11/how-to-prioritize-competing-ai-project-requests.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "cb08ab7f30ea"
   },
   {
     "target": "/blog/tag/ai-pilots",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-can-boards-verify-ai-cost-savings (generation record audits/autowriter/generations/2026/11/how-can-boards-verify-ai-cost-savings.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "049a40f95e36"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prioritize-competing-ai-project-requests (generation record audits/autowriter/generations/2026/11/how-to-prioritize-competing-ai-project-requests.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "cb08ab7f30ea"
   },
   {
     "target": "/blog/tag/ai-register",
@@ -265,22 +265,22 @@
     "target": "/blog/tag/production-readiness",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-deploy-ai-agent-updates-with-canary-releases (generation record audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "9467950e3b3f"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prioritize-competing-ai-project-requests (generation record audits/autowriter/generations/2026/11/how-to-prioritize-competing-ai-project-requests.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "0ad60d38e4c9"
   },
   {
     "target": "/blog/tag/production-readiness",
     "location": "body.h1",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-deploy-ai-agent-updates-with-canary-releases (generation record audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "9467950e3b3f"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prioritize-competing-ai-project-requests (generation record audits/autowriter/generations/2026/11/how-to-prioritize-competing-ai-project-requests.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "0ad60d38e4c9"
   },
   {
     "target": "/blog/tag/production-readiness",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-deploy-ai-agent-updates-with-canary-releases (generation record audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "9467950e3b3f"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prioritize-competing-ai-project-requests (generation record audits/autowriter/generations/2026/11/how-to-prioritize-competing-ai-project-requests.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "0ad60d38e4c9"
   },
   {
     "target": "/blog/tag/security-review",
@@ -319,15 +319,15 @@
     "target": "/blog/why-your-ai-pilot-never-reached-production",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-assign-roles-and-escalation-paths-for-ai-incidents (generation record audits/autowriter/generations/2026/11/how-to-assign-roles-and-escalation-paths-for-ai-incidents.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "7efad6d78c0c"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prioritize-competing-ai-project-requests (generation record audits/autowriter/generations/2026/11/how-to-prioritize-competing-ai-project-requests.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "edc627784b7d"
   },
   {
     "target": "/blog/why-your-ai-pilot-never-reached-production",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-assign-roles-and-escalation-paths-for-ai-incidents (generation record audits/autowriter/generations/2026/11/how-to-assign-roles-and-escalation-paths-for-ai-incidents.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "7efad6d78c0c"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prioritize-competing-ai-project-requests (generation record audits/autowriter/generations/2026/11/how-to-prioritize-competing-ai-project-requests.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "edc627784b7d"
   },
   {
     "target": "/case-studies",
