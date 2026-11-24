@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/which-ai-decisions-need-board-approval.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/which-ai-decisions-need-board-approval.json on 2026-11-24. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/which-ai-decisions-need-board-approval.json.",
+    "digest": "20e9dd715909"
+  },
+  {
+    "target": "/blog/which-ai-decisions-need-board-approval",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/which-ai-decisions-need-board-approval.json on 2026-11-24. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/which-ai-decisions-need-board-approval.json.",
+    "digest": "0cb015031d9a"
+  }
+]

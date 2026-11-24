@@ -1,0 +1,285 @@
+{
+  "schema": 1,
+  "slug": "which-ai-decisions-need-board-approval",
+  "runId": "45470507677-1",
+  "generatedAt": "2026-11-24T19:35:42.641Z",
+  "claim": {
+    "title": "Which AI decisions need board approval?",
+    "query": "which ai decisions need board approval",
+    "origin": "category",
+    "category": "executive",
+    "catchUp": {
+      "slot": "15:00",
+      "lateMinutes": 270
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-24",
+      "windowStart": "2026-08-24",
+      "windowEnd": "2026-11-22",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/which-ai-decisions-need-board-approval",
+    "path": "site/src/data/post/which-ai-decisions-need-board-approval.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_065769be30e0ab8b016b05e608639087d08a97817fa3e5382b",
+  "published": {
+    "callIndex": 3
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0adc56832e5e81e0016b05e5cf483c87d08ec9d4e6854197b8",
+      "requestDigest": "4bcf0cf1af1883c9d607bd89a904704a106710d6393fd49ce2c7d3a4fc050cda",
+      "tokens": {
+        "input": 1511,
+        "output": 114
+      },
+      "costUsd": 0.002081,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_070bb1e8714abc4a016b05e5d39d3087d090d18d0d4a835013",
+      "requestDigest": "1e6dff0d0d8d8b97548c216aa1d331073a533cb0b65cd9c7af57489ba385218b",
+      "tokens": {
+        "input": 1565,
+        "output": 70
+      },
+      "costUsd": 0.001915,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_01f74b4c45acab34016b05e5da1d0487d092ce3d32030868e4",
+      "requestDigest": "b636f036008f9749adb64fdc979ae9a549e9ae4b2d5a2b9cc3d396b6374844c3",
+      "tokens": {
+        "input": 10914,
+        "output": 2426
+      },
+      "costUsd": 0.023044,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_065769be30e0ab8b016b05e608639087d08a97817fa3e5382b",
+      "requestDigest": "82bad49ac194bde5105b01146f041e070b97922ac5381c827509daf790047371",
+      "tokens": {
+        "input": 12668,
+        "output": 3663
+      },
+      "costUsd": 0.030983,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 26658,
+      "output": 6273
+    },
+    "costUsd": 0.058023
+  },
+  "ledger": "audits/autowriter/2026/11/which-ai-decisions-need-board-approval.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "fac2351e187fe0551cdf0b3d5ae19ce4f2a524dac23c55e9de57ab98241c89cd",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "7983e72318b2701ef667d48ce7fff71de6bc58227340fa77be86897b066bb2f5"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "1e291e4336807e99144f2a63cfd94220707c1c99d9084f960e26799cbf12fde8"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "bfb02303381d779e9551eb07526273d9ebecba36e6d2abda5692ac878241e479"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "29ded844ec7747008b22ac740587473a4e8f617d5c21b1d7bd292cbdef2a4b94"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "726c38738e0cf80f1d0dacd9461ca92c7275aa02ca6b6ebb16177fc63ac4a5ea"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "6417cda795fc88b7e2a0a350e62b1164b26ad3fc8a54783109d4e3f57cbf9487"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "f64e24db8dca1c487b003c3d3cac0b30d8f5290ec8ab26b658c8b3abf574a4cc"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "3d66cf5a43938b627f0e19e15155b6054ad6fb67",
+    "fingerprint": "21ad333d3084d4b947996499fafbcab1865f17ab6dc0cc6a19b160ca26e5392a"
+  },
+  "claimTable": [
+    {
+      "sentence": "The question concerns the decision, not the presence of a model.",
+      "marker": "own-reading",
+      "source": null,
+      "span": null
+    },
+    {
+      "sentence": "Bring a proposal to the board when it asks the company to accept risk beyond management's agreed authority.",
+      "marker": "own-reading",
+      "source": null,
+      "span": null
+    }
+  ],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 136,
+      "median": 15,
+      "shareBelowThreshold": 0.1692,
+      "shareJustBelow": 0.1618,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/which-ai-decisions-need-board-approval.json",
+    "audits/autowriter/claims/2026/11/which-ai-decisions-need-board-approval.json",
+    "audits/autowriter/generations/2026/11/which-ai-decisions-need-board-approval.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-ai-readiness-scorecard-five-drivers.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-board-memo-ai-strategy-one-page.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-build-vs-buy-ai-3-year-tco.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-fractional-caio-pricing.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-can-boards-verify-ai-cost-savings.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-should-boards-divide-ai-oversight-among-committees.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-what-should-a-board-request-in-a-quarterly-ai-risk-report.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-which-ai-decisions-need-board-approval.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/which-ai-decisions-need-board-approval.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}
