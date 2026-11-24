@@ -75,7 +75,7 @@ title `{spec name} specification {version} — meshin.co` · meta: what the vers
 | `/spec/evals-baseline`     | evals-baseline specification     | evals-baseline specification — meshin.co     | Every published version of the evals-baseline specification, and the address to cite for each.                                                         | evals-baseline specification     | 23    | ✓       |
 | `/spec/evals-baseline/1.0` | evals-baseline specification 1.0 | evals-baseline specification 1.0 — meshin.co | The evals-baseline specification 1.0 says what a regression in an agent evaluation is, and defines the baseline file, the findings and the exit codes. | evals-baseline specification 1.0 | 26    | ✓       |
 
-### article (43)
+### article (44)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
@@ -112,6 +112,7 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/how-to-review-ai-generated-customer-support-replies`        | how to review ai-generated customer support replies        | How to review AI-generated customer support replies — meshin.co        | Set a practical review process for AI-generated support replies, from checking account facts to handling risky drafts and improving future reviews.   | How to review AI-generated customer support replies        | 32    | ✓       |
 | `/blog/how-to-review-ai-vendor-model-updates-after-deployment`     | how to review ai vendor model updates after deployment     | How to review AI vendor model updates after deployment — meshin.co     | Learn how to review AI vendor model updates after deployment with paired tests, release decisions and a fallback plan.                                | How to review AI vendor model updates after deployment     | 33    | ✓       |
 | `/blog/how-to-roll-back-an-ai-agent-deployment`                    | how to roll back an ai agent deployment                    | How to roll back an AI agent deployment — meshin.co                    | How to roll back an AI agent deployment: stop actions, restore a known release and check in-flight work before resuming.                              | How to roll back an AI agent deployment                    | 29    | ✓       |
+| `/blog/how-to-rotate-ai-agent-credentials-without-downtime`        | how to rotate ai agent credentials without downtime        | How to rotate AI agent credentials without downtime — meshin.co        | How to rotate AI agent credentials without downtime by staging a replacement, checking consumers, and retiring the old credential safely.             | How to rotate AI agent credentials without downtime        | 31    | ✓       |
 | `/blog/how-to-run-a-quarterly-ai-tool-access-review`               | how to run a quarterly ai tool access review               | How to run a quarterly AI tool access review — meshin.co               | Learn how to run a quarterly AI tool access review with clear owners, evidence, decisions and checks that changes take effect.                        | How to run a quarterly AI tool access review               | 32    | ✓       |
 | `/blog/how-to-run-an-ai-agent-in-shadow-mode`                      | how to run an ai agent in shadow mode                      | How to run an AI agent in shadow mode — meshin.co                      | Learn how to run an AI agent in shadow mode while blocking live actions and comparing proposals with workflow outcomes.                               | How to run an AI agent in shadow mode                      | 30    | ✓       |
 | `/blog/how-to-sandbox-ai-agent-code-execution`                     | how to sandbox ai agent code execution                     | How to sandbox AI agent code execution — meshin.co                     | Learn how to sandbox AI agent code execution with isolated runtimes, restricted access, output checks, and tests.                                     | How to sandbox AI agent code execution                     | 32    | ✓       |
@@ -472,7 +473,7 @@ One owning route per entity. The mention count is inbound references from other 
 | Data classification            | `/glossary/data-classification`            | 20           |
 | DPIA                           | `/glossary/dpia`                           | 6            |
 | EU AI Act                      | `/glossary/eu-ai-act`                      | 43           |
-| Evals                          | `/glossary/evals`                          | 51           |
+| Evals                          | `/glossary/evals`                          | 52           |
 | Guardrails                     | `/glossary/guardrails`                     | 7            |
 | Hallucination rate             | `/glossary/hallucination-rate`             | 4            |
 | High-risk AI system            | `/glossary/high-risk-ai-system`            | 10           |
