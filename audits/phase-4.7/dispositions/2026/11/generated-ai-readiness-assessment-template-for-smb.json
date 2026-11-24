@@ -8,7 +8,7 @@
   {
     "target": "/blog/ai-readiness-assessment-template-for-smb",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-create-an-ai-training-plan-by-employee-role (generation record audits/autowriter/generations/2026/11/how-to-create-an-ai-training-plan-by-employee-role.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "9642618be4ea"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-prioritize-competing-ai-project-requests (generation record audits/autowriter/generations/2026/11/how-to-prioritize-competing-ai-project-requests.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "77f3c164e9d0"
   }
 ]

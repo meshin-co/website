@@ -1,0 +1,323 @@
+{
+  "schema": 1,
+  "slug": "how-to-prioritize-competing-ai-project-requests",
+  "runId": "45163371624-1",
+  "generatedAt": "2026-11-23T11:22:44.509Z",
+  "claim": {
+    "title": "How to prioritize competing AI project requests",
+    "query": "how to prioritize competing ai project requests",
+    "origin": "category",
+    "category": "operating-model",
+    "catchUp": {
+      "slot": "06:00",
+      "lateMinutes": 316
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-23",
+      "windowStart": "2026-08-23",
+      "windowEnd": "2026-11-21",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/how-to-prioritize-competing-ai-project-requests",
+    "path": "site/src/data/post/how-to-prioritize-competing-ai-project-requests.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_0e39c61b26e468bd016b0420f461bc87d297cd9ba80d26d0d1",
+  "published": {
+    "callIndex": 5
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_04a8b0d4002efa2a016b04209d825887d2999a20fed5c9585e",
+      "requestDigest": "16ef9bceab8968dc049788731c20a9bd7c568bca389752cdbd46a80e0a220c9d",
+      "tokens": {
+        "input": 1472,
+        "output": 142
+      },
+      "costUsd": 0.002182,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_05e2a1d219436009016b0420a1b24887d29251fcd0e52ba707",
+      "requestDigest": "0411ddd7e2f94f4f62943e6d67338799858af746ac836b8d544f8f4c508bf8dc",
+      "tokens": {
+        "input": 1536,
+        "output": 125
+      },
+      "costUsd": 0.002161,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0e043e64a253bd6c016b0420a54d3887d2b9eaaf9fed7f50b8",
+      "requestDigest": "fcf1ec723bd51799ac6d930182d00f1fd2596394aad5a84bd729e12de7b250af",
+      "tokens": {
+        "input": 1476,
+        "output": 78
+      },
+      "costUsd": 0.001866,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0cdc33d6c3d434b3016b0420a8578887d2877eb79fcbdd7c03",
+      "requestDigest": "289e45231a22ae3614059be6805bafa4619017efb884fb6c921d20025d2652f5",
+      "tokens": {
+        "input": 1536,
+        "output": 73
+      },
+      "costUsd": 0.001901,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0a85b2245d0a1c27016b0420ad939087d2a619787a29e647dc",
+      "requestDigest": "acb2bae06c275a72a5abc1c34a1d39b8a52393feecb0efc0073f48d7f8270737",
+      "tokens": {
+        "input": 10884,
+        "output": 3631
+      },
+      "costUsd": 0.029039,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0e39c61b26e468bd016b0420f461bc87d297cd9ba80d26d0d1",
+      "requestDigest": "3bdef79ec248420ce1416f90a4994fb9495390c4adc3cc1782b6701cffbd1720",
+      "tokens": {
+        "input": 13802,
+        "output": 2904
+      },
+      "costUsd": 0.028322,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 30706,
+      "output": 6953
+    },
+    "costUsd": 0.065471
+  },
+  "ledger": "audits/autowriter/2026/11/how-to-prioritize-competing-ai-project-requests.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "c6b02198fa72a3f3a3adbe8284cac253f04c336f4d1b3c83b97fabd2fe4af933",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "7983e72318b2701ef667d48ce7fff71de6bc58227340fa77be86897b066bb2f5"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "1e291e4336807e99144f2a63cfd94220707c1c99d9084f960e26799cbf12fde8"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "bfb02303381d779e9551eb07526273d9ebecba36e6d2abda5692ac878241e479"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "986d4bdb249b3c1c3676d7c363ee2a451364919f0e11667214e91e1c6486625a"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "edf52ade25515725595150d9a7adecfed92f4ad3f18baa6ab25e9ebe4c2a8744"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "092633e72e99a0522e347669519f6621128bd93b2f8b789390d7bde734dca796"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "f64e24db8dca1c487b003c3d3cac0b30d8f5290ec8ab26b658c8b3abf574a4cc"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "9c78a91935ea3297b96a97669b17502f3d35920c",
+    "fingerprint": "f49050a63c4b3458051ca4f5bc5d6051ceda5b2e57345c2f0c4f8cca3f70797b"
+  },
+  "claimTable": [
+    {
+      "sentence": "A high expected benefit does not remove that need.",
+      "marker": "own-reading",
+      "source": null,
+      "span": null
+    },
+    {
+      "sentence": "If the team starts the urgent work, identify the work that will pause and tell its owner.",
+      "marker": "own-reading",
+      "source": null,
+      "span": null
+    }
+  ],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 119,
+      "median": 14,
+      "shareBelowThreshold": 0.2437,
+      "shareJustBelow": 0.2185,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/how-to-prioritize-competing-ai-project-requests.json",
+    "audits/autowriter/claims/2026/11/how-to-prioritize-competing-ai-project-requests.json",
+    "audits/autowriter/generations/2026/11/how-to-prioritize-competing-ai-project-requests.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-ai-readiness-assessment-template-for-smb.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-allocate-shared-ai-tool-costs-across-departments.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-assign-roles-and-escalation-paths-for-ai-incidents.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-prioritize-competing-ai-project-requests.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-retire-an-ai-tool-when-its-vendor-contract-ends.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-review-ai-generated-customer-support-replies.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-review-ai-vendor-model-updates-after-deployment.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/articles-telemetry.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/how-to-prioritize-competing-ai-project-requests.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}
