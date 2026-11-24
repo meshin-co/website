@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "slug": "which-ai-decisions-need-board-approval",
+  "title": "Which AI decisions need board approval?",
+  "format": "article",
+  "query": "which ai decisions need board approval",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "origin": "category",
+  "category": "executive",
+  "catchUp": {
+    "slot": "15:00",
+    "lateMinutes": 270
+  },
+  "runId": "45470507677-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-24T19:30:21.523Z",
+  "expiresAt": "2026-12-08T19:30:21.523Z"
+}
