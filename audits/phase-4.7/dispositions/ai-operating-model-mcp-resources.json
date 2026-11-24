@@ -409,15 +409,15 @@
     "target": "/blog/multi-agent-reference-architecture-in-production",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-deploy-ai-agent-updates-with-canary-releases (generation record audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "58f81ccd2155"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-rotate-ai-agent-credentials-without-downtime (generation record audits/autowriter/generations/2026/11/how-to-rotate-ai-agent-credentials-without-downtime.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "4569bbfa7d1d"
   },
   {
     "target": "/blog/multi-agent-reference-architecture-in-production",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-deploy-ai-agent-updates-with-canary-releases (generation record audits/autowriter/generations/2026/11/how-to-deploy-ai-agent-updates-with-canary-releases.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "58f81ccd2155"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-rotate-ai-agent-credentials-without-downtime (generation record audits/autowriter/generations/2026/11/how-to-rotate-ai-agent-credentials-without-downtime.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "4569bbfa7d1d"
   },
   {
     "target": "/blog/handing-over-ai-leadership-to-an-internal-owner",
