@@ -259,5 +259,15 @@
       "against": "/blog/what-should-a-board-request-in-a-quarterly-ai-risk-report",
       "detail": "the topic \"How should boards document acceptance of AI risks?\" repeats /blog/what-should-a-board-request-in-a-quarterly-ai-risk-report (\"What should a board request in a quarterly AI risk report?\"): its subject shares ai, board, risk, should, 4 of the 6 stems of the smaller one, a containment of 0.67 against the threshold of 0.5"
     }
+  ],
+  "resumes": [
+    {
+      "at": "2026-11-24T08:26:09.257Z",
+      "by": "main-change",
+      "mainSha": "3fbce568fbd3708de464567383db7aeeb7bb07ff",
+      "failedJobs": [
+        "types-and-units"
+      ]
+    }
   ]
 }
