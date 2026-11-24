@@ -6,23 +6,23 @@
   "attempts": [],
   "spend": {
     "tokens": {
-      "input": 8985,
-      "output": 749
+      "input": 33839,
+      "output": 7520
     },
-    "costUsd": 0.01273
+    "costUsd": 0.071439
   },
   "verdict": {
-    "state": "open",
+    "state": "merged",
     "reason": null,
-    "decidedAt": null
+    "decidedAt": "2026-11-24T08:25:34.877Z"
   },
   "escalations": [],
   "generation": {
     "tokens": {
-      "input": 8985,
-      "output": 749
+      "input": 33839,
+      "output": 7520
     },
-    "costUsd": 0.01273
+    "costUsd": 0.071439
   },
   "refusals": [
     {
@@ -247,5 +247,11 @@
       "against": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
       "detail": "the topic \"How to approve exceptions to an AI acceptable use policy\" repeats /blog/ai-acceptable-use-policy-for-a-50-person-company (\"What actually belongs in an AI acceptable use policy\"): its subject shares acceptabl, ai, policy, use, 4 of the 6 stems of the smaller one, a containment of 0.67 against the threshold of 0.5"
     }
-  ]
+  ],
+  "measurementDebt": {
+    "mergedCommit": "3fbce568fbd3708de464567383db7aeeb7bb07ff",
+    "fingerprint": "3bc402af9f521de3d2ee09cc4f453453a1cb891ec5e2a8e1b1181db8c73ba97a",
+    "recordedAt": "2026-11-24T08:25:34.877Z",
+    "clear": "cd site && GATE_PHASE=<bucket> npm run gate:lh && GATE_PHASE=<bucket> npm run lh:record"
+  }
 }

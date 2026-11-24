@@ -1,21 +1,21 @@
 # Spend report: what writing each entry cost
 
-Generated-from: 8b65fc4c0e0cf230025f67b857ad8ccb938135fd
+Generated-from: fd196f5d4ff8007cdc3d5261f910c520a6e3f79d
 Generated-at: 2026-11-24T06:29:17.330Z
 
 ## This month
 
-2026-11 so far: 2.587455 USD spent of the 25.00 USD monthly ceiling, 22.412545 USD left.
+2026-11 so far: 2.703525 USD spent of the 25.00 USD monthly ceiling, 22.296475 USD left.
 
 The figure is the spend of the UTC calendar month of 2026-11-24T06:29:17.330Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
 
 | What was paid for               | Cost (USD) |
 | ------------------------------- | ---------- |
-| Writing calls of entries        | 2.017459   |
+| Writing calls of entries        | 2.154369   |
 | Repair calls                    | 0.00       |
 | Runs that ended with no entry   | 0.533207   |
-| Spend with no generation record | 0.036789   |
-| Everything paid for             | 2.587455   |
+| Spend with no generation record | 0.015949   |
+| Everything paid for             | 2.703525   |
 
 ## About this file
 
@@ -37,8 +37,8 @@ The 30 days of 24 hours each that end at the newest record: after 2026-10-25T06:
 
 | Format  | Entries | Input tokens | Output tokens | Cost (USD) |
 | ------- | ------- | ------------ | ------------- | ---------- |
-| all     | 34      | 881,459      | 227,200       | 2.017459   |
-| article | 34      | 881,459      | 227,200       | 2.017459   |
+| all     | 36      | 946,004      | 241,673       | 2.154369   |
+| article | 36      | 946,004      | 241,673       | 2.154369   |
 
 ## All time
 
@@ -46,16 +46,16 @@ Every entry recorded: from 2026-11-03T05:36:35.954Z, the oldest record, through 
 
 | Format  | Entries | Input tokens | Output tokens | Cost (USD) |
 | ------- | ------- | ------------ | ------------- | ---------- |
-| all     | 34      | 881,459      | 227,200       | 2.017459   |
-| article | 34      | 881,459      | 227,200       | 2.017459   |
+| all     | 36      | 946,004      | 241,673       | 2.154369   |
+| article | 36      | 946,004      | 241,673       | 2.154369   |
 
 | What was paid for               | Cost (USD) |
 | ------------------------------- | ---------- |
-| Writing calls of entries        | 2.017459   |
+| Writing calls of entries        | 2.154369   |
 | Repair calls                    | 0.00       |
 | Runs that ended with no entry   | 0.533207   |
-| Spend with no generation record | 0.036789   |
-| Everything paid for             | 2.587455   |
+| Spend with no generation record | 0.015949   |
+| Everything paid for             | 2.703525   |
 
 ## Every entry
 
@@ -64,6 +64,8 @@ One row per generation record, newest first. The cost is the cost of its writing
 | Generated (UTC)          | Format  | Slug                                                       | Input tokens | Output tokens | Cost (USD) | Repair (USD) |
 | ------------------------ | ------- | ---------------------------------------------------------- | ------------ | ------------- | ---------- | ------------ |
 | 2026-11-24T06:29:17.326Z | article | how-to-rotate-ai-agent-credentials-without-downtime        | 36,567       | 7,028         | 0.071707   | 0.00         |
+| 2026-11-23T19:35:38.684Z | article | how-to-create-an-ai-training-plan-by-employee-role         | 33,839       | 7,520         | 0.071439   | 0.00         |
+| 2026-11-23T11:22:44.509Z | article | how-to-prioritize-competing-ai-project-requests            | 30,706       | 6,953         | 0.065471   | 0.00         |
 | 2026-11-22T15:45:19.079Z | article | how-to-deploy-ai-agent-updates-with-canary-releases        | 36,262       | 7,082         | 0.071672   | 0.00         |
 | 2026-11-22T07:30:59.132Z | article | how-to-pause-and-resume-long-running-ai-agents             | 36,047       | 7,726         | 0.074677   | 0.00         |
 | 2026-11-21T15:43:27.456Z | article | how-to-retire-an-ai-tool-when-its-vendor-contract-ends     | 45,921       | 10,576        | 0.098801   | 0.00         |
@@ -104,15 +106,13 @@ The model and the two rates, in USD per million tokens, that each cost was compu
 
 | Model         | Input USD per million tokens | Output USD per million tokens | Entries | First                    | Last                     |
 | ------------- | ---------------------------- | ----------------------------- | ------- | ------------------------ | ------------------------ |
-| gpt-6.1-terra | 1                            | 5                             | 34      | 2026-11-03T05:36:35.954Z | 2026-11-24T06:29:17.326Z |
+| gpt-6.1-terra | 1                            | 5                             | 36      | 2026-11-03T05:36:35.954Z | 2026-11-24T06:29:17.326Z |
 
 ## Waiting for a record
 
-These ledgers have no generation record yet, and a claim that is still in force says one is expected: the run that holds the topic has not merged its entry. Together they cost 0.036789 USD, and the paid tables already count that spend under Spend with no generation record. Nothing is wrong and no person has to act: a line leaves this list when its record reaches the tree, and moves to Warnings if its claim lapses first.
+These ledgers have no generation record yet, and a claim that is still in force says one is expected: the run that holds the topic has not merged its entry. Together they cost 0.015949 USD, and the paid tables already count that spend under Spend with no generation record. Nothing is wrong and no person has to act: a line leaves this list when its record reaches the tree, and moves to Warnings if its claim lapses first.
 
 - how-to-configure-a-circuit-breaker-for-llm-api-failures: its ledger records a generation of 0.015949 USD (verdict: open) and no generation record names it yet; its claim holds the topic until 2026-12-04T10:29:13.638Z, so the record is still expected
-- how-to-create-an-ai-training-plan-by-employee-role: its ledger records a generation of 0.01273 USD (verdict: open) and no generation record names it yet; its claim holds the topic until 2026-12-07T19:30:46.468Z, so the record is still expected
-- how-to-prioritize-competing-ai-project-requests: its ledger records a generation of 0.00811 USD (verdict: open) and no generation record names it yet; its claim holds the topic until 2026-12-07T11:16:43.028Z, so the record is still expected
 
 ## Notes
 
