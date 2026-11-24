@@ -1,21 +1,21 @@
 # Spend report: what writing each entry cost
 
-Generated-from: d6af106
+Generated-from: 8b65fc4c0e0cf230025f67b857ad8ccb938135fd
 Generated-at: 2026-11-24T06:24:36.499Z
 
 ## This month
 
-2026-11 so far: 2.532098 USD spent of the 25.00 USD monthly ceiling, 22.467902 USD left.
+2026-11 so far: 2.590807 USD spent of the 25.00 USD monthly ceiling, 22.409193 USD left.
 
 The figure is the spend of the UTC calendar month of 2026-11-24T06:24:36.499Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
 
 | What was paid for               | Cost (USD) |
 | ------------------------------- | ---------- |
-| Writing calls of entries        | 1.945752   |
+| Writing calls of entries        | 2.017191   |
 | Repair calls                    | 0.00       |
 | Runs that ended with no entry   | 0.533207   |
-| Spend with no generation record | 0.053139   |
-| Everything paid for             | 2.532098   |
+| Spend with no generation record | 0.040409   |
+| Everything paid for             | 2.590807   |
 
 ## About this file
 
@@ -25,37 +25,37 @@ Cost means the cost of the writing calls of an entry: its draft and its correcti
 
 ## This entry
 
-The newest run: the run of the newest record, which was generated at 2026-11-22T15:45:19.079Z. A run that wrote an article and a term lists both.
+The newest run: the run of the newest record, which was generated at 2026-11-23T19:35:38.684Z. A run that wrote an article and a term lists both.
 
-| Generated (UTC)          | Format  | Slug                                                | Input tokens | Output tokens | Cost (USD) | Repair (USD) |
-| ------------------------ | ------- | --------------------------------------------------- | ------------ | ------------- | ---------- | ------------ |
-| 2026-11-22T15:45:19.079Z | article | how-to-deploy-ai-agent-updates-with-canary-releases | 36,262       | 7,082         | 0.071672   | 0.00         |
+| Generated (UTC)          | Format  | Slug                                               | Input tokens | Output tokens | Cost (USD) | Repair (USD) |
+| ------------------------ | ------- | -------------------------------------------------- | ------------ | ------------- | ---------- | ------------ |
+| 2026-11-23T19:35:38.684Z | article | how-to-create-an-ai-training-plan-by-employee-role | 33,839       | 7,520         | 0.071439   | 0.00         |
 
 ## Last 30 days
 
-The 30 days of 24 hours each that end at the newest record: after 2026-10-23T15:45:19.079Z and through 2026-11-22T15:45:19.079Z. The start is excluded and the end is included, so an entry generated exactly at the start is outside the window. The window ends at the newest record and not at the clock, so this file does not change at midnight. Read long after the last run, it still describes the 30 days before that run. These 30 days are not the UTC calendar month of the monthly spend ceiling in `site/engine.config.json`: that ceiling counts calendar months and counts every call the machine paid for, not only the writing calls of entries. This table counts the writing calls of entries only.
+The 30 days of 24 hours each that end at the newest record: after 2026-10-24T19:35:38.684Z and through 2026-11-23T19:35:38.684Z. The start is excluded and the end is included, so an entry generated exactly at the start is outside the window. The window ends at the newest record and not at the clock, so this file does not change at midnight. Read long after the last run, it still describes the 30 days before that run. These 30 days are not the UTC calendar month of the monthly spend ceiling in `site/engine.config.json`: that ceiling counts calendar months and counts every call the machine paid for, not only the writing calls of entries. This table counts the writing calls of entries only.
 
 | Format  | Entries | Input tokens | Output tokens | Cost (USD) |
 | ------- | ------- | ------------ | ------------- | ---------- |
-| all     | 33      | 844,892      | 220,172       | 1.945752   |
-| article | 33      | 844,892      | 220,172       | 1.945752   |
+| all     | 34      | 878,731      | 227,692       | 2.017191   |
+| article | 34      | 878,731      | 227,692       | 2.017191   |
 
 ## All time
 
-Every entry recorded: from 2026-11-03T05:36:35.954Z, the oldest record, through 2026-11-22T15:45:19.079Z, the newest. The first table counts the writing calls of entries only. The second table adds every other call the machine paid for, so its last row is the whole spend the ledgers and records show.
+Every entry recorded: from 2026-11-03T05:36:35.954Z, the oldest record, through 2026-11-23T19:35:38.684Z, the newest. The first table counts the writing calls of entries only. The second table adds every other call the machine paid for, so its last row is the whole spend the ledgers and records show.
 
 | Format  | Entries | Input tokens | Output tokens | Cost (USD) |
 | ------- | ------- | ------------ | ------------- | ---------- |
-| all     | 33      | 844,892      | 220,172       | 1.945752   |
-| article | 33      | 844,892      | 220,172       | 1.945752   |
+| all     | 34      | 878,731      | 227,692       | 2.017191   |
+| article | 34      | 878,731      | 227,692       | 2.017191   |
 
 | What was paid for               | Cost (USD) |
 | ------------------------------- | ---------- |
-| Writing calls of entries        | 1.945752   |
+| Writing calls of entries        | 2.017191   |
 | Repair calls                    | 0.00       |
 | Runs that ended with no entry   | 0.533207   |
-| Spend with no generation record | 0.053139   |
-| Everything paid for             | 2.532098   |
+| Spend with no generation record | 0.040409   |
+| Everything paid for             | 2.590807   |
 
 ## Every entry
 
@@ -63,6 +63,7 @@ One row per generation record, newest first. The cost is the cost of its writing
 
 | Generated (UTC)          | Format  | Slug                                                       | Input tokens | Output tokens | Cost (USD) | Repair (USD) |
 | ------------------------ | ------- | ---------------------------------------------------------- | ------------ | ------------- | ---------- | ------------ |
+| 2026-11-23T19:35:38.684Z | article | how-to-create-an-ai-training-plan-by-employee-role         | 33,839       | 7,520         | 0.071439   | 0.00         |
 | 2026-11-22T15:45:19.079Z | article | how-to-deploy-ai-agent-updates-with-canary-releases        | 36,262       | 7,082         | 0.071672   | 0.00         |
 | 2026-11-22T07:30:59.132Z | article | how-to-pause-and-resume-long-running-ai-agents             | 36,047       | 7,726         | 0.074677   | 0.00         |
 | 2026-11-21T15:43:27.456Z | article | how-to-retire-an-ai-tool-when-its-vendor-contract-ends     | 45,921       | 10,576        | 0.098801   | 0.00         |
@@ -103,14 +104,13 @@ The model and the two rates, in USD per million tokens, that each cost was compu
 
 | Model         | Input USD per million tokens | Output USD per million tokens | Entries | First                    | Last                     |
 | ------------- | ---------------------------- | ----------------------------- | ------- | ------------------------ | ------------------------ |
-| gpt-6.1-terra | 1                            | 5                             | 33      | 2026-11-03T05:36:35.954Z | 2026-11-22T15:45:19.079Z |
+| gpt-6.1-terra | 1                            | 5                             | 34      | 2026-11-03T05:36:35.954Z | 2026-11-23T19:35:38.684Z |
 
 ## Waiting for a record
 
-These ledgers have no generation record yet, and a claim that is still in force says one is expected: the run that holds the topic has not merged its entry. Together they cost 0.053139 USD, and the paid tables already count that spend under Spend with no generation record. Nothing is wrong and no person has to act: a line leaves this list when its record reaches the tree, and moves to Warnings if its claim lapses first.
+These ledgers have no generation record yet, and a claim that is still in force says one is expected: the run that holds the topic has not merged its entry. Together they cost 0.040409 USD, and the paid tables already count that spend under Spend with no generation record. Nothing is wrong and no person has to act: a line leaves this list when its record reaches the tree, and moves to Warnings if its claim lapses first.
 
 - how-to-configure-a-circuit-breaker-for-llm-api-failures: its ledger records a generation of 0.015949 USD (verdict: open) and no generation record names it yet; its claim holds the topic until 2026-12-04T10:29:13.638Z, so the record is still expected
-- how-to-create-an-ai-training-plan-by-employee-role: its ledger records a generation of 0.01273 USD (verdict: open) and no generation record names it yet; its claim holds the topic until 2026-12-07T19:30:46.468Z, so the record is still expected
 - how-to-prioritize-competing-ai-project-requests: its ledger records a generation of 0.00811 USD (verdict: open) and no generation record names it yet; its claim holds the topic until 2026-12-07T11:16:43.028Z, so the record is still expected
 - how-to-rotate-ai-agent-credentials-without-downtime: its ledger records a generation of 0.01635 USD (verdict: open) and no generation record names it yet; its claim holds the topic until 2026-12-08T06:24:06.999Z, so the record is still expected
 

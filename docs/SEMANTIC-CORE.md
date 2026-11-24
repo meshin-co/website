@@ -75,7 +75,7 @@ title `{spec name} specification {version} — meshin.co` · meta: what the vers
 | `/spec/evals-baseline`     | evals-baseline specification     | evals-baseline specification — meshin.co     | Every published version of the evals-baseline specification, and the address to cite for each.                                                         | evals-baseline specification     | 23    | ✓       |
 | `/spec/evals-baseline/1.0` | evals-baseline specification 1.0 | evals-baseline specification 1.0 — meshin.co | The evals-baseline specification 1.0 says what a regression in an agent evaluation is, and defines the baseline file, the findings and the exit codes. | evals-baseline specification 1.0 | 26    | ✓       |
 
-### article (41)
+### article (42)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
@@ -98,6 +98,7 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/how-to-audit-employee-compliance-with-ai-usage-rules`       | how to audit employee compliance with ai usage rules       | How to audit employee compliance with AI usage rules — meshin.co       | Audit employee AI use against workplace rules with a practical sampling plan, proportionate evidence and a clear process for fixing gaps.             | How to audit employee compliance with AI usage rules       | 34    | ✓       |
 | `/blog/how-to-build-an-ai-system-register-in-a-week`               | ai system register                                         | How to build an AI system register in a week — meshin.co               | A step-by-step way to build an AI system register in a week without buying a tool, so a security reviewer gets the document they ask for first.       | How to build an AI system register in a week               | 34    | ✓       |
 | `/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company` | ai operating model for mid-size company                    | How to choose an AI operating model for a mid-size company — meshin.co | How to choose an operating model for AI work in a mid-size company, starting from what the law requires and what the evidence supports.               | How to choose an AI operating model for a mid-size company | 41    | ✓       |
+| `/blog/how-to-create-an-ai-training-plan-by-employee-role`         | how to create an ai training plan by employee role         | How to create an AI training plan by employee role — meshin.co         | Learn how to create an AI training plan by employee role, with exercises, checks, and clear ownership.                                                | How to create an AI training plan by employee role         | 35    | ✓       |
 | `/blog/how-to-decide-which-employee-data-can-be-used-in-ai-tools`  | how to decide which employee data can be used in ai tools  | How to decide which employee data can be used in AI tools — meshin.co  | How to decide which employee data can be used in AI tools depends on the task, the fields, vendor terms and approval controls.                        | How to decide which employee data can be used in AI tools  | 32    | ✓       |
 | `/blog/how-to-deploy-ai-agent-updates-with-canary-releases`        | how to deploy ai agent updates with canary releases        | How to deploy AI agent updates with canary releases — meshin.co        | Learn how to deploy AI agent updates with canary releases, including cohort selection, live checks and rollback.                                      | How to deploy AI agent updates with canary releases        | 31    | ✓       |
 | `/blog/how-to-let-customers-appeal-ai-assisted-decisions`          | how to let customers appeal ai-assisted decisions          | How to let customers appeal AI-assisted decisions — meshin.co          | How to let customers appeal AI-assisted decisions with clear notices, fair review and effective corrections.                                          | How to let customers appeal AI-assisted decisions          | 31    | ✓       |
@@ -461,10 +462,10 @@ One owning route per entity. The mention count is inbound references from other 
 | Entity                         | Owned by                                   | Mentioned by |
 | ------------------------------ | ------------------------------------------ | ------------ |
 | Agentic workflow               | `/glossary/agentic-workflow`               | 15           |
-| AI governance                  | `/glossary/ai-governance`                  | 61           |
+| AI governance                  | `/glossary/ai-governance`                  | 62           |
 | AI impact assessment           | `/glossary/ai-impact-assessment`           | 3            |
 | AI management system           | `/glossary/ai-management-system`           | 7            |
-| AI operating model             | `/glossary/ai-operating-model`             | 27           |
+| AI operating model             | `/glossary/ai-operating-model`             | 29           |
 | AI register                    | `/glossary/ai-register`                    | 48           |
 | Conformity assessment          | `/glossary/conformity-assessment`          | 5            |
 | Data classification            | `/glossary/data-classification`            | 20           |
