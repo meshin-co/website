@@ -75,7 +75,7 @@ title `{spec name} specification {version} — meshin.co` · meta: what the vers
 | `/spec/evals-baseline`     | evals-baseline specification     | evals-baseline specification — meshin.co     | Every published version of the evals-baseline specification, and the address to cite for each.                                                         | evals-baseline specification     | 23    | ✓       |
 | `/spec/evals-baseline/1.0` | evals-baseline specification 1.0 | evals-baseline specification 1.0 — meshin.co | The evals-baseline specification 1.0 says what a regression in an agent evaluation is, and defines the baseline file, the findings and the exit codes. | evals-baseline specification 1.0 | 26    | ✓       |
 
-### article (44)
+### article (45)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
@@ -124,6 +124,7 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/named-person-responsible-for-ai-risk-in-vendor-procurement` | named person responsible for ai risk in vendor procurement | Named person responsible for AI risk in vendor procurement — meshin.co | How a named AI risk owner coordinates vendor review, records decisions, and answers customer procurement questions.                                   | Named person responsible for AI risk in vendor procurement | 36    | ✓       |
 | `/blog/what-should-a-board-request-in-a-quarterly-ai-risk-report`  | what should a board request in a quarterly ai risk report  | What should a board request in a quarterly AI risk report? — meshin.co | What boards should request in a quarterly AI risk report, from material exposures and control evidence to incidents and decisions.                    | What should a board request in a quarterly AI risk report? | 31    | ✓       |
 | `/blog/when-should-a-business-disclose-ai-use-to-customers`        | when should a business disclose ai use to customers        | When should a business disclose AI use to customers? — meshin.co       | Decide when to tell customers about AI use, where to place the notice, and how to keep it accurate.                                                   | When should a business disclose AI use to customers?       | 32    | ✓       |
+| `/blog/which-ai-decisions-need-board-approval`                     | which ai decisions need board approval                     | Which AI decisions need board approval? — meshin.co                    | Decide which AI proposals need board approval, which management can approve, and what evidence directors should request.                              | Which AI decisions need board approval?                    | 34    | ✓       |
 | `/blog/why-your-ai-pilot-never-reached-production`                 | ai pilot never reached production                          | Why your AI pilot never reached production — meshin.co                 | Most AI pilots stall on ownership, data rules and a missing outcome metric, not the model. Here is what has to be true before one reaches production. | Why your AI pilot never reached production                 | 32    | ✓       |
 
 ### blog-category (4)
@@ -464,11 +465,11 @@ One owning route per entity. The mention count is inbound references from other 
 | Entity                         | Owned by                                   | Mentioned by |
 | ------------------------------ | ------------------------------------------ | ------------ |
 | Agentic workflow               | `/glossary/agentic-workflow`               | 15           |
-| AI governance                  | `/glossary/ai-governance`                  | 62           |
+| AI governance                  | `/glossary/ai-governance`                  | 63           |
 | AI impact assessment           | `/glossary/ai-impact-assessment`           | 3            |
 | AI management system           | `/glossary/ai-management-system`           | 7            |
 | AI operating model             | `/glossary/ai-operating-model`             | 30           |
-| AI register                    | `/glossary/ai-register`                    | 48           |
+| AI register                    | `/glossary/ai-register`                    | 49           |
 | Conformity assessment          | `/glossary/conformity-assessment`          | 5            |
 | Data classification            | `/glossary/data-classification`            | 20           |
 | DPIA                           | `/glossary/dpia`                           | 6            |
