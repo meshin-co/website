@@ -1,0 +1,273 @@
+{
+  "schema": 1,
+  "slug": "how-should-boards-run-an-ai-incident-tabletop-exercise",
+  "runId": "45676944219-1",
+  "generatedAt": "2026-11-25T18:44:40.551Z",
+  "claim": {
+    "title": "How should boards run an AI incident tabletop exercise?",
+    "query": "how should boards run an ai incident tabletop exercise",
+    "origin": "category",
+    "category": "executive",
+    "catchUp": {
+      "slot": "15:00",
+      "lateMinutes": 218
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-25",
+      "windowStart": "2026-08-25",
+      "windowEnd": "2026-11-23",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/how-should-boards-run-an-ai-incident-tabletop-exercise",
+    "path": "site/src/data/post/how-should-boards-run-an-ai-incident-tabletop-exercise.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_0cff18e54324e311016b072b9b2b4487d1b8283b1b469b5df5",
+  "published": {
+    "callIndex": 3
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0100e1c177eca6c8016b072b409ee887d186e6f0d0437a8edf",
+      "requestDigest": "ca75f13e17e84204c7fb28e2b5bd1caa8604e7ee334cfef2ebc56970685b0ac6",
+      "tokens": {
+        "input": 1537,
+        "output": 128
+      },
+      "costUsd": 0.002177,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_094d361942935e83016b072b45192c87d1a335852fa60ce547",
+      "requestDigest": "a5a07719eb044c83e8909fa7772c305cfc69f393c476c2a3dd876e267121b628",
+      "tokens": {
+        "input": 1599,
+        "output": 85
+      },
+      "costUsd": 0.002024,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0650b4e1965788c2016b072b4b53a887d1908a64de56a427c5",
+      "requestDigest": "993bed7993cfb1cbcd1bb215ea1cb84e64afb8202c9ad022397e753ec1ae4262",
+      "tokens": {
+        "input": 10953,
+        "output": 3812
+      },
+      "costUsd": 0.030013,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0cff18e54324e311016b072b9b2b4487d1b8283b1b469b5df5",
+      "requestDigest": "c6f736c5d45a45d74f5493056ca0a7bd1dc927ed1bb0cf4cf760ff5e8f870f38",
+      "tokens": {
+        "input": 13726,
+        "output": 3070
+      },
+      "costUsd": 0.029076,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 27815,
+      "output": 7095
+    },
+    "costUsd": 0.06329
+  },
+  "ledger": "audits/autowriter/2026/11/how-should-boards-run-an-ai-incident-tabletop-exercise.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "b1a4d3c1d9a62f2484155e5f189865d9df8116bf8266f2097ecbc45412f65f67",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "7983e72318b2701ef667d48ce7fff71de6bc58227340fa77be86897b066bb2f5"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "1e291e4336807e99144f2a63cfd94220707c1c99d9084f960e26799cbf12fde8"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "bfb02303381d779e9551eb07526273d9ebecba36e6d2abda5692ac878241e479"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "12adf28df7b05fa9c4477702be7eebdfe8a101bf2eeaf176065b1b79bbb839e3"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "5dc14bc53c6bcb04b67fb827fdb33640af90706384899f4443d170ea638be6f7"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "d35a552b59868065350bbce2b523865628bb5e2bef1fd11fcc5e52895b1d6746"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "f64e24db8dca1c487b003c3d3cac0b30d8f5290ec8ab26b658c8b3abf574a4cc"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "dde0316bacb78709de4ac55ff5347c4bf082d0ac",
+    "fingerprint": "9f6c7c6a0dcc720be0242ac5a232ce8912e9823bba880539576194ee97aef097"
+  },
+  "claimTable": [],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 112,
+      "median": 15,
+      "shareBelowThreshold": 0.1875,
+      "shareJustBelow": 0.1697,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/how-should-boards-run-an-ai-incident-tabletop-exercise.json",
+    "audits/autowriter/claims/2026/11/how-should-boards-run-an-ai-incident-tabletop-exercise.json",
+    "audits/autowriter/generations/2026/11/how-should-boards-run-an-ai-incident-tabletop-exercise.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-ai-readiness-scorecard-five-drivers.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-board-memo-ai-strategy-one-page.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-build-vs-buy-ai-3-year-tco.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-fractional-caio-pricing.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-can-boards-verify-ai-cost-savings.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-should-boards-divide-ai-oversight-among-committees.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-should-boards-run-an-ai-incident-tabletop-exercise.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-what-should-a-board-request-in-a-quarterly-ai-risk-report.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-which-ai-decisions-need-board-approval.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/how-should-boards-run-an-ai-incident-tabletop-exercise.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}

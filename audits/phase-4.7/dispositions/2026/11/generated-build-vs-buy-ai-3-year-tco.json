@@ -8,7 +8,7 @@
   {
     "target": "/blog/build-vs-buy-ai-3-year-tco",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/which-ai-decisions-need-board-approval (generation record audits/autowriter/generations/2026/11/which-ai-decisions-need-board-approval.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "01830b20d1a2"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-should-boards-run-an-ai-incident-tabletop-exercise (generation record audits/autowriter/generations/2026/11/how-should-boards-run-an-ai-incident-tabletop-exercise.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "4b6b0c455df2"
   }
 ]

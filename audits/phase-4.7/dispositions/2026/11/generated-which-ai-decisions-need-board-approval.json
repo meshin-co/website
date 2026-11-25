@@ -8,7 +8,7 @@
   {
     "target": "/blog/which-ai-decisions-need-board-approval",
     "status": "rewritten",
-    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/which-ai-decisions-need-board-approval.json on 2026-11-24. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/which-ai-decisions-need-board-approval.json.",
-    "digest": "0cb015031d9a"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-should-boards-run-an-ai-incident-tabletop-exercise (generation record audits/autowriter/generations/2026/11/how-should-boards-run-an-ai-incident-tabletop-exercise.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "fb9703b66cab"
   }
 ]

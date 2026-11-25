@@ -8,7 +8,7 @@
   {
     "target": "/blog/fractional-caio-pricing",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/which-ai-decisions-need-board-approval (generation record audits/autowriter/generations/2026/11/which-ai-decisions-need-board-approval.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "a2b16495512b"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-should-boards-run-an-ai-incident-tabletop-exercise (generation record audits/autowriter/generations/2026/11/how-should-boards-run-an-ai-incident-tabletop-exercise.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "06d0e2926632"
   }
 ]
