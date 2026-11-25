@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "slug": "how-should-boards-run-an-ai-incident-tabletop-exercise",
+  "title": "How should boards run an AI incident tabletop exercise?",
+  "format": "article",
+  "query": "how should boards run an ai incident tabletop exercise",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "origin": "category",
+  "category": "executive",
+  "catchUp": {
+    "slot": "15:00",
+    "lateMinutes": 218
+  },
+  "runId": "45676944219-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-25T18:38:54.815Z",
+  "expiresAt": "2026-12-09T18:38:54.815Z"
+}
