@@ -12,9 +12,9 @@
     "costUsd": 0.073136
   },
   "verdict": {
-    "state": "open",
+    "state": "merged",
     "reason": null,
-    "decidedAt": null
+    "decidedAt": "2026-11-25T21:39:31.131Z"
   },
   "escalations": [],
   "generation": {
@@ -235,5 +235,11 @@
       "against": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
       "detail": "the topic \"How to approve exceptions to an AI acceptable use policy\" repeats /blog/ai-acceptable-use-policy-for-a-50-person-company (\"What actually belongs in an AI acceptable use policy\"): its subject shares acceptabl, ai, policy, use, 4 of the 6 stems of the smaller one, a containment of 0.67 against the threshold of 0.5"
     }
-  ]
+  ],
+  "measurementDebt": {
+    "mergedCommit": "cb642c8ad1770f5df628e8354d429547fe38b945",
+    "fingerprint": "bbd1cee1ed9fc62a7da360227b2532b287de1c1261400fd40decc9f9bdd43e88",
+    "recordedAt": "2026-11-25T21:39:31.131Z",
+    "clear": "cd site && GATE_PHASE=<bucket> npm run gate:lh && GATE_PHASE=<bucket> npm run lh:record"
+  }
 }
