@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/how-to-negotiate-ai-vendor-data-use-terms.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-negotiate-ai-vendor-data-use-terms.json on 2026-11-26. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-negotiate-ai-vendor-data-use-terms.json.",
+    "digest": "edb4453ca767"
+  },
+  {
+    "target": "/blog/how-to-negotiate-ai-vendor-data-use-terms",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-negotiate-ai-vendor-data-use-terms.json on 2026-11-26. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-negotiate-ai-vendor-data-use-terms.json.",
+    "digest": "a52bc8c66ed0"
+  }
+]

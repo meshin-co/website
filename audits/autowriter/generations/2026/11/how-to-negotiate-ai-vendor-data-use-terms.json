@@ -1,0 +1,322 @@
+{
+  "schema": 1,
+  "slug": "how-to-negotiate-ai-vendor-data-use-terms",
+  "runId": "45810799540-1",
+  "generatedAt": "2026-11-26T11:36:03.675Z",
+  "claim": {
+    "title": "How to negotiate AI vendor data-use terms",
+    "query": "how to negotiate ai vendor data-use terms",
+    "origin": "category",
+    "category": "governance",
+    "catchUp": {
+      "slot": "06:00",
+      "lateMinutes": 329
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-26",
+      "windowStart": "2026-08-26",
+      "windowEnd": "2026-11-24",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/how-to-negotiate-ai-vendor-data-use-terms",
+    "path": "site/src/data/post/how-to-negotiate-ai-vendor-data-use-terms.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_018be82824a6960a016b0818a2172487d1979bd06c36015d84",
+  "published": {
+    "callIndex": 5
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_00a5bea1d0316e7f016b08182c93cc87d18e5d9bc3b8b567bd",
+      "requestDigest": "81c76c778d9246be4a67794c43e1a2e258172bfedcac1bc355b65e584cd58657",
+      "tokens": {
+        "input": 1569,
+        "output": 155
+      },
+      "costUsd": 0.002344,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0b9da39058feb8a5016b0818328b4c87d18cebb1d65a9f13b2",
+      "requestDigest": "034dccc5d68fc17b195670dd51759a97342b903b3653ec5876e47bc37f6107a6",
+      "tokens": {
+        "input": 1623,
+        "output": 120
+      },
+      "costUsd": 0.002223,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_076f8b3ed239ba24016b081836828887d194bc074afbc71b3f",
+      "requestDigest": "b463a3ace730ec0ff3d28188f09369e4ba7dda790259db83e55f6a22681fed47",
+      "tokens": {
+        "input": 1565,
+        "output": 155
+      },
+      "costUsd": 0.00234,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0f5be38391cb06db016b08183b920087d182e6dd55866ffe5b",
+      "requestDigest": "c33ef59b4a54b6b46acfa481613e74d43bcfb0d21b96f62e7a9854b46bf7b7f2",
+      "tokens": {
+        "input": 1623,
+        "output": 111
+      },
+      "costUsd": 0.002178,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_07bcbffcaf782931016b0818436d7087d1b25769067d1058df",
+      "requestDigest": "8480bda226b41f5a593c00f3d4fa1c291067f0132a8be9bb173100e98ee16668",
+      "tokens": {
+        "input": 10972,
+        "output": 3965
+      },
+      "costUsd": 0.030797,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_018be82824a6960a016b0818a2172487d1979bd06c36015d84",
+      "requestDigest": "b91cd43db598af3d40c915eaadcb75fb6d479abfbb48e34ca7d3f6344e251220",
+      "tokens": {
+        "input": 13881,
+        "output": 3248
+      },
+      "costUsd": 0.030121,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 31233,
+      "output": 7754
+    },
+    "costUsd": 0.070003
+  },
+  "ledger": "audits/autowriter/2026/11/how-to-negotiate-ai-vendor-data-use-terms.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "baa92dac71ee11bad12775cada025ce82bbc71d045b112b5d2e5686698c484ba",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "7983e72318b2701ef667d48ce7fff71de6bc58227340fa77be86897b066bb2f5"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "1e291e4336807e99144f2a63cfd94220707c1c99d9084f960e26799cbf12fde8"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "bfb02303381d779e9551eb07526273d9ebecba36e6d2abda5692ac878241e479"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "5372b223f88755a97b82f577cd357d9d85a8f742a7013da5a6c5bd9be91aaf45"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "b67d86bcd78cf33854e02c83a4e0b59d6880e8f0393231d26049c5b08bcc45c5"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "0c080c9475bdf3d87fb7c618d78d894e948135b90127885a6c64afd946ec4415"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "f64e24db8dca1c487b003c3d3cac0b30d8f5290ec8ab26b658c8b3abf574a4cc"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "94b7322fdf5b3e372b23ce3f1ccbd183d86e4945",
+    "fingerprint": "8376f97c24388d0be2b14e1e2e9144c1c477d545f1606acfd420097b9a0b6929"
+  },
+  "claimTable": [
+    {
+      "sentence": "When the vendor acts as a processor, GDPR Article 28 requires documented instructions, subject to legal exceptions.",
+      "marker": "sourced",
+      "source": {
+        "id": "gdpr",
+        "title": "Regulation (EU) 2016/679",
+        "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng"
+      },
+      "span": "processes the personal data only on documented instructions from the controller"
+    }
+  ],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 111,
+      "median": 15,
+      "shareBelowThreshold": 0.1532,
+      "shareJustBelow": 0.1442,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/how-to-negotiate-ai-vendor-data-use-terms.json",
+    "audits/autowriter/claims/2026/11/how-to-negotiate-ai-vendor-data-use-terms.json",
+    "audits/autowriter/generations/2026/11/how-to-negotiate-ai-vendor-data-use-terms.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-ai-vendor-assessment-questionnaire-template.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-audit-employee-compliance-with-ai-usage-rules.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-decide-which-employee-data-can-be-used-in-ai-tools.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-let-customers-appeal-ai-assisted-decisions.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-negotiate-ai-vendor-data-use-terms.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-rank-ai-use-cases-by-risk.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-run-a-quarterly-ai-tool-access-review.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-set-ai-chat-retention-rules.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-named-person-responsible-for-ai-risk-in-vendor-procurement.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-when-should-a-business-disclose-ai-use-to-customers.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/how-to-negotiate-ai-vendor-data-use-terms.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}
