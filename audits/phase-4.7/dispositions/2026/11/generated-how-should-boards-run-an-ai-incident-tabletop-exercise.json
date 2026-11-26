@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/how-should-boards-run-an-ai-incident-tabletop-exercise.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-should-boards-run-an-ai-incident-tabletop-exercise.json on 2026-11-25. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-should-boards-run-an-ai-incident-tabletop-exercise.json.",
+    "digest": "a91293b9e247"
+  },
+  {
+    "target": "/blog/how-should-boards-run-an-ai-incident-tabletop-exercise",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-should-boards-run-an-ai-incident-tabletop-exercise.json on 2026-11-25. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-should-boards-run-an-ai-incident-tabletop-exercise.json.",
+    "digest": "3b566363700c"
+  }
+]
