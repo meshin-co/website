@@ -1,6 +1,6 @@
 # Search demand: what Search Console measured
 
-Generated-from: 94b7322
+Generated-from: 1e7c098
 
 Measured: 2026-11-26 (window 2026-08-26 to 2026-11-24)
 
