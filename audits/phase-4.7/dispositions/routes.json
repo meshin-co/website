@@ -33,15 +33,15 @@
     "target": "/blog",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-should-boards-run-an-ai-incident-tabletop-exercise (generation record audits/autowriter/generations/2026/11/how-should-boards-run-an-ai-incident-tabletop-exercise.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "6aea66c6f8d6"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-redact-sensitive-data-from-llm-application-logs (generation record audits/autowriter/generations/2026/11/how-to-redact-sensitive-data-from-llm-application-logs.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "70323a9b9163"
   },
   {
     "target": "/blog",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-should-boards-run-an-ai-incident-tabletop-exercise (generation record audits/autowriter/generations/2026/11/how-should-boards-run-an-ai-incident-tabletop-exercise.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "6aea66c6f8d6"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-redact-sensitive-data-from-llm-application-logs (generation record audits/autowriter/generations/2026/11/how-to-redact-sensitive-data-from-llm-application-logs.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "70323a9b9163"
   },
   {
     "target": "/blog/ai-acceptable-use-policy-for-a-50-person-company",
@@ -53,15 +53,15 @@
     "target": "/blog/category/agentic-architecture",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-rotate-ai-agent-credentials-without-downtime (generation record audits/autowriter/generations/2026/11/how-to-rotate-ai-agent-credentials-without-downtime.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "8ab46c5cffe4"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-redact-sensitive-data-from-llm-application-logs (generation record audits/autowriter/generations/2026/11/how-to-redact-sensitive-data-from-llm-application-logs.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "abb654d8fcf4"
   },
   {
     "target": "/blog/category/agentic-architecture",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-rotate-ai-agent-credentials-without-downtime (generation record audits/autowriter/generations/2026/11/how-to-rotate-ai-agent-credentials-without-downtime.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "8ab46c5cffe4"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-redact-sensitive-data-from-llm-application-logs (generation record audits/autowriter/generations/2026/11/how-to-redact-sensitive-data-from-llm-application-logs.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "abb654d8fcf4"
   },
   {
     "target": "/blog/category/executive",
@@ -101,15 +101,15 @@
     "target": "/blog/evals-in-ci-for-llm-agents",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-rotate-ai-agent-credentials-without-downtime (generation record audits/autowriter/generations/2026/11/how-to-rotate-ai-agent-credentials-without-downtime.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "817512368234"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-redact-sensitive-data-from-llm-application-logs (generation record audits/autowriter/generations/2026/11/how-to-redact-sensitive-data-from-llm-application-logs.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "ac1b34d0847e"
   },
   {
     "target": "/blog/evals-in-ci-for-llm-agents",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-rotate-ai-agent-credentials-without-downtime (generation record audits/autowriter/generations/2026/11/how-to-rotate-ai-agent-credentials-without-downtime.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "817512368234"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-redact-sensitive-data-from-llm-application-logs (generation record audits/autowriter/generations/2026/11/how-to-redact-sensitive-data-from-llm-application-logs.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "ac1b34d0847e"
   },
   {
     "target": "/blog/how-to-build-an-ai-system-register-in-a-week",
@@ -127,22 +127,22 @@
     "target": "/blog/tag/agentic-architecture",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-rotate-ai-agent-credentials-without-downtime (generation record audits/autowriter/generations/2026/11/how-to-rotate-ai-agent-credentials-without-downtime.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "f51443bc9853"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-redact-sensitive-data-from-llm-application-logs (generation record audits/autowriter/generations/2026/11/how-to-redact-sensitive-data-from-llm-application-logs.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "334bfa5774b3"
   },
   {
     "target": "/blog/tag/agentic-architecture",
     "location": "body.h1",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-rotate-ai-agent-credentials-without-downtime (generation record audits/autowriter/generations/2026/11/how-to-rotate-ai-agent-credentials-without-downtime.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "f51443bc9853"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-redact-sensitive-data-from-llm-application-logs (generation record audits/autowriter/generations/2026/11/how-to-redact-sensitive-data-from-llm-application-logs.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "334bfa5774b3"
   },
   {
     "target": "/blog/tag/agentic-architecture",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-rotate-ai-agent-credentials-without-downtime (generation record audits/autowriter/generations/2026/11/how-to-rotate-ai-agent-credentials-without-downtime.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "f51443bc9853"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-redact-sensitive-data-from-llm-application-logs (generation record audits/autowriter/generations/2026/11/how-to-redact-sensitive-data-from-llm-application-logs.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "334bfa5774b3"
   },
   {
     "target": "/blog/tag/ai-governance",
@@ -265,28 +265,28 @@
     "target": "/blog/tag/production-readiness",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-rotate-ai-agent-credentials-without-downtime (generation record audits/autowriter/generations/2026/11/how-to-rotate-ai-agent-credentials-without-downtime.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "07cdf7d0a7b4"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-redact-sensitive-data-from-llm-application-logs (generation record audits/autowriter/generations/2026/11/how-to-redact-sensitive-data-from-llm-application-logs.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "3d32c89fdbb5"
   },
   {
     "target": "/blog/tag/production-readiness",
     "location": "body.h1",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-rotate-ai-agent-credentials-without-downtime (generation record audits/autowriter/generations/2026/11/how-to-rotate-ai-agent-credentials-without-downtime.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "07cdf7d0a7b4"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-redact-sensitive-data-from-llm-application-logs (generation record audits/autowriter/generations/2026/11/how-to-redact-sensitive-data-from-llm-application-logs.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "3d32c89fdbb5"
   },
   {
     "target": "/blog/tag/production-readiness",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-rotate-ai-agent-credentials-without-downtime (generation record audits/autowriter/generations/2026/11/how-to-rotate-ai-agent-credentials-without-downtime.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "07cdf7d0a7b4"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-redact-sensitive-data-from-llm-application-logs (generation record audits/autowriter/generations/2026/11/how-to-redact-sensitive-data-from-llm-application-logs.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "3d32c89fdbb5"
   },
   {
     "target": "/blog/tag/security-review",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-should-boards-run-an-ai-incident-tabletop-exercise (generation record audits/autowriter/generations/2026/11/how-should-boards-run-an-ai-incident-tabletop-exercise.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "5b067c0c9774"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-redact-sensitive-data-from-llm-application-logs (generation record audits/autowriter/generations/2026/11/how-to-redact-sensitive-data-from-llm-application-logs.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "2ac8099d5b23"
   },
   {
     "target": "/blog/tag/shadow-ai",

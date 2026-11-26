@@ -75,7 +75,7 @@ title `{spec name} specification {version} — meshin.co` · meta: what the vers
 | `/spec/evals-baseline`     | evals-baseline specification     | evals-baseline specification — meshin.co     | Every published version of the evals-baseline specification, and the address to cite for each.                                                         | evals-baseline specification     | 23    | ✓       |
 | `/spec/evals-baseline/1.0` | evals-baseline specification 1.0 | evals-baseline specification 1.0 — meshin.co | The evals-baseline specification 1.0 says what a regression in an agent evaluation is, and defines the baseline file, the findings and the exit codes. | evals-baseline specification 1.0 | 26    | ✓       |
 
-### article (47)
+### article (48)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
@@ -108,6 +108,7 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/how-to-prevent-duplicate-ai-agent-actions-on-retries`       | how to prevent duplicate ai agent actions on retries       | How to prevent duplicate AI agent actions on retries — meshin.co       | Learn how to prevent duplicate AI agent actions on retries with stable operation keys, durable records, and checks for uncertain outcomes.            | How to prevent duplicate AI agent actions on retries       | 30    | ✓       |
 | `/blog/how-to-prioritize-competing-ai-project-requests`            | how to prioritize competing ai project requests            | How to prioritize competing AI project requests — meshin.co            | How to prioritize competing AI project requests using a common intake, risk checks and delivery capacity.                                             | How to prioritize competing AI project requests            | 32    | ✓       |
 | `/blog/how-to-rank-ai-use-cases-by-risk`                           | how to rank ai use cases by risk                           | How to rank AI use cases by risk — meshin.co                           | How to rank AI use cases by risk using potential harm, likelihood, control evidence and uncertainty.                                                  | How to rank AI use cases by risk                           | 33    | ✓       |
+| `/blog/how-to-redact-sensitive-data-from-llm-application-logs`     | how to redact sensitive data from llm application logs     | How to redact sensitive data from LLM application logs — meshin.co     | How to redact sensitive data from LLM application logs before records reach log sinks, with safe fields and tests.                                    | How to redact sensitive data from LLM application logs     | 33    | ✓       |
 | `/blog/how-to-require-approval-for-ai-agent-payments`              | how to require approval for ai agent payments              | How to require approval for AI agent payments — meshin.co              | See how to require approval for AI agent payments with a human review gate before money is sent.                                                      | How to require approval for AI agent payments              | 32    | ✓       |
 | `/blog/how-to-retire-an-ai-tool-when-its-vendor-contract-ends`     | how to retire an ai tool when its vendor contract ends     | How to retire an AI tool when its vendor contract ends — meshin.co     | Learn how to retire an AI tool when its vendor contract ends, from preserving records and planning the cutover to checking deletion.                  | How to retire an AI tool when its vendor contract ends     | 31    | ✓       |
 | `/blog/how-to-review-ai-generated-customer-support-replies`        | how to review ai-generated customer support replies        | How to review AI-generated customer support replies — meshin.co        | Set a practical review process for AI-generated support replies, from checking account facts to handling risky drafts and improving future reviews.   | How to review AI-generated customer support replies        | 32    | ✓       |
@@ -473,7 +474,7 @@ One owning route per entity. The mention count is inbound references from other 
 | AI operating model             | `/glossary/ai-operating-model`             | 31           |
 | AI register                    | `/glossary/ai-register`                    | 51           |
 | Conformity assessment          | `/glossary/conformity-assessment`          | 5            |
-| Data classification            | `/glossary/data-classification`            | 20           |
+| Data classification            | `/glossary/data-classification`            | 21           |
 | DPIA                           | `/glossary/dpia`                           | 6            |
 | EU AI Act                      | `/glossary/eu-ai-act`                      | 43           |
 | Evals                          | `/glossary/evals`                          | 52           |
@@ -483,7 +484,7 @@ One owning route per entity. The mention count is inbound references from other 
 | Human oversight                | `/glossary/human-oversight`                | 18           |
 | Human-in-the-loop              | `/glossary/human-in-the-loop`              | 6            |
 | ISO/IEC 42001                  | `/glossary/iso-iec-42001`                  | 30           |
-| LLM gateway                    | `/glossary/llm-gateway`                    | 13           |
+| LLM gateway                    | `/glossary/llm-gateway`                    | 14           |
 | Model card                     | `/glossary/model-card`                     | 3            |
 | Model Context Protocol         | `/glossary/mcp`                            | 2            |
 | Model provenance               | `/glossary/model-provenance`               | 3            |

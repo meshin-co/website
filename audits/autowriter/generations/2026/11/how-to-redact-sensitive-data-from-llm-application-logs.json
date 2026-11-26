@@ -1,0 +1,410 @@
+{
+  "schema": 1,
+  "slug": "how-to-redact-sensitive-data-from-llm-application-logs",
+  "runId": "45875283161-1",
+  "generatedAt": "2026-11-26T18:31:18.228Z",
+  "claim": {
+    "title": "How to redact sensitive data from LLM application logs",
+    "query": "how to redact sensitive data from llm application logs",
+    "origin": "category",
+    "category": "agentic-architecture",
+    "catchUp": {
+      "slot": "15:00",
+      "lateMinutes": 203
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-26",
+      "windowStart": "2026-08-26",
+      "windowEnd": "2026-11-24",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/how-to-redact-sensitive-data-from-llm-application-logs",
+    "path": "site/src/data/post/how-to-redact-sensitive-data-from-llm-application-logs.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_093e4b229efbe000016b0879b91bd487d1bf4944aaefaa5817",
+  "published": {
+    "callIndex": 10
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_02c682902db1472e016b08793535f487d18a91bb29cfbe1999",
+      "requestDigest": "4ca9ddcc537045f117a3db2e3335c39ff945c7e3bb20ea73a171b954168e9b0f",
+      "tokens": {
+        "input": 1579,
+        "output": 72
+      },
+      "costUsd": 0.001939,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_08af09acebe515ce016b087937b3d087d1aba85d89a9e4932c",
+      "requestDigest": "f21347050e51f7e8d22cbb50a1bc835a6a6f71cdc7f705a4975dea9fa74c0e87",
+      "tokens": {
+        "input": 1631,
+        "output": 63
+      },
+      "costUsd": 0.001946,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_032d9a091d940f8f016b08793a3ea887d1ab3fea2fc11f8ca9",
+      "requestDigest": "a8484e4a631c56edf8ba86450679eadb19d24b630c83d29e4e2b9f6681288e70",
+      "tokens": {
+        "input": 1575,
+        "output": 149
+      },
+      "costUsd": 0.00232,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_096415b05755c9d0016b08793e199487d1ad8fee1097bbe2fa",
+      "requestDigest": "e593ba711d0d9aff241fe2ecb2b72efa4196a45ca68734f3af5a9055ac854c6a",
+      "tokens": {
+        "input": 1633,
+        "output": 184
+      },
+      "costUsd": 0.002553,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_02cb1d4e1e55d46f016b08794244b087d189ec36b879e2a9fe",
+      "requestDigest": "939b38d672df0c38b85dcf1310034852ca5f6081f877cc55063a8e0f5e7bb573",
+      "tokens": {
+        "input": 1583,
+        "output": 101
+      },
+      "costUsd": 0.002088,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_09cde31c33136bf4016b087945b07487d1a02923946986526c",
+      "requestDigest": "ebec0e4fd0619a13a98d90557c868d3b94e81941d84155c169c188da8ad95bd7",
+      "tokens": {
+        "input": 1645,
+        "output": 200
+      },
+      "costUsd": 0.002645,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "max_output_tokens"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_036769d08a6e3f87016b08794b993c87d1a7c5a93cf1dca60e",
+      "requestDigest": "cad53c11b01d05391be09c8af8ade887dc0d3839268b13fefe0373f6eede6359",
+      "tokens": {
+        "input": 1576,
+        "output": 132
+      },
+      "costUsd": 0.002236,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0c893746dc13b951016b08794e92ec87d1810c3e09b98984cc",
+      "requestDigest": "6806f4220906ed21e9440f1fa28ba5026a55f2d7613bb394df69cdb3303acc54",
+      "tokens": {
+        "input": 1686,
+        "output": 136
+      },
+      "costUsd": 0.002366,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0760e6fbaa5029e8016b08795614b087d1bc3b062236e70301",
+      "requestDigest": "420e39d56b1d94be3ecbd1c02489ac7edf21c9561b926639113415a3c8c93604",
+      "tokens": {
+        "input": 10992,
+        "output": 3601
+      },
+      "costUsd": 0.028997,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_05e43e61b9fff4d5016b087998abfc87d1bfefc6e8b8193903",
+      "requestDigest": "78d97a0a6fea2cb92b0914729bdbf3ba8ee07b06f491b2bd3ba0eadec474bb46",
+      "tokens": {
+        "input": 13797,
+        "output": 2800
+      },
+      "costUsd": 0.027797,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_093e4b229efbe000016b0879b91bd487d1bf4944aaefaa5817",
+      "requestDigest": "f8e01208420c3894cd7f2e6903c3eec46dba78b58e79a10e0c047d63c1470234",
+      "tokens": {
+        "input": 16548,
+        "output": 2789
+      },
+      "costUsd": 0.030493,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 54245,
+      "output": 10227
+    },
+    "costUsd": 0.10538
+  },
+  "ledger": "audits/autowriter/2026/11/how-to-redact-sensitive-data-from-llm-application-logs.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "5a8b1b19d790c8d83da8976ab983f769917c44a39211a9e5f5c7b3a4cf314698",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "7983e72318b2701ef667d48ce7fff71de6bc58227340fa77be86897b066bb2f5"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "1e291e4336807e99144f2a63cfd94220707c1c99d9084f960e26799cbf12fde8"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "bfb02303381d779e9551eb07526273d9ebecba36e6d2abda5692ac878241e479"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "5372b223f88755a97b82f577cd357d9d85a8f742a7013da5a6c5bd9be91aaf45"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "b67d86bcd78cf33854e02c83a4e0b59d6880e8f0393231d26049c5b08bcc45c5"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "0c080c9475bdf3d87fb7c618d78d894e948135b90127885a6c64afd946ec4415"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "f64e24db8dca1c487b003c3d3cac0b30d8f5290ec8ab26b658c8b3abf574a4cc"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "18a364486f87eff629b374fa5e8c00ba6e8b3e52",
+    "fingerprint": "8376f97c24388d0be2b14e1e2e9144c1c477d545f1606acfd420097b9a0b6929"
+  },
+  "claimTable": [],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 113,
+      "median": 14,
+      "shareBelowThreshold": 0.239,
+      "shareJustBelow": 0.2301,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/how-to-redact-sensitive-data-from-llm-application-logs.json",
+    "audits/autowriter/claims/2026/11/how-to-redact-sensitive-data-from-llm-application-logs.json",
+    "audits/autowriter/generations/2026/11/how-to-redact-sensitive-data-from-llm-application-logs.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-deploy-ai-agent-updates-with-canary-releases.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-load-test-an-ai-agent-before-launch.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-pause-and-resume-long-running-ai-agents.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-prevent-duplicate-ai-agent-actions-on-retries.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-redact-sensitive-data-from-llm-application-logs.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-require-approval-for-ai-agent-payments.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-roll-back-an-ai-agent-deployment.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-rotate-ai-agent-credentials-without-downtime.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-run-an-ai-agent-in-shadow-mode.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-sandbox-ai-agent-code-execution.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-set-a-per-task-spending-limit-for-an-ai-agent.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-stop-ai-agents-getting-stuck-in-loops.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-trace-ai-agent-tool-calls-in-production.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/how-to-redact-sensitive-data-from-llm-application-logs.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}
