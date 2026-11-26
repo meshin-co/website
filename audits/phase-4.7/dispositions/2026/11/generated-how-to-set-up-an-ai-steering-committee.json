@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/how-to-set-up-an-ai-steering-committee.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-set-up-an-ai-steering-committee.json on 2026-11-25. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-set-up-an-ai-steering-committee.json.",
+    "digest": "523ffee86ceb"
+  },
+  {
+    "target": "/blog/how-to-set-up-an-ai-steering-committee",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-set-up-an-ai-steering-committee.json on 2026-11-25. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-set-up-an-ai-steering-committee.json.",
+    "digest": "d1d77c23acae"
+  }
+]
