@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/how-to-redact-sensitive-data-from-llm-application-logs.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-redact-sensitive-data-from-llm-application-logs.json on 2026-11-26. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-redact-sensitive-data-from-llm-application-logs.json.",
+    "digest": "bb3ec9b6cf41"
+  },
+  {
+    "target": "/blog/how-to-redact-sensitive-data-from-llm-application-logs",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-redact-sensitive-data-from-llm-application-logs.json on 2026-11-26. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-redact-sensitive-data-from-llm-application-logs.json.",
+    "digest": "f8c660eacb64"
+  }
+]

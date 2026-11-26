@@ -6,23 +6,47 @@
   "attempts": [],
   "spend": {
     "tokens": {
-      "input": 12908,
-      "output": 1037
+      "input": 54245,
+      "output": 10227
     },
-    "costUsd": 0.018093
+    "costUsd": 0.10538
   },
   "verdict": {
-    "state": "open",
-    "reason": null,
-    "decidedAt": null
+    "state": "escalated",
+    "reason": "Autowriter pull request #216: the gate's findings cannot be repaired by rewriting the entry, or the rewrite could not be made to pass the repair's own checks",
+    "decidedAt": "2026-11-26T18:46:52.197Z"
   },
-  "escalations": [],
+  "escalations": [
+    {
+      "id": "esc-1",
+      "kind": "unrepairable",
+      "title": "Autowriter pull request #216: the gate's findings cannot be repaired by rewriting the entry, or the rewrite could not be made to pass the repair's own checks",
+      "detail": "The repair of pull request #216 ended as unrepairable: the gate's findings cannot be repaired by rewriting the entry, or the rewrite could not be made to pass the repair's own checks.\nStop: refused at gate:orphans (chrome-only on /blog/how-to-sandbox-ai-agent-code-execution)\nRepair run: https://github.com/meshin-co/website/actions/runs/45877951624\nPull request: https://github.com/meshin-co/website/pull/216",
+      "stop": "refused",
+      "gate": "gate:orphans",
+      "rule": "chrome-only",
+      "subject": "/blog/how-to-sandbox-ai-agent-code-execution",
+      "ciRun": 45876606579,
+      "measuredMain": "18a364486f87eff629b374fa5e8c00ba6e8b3e52",
+      "raisedAt": "2026-11-26T18:46:51.398Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-26T18:46:51.398Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 217,
+          "error": null
+        }
+      ]
+    }
+  ],
   "generation": {
     "tokens": {
-      "input": 12908,
-      "output": 1037
+      "input": 54245,
+      "output": 10227
     },
-    "costUsd": 0.018093
+    "costUsd": 0.10538
   },
   "refusals": [
     {
