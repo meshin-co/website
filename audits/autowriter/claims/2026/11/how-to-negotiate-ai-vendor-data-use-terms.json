@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "slug": "how-to-negotiate-ai-vendor-data-use-terms",
+  "title": "How to negotiate AI vendor data-use terms",
+  "format": "article",
+  "query": "how to negotiate ai vendor data-use terms",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "origin": "category",
+  "category": "governance",
+  "catchUp": {
+    "slot": "06:00",
+    "lateMinutes": 329
+  },
+  "runId": "45810799540-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-26T11:29:47.012Z",
+  "expiresAt": "2026-12-10T11:29:47.012Z"
+}
