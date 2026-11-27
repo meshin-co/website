@@ -259,5 +259,14 @@
       "against": "/blog/which-ai-decisions-need-board-approval",
       "detail": "the topic \"How should boards document dissent on AI decisions?\" repeats /blog/which-ai-decisions-need-board-approval (\"Which AI decisions need board approval?\"): its subject shares ai, board, decision, 3 of the 5 stems of the smaller one, a containment of 0.60 against the threshold of 0.5"
     }
+  ],
+  "remeasures": [
+    {
+      "at": "2026-11-27T21:31:06.726Z",
+      "gate": "gate:orphans",
+      "measuredMain": "fa5e24d432b952cc1da9c6485231d27a409c8400",
+      "mainSha": "8f7133c44bf33d00b288773e80597b5c68fd96f5",
+      "result": "requested"
+    }
   ]
 }
