@@ -8,7 +8,7 @@
   {
     "target": "/blog/how-to-set-ai-chat-retention-rules",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-negotiate-ai-vendor-data-use-terms (generation record audits/autowriter/generations/2026/11/how-to-negotiate-ai-vendor-data-use-terms.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "cbb1f61d94d0"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-assign-an-owner-to-each-ai-tool (generation record audits/autowriter/generations/2026/11/how-to-assign-an-owner-to-each-ai-tool.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "46129e063d4e"
   }
 ]
