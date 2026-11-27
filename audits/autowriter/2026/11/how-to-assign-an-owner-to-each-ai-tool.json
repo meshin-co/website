@@ -12,9 +12,9 @@
     "costUsd": 0.072271
   },
   "verdict": {
-    "state": "open",
+    "state": "merged",
     "reason": null,
-    "decidedAt": null
+    "decidedAt": "2026-11-27T21:30:41.585Z"
   },
   "escalations": [],
   "generation": {
@@ -241,5 +241,11 @@
       "against": "/blog/how-to-decide-which-employee-data-can-be-used-in-ai-tools",
       "detail": "the topic \"How to approve employee requests for new AI tools\" repeats /blog/how-to-decide-which-employee-data-can-be-used-in-ai-tools (\"How to decide which employee data can be used in AI tools\"): its subject shares ai, employe, tool, 3 of the 6 stems of the smaller one, a containment of 0.50 against the threshold of 0.5"
     }
-  ]
+  ],
+  "measurementDebt": {
+    "mergedCommit": "9e2f75b25b72037672f7031f87b5d674364f95df",
+    "fingerprint": "ff7cccdce0f6b7d53fe51eace9aa35e3706bb31159882a82a5a942e6a7c8327e",
+    "recordedAt": "2026-11-27T21:30:41.585Z",
+    "clear": "cd site && GATE_PHASE=<bucket> npm run gate:lh && GATE_PHASE=<bucket> npm run lh:record"
+  }
 }
