@@ -271,5 +271,14 @@
       "against": "/blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent",
       "detail": "the topic \"How to restrict an AI agent's tool permissions by task\" repeats /blog/how-to-set-a-per-task-spending-limit-for-an-ai-agent (\"How to set a per-task spending limit for an AI agent\"): its subject shares agent, ai, task, 3 of the 6 stems of the smaller one, a containment of 0.50 against the threshold of 0.5"
     }
+  ],
+  "remeasures": [
+    {
+      "at": "2026-11-27T00:03:22.322Z",
+      "gate": "gate:orphans",
+      "measuredMain": "18a364486f87eff629b374fa5e8c00ba6e8b3e52",
+      "mainSha": "df397d03e7f169b7262f7b457fd1c74c6a50e223",
+      "result": "requested"
+    }
   ]
 }
