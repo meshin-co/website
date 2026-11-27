@@ -1,21 +1,21 @@
 # Spend report: what writing each entry cost
 
-Generated-from: 336f5c874bb578d68f7eaa6956c5411d20808fe4
-Generated-at: 2026-11-27T09:09:24.059Z
+Generated-from: fa5e24d432b952cc1da9c6485231d27a409c8400
+Generated-at: 2026-11-27T19:11:41.423Z
 
 ## This month
 
-2026-11 so far: 3.058341 USD spent of the 25.00 USD monthly ceiling, 21.941659 USD left.
+2026-11 so far: 3.064535 USD spent of the 25.00 USD monthly ceiling, 21.935465 USD left.
 
-The figure is the spend of the UTC calendar month of 2026-11-27T09:09:24.059Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
+The figure is the spend of the UTC calendar month of 2026-11-27T19:11:41.423Z, the instant stamped in Generated-at. It counts the ledgers and records committed in this repository: every call they show, whether it wrote an entry, repaired one or ended with no entry. The ceiling job also counts the spend on branches that are not merged yet, so the figure it stops on can be higher. This file does not change at the turn of the month: after the last run it still says what 2026-11 had spent at that instant.
 
 | What was paid for               | Cost (USD) |
 | ------------------------------- | ---------- |
 | Writing calls of entries        | 2.491092   |
 | Repair calls                    | 0.00       |
 | Runs that ended with no entry   | 0.533207   |
-| Spend with no generation record | 0.034042   |
-| Everything paid for             | 3.058341   |
+| Spend with no generation record | 0.040236   |
+| Everything paid for             | 3.064535   |
 
 ## About this file
 
@@ -54,8 +54,8 @@ Every entry recorded: from 2026-11-03T05:36:35.954Z, the oldest record, through 
 | Writing calls of entries        | 2.491092   |
 | Repair calls                    | 0.00       |
 | Runs that ended with no entry   | 0.533207   |
-| Spend with no generation record | 0.034042   |
-| Everything paid for             | 3.058341   |
+| Spend with no generation record | 0.040236   |
+| Everything paid for             | 3.064535   |
 
 ## Every entry
 
@@ -115,8 +115,9 @@ The model and the two rates, in USD per million tokens, that each cost was compu
 
 ## Waiting for a record
 
-These ledgers have no generation record yet, and a claim that is still in force says one is expected: the run that holds the topic has not merged its entry. Together they cost 0.034042 USD, and the paid tables already count that spend under Spend with no generation record. Nothing is wrong and no person has to act: a line leaves this list when its record reaches the tree, and moves to Warnings if its claim lapses first.
+These ledgers have no generation record yet, and a claim that is still in force says one is expected: the run that holds the topic has not merged its entry. Together they cost 0.040236 USD, and the paid tables already count that spend under Spend with no generation record. Nothing is wrong and no person has to act: a line leaves this list when its record reaches the tree, and moves to Warnings if its claim lapses first.
 
+- how-to-approve-employee-requests-to-use-a-new-ai-tool: its ledger records a generation of 0.006194 USD (verdict: open) and no generation record names it yet; its claim holds the topic until 2026-12-11T19:11:31.365Z, so the record is still expected
 - how-to-configure-a-circuit-breaker-for-llm-api-failures: its ledger records a generation of 0.015949 USD (verdict: open) and no generation record names it yet; its claim holds the topic until 2026-12-04T10:29:13.638Z, so the record is still expected
 - how-to-redact-sensitive-data-from-llm-application-logs: its ledger records a generation of 0.018093 USD (verdict: open) and no generation record names it yet; its claim holds the topic until 2026-12-10T18:23:47.455Z, so the record is still expected
 
