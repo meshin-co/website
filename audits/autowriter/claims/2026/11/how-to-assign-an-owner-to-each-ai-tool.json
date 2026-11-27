@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "slug": "how-to-assign-an-owner-to-each-ai-tool",
+  "title": "How to assign an owner to each AI tool",
+  "format": "article",
+  "query": "how to assign an owner to each ai tool",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "origin": "category",
+  "category": "governance",
+  "catchUp": {
+    "slot": "06:00",
+    "lateMinutes": 182
+  },
+  "runId": "45970031697-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-27T09:02:05.624Z",
+  "expiresAt": "2026-12-11T09:02:05.624Z"
+}
