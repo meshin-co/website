@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/who-should-sign-off-before-an-ai-system-goes-live.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/who-should-sign-off-before-an-ai-system-goes-live.json on 2026-11-28. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/who-should-sign-off-before-an-ai-system-goes-live.json.",
+    "digest": "2003cf1a1e98"
+  },
+  {
+    "target": "/blog/who-should-sign-off-before-an-ai-system-goes-live",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/who-should-sign-off-before-an-ai-system-goes-live.json on 2026-11-28. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/who-should-sign-off-before-an-ai-system-goes-live.json.",
+    "digest": "f7d15150a87d"
+  }
+]
