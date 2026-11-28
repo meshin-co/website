@@ -1,0 +1,339 @@
+{
+  "schema": 1,
+  "slug": "who-should-sign-off-before-an-ai-system-goes-live",
+  "runId": "46167038128-1",
+  "generatedAt": "2026-11-28T16:55:07.953Z",
+  "claim": {
+    "title": "Who should sign off before an AI system goes live?",
+    "query": "who should sign off before an ai system goes live",
+    "origin": "category",
+    "category": "operating-model",
+    "catchUp": {
+      "slot": "15:00",
+      "lateMinutes": 109
+    }
+  },
+  "demand": {
+    "impressions": 0,
+    "position": null,
+    "report": {
+      "path": "audits/search-demand.md",
+      "measured": "2026-11-28",
+      "windowStart": "2026-08-28",
+      "windowEnd": "2026-11-26",
+      "table": null
+    },
+    "row": null
+  },
+  "entry": {
+    "format": "article",
+    "route": "/blog/who-should-sign-off-before-an-ai-system-goes-live",
+    "path": "site/src/data/post/who-should-sign-off-before-an-ai-system-goes-live.md"
+  },
+  "provider": "openai",
+  "model": "gpt-6.1-terra",
+  "responseId": "resp_0ea23fdc00459794016b0b0663697487d198d89f22478e7d04",
+  "published": {
+    "callIndex": 6
+  },
+  "calls": [
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_09c52bb644890de8016b0b061e035887d19f806f43b2a74b2c",
+      "requestDigest": "2267138219b747674fa120d90c898acdb24198b7fe70e1121b073d3ee53fd875",
+      "tokens": {
+        "input": 1634,
+        "output": 105
+      },
+      "costUsd": 0.002159,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0e6014117c53de58016b0b0620d6ac87d1ab24f13c94426709",
+      "requestDigest": "82ce88f4ccc59e2e945ea294dc522b94b2fa283dda1bb4ece876e84fbf3d6b83",
+      "tokens": {
+        "input": 1688,
+        "output": 101
+      },
+      "costUsd": 0.002193,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_01d8791934cc8626016b0b06239ac887d1a736cf6468de7c75",
+      "requestDigest": "1c993fab4ccc9a96aef6fac697b9bf013ad0d30034f0ccf49630614e094fe4cf",
+      "tokens": {
+        "input": 1630,
+        "output": 98
+      },
+      "costUsd": 0.00212,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_01eabdfb94e7881f016b0b0626078487d1b5f088eae79d5d35",
+      "requestDigest": "e4ccd1c26aaf15d1ee06b235d7f4f3aa4c35c6169ace61e922553b3a5942d8fd",
+      "tokens": {
+        "input": 1688,
+        "output": 169
+      },
+      "costUsd": 0.002533,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "topic",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0042c37382689d63016b0b062a360087d198028cf7904e9168",
+      "requestDigest": "ef266d13daa0e5273cb9b2ff21a25267cab19fa0e1e8ee2f37dd5545dd991a9c",
+      "tokens": {
+        "input": 1638,
+        "output": 109
+      },
+      "costUsd": 0.002183,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "draft",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0ad0bf7cb49666eb016b0b0630706087d1b9b0f45275a32667",
+      "requestDigest": "9cb38b7c5ea9cf0aef9d91720db49482743045d7cc64ffee74a6c915f88689aa",
+      "tokens": {
+        "input": 11027,
+        "output": 3503
+      },
+      "costUsd": 0.028542,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    },
+    {
+      "role": "correction",
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "configuredModel": "gpt-6.1-terra",
+      "resolvedModel": "gpt-6.1-terra",
+      "responseId": "resp_0ea23fdc00459794016b0b0663697487d198d89f22478e7d04",
+      "requestDigest": "aa36d240cbfccd5839918879c312015bfb0703cb37f66995de40671231361ee4",
+      "tokens": {
+        "input": 13989,
+        "output": 3236
+      },
+      "costUsd": 0.030169,
+      "price": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 5
+      },
+      "stopReason": "completed"
+    }
+  ],
+  "totals": {
+    "tokens": {
+      "input": 33294,
+      "output": 7321
+    },
+    "costUsd": 0.069899
+  },
+  "ledger": "audits/autowriter/2026/11/who-should-sign-off-before-an-ai-system-goes-live.json",
+  "modelChecks": [
+    {
+      "vendor": "openai",
+      "modelVariable": "OPENAI_WRITING_MODEL",
+      "model": "gpt-6.1-terra",
+      "shutdownDate": null,
+      "note": null
+    }
+  ],
+  "prompt": {
+    "digest": "6ce5128e9939f0aeabc4cb3f1543e63a0745f30c38f72147b72e6523e98f66fc",
+    "schemaDigest": "31c64a5409d38870844e23d70c1bb720deab7b0640d7e9e9f87ad50c402c2856",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "7983e72318b2701ef667d48ce7fff71de6bc58227340fa77be86897b066bb2f5"
+      },
+      {
+        "path": "site/.agents/skills/write-copy.md",
+        "sha256": "5ee2bdcc9ac92bc807008346f0df968492d19d486fc353d600641e46cc768ed3"
+      },
+      {
+        "path": "site/.agents/skills/write-for-humans.md",
+        "sha256": "ade73f7620f39a2c4cfa0a8580fe19b813489f6838baad5d82f84c187dbe0e28"
+      },
+      {
+        "path": "site/.agents/skills/place-a-new-text.md",
+        "sha256": "58fa70499845183ae128d2ee14aec8732de857f4b4582ae08ef02ce56996a0f1"
+      },
+      {
+        "path": "site/.agents/skills/add-collection-entry.md",
+        "sha256": "1e291e4336807e99144f2a63cfd94220707c1c99d9084f960e26799cbf12fde8"
+      },
+      {
+        "path": "site/src/content.config.ts",
+        "sha256": "bfb02303381d779e9551eb07526273d9ebecba36e6d2abda5692ac878241e479"
+      },
+      {
+        "path": "docs/CONTENT-GATE.md",
+        "sha256": "64bfe780e4efa67970d3d0ba3f5611f18b39e9d17180bb877919feb6fde68e11"
+      },
+      {
+        "path": "docs/SEMANTIC-CORE.md",
+        "sha256": "aa2ff8f8610f52ca9bd8f5bd017a9a4c7c5fdbb062ad03da65c34313f44fcec8"
+      },
+      {
+        "path": "site/banned-phrases.json",
+        "sha256": "7edefc6e7dfa3c7a1601691322d542c68cb4524ecdcb9774af338c0a1ff774e0"
+      },
+      {
+        "path": "site/controlled-words.json",
+        "sha256": "b57e51a3dff47269f22540e158a551c1a3525a114ae889da95a8f7c243cfa1e6"
+      },
+      {
+        "path": "site/content-facts.json",
+        "sha256": "fa8a7e9e73dee42365666f2b7785c9a990f3f48c6e4c46758d5f173ee248585c"
+      },
+      {
+        "path": "audits/sentence-band.json",
+        "sha256": "41166c0fa3cf3e30edd38a1d34df8dfd080a148b9a11688922a84e4cd867d37d"
+      },
+      {
+        "path": "audits/entry-length.json",
+        "sha256": "335b319f574303048377660b1031639d0c0684e99ba8a07f86043b8c9347df1e"
+      },
+      {
+        "path": "audits/routes.json",
+        "sha256": "6a153bb83d14ca47c516eafd35fac1ca72c38518a0e8eff19e0333b05ecbe0b1"
+      },
+      {
+        "path": "site/src/data/tags.mjs",
+        "sha256": "f64e24db8dca1c487b003c3d3cac0b30d8f5290ec8ab26b658c8b3abf574a4cc"
+      }
+    ]
+  },
+  "tree": {
+    "parent": "930ffde6c63edbc99513a312d0eb4fed4b86b056",
+    "fingerprint": "ff7cccdce0f6b7d53fe51eace9aa35e3706bb31159882a82a5a942e6a7c8327e"
+  },
+  "claimTable": [
+    {
+      "sentence": "Decide who should sign off before an AI system goes live by naming the business owner and the people responsible for technical and operational risks.",
+      "marker": "own-reading",
+      "source": null,
+      "span": null
+    }
+  ],
+  "band": {
+    "measuredOn": "2026-11-10",
+    "limits": {
+      "format": "article",
+      "threshold": 12,
+      "justBelowFrom": 8,
+      "minimumSentences": 8,
+      "medianFloor": 10,
+      "medianCeiling": 15,
+      "belowThresholdCap": 0.5779,
+      "justBelowCap": 0.2907
+    },
+    "measured": {
+      "format": "article",
+      "sentences": 122,
+      "median": 15,
+      "shareBelowThreshold": 0.246,
+      "shareJustBelow": 0.2132,
+      "threshold": 12
+    }
+  },
+  "files": [
+    "audits/autowriter/2026/11/who-should-sign-off-before-an-ai-system-goes-live.json",
+    "audits/autowriter/claims/2026/11/who-should-sign-off-before-an-ai-system-goes-live.json",
+    "audits/autowriter/generations/2026/11/who-should-sign-off-before-an-ai-system-goes-live.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-ai-readiness-assessment-template-for-smb.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-allocate-shared-ai-tool-costs-across-departments.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-assign-roles-and-escalation-paths-for-ai-incidents.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-create-an-ai-training-plan-by-employee-role.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-prioritize-competing-ai-project-requests.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-retire-an-ai-tool-when-its-vendor-contract-ends.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-review-ai-generated-customer-support-replies.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-review-ai-vendor-model-updates-after-deployment.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-how-to-set-up-an-ai-steering-committee.json",
+    "audits/phase-4.7/dispositions/2026/11/generated-who-should-sign-off-before-an-ai-system-goes-live.json",
+    "audits/phase-4.7/dispositions/ai-operating-model-mcp-resources.json",
+    "audits/phase-4.7/dispositions/articles-telemetry.json",
+    "audits/phase-4.7/dispositions/routes.json",
+    "audits/routes.json",
+    "audits/spend-report.md",
+    "docs/SEMANTIC-CORE.md",
+    "site/content-facts.json",
+    "site/src/data/post/who-should-sign-off-before-an-ai-system-goes-live.md"
+  ],
+  "gates": [
+    {
+      "name": "semantic-core",
+      "exit": 0
+    },
+    {
+      "name": "gate:registers",
+      "exit": 0
+    },
+    {
+      "name": "gate:editorial",
+      "exit": 0
+    },
+    {
+      "name": "gate:content",
+      "exit": 0
+    },
+    {
+      "name": "gate:human",
+      "exit": 0
+    },
+    {
+      "name": "gate:machine",
+      "exit": 0
+    }
+  ]
+}
