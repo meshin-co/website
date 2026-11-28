@@ -1,0 +1,14 @@
+[
+  {
+    "target": "src/data/post/how-to-approve-changes-to-ai-prompts-used-in-production.md",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-approve-changes-to-ai-prompts-used-in-production.json on 2026-11-28. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-approve-changes-to-ai-prompts-used-in-production.json.",
+    "digest": "190cb9080caf"
+  },
+  {
+    "target": "/blog/how-to-approve-changes-to-ai-prompts-used-in-production",
+    "status": "rewritten",
+    "reason": "Written by the unattended writer from the claim in audits/autowriter/claims/2026/11/how-to-approve-changes-to-ai-prompts-used-in-production.json on 2026-11-28. No human has read this text. Every hard fact in it is bound to a source in audits/autowriter/generations/2026/11/how-to-approve-changes-to-ai-prompts-used-in-production.json.",
+    "digest": "af2bc6a01123"
+  }
+]

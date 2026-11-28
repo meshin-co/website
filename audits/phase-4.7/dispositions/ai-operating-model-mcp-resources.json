@@ -241,15 +241,15 @@
     "target": "/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company",
     "location": "head.title",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-up-an-ai-steering-committee (generation record audits/autowriter/generations/2026/11/how-to-set-up-an-ai-steering-committee.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "387489630696"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-approve-changes-to-ai-prompts-used-in-production (generation record audits/autowriter/generations/2026/11/how-to-approve-changes-to-ai-prompts-used-in-production.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "43f0244b9367"
   },
   {
     "target": "/blog/how-to-choose-an-ai-operating-model-for-a-mid-size-company",
     "location": "body.p",
     "status": "rewritten",
-    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-set-up-an-ai-steering-committee (generation record audits/autowriter/generations/2026/11/how-to-set-up-an-ai-steering-committee.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
-    "digest": "387489630696"
+    "reason": "The text of this target changed in the run in which the unattended writer added /blog/how-to-approve-changes-to-ai-prompts-used-in-production (generation record audits/autowriter/generations/2026/11/how-to-approve-changes-to-ai-prompts-used-in-production.json). The text the writer added was written by a model, and no human has read it. Whatever review the previous reason of this entry recorded covers the text that was there before; that reason is in the git history of this file.",
+    "digest": "43f0244b9367"
   },
   {
     "target": "src/data/resource/handover-playbook.md",

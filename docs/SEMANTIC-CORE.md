@@ -75,7 +75,7 @@ title `{spec name} specification {version} — meshin.co` · meta: what the vers
 | `/spec/evals-baseline`     | evals-baseline specification     | evals-baseline specification — meshin.co     | Every published version of the evals-baseline specification, and the address to cite for each.                                                         | evals-baseline specification     | 23    | ✓       |
 | `/spec/evals-baseline/1.0` | evals-baseline specification 1.0 | evals-baseline specification 1.0 — meshin.co | The evals-baseline specification 1.0 says what a regression in an agent evaluation is, and defines the baseline file, the findings and the exit codes. | evals-baseline specification 1.0 | 26    | ✓       |
 
-### article (49)
+### article (50)
 
 title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence, uncut · body intent: problem → mechanism → fix → takeaways
 
@@ -95,6 +95,7 @@ title `{short answer sentence} — meshin.co` · meta: the shortAnswer sentence,
 | `/blog/how-should-boards-divide-ai-oversight-among-committees`     | how should boards divide ai oversight among committees     | How should boards divide AI oversight among committees? — meshin.co    | How should boards divide AI oversight among committees, and when should the full board decide?                                                        | How should boards divide AI oversight among committees?    | 32    | ✓       |
 | `/blog/how-should-boards-run-an-ai-incident-tabletop-exercise`     | how should boards run an ai incident tabletop exercise     | How should boards run an AI incident tabletop exercise? — meshin.co    | A practical board tabletop for an AI incident, from scenario design and escalation decisions to follow-up.                                            | How should boards run an AI incident tabletop exercise?    | 31    | ✓       |
 | `/blog/how-to-allocate-shared-ai-tool-costs-across-departments`    | how to allocate shared ai tool costs across departments    | How to allocate shared AI tool costs across departments — meshin.co    | Allocate shared AI tool costs using direct charges, service-specific usage measures and a review process departments can inspect.                     | How to allocate shared AI tool costs across departments    | 31    | ✓       |
+| `/blog/how-to-approve-changes-to-ai-prompts-used-in-production`    | how to approve changes to ai prompts used in production    | How to approve changes to AI prompts used in production — meshin.co    | How to approve changes to ai prompts used in production, from version review and testing to sign-off and rollback.                                    | How to approve changes to AI prompts used in production    | 34    | ✓       |
 | `/blog/how-to-assign-an-owner-to-each-ai-tool`                     | how to assign an owner to each ai tool                     | How to assign an owner to each AI tool — meshin.co                     | How to assign an owner to each AI tool: name a decision maker, record their duties and choose a backup.                                               | How to assign an owner to each AI tool                     | 34    | ✓       |
 | `/blog/how-to-assign-roles-and-escalation-paths-for-ai-incidents`  | how to assign roles and escalation paths for ai incidents  | How to assign roles and escalation paths for AI incidents — meshin.co  | How to assign roles and escalation paths for AI incidents, including stop authority, backup contacts and restart decisions.                           | How to assign roles and escalation paths for AI incidents  | 33    | ✓       |
 | `/blog/how-to-audit-employee-compliance-with-ai-usage-rules`       | how to audit employee compliance with ai usage rules       | How to audit employee compliance with AI usage rules — meshin.co       | Audit employee AI use against workplace rules with a practical sampling plan, proportionate evidence and a clear process for fixing gaps.             | How to audit employee compliance with AI usage rules       | 34    | ✓       |
@@ -140,7 +141,7 @@ title `{category name} — meshin.co` · meta: what the category covers, scoped 
 | `/blog/category/agentic-architecture` | agentic architecture articles | Agentic architecture articles — meshin.co | Articles on agentic architecture for production: evals in CI, tracing, cost ceilings and a rollback path for agent systems.                             | Agentic architecture articles | 24    | ✓       |
 | `/blog/category/executive`            | ai for boards                 | AI for boards — meshin.co                 | AI for boards is accountability, not literacy: what you are on the hook for, what to ask for in writing, and what not to ask for.                       | AI for boards                 | 23    | ✓       |
 | `/blog/category/governance`           | ai governance articles        | AI governance articles — meshin.co        | Articles on AI governance for companies of 30 to 300 people: the register, acceptable use policy, data classification and a named owner.                | AI governance articles        | 24    | ✓       |
-| `/blog/category/operating-model`      | ai operating model articles   | AI operating model articles — meshin.co   | Articles on the operating model for AI work in companies of 30 to 300 people: who chooses, who reviews, who runs it. The glossary holds the definition. | AI operating model articles   | 23    | ✓       |
+| `/blog/category/operating-model`      | ai operating model articles   | AI operating model articles — meshin.co   | Articles on the operating model for AI work in companies of 30 to 300 people: who chooses, who reviews, who runs it. The glossary holds the definition. | AI operating model articles   | 24    | ✓       |
 
 ### tag-index (1)
 
@@ -469,16 +470,16 @@ One owning route per entity. The mention count is inbound references from other 
 | Entity                         | Owned by                                   | Mentioned by |
 | ------------------------------ | ------------------------------------------ | ------------ |
 | Agentic workflow               | `/glossary/agentic-workflow`               | 15           |
-| AI governance                  | `/glossary/ai-governance`                  | 68           |
+| AI governance                  | `/glossary/ai-governance`                  | 70           |
 | AI impact assessment           | `/glossary/ai-impact-assessment`           | 3            |
 | AI management system           | `/glossary/ai-management-system`           | 7            |
-| AI operating model             | `/glossary/ai-operating-model`             | 32           |
+| AI operating model             | `/glossary/ai-operating-model`             | 34           |
 | AI register                    | `/glossary/ai-register`                    | 52           |
 | Conformity assessment          | `/glossary/conformity-assessment`          | 5            |
 | Data classification            | `/glossary/data-classification`            | 22           |
 | DPIA                           | `/glossary/dpia`                           | 6            |
 | EU AI Act                      | `/glossary/eu-ai-act`                      | 43           |
-| Evals                          | `/glossary/evals`                          | 52           |
+| Evals                          | `/glossary/evals`                          | 53           |
 | Guardrails                     | `/glossary/guardrails`                     | 7            |
 | Hallucination rate             | `/glossary/hallucination-rate`             | 4            |
 | High-risk AI system            | `/glossary/high-risk-ai-system`            | 10           |
