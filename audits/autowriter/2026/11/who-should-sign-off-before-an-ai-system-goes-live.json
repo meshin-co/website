@@ -12,11 +12,35 @@
     "costUsd": 0.069899
   },
   "verdict": {
-    "state": "open",
-    "reason": null,
-    "decidedAt": null
+    "state": "escalated",
+    "reason": "Autowriter pull request #223: the gate's findings cannot be repaired by rewriting the entry, or the rewrite could not be made to pass the repair's own checks",
+    "decidedAt": "2026-11-28T17:10:36.760Z"
   },
-  "escalations": [],
+  "escalations": [
+    {
+      "id": "esc-1",
+      "kind": "unrepairable",
+      "title": "Autowriter pull request #223: the gate's findings cannot be repaired by rewriting the entry, or the rewrite could not be made to pass the repair's own checks",
+      "detail": "The repair of pull request #223 ended as unrepairable: the gate's findings cannot be repaired by rewriting the entry, or the rewrite could not be made to pass the repair's own checks.\nStop: refused at gate:orphans (chrome-only on /blog/ai-readiness-assessment-template-for-smb)\nRepair run: https://github.com/meshin-co/website/actions/runs/46168619344\nPull request: https://github.com/meshin-co/website/pull/223",
+      "stop": "refused",
+      "gate": "gate:orphans",
+      "rule": "chrome-only",
+      "subject": "/blog/ai-readiness-assessment-template-for-smb",
+      "ciRun": 46167696924,
+      "measuredMain": "930ffde6c63edbc99513a312d0eb4fed4b86b056",
+      "raisedAt": "2026-11-28T17:10:36.108Z",
+      "receipts": [
+        {
+          "channel": "issue",
+          "attemptedAt": "2026-11-28T17:10:36.108Z",
+          "delivered": true,
+          "status": 201,
+          "issue": 224,
+          "error": null
+        }
+      ]
+    }
+  ],
   "generation": {
     "tokens": {
       "input": 33294,
