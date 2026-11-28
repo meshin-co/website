@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "slug": "how-to-approve-changes-to-ai-prompts-used-in-production",
+  "title": "How to approve changes to AI prompts used in production",
+  "format": "article",
+  "query": "how to approve changes to ai prompts used in production",
+  "demand": {
+    "impressions": 0,
+    "position": null
+  },
+  "origin": "category",
+  "category": "operating-model",
+  "catchUp": {
+    "slot": "06:00",
+    "lateMinutes": 145
+  },
+  "runId": "46125572312-1",
+  "status": "claimed",
+  "claimedAt": "2026-11-28T08:25:24.113Z",
+  "expiresAt": "2026-12-12T08:25:24.113Z"
+}
